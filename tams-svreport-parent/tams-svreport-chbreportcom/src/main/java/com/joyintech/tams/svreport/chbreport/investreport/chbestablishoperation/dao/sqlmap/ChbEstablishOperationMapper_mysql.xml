@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.investreport.chbestablishoperation.dao.ChbEstablishOperationMapper_mysql">
+	<!--获取成立公告数据-->
+	<select id="getEstablishinfo" resultType="com.joyintech.tams.svreport.chbreport.investreport.chbestablishoperation.dto.ChbEstablishPrdInfo">
+		SELECT
+			p.PROD_ID AS prodId,	/** 产品代码**/
+			p.PROD_NAME AS prodName,	/** 产品全称**/
+			p.REG_CODE AS regCode, /**理财登记编码**/
+			date_format(p.RAISE_PSTRDATE,'%Y年%m月%d日') AS paisePstrDate,#/**募集起始日**/
+			date_format(p.RAISE_PENDDATE,'%Y年%m月%d日') AS paisePendDate,#/**募集结束日**/
+		    date_format(p.VDATE,'%Y年%m月%d日') AS vDate, /**产品起息日**/
+			p.ACCT_NAME AS acctName, /**托管账户名称**/
+			p.BUSI_ACCT_NO AS busiAcctNo, /**托管账户账号**/
+			d.TRADE_COST AS tradeCost, /**实际募集金额**/
+			d.CCY AS ccy, /**币种**/
+			'华夏理财有限责任公司' AS managerFullName, /**管理人全称**/
+			'华夏理财' AS managerShortName, /**管理人简称**/
+		    date_format(DATE_ADD(p.VDATE,INTERVAL 1 DAY),'%Y年%m月%d日') AS revealDate, /**公告披露日期**/
+			p.CUSTOMER_TYPE as customerType/** 客户类型**/
+		FROM
+			CHB_PRD_BASEINFO p
+			LEFT JOIN CHB_PRD_DEAL d ON d.PROD_ID = p.PROD_ID AND d.TRADE_TYPE = '01'
+			LEFT JOIN REP_REVEAL l ON l.REP_ID = '01'
+			AND l.`STATUS` = 'E'
+			AND l.PRODID = p.PROD_ID
+			AND DATE_FORMAT(p.VDATE, '%Y-%m-%d') = DATE_FORMAT(l.END_DATE, '%Y-%m-%d')
+		WHERE	p.`STATUS` = 'E'
+		<if test="prodId !=null and prodId != ''">
+			and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate !=null and endDate != ''">
+			and  DATE_FORMAT(p.VDATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+		</if>
+		<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+			and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+		</if>
+	</select>
+</mapper>

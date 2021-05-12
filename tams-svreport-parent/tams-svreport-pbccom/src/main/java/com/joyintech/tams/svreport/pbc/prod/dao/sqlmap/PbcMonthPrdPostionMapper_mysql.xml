@@ -649,12 +649,14 @@
 		  deal.endqtysum         endqtysum,/*剩余份额*/
 		  CASE
 			  WHEN info.operate_mode IN ('01','02') THEN
-				  greatest( (case when (info.mdate - date_format(#{reportEndDate,jdbcType=DATE},'%Y-%m-%d')) <![CDATA[<]]> 0 then 1 else info.mdate - date_format(#{reportEndDate,jdbcType=DATE},'%Y-%m-%d') end), 0)
+				  greatest( (case when (DATEDIFF(info.mdate,date_format(#{reportEndDate,jdbcType=DATE},'%Y-%m-%d'))) <![CDATA[<]]> 0 then 1
+	                         else DATEDIFF(info.mdate,date_format(#{reportEndDate,jdbcType=DATE},'%Y-%m-%d')) end), 0)
 			  ELSE
 			  (
 				  CASE
 					  WHEN info.plancounts = 0 THEN 1 /*开放计划条数为0，表示高频开放*/
-					  ELSE greatest( (case when ifnull(info.minopenstart,info.mdate)- date_format(#{reportEndDate,jdbcType=DATE},'%Y-%m-%d') <![CDATA[<]]> 0 then 1 else ifnull(info.minopenstart,info.mdate)- date_format(#{reportEndDate,jdbcType=DATE},'%Y-%m-%d')  end), 0)
+					  ELSE greatest( (case when DATEDIFF(ifnull(info.minopenstart,info.mdate), date_format(#{reportEndDate,jdbcType=DATE},'%Y-%m-%d')) <![CDATA[<]]> 0 then 1
+	                                  else DATEDIFF(ifnull(info.minopenstart,info.mdate),date_format(#{reportEndDate,jdbcType=DATE},'%Y-%m-%d'))  end), 0)
 				  END
 			  )
 		  END end_days,/*剩余期限*/
