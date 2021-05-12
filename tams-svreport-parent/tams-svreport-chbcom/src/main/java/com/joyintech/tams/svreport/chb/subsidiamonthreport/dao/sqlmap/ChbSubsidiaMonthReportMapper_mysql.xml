@@ -66,6 +66,21 @@
         ORDER BY STATUS_DATE
     </select>
 
+    <delete id="deleteReportDataHis" parameterType="java.util.Map">
+        delete
+        from CHB_MONTH_REPORT_SUB_HIS  his
+        where his.CREATE_TIME=(select CREATETIME from (
+        SELECT max(CREATE_TIME) as CREATETIME from CHB_MONTH_REPORT_SUB_HIS
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                TERMID IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.termid,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where> ) tmp)
+    </delete>
+
     <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
         update CHB_MONTH_REPORT_SUB sub
         <set>

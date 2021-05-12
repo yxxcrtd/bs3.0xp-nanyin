@@ -225,7 +225,7 @@ public class ChbInvestOperationService extends CommonExportService<ChbInvestPrdI
             List<ChbInvsetAssetInfo> mr =  this.qryChbInvsetAssetInfo(param);
             param.put("curAssetType", DictCodeListExt2.资金流动类型_资产卖出或到期.getValue());//买入
             List<ChbInvsetAssetInfo> mc =  this.qryChbInvsetAssetInfo(param);
-            dataMap.put("dealdateFmt", param.get("endDate"));//变动日
+            dataMap.put("dealdateFmt", DateUtil.format(DateUtil.parse(param.get("endDate").toString()),DateUtil.DEFAULT_DATE_FORMAT_CN));//变动日
             dataMap.put("prdInfo", chbInvestPrdInfo);//产品信息
             dataMap.put("assetBuyList", mr);//非标买入
             if(StringUtil.isEmptyList(mr)) {
