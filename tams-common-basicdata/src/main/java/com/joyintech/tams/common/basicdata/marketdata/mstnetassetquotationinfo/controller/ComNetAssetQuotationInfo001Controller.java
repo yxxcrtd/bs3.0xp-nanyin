@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.common.basicdata.marketdata.mstnetassetquotationinfo.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +27,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -34,13 +35,15 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
-import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
-import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
@@ -74,12 +77,6 @@ public class ComNetAssetQuotationInfo001Controller extends BaseController{
     public String init(Model model){
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("valDate",DateUtil.format(sysDate));
-        // 画面元素是否显示
-     	PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
-     	pageElementConfigDto.setPageId(this.getPageId());
-     	Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto); 
-     	model.addAttribute("isEleShow", isEleShow);
-        
         return super.init(model);
     }
     
@@ -114,7 +111,8 @@ public class ComNetAssetQuotationInfo001Controller extends BaseController{
         String param = super.getRequest().getParameter("param");   
         map.put("finProdName", param);
         map.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue());
-        map.put("PROFITTYPE_VALUE_03", DictCodeList.收益类型_货币型.getValue());
+        /** modify by yanya on 20210209 改为用估值侧类型过滤 **/
+        //map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         List<SuggestDto> temp = mstnetassetquotationinfo001service.getAssetName(map);
         return temp;
@@ -137,6 +135,8 @@ public class ComNetAssetQuotationInfo001Controller extends BaseController{
         map.put("finProdMarketId", param);
         map.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue());
         map.put("PROFITTYPE_VALUE_03", DictCodeList.收益类型_货币型.getValue());
+        /** modify by yanya on 20210209 改为用估值侧类型过滤 **/
+        //map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         List<SuggestDto> temp = mstnetassetquotationinfo001service.getAssetCode(map);
         return temp;
@@ -200,30 +200,53 @@ public class ComNetAssetQuotationInfo001Controller extends BaseController{
     @RequestMapping("export")
     public ResponseEntity<byte[]> export() 
         throws Exception {
-        return mstnetassetquotationinfo001service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
+        /** modify by yanya on 20210209 增加按照选择数据进行导出 start**/
+        //return mstnetassetquotationinfo001service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
+        String datas = this.getParam("datas");
+        Map<String, Object> params= RequestUtil.getPageParam();
+        List<ComNetAssetQuotationInfo001Dto> list = null;
+        if (StringUtil.isNotEmpty(datas)) {
+            list = JsonUtils.json2List(datas, ComNetAssetQuotationInfo001Dto.class);
+        }
+        else {
+            list = mstnetassetquotationinfo001service.selectAllList(params);
+        }
+//        return valBondQuotationInfoService.export(this.getPageId(),
+//            RequestUtil.getParameters(getRequest()));
+        File outFile = mstnetassetquotationinfo001service.makeFile(
+                "/com/joyintech/tams/valuation/basedata/marketdata/valnetassetquotationinfo/conf/export_conf.xml",
+                list);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
+        /** modify by yanya on 20210209 增加按照选择数据进行导出 end**/
     }
-    
     /**
-     * 导入数据文件之前检查数据
+     * 导入
      *
      * @param fileName 导入的文件名
      * @return 处理结果
+     * @throws Exception 异常
      */
     @ResponseBody
-    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return mstnetassetquotationinfo001service.checkConfirmMsgForImportData(fileName);
+    @RequestMapping("checkImportData")
+    public AjaxResult checkImportData(String fileName) {
+        return mstnetassetquotationinfo001service.checkImportData(fileName);
     }
-    
+
     /**
-     * 导入数据文件
      *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * @param param
+     * @return
+     * @throws IOException 
      */
     @ResponseBody
     @RequestMapping("importFile")
-    public List<ExcelValidDto> importData(String fileName) {
-        return this.mstnetassetquotationinfo001service.importData(fileName);
+    public AjaxResult importFile(@RequestBody Map<String, Object> param) throws IOException {
+        return this.mstnetassetquotationinfo001service.importFile(param);
     }
 }

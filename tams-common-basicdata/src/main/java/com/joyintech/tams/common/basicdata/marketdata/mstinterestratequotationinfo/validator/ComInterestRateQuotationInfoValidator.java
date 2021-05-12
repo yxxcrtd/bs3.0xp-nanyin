@@ -52,12 +52,12 @@ public class ComInterestRateQuotationInfoValidator implements BeanValidator {
                 // 遍历选择的项目
                 for (ComInterestRateQuotationInfoDto cur : dto.getSelectedItem()) {
                     // 判断发布日是否小于平台时间
-                    if (cur.getEffDate().compareTo(sysDate) < 0) {
-                        // 添加错误信息
-                        errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0015",
-                            getMessage("ComInterestRateQuotationInfo002.effDate"),
-                            getMessage("ComInterestRateQuotationInfo002.date"))));
-                    }
+//                    if (cur.getEffDate().compareTo(sysDate) < 0) {
+//                        // 添加错误信息
+//                        errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0015",
+//                            getMessage("ComInterestRateQuotationInfo002.effDate"),
+//                            getMessage("ComInterestRateQuotationInfo002.date"))));
+//                    }
                 }
             }
         }
@@ -87,33 +87,33 @@ public class ComInterestRateQuotationInfoValidator implements BeanValidator {
                     )));
                 }
                 else if (dto.getEffDate().compareTo(sysDate) < 0) {
-                    // 添加错误信息
-                    errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0004",
-                        getMessage("ComInterestRateQuotationInfo002.effDate"),
-                        getMessage("ComInterestRateQuotationInfo002.date"))));
+//                    // 添加错误信息
+//                    errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0004",
+//                        getMessage("ComInterestRateQuotationInfo002.effDate"),
+//                        getMessage("ComInterestRateQuotationInfo002.date"))));
                 }
             }
         }
         else {
-            if (dto.getEffDate().compareTo(sysDate) < 0) {
-                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0018",
-                    getMessage("ComInterestRateQuotationInfo002.effDate"),
-                    getMessage("ComInterestRateQuotationInfo002.date"))));
-            }
+//            if (dto.getEffDate().compareTo(sysDate) < 0) {
+//                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0018",
+//                    getMessage("ComInterestRateQuotationInfo002.effDate"),
+//                    getMessage("ComInterestRateQuotationInfo002.date"))));
+//            }
             if (dto.getEffDate() != null && dto.getRelaeseDate() != null
                 && dto.getEffDate().compareTo(dto.getRelaeseDate()) < 0) {
-                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0004",
-                    getMessage("ComInterestRateQuotationInfo002.effDate"),
-                    getMessage("ComInterestRateQuotationInfo002.relaeseDate"))));
+//                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0004",
+//                    getMessage("ComInterestRateQuotationInfo002.effDate"),
+//                    getMessage("ComInterestRateQuotationInfo002.relaeseDate"))));
             }
         }
         
         if(StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit")){
             if (dto.getRelaeseDate() != null
                 && DateUtil.compareDate(dto.getRelaeseDate(), sysDate) < 0) {
-                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0004",
-                    getMessage("ComInterestRateQuotationInfo002.relaeseDate"),
-                    getMessage("ComInterestRateQuotationInfo002.date"))));
+//                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0004",
+//                    getMessage("ComInterestRateQuotationInfo002.relaeseDate"),
+//                    getMessage("ComInterestRateQuotationInfo002.date"))));
             }
         }
         // }

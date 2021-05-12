@@ -28,8 +28,9 @@ $(function() {
          //*  资产代码
         $('#sharesId').on('change', function () {
             if ($('#sharesId').val()) {
-                var data = $('#sharesId').select2('data')[0].object;
-                $('#finprodAbbr').val(data.finprodAbbr).trigger('change');
+                // var data = $('#sharesId').select2('data')[0].object;
+				var data = $('#sharesId').select2('data')[0].text;
+                $('#finprodAbbr').val(data).trigger('change');
                 if($('#dealDate').val()){
                 	getLatelyShareById();
         		}
@@ -106,9 +107,9 @@ $(function() {
      */
     var modifyChange =function(){
     	if($('#preClosePrice').val()&&$('#closePrice').val()){
-    		$("#change").val(($('#closePrice').val()-$('#preClosePrice').val()).toFixed(2));
-    		var changePercent = (($('#closePrice').val()-$('#preClosePrice').val())/$('#preClosePrice').val()*100).toFixed(2)
-    		$("#changePercent").val(changePercent);
+    		$("#change").val(($('#closePrice').val()-$('#preClosePrice').val()).toFixed(3)).trigger('change');
+    		var changePercent = (($('#closePrice').val()-$('#preClosePrice').val())/$('#preClosePrice').val()*100).toFixed(3)
+    		$("#changePercent").val(changePercent).trigger('change');
     	}
     }
     
@@ -120,16 +121,16 @@ $(function() {
     		$("#preClosePriceAdj").val(($('#preClosePrice').val()*$('#factorAdj').val()).toFixed(2));
     	}
     	if($('#openPrice').val()){
-    		$("#openPriceAdj").val(($('#openPrice').val()*$('#factorAdj').val()).toFixed(2));
+    		$("#openPriceAdj").val(($('#openPrice').val()*$('#factorAdj').val()).toFixed(3)).trigger('change');
     	}
     	if($('#highPrice').val()){
-    		$("#highPriceAdj").val(($('#highPrice').val()*$('#factorAdj').val()).toFixed(2));
+    		$("#highPriceAdj").val(($('#highPrice').val()*$('#factorAdj').val()).toFixed(3)).trigger('change');
     	}
     	if($('#lowPrice').val()){
-    		$("#lowPriceAdj").val(($('#lowPrice').val()*$('#factorAdj').val()).toFixed(2));
+    		$("#lowPriceAdj").val(($('#lowPrice').val()*$('#factorAdj').val()).toFixed(3)).trigger('change');
     	}
     	if($('#closePrice').val()){
-    		$("#closePriceAdj").val(($('#closePrice').val()*$('#factorAdj').val()).toFixed(2));
+    		$("#closePriceAdj").val(($('#closePrice').val()*$('#factorAdj').val()).toFixed(3)).trigger('change');
     	}
     }
     
@@ -138,7 +139,7 @@ $(function() {
      */
     var modifyAvgPrice =function(){
     	if($('#dealValume').val()&&$('#dealAmount').val()){
-    		$("#avgPrice").val(($('#dealAmount').val()/$('#dealValume').val()).toFixed(2));
+    		$("#avgPrice").val(($('#dealAmount').val()/$('#dealValume').val()).toFixed(3)).trigger('change');
     	}
     }
     
@@ -166,10 +167,10 @@ $(function() {
 			dataType: "json",
 			success:function(data){
 				if(data){
-					$('#sShares').val(data.sShares).trigger('change');
-					$('#cShares').val(data.cShares).trigger('change');
-					$('#lastClosePrice').val(data.closePrice).trigger('change');
-					$('#lastFactorAdj').val(data.factorAdj).trigger('change');
+					$('#sShares').val((data.sShares/1.000).toFixed(3)).trigger('change');
+					$('#cShares').val((data.cShares/1.000).toFixed(3)).trigger('change');
+					$('#lastClosePrice').val((data.closePrice/1.000).toFixed(3)).trigger('change');
+					$('#lastFactorAdj').val((data.factorAdj/1.000).toFixed(3)).trigger('change');
 					modifyFactorAdj();
 				}else{
 					//取不到最近交易信息 复权因子置位1

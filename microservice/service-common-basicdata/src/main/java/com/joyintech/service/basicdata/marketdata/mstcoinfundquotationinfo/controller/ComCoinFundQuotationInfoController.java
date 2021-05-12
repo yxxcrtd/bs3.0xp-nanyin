@@ -13,10 +13,6 @@ package com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.cont
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto;
-import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.service.ComCoinFundQuotationInfoService;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
-import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,11 +22,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.service.ComCoinFundQuotationInfoImportDataService;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto;
+import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.service.ComCoinFundQuotationInfoService;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 
 /**
  * 货币型基金行情信息
@@ -50,11 +47,6 @@ public class ComCoinFundQuotationInfoController {
     @Autowired
     private ComCoinFundQuotationInfoService comCoinFundQuotationInfoService;
     
-    /**hsgexinghua add by zhangxing1 20200228
-     * service注入
-     */
-    @Autowired
-    private ComCoinFundQuotationInfoImportDataService comCoinFundQuotationInfoImportDataService;
     /**
      * service注入
      */
@@ -90,20 +82,20 @@ public class ComCoinFundQuotationInfoController {
      * 联想文本框service层实现
      * 
      * @param param 检索参数
-     * @return SuggestDto
+     * @return SelectOptionDto
      */
     @PostMapping("/selectForCode")
-    public List<SuggestDto> selectForCode(@RequestBody Map<String, Object> param) {
+    public List<SelectOptionDto> selectForCode(@RequestBody Map<String, Object> param) {
         return comCoinFundQuotationInfoService.selectForCode(param);
     }
     /**
      * data-url 方式的下拉框
      * 
      * @param map 检索参数
-     * @return SuggestDto
+     * @return SelectOptionDto
      */
     @PostMapping("/getManagement")
-    public List<SuggestDto> getManagement(@RequestBody Map<String, Object> map) {
+    public List<SelectOptionDto> getManagement(@RequestBody Map<String, Object> map) {
         return comCoinFundQuotationInfoService.getManagement(map);
     }
     
@@ -115,7 +107,7 @@ public class ComCoinFundQuotationInfoController {
      * @since 1.0
      */
     @PostMapping("/queryFinprod")
-    public List<SuggestDto> queryFinprod(@RequestBody Map<String, Object> map) {
+    public List<SelectOptionDto> queryFinprod(@RequestBody Map<String, Object> map) {
         return comCoinFundQuotationInfoService.queryFinprod(map);
     }
     /**
@@ -147,8 +139,12 @@ public class ComCoinFundQuotationInfoController {
 
     /**
      * 通过估值日与ID查询
-     * @param map
-     * @return
+     * <功能详细描述>
+     * @param finprodId id
+     * @param valDate 估值日期
+     * @return 结果
+     * @see
+     * @since 1.0
      */
     @PostMapping("/selectByIdAndValDate")
     public String selectByIdAndValDate(@RequestBody Map<String,Object>map) {
@@ -159,40 +155,4 @@ public class ComCoinFundQuotationInfoController {
     public String getIplatDate(){
         return commonPlatformDateService.getSysDateStr();
     }
-    
-  //hsgexinghua add by zhangxing1 20200228 start
-
-    /**
-     * 导入数据文件之前检查数据
-     *
-     * @param param 导入的文件名
-     * @return 处理结果
-     */
-    @SuppressWarnings("unchecked")
-    @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return comCoinFundQuotationInfoImportDataService.checkConfirmMsgForImportData(dataList);
-    }
-
-
-    /**
-     * 导入数据文件
-     *
-     * @param param 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
-     */
-    @SuppressWarnings("unchecked")
-    @PostMapping("importData")
-    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-        String userName=param.get("userName")==null?null:param.get("userName").toString();
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return this.comCoinFundQuotationInfoImportDataService.importData(dataList,tempList,userName,orgCode,deptCode);
-    }
-    //hsgexinghua add by zhangxing1 20200228 end
 }

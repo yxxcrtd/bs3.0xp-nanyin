@@ -10,9 +10,11 @@
  
 package com.joyintech.tams.common.basicdata.marketdata.yieldcurveinfo.controller;
 
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.common.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto;
-import com.joyintech.tams.common.basicdata.marketdata.yieldcurveinfo.service.ComYieldCurveInfoService;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,12 +29,20 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.common.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto;
+import com.joyintech.tams.common.basicdata.marketdata.yieldcurveinfo.service.ComYieldCurveInfoService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
@@ -139,8 +149,31 @@ public class ComYieldCurveInfo001Controller extends BaseController{
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export() throws Exception{
-        return comYieldCurveInfoService.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
+
+        String datas = this.getParam("datas");
+        List<ComYieldCurveInfoDto> listdto ;
+
+        if (datas == null) {
+            listdto = comYieldCurveInfoService.selectAllList(RequestUtil.getPageParam());
+        }
+        else {
+            listdto = JsonUtils.json2List(datas, ComYieldCurveInfoDto.class);
+        }
+
+        for (int i=0;i<listdto.size();i++){
+            ComYieldCurveInfoDto valYieldCurveInfoDto = listdto.get(i);
+            valYieldCurveInfoDto.setCurveDateFormatStr( DateUtil.format(valYieldCurveInfoDto.getCurveDate(),"yyyy-MM-dd"));
+        }
+        File outFile = comYieldCurveInfoService.makeFile(
+                "/com/joyintech/tams/valuation/basedata/marketdata/valyieldcurveinfo/conf/export_conf.xml",
+                listdto);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 
     //添加曲线名称的联想下拉框事件 add by lishuping 20191008 start
@@ -157,4 +190,63 @@ public class ComYieldCurveInfo001Controller extends BaseController{
         return comYieldCurveInfoService.getCurveName(RequestUtil.getPageParam());
     }
     //添加曲线名称的联想下拉框事件 add by lishuping 20191008 end
+    
+    
+    /**
+     * 导入（必填项校验）
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     * @throws Exception 异常
+     */
+    @ResponseBody
+    @RequestMapping("importFile")
+    public List<ExcelValidDto> importData(String fileName)
+            throws Exception{
+        return this.comYieldCurveInfoService.importData(fileName);
+    }
+    
+    
+    /**
+     * 导入（重复数据获取）
+     * 
+     * @param fileName 导入的文件名
+     * @return checkResult
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("duplicateCheck")
+    public List<Integer> duplicateCheck(String fileName)
+        throws Exception {
+         List<List<String>> dataList = comYieldCurveInfoService.dataAnalysis(fileName);
+         List<Integer> checkResult = new ArrayList<>();
+         if (null != dataList && dataList.size() > 0) {
+             // 导入文件重复数据检查
+        	 checkResult = comYieldCurveInfoService.duplicateCheck(dataList);
+         }
+        return checkResult;
+    }
+    
+    /**
+     * 导入（数据保存）
+     * 
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("importFileSave")
+    public List<Integer> importFileSave(String fileName)
+        throws Exception {
+        List<List<String>> dataList = comYieldCurveInfoService.dataAnalysis(fileName);
+        List<Integer> checkResult = new ArrayList<>();
+        if (null != dataList && dataList.size() > 0) {
+            // 导入文件重复数据检查
+       	 checkResult = comYieldCurveInfoService.duplicateCheck(dataList);
+       	 List<ComYieldCurveInfoDto> equityList = comYieldCurveInfoService.converToBean(dataList,checkResult);
+       	 // 保存，已存在则更新
+       	 comYieldCurveInfoService.dealAfterCheck(equityList);
+        }
+        return checkResult;
+    }
 }

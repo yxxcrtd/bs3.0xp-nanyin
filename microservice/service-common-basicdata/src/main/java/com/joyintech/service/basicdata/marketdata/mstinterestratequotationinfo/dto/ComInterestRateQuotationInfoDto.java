@@ -42,11 +42,6 @@ public class ComInterestRateQuotationInfoDto extends MstIntRateInfo implements I
      * 请求的结构名
      */
     private String elementId;
-    
-    /**hsgexinghua add by zhangxing1 20200228
-     * excel 列
-     */
-    private String excelNum;
 
     /**
      * 获取选择的数据
@@ -174,13 +169,5 @@ public class ComInterestRateQuotationInfoDto extends MstIntRateInfo implements I
      */
     public Date getRelaeseDate() {
         return super.getRelaeseDate();
-    }
-    
-    public String getExcelNum() {
-        return excelNum;
-    }
-
-    public void setExcelNum(String excelNum) {
-        this.excelNum = excelNum;
     }
 }

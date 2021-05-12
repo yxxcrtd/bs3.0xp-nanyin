@@ -14,7 +14,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto;
 
 /**
@@ -56,7 +56,7 @@ public interface ComCoinFundQuotationInfoMapper {
      * @since 1.0
      */
 
-    List<SuggestDto> queryCode(Map<String, Object> map);
+    List<SelectOptionDto> queryCode(Map<String, Object> map);
 
     /**
      * 查询基金管理人（画面一联想文本框）
@@ -66,7 +66,7 @@ public interface ComCoinFundQuotationInfoMapper {
      * @see
      * @since 1.0
      */
-    List<SuggestDto> queryManagement(Map<String, Object> map);
+    List<SelectOptionDto> queryManagement(Map<String, Object> map);
 
     /**
      * 查询基金代码（画面二联想文本框）
@@ -76,7 +76,7 @@ public interface ComCoinFundQuotationInfoMapper {
      * @see
      * @since 1.0
      */
-    List<SuggestDto> queryFinprod(Map<String, Object> map);
+    List<SelectOptionDto> queryFinprod(Map<String, Object> map);
 
     /**
      * 查找基金信息是否存在
@@ -107,50 +107,4 @@ public interface ComCoinFundQuotationInfoMapper {
      * @since 1.0
      */
     ComCoinFundQuotationInfo001Dto selectManagement(Map<String, Object> map);
-    
-    //hsgexinghua add by zhangxing1 20200228 start
-    /**
-     * 查询新增数据主键是否重复
-     * @param list 产品list
-     * @param orgCode 机构代码
-     * @return list
-     * @see
-     * @since 1.0
-     */
-
-    String getRegistExcelList(Map<String,Object> param);
-
-    /**
-     * 查询新增数据主键是否重复
-     * @param list 产品list
-     * @param orgCode 机构代码
-     * @return list
-     * @see
-     * @since 1.0
-     */
-
-    ComCoinFundQuotationInfo001Dto checkFinprod(Map<String,Object> param) ;
-    
-    /**
-     * 查询新增数据主键是否重复
-     * @param list 产品list
-     * @param orgCode 机构代码
-     * @return list
-     * @see
-     * @since 1.0
-     */
-
-    ComCoinFundQuotationInfo001Dto checkType(Map<String,Object> param) ;
-    
-    /**
-     * 查询新增数据主键是否重复
-     * @param list 产品list
-     * @param orgCode 机构代码
-     * @return list
-     * @see
-     * @since 1.0
-     */
-
-    String  checkFundManager(Map<String,Object> param) ;
-    //hsgexinghua add by zhangxing1 20200228  end
 }

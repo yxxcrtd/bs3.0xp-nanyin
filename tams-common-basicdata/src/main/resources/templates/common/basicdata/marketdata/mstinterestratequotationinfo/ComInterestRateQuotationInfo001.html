@@ -11,7 +11,7 @@
 			<div class="layui-col-xs12 layui-col-md12 layui-col-sm12 layui-col-lg12 form-button-area" style="margin:10px;">
 				<a id="ComInterestRateQuotationInfo001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}" >新建</a>
 		        <a id="ComInterestRateQuotationInfo001_btn_delete" class="layui-btn layui-btn-sm btn-delete" data-th-text="#{SysCommon.delete}" style="display:none;">删除</a>
-				<a id="ComInterestRateQuotationInfo001_btn_import" class="layui-btn layui-btn-sm btn-import btn-default">导入</a>
+				<a id="ComInterestRateQuotationInfo001_btn_import" class="layui-btn layui-btn-sm btn-create">导入</a>
 	   		</div>
 	   		<div class='joyin-form-wrap joyin-filter-form condition-area'>
 	   		<form class="layui-form" id="searchForm" >
@@ -19,15 +19,8 @@
 	                <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
 	                    <label class="layui-form-label form-lable" data-th-text="#{ComInterestRateQuotationInfo001.intRateName}">利率名称</label>
 	                    <div class="layui-input-inline input-inline">
-<!-- 	                    	<input id="intRateId" name="intRateId" type="text" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SECRATE_DATA}" formatoption = true>
- -->	                        <select type="text" id="intRateId" name="intRateId" 
-                                        class="layui-input form-input input-select" 
-                                        data-th-data-result='${SECRATE_DATA}' allowClear="true" 
-                                        placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                        formatoption = "true" >
-                                   <option></option>                             
-                                </select>
-                        </div>
+	                    	<input id="intRateId" name="intRateId" type="text" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SECRATE_DATA}" formatoption = true>
+	                    </div>
 	                </div>
 	                <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
 	                    <label class="layui-form-label form-lable" data-th-text="#{ComInterestRateQuotationInfo001.relaeseDate}">发布日</label>

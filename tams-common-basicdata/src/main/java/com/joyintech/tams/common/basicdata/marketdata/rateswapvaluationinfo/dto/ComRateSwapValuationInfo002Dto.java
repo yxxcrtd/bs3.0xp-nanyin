@@ -1,6 +1,7 @@
 package com.joyintech.tams.common.basicdata.marketdata.rateswapvaluationinfo.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -37,6 +38,7 @@ public class ComRateSwapValuationInfo002Dto extends BaseEntity  implements Proce
     @PrimaryKey(value= PrimaryKey.Field.PK_2)
     @NotBlank(message = "估值来源不能为空!", groups = ValidateGroupEdit.class)
     private String datasourceType;
+    private String datasourceTypeOld;
 
     /**
      * 估值日期
@@ -78,6 +80,7 @@ public class ComRateSwapValuationInfo002Dto extends BaseEntity  implements Proce
      */
     private String operateType;
 
+    private List<ComRateSwapValuationInfo002Dto> selectedItem;
     public String getPageModel() {
         return pageModel;
     }
@@ -198,4 +201,19 @@ public class ComRateSwapValuationInfo002Dto extends BaseEntity  implements Proce
         this.inputType = inputType == null ? null : inputType.trim();
     }
 
+    public List<ComRateSwapValuationInfo002Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<ComRateSwapValuationInfo002Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public String getDatasourceTypeOld() {
+        return datasourceTypeOld;
+    }
+
+    public void setDatasourceTypeOld(String datasourceTypeOld) {
+        this.datasourceTypeOld = datasourceTypeOld;
+    }
 }

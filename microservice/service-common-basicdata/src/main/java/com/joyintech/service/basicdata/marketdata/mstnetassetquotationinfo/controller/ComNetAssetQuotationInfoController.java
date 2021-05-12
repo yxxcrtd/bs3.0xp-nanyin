@@ -15,7 +15,6 @@ import java.util.Map;
 
 import com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto;
 import com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.service.ComNetAssetQuotationInfo001Service;
-import com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.service.ComNetAssetQuotationInfoImportDataService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,11 +47,6 @@ public class ComNetAssetQuotationInfoController {
      */
     @Autowired
     private ComNetAssetQuotationInfo001Service comNetAssetQuotationInfo001Service;
-    /**hsgexinghua add by zhangxing1 20200228
-     * service注入
-     */
-    @Autowired
-    private ComNetAssetQuotationInfoImportDataService comNetAssetQuotationInfoImportDataService;
     /**
      * 
      * 分页查询
@@ -187,40 +181,16 @@ public class ComNetAssetQuotationInfoController {
     public ComNetAssetQuotationInfo001Dto selectByIdAndDate(@RequestBody Map<String,Object> map) {
         return comNetAssetQuotationInfo001Service.selectByIdAndDate(map);
     }
-   
-  //hsgexinghua add by zhangxing1 20200228 start
 
     /**
-     * 导入数据文件之前检查数据
-     *
-     * @param param 导入的文件名
-     * @return 处理结果
+     * 根据条件查询数据
+     * @param pageParam
+     * @return
+     * @throws Exception
      */
-    @SuppressWarnings("unchecked")
-    @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return comNetAssetQuotationInfoImportDataService.checkConfirmMsgForImportData(dataList);
+    @PostMapping("selectAllList")
+    public List<ComNetAssetQuotationInfo001Dto> selectAllList(@RequestBody Map<String, Object> pageParam) throws Exception {
+        return comNetAssetQuotationInfo001Service.selectAllList(pageParam);
     }
 
-
-    /**
-     * 导入数据文件
-     *
-     * @param param 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
-     */
-    @SuppressWarnings("unchecked")
-    @PostMapping("importData")
-    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-        String userName=param.get("userName")==null?null:param.get("userName").toString();
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return this.comNetAssetQuotationInfoImportDataService.importData(dataList,tempList,userName,orgCode,deptCode);
-    }
-    //hsgexinghua add by zhangxing1 20200228 end
 }

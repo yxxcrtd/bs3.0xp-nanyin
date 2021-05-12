@@ -11,23 +11,26 @@
 package com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dao.ComCoinFundQuotationInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dao.ComCoinFundQuotationInfoMapper;
+import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.FinProductValuationMapper;
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto;
+import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**
  * 基金类行情信息
@@ -69,7 +72,7 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      */
     public Page<ComCoinFundQuotationInfo001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
         throws Exception {
-        pageParam.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
+        pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
         pageParam.put("yes", DictCodeList.是否_是.getValue());
         return super.queryForPage(page,length,() -> comCoinFundQuotationInfoMapper.queryForPage(pageParam));
     }
@@ -89,8 +92,8 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      * @param map 检索参数
      * @return SuggestDto
      */
-    public List<SuggestDto> selectForCode(Map<String, Object> map) {
-        map.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
+    public List<SelectOptionDto> selectForCode(Map<String, Object> map) {
+        map.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
         return comCoinFundQuotationInfoMapper.queryCode(map);
         // return super.queryForSuggest(mstCoinFundQuotationInfo001Mapper::queryCode, param, null);
     }
@@ -101,7 +104,7 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      * @param map 检索参数
      * @return SuggestDto
      */
-    public List<SuggestDto> getManagement(Map<String,Object> map) {
+    public List<SelectOptionDto> getManagement(Map<String,Object> map) {
         return comCoinFundQuotationInfoMapper.queryManagement(map);
     }
 
@@ -112,7 +115,7 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      * @see
      * @since 1.0
      */
-    public List<SuggestDto> queryFinprod(Map<String, Object> map) {
+    public List<SelectOptionDto> queryFinprod(Map<String, Object> map) {
         return comCoinFundQuotationInfoMapper.queryFinprod(map);
     }
 
@@ -137,7 +140,7 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      */
     public ComCoinFundQuotationInfo001Dto getManageAndType(String finprodId) {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
+        map.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
         map.put("yes", DictCodeList.是否_是.getValue());
         map.put("finprodId", finprodId);
         String finprodType = comCoinFundQuotationInfoMapper.selectByfinprodId(map);
@@ -178,12 +181,6 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
             }
             //七日年化收益率入库需除100 add by gejiaao 2019/8/20 end
             finProductValuationMapper.insert(entity);
-            //投管接口调用
-//            InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
-//            investInterfCommDto.setPageId("MstNetAssetQuotationInfo002");
-//            investInterfCommDto.setPortfolioId(entity.getFinprodMarketId());
-//            investInterfCommDto.setFinProductValuation(entity);
-//            investInterfCommService.doInvestInterf(investInterfCommDto);
         }
         else {
             entity.setFinprodType(DictCodeListExt1.金融产品类型_基金.getValue());
@@ -206,16 +203,19 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      * @since 1.0
      */
     public String selectByIdAndValDate(Map<String, Object> map) {
-    	map.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
+        /** 改为用估值类型进行数据过滤 modify by yanya on 20210209 **/
+    	//map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+        map.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
         return comCoinFundQuotationInfoMapper.selectByIdAndValDate(map);
     }
-    
-//    public String getIplatDate(){
+
+    public String getIplatDate(){
 //        Date date = iPlatformDate != null ? iPlatformDate.getSysDate():DateUtil.now();
-//        String dateStr = "";
-//        if(date != null){
-//            dateStr = DateUtil.format(date);
-//        }
-//        return dateStr;
-//    }
+        Date date = DateUtil.now();
+        String dateStr = "";
+        if(date != null){
+            dateStr = DateUtil.format(date);
+        }
+        return dateStr;
+    }
 }

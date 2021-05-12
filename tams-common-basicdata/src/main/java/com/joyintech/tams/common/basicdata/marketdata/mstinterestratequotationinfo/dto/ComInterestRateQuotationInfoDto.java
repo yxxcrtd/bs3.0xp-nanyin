@@ -58,6 +58,11 @@ public class ComInterestRateQuotationInfoDto extends MstIntRateInfo implements I
     private String elementId;
 
     /**
+     * 发布日 format
+     */
+    private String relaeseDateFmt;
+
+    /**
      * 获取选择的数据
      * @return List<MstInterestRateQuotationInfoDto> 实体类集合
      * @see
@@ -219,5 +224,14 @@ public class ComInterestRateQuotationInfoDto extends MstIntRateInfo implements I
      */
     public String getCcyName() {
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+    }
+
+
+    public String getRelaeseDateFmt() {
+        return DateUtil.format(this.getRelaeseDate());
+    }
+
+    public void setRelaeseDateFmt(String relaeseDateFmt) {
+        this.relaeseDateFmt = relaeseDateFmt;
     }
 }

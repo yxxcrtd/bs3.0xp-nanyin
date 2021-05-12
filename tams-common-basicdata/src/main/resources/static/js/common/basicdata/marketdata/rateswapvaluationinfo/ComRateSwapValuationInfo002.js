@@ -39,10 +39,13 @@ $(function () {
             $("#finprodId2").attr("disabled", "disabled");
             $("#valDate").attr("disabled", "disabled");
             //$("#datasourceType").attr("disabled", "disabled");
-            //$("#inputType").attr("disabled", "disabled");
+            $("#inputType").attr("disabled", "disabled");
+            /** 增加币种不可修改**/
+            $("#ccy").attr("disabled", "disabled");
         } else {
         	$('#inputType').val("01").trigger('change');
         	$("#inputType").attr("disabled","disabled");
+            $("#ccy").attr("disabled", "disabled");//增加币种不可修改
         }
     };
 
@@ -55,6 +58,13 @@ $(function () {
             saveOrSubmit('submit');
         });
 
+        /** modify by yanya on 20210329 添加交易编号与币种的联动**/
+        $("#finprodId2").change(function(){
+            var ccyVal = $('#finprodId2').select2('data')[0].object;
+            if(ccyVal) {
+                $("#ccy").val(ccyVal).trigger("change");
+            }
+        });
 
         initShow();// 根据操作类型：显示或隐藏
 

@@ -50,11 +50,6 @@ public class ComCoinFundQuotationInfo001Dto extends FinProductValuation {
      */
     private String type;
     
-    /**hsgexinghua add by zhangxing1 20200228
-     * excel 列
-     */
-    private String excelNum;
-    
     
     /**
      * 获取 type
@@ -136,23 +131,5 @@ public class ComCoinFundQuotationInfo001Dto extends FinProductValuation {
      */
     public void setImportDay(Date importDay) {
         this.importDay = importDay;
-    }
-    
-    public String getExcelNum() {
-        return excelNum;
-    }
-
-    public void setExcelNum(String excelNum) {
-        this.excelNum = excelNum;
-    }
-
-    private String finprodAbbr;
-
-    public String getFinprodAbbr() {
-        return finprodAbbr;
-    }
-
-    public void setFinprodAbbr(String finprodAbbr) {
-        this.finprodAbbr = finprodAbbr;
     }
 }

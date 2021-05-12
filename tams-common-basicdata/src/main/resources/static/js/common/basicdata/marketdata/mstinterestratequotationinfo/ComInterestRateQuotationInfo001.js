@@ -46,9 +46,11 @@ $(function() {
     	data.effDate = new Date(data.effDate).format();
         data.pageModel = PAGE_MODEL_EDIT;
          Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstinterestratequotationinfo/ComInterestRateQuotationInfo002/check', data, function(result) {
-            Joyin.dialog(JoyinUtil.getLabel("ComInterestRateQuotationInfo002.edit"),
+             Joyin.confirm("请确认是否修改?", function(){
+                 Joyin.dialog(JoyinUtil.getLabel("ComInterestRateQuotationInfo002.edit"),
                     basePath + "common/basicdata/marketdata/mstinterestratequotationinfo/ComInterestRateQuotationInfo002/init",
                     "98%", "95%", data,function(){table.reload();});
+             });
          });
     });
     
@@ -70,8 +72,21 @@ $(function() {
      * 导出选中的表格数据
      */
     var exportExcel = function() {
-        var paramObj = getSearchParams();//请求参数json格式
-        Joyin.exportExcel('export', paramObj);//导出（共通）
+        // var paramObj = getSearchParams();//请求参数json格式
+        // Joyin.exportExcel('export', paramObj);//导出（共通）
+
+        if (table) {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length === 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
     };
 
     /**
@@ -107,20 +122,22 @@ $(function() {
                     });
                 });
         });
-        });
-      //hsgexinghua   add by zhangxing1 20200220 start
-        // 导入按钮点击事件
+
+        // add by zwq 20210222  start
         $('#ComInterestRateQuotationInfo001_btn_import').click(function() {
-            Joyin.confirm("请确认是否要导入数据？", function() {
-                Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'common/basicdata/marketdata/mstinterestratequotationinfo/ComInterestRateQuotationInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                        Joyin.ajax(basePath + 'common/basicdata/marketdata/mstinterestratequotationinfo/ComInterestRateQuotationInfo001/importFile', {fileName: fileName});
+            Joyin.confirm(JoyinUtil.getLabel("请确认是否要导入数据？"), function() {
+                Joyin.uploadFile({pageId:'ValInterestRateQuotationInfo001'},function(fileName) {
+                    Joyin.ajax(basePath +"common/basicdata/marketdata/mstinterestratequotationinfo/ComInterestRateQuotationInfo001/importFile", {
+                        fileName : fileName
+                    },function(result){
+                        if(!result || !($.isArray(result) && result.length > 0)) {
+                            layui.layer.closeAll();
+                            table.reload();
+                        }
                     });
-                },function() {
-                    table.reload();
                 });
             });
         });
-        //hsgexinghua  add by zhangxing1 20200220 end
+        // add by zwq 20210222  end
     });
 }());

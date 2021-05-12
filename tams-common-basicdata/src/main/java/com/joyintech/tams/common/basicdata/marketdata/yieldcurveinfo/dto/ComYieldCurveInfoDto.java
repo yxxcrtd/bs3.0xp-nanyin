@@ -67,8 +67,17 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     private String elementId;
 
 
-    
-   /**
+    private String curveDateFormatStr;
+
+    public String getCurveDateFormatStr() {
+        return curveDateFormatStr;
+    }
+
+    public void setCurveDateFormatStr(String curveDateFormatStr) {
+        this.curveDateFormatStr = curveDateFormatStr;
+    }
+
+    /**
     * 
     */
     @SuppressWarnings("unused")
@@ -225,6 +234,10 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     @PrimaryKey(Field.PK_3)
     public String getCurveType() {
         return super.getCurveType();
+    }
+    @PrimaryKey(value = Field.PK_4)
+    public String getKeyPointStr() {
+        return String.valueOf(super.getKeyPoint());
     }
 
 	//添加n、k modified by lishuping 20190930 start

@@ -8,14 +8,17 @@
 		       nvl(A.FINPROD_ABBR, a.FINPROD_NAME) finProdName,
 		       B.VAL_DATE valDate,
                B.VALUATION valuation,
-               TO_CHAR(B.CREATE_TIME, 'yyyy-MM-dd') importDate
+               /** modify by yanya on 20210329 更新日期代替创建日期作为导入日**/
+               TO_CHAR(NVL(B.UPDATE_TIME, B.CREATE_TIME), 'yyyy-MM-dd') importDate
         FROM 
                FIN_PRODUCT A , 
                FIN_PRODUCT_VALUATION B 
         WHERE 
                A.FINPROD_MARKET_ID=B.FINPROD_ID
                AND A.PROFIT_TYPE IN (#{PROFITTYPE_VALUE_01,jdbcType=VARCHAR}, #{PROFITTYPE_VALUE_03,jdbcType=VARCHAR})
-               AND A.FINPROD_TYPE=#{TYPE_TOUGUAN_F17,jdbcType=VARCHAR}
+               <!-- modify by yanya on 20210209 改为用估值侧类型过滤 -->
+	           <!--AND A.FINPROD_TYPE2=#{TYPE_TOUGUAN_F17,jdbcType=VARCHAR}-->
+			   AND A.FINPROD_TYPE=#{TYPE_TOUGUAN_F17,jdbcType=VARCHAR}
 			<if test="finProdName != null and finProdName != ''">
 				AND A.FINPROD_ABBR like concat(concat('%', #{finProdName,jdbcType=VARCHAR}),'%')
 			</if>
@@ -32,16 +35,15 @@
 		       nvl(A.FINPROD_ABBR, a.FINPROD_NAME) name,
 		       A.FINPROD_ABBR shortName,
 		       A.FINPROD_MARKET_ID hidCode
-		       /*多级法人改造，增加FIN_PRODUCT.FINPROD_ID查询字段 add by caojin 2020/6/9 start  */
-		       ,A.FINPROD_ID finprodId
-		       /*多级法人改造，增加FIN_PRODUCT.FINPROD_ID查询字段 add by caojin 2020/6/9 end  */
 		FROM 
 		       FIN_PRODUCT A,FIN_PRODUCT_VALUATION B
 		WHERE 
-		       A.FINPROD_MARKET_ID=B.FINPROD_ID 
+		       A.FINPROD_ID=B.FINPROD_ID 
 		       AND A.FINPROD_ABBR like concat(concat('%', #{finProdName,jdbcType=VARCHAR}),'%') 
-		      AND A.PROFIT_TYPE IN (#{PROFITTYPE_VALUE_01,jdbcType=VARCHAR}, #{PROFITTYPE_VALUE_03,jdbcType=VARCHAR})
-		       AND A.FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
+		       AND A.PROFIT_TYPE=#{PROFITTYPE_VALUE_01}
+				<!-- modify by yanya on 20210209 改为用估值侧类型过滤 -->
+				<!-- AND A.FINPROD_TYPE2=#{TYPE_TOUGUAN_F17}-->
+				AND A.FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
 </select>
 <select id="getAssetCode" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT DISTINCT
@@ -49,9 +51,6 @@
 		       nvl(A.FINPROD_ABBR, a.FINPROD_NAME) name,
 		       A.FINPROD_ABBR shortName,
 		       A.FINPROD_ID hidCode 
-		       /*多级法人改造，增加FIN_PRODUCT.FINPROD_ID查询字段 add by caojin 2020/6/9 start  */
-		       ,A.FINPROD_ID finprodId
-		       /*多级法人改造，增加FIN_PRODUCT.FINPROD_ID查询字段 add by caojin 2020/6/9 end  */
 		FROM 
 		       FIN_PRODUCT A,FIN_PRODUCT_VALUATION B
 		WHERE 
@@ -61,32 +60,28 @@
 		       	OR A.FINPROD_NAME like concat(concat('%', #{finProdMarketId,jdbcType=VARCHAR}),'%')
 		       	)
                AND A.PROFIT_TYPE IN (#{PROFITTYPE_VALUE_01,jdbcType=VARCHAR}, #{PROFITTYPE_VALUE_03,jdbcType=VARCHAR})
-		      AND A.FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
+				<!-- modify by yanya on 20210209 改为用估值侧类型过滤 -->
+				<!-- AND A.FINPROD_TYPE2=#{TYPE_TOUGUAN_F17}-->
+				AND A.FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
 </select>
 <select id="getAssetCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT
+		SELECT 
 		       FINPROD_MARKET_ID id,
-		       /*资产代码字段的选框值改为：资产代码：资产简称 add by yujiaping 2020-11-10 start*/
-	         <!--   FINPROD_MARKET_ID text /*modify by liupeilin*/ -->
-	           FINPROD_ABBR  text 
-	           /*资产代码字段的选框值改为：资产代码：资产简称 add by yujiaping 2020-11-10 end*/
-               /*多级法人改造，增加FIN_PRODUCT.FINPROD_ID查询字段 add by caojin 2020/6/9 start  */
-		       ,FINPROD_ID finprodId
-		       /*多级法人改造，增加FIN_PRODUCT.FINPROD_ID查询字段 add by caojin 2020/6/9 end  */
+               FINPROD_MARKET_ID text
 		FROM 
 		       FIN_PRODUCT 
 		WHERE  
-		      1=1
+		      1=1 and PROFIT_TYPE in (#{PROFIT_TYPE_01},#{PROFIT_TYPE_03})
 		      <if test="profitType != null and profitType != ''">
 		       AND PROFIT_TYPE=#{profitType}
 		      </if>
-		       AND FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
+			  <!-- modify by yanya on 20210209 改为用估值侧类型过滤 -->
+			  <!--  AND FINPROD_TYPE2=#{TYPE_TOUGUAN_F17}-->
+			  AND FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
 		       AND FINPROD_MARKET_ID IS NOT NULL
 		       <if test="search != null and search != ''">
-		       AND (FINPROD_MARKET_ID like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
-		          /*可支持代码和简称的双双模糊查询 add by yujiaping 2020-11-10 start */
-                         OR FINPROD_ABBR like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
-                  /*可支持代码和简称的双双模糊查询 add by yujiaping 2020-11-10 end */
+		       	AND (FINPROD_MARKET_ID like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
+
 		       	)
 		       </if>
 		       <if test="initValue != null and initValue != ''">
@@ -101,7 +96,7 @@
 		       nvl(B.FINPROD_ABBR, B.FINPROD_NAME) finProdName,
 		       C.VAL_DATE valDate,
 		       A.CUSTOMER_NAME fundManager,
-		       C.VALUATION valuation，
+		       C.VALUATION valuation,
 		       B.PROFIT_TYPE
         FROM 
                MST_CUSTOMER_INFO A,
@@ -112,7 +107,8 @@
                AND B.MANAGER=A.CUSTOMER_ID(+) 
                AND B.FINPROD_ID=#{finprodId} 
                <!-- AND B.PROFIT_TYPE=#{PROFITTYPE_VALUE_01,jdbcType=VARCHAR} -->
-               AND A.IS_ASSTE_MANAGER(+)=#{YESORNO_YES_01,jdbcType=VARCHAR} 
+               /** modify by yanya on 20210329 取消是否管理人的字段查询条件**/
+			   <!-- AND A.IS_ASSTE_MANAGER(+)=#{YESORNO_YES_01,jdbcType=VARCHAR} -->
                AND C.VAL_DATE=TO_DATE (#{valDate},'yyyy-MM-dd')
 </select>
 <select id="selectNameAndFundManager" resultType="com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto">
@@ -129,7 +125,8 @@
         WHERE 
                B.FINPROD_MARKET_ID=#{finProdMarketId}
                AND B.PROFIT_TYPE=#{profitType,jdbcType=VARCHAR}
-               AND A.IS_ASSTE_MANAGER=#{YESORNO_YES_01,jdbcType=VARCHAR} 
+               /**取消是否管理人的限制条件 modify by yanya on 20210327 **/
+               <!-- AND A.IS_ASSTE_MANAGER=#{YESORNO_YES_01,jdbcType=VARCHAR} -->
 </select>
 <select id="selectFinProdType" resultType="java.lang.String">
 		SELECT 
@@ -156,7 +153,9 @@
                FIN_PRODUCT_VALUATION 
         WHERE 
                FINPROD_ID=#{finprodId} 
-               AND FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+	           <!-- modify by yanya on 20210209 改为用估值侧类型过滤 -->
+				<!--AND FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}-->
+				AND FINPROD_TYPE = #{finprodType2,jdbcType=VARCHAR}
                AND to_char(VAL_DATE,'yyyy-MM-dd') = #{valDate} 
 </select>
     <update id="update" parameterType="com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto" >
@@ -185,40 +184,4 @@
                 FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
                 AND VAL_DATE = #{valDate,jdbcType=DATE}
     </update>
-    
-    <!--   hsgexinghua add by zhangxing1 20200228   主键判断基金行情信息是否存在-->
-	<select id="getRegistExcelList" resultType="java.lang.String">
-		select A.FINPROD_ID finprodId
-		from FIN_PRODUCT_VALUATION A
-		where
-			A.FINPROD_ID  =	#{finprodId,jdbcType=VARCHAR}
-		AND
-			A.VAL_DATE = #{valDate,jdbcType=DATE}
-		AND
-			A.FINPROD_TYPE=#{finprodType,jdbcType=VARCHAR}
-	</select>
-
-	<select id="checkFinprod" resultType="com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto">
-    	SELECT
-    		FINPROD_MARKET_ID finprodId
-		FROM
-    		FIN_PRODUCT  FP
-		WHERE
-    	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
-		AND
-    	FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
-    </select>
-    
-    <select id="checkFinprodIdAndFinprodName" resultType="com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto">
-    	SELECT
-    		FINPROD_MARKET_ID finprodId
-		FROM
-    		FIN_PRODUCT  FP
-		WHERE
-    	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
-		AND
-    	FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
-    	AND
-    	FP.FINPROD_ABBR = #{finprodName,jdbcType=VARCHAR}
-    </select>
 </mapper>

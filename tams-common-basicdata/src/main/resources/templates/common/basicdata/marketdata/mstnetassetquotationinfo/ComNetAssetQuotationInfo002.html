@@ -31,7 +31,8 @@
                            data-th-text="#{ComNetAssetQuotationInfo002.assetCode}">资产代码</label>
                     <div class="layui-input-inline input-inline">
                         <select type="text" id="finProdMarketId" name="finProdMarketId"
-                               class="layui-input form-input input-select" placeholder="请输入内容" data-th-parentids="profitType"
+                               class="layui-input form-input input-select" data-th-parentids="profitType"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" allowClear="true"
                                data-th-data-url="@{/common/basicdata/marketdata/mstnetassetquotationinfo/ComNetAssetQuotationInfo002/getAssetCodeList}"
                                required="required" data-th-initValue="${entity?.finProdMarketId}">
                           </select>

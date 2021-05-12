@@ -45,9 +45,6 @@ public class ComSharePriceValidator implements BeanValidator{
     @Autowired
     private ComSharePriceService comSharePriceService;
 
-    @Autowired
-    private CommonPlatformDateService commonPlatformDateService;
-
     /**
      * 校验
      */
@@ -81,19 +78,7 @@ public class ComSharePriceValidator implements BeanValidator{
                         getMessage("MST_SHAREPRICE_0002", getMessage("MstSharePrice001.sharesId"),
                             getMessage("MstSharePrice001.dealDate"))));
                 }
-
-                Date date = dto.getDealDate();
-                Date platDate = commonPlatformDateService.getSysDate();
-                if(DateUtil.compareDate(date,platDate) == -1){
-                    //如果 估值日期 小于平台日 则提醒。
-                    resultList.add(new ValidMessage(getMessage("VAL_COMMON_E_0073")));
-                }
             }
-            /*if (StringUtil.equals(dto.getOperateType(), "delete")) {
-            	//删除
-            	
-            }*/
-        
         }
         return resultList;
     }

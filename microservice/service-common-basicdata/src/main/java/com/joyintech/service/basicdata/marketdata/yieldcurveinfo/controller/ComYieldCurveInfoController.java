@@ -101,4 +101,19 @@ public class ComYieldCurveInfoController {
         return comYieldCurveInfoService.selectNK(param);
     }
     //add by lishuping 20191008 end
+
+
+    /**
+     *
+     * 插入数据
+     * @param equityList 参数
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/mergeInfoList")
+    public void mergeInfoList(@RequestBody List<ComYieldCurveInfoDto> equityList){
+    	comYieldCurveInfoService.mergeInfoList(equityList);
+    }
 }

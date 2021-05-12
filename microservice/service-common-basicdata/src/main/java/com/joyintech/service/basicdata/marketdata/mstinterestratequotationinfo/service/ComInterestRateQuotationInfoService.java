@@ -1,4 +1,5 @@
 package com.joyintech.service.basicdata.marketdata.mstinterestratequotationinfo.service;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,13 @@ public class ComInterestRateQuotationInfoService extends BaseService<ComInterest
         throws Exception {
         pageParam.put("BENCHMARK_TYPE_04", DictCodeListExt1.基准类型_2_利率.getValue());
         return super.queryForPage(page,length,() -> comInterestRateQuotationInfoMapper.select(pageParam));
-    };
+    }
+
+    public List<ComInterestRateQuotationInfoDto> selectForList(Map<String, Object> pageParam)
+            throws Exception {
+        pageParam.put("BENCHMARK_TYPE_04", DictCodeListExt1.基准类型_2_利率.getValue());
+        return comInterestRateQuotationInfoMapper.select(pageParam);
+    }
 
     /**
      * 根据主键查询
@@ -95,4 +102,30 @@ public class ComInterestRateQuotationInfoService extends BaseService<ComInterest
         }
     }
 
+    /**
+     *
+     * 根据利率名称找到利率名称Id
+     */
+    public String getIntRateId(String intRateName){
+        return comInterestRateQuotationInfoMapper.getIntRateId(intRateName);
+    }
+
+    // add by zwq 20210222 增加基准利率行情导入功能 start
+    public void mergeInfoList(List<ComInterestRateQuotationInfoDto> list){
+        int batchCount = 50;// 每批commit的个数
+        int batchLastIndex = batchCount;// 每批最后一个的下标
+        for (int index = 0; index < list.size();) {
+            if (batchLastIndex > list.size() - 1) {
+                batchLastIndex = list.size();
+                comInterestRateQuotationInfoMapper.mergeInfoList(list.subList(index, batchLastIndex));
+                break;// 数据插入完毕,退出循环
+            }
+            else {
+                comInterestRateQuotationInfoMapper.mergeInfoList(list.subList(index, batchLastIndex));
+                index = batchLastIndex;// 设置下一批下标
+                batchLastIndex = index + batchCount;
+            }
+        }
+    }
+    // add by zwq 20210222 增加基准利率行情导入功能 end
 }

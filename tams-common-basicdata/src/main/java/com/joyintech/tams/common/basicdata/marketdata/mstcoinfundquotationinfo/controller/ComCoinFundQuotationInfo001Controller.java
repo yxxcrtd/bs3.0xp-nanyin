@@ -10,6 +10,9 @@
 
 package com.joyintech.tams.common.basicdata.marketdata.mstcoinfundquotationinfo.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,11 +34,18 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
@@ -115,10 +125,33 @@ public class ComCoinFundQuotationInfo001Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
         throws Exception {
-        return comCoinFundQuotationInfo001Service.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
-    }
+        /** modify by yanya on 20210209 增加按照选择数据进行导出 start**/
+//        return comCoinFundQuotationInfo001Service.export(this.getPageId(),
+//            RequestUtil.getParameters(getRequest()));
+        String datas = this.getParam("datas");
+        Map<String, Object> params= RequestUtil.getPageParam();
 
+        List<ComCoinFundQuotationInfo001Dto> list = null;
+        if (StringUtil.isNotEmpty(datas)) {
+            list = JsonUtils.json2List(datas, ComCoinFundQuotationInfo001Dto.class);
+        }
+        else {
+            params.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
+            params.put("yes", DictCodeList.是否_是.getValue());
+            list = comCoinFundQuotationInfo001Service.selectPageInfo(params);
+        }
+        File outFile = comCoinFundQuotationInfo001Service.makeFile(
+                "/com/joyintech/tams/valuation/basedata/marketdata/valcoinfundquotationinfo/conf/export_conf.xml",
+                list);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
+        /** modify by yanya on 20210209 增加按照选择数据进行导出 end**/
+    }
     /**
      * 删除按钮点击时的check
      * @param dto 实体类
@@ -182,12 +215,12 @@ public class ComCoinFundQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getCodeName")
-    public List<SuggestDto> getSuggestDataByName()
+    public List<SelectOptionDto> getSuggestDataByName()
         throws Exception {
         // 画面的输入值param前台的输入值，为了进行模糊查询
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果
-        List<SuggestDto> temp = comCoinFundQuotationInfo001Service.selectForCode(param);// 获取基金代码
+        List<SelectOptionDto> temp = comCoinFundQuotationInfo001Service.selectForCode(param);// 获取基金代码
         return temp;// 返回基金代码
     }
 
@@ -201,40 +234,37 @@ public class ComCoinFundQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getManagement") // 获取基金管理人的名称
-    public List<SuggestDto> getManagement()
+    public List<SelectOptionDto> getManagement()
         throws Exception {
         // 画面的输入值
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果
-        List<SuggestDto> temp = comCoinFundQuotationInfo001Service.getManagement(param);// 获取基金管理人
+        List<SelectOptionDto> temp = comCoinFundQuotationInfo001Service.getManagement(param);// 获取基金管理人
         return temp;// 返回取得的值
     }
     
-    
- // hsgexinghua   add by zhanngxing1 20200220 start
-
     /**
-     * 导入数据文件之前检查数据
+     * 导入
      *
      * @param fileName 导入的文件名
      * @return 处理结果
+     * @throws Exception 异常
      */
     @ResponseBody
-    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        AjaxResult ajaxResult = comCoinFundQuotationInfo001Service.checkConfirmMsgForImportData(fileName);
-        return ajaxResult;
+    @RequestMapping("checkImportData")
+    public AjaxResult checkImportData(String fileName) {
+        return comCoinFundQuotationInfo001Service.checkImportData(fileName);
     }
 
     /**
-     * 导入数据文件
      *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * @param param
+     * @return
+     * @throws IOException 
      */
     @ResponseBody
-    @RequestMapping("/importFile")
-    public List<ExcelValidDto> importData(String fileName) {
-        return this.comCoinFundQuotationInfo001Service.importData(fileName);
+    @RequestMapping("importFile")
+    public AjaxResult importFile(@RequestBody Map<String, Object> param) throws IOException {
+        return comCoinFundQuotationInfo001Service.importFile(param);
     }
 }

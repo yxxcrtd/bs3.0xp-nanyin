@@ -138,7 +138,9 @@
     <select id="getFinprodIdForAdd" resultMap="finprodIdMap">
         SELECT
         T1.FINPROD_MARKET_ID 		id,
-        T1.FINPROD_MARKET_ID 		text,
+        /** modify by yanya on 20210327 修改展示名称**/
+        /** T1.FINPROD_MARKET_ID 		text,**/
+        nvl(T1.FINPROD_ABBR, T1.FINPROD_NAME) text,
         T1.FINPROD_NAME,
         T1.FINPROD_ABBR
         <!-- ,
@@ -162,36 +164,88 @@
         </where>
     </select>
     
-    <select id="getRegistExcelList" resultType="java.lang.String">
-		select A.SHARES_ID finprodId
-		from mst_share_price A
-		where
-			A.SHARES_ID  =	#{finprodId,jdbcType=VARCHAR}
-		AND
-			A.DEAL_DATE =#{tradeDate}
-	</select>
-
-	<select id="checkFinprod" resultType="java.lang.String">
-    	SELECT
-    	FP.FINPROD_MARKET_ID finprodId
-		FROM
-    		FIN_PRODUCT  FP
-		WHERE
-    	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
-		AND
-    	FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
-    </select>
-    
-    <select id="checkFinprodIdAndFinprodName" resultType="java.lang.String">
-    	SELECT
-    	FP.FINPROD_MARKET_ID finprodId
-		FROM
-    		FIN_PRODUCT  FP
-		WHERE
-    	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
-		AND
-    	FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
-    	AND
-    	FP.FINPROD_ABBR = #{finprodName,jdbcType=VARCHAR}
-    </select>
+		<!--  股票估值行情导入   -->
+	 	<insert id="mergeInfoList"  parameterType="com.joyintech.service.basicdata.marketdata.mstshareprice.dto.ComSharePriceDto">
+    		MERGE INTO MST_SHARE_PRICE CII
+        	USING (
+        	<foreach collection="newDataList" item="item" open="select * from("
+                 close=")" separator="union all">
+            select
+            #{item.sharesId,jdbcType=VARCHAR} SHARES_ID,
+            #{item.dealDate,jdbcType=DATE} DEAL_DATE,
+            #{item.preClosePrice,jdbcType=DECIMAL} PRE_CLOSE_PRICE,
+            #{item.openPrice,jdbcType=DECIMAL} OPEN_PRICE,
+            #{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
+            #{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
+            #{item.closePrice,jdbcType=DECIMAL} CLOSE_PRICE,
+            #{item.sShares,jdbcType=DECIMAL} S_SHARES,
+            #{item.cShares,jdbcType=DECIMAL} C_SHARES,
+            #{item.change,jdbcType=DECIMAL} CHANGE,
+            #{item.changePercent,jdbcType=DECIMAL} CHANGE_PERCENT,
+            #{item.dealValume,jdbcType=DECIMAL} DEAL_VALUME,
+            #{item.dealAmount,jdbcType=DECIMAL} DEAL_AMOUNT,
+            #{item.avgPrice,jdbcType=DECIMAL} AVG_PRICE,
+            #{item.preClosePriceAdj,jdbcType=DECIMAL} PRE_CLOSE_PRICE_ADJ,
+            #{item.openPriceAdj,jdbcType=DECIMAL} OPEN_PRICE_ADJ,
+            #{item.highPriceAdj,jdbcType=DECIMAL} HIGH_PRICE_ADJ,
+            #{item.lowPriceAdj,jdbcType=DECIMAL} LOW_PRICE_ADJ,
+            #{item.closePriceAdj,jdbcType=DECIMAL} CLOSE_PRICE_ADJ,
+            #{item.factorAdj,jdbcType=DECIMAL} FACTOR_ADJ,
+            #{item.tradeStatus,jdbcType=VARCHAR} TRADE_STATUS,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            sysdate CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            sysdate UPDATE_TIME,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            from dual
+        </foreach>
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON (CII.SHARES_ID = TEMP.SHARES_ID AND CII.DEAL_DATE = TEMP.DEAL_DATE)
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN
+        UPDATE
+        SET 
+        <!--CII.SHARES_ID = TEMP.SHARES_ID,
+        CII.DEAL_DATE = TEMP.DEAL_DATE,-->
+        CII.PRE_CLOSE_PRICE = TEMP.PRE_CLOSE_PRICE,
+        CII.OPEN_PRICE = TEMP.OPEN_PRICE,
+        CII.HIGH_PRICE = TEMP.HIGH_PRICE,
+        CII.LOW_PRICE = TEMP.LOW_PRICE,
+        CII.CLOSE_PRICE = TEMP.CLOSE_PRICE,
+        CII.S_SHARES = TEMP.S_SHARES,
+        CII.C_SHARES = TEMP.C_SHARES,
+        CII.CHANGE = TEMP.CHANGE,
+        CII.CHANGE_PERCENT = TEMP.CHANGE_PERCENT,
+        CII.DEAL_VALUME = TEMP.DEAL_VALUME,
+        CII.DEAL_AMOUNT = TEMP.DEAL_AMOUNT,
+        CII.AVG_PRICE = TEMP.AVG_PRICE,
+        CII.PRE_CLOSE_PRICE_ADJ = TEMP.PRE_CLOSE_PRICE_ADJ,
+        CII.OPEN_PRICE_ADJ = TEMP.OPEN_PRICE_ADJ,
+        CII.HIGH_PRICE_ADJ = TEMP.HIGH_PRICE_ADJ,
+        CII.LOW_PRICE_ADJ = TEMP.LOW_PRICE_ADJ,
+        CII.CLOSE_PRICE_ADJ = TEMP.CLOSE_PRICE_ADJ,
+        CII.FACTOR_ADJ = TEMP.FACTOR_ADJ,
+        CII.TRADE_STATUS = TEMP.TRADE_STATUS,
+        CII.CREATE_USER = TEMP.CREATE_USER,
+        CII.CREATE_TIME = TEMP.CREATE_TIME,
+        CII.UPDATE_USER = TEMP.UPDATE_USER,
+        CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+        CII.CREATE_DEPT = TEMP.CREATE_DEPT
+        <!-- 未匹配到这插入 -->
+        WHEN NOT MATCHED THEN
+        INSERT (SHARES_ID,DEAL_DATE,PRE_CLOSE_PRICE,OPEN_PRICE,HIGH_PRICE,LOW_PRICE
+        ,CLOSE_PRICE,S_SHARES,C_SHARES,CHANGE,CHANGE_PERCENT,DEAL_VALUME
+        ,DEAL_AMOUNT, AVG_PRICE,PRE_CLOSE_PRICE_ADJ,OPEN_PRICE_ADJ,HIGH_PRICE_ADJ
+        ,LOW_PRICE_ADJ,CLOSE_PRICE_ADJ,FACTOR_ADJ,TRADE_STATUS,CREATE_USER,
+        CREATE_TIME,UPDATE_USER,UPDATE_TIME,CREATE_DEPT)
+        values(
+        TEMP.SHARES_ID,TEMP.DEAL_DATE,TEMP.PRE_CLOSE_PRICE,TEMP.OPEN_PRICE,
+        TEMP.HIGH_PRICE,TEMP.LOW_PRICE,TEMP.CLOSE_PRICE,TEMP.S_SHARES,TEMP.C_SHARES,
+        TEMP.CHANGE,TEMP.CHANGE_PERCENT,TEMP.DEAL_VALUME,TEMP.DEAL_AMOUNT,
+        TEMP.AVG_PRICE,TEMP.PRE_CLOSE_PRICE_ADJ,TEMP.OPEN_PRICE_ADJ,TEMP.HIGH_PRICE_ADJ,
+        TEMP.LOW_PRICE_ADJ,TEMP.CLOSE_PRICE_ADJ,TEMP.FACTOR_ADJ,TEMP.TRADE_STATUS,
+        TEMP.CREATE_USER,TEMP.CREATE_TIME,TEMP.UPDATE_USER,TEMP.UPDATE_TIME,TEMP.CREATE_DEPT
+        )
+    </insert>
 </mapper>

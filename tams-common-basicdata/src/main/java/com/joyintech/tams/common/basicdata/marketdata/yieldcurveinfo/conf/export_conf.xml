@@ -2,7 +2,7 @@
 <Workbook filePath="MstYieldCurveInfo001.xlsx" name="收益率曲线">
 	<Worksheet javaBean="com.joyintech.tams.common.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto">
 		<Row>
-			<Cell order="1" name="曲线日期">curveDate</Cell><!-- 曲线日期 -->
+			<Cell order="1" name="曲线日期">curveDateFormatStr</Cell><!-- 曲线日期 -->
 			<!--修改曲线名称 modified by lishuping start-->
 			<Cell order="2" name="曲线名称">curveCode</Cell><!-- 曲线名称 -->
 			<!--修改曲线名称 modified by lishuping end-->

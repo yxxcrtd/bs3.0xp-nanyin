@@ -10,11 +10,11 @@
  
 package com.joyintech.tams.common.basicdata.marketdata.mstshareprice.controller;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import com.joyintech.tams.common.basicdata.marketdata.mstshareprice.dto.ComSharePriceDto;
-import com.joyintech.tams.common.basicdata.marketdata.mstshareprice.service.ComSharePriceService;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -32,10 +31,18 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.common.basicdata.marketdata.mstshareprice.dto.ComSharePriceDto;
+import com.joyintech.tams.common.basicdata.marketdata.mstshareprice.service.ComSharePriceService;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
@@ -159,33 +166,87 @@ public class ComSharePrice001Controller extends BaseController{
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
         throws Exception {
-        return comSharePriceService.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
+        /** modify by yanya on 20210225 增加页面选中数据行进行导出 start**/
+        String datas = this.getParam("datas");
+        List<ComSharePriceDto> list = null;
+        if (StringUtil.isNotEmpty(datas)) {
+            list = JsonUtils.json2List(datas, ComSharePriceDto.class);
+        }
+        else {
+            list = comSharePriceService.selectAllList(RequestUtil.getPageParam());
+        }
+//        return comSharePriceService.export(this.getPageId(),
+//            RequestUtil.getParameters(getRequest()));
+        File outFile = comSharePriceService.makeFile(
+                "/com/joyintech/tams/valuation/basedata/marketdata/valshareprice/conf/export_conf.xml",
+                list);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
+        /** modify by yanya on 20210225 增加页面选中数据行进行导出 end**/
     }
     
+    
     /**
-     * 导入数据文件之前检查数据
+     * 导入（必填项校验）
      *
      * @param fileName 导入的文件名
      * @return 处理结果
+     * @throws Exception 异常
      */
     @ResponseBody
-    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return comSharePriceService.checkConfirmMsgForImportData(fileName);
-    }
-
-    /**
-     * 导入数据文件
-     *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
-     */
-    @ResponseBody
-    @RequestMapping("/importFile")
-    public List<ExcelValidDto> importData(String fileName) {
+    @RequestMapping("importFile")
+    public List<ExcelValidDto> importData(String fileName)
+            throws Exception{
         return this.comSharePriceService.importData(fileName);
-
+    }
+    
+    
+    /**
+     * 导入（重复数据获取）
+     * 
+     * @param fileName 导入的文件名
+     * @return checkResult
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("duplicateCheck")
+    public List<Integer> duplicateCheck(String fileName)
+        throws Exception {
+         List<List<String>> dataList = comSharePriceService.dataAnalysis(fileName);
+         List<Integer> checkResult = new ArrayList<>();
+         if (null != dataList && dataList.size() > 0) {
+             // 导入文件重复数据检查
+        	 checkResult = comSharePriceService.duplicateCheck(dataList);
+         }
+        return checkResult;
+    }
+    
+    /**
+     * 导入（数据保存）
+     * 
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("importFileSave")
+    public List<Integer> importFileSave(String fileName)
+        throws Exception {
+        List<List<String>> dataList = comSharePriceService.dataAnalysis(fileName);
+        List<Integer> checkResult = new ArrayList<>();
+        if (null != dataList && dataList.size() > 0) {
+            // 导入文件重复数据检查
+       	 checkResult = comSharePriceService.duplicateCheck(dataList);
+       	 List<ComSharePriceDto> equityList = comSharePriceService.converToBean(dataList,checkResult);
+       	 // 保存，已存在则更新
+       	comSharePriceService.dealAfterCheck(equityList);
+        }
+        return checkResult;
     }
 
 }

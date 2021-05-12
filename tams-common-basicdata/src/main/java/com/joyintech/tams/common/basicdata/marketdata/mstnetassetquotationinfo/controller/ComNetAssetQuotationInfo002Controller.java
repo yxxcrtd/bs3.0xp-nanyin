@@ -74,8 +74,13 @@ public class ComNetAssetQuotationInfo002Controller extends BaseController{
         String workflowId = getParam("workflowId");
         setSelectOptionToModel(model, DictCode.收益类型);
         if(StringUtil.isNotEmpty(finprodId)) {
-            //将输入的估值日期格式化
-            String valDate = DateUtil.format(new Date(Long.valueOf(getParam("valDate"))));
+            String valDate = "";
+            if (StringUtil.isNotEmpty(getParam("valDate")) && (getParam("valDate").contains("-") || getParam("valDate").contains("/"))){
+                valDate = DateUtil.format(DateUtil.parse(getParam("valDate")));
+            }else {
+                //将输入的估值日期格式化
+                valDate = DateUtil.format(new Date(Long.valueOf(getParam("valDate"))));
+            }
             Map<String,Object> param = new HashMap<>();
             //将需要的数据字典和参数添加到map中
 			/* param.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue()); */
@@ -116,6 +121,8 @@ public class ComNetAssetQuotationInfo002Controller extends BaseController{
         Map<String,Object> param = RequestUtil.getPageParam();
         //map.put("finProdMarketId", param);
 		/* param.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue()); */
+        /** modify by yanya on 20210209 改为用估值侧类型过滤 **/
+        //param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         List<SelectOptionDto> temp = mstnetassetquotationinfo001service.getAssetCodeList(param);
         return temp;
@@ -180,12 +187,11 @@ public class ComNetAssetQuotationInfo002Controller extends BaseController{
             dto.setFinprodId(IDGenerator.generate());
         }
         params.setBusinessCode(dto.getFinprodId());
-//        if(StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue())){
-//        	params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_信息.getValue());
-//        }else{
-//        	params.setBusinessType(DictCodeList.共通业务类型_计划类资产_货币型_信息.getValue());
-//        }
-        params.setBusinessType(DictCodeList.共通业务类型_计划类资产行情信息.getValue());
+        if(StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue())){
+        	params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_信息.getValue());
+        }else{
+        	params.setBusinessType(DictCodeList.共通业务类型_计划类资产_货币型_信息.getValue());
+        }
         // 设置流程业务说明:资产代码 + "(" + 资产代码 + ")" + "-"  + "估值日期" + "-"  + "估值日期"
         params.setComment(
             entity -> this.getMessage("ComNetAssetQuotationInfo001.assetCode") + "("+entity.getFinProdMarketId()+ ")"

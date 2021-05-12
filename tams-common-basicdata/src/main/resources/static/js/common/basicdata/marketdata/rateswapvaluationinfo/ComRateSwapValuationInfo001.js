@@ -34,16 +34,7 @@ $(function () {
         cols: [
             {field:'finprodId2', width:200, title: '交易编号' },
             {field:'valDate', width:200, type:'date', title: '估值日期' },
-            {field:'valuation', width:200, type:'money', title: '估值' ,
-                render : function(data, type, row, meta) {
-                    if(row.valuation){
-                        return  formatMoney(row.valuation);
-                    }
-                    else{
-                        return formatMoney(0.00);
-                    }
-                }
-            },
+            {field:'valuation', width:200, type:'money', title: '估值' ,digit:4},
             {field:'ccy', width:200, title: '币种' , visible: false},
             {field:'ccyFmt', sortField: 'ccy', width:200, title: '币种' },
             /*{field:'valmodelId', width:200, title: '估值模型' , visible: false},
@@ -95,22 +86,25 @@ $(function () {
         table.bind('click', '.edit', function(data) {
             var object = {};
             object.finprodId = data.finprodId;
-            Joyin.dialog(JoyinUtil.getLabel("编辑利率互换估值信息（ "+ "<span style='color:red'> * </span>" + "必填）"),
-                basePath + "common/basicdata/marketdata/rateswapvaluationinfo/ComRateSwapValuationInfo002/init",
-                "85%", "85%", {pageModel:PAGE_MODEL_EDIT, finprodId2: data.finprodId2, datasourceType: data.datasourceType, valDate: data.valDate, operateType:"edit"},function(){
-                    table.reload();
-                });
+            Joyin.confirm("请确认是否修改?", function(){
+                Joyin.dialog(JoyinUtil.getLabel("编辑利率互换估值信息（ "+ "<span style='color:red'> * </span>" + "必填）"),
+                    basePath + "common/basicdata/marketdata/rateswapvaluationinfo/ComRateSwapValuationInfo002/init",
+                    "85%", "85%", {pageModel:PAGE_MODEL_EDIT, finprodId2: data.finprodId2, datasourceType: data.datasourceType, valDate: data.valDate, operateType:"edit"},function(){
+                        table.reload();
+                    });
+            });
         });
 
         /**
          * 删除-走流程
          */
         table.bind('click', '.delt', function(data) {
-            var object = {};
+            /*var object = {};
             object.finprodId2 = data.finprodId2;
             object.datasourceType = data.datasourceType;
             object.valDate = data.valDate;
-            object.operateType = data.operateType;
+            object.operateType = data.operateType;*/
+            var object = {selectedItem: [data], operateType:"delete"};
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/rateswapvaluationinfo/ComRateSwapValuationInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(
@@ -125,9 +119,24 @@ $(function () {
                 });
             });
         });
-
-        /** 事件绑定: 删除 */
         $('#ComRateSwapValuationInfo001_btn_delete').click(function() {
+            if(table!=null && table!=''){
+                var selArr = table.getAllCheckedRows();
+            }
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            var object = {selectedItem: selArr, operateType:"delete"};
+            Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/rateswapvaluationinfo/ComRateSwapValuationInfo001/check', object, function(result) {
+                Joyin.confirm("请确认是否删除?", function(){
+                    WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/rateswapvaluationinfo/ComRateSwapValuationInfo001/delete', object,
+                        "ComRateSwapValuationInfo001_btn_delete","ComRateSwapValuationInfo002");
+                });
+            });
+        });
+        /** 事件绑定: 删除 */
+        /*$('#ComRateSwapValuationInfo001_btn_delete').click(function() {
             var object = {};
             var rowArr = table.getAllCheckedRows();// 所有选中行数据
             if(rowArr == null || rowArr.length === 0 || rowArr.length >1){
@@ -149,7 +158,7 @@ $(function () {
                     });
                 });
             }
-        });
+        });*/
 
     };
 
@@ -185,7 +194,58 @@ $(function () {
         $('#ComRateSwapValuationInfo001_btn_export').click(function() {
             exportExcel();
         });
-
+        /**
+         * 导入按钮
+         */
+        $('#ComRateSwapValuationInfo001_btn_import').click(function() {
+            Joyin.uploadFile({pageId:'ComRateSwapValuationInfo001MTM'},function(fileName) {
+                Joyin.ajax(basePath + 'common/basicdata/marketdata/rateswapvaluationinfo/ComRateSwapValuationInfo001/checkImportData', {fileName: fileName}, function(checkResult) {
+                    if (checkResult) {
+                        setTimeout( function () {
+                            if(checkResult.data.errorMsg){
+                                Joyin.error(checkResult.data.errorMsg);
+                                return;
+                            }
+                            if (checkResult.data.confirmMsg) {
+                                Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                    var data = {
+                                        tempList: checkResult.data.correctData
+                                    }
+                                    Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/rateswapvaluationinfo/ComRateSwapValuationInfo001/importFile', data,
+                                        function (resultObj) {
+                                            if (resultObj.statuCode.toString() === '200') {
+                                                /** modify by yanya on 20210329 修正导入逻辑**/
+                                                //Joyin.alert("文件导入成功！");
+                                                table.reload();
+                                                return;
+                                            }
+                                        });
+                                }, {}, function () {
+                                    layui.layer.closeAll()
+                                    table.reload();
+                                });
+                            }else {
+                                var data = {
+                                    tempList: checkResult.data.correctData
+                                }
+                                Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/rateswapvaluationinfo/ComRateSwapValuationInfo001/importFile', data,
+                                    function (resultObj) {
+                                        if (resultObj.statuCode.toString() === '200') {
+                                            /** modify by yanya on 20210329 修正导入逻辑**/
+                                            //Joyin.alert("文件导入成功！");
+                                            table.reload();
+                                            return;
+                                        }
+                                    });
+                            }
+                        }
+                        ,1000);
+                    }
+                });
+            },function() {
+                table.reload();
+            });
+        });
         //新建、修改、删除事件绑定
         tableBind();
     });

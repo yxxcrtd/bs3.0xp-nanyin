@@ -36,16 +36,16 @@
         $("#fundManager").attr("disabled",true);
         $('#finprodChiType').attr("disabled",true);
         if ($("#finprodType2").val()=='F02') {
-            $("#day7YearYield_div").hide();
+            //$("#day7YearYield_div").hide();
         }
         if ($("#finprodType2").val()=='F01') {
-            $("#totalValue_div").hide();
-            $("#restNetValue_div").hide();
+            //$("#totalValue_div").hide();
+            //$("#restNetValue_div").hide();
         }
         if (!$("#finprodType2").val()) {
-            $("#day7YearYield_div").hide();
-            $("#totalValue_div").hide();
-            $("#restNetValue_div").hide();
+            //$("#day7YearYield_div").hide();
+            //$("#totalValue_div").hide();
+            //$("#restNetValue_div").hide();
         }
         if(pageModel === PAGE_MODEL_NEW){
         	if (!$('#publishDate').val()) {
@@ -75,19 +75,29 @@
             var object = {'finprodId':finprodId};
             Joyin.ajax(basePath + 'common/basicdata/marketdata/mstcoinfundquotationinfo/ComCoinFundQuotationInfo002/getManageAndType', object, function(data){
                 if(data){
-                    $("#fundManager").val(data.fundManager);
-                    $('#finprodType2').val(data.finprodType);
-                    $('#finprodChiType').val(data.finprodChiType);
+                    $("#fundManager").val(data.fundManager).trigger('change');
+                    $('#finprodType2').val(data.finprodType).trigger('change');
+                    $('#finprodChiType').val(data.finprodType2).trigger('change');
+
+                    /** modify by yanya on 20210224 基金类型判定修改 start**/
                     //如果基金类型为货币基金 add by gejiaao  2019/8/15
-                    if (data.finprodType=='F01'){
-                        $("#day7YearYield_div").show();
-                        $("#totalValue_div").hide();
-                        $("#restNetValue_div").hide();
+                    //if (data.finprodType=='F01'){
+                    if (data.finprodType=='01'){
+                        //$("#day7YearYield_div").show();
+                        $("#day7YearYield").removeAttr("disabled");
+                        //$("#totalValue_div").hide();
+                        //$("#restNetValue_div").hide();
+                        $("#restNetValue").val('').trigger('change');
+                        $("#restNetValue").attr("disabled",true);
                     }else {
-                        $("#day7YearYield_div").hide();
-                        $("#totalValue_div").show();
-                        $("#restNetValue_div").show();
+                        //$("#day7YearYield_div").hide();
+                        $("#day7YearYield").val('').trigger('change');
+                        $("#day7YearYield").attr("disabled",true);
+                        //$("#totalValue_div").show();
+                        //$("#restNetValue_div").show();
+                        $("#restNetValue").removeAttr("disabled");
                     }
+                    /** modify by yanya on 20210224 基金类型判定修改 end**/
                 }
             });
             $("#fundManager").attr("disabled",true);

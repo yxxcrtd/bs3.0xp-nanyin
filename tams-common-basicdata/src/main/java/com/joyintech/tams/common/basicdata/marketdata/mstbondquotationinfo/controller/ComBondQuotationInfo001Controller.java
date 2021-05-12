@@ -10,7 +10,11 @@
 
 package com.joyintech.tams.common.basicdata.marketdata.mstbondquotationinfo.controller;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.joyintech.tams.common.basicdata.marketdata.mstbondquotationinfo.dto.ComBondQuotationInfoDto;
 import com.joyintech.tams.common.basicdata.marketdata.mstbondquotationinfo.service.ComBondQuotationInfoService;
@@ -32,9 +36,14 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -173,36 +182,89 @@ public class ComBondQuotationInfo001Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
         throws Exception {
-        return comBondQuotationInfoService.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
+        /** modify by yanya on 20210209 增加按照选择数据进行导出 start**/
+        String datas = this.getParam("datas");
+        Map<String, Object> params= RequestUtil.getPageParam();
+        List<ComBondQuotationInfoDto> list = null;
+        if (StringUtil.isNotEmpty(datas)) {
+            list = JsonUtils.json2List(datas, ComBondQuotationInfoDto.class);
+        }
+        else {
+            list = comBondQuotationInfoService.selectAllList(params);
+        }
+//        return comBondQuotationInfoService.export(this.getPageId(),
+//            RequestUtil.getParameters(getRequest()));
+        File outFile = comBondQuotationInfoService.makeFile(
+                "com/joyintech/tams/common/basicdata/marketdata/mstbondquotationinfo/conf/export_conf.xml",
+                list);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
+        /** modify by yanya on 20210209 增加按照选择数据进行导出 end**/
 
     }
     
  // hsgexinghua   add by zhanngxing1 20200220 start
-
     /**
-     * 导入数据文件之前检查数据
+     * 导入（必填项校验）
      *
      * @param fileName 导入的文件名
      * @return 处理结果
+     * @throws Exception 异常
      */
     @ResponseBody
-    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return comBondQuotationInfoService.checkConfirmMsgForImportData(fileName);
-    }
-
-    /**
-     * 导入数据文件
-     *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
-     */
-    @ResponseBody
-    @RequestMapping("/importFile")
-    public List<ExcelValidDto> importData(String fileName) {
+    @RequestMapping("importFile")
+    public List<ExcelValidDto> importData(String fileName)
+            throws Exception{
         return this.comBondQuotationInfoService.importData(fileName);
-
+    }
+    
+    
+    /**
+     * 导入（重复数据获取）
+     * 
+     * @param fileName 导入的文件名
+     * @return checkResult
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("duplicateCheck")
+    public List<Integer> duplicateCheck(String fileName)
+        throws Exception {
+         List<List<String>> dataList = comBondQuotationInfoService.dataAnalysis(fileName);
+         List<Integer> checkResult = new ArrayList<>();
+         if (null != dataList && dataList.size() > 0) {
+             // 导入文件重复数据检查
+        	 checkResult = comBondQuotationInfoService.duplicateCheck(dataList);
+         }
+        return checkResult;
+    }
+    
+    /**
+     * 导入（数据保存）
+     * 
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("importFileSave")
+    public List<Integer> importFileSave(String fileName)
+        throws Exception {
+        List<List<String>> dataList = comBondQuotationInfoService.dataAnalysis(fileName);
+        List<Integer> checkResult = new ArrayList<>();
+        if (null != dataList && dataList.size() > 0) {
+            // 导入文件重复数据检查
+       	 checkResult = comBondQuotationInfoService.duplicateCheck(dataList);
+       	 List<ComBondQuotationInfoDto> equityList = comBondQuotationInfoService.converToBean(dataList,checkResult);
+       	 // 保存，已存在则更新
+       	 comBondQuotationInfoService.dealAfterCheck(equityList);
+        }
+        return checkResult;
     }
 
 }

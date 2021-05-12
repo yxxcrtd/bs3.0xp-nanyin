@@ -51,8 +51,8 @@
         		$('#finprodAbbr').val('');
         	}
         	else{
-//        		$('#finprodAbbr').val($('#secId').select2('data')[0].object).trigger('change');
-        		$('#finprodAbbr').val(secId).trigger('change');
+        		$('#finprodAbbr').val($('#secId').select2('data')[0].object).trigger('change');
+//        		$('#finprodAbbr').val($('#secId').select2('data')[0].text).trigger('change');
         	}
         })
         

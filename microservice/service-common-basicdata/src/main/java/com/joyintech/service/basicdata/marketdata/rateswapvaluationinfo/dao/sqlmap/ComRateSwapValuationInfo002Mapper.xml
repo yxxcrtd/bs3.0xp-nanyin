@@ -20,4 +20,34 @@
           and VAL_DATE = TO_DATE(#{valDate}, 'yyyy-MM-dd')
     </select>
 
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.basicdata.marketdata.rateswapvaluationinfo.dto.ComRateSwapValuationInfo002Dto">
+        update MST_VAL_IRS
+        <set >
+            <if test="valuation != null" >
+                VALUATION = #{valuation,jdbcType=DECIMAL},
+            </if>
+            <if test="valmodelId != null" >
+                VALMODEL_ID = #{valmodelId,jdbcType=VARCHAR},
+            </if>
+            <if test="datasourceType != null" >
+                DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where FINPROD_ID2 = #{finprodId2,jdbcType=VARCHAR}
+        and DATASOURCE_TYPE = #{datasourceTypeOld,jdbcType=VARCHAR}
+        and VAL_DATE = TO_DATE(#{valDate}, 'yyyy-MM-dd')
+    </update>
+
 </mapper>

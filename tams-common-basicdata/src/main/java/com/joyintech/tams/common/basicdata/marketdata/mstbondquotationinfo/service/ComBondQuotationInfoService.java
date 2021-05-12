@@ -1,5 +1,9 @@
 package com.joyintech.tams.common.basicdata.marketdata.mstbondquotationinfo.service;
 
+import java.io.File;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,14 +13,19 @@ import com.joyintech.tams.common.basicdata.marketdata.mstbondquotationinfo.dto.C
 import com.joyintech.tams.common.basicdata.util.ComBasicDataExcelUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExcelUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -59,8 +68,8 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
      * 
      * @return List
      */
-    public List<SelectOptionDto> getFinprodAbbrOption(Map<String,Object> param) {
-        return restTemplate.postForList(ServiceApplication.CommonBasicDataService
+    public Page<SelectOptionDto> getFinprodAbbrOption(Map<String,Object> param) throws Exception{
+        return restTemplate.postForPage(ServiceApplication.CommonBasicDataService
                                        + "/ComBondQuotationInfo/getFinprodAbbrOption",param,
             SelectOptionDto.class);
     }
@@ -173,46 +182,307 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
             ServiceApplication.CommonBasicDataService + "/ComBondQuotationInfo/getFinProdAbbr",
             SelectOptionDto.class);
     }
-    
-    
-  //hsgexinghua   add by zhangxing1 20200220 start
 
     /**
-     * 导入数据文件之前检查数据
-     *
-     * @param fileName 导入的文件名
-     * @return 处理结果
+     * 查询符合条件的所有数据
+     * @param pageParam
+     * @return
      */
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        Map<String,Object> param = new HashMap<String,Object>();
-        param.put("dataList", ComBasicDataExcelUtil.getDataListLocal(fileName));
-        param.put("orgCode", CommonUtil.getOrgCode());
-        param.put("deptCode", CommonUtil.getDeptCode());
-        return restTemplate.postForObject(
-                ServiceApplication.CommonBasicDataService + "/ComBondQuotationInfo/checkConfirmMsgForImportData",
-                param,
-                AjaxResult.class);
+    public List<ComBondQuotationInfoDto> selectAllList(Map<String, Object> pageParam) {
+        return restTemplate.postForList(
+                ServiceApplication.CommonBasicDataService + "/ComBondQuotationInfo/selectAllList",
+                pageParam, ComBondQuotationInfoDto.class);
+    }
+    
+    
+    /**
+     * excel导入功能
+     *
+     * @param flieName 文件名称
+     * @return 检验list
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public List<ExcelValidDto> importData(String flieName)
+        throws Exception {
+        // 检查文件名是否为空
+        if (StringUtil.isNotEmpty(flieName)) {
+            if (flieName.indexOf("债券估值行情导入") != -1) {
+                List<List<String>> dataList = dataAnalysis(flieName);
+                if (null != dataList && dataList.size() > 0) {
+                    // 将excel表格中的数据转化为dto
+                    List<ExcelValidDto> checkResult = checkExcelData(dataList);
+//                    if (checkResult.isEmpty()) {
+//                        List<ComBondQuotationInfoDto> equityList = converToBean(dataList);
+//                        // 保存，已存在则更新
+//                        dealAfterCheck(equityList);
+//                    }
+                    return checkResult;
+                }
+            }
+            else {
+                List<ExcelValidDto> checkResult = new ArrayList<>();
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                		"文件名称错误，请下载模板后上传"));
+                return checkResult;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * excel导入数据整理
+     *
+     * @param flieName 文件名称
+     * @return 检验list
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public List<List<String>> dataAnalysis(String flieName)
+        throws Exception {
+    	String prefix = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+        if(!StringUtil.startsWith(flieName, prefix)
+            && !StringUtil.startsWith(flieName, prefix.replace("/", File.separator))) {
+     	   flieName = prefix + File.separator + flieName;
+       }
+         ExcelUtil excelUtil = ExcelUtil.build(flieName, null);
+         List<List<String>> dataList = excelUtil.readToList(0, 1, 0);
+        return dataList;
     }
 
-
+    /**
+     * 导入文件内容检查 <功能详细描述>
+     * 
+     * @param dataList 导入数据
+     * @return 返回检查结果
+     * @throws ParseException 抛出异常
+     * @see
+     * @since 1.0
+     */
+    private List<ExcelValidDto> checkExcelData(List<List<String>> dataList)
+        throws ParseException {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        List<ComBondQuotationInfoDto> equityList = converToBean(dataList,null);
+        ComBondQuotationInfoDto ComBondQuotationInfoDto = null;
+        List<Integer> duplicateDataList=new ArrayList<Integer>();
+        if (equityList.size() >= 1) {
+            for (int i = 0; i < equityList.size(); i++ ) {
+                ComBondQuotationInfoDto = equityList.get(i);
+                // 检查表内数据每行是否合法
+                if (checkExcelCow(i, dataList.get(i)) != null) {
+                    checkResult.addAll(checkExcelCow(i, dataList.get(i)));
+                }
+                if(ComBondQuotationInfoDto.getSecId() == null
+                		|| ComBondQuotationInfoDto.getValueDate() == null
+                		|| ComBondQuotationInfoDto.getValueSource() == null
+                		|| duplicateDataList.contains(i)){
+                	continue;
+                }
+                // 检查表内数据是否有主键重复
+                if (equityList.size() >= 2) {
+                    for (int k = i + 1; k < equityList.size(); k++ ) {
+                        if(equityList.get(k).getSecId() == null
+                        		|| equityList.get(k).getValueDate() == null
+                        		|| equityList.get(k).getValueSource() == null){
+                        	continue;
+                        }
+                        if (equityList.get(k).getSecId().equals(ComBondQuotationInfoDto.getSecId())
+                            && equityList.get(k).getValueDate().equals(
+                                ComBondQuotationInfoDto.getValueDate())
+                            && equityList.get(k).getValueSource().equals(
+                                ComBondQuotationInfoDto.getValueSource())) {
+                        	if(!duplicateDataList.contains(k)){
+                        		duplicateDataList.add(k);
+                        		checkResult.add(new ExcelValidDto(dataList.get(k).get(1),
+                                        String.valueOf(k + 2), "表中数据重复"));
+                        	}
+                        }
+                    }
+                }
+            }
+        }
+        return checkResult;
+    }
 
     /**
-     * 导入数据文件
+     * list转换为Bean
      *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * @param dataList excel解析后的list
+     * @return List<mstMarketCalendarInfo001Dto>
+     * @throws ParseException 抛出异常
+     * @see
+     * @since 1.0
      */
-    public List<ExcelValidDto> importData(String fileName) {
-        Map<String,Object> param = new HashMap<String,Object>();
-        param.put("dataList", ComBasicDataExcelUtil.getDataListLocal(fileName));
-        param.put("tempList", ComBasicDataExcelUtil.getTempListLocal(fileName));
-        param.put("userName", CommonUtil.getUserName());
-        param.put("orgCode", CommonUtil.getOrgCode());
-        param.put("deptCode", CommonUtil.getDeptCode());
-        return restTemplate.postForList(
-                ServiceApplication.CommonBasicDataService + "/ComBondQuotationInfo/importData",
-                param,
-                ExcelValidDto.class);
+    public List<ComBondQuotationInfoDto> converToBean(List<List<String>> dataList,List<Integer> checkResult)
+        throws ParseException {
+        // 返回的list定义
+        List<ComBondQuotationInfoDto> returnInfoList = new ArrayList<ComBondQuotationInfoDto>();
+        ComBondQuotationInfoDto ComBondQuotationInfoDto = null;
+        for (int i = 0; i < dataList.size(); i++ ) {
+        	if(null !=checkResult && checkResult.contains(i)){
+        		continue;
+        	}
+            List<String> list = dataList.get(i);
+            ComBondQuotationInfoDto = new ComBondQuotationInfoDto();
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                ComBondQuotationInfoDto.setSecId(list.get(0).trim());
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                ComBondQuotationInfoDto.setFinprodAbbr(list.get(1).trim());
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                ComBondQuotationInfoDto.setValueSource(list.get(2).trim().split("：")[0].trim());
+            }
+            if (StringUtil.isNotEmpty(list.get(3))) {
+                ComBondQuotationInfoDto.setValueDate(DateUtil.parse(list.get(3).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(4))) {
+                ComBondQuotationInfoDto.setLastPeriod(new BigDecimal(list.get(4).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(5))) {
+                ComBondQuotationInfoDto.setPrice(new BigDecimal(list.get(5).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(6))) {
+                ComBondQuotationInfoDto.setNetprice(new BigDecimal(list.get(6).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(7))) {
+                ComBondQuotationInfoDto.setmDuration(new BigDecimal(list.get(7).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(8))) {
+                ComBondQuotationInfoDto.setmConvexity(new BigDecimal(list.get(8).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(9))) {
+                ComBondQuotationInfoDto.setBpvalue(new BigDecimal(list.get(9).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(10))) {
+                ComBondQuotationInfoDto.setSduration(new BigDecimal(list.get(10).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(11))) {
+                ComBondQuotationInfoDto.setScnvxty(new BigDecimal(list.get(11).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(12))) {
+                ComBondQuotationInfoDto.setInterestDuration(new BigDecimal(list.get(12).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(13))) {
+                ComBondQuotationInfoDto.setInterestCnvxty(new BigDecimal(list.get(13).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(14))) {
+                ComBondQuotationInfoDto.setBpyield(
+                    new BigDecimal(list.get(14).trim()).divide(new BigDecimal(100)));
+            }
+            // Date date = new Date();
+            ComBondQuotationInfoDto.setCreateUser(CommonUtil.getUserName());
+            ComBondQuotationInfoDto.setCreateDept(CommonUtil.getDeptCode());
+            // ComBondQuotationInfoDto.setCreateTime(date);
+            ComBondQuotationInfoDto.setUpdateUser(CommonUtil.getUserName());
+            // ComBondQuotationInfoDto.setUpdateTime(date);
+            returnInfoList.add(ComBondQuotationInfoDto);
+        }
+        return returnInfoList;
+    }
+
+    /**
+     * 检查excel是否为空或者传入列是否正确
+     *
+     * @param i 第几行
+     * @param list 每一列解析后的List
+     * @return 检查结构
+     * @see
+     * @since 1.0
+     */
+    private List<ExcelValidDto> checkExcelCow(int i, List<String> list) {
+        List<ExcelValidDto> excelValidDtolist = new ArrayList<ExcelValidDto>();
+        // 列数为15
+        if (null == list || list.size() != 15) {
+            ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i), "数据列数错误");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(0))) {
+            // 验证导入债券代码是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "债券代码为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(2))) {
+            // 验证导入估值来源是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估值来源为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(3))) {
+            // 验证导入估值日期是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估值日期为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(5))) {
+            // 验证导入市价全价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "市价全价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(6))) {
+            // 验证导入市价净价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "市价净价为空");
+            excelValidDtolist.add(dto);
+        }
+        return excelValidDtolist;
+    }
+
+    /**
+     * check后的保存
+     * 
+     * @param equityList 需要保存的数据
+     * @see
+     * @since 1.0
+     */
+    public void dealAfterCheck(List<ComBondQuotationInfoDto> equityList) {
+        restTemplate.postForObject(
+            ServiceApplication.CommonBasicDataService + "/ComBondQuotationInfo/mergeInfoList",
+            equityList, Integer.class);
+    }
+    
+    /**
+     * 导入文件重复数据检查 <功能详细描述>
+     * 
+     * @param dataList 导入数据
+     * @return 返回检查结果
+     * @throws ParseException 抛出异常
+     * @see
+     * @since 1.0
+     */
+    public List<Integer> duplicateCheck(List<List<String>> dataList)
+        throws ParseException {
+    	List<ComBondQuotationInfoDto> equityList = converToBean(dataList,null);
+    	List<Integer> duplicateData=new ArrayList<Integer>();
+      for (int i = 0; i < dataList.size(); i++ ) {
+      	ComBondQuotationInfoDto valBondQuotationInfoDto = equityList.get(i);
+      	if(valBondQuotationInfoDto.getSecId() == null
+        		|| valBondQuotationInfoDto.getValueDate() == null
+        		|| valBondQuotationInfoDto.getValueSource() == null
+        		|| duplicateData.contains(i)){
+      		continue;
+        }
+          // 检查表内数据是否有主键重复
+          for (int k = i + 1; k < dataList.size(); k++ ) {
+        	  if(equityList.get(k).getSecId() == null
+              		|| equityList.get(k).getValueDate() == null
+              		|| equityList.get(k).getValueSource() == null){
+        		  continue;
+              }
+              if (equityList.get(k).getSecId().equals(
+              		valBondQuotationInfoDto.getSecId())
+                      && equityList.get(k).getValueSource().equals(valBondQuotationInfoDto.getValueSource())
+                      && equityList.get(k).getValueDate().equals(valBondQuotationInfoDto.getValueDate())) {
+              	if(!duplicateData.contains(k)){
+              		duplicateData.add(k);
+              	}
+              }
+          }
+      }
+      if(duplicateData.isEmpty()){
+    	  duplicateData.add(-1);
+      }
+      return duplicateData;
     }
     
 }

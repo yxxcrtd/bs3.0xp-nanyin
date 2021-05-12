@@ -12,32 +12,33 @@ package com.joyintech.service.basicdata.marketdata.fundmarketinfo.controller;
 
 import java.io.File;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.service.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto;
-import com.joyintech.service.basicdata.marketdata.fundmarketinfo.service.ComFundMarketInfo001Service;
-import com.joyintech.service.basicdata.marketdata.fundmarketinfo.service.ComFundMarketQuotationInfoImportDataService;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto;
+import com.joyintech.service.basicdata.marketdata.fundmarketinfo.service.ComFundMarketInfo001Service;
 import com.joyintech.tams.constant.DictCode;
 
 /**
@@ -53,13 +54,10 @@ import com.joyintech.tams.constant.DictCode;
 public class ComFundMarketInfo001Controller extends BaseController {
 
     /**
-     * valFundMarketInfo001Service
+     * comFundMarketInfo001Service
      */
     @Autowired
     private ComFundMarketInfo001Service comFundMarketInfo001Service;
-    
-    @Autowired
-    private ComFundMarketQuotationInfoImportDataService comFundMarketQuotationInfoImportDataService;
 
     /**
      * 重写init方法 {@inheritDoc}
@@ -75,7 +73,7 @@ public class ComFundMarketInfo001Controller extends BaseController {
      * 加载表格
      * <功能详细描述>
      * 
-     * @return List<ValFundMarketInfo001dto>
+     * @return List<ComFundMarketInfo001dto>
      * @throws Exception Exception
      */
     @PostMapping("/tableLoad")
@@ -89,12 +87,11 @@ public class ComFundMarketInfo001Controller extends BaseController {
                                                   @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
         return comFundMarketInfo001Service.findPage(page,length,params);
     }
-
-    //add jinmaodong 导出不在微服务端实现
+    
 //    /**
 //     * 导出数据 <一句话功能简述> <功能详细描述>
-//     *
-//     * @return List<ValFundMarketInfo001dto>
+//     * 
+//     * @return List<ComFundMarketInfo001dto>
 //     * @throws Exception Exception
 //     */
 //    @RequestMapping(ACTION_EXPORT)
@@ -113,13 +110,13 @@ public class ComFundMarketInfo001Controller extends BaseController {
 //        }
 //
 //        File outFile = comFundMarketInfo001Service.makeFile(
-//            "/com/joyintech/tams/valuation/basedata/marketdata/fundmarketinfo/config/export_conf.xml",
+//            "/com/joyintech/tams/valuation/basedata/marketdata/fundmarketinfo/config/export_valfundmarketinfo001.xml",
 //            listdto);
 //        return ExportUtil.export(
-//            this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
-//                                 + DateUtil.format(DateUtil.platDateFromCache())
-//                                 + GlobalConstant.CLOSE_PARENTHESIS
-//                                 + GlobalConstant.POINT
+//            this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+//                                 + DateUtil.format(new Date())
+//                                 + SystemGlobalConstant.CLOSE_PARENTHESIS
+//                                 + SystemGlobalConstant.POINT
 //                                 + FileNameUtil.getFileExtName(outFile),
 //            outFile, true);
 //    }
@@ -145,38 +142,104 @@ public class ComFundMarketInfo001Controller extends BaseController {
 
         return paraMap;
     }
-    
-    /**
-     * 导入数据文件之前检查数据
-     *
-     * @param param 导入的文件名
-     * @return 处理结果
-     */
-    @SuppressWarnings("unchecked")
-    @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return comFundMarketQuotationInfoImportDataService.checkConfirmMsgForImportData(dataList);
-    }
-
 
     /**
-     * 导入数据文件
-     *
-     * @param param 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * 删除数据
      */
-    @SuppressWarnings("unchecked")
-    @PostMapping("importData")
-    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-        String userName=param.get("userName")==null?null:param.get("userName").toString();
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return this.comFundMarketQuotationInfoImportDataService.importData(dataList,tempList,userName,orgCode,deptCode);
+    @Transactional
+    @DTXTransaction
+    @RequestMapping("delete")
+    public int deleteByPrimaryKey(@RequestBody ComFundMarketInfo001dto dto){
+        String finprodId = dto.getFinprodId();
+        /** modify by yanya on 20210224 查找市场代码通过finprod_type包进行查询 start**/
+        //String fundCode = finprodId.substring(4);
+        String fundCode = comFundMarketInfo001Service.queryFinprodMarketIdByFinprodId(finprodId);
+        /** modify by yanya on 20210224 查找市场代码通过finprod_type包进行查询 end**/
+        dto.setFundCode(fundCode);
+        return comFundMarketInfo001Service.deleteByPrimaryKey(dto);
     }
 
+    /**
+     * 插入
+     *
+     * @param dto 页面选中的数据
+     * @param br br
+     * @return 结果
+     * @throws Exception 异常
+     */
+    @Transactional
+    @DTXTransaction
+    @RequestMapping("insert")
+    public int insert(@RequestBody ComFundMarketInfo001dto dto)
+            throws Exception {
+        String finprodId = dto.getFinprodId();
+        /** modify by yanya on 20210224 查找市场代码通过finprod_type包进行查询 start**/
+        //String fundCode = finprodId.substring(4);
+        String fundCode = comFundMarketInfo001Service.queryFinprodMarketIdByFinprodId(finprodId);
+        /** modify by yanya on 20210224 查找市场代码通过finprod_type包进行查询 end**/
+        dto.setFundCode(fundCode);
+        return comFundMarketInfo001Service.saveNewDto(dto);
+    }
+
+    /**
+     * 更新
+     *
+     * @param dto 页面选中的数据
+     * @param br br
+     * @return 结果
+     * @throws Exception 异常
+     */
+    @Transactional
+    @DTXTransaction
+    @RequestMapping("update")
+    public int update(@RequestBody ComFundMarketInfo001dto dto)
+            throws Exception {
+        String finprodId = dto.getFinprodId();
+        /** modify by yanya on 20210224 查找市场代码通过finprod_type包进行查询 start**/
+        //String fundCode = finprodId.substring(4);
+        String fundCode = comFundMarketInfo001Service.queryFinprodMarketIdByFinprodId(finprodId);
+        /** modify by yanya on 20210224 查找市场代码通过finprod_type包进行查询 end**/
+        dto.setFundCode(fundCode);
+        return comFundMarketInfo001Service.updateByPrimaryKey(dto);
+    }
+
+    /**
+     * 查询资产代码
+     */
+    @ResponseBody
+    @RequestMapping("getFinProductList/{page}/{length}")
+    public Page<SelectOptionDto> getFinProductList(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length)
+            throws Exception {
+        return comFundMarketInfo001Service.getFinProductList(map,page,length);
+    }
+    /**
+     * 查询市场代码
+     */
+    @ResponseBody
+    @RequestMapping("getFinprodMarketId")
+    public List<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> map) {
+        return comFundMarketInfo001Service.getFinprodMarketId(map);
+    }
+
+    /**
+     * 查询符合条件的数据
+     */
+    @ResponseBody
+    @RequestMapping("queryDtoByKey")
+    public List<ComFundMarketInfo001dto> queryDtoByKey(@RequestBody Map<String, Object> map){
+        return comFundMarketInfo001Service.queryDtoByKey(map);
+    }
+    /**
+     *
+     * 资产信息检索查询
+     * <功能详细描述>
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getAssetInfo")
+    public List<ComFundMarketInfo001dto>  getAssetInfo(@RequestBody Map<String, Object> param) {
+        return comFundMarketInfo001Service.getAssetInfo(param);
+    }
 }

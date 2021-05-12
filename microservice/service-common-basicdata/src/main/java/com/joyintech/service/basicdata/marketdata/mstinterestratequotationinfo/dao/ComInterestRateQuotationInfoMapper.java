@@ -3,6 +3,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.basicdata.marketdata.mstinterestratequotationinfo.dto.ComInterestRateQuotationInfoDto;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,34 +32,7 @@ public interface ComInterestRateQuotationInfoMapper {
      */
     ComInterestRateQuotationInfoDto selectByPrimaryKey(Map<String, Object> map);
     
-  //hsgexinghua add by zhangxing1 20200228 start
-    /**
-     * 查询新增数据主键是否重复
-     * @param list 产品list
+    String getIntRateId(@Param("intRateName")String intRateName);
 
-     * @return list
-     * @see
-     * @since 1.0
-     */
-
-    String getRegistExcelList( Map<String,Object> param );
-    /**
-     * 查询导入利率代码
-     * @param list 产品list
-
-     * @return list
-     * @see
-     * @since 1.0
-     */
-    ComInterestRateQuotationInfoDto getIntRateIdByName(Map<String,Object> param );
-    
-    /**
-     * 查询导入利率代码
-     * @param list 产品list
-
-     * @return list
-     * @see
-     * @since 1.0
-     */
-    String checkCcy( Map<String,Object> param );
+    int mergeInfoList(@Param("newDataList")List<ComInterestRateQuotationInfoDto> insertList);
 }

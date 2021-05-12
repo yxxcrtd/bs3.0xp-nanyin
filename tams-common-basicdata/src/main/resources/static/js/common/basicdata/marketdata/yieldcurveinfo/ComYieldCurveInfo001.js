@@ -40,12 +40,12 @@ $(function() {
              //修改数据字典值为查询值 modified by lishuping 20191008 start
             ,{field:'curveCode',width:200, title: 'ComYieldCurveInfo001.curveName'}
             //修改数据字典值为查询值 modified by lishuping 20191008 end
-            ,{field:'keyPoint',width:200, title: 'ComYieldCurveInfo001.keyPoint',type:'number'}
-            ,{field:'yield',width:200, title: 'ComYieldCurveInfo001.yield',type:'number'}
+            ,{field:'keyPoint',width:200, title: 'ComYieldCurveInfo001.keyPoint',type:'number',digit:3}
+            ,{field:'yield',width:200, title: 'ComYieldCurveInfo001.yield',type:'number',digit:4}
             ,{field:'curveType',width:200, title: 'ComYieldCurveInfo001.curveType', visible:false}
             ,{field:'curveTypeName',width:200, sortField:'curveType', title: 'ComYieldCurveInfo001.curveType'}
-            ,{field:'n',width:200, title: 'N',type:'number'}
-            ,{field:'k',width:200, title: 'K',type:'number'}
+            ,{field:'n',width:200, title: 'N',type:'number',digit:3}
+            ,{field:'k',width:200, title: 'K',type:'number',digit:3}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
             ]
     });
@@ -58,14 +58,16 @@ $(function() {
          var curveDate = new Date(parseInt(data.curveDate));
          curveDate= curveDate.format('yyyy-MM-dd');
          Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo002/check', data, function(result) {
-             Joyin.dialog(JoyinUtil.getLabel("ComYieldCurveInfo002.edit"),
+             Joyin.confirm("请确认是否修改?", function(){
+                 Joyin.dialog(JoyinUtil.getLabel("ComYieldCurveInfo002.edit"),
                      basePath + "common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo002/init",
                      "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
             	                     curveCode:data.curveCode,
             	                     curveDate:curveDate,
                                      curveType:data.curveType},function() {
                                      table.reload();
-               });
+                     });
+             });
          });
      });
      
@@ -87,8 +89,18 @@ $(function() {
      * 以excel形式导出数据
      */
     var exportExcel = function() {
-        var paramObj = getSearchParams();
-        Joyin.exportExcel('export', paramObj);
+        if (table) {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length === 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
     };
     
     $(function() {
@@ -121,6 +133,48 @@ $(function() {
                        WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo001/delete', object, "ComYieldCurveInfo001_btn_delete", "ComYieldCurveInfo002",function() {
                         	table.reload();
                        });                  
+                   });
+               });
+           });
+           
+           /**
+            * 导入按钮
+            */
+           $('#ComYieldCurveInfo001_btn_import').click(function() {
+               Joyin.confirm("请确认是否要导入数据？", function() {
+                   Joyin.uploadFile(function(fileName) {
+                       Joyin.ajax(basePath +"common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo001/importFile", {
+                           fileName : fileName
+                       },function(result){
+                       	if(!result || !($.isArray(result) && result.length > 0)){
+                       		Joyin.ajax(
+                                       basePath + 'common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo001/importFileSave', 
+                                       {fileName : fileName},function (data1) {
+                                       	layui.layer.closeAll()
+                                           table.reload();
+                                 });
+                       	}
+                       	else if($.isArray(result) && result.length > 0 && result[0].rowNum != "") {
+                           	Joyin.ajax(
+                                       basePath + 'common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo001/duplicateCheck', 
+                                       {fileName : fileName},function (data) {
+                                       	if(result.length == data.length){
+                                       		Joyin.confirm("导入文件存在"+data.length+"条数据重复，重复数据不导入，是否确认？", function(){
+                                       			Joyin.ajax(
+                                                           basePath + 'common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo001/importFileSave', 
+                                                           {fileName : fileName},function (data1) {
+                                                           	layui.layer.closeAll()
+                                                               table.reload();
+                                                           	Joyin.alert("文件导入成功！", 0);
+                                                     });
+                                               }, {}, function() {
+                                               	layui.layer.closeAll()
+                                                   table.reload();
+                                               });
+                                       	}
+                                 });
+                           }
+                       });
                    });
                });
            });

@@ -38,6 +38,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @see ComCoinFundQuotationInfo001Dto
  * @since 1.0
  */
+@PageId("ComCoinFundQuotationInfo002")//页面id
 @ValidLogic(targetClass = ComCoinFundQuotationInfoValidator.class, groups = {ValidateGroupEdit.class,ValidateGroupDelete.class})
 public class ComCoinFundQuotationInfo001Dto extends FinProductValuation implements ITableRow,ProcessEntity{
     /**
@@ -84,6 +85,21 @@ public class ComCoinFundQuotationInfo001Dto extends FinProductValuation implemen
      * 操作类型
      */
     private String type;
+
+    /**
+     * 估值日期 format
+     */
+    private String valDateFmt;
+
+    /**
+     * 公布日期 format
+     */
+    private String publishDateFmt;
+
+    /**
+     * 导入日期 format
+     */
+    private String importDayFmt;
     
     
     /**
@@ -123,7 +139,9 @@ public class ComCoinFundQuotationInfo001Dto extends FinProductValuation implemen
      * @return finprodChiType.
      */
     public String getFinprodChiType(){
-        return SysDataUtil.getNameFromDataDict(DictCode.基金类资产类型, super.getFinprodType2());
+        /** modify by yanya on 20210224 修改为估值基金类型**/
+        //return SysDataUtil.getNameFromDataDict(DictCode.基金类资产类型, super.getFinprodType2());
+        return SysDataUtil.getNameFromDataDict(DictCode.基金类型, super.getFinprodType2());
     }
     /**
      * 基金类型
@@ -342,4 +360,26 @@ public class ComCoinFundQuotationInfo001Dto extends FinProductValuation implemen
     public void setFinprodAbbr(String finprodAbbr) {
         this.finprodAbbr = finprodAbbr;
     }
-}
+    public String getValDateFmt() {
+        return DateUtil.format(this.getValDate());
+    }
+
+    public void setValDateFmt(String valDateFmt) {
+        this.valDateFmt = valDateFmt;
+    }
+
+    public String getPublishDateFmt() {
+        return DateUtil.format(this.getPublishDate());
+    }
+
+    public void setPublishDateFmt(String publishDateFmt) {
+        this.publishDateFmt = publishDateFmt;
+    }
+
+    public String getImportDayFmt() {
+        return DateUtil.format(this.getImportDay());
+    }
+
+    public void setImportDayFmt(String importDayFmt) {
+        this.importDayFmt = importDayFmt;
+    }}

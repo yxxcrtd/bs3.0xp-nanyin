@@ -2,12 +2,15 @@ package com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -17,7 +20,7 @@ import com.joyintech.tams.constant.DictCode;
  * @see ComFundMarketInfo001dto
  * @since 1.0
  */
-public class ComFundMarketInfo001dto extends BaseEntity {
+public class ComFundMarketInfo001dto extends BaseEntity implements ProcessEntity {
 
     /**
      * <意义，目的和功能，以及可能被用到的地方>
@@ -31,6 +34,7 @@ public class ComFundMarketInfo001dto extends BaseEntity {
     /**
      * 基金代码
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String fundCode;
 
     /**
@@ -56,6 +60,7 @@ public class ComFundMarketInfo001dto extends BaseEntity {
     /**
      * 估值日期
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String valueDate;
 
     /**
@@ -97,6 +102,26 @@ public class ComFundMarketInfo001dto extends BaseEntity {
      * 卖一价
      */
     private BigDecimal sellOnePrice;
+
+    /**
+     * 要素id
+     */
+    private String elementId;
+
+    /**
+     * 被选中的数据
+     */
+    private List<ComFundMarketInfo001dto> selectedItem;
+
+    /**
+     * 画面模型
+     */
+    private String pageModel;
+
+    /**
+     * 操作类型
+     */
+    private String operateType;
 
     /**
      * 获取 fundCode
@@ -397,6 +422,44 @@ public class ComFundMarketInfo001dto extends BaseEntity {
     public void setFinprodId(String finprodId) {
         this.finprodId = finprodId;
     }
-    
 
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
+
+    public List<ComFundMarketInfo001dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<ComFundMarketInfo001dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public String getPageModel() {
+        return pageModel;
+    }
+
+    public void setPageModel(String pageModel) {
+        this.pageModel = pageModel;
+    }
+
+    public String getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
+    }
 }

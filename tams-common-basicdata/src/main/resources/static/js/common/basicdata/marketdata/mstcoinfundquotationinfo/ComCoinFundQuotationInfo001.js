@@ -90,8 +90,23 @@ $(function() {
      * 导出选中的表格数据
      */
     var exportExcel = function() {
-        var paramObj = getSearchParams();//请求参数json格式
-        Joyin.exportExcel('export', paramObj);//导出（共通）
+        //modify by yanya on 20210209 增加按照页面选择数据进行导出
+        // var paramObj = getSearchParams();//请求参数json格式
+        // Joyin.exportExcel('export', paramObj);//导出（共通）
+        var selArr = [];
+        var datas = null;
+        if (table != null && table != '') {
+            selArr = table.getAllCheckedRows();
+            datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
     };
 
     /**
@@ -129,19 +144,57 @@ $(function() {
                     });
                 });
         });
-      //hsgexinghua   add by zhangxing1 20200220 start
-        // 导入按钮点击事件
+        /**
+         * 导入按钮
+         */
         $('#ComCoinFundQuotationInfo001_btn_import').click(function() {
-            Joyin.confirm("请确认是否要导入数据？", function() {
-                Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'common/basicdata/marketdata/mstcoinfundquotationinfo/ComCoinFundQuotationInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function( result) {
-                        Joyin.ajax(basePath + 'common/basicdata/marketdata/mstcoinfundquotationinfo/ComCoinFundQuotationInfo001/importFile', {fileName: fileName});
-                    });
-                },function() {
-                    table.reload();
+            Joyin.uploadFile({pageId:'ComCoinFundQuotationInfo001MTM'},function(fileName) {
+                Joyin.ajax(basePath + 'common/basicdata/marketdata/mstcoinfundquotationinfo/ComCoinFundQuotationInfo001/checkImportData', {fileName: fileName}, function(checkResult) {
+                    if (checkResult) {
+                        setTimeout( function () {
+                            if(checkResult.data.errorMsg){
+                                Joyin.error(checkResult.data.errorMsg);
+                                return;
+                            }
+                            if (checkResult.data.confirmMsg) {
+                                Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                    var data = {
+                                        tempList: checkResult.data.correctData
+                                    }
+                                    Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstcoinfundquotationinfo/ComCoinFundQuotationInfo001/importFile', data,
+                                        function (resultObj) {
+                                            if (resultObj.statuCode.toString() === '200') {
+                                                /** modify by yanya on 20210329 修正导入逻辑**/
+                                                //Joyin.alert("文件导入成功！");
+                                                table.reload();
+                                                return;
+                                            }
+                                        });
+                                },{}, function () {
+                                    layui.layer.closeAll()
+                                    table.reload();
+                                });
+                            }else {
+                                var data = {
+                                    tempList: checkResult.data.correctData
+                                }
+                                Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstcoinfundquotationinfo/ComCoinFundQuotationInfo001/importFile', data,
+                                    function (resultObj) {
+                                        if (resultObj.statuCode.toString() === '200') {
+                                            /** modify by yanya on 20210329 修正导入逻辑**/
+                                            //Joyin.alert("文件导入成功！");
+                                            table.reload();
+                                            return;
+                                        }
+                                    });
+                            }
+                        }
+                        ,1000);
+                    }
                 });
+            },function() {
+                table.reload();
             });
         });
-        //hsgexinghua  add by zhangxing1 20200220 end
     });
 }());

@@ -1,6 +1,7 @@
 package com.joyintech.tams.common.basicdata.marketdata.rateswapvaluationinfo.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -65,14 +66,15 @@ public class ComRateSwapValuationInfo001Controller extends BaseController {
      *
      * @return 返回的数据
      */
-    @RequestMapping("/getFinprodId2")
     @ResponseBody
-    public List<SelectOptionDto> getFinprodId2(HttpServletRequest request) {
-        Map<String, Object> param =RequestUtil.getPageParam();
+    @RequestMapping("/getFinprodId2")
+    public List<SelectOptionDto> getFinprodId2() {
+        // 画面的输入值param前台的输入值，为了进行模糊查询
+        Map<String, Object> param = RequestUtil.getPageParam();
         param.put("finprodType", DictCodeListExt1.金融产品类型_利率互换.getValue());
         return comRateSwapValuationInfo001Service.getFinprodId2(param);
     }
-
+    
     /**
      * 列表查询
      * @return 列表信息
@@ -171,5 +173,29 @@ public class ComRateSwapValuationInfo001Controller extends BaseController {
                         + SystemGlobalConstant.POINT
                         + FileNameUtil.getFileExtName(outFile),
                 outFile, true);
+    }
+    /**
+     * 导入
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     * @throws Exception 异常
+     */
+    @ResponseBody
+    @RequestMapping("checkImportData")
+    public AjaxResult checkImportData(String fileName) {
+        return comRateSwapValuationInfo001Service.checkImportData(fileName);
+    }
+
+    /**
+     *
+     * @param param
+     * @return
+     * @throws IOException 
+     */
+    @ResponseBody
+    @RequestMapping("importFile")
+    public AjaxResult importFile(@RequestBody Map<String, Object> param) throws IOException {
+        return comRateSwapValuationInfo001Service.importFile(param);
     }
 }

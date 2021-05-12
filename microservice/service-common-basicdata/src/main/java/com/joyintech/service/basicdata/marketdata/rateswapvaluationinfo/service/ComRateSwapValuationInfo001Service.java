@@ -54,9 +54,9 @@ public class ComRateSwapValuationInfo001Service extends BaseService<ComRateSwapV
      * @return 返回的数据
      */
     public List<SelectOptionDto> getFinprodId2(Map<String, Object> params) {
-    	 List<SelectOptionDto> resultList = comRateSwapValuationInfo001Mapper.getFinprodId2(params);
-    	
-    	List<SelectOptionDto> selectOptionDtoList = new ArrayList<>();
+    	 return comRateSwapValuationInfo001Mapper.getFinprodId2(params);
+
+/*    	List<SelectOptionDto> selectOptionDtoList = new ArrayList<>();
         for (SelectOptionDto single : resultList) { // 组装select节点对象
             SelectOptionDto selectOptionDto = new SelectOptionDto();
             selectOptionDto.setId(single.getId());
@@ -64,7 +64,7 @@ public class ComRateSwapValuationInfo001Service extends BaseService<ComRateSwapV
             selectOptionDtoList.add(selectOptionDto);
         }
         return selectOptionDtoList;
-    	 
+    	 */
 	}
    
 

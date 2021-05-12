@@ -30,6 +30,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
@@ -174,10 +175,10 @@ public class ComBondQuotationInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getAssetCodeList")
-    public List<SelectOptionDto> getAssetCodeList()
+    public Page<SelectOptionDto> getAssetCodeList()
         throws Exception { 
     	Map<String,Object> param = RequestUtil.getPageParam();
-        List<SelectOptionDto> temp = comBondQuotationInfoService.getFinprodAbbrOption(param);
+    	Page<SelectOptionDto> temp = comBondQuotationInfoService.getFinprodAbbrOption(param);
         return temp;
     }
 }

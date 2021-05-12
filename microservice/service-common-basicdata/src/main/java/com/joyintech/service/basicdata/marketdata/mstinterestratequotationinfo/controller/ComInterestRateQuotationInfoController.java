@@ -14,6 +14,7 @@ import java.util.Map;
 
 import com.joyintech.service.basicdata.marketdata.mstinterestratequotationinfo.dto.ComInterestRateQuotationInfoDto;
 import com.joyintech.service.basicdata.marketdata.mstinterestratequotationinfo.service.ComInterestRateQuotationInfoService;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.service.basicdata.marketdata.mstinterestratequotationinfo.service.ComInterestRateQuotationInfoImportDataService;
 
 /**
  * 利率行情信息查询
@@ -46,12 +46,6 @@ public class ComInterestRateQuotationInfoController {
     @Autowired
     private ComInterestRateQuotationInfoService comInterestRateQuotationInfoService;
     
-    /**hsgexinghua add by zhangxing1 20200228
-     * service注入
-     */
-    @Autowired
-    private ComInterestRateQuotationInfoImportDataService comInterestRateQuotationInfoImportDataService;
-    
     /**
      * 分页查询
      * 
@@ -66,6 +60,10 @@ public class ComInterestRateQuotationInfoController {
         return comInterestRateQuotationInfoService.selectForPage(page,length,pageParam);
     }
     
+    @PostMapping("/selectForList")
+    public List<ComInterestRateQuotationInfoDto> selectForList(@RequestBody Map<String, Object> pageParam) throws Exception{
+        return comInterestRateQuotationInfoService.selectForList(pageParam);
+    }
     /**
      * 根据主键查询
      * @param map 查询条件
@@ -91,40 +89,34 @@ public class ComInterestRateQuotationInfoController {
         String type = entity.getOperateType();
         comInterestRateQuotationInfoService.doComplete(entity,type);
     }
-    
-  //hsgexinghua add by zhangxing1 20200228 start
 
     /**
-     * 导入数据文件之前检查数据
      *
-     * @param param 导入的文件名
-     * @return 处理结果
+     * 根据利率名称找到利率名称Id
      */
-    @SuppressWarnings("unchecked")
-    @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return comInterestRateQuotationInfoImportDataService.checkConfirmMsgForImportData(dataList);
+    @PostMapping("/getIntRateId")
+    public String getIntRateId(@RequestBody String intRateName){
+        return comInterestRateQuotationInfoService.getIntRateId(intRateName);
     }
 
-
+    // add by zwq 20210222 增加基准利率行情导入功能 start
     /**
-     * 导入数据文件
      *
-     * @param param 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * 插入数据
+     * @param equityList 参数
+     * @see
+     * @since 1.0
      */
-    @SuppressWarnings("unchecked")
-    @PostMapping("importData")
-    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-        String userName=param.get("userName")==null?null:param.get("userName").toString();
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return this.comInterestRateQuotationInfoImportDataService.importData(dataList,tempList,userName,orgCode,deptCode);
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/mergeInfoList")
+    public void mergeInfoList(@RequestBody List<ComInterestRateQuotationInfoDto> equityList){
+        for (ComInterestRateQuotationInfoDto dto:equityList){
+            dto.setIntRateType(DictCodeListExt1.基准类型_2_利率.getValue());
+            dto.setInputType(DictCodeListExt1.录入方式_系统导入.getValue());
+        }
+        comInterestRateQuotationInfoService.mergeInfoList(equityList);
     }
-    //hsgexinghua add by zhangxing1 20200228 end
+    // add by zwq 20210222 增加基准利率行情导入功能 end
+
 }

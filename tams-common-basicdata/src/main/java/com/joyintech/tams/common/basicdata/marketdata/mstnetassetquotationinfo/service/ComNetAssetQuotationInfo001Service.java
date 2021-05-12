@@ -10,6 +10,9 @@
 
 package com.joyintech.tams.common.basicdata.marketdata.mstnetassetquotationinfo.service;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +22,7 @@ import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
 import com.joyintech.tams.common.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto;
 import com.joyintech.tams.common.basicdata.util.ComBasicDataExcelUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +34,13 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
@@ -64,7 +70,9 @@ public class ComNetAssetQuotationInfo001Service extends CommonExportService<ComN
     public Page<ComNetAssetQuotationInfo001Dto> selectForPage(Map<String, Object> pageParam) {
         pageParam.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue());
         pageParam.put("PROFITTYPE_VALUE_03", DictCodeList.收益类型_货币型.getValue());
-        pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        /** modify by yanya on 20210209 改为用估值侧类型过滤 **/
+        //pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         return restTemplate.postForPage(
             ServiceApplication.CommonBasicDataService + "/ComNetAssetQuotationInfo/findPage", pageParam,
             ComNetAssetQuotationInfo001Dto.class);
@@ -153,7 +161,9 @@ public class ComNetAssetQuotationInfo001Service extends CommonExportService<ComN
     protected void buildExportParam(ExportParam exportParam) {
         Map<String, Object> param = exportParam.getSelectParam();
         param.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue());
-        param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        /** modify by yanya on 20210209 改为用估值侧类型过滤 **/
+        //param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         exportParam.config(
                 "/com/joyintech/tams/common/basicdata/marketdata/mstnetassetquotationinfo/conf/export_conf.xml").dataSource(
                 DataSourceType.MASERT);
@@ -216,46 +226,191 @@ public class ComNetAssetQuotationInfo001Service extends CommonExportService<ComN
             map, ComNetAssetQuotationInfo001Dto.class);
     }
 
-
-    //hsgexinghua   add by zhangxing1 20200220 start
-
     /**
-     * 导入数据文件之前检查数据
-     *
-     * @param fileName 导入的文件名
-     * @return 处理结果
+     * 根据条件查询所有数据
+     * @param selectParam
+     * @return
      */
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        Map<String,Object> param = new HashMap<String,Object>();
-        param.put("dataList", ComBasicDataExcelUtil.getDataListLocal(fileName));
-        param.put("orgCode", CommonUtil.getOrgCode());
-        param.put("deptCode", CommonUtil.getDeptCode());
-        return restTemplate.postForObject(
-                ServiceApplication.CommonBasicDataService + "/ComNetAssetQuotationInfo/checkConfirmMsgForImportData",
-                param,
-                AjaxResult.class);
+    public List<ComNetAssetQuotationInfo001Dto> selectAllList(Map<String, Object> selectParam) {
+        return restTemplate.postForList(ServiceApplication.CommonBasicDataService
+                        + "/ComNetAssetQuotationInfo/selectAllList",
+                selectParam,ComNetAssetQuotationInfo001Dto.class);
+    }
+    /**
+     * 导入check
+     * @param fileName
+     * @return
+     */
+    public AjaxResult checkImportData(String fileName) {
+        List<List<String>> objects = ExcelUtil.getTempList(fileName);
+        if (objects.size() - 1 > 1000) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("errorMsg", "行情单次最多导入1000条。");
+            AjaxResult wr = new AjaxResult();
+            wr.setData(resultMap);
+            return wr;
+        }
+        String totalMsg = "";
+        List<List<String>> jsonArrays = new ArrayList<>();
+        // 重复数据
+        int repeatNum = 0;
+        if (objects.size() <= 1) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("errorMsg", "数据格式错误，内容需要大于1行，模板是有表头的。");
+            AjaxResult wr = new AjaxResult();
+            wr.setData(resultMap);
+            return wr;
+        } else {
+            if (null == objects.get(0) || objects.get(0).size() != 5) {
+                Map<String, Object> resultMap = new HashMap<>();
+                resultMap.put("errorMsg", "数据格式错误，数据格式需要5列。");
+                AjaxResult wr = new AjaxResult();
+                wr.setData(resultMap);
+                return wr;
+            }else {
+                StringBuilder returnerrorMsg = new StringBuilder("");
+                for (int i = 1; i < objects.size(); i++) {
+                    StringBuilder errorMsg = new StringBuilder("");
+                    List<String> rowData = objects.get(i);
+                    //资产代码 必填
+                    if (!StringUtil.isNotEmpty(rowData.get(0))){
+                        errorMsg.append("资产代码 必填！");
+                    }
+                    //资产名称 必填
+                    /*if (!StringUtil.isNotEmpty(rowData.get(1))){
+                        errorMsg.append("资产名称 必填！");
+                    }*/
+                    //估值日期 必填
+                    if (!StringUtil.isNotEmpty(rowData.get(2))){
+                        errorMsg.append("估值日期 必填！");
+                    }
+                    //万份收益/净值 必填
+                    if (!StringUtil.isNotEmpty(rowData.get(3))){
+                        errorMsg.append("万份收益/净值 必填！");
+                    }
+                    //管理人 必填
+                    if (!StringUtil.isNotEmpty(rowData.get(4))){
+                        errorMsg.append("管理人 必填！");
+                    }
+                    if (StringUtil.isNotEmpty(errorMsg.toString())){
+                        errorMsg.append("<br />");
+                        returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
+                    }
+                }
+                if (StringUtil.isNotEmpty(returnerrorMsg.toString())){
+                    Map<String, Object> resultMap = new HashMap<>();
+                    resultMap.put("errorMsg", returnerrorMsg.toString());
+                    AjaxResult wr = new AjaxResult();
+                    wr.setData(resultMap);
+                    return wr;
+                }
+                for (int i = objects.size() - 1; i >= 1; i--) {
+                    List<String> list1 = objects.get(i);
+                    Boolean isRepeat = false;
+                    for (int k = i - 1; k >= 1; k--) {
+                        List<String> list2 = objects.get(k);
+                        //资产代码、估值日期，相同时为重复数据
+                        if ((StringUtil.equals(list1.get(0), list2.get(0)) && StringUtil.equals(list1.get(2), list2.get(2)))) {
+                            isRepeat = true;
+                            break;
+                        }
+                    }
+                    if (isRepeat){
+                        repeatNum++;
+                    }else {
+                        jsonArrays.add(list1);
+                    }
+                }
+            }
+        }
+        if (repeatNum > 0){
+            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        if (StringUtil.isNotBlank(totalMsg)) {
+            resultMap.put("confirmMsg", totalMsg);
+        }
+        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+        AjaxResult wr = new AjaxResult();
+        wr.setData(resultMap);
+        return wr;
     }
 
-
-
     /**
-     * 导入数据文件
-     *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * 计划类净值/货币资产估值行情
+     * @param tempList
+     * @return
+     * @throws IOException 
      */
-    public List<ExcelValidDto> importData(String fileName) {
-        Map<String,Object> param = new HashMap<String,Object>();
-        param.put("dataList", ComBasicDataExcelUtil.getDataListLocal(fileName));
-        param.put("tempList", ComBasicDataExcelUtil.getTempListLocal(fileName));
-        param.put("userName", CommonUtil.getUserName());
-        param.put("orgCode", CommonUtil.getOrgCode());
-        param.put("deptCode", CommonUtil.getDeptCode());
-        return restTemplate.postForList(
-                ServiceApplication.CommonBasicDataService + "/ComNetAssetQuotationInfo/importData",
-                param,
-                ExcelValidDto.class);
+    public ComNetAssetQuotationInfo001Dto getValNetAssetQuotationInfoListData(String tempList) throws IOException {
+        ComNetAssetQuotationInfo001Dto dto = new ComNetAssetQuotationInfo001Dto();
+        // 行情信息列表
+        List<ComNetAssetQuotationInfo001Dto> valNetAssetQuotationInfoList = new ArrayList<>();
+        dto.setSelectedItem(valNetAssetQuotationInfoList);
+        List<String> objects = JsonUtils.json2List(tempList,String.class);
+
+        for (int i = 0; i < objects.size(); i++) {
+//            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
+        	List<String> rowData = JsonUtils.json2List(objects.get(i),String.class);
+            ComNetAssetQuotationInfo001Dto valNetAssetQuotationInfo001Dto = new ComNetAssetQuotationInfo001Dto();
+            // 资产代码【0】
+            if (StringUtil.isNotEmpty(rowData.get(0))) {
+                valNetAssetQuotationInfo001Dto.setFinprodId(rowData.get(0).toString());
+            }
+            // 资产名称【1】
+            if (StringUtil.isNotEmpty(rowData.get(1))) {
+                valNetAssetQuotationInfo001Dto.setFinProdName(rowData.get(1).toString());
+            }
+            // 估值日期【2】
+            if (StringUtil.isNotEmpty(rowData.get(2))) {
+                valNetAssetQuotationInfo001Dto.setValDate(DateUtil.parse(rowData.get(2).toString()));
+            }
+            // 万份收益/净值【3】
+            if (StringUtil.isNotEmpty(rowData.get(3))) {
+                valNetAssetQuotationInfo001Dto.setValuation(new BigDecimal(rowData.get(3).toString()));
+            }
+            // 管理人【4】
+            if (StringUtil.isNotEmpty(rowData.get(4))) {
+                valNetAssetQuotationInfo001Dto.setFundManager(rowData.get(4).toString());
+            }
+            valNetAssetQuotationInfo001Dto.setFinProdMarketId(valNetAssetQuotationInfo001Dto.getFinprodId());
+            valNetAssetQuotationInfoList.add(valNetAssetQuotationInfo001Dto);
+        }
+        dto.setSelectedItem(valNetAssetQuotationInfoList);
+        return dto;
     }
-	
-	
+
+    public AjaxResult importFile(Map<String, Object> param) throws IOException {
+        AjaxResult ajaxResult = new AjaxResult();
+        String tempList = (String) param.get("tempList");
+        ComNetAssetQuotationInfo001Dto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<ComNetAssetQuotationInfo001Dto> selectedItem = dto.getSelectedItem();
+        List<ComNetAssetQuotationInfo001Dto>  existData = new ArrayList<>();
+        List<ComNetAssetQuotationInfo001Dto>  newData = new ArrayList<>();
+        for (ComNetAssetQuotationInfo001Dto temp:selectedItem
+        ) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("finprodId",temp.getFinprodId());
+            map.put("valDate",DateUtil.format(temp.getValDate()));
+            ComNetAssetQuotationInfo001Dto dto1 = this.selectByIdAndDate(map);
+            //数据已存在 【资产代码、估值日 相同】，做更新操作。
+            if (StringUtil.isNotEmpty(dto1)){
+                existData.add(temp);
+            }else {
+                newData.add(temp);
+            }
+        }
+        //更新操作
+        for (ComNetAssetQuotationInfo001Dto existDataDto : existData
+        ) {
+            this.doComplete(existDataDto,OperationType.MODIFY);
+        }
+        //插入操作
+        for (ComNetAssetQuotationInfo001Dto newDataDto : newData
+        ) {
+            this.doComplete(newDataDto,OperationType.NEW);
+        }
+        ajaxResult.setStatuCode(HttpStatus.OK.value());
+        return ajaxResult;
+    }
 }

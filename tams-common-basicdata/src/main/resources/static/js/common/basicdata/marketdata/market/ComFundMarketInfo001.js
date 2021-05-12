@@ -24,7 +24,7 @@ $(function() {
 
 		return {
 			fundCode : $("#fundCode").val(),
-			fundName : $('#fundName').val(),
+			fundName : $('#fundName').find("option:selected").text(),
 			fundType : $('#fundType').val(),
 			valueSource : $('#valueSource').val(),
 			startDate : $('#valueDate').startDate(),
@@ -60,20 +60,20 @@ $(function() {
 		},*/
 		
 	
-		 cellMinWidth : 100,
+		 cellMinWidth : 50,
 //		 loadonce : true,
 		cols : [ {
 			field : 'finprodId',
-			width : 120,
+			width : 160,
 			title : '基金代码'
-		}, {
+		},{
 			field : 'fundName',
-			//width : 120,
+			width : 230,
 			title : '基金名称'
 		}, {
 			field : 'fundTypeFmt',
 			sortField:'fundType', 
-			width : 120,
+			width : 100,
 			title : '基金类型'
 		}, 
 //		{
@@ -84,41 +84,90 @@ $(function() {
 //		}, 
 		{
 			field : 'valueDate',
-			width : 120,
+			width : 100,
 			title : '估值日期'
 		}, {
 			field : 'closePrice',
-			width : 100,
+			width : 50,
+				digit: 3,
 			type  : "money",
 			title : '收盘价'
 		}, {
 			field : 'averagePrice',
-			width : 100,
+				digit: 3,
+			width : 50,
 			type  : "money",
 			title : '平均价'
 		}, {
 			field : 'maxPrice',
-			width : 100,
+				digit: 3,
+			width : 50,
 			type  : "money",
 			title : '最高价'
 		}, {
 			field : 'minPrice',
-			width : 100,
+				digit: 3,
+			width : 50,
 			type  : "money",
 			title : '最低价'
 		}, {
 			field : 'buyOnePrice',
-			width : 100,
+				digit: 3,
+			width : 50,
 			type  : "money",
 			title : '买一价'
 		}, {
 			field : 'sellOnePrice',
-			width : 100,
+				digit: 3,
+			width : 50,
 			type  : "money",
 			title : '卖一价'
-		} ]
+		},
+		{
+			field:'operation',
+			title: '操作' ,
+			type:'action',
+			buttons: ['edit', 'delt'] ,
+			width:50
+		}]
 	});
 
+	/**
+	 * 绑定编辑事件
+	 */
+	table.bind('click', '.edit', function(data, index) {
+		data.valueDate = new Date(data.valueDate).format();
+		data.pageModel=PAGE_MODEL_EDIT;
+		data.operateType='edit';
+		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/check', data, function(result) {
+			Joyin.confirm("请确认是否要修改？", function(){
+				Joyin.dialog(JoyinUtil.getLabel("每日债券行情编辑"),
+					basePath + "common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/init",
+					"85%", "85%",data,
+					function(){table.reload();});
+			});
+		});
+
+	});
+	/**
+	 * 绑定删除事件
+	 */
+	table.bind('click', '.delt', function(data, index) {
+		var object = {
+			finprodId:data.finprodId,
+			secId:data.secId,
+			valueDate:data.valueDate,
+			selectedItem: [data],
+			operateType:"delete"
+		};
+		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/check', object, function(result) {
+			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/delete', object, "ComFundMarketInfo001_btn_delete", "ValFundMarketInfo002",function(){
+					table.reload();
+				});
+			});
+		});
+	});
 	
 	/**
 	 * 画面加载完成
@@ -129,6 +178,7 @@ $(function() {
 	 */
 	$('#ComFundMarketInfo001_btn_search').click(function() {
 		table.load();
+		$('#ComFundMarketInfo001_btn_delete').show();
 	});
 	 /**
      * 导出
@@ -136,17 +186,84 @@ $(function() {
     $('#ComFundMarketInfo001_btn_export').click(function() {
         exportExcel();
     });
-    
-    // 导入按钮点击事件
-    $('#ComFundMarketInfo001_btn_import').click(function() {
-        Joyin.confirm("请确认是否要导入数据？", function() {
-            Joyin.uploadFile(function(fileName) {
-                Joyin.ajax(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                    Joyin.ajax(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/importFile', {fileName: fileName});
-                });
-            },function() {
-                table.reload();
-            });
-        });
-    });
+
+	/**
+	 * 删除选中的数据
+	 */
+	$('#ComFundMarketInfo001_btn_delete').click(function () {
+		if(table!=null && table!=''){
+			var selArr = table.getAllCheckedRows();
+		}
+		if (!selArr || selArr.length == 0) {
+			Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+			return;
+		}
+		var object = {selectedItem: selArr, operateType:"delete"};
+		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/check', object, function(result) {
+			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/delete', object, "ComFundMarketInfo001_btn_delete", "ValFundMarketInfo002",function () {
+					table.reload();
+				});
+			});
+		});
+	});
+
+	/**
+	 * 新建
+	 */
+	$('#ComFundMarketInfo001_btn_add').click(function () {
+		Joyin.dialog(JoyinUtil.getLabel("每日基金行情新建"), basePath +'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/init', '85%', '85%');
+	});
+	/**
+	 * 导入按钮
+	 */
+	$('#ComFundMarketInfo001_btn_import').click(function() {
+		Joyin.uploadFile({pageId:'ValFundMarketInfo001MTM'},function(fileName) {
+			Joyin.ajax(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/checkImportData', {fileName: fileName}, function(checkResult) {
+				if (checkResult) {
+					setTimeout( function () {
+						if(checkResult.data.errorMsg){
+							Joyin.error(checkResult.data.errorMsg);
+							return;
+						}
+						if (checkResult.data.confirmMsg) {
+							Joyin.confirm(checkResult.data.confirmMsg, function () {
+								var data = {
+									tempList: checkResult.data.correctData
+								}
+								Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/importFile', data,
+									function (resultObj) {
+										if (resultObj.statuCode.toString() === '200') {
+											/** modify by yanya on 20210329 修正导入逻辑**/
+											//Joyin.alert("文件导入成功！");
+											table.reload();
+											return;
+										}
+									});
+							}, {}, function () {
+								layui.layer.closeAll()
+								table.reload();
+							});
+						}else {
+							var data = {
+								tempList: checkResult.data.correctData
+							}
+							Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/importFile', data,
+								function (resultObj) {
+									if (resultObj.statuCode.toString() === '200') {
+										/** modify by yanya on 20210329 修正导入逻辑**/
+										//Joyin.alert("文件导入成功！");
+										table.reload();
+										return;
+									}
+								});
+						}
+					}
+					,1000);
+				}
+			});
+		},function() {
+			table.reload();
+		});
+	});
 });

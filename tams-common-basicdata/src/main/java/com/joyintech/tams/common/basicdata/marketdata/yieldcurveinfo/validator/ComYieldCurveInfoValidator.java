@@ -69,12 +69,12 @@ public class ComYieldCurveInfoValidator implements BeanValidator {
             }
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
                 // 点击编辑按钮，判断曲线日期小于平台日期
-                Date curveDate = dto.getCurveDate();
-                if (DateUtil.compareDate(curveDate, sysDate) < 0) {
-                    errorList.add(new ValidMessage("curveDate",
-                        getMessage("BUSS_COM_E_0018", getMessage("ComYieldCurveInfo001.curveDate"),
-                            getMessage("ComYieldCurveInfo001.sysDate"))));
-                }
+//                Date curveDate = dto.getCurveDate();
+//                if (DateUtil.compareDate(curveDate, sysDate) < 0) {
+//                    errorList.add(new ValidMessage("curveDate",
+//                        getMessage("BUSS_COM_E_0018", getMessage("ComYieldCurveInfo001.curveDate"),
+//                            getMessage("ComYieldCurveInfo001.sysDate"))));
+//                }
             }
 
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
@@ -86,12 +86,12 @@ public class ComYieldCurveInfoValidator implements BeanValidator {
                 List<ComYieldCurveInfoDto> items = dto.getSelectedItem();
                 for (ComYieldCurveInfoDto comYieldCurveInfoDto : items) {
                     Date curveDate = comYieldCurveInfoDto.getCurveDate();
-                    if (DateUtil.compareDate(curveDate, sysDate) < 0) {
-                        errorList.add(new ValidMessage("curveDate",
-                            getMessage("BUSS_COM_E_0015",
-                                getMessage("ComYieldCurveInfo001.curveDate"),
-                                getMessage("ComYieldCurveInfo001.sysDate"))));
-                    }
+//                    if (DateUtil.compareDate(curveDate, sysDate) < 0) {
+//                        errorList.add(new ValidMessage("curveDate",
+//                            getMessage("BUSS_COM_E_0015",
+//                                getMessage("ComYieldCurveInfo001.curveDate"),
+//                                getMessage("ComYieldCurveInfo001.sysDate"))));
+//                    }
                 }
             }
         }

@@ -78,12 +78,15 @@ public class ComRateSwapValuationInfo002Service extends CommonExportService<ComR
      * @param dto
      */
     public void updateByPrimaryKeySelective(ComRateSwapValuationInfo002Dto dto) {
-        MstValIrs mstValIrs = new MstValIrs();
+
+        comRateSwapValuationInfo002Mapper.updateByPrimaryKeySelective(dto);
+
+/*        MstValIrs mstValIrs = new MstValIrs();
 
         BeanUtils.copyProperties(dto, mstValIrs);
         mstValIrs.setValDate(DateUtil.parse(dto.getValDate()));
 
-        mstValIrsMapper.updateByPrimaryKeySelective(mstValIrs);
+        mstValIrsMapper.updateByPrimaryKeySelective(mstValIrs);*/
     }
 
     /**

@@ -13,6 +13,7 @@ package com.joyintech.service.basicdata.marketdata.mstshareprice.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -38,25 +39,11 @@ public interface ComSharePrice001Mapper {
     List<SelectOptionDto> getFinprodIdForAdd(Map<String, String> map);
     
     /**
-    * 查询新增数据主键是否重复
-    * @param list 产品list
-    * @return list
-    * @see
-    * @since 1.0
-    */
-
-   String getRegistExcelList( Map<String,Object> param );
-
-   /**
-    * 查询新增数据产品代码是否存在
-    * @param finprodId 产品代码
-    * @param finprodType2 金融产品类型
-    * @return list
-    * @see
-    * @since 1.0
-    */
-
-   String  checkFinprod( Map<String,Object> param) ;
-
-   String  checkFinprodIdAndFinprodName( Map<String,Object> param) ;
+     * 保存，已存在则更新
+     * 
+     * @param insertList 需要保存的数据
+     * @see
+     * @since 1.0
+     */
+    int mergeInfoList(@Param("newDataList")List<ComSharePriceDto> insertList);
 }

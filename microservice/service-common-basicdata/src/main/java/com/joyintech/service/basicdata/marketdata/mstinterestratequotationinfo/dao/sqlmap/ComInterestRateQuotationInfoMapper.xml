@@ -31,14 +31,13 @@
 				AND INT_RATE_ID =  #{intRateId,jdbcType=VARCHAR}
 			</if>
 			<if test="intRateIdList != null and intRateIdList.size() > 0">
-					AND (INT_RATE_ID in 
-					<foreach collection="intRateIdList" item="item" index= "index" open="(" close=")" separator="," >
-		                <if test="(index % 998) == 0">
-		                	null) or INT_RATE_ID in (
-		                </if>
-		                #{item}
-            		</foreach>
-            		)
+				AND (INT_RATE_ID in
+				<foreach collection="intRateIdList" item="item" index="index" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR INT_RATE_ID in (
+					</if>
+					#{item}
+				</foreach>)
 			</if>
 		</where>
 	</select>
@@ -47,37 +46,58 @@
 			<include refid="Base_Column_List"></include>
 		from MST_INT_RATE_INFO where INT_RATE_ID =#{intRateId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE} and CCY = #{ccy}
 	</select>
-	
-	<!--   hsgexinghua add by zhangxing1 20200228   主键判断利率行情信息是否存在-->
-	<select id="getRegistExcelList" resultType="java.lang.String">
-		select
-			A.INT_RATE_ID intRateId
-		from
-			MST_INT_RATE_INFO A
-		 where
-			A.INT_RATE_ID =#{intRateId,jdbcType=VARCHAR} and A.EFF_DATE = #{effDate,jdbcType=DATE}
+
+	<select id="getIntRateId" resultType="java.lang.String">
+		select ITEM_CODE from sys_datadict_list where dict_code = 'SECRATE_DATA' and item_value=#{intRateName,jdbcType=VARCHAR}
 	</select>
 
-	<!--   hsgexinghua add by zhangxing1 20200228   查询导入利率代码-->
-	<select id="getIntRateIdByName" resultType="com.joyintech.service.basicdata.marketdata.mstinterestratequotationinfo.dto.ComInterestRateQuotationInfoDto">
-    	SELECT
-    		item_code intRateId
-		FROM
-    		SYS_DATADICT_LIST  SDL
-		WHERE
-    	SDL.dict_code = #{SECRATE_DATA,jdbcType=VARCHAR}
-		AND
-    	SDL.item_value = #{IntRateName,jdbcType=VARCHAR}
-    </select>
-    
-    <select id="checkCcy" resultType="java.lang.String">
-    	SELECT
-    		item_code ccy
-		FROM
-    		SYS_DATADICT_LIST  SDL
-		WHERE
-    	SDL.dict_code = 'CCY'
-		AND
-    	SUBSTR(item_value, 0, decode(INSTR(item_value,'('),0,INSTR(item_value,'（'),INSTR(item_value,'('))-1) = #{ccy,jdbcType=VARCHAR}
-    </select>
+	<!-- add by zwq 20210222 增加基准利率行情导入功能 start -->
+	<insert id="mergeInfoList"  parameterType="com.joyintech.service.basicdata.marketdata.mstinterestratequotationinfo.dto.ComInterestRateQuotationInfoDto">
+				MERGE INTO MST_INT_RATE_INFO CII
+				USING (
+				<foreach collection="newDataList" item="item" open="select * from("
+						 close=")" separator="union all">
+					select
+					#{item.intRateId,jdbcType=VARCHAR} INT_RATE_ID,
+					#{item.intRateType,jdbcType=VARCHAR} INT_RATE_TYPE,
+					#{item.effDate,jdbcType=DATE} EFF_DATE,
+					#{item.relaeseDate,jdbcType=DATE} RELAESE_DATE,
+					#{item.intRate,jdbcType=DECIMAL} INT_RATE,
+					#{item.ccy,jdbcType=VARCHAR} CCY,
+					#{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,
+					#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+					sysdate CREATE_TIME,
+					#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+					sysdate UPDATE_TIME,
+					#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+					from dual
+				</foreach>
+				) TEMP
+				<!-- 业务主键匹配 -->
+				ON (CII.INT_RATE_ID = TEMP.INT_RATE_ID AND CII.EFF_DATE = TEMP.EFF_DATE)
+				<!-- 匹配到则更新 -->
+				WHEN MATCHED THEN
+				UPDATE
+				SET
+				CII.INT_RATE_TYPE = TEMP.INT_RATE_TYPE,
+				CII.RELAESE_DATE = TEMP.RELAESE_DATE,
+				CII.INT_RATE = TEMP.INT_RATE,
+				CII.CCY = TEMP.CCY,
+				CII.INPUT_TYPE = TEMP.INPUT_TYPE,
+				CII.CREATE_USER = TEMP.CREATE_USER,
+				CII.CREATE_TIME = TEMP.CREATE_TIME,
+				CII.UPDATE_USER = TEMP.UPDATE_USER,
+				CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+				CII.CREATE_DEPT = TEMP.CREATE_DEPT
+				<!-- 未匹配到则插入 -->
+				WHEN NOT MATCHED THEN
+				INSERT (INT_RATE_ID,INT_RATE_TYPE,EFF_DATE,RELAESE_DATE,INT_RATE,CCY,INPUT_TYPE
+				,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,CREATE_DEPT)
+				values(
+				TEMP.INT_RATE_ID,TEMP.INT_RATE_TYPE,TEMP.EFF_DATE,TEMP.RELAESE_DATE,
+				TEMP.INT_RATE,TEMP.CCY,TEMP.INPUT_TYPE,TEMP.CREATE_USER,TEMP.CREATE_TIME,
+				TEMP.UPDATE_USER,TEMP.UPDATE_TIME,TEMP.CREATE_DEPT
+				)
+	</insert>
+	<!-- add by zwq 20210222 增加基准利率行情导入功能 end -->
 </mapper>

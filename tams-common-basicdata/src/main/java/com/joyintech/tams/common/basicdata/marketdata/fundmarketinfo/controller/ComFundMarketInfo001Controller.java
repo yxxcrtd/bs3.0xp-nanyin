@@ -11,19 +11,19 @@
 package com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -36,9 +36,15 @@ import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto;
 import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.service.ComFundMarketInfo001Service;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -67,6 +73,13 @@ public class ComFundMarketInfo001Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.基金类型);
         this.setSelectOptionToModel(model, DictCode.估值交易市场);
         return super.init(model);
+    }
+
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody ComFundMarketInfo001dto dto) {
+        AjaxResult ajaxResult = new AjaxResult();
+        return ajaxResult;
     }
 
     /**
@@ -139,30 +152,60 @@ public class ComFundMarketInfo001Controller extends BaseController {
 
         return paraMap;
     }
-    
+
     /**
-     * 导入数据文件之前检查数据
+     *  删除
+     * @param dto 页面选中的数据
+     * @param br br
+     * @return 结果
+     * @throws Exception 异常
+     */
+    @ResponseBody
+    @RequestMapping(ACTION_DELETE)
+    public AjaxResult delete(@RequestBody @Validated({
+            ValidateGroupDelete.class}) ComFundMarketInfo001dto dto, BindingResult br)
+            throws Exception {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        ProcessParameter<ComFundMarketInfo001dto> processParameter = new ProcessParameter<ComFundMarketInfo001dto>();
+        WorkFlowParameter<ComFundMarketInfo001dto> params = new WorkFlowParameter<ComFundMarketInfo001dto>();
+        params.setPageId("ValFundMarketInfo002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(item -> item.getFinprodId());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_每日基金行情信息.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        // 业务说明：债券代码 + "(" + 债券代码 + ")" + "-" + "估值日" + "-" + "估值日"
+        params.setComment(entity ->"基金代码(" + entity.getFundCode() + ")" + "-" + "估值日期(" + entity.getValueDate()+ ")"
+                + "-" + "基金类型(" + entity.getFundTypeFmt() + ")");
+        processParameter.setWorkFlowParameter(params);
+        String msg = comFundMarketInfo001Service.start(processParameter,
+                dto.getSelectedItem().toArray(
+                        new ComFundMarketInfo001dto[dto.getSelectedItem().size()]));
+        return new AjaxResult(msg);
+
+    }
+    /**
+     * 导入
      *
      * @param fileName 导入的文件名
      * @return 处理结果
      */
     @ResponseBody
-    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return comFundMarketInfo001Service.checkConfirmMsgForImportData(fileName);
+    @RequestMapping("checkImportData")
+    public AjaxResult checkImportData(String fileName) {
+        return comFundMarketInfo001Service.checkImportData(fileName);
     }
 
     /**
-     * 导入数据文件
      *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * @param param
+     * @return
+     * @throws IOException 
      */
     @ResponseBody
-    @RequestMapping("/importFile")
-    public List<ExcelValidDto> importData(String fileName) {
-        return this.comFundMarketInfo001Service.importData(fileName);
-
+    @RequestMapping("importFile")
+    public AjaxResult importFile(@RequestBody Map<String, Object> param) throws IOException {
+        return comFundMarketInfo001Service.importFile(param);
     }
-
 }

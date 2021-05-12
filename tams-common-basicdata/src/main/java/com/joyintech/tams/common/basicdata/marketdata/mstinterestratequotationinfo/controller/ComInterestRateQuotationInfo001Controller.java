@@ -8,13 +8,12 @@
  * 系统名称：理财资管管理系统V2.0
  */
 package com.joyintech.tams.common.basicdata.marketdata.mstinterestratequotationinfo.controller;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.basicdata.marketdata.mstinterestratequotationinfo.dto.ComInterestRateQuotationInfoDto;
-import com.joyintech.tams.common.basicdata.marketdata.mstinterestratequotationinfo.service.ComInterestRateQuotationInfoService;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -33,11 +31,18 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.common.basicdata.marketdata.mstinterestratequotationinfo.dto.ComInterestRateQuotationInfoDto;
+import com.joyintech.tams.common.basicdata.marketdata.mstinterestratequotationinfo.service.ComInterestRateQuotationInfoService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
@@ -108,8 +113,38 @@ public class ComInterestRateQuotationInfo001Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
         throws Exception {
-        return comInterestRateQuotationInfoService.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
+//        return comInterestRateQuotationInfoService.export(this.getPageId(),
+//            RequestUtil.getParameters(getRequest()));
+
+        String datas = this.getParam("datas");
+        List<ComInterestRateQuotationInfoDto> listdto ;
+
+        if (datas == null) {
+            Map<String, Object> pageParam = RequestUtil.getParameters(getRequest());
+            SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.利率行情, null);
+            List<String> intRateIdList = new ArrayList<String>();
+            if (selectDto != null && !StringUtil.isEmptyList(selectDto.getOptions())) {
+                List<SelectOptionDto> options = selectDto.getOptions();
+                for(SelectOptionDto selectOptionDto :options){
+                    intRateIdList.add(selectOptionDto.getId());
+                }
+            }
+            pageParam.put("intRateIdList", intRateIdList);
+            listdto = comInterestRateQuotationInfoService.selectForList(pageParam);
+        }
+        else {
+            listdto = JsonUtils.json2List(datas, ComInterestRateQuotationInfoDto.class);
+        }
+        File outFile = comInterestRateQuotationInfoService.makeFile(
+                "com/joyintech/tams/common/basicdata/marketdata/mstinterestratequotationinfo/conf/export_conf.xml",
+                listdto);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 
     /**
@@ -162,32 +197,14 @@ public class ComInterestRateQuotationInfo001Controller extends BaseController {
                 new ComInterestRateQuotationInfoDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
     }
-    
- // hsgexinghua   add by zhanngxing1 20200220 start
 
-    /**
-     * 导入数据文件之前检查数据
-     *
-     * @param fileName 导入的文件名
-     * @return 处理结果
-     */
+    // add by zwq 20210222  start
+    // 添加批量导入功能
     @ResponseBody
-    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return comInterestRateQuotationInfoService.checkConfirmMsgForImportData(fileName);
+    @RequestMapping("importFile")
+    public List<ExcelValidDto> importData(String fileName)
+            throws Exception{
+        return comInterestRateQuotationInfoService.importData(fileName);
     }
-
-    /**
-     * 导入数据文件
-     *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
-     */
-    @ResponseBody
-    @RequestMapping("/importFile")
-    public List<ExcelValidDto> importData(String fileName) {
-        return this.comInterestRateQuotationInfoService.importData(fileName);
-
-    }
-
+    // add by zwq 20210222  end
 }

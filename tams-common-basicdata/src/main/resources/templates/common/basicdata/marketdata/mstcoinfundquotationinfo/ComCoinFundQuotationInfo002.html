@@ -17,13 +17,10 @@
                     <label class="layui-form-label form-lable mst-lable"
                            data-th-text="#{ComCoinFundQuotationInfo001.finprodId}">基金代码</label>
                     <div class="layui-input-inline input-inline mst-input">
-                        <input type="text" id="finprodMarketId" maxlength="32"
-                               name="finprodMarketId" class="layui-input form-input input-lenovoselect"
-                               data-th-value='${entity?.finprodMarketId}' placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}"
-                               data-th-data-url="@{/common/basicdata/marketdata/mstcoinfundquotationinfo/ComCoinFundQuotationInfo002/queryFinprod}"
-                               required="required" data-idfield="code" data-keyfield="code"
-                               data-th-data-effectivefieldsalias='|{"code":"#{ComCoinFundQuotationInfo001.productCode}","shortName":"#{ComCoinFundQuotationInfo001.productName}"}|'>
+                        <select id="finprodMarketId" name="finprodMarketId" class="layui-input form-input input-select" allowClear="true"
+                                data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.finprodMarketId}"
+                                data-th-data-url="@{/common/basicdata/marketdata/mstcoinfundquotationinfo/ComCoinFundQuotationInfo002/queryFinprod}" >
+                        </select>
                         <input type="hidden" id="finprodId" name="finprodId"
                                data-th-value="${entity?.finprodMarketId}">
                     </div>
@@ -32,9 +29,10 @@
                     <label class="layui-form-label form-lable mst-lable"
                            data-th-text="#{ComCoinFundQuotationInfo002.finprodType}">基金类型</label>
                     <div class="layui-input-inline input-inline">
-                        <input id="finprodChiType" name="finprodChiType" type="text"
-                               placeholder="请输入内容" data-th-value="${entity?.finprodChiType}"
-                               class="layui-input form-input">
+                        <select id="finprodChiType" name="finprodChiType" class="layui-input form-input input-select" disabled
+                                data-th-data-result="${FUND_TYPE}" allowClear="true" required placeholder="请选择"
+                                data-th-initValue="${entity?.finprodType2}">
+                        </select>
                         <input type="hidden" id="finprodType2" name="finprodType2"
                                data-th-value="${entity?.finprodType2}">
                     </div>
@@ -49,7 +47,7 @@
                                placeholder="请选择时间" required="required">
                     </div>
                 </div>
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">
                     <label class="layui-form-label form-lable mst-lable"
                            data-th-text="#{ComCoinFundQuotationInfo002.publishDate}">公布日期</label>
                     <div class="layui-input-inline input-inline">
@@ -58,7 +56,7 @@
                                data-th-value='${#dates.format(entity?.publishDate,"yyyy-MM-dd")}'
                                placeholder="请选择时间">
                     </div>
-                </div>
+                </div>-->
                 <div class="layui-form-item">
                     <label class="layui-form-label form-lable mst-lable"
                            data-th-text="#{ComCoinFundQuotationInfo002.valuation}">万份收益</label>
@@ -74,15 +72,6 @@
                     <div class="layui-input-inline input-inline">
                         <input id="day7YearYield" name="day7YearYield" type="text" placeholder="请输入内容" data-textrange="4"
                                data-th-value="${entity?.day7YearYield}" class="layui-input form-input text-number" data-fixtype="2">
-                    </div>
-                </div>
-                <!-- 添加基金总份额字段     杨文君 -->
-                <div class="layui-form-item" id="cShares_div">
-                    <label class="layui-form-label form-lable mst-lable"
-                           data-th-text="#{ComCoinFundQuotationInfo002.cShares}">基金总份额</label>
-                    <div class="layui-input-inline input-inline">
-                        <input id="cShares" name="cShares" type="text" placeholder="请输入内容" data-textrange="4" maxlength="26"
-                               data-th-value="${entity?.cShares}" class="layui-input form-input text-number" data-fixtype="2" required="required">
                     </div>
                 </div>
                 <div class="layui-form-item" id="totalValue_div">

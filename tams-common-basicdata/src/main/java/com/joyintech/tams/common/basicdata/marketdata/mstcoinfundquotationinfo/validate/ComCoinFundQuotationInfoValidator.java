@@ -66,17 +66,10 @@ public class ComCoinFundQuotationInfoValidator implements BeanValidator {
 					 */
                     	  //add wangwei 1 YUCHUBS-521债券估值行情、基金估值行情、计划类资产估值行情：功能优化
                         //修改/删除时，仅能修改/删除导入日为平台日的数据
-                    	//删除时小于平台日的不能删除 by 赵东东 20191209 start 
-                        if (StringUtil.isNotEmpty(cur.getImportDay()) && DateUtil.compareDate(DateUtil.format(cur.getImportDay()), DateUtil.format(sysDate))  < 0) {
-                        	errorList.add(new ValidMessage("导入日期小于平台日，不能删除"));
-                        }
-                      //删除时小于平台日的不能删除 by 赵东东 20191209 end
-                        //BS-198   start
-                      //修改/删除时，仅能修改/删除导入日为平台日的数据
-                        if (StringUtil.isNotEmpty(cur.getImportDay()) && DateUtil.compareDate(DateUtil.format(cur.getImportDay()), DateUtil.format(sysDate))  != 0) {
-                        	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
-                        }
-                      //BS-198   end
+//                        if (StringUtil.isNotEmpty(cur.getImportDay()) && DateUtil.compareDate(DateUtil.format(cur.getImportDay()), DateUtil.format(sysDate))  != 0) {
+//                        	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
+//                        }
+                        
                     }
                 }
                 // 判断操作类型
@@ -121,9 +114,9 @@ public class ComCoinFundQuotationInfoValidator implements BeanValidator {
                 }
                 //add wangwei 1 YUCHUBS-521债券估值行情、基金估值行情、计划类资产估值行情：功能优化
                 //修改/删除时，仅能修改/删除导入日为平台日的数据
-                if (StringUtil.isNotEmpty(dto.getImportDay()) && DateUtil.compareDate(DateUtil.format(dto.getImportDay()), DateUtil.format(sysDate))  != 0) {
-                	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
-                }
+//                if (StringUtil.isNotEmpty(dto.getImportDay()) && DateUtil.compareDate(DateUtil.format(dto.getImportDay()), DateUtil.format(sysDate))  != 0) {
+//                	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
+//                }
 			/*
 			 * else if (dto.getValDate().compareTo(sysDate) < 0) { errorList.add(new
 			 * ValidMessage(getMessage( "BUSS_COM_E_0018",

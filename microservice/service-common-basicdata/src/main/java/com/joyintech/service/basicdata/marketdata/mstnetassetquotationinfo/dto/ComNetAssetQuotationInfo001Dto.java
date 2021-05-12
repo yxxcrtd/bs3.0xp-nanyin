@@ -71,11 +71,6 @@ public class ComNetAssetQuotationInfo001Dto extends FinProductValuation{
      * 收益类型
      */
     private String profitType;
-    
-    /**hsgexinghua add by zhangxing1 20200228
-     * excel 列
-     */
-    private String excelNum;
 
     
     /**
@@ -259,14 +254,6 @@ public class ComNetAssetQuotationInfo001Dto extends FinProductValuation{
 
     public void setProfitType(String profitType) {
         this.profitType = profitType;
-    }
-    
-    public String getExcelNum() {
-        return excelNum;
-    }
-
-    public void setExcelNum(String excelNum) {
-        this.excelNum = excelNum;
     }
 }
     

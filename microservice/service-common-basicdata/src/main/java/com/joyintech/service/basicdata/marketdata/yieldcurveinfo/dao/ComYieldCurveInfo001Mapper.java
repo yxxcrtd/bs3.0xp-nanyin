@@ -13,9 +13,10 @@ package com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.framework.select.SelectOptionDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto;
 
 
@@ -59,4 +60,14 @@ public interface ComYieldCurveInfo001Mapper {
      */
     List<ComYieldCurveInfoDto> selectNK(ComYieldCurveInfoDto param);
     // add by lishuping 20191008 end
+    
+    
+    /**
+     * 保存，已存在则更新
+     * 
+     * @param insertList 需要保存的数据
+     * @see
+     * @since 1.0
+     */
+    int mergeInfoList(@Param("newDataList")List<ComYieldCurveInfoDto> insertList);
 }

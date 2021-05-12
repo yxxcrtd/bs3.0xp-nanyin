@@ -36,11 +36,6 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
      */
     @Autowired
     private MstBondValuationInfoMapper mstBondValuationInfoMapper;
-//    /**
-//     * 投管接口共通组件
-//     */
-//    @Autowired
-//    private InvestInterfCommService investInterfCommService;
 
     /**
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
@@ -72,9 +67,11 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
      * 
      * @return List
      */
-    public List<SelectOptionDto> getFinprodAbbrOption(Map<String, Object> map) {
-    	map.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_债券.getValue());
-        return comBondQuotationInfoMapper.getFinprodAbbrOption(map);
+    public Page<SelectOptionDto> getFinprodAbbrOption(Map<String, Object> map, int page, int length) {
+        /** modify by yanya on 20210207 产品类型接口接入时，不接入finprod_type2,此处过滤条件用估值自身类型**/
+    	//map.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        map.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_债券.getValue());
+        return this.queryForPageForSelectReturn(page, length,() -> comBondQuotationInfoMapper.getFinprodAbbrOption(map));
     }
 
 
@@ -93,17 +90,10 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
     	if(StringUtil.isNotEmpty(entity.getBpyield())){
         entity.setBpyield(entity.getBpyield().divide(new BigDecimal(100)));
         }
-    	//TODO 此处不应该调用投管接口吧，维护个行情而已？
-        //投管接口调用 add by cxq 20200225
-//        InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
-//        investInterfCommDto.setPageId("MstBondQuotationInfo002");
-//        investInterfCommDto.setMstBondValuationInfo(entity);
-//        investInterfCommService.doInvestInterf(investInterfCommDto);
-        //投管接口调用 add by cxq 20200225
         // 入库时市价收益率除100 by 赵东东 2019.11.4 end
         return mstBondValuationInfoMapper.insert(entity);
     }
-    
+
     /**
      * 更新操作
      */
@@ -181,5 +171,43 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
     public List<SelectOptionDto> getAssetCodeList() {
         return comBondQuotationInfoMapper.getAssetCodeList();
     }
-    
+
+
+    /**
+     * 查询所有符合条件的数据
+     * @param pageParam
+     * @return
+     * @throws Exception
+     */
+    public List<ComBondQuotationInfoDto> selectAllList(Map<String, Object> pageParam) throws Exception {
+        /** modify by yanya on 20210207 产品类型接口接入时，不接入finprod_type2,此处过滤条件用估值自身类型**/
+        //pageParam.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        pageParam.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_债券.getValue());
+        return comBondQuotationInfoMapper.select(pageParam);
+    }
+
+
+   /**
+    * 保存导入数据
+    *
+    * @param list 需保存的数据
+    * @see
+    * @since 1.0
+    */
+   public void mergeInfoList(List<ComBondQuotationInfoDto> list){
+       int batchCount = 50;// 每批commit的个数
+       int batchLastIndex = batchCount;// 每批最后一个的下标
+       for (int index = 0; index < list.size();) {
+           if (batchLastIndex > list.size() - 1) {
+               batchLastIndex = list.size();
+               comBondQuotationInfoMapper.mergeInfoList(list.subList(index, batchLastIndex));
+               break;// 数据插入完毕,退出循环
+           }
+           else {
+        	   comBondQuotationInfoMapper.mergeInfoList(list.subList(index, batchLastIndex));
+               index = batchLastIndex;// 设置下一批下标
+               batchLastIndex = index + batchCount;
+           }
+       }
+   }
 }

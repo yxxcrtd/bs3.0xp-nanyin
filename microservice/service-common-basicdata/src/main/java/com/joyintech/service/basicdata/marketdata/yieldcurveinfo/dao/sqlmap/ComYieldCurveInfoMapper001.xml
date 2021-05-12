@@ -89,4 +89,52 @@
 		</if>
 	</select>
 	<!--添加曲线名称下拉框查询、添加N、K联动查询 add by lishuping 20191008 start-->
+	
+	
+		<!--  收益率曲线信息导入   -->
+	 	<insert id="mergeInfoList"  parameterType="com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto">
+    		MERGE INTO MST_YIELD_CURVE_INFO CII
+        	USING (
+        	<foreach collection="newDataList" item="item" open="select * from("
+                 close=")" separator="union all">
+            select
+            #{item.curveDate,jdbcType=VARCHAR} CURVE_DATE,
+            #{item.curveCode,jdbcType=DATE} CURVE_CODE,
+            #{item.keyPoint,jdbcType=VARCHAR} KEY_POINT,
+            #{item.yield,jdbcType=DECIMAL}/100 YIELD,
+            #{item.curveType,jdbcType=DECIMAL} CURVE_TYPE,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            sysdate CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            sysdate UPDATE_TIME,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            from dual
+        </foreach>
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON (CII.CURVE_DATE = TEMP.CURVE_DATE AND CII.CURVE_CODE = TEMP.CURVE_CODE 
+        	AND CII.KEY_POINT = TEMP.KEY_POINT)
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN
+        UPDATE
+        SET 
+        <!--CII.CURVE_DATE = TEMP.CURVE_DATE,
+        CII.CURVE_CODE = TEMP.CURVE_CODE,
+        CII.KEY_POINT = TEMP.KEY_POINT,-->
+        CII.CURVE_TYPE = TEMP.CURVE_TYPE,
+        CII.YIELD = TEMP.YIELD,
+        CII.CREATE_USER = TEMP.CREATE_USER,
+        CII.CREATE_TIME = TEMP.CREATE_TIME,
+        CII.UPDATE_USER = TEMP.UPDATE_USER,
+        CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+        CII.CREATE_DEPT = TEMP.CREATE_DEPT
+        <!-- 未匹配到这插入 -->
+        WHEN NOT MATCHED THEN
+        INSERT (CURVE_DATE,CURVE_CODE,KEY_POINT,CURVE_TYPE,YIELD,CREATE_USER
+        ,CREATE_TIME,UPDATE_USER,UPDATE_TIME,CREATE_DEPT)
+        values(
+        TEMP.CURVE_DATE,TEMP.CURVE_CODE,TEMP.KEY_POINT,TEMP.CURVE_TYPE,TEMP.YIELD,
+        TEMP.CREATE_USER,TEMP.CREATE_TIME,TEMP.UPDATE_USER,TEMP.UPDATE_TIME,TEMP.CREATE_DEPT
+        )
+    </insert>
 </mapper>

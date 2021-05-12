@@ -28,16 +28,16 @@ $(function() {
             if (pageModel==PAGE_MODEL_EDIT){
             $('#finProdMarketId').attr("disabled",true);
             $('#valDate').attr("disabled",true);
-            $('#profitType').attr("disabled",true);
+            $('#profitType').attr("disabled",true).trigger("change");
         }
     };
-    //画面联动：输入资产代码，联动显示资产名称和管理人
+    //画面联动：输入资产代码，联动显示资产名称和管理人   
     var finprodIdChange = function() {
         var finProdMarketId = $("#finProdMarketId").val();
         if (!finProdMarketId) {
-            $('#finProdName').val('');
-            $('#fundManager').val('');
-            $('#finprodId').val('');
+            $('#finProdName').val('').trigger('change');
+            $('#fundManager').val('').trigger('change');
+            $('#finprodId').val('').trigger('change');
             return;
         }
         var object = {'finProdMarketId':finProdMarketId, 'profitType': $("#profitType").val()};
@@ -67,8 +67,8 @@ $(function() {
         });
         //收益标识联动事件
         $('#profitType').change(function() {
-        	$('#finProdMarketId option').remove();
-        	finprodIdChange()
+            $("#finProdMarketId").val('').trigger('change');
+        	finprodIdChange();
         });
     });
 }());

@@ -31,6 +31,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
@@ -82,9 +83,14 @@ public class ComCoinFundQuotationInfo002Controller extends BaseController {
             map.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
             map.put("yes", DictCodeList.是否_是.getValue());
             map.put("finprodId", finprodMarketId);
-            Date date = new Date();
-            date.setTime(Long.valueOf(getParam("valDate")));
-            String val = DateUtil.format(date);
+            String val = "";
+            if (StringUtil.isNotEmpty(getParam("valDate")) && (getParam("valDate").contains("-") || getParam("valDate").contains("/"))){
+                val = DateUtil.format(DateUtil.parse(getParam("valDate")));
+            }else {
+                Date date = new Date();
+                date.setTime(Long.valueOf(getParam("valDate")));
+                val = DateUtil.format(date);
+            }
             map.put("valDate", val);
             // 根据估值日和金融代码进行查找
             List<ComCoinFundQuotationInfo001Dto> dto;
@@ -186,12 +192,12 @@ public class ComCoinFundQuotationInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryFinprod")
-    public List<SuggestDto> queryFinprod()
+    public List<SelectOptionDto> queryFinprod()
         throws Exception {
         // 画面的输入值param前台的输入值，为了进行模糊查询
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果
-        List<SuggestDto> temp = comCoinFundQuotationInfo001Service.queryFinprod(param);// 获取基金代码
+        List<SelectOptionDto> temp = comCoinFundQuotationInfo001Service.queryFinprod(param);// 获取基金代码
         return temp;// 返回基金代码
     }
     

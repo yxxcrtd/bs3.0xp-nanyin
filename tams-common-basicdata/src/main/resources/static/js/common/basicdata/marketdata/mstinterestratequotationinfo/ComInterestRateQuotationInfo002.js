@@ -21,11 +21,11 @@
         }); 	
        }; 
     
-    function　init(){
+    function init(){
         if(pageModel != PAGE_MODEL_NEW){
             $("#intRateId").attr("disabled",true);
             $("#effDate").attr("disabled",true);
-            $("#ccy").attr("disabled",true);
+            // $("#ccy").attr("disabled",true);
         }
     }
     /**

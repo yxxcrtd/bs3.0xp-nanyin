@@ -64,6 +64,11 @@ public class ComBondQuotationInfoDto extends MstBondValuationInfo implements Pro
     private Date importDay;
 
     /**
+     * 导入日fmt
+     */
+    private String importDayFmt;
+
+    /**
      * 获取 importDay
      * @return importDay.
      */
@@ -78,7 +83,23 @@ public class ComBondQuotationInfoDto extends MstBondValuationInfo implements Pro
     public void setImportDay(Date importDay) {
         this.importDay = importDay;
     }
-    
+
+    /**
+     * 获取 importDayFmt
+     * @return importDayFmt.
+     */
+    public String getImportDayFmt() {
+        return DateUtil.format(this.getImportDay());
+    }
+
+    /**
+     * 设置 importDayFmt
+     * @param importDayFmt importDayFmt
+     */
+    public void setImportDayFmt(String importDayFmt) {
+        this.importDayFmt = importDayFmt;
+    }
+
     /**
      * 目的和意义以及可能会用到的地方
      */

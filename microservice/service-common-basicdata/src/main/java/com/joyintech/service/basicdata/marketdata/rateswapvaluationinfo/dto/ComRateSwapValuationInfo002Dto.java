@@ -59,7 +59,7 @@ public class ComRateSwapValuationInfo002Dto extends BaseEntity  implements Proce
      * 处理操作
      */
     private String operateType;
-
+    private String datasourceTypeOld;
     public String getPageModel() {
         return pageModel;
     }
@@ -180,4 +180,11 @@ public class ComRateSwapValuationInfo002Dto extends BaseEntity  implements Proce
         this.inputType = inputType == null ? null : inputType.trim();
     }
 
+    public String getDatasourceTypeOld() {
+        return datasourceTypeOld;
+    }
+
+    public void setDatasourceTypeOld(String datasourceTypeOld) {
+        this.datasourceTypeOld = datasourceTypeOld;
+    }
 }

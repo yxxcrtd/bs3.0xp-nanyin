@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -25,7 +26,6 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.basicdata.marketdata.mstbondquotationinfo.service.ComBondQuotationInfoImportDataService;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 
 /**
@@ -45,12 +45,6 @@ public class ComBondQuotationInfoController {
      */
     @Autowired
     private ComBondQuotationInfoService comBondQuotationInfoService;
-    
-    /**hsgexinghua add by zhangxing1 20200228
-     * service注入
-     */
-    @Autowired
-    private ComBondQuotationInfoImportDataService comBondQuotationInfoImportDataService;
 
     /**
      * 债券代码下拉选择框
@@ -109,10 +103,11 @@ public class ComBondQuotationInfoController {
      * @return 查询结果集
      * @throws Exception 异常
      */
-    @PostMapping("getFinprodAbbrOption")
-    public List<SelectOptionDto> getFinprodAbbrOption(@RequestBody Map<String, Object> map)
+    @ResponseBody
+    @PostMapping("getFinprodAbbrOption/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodAbbrOption(@RequestBody Map<String, Object> map, @PathVariable("page") int page,@PathVariable("length") int length)
         throws Exception {
-        return comBondQuotationInfoService.getFinprodAbbrOption(map);
+        return comBondQuotationInfoService.getFinprodAbbrOption(map,page,length);
     }
 
     /**
@@ -183,41 +178,33 @@ public class ComBondQuotationInfoController {
         throws Exception {
         return comBondQuotationInfoService.selectByKey(secId, valueDate, valueSource);
     }
-    
-  //hsgexinghua add by zhangxing1 20200228 start
-
-    /**
-     * 导入数据文件之前检查数据
-     *
-     * @param param 导入的文件名
-     * @return 处理结果
-     */
-    @SuppressWarnings("unchecked")
-    @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return comBondQuotationInfoImportDataService.checkConfirmMsgForImportData(dataList);
-    }
 
 
     /**
-     * 导入数据文件
-     *
-     * @param param 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * 查询所有符合条件的数据
+     * @param param
+     * @return
+     * @throws Exception
      */
-    @SuppressWarnings("unchecked")
-    @PostMapping("importData")
-    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-        String userName=param.get("userName")==null?null:param.get("userName").toString();
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return this.comBondQuotationInfoImportDataService.importData(dataList,tempList,userName,orgCode,deptCode);
+    @PostMapping("selectAllList")
+    public List<ComBondQuotationInfoDto> selectAllList(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return comBondQuotationInfoService.selectAllList(param);
     }
-    //hsgexinghua add by zhangxing1 20200228 end
+
+
+   /**
+    *
+    * 插入数据
+    * @param equityList 参数
+    * @see
+    * @since 1.0
+    */
+   @Transactional
+   @DTXTransaction
+   @PostMapping("/mergeInfoList")
+   public void mergeInfoList(@RequestBody List<ComBondQuotationInfoDto> equityList){
+	   comBondQuotationInfoService.mergeInfoList(equityList);
+   }
 
 }

@@ -10,7 +10,10 @@
 	<div layout:fragment="content">
 		<!-- 画面内容 -->
 		<div class="form-button-area">
-			<a id="ComFundMarketInfo001_btn_import" class="layui-btn layui-btn-sm btn-import btn-default">导入</a>
+			<a id="ComFundMarketInfo001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
+			<a id="ComFundMarketInfo001_btn_import" class="layui-btn layui-btn-sm btn-import">
+				<i class="iconfont icon-import"></i><span data-th-text="#{SysCommon.import}">导入</span></a>
+			<a id="ComFundMarketInfo001_btn_delete" class="layui-btn layui-btn-sm btn-delete" data-th-text="#{SysCommon.delete}" style="display: none">删除</a>
 		</div>
 		<div class="joyin-form-wrap joyin-filter-form condition-area">
 			<form class="layui-form" id="searchForm">
@@ -18,15 +21,23 @@
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">基金代码</label>
 						<div class="layui-input-inline input-inline">
-							<input type="text" id="fundCode" name="fundCode"
-								class="layui-input form-input" placeholder="请输入内容">
+<!--							<input type="text" id="fundCode" name="fundCode"-->
+<!--								class="layui-input form-input" placeholder="请输入内容">-->
+							<select type="text" id="fundCode" name="fundCode"
+									class="layui-input form-input input-select" placeholder="请输入内容"
+									data-th-data-url="@{common/basicdata/marketdata/bondmarketinfo/ComFundMarketInfo002/getFinProductList}">
+							</select>
 						</div>
 					</div>
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">基金名称</label>
 						<div class="layui-input-inline input-inline">
-							<input type="text" id="fundName" name="fundName"
-								class="layui-input form-input" placeholder="请输入内容">
+<!--							<input type="text" id="fundName" name="fundName"-->
+<!--								class="layui-input form-input" placeholder="请输入内容">-->
+							<select type="text" id="fundName" name="fundName"
+									class="layui-input form-input input-select" placeholder="请输入内容"
+									data-th-data-url="@{common/basicdata/marketdata/bondmarketinfo/ComFundMarketInfo002/getFinProductList}">
+							</select>
 						</div>
 					</div>
 					<div class="layui-inline layui-col-md4">
@@ -53,17 +64,11 @@
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">基金类型</label>
 						<div class="layui-input-inline input-inline">
-							<!-- <input type="text" id="fundType" name="fundType"
+							<input type="text" id="fundType" name="fundType"
 								class="layui-input form-input input-select" placeholder="请选择"
 								data-url="/system/log/SysBatchLog001/getPrdGroup"
 								data-idfield="code" data-keyfield="shortName"
-								data-th-data-result="${FUND_TYPE}" allowClear="true"> --> 
-                            <select type="text" name="fundType" id="fundType"
-                                class="layui-input form-input input-select" maxlength=60 
-                                data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${FUND_TYPE}"
-                                allowClear="true" formatoption=true>
-                                <option></option>      
-                            </select>      
+								data-th-data-result="${FUND_TYPE}" allowClear="true">
 						</div>
 					</div>
 				</div>

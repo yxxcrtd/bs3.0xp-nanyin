@@ -14,4 +14,6 @@ public interface ComRateSwapValuationInfo002Mapper {
 
 
     ComRateSwapValuationInfo002Dto selectByPrimaryKey(Map<String, Object> map);
+
+    void updateByPrimaryKeySelective(ComRateSwapValuationInfo002Dto dto);
 }

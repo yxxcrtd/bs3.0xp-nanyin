@@ -70,12 +70,18 @@ public class ComRateSwapValuationInfo002Controller extends BaseController {
     @Override
     public String init(Model model) {
         String finprodId2 = getParam("finprodId2");
+        String datasourceType = getParam("datasourceType");
         ComRateSwapValuationInfo002Dto dto = new ComRateSwapValuationInfo002Dto();
         String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);// 工作流ID
 
         if (StringUtils.isNotEmpty(finprodId2)) { // 查看 、 修改
             dto = comRateSwapValuationInfo002Service.findByPrimaryKey(RequestUtil.getPageParam());
-
+            if (StringUtil.isNotEmpty(datasourceType)){
+                dto.setDatasourceTypeOld(datasourceType);
+            }
+            if (!StringUtil.isNotEmpty(datasourceType)){
+                dto.setDatasourceTypeOld(dto.getDatasourceType());
+            }
         }
         else if (StringUtil.isNotEmpty(workflowId)) { // 流程查看页面
             dto = comRateSwapValuationInfo002Service.getBussinessEntityByWorkflowId(workflowId);
@@ -83,10 +89,10 @@ public class ComRateSwapValuationInfo002Controller extends BaseController {
 
         model.addAttribute(GlobalConstant.ENTITY, dto);
         //
-        super.setSelectOptionToModel(model, DictCode.币种);
-        super.setSelectOptionToModel(model, DictCode.估值来源);
-        super.setSelectOptionToModel(model, DictCode.估值方法);
-        super.setSelectOptionToModel(model, DictCode.录入方式);
+        this.setSelectOptionToModel(model, DictCode.币种);
+        this.setSelectOptionToModel(model, DictCode.估值来源);
+        this.setSelectOptionToModel(model, DictCode.估值方法);
+        this.setSelectOptionToModel(model, DictCode.录入方式);
         return super.init(model);
     }
 
@@ -95,10 +101,11 @@ public class ComRateSwapValuationInfo002Controller extends BaseController {
      *
      * @return 返回的数据
      */
-    @RequestMapping("/getFinprodId2")
     @ResponseBody
-    public List<SelectOptionDto> getFinprodId2(HttpServletRequest request) {
-        Map<String, Object> param =RequestUtil.getPageParam();
+    @RequestMapping("/getFinprodId2")
+    public List<SelectOptionDto> getFinprodId2() {
+        // 画面的输入值param前台的输入值，为了进行模糊查询
+        Map<String, Object> param = RequestUtil.getPageParam();
         param.put("finprodType", DictCodeListExt1.金融产品类型_利率互换.getValue());
         return comRateSwapValuationInfo001Service.getFinprodId2(param);
     }
@@ -121,6 +128,17 @@ public class ComRateSwapValuationInfo002Controller extends BaseController {
         if (!bindingResult.hasErrors()) {
             /** modify by yanya on 20191105 修改页面不作数据唯一性校验**/
             if (GlobalConstant.DETAIL_PAGE_MODEL_NEW.equals(dto.getPageModel())) {
+                // 判断数据库是否存在：主键check
+                Map<String, Object> map = Maps.newHashMap();
+                map.put("finprodId2", dto.getFinprodId2());
+                map.put("datasourceType", dto.getDatasourceType());
+                map.put("valDate", dto.getValDate());
+                ComRateSwapValuationInfo002Dto entity = comRateSwapValuationInfo002Service.findByPrimaryKey(map);
+                if (entity != null) {
+                    return new AjaxResult("已存在交易编号_估值来源_估值日期相同的数据，请确保数据唯一性。", MessageType.错误消息);
+                }
+            }
+            if (GlobalConstant.DETAIL_PAGE_MODEL_EDIT.equals(dto.getPageModel()) && !StringUtil.equals(dto.getDatasourceType(),dto.getDatasourceTypeOld())) {
                 // 判断数据库是否存在：主键check
                 Map<String, Object> map = Maps.newHashMap();
                 map.put("finprodId2", dto.getFinprodId2());

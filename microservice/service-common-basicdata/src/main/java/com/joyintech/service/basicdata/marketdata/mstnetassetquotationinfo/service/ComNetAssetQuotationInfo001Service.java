@@ -17,6 +17,7 @@ import java.util.Map;
 import com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,12 +77,14 @@ public class ComNetAssetQuotationInfo001Service extends BaseService<ComNetAssetQ
      * @since 1.0
      */
     public Page<ComNetAssetQuotationInfo001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
-        pageParam.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue());
-        pageParam.put("PROFITTYPE_VALUE_03", DictCodeList.收益类型_货币型.getValue());
+        pageParam.put("PROFITTYPE_VALUE_01", DictCodeListExt2.收益类型_净值.getValue());
+        pageParam.put("PROFITTYPE_VALUE_03", DictCodeListExt2.收益类型_货币.getValue());
+        /** modify by yanya on 20210209 改为用估值侧类型过滤 **/
+        //pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         return super.queryForPage(page,length,()-> comNetAssetQuotationInfo001Mapper.select(pageParam));
-    }   
-    
+    }
+
     /**
      * 资产名称联想文本框
      * 可以通过输入的资产名称模糊查询
@@ -115,9 +118,11 @@ public class ComNetAssetQuotationInfo001Service extends BaseService<ComNetAssetQ
      * @since 1.0
      */
     public List<SelectOptionDto> getAssetCodeList(Map<String, Object> map) {
+        map.put("PROFIT_TYPE_01",DictCodeListExt2.收益类型_净值.getValue());
+        map.put("PROFIT_TYPE_03",DictCodeListExt2.收益类型_货币.getValue());
         return comNetAssetQuotationInfo001Mapper.getAssetCodeList(map);
     }
-    
+
     /**
      * 通过资产代码查询数据
      * 完成新建、编辑界面和双击查看界面初始化
@@ -152,15 +157,9 @@ public class ComNetAssetQuotationInfo001Service extends BaseService<ComNetAssetQ
      // 一体化对应etliu end
         entity.setFinprodType(DictCodeListExt1.金融产品类型_计划类资产.getValue());
         entity.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
-        //投管接口调用
-//        InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
-//        investInterfCommDto.setPageId("MstNetAssetQuotationInfo002");
-//        investInterfCommDto.setPortfolioId(entity.getFinProdMarketId());
-//        investInterfCommDto.setFinProductValuation(entity);
-//        investInterfCommService.doInvestInterf(investInterfCommDto);
         return finProductValuationMapper.insertSelective(entity);
     }
-    
+
     /**
      * 更新操作
      */
@@ -215,13 +214,26 @@ public class ComNetAssetQuotationInfo001Service extends BaseService<ComNetAssetQ
      * @see
      * @since 1.0
      */
-    /**
-     *
-     * @param map
-     * @return
-     */
     public ComNetAssetQuotationInfo001Dto selectByIdAndDate(Map<String,Object> map) {
-    	map.put("finprodType", DictCodeListExt1.金融产品类型_计划类资产.getValue());
+        /** modify by yanya on 20210209 改为用估值侧类型过滤 **/
+    	//map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        map.put("finprodType2", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         return comNetAssetQuotationInfo001Mapper.selectByIdAndDate(map);
     }
-}
+
+        /**
+         * 根据条件查询数据
+         * @param pageParam
+         * @return
+         * @throws Exception
+         */
+        public List<ComNetAssetQuotationInfo001Dto> selectAllList(Map<String, Object> pageParam) throws Exception {
+            pageParam.put("PROFITTYPE_VALUE_01", DictCodeListExt2.收益类型_净值.getValue());
+            pageParam.put("PROFITTYPE_VALUE_03", DictCodeListExt2.收益类型_货币.getValue());
+            /** modify by yanya on 20210209 改为用估值侧类型过滤 **/
+            //pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+            pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
+            return comNetAssetQuotationInfo001Mapper.select(pageParam);
+        }
+
+    }

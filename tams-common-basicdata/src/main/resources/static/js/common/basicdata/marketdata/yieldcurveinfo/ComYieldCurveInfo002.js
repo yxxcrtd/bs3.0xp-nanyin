@@ -64,6 +64,7 @@ $(function() {
             $('#curveCode').attr("disabled",true);
             $('#curveDate').attr("disabled",true);
             $('#curveType').attr("disabled",true);
+            $('#keyPoint').attr("disabled",true);
         }
     };
     /**

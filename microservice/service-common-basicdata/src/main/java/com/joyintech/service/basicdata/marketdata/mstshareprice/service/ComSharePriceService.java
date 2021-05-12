@@ -19,9 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.PageInfo;
+//import com.jixu.joyin2jixu.service.Joyin2JixuInterface;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.MstSharePriceMapper;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -47,6 +50,9 @@ public class ComSharePriceService extends BaseService<ComSharePriceDto>{
     
     @Autowired
     private  MstSharePriceMapper mstSharePriceMapper;
+
+//    @Autowired
+//    private Joyin2JixuInterface joyin2JixuInterface;
     /**
      * 
      * 获取分页查询结果（sharesId  dealDateString）
@@ -81,12 +87,19 @@ public class ComSharePriceService extends BaseService<ComSharePriceDto>{
      * @return
      */
     public Page<SelectOptionDto> getFinprodIdForAdd(int page, int length,Map<String, String> map) {
-        map.put("planasset", DictCodeListExt1.金融产品类型_股票.getValue());
-        /*map.put("notworth", DictCodeList.收益类型_货币型.getValue());*/
-        return this.queryForPageForSelectReturn(page, length,()-> comSharePrice001Mapper.getFinprodIdForAdd(map));
+        Page<SelectOptionDto> result = null;
+        if(CacheUtil.getSysParam("ISSINGLEVAL").equals(DictCodeListExt1.是或否_否.getValue())){
+            map.put("planasset", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+            /*map.put("notworth", DictCodeList.收益类型_货币型.getValue());*/
+            result = this.queryForPageForSelectReturn(page, length,()->comSharePrice001Mapper.getFinprodIdForAdd(map));
+        }else{
+//            List<SelectOptionDto> list = joyin2JixuInterface.getSecurityDtoByAssetType(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+//            result = new Page<SelectOptionDto>(new PageInfo<SelectOptionDto>(list));
+        }
+        return result;
     }
     /**
-     * 
+     *
      * 工作流完结之后的操作
      * <功能详细描述>
      * @param entity 实体
@@ -112,4 +125,28 @@ public class ComSharePriceService extends BaseService<ComSharePriceDto>{
 	public ComSharePriceDto getLatelyShareById(Map<String, Object> pageParam) {
 		 return comSharePrice001Mapper.getLatelyShareById(pageParam);
 	}
+
+	   /**
+	    * 保存导入数据
+	    *
+	    * @param list 需保存的数据
+	    * @see
+	    * @since 1.0
+	    */
+	   public void mergeInfoList(List<ComSharePriceDto> list){
+	       int batchCount = 50;// 每批commit的个数
+	       int batchLastIndex = batchCount;// 每批最后一个的下标
+	       for (int index = 0; index < list.size();) {
+	           if (batchLastIndex > list.size() - 1) {
+	               batchLastIndex = list.size();
+	               comSharePrice001Mapper.mergeInfoList(list.subList(index, batchLastIndex));
+	               break;// 数据插入完毕,退出循环
+	           }
+	           else {
+	        	   comSharePrice001Mapper.mergeInfoList(list.subList(index, batchLastIndex));
+	               index = batchLastIndex;// 设置下一批下标
+	               batchLastIndex = index + batchCount;
+	           }
+	       }
+	   }
 }

@@ -98,7 +98,7 @@ public class ComYieldCurveInfoService extends BaseService<ComYieldCurveInfoDto>{
             mstYieldCurveInfoMapper.insert(entity);
         }
         else{
-            mstYieldCurveInfoMapper.updateByPrimaryKey(entity);
+            mstYieldCurveInfoMapper.updateByPrimaryKeySelective(entity);
         }
     }
     //add by lishuping 20191008 start
@@ -125,4 +125,29 @@ public class ComYieldCurveInfoService extends BaseService<ComYieldCurveInfoDto>{
         return list.get(0);
     }
     //add by lishuping 20191008 end
+
+
+    /**
+     * 保存导入数据
+     *
+     * @param list 需保存的数据
+     * @see
+     * @since 1.0
+     */
+    public void mergeInfoList(List<ComYieldCurveInfoDto> list){
+        int batchCount = 50;// 每批commit的个数
+        int batchLastIndex = batchCount;// 每批最后一个的下标
+        for (int index = 0; index < list.size();) {
+            if (batchLastIndex > list.size() - 1) {
+                batchLastIndex = list.size();
+                comYieldCurveInfo001Mapper.mergeInfoList(list.subList(index, batchLastIndex));
+                break;// 数据插入完毕,退出循环
+            }
+            else {
+            	comYieldCurveInfo001Mapper.mergeInfoList(list.subList(index, batchLastIndex));
+                index = batchLastIndex;// 设置下一批下标
+                batchLastIndex = index + batchCount;
+            }
+        }
+    }
 }

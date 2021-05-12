@@ -3,6 +3,7 @@ package com.joyintech.service.basicdata.marketdata.mstbondquotationinfo.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -102,21 +103,14 @@ public interface ComBondQuotationInfoMapper {
 	
 	List<SelectOptionDto> getAssetCodeList();
 	
-	//hsgexinghua add by zhangxing1 20200228 start
-		/**
-		 * 查询新增数据主键是否重复
-		 * @param list 产品list
-		 * @return list
-		 * @see
-		 * @since 1.0
-		 */
-
-	String getRegistExcelList(Map<String,Object> param);
-
-	String checkSecId(Map<String,Object> param);
-
-	String checkSecName(Map<String,Object> param);
-	
-	ComBondQuotationInfoDto getvalueSourceCode(Map<String,Object> param);
+   
+   /**
+    * 保存，已存在则更新
+    * 
+    * @param insertList 需要保存的数据
+    * @see
+    * @since 1.0
+    */
+   int mergeInfoList(@Param("newDataList")List<ComBondQuotationInfoDto> insertList);
 
 }

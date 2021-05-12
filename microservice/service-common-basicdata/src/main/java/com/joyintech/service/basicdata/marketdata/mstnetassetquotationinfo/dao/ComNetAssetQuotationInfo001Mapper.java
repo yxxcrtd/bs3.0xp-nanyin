@@ -139,38 +139,4 @@ public interface ComNetAssetQuotationInfo001Mapper {
      * @since 1.0
      */
     String selectFinProdType2(String finprodId);
-    
-  //hsgexinghua add by zhangxing1 20200228 start
-    /**
-     * 查询新增数据主键是否重复
-     * @param list 产品list
-     * @return list
-     * @see
-     * @since 1.0
-     */
-
-    String getRegistExcelList( Map<String,Object> param );
-
-    /**
-     * 查询新增数据产品代码是否存在
-     * @param finprodId 产品代码
-     * @param finprodType2 金融产品类型
-     * @return list
-     * @see
-     * @since 1.0
-     */
-
-    ComNetAssetQuotationInfo001Dto checkFinprod(Map<String,Object> param) ;
-    
-    /**
-     * 查询新增数据产品代码与产品名称是否匹配
-     * @param finprodId 产品代码
-     * @param finprodType2 金融产品类型
-     * @return list
-     * @see
-     * @since 1.0
-     */
-
-    ComNetAssetQuotationInfo001Dto checkFinprodIdAndFinprodName(Map<String,Object> param) ;
-    //hsgexinghua add by zhangxing1 20200228  end
 }

@@ -47,9 +47,9 @@ public class ComBondQuotationInfoValidator implements BeanValidator {
 				 */
             	   //add wangwei 1 YUCHUBS-521债券估值行情、基金估值行情、计划类资产估值行情：功能优化
                 //修改/删除时，仅能修改/删除导入日为平台日的数据
-                if (StringUtil.isNotEmpty(mst.getImportDay()) && DateUtil.compareDate(DateUtil.format(mst.getImportDay()), DateUtil.format(platDate)) != 0) {
-                    resultList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
-                }
+//                if (StringUtil.isNotEmpty(mst.getImportDay()) && DateUtil.compareDate(DateUtil.format(mst.getImportDay()), DateUtil.format(platDate)) != 0) {
+//                    resultList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
+//                }
                 
                 if(comBondQuotationInfoService.selectByKey(mst.getSecId(), DateUtil.format(mst.getValueDate()),mst.getValueSource()) == null){
                     resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0022")));
@@ -67,9 +67,10 @@ public class ComBondQuotationInfoValidator implements BeanValidator {
 				 */
                 //add wangwei 1 YUCHUBS-521债券估值行情、基金估值行情、计划类资产估值行情：功能优化
             	//修改/删除时，仅能修改/删除导入日为平台日的数据
-                if ( StringUtil.isNotEmpty(dto.getImportDay()) && DateUtil.compareDate(DateUtil.format(dto.getImportDay()), DateUtil.format(platDate))  != 0) {
-                    resultList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
-                }
+                //修改和删除的校验在估值子系统中使用软校验，即提示：请确认是否修改/删除
+//                if ( StringUtil.isNotEmpty(dto.getImportDay()) && DateUtil.compareDate(DateUtil.format(dto.getImportDay()), DateUtil.format(platDate))  != 0) {
+//                    resultList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
+//                }
             }
             else {
                 // 保存check
