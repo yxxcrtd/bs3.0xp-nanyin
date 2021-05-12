@@ -79,7 +79,7 @@
 					A.BOOKSET_ID,a.busi_id,a.inv_aim
 				from A
 				inner join BOK_BOOKSET_PLAN bbp on  bbp.BOOKSET_ID = a.BOOKSET_ID
-				inner join BOK_VAL_SCHEME_DETAIL_SPECIAL bvsd on bvsd.SCHEME_ID = bbp.SCHEME_ID and bvsd.vdate &lt;= date'2019-05-31' 
+				inner join BOK_VAL_SCHEME_DETAIL_SPECIAL bvsd on bvsd.SCHEME_ID = bbp.SCHEME_ID and bvsd.vdate &lt;= #{checkDate,jdbcType=DATE} 
 					and (bvsd.mdate is null or  bvsd.mdate &gt;=  #{checkDate,jdbcType=DATE}) and bvsd.finprod_id =  a.busi_id and nvl(a.inv_aim,'999999') = NVL(bvsd.inv_Aim,'999999')
 			)
 			select DISTINCT
