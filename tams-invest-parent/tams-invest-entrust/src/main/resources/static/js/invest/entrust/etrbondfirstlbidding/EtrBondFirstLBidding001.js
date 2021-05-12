@@ -118,7 +118,7 @@ $(function() {
         
         });
         //关闭事件
-        $('#EtrBondFirstLBidding001_btn_close').click(function(){
+        $('#'+pageId+'_btn_close').click(function(){
 
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
