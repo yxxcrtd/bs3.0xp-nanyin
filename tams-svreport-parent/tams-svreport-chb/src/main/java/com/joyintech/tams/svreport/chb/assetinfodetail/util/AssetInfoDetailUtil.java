@@ -172,7 +172,7 @@ public class AssetInfoDetailUtil {
                     return resultList;
                 }
                 entity.setSvrBussQDIISharesInfoDto(getSvrBussQDIISharesInfoDto(list));
-            }else if (DictCodeListExt2.资产_负债类别_QDII结构性票据类资产.getValue().equals(entity.getAssetType())){
+            }else if (DictCodeListExt2.资产_负债类别_QDII结构性票据.getValue().equals(entity.getAssetType())){
                 /**维护信息-QDII结构性票据*/
                 if (dataList.get(1).size() != 51) {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "资产要素表模板-QDII品格式不正确！"));

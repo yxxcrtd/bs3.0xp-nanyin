@@ -2158,7 +2158,7 @@
     <select id="selectAssetCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
         ASSET_CODE id,
-        ASSET_NAME text
+        ifnull(ASSET_NAME,ASSET_CODE) text
         from (
         SELECT
         ASSET_CODE,ASSET_NAME

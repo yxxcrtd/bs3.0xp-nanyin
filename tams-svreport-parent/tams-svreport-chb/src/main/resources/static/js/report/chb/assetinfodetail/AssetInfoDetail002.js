@@ -44,61 +44,61 @@ var QueryFunc=function(){
         $(".businessDeptClass").hide();
         $(".businessDeptClass").attr('disabled',true);
         var obj = JSON.parse(AssetTypeListLink) ;
-        if(obj["01"].indexOf(repAssetType)>=0){
-            //本行/他行存款||大额存单
-            $("#svrBussRepDepositInfoDto_div").show();
-        }else if(obj["02"].indexOf(repAssetType)>=0){
-            //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
-            $("#svrBussRepPlacementInfo_div").show();
-        }else if(obj["03"].indexOf(repAssetType)>=0){
-            //债券类资产/理财直接融资工具/同业存单
-            $("#svrBussFinBondRepInfo_div").show();
-        }else if(obj["04"].indexOf(repAssetType)>=0){
-            //非标准化债权类资产/信贷资产流转项目
-            $("#svrBussRepAssetCreditNonstdInfo_div").show();
-        }else if(obj["05"].indexOf(repAssetType)>=0){
-            //票据类资产/信用证类资产
-            $("#svrBussRepAssetAstBillInfo_div").show();
-        }else if(obj["06"].indexOf(repAssetType)>=0){
-            //权益类资产
-            $("#svrBussRepEquityInfo_div").show();
-        }else if(obj["07"].indexOf(repAssetType)>=0){
-            //金融衍生品
-            $("#svrBussRepFinanciallInfo_div").show();
-        }else if(obj["08"].indexOf(repAssetType)>=0){
-            //QDII债券资产
-            $("#svrBussQDIIBondRepInfo_div").show();
-        }else if(obj["09"].indexOf(repAssetType)>=0){
-            //QDII拆出/逆回购资产
-            $("#svrBussRepQDIIdemolitionInfo_div").show();
-        }else if(obj["10"].indexOf(repAssetType)>=0){
-            //QDII股票/基金类资产
-            $("#svrBussQDIISharesInfo_div").show();
-        }else if(obj["11"].indexOf(repAssetType)>=0){
-            //QDII结构性票据类资产
-            $("#svrBussRepQDIIStructureInfo_div").show();
-        }else if(obj["12"].indexOf(repAssetType)>=0){
-            //资产管理产品
-            $("#svrBussRepAssetMngProdInfo_div").show();
-        }else if(obj["13"].indexOf(repAssetType)>=0){
-            //商品类资产
-            $("#svrBussRepNobleMetalInfo_div").show();
-        }else if(obj["14"].indexOf(repAssetType)>=0){
-            //各类资产的其他项
-            $("#svrBussRepOtherInvestTargetInfo_div").show();
-        }else if(obj["16"].indexOf(repAssetType)>=0){
-            //委外投资——协议方式
-            $("#svrBussRepOutInvestAgrInfo_div").show();
-        }else if(obj["17"].indexOf(repAssetType)>=0){
-            //其他（负债）类资产
-            $("#svrBussRepOtherInfo_div").show();
-        }else if(obj["18"].indexOf(repAssetType)>=0){
-            //另类资产
-            $("#svrBussRepOthKindInfo_div").show();
-        }else if(obj["19"].indexOf(repAssetType)>=0 || obj["15"].indexOf(repAssetType)>=0){
-            //公募基金/私募基金
-            $("#svrBussRepFundInfo_div").show();
-        }
+        // if(obj["01"].indexOf(repAssetType)>=0){
+        //     //本行/他行存款||大额存单
+        //     $("#svrBussRepDepositInfoDto_div").show();
+        // }else if(obj["02"].indexOf(repAssetType)>=0){
+        //     //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
+        //     $("#svrBussRepPlacementInfo_div").show();
+        // }else if(obj["03"].indexOf(repAssetType)>=0){
+        //     //债券类资产/理财直接融资工具/同业存单
+        //     $("#svrBussFinBondRepInfo_div").show();
+        // }else if(obj["04"].indexOf(repAssetType)>=0){
+        //     //非标准化债权类资产/信贷资产流转项目
+        //     $("#svrBussRepAssetCreditNonstdInfo_div").show();
+        // }else if(obj["05"].indexOf(repAssetType)>=0){
+        //     //票据类资产/信用证类资产
+        //     $("#svrBussRepAssetAstBillInfo_div").show();
+        // }else if(obj["06"].indexOf(repAssetType)>=0){
+        //     //权益类资产
+        //     $("#svrBussRepEquityInfo_div").show();
+        // }else if(obj["07"].indexOf(repAssetType)>=0){
+        //     //金融衍生品
+        //     $("#svrBussRepFinanciallInfo_div").show();
+        // }else if(obj["08"].indexOf(repAssetType)>=0){
+        //     //QDII债券资产
+        //     $("#svrBussQDIIBondRepInfo_div").show();
+        // }else if(obj["09"].indexOf(repAssetType)>=0){
+        //     //QDII拆出/逆回购资产
+        //     $("#svrBussRepQDIIdemolitionInfo_div").show();
+        // }else if(obj["10"].indexOf(repAssetType)>=0){
+        //     //QDII股票/基金类资产
+        //     $("#svrBussQDIISharesInfo_div").show();
+        // }else if(obj["11"].indexOf(repAssetType)>=0){
+        //     //QDII结构性票据类资产
+        //     $("#svrBussRepQDIIStructureInfo_div").show();
+        // }else if(obj["12"].indexOf(repAssetType)>=0){
+        //     //资产管理产品
+        //     $("#svrBussRepAssetMngProdInfo_div").show();
+        // }else if(obj["13"].indexOf(repAssetType)>=0){
+        //     //商品类资产
+        //     $("#svrBussRepNobleMetalInfo_div").show();
+        // }else if(obj["14"].indexOf(repAssetType)>=0){
+        //     //各类资产的其他项
+        //     $("#svrBussRepOtherInvestTargetInfo_div").show();
+        // }else if(obj["16"].indexOf(repAssetType)>=0){
+        //     //委外投资——协议方式
+        //     $("#svrBussRepOutInvestAgrInfo_div").show();
+        // }else if(obj["17"].indexOf(repAssetType)>=0){
+        //     //其他（负债）类资产
+        //     $("#svrBussRepOtherInfo_div").show();
+        // }else if(obj["18"].indexOf(repAssetType)>=0){
+        //     //另类资产
+        //     $("#svrBussRepOthKindInfo_div").show();
+        // }else if(obj["L01"].indexOf(repAssetType)>=0){
+        //     //公募基金/私募基金
+        //     $("#svrBussRepFundInfo_div").show();
+        // }
         star();
         layui.form.render();
     }
@@ -316,7 +316,7 @@ var QueryFunc=function(){
             //其他（负债）类资产
         }else if(obj["18"].indexOf(repAssetType)>=0){
             //另类资产
-        }else if(obj["19"].indexOf(repAssetType)>=0 || obj["15"].indexOf(repAssetType)>=0){
+        }else if(obj["L01"].indexOf(repAssetType)>=0){
             //公募基金/私募基金
             if(repAssetType=='2607'||repAssetType=='2610'||repAssetType=='2613'||
                 repAssetType=='2611'||repAssetType=='2612'||repAssetType=='2617'){
