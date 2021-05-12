@@ -279,13 +279,24 @@
     	object.feeName = $('#cashId').select2('data')[0].text;
     	object.finprodMarketId = $("#finprodMarketId").val();
         Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finpayplanadjustment/FinPayPlanAdjustment001/check', object, function(result) {
+			// modify by jiangpeng on 20210507 start
+			// TISHKBS-2071 CLONE - 【付费计划调整】选择产品提交后，提交按钮置灰，切换产品后还是置灰，必须将画面关闭重新打开才能操作
             Joyin.confirm(result.data, function() {
                 if(operateType === 'save') {
-                    WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finpayplanadjustment/FinPayPlanAdjustment001/save', object, "FinPayPlanAdjustment001_btn_save");
+                    WorkFlow.doSaveList(basePath + 'invest/product/messageadjust/finpayplanadjustment/FinPayPlanAdjustment001/save', object, "FinPayPlanAdjustment001_btn_save"
+						,null, function (){
+							JoyinUtil.disableButton("FinPayPlanAdjustment001_btn_save", false);
+                    	}
+					);
                 }
                 else {
-                    WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finpayplanadjustment/FinPayPlanAdjustment001/save', object, "FinPayPlanAdjustment001_btn_submit");
-                }
+                    WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/finpayplanadjustment/FinPayPlanAdjustment001/save', object, "FinPayPlanAdjustment001_btn_submit"
+						,null, function (){
+							JoyinUtil.disableButton("FinPayPlanAdjustment001_btn_submit", false);
+						}
+					);
+				}
+				// modify by jiangpeng on 20210507 end
             });
         });
     };
