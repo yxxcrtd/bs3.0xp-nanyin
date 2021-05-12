@@ -12,11 +12,6 @@
     var table;
     // 生成指令参数保存
     var calcConditionObjBackUp = null;
-    // modify by jiangpeng on 20210511 ZGBSSE-343
-    if(IS_TODO){
-        $('#'+entityName+'_table').attr('data-ignore',true);
-    }
-    // modify by jiangpeng on 20210511 ZGBSSE-343
     //表格初始化n
     var init = function () {
         if (pageModel != PAGE_MODEL_NEW && entity) {

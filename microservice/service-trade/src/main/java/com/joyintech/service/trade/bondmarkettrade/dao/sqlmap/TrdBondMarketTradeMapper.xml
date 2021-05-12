@@ -437,4 +437,13 @@
     	from RSK_OCCUPY_INFO
     	where event_id = #{EventId,jdbcType=VARCHAR} AND rownum = 1
     </select>
+
+    <select id = "selectIssueAsset" resultType="java.lang.Integer">
+		SELECT count(1)
+		FROM FIN_PRODUCT FP 
+		INNER JOIN FIN_PRODUCT_ADD FPA
+			ON FPA.FINPROD_ID = FP.FINPROD_ID
+		WHERE FP.FINPROD_ID = #{finprodId}
+		AND FPA.APPEAR_MARKET_ID IS NOT NULL
+	</select>
 </mapper>

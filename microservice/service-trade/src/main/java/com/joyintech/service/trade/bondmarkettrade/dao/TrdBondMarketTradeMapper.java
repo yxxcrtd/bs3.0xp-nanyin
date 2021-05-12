@@ -165,4 +165,14 @@ public interface TrdBondMarketTradeMapper {
      * @return
      */
     Map<String,Object> getTradeData(String EventId);
+
+    /**
+     * 根据资产代码查询是否是存在上市流通交易的发行标的
+     *
+     * @param finprodId
+     * @return 大于0则为是
+     * @see
+     * @since 1.0
+     */
+    int selectIssueAsset(@Param("finprodId") String finprodId);
 }
