@@ -441,9 +441,13 @@
         inner join trd_fin_product_barter tfpd
         on fpa.finprod_id = tfpd.finprod_id
         and bdi.inv_aim = tfpd.inv_aim
+        inner join trd_product_deal_add tpda
+        on tfpd.trade_id = tpda.trade_id
+        and bdi.bookset_id = concat('F16_',tpda.portfolio_id)
         where bdi.bookset_id = #{booksetId}
         and fpa.finprod_id =#{busiId}
         and fpa.is_issue_asset ='Y'
+        and rownum =1
     </select>
 
     <select id="getIsShbdByBusiId" resultType="boolean">
