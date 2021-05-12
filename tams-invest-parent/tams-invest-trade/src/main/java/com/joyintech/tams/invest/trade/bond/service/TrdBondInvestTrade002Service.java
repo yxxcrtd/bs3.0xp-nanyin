@@ -3714,4 +3714,18 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     	 result.put("cashS", cashS);
     	 return result;
     }
+
+    /**
+     * 根据资产代码查询是否是上市标的
+     *
+     * @param finprodId
+     * @return 是否是上市标的，大于0则为是
+     * @see
+     * @since 1.0
+     */
+    public int selectIssueAsset(String finprodId){
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/TrdBondMarketTrade/selectIssueAsset?finprodId="+finprodId,
+                Integer.class);
+    }
 }

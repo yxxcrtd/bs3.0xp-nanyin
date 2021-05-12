@@ -647,4 +647,16 @@ public class TrdBondMarketTradeService extends BaseService {
         List<Map<String,Object>> maps = trdBondMarkettTradeMapper.selectTrdProductDealsInfo(param);
         return maps;
     }
+
+    /**
+     * 根据资产代码查询是否是存在上市流通交易的发行标的
+     *
+     * @param finprodId
+     * @return 大于0则为是
+     * @see
+     * @since 1.0
+     */
+    public int selectIssueAsset(String finprodId) {
+        return trdBondMarkettTradeMapper.selectIssueAsset(finprodId);
+    }
 }
