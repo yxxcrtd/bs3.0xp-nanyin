@@ -54,7 +54,7 @@
 		</if>
 	</select>
 
-	<!--	根据主键查询Dto-->
+	<!--	鏍规嵁涓婚敭鏌ヨDto-->
 	<select id="queryDtoByKey" resultType="com.joyintech.service.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto">
 		SELECT
 		b.FINPROD_ID AS finprodId,
@@ -84,7 +84,7 @@
 		and A.VALUE_DATE = to_date(#{valueDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 	</select>
 
-	<!--	新建操作  zwq by 2021/01/30-->
+	<!--	鏂板缓鎿嶄綔  zwq by 2021/01/30-->
 	<insert id="saveNewDto" parameterType="com.joyintech.service.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto">
 		insert into MST_FUND_MARKET_INFO
 		(FUND_CODE,VALUE_DATE,CLOSE_PRICE,AVERAGE_PRICE,BUY_ONE_PRICE,SELL_ONE_PRICE,MAX_PRICE,MIN_PRICE,CREATE_TIME,UPDATE_TIME,CREATE_USER,UPDATE_USER)
@@ -95,14 +95,14 @@
 		sysdate,sysdate,#{createUser,jdbcType=VARCHAR},#{updateUser,jdbcType=VARCHAR})
 	</insert>
 
-	<!--	删除操作  zwq by 2021/01/30-->
+	<!--	鍒犻櫎鎿嶄綔  zwq by 2021/01/30-->
 	<delete id="deleteByPrimaryKey" parameterType="com.joyintech.service.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto">
 		delete from MST_FUND_MARKET_INFO
 		where FUND_CODE = #{fundCode,jdbcType=VARCHAR}
 		and VALUE_DATE = to_date(#{valueDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 	</delete>
 
-	<!--	更新操作  zwq by 2021/01/30-->
+	<!--	鏇存柊鎿嶄綔  zwq by 2021/01/30-->
 	<update id="updateByPrimaryKey" parameterType="com.joyintech.service.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto">
 		update MST_FUND_MARKET_INFO
 		set CLOSE_PRICE = #{closePrice,jdbcType=DECIMAL},
@@ -117,7 +117,7 @@
 		and VALUE_DATE = to_date(#{valueDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 	</update>
 
-	<!--	查询基金代码-->
+	<!--	鏌ヨ鍩洪噾浠ｇ爜-->
 	<select id="getFinProductList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select distinct
 		t.FINPROD_ID id,
@@ -133,7 +133,7 @@
 			or lower(t.FINPROD_NAME) like '%' || lower(#{search}) || '%')
 		</if>
 	</select>
-	<!--	查询基金-->
+	<!--	鏌ヨ鍩洪噾-->
 	<select id="getAssetInfo" resultType="com.joyintech.service.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto">
 		select distinct
 		t.FINPROD_ID finprodId,
@@ -147,7 +147,7 @@
 			and t.FINPROD_ID = #{finprodId}
 		</if>
 	</select>
-	<!--	查询市场代码-->
+	<!--	鏌ヨ甯傚満浠ｇ爜-->
 	<select id="getFinprodMarketId" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select distinct
 		t.FINPROD_MARKET_ID id,
@@ -159,7 +159,7 @@
 		</if>
 	</select>
 
-	<!-- 根据产品代码查找市场代码 -->
+	<!-- 鏍规嵁浜у搧浠ｇ爜鏌ユ壘甯傚満浠ｇ爜 -->
 	<select id="queryFinprodMarketIdByFinprodId" resultType="java.lang.String">
 		select
 			coalesce(t.FINPROD_MARKET_ID, t.FINPROD_ID)
