@@ -96,7 +96,7 @@
 			and c.STATUS in('A','E')
 			)
 			<if test="search != null and search !='' ">
-				AND P.COUNTER_ID LIKE concat_ws(concat_ws('%', #{search}),'%') or p.COUNTER_NAME like concat_ws(concat_ws('%', #{search}),'%')
+				AND P.COUNTER_ID LIKE concat(concat('%', #{search}),'%') or p.COUNTER_NAME like concat(concat('%', #{search}),'%')
 			</if>
 		</where>
 		union all
@@ -104,7 +104,7 @@
 		<where>
 			q.STATUS in ('A','E')
 			<if test="search != null and search !='' ">
-				AND q.COUNTER_ID LIKE concat_ws(concat_ws('%', #{search}),'%') or q.COUNTER_NAME like concat_ws(concat_ws('%', #{search}),'%')
+				AND q.COUNTER_ID LIKE concat(concat('%', #{search}),'%') or q.COUNTER_NAME like concat(concat('%', #{search}),'%')
 			</if>
 		</where>
 	</select>

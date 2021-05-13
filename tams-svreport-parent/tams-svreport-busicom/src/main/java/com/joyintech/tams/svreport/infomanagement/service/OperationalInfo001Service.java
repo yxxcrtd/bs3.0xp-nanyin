@@ -1791,7 +1791,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		List<ExcelValidDto> checkResult = new ArrayList<>();
 
 		//对中债模版进行特殊判断 把 sheet1名称为"报告模版"字样 映射为"产品申报信息表" 2021-05-12 修改
-		if(!"".equals(tableName) && "报告模版".equals(tableName)){
+		if(!"".equals(tableName) && "报告模板".equals(tableName)){
 			tableName="产品申报信息表";
 		}
 		//先通过tableName获取CHB_MGRTABLE_INFO中对应的MGRTABLE_ID
@@ -2395,7 +2395,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 
 		//对中债模版进行特殊判断 把 sheet1名称为"报告模版"字样 映射为"产品申报信息表" 2021-05-12 修改
-		if(!"".equals(tableName) && "报告模版".equals(tableName)){
+		if(!"".equals(tableName) && "报告模板".equals(tableName)){
 			tableName="产品申报信息表";
 		}
 		ChbMgrTableInfo chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyChiName(tableName);
