@@ -12,7 +12,7 @@
             deal as (
 				SELECT * FROM(
 					select 
-						deal.*,rank() over(partition by workflow_id order by update_time desc) as rank
+						deal.*,rank() over(partition by workflow_id order by trade_id desc) as rank
 					from WFL_TRD_PRODUCT_DEAL deal 
 				) WHERE rank = 1
             ),
@@ -94,8 +94,8 @@
                 OR (T5.PA_BUSS_TYPE IN ('35', '36','37') AND FPA.PAY_TYPE = '01' AND SSAI.TRADE_PLACE IN ('03', '04'))/*逐笔划款: 交易所债券（收息、还本、到期）*/
                 OR (T4.FINPROD_TYPE2 IN ('F29', 'F30', 'F10', 'F11', 'F12', 'F13') AND WFL_ORDERS.PS = '01')
                 )
-				--AND (WFL_ORDERS.COUNTER_ACCT_NO IS NULL OR WFL_ORDERS.MY_ACCT_NO != WFL_ORDERS.COUNTER_ACCT_NO)
-                --AND T4.PORTFOLIO_ID IS NOT NULL
+				AND (WFL_ORDERS.COUNTER_ACCT_NO IS NULL OR WFL_ORDERS.MY_ACCT_NO != WFL_ORDERS.COUNTER_ACCT_NO)
+                AND T4.PORTFOLIO_ID IS NOT NULL
 				and not exists (select 1 from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL tt where tt.TOTLE_TRADE_ID = t4.P_TOTLE_TRADE_ID)
 				and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
 			--来帐分拣，片段二
