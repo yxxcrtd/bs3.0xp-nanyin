@@ -1,5 +1,7 @@
 package com.joyintech.tams.svreport.chbreport.investreport.utils;
 
+import java.text.DecimalFormat;
+
 /**
  * @ClassName ChbInvestReportConstant
  * @Description: 投资报告相关Constant
@@ -46,4 +48,15 @@ public class ChbInvestReportConstant {
     public static final String 理财产品非标投资运作报告模板文件 = "ChbInvestOperation.ftl";
     public static final String 成立公告模板文件 = "ChbEstablishOperation.ftl";
     public static final String 到期公告模板文件 = "ChbExpireOperation.ftl";
+    public static final String 产品定期公告_单份额类净值型产品模板文件 = "ChbPeriodic01.ftl";
+    public static final String 产品定期公告_单份额类货币型产品模板文件 = "ChbPeriodic02.ftl";
+    public static final String 产品定期公告_多份额类净值型产品模板文件 = "ChbPeriodic03.ftl";
+    public static final String 产品定期公告_多份额类货币型产品模板文件 = "ChbPeriodic04.ftl";
+
+    public static final String 期末数据 = "期末数据";
+    public static final String 期初数据 = "期初数据";
+
+    public static final DecimalFormat df1 = new DecimalFormat("0.0000");
+    public static final DecimalFormat df2 = new DecimalFormat("###,##0.00");
+    public static final DecimalFormat df3 = new DecimalFormat("0.00%");
 }

@@ -1,6 +1,5 @@
 package com.joyintech.tams.svreport.chbreport.investreport.chbestablishoperation.dao;
 
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.svreport.chbreport.investreport.chbestablishoperation.dto.ChbEstablishPrdInfo;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +17,7 @@ import java.util.Map;
 public interface ChbEstablishOperationMapper {
 
     /**
-     * 查询产品下拉框
+     * 获取成立公告数据
      * @param param
      * @return
      */

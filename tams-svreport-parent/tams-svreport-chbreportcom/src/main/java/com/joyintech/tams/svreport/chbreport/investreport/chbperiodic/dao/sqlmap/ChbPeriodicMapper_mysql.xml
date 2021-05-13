@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dao.ChbPeriodicMapper_mysql">
+
+    <select id="queryPrdInfoList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select
+        p.PROD_ID id,
+        p.PROD_NAME text
+        from CHB_PRD_BASEINFO p
+        where
+        p.`STATUS` = 'E'
+        <if test="initValue != null and initValue != ''">
+            and p.PROD_ID IN (#{initValue})
+        </if>
+        <if test="search != null and search != ''">
+            and ( p.PROD_ID like concat(concat('%',#{search}),'%') or p.PROD_NAME like
+            concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+
+    <select id="qryChbPeriodicPrdInfo"
+            resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicPrdInfo">
+        select p.PROD_ID         as prodId,/** 产品代码**/
+               p.PROD_NAME       as prodName,/** 产品名称**/
+               p.REG_CODE        as regCode,/** 理财信息系统登记编码**/
+               p.OPERATE_MODE    as operateMode,/** 产品运作模式**/
+               p.IVSTORIENTATION as ivstorientation,/** 投资性质**/
+               p.CASH_PRIN_CCY   as cashPrinCcy,/** 兑付本金币种**/
+               p.RISK_LEVEL      as riskLevel,/** 产品风险等级**/
+               p.RAISE_TYPE      as raiseType,/** 募集方式**/
+               p.VDATE           as vdate,/** 起息日**/
+               p.MDATE           as mdate,/** 到期日**/
+               p.BUSI_ACCT_NO    as busiAcctNo,/** 资金托管账号**/
+               p.IN_DEP_NAME     as inDepName,/** 境内托管机构名称**/
+               p.OUT_DEP_NAME    as outDepName, /** 境外托管机构名称**/
+               case
+                   when p.IN_DEP_NAME is not null and p.OUT_DEP_NAME is not null
+                       then concat_ws('、', p.IN_DEP_NAME, p.OUT_DEP_NAME)
+                   when p.IN_DEP_NAME is not null and p.OUT_DEP_NAME is null then p.IN_DEP_NAME
+                   when p.IN_DEP_NAME is null and p.OUT_DEP_NAME is not null then p.OUT_DEP_NAME
+                   else ''
+                   end           as depName, /** 境内托管机构名称 + 境外托管机构名称**/
+               '华夏理财有限责任公司'      as managerName /** 产品管理人**/
+        from CHB_PRD_BASEINFO p
+        where p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="qryChbPeriodicIndex"
+            resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicIndex">
+        select p.PROD_ID                as prodId,
+               #{qryDate,jdbcType=DATE} as valueDate,/** 估值日期**/
+               p.UNIT_VALUE             as unitValue,/** 产品单位净值**/
+               p.CAPITAL                as capital,/** 实收资本**/
+               p.UNIT_VALUE_T           as unitValueT,/** 产品累计单位净值**/
+               p.ASSET_VALUE_MARKET     as assetValueMarket,/** 产品资产净值（按市值）**/
+               p.W_YIELD                as wYield,/** 当日万份收益**/
+               p.YIELD_7                as yield7/** 7日年化收益率**/
+        from REP_PROD_INDEX p
+        where p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and p.VALUE_DATE = #{qryDate,jdbcType=DATE}
+    </select>
+
+    <select id="qryChbPeriodicIndexValuePercent" resultType="java.math.BigDecimal">
+        SELECT (SUM(1 + p.W_YIELD / 10000) - 1) * 100 as valuePercent
+        FROM rep_prod_index p
+        WHERE p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+          AND p.VALUE_DATE BETWEEN #{startReportDate,jdbcType=DATE}
+            AND #{endReportDate,jdbcType=DATE}
+        GROUP BY p.PROD_ID
+    </select>
+
+    <select id="qryChbPeriodicBonusDeal"
+            resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicBonusDeal">
+        select p.PROD_ID       as prodId,
+               p.REG_DATE      as regDate,/** 权益登记日/计息结束日**/
+               p.TRADE_AMT     as tradeQty,/** 红利再投金额**/
+               p.REG_TRADE_QTY as regTradeQty,/** 权益登记日份额**/
+               p.INT_AMT       as intAmt/** 现金分红金额**/
+        FROM CHB_PRD_BONUS_DEAL p
+        WHERE p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+          AND p.SETTDATE_DATE BETWEEN #{startReportDate,jdbcType=DATE}
+            AND #{endReportDate,jdbcType=DATE}
+    </select>
+
+    <select id="qryChbPeriodicPosition"
+            resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicPosition">
+        SELECT a.PROD_ID                                     as prodId,
+               a.ASSETTYPE2                                  as assettype2,
+               ROUND(a.ASSETVALUE_A / b.totalAssetvalueA, 2) as percentAssetvalueA,
+               ROUND(a.ASSETVALUE_B / b.totalAssetvalueB, 2) as percentAssetvalueB
+        FROM chb_month_asset_position a,
+             (SELECT PROD_ID, SUM(ASSETVALUE_A) AS totalAssetvalueA, SUM(ASSETVALUE_B) AS totalAssetvalueB
+              FROM chb_month_asset_position
+              where ENDDATE = #{endReportDate,jdbcType=DATE}
+              GROUP BY PROD_ID) b
+        WHERE a.PROD_ID = b.PROD_ID
+          AND a.PROD_ID = #{prodId,jdbcType=VARCHAR}
+          AND a.ENDDATE = #{endReportDate,jdbcType=DATE}
+    </select>
+
+    <select id="qryChbPeriodicPositionTop10"
+            resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicPositionTop10">
+        SELECT a.PROD_ID                                                      as prodId,
+               b.ASSET_NAME                                                   as assetName,
+               a.ASSETTYPE2                                                   as assettype2,
+               CONCAT(ROUND(a.ASSETVALUE_B / c.totalAssetvalueB, 2), '', '%') as percentAssetvalueB,
+               a.ASSETVALUE_B                                                 as assetvalueB,
+               b.CCY                                                          as ccy
+        FROM chb_month_asset_position a,
+             chb_asset_info b,
+             (SELECT PROD_ID, SUM(ASSETVALUE_B) AS totalAssetvalueB
+              FROM chb_month_asset_position
+              where ENDDATE = #{endReportDate,jdbcType=DATE}
+              GROUP BY PROD_ID) c
+        where a.PROD_ID = c.PROD_ID
+          and a.ASSET_CODE = b.ASSET_CODE
+          AND a.ENDDATE = #{endReportDate,jdbcType=DATE}
+        order by a.ASSETVALUE_B Limit 10;
+    </select>
+
+    <select id="qryChbPeriodicAssetInfo"
+            resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicAssetInfo">
+        select distinct t.PROD_ID     as prodId,
+                        a.ASSET_NAME  as assetName,/** 资产名称**/
+                        a.ASSET_TYPE2 as assetType2,/** 资产/负债二级类别**/
+                        a.FINANCIE    as financie,/** 融资人**/
+                        a.ASSET_YIELD as assetYield,/** 项目收益率(利率)%**/
+                        a.MDATE       as mdate /** 到期日 **/
+        from CHB_INVEST_TRADE t,
+             CHB_ASSET_INFO a
+        where t.ASSET_CODE = a.ASSET_CODE
+          and a.`STATUS` = 'E'
+			and t.`STATUS` = 'E'
+			and a.ASSET_TYPE2 in (
+				select SRCFIELD1 from chb_type_mapping_ex where MAPPINGCODE = 'ChbInvestOperation001'
+			) /** 指定非标资产的类别**/
+			and t.PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and t.DEALDATE = #{endReportDate,jdbcType=DATE}
+        order by a.ASSET_TYPE2, a.ASSET_CODE
+    </select>
+
+</mapper>
