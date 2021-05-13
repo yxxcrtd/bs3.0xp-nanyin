@@ -578,6 +578,10 @@ public class TrdFundInvestTrade003Controller extends BaseController {
 
         trdFundInvestTrade003Service.prepareEntity(dto, true);
 
+        if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
+            dto.setTradePlat(dto.getTradeMarket());
+        }
+
         String msg = trdFundInvestTrade003Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }
