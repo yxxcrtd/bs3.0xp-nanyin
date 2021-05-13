@@ -125,7 +125,7 @@
         dd.chIldName
         from (
             select
-            fcp.CASH_TYPE cashType,
+            nvl(fcp.CASH_TYPE,decode(ftp.BRANCH_TYPE, 'D01', '01', 'D02', '02')) cashType,
             fp.FINPROD_ID finprodId,
             fp.finprod_market_id finprodMarketId,
             fpty.TYPE_8 finprodType2,
@@ -1199,7 +1199,7 @@ with rece_all as(
         FIN_PRODUCT.FINPROD_MARKET_ID 										finprodMarketId,
         FIN_PRODUCT.TRADE_MARKET											tradeMarket,
         nvl(FIN_PRODUCT.FINPROD_ABBR,FIN_PRODUCT.FINPROD_NAME)   			finprodName,
-        FIN_CASH_PLAN.CASH_TYPE   											cashType,
+        nvl(FIN_CASH_PLAN.CASH_TYPE,decode(FIN_TRADE_PRODUCT.BRANCH_TYPE,'D01','01','D02','02'))	cashType,
         FIN_TRADE_PRODUCT.VDATE												vdate,
         FIN_TRADE_PRODUCT.MDATE												mdate,
         FIN_TRADE_PRODUCT.CCY												ccy,
