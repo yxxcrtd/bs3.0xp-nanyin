@@ -81,55 +81,71 @@
                           and a1.TRADE_STATUS =#{TRADE_STATUS_03} 
                   	    )
 	                   ) as taxStartDate,
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	                   /*modify by jiangpeng on 20210513 start ZGBSSE-387*/
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+	                      and bba.CDATE <![CDATA[<=]]> #{payment1}
+						  and ((select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id) is null
+								or bba.CDATE >= (select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id))
 	                      and bba.FEE_TYPE = #{TAX0102}
 	                      and bba.chl_id is null),
 	                   0) as interestIncome, /*利息收入*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where  bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+	                      and bba.CDATE <![CDATA[<=]]> #{payment1}
+						  and ((select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id) is null
+								or bba.CDATE >= (select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id))
 	                      and bba.FEE_TYPE = #{TAX0202}
 	                      and bba.chl_id is null),
 	                   0) as dividendIncome, /*红利收入*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+	                      and bba.CDATE <![CDATA[<=]]> #{payment1}
+						  and ((select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id) is null
+								or bba.CDATE >= (select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id))
 	                      and bba.FEE_TYPE = #{TAX0302}
 	                      and bba.chl_id is null),
 	                   0) as difbetIncome, /*价差收入*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+	                      and bba.CDATE <![CDATA[<=]]> #{payment1}
+						  and ((select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id) is null
+								or bba.CDATE >= (select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id))
 	                      and bba.FEE_TYPE = #{ALT0102}
 	                      and bba.chl_id is null),
 	                   0) as constructionTax, /*城建税*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+	                      and bba.CDATE <![CDATA[<=]]> #{payment1}
+						  and ((select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id) is null
+								or bba.CDATE >= (select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id))
 	                      and bba.FEE_TYPE = #{ALT0202}
 	                      and bba.chl_id is null),
 	                   0) as educationTax, /*教育税*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+	                      and bba.CDATE <![CDATA[<=]]> #{payment1}
+						  and ((select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id) is null
+								or bba.CDATE >= (select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id))
 	                      and bba.FEE_TYPE = #{ALT0302}
 	                      and bba.chl_id is null),
 	                   0) as placeeducationTax,/*地方教育费*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+	                      and bba.CDATE <![CDATA[<=]]> #{payment1}
+						  and ((select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id) is null
+								or bba.CDATE >= (select lastDeal.payTaxVDate from lastDeal where lastDeal.portfolioId = b.portfolio_id))
 	                      and bba.FEE_TYPE = #{ALT0402}
 	                      and bba.chl_id is null),
 	                   0) as waterTrafficTax/*水利基金税*/
+		/*modify by jiangpeng on 20210513 end ZGBSSE-387*/
 	          from FIN_PRODUCT a
 	         inner join FIN_PRODUCT_ADD b
 	            on a.FINPROD_ID = b.FINPROD_ID
