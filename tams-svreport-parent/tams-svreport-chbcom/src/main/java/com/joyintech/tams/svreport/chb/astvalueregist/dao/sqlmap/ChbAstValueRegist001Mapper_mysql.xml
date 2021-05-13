@@ -326,7 +326,7 @@
 				</foreach>
 			</if>
 		</where>
-		)
+		) tmp
 	</select>
 
 
@@ -471,7 +471,7 @@
 			</if>
 
 		</where>
-		)
+		) tmp
 	</select>
 
 
