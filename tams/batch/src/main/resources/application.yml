@@ -364,14 +364,14 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: BS30INIT
+    password: BS30INIT
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
   url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  username: tams30
-  password: tams30
+  username: BS30INIT
+  password: BS30INIT
   loadbalance: false
   micorservice:
     contextPath:

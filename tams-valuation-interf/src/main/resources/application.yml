@@ -91,9 +91,9 @@ jixu:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.111)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.112)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=tamsdbpdb)))
-    username: tams212
-    password: tams212
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.70.245)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.70.245)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=orcl)))
+    username: BS30INIT
+    password: BS30INIT
     validationQuery: SELECT 1 FROM DUAL
     initialSize: 10
     maxWaitMillis: -1
@@ -127,9 +127,9 @@ spring:
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.111)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.112)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=tamsdbpdb)))
-    username: tams212
-    password: tams212
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.70.245)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.70.245)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=orcl)))
+    username: BS30INIT
+    password: BS30INIT
     validationQuery: SELECT 1 FROM DUAL
     initialSize: 10
     maxTotal: 100

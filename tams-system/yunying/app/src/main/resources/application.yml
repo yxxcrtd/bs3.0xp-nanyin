@@ -24,8 +24,8 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -292,13 +292,13 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: CVR30
-  sqldirpassword: CVR30
+  sqldiruserName: BS30INIT
+  sqldirpassword: BS30INIT
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -314,23 +314,23 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -406,34 +406,34 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  username: CVR30
-  password: CVR30
+  username: BS30INIT
+  password: BS30INIT
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30
-    password: CVR30
+    username: BS30INIT
+    password: BS30INIT
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG
