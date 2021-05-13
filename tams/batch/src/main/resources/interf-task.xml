@@ -17,13 +17,13 @@
 		<property name="startupDelay" value="60" />
 		<property name="triggers">
 			<list>
-				 <!-- <ref bean="chbInterfTaskTrigger1" /> 
-				 <ref bean="chbInterfTaskTrigger2" />  -->
-			</list>
-		</property>
-		<property name="quartzProperties">
-			<props>
-				<!-- quartz 取消检查更新 -->
+				<!--<ref bean="chbInterfTaskTrigger1" />-->
+                <ref bean="chbInterfTaskTrigger2" />
+           </list>
+       </property>
+       <property name="quartzProperties">
+           <props>
+               <!-- quartz 取消检查更新 -->
 				<prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
 			</props>
 		</property>
