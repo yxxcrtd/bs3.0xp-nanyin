@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.apache.commons.collections.CollectionUtils;
@@ -338,7 +339,17 @@ public class ValuationMethodScheme004Controller extends BaseController {
 		param.put("dict_code_parent", DictCode.投资目的.getValue());
 		param.put("dict_code_child", DictCode.估值方法.getValue());
 		param.put("item_code_parent", param.get("invAim"));
-		return valuationMethodScheme001Service.getLinkSelectOption(param);
+		List<SelectOptionDto> list = valuationMethodScheme001Service.getLinkSelectOption(param);
+
+		if (StringUtil.isNotEmpty(param.get("finprodType"))){
+			if (StringUtil.equals(param.get("finprodType"),"F17") && StringUtil.equals(param.get("invAim"),DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue())){
+				return list.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
+			}
+			if (StringUtil.equals(param.get("finprodType"),"F17") && StringUtil.equals(param.get("invAim"),DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())){
+				return list.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
+			}
+		}
+		return list;
 	}
 
 	/**
@@ -361,6 +372,13 @@ public class ValuationMethodScheme004Controller extends BaseController {
 			param.put("dict_code_child", DictCode.估值市价.getValue());
 			param.put("item_code_parent", DictCodeListExt1.证券品种_债券.getValue());//  特殊类资产默认为债券
 //		}
+		if (StringUtil.isNotEmpty(param.get("finprodType"))){
+			if (StringUtil.equals(param.get("finprodType"),"F17")){
+				param.put("dict_code_parent", DictCode.证券品种.getValue());
+				param.put("dict_code_child", DictCode.估值市价.getValue());
+				param.put("item_code_parent", DictCodeListExt1.证券品种_计划类资产_收益型.getValue());
+			}
+		}
 
 		return valuationMethodScheme001Service.getLinkSelectOption(param);
 	}

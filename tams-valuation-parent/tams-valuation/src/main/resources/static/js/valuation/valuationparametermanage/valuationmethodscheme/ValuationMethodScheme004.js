@@ -72,10 +72,18 @@ $(function () {
 							{finprodId : s_finprodId},
 							function (data) {
 								  $("#finprodName").val(data.finprodName);
+								  $("#finprodType").val(data.finprodType).trigger("change");
 								  $("#tradeMarket").val('').trigger("change");
 								  $("#tradeMarket").textSelect('setValue',data.tradeMarket);
+								  if (data.finprodType === 'F17'){
+									  $("#div_tradeMarket").hide();
+								  }else {
+									  $("#div_tradeMarket").show();
+								  }
 					  });
 			  }
+			  $("#valuationPrice").val('').trigger("change");
+			  $("#valuationPrice2").val('').trigger("change");
         });
         
         
@@ -93,9 +101,20 @@ $(function () {
             $("#priceClass").val("01").trigger("change");
             priceClassShow();
         });
-        
+        $("#invAim").change(function(){
+			invAimChange();
+        });
     }
-	
+
+    var invAimChange = function () {
+		if ($("#finprodType").val() === 'F17' && $("#invAim").val() === 'FVTPL') {
+			$("#valuationMethod").val('01').trigger("change");
+		}
+		if ($("#finprodType").val() === 'F17' && $("#invAim").val() === 'FVOCI') {
+			$("#valuationMethod").val('01').trigger("change");
+		}
+	};
+
     // 估值方法为市值法/市值成本孰低法 显示：估值第一市价、估值第二市价、行情日期、行情位数、行情位数处理
     var valMethodLinkShow = function (){
         var valMethod = $("#valuationMethod").val();
@@ -122,6 +141,13 @@ $(function () {
 			$("#priceTailMode").val("");
 			$("#c_priceClass").val("");
         }
+		if ($("#finprodType").val()){
+			if ($("#finprodType").val() === 'F17'){
+				$("#div_tradeMarket").hide();
+			}else {
+				$("#div_tradeMarket").show();
+			}
+		}
     };
     
     // 01-债券,估值方法为市值法/市值成本孰低法且估值市价为收盘价、平均价、最高价、最低价、卖一价或者买一价时显示价格类型

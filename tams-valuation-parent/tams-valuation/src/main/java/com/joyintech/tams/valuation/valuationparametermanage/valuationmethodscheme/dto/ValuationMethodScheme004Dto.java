@@ -140,7 +140,15 @@ public class ValuationMethodScheme004Dto extends BaseEntity implements ProcessEn
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private String pageModel;
+    /**
+     *收益类型
+     */
+    private String profitType;
 
+    /**
+     *金融产品类型（估值核算）
+     */
+    private String finprodType;
     public String getOperateType() {
         return operateType;
     }
@@ -307,4 +315,19 @@ public class ValuationMethodScheme004Dto extends BaseEntity implements ProcessEn
         this.listValuationMethodSchemeDto = listValuationMethodSchemeDto;
     }
 
+    public String getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(String profitType) {
+        this.profitType = profitType;
+    }
+
+    public String getFinprodType() {
+        return finprodType;
+    }
+
+    public void setFinprodType(String finprodType) {
+        this.finprodType = finprodType;
+    }
 }

@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.valuationparametermanage.valuationmethodsch
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -372,14 +373,20 @@ public class ValuationMethodScheme003Controller extends BaseController {
 
        	// ---  以投资目的维度联动
 		if(Arrays.asList(DictCodeListExt1.证券品种_计划类资产_收益型.getValue()).contains(param.get("secType"))&&
-				Arrays.asList(DictCodeListExt1.投资目的_摊余成本类.getValue()).contains(param.get("invAim"))){
-			param.put("dict_code_parent", DictCode.投资目的.getValue());
-			param.put("item_code_parent", param.get("invAim"));
-		}else if(Arrays.asList(DictCodeListExt1.证券品种_债券.getValue()).contains(param.get("secType"))){
+				Arrays.asList(DictCodeListExt1.投资目的_摊余成本类.getValue(),DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue()).contains(param.get("invAim"))){
 			param.put("dict_code_parent", DictCode.投资目的.getValue());
 			param.put("item_code_parent", param.get("invAim"));
 		}
-		return valuationMethodScheme001Service.getLinkSelectOption(param);
+		if(Arrays.asList(DictCodeListExt1.证券品种_债券.getValue()).contains(param.get("secType"))){
+			param.put("dict_code_parent", DictCode.投资目的.getValue());
+			param.put("item_code_parent", param.get("invAim"));
+		}
+		List<SelectOptionDto> linkSelectOption = valuationMethodScheme001Service.getLinkSelectOption(param);
+		if (Arrays.asList(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue()).contains(param.get("invAim"))){
+			//过滤掉 估值方法_摊余成本法
+			return linkSelectOption.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
+		}
+		return linkSelectOption;
 	}
 
 	/**

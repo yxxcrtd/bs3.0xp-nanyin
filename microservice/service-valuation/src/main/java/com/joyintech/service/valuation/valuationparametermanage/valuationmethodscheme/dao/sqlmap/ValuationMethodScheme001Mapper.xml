@@ -167,9 +167,10 @@
             t.VALUATION_DATE as valuationDate, /** 估值日期 **/
             t.VALUATION_DATE as valuationDateCode,
             TO_CHAR(t.VDATE,'YYYY-MM-DD') AS vdate,/** 开始日 **/
-            TO_CHAR(t.MDATE,'YYYY-MM-DD') AS mdate/** 结束日 **/
+            TO_CHAR(t.MDATE,'YYYY-MM-DD') AS mdate,/** 结束日 **/
+            vfp.finprod_type as finprodType
         from BOK_VAL_SCHEME_DETAIL_SPECIAL t 
-        	left join FIN_PRODUCT vfp on t.FINPROD_ID = vfp.FINPROD_ID and vfp.FINPROD_TYPE = 'F01' 
+        	left join FIN_PRODUCT vfp on t.FINPROD_ID = vfp.FINPROD_ID and (vfp.FINPROD_TYPE = 'F01'  or ((vfp.profit_type is null or vfp.profit_type = '02') and vfp.finprod_type = 'F17' ))
         <where>
             <if test="schemeId != null and schemeId != ''">
 
