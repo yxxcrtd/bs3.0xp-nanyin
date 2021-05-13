@@ -22,8 +22,8 @@ import com.jixu.common.type.JMSStringModel;
 import com.jixu.common.types.WorkFlowStatus;
 import com.jixu.common.util.DateUtil;
 import com.jixu.data.service.OutDataInterface;
-import com.jixu.mq.producer.ActiveMQSender;
-import com.jixu.mq.producer.MQFactory;
+//import com.jixu.mq.producer.ActiveMQSender;
+//import com.jixu.mq.producer.MQFactory;
 
 /**
  * @ClassName OutDataFactory
@@ -40,14 +40,14 @@ public class OutDataCenter implements InitializingBean, ApplicationContextAware 
 	@Resource(name="taskExecutor")
 	private ThreadPoolTaskExecutor taskExecutor; 
 	
-	@Resource(name="mQFactory")
-	private MQFactory mqFactory;
+	//@Resource(name="mQFactory")
+	//private MQFactory mqFactory;
 	
 	@Autowired
 	private PublicDataFactory publicDataFactory;
 	
-	@Resource(name="ActiveMQProducer")
-	private ActiveMQSender actSender;
+	//@Resource(name="ActiveMQProducer")
+	//private ActiveMQSender actSender;
 	
 	@Value("${jixu.dataCenter.synchFlag:0}")
 	private int synchFlag;
@@ -98,27 +98,27 @@ public class OutDataCenter implements InitializingBean, ApplicationContextAware 
 					}
 				}
 			}
-			if(status==WorkFlowStatus.process){//状态是撤销 
-				JMSStringModel model=new JMSStringModel();
-				if(startDate.length()==10&&endDate.length()==10){//判断是否传入开始日期和结束日期
-					for(String portnum:portnums){
-						String content=mqFactory.returnDeleteContent2(portnum, startDate, endDate);
-						model.setContent(content);
-						String topicName=mqFactory.returnDeleteTopic(portnum);
-						model.setTopicName(topicName);
-						actSender.sendMessage(model);
-					}
-				}else{
-					String strdate=DateUtil.convertD2YYYY_MM_DD(date);
-					for(String portnum:portnums){
-						String content=mqFactory.returnDeleteContent(portnum, strdate);
-						model.setContent(content);
-						String topicName=mqFactory.returnDeleteTopic(portnum);
-						model.setTopicName(topicName);
-						actSender.sendMessage(model);
-					}
-				}
-			}
+			//if(status==WorkFlowStatus.process){//状态是撤销
+			//	JMSStringModel model=new JMSStringModel();
+			//	if(startDate.length()==10&&endDate.length()==10){//判断是否传入开始日期和结束日期
+			//		for(String portnum:portnums){
+			//			String content=mqFactory.returnDeleteContent2(portnum, startDate, endDate);
+			//			model.setContent(content);
+			//			String topicName=mqFactory.returnDeleteTopic(portnum);
+			//			model.setTopicName(topicName);
+			//			actSender.sendMessage(model);
+			//		}
+			//	}else{
+			//		String strdate=DateUtil.convertD2YYYY_MM_DD(date);
+			//		for(String portnum:portnums){
+			//			String content=mqFactory.returnDeleteContent(portnum, strdate);
+			//			model.setContent(content);
+			//			String topicName=mqFactory.returnDeleteTopic(portnum);
+			//			model.setTopicName(topicName);
+			//			actSender.sendMessage(model);
+			//		}
+			//	}
+			//}
 		}else{ //不同步数据 return
 			return; 
 		}

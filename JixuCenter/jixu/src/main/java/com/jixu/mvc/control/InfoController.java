@@ -39,7 +39,7 @@ import com.jixu.common.util.RoundUtil;
 import com.jixu.common.util.SubListUtil;
 import com.jixu.data.service.OutDataInterface;
 import com.jixu.framework.msg.MsgFactory;
-import com.jixu.mq.producer.ActiveMQSender;
+//import com.jixu.mq.producer.ActiveMQSender;
 import com.jixu.mvc.control.model.SecPositionModel;
 import com.jixu.mvc.control.model.VoucherDetailsView;
 import com.jixu.mvc.control.model.VouchersModel;
@@ -71,8 +71,8 @@ public class InfoController extends ExceptionControl{
 	@Resource(name="msgFactory")
 	private MsgFactory msgFactory;
 	
-	@Resource(name="ActiveMQProducer")
-	private ActiveMQSender actSender;
+	//@Resource(name="ActiveMQProducer")
+	//private ActiveMQSender actSender;
 	
 	@Resource(name="JixuTbSecPosition")
 	private OutDataInterface outDate;

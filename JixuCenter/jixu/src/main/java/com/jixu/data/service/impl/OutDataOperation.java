@@ -16,7 +16,7 @@ import com.jixu.dao.intf.FxCurrencyDao;
 import com.jixu.dao.intf.IssueInfoDao;
 import com.jixu.dao.intf.PortfolioHdrDao;
 import com.jixu.data.service.OutDataInterface;
-import com.jixu.mq.producer.ActiveMQSender;
+//import com.jixu.mq.producer.ActiveMQSender;
 import com.jixu.mvc.control.service.PortfolioCfgService;
 import com.orm.obj.PortfolioHdr;
 
@@ -44,8 +44,8 @@ public abstract class OutDataOperation implements OutDataInterface {
 	@Autowired
 	protected IssueInfoDao issueInfoDao;
 	
-	@Resource(name="ActiveMQProducer")
-	private ActiveMQSender actSender;
+	//@Resource(name="ActiveMQProducer")
+	//private ActiveMQSender actSender;
 	//private void execut
 	
 	//发现使用多线程,需要在这里开启线程,目前不知道原因
@@ -65,7 +65,7 @@ public abstract class OutDataOperation implements OutDataInterface {
 			model.setPortfolioCode(portfolio.getShortCode());
 			model.setContent(results);
 			//消息名以投资组合编号作为名字的一部分,比如现金头寸的消息, CashPosition_220101
-			actSender.sendMessage(model);
+			//actSender.sendMessage(model);
 		}
 	}
 }

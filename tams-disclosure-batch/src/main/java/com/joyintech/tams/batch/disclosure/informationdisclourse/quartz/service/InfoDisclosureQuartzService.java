@@ -45,8 +45,8 @@ import com.joyintech.tams.disclosure.common.common.constant.BatchBeanName;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tools.mq.constant.OperationType;
-import com.joyintech.tools.mq.entity.PushMessageDto;
-import com.joyintech.tools.mq.listener.MessagePushListener;
+//import com.joyintech.tools.mq.entity.PushMessageDto;
+//import com.joyintech.tools.mq.listener.MessagePushListener;
 
 /**
  * 信息披露生成报表并发送service
@@ -56,7 +56,7 @@ import com.joyintech.tools.mq.listener.MessagePushListener;
  * @since 1.0
  */
 @Service
-public class InfoDisclosureQuartzService extends AutoSendCBBaseService implements  MessagePushListener{
+public class InfoDisclosureQuartzService extends AutoSendCBBaseService /*implements  MessagePushListener*/{
 	/**
      * 日志
      */
@@ -209,23 +209,23 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService implement
     }
 
 
-    @Override
-    public boolean messageFilter(PushMessageDto msg) {
-        if (StringUtil.equals(msg.getBusinessMode(), BusinessMode.定时批处理参数更新.getModeCode())) {
-            return true;
-        }
-        return false;
-    }
+    //@Override
+    //public boolean messageFilter(PushMessageDto msg) {
+    //    if (StringUtil.equals(msg.getBusinessMode(), BusinessMode.定时批处理参数更新.getModeCode())) {
+    //        return true;
+    //    }
+    //    return false;
+    //}
 
-    @Override
-    public PushMessageDto onMessage(PushMessageDto msg) {
-        OperationType type = OperationType.from(msg.getOperationType());
-        RepJob item = (RepJob) msg.getBusinessEntity();
-        RepJobDetail dto = new RepJobDetail();
-        BeanUtils.copyProperties(dto, item);
-        reQuartzSchedule(type, dto);
-        return null;
-    }
+    //@Override
+    //public PushMessageDto onMessage(PushMessageDto msg) {
+    //    OperationType type = OperationType.from(msg.getOperationType());
+    //    RepJob item = (RepJob) msg.getBusinessEntity();
+    //    RepJobDetail dto = new RepJobDetail();
+    //    BeanUtils.copyProperties(dto, item);
+    //    reQuartzSchedule(type, dto);
+    //    return null;
+    //}
 
     public void reQuartzSchedule(OperationType type, RepJobDetail item) {
         Trigger trigger = newTrigger().withIdentity("trigger:" + item.getJobId()).withSchedule(

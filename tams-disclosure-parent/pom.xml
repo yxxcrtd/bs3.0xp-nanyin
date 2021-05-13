@@ -6,7 +6,7 @@
 		<artifactId>tams-parent</artifactId>
 		<version>0.0.4</version>
 	</parent>
-	<artifactId>tams-parent-disclosure</artifactId>
+	<artifactId>tams-disclosure-parent</artifactId>
 	<version>3.0.0</version>
 	<packaging>pom</packaging>
 	<modules>

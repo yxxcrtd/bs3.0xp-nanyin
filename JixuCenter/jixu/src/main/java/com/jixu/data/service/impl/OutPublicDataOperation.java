@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jixu.common.func.CommFuncService;
 import com.jixu.common.type.JMSObjectModel;
 import com.jixu.data.service.OutPublicDataInterface;
-import com.jixu.mq.producer.ActiveMQSender;
+//import com.jixu.mq.producer.ActiveMQSender;
 
 /** 
  * @ClassName 		OutPublicDataOperation
@@ -23,8 +23,8 @@ public abstract class OutPublicDataOperation implements OutPublicDataInterface {
 	@Resource(name="commfuncService")
 	protected CommFuncService comService;
 	
-	@Resource(name="ActiveMQProducer")
-	private ActiveMQSender actSender;
+	//@Resource(name="ActiveMQProducer")
+	//private ActiveMQSender actSender;
 	
 	//发现使用多线程,需要在这里开启线程,目前不知道原因
 	
@@ -41,7 +41,7 @@ public abstract class OutPublicDataOperation implements OutPublicDataInterface {
 			JMSObjectModel model=new JMSObjectModel();
 			model.setContent(results);
 			//消息名以投资组合编号作为名字的一部分,比如现金头寸的消息, CashPosition_220101
-			actSender.sendPublicMessage(model);
+			//actSender.sendPublicMessage(model);
 		}
 	}
 	
@@ -71,7 +71,7 @@ public abstract class OutPublicDataOperation implements OutPublicDataInterface {
 			JMSObjectModel model=new JMSObjectModel();
 			model.setContent(results);
 			//消息名以投资组合编号作为名字的一部分,比如现金头寸的消息, CashPosition_220101
-			actSender.sendPublicMessage(model);
+			//actSender.sendPublicMessage(model);
 		}
 	}
 }

@@ -15,7 +15,12 @@
 	</properties> -->	
 
     <dependencies>
-		<dependency>
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>batch-framework</artifactId>
+            <version>2.1.6.3</version>
+        </dependency>
+        <dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>tams-svreport-pbccom</artifactId>
 			<version>${project.version}</version>
