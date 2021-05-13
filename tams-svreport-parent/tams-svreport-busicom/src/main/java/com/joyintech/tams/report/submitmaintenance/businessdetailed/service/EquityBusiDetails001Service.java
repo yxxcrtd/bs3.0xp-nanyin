@@ -2685,7 +2685,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     }
                 } else {
                     try {
-                        field.set(dto,(value == null || "".equals(value)) ? "" : value);
+                        field.set(dto,value);
                     } catch (IllegalAccessException e){
                         logger.error(e.getMessage(),e);
                         return entities;
