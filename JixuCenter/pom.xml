@@ -41,7 +41,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.3.13.RELEASE</spring.version>
-		<hibernate.version>5.3.6.Final</hibernate.version>		
+		<hibernate.version>5.3.6.Final</hibernate.version>
 		<thymeleaf.version>3.0.2.RELEASE</thymeleaf.version>
 		<junit.version>4.12</junit.version>
         <jackson.version>2.9.2</jackson.version>
@@ -105,7 +105,7 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-feign</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-core</artifactId>
@@ -117,22 +117,22 @@
 		    <artifactId>javax.persistence-api</artifactId>
 		    <version>2.2</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
 		<dependency>
 		    <groupId>dom4j</groupId>
 		    <artifactId>dom4j</artifactId>
 		    <version>1.6.1</version>
 		</dependency>
-		
-		
+
+
 		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
 			<version>1.8.17</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.hibernate.common/hibernate-commons-annotations -->
 		<dependency>
 			<groupId>org.hibernate.common</groupId>
@@ -170,7 +170,7 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId> 
+			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<!-- <dependency>
@@ -264,13 +264,13 @@
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
 			<version>2.5.3</version>
 		</dependency>
-		
+
 		<dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -284,7 +284,7 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency> -->
-		
+
 		<!-- c3p0数据�??? -->
 		<dependency>
 			<groupId>com.mchange</groupId>
@@ -327,26 +327,31 @@
 			<version>2.4</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
-
-
+		<!--删除MQ依赖后，发现JPA依赖的包缺少，需引入-->
 		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-pool</artifactId>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jta_1.0.1B_spec</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-jms-pool</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-client</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.apache.activemq</groupId>-->
+<!--			<artifactId>activemq-pool</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.apache.activemq</groupId>-->
+<!--			<artifactId>activemq-jms-pool</artifactId>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>org.apache.activemq</groupId>-->
+<!--			<artifactId>activemq-client</artifactId>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>

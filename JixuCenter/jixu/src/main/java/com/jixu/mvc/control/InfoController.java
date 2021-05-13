@@ -39,7 +39,7 @@ import com.jixu.common.util.RoundUtil;
 import com.jixu.common.util.SubListUtil;
 import com.jixu.data.service.OutDataInterface;
 import com.jixu.framework.msg.MsgFactory;
-import com.jixu.mq.producer.ActiveMQSender;
+//import com.jixu.mq.producer.ActiveMQSender;
 import com.jixu.mvc.control.model.SecPositionModel;
 import com.jixu.mvc.control.model.VoucherDetailsView;
 import com.jixu.mvc.control.model.VouchersModel;
@@ -54,44 +54,44 @@ import com.orm.obj.PortfolioHdr;
 import com.orm.obj.Voucher;
 import com.orm.obj.VoucherDetails;
 
-@Controller  
+@Controller
 public class InfoController extends ExceptionControl{
 	@Resource(name="voucherService")
 	private VoucherService voucherService;
-	
+
 	@Resource(name="SecCashService")
 	private SecCashService secCashService;
-	
+
 	@Resource(name="commfuncService")
 	private CommFuncService commService;
-	
+
 	@Resource(name="msgPackage")
 	private MsgPackage msgPackage;
-	
+
 	@Resource(name="msgFactory")
 	private MsgFactory msgFactory;
-	
-	@Resource(name="ActiveMQProducer")
-	private ActiveMQSender actSender;
-	
+
+//	@Resource(name="ActiveMQProducer")
+//	private ActiveMQSender actSender;
+
 	@Resource(name="JixuTbSecPosition")
 	private OutDataInterface outDate;
-	
+
 	@RequestMapping(value="/info.do", method = RequestMethod.GET, name="财务信息-页面显示")
 	public String info() {
 		return "info";
 	}
-	
-	@RequestMapping(value="/info/voucherCreate.do", method = RequestMethod.POST, name="凭证-手工分录创建")  
+
+	@RequestMapping(value="/info/voucherCreate.do", method = RequestMethod.POST, name="凭证-手工分录创建")
     public void voucheCreate(@RequestParam(value = "portID", required = true) String portID,
     						@RequestParam(value = "date", required = true) String date,
     						@RequestParam(value = "voucher", required = true) String voucher,
     						HttpServletRequest request,
     						HttpServletResponse response){
-		
+
 		int userID=JixuUserUtil.getUserIDbyRequest(request);
 		List<Object> v_list = JsonUtil.stringToList(voucher);
-		
+
 		ResultContainer container=voucherService.createManualVoucher(userID,portID, date.replaceAll("-", ""), v_list);
 		if(container.isCorrectFlag()){
 			JsonUtil.writeObjToResponse(response, container.getEntityID());
@@ -106,14 +106,14 @@ public class InfoController extends ExceptionControl{
 		}
 	}
 
-	@RequestMapping(value="/info/voucherUpdate.do", method = RequestMethod.POST, name="凭证-手工分录更新")  
+	@RequestMapping(value="/info/voucherUpdate.do", method = RequestMethod.POST, name="凭证-手工分录更新")
     public void voucheUpdate(@RequestParam(value = "id", required = true) String voucherID,
     						@RequestParam(value = "voucher", required = true) String voucher,
     						HttpServletResponse response){
 		JsonUtil.writeObjToResponse(response, voucherID);
 	}
-	
-	@RequestMapping(value="/info/voucherList.do", method = RequestMethod.POST, name="凭证-查询")  
+
+	@RequestMapping(value="/info/voucherList.do", method = RequestMethod.POST, name="凭证-查询")
     public void voucherList(@RequestParam(value = "voucher", required = true) int journalCode,
     						@RequestParam(value = "currency", required = true) String currency,
     						@RequestParam(value = "secid", required = true) String secid,
@@ -127,10 +127,10 @@ public class InfoController extends ExceptionControl{
 			start="2000-01-01";
 		if(end.equals(""))
 			end=DateUtil.convertD2YYYY_MM_DD(new Date());
-		
+
 		Date startDate=DateUtil.convertStr2Date2(start);
 		Date endDate=DateUtil.convertStr2Date2(end);
-		
+
 		String startVoucherNum="";
 		String endVoucherNum="";
 		String secID=secid;
@@ -138,13 +138,13 @@ public class InfoController extends ExceptionControl{
 		Pages<VouchersModel> pages=new Pages<VouchersModel>(num);
 		pages.setPageMaxRecords(100000);
 		pages=voucherService.fetchVouchers(pages, portfolio, startDate, endDate, journalCode, startVoucherNum, endVoucherNum, secID, currencycode, acctNum);
-		
+
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		
+
 		List<List<Object>> data = new ArrayList<List<Object>>();
-		
+
 		List<VouchersModel> vouchersModelList=pages.getResultList();
-		
+
 		for(VouchersModel voucherModel:vouchersModelList){
 			Voucher v=voucherModel.getVoucher();
 			List<VoucherDetails> vds=voucherModel.getVoucherDetailsList();
@@ -156,11 +156,11 @@ public class InfoController extends ExceptionControl{
 			}
 			totalCR=RoundUtil.roundMoney2Dec(totalCR);
 			totalDR=RoundUtil.roundMoney2Dec(totalDR);
-			
+
 			ArrayList<Object> item = new ArrayList<Object>();
 			item.add(v.getVouchernum());
 			item.add(commService.loadPortfolio(v.getPortfolio()).getShortName());
-			
+
 			item.add(DateUtil.convertD2YYYY_MM_DD(v.getLedgerDate()));
 			item.add(v.getDescription());
 			if(vds.get(0).getSecurityID()==null){
@@ -186,40 +186,40 @@ public class InfoController extends ExceptionControl{
 			}
 			data.add(item);
 		}
-		
+
 		result.put("data", data);
 		List<String> titles = Arrays.asList("凭证号","投资组合","记账日期", "摘要", "证券代码", "本币", "原币", "借方(本币)", "贷方(本币)", "交易/头寸编号");
-		
-		
+
+
 
 //		DataReadResult dataSet=new DataReadResult();
 //		dataSet.setDataHeader(titles);
 //		dataSet.setDataResult(data);
-//		
+//
 //		try {
 //			downLoadFile(response, dataSet);
 //		}catch(Exception e) {
 //			e.printStackTrace();
 //		}
 //		System.out.println(1111);
-		
+
 		result.put("titles", titles);
 		result.put("pages", pages.getTotalPages());
 		JsonUtil.writeObjToResponse(response, result);
     }
-	
+
 	@RequestMapping(value="/info/voucherTypeList.do", method = RequestMethod.POST)
 	 public void voucherTypeList(HttpServletResponse response){
 		HashMap<Integer, String> result = JournalTypes.getJournalTypeHM();
 		result.put(0, "全部");
 		JsonUtil.writeObjToResponse(response, result);
 	}
-	
-	@RequestMapping(value="/info/voucherDetail.do", method = RequestMethod.POST, name="凭证-详情")  
-    public void voucherDetail(@RequestParam(value = "id", required = true) String voucherNum, 
+
+	@RequestMapping(value="/info/voucherDetail.do", method = RequestMethod.POST, name="凭证-详情")
+    public void voucherDetail(@RequestParam(value = "id", required = true) String voucherNum,
     		HttpServletRequest request,
     		HttpServletResponse response) {
-		
+
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		ArrayList<Object> data = new ArrayList<Object>();
 		List<VoucherDetailsView> vdList=voucherService.fetchVoucherDetails(voucherNum);
@@ -241,7 +241,7 @@ public class InfoController extends ExceptionControl{
 			}
 			item.add(DataConvert.convertCash2US(vd.getPrice()));
 			item.add(vd.getFxRate());
-			
+
 			data.add(item);
 		}
 		result.put("data", data);
@@ -249,13 +249,13 @@ public class InfoController extends ExceptionControl{
 		result.put("titles", titles);
 		JsonUtil.writeObjToResponse(response, result);
 	}
-	
+
 	@RequestMapping(value="/info/voucherEntryTypes.do", method = RequestMethod.POST)
 	public void voucherEntryTypesTypes(HttpServletResponse response){
 		JsonUtil.writeObjToResponse(response, DBCR.jdOptionsHM);
 	}
-	
-	@RequestMapping(value="/info/voucherRemove.do", method = RequestMethod.POST, name="凭证-删除")  
+
+	@RequestMapping(value="/info/voucherRemove.do", method = RequestMethod.POST, name="凭证-删除")
 	@Transactional(value="jixuTXManager", rollbackFor = Exception.class)
 	public void voucheRemove(@RequestParam(value = "id", required = true) int vouchernum,
 							HttpServletRequest request,
@@ -266,7 +266,7 @@ public class InfoController extends ExceptionControl{
 		container.setFieldsHM(fieldsMap);
 		container.setUserID(userID);
 		container=msgFactory.executeMsg(container);
-		
+
 		if(container.isCorrectFlag()){
 			JsonUtil.writeObjToResponse(response, container.getObjID() + "");
 		}else{
@@ -279,20 +279,20 @@ public class InfoController extends ExceptionControl{
 			JsonUtil.writeObjToResponse(response, result);
 		}
 	}
-	
-	@RequestMapping(value="/info/cash.do", method = RequestMethod.POST, name="现金头寸-查询")  
+
+	@RequestMapping(value="/info/cash.do", method = RequestMethod.POST, name="现金头寸-查询")
     public void cashPosition(@RequestParam(value = "portfolio", required = true) String portfolio,
     						 @RequestParam(value = "start", required = true) String start,
     						 @RequestParam(value = "end", required = true) String end,
     						 HttpServletResponse response) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		
+
 		List<String> titles = Arrays.asList("编号","银行", "账户", "账户名称", "货币", "当前余额","应收利息", "投资组合货币","当前价值");
 		result.put("titles", titles);
-		
+
 		List<Object> data = new ArrayList<Object>();
 		Date endDate=DateUtil.convertStr2DateAll(end);
-		
+
 		List<CashPositionModel> cashPositionList=secCashService.getCashPosition(portfolio, endDate);
 		for(int i=0;i<cashPositionList.size();i++){
 			CashPositionModel cashPosition=cashPositionList.get(i);
@@ -307,13 +307,13 @@ public class InfoController extends ExceptionControl{
 			item.add(cashPosition.getFuncCurCode());
 			item.add(DataConvert.convertCash2US(cashPosition.getFuncBalance()));
 			data.add(item);
-			
+
 		}
 		result.put("data", data);
 		JsonUtil.writeObjToResponse(response, result);
 	}
-	
-	@RequestMapping(value="/info/cashDetail.do", method = RequestMethod.POST, name="现金头寸-详情")  
+
+	@RequestMapping(value="/info/cashDetail.do", method = RequestMethod.POST, name="现金头寸-详情")
     public void cashDetail(@RequestParam(value = "accountID", required = true) int accountID,
     					   @RequestParam(value = "portID", required = true) String portID,
     					   @RequestParam(value = "start", required = true) String start,
@@ -329,8 +329,8 @@ public class InfoController extends ExceptionControl{
 		int pageSize=10;
 		Pages<List<String>> pages=new Pages<List<String>>(num,pageSize);
 		pages=SubListUtil.getPageList(cashList, num, pages);
-		cashList=pages.getResultList(); 
-		
+		cashList=pages.getResultList();
+
 		for(List<String> fieldsList:cashList){
 			List<Object> tItem = new ArrayList<Object>();
 			for(String field:fieldsList){
@@ -340,11 +340,11 @@ public class InfoController extends ExceptionControl{
 		}
 		cashflow.put("data", tData);
 		cashflow.put("pages", pages.getTotalPages());
-		
+
 		JsonUtil.writeObjToResponse(response, cashflow);
 	}
-	
-	@RequestMapping(value="/info/position.do", method = RequestMethod.POST, name="证券头寸-查询")  
+
+	@RequestMapping(value="/info/position.do", method = RequestMethod.POST, name="证券头寸-查询")
     public void securityPosition(@RequestParam(value = "portfolio", required = true) String portnum,
     						 	 @RequestParam(value = "start", required = true) String start,
     						 	 @RequestParam(value = "end", required = true) String end,
@@ -354,9 +354,9 @@ public class InfoController extends ExceptionControl{
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("证券代码","投资组合", "内部代码", "证券名称", "类型", "多空", "数量", "货币","摊余成本","成本(原币)","市值(原币)","利息(原币)", "货币", "成本(本币)","市值(本币)","利息(本币)","汇率");
 		result.put("titles", titles);
-		
+
 		List<Object> data = new ArrayList<Object>();
-		
+
 		Date endDate=null;
 		if(end.equals("")){
 			PortfolioHdr portfolio=commService.loadPortfolio(portnum);
@@ -364,9 +364,9 @@ public class InfoController extends ExceptionControl{
 		}else{
 			endDate=DateUtil.convertStr2Date2(end);
 		}
-		
+
 		List<SecPositionModel> positionList=new ArrayList<SecPositionModel>();
-		
+
 		if(secid!=null && !secid.equals("")){
 			String[] secids=secid.split("\\|");
 			String secidFinal="";
@@ -379,12 +379,12 @@ public class InfoController extends ExceptionControl{
 		}else{
 			positionList=secCashService.getSecPositions(portnum, endDate);
 		}
-		
+
 		//对list进行分页显示
 		Pages<SecPositionModel> pages=new Pages<SecPositionModel>(num);
 		pages=SubListUtil.getPageList(positionList, num, pages);
-		positionList=pages.getResultList(); 
-		//防止该组合下真的没有头寸  
+		positionList=pages.getResultList();
+		//防止该组合下真的没有头寸
 		if(positionList!=null){
 			for(SecPositionModel position:positionList){
 				List<Object> item = new ArrayList<Object>();
@@ -410,17 +410,17 @@ public class InfoController extends ExceptionControl{
 				item.add(DataConvert.convertCash2US(position.getFunMkValue()));
 				item.add(DataConvert.convertCash2US(position.getAccruedFunc()));
 				item.add(position.getFxRate());
-				
+
 				data.add(item);
 			}
 		}
-		
+
 		result.put("data", data);
 		result.put("pages", pages.getTotalPages());
 		JsonUtil.writeObjToResponse(response, result);
 	}
-	
-	@RequestMapping(value="/info/positionTradeDetail.do", method = RequestMethod.POST, name="证券头寸-交易详情")  
+
+	@RequestMapping(value="/info/positionTradeDetail.do", method = RequestMethod.POST, name="证券头寸-交易详情")
     public void positionTradeDetail(@RequestParam(value = "secID", required = true) String secID,
     					   @RequestParam(value = "portID", required = true) String portID,
     					   @RequestParam(value = "start", required = true) String start,
@@ -443,8 +443,8 @@ public class InfoController extends ExceptionControl{
 		trades.put("pages", 1);
 		JsonUtil.writeObjToResponse(response, trades);
 	}
-	
-	@RequestMapping(value="/info/positionAmortDetail.do", method = RequestMethod.POST, name="证券头寸-摊销详情")  
+
+	@RequestMapping(value="/info/positionAmortDetail.do", method = RequestMethod.POST, name="证券头寸-摊销详情")
     public void positionAmortDetail(@RequestParam(value = "secID", required = true) String secID,
     					   @RequestParam(value = "portID", required = true) String portID,
     					   @RequestParam(value = "start", required = true) String start,
@@ -454,23 +454,23 @@ public class InfoController extends ExceptionControl{
 		HashMap<String, Object> amorts = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("日期", "批次", "票面价值", "期初摊余成本", "有效利率","利息收入", "息票率", "应收利息", "期末摊余成本", "市值", "偏离度");
 		amorts.put("titles", titles);
-		
+
 		Date endDate=null;
 		if(end.equals("")){
 			endDate=new Date();
 		}else{
 			endDate=DateUtil.convertStr2Date2(end);
 		}
-		
+
 		//摊销详情
 		List<Object> tData =secCashService.positionAmortDetail(secID, portID,endDate);
 		amorts.put("data", tData);
 		amorts.put("pages", 1);
 		JsonUtil.writeObjToResponse(response, amorts);
 	}
-	
 
-	@RequestMapping(value="/info/nav.do", method = RequestMethod.POST, name="净值-查询")  
+
+	@RequestMapping(value="/info/nav.do", method = RequestMethod.POST, name="净值-查询")
     public void navReport(@RequestParam(value = "portfolio", required = true) String portfolio,
     					  @RequestParam(value = "start", required = true) String start,
     					  @RequestParam(value = "end", required = true) String end,
@@ -485,12 +485,12 @@ public class InfoController extends ExceptionControl{
 		}else{
 			searchDate=new Date();
 		}
-		
+
 		List<NavAssetObj> navAssetObjList=new ArrayList<NavAssetObj>();
 		Pages<NavAssetObj> pages=new Pages<NavAssetObj>(num);
 		pages=secCashService.getNavObjList(pages,portfolio, searchDate);
 		navAssetObjList=pages.getResultList();
-		
+
 		List<Object> data = new ArrayList<Object>();
 		for(NavAssetObj navObj:navAssetObjList){
 			List<Object> item = new ArrayList<Object>();
@@ -506,8 +506,8 @@ public class InfoController extends ExceptionControl{
 		result.put("pages",pages.getTotalPages());
 		JsonUtil.writeObjToResponse(response, result);
 	}
-	
-	@RequestMapping(value="/info/navDetail.do", method = RequestMethod.POST, name="净值-详情")  
+
+	@RequestMapping(value="/info/navDetail.do", method = RequestMethod.POST, name="净值-详情")
     public void navDetail( @RequestParam(value = "portID", required = true) String portID,
     					   @RequestParam(value = "navDate", required = true) String date,
     					   HttpServletResponse response) {
@@ -515,14 +515,14 @@ public class InfoController extends ExceptionControl{
 		ArrayList<Object> data = new ArrayList<Object>();
 		List<Nav> navList=secCashService.getNavDetail(portID, DateUtil.convertStr2Date2(date));
 		PortfolioHdr portfolio=commService.loadPortfolio(portID);
-		
+
 		Nav nav1=navList.get(0);
 		Nav nav2=navList.get(1);
 		data.add(portID);
 		data.add(portfolio.getShortName());
 		data.add(date);
 		data.add(RoundUtil.roundMoney(nav2.getNavAmount(),portfolio.getNavPrecision()));
-		
+
 		data.add(DataConvert.convertAmount2US(nav1.getAsset()));
 		data.add(DataConvert.convertAmount2US(nav1.getLiabilities()));
 		data.add(DataConvert.convertAmount2US(nav2.getIncome()));
@@ -530,7 +530,7 @@ public class InfoController extends ExceptionControl{
 		data.add(DataConvert.convertAmount2US(nav2.getCapital()));
 		data.add(DataConvert.convertAmount2US(nav2.getCapitalUnreal()*-1));
 		data.add(DataConvert.convertAmount2US(nav2.getCapitalRG()));
-		
+
 		data.add(DataConvert.convertAmount2US(nav2.getSharesSettled()));
 		data.add(RoundUtil.roundMoney(nav2.getNavAmount(),portfolio.getNavPrecision()));
 		data.add(0);
@@ -539,13 +539,13 @@ public class InfoController extends ExceptionControl{
 		result.put("titles", titles);
 		JsonUtil.writeObjToResponse(response, result);
 	}
-	
+
 	/**
 	 * 获取某个组合最近的一个总净值
 	 * @param portfolio
 	 * @param response
 	 */
-	@RequestMapping(value="/info/latestTotalNAV.do", method = RequestMethod.POST)  
+	@RequestMapping(value="/info/latestTotalNAV.do", method = RequestMethod.POST)
     public void latestTotalNAV(@RequestParam(value = "portfolio", required = true) String portfolio, HttpServletResponse response) {
 		Pages<NavAssetObj> pages=new Pages<NavAssetObj>();
 		pages=secCashService.getNavObjList(pages,portfolio, DateUtil.convertStr2Date("29991231"));
@@ -553,7 +553,7 @@ public class InfoController extends ExceptionControl{
 		NavAssetObj nav=navList.get(0);
 		JsonUtil.writeObjToResponse(response, nav.getNetAsset());
 	}
-	
+
 	/**
 	 * 给出一个组合,总净值,总份额计算单位净值
 	 * @param portID
@@ -561,7 +561,7 @@ public class InfoController extends ExceptionControl{
 	 * @param shares
 	 * @param response
 	 */
-	@RequestMapping(value="/info/calcNAV.do", method = RequestMethod.POST)  
+	@RequestMapping(value="/info/calcNAV.do", method = RequestMethod.POST)
     public void calcNAV(@RequestParam(value = "portfolio", required = true) String portID,
     				    @RequestParam(value = "totalNAV", required = true) double totalNAV,
     				    @RequestParam(value = "shares", required = true) double shares,
@@ -569,17 +569,17 @@ public class InfoController extends ExceptionControl{
 		PortfolioHdr portfolio=commService.loadPortfolio(portID);
 		JsonUtil.writeObjToResponse(response, RoundUtil.roundMoney(totalNAV/shares, portfolio.getNavPrecision()));
 	}
-	
+
 	//TODO: 给出一个组合,总净值,单位净值，计算总份额
-	@RequestMapping(value="/info/calcShares.do", method = RequestMethod.POST)  
+	@RequestMapping(value="/info/calcShares.do", method = RequestMethod.POST)
 	public void calcShares(@RequestParam(value = "portfolio", required = true) String portID,
 						@RequestParam(value = "totalNAV", required = true) double totalNAV,
 	    				@RequestParam(value = "NAV", required = true) double NAV,
 	    				HttpServletResponse response) {
 			JsonUtil.writeObjToResponse(response, RoundUtil.roundMoney(totalNAV/NAV, 0));
 		}
-	
-	@RequestMapping(value="/info/rd.do", method = RequestMethod.POST, name="实收实付-查询")  
+
+	@RequestMapping(value="/info/rd.do", method = RequestMethod.POST, name="实收实付-查询")
     public void rdReport(@RequestParam(value = "portfolio", required = true) String portfolio,
     					  @RequestParam(value = "start", required = true) String start,
     					  @RequestParam(value = "end", required = true) String end,
@@ -588,12 +588,12 @@ public class InfoController extends ExceptionControl{
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("编号","日期", "实收实付描述", "货币", "剩余金额", "原始金额", "类型", "证券代码", "银行", "银行账户", "银行账户描述", "应收应付编号", "交易编号");
 		result.put("titles", titles);
-		
+
 		List<Object> data = new ArrayList<Object>();
 		//String portNum=Integer.valueOf(portfolio);
-		
+
 		Pages<BkCashFlow> pages=new Pages<BkCashFlow>(num);
-		
+
 		Date startDate=DateUtil.convertStr2DateAll(start);
 		Date endDate=DateUtil.convertStr2DateAll(end);
 		Pages<BkCashFlow> cashFlowPage=secCashService.getCashFlow(pages, portfolio, startDate, endDate);
@@ -611,7 +611,7 @@ public class InfoController extends ExceptionControl{
 				item.add(cashFlow.getCusip().getSecurityid());
 			else
 				item.add("");
-		
+
 			item.add(cashFlow.getBkCashAcct().getBkinfo().getBankDesc());
 			item.add(cashFlow.getBkCashAcct().getExternalacctnumber());
 			item.add(cashFlow.getBkCashAcct().getBankdesc());
@@ -621,37 +621,37 @@ public class InfoController extends ExceptionControl{
 		}
 		result.put("data", data);
 		result.put("pages", pages.getTotalPages());
-			
+
 		JsonUtil.writeObjToResponse(response, result);
 	}
-	
-	@RequestMapping(value="/info/rcpy.do", method = RequestMethod.POST, name="应收应付-查询")  
+
+	@RequestMapping(value="/info/rcpy.do", method = RequestMethod.POST, name="应收应付-查询")
     public void rcpyReport(@RequestParam(value = "portfolio", required = true) String portfolio,
     					   @RequestParam(value = "start", required = true) String start,
     					   @RequestParam(value = "end", required = true) String end,
     					   @RequestParam(value = "num", required = false) int num,
     					   HttpServletResponse response) {
-		
-		
+
+
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("编号","到期日期","生成日期","应收应付描述", "货币", "剩余结算金额", "原始结算金额", "类型", "证券代码", "银行", "银行账户", "交易编号");
 		result.put("titles", titles);
-		
+
 		List<Object> data = new ArrayList<Object>();
 		Date startDate=DateUtil.convertStr2DateAll(start);
 		Date endDate=DateUtil.convertStr2DateAll(end);
-		
+
 		List<BkCashRcpy> rcpyList=new ArrayList<BkCashRcpy>();
 		Pages<BkCashRcpy> pages=new Pages<BkCashRcpy>(num);
 		Pages<BkCashRcpy> BkCashRcpypages=secCashService.getCashRcpy(pages,portfolio, startDate, endDate);
 		rcpyList=BkCashRcpypages.getResultList();
-		
+
 		String rcpydc="";
 		String rcpyMsg="";
 		for(BkCashRcpy rcpy:rcpyList){
 			List<Object> item = new ArrayList<Object>();
 			rcpydc=DBCR.dcOptionsHM.get(rcpy.getDbcr());
-			
+
 			rcpyMsg=rcpy.getRcpyDesc();
 			item.add(rcpy.getId());
 			item.add(DateUtil.convertD2YYYY_MM_DD(rcpy.getPaydate()));
@@ -679,23 +679,23 @@ public class InfoController extends ExceptionControl{
 		result.put("pages",pages.getTotalPages());
 		JsonUtil.writeObjToResponse(response, result);
 	}
-	
-	@RequestMapping(value="/info/rcpyCreated.do", method = RequestMethod.POST)  
+
+	@RequestMapping(value="/info/rcpyCreated.do", method = RequestMethod.POST)
     public void rcpyCreated(@RequestParam(value = "portfolio", required = true) String portfolio,
     					   @RequestParam(value = "start", required = true) String start,
     					   @RequestParam(value = "end", required = true) String end,
     					   @RequestParam(value = "num", required = false) int num,
     					   HttpServletResponse response) {
-		
-		
+
+
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("到期日期","生成日期","应收应付描述", "货币", "剩余结算金额", "原始结算金额", "类型", "证券代码", "银行", "银行账户", "交易编号");
 		result.put("titles", titles);
-		
+
 		List<Object> data = new ArrayList<Object>();
-		
+
 		Pages<BkCashRcpy> pages=new Pages<BkCashRcpy>(num);
-		
+
 		Date startDate=DateUtil.convertStr2DateAll(start);
 		Date endDate=DateUtil.convertStr2DateAll(end);
 		Pages<BkCashRcpy> BkCashRcpypages=secCashService.getCashRcpy(pages,portfolio, startDate, endDate);
@@ -705,12 +705,12 @@ public class InfoController extends ExceptionControl{
 		for(BkCashRcpy rcpy:rcpyList){
 			List<Object> item = new ArrayList<Object>();
 			rcpydc=DBCR.dcOptionsHM.get(rcpy.getDbcr());
-			
+
 			rcpyMsg=SecurityCoreFactory.getAllTranTypeHM().get(rcpy.getTrantype());
 			if(rcpy.getRcpyDesc() != null){
 				rcpyMsg=rcpyMsg+ "-"+rcpy.getRcpyDesc();
 			}
-			
+
 			item.add(DateUtil.convertD2YYYY_MM_DD(rcpy.getPaydate()));
 			item.add(DateUtil.convertD2YYYY_MM_DD(rcpy.getLedger()));
 			item.add(rcpyMsg);
@@ -740,7 +740,7 @@ public class InfoController extends ExceptionControl{
 		System.out.println(json);
 		JsonUtil.writeObjToResponse(response, true);
 	}
-	
+
 	@RequestMapping(value="/info/settleRCPY.do", produces = "application/json; charset=utf-8",method = RequestMethod.POST, name="应收应付-结转")
 	@ResponseBody
 	public Object settleRCPY(@RequestParam(value = "json", required = true) String json,
@@ -749,7 +749,7 @@ public class InfoController extends ExceptionControl{
 		MsgContainer container=commService.executeMsg(request, json);
 		return commService.controllerReturn(container);
 	}
-	
+
 	@RequestMapping(value="/info/deleteCash.do", produces = "application/json; charset=utf-8",method = RequestMethod.POST, name="实收实付-删除")
 	@ResponseBody
 	public Object deleteCash(@RequestParam(value = "id", required = true) String id,
@@ -759,21 +759,21 @@ public class InfoController extends ExceptionControl{
 		msghm.put(MsgFields.header, "rcpy2CashMsg");
 		msghm.put(MsgFields.operation, "DELETE");
 		msghm.put(MsgFields.id, id);
-		
+
 		MsgContainer container=commService.executeMsg(request, JSONObject.toJSONString(msghm));
 		return commService.controllerReturn(container);
 	}
-		
-	@RequestMapping(value="/info/getRCPY.do", method = RequestMethod.POST, name="应收应付-详情")  
+
+	@RequestMapping(value="/info/getRCPY.do", method = RequestMethod.POST, name="应收应付-详情")
     public void getRCPY(@RequestParam(value = "rcpyNum", required = true) int rcpyNum,
     					HttpServletResponse response) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("到期日期", "应收应付描述", "货币", "剩余结算金额", "原始结算金额", "类型", "证券代码", "银行", "银行账户");
 		result.put("titles", titles);
-		
+
 		List<Object> data = new ArrayList<Object>();
 		List<Object> item = new ArrayList<Object>();
-		
+
 		BkCashRcpy rcpy=secCashService.loadCashRcpy(rcpyNum);
 		item.add(DateUtil.convertD2YYYY_MM_DD(rcpy.getExpdcashdate()));
 		item.add(rcpy.getRcpyDesc());
@@ -786,21 +786,21 @@ public class InfoController extends ExceptionControl{
 		}else{
 			item.add("-");
 		}
-		
+
 		item.add(rcpy.getBkCashAcct().getBkinfo().getBankDesc());
 		item.add(rcpy.getBkCashAcct().getBankdesc());
 		data.add(item);
-		
+
 		result.put("data", data);
 		JsonUtil.writeObjToResponse(response, result);
 	}
-	
-	@RequestMapping(value="/info/getRCPYBrief.do", method = RequestMethod.POST)  
+
+	@RequestMapping(value="/info/getRCPYBrief.do", method = RequestMethod.POST)
     public void getRCPYBrief(@RequestParam(value = "rcpyNum", required = true) int rcpyNum,
     					HttpServletResponse response) {
-		
-		
-		
+
+
+
 		HashMap<String, Object> item = new HashMap<String, Object>();
 		BkCashRcpy rcpy=secCashService.loadCashRcpy(rcpyNum);
 		item.put("settleDate", DateUtil.convertD2YYYY_MM_DD(rcpy.getExpdcashdate()));
@@ -811,7 +811,7 @@ public class InfoController extends ExceptionControl{
 		item.put("origBal", DataConvert.convertCash2US(rcpy.getOrigbal()));
 		JsonUtil.writeObjToResponse(response, item);
 	}
-	
+
 	@RequestMapping(value = "/info/OutSecPosition.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public Object outSecPosition(@RequestParam(value = "portnum", required = true) String portnum,
@@ -819,7 +819,7 @@ public class InfoController extends ExceptionControl{
     					HttpServletResponse response){
 		return outDate.genResults(portnum, asOfDate);
 	}
-	
+
 	@RequestMapping(value="/info/useageCashPosition.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
     public Object cashPosition(@RequestParam(value = "portnum", required = true) String portnum,
@@ -827,21 +827,21 @@ public class InfoController extends ExceptionControl{
     						 HttpServletResponse response) {
 		return secCashService.getUseageCashPosition(portnum, asOfDate);
 	}
-	
-	
-	@RequestMapping(value="/info/compareVoucer.do", method = RequestMethod.POST)  
+
+
+	@RequestMapping(value="/info/compareVoucer.do", method = RequestMethod.POST)
     public void compareStandardVoucher(@RequestParam(value = "port", required = true) String portID,
     						@RequestParam(value = "date", required = true) String date,
     						HttpServletRequest request,
     						HttpServletResponse response){
-		
+
 		String[] port={portID};
 		Date ledgerDate=DateUtil.convertStr2Date2(date);
 		ResultContainer container=voucherService.testCaseDailyVoucher(port, ledgerDate);
 		//将比较的结果返回到JixuTest
 		JsonUtil.writeObjToResponse(response, container);
 	}
-	
+
 	/**
 	 * 理财产品的类型
 	 * @param response
@@ -850,7 +850,7 @@ public class InfoController extends ExceptionControl{
 	public void portProductTypes(HttpServletResponse response){
 		JsonUtil.writeObjToResponse(response, OptionType.portProductTypesHM);
 	}
-	
+
 //	@RequestMapping(value="/info/getJoyinSession.do", method = RequestMethod.POST)
 //	public void testGetSession(HttpServletResponse response) {
 //		final List<String> permissionModules = (List<String>)SecurityUtil.getFromSession(GlobalConstant.SESSION_ALL_MODULES);
@@ -858,7 +858,7 @@ public class InfoController extends ExceptionControl{
 //		result.put("session", permissionModules);
 //		JsonUtil.writeObjToResponse(response, result);
 //	}
-	
+
 	@RequestMapping(value="/info/getSessionBtn.do", method = RequestMethod.POST)
 	public void testGetBtn(@RequestParam(value = "buttonId", required = false) String buttonId,
 			HttpServletRequest request,HttpServletResponse response) {

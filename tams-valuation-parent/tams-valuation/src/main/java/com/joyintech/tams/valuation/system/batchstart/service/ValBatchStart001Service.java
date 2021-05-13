@@ -51,10 +51,10 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.system.batchstart.dao.ValBatchStart001Mapper;
 import com.joyintech.tams.valuation.system.batchstart.dto.BatchGrpPri;
 import com.joyintech.tams.valuation.system.batchstart.dto.DimensionValue;
-import com.joyintech.tools.mq.MessageQueueManager;
+//import com.joyintech.tools.mq.MessageQueueManager;
 import com.joyintech.tools.mq.constant.OperationType;
 import com.joyintech.tools.mq.constant.SystemList;
-import com.joyintech.tools.mq.entity.PushMessageDto;
+//import com.joyintech.tools.mq.entity.PushMessageDto;
 
 @Service
 public class ValBatchStart001Service extends BaseService<SysBatchTask> {
@@ -73,15 +73,15 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 	@Autowired
 	private SysBatchPrdGrpMapper batchProductGroupMapper;
 
-	@Autowired
-	private MessageQueueManager messageQueueManager;
+//	@Autowired
+//	private MessageQueueManager messageQueueManager;
 
 	@Autowired(required = false)
 	private ProductService productService;
 
 	@Autowired
 	private ValBatchStart001MastService valBatchStart001MastService;
-	
+
 	public static final String BATCH_DISPATCH = "100";
 
 	public static final String BATCH_UNISTART = "999999";
@@ -156,7 +156,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 			tasks = selectGroupBySeqNo(batchGroupSeqNos);
 			systemCode = getSystemCode(tasks.get(0));
 		}
-		
+
 		String prodGroupSeqNo = selectedProductGroup;
 
 		List<String> prodList = null;
@@ -193,7 +193,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 			prodList = findAllProdbyGroup(prodGroupSeqNos);
 
 		}
-		
+
 		// BS-890 【 批处理启动_估值】执行产品，未选择产品，不应给其他机构批跑了 add by lizhi 20200712 start
 		if (StringUtil.isEmpty(prodGroupSeqNo) && GlobalConstant.BATCH_EXECUTE_TYPE_SINGLE.equals(prodGroupType)
 				&& DictCodeList.权限模式_联社模式.getValue().equals(CacheUtil.getSysParam(GlobalConstant.AUTHORITY_TYPE))
@@ -202,7 +202,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 	        String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
 	        if(StringUtil.isNotEmpty(createInst)){
 	        	// 查询登录用户所属机构的所有产品
-				List<com.joyintech.tams.valuation.system.batchstart.dto.Product> productList = 
+				List<com.joyintech.tams.valuation.system.batchstart.dto.Product> productList =
 						valBatchStart001Mapper.findAllProdByInstitutionCode(createInst);
 				if(null != productList && productList.size() > 0){
 					prodList = new ArrayList<String>();
@@ -211,7 +211,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 					}
 				}
 	        }
-	        
+
 			if(StringUtil.isNotEmpty(prodList)){
 				selectedProductGroup = StringUtil.joinString(prodList, ",");
 				prodGroupSeqNo = IDGenerator.generate();
@@ -324,7 +324,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		}
 		// 维度批处理必备参数
 		insertDimensionTask(insertJobInstList, insertGrpPriList, insertDimValueList);
-		
+
 		executeDetail.setSystemCode(systemCode);
 		executeDetail.setSeqNo(detailSeqNo);
 		executeDetail.setBatchSeqNo(batchGroupSeqNo);
@@ -375,16 +375,16 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		DynamicDataSourceHolder.putDataSource(DataSourceType.OTHER);
 		valBatchStart001Mapper.updateExeDetailToUnr(detailSeqNo, SecurityUtil.getLoginUser().getUserName());
 		valBatchStart001Mapper.deleteAllBatchInfo(detailSeqNo);
-		if (isActivemqActive == null || isActivemqActive) {
-			PushMessageDto messageDto = new PushMessageDto();
-			messageDto.setMessageId(IDGenerator.generate());
-			messageDto.setDestSystem(SystemList.估值核算_批处理.getValue());
-			messageDto.setBusinessEntity(detailSeqNo);
-			messageDto.setBusinessMode(BusinessMode.批处理启动.getModeCode());
-			messageDto.setOperationType(OperationType.插入.getValue());
-			DynamicDataSourceHolder.clearDataSource();
-			flag = messageQueueManager.sendMessage(messageDto);
-		}
+//		if (isActivemqActive == null || isActivemqActive) {
+//			PushMessageDto messageDto = new PushMessageDto();
+//			messageDto.setMessageId(IDGenerator.generate());
+//			messageDto.setDestSystem(SystemList.估值核算_批处理.getValue());
+//			messageDto.setBusinessEntity(detailSeqNo);
+//			messageDto.setBusinessMode(BusinessMode.批处理启动.getModeCode());
+//			messageDto.setOperationType(OperationType.插入.getValue());
+//			DynamicDataSourceHolder.clearDataSource();
+//			flag = messageQueueManager.sendMessage(messageDto);
+//		}
 		return flag;
 	}
 
