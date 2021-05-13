@@ -249,7 +249,6 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		List<ChbPrdBaseinfo> rs = new ArrayList<ChbPrdBaseinfo>();
 		for (Map<String, String> map : dataList) {
 			ChbPrdBaseinfo t = new ChbPrdBaseinfo();
-			t.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 			for (String key : map.keySet()) {
 				if(key==null||key.equals("ERRMSG")){//待处理的数据
 					t.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
