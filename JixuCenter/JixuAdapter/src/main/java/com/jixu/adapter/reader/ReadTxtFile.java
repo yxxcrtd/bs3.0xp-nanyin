@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +95,7 @@ public class ReadTxtFile extends ReadFileBasic {
 						}else{
 							String splitChar=source.getTableSpilitChar();
 							splitChar=getSplitWrite(splitChar);
-							String[] fields=line.split(splitChar);
+							String[] fields=line.split(Pattern.quote(splitChar));
 							for(String field:fields){
 								fieldsList.add(field);
 							}

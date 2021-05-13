@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -104,7 +105,7 @@ public abstract class ReadFileBasic implements ReadDataFile{
 			}else{
 				String splitChar=source.getTableSpilitChar();
 				splitChar=getSplitWrite(splitChar);
-				String[] fields=line.split(splitChar);
+				String[] fields=line.split(Pattern.quote(splitChar));
 				for(String field:fields){
 					fieldsList.add(field);
 				}

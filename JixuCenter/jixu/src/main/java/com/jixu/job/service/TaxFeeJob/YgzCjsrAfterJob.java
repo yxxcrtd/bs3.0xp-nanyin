@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
@@ -85,7 +86,7 @@ public class YgzCjsrAfterJob extends AfterJobAbstract {
 				continue;
 			
 			for(String acct:accts){
-				if(bacl.getAcctnum().matches(acct)){
+				if(bacl.getAcctnum().matches(Pattern.quote(acct))){
 					IssueInfo sec=issueInfoDao.loadSecurity(bacl.getSecid());
 					//判断是否应税
 					boolean ysflag=false;
