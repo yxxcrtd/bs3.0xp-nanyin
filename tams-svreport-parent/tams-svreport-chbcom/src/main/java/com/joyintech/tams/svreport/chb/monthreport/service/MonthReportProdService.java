@@ -1506,7 +1506,7 @@ public class MonthReportProdService {
      * @param
      */
     public Map<String,ChbMonthPrdPosition>  getMaxQtyByType(List<ChbMonthPrdPosition> pos) {
-        Map<String,ChbMonthPrdPosition> resultMap = null;
+        Map<String,ChbMonthPrdPosition> resultMap = new HashMap<String, ChbMonthPrdPosition>();
         //根据产品代码对头寸LIST进行分组
         Map<String, List<ChbMonthPrdPosition>> map = pos.stream().collect(JoyinCollectors.groupingBy(ChbMonthPrdPosition::getProdid));
 
