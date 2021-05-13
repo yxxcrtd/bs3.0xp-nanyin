@@ -107,6 +107,10 @@
 					<artifactId>service-common</artifactId>
 					<groupId>com.joyintech</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>service-exchange</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
