@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName SysPrebatchResult001Service.java
+ * @Description 批前检查001 页面对应
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.prebatch.service;
 
 import com.joyintech.framework.base.entity.SysBatchgrpExecInfo;

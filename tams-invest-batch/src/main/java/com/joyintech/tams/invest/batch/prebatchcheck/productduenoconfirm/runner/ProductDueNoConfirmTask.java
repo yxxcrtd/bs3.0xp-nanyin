@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName ProductDueNoConfirmTask.java
+ * @Description 批前检查 产品到期未确认
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.batch.prebatchcheck.productduenoconfirm.runner;
 
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
@@ -38,6 +45,13 @@ public class ProductDueNoConfirmTask extends BatchBaseService {
     @Autowired
     private ProductDueNoConfirmService productDueNoConfirmService;
 
+    /**
+     * @title
+     * @description 执行任务
+     * @author wj
+     * @updateTime 2021/5/13 11:01
+     * @throws
+     */
     @Override
     public JobExecution execute() throws BatchException {
         JobExecution result = new JobExecution(1l);

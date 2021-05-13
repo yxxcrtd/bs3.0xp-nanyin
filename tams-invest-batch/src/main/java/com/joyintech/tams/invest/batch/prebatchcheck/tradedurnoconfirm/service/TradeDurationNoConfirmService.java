@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName TradeDurationNoConfirmTask.java
+ * @Description 批前检查 交易/存续期 未确认service
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.batch.prebatchcheck.tradedurnoconfirm.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
@@ -106,6 +113,13 @@ public class TradeDurationNoConfirmService {
 
     }
 
+    /**
+     * @title 组装
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:03 
+     * @throws 
+     */
     private void setResultDetail(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, SysPrebatchResultDetail item) {
         item.setResultSeqNo(dto.getSeqNo());
         item.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());

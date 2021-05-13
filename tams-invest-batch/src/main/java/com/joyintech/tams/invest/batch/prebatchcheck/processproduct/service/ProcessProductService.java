@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName ProcessProductService.java
+ * @Description 批前检查
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.batch.prebatchcheck.processproduct.service;
 
 
@@ -29,6 +36,13 @@ public class ProcessProductService {
     @Autowired
     private PrebatchCheckCommonService prebatchCheckCommonService;
 
+    /**
+     * @title
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 10:57 
+     * @throws 
+     */
     public void execute(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, String instCode){
 
         Map<String,Object> param = new HashMap<>();
