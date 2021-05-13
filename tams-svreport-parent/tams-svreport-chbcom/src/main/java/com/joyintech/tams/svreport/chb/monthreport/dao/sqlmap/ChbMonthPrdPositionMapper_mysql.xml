@@ -41,7 +41,7 @@
         pd as(
         select DISTINCT info.prod_id,
         case info.ISSUING_STATUS when '01' then (
-        case when info.vdate<![CDATA[<=]]>#{enddate,jdbcType=DATE}  then IF(ISNULL(deal.prod_id),'02','01')
+        case when info.vdate<![CDATA[<=]]>#{enddate,jdbcType=DATE}  then IF(ISNULL(deal.prod_id),'01','02')
         else '03'  end)
         else '03'  end DURATIONFLAG
         from CHB_PRD_BASEINFO info

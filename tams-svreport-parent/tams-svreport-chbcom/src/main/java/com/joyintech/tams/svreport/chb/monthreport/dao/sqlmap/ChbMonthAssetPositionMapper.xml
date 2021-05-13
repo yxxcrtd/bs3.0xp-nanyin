@@ -36,9 +36,12 @@
       <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
       <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
       <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
+      <result column="TERMS" property="terms" jdbcType="DECIMAL" />
+      <result column="SUNASSETTYPE" property="sunassettype" jdbcType="VARCHAR" />
+      <result column="SUNASSETTYPE2" property="sunassettype2" jdbcType="VARCHAR" />
 
   </resultMap>
-  
+
    <resultMap id="PlanResultMap" type="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
     <id column="PLAN_ASSET_ID" property="planAssetId" jdbcType="CHAR" />
      <result column="TOTAL_NUM" property="totalNum" jdbcType="DECIMAL" />
@@ -48,12 +51,13 @@
      <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
      <result column="ISFINAPLAN" property="isfinaplan" jdbcType="CHAR" />
      <result column="ACCUAMT" property="accuamt" jdbcType="DECIMAL" />
-     
+
   </resultMap>
   <sql id="Base_Column_List" >
-    POSUUID, BOOKDATE, STARTDATE, ENDDATE, INVEST_VARIETY, ASSET_CODE, ASSETTYPE, PROD_ID, 
-    ASSETVALUE_A, ASSETVALUE_B, INDUSTRY1, IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE, MANAGE_TYPE, 
-    IS_GOVERN_FUND1, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, RATING,ASSETTYPE2
+    POSUUID, BOOKDATE, STARTDATE, ENDDATE, INVEST_VARIETY, ASSET_CODE, ASSETTYPE, PROD_ID,
+    ASSETVALUE_A, ASSETVALUE_B, INDUSTRY1, IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE, MANAGE_TYPE,
+    IS_GOVERN_FUND1, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, RATING,ASSETTYPE2,
+    TERMS , SUNASSETTYPE , SUNASSETTYPE2
   </sql>
   <sql id="Sec_Rating_List" >
   with a as	(
@@ -165,7 +169,8 @@
       ASSETVALUE_B, INDUSTRY1, IN_ASSET_TYPE, 
       PPPFLAG, MONIT_TYPE, MANAGE_TYPE, 
       IS_GOVERN_FUND1, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, 
-      BONDTOSTOCK_FLAG, RATING,ASSETTYPE2,OLD_ASSET_CODE,IS_FHXGCP)
+      BONDTOSTOCK_FLAG, RATING,ASSETTYPE2,OLD_ASSET_CODE,IS_FHXGCP,
+      TERMS, SUNASSETTYPE, SUNASSETTYPE2)
     values (#{posuuid,jdbcType=CHAR}, #{bookdate,jdbcType=TIMESTAMP}, #{startdate,jdbcType=TIMESTAMP}, 
       #{enddate,jdbcType=TIMESTAMP}, #{investVariety,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
       #{assettype,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{assetvalueA,jdbcType=DECIMAL}, 
@@ -173,7 +178,8 @@
       #{pppflag,jdbcType=VARCHAR}, #{monitType,jdbcType=VARCHAR}, #{manageType,jdbcType=VARCHAR}, 
       #{isGovernFund1,jdbcType=VARCHAR}, #{privatefundFlag,jdbcType=VARCHAR}, #{privateprdFlag,jdbcType=VARCHAR}, 
       #{bondtostockFlag,jdbcType=VARCHAR}, #{rating,jdbcType=VARCHAR},#{assettype2,jdbcType=VARCHAR},#{oldAssetCode,jdbcType=VARCHAR}
-      ,#{isFhxgcp,jdbcType=VARCHAR})
+      ,#{isFhxgcp,jdbcType=VARCHAR},
+      #{terms,jdbcType=DECIMAL}, #{sunassettype,jdbcType=VARCHAR}, #{sunassettype2,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
     insert into CHB_MONTH_ASSET_POSITION
@@ -241,6 +247,15 @@
       <if test="assettype2 != null" >
         ASSETTYPE2,
       </if>
+        <if test="terms != null" >
+            TERMS,
+        </if>
+        <if test="sunassettype != null" >
+            SUNASSETTYPE,
+        </if>
+        <if test="sunassettype2 != null" >
+            SUNASSETTYPE2,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="posuuid != null" >
@@ -306,6 +321,15 @@
       <if test="assettype2 != null" >
         #{assettype2,jdbcType=VARCHAR},
       </if>
+        <if test="terms != null" >
+            #{terms,jdbcType=DECIMAL},
+        </if>
+        <if test="sunassettype != null" >
+            #{sunassettype,jdbcType=VARCHAR},
+        </if>
+        <if test="sunassettype2 != null" >
+            #{sunassettype2,jdbcType=VARCHAR},
+        </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
@@ -371,6 +395,15 @@
       <if test="assettype2 != null" >
         ASSETTYPE2 = #{assettype2,jdbcType=VARCHAR},
       </if>
+        <if test="terms != null" >
+            TERMS = #{terms,jdbcType=DECIMAL},
+        </if>
+        <if test="sunassettype != null" >
+            SUNASSETTYPE = #{sunassettype,jdbcType=VARCHAR},
+        </if>
+        <if test="sunassettype2 != null" >
+            SUNASSETTYPE2 = #{sunassettype2,jdbcType=VARCHAR},
+        </if>
     </set>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
@@ -395,7 +428,10 @@
       PRIVATEPRD_FLAG = #{privateprdFlag,jdbcType=VARCHAR},
       BONDTOSTOCK_FLAG = #{bondtostockFlag,jdbcType=VARCHAR},
       RATING = #{rating,jdbcType=VARCHAR},
-      ASSETTYPE2 = #{assettype2,jdbcType=VARCHAR}
+      ASSETTYPE2 = #{assettype2,jdbcType=VARCHAR},
+       TERMS = #{terms,jdbcType=DECIMAL},
+        SUNASSETTYPE = #{sunassettype,jdbcType=VARCHAR},
+        SUNASSETTYPE2 = #{sunassettype2,jdbcType=VARCHAR}
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
   

@@ -204,7 +204,8 @@ public class MonthReportAssetService {
         	p1.setRating(SvrDataUtil.getNameFromDataDict(DictCode.资产评级,p1.getRating()));
         	// 评级结果 add by jiangxiao end
         	p1.setStartdate(firstday);
-            if ( p1.getChlId()!=null &&!"05".equals(p1.getTradeType())) {
+        	//modify by yanya on 20210513 判定为空 方法更改
+            if ( StringUtil.isNotEmpty(p1.getChlId()) &&!"05".equals(p1.getTradeType())) {
                 if ( "01".equals(p1.getIsUnderDeal()) )  { //排除非首层交易
                     p1.setAssetvalueB(p1.getAssetvalueA());
                     p1.setAssetvalueA(null);
