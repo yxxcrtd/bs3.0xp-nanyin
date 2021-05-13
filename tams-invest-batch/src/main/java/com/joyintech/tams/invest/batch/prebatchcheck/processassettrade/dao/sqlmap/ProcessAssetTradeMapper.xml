@@ -65,7 +65,7 @@
                 /*流程中交易表去重，防止数据膨胀。同时，如果交易表存在多条记录，则去汇总交易表数据，即去重后不影响最终数据*/
                 deal as(
                     select * from(
-                        select deal.*,rank() over(partition by deal.workflow_id order by deal.update_time desc) as rank
+                        select deal.*,rank() over(partition by deal.workflow_id order by deal.trade_id desc) as rank
                         from WFL_TRD_PRODUCT_DEAl deal
                         where deal.workflow_id not in (select workflow_id from filter) or deal.workflow_id in (select seq_no from duration)
                     )where rank = 1
