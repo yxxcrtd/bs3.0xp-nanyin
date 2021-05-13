@@ -374,7 +374,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
                 ptlCashPositionFlowDto.setAmount(stlpayorder.getSettleAmt().negate());
                 ptlCashPositionFlowDto.setOrderId(stlpayorder.getOrderId());
                 // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
-                if(StringUtil.isNotEmpty(dto.getChannelId())) {
+                if (StringUtil.isNotEmpty(dto.getChannelId()) && StringUtil.equals(dto.getPayType(), DictCodeListExt2.划款方式_一次性划款.getValue())) {
                     ptlCashPositionFlowDto.setChlFinprodId("F28_" + dto.getChannelId());
                 }
                 // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
