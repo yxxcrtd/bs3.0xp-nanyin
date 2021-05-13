@@ -140,4 +140,7 @@ public class ComExternalOptionsService extends CommonExportService<ComExternalOp
         return comExternalOptionsMapper.dateCheck(params);
     }
 
+    public List<ComExternalOptions002Dto> getTargetInfo(Map<String, Object> param) {
+        return comExternalOptionsMapper.getTargetInfo(param);
+    }
 }

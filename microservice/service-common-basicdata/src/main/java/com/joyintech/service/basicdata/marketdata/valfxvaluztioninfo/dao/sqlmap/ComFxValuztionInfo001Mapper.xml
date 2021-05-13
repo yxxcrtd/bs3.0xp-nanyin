@@ -4,51 +4,32 @@
         namespace="com.joyintech.service.basicdata.marketdata.valfxvaluztioninfo.dao.ComFxValuztionInfo001Mapper">
 
 	<select id="getFinprodId2" resultType="com.joyintech.framework.select.SelectOptionDto">
-	    select
-        tpd.TRADE_ID as id
-        ,tpda.PORTFOLIO_ID portfolioId
-		from TRD_PRODUCT_DEAL  tpd
-        LEFT JOIN trd_product_deal_add tpda
-        ON tpda.trade_id = tpd.trade_id
-        WHERE tpd.TRADE_STATUS != '03'  AND tpd.is_cancel != 'Y' and tpd.finprod_type in ('F11','F12','F13')
+	    select 
+ 			TRADE_ID as id,
+ 			TRADE_ID as text
+		from TRD_PRODUCT_DEAL  
+        WHERE finprod_type in ('F11','F12','F13')
             <if test="search !=null and  search !='' ">
-                AND tpd.trade_id like '%' || #{search} || '%'
+                AND trade_id like '%' || #{search} || '%'              
             </if>
-        GROUP BY
-        tpd.TRADE_ID,tpda.PORTFOLIO_ID
-	</select>
-
-	<select id="getFinprodIdFromJx" resultType="com.joyintech.framework.select.SelectOptionDto">
-	    select
-        SECURITYID as id
-        ,SECURITYNAME portfolioId
-		from JXS_ISSUE_INFO
-        WHERE
-            ISSUETYPE IN
-            <foreach collection="ASSETTYPES" item="item" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        GROUP BY
-        SECURITYID,SECURITYNAME
+        GROUP BY 
+            TRADE_ID
 	</select>
 
     <select id="selectList"
             resultType="com.joyintech.service.basicdata.marketdata.valfxvaluztioninfo.dto.ComFxValuztionInfo001Dto">
         select
-        mvf.FINPROD_ID2                     finprodId2, /* 交易编号 - 金融产品代码（市场代码） */
+               FINPROD_ID2                     finprodId2, /* 交易编号 - 金融产品代码（市场代码） */
                tpd.finprod_type    			   foreignexChangeType,  /* 外汇类型 */
-               TO_CHAR(mvf.VAL_DATE, 'yyyy-MM-dd') valDate, /* 估值日期 */
-        mvf.VALUATION                       valuation, /* 估值 - 每日估值 */
+               TO_CHAR(VAL_DATE, 'yyyy-MM-dd') valDate, /* 估值日期 */
+               VALUATION                       valuation, /* 估值 - 每日估值 */
                mvf.CCY                         ccy, /* 币种 */
-        mvf.VALMODEL_ID                     valmodelId, /* 估值模型 */
-        mvf.DATASOURCE_TYPE                 datasourceType, /* 估值来源 - 数据来源 */
-        mvf.INPUT_TYPE                      inputType /* 维护方式 - 录入方式，接口、手工等 */
-        ,tpda.PORTFOLIO_ID portfolioId
+               VALMODEL_ID                     valmodelId, /* 估值模型 */
+               DATASOURCE_TYPE                 datasourceType, /* 估值来源 - 数据来源 */
+               INPUT_TYPE                      inputType /* 维护方式 - 录入方式，接口、手工等 */
         from MST_VAL_FX mvf 
         left join trd_product_deal tpd on tpd.trade_id = mvf.finprod_id2 
         and tpd.finprod_type in ('F11','F12','F13')
-        LEFT JOIN trd_product_deal_add tpda
-        ON tpda.trade_id = tpd.trade_id
         
         <where>
             <if test="finprodId2 != null  and finprodId2 !=''">
@@ -74,45 +55,55 @@
             </if>
         </where>
     </select>
-    
-    <select id="getRegistExcelList" resultType="java.lang.String">
-		select A.FINPROD_ID2 finprodId
-		from MST_VAL_FX A
-		where
-			A.FINPROD_ID2  =	#{finprodId,jdbcType=VARCHAR}
-		AND
-			A.VAL_DATE = #{valDate}
-		AND
-			A.DATASOURCE_TYPE = #{dataSource,jdbcType=VARCHAR}
-	</select>
 
-	<select id="checkFinprod" resultType="java.lang.String">
-    	select TRADE_ID 
-    	    from trd_product_deal 
-			where FINPROD_TYPE2 in ('F11','F12','F13')
-			and IS_CANCEL = 'N'
-			and TRADE_STATUS = '01'
-			and TRADE_ID = #{finprodId,jdbcType=VARCHAR}
-    </select>
-    
-    <select id="checkFinprodAndFinprodType2" resultType="java.lang.String">
-    	select TRADE_ID 
-    	    from trd_product_deal 
-			where FINPROD_TYPE2 = decode(#{finProdType2,jdbcType=VARCHAR},'即期','F11','远期','F12','掉期','F13')
-			and IS_CANCEL = 'N'
-			and TRADE_STATUS = '01'
-			and TRADE_ID = #{finprodId,jdbcType=VARCHAR}
-    </select>
-    
-    <select id="checkCcy" resultType="java.lang.String">
-    	SELECT
-    		item_code ccy
-		FROM
-    		SYS_DATADICT_LIST  SDL
-		WHERE
-    	SDL.dict_code = 'CCY'
-		AND
-    	SUBSTR(item_value, 0, decode(INSTR(item_value,'('),0,INSTR(item_value,'（'),INSTR(item_value,'('))-1) = #{ccy,jdbcType=VARCHAR}
-    </select>
+		<!-- 外汇估值信息导入   -->
+	 	<insert id="mergeInfoList"  parameterType="com.joyintech.service.basicdata.marketdata.valfxvaluztioninfo.dto.ComFxValuztionInfo001Dto">
+    		MERGE INTO MST_VAL_FX CII
+        	USING (
+        	<foreach collection="newDataList" item="item" open="select * from("
+                 close=")" separator="union all">
+            select
+            #{item.finprodId2,jdbcType=VARCHAR} FINPROD_ID2,
+            to_date(#{item.valDate,jdbcType=VARCHAR},'yyyy-MM-dd') VAL_DATE,
+            #{item.valuation,jdbcType=VARCHAR} VALUATION,
+            #{item.ccy,jdbcType=DECIMAL} CCY,
+            #{item.datasourceType,jdbcType=DECIMAL} DATASOURCE_TYPE,
+            #{item.inputType,jdbcType=DECIMAL} INPUT_TYPE,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            sysdate CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            sysdate UPDATE_TIME,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            from dual
+        </foreach>
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON (CII.FINPROD_ID2 = TEMP.FINPROD_ID2 AND CII.VAL_DATE = TEMP.VAL_DATE 
+        	AND CII.DATASOURCE_TYPE = TEMP.DATASOURCE_TYPE AND CII.CCY = TEMP.CCY)
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN
+        UPDATE
+        SET 
+        <!--CII.FINPROD_ID2 = TEMP.FINPROD_ID2,
+        CII.VAL_DATE = TEMP.VAL_DATE,
+        CII.DATASOURCE_TYPE = TEMP.DATASOURCE_TYPE,
+        CII.CCY = TEMP.CCY,-->
+        CII.VALUATION = TEMP.VALUATION,
+        CII.INPUT_TYPE = TEMP.INPUT_TYPE,
+        CII.CREATE_USER = TEMP.CREATE_USER,
+        CII.CREATE_TIME = TEMP.CREATE_TIME,
+        CII.UPDATE_USER = TEMP.UPDATE_USER,
+        CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+        CII.CREATE_DEPT = TEMP.CREATE_DEPT
+        <!-- 未匹配到这插入 -->
+        WHEN NOT MATCHED THEN
+        INSERT (FINPROD_ID2,VAL_DATE,CCY,VALUATION,DATASOURCE_TYPE,INPUT_TYPE
+        ,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,CREATE_DEPT)
+        values(
+        TEMP.FINPROD_ID2,TEMP.VAL_DATE,TEMP.CCY,TEMP.VALUATION,TEMP.DATASOURCE_TYPE,
+        TEMP.INPUT_TYPE,TEMP.CREATE_USER,TEMP.CREATE_TIME,TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,TEMP.CREATE_DEPT
+        )
+    </insert>
 
 </mapper>

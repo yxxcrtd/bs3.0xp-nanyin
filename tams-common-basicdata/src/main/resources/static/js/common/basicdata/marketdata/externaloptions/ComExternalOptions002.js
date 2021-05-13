@@ -48,16 +48,23 @@ $(function () {
         } else{
             $('#inputType').val("01").trigger('change');
             $("#inputType").attr("disabled","disabled");
-            $("#finprodId2").attr("disabled", "disabled");
+            //$("#finprodId2").attr("disabled", "disabled");
         }
     };
 
     /**
-     * 交易编号
+     * 交易编号 change
      */
-    $('#targetId').change(function() {
-        var type = $("#targetId_hidden").val();
-        $('#finprodId2').val(type);
+    $('#finprodId2').change(function() {
+        var data = {
+            finprodId2: $('#finprodId2').val()
+        }
+        Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions002/getTargetInfo', data,
+            function (resultObj) {
+                $('#targetId').val(resultObj.targetId).trigger('change');
+                $("#targetName").val(resultObj.targetName).trigger('change');
+                $("#targetType").val(resultObj.targetType).trigger('change');
+            });
     });
 
 

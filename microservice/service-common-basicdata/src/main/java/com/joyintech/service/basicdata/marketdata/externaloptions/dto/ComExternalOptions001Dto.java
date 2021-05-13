@@ -26,7 +26,8 @@ public class ComExternalOptions001Dto extends BaseEntity {
     }
 
     public String targetId;
-
+    public String targetName;
+    public String targetType;
     public String getTargetId() {
         return targetId;
     }
@@ -227,5 +228,21 @@ public class ComExternalOptions001Dto extends BaseEntity {
     // @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setPublishDate(String publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
     }
 }

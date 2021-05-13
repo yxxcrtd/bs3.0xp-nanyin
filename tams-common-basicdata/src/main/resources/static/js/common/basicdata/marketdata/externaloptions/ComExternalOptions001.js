@@ -8,6 +8,7 @@ $(function () {
             targetId: $.trim($('#targetId').val()),
             finprodId: $.trim($('#finprodId').val()),
             valDate: $.trim($('#valDate').val()),
+            targetType: $.trim($('#targetType').val()),
         }
     };
 
@@ -28,9 +29,13 @@ $(function () {
         cols: [
             {field:'targetId', width:160, title: '合约标的' },
             {field:'finprodId2', width:160, title: '交易编号' },
-            {field:'valDate', width:160, type:'date', title: '估值日' },
-            {field:'valuation',type:"money", width:160, title: '期权价值' },
-            {field:'publishDate', width:160, type:'date', title: '公布日' },
+            {field:'targetId', width:160, title: '标的代码' },
+            {field:'targetName', width:160, title: '合约标的' },
+            {field:'targetTypeStr', width:160, title: '标的类型' },
+            {field:'targetType', width:160, title: '标的类型',visible:false },
+            {field:'valDate', width:160, type:'date', title: '估值日期' },
+            {field:'valuation',type:"money", width:160, title: '收盘价' ,digit:3},
+            /*{field:'publishDate', width:160, type:'date', title: '公布日' },*/
             {field:'operation', width:160,title: 'SysCommon.operation', type:'action',
                 buttons: ['edit', 'delt']}
         ],
@@ -60,11 +65,13 @@ $(function () {
         table.bind('click', '.edit', function(data) {
             var object = {};
             object.finprodId = data.finprodId;
-            Joyin.dialog(JoyinUtil.getLabel("编辑场外期权信息（ "+ "<span style='color:red'> * </span>" + "必填）"),
-                basePath + "common/basicdata/marketdata/externaloptions/ComExternalOptions002/init",
-                "85%", "85%", {pageModel:PAGE_MODEL_EDIT, finprodId2: data.finprodId2, valmodelId:data.valmodelId,datasourceType: data.datasourceType, valDate: data.valDate, operateType:"edit"},function(){
-                    table.reload();
-                });
+            Joyin.confirm("请确认是否修改?", function(){
+                Joyin.dialog(JoyinUtil.getLabel("编辑场外期权信息（ "+ "<span style='color:red'> * </span>" + "必填）"),
+                    basePath + "common/basicdata/marketdata/externaloptions/ComExternalOptions002/init",
+                    "80%", "85%", {pageModel:PAGE_MODEL_EDIT, finprodId2: data.finprodId2, valmodelId:data.valmodelId,datasourceType: data.datasourceType, valDate: data.valDate, operateType:"edit"},function(){
+                        table.reload();
+                    });
+            });
         });
 
         /**
@@ -77,6 +84,7 @@ $(function () {
             object.valDate = data.valDate;
             object.valuation = data.valuation;
             object.publishDate = data.publishDate;
+            var object = {selectedItem: [data], operateType:"delete"};
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(
@@ -91,9 +99,24 @@ $(function () {
                 });
             });
         });
-
+        $('#ComExternalOptions001_btn_delete').click(function () {
+            if (table != null && table != '') {
+                var selArr = table.getAllCheckedRows();
+            }
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            var object = {selectedItem: selArr, operateType: "delete"};
+            Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/check', object, function (result) {
+                Joyin.confirm("请确认是否删除?", function () {
+                    WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/delete', object,
+                        "ComExternalOptions001_btn_delete", "ExternalOptions002");
+                });
+            });
+        });
         /** 事件绑定: 删除 */
-        $('#ComExternalOptions001_btn_delete').click(function() {
+         /*$('#ComExternalOptions001_btn_delete').click(function() {
             var object = {};
             var rowArr = table.getAllCheckedRows();// 所有选中行数据
             if(rowArr == null || rowArr.length === 0 || rowArr.length >1){
@@ -116,8 +139,58 @@ $(function () {
                     });
                 });
             }
+        });*/
+        /**
+         * 导入按钮
+         */
+        $('#ComExternalOptions001_btn_import').click(function() {
+            Joyin.uploadFile({pageId:'ComExternalOptions001MTM'},function(fileName) {
+                Joyin.ajax(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/checkImportData', {fileName: fileName}, function(checkResult) {
+                    if (checkResult) {
+                        setTimeout( function () {
+                            if(checkResult.data.errorMsg){
+                                Joyin.error(checkResult.data.errorMsg);
+                                return;
+                            }
+                            if (checkResult.data.confirmMsg) {
+                                Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                    var data = {
+                                        tempList: checkResult.data.correctData
+                                    }
+                                    Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/importFile', data,
+                                        function (resultObj) {
+                                            if (resultObj.statuCode.toString() === '200') {
+                                                /** modify by yanya on 20210329 修正导入逻辑**/
+                                                //Joyin.alert("文件导入成功！");
+                                                table.reload();
+                                                return;
+                                            }
+                                        });
+                                },{}, function () {
+                                    layui.layer.closeAll()
+                                    table.reload();
+                                });
+                            }else {
+                                var data = {
+                                    tempList: checkResult.data.correctData
+                                }
+                                Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/importFile', data,
+                                    function (resultObj) {
+                                        if (resultObj.statuCode.toString() === '200') {
+                                            /** modify by yanya on 20210329 修正导入逻辑**/
+                                            //Joyin.alert("文件导入成功！");
+                                            table.reload();
+                                            return;
+                                        }
+                                    });
+                            }
+                        },1000);
+                    }
+                });
+            },function() {
+                table.reload();
+            });
         });
-
     };
 
 
@@ -158,17 +231,5 @@ $(function () {
         tableBind();
     });
     
-    // 导入按钮点击事件
-    $('#ComExternalOptions001_btn_import').click(function() {
-        Joyin.confirm("请确认是否要导入数据？", function() {
-            Joyin.uploadFile(function(fileName) {
-                Joyin.ajax(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                    Joyin.ajax(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/importFile', {fileName: fileName});
-                });
-            },function() {
-                table.reload();
-            });
-        });
-    });
 
 });

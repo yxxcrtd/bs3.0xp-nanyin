@@ -20,30 +20,30 @@
         where FINPROD_ID2 = #{finprodId2,jdbcType=VARCHAR}
           and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
           and VAL_DATE = TO_DATE(#{valDate}, 'yyyy-MM-dd')
+          <if test="ccy !=null and ccy != ''">
+            AND	mvf.CCY  = #{ccy,jdbcType=VARCHAR}
+          </if>
           <!-- and VALMODEL_ID = #{valmodelId,jdbcType=VARCHAR} -->
     </select>
 
  
  <select id="getFinprodId2" resultType="com.joyintech.framework.select.SuggestDto">
                 
-   select t.finprod_type as name,
-     t.TRADE_ID     as code,
-     t.finprod_type as hidCode,
-       a.item_value as shortName,
-     tpda.PORTFOLIO_ID portfolioId
+   select finprod_type as name,
+       TRADE_ID     as code,
+       finprod_type as hidCode,
+       a.item_value as shortName
   from TRD_PRODUCT_DEAL t
-     LEFT JOIN trd_product_deal_add tpda
-     ON tpda.trade_id = t.trade_id
   LEFT JOIN SYS_DATADICT_LIST a
     on t.finprod_type = a.item_code
    and a.dict_code = 'FINPROD_TYPE'
- WHERE t.TRADE_status != '03' AND t.is_cancel != 'Y' and finprod_type in ('F11', 'F12', 'F13')
+ WHERE finprod_type in ('F11', 'F12', 'F13')
     <if test="param !=null and param != ''">
-   		AND	t.TRADE_ID like concat('%',concat(#{param},'%'))
+   		AND	TRADE_ID like concat('%',concat(#{param},'%'))
    	</if>
-      <!-- GROUP BY finprod_type,
-	            item_value,
-	            TRADE_ID-->
+       GROUP BY finprod_type, 
+	            item_value, 
+	            TRADE_ID
  
  </select>
  

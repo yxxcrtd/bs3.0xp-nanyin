@@ -11,6 +11,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.common.basicdata.marketdata.externaloptions.service.ComExternalOptions001Service;
 import com.joyintech.tams.common.basicdata.marketdata.externaloptions.service.ComExternalOptions002Service;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.common.basicdata.marketdata.externaloptions.dto.ComExternalOptions001Dto;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +53,7 @@ public class ComExternalOptions001Controller extends BaseController {
 
     @Override
     public String init(Model model) {
+        super.setSelectOptionToModel(model, DictCode.期权资产类型);
         return super.init(model);
     }
 
@@ -129,7 +132,7 @@ public class ComExternalOptions001Controller extends BaseController {
                     "场外期权" , entity.getFinprodId2()));// 当前工作流备注
             processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
 
-            msg = comExternalOptions002Service.start(processParameter, dto);
+            msg = comExternalOptions002Service.start(processParameter, dto.getSelectedItem().toArray(new ComExternalOptions002Dto[dto.getSelectedItem().size()]));
         } catch (Exception e) {
             this.getLogger().error("启动外汇估值信息流程失败：", e);
             msg = e.getMessage();
@@ -171,27 +174,27 @@ public class ComExternalOptions001Controller extends BaseController {
     }
     
     /**
-     * 导入数据文件之前检查数据
+     * 导入
      *
      * @param fileName 导入的文件名
      * @return 处理结果
      */
     @ResponseBody
-    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return comExternalOptions001Service.checkConfirmMsgForImportData(fileName);
+    @RequestMapping("checkImportData")
+    public AjaxResult checkImportData(String fileName) {
+        return comExternalOptions001Service.checkImportData(fileName);
     }
 
     /**
-     * 导入数据文件
      *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * @param param
+     * @return
+     * @throws IOException 
      */
     @ResponseBody
-    @RequestMapping("/importFile")
-    public List<ExcelValidDto> importData(String fileName) {
-        return this.comExternalOptions001Service.importData(fileName);
-
+    @RequestMapping("importFile")
+    public AjaxResult importFile(@RequestBody Map<String, Object> param) throws IOException {
+        return comExternalOptions001Service.importFile(param);
     }
+
 }

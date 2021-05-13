@@ -5,13 +5,10 @@
 <mapper namespace="com.joyintech.service.basicdata.marketdata.externaloptions.dao.ComExternalOptionsMapper">
 
 <select id="findFinRateInfoByBenchmarkId"  resultType="com.joyintech.framework.select.SuggestDto">
-     select distinct A.BENCHMARK_ID as code, A.FINPROD_ID as shortName , A.FINPROD_ID as hidCode
+     select distinct A.FINPROD_ID as code, A.BENCHMARK_ID as shortName , A.FINPROD_ID as hidCode
      FROM FIN_RATE_INFO A INNER JOIN OPT_TARGET_INFO B
      on B.TARGET_ID = A.BENCHMARK_ID
-    left join trd_product_deal tpd
-    on tpd.totle_trade_id = A.FINPROD_ID
      where A.BENCHMARK_ID like concat('%',concat(#{param},'%'))
-    and tpd.is_cancel != 'Y'
      and A.BENCHMARK_TYPE = #{BENCHMARK_TYPE2}
 </select>
 
@@ -19,22 +16,15 @@
      select distinct A.BENCHMARK_ID as code
      FROM FIN_RATE_INFO A INNER JOIN OPT_TARGET_INFO B
      on B.TARGET_ID = A.BENCHMARK_ID
-        left join trd_product_deal tpd
-        on tpd.totle_trade_id = A.FINPROD_ID
      where A.BENCHMARK_ID like concat('%',concat(#{param},'%'))
-        and tpd.is_cancel != 'Y'
      and A.BENCHMARK_TYPE = #{BENCHMARK_TYPE2}
 </select>
 
     <select id="findFinprodId"  resultType="com.joyintech.framework.select.SuggestDto">
      select distinct  A.FINPROD_ID as code
-        ,B.TARGET_ID targetId
      FROM FIN_RATE_INFO A INNER JOIN OPT_TARGET_INFO B
      on B.TARGET_ID = A.BENCHMARK_ID
-        left join trd_product_deal tpd
-        on tpd.totle_trade_id = A.FINPROD_ID
      where A.FINPROD_ID like concat('%',concat(#{param},'%'))
-        and tpd.is_cancel != 'Y'
      and A.BENCHMARK_TYPE = #{BENCHMARK_TYPE2}
 </select>
 
@@ -55,17 +45,20 @@
           and VAL_DATE = TO_DATE(#{valDate}, 'yyyy-MM-dd')
           -->
           <!-- and VALMODEL_ID = #{valmodelId,jdbcType=VARCHAR} -->
-         SELECT opt.TARGET_ID as targetId , mst.VALUATION, TO_CHAR(mst.VAL_DATE, 'yyyy-MM-dd') as valDate ,mst.FINPROD_ID2,TO_CHAR(mst.PUBLISH_DATE, 'yyyy-MM-dd') as publishDate
+         SELECT opt.TARGET_ID as targetId , opt.TARGET_NAME targetName,opt.TARGET_TYPE targetType,mst.VALUATION, TO_CHAR(mst.VAL_DATE, 'yyyy-MM-dd') as valDate ,mst.FINPROD_ID2,TO_CHAR(mst.PUBLISH_DATE, 'yyyy-MM-dd') as publishDate
          FROM MST_VAL_OP mst LEFT JOIN FIN_RATE_INFO fin  ON fin.FINPROD_ID=mst.FINPROD_ID2
          AND		fin.BENCHMARK_TYPE = #{BENCHMARK_TYPE2}
          LEFT JOIN OPT_TARGET_INFO opt ON opt.TARGET_ID = fin.BENCHMARK_ID
          where mst.FINPROD_ID2 = #{finprodId2,jdbcType=VARCHAR} and mst.VAL_DATE = TO_DATE(#{valDate}, 'yyyy-MM-dd')
+         <if test="targetId != null  and targetId !=''">
+             and opt.TARGET_ID= #{targetId}
+         </if>
      </select>
 
 
 
      <select id="selectList" resultType="com.joyintech.service.basicdata.marketdata.externaloptions.dto.ComExternalOptions001Dto">
-    SELECT opt.TARGET_ID as targetId , mst.VALUATION, TO_CHAR(mst.VAL_DATE, 'yyyy-MM-dd') as valDate ,mst.FINPROD_ID2,TO_CHAR(mst.PUBLISH_DATE, 'yyyy-MM-dd') as publishDate
+    SELECT opt.TARGET_ID as targetId ,opt.TARGET_NAME targetName,opt.TARGET_TYPE targetType, mst.VALUATION, TO_CHAR(mst.VAL_DATE, 'yyyy-MM-dd') as valDate ,mst.FINPROD_ID2,TO_CHAR(mst.PUBLISH_DATE, 'yyyy-MM-dd') as publishDate
     FROM MST_VAL_OP mst LEFT JOIN FIN_RATE_INFO fin  ON fin.FINPROD_ID=mst.FINPROD_ID2
     AND		fin.BENCHMARK_TYPE = #{BENCHMARK_TYPE2}
     LEFT JOIN OPT_TARGET_INFO opt ON opt.TARGET_ID = fin.BENCHMARK_ID
@@ -76,12 +69,15 @@
         <if test="finprodId != null  and finprodId !=''">
             AND fin.FINPROD_ID = #{finprodId}
         </if>
+        <if test="targetType != null  and targetType !=''">
+            AND opt.TARGET_TYPE = #{targetType}
+        </if>
         <if test="valDate != null  and valDate !=''">
             AND mst.VAL_DATE = to_date(#{valDate},'yyyy-mm-dd')
         </if>
 
     </where>
-    GROUP BY opt.TARGET_ID , mst.VALUATION, mst.VAL_DATE,mst.FINPROD_ID2,mst.PUBLISH_DATE
+    GROUP BY opt.TARGET_ID , opt.TARGET_NAME,opt.TARGET_TYPE,mst.VALUATION, mst.VAL_DATE,mst.FINPROD_ID2,mst.PUBLISH_DATE
      </select>
      
      <!-- add by tanxuan on 20200210 -->
@@ -91,34 +87,15 @@
 	     where ftp.FINPROD_ID = #{finprodId2}
 	     and ftp.BRANCH = #{branch}
 	</select>
-	
-	<select id="getRegistExcelList" resultType="java.lang.String">
-		select A.FINPROD_ID2 finprodId
-		from MST_VAL_OP A
-		where
-			A.FINPROD_ID2  =	#{tradeId,jdbcType=VARCHAR}
-		AND
-			A.VAL_DATE = #{valDate}
-	</select>
 
-	<select id="checkTargetId" resultType="java.lang.String">
-    	select TARGET_ID 
-    	    from OPT_TARGET_INFO 
-			where TARGET_ID = #{targetId,jdbcType=VARCHAR}
+    <select id="getTargetInfo" resultType="com.joyintech.service.basicdata.marketdata.externaloptions.dto.ComExternalOptions002Dto">
+         select distinct
+            A.FINPROD_ID ,
+            B.TARGET_ID,
+            B.TARGET_NAME,
+            B.TARGET_TYPE
+         FROM FIN_RATE_INFO A INNER JOIN OPT_TARGET_INFO B
+         on B.TARGET_ID = A.BENCHMARK_ID
+         where  A.FINPROD_ID = #{finprodId2}
     </select>
-    
-    <select id="checkTradeId" resultType="java.lang.String">
-    	select FINPROD_ID 
-    	    from FIN_RATE_INFO 
-			where FINPROD_ID = #{tradeId,jdbcType=VARCHAR}
-    </select>
-    
-    <select id="checkTargetIdAndTradeId" resultType="java.lang.String">
-    	select CASH_ID 
-    	    from FIN_RATE_INFO 
-			where 
-			FINPROD_ID = #{tradeId,jdbcType=VARCHAR}
-			and BENCHMARK_ID = #{targetId,jdbcType=VARCHAR}
-    </select>
-
 </mapper>

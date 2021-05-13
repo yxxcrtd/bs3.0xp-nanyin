@@ -45,7 +45,7 @@ public class ComFxValuztionInfo002Controller extends BaseController {
      */
     @PostMapping("/getFinprodId2")
 	public List<SuggestDto> getFinprodId2(@RequestBody Map<String, Object> param) throws Exception {
-    	
+
 		return comFxValuztionInfo002Service.getFinprodId2(param);
 	}
     

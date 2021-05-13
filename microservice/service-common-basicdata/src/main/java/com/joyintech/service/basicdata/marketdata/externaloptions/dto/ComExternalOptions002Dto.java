@@ -147,7 +147,8 @@ public class ComExternalOptions002Dto extends BaseEntity implements ProcessEntit
      * null
      */
     private String inputType;
-
+    public String targetName;
+    public String targetType;
     /**
      * 取得 null
      * @return null
@@ -281,5 +282,21 @@ public class ComExternalOptions002Dto extends BaseEntity implements ProcessEntit
      */
     public void setMdate(String mdate) {
         this.mdate = mdate;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
     }
 }

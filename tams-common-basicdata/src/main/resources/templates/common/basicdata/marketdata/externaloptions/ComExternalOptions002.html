@@ -3,80 +3,82 @@
       layout:decorator="~{layout/default}">
 <head>
     <title>场外期权</title>
+    <style>
+        .mst-lable{
+            width: 20%;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
-    <form class="layui-form " id="dataForm">
+    <form class="layui-form joyin-form-wrap pro-module-form" id="dataForm">
         <div class="layui-form-item" style="display: none;">
             <input id="operateType" name="operateType" class="layui-input form-input" placeholder="操作类型"
                    data-th-value="${entity?.operateType}"/>
             <input type="text" id="workflowId" name="workflowId" placeholder="流程 Id"
                    class="layui-input form-input" data-th-value="${entity?.workflowId}"/>
         </div>
+
         <div class="layui-form-item">
-
-
-
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable"><span style="color: red"> * </span> 合约标的</label>
-                <div class="layui-input-inline input-inline">
-                    <input type="text" id="targetId" name="targetId" class="layui-input form-input input-lenovoselect" allowClear="true"
-                           data-th-placeholder="#{SysCommon.placeholder}"
-                           data-th-data-url="getFinprodId"
-                           data-idfield="code" data-keyfield="code"
-                           data-th-data-effectivefieldsalias='|{"code":"现金流代码","shortName":"交易编号"}|'
-                           data-th-value="${entity?.targetId}"
-                    >
-                </div>
+            <label class="layui-form-label form-lable mst-lable">交易编号</label>
+            <div class="layui-input-inline input-inline">
+                <input type="text" id="finprodId2" name="finprodId2" class="layui-input form-input input-lenovoselect"
+                       allowClear="true"
+                       data-th-placeholder="#{SysCommon.placeholder}"
+                       data-th-data-url="getFinprodId"
+                       data-idfield="code" data-keyfield="code"
+                       data-th-data-effectivefieldsalias='|{"code":"交易编号","shortName":"标的代码"}|'
+                       data-th-value="${entity?.finprodId2}"
+                >
             </div>
-
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable"><span style="color: red"> * </span> 交易编号</label>
-                <div class="layui-input-inline input-inline">
-
-                    <input type="text" id="finprodId2" name="finprodId2" data-th-value="${entity?.finprodId2}" class="layui-input form-input input-lenovoselect">
-                </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label form-lable mst-lable">标的代码</label>
+            <div class="layui-input-inline input-inline">
+                <input type="text" id="targetId" name="targetId" data-th-value="${entity?.targetId}" disabled
+                       class="layui-input form-input input-lenovoselect">
             </div>
-
-
-
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable"><span style="color: red"> * </span>期权价值</label>
-                <div class="layui-input-inline input-inline">
-                    <input type="text" id="valuation" name="valuation"  class="layui-input form-input text-number" placeholder="请输入" 
-                            data-th-value="${entity?.valuation}"  allowClear="true">
-                </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label form-lable mst-lable">合约标的</label>
+            <div class="layui-input-inline input-inline">
+                <input type="text" id="targetName" name="targetName" data-th-value="${entity?.targetName}" disabled
+                       class="layui-input form-input input-lenovoselect">
             </div>
-
-
-                <div class="layui-inline layui-col-md6">
-                    <label class="layui-form-label form-lable"><span style="color: red"> * </span> 估值日期</label>
-                    <div class="layui-input-inline input-inline">
-                        <input id="valDate" name="valDate" class="layui-input form-input input-dateSelect"
-                               allowClear="true" data-th-value="${entity?.valDate}">
-                    </div>
-                </div>
-
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable"><span style="color: red"> * </span> 公布日期</label>
-                <div class="layui-input-inline input-inline">
-                    <input id="publishDate" name="publishDate" class="layui-input form-input input-dateSelect"
-                           allowClear="true" data-th-value="${entity?.publishDate}">
-                </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label form-lable mst-lable">标的类型</label>
+            <div class="layui-input-inline input-inline">
+                <select id="targetType" name="targetType" class="layui-input form-input input-select" disabled
+                        data-th-data-result="${OPTION_TYPE}" allowClear="true" required placeholder="请选择"
+                        data-th-initValue="${entity?.targetType}">
+                </select>
             </div>
-
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label form-lable mst-lable">估值日期</label>
+            <div class="layui-input-inline input-inline">
+                <input id="valDate" name="valDate" class="layui-input form-input input-dateSelect"
+                       allowClear="true" data-th-value="${entity?.valDate}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label form-lable mst-lable">收盘价</label>
+            <div class="layui-input-inline input-inline">
+                <input type="text" id="valuation" name="valuation" class="layui-input form-input text-number"
+                       placeholder="请输入" data-fixtype="2" data-textrange="3"
+                       data-th-value="${entity?.valuation}" allowClear="true">
+            </div>
         </div>
 
-
-
-            <div class="layui-row" style="margin: 50px;">
-                <div class="text-center">
-                    <button type="button" class="layui-btn btn-save" id="ComExternalOptions002_btn_save">保存</button>
-                    <button type="button" class="layui-btn btn-submit" id="ComExternalOptions002_btn_submit">提交
-                    </button>
-                    <a type="button" class="layui-btn btn-cancel" id="ComExternalOptions002_btn_cancel">取消</a>
-                </div>
+        <div class="layui-row" style="margin: 50px;">
+            <div class="text-center">
+                <button type="button" class="layui-btn btn-save" id="ComExternalOptions002_btn_save">保存</button>
+                <button type="button" class="layui-btn btn-submit" id="ComExternalOptions002_btn_submit">提交
+                </button>
+                <a type="button" class="layui-btn btn-cancel" id="ComExternalOptions002_btn_cancel">取消</a>
             </div>
+        </div>
 
     </form>
 </div>

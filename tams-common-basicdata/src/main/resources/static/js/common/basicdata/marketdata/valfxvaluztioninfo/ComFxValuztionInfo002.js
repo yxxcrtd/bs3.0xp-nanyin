@@ -42,7 +42,7 @@ $(function () {
             $("#valDate").attr("disabled", "disabled");
             $("#datasourceType").attr("disabled", "disabled");
             $("#inputType").attr("disabled", "disabled");
-           
+            $("#ccy").attr("disabled", "disabled");
         } else{
         	$('#inputType').val("01").trigger('change');
         	$("#inputType").attr("disabled","disabled");
