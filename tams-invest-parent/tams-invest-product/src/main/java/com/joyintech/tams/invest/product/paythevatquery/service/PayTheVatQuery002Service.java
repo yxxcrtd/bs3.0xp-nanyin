@@ -510,6 +510,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
                     param.setPortfolioId(dto.getPortfolioId());
                     param.setDeal(deal);
                     BussTrdTransferOrderDto ret = bussTrdTransferOrderService.generateOrder(param);
+                    ret.setIsNeedSend(DictCodeList.是否_否.getValue());//add by jiangpeng on 20210513 ZGBSSE-379
 
                     stlPayOrdersList.add(ret);
                 }
