@@ -45,8 +45,8 @@ import com.joyintech.tams.disclosure.common.common.constant.BatchBeanName;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tools.mq.constant.OperationType;
-import com.joyintech.tools.mq.entity.PushMessageDto;
-import com.joyintech.tools.mq.listener.MessagePushListener;
+//import com.joyintech.tools.mq.entity.PushMessageDto;
+//import com.joyintech.tools.mq.listener.MessagePushListener;
 
 /**
  * 信息披露生成报表并发送service
@@ -56,35 +56,35 @@ import com.joyintech.tools.mq.listener.MessagePushListener;
  * @since 1.0
  */
 @Service
-public class InfoDisclosureQuartzService extends AutoSendCBBaseService implements  MessagePushListener{
+public class InfoDisclosureQuartzService extends AutoSendCBBaseService /*implements  MessagePushListener*/{
 	/**
      * 日志
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
-    
-    
+
+
     private Scheduler scheduler;
-    
+
     @Autowired
     private InfoDisclosureQuartzMapper quartzMapper;
-    
-    
+
+
     @Autowired
     private RepJobMapper Mapper;
-    
+
     @Autowired
     private RepTaskDeatilMapper repTaskDeatilMapper;
-    
-    
+
+
     private Date date;
-    
-    
+
+
     private String min;
-    
+
     /**
 	/**
      * 信息披露生成报表并发送批处理主方法
-     * @param executeDate 
+     * @param executeDateStr
      *
      * @see
      * @since 1.0
@@ -95,7 +95,7 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService implement
     	logInfoBatchStart();
     	date = new Date();
     	 min = CacheUtil.getSysParam(ReportGlobalConstant.REP_REFRESH_JOBRULE);
-    	
+
     	int time = StringUtil.isNotEmpty(min)?Integer.parseInt(min):1;
     	//
     	while (repTaskDeatilMapper.RepTaskDeatilin()>0) {
@@ -108,16 +108,16 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService implement
                 logger.info("等待时间结束.查看线程是否可使用");
 
             } catch (InterruptedException e) {
-                
+
             }
         }
-    	
+
     	RepTaskDeatil taskDetail = new RepTaskDeatil();
     	taskDetail.setFlag(DisclosureDictCodeList.数据状态_有效.getValue());
     	taskDetail.setTaskdate(DateUtil.getCurrentDate());
     	taskDetail.setTaskflag("0");
     	repTaskDeatilMapper.insert(taskDetail);
-    	
+
     	try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
@@ -152,7 +152,7 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService implement
                         this.setDate(new Date());
                     }
                 } catch (InterruptedException e) {
-                    
+
                 }
             }
         } catch (SchedulerException e) {
@@ -168,13 +168,13 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService implement
         logger.info("结束了!!!!!!!!!!!!!!!!!");
 
     }
-    
-    
 
 
 
 
-    
+
+
+
     public Date getDate() {
         return date;
     }
@@ -184,7 +184,7 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService implement
 
 
 
-    
+
     public void setDate(Date date) {
         this.date = date;
     }
@@ -195,7 +195,7 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService implement
 
 
     /**
-     * 
+     *
      * 根据作业编号获取作业信息
      * <功能详细描述>
      * @param jobId
@@ -205,27 +205,27 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService implement
      */
     public RepJob getRepJob(String jobId){
         return Mapper.selectByPrimaryKey(jobId);
-        
+
     }
 
 
-    @Override
-    public boolean messageFilter(PushMessageDto msg) {
-        if (StringUtil.equals(msg.getBusinessMode(), BusinessMode.定时批处理参数更新.getModeCode())) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public PushMessageDto onMessage(PushMessageDto msg) {
-        OperationType type = OperationType.from(msg.getOperationType());
-        RepJob item = (RepJob) msg.getBusinessEntity();
-        RepJobDetail dto = new RepJobDetail();
-        BeanUtils.copyProperties(dto, item);
-        reQuartzSchedule(type, dto);
-        return null;
-    }
+//    @Override
+//    public boolean messageFilter(PushMessageDto msg) {
+//        if (StringUtil.equals(msg.getBusinessMode(), BusinessMode.定时批处理参数更新.getModeCode())) {
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    @Override
+//    public PushMessageDto onMessage(PushMessageDto msg) {
+//        OperationType type = OperationType.from(msg.getOperationType());
+//        RepJob item = (RepJob) msg.getBusinessEntity();
+//        RepJobDetail dto = new RepJobDetail();
+//        BeanUtils.copyProperties(dto, item);
+//        reQuartzSchedule(type, dto);
+//        return null;
+//    }
 
     public void reQuartzSchedule(OperationType type, RepJobDetail item) {
         Trigger trigger = newTrigger().withIdentity("trigger:" + item.getJobId()).withSchedule(
