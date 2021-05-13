@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail;
 
+/**
+ * 流程中产品交易查询mapper
+ * @author yantianyuan
+ * 创建日期：2021-05-13
+ */
 @Repository
 public interface ProcessProductTradeMapper {
 	

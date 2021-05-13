@@ -11,6 +11,7 @@
 					nvl(fp.finprod_Name,fp.finprod_abbr) finprodName,
 					decode(ftp.type_8,'F02','02','F11','06','F01','01','F04','10','F09','11') secType
 				from (
+					/*前一天头寸*/
 					select distinct
 						A.BOOKSET_ID,
 						A.BUSI_ID,
@@ -38,6 +39,7 @@
 							and bsdp.POS_AMT!=0
 					)a
 					union 
+					/*当天交易*/
 					select distinct
 						bda.bookset_id,
 						deal.finprod_id,
@@ -65,6 +67,7 @@
 				inner join fin_product_type ftp on ftp.finprod_id = fp.finprod_id
 				where ftp.type_8 in ('F02','F11','F01','F04','F09')
 			),
+			/*一般估值方案配置*/
 			B as(
 				select
 					A.BOOKSET_ID,a.busi_id,a.inv_aim
@@ -74,6 +77,7 @@
 					and nvl(a.inv_aim,'999999') = NVL(bvsd.inv_Aim,'999999') AND (A.trade_market IS NULL OR A.trade_market = bvsd.trade_market)
 					and a.secType = bvsd.sec_type
 			),
+			/*特殊估值方案配置*/
 			C as(
 				select 
 					A.BOOKSET_ID,a.busi_id,a.inv_aim

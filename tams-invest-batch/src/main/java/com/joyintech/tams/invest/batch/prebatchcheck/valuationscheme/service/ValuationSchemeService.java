@@ -15,6 +15,11 @@ import com.joyintech.tams.invest.batch.prebatchcheck.common.service.PrebatchChec
 import com.joyintech.tams.invest.batch.prebatchcheck.valuationscheme.dao.ValuationSchemeMapper;
 import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail;
 
+/**
+ * 估值方法方案批任务service
+ * @author yantianyuan
+ * 创建日期：2021-05-13
+ */
 @Service
 public class ValuationSchemeService {
 	
@@ -24,6 +29,12 @@ public class ValuationSchemeService {
     @Autowired
     private PrebatchCheckCommonService prebatchCheckCommonService;
     
+    /**
+     * 错误信息关联SysPrebatchResultDto
+     * @param batchExecuteInfo
+     * @param dto
+     * @param item
+     */
     private void setResultDetail(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, SysPrebatchResultDetail item) {
 
         item.setResultSeqNo(dto.getSeqNo());
@@ -35,6 +46,12 @@ public class ValuationSchemeService {
         item.setUpdateUser(dto.getUpdateUser());
     }
     
+    /**
+     * 检查方法
+     * @param batchExecuteInfo
+     * @param dto
+     * @param instCode
+     */
 	public void execute(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, String instCode) {
 		Map<String,Object> param = new HashMap<>();
 		//1. 多级法人模式下需根据机构代码进行数据隔离

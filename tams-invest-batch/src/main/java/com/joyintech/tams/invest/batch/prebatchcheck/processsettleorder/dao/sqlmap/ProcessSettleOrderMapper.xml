@@ -8,6 +8,7 @@
 				SELECT *
                 FROM WFL_STL_PAY_ORDERS T5
                 WHERE T5.ORDER_ID = (SELECT MAX(T52.ORDER_ID) FROM WFL_STL_PAY_ORDERS T52 WHERE T5.TRADE_ID = T52.TRADE_ID)),
+            /*流程中交易表去重，防止数据膨胀*/
             deal as (
 				SELECT * FROM(
 					select 
@@ -15,6 +16,7 @@
 					from WFL_TRD_PRODUCT_DEAL deal 
 				) WHERE rank = 1
             ),
+            /*获取最新的留痕表信息*/
 			TEMP AS (
 				SELECT * FROM(
 					select 

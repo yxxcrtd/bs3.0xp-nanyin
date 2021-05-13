@@ -9,6 +9,7 @@
 	        from sys_wfl_business_node A 
 	        inner join sys_wfl_business_list B on A.workflow_id = B.workflow_id and b.process_state = 'BACK'
         ),
+        /*根据sys_wfl_business_node表中信息过滤流程中退回后再保存的数据*/
         filter as(
 	        select C.seq_no workflow_id
 	        from tempA A
@@ -17,6 +18,7 @@
 		        select 1 from tempA B where B.rank = 1 and B.workflow_id = A.workflow_id and b.node_id = a.node_id
 	        )
         ),
+        /*获取最新的留痕表信息*/
         TEMP AS (
 			SELECT * FROM(
 				select 
@@ -57,6 +59,7 @@
 				where a.page_id = 'FinNetProductDuration' and A.workflow_id not in (select workflow_id from filter)
 			)A WHERE rank = 1
         ),
+        /*流程中交易表去重，防止由于存在多条交易表数据导致数据膨胀*/
         deal as(
             select * from(
                 select deal.*,rank() over(partition by deal.workflow_id order by deal.update_time desc) as rank

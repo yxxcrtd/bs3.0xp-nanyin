@@ -23,6 +23,7 @@
 	        from sys_wfl_business_node A 
 	        inner join sys_wfl_business_list B on A.workflow_id = B.workflow_id and b.process_state = 'BACK'
         ),
+        /*根据sys_wfl_business_node中结点信息过滤退回后保存的数据*/
         filter as(
 	        select C.seq_no workflow_id
 	        from tempA A
@@ -31,6 +32,7 @@
 		        select 1 from tempA B where B.rank = 1 and B.workflow_id = A.workflow_id and b.node_id = a.node_id
 	        )
         ),
+        /*获取流程中最新的留痕表数据*/
         TEMP AS (
 			SELECT * FROM(
 				select 
@@ -72,6 +74,7 @@
 			LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
         	LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 			WHERE T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+			<!-- 多级法人模式下需要进行数据隔离 -->
 			<if test='isMultilevel=="true"'>
 		 		and (temp.page_id in ('FinBondTargetAsset002','FinTenderBondTargetAsset002','FinFundTarget002','FinStockInfo002')
 					or sd.institution_code = #{instCode,jdbcType=VARCHAR})

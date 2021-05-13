@@ -31,6 +31,11 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchD
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 
+/**
+ * 资产行情数据 service
+ * @author yantianyuan
+ * 创建日期：2021-05-13
+ */
 @Service
 public class AssetMarketDataService extends BaseService{
     @Autowired
@@ -45,14 +50,19 @@ public class AssetMarketDataService extends BaseService{
     @Value("${server.port:8080}")
     private String serverPort;
     
-    
+    /**
+     * 校验函数
+     * @param batchExecuteInfo
+     * @param dto
+     * @param instCode
+     */
     public void execute(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, String instCode){
         Map<String,Object> param = new HashMap<>();
         if(StringUtil.isNotEmpty(instCode)){
-            // 固定key 勿修改
+            //机构代码，框架用该字段进行数据隔离
             param.put("PRE_INST_CODE",instCode);
         }
-
+        //设置检查日
         param.put("checkDate",dto.getCheckDate());
         //1. 获取组合-资产的持仓信息
         List<AssetMarketDataResultDto> details = assetMarketDataMapper.getAssetMarketDataResult(param);
@@ -123,6 +133,12 @@ public class AssetMarketDataService extends BaseService{
         prebatchCheckCommonService.insertBatchResultDetail(dto,finalDetails);
     }
     
+    /**
+     * 设置错误信息与SysPrebatchResultDto关联
+     * @param batchExecuteInfo
+     * @param dto
+     * @param item
+     */
     private void setResultDetail(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, SysPrebatchResultDetail item) {
 
         item.setResultSeqNo(dto.getSeqNo());

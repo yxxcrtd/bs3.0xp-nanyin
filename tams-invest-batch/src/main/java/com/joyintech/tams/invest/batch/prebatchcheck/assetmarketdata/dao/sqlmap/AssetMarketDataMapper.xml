@@ -16,6 +16,7 @@
 					a.institution_code instCode,
 					fp.CALENDAR_ID calenderId
 				from (
+					/*前一天的持仓头寸*/
 					select distinct
 						A.BOOKSET_ID,
 						A.BUSI_ID,
@@ -43,6 +44,7 @@
 							and bsdp.POS_AMT!=0
 					)a
 					union 
+					/*当天的交易所涉及的资产*/
 					select distinct
 						bda.bookset_id,
 						deal.finprod_id,
