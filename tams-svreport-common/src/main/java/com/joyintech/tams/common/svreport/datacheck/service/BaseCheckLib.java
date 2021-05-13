@@ -529,7 +529,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             BigDecimal value = new BigDecimal(srcValue);
             BigDecimal noZeros = value.stripTrailingZeros();
             srcValue = noZeros.toPlainString();
-        }else if(srcValue.startsWith("0E-")){
+        }else if(null !=srcValue && srcValue.startsWith("0E-")){
             double value = new BigDecimal(srcValue).doubleValue();
             srcValue = Double.toString(value);
         }
