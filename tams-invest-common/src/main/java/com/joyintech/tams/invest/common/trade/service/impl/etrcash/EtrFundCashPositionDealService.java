@@ -988,9 +988,10 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、资金账户):赎回确认日增加交易金额
                 if (StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
-                    etrCashPositionFlowDto.setAcctId(
-                        EtrCommonCashPositionDealService.select证券托管户(deal.getSecManageAcctId()));
-//                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getRecAcctNo());
+//                    etrCashPositionFlowDto.setAcctId(
+//                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getRecAcctNo());
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.委托通道逐笔划款、委托通道一次性划款
