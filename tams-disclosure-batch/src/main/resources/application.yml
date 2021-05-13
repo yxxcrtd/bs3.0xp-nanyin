@@ -7,17 +7,6 @@ spring:
     active: yitihua
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-  activemq:
-    active: false
-    systemId: REPORT-BATCH-SERVER
-    brokerUrl: tcp://localhost:61616
-    user: system
-    password: manager
-    maximumRedeliveries: 10
-    initialRedeliveryDelay: 1
-    backOffMultiplier: 2
-    useExponentialBackOff: true
-    maximumRedeliveryDelay: -1
 
 batch:
   sysCode: REP
@@ -205,7 +194,7 @@ log:
 logging:
   path: /home/tamsuser/logs/report
 
-  
+
 ---
 spring:
   profiles: xppocoracle
@@ -229,8 +218,8 @@ log:
   level: info
 logging:
   path: /home/tamsuser/logs/report-batch
-  
-  
+
+
 ---
 spring:
   profiles: xppocdb2
@@ -255,7 +244,7 @@ shiro:
 log:
   path: /home/tamsuser/logs/report-batch
   level: info
-  
+
 ---
 spring:
   profiles: xppocoracleT
@@ -279,7 +268,7 @@ log:
   level: info
 logging:
   path: /home/tamsuser/logs/report-batch
-  
+
 ---
 spring:
   profiles: yitihua
@@ -319,4 +308,3 @@ log:
   level: info
 logging:
   path: /home/tamsuser/logs/report-batch
-  

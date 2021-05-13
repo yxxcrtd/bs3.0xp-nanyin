@@ -22,20 +22,9 @@ spring:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true   
-  activemq:
-    systemId: YUNYING-BATCH-SERVER
-    active: false
-    brokerUrl: tcp://localhost:61616
-    user: system
-    password: manager
-    maximumRedeliveries: 10
-    initialRedeliveryDelay: 1
-    backOffMultiplier: 2
-    useExponentialBackOff: true
-    maximumRedeliveryDelay: -1
+    logAbandoned: true
 
-#base数据源配置  
+#base数据源配置
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
@@ -48,7 +37,7 @@ base:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-  casEnable: false        
+  casEnable: false
 #interf数据源配置
 interf:
   datasource:
@@ -109,7 +98,7 @@ batch:
     maxJobPoolSize: 5 #job线程池
     maxExeUser: 2 #最大并发用户数
     maxThreadPerUser: 5 #任务并发数
-    sleeptime: 1000 #轮询时间 
+    sleeptime: 1000 #轮询时间
     maxSqlNum: 50 #批量提交数
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -132,7 +121,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zjtams2121_test
-    password: zjtams2121_test 
+    password: zjtams2121_test
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -173,7 +162,7 @@ base:
     username: zjtams2121_test
     password: zjtams2121_test
 #interf数据源配置
-interf:  
+interf:
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zjtams2121_test
@@ -200,7 +189,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams214_v1203
-    password: zgtams214_v1203 
+    password: zgtams214_v1203
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -241,7 +230,7 @@ base:
     username: zgtams214_v1203
     password: zgtams214_v1203
 #interf数据源配置
-interf:  
+interf:
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams214_v1203
@@ -271,8 +260,8 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-    
-    
+
+
 ---
 spring:
   profiles: dtxls
@@ -286,7 +275,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
-    password: zgtams0702ls 
+    password: zgtams0702ls
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -327,7 +316,7 @@ base:
     username: zgtams0702ls
     password: zgtams0702ls
 #interf数据源配置
-interf:  
+interf:
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
@@ -357,9 +346,9 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-    
-    
-    
+
+
+
 ---
 spring:
   profiles: dtx1
@@ -372,7 +361,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams1214ls
-    password: zgtams1214ls 
+    password: zgtams1214ls
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -413,7 +402,7 @@ base:
     username: zgtams1214ls
     password: zgtams1214ls
 #interf数据源配置
-interf:  
+interf:
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams1214ls
@@ -443,8 +432,8 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-    
-    
+
+
 ---
 spring:
   profiles: dtx2
@@ -457,7 +446,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: productLs_20210301_WY
-    password: productLs_20210301_WY 
+    password: productLs_20210301_WY
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -498,7 +487,7 @@ base:
     username: productLs_20210301_WY
     password: productLs_20210301_WY
 #interf数据源配置
-interf:  
+interf:
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: productLs_20210301_WY

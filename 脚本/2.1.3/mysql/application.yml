@@ -31,9 +31,6 @@ spring:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-  activemq:
-    systemId: tams
-    active: false
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   http:
@@ -95,7 +92,7 @@ shiro:
 application:
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: invest/remindMain  
+  remindPage: invest/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top
@@ -225,7 +222,7 @@ exchangesystem:
     urlIP: joyin.gaoyusoft.com
     urlPort: 8989
     urlAppend: /exchange/hello
-    
+
 tx-lcn:
   client:
     managerAddress: 192.168.70.228:8070

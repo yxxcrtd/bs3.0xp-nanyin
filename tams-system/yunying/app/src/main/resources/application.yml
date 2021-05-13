@@ -35,17 +35,6 @@ spring:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-  activemq:
-    active: false
-    systemId: tamsyy-server
-    brokerUrl: tcp://localhost:61616
-    user: system
-    password: manager
-    maximumRedeliveries: 10
-    initialRedeliveryDelay: 1
-    backOffMultiplier: 2
-    useExponentialBackOff: true
-    maximumRedeliveryDelay: -1
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   http:
@@ -197,7 +186,7 @@ application:
 #      chb3Service: http://127.0.0.1:8114
 #      svrcomService: http://127.0.0.1:8114
 #      pbcService: http://127.0.0.1:8114
-#      channelService: http://127.0.0.1:8114 
+#      channelService: http://127.0.0.1:8114
 #      customerInterfService: http://127.0.0.1:8114
 #      tamsServer: http://127.0.0.1:8114
 #      investInterfService: http://127.0.0.1:8114
@@ -401,7 +390,7 @@ exchangesystem:
     urlIP: joyin.gaoyusoft.com
     urlPort: 8989
     urlAppend: /exchange/hello
-    
+
 tx-lcn:
   client:
     managerAddress: 192.168.90.197:8070

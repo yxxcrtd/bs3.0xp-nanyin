@@ -22,9 +22,6 @@ spring:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
-  activemq:
-    systemId: valuation
-    active: false
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   http:

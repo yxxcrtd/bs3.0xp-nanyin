@@ -7,9 +7,6 @@ spring:
     active: test
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-  activemq:
-    systemId: pingan_batch
-    active: false
 batch:
   properties:
     chunkNumber: 100
@@ -17,7 +14,7 @@ batch:
     queueCapacity: 50
     maxExeUser: 5         #最大并发用户数
     maxThreadPerUser: 10  #每用户最大并发数
-    sleeptime: 10000      #轮询时间 
+    sleeptime: 10000      #轮询时间
     maxSqlNum: 50         #批量提交数量
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -95,7 +92,7 @@ spring:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000 # 批处理不加该配置
-    
+
 base:
   datasource:
     url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.111)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.90.112)(PORT=1521))(LOAD_BALANCE=no)(FAILOVER=on))(CONNECT_DATA=(SERVICE_NAME=tamsdbpdb)))
@@ -108,7 +105,7 @@ base:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true     
+    logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000 # 批处理不加该配置
 
 

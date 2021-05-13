@@ -24,7 +24,7 @@ spring:
     password: tams212
     validationQuery: SELECT 1 FROM DUAL
     initialSize: 10
-    
+
     maxWaitMillis: -1
     defaultAutoCommit: true
     defaultReadOnly: false
@@ -50,7 +50,6 @@ spring:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    validationQuery: SELECT 1 FROM DUAL   # interf 数据源和stress 数据源必须添加
 jixu:
 #用户系统
 #1 jixu用户系统
@@ -62,34 +61,26 @@ jixu:
 
   project:
     group: Auto-Porject
-    
+
 #是否使用和joyin整合后的缩表版本,该参数为临时存在，在尚未完成缩表结构前,测试人员还是测试用原表进行功能测试
 #true 精简锁表版本
 #false 使用原始的jixu表结构
   joyintables:
     flag: false
-    
+
 #主配置文件，配置了这个会优先读取里面的属性覆盖主配置文件的属性
-##目标数据库的类型 
+##目标数据库的类型
 #Oracle=11;
 #MySQL=12;
 #SQLServer=13;
 #DB2=14;
-#Access=15;   
+#Access=15;
   adapter:
     targetDB:
       dbType: 11
 
-##activemq数据源配置   
-  activeMQ:
-    serverURL: localhost
-    serverPort: 61616
-    username: admin
-    password: admin
-    maxCon: 100
-    defaultDestinationName: jixuqueue
 
-##是否同步数据到数据中心 
+##是否同步数据到数据中心
 #0:不同步
 #1:同步数据
 #如果在StartDate和EndDate输入日期,则是同步一段区间内的数据
@@ -97,24 +88,24 @@ jixu:
 #DataCenter.StartDate=2017-07-19
   dataCenter:
     synchFlag: 0
-    startDate: 
-    endDate: 
-    
+    startDate:
+    endDate:
+
 ##使用Hibernate或MyBatis框架
 #0:使用Hibernate框架
 #1:使用MyBatis框架
   frameWork:
     flag: 0
-    
+
 ##0 jixu独立系统
 ##1 jixu调用joyin的主键生成系统
   keyGenerate:
     flag: 0
-    
-#是否需要生成估值表,余额表等报表。外接入其它系统时，不需要几许生成报表 
+
+#是否需要生成估值表,余额表等报表。外接入其它系统时，不需要几许生成报表
   genValreport:
     flag: false
-    
+
 ##报表源文件地址
   report:
     reportSourceFolder: D:/apache-tomcat-8.0.52-32bit/wtpwebapps/jixu/reports
@@ -130,7 +121,7 @@ jixu:
       FundCustodyFee: 基金托管费.jasper
       CustodyFeesChild: 托管费子表.jasper
       YGZTaiZhang: 营改增台账.jasper
-  
+
 eureka:
   client:
     enabled: false

@@ -20,16 +20,13 @@ spring:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
-  activemq:
-    systemId: report
-    active: false
   http:
     multipart: # 文件上传设置
       maxFileSize: 10Mb #设置单个文件的大小
       maxRequestSize: 100Mb #设置单次请求的文件的总大小
 shiro:
   casClientName: report
-  
+
 application:
   menuType: hover
   sysCode: REP
@@ -47,7 +44,7 @@ application:
   reportSelectOrDeleteCount: 50 #数据批量一次查询或者删除条数
   reportSelectOrDeleteCountForShenFen: 100 #数据批量一次查询或者删除条数(身份信息用)
   reportInsertLongCount: 10 #数据批量一次性insert条数(单条数据字段较多)
-  reportInterfFileEncoding: UTF-8 #上游接口文件编码格式 
+  reportInterfFileEncoding: UTF-8 #上游接口文件编码格式
   reportInterfOneTimeDataCount: 1000 #上游接口解析读取文件处理,单线程处理数据条数
   reportInterfOneTimeSqlLdrDataCount: 200000 #上游接口解析读取文件处理,单次sqlldr处理最大数据条数
   reportInterfOneTimeSqlLdrCommitCount: 10000 #上游接口解析读取文件处理,单次sqlldr处理单次提交数
@@ -109,7 +106,7 @@ log:
   level: info
 logging:
   path: /home/tams/logs/report
-  
+
 ---
 spring:
   profiles: prod
@@ -133,8 +130,8 @@ log:
   level: info
 logging:
   path: /home/tams/logs/report
-  
-  
+
+
 ---
 spring:
   profiles: etliu
@@ -158,8 +155,8 @@ log:
   level: info
 logging:
   path: /home/etliu/logs/report
-  
-  
+
+
 ---
 spring:
   profiles: bigdatatest
@@ -233,7 +230,7 @@ log:
   level: info
 logging:
   path: /home/tamsuser/logs/report
-  
+
 ---
 spring:
   profiles: xppocoracleT
@@ -257,7 +254,7 @@ log:
   level: info
 logging:
   path: /home/tamsuser/logs/report
-  
+
 ---
 spring:
   profiles: xppocdb2
@@ -284,8 +281,8 @@ shiro:
 log:
   path: /home/tamsuser/logs/report
   level: info
-  
-  
+
+
 ---
 spring:
   profiles: xpdb2Test
@@ -310,7 +307,7 @@ shiro:
 log:
   path: /home/tamsuser/logs/report
   level: info
-  
+
 ---
 spring:
   profiles: yitihua
@@ -374,7 +371,7 @@ base:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true     
+    logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000 # 批处理不加该配置
     validationQuery: SELECT 1 FROM DUAL
 shiro:

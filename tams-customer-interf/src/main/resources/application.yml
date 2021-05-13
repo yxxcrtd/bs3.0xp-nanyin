@@ -109,14 +109,6 @@ jixu:
     targetDB:
       dbType: 11
 
-  ##activemq数据源配置
-  activeMQ:
-    serverURL: localhost
-    serverPort: 61616
-    username: admin
-    password: admin
-    maxCon: 100
-    defaultDestinationName: jixuqueue
 
   ##是否同步数据到数据中心
   #0:不同步
