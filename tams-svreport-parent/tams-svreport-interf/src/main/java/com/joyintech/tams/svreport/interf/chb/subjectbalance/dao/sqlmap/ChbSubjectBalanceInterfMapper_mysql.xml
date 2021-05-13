@@ -70,7 +70,7 @@
         TDY_RED_B_D_ULAMT TDY_RED_B_D_ULAMT, TDY_PUR_B_C_ULAMT TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT TDY_RED_B_C_ULAMT
   </sql>
   <select id="getTableColumnList" resultType="string">
-		select COLUMN_NAME
+		select DISTINCT COLUMN_NAME
 		from information_schema.`COLUMNS`
 		where Table_Name = #{tableName,jdbcType=VARCHAR}
 	</select>

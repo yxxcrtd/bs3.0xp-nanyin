@@ -67,7 +67,7 @@ and  BPP.FEE_TYPE  in ('C03','C04','C05','C06','C09','C10','C18')
   </delete>
 
  <select id="getTableColumnList" resultType="string">
-		select COLUMN_NAME
+		select DISTINCT COLUMN_NAME
 		from information_schema.`COLUMNS`
 		where Table_Name = #{tableName,jdbcType=VARCHAR}
 	</select>
