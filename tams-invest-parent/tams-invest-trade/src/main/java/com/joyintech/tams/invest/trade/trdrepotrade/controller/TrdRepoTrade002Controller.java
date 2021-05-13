@@ -22,7 +22,6 @@ import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.cstp.TrdRepoTradeCSTPDto;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
-import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.lang.StringUtils;
