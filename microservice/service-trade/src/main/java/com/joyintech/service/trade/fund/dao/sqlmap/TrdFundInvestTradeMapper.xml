@@ -36,7 +36,7 @@
         <result column="changeToFinprodMarketId"       property="changeToFinprodMarketId"      jdbcType="VARCHAR" />
         <result column="changeToFinprodName"       property="changeToFinprodName"      jdbcType="VARCHAR" />
         <result column="changeInShareAmt"       property="changeInShareAmt"      jdbcType="NUMERIC" />
-        <result column="feeAmtPay"               property="feeAmtPay"      jdbcType="NUMERIC" />
+        <result column="FEE_AMT_PAY"               property="feeAmtPay"      jdbcType="NUMERIC" />
         <result column="feeAmtPayPurchase"       property="feeAmtPayPurchase"      jdbcType="NUMERIC" />
         <result column="channelAmt"              property="channelAmt"      jdbcType="NUMERIC" />
         <!--添加确认日 add by lishuping 20191018 start-->
