@@ -8,6 +8,13 @@
 				SELECT *
                 FROM WFL_STL_PAY_ORDERS T5
                 WHERE T5.ORDER_ID = (SELECT MAX(T52.ORDER_ID) FROM WFL_STL_PAY_ORDERS T52 WHERE T5.TRADE_ID = T52.TRADE_ID)),
+            deal as (
+				SELECT * FROM(
+					select 
+						deal.*,rank() over(partition by workflow_id order by update_time desc) as rank
+					from WFL_TRD_PRODUCT_DEAL deal 
+				) WHERE rank = 1
+            ),
 			TEMP AS (
 				SELECT * FROM(
 					select 
@@ -36,14 +43,14 @@
 					'' finprodName,
 					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"portfolioId":"[^"]+"',1,1)),'"portfolioId":"',''),'"','') portfolioId,
 					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"portfolioName":"[^"]+"',1,1)),'"portfolioName":"',''),'"','') portfolioName,
-					'' tradeId,
+					t.trade_id tradeId,
 					'' totleTradeId,
 					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"settleAmt":"[^"]+"',1,1)),'"settleAmt":"',''),'"','') tradeAmt,
 					T.NEXT_USER  AS nextUser,
 					T.CRT_DATE AS createTaskTime,
 					sd.institution_code instCode
 				FROM SYS_WFL_BUSINESS_LIST T 
-				INNER JOIN TEMP on T.seq_no = temp.workflow_id and T.PROCESS_STATE != 'END'
+				INNER JOIN TEMP on T.seq_no = temp.workflow_id and T.PROCESS_STATE NOT IN ('END','NEW')
 				LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
 				LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 				where T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
@@ -56,14 +63,14 @@
 				nvl(T6.finprod_name,t6.finprod_abbr) finprodName,
 				T4.PORTFOLIO_ID portfolioId,
 				T7.PORTFOLIO_NAME portfolioName,
-				deal.trade_id tradeId,
+				t.trade_id tradeId,
 				T4.TOTLE_TRADE_ID totleTradeId,
-				nvl(deal.trade_amt,t4.trade_amt) tradeAmt,
+				nvl(t4.trade_amt,deal.trade_amt) tradeAmt,
 				T.NEXT_USER  AS nextUser,
 				T.CRT_DATE AS createTaskTime,
 				sd.institution_code instCode
 			FROM SYS_WFL_BUSINESS_LIST T
-			INNER JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T4 on  T.seq_no = t4.workflow_id and T.PROCESS_STATE != 'END'
+			INNER JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T4 on  T.seq_no = t4.workflow_id and T.PROCESS_STATE not in ('END','NEW')
 			LEFT JOIN WFL_PA_TRD_FIN_DEAL_TOTAL T5 ON T4.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID
 			LEFT JOIN FIN_PRODUCT T6 ON T4.FINPROD_ID = T6.FINPROD_ID
             LEFT JOIN PTL_PORTFOLIO T7 ON T4.PORTFOLIO_ID = T7.PORTFOLIO_ID
@@ -73,10 +80,10 @@
 			LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = T4.FINPROD_ID
 			LEFT JOIN FIN_PRODUCT_ADD FPA ON T4.CHL_ID = FPA.FINPROD_ID
 			LEFT JOIN WFL_ORDERS ON T4.TOTLE_TRADE_ID = WFL_ORDERS.TRADE_ID
-			left join WFL_TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID
+			left join deal on deal.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID
 			where deal.finprod_type!='F16' AND  /*过滤产品交易*/
 				(
-                (T5.PA_BUSS_TYPE IN ('01', '02', '04', '138','44','45', '46','47', '48', '49', '50','38', '39', '40', '41', '144')
+                (T5.PA_BUSS_TYPE IN ('01', '02', '04', '138','45', '46','47', '48', '49', '50','38', '40', '41', '144')
 					AND (FPA.FINPROD_ID IS NULL OR FPA.PAY_TYPE = '01'))/*非通道或逐笔通道*/
                 OR (T5.PA_BUSS_TYPE = '34' AND FPA.PAY_TYPE IS NULL)
                 OR (T5.PA_BUSS_TYPE IN ('77') AND FPA.PAY_TYPE = '01' AND SSAI.TRADE_PLACE IN ('01'))/*逐笔划款: 银行间买断式逆回购到期*/
@@ -97,15 +104,16 @@
 				nvl(T6.finprod_name,t6.finprod_abbr) finprodName,
 				T4.PORTFOLIO_ID portfolioId,
 				T7.PORTFOLIO_NAME portfolioName,
-				t3.trade_id tradeId,
+				t.trade_id tradeId,
 				t3.TOTLE_TRADE_ID totleTradeId,
-				t3.trade_amt tradeAmt,
+				nvl(total.trade_amt,t3.trade_amt) tradeAmt,
 				T.NEXT_USER  AS nextUser,
 				T.CRT_DATE AS createTaskTime,
 				sd.institution_code instCode
-			from WFL_TRD_PRODUCT_DEAL T3
-			inner join SYS_WFL_BUSINESS_LIST T on t3.workflow_id = T.seq_no and T.PROCESS_STATE != 'END'
+			from deal T3
+			inner join SYS_WFL_BUSINESS_LIST T on t3.workflow_id = T.seq_no and T.PROCESS_STATE not in ('NEW','END')
 			LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
+            LEFT JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL total ON total.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
 			LEFT JOIN WFL_PA_TRD_PRODUCT_DEAL T5 ON T3.TRADE_ID = T5.TRADE_ID
 			LEFT JOIN FIN_PRODUCT T6 ON T3.FINPROD_ID = T6.FINPROD_ID
 			LEFT JOIN PTL_PORTFOLIO T7 ON T4.PORTFOLIO_ID = T7.PORTFOLIO_ID
