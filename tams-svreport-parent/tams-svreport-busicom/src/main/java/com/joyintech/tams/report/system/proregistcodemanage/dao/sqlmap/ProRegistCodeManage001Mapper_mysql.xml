@@ -270,7 +270,7 @@
 		and p.fprod_id is null
 		<!--  and p.ISSUING_STATUS != '03' -->
 		<if test="search != null and search !='' ">
-			AND P.PROD_ID LIKE concat_ws(concat_ws('%', #{search}),'%')
+			AND P.PROD_ID LIKE concat(concat('%', #{search}),'%')
 		</if>
 	</select>
 
@@ -279,7 +279,7 @@
 		where p.status in ('E','M')
 		and p.fprod_id is null
 		<if test="search != null and search !='' ">
-			AND P.PROD_INS_ID LIKE concat_ws(concat_ws('%', #{search}),'%')
+			AND P.PROD_INS_ID LIKE concat(concat('%', #{search}),'%')
 		</if>
 	</select>
 
