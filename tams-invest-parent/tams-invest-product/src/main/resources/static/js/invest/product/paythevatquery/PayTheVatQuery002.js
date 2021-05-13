@@ -724,7 +724,8 @@ $(function () {
     $(function() {
         $("#portfolioId").textSelect("setValue",portfolioIdOld);//add by jiangpeng on 20210512 ZGBSSE-365
         // 绑定按钮事件
-        $('#FinproductPayTheVatQuery002_btn_search').click(function() { 
+        $('#FinproductPayTheVatQuery002_btn_search').click(function() {
+            payTaxMDateCheck = $("#payTaxMDate").val(); // add by jiangpeng on 20210512 ZGBSSE-363
         	var message ="";
             //获取纳税截止日的值，并赋给payment
         	if($("#taxidenType").val()== null || $("#taxidenType").val()== ''){
@@ -751,7 +752,6 @@ $(function () {
                 	 loadSubProductTable();
                 }
         	}
-            payTaxMDateCheck = $("#payTaxMDate").val(); // add by jiangpeng on 20210512 ZGBSSE-363
         });
         //绑定联动
         linkBind();
