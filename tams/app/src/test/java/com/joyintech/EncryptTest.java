@@ -17,8 +17,9 @@ public class EncryptTest {
 
     @Test
     public void test() {
-        String password = "tams1_ejfr16_01";
-        System.out.println(stringEncryptor.encrypt(password));
+        //生成加密密码的代码,只有使用时才放开，生成代码后注释掉，安全漏洞扫描时会认为是漏洞
+//        String password = "tams1_ejfr16_01";
+//        System.out.println(stringEncryptor.encrypt(password));
     }
 
 }

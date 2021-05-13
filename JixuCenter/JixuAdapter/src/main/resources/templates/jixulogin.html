@@ -90,8 +90,10 @@
 		 $("#site_name").text(site_name);
 		 $("#site_intro").text(site_intro);
 		 $("#site_pic").attr("src", site_pic);
+		 var username = $("#username").val();
+		 var password = $("#password").val();
 		 if (getParameter("pass") == "OK"){
-			 loginInvoke(getURL("authenticate"),{username:"jixu", password:"jixu"}, function(data){
+			 loginInvoke(getURL("authenticate"),{username:username, password:password}, function(data){
 					var result = $.parseJSON(data);
 					if (result){
 						var perms = setMenuPermission();
