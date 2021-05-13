@@ -106,7 +106,14 @@ public final class InfoXmlParseUtil {
        if (null != inStream) {
            SAXHandler handler = new InfoXmlParseUtil.SAXHandler();
            InputSource is = new InputSource(inStream);
-           SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+           
+           SAXParserFactory spf = SAXParserFactory.newInstance();
+           spf.setValidating(false);
+           spf.setFeature("http://xml.org/sax/features/validation",false);
+           spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
+           spf.setFeature("http://xml.org/sax/features/use-entity-resolver2",false);
+           
+           SAXParser sax = spf.newSAXParser();
            sax.parse(is, handler);
            return handler.getDataList();
        }
