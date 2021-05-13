@@ -1,18 +1,12 @@
 package com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.dto.ComFxValuztionInfo001Dto;
-import com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.dto.ComFxValuztionInfo002Dto;
-import com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.service.ComFxValuztionInfo001Service;
-import com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.service.ComFxValuztionInfo002Service;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,22 +15,31 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.dto.ComFxValuztionInfo001Dto;
+import com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.dto.ComFxValuztionInfo002Dto;
+import com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.service.ComFxValuztionInfo001Service;
+import com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.service.ComFxValuztionInfo002Service;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 外汇估值信息
@@ -99,9 +102,7 @@ public class ComFxValuztionInfo001Controller extends BaseController {
     public AjaxResult check(@RequestBody @Validated({ValidateGroupDelete.class}) ComFxValuztionInfo002Dto dto,
                             BindingResult bindingResult)
             throws Exception {
-        String msg = StringUtils.EMPTY;
         String operateType = dto.getOperateType();
-
         return commonCheck(bindingResult, operateType);
     }
 
@@ -115,34 +116,57 @@ public class ComFxValuztionInfo001Controller extends BaseController {
      * @since 1.0
      */
     @ResponseBody
-    @RequestMapping(value = "delete", method = RequestMethod.POST)
-    public AjaxResult deleteConfig(@RequestBody @Validated({ValidateGroupDelete.class}) ComFxValuztionInfo002Dto dto) {
-        String msg = StringUtils.EMPTY;
-
-        ProcessParameter<ComFxValuztionInfo002Dto> processParameter = new ProcessParameter<>();
-        WorkFlowParameter<ComFxValuztionInfo002Dto> workFlowParameter = new WorkFlowParameter<>();
-
-        try {
-            Map<String, Object> map = Maps.newHashMap();
-            map.put("finprodId2", dto.getFinprodId2());
-            map.put("datasourceType", dto.getDatasourceType());
-            map.put("valDate", dto.getValDate());
-            map.put("valmodelId", dto.getValmodelId());
-            dto = comFxValuztionInfo002Service.findByPrimaryKey(map);// dto 为回显值
-
-            workFlowParameter.setPageId("ComFxValuztionInfo002"); // 页面id
-            workFlowParameter.setElementId(this.getParam("elementId")); // 元素id
-            workFlowParameter.setBusinessCode(dto.getFinprodId2());// 业务代码编号
-            workFlowParameter.setBusinessType(DictCodeList.共通业务类型_外汇估值信息.getValue());// 业务类型
-            workFlowParameter.setComment(entity -> WorkFlowUtil.concatComment(
-                    "外汇估值信息" , entity.getFinprodId2()));// 当前工作流备注
-            processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
-
-            msg = comFxValuztionInfo002Service.start(processParameter, dto);
-        } catch (Exception e) {
-            this.getLogger().error("启动外汇估值信息流程失败：", e);
-            msg = e.getMessage();
+    @RequestMapping(ACTION_DELETE)
+    public AjaxResult deleteConfig(@RequestBody @Validated({
+    	ValidateGroupDelete.class}) ComFxValuztionInfo002Dto dto, BindingResult br)
+    	throws Exception {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
         }
+        ProcessParameter<ComFxValuztionInfo002Dto> processParameter = new ProcessParameter<ComFxValuztionInfo002Dto>();
+        WorkFlowParameter<ComFxValuztionInfo002Dto> params = new WorkFlowParameter<ComFxValuztionInfo002Dto>();
+        params.setPageId("ValFxValuztionInfo002");
+        params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
+        params.setBusinessCode(item -> item.getFinprodId2());
+        params.setBusinessType(DictCodeList.共通业务类型_外汇估值信息.getValue());
+     // 设置流程业务说明, entity即传入的dto
+        // 业务说明：债券代码 + "(" + 债券代码 + ")" + "-" + "估值日" + "-" + "估值日"
+        params.setComment(entity -> SpringContextUtil.getTextValue("ValFxValuztionInfo002.finprodId2") + "(" + entity.getFinprodId2() + ")" + "-"
+            + SpringContextUtil.getTextValue("ValFxValuztionInfo002.datasourceType") + "("
+            + entity.getDatasourceType() + ")"+ this.getMessage("ValFxValuztionInfo002.valDate") + "("
+            + entity.getValDate() + ")"+ this.getMessage("ValFxValuztionInfo002.ccy") + "("
+            + entity.getCcy() + ")");
+        processParameter.setWorkFlowParameter(params);
+        String msg = comFxValuztionInfo002Service.start(processParameter,
+            dto.getSelectedItem().toArray(
+                new ComFxValuztionInfo002Dto[dto.getSelectedItem().size()]));
+        
+//        String msg = StringUtils.EMPTY;
+//
+//        ProcessParameter<ComFxValuztionInfo002Dto> processParameter = new ProcessParameter<>();
+//        WorkFlowParameter<ComFxValuztionInfo002Dto> workFlowParameter = new WorkFlowParameter<>();
+//
+//        try {
+//            Map<String, Object> map = Maps.newHashMap();
+//            map.put("finprodId2", dto.getFinprodId2());
+//            map.put("datasourceType", dto.getDatasourceType());
+//            map.put("valDate", dto.getValDate());
+//            map.put("valmodelId", dto.getValmodelId());
+//            dto = comFxValuztionInfo002Service.findByPrimaryKey(map);// dto 为回显值
+//
+//            workFlowParameter.setPageId("ValFxValuztionInfo002"); // 页面id
+//            workFlowParameter.setElementId(this.getParam(GlobalConstant.ELEMENT_ID)); // 元素id
+//            workFlowParameter.setBusinessCode(dto.getFinprodId2());// 业务代码编号
+//            workFlowParameter.setBusinessType(DictCodeList.共通业务类型_外汇估值信息.getValue());// 业务类型
+//            workFlowParameter.setComment(entity -> WorkFlowUtil.concatComment(
+//                    "外汇估值信息" , entity.getFinprodId2()));// 当前工作流备注
+//            processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
+//
+//            msg = comFxValuztionInfo002Service.start(processParameter, dto);
+//        } catch (Exception e) {
+//            this.getLogger().error("启动外汇估值信息流程失败：", e);
+//            msg = e.getMessage();
+//        }
         return new AjaxResult(msg);
     }
 
@@ -178,28 +202,62 @@ public class ComFxValuztionInfo001Controller extends BaseController {
                 outFile, true);
     }
     
+    
     /**
-     * 导入数据文件之前检查数据
+     * 导入（必填项校验）
      *
      * @param fileName 导入的文件名
      * @return 处理结果
+     * @throws Exception 异常
      */
     @ResponseBody
-    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return comFxValuztionInfo001Service.checkConfirmMsgForImportData(fileName);
-    }
-
-    /**
-     * 导入数据文件
-     *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
-     */
-    @ResponseBody
-    @RequestMapping("/importFile")
-    public List<ExcelValidDto> importData(String fileName) {
+    @RequestMapping("importFile")
+    public List<ExcelValidDto> importData(String fileName)
+            throws Exception{
         return this.comFxValuztionInfo001Service.importData(fileName);
-
+    }
+    
+    
+    /**
+     * 导入（重复数据获取）
+     * 
+     * @param fileName 导入的文件名
+     * @return checkResult
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("duplicateCheck")
+    public List<Integer> duplicateCheck(String fileName)
+        throws Exception {
+         List<List<String>> dataList = comFxValuztionInfo001Service.dataAnalysis(fileName);
+         List<Integer> checkResult = new ArrayList<>();
+         if (null != dataList && dataList.size() > 0) {
+             // 导入文件重复数据检查
+        	 checkResult = comFxValuztionInfo001Service.duplicateCheck(dataList);
+         }
+        return checkResult;
+    }
+    
+    /**
+     * 导入（数据保存）
+     * 
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("importFileSave")
+    public List<Integer> importFileSave(String fileName)
+        throws Exception {
+        List<List<String>> dataList = comFxValuztionInfo001Service.dataAnalysis(fileName);
+        List<Integer> checkResult = new ArrayList<>();
+        if (null != dataList && dataList.size() > 0) {
+            // 导入文件重复数据检查
+       	 checkResult = comFxValuztionInfo001Service.duplicateCheck(dataList);
+       	 List<ComFxValuztionInfo001Dto> equityList = comFxValuztionInfo001Service.converToBean(dataList,checkResult);
+       	 // 保存，已存在则更新
+       	comFxValuztionInfo001Service.dealAfterCheck(equityList);
+        }
+        return checkResult;
     }
 }

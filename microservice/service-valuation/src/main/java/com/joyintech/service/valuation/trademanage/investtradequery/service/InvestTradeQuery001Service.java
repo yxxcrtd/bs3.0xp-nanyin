@@ -92,17 +92,17 @@ public class InvestTradeQuery001Service extends CommonExportService<InvestTradeD
         // 获取交易方向
         String paPs = (String)params.get("paPs");
         params.put("paPsArr", this.String2Arr(paPs));
- 
+
         String filterStr =  (String)params.get("filterBusiType");
         Page<InvestTradeDto> page = new Page<>();
         page.setRoot(Lists.newArrayList());
         // 收益类型
         String profitType = (String)params.get("profitType");
-        if(filterStr.contains("02") && filterStr.contains("20")) {//过滤业务类型 - 债券交易,交易所债券交易
+        if(filterStr.contains("02") && filterStr.contains("20") && filterStr.contains("24")) {//过滤业务类型 - 债券交易,交易所债券交易、债券预交易
             page = super.queryForPage(pageNum, length, () -> mapper.selectBondList(params));
         }else if(filterStr.contains("03")){ //存借款交易
             page = super.queryForPage(pageNum, length, () -> mapper.queryPageList(params));
-        }else if(filterStr.contains("01")){// 拆借交易      
+        }else if(filterStr.contains("01")){// 拆借交易
             page = super.queryForPage(pageNum, length, () -> mapper.selectLendList(params));
         }else if(filterStr.contains("06")||filterStr.contains("07")){//过滤业务类型 - 基金类资产
             page = super.queryForPage(pageNum, length, () -> mapper.queryFundCurrencyList(params));
@@ -110,7 +110,7 @@ public class InvestTradeQuery001Service extends CommonExportService<InvestTradeD
             page = super.queryForPage(pageNum, length, () -> mapper.queryCurrentDepositList(params));
         }else if(filterStr.contains("19")){//过滤业务类型 - 交易账户收划款
             page = super.queryForPage(pageNum, length, () -> mapper.queryTradeAccountList(params));
-        }if(filterStr.contains("04") || filterStr.contains("05")){// 回购交易（债券质押式回购交易 和 债券买断式回购交易）   
+        }if(filterStr.contains("04") || filterStr.contains("05")){// 回购交易（债券质押式回购交易 和 债券买断式回购交易）
             page = super.queryForPage(pageNum, length, () -> mapper.selectRepurchaseList(params));
         }if(filterStr.contains("18")){ //现金类交易(费用交易)
             page = super.queryForPage(pageNum, length,() -> mapper.queryCashTransactions(params));
@@ -129,7 +129,7 @@ public class InvestTradeQuery001Service extends CommonExportService<InvestTradeD
         }else if(filterStr.contains("37")){//逾期罚息交易查询
             page = super.queryForPage(pageNum, length, () -> mapper.selectOverduePenaltyList(params));
         }
-       
+
         return page;
     }
     

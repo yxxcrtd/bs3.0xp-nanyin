@@ -70,6 +70,7 @@ public class ComExternalOptions002Controller extends BaseController {
         super.setSelectOptionToModel(model, DictCode.估值方法);
         super.setSelectOptionToModel(model, DictCode.维护方式);
         super.setSelectOptionToModel(model, DictCode.金融产品类型);
+        super.setSelectOptionToModel(model, DictCode.期权资产类型);
         return super.init(model);
 
     }
@@ -83,6 +84,11 @@ public class ComExternalOptions002Controller extends BaseController {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("BENCHMARK_TYPE2",str);
         return comExternalOptions002Service.getFinprodId(param);
+    }
+    @ResponseBody
+    @RequestMapping("/getTargetInfo")
+    public ComExternalOptions002Dto getTargetInfo(@RequestBody Map<String, Object> param){
+        return comExternalOptions002Service.getTargetInfo(param);
     }
 
 
@@ -102,7 +108,7 @@ public class ComExternalOptions002Controller extends BaseController {
                 //  map.put("valmodelId", dto.getValmodelId());
                 ComExternalOptions002Dto entity = comExternalOptions002Service.findByPrimaryKey(map);
                 if (entity != null) {
-                    return new AjaxResult("已存在合约标的_交易编号_估值日相同的数据，请确保数据唯一性。", MessageType.错误消息);
+                    return new AjaxResult("已存在交易编号_估值日相同的数据，请确保数据唯一性。", MessageType.错误消息);
                 }
                 map.put("branch", 0);
                 ComExternalOptions002Dto dateCheckDto = comExternalOptions002Service.dateCheck(map);
@@ -119,16 +125,26 @@ public class ComExternalOptions002Controller extends BaseController {
     @RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
     public AjaxResult save(@RequestBody ComExternalOptions002Dto dto) throws WorkFlowException {
         String msg = StringUtil.EMPTY;
+
         ProcessParameter<ComExternalOptions002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<ComExternalOptions002Dto> workFlowParameter = new WorkFlowParameter<>();
-        workFlowParameter.setPageId(this.getPageId()); // 页面id
-        workFlowParameter.setElementId(this.getParam(GlobalConstant.ELEMENT_ID)); // 元素id
-        workFlowParameter.setBusinessCode(dto.getFinprodId2());// 业务代码编号
-        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_场外期权.getValue());// 业务类型
-        workFlowParameter.setComment(
-                entity -> WorkFlowUtil.concatComment("场外期权", entity.getFinprodId2()));// 当前工作流备注
-        processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
-        msg = comExternalOptions002Service.start(processParameter, dto);
+
+        try {
+            workFlowParameter.setPageId(this.getPageId()); // 页面id
+            workFlowParameter.setElementId(this.getParam(GlobalConstant.ELEMENT_ID)); // 元素id
+            workFlowParameter.setBusinessCode(dto.getFinprodId2());// 业务代码编号
+            workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_场外期权.getValue());// 业务类型
+            workFlowParameter.setComment(
+                    entity -> WorkFlowUtil.concatComment("场外期权", entity.getFinprodId2()));// 当前工作流备注
+            processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
+
+            comExternalOptions002Service.start(processParameter, dto);
+            msg = getMessage("COMMON_I_0001"); // 处理正常结束
+        }
+        catch (Exception e) {
+            this.getLogger().error("启动外汇估值信息流程失败：", e);
+            msg = e.getMessage();
+        }
 
         return new AjaxResult(msg);
     }

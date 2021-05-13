@@ -3,6 +3,7 @@ package com.joyintech.tams.common.basicdata.marketdata.externaloptions.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.common.basicdata.marketdata.externaloptions.dto.ComExternalOptions002Dto;
@@ -60,4 +61,12 @@ public class ComExternalOptions002Service extends CommonExportService<ComExterna
                         + "/ComExternalOptions/dateCheck", params, ComExternalOptions002Dto.class);
     }
 
+    public ComExternalOptions002Dto getTargetInfo(Map<String, Object> param) {
+        List<ComExternalOptions002Dto> externalOptions002DtoList = restTemplate.postForList(ServiceApplication.CommonBasicDataService + "/ComExternalOptions/getTargetInfo",
+                param, ComExternalOptions002Dto.class);
+        if (!StringUtil.isEmptyList(externalOptions002DtoList)){
+            return externalOptions002DtoList.get(0);
+        }
+        return null;
+    }
 }

@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.basicdata.marketdata.externaloptions.service.ComExternalOptionsService001;
-import com.joyintech.service.basicdata.marketdata.externaloptions.service.ComExternalOptionsQuotationInfoImportDataService;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
@@ -34,8 +31,6 @@ public class ComExternalOptionsController extends BaseController {
     ComExternalOptionsService comExternalOptionsService;
     @Autowired
     ComExternalOptionsService001 comExternalOptionsService001;
-    @Autowired
-    ComExternalOptionsQuotationInfoImportDataService comExternalOptionsQuotationInfoImportDataService;
 
     @PostMapping("/findFinRateInfoByBenchmarkId")
     public List<SuggestDto> findFinRateInfoByBenchmarkId(@RequestBody Map<String, Object> params)
@@ -89,6 +84,19 @@ public class ComExternalOptionsController extends BaseController {
     {
         return comExternalOptionsService.findFinprodId(params);
     }
+    /**
+     *
+     * 资产信息检索查询
+     * <功能详细描述>
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getTargetInfo")
+    public List<ComExternalOptions002Dto>  getTargetInfo(@RequestBody Map<String, Object> param) {
+        return comExternalOptionsService.getTargetInfo(param);
+    }
 
     /**
      * 获取增值税则表 - 不分页
@@ -110,38 +118,5 @@ public class ComExternalOptionsController extends BaseController {
     public ComExternalOptions002Dto dateCheck(@RequestBody Map<String, Object> params) {
         return comExternalOptionsService.dateCheck(params);
     }
-    
-    /**
-     * 导入数据文件之前检查数据
-     *
-     * @param param 导入的文件名
-     * @return 处理结果
-     */
-    @SuppressWarnings("unchecked")
-    @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return comExternalOptionsQuotationInfoImportDataService.checkConfirmMsgForImportData(dataList);
-    }
 
-
-    /**
-     * 导入数据文件
-     *
-     * @param param 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
-     */
-    @SuppressWarnings("unchecked")
-    @PostMapping("importData")
-    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-        String userName=param.get("userName")==null?null:param.get("userName").toString();
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return this.comExternalOptionsQuotationInfoImportDataService.importData(dataList,tempList,userName,orgCode,deptCode);
-    }
-    
 }

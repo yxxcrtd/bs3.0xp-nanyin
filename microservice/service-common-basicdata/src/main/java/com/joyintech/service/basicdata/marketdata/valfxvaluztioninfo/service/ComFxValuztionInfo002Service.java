@@ -32,10 +32,10 @@ public class ComFxValuztionInfo002Service implements BaseProcessService<ComFxVal
     
     @Autowired
     private MstValFxMapper mstValFxMapper;
-    
+
     /**
      * 交易编号获取
-     * @param params 
+     * @param params
      *
      * @return 返回的数据
      */

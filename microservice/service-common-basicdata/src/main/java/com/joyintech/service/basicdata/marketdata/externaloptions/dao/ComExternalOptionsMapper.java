@@ -30,48 +30,6 @@ public interface ComExternalOptionsMapper {
     public List<SuggestDto> findFinprodId(Map<String, Object> params);
 
     ComExternalOptions002Dto dateCheck(Map<String, Object> params);
-    
-    /**
-     * 查询新增数据主键是否重复
-     * @param list 产品list
-     * @return list
-     * @see
-     * @since 1.0
-     */
 
-    String getRegistExcelList( Map<String,Object> param );
-
-    /**
-     * 查询新增数据合约标的是否存在
-     * @param 
-     * @param 
-     * @return 
-     * @see
-     * @since 1.0
-     */
-
-    String  checkTargetId( Map<String,Object> param);
-    
-    /**
-     * 查询新增数据交易编号是否存在
-     * @param 
-     * @param 
-     * @return 
-     * @see
-     * @since 1.0
-     */
-
-    String  checkTradeId( Map<String,Object> param);
-    
-    /**
-     * 验证交易编号与外汇类型是否匹配
-     * @param finprodId 产品代码
-     * @param finprodType2 金融产品类型
-     * @return list
-     * @see
-     * @since 1.0
-     */
-
-    String  checkTargetIdAndTradeId( Map<String,Object> param);
-
+    List<ComExternalOptions002Dto> getTargetInfo(Map<String, Object> param);
 }

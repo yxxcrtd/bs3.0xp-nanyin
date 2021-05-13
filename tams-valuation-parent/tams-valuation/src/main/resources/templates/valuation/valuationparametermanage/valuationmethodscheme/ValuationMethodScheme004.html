@@ -30,6 +30,8 @@
                     data-th-value="${entity?.operateType}">
                 <input type="text" id="workflowId" name="workflowId"  placeholder="流程 Id"
                             class="layui-input form-input" data-th-value="${entity?.workflowId}" >
+                <input type="text" id="finprodType" name="finprodType"  placeholder="金融产品类型（估值核算）"
+                       class="layui-input form-input" data-th-value="${entity?.finprodType}" >
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md6">
@@ -51,7 +53,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-inline layui-col-md6">
+                <div class="layui-inline layui-col-md6" id="div_tradeMarket">
                     <label class="layui-form-label form-lable-wrap">交易场所</label>
                     <div class="layui-input-inline input-inline">
                         <input id="tradeMarket" name="tradeMarket" class="layui-input form-input  input-select"
@@ -78,7 +80,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="valuationMethod" name="valuationMethod" class="layui-input form-input input-select"
                             allowClear="true" placeholder="请输入" data-th-data-result="${VALUATION_METHOD}"
-                            data-th-initvalue="${entity?.valuationMethod}" parentIds="invAim"data-th-required="true"
+                            data-th-initvalue="${entity?.valuationMethod}" parentIds="invAim,finprodType"data-th-required="true"
                             data-th-data-url="@{/valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme004/getValuationMethod}">
                             <option></option>
                         </select>
@@ -91,7 +93,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="valuationPrice" name="valuationPrice" class="layui-input form-input input-select"
                             allowClear="true" placeholder="请输入" data-th-data-result="${VALUATION_PRICE}"
-                            data-th-initvalue="${entity?.valuationPrice}" data-th-required="true"parentIds="tradeMarket"
+                            data-th-initvalue="${entity?.valuationPrice}" data-th-required="true"parentIds="tradeMarket,finprodType"
                             data-th-data-url="@{/valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme004/getValuationPrice}">
                             <option></option>
                         </select>
@@ -102,7 +104,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="valuationPrice2" name="valuationPrice2" class="layui-input form-input input-select"
                             allowClear="true" placeholder="请输入" data-th-data-result="${VALUATION_PRICE}"
-                            data-th-initvalue="${entity?.valuationPrice2}" parentIds="tradeMarket"
+                            data-th-initvalue="${entity?.valuationPrice2}" parentIds="tradeMarket,finprodType"
                             data-th-data-url="@{/valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme004/getValuationPrice}">
                             <option></option>
                         </select>
@@ -158,7 +160,7 @@
                             data-th-value="${entity?.vdate}"data-th-required="true">
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md6">
+                <div class="layui-inline layui-col-md6" id="div_mdate">
                     <label class="layui-form-label form-lable-wrap">结束日</label>
                     <div class="layui-input-inline input-inline">
                         <input id="mdate" name="mdate" class="layui-input form-input input-dateSelect" placeholder="请输入"

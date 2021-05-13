@@ -591,62 +591,72 @@
 	        d.TRADE_STATUS as tradeStatusCode, /**交易状态Code**/
 	        d.TRADE_STATUS as tradeStatus, /**交易状态**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21,T04,T39', d.ps) >0 THEN d.UNIT_CPRICE
+	         CASE
+	           <!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21,T04,T39,T67', d.ps) >0 THEN d.UNIT_CPRICE
 	           ELSE 0
 	         END      
 	        ) as unitCprice, /**单位净价**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21,T04,T39', d.ps) >0 THEN d.CPRICE_AMT
+	         CASE
+				<!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21,T04,T39,T67', d.ps) >0 THEN d.CPRICE_AMT
 	           ELSE 0
 	         END      
 	        ) as cpriceAmt, /**净价总额**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21;T09,T22,T04,T39', d.ps) >0 THEN d.unit_INT
+	         CASE
+				<!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21;T09,T22,T04,T39,T67', d.ps) >0 THEN d.unit_INT
 	           ELSE 0
 	         END      
 	        ) as unitInt, /**应收利息总额 - 单位分红利息**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21,T04,T39', d.ps) >0 THEN d.UNIT_FPRICE
+	         CASE
+				<!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21,T04,T39,T67', d.ps) >0 THEN d.UNIT_FPRICE
 	           ELSE 0
 	         END      
 	        ) as unitFprice, /**单位全价**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21,T04,T39', d.ps) >0 THEN d.FPRICE_AMT
+	         CASE
+				<!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21,T04,T39,T67', d.ps) >0 THEN d.FPRICE_AMT
 	           ELSE 0
 	         END      
 	        ) as fpriceAmt, /**全价总额**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21,T04,T39', d.ps) >0 THEN d.FEE_AMT
+	         CASE
+				<!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21,T04,T39,T67', d.ps) >0 THEN d.FEE_AMT
 	           ELSE 0
 	         END      
 	        ) as feeAmt, /**总交易费用**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21,T04,T39', d.ps) >0 THEN tdf.FEE_AMT
+	         CASE
+				<!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21,T04,T39,T67', d.ps) >0 THEN tdf.FEE_AMT
 	           ELSE 0
 	         END      
 	        ) as tdFeeAmt,/**通道费**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21;T09,T22;T08,T23,T04,T39', d.ps) >0 THEN d.TRADE_AMT
+	         CASE
+				<!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21;T09,T22;T08,T23,T04,T39,T67', d.ps) >0 THEN d.TRADE_AMT
 	           ELSE 0
 	         END      
 	        ) as tradeAmt, /**交易金额**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21,T04,T39', d.ps) >0 THEN d.YIELD
+	         CASE
+				<!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21,T04,T39,T67', d.ps) >0 THEN d.YIELD
 	           ELSE 0
 	         END      
 	        )*100 as yield, /**到期收益率**/
 	        (
-	         CASE 
-	           WHEN instr('T01,T02,T03,T20,T21,T04,T39', d.ps) >0 THEN d.EXER_YIELD
+	         CASE
+				<!-- modify by yanya on 20210310 增加行权-->
+	           WHEN instr('T01,T02,T03,T20,T21,T04,T39,T67', d.ps) >0 THEN d.EXER_YIELD
 	           ELSE 0
 	         END      
 	        )*100 as exerYield, /**行权收益率**/
@@ -668,11 +678,13 @@
 		and acct.ACCT_SUBJECT_TYPE = book.ACCT_SUBJECT_TYPE
 	    left join TRD_TRADE_FEE_DETAIL tdf on tdf.trade_id = d.trade_id and tdf.fee_type = 'B09'
 	    where 1=1
+	    /** 增加行权查询时，增加了债券预处理交易，此处需要过滤掉到期、还本、收息、赎回结转**/
+		AND d.PS not in ('T07','T08','T09','T68')
         <if test="paTradeId !=null and paTradeId !='' ">
-            and d.TRADE_ID LIKE '%'||#{paTradeId}||'%'
+            and d.TRADE_ID LIKE '%' || #{paTradeId} || '%'
         </if>
         <if test="paAsset !=null and paAsset !='' ">
-            and (zc.FINPROD_ID LIKE '%'||#{paAsset}||'%' or zc.FINPROD_ABBR LIKE '%'||#{paAsset}||'%' )
+            and (zc.FINPROD_ID LIKE '%' || #{paAsset} || '%' or zc.FINPROD_ABBR LIKE '%' || #{paAsset} || '%' )
             <!-- modify by dongjun on 20181127 start -->
             <if test="queryTypeList != null and queryTypeList.size > 0">
          	and d.BUSI_TYPE in  

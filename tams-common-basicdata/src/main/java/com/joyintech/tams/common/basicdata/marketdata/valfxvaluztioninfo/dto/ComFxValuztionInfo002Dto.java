@@ -1,6 +1,7 @@
 package com.joyintech.tams.common.basicdata.marketdata.valfxvaluztioninfo.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -60,6 +61,7 @@ public class ComFxValuztionInfo002Dto extends BaseEntity  implements ProcessEnti
     /**
      * 币种
      */
+    @PrimaryKey(value= PrimaryKey.Field.PK_4)
     @NotBlank(message = "币种不能为空!", groups = ValidateGroupEdit.class)
     private String ccy;
 
@@ -82,6 +84,29 @@ public class ComFxValuztionInfo002Dto extends BaseEntity  implements ProcessEnti
      * 外汇类型
      */
     private String  foreignexChangeType;
+    
+    /**
+     * 选择数据
+     */
+    private List<ComFxValuztionInfo002Dto> selectedItem;
+    
+    /**
+     * 选择的数据
+     * 
+     * @return List
+     */
+    public List<ComFxValuztionInfo002Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    /**
+     * 选择的数据
+     * 
+     * @param selectedItem selectedItem
+     */
+    public void setSelectedItem(List<ComFxValuztionInfo002Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 
     public String getPageModel() {
         return pageModel;

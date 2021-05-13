@@ -20,9 +20,10 @@
             t.PRICE_CLASS  as  priceClass, /** 价格类型 **/
             t.VALUATION_DATE as valuationDate, /** 行情日期 - 估值日期 **/
             TO_CHAR(t.VDATE,'YYYY-MM-DD') AS vdate,/** 开始日 **/
-            TO_CHAR(t.MDATE,'YYYY-MM-DD') AS mdate/** 结束日 **/
+            TO_CHAR(t.MDATE,'YYYY-MM-DD') AS mdate,/** 结束日 **/
+            vfp.finprod_type finprodType
         from BOK_VAL_SCHEME_DETAIL_SPECIAL t 
-        	left join FIN_PRODUCT vfp on t.FINPROD_ID = vfp.FINPROD_ID and vfp.FINPROD_TYPE = 'F01' 
+        	left join FIN_PRODUCT vfp on t.FINPROD_ID = vfp.FINPROD_ID and (vfp.FINPROD_TYPE = 'F01'  or ((vfp.profit_type is null or vfp.profit_type = '02') and vfp.finprod_type = 'F17' ))
         where t.SCHEME_DETAIL_ID = #{schemeDetailId,jdbcType=VARCHAR}
 
     </select>
@@ -194,7 +195,7 @@
                vfp.finprod_id as originalFinprodId /**资产代码**/
           from FIN_PRODUCT vfp
         WHERE 1=1 
-        AND vfp. FINPROD_TYPE = 'F01'
+        AND (vfp.FINPROD_TYPE = 'F01'  or ((vfp.profit_type is null or vfp.profit_type = '02') and vfp.finprod_type = 'F17' ))
 
             <!-- select2的模糊查询 -->
             <if test="search!=null and !''.equals(search.trim())">
@@ -209,9 +210,11 @@
     <select id="getFinprodInfo" resultType="com.joyintech.service.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme004Dto">
         select vfp.finprod_id   as finprodId, /**资产代码**/
                vfp.finprod_abbr as finprodName, /**资产名称**/
-               vfp.TRADE_MARKET as tradeMarket/** 交易场所 **/
+               vfp.TRADE_MARKET as tradeMarket,/** 交易场所 **/
+               vfp.profit_type as profitType,
+               vfp.finprod_type as finprodType
           from FIN_PRODUCT vfp
-        WHERE  vfp.FINPROD_TYPE = 'F01'
+        WHERE  (vfp.FINPROD_TYPE = 'F01'  or ((vfp.profit_type is null or vfp.profit_type = '02') and vfp.finprod_type = 'F17' ))
             AND vfp.finprod_id = #{finprodId}
     </select>
     
@@ -222,7 +225,7 @@
 	               vfp.finprod_abbr as finprodName, /**资产名称**/
 	               vfp.finprod_id as originalFinprodId /**资产代码**/
 	          from FIN_PRODUCT vfp
-	        WHERE  vfp.FINPROD_TYPE = 'F01' 
+	        WHERE  (vfp.FINPROD_TYPE = 'F01'  or ((vfp.profit_type is null or vfp.profit_type = '02') and vfp.finprod_type = 'F17' ))
         ) t 
             where t.finprodId = #{finprodId}
     </select>

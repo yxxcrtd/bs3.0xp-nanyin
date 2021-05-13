@@ -129,7 +129,7 @@ public class ComFxValuztionInfo002Controller extends BaseController {
               //  map.put("valmodelId", dto.getValmodelId());
                 ComFxValuztionInfo002Dto entity = valFxValuztionInfo002.findByPrimaryKey(map);
                 if (entity != null) {
-                    return new AjaxResult("已存在交易编号_估值日期_数据来源相同的数据，请确保数据唯一性。", MessageType.错误消息);
+                    return new AjaxResult("已存在交易编号_估值日期_币种_数据来源相同的数据，请确保数据唯一性。", MessageType.错误消息);
                 }
             }
         }

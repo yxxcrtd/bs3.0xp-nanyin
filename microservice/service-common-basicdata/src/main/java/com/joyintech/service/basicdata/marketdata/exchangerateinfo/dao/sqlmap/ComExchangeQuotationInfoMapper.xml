@@ -44,7 +44,7 @@
 	</select>
 
 	<!-- add by zwq 20210222 增加基准汇率行情导入功能 start -->
-	<insert id="mergeInfoList"  parameterType="com.joyintech.service.valuation.basedata.marketdata.valexchangerateinfo.dto.ValExchangeQuotationInfoDto">
+	<insert id="mergeInfoList"  parameterType="com.joyintech.service.basicdata.marketdata.exchangerateinfo.dto.ComExchangeQuotationInfoDto">
 		MERGE INTO MST_EXCHARGE_QUOTE CII
 		USING (
 		<foreach collection="newDataList" item="item" open="select * from("

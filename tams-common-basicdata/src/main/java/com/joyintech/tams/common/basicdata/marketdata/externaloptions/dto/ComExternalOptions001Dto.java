@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -25,7 +27,9 @@ public class ComExternalOptions001Dto extends BaseEntity {
         this.finprodId = finprodId;
     }
     public String targetId;
-
+    public String targetName;
+    public String targetType;
+    public String targetTypeStr;
     public String getTargetId() {
         return targetId;
     }
@@ -226,5 +230,29 @@ public class ComExternalOptions001Dto extends BaseEntity {
     // @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setPublishDate(String publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
+    public String getTargetTypeStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.期权资产类型,this.getTargetType());
+    }
+
+    public void setTargetTypeStr(String targetTypeStr) {
+        this.targetTypeStr = targetTypeStr;
     }
 }

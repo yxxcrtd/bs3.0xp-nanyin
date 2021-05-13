@@ -109,7 +109,8 @@ public class InvestTradeQuery001Controller extends BaseController {
             30:债券重分类交易
             37:逾期罚息交易
          * */
-        String[] busiType={"01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","18","19","30","37"};
+        //modify by yanya on 20210310 增加债券预处理查询
+        String[] busiType={"01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","18","19","30","37","24"};
         //参数过滤
         DictCode.checkDictCode(model,DictCode.业务类型,busiType,true);
         /* PS   T01:买入
@@ -139,7 +140,13 @@ public class InvestTradeQuery001Controller extends BaseController {
                 T63:转换赎回确认
                 T64:转换申购确认
          * */
-        String[] psArr={"T01","T02","T03","T04","T05","T06","T07","T08","T09","T10","T11","T12","T13","T14","T15","T16","T17","T18","T19","T20","T21","T25","T26","T35","T63","T64"};
+        //modify by yanya on 20210310 增加行权
+        //String[] psArr={"T01","T02","T03","T04","T05","T06","T07","T08","T09","T10","T11","T12","T13","T14","T15","T16","T17","T18","T19","T20","T21","T25","T26","T35","T63","T64"};
+        //modify by yanya on 20210320 去除赎回结转
+//        String[] psArr={"T01","T02","T03","T04","T05","T06","T07","T08","T09","T10","T11","T12","T13","T14","T15","T16","T17","T18","T19",
+//                "T20","T21","T25","T26","T35","T63","T64","T39","T67","T68"};
+        String[] psArr={"T01","T02","T03","T04","T05","T06","T07","T08","T09","T10","T11","T12","T13","T14","T15","T16","T17","T18","T19",
+                "T20","T21","T25","T26","T35","T63","T64","T39","T67"};
         DictCode.checkDictCode(model,DictCode.交易方向,psArr,true);
         // 核算主体类别
 //        this.setSelectOptionToModel(model, DictCode.核算主体类别);

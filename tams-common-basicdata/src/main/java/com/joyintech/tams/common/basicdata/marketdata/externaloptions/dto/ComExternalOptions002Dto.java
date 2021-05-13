@@ -7,12 +7,15 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 //import com.joyintech.tams.common.basicdata.marketdata.externaloptions.validator.ExternalOptions002DtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -25,7 +28,10 @@ public class ComExternalOptions002Dto extends BaseEntity implements ProcessEntit
 
 
     private String finprodId; //金融产品代码
-
+    /**
+     * 画面元素
+     */
+    private String elementId;
     public String getFinprodId() {
         return finprodId;
     }
@@ -74,7 +80,7 @@ public class ComExternalOptions002Dto extends BaseEntity implements ProcessEntit
         this.pageModel = pageModel;
     }
 
-    @NotBlank(message = "公布日期不能为空!", groups = ValidateGroupEdit.class)
+    //@NotBlank(message = "公布日期不能为空!", groups = ValidateGroupEdit.class)
     private String publishDate;
     /**
      * 取得 null
@@ -127,7 +133,7 @@ public class ComExternalOptions002Dto extends BaseEntity implements ProcessEntit
     /**
      * null
      */
-    @NotNull(message = "期权价值不能为空!", groups = ValidateGroupEdit.class)
+    @NotNull(message = "收盘价不能为空!", groups = ValidateGroupEdit.class)
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal valuation;
 
@@ -145,6 +151,16 @@ public class ComExternalOptions002Dto extends BaseEntity implements ProcessEntit
      * null
      */
     private String inputType;
+
+    private List<ComExternalOptions002Dto> selectedItem;
+
+    public List<ComExternalOptions002Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<ComExternalOptions002Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 
     /**
      * 取得 null
@@ -210,8 +226,11 @@ public class ComExternalOptions002Dto extends BaseEntity implements ProcessEntit
         this.inputType = inputType == null ? null : inputType.trim();
     }
 
-    @NotBlank(message = "合约标的不能为空!", groups = ValidateGroupEdit.class)
+    //@NotBlank(message = "合约标的不能为空!", groups = ValidateGroupEdit.class)
     public String targetId;
+    public String targetName;
+    public String targetType;
+    public String targetTypeStr;
 
     public String getTargetId() {
         return targetId;
@@ -262,5 +281,37 @@ public class ComExternalOptions002Dto extends BaseEntity implements ProcessEntit
      */
     public void setMdate(String mdate) {
         this.mdate = mdate;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
+    public String getTargetTypeStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.期权资产类型,this.getTargetType());
+    }
+
+    public void setTargetTypeStr(String targetTypeStr) {
+        this.targetTypeStr = targetTypeStr;
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
     }
 }

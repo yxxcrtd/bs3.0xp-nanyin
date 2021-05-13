@@ -39,7 +39,7 @@ $(function () {
             {field:'foreignexChangeType', width:160, title: '外汇类型', visible: false },
             {field:'foreignexChangeTypeFmt',  sortField: 'foreignexChangeType',width:160, title: '外汇类型' },
             {field:'valDate', width:160, type:'date', title: '估值日期' },
-            {field:'valuation', width:160, title: '估值' },
+            {field:'valuation', width:160, title: '估值' ,type:'number',digit:4},
             {field:'ccy', width:160, title: '币种' , visible: false},
             {field:'ccyFmt', sortField: 'ccy', width:160, title: '币种' },
             {field:'valmodelId', width:160, title: '估值模型' , visible: false},
@@ -77,30 +77,26 @@ $(function () {
         table.bind('click', '.edit', function(data) {
             var object = {};
             object.finprodId = data.finprodId;
-            Joyin.dialog(JoyinUtil.getLabel("编辑外汇估值信息（ "+ "<span style='color:red'> * </span>" + "必填）"),
-                basePath + "common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo002/init",
-                "85%", "85%", {pageModel:PAGE_MODEL_EDIT, finprodId2: data.finprodId2, valmodelId:data.valmodelId,datasourceType: data.datasourceType, valDate: data.valDate, operateType:"edit"},function(){
-                    table.reload();
-                });
+            Joyin.confirm("请确认是否要修改？", function(){
+                Joyin.dialog(JoyinUtil.getLabel("编辑外汇估值信息（ "+ "<span style='color:red'> * </span>" + "必填）"),
+                    basePath + "common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo002/init",
+                    "85%", "85%", {pageModel:PAGE_MODEL_EDIT, finprodId2: data.finprodId2, valmodelId:data.valmodelId,datasourceType: data.datasourceType, valDate: data.valDate, operateType:"edit"},function(){
+                        table.reload();
+                    });
+            });
         });
 
         /**
          * 删除-走流程
          */
         table.bind('click', '.delt', function(data) {
-            var object = {};
-            object.finprodId2 = data.finprodId2;
-            object.datasourceType = data.datasourceType;
-            object.valDate = data.valDate;
-            object.operateType = data.operateType;
-            object.valmodelId = data.valmodelId;
+        	var object = {selectedItem: [data], operateType:"delete"};
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(
-                        basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/delete',
-                        object,
-                        "ComFxValuztionInfo001_btn_delete",
-                        "ComFxValuztionInfo002",
+                        basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/delete',object,
+                        "ValFxValuztionInfo001_btn_delete",
+                        "ValFxValuztionInfo002",
                         function() {
                             table.reload();
                         }
@@ -111,28 +107,24 @@ $(function () {
 
         /** 事件绑定: 删除 */
         $('#ComFxValuztionInfo001_btn_delete').click(function() {
-            var object = {};
-            var rowArr = table.getAllCheckedRows();// 所有选中行数据
-            if(rowArr == null || rowArr.length === 0 || rowArr.length >1){
-                Joyin.error("请选择1条记录进行删除。");
-            }else{
-                object.finprodId2 = rowArr[0].finprodId2;
-                object.datasourceType = rowArr[0].datasourceType;
-                object.valDate = rowArr[0].valDate;
-                object.operateType = rowArr[0].operateType;
-                object.valmodelId = rowArr[0].valmodelId;
-                Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/check', object, function(result) {
-                    object.operateType = "delete";
-                    Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                        WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/delete', object,
-                            "ComFxValuztionInfo001_btn_delete",
-                            "ComFxValuztionInfo002",
-                            function() {
-                            vatTaxTable.reload();
-                        });
+        	if(table!=null && table!=''){
+                var selArr = table.getAllCheckedRows();// 所有选中行数据
+            }
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            var object = {selectedItem: selArr, operateType:"delete"};
+            Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/check', object, function(result) {
+                Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                    WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/delete', object,
+                        "ValFxValuztionInfo001_btn_delete",
+                        "ValFxValuztionInfo002",
+                        function() {
+                    	table.reload();
                     });
                 });
-            }
+            });
         });
 
     };
@@ -169,22 +161,51 @@ $(function () {
         $('#ComFxValuztionInfo001_btn_export').click(function() {
             exportExcel();
         });
-
-        //新建、修改、删除事件绑定
-        tableBind();
         
-     // 导入按钮点击事件
+        /**
+         * 导入按钮
+         */
         $('#ComFxValuztionInfo001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                        Joyin.ajax(basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/importFile', {fileName: fileName});
+                    Joyin.ajax(basePath +"common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/importFile", {
+                        fileName : fileName
+                    },function(result){
+                    	if(!result || !($.isArray(result) && result.length > 0)){
+                    		Joyin.ajax(
+                                    basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/importFileSave', 
+                                    {fileName : fileName},function (data1) {
+                                    	layui.layer.closeAll()
+                                        table.reload();
+                              });
+                    	}
+                    	else if($.isArray(result) && result.length > 0 && result[0].rowNum != "") {
+                        	Joyin.ajax(
+                                    basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/duplicateCheck', 
+                                    {fileName : fileName},function (data) {
+                                    	if(result.length == data.length){
+                                    		Joyin.confirm("导入文件存在"+data.length+"条数据重复，重复数据不导入，是否确认？", function(){
+                                    			Joyin.ajax(
+                                                        basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/importFileSave', 
+                                                        {fileName : fileName},function (data1) {
+                                                        	layui.layer.closeAll()
+                                                            table.reload();
+                                                        	Joyin.alert("文件导入成功！", 0);
+                                                  });
+                                            }, {}, function() {
+                                            	layui.layer.closeAll()
+                                                table.reload();
+                                            });
+                                    	}
+                              });
+                        }
                     });
-                },function() {
-                    table.reload();
                 });
             });
         });
+
+        //新建、修改、删除事件绑定
+        tableBind();
     });
 
 });

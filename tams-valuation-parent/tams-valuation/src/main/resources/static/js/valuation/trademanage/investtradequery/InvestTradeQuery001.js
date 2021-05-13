@@ -51,8 +51,8 @@ $(function () {
             url: 'findPage',
             type: 'POST',
             data: function() {
-            	//过滤业务类型 - 债券交易,交易所债券交易
-            	var nowBusitypeArr =  ['02','20'];
+            	//过滤业务类型 - 债券交易,交易所债券交易 -债券交易预处理
+            	var nowBusitypeArr =  ['02','20','24'];
             	
             	//获取查询参数
             	var paMap = getSearchParams();
@@ -114,7 +114,13 @@ $(function () {
 	
 //	债券交易双击详情
 	function showbondTrade(table,data){
-		var ps1 = ['T01', 'T02', 'T03', 'T20', 'T21', 'T04','T05','T49'];//债券交易(交易方向为买入、卖出、行权、转入、转出、申购、申购确认、债转股);
+	    /** modify by yanya on 20210310 增加行权的交易 start**/
+		//var ps1 = ['T01', 'T02', 'T03', 'T20', 'T21', 'T04','T05','T49'];//债券交易(交易方向为买入、卖出、行权、转入、转出、申购、申购确认、债转股);
+        //债券交易(交易方向为买入、卖出、行权、转入、转出、申购、申购确认、债转股);
+            //modify by yanya on 20210320 去除赎回结转
+        //var ps1 = ['T01', 'T02', 'T03', 'T20', 'T21', 'T04','T05','T49', 'T39', 'T67'];
+        var ps1 = ['T01', 'T02', 'T03', 'T20', 'T21', 'T04','T05','T49', 'T39', 'T67', 'T68'];
+        /** modify by yanya on 20210310 增加行权的交易 end**/
 		var ps2 = ['T08', 'T09', 'T22', 'T23', 'T25', 'T26'];//债券存续期(交易方向为收息、还本;收息到账、还本到账); 应收款项转入、转出 add by tanxuan 20191223
         var wide="98%";
         var high="85%";

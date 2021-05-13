@@ -173,8 +173,11 @@ public class ValuationMethodScheme001Dto extends BokValScheme {
      * 处理操作
      */
     private String operateType;
-    
-    
+
+	/**
+	 *金融产品类型（估值核算）
+	 */
+	private String finprodType;
     
 	
     public String getOperateType() {
@@ -441,5 +444,12 @@ public class ValuationMethodScheme001Dto extends BokValScheme {
     public void setListValuationMethodSchemeDto(List<ValuationMethodScheme001Dto> listValuationMethodSchemeDto) {
         this.listValuationMethodSchemeDto = listValuationMethodSchemeDto;
     }
-	
+
+	public String getFinprodType() {
+		return finprodType;
+	}
+
+	public void setFinprodType(String finprodType) {
+		this.finprodType = finprodType;
+	}
 }

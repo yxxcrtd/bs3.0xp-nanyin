@@ -112,6 +112,16 @@ $(function () {
         $("#secDetailType").change(function(){
             priceClassShow();
         });
+		$("#invAim").change(function(){
+			if ($("#invAim").val() && $("#secType").val() === '12'){
+				if ($("#invAim").val() === 'FVTPL'){
+					$("#valuationMethod").val("01").trigger("change");
+				}
+				if ($("#invAim").val() === 'FVOCI'){
+					$("#valuationMethod").val("01").trigger("change");
+				}
+			}
+		});
     };
     
 //  联动：证券品种为债券时显示: 证券细分类，投资目的
@@ -199,7 +209,11 @@ $(function () {
 //	    			$("#valuationMethod").val("").trigger("change");
 //	        	}
 //	        });
-    	}
+    	}else if(secType === '12') {
+			$("#c_tradeMarket").hide();
+			$("#c_secDetailType").hide();
+			$("#c_invAim").show();
+		}
     };
 	
  // 估值方法为市值法/市值成本孰低法 显示：估值第一市价、估值第二市价、行情日期、行情位数、行情位数处理
@@ -222,9 +236,9 @@ $(function () {
 
 					$("#valuationPrice2").val("").trigger("change");
 					$("#valuationDate").next().find("li").removeClass("laytable-checkbox-selected");
-					$("#valuationDate").val("");
+					$("#valuationDate").val("").trigger("change");
 					$("#quotaDigit").val("");
-					$("#priceTailMode").val("");
+					$("#priceTailMode").val("").trigger("change");
 					$("#priceClass").val("");
 		    	}else{
 	    	        $("#valuationPrice").attr("disabled", false);
@@ -245,9 +259,9 @@ $(function () {
 				$("#valuationPrice").val("").trigger("change");
 				$("#valuationPrice2").val("").trigger("change");
 				$("#valuationDate").next().find("li").removeClass("laytable-checkbox-selected");
-				$("#valuationDate").val("");
+				$("#valuationDate").val("").trigger("change");
 				$("#quotaDigit").val("");
-				$("#priceTailMode").val("");
+				$("#priceTailMode").val("").trigger("change");
 				$("#priceClass").val("");
 			}
 //		}
