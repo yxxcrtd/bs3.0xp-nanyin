@@ -138,7 +138,7 @@
     <select id="getFinprodIdForAdd" resultMap="finprodIdMap">
         SELECT
         T1.FINPROD_MARKET_ID 		id,
-        /** modify by yanya on 20210327 –ﬁ∏ƒ’π æ√˚≥∆**/
+        /** modify by yanya on 20210327 ‰øÆÊîπÂ±ïÁ§∫ÂêçÁß∞**/
         /** T1.FINPROD_MARKET_ID 		text,**/
         nvl(T1.FINPROD_ABBR, T1.FINPROD_NAME) text,
         T1.FINPROD_NAME,
@@ -164,7 +164,7 @@
         </where>
     </select>
     
-		<!--  π…∆±π¿÷µ––«Èµº»Î   -->
+		<!--  ËÇ°Á•®‰º∞ÂÄºË°åÊÉÖÂØºÂÖ•   -->
 	 	<insert id="mergeInfoList"  parameterType="com.joyintech.service.basicdata.marketdata.mstshareprice.dto.ComSharePriceDto">
     		MERGE INTO MST_SHARE_PRICE CII
         	USING (
@@ -200,9 +200,9 @@
             from dual
         </foreach>
         ) TEMP
-        <!-- “µŒÒ÷˜º¸∆•≈‰ -->
+        <!-- ‰∏öÂä°‰∏ªÈîÆÂåπÈÖç -->
         ON (CII.SHARES_ID = TEMP.SHARES_ID AND CII.DEAL_DATE = TEMP.DEAL_DATE)
-        <!-- ∆•≈‰µΩ‘Ú∏¸–¬ -->
+        <!-- ÂåπÈÖçÂà∞ÂàôÊõ¥Êñ∞ -->
         WHEN MATCHED THEN
         UPDATE
         SET 
@@ -232,7 +232,7 @@
         CII.UPDATE_USER = TEMP.UPDATE_USER,
         CII.UPDATE_TIME = TEMP.UPDATE_TIME,
         CII.CREATE_DEPT = TEMP.CREATE_DEPT
-        <!-- Œ¥∆•≈‰µΩ’‚≤Â»Î -->
+        <!-- Êú™ÂåπÈÖçÂà∞ËøôÊèíÂÖ• -->
         WHEN NOT MATCHED THEN
         INSERT (SHARES_ID,DEAL_DATE,PRE_CLOSE_PRICE,OPEN_PRICE,HIGH_PRICE,LOW_PRICE
         ,CLOSE_PRICE,S_SHARES,C_SHARES,CHANGE,CHANGE_PERCENT,DEAL_VALUME
