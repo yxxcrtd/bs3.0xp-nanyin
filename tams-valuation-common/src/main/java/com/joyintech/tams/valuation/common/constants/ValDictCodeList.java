@@ -798,7 +798,12 @@ public enum ValDictCodeList implements BaseDictCodeList {
     账套配置表参数项_预提费用计提方式(
         ValDictCode.账套配置表参数项, "TOCAL_ACCR_TYPE", "预提费用计提方式"
     ),
-
+    /**
+     * 账套配置表参数项_计划类利率型资产计提方式
+     */
+    账套配置表参数项_项目类计提区间倒减方式(
+            ValDictCode.账套配置表参数项, "PLAN_SUBTRACTION_TYPE", "项目类计提区间倒减方式"
+    ),
     ;
 
     /**

@@ -1676,4 +1676,12 @@ public class FinProductCommonService {
     public TrdFinProductBarterDto selectTrdFinProductBarter(Map<String, Object> map) {
         return finProductCommonMapper.selectTrdFinProductBarter(map);
     }
+    /**
+     * 公共方法：标的类共通方法 - 标的信息查询，查询标的金融产品类型（投管分类）
+     * @param finprodId 标的代码【必输项】
+     * @return　返回值获取，直接查询标的金融产品类型（投管分类）
+     */
+    public String getfinprodType2(String finprodId) {
+        return  finProductCommonMapper.getfinprodType2(finprodId);
+    }
 }

@@ -528,5 +528,8 @@ public interface FinProductCommonMapper {
     String getIsPayInt(@Param("finprodId") String finprodId);
 	
 	TrdFinProductBarterDto selectTrdFinProductBarter(Map<String, Object> map);
-
+    /**
+     * 查询标的金融产品类型（投管分类）
+     */
+    String getfinprodType2(@Param("finprodId") String finprodId);
 }

@@ -2018,6 +2018,8 @@ public enum DictCodeList implements BaseDictCodeList {
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
     共通业务类型_手动释放头寸(DictCode.共通业务类型,"MR1","手动释放头寸"),
     共通业务类型_规划策略池维护(DictCode.共通业务类型, "PRDPLAN06", "规划策略池维护"),
+	项目类计提区间倒减方式_倒减科目余额(DictCode.项目类计提区间倒减方式,"01","倒减科目余额"),
+	项目类计提区间倒减方式_倒减前一日计算结果(DictCode.项目类计提区间倒减方式,"02","倒减前一日计算结果"),
 	;
 	/*字典值已经满了 ，不要添加了*/
     private String value;

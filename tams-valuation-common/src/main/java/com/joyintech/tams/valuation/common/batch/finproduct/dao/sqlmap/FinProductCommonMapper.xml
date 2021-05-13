@@ -1490,5 +1490,9 @@ AND	fin.BRANCH = 0
 		A.TRADE_ID =  #{tradeId}
 		AND tpda.portfolio_id=#{portfolioId}
 	</select>
+	<select id="getfinprodType2" resultType="java.lang.String">
+		select finprod_type2  from fin_cash_plan where finprod_id = #{finprodId}
+		and rownum=1
+	</select>
 
 </mapper>
