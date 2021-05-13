@@ -114,18 +114,20 @@ public class BankAccountMsg extends MsgExecuteService{
 				msgcontainer.setEntityObj(BkAcct);
 			}
 		}else{
-			oldBkAcct.setExternalacctnumber(BkAcct.getExternalacctnumber());
-			oldBkAcct.setBankdesc(BkAcct.getBankdesc());
-			oldBkAcct.setBkinfo(BkAcct.getBkinfo());
-			oldBkAcct.setSttlmntcurrdefault(BkAcct.getSttlmntcurrdefault());
-			oldBkAcct.setSeatNumber(BkAcct.getSeatNumber());
-			oldBkAcct.setFxcurrency(BkAcct.getFxcurrency());
-			oldBkAcct.setStatus(BkAcct.getStatus());
-			oldBkAcct.setPortfolio(BkAcct.getPortfolio());
-			oldBkAcct.setIntCshflwMasterRec(BkAcct.getIntCshflwMasterRec());
-			bkCashAcctDao.updateEntity(oldBkAcct);
-			msgcontainer.setObjID(oldBkAcct.getId());
-			msgcontainer.setEntityObj(oldBkAcct);
+			if(oldBkAcct != null){
+				oldBkAcct.setExternalacctnumber(BkAcct.getExternalacctnumber());
+				oldBkAcct.setBankdesc(BkAcct.getBankdesc());
+				oldBkAcct.setBkinfo(BkAcct.getBkinfo());
+				oldBkAcct.setSttlmntcurrdefault(BkAcct.getSttlmntcurrdefault());
+				oldBkAcct.setSeatNumber(BkAcct.getSeatNumber());
+				oldBkAcct.setFxcurrency(BkAcct.getFxcurrency());
+				oldBkAcct.setStatus(BkAcct.getStatus());
+				oldBkAcct.setPortfolio(BkAcct.getPortfolio());
+				oldBkAcct.setIntCshflwMasterRec(BkAcct.getIntCshflwMasterRec());
+				bkCashAcctDao.updateEntity(oldBkAcct);
+				msgcontainer.setObjID(oldBkAcct.getId());
+				msgcontainer.setEntityObj(oldBkAcct);
+			}
 		}
 	}
 

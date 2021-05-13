@@ -1,9 +1,6 @@
 package com.joyintech.tams.systemtools.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,33 +65,43 @@ public class ExcelUtil {
     public static List<List<String>> readToList(File file, int sheetIndex) throws FileNotFoundException{
         List<List<String>> ls = new ArrayList<List<String>>();
         Workbook wb = loadWorkbook(null, file, null);
-        if (null != wb) {
-            Sheet sh = wb.getSheetAt(sheetIndex);
-            int rows = sh.getPhysicalNumberOfRows();
-            int cells = sh.getRow(0).getPhysicalNumberOfCells();
-            for (int i = 0; i < rows; i++ ) {
-                Row row = sh.getRow(i);
-                if (row == null) {
-                    break;
-                }
-                List<String> r = new ArrayList<String>(cells);
-                boolean dataFlag = true;
-                for (int c = 0; c < cells; c++ ) {
-                    if (row.getCell(c) == null
-                        || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
-                        r.add("");
+        try {
+            if (null != wb) {
+                Sheet sh = wb.getSheetAt(sheetIndex);
+                int rows = sh.getPhysicalNumberOfRows();
+                int cells = sh.getRow(0).getPhysicalNumberOfCells();
+                for (int i = 0; i < rows; i++ ) {
+                    Row row = sh.getRow(i);
+                    if (row == null) {
+                        break;
                     }
-                    else {
-                        dataFlag = false;
-                        r.add(getStringCellValue(row.getCell(c)));
+                    List<String> r = new ArrayList<String>(cells);
+                    boolean dataFlag = true;
+                    for (int c = 0; c < cells; c++ ) {
+                        if (row.getCell(c) == null
+                                || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
+                            r.add("");
+                        }
+                        else {
+                            dataFlag = false;
+                            r.add(getStringCellValue(row.getCell(c)));
+                        }
                     }
+                    // 遇到一行全为空结束
+                    if (dataFlag) {
+                        break;
+                    }
+                    ls.add(r);
                 }
-                // 遇到一行全为空结束
-                if (dataFlag) {
-                    break;
-                }
-                ls.add(r);
             }
+        }finally {
+           if(wb != null){
+               try {
+                   wb.close();
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
         }
         return ls;
     }
@@ -116,43 +123,54 @@ public class ExcelUtil {
                                                 InputStream inputStream, int sheetIndex,
                                                 int skipRows, int titleRow) throws FileNotFoundException{
         List<List<String>> ls = new ArrayList<List<String>>();
-        Workbook wb = loadWorkbook(fileName, file, inputStream);
-        if (null != wb) {
-            Sheet sh = wb.getSheetAt(sheetIndex);
-            int rows = sh.getPhysicalNumberOfRows();
-            int cells = sh.getRow(titleRow).getPhysicalNumberOfCells();
-            Row tRow = sh.getRow(titleRow);
-            // 列标题为空的话结束
-            for (int c = 0; c < cells; c++ ) {
-                if (tRow.getCell(c) == null
-                    || StringUtil.isEmpty(getStringCellValue(tRow.getCell(c)))) {
-                    cells = c;
-                    break;
+        Workbook wb = null;
+        try {
+            wb= loadWorkbook(fileName, file, inputStream);
+            if (null != wb) {
+                Sheet sh = wb.getSheetAt(sheetIndex);
+                int rows = sh.getPhysicalNumberOfRows();
+                int cells = sh.getRow(titleRow).getPhysicalNumberOfCells();
+                Row tRow = sh.getRow(titleRow);
+                // 列标题为空的话结束
+                for (int c = 0; c < cells; c++ ) {
+                    if (tRow.getCell(c) == null
+                            || StringUtil.isEmpty(getStringCellValue(tRow.getCell(c)))) {
+                        cells = c;
+                        break;
+                    }
+                }
+
+                for (int i = skipRows; i < rows; i++ ) {
+                    Row row = sh.getRow(i);
+                    if (row == null) {
+                        break;
+                    }
+                    List<String> r = new ArrayList<String>(cells);
+                    boolean dataFlag = true;
+                    for (int c = 0; c < cells; c++ ) {
+                        if (row.getCell(c) == null
+                                || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
+                            r.add("");
+                        }
+                        else {
+                            dataFlag = false;
+                            r.add(getStringCellValue(row.getCell(c)));
+                        }
+                    }
+                    // 遇到一行全为空结束
+                    if (dataFlag) {
+                        break;
+                    }
+                    ls.add(r);
                 }
             }
-
-            for (int i = skipRows; i < rows; i++ ) {
-                Row row = sh.getRow(i);
-                if (row == null) {
-                    break;
+        }finally {
+            if(wb != null){
+                try {
+                    wb.close();
+                }catch (IOException e) {
+                    e.printStackTrace();
                 }
-                List<String> r = new ArrayList<String>(cells);
-                boolean dataFlag = true;
-                for (int c = 0; c < cells; c++ ) {
-                    if (row.getCell(c) == null
-                        || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
-                        r.add("");
-                    }
-                    else {
-                        dataFlag = false;
-                        r.add(getStringCellValue(row.getCell(c)));
-                    }
-                }
-                // 遇到一行全为空结束
-                if (dataFlag) {
-                    break;
-                }
-                ls.add(r);
             }
         }
         return ls;

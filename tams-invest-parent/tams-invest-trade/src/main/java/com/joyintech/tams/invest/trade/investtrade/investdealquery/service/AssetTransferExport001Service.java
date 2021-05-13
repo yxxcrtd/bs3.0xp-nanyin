@@ -206,7 +206,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 		
         File depositfile = null;
         Workbook workbook = null;
-
+		OutputStream os = null;
         try {
 
             // 传放地址
@@ -248,14 +248,11 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
             	}
             }
 
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+            os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
             workbook.write(os); 
-            os.flush();
-            os.close();
+
         }
         catch (Exception e) {
-        	
-        	
             logger.error(template + "生成失败！");
             throw new RuntimeException(e);
         }finally{
@@ -267,10 +264,17 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
             catch (Exception e) {
             	logger.error("workbook关闭失败！");
             }
+			try {
+				if (null != os) {
+					os.flush();
+					os.close();
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
         }
         return depositfile;
-		
-		
 	}
 
 	/**
@@ -328,7 +332,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 //		String flieName =  termname +DateUtil.format(DateUtil.now(),DateUtil.DEFAULT_DATETIME_FORMAT_SSS) + ".xls";
         File depositfile = null;
         Workbook workbook = null;
-
+		OutputStream os =null;
         try {
             // 传放地址
             String depositfilePath = CacheUtil.getSysParam(
@@ -375,15 +379,12 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 	            	}
             	}
             }
-            
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+
+			os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
             workbook.write(os); 
-            os.flush();
-            os.close();
+
         }
         catch (Exception e) {
-        	
-        	
             logger.error(template + "生成失败！");
             throw new RuntimeException(e);
         }finally{
@@ -395,9 +396,16 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
             catch (Exception e) {
             	logger.error("workbook关闭失败！");
             }
+			try {
+				if (null != os) {
+					os.flush();
+					os.close();
+				}
+			}catch (Exception e){
+				e.printStackTrace();
+			}
         }
         return depositfile;
-		
 	}
 
 	

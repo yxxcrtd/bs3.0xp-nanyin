@@ -526,7 +526,7 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 			container.setEntityObj(msgcontainerList);
 		}catch(Exception e){
 			container.setCorrectFlag(false);
-			container.setErrorMsg(e.toString());
+			container.setErrorMsg("上传并读取接口文件异常");//e.toString());
 			logger.error("Error", e);
 			return container;
 		}

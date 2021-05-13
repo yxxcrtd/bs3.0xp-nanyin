@@ -8,11 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
 package com.joyintech.tams.invest.portfolio.ptlcashflowgapanalysis.service;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -300,6 +296,7 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
         String termname = data.get("termname").toString();
         String flieName =  termname + ".xlsx";
         File depositfile = null;
+        OutputStream os = null;
         try {
             // 关联模板
             XLSTransformer transformer = new XLSTransformer();  
@@ -315,13 +312,20 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
             InputStream stream  = CommonExportService.class.getResourceAsStream(
                     "/tpl/" + templateFile);
             Workbook workbook = transformer.transformXLS(stream, data);
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+            os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
             workbook.write(os); 
-            os.flush();
-            os.close();
         }
         catch (Exception e) { 
             throw new RuntimeException(e);
+        }finally {
+            if(os != null){
+                try {
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return depositfile;
     } 

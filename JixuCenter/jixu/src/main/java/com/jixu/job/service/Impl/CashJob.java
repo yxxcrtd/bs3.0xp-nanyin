@@ -131,9 +131,11 @@ public class CashJob extends JNLJob {
 									continue;
 								}else{
 									//业务明细类型
-									voucherDetails.setBusiDetailType(bbci.getAcctType());
-									//业务明细代码
-									voucherDetails.setBusiID(bbci.getAcctNo());
+									if (bbci != null){
+										voucherDetails.setBusiDetailType(bbci.getAcctType());
+										//业务明细代码
+										voucherDetails.setBusiID(bbci.getAcctNo());
+									}
 								}
 							}
 							//表外账业务明细代码

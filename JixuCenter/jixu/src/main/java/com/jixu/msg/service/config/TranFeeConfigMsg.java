@@ -98,11 +98,13 @@ public class TranFeeConfigMsg extends MsgExecuteService{
 				BeanUtils.copyProperties(feeDef, oldFeeDef, "id");
 				
 				tranFeeDefDao.updateEntity(oldFeeDef);
-				msgcontainer.setObjID(oldFeeDef.getId());
+
 				msgcontainer.setEntityObj(oldFeeDef);
-				
-				tranFeeTypeMapDao.deleteTranFeeDefMapByFeeID(oldFeeDef.getId());
-				
+				if (oldFeeDef != null){
+					msgcontainer.setObjID(oldFeeDef.getId());
+					tranFeeTypeMapDao.deleteTranFeeDefMapByFeeID(oldFeeDef.getId());
+				}
+
 				for(Object obj:tranTypesList){
 			    	String assettype=obj.toString();
 			    	

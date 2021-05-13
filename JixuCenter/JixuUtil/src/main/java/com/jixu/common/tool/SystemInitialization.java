@@ -133,77 +133,78 @@ public class SystemInitialization implements CommandLineRunner{
 				break;
 			}
 		}
-		Iterator<Entry<RequestMappingInfo, HandlerMethod>> handleIter=handleMap.getHandlerMethods().entrySet().iterator();
-		String roleURL="";
-		
-		if(!JixuUserUtil.jixuUserSystemFlag()) {
-			//如果非几许用户登陆，放开页面的所有访问权限
-			while(handleIter.hasNext()){
-				Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
-				RequestMappingInfo key=entry.getKey();
-				roleURL=key.getPatternsCondition().toString().replace("[", "");
-				roleURL=roleURL.replace("]", "");
-				if(key.getName()!=null){
-					roleTypeNameHM.put(roleURL, key.getName());
+		if (handleMap != null){
+			Iterator<Entry<RequestMappingInfo, HandlerMethod>> handleIter=handleMap.getHandlerMethods().entrySet().iterator();
+			String roleURL="";
+
+			if(!JixuUserUtil.jixuUserSystemFlag()) {
+				//如果非几许用户登陆，放开页面的所有访问权限
+				while(handleIter.hasNext()){
+					Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
+					RequestMappingInfo key=entry.getKey();
+					roleURL=key.getPatternsCondition().toString().replace("[", "");
+					roleURL=roleURL.replace("]", "");
+					if(key.getName()!=null){
+						roleTypeNameHM.put(roleURL, key.getName());
+					}
 				}
-			}
-		}else {
-			List<RoleType> roleList=roleTypeDao.loadRoleType();
-			boolean roleExist=false;
-			
-			List<String> roleURLList=new ArrayList<String>();
-			while(handleIter.hasNext()){
-				Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
-				RequestMappingInfo key=entry.getKey();
-				roleURL=key.getPatternsCondition().toString().replace("[", "");
-				roleURL=roleURL.replace("]", "");
-				if(key.getName()!=null){
-					roleExist=false;
-					//查找是否存在该权限
-					for(RoleType role:roleList){
-						if(roleURL.equals(role.getRoleURLPath())){
-							//如果配置在数据库中存在，则查看是否需要更新数据  样例:{xxx.do:显示页面}
-							roleExist=true;
-							if(!key.getName().equals(role.getRoleName())){
-								role.setRoleName(key.getName());
-								roleTypeDao.updateEntityBean(role);
+			}else {
+				List<RoleType> roleList=roleTypeDao.loadRoleType();
+				boolean roleExist=false;
+
+				List<String> roleURLList=new ArrayList<String>();
+				while(handleIter.hasNext()){
+					Entry<RequestMappingInfo, HandlerMethod> entry=handleIter.next();
+					RequestMappingInfo key=entry.getKey();
+					roleURL=key.getPatternsCondition().toString().replace("[", "");
+					roleURL=roleURL.replace("]", "");
+					if(key.getName()!=null){
+						roleExist=false;
+						//查找是否存在该权限
+						for(RoleType role:roleList){
+							if(roleURL.equals(role.getRoleURLPath())){
+								//如果配置在数据库中存在，则查看是否需要更新数据  样例:{xxx.do:显示页面}
+								roleExist=true;
+								if(!key.getName().equals(role.getRoleName())){
+									role.setRoleName(key.getName());
+									roleTypeDao.updateEntityBean(role);
+								}
+								roleTypeHM.put(role.getRoleID(), role.getRoleName());
+								break;
 							}
-							roleTypeHM.put(role.getRoleID(), role.getRoleName());
-							break;
 						}
+
+						if(!roleExist){
+							//该权限在数据库不存在
+							RoleType role=new RoleType();
+							role.setRoleName(key.getName());
+							role.setRoleURLPath(roleURL);
+							roleTypeDao.saveEntityBean(role);
+							roleTypeHM.put(role.getRoleID(), role.getRoleName());
+						}
+						roleURLList.add(roleURL);
+						roleTypeNameHM.put(roleURL, key.getName());
+					}else{
+						ignoreRolesHM.put(roleURL, roleURL);
 					}
-					
-					if(!roleExist){
-						//该权限在数据库不存在
-						RoleType role=new RoleType();
-						role.setRoleName(key.getName());
-						role.setRoleURLPath(roleURL);
-						roleTypeDao.saveEntityBean(role);
-						roleTypeHM.put(role.getRoleID(), role.getRoleName());
+				}
+
+				//某条权限配置在数据库中存在，但controller中不存在的权限,则删除数据库中该权限
+				boolean urlExist=false;
+				for(RoleType role:roleList){
+					urlExist=false;
+					if(roleURLList.contains(role.getRoleURLPath())){
+						urlExist=true;
+						break;
 					}
-					
-					
-					roleURLList.add(roleURL);
-					roleTypeNameHM.put(roleURL, key.getName());
-				}else{
-					ignoreRolesHM.put(roleURL, roleURL);
-				}
-			}
-			
-			//某条权限配置在数据库中存在，但controller中不存在的权限,则删除数据库中该权限
-			boolean urlExist=false;
-			for(RoleType role:roleList){
-				urlExist=false;
-				if(roleURLList.contains(role.getRoleURLPath())){
-					urlExist=true;
-					break;
-				}
-				if(!urlExist){
-					roleTypeRoleGroupMapDao.deleteRoleGroupMap(role.getRoleID());
-					roleTypeDao.deleteEntity(role);
+					if(!urlExist){
+						roleTypeRoleGroupMapDao.deleteRoleGroupMap(role.getRoleID());
+						roleTypeDao.deleteEntity(role);
+					}
 				}
 			}
 		}
+
 	}
 	
 	

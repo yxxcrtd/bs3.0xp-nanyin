@@ -161,17 +161,23 @@ public class FTPTool {
 		// 单个文件流上传
 		for (File file : files) {
 			if (file.isFile()) {
-				FileInputStream fis = new FileInputStream(file);
-				String fileName = new String(file.getName().getBytes(
-						ENCODE_UTF8), ENCODE_ISO);
-				String remoteFile = remote + file.getName();
-				boolean flag4 = ftp.storeFile(fileName, fis);
-				if (flag4) {
-					logger.info("上传文件成功：" + remoteFile);
-				} else {
-					logger.error("上传文件失败：" + remoteFile);
+				FileInputStream fis = null;
+				try{
+					new FileInputStream(file);
+					String fileName = new String(file.getName().getBytes(
+							ENCODE_UTF8), ENCODE_ISO);
+					String remoteFile = remote + file.getName();
+					boolean flag4 = ftp.storeFile(fileName, fis);
+					if (flag4) {
+						logger.info("上传文件成功：" + remoteFile);
+					} else {
+						logger.error("上传文件失败：" + remoteFile);
+					}
+				}finally {
+					if(fis != null){
+						fis.close();
+					}
 				}
-				fis.close();
 			}
 		}
         logger.info("文件上传成功");
@@ -327,14 +333,15 @@ public class FTPTool {
 				ftp.changeToParentDirectory();
 				
 			}
-			fos.close();
 		} catch (SocketException e) {
 			e.printStackTrace();
-			
 		} catch (IOException e) {
 			e.printStackTrace();
-			
-		} 
+		} finally {
+			if(fos != null) {
+				fos.close();
+			}
+		}
 	}
  
 // 判断是否是目录

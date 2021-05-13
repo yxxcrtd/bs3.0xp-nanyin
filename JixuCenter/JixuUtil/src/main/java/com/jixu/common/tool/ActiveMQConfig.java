@@ -13,10 +13,10 @@ import org.springframework.jms.core.JmsTemplate;
 @ConfigurationProperties(prefix = "jixu.activeMQ")
 @EnableJms
 public class ActiveMQConfig {
-    private String serverURL="localhost";
-    private String serverPort="61616";
-    private String username="admin";
-    private String password="admin";
+    private String serverURL;
+    private String serverPort;
+    private String username;
+    private String password;
     private int maxCon=100;
     private String defaultDestinationName="jixuqueue";
     

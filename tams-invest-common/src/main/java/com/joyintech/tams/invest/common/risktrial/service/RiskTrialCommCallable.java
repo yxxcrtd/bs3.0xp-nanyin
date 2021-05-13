@@ -131,7 +131,7 @@ public class RiskTrialCommCallable {
 								(PluginClassDao) SpringContextUtil.getBean(RiskUtil.COMMON_PLUGIN_REFLECT),inputDto);
 						Object paramValue = plugclass.getParamterValue();// 获取每个参数实际值
 						if (paramValue == null) {
-							if(rskTaskDto.getIndType().indexOf(RiskUtil.LIMIT)!=-1){
+							if(rskTaskDto.getIndType().indexOf(RiskUtil.LIMIT)!=-1 && params != null){
 								params.put(paramName,new BigDecimal(0));
 							}
 							else{

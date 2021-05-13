@@ -471,6 +471,13 @@ public class Chb3CnBondUpInterfService extends InterfService {
                     this.handleMonitorInfoAfterException(monitorInfoDto, e);
                 }
                 finally {
+                    if (in != null){
+                        try {
+                            in.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
 //                    try {
                         // 删除导入用的临时的数据
 //                        investorsHoldInfo001Service.deleteImportTmpData();
@@ -668,7 +675,36 @@ public class Chb3CnBondUpInterfService extends InterfService {
 				} catch (Exception e) {
 //					e.printStackTrace();
 		            logger.error(e.getMessage(),e);
-				}
+				}finally {
+    			    if(in != null){
+                        try {
+                            in.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(bfinput != null){
+                        try {
+                            bfinput.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(inreader != null){
+                        try {
+                            inreader.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(reader != null){
+                        try {
+                            reader.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
     		}
     		//关闭流
     		if(in!=null){

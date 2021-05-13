@@ -92,113 +92,115 @@ public class TranJobSwapInterestMaturity extends TranJobBasic {
 			int ingcNum=0;	//轧差科目总账栏
 			int outNum=0;
 			int outgcNum=0;	//支轧差总账栏
-			double ysyflx=clo.getAccrued();	//获取基准头寸日常计提的利息
-			double ysyfunit=clo.getAmount();	//获取基准头寸的数量
-			double cjje=cashobj.getCash();
-			if(tranbasic.isSetAllIntatmatFlag() && cashobj.getDbcr().equals(DBCR.DEBIT)
-				|| tranbasic.isSetAllIntatmatFlag2() && cashobj.getDbcr().equals(DBCR.CREDIT)){
-				//判断多空双方分别是否需要结清利息
-				cjje=ysyflx*tranbasic.getAmount()/ysyfunit;	//冲减金额
-			}
-			double gcje=RoundUtil.roundMoney2Dec(cashobj.getCash()-cjje);
-			double gcjeFunc=RoundUtil.roundMoney2Dec(gcje*cashobj.getAsofdayRate());
-			
-			if(cashobj.getPostType()==PostType.Income){
-				outNum=GLACCT.ACCRUED_INT_EXP_PAY_SHORT;
-				outgcNum=GLACCT.ACCRUED_INT_EXP_SHORT;
-				inNum=GLACCT.ACCRUED_INC;
-				ingcNum=GLACCT.INC_ACCRUAL;
-				
-				String cashglcode=bkcashacct.getCashglcode();
-				checkCashAcctValiable(cashglcode, bkcashacct.getBankdesc(), BankAccountType.Cash_Account);
-				
-				if (cashobj.getDbcr().equals(DBCR.DEBIT)) { //收入
-					jobCom.saveZJZHGL(cashCooa,
-							portfolio,
-							bkcashacct,
-							DBCR.DEBIT, 
-							RoundUtil.roundMoney2Dec(cashobj.getCash()*cashobj.getAsofdayRate()), 
-							cashobj.getCash(), 
-							cashglcode,
-							bkcashacct.getFxcurrency());
-					
-					jobCom.saveSecGL(cashCooa,
-							sec.getId(),
-							DBCR.CREDIT, 
-							RoundUtil.roundMoney2Dec(cjje*cashobj.getAsofdayRate()), 
-							cjje, 
-							jobCom.loadGLAcctnum(chartnum, glgroup,inNum));
-							//银行存款已实现汇兑
-					
-					//轧差金额
-					jobCom.saveSecGL(cashCooa,
-							sec.getId(),
-							DBCR.CREDIT, 
-							gcjeFunc, 
-							gcje, 
-							jobCom.loadGLAcctnum(chartnum, glgroup,ingcNum));
-					
-					if (gainloss > 0) {
-						jobCom.saveSecGL(cashCooa,
-								sec.getId(),
-								DBCR.CREDIT, 
-								RoundUtil.roundMoney2Dec(gainloss), 
-								0, 
-								jobCom.loadGLAcctnum(chartnum, glgroup,GLACCT.FX_GAIN_CAPITAL_UNREAL));
-					} else if(gainloss<0){
-						jobCom.saveSecGL(cashCooa,
-								sec.getId(),
-								DBCR.DEBIT, 
-								RoundUtil.roundMoney2Dec(Math.abs(gainloss)), 
-								0, 
-								jobCom.loadGLAcctnum(chartnum, glgroup,GLACCT.FX_LOSS_CAPITAL_UNREAL));
-					}
-					cashCooa.setTableID("1811");
-					
-				} else if (cashobj.getDbcr().equals(DBCR.CREDIT)) { //支出	
-					jobCom.saveSecGL(cashCooa,
-							sec.getId(),
-							DBCR.DEBIT, 
-							RoundUtil.roundMoney2Dec(cjje*cashobj.getAsofdayRate()), 
-							cjje, 
-							jobCom.loadGLAcctnum(chartnum, glgroup,outNum));
-					
-					jobCom.saveZJZHGL(cashCooa,
-							portfolio,
-							bkcashacct,
-							DBCR.CREDIT, 
-							RoundUtil.roundMoney2Dec(cashobj.getCash() * cashobj.getBkavgrate()), 
-							cashobj.getCash(), cashglcode,bkcashacct.getFxcurrency());
-					//轧差金额
-					jobCom.saveSecGL(cashCooa,
-							sec.getId(),
-							DBCR.DEBIT, 
-							gcjeFunc, 
-							gcje, 
-							jobCom.loadGLAcctnum(chartnum, glgroup,outgcNum));
-					
-					//清算款已实现汇兑
-					if (gainloss < 0) {
-						jobCom.saveSecGL(cashCooa,
-								sec.getId(),
-								DBCR.CREDIT, 
-								RoundUtil.roundMoney2Dec(Math.abs(gainloss)), 
-								0, 
-								jobCom.loadGLAcctnum(chartnum, glgroup,GLACCT.FX_LOSS_CAPITAL_UNREAL));
-					} else if(gainloss>0){
-						jobCom.saveSecGL(cashCooa,
-								sec.getId(),
-								DBCR.DEBIT, 
-								RoundUtil.roundMoney2Dec(gainloss), 
-								0, 
-								jobCom.loadGLAcctnum(chartnum, glgroup,GLACCT.FX_GAIN_CAPITAL_UNREAL));
-					}
-					cashCooa.setTableID("1812");
+			if (clo != null){
+				double ysyflx=clo.getAccrued();	//获取基准头寸日常计提的利息
+				double ysyfunit=clo.getAmount();	//获取基准头寸的数量
+				double cjje=cashobj.getCash();
+				if(tranbasic.isSetAllIntatmatFlag() && cashobj.getDbcr().equals(DBCR.DEBIT)
+						|| tranbasic.isSetAllIntatmatFlag2() && cashobj.getDbcr().equals(DBCR.CREDIT)){
+					//判断多空双方分别是否需要结清利息
+					cjje=ysyflx*tranbasic.getAmount()/ysyfunit;	//冲减金额
 				}
-				jobCom.genVoucherDetails(cashCooa, portfolio, cashobj);
-				voucher=jobCom.genVoucher(ledgerDate, portfolio, JournalTypes.CASH, tranbasic.getId(), desc);
-				cashCooa.setVoucher(voucher);
-				cooaList.add(cashCooa);
+				double gcje=RoundUtil.roundMoney2Dec(cashobj.getCash()-cjje);
+				double gcjeFunc=RoundUtil.roundMoney2Dec(gcje*cashobj.getAsofdayRate());
+
+				if(cashobj.getPostType()==PostType.Income){
+					outNum=GLACCT.ACCRUED_INT_EXP_PAY_SHORT;
+					outgcNum=GLACCT.ACCRUED_INT_EXP_SHORT;
+					inNum=GLACCT.ACCRUED_INC;
+					ingcNum=GLACCT.INC_ACCRUAL;
+
+					String cashglcode=bkcashacct.getCashglcode();
+					checkCashAcctValiable(cashglcode, bkcashacct.getBankdesc(), BankAccountType.Cash_Account);
+
+					if (cashobj.getDbcr().equals(DBCR.DEBIT)) { //收入
+						jobCom.saveZJZHGL(cashCooa,
+								portfolio,
+								bkcashacct,
+								DBCR.DEBIT,
+								RoundUtil.roundMoney2Dec(cashobj.getCash()*cashobj.getAsofdayRate()),
+								cashobj.getCash(),
+								cashglcode,
+								bkcashacct.getFxcurrency());
+
+						jobCom.saveSecGL(cashCooa,
+								sec.getId(),
+								DBCR.CREDIT,
+								RoundUtil.roundMoney2Dec(cjje*cashobj.getAsofdayRate()),
+								cjje,
+								jobCom.loadGLAcctnum(chartnum, glgroup,inNum));
+						//银行存款已实现汇兑
+
+						//轧差金额
+						jobCom.saveSecGL(cashCooa,
+								sec.getId(),
+								DBCR.CREDIT,
+								gcjeFunc,
+								gcje,
+								jobCom.loadGLAcctnum(chartnum, glgroup,ingcNum));
+
+						if (gainloss > 0) {
+							jobCom.saveSecGL(cashCooa,
+									sec.getId(),
+									DBCR.CREDIT,
+									RoundUtil.roundMoney2Dec(gainloss),
+									0,
+									jobCom.loadGLAcctnum(chartnum, glgroup,GLACCT.FX_GAIN_CAPITAL_UNREAL));
+						} else if(gainloss<0){
+							jobCom.saveSecGL(cashCooa,
+									sec.getId(),
+									DBCR.DEBIT,
+									RoundUtil.roundMoney2Dec(Math.abs(gainloss)),
+									0,
+									jobCom.loadGLAcctnum(chartnum, glgroup,GLACCT.FX_LOSS_CAPITAL_UNREAL));
+						}
+						cashCooa.setTableID("1811");
+
+					} else if (cashobj.getDbcr().equals(DBCR.CREDIT)) { //支出
+						jobCom.saveSecGL(cashCooa,
+								sec.getId(),
+								DBCR.DEBIT,
+								RoundUtil.roundMoney2Dec(cjje*cashobj.getAsofdayRate()),
+								cjje,
+								jobCom.loadGLAcctnum(chartnum, glgroup,outNum));
+
+						jobCom.saveZJZHGL(cashCooa,
+								portfolio,
+								bkcashacct,
+								DBCR.CREDIT,
+								RoundUtil.roundMoney2Dec(cashobj.getCash() * cashobj.getBkavgrate()),
+								cashobj.getCash(), cashglcode,bkcashacct.getFxcurrency());
+						//轧差金额
+						jobCom.saveSecGL(cashCooa,
+								sec.getId(),
+								DBCR.DEBIT,
+								gcjeFunc,
+								gcje,
+								jobCom.loadGLAcctnum(chartnum, glgroup,outgcNum));
+
+						//清算款已实现汇兑
+						if (gainloss < 0) {
+							jobCom.saveSecGL(cashCooa,
+									sec.getId(),
+									DBCR.CREDIT,
+									RoundUtil.roundMoney2Dec(Math.abs(gainloss)),
+									0,
+									jobCom.loadGLAcctnum(chartnum, glgroup,GLACCT.FX_LOSS_CAPITAL_UNREAL));
+						} else if(gainloss>0){
+							jobCom.saveSecGL(cashCooa,
+									sec.getId(),
+									DBCR.DEBIT,
+									RoundUtil.roundMoney2Dec(gainloss),
+									0,
+									jobCom.loadGLAcctnum(chartnum, glgroup,GLACCT.FX_GAIN_CAPITAL_UNREAL));
+						}
+						cashCooa.setTableID("1812");
+					}
+					jobCom.genVoucherDetails(cashCooa, portfolio, cashobj);
+					voucher=jobCom.genVoucher(ledgerDate, portfolio, JournalTypes.CASH, tranbasic.getId(), desc);
+					cashCooa.setVoucher(voucher);
+					cooaList.add(cashCooa);
+				}
 			}
 		}
 			

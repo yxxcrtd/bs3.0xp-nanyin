@@ -143,7 +143,9 @@ public class EquityBusiDetails002Service extends BaseService{
         }
        
         equityBusiDetails001Mapper.insertIntoImportTable(insertList);
-        bankCode=dto.getRegistBankCode();
+        if(dto != null){
+			bankCode=dto.getRegistBankCode();
+		}
         equityBusiDetails001Service.checkDataInfo(checkList, entitiesList,bankCode,deptCode,orgCode,userName);
         if(!entitiesList.isEmpty()){
             if(entitiesList.get(0).getTempMap()!=null){

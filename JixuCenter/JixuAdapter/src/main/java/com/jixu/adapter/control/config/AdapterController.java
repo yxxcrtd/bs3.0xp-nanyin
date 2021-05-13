@@ -163,12 +163,14 @@ public class AdapterController extends ExceptionControl {
 			 ubconfigList=configService.loadAdapterColConfigList(uds.getBasicDataSetId(), InterfaceConfig.baseType);
 			 ubconfigList.addAll(uconfigList);
 		}
-		for(AdapterColConfig ubcfg:ubconfigList){
-		   HashMap<String, Object> item = new HashMap<String, Object>();
-		   item.put("option", ubcfg.getColname());
-		   item.put("value", ubcfg.getColname());
-		   data.add(item);
-		 }
+		if (ubconfigList != null){
+			for(AdapterColConfig ubcfg:ubconfigList){
+				HashMap<String, Object> item = new HashMap<String, Object>();
+				item.put("option", ubcfg.getColname());
+				item.put("value", ubcfg.getColname());
+				data.add(item);
+			}
+		}
 		 result.put("data", data);
 		 JsonUtil.writeObjToResponse(response, result);
 	}

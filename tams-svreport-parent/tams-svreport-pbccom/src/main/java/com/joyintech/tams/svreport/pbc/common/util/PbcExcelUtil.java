@@ -150,10 +150,16 @@ public class PbcExcelUtil {
      * @throws Exception 
      */ 
     public static void fileWrite(File targetFile,HSSFWorkbook wb) throws Exception{
-        FileOutputStream fileOut = new FileOutputStream(targetFile); 
-        wb.write(fileOut); 
-        fileOut.flush(); 
-        fileOut.close(); 
+        FileOutputStream fileOut =null;
+        try{
+			fileOut = new FileOutputStream(targetFile);
+			wb.write(fileOut);
+		} finally {
+        	if(fileOut != null){
+				fileOut.flush();
+				fileOut.close();
+			}
+		}
     }
     
     /**

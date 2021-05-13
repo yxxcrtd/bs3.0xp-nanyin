@@ -121,7 +121,7 @@ public class TrdBondDurationService extends BaseService {
         this.setParamForFindAllData(param);
         Page<TrdBondDurationDto> result = null;
         //update by wangcheng SHBS-2192 查询条件输入 资金到账日  ，有效状态选择 待处理  报错
-        if(StringUtil.isNotEmpty((String)param.get("tradeDateStart"))&&((statusValid.size()==1) && statusValid.contains("01"))){
+        if(statusValid != null && StringUtil.isNotEmpty((String)param.get("tradeDateStart"))&&((statusValid.size()==1) && statusValid.contains("01"))){
             result = new Page<TrdBondDurationDto>();
         }else{
             result = queryForPageForSelectReturn(page, length, () -> trdBondDurationMapper.findPage(param));

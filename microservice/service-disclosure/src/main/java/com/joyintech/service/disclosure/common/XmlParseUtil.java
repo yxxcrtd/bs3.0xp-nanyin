@@ -127,8 +127,16 @@ public final class XmlParseUtil {
         throws ParserConfigurationException, SAXException, IOException {
         if (null != inStream) {
             SAXHandler handler = new XmlParseUtil.SAXHandler();
-            InputSource is = new InputSource(inStream);
-            SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+			InputSource is = new InputSource(inStream);
+			// ------start---------2020-11-25 周敏 添加
+			SAXParserFactory spf = SAXParserFactory.newInstance();
+			spf.setValidating(false);
+			spf.setFeature("http://xml.org/sax/features/validation", false);
+			spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			spf.setFeature("http://xml.org/sax/features/use-entity-resolver2", false);
+			SAXParser sax = spf.newSAXParser();
+			// ------end---------
+//           SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
             sax.parse(is, handler);
             return handler.getDataList();
         }

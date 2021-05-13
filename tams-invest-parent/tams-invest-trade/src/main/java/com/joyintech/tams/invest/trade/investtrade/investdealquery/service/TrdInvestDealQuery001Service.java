@@ -543,98 +543,122 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	        return this.exportZip(fileList, termname+".zip");
 	    }
 
-	    /**
-	     * 创建file
-	     * @param data
-	     * @param exceltemplate
-	     * @return
-	     * @see
-	     * @since 1.0
-	     */
-	    public File createFile(Map<Object, Object> data, String exceltemplate) {
-	        String termname = data.get("termname").toString();
-	        String flieName =  termname + ".xls";
-	        File depositfile = null;
-	        try {
-	            // 关联模板
-	            XLSTransformer transformer = new XLSTransformer();  
-	            // 传放地址
-	            String depositfilePath = CacheUtil.getSysParam(
-	                GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-	            depositfile = new File(depositfilePath + File.separator + flieName);
-	            if (!depositfile.getParentFile().exists()) {
-	                depositfile.getParentFile().mkdirs();
-	            }
-	            String templateFile = exceltemplate + ".xls";
-	            // 模板输入流
-	            InputStream stream  = CommonExportService.class.getResourceAsStream(
-	                    "/tpl/" + templateFile);
-	            Workbook workbook = transformer.transformXLS(stream, data);
-	            OutputStream os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
-	            workbook.write(os); 
-	            os.flush();
-	            os.close();
-	        }
-	        catch (Exception e) {
-	            logger.info(exceltemplate + "生成失败！");
-	            throw new RuntimeException(e);
-	        }
-	        return depositfile;
-	    }
-	    
-	    /**
-	     * 单笔导出
-	     * 
-	     * @param list 需要导出的列
-	     * @param fileName 文件名
-	     * @return 文件
-	     * @see
-	     * @since 1.0
-	     */ 
-	    @SuppressWarnings("all")
-	    public ResponseEntity<byte[]> exportZip(List<File> files, String fileName) {
-	        String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-	        File tmpDir = new File(
-	            exportFilePath + File.separator + fileName.substring(0, fileName.length()-4));
-	        if (tmpDir.exists()) {
-	            tmpDir.delete();
-	        }
-	        tmpDir.mkdirs();
-	        try {
-	            File zipFile = new File(exportFilePath + File.separator + fileName);
-	            ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-	            InputStream input = null; 
-	            if (files != null && !files.isEmpty()) {
-	                for (File realFile : files) {
-	                    if (realFile.exists()) { 
-	                        input = new FileInputStream(realFile);
-	                        zipOut.putNextEntry(
-	                            new ZipEntry(tmpDir.getName() + File.separator + realFile.getName()));
-	                        int tmp = 0;
-	                        while ((tmp = input.read()) != -1) {
-	                            zipOut.write(tmp);
-	                        }
-	                        input.close();
-	                    }
-	                }
-	            }
-	            zipOut.flush();
-	            zipOut.close();
-	            HttpHeaders headers = new HttpHeaders();
-	            fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");// 为了解决中文名称乱码问题
-	            headers.setContentDispositionFormData("attachment", fileName);
-	            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-	            ResponseEntity<byte[]> responseEntity = new ResponseEntity<byte[]>(
-	                FileUtils.readFileToByteArray(zipFile), headers, HttpStatus.CREATED);
-	            zipFile.delete();
-	            return responseEntity;
-	        }
-	        catch (Exception e) {
-	            logger.info(fileName + "zip生成失败！");
-	            e.printStackTrace();
-	        }
-	        return null;
-	    }
+	/**
+	 * 创建file
+	 * @param data
+	 * @param exceltemplate
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public File createFile(Map<Object, Object> data, String exceltemplate) {
+		String termname = data.get("termname").toString();
+		String flieName =  termname + ".xls";
+		File depositfile = null;
+		OutputStream os = null;
+		InputStream stream = null;
+		try {
+			// 关联模板
+			XLSTransformer transformer = new XLSTransformer();
+			// 传放地址
+			String depositfilePath = CacheUtil.getSysParam(
+					GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+			depositfile = new File(depositfilePath + File.separator + flieName);
+			if (!depositfile.getParentFile().exists()) {
+				depositfile.getParentFile().mkdirs();
+			}
+			String templateFile = exceltemplate + ".xls";
+			// 模板输入流
+			stream  = CommonExportService.class.getResourceAsStream(
+					"/tpl/" + templateFile);
+			Workbook workbook = transformer.transformXLS(stream, data);
+			os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+			workbook.write(os);
+		}
+		catch (Exception e) {
+			logger.info(exceltemplate + "生成失败！");
+			throw new RuntimeException(e);
+		}finally {
+			if(os != null){
+				try {
+					os.flush();
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(stream != null){
+				try {
+					stream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return depositfile;
+	}
+
+	/**
+	 * 单笔导出
+	 *
+	 * @param list 需要导出的列
+	 * @param fileName 文件名
+	 * @return 文件
+	 * @see
+	 * @since 1.0
+	 */
+	@SuppressWarnings("all")
+	public ResponseEntity<byte[]> exportZip(List<File> files, String fileName) {
+		String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+		File tmpDir = new File(
+				exportFilePath + File.separator + fileName.substring(0, fileName.length()-4));
+		if (tmpDir.exists()) {
+			tmpDir.delete();
+		}
+		tmpDir.mkdirs();
+		ZipOutputStream zipOut= null;
+		try {
+			File zipFile = new File(exportFilePath + File.separator + fileName);
+			zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+			InputStream input = null;
+			if (files != null && !files.isEmpty()) {
+				for (File realFile : files) {
+					if (realFile.exists()) {
+						input = new FileInputStream(realFile);
+						zipOut.putNextEntry(
+								new ZipEntry(tmpDir.getName() + File.separator + realFile.getName()));
+						int tmp = 0;
+						while ((tmp = input.read()) != -1) {
+							zipOut.write(tmp);
+						}
+						input.close();
+					}
+				}
+			}
+			HttpHeaders headers = new HttpHeaders();
+			fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");// 为了解决中文名称乱码问题
+			headers.setContentDispositionFormData("attachment", fileName);
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			ResponseEntity<byte[]> responseEntity = new ResponseEntity<byte[]>(
+					FileUtils.readFileToByteArray(zipFile), headers, HttpStatus.CREATED);
+			zipFile.delete();
+			return responseEntity;
+		}
+		catch (Exception e) {
+			logger.info(fileName + "zip生成失败！");
+			e.printStackTrace();
+		}finally {
+			if (zipOut != null){
+				try {
+					zipOut.flush();
+					zipOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
 	    
 	    /**
 	     * check是否为转仓交易

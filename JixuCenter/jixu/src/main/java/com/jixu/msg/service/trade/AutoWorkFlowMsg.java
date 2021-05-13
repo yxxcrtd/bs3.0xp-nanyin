@@ -157,7 +157,10 @@ public class AutoWorkFlowMsg extends MsgExecuteService{
 					}
 					
 					// 打印做账结果到interfacelog
-					List<ResultContainer> containerList=(List<ResultContainer>)mainContainer.getEntityObj();
+					List<ResultContainer> containerList= null;
+					if (mainContainer != null){
+						containerList = (List<ResultContainer>)mainContainer.getEntityObj();
+					}
 					if(containerList!=null){
 						for(ResultContainer container:containerList){
 							PortfolioHdr portfolio=(PortfolioHdr)container.getEntityObj();
@@ -237,7 +240,10 @@ public class AutoWorkFlowMsg extends MsgExecuteService{
 					}
 					
 					// 输出执行结果到interfacelog
-					List<ResultContainer> containerList=(List<ResultContainer>)mainContainer.getEntityObj();
+					List<ResultContainer> containerList= null;
+					if (mainContainer != null){
+						containerList = (List<ResultContainer>)mainContainer.getEntityObj();
+					}
 					if(containerList!=null){
 						for(ResultContainer container:containerList){
 							PortfolioHdr portfolio=(PortfolioHdr)container.getEntityObj();

@@ -271,24 +271,27 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         File templeteFile = new File(this.buildTempleteFilePath(tempFilePath));
         reportConfig.setTempleteFile(fileName + fileType);
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
-        } else {
-            stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
-        }
-
-        if (StringUtil.equals(fileType, ".xls")) {
-            wb = new HSSFWorkbook((InputStream)stream);
-        } else {
-            if (!StringUtil.equals(fileType, ".xlsx")) {
-                ((InputStream)stream).close();
-                throw new BusinessException("不是一个有效的Excel文件");
+        try {
+            if (templeteFile.exists()) {
+                stream = new FileInputStream(templeteFile);
+            } else {
+                stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
             }
-
-            wb = new XSSFWorkbook((InputStream)stream);
+            if (StringUtil.equals(fileType, ".xls")) {
+                wb = new HSSFWorkbook((InputStream)stream);
+            } else {
+                if (!StringUtil.equals(fileType, ".xlsx")) {
+                    ((InputStream)stream).close();
+                    throw new BusinessException("不是一个有效的Excel文件");
+                }
+                wb = new XSSFWorkbook((InputStream)stream);
+            }
+            return (Workbook)wb;
+        }finally {
+            if(stream != null){
+                stream.close();
+            }
         }
-
-        return (Workbook)wb;
     }
 
     private File makeSingleFile(Workbook wb, JoyinBookConfig reportConfig, String pageId, String fileType, List<?> contents, LongAdder current, long total, int sheetMaxRowCount) throws IOException {
@@ -377,9 +380,16 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-
-        swb.write(new FileOutputStream(file));
-        return file;
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            swb.write(fileOutputStream);
+            return file;
+        }finally {
+            if(fileOutputStream != null){
+                fileOutputStream.close();
+            }
+        }
     }
 
     private void dealDataList(List<EquityBusiInfoRegist001Dto> list) {

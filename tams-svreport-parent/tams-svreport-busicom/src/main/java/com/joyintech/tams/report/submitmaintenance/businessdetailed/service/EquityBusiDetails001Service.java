@@ -2371,24 +2371,29 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         File templeteFile = new File(this.buildTempleteFilePath(tempFilePath));
         reportConfig.setTempleteFile(fileName + fileType);
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
-        } else {
-            stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
-        }
-
-        if (StringUtil.equals(fileType, ".xls")) {
-            wb = new HSSFWorkbook((InputStream)stream);
-        } else {
-            if (!StringUtil.equals(fileType, ".xlsx")) {
-                ((InputStream)stream).close();
-                throw new BusinessException("不是一个有效的Excel文件");
+        try{
+            if (templeteFile.exists()) {
+                stream = new FileInputStream(templeteFile);
+            } else {
+                stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
             }
 
-            wb = new XSSFWorkbook((InputStream)stream);
-        }
+            if (StringUtil.equals(fileType, ".xls")) {
+                wb = new HSSFWorkbook((InputStream)stream);
+            } else {
+                if (!StringUtil.equals(fileType, ".xlsx")) {
+                    ((InputStream)stream).close();
+                    throw new BusinessException("不是一个有效的Excel文件");
+                }
 
-        return (Workbook)wb;
+                wb = new XSSFWorkbook((InputStream)stream);
+            }
+            return (Workbook)wb;
+        }finally {
+            if(stream != null){
+                stream.close();
+            }
+        }
     }
 
     private File makeSingleFile(Workbook wb, JoyinBookConfig reportConfig, String pageId, String fileType, List<?> contents, LongAdder current, long total, int sheetMaxRowCount) throws IOException {
@@ -2470,9 +2475,16 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-
-        wb.write(new FileOutputStream(file));
-        return file;
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            wb.write(fileOutputStream);
+            return file;
+        }finally {
+            if(fileOutputStream != null){
+                fileOutputStream.close();
+            }
+        }
     }
 
     private List<EquiteBusiDetails001Dto> convertMapToEntity(List<Map<String,String>> listData,List<EquiteBusiDetails001Dto> entities){

@@ -52,7 +52,7 @@ public class TrdSecOverdueDuration003Controller extends BaseController {
         String pageModel = getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY);
         String type8 = getParam("finprodType2");
         Map<String,Object> map = RequestUtil.getPageParam();
-        TrdSecOverdueDuration003Dto entity = null;
+        TrdSecOverdueDuration003Dto entity = new TrdSecOverdueDuration003Dto();
 //        流程中
         if(StringUtil.isNotEmpty(workflowId)){
             entity = trdSecOverdueDuration003Service.getBussinessEntityByWorkflowId(workflowId);

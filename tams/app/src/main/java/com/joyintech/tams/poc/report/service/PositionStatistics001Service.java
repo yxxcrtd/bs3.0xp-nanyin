@@ -102,6 +102,7 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
      String flieName = exceltemplate+".xlsx";
      File depositfile = null;
      FileOutputStream fos=null;
+     InputStream fis = null;
      try{          
      // 关联模板
      XLSTransformer transformer = new XLSTransformer();
@@ -121,7 +122,7 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
      File srcFile = new File(template);
      // 目标文件
      File destFile = new File(temp);
-     InputStream fis = null;
+
      if (srcFile.exists()) {
          fis = new FileInputStream(srcFile);
      } else {
@@ -145,6 +146,13 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
          if(fos !=null){
              try {
                  fos.close();
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+         }
+         if(fis !=null){
+             try {
+                 fis.close();
              } catch (IOException e) {
                  e.printStackTrace();
              }

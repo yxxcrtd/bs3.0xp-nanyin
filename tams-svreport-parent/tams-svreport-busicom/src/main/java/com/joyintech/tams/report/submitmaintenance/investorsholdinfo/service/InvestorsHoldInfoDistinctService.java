@@ -208,7 +208,9 @@ public class InvestorsHoldInfoDistinctService {
 					 ChbInvestholdInfoCheckDto record=new ChbInvestholdInfoCheckDto();
 					 record.setRegistBankCode(info.getRegistBankCode());
 					 record.setIndentifyMark(info.getIndentifyMark());
-					 record.setHoldDate(qmodel.getHoldDate());
+					 if (qmodel != null){
+						 record.setHoldDate(qmodel.getHoldDate());
+					 }
 					 List<ChbInvestholdInfoCheckDto> temList=chbInvestholdInfoCheckDtoMapper.selectBymodel(record);
 					 if(temList==null||temList.isEmpty()){//持有信息中没有数据 再去维护表找是否有数据 (排除已报送)
 						List<ChbInvestholdInfoCheckDto> infoList= chbInvestholdInfoCheckDtoMapper.selectBymodelFromFormer(record);

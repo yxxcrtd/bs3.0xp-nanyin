@@ -11,6 +11,8 @@ import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.Session;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,9 @@ import com.jixu.common.type.MsgFields;
 @Service("ActiveMQProducer")
 public class ActiveMQSender {
 	
-	@Resource(name="activeMqJmsTemplate")
+//	@Resource(name="activeMqJmsTemplate")
+	@Autowired(required = false)
+	@Qualifier("activeMqJmsTemplate")
 	private JmsTemplate activeMqJmsTemplate;
 	
 	@Resource(name="mQFactory")

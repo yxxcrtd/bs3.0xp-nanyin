@@ -70,7 +70,7 @@ public class RskEvent003Controller extends BaseController {
 				// 获取风险事件关联指标参数
 				rskEvent003Dto = rskEvent003Service.selectEventRelParaByCode(eventCode)==null?new RskEvent003Dto():rskEvent003Service.selectEventRelParaByCode(eventCode);
 			}
-			if(StringUtil.isNotEmpty(this.getParam("eventCode"))){
+			if(StringUtil.isNotEmpty(this.getParam("eventCode")) && rskEvent003Dto != null){
 				rskEvent003Dto.setEventCode(this.getParam("eventCode"));
 				rskEvent003Dto.setEventName(this.getParam("eventName"));
 			}

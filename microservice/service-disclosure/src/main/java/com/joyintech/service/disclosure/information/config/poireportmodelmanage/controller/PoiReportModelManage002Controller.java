@@ -204,9 +204,15 @@ public class PoiReportModelManage002Controller extends BaseController {
 			  	e.printStackTrace();
 			  }
 			  finally {
-			  	fos.close();
-			  	bis.close();
-			  	bos.close();
+			  	if (fos != null){
+					fos.close();
+				}
+			  	if (bis != null){
+					bis.close();
+			  	}
+			    if (bos != null){
+					bos.close();
+			    }
 			  }
 
 				 

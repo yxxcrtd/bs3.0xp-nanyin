@@ -137,8 +137,10 @@ public class TrdFundDuration002Controller extends BaseController {
                 dto.setFinAssetIntInfoList(trdFundDuration001Service.findAssetIntInfo(pageParam));
             }
 //            处理类型及交易员
-            type=dto==null?null:dto.getType();
-            trader = dto.getTrader();
+            if (dto != null){
+                type=dto==null?null:dto.getType();
+                trader = dto.getTrader();
+            }
         }
 //        有效及撤销处理
         else if(StringUtil.isNotEmpty(statusValid)){

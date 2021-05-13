@@ -140,25 +140,31 @@ public class PtlAnalyzeAfterInvest003Service extends CommonExportService<PtlAnal
         reportConfig.setTempleteFile(fileName + fileType);
         // 模板输入流
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
+        try {
+            if (templeteFile.exists()) {
+                stream = new FileInputStream(templeteFile);
+            }
+            else {
+                stream = CommonExportService.class.getResourceAsStream(
+                        "/tpl/" + tempFilePath);
+            }
+            // 工作表对象初始化
+            if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
+                wb = new HSSFWorkbook(stream);
+            }
+            else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
+                wb = new XSSFWorkbook(stream);
+            }
+            else {
+                stream.close();
+                throw new BusinessException("不是一个有效的Excel文件");
+            }
+            return wb;
+        }finally {
+            if (stream != null){
+                stream.close();
+            }
         }
-        else {
-            stream = CommonExportService.class.getResourceAsStream(
-            		"/tpl/" + tempFilePath);
-        }
-        // 工作表对象初始化
-        if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
-            wb = new HSSFWorkbook(stream);
-        }
-        else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
-            wb = new XSSFWorkbook(stream);
-        }
-        else {
-            stream.close();
-            throw new BusinessException("不是一个有效的Excel文件");
-        }
-        return wb;
     }
 
     /**
@@ -179,106 +185,111 @@ public class PtlAnalyzeAfterInvest003Service extends CommonExportService<PtlAnal
                                 List<?> contents, LongAdder current, long total, int sheetMaxRowCount)
         throws IOException {
         ReportCfgHandler handler = new ReportCfgHandler();
-        wb.close();
-        wb = getWorkbook(reportConfig);
-        // 配置文件中的工作表列表
-        List<JoyinSheetConfig> sheetList = reportConfig.getSheetConfList();
-        // 循环处理每个Sheet
-        for (int i = 0; i < sheetList.size(); i++ ) {
-            // 获取配置文件中的工作表配置
-            JoyinSheetConfig sheetCfg = sheetList.get(i);
-            // javaBean
-            String beanName = sheetCfg.getJavaBean();
-            // 获取配置文件中每行对应的单元格配置
-            List<JoyinCellConfig> cellList = sheetCfg.getCellConfList();
-            // 获取模板文件中的sheet页
-            Sheet sheet = wb.getSheetAt(i);
-            // 模板文件填充的开始行，默认从第二行开始。第一行预留为标题行
-            int index = sheetCfg.getRowStart();
-            // // 模板文件当前sheet中的最大行
-            // int maxRowNum = sheet.getLastRowNum() - sheet.getFirstRowNum();
-            // // 模板文件当前sheet中的最大列
-            // int maxColNum = sheet.getRow(sheet.getFirstRowNum()).getPhysicalNumberOfCells();
-            // 模板文件最后一行
-            Row lastRow = sheet.getRow(sheet.getLastRowNum());
-            for (Object dto : contents) {
-                Map<String, Object> map = BeanUtil.object2Map(dto);
-                Row row = sheet.getRow(index++ );
-                if (row == null) {
-                    handler.copyRow(wb, lastRow, sheet.createRow(index - 1), false);
-                    row = sheet.getRow(index - 1);
-                }
+        try{
+            wb.close();
+            wb = getWorkbook(reportConfig);
+            // 配置文件中的工作表列表
+            List<JoyinSheetConfig> sheetList = reportConfig.getSheetConfList();
+            // 循环处理每个Sheet
+            for (int i = 0; i < sheetList.size(); i++ ) {
+                // 获取配置文件中的工作表配置
+                JoyinSheetConfig sheetCfg = sheetList.get(i);
+                // javaBean
+                String beanName = sheetCfg.getJavaBean();
+                // 获取配置文件中每行对应的单元格配置
+                List<JoyinCellConfig> cellList = sheetCfg.getCellConfList();
+                // 获取模板文件中的sheet页
+                Sheet sheet = wb.getSheetAt(i);
+                // 模板文件填充的开始行，默认从第二行开始。第一行预留为标题行
+                int index = sheetCfg.getRowStart();
+                // // 模板文件当前sheet中的最大行
+                // int maxRowNum = sheet.getLastRowNum() - sheet.getFirstRowNum();
+                // // 模板文件当前sheet中的最大列
+                // int maxColNum = sheet.getRow(sheet.getFirstRowNum()).getPhysicalNumberOfCells();
+                // 模板文件最后一行
+                Row lastRow = sheet.getRow(sheet.getLastRowNum());
+                for (Object dto : contents) {
+                    Map<String, Object> map = BeanUtil.object2Map(dto);
+                    Row row = sheet.getRow(index++ );
+                    if (row == null) {
+                        handler.copyRow(wb, lastRow, sheet.createRow(index - 1), false);
+                        row = sheet.getRow(index - 1);
+                    }
 
-                for (int ci = 0; ci < cellList.size(); ci++ ) {
-                    JoyinCellConfig cfg = cellList.get(ci);
-                    // 获取单元格
-                    Cell cell = row.getCell(ci, MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                    String propName = cfg.getBeanPropName();
-                    if (StringUtil.isNotEmpty(propName)) {
-                        Cell hCell = lastRow.getCell(ci);
-                        if (null == cell && null != hCell) {
-                            cell = row.createCell(ci);
-                            handler.copyCell(wb, hCell, cell, false);
-                            setCellStyle(wb, cell.getCellStyle());
-                        }
-                        Object value = map.get(propName);
-                        if (StringUtil.isNotEmpty(value)) {
-                            if (value instanceof Date) {
-                            	if (null != cell)cell.setCellValue(DateUtil.formatDateTime((Date)value));
+                    for (int ci = 0; ci < cellList.size(); ci++ ) {
+                        JoyinCellConfig cfg = cellList.get(ci);
+                        // 获取单元格
+                        Cell cell = row.getCell(ci, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                        String propName = cfg.getBeanPropName();
+                        if (StringUtil.isNotEmpty(propName)) {
+                            Cell hCell = lastRow.getCell(ci);
+                            if (null == cell && null != hCell) {
+                                cell = row.createCell(ci);
+                                handler.copyCell(wb, hCell, cell, false);
+                                setCellStyle(wb, cell.getCellStyle());
                             }
-                            else if (value instanceof String) {
-                                if (StringUtil.isNotEmpty(value)) {
-                                    value = StringUtil.getLimitLengthString(value.toString(),
-                                        16383, StringUtil.EMPTY);
+                            Object value = map.get(propName);
+                            if (StringUtil.isNotEmpty(value)) {
+                                if (value instanceof Date) {
+                                    if (null != cell)cell.setCellValue(DateUtil.formatDateTime((Date)value));
                                 }
-                                if (null != cell)cell.setCellValue((String)value);
+                                else if (value instanceof String) {
+                                    if (StringUtil.isNotEmpty(value)) {
+                                        value = StringUtil.getLimitLengthString(value.toString(),
+                                                16383, StringUtil.EMPTY);
+                                    }
+                                    if (null != cell)cell.setCellValue((String)value);
+                                }
+                                else if (value instanceof Boolean) {
+                                    if (null != cell)cell.setCellValue((Boolean)value);
+                                }
+                                else if (value instanceof Calendar) {
+                                    cell.setCellValue((Calendar)value);
+                                }
+                                else if (value instanceof RichTextString) {
+                                    if (null != cell)cell.setCellValue((RichTextString)value);
+                                }
+                                else if (value instanceof Double) {
+                                    if (null != cell)cell.setCellValue((Double)value);
+                                }
+                                else if (value instanceof BigDecimal) {
+                                    BigDecimal cellValue = (BigDecimal)value;
+                                    if (null != cell)cell.setCellValue(cellValue.doubleValue());
+                                }
+                                else if (value instanceof Long) {
+                                    Long cellValue = (Long)value;
+                                    if (null != cell)cell.setCellValue(cellValue.doubleValue());
+                                }
+                                else if (value instanceof Integer) {
+                                    Integer cellValue = (Integer)value;
+                                    if (null != cell)cell.setCellValue(cellValue.doubleValue());
+                                }
+                                // 自定义的特殊处理
+                                setCellValue(beanName, cell, propName, value);
                             }
-                            else if (value instanceof Boolean) {
-                            	if (null != cell)cell.setCellValue((Boolean)value);
-                            }
-                            else if (value instanceof Calendar) {
-                                cell.setCellValue((Calendar)value);
-                            }
-                            else if (value instanceof RichTextString) {
-                            	if (null != cell)cell.setCellValue((RichTextString)value);
-                            }
-                            else if (value instanceof Double) {
-                            	if (null != cell)cell.setCellValue((Double)value);
-                            }
-                            else if (value instanceof BigDecimal) {
-                                BigDecimal cellValue = (BigDecimal)value;
-                                if (null != cell)cell.setCellValue(cellValue.doubleValue());
-                            }
-                            else if (value instanceof Long) {
-                                Long cellValue = (Long)value;
-                                if (null != cell)cell.setCellValue(cellValue.doubleValue());
-                            }
-                            else if (value instanceof Integer) {
-                                Integer cellValue = (Integer)value;
-                                if (null != cell)cell.setCellValue(cellValue.doubleValue());
-                            }
-                            // 自定义的特殊处理
-                            setCellValue(beanName, cell, propName, value);
                         }
                     }
-                }
-                if(null != pageId && total > 0) {
-                    current.increment();
-                    progressBarService.updatePercent(pageId, "exportProcessBar", current.doubleValue() / total, false);
+                    if(null != pageId && total > 0) {
+                        current.increment();
+                        progressBarService.updatePercent(pageId, "exportProcessBar", current.doubleValue() / total, false);
+                    }
                 }
             }
-        }
 
-        // 生成后的文件名
-        String outFileName = FileNameUtil.createFileName(fileType);
-        // 从系统配置参数中获取文件存放路径
-        String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-        File file = new File(exportFilePath + File.separator + outFileName);
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
+            // 生成后的文件名
+            String outFileName = FileNameUtil.createFileName(fileType);
+            // 从系统配置参数中获取文件存放路径
+            String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+            File file = new File(exportFilePath + File.separator + outFileName);
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            wb.write(new FileOutputStream(file));
+            return file;
+        }finally {
+            if(wb != null){
+                wb.close();
+            }
         }
-        wb.write(new FileOutputStream(file));
-        return file;
     }
-    
 }

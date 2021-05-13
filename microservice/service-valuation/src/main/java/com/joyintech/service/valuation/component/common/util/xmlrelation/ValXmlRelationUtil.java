@@ -253,7 +253,15 @@ public class ValXmlRelationUtil {
         if (null != inStream) {
             XmlRelationSAXHandler handler = new ValXmlRelationUtil.XmlRelationSAXHandler();
             InputSource is = new InputSource(inStream);
-            SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+//          SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            //------start---------2020-11-25 周敏 添加 
+            spf.setValidating(false);
+            spf.setFeature("http://xml.org/sax/features/validation",false);
+            spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
+            spf.setFeature("http://xml.org/sax/features/use-entity-resolver2",false);
+            SAXParser sax = spf.newSAXParser();
+            //------end---------
             sax.parse(is, handler);
             return handler.getRecordList();
         }
@@ -273,21 +281,33 @@ public class ValXmlRelationUtil {
         List<ValXmlRelationRecordDto> resultList = CacheUtil.getAppCache(CACHE_KEY_XMLRELATION,
             List.class);
         if (StringUtil.isEmptyList(resultList)) {
-            InputStream xmlFileInStream = ValXmlRelationUtil.class.getClassLoader().getResourceAsStream(
-                "data_dict_convert_rule.xml");
-            try {
-                resultList = ValXmlRelationUtil.parse(xmlFileInStream);
-                CacheUtil.putAppCache(CACHE_KEY_XMLRELATION, resultList);
+            InputStream xmlFileInStream = null;
+            try{
+                xmlFileInStream = ValXmlRelationUtil.class.getClassLoader().getResourceAsStream(
+                        "data_dict_convert_rule.xml");
+                try {
+                    resultList = ValXmlRelationUtil.parse(xmlFileInStream);
+                    CacheUtil.putAppCache(CACHE_KEY_XMLRELATION, resultList);
+                }
+                catch (ParserConfigurationException e) {
+                    e.printStackTrace();
+                }
+                catch (SAXException e) {
+                    e.printStackTrace();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }finally {
+                if (xmlFileInStream != null){
+                    try {
+                        xmlFileInStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            }
-            catch (SAXException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+
         }
 
         return resultList;

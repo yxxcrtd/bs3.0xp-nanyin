@@ -136,9 +136,11 @@ public class InterfaceFieldsService {
 		
 		if(groupCfgList.size()>0){
 			logger.debug("Start Group+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-			AdditionFunc groupFunc=ineterfaceBeanService.getAdditionFuncBean(groupCfg.getFuncClass());
-			List<HashMap<String, Object>> newGroupSourceList=groupFunc.genGroupNewSourceData(newSourceList, groupCfg.getFuncParams(), groupCfgList);
-			newSourceList=genAdvanceMsg(newGroupSourceList,unGroupCfgList, initGlobalValHM);
+			if (groupCfg != null){
+				AdditionFunc groupFunc=ineterfaceBeanService.getAdditionFuncBean(groupCfg.getFuncClass());
+				List<HashMap<String, Object>> newGroupSourceList=groupFunc.genGroupNewSourceData(newSourceList, groupCfg.getFuncParams(), groupCfgList);
+				newSourceList=genAdvanceMsg(newGroupSourceList,unGroupCfgList, initGlobalValHM);
+			}
 			logger.debug("End Group-------------------------------------------------------------------------------");
 		}
 		

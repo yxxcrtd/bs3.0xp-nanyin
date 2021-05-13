@@ -587,23 +587,24 @@ public class ExportController extends ExceptionControl{
 		
 		String[] params={String.valueOf(portID), exportDate};
 		ResultContainer container=exeExport.preViewExport(configID, params);
-		
-		DataReadResult writeSourceData=(DataReadResult)container.getEntityObj();
-		List<String> titles=writeSourceData.getDataHeader();
-		
-		ArrayList<Object> data = new ArrayList<Object>();
-		
-		List<List<Object>> dataList=writeSourceData.getDataResult();
-		for(List<Object> fields:dataList){
-			List<Object> item = new ArrayList<Object>();
-			for(Object field:fields){
-				item.add(field);
+		if(container != null){
+			DataReadResult writeSourceData=(DataReadResult)container.getEntityObj();
+			List<String> titles=writeSourceData.getDataHeader();
+
+			ArrayList<Object> data = new ArrayList<Object>();
+
+			List<List<Object>> dataList=writeSourceData.getDataResult();
+			for(List<Object> fields:dataList){
+				List<Object> item = new ArrayList<Object>();
+				for(Object field:fields){
+					item.add(field);
+				}
+				data.add(item);
 			}
-			data.add(item);
+			result.put("titles", titles);
+			result.put("data", data);
+			JsonUtil.writeObjToResponse(response, result);
 		}
-		result.put("titles", titles);
-		result.put("data", data);
-		JsonUtil.writeObjToResponse(response, result);
 	}
 	
 	@RequestMapping(value="/export/export.do", method = RequestMethod.POST, name="管理-导出配置-导出数据")

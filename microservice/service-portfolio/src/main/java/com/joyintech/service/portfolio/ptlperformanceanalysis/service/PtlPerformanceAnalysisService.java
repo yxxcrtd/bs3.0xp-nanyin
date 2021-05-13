@@ -677,14 +677,16 @@ public class PtlPerformanceAnalysisService extends BaseService<PtlPerformanceAna
 		}
 		
 		//平均分配
-		BigDecimal avgYield = maxyleftData.subtract(minyleftData).divide(new BigDecimal(5),BigDecimal.ROUND_HALF_UP,4);
-		for(int i = 0 ; i < 5 ; i++){
-			BigDecimal tempYield = minyleftData.add(avgYield);
-			ptlPerformanceLineDto.getYleftaxisdata().add(tempYield.toString());
+		if (maxyleftData != null){
+			BigDecimal avgYield = maxyleftData.subtract(minyleftData).divide(new BigDecimal(5),BigDecimal.ROUND_HALF_UP,4);
+			for(int i = 0 ; i < 5 ; i++){
+				if(avgYield != null){
+					BigDecimal tempYield = minyleftData.add(avgYield);
+					ptlPerformanceLineDto.getYleftaxisdata().add(tempYield.toString());
+				}
+			}
 		}
 
-		
-		
 		//对于日期时间赋值
 		if(list.size() > 0 ){
 			dateStartDate = list.get(0).getCdate();

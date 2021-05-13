@@ -84,7 +84,9 @@ public class RiskTrialCommCallable {
 							
 						}
 						else{
-							params.put(paramName,paramValue);
+							if (params != null){
+								params.put(paramName,paramValue);
+							}
 						}
 						
 					}

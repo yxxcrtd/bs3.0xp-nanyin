@@ -62,37 +62,37 @@ public class BusinessDetailedMaintainInterfService {
      * @see
      * @since 1.0
      */
-    public void getBusinessDetailedData(){
-        //从缓存中获取开关项配置  01 开 02 闭
-        String isOpen = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, ReportGlobalConstant.DICT_INTERF_IMPORT_SWITCH);
-        List<Map<String, String>> result;
-        String xmlFilePath = "D:\\joyin\\workspace-zz\\report-parent\\report\\src\\test\\java\\com\\joyintech\\tams\\test\\demo.xml";
-        List <InterestsBusinessDetailed> ibdList = new ArrayList<InterestsBusinessDetailed>();
-        InterestsBusinessDetailed ibd = null;
-        try {
-            result = XmlParseUtil.parse(xmlFilePath);
-//            result.forEach(System.out::println);
-            for(Map<String,String> map:result){
-                ibd = dataConversionEntity(map);
-                ibd.setRegCode(ibdMapper.selectRegCodeByProdId(ibd.getAccount()).getRegCode());
-                AjaxResult wr = ibd.validCheck();
-                if(wr.getStatuCode() == 500){
-                    ibd.setStatus("P");
-                }else{
-                    ibd.setStatus("E");
-                }
-                ibdList.add(ibd);
-            }
-            List<String> coverList = updateDataSwitch(); 
-            LOGGER.debug("********权益人业务明细接口数据插入开始********");
-            ibdMapper.saveIbdDataBatch(ibdList, isOpen, coverList);
-            LOGGER.debug("********权益人业务明细接口数据插入结束********");
-        }
-        catch (ParserConfigurationException | SAXException | IOException e) {
-//            e.printStackTrace();
-        	LOGGER.error(e.getMessage(),e);
-        }
-    }
+//    public void getBusinessDetailedData(){
+//        //从缓存中获取开关项配置  01 开 02 闭
+//        String isOpen = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, ReportGlobalConstant.DICT_INTERF_IMPORT_SWITCH);
+//        List<Map<String, String>> result;
+//        String xmlFilePath = "D:\\joyin\\workspace-zz\\report-parent\\report\\src\\test\\java\\com\\joyintech\\tams\\test\\demo.xml";
+//        List <InterestsBusinessDetailed> ibdList = new ArrayList<InterestsBusinessDetailed>();
+//        InterestsBusinessDetailed ibd = null;
+//        try {
+//            result = XmlParseUtil.parse(xmlFilePath);
+////            result.forEach(System.out::println);
+//            for(Map<String,String> map:result){
+//                ibd = dataConversionEntity(map);
+//                ibd.setRegCode(ibdMapper.selectRegCodeByProdId(ibd.getAccount()).getRegCode());
+//                AjaxResult wr = ibd.validCheck();
+//                if(wr.getStatuCode() == 500){
+//                    ibd.setStatus("P");
+//                }else{
+//                    ibd.setStatus("E");
+//                }
+//                ibdList.add(ibd);
+//            }
+//            List<String> coverList = updateDataSwitch(); 
+//            LOGGER.debug("********权益人业务明细接口数据插入开始********");
+//            ibdMapper.saveIbdDataBatch(ibdList, isOpen, coverList);
+//            LOGGER.debug("********权益人业务明细接口数据插入结束********");
+//        }
+//        catch (ParserConfigurationException | SAXException | IOException e) {
+////            e.printStackTrace();
+//        	LOGGER.error(e.getMessage(),e);
+//        }
+//    }
     
     @Value("${chbConfig.CHB_EQUDET}")
     private String chbEqudet;

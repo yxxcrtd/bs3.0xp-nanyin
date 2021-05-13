@@ -257,15 +257,21 @@ public class RepFinProductAssetBalanceController extends BaseController{
      * @since 1.0
      */
     public File fileMerge(File outFile,File outFile2) throws Exception{
+        FileOutputStream fileOut = null;
         XSSFWorkbook newExcelCreat = new XSSFWorkbook();
         FileMergeUtil fileMergeUtil = new FileMergeUtil();
         fileMergeUtil.handle(outFile, newExcelCreat);
         fileMergeUtil.handle(outFile2, newExcelCreat);
         String allFileName = outFile.getPath();    //定义新生成的xlx表格文件
-        FileOutputStream fileOut = new FileOutputStream(allFileName);
-        newExcelCreat.write(fileOut);
-        fileOut.flush();
-        fileOut.close();
+        try{
+            fileOut = new FileOutputStream(allFileName);
+            newExcelCreat.write(fileOut);
+        }finally {
+            if(fileOut != null){
+                fileOut.flush();
+                fileOut.close();
+            }
+        }
         return new File(allFileName);
     }
     

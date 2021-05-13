@@ -175,7 +175,7 @@ public class SMFOperation extends MsgExecuteService {
 				return;
 			}
 			//如果已经存在post的交易  则证券主ID不能被修改
-			if(oldIssue.getTranBasic().size()>0 && info==null){
+			if(oldIssue != null && oldIssue.getTranBasic().size()>0 && info==null){
 				List<String> list =new ArrayList<String>();
 				Set<TranBasic> tlist=oldIssue.getTranBasic();
 				for (TranBasic tranBasic : tlist) {
@@ -452,7 +452,9 @@ public class SMFOperation extends MsgExecuteService {
 		}else if(actionType.equalsIgnoreCase(update)){
 			BeanUtils.copyProperties(sec, oldIssue, "id");
 			issueInfoDao.updateIssue(oldIssue);
-			msgcontainer.setEntityID(oldIssue.getId());
+			if (oldIssue != null){
+				msgcontainer.setEntityID(oldIssue.getId());
+			}
 			//smf辅助表
 			if(oldSc!=null){
 				sc.setCusip(oldIssue.getId());

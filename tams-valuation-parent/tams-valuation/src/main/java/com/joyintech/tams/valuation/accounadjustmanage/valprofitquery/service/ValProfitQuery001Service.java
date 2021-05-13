@@ -276,7 +276,7 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         String fileName = prefix + "_" + reportDate + "_利润表" + ".xls";
         String tempName = "ValProfitQuery.xls";
-        String tplFlodPath = "accounadjustmanage/valprofitquery/ValProfitQuery.xls";
+        String tplFlodPath = "accounadjustmanage" + File.separator + "valprofitquery" + File.separator + "ValProfitQuery.xls";
         String tplPath = FileNameUtil.getTplFile(tplFlodPath);
         String outPath = exportFilePath + File.separator + fileName;
 

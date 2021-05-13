@@ -1605,14 +1605,19 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			}
 
 			if (workbook != null) {
+				FileOutputStream out = null;
 				try {
 					File exportFile = new File(fileName);
-					FileOutputStream out = new FileOutputStream(exportFile);
+					out = new FileOutputStream(exportFile);
 					workbook.write(out);
 					out.close();
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
 					e.printStackTrace();
+				}finally {
+					if(out != null){
+						out.close();
+					}
 				}
 			}
 

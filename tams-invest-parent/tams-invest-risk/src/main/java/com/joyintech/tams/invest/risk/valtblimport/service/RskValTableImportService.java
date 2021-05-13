@@ -1023,7 +1023,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                Double cellNum = null;
                if(StringUtil.isNotEmpty(subjName)){
                    subjName = subjName.replaceAll(",", "");
-                   if(ValDataType.STRING == sumNameCodeEntry.getNextColType()){
+                   if(sumNameCodeEntry != null && ValDataType.STRING == sumNameCodeEntry.getNextColType()){
                        cellNum = null;
                    }else{
                        if(subjName.contains("%")){

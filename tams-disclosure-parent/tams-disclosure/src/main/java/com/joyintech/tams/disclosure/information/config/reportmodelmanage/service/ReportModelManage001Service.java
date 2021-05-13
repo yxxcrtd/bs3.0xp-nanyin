@@ -303,14 +303,19 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
         		String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
         		fileName = FileNameUtil.createFileName("zip");
         		exportFile = new File(uploadFilePath+fileName);
-        		zipOut = new ZipOutputStream(new FileOutputStream(exportFile));
-//    			zipOut.setEncoding(ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE);
-    			for (Map.Entry<String, String> val : resultMap.entrySet()) {
-            		reportModelManage001Dto.getParam().put("portnum", val.getKey());
-    				compressFile2(zipOut, new File(val.getValue()),buildFileName(reportModelManage001Dto));
-				}
-    			zipOut.close();
-            	
+        		zipOut = null;
+        		try {
+	        		zipOut = new ZipOutputStream(new FileOutputStream(exportFile));
+	//    			zipOut.setEncoding(ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE);
+	    			for (Map.Entry<String, String> val : resultMap.entrySet()) {
+	            		reportModelManage001Dto.getParam().put("portnum", val.getKey());
+	    				compressFile2(zipOut, new File(val.getValue()),buildFileName(reportModelManage001Dto));
+					}
+                }finally {
+        		    if(zipOut != null){
+                        zipOut.close();
+                    }
+                }
             }else{
             	fileName = buildFileName(reportModelManage001Dto);
             	exportFile=new File(reportModelManage001Dto.getTemLoad());///NB/GLJY

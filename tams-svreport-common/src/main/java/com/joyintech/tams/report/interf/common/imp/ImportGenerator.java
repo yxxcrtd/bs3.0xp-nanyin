@@ -237,7 +237,7 @@ public final class ImportGenerator {
     public static boolean importToDB(ImpTable table, String path, String dataFileName,
                                      List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName) throws IOException, InterruptedException {
         if (!path.endsWith("/")) {
-            path = path + "/";
+            path = path + File.separator;
         }
         String absoultPath = path + dataFileName;
         File tmpFile = new File(absoultPath);
@@ -259,10 +259,18 @@ public final class ImportGenerator {
                 ReportGlobalConstant.SYS_PARA_REP_DB2_SERVER_FTP_FILEPATH);
 
             int ftpPort = Integer.valueOf(repDb2ServerFtpProt);
+            FileInputStream fileInputStream = null;
+            try{
+                fileInputStream = new FileInputStream(tmpFile);
+                FtpUtil.uploadFile(repDb2ServerFtpIp, ftpPort, repDb2ServerFtpUser,
+                        repDb2ServerFtpPassword, repDb2ServerFtpFilepath, dataFileName,
+                        fileInputStream);
+            }finally {
+                if(fileInputStream != null){
+                    fileInputStream.close();
+                }
+            }
 
-            FtpUtil.uploadFile(repDb2ServerFtpIp, ftpPort, repDb2ServerFtpUser,
-            		repDb2ServerFtpPassword, repDb2ServerFtpFilepath, dataFileName,
-                new FileInputStream(tmpFile));
 
             String importFullPath = repDb2ServerFtpFilepath;
             if (!StringUtil.endsWith(importFullPath, "/")) {

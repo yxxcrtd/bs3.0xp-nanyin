@@ -142,6 +142,7 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
     public ResponseEntity<byte[]> exportMailModel(Map<String, Object> selectParam) throws IOException {
     	Workbook wb =null;
 	    InputStream stream = null;
+		FileOutputStream out = null;
         try {
 			selectParam.put("branchNo", Long.valueOf(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
 			List<TrdRepoTradeExportMail001Dto> finDealPledgeList = restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
@@ -220,7 +221,8 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
 			    if (!file.getParentFile().exists()) {
 			        file.getParentFile().mkdirs();
 			    }
-			    wb.write(new FileOutputStream(file));
+				out = new FileOutputStream(file);
+			    wb.write(out);
 			    String exportFileName =  "正回购交易查询" 
 			        + GlobalConstant.OPEN_PARENTHESIS + DateUtil.getCurrentDate()
 			        + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
@@ -234,6 +236,9 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
             if (wb != null) {
             	wb.close();
             }
+			if (out != null) {
+				out.close();
+			}
 		}
         return null;
     }

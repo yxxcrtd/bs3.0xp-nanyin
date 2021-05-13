@@ -1478,8 +1478,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
 		totalAmountInfoDto.setReportDate(realName.substring(30,38));
 		totalAmountInfoDto.setInterfaceType("1");
 		totalAmountInfoDto.setFileName(realName);
-		totalAmountInfoDto.setFileCount(equityList.size()+"");
-		
+		if (equityList != null){
+            totalAmountInfoDto.setFileCount(equityList.size()+"");
+        }
+
         //-----add by lingxq on 2019-03-21 for 三要素合并升级------>>>>>
         EquityInfoDistinctService equityInfoDistinctService = 
         		                     SpringContextUtil.getBean(EquityInfoDistinctService.class);
@@ -1788,7 +1790,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         Long time=(et-bt)/1000;
     	logger.info("身份信息三要素合并结束:"+sdf.format(edate)+"耗时"+time+"秒");
         //-----add by lingxq on 2019-03-21 for 三要素合并升级------<<<<<
-    	equityList.addAll(temList);
+        if (equityList != null){
+            equityList.addAll(temList);
+        }
         // 解析成功或失败的标识
     	 //查询全部的已报送数据
 //      final Map<String, EquityInfoRegist001Dto> mapRegist = new HashMap<String,EquityInfoRegist001Dto>();

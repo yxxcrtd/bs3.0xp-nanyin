@@ -2389,236 +2389,237 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
                 return "fail";
             }
 		}
-	    TotalAmountInfoDto totalAmountInfoDto = new TotalAmountInfoDto();
-	    totalAmountInfoDto.setId(UUID.randomUUID().toString());
-	    totalAmountInfoDto.setReportDate(realName.substring(37, 45));
-		totalAmountInfoDto.setInterfaceType("2");
-		totalAmountInfoDto.setFileName(realName);
-		totalAmountInfoDto.setFileCount(equityList.size()+"");
-		
-		logger.info("解析xml文件存入List完成后equityList长度："+equityList.size());
-		// String[] result = ReadConfigurationUtil.readPropertiesByGetResourceAsStream(
-		// CHB_INVESTHOLD_INFO_NAME).split(GlobalConstant.COMMA);
-		String[] result = {};
-		// 解析成功或失败的标识
-		boolean success = true;
-		
-		Map<String,String> resultMap = new TreeMap<String,String>();
-		
-		// 产品代码信息集合（用于重复性过滤）
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date bdate=new Date();
-        Long bt=bdate.getTime();
-		logger.info("持有信息入库处理开始："+sdf.format(bdate));
-		if (CollectionUtils.isNotEmpty(equityList)) {
-			monitorInfoDto.setFileDataCount(BigDecimal.valueOf(equityList.size()));
-			DataCheckService.checkDuplicatedData(equityList, "REGIST_BANK_CODE", "ACCOUNT","INDENTIFY_MARK","HOLD_DATE","CCY");
-			investorsHoldInfoDistinctService.checkInvestorsHoldInfolist(equityList,"02");
-			for(Map<String, String> map:equityList){
-				map.remove(null);
-			}
-			// 投资者持有信息上游接口接入多线程处理，可以事先查询的内容预加载，避免循环中多次处理
-			InvestorsHoldInfo001FileReadParaDto paraDto = this.buildFileReadParaDto(equityList);
-			List<ChbPrdresistCode> prodRegInfoList = this.getProdRegInfoListFromFile(equityList, paraDto);
+		if (equityList != null){
+			TotalAmountInfoDto totalAmountInfoDto = new TotalAmountInfoDto();
+			totalAmountInfoDto.setId(UUID.randomUUID().toString());
+			totalAmountInfoDto.setReportDate(realName.substring(37, 45));
+			totalAmountInfoDto.setInterfaceType("2");
+			totalAmountInfoDto.setFileName(realName);
+			totalAmountInfoDto.setFileCount(equityList.size()+"");
+
+			logger.info("解析xml文件存入List完成后equityList长度："+equityList.size());
+			// String[] result = ReadConfigurationUtil.readPropertiesByGetResourceAsStream(
+			// CHB_INVESTHOLD_INFO_NAME).split(GlobalConstant.COMMA);
+			String[] result = {};
+			// 解析成功或失败的标识
+			boolean success = true;
+
+			Map<String,String> resultMap = new TreeMap<String,String>();
+
+			// 产品代码信息集合（用于重复性过滤）
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date bdate=new Date();
+			Long bt=bdate.getTime();
+			logger.info("持有信息入库处理开始："+sdf.format(bdate));
+			if (CollectionUtils.isNotEmpty(equityList)) {
+				monitorInfoDto.setFileDataCount(BigDecimal.valueOf(equityList.size()));
+				DataCheckService.checkDuplicatedData(equityList, "REGIST_BANK_CODE", "ACCOUNT","INDENTIFY_MARK","HOLD_DATE","CCY");
+				investorsHoldInfoDistinctService.checkInvestorsHoldInfolist(equityList,"02");
+				for(Map<String, String> map:equityList){
+					map.remove(null);
+				}
+				// 投资者持有信息上游接口接入多线程处理，可以事先查询的内容预加载，避免循环中多次处理
+				InvestorsHoldInfo001FileReadParaDto paraDto = this.buildFileReadParaDto(equityList);
+				List<ChbPrdresistCode> prodRegInfoList = this.getProdRegInfoListFromFile(equityList, paraDto);
 
 //			if (equityList.size() <= 1000) {
 //				success = excuteInvestorsHoldInfoByStep(equityList, interType, result, null, null, null,
 //						prodRegInfoList, paraDto);
 //			} else {
 				// 创建表
-            ImpTable table = new ImpTable(CHB_INVESTHOLD_INFO_NAME);
-            table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
-            // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
-            ImpTable subTable = new ImpTable("CHB_INVESTHOLD_INFO_SUB");
-            subTable.setColumns(ImportGenerator.createImpTableColumns(subTable.getName()));
-            subTable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
-            // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
-            for (ImpColumn column : subTable.getColumns()) {
-                if (StringUtil.equals(column.getName(), "STATUS")) {
-                    column.setConstant(DictCodeListExt2.报送数据状态_新建.getValue());
-                }
-            }
+				ImpTable table = new ImpTable(CHB_INVESTHOLD_INFO_NAME);
+				table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+				// 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
+				ImpTable subTable = new ImpTable("CHB_INVESTHOLD_INFO_SUB");
+				subTable.setColumns(ImportGenerator.createImpTableColumns(subTable.getName()));
+				subTable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
+				// 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
+				for (ImpColumn column : subTable.getColumns()) {
+					if (StringUtil.equals(column.getName(), "STATUS")) {
+						column.setConstant(DictCodeListExt2.报送数据状态_新建.getValue());
+					}
+				}
 
-            // 创建一个线程池
-            if (interfMaxCorePoolSize < 1) {
-                interfMaxCorePoolSize = 20;
-            }
-            ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-            List<Callable<Map<String,String>>> tasks = new ArrayList<>();
-            if (null != equityList) {
-                int start = 0;
-                int end = 0;
-                int size = equityList.size();
-                int max = (int)Math.ceil((double)size / reportInterfOneTimeDataCount);
-                for (int i = 0; i < max; i++ ) {
-                    start = end;
-                    end = Math.min(size, reportInterfOneTimeDataCount * (i + 1));
-                    List<Map<String, String>> subList = equityList.subList(start, end);
-                    logger.info("循环截取equityList处理：i="+i+"；start="+start+";end="+end+"subList.size="+subList.size());
-                    tasks.add(new Callable<Map<String,String>>() {
+				// 创建一个线程池
+				if (interfMaxCorePoolSize < 1) {
+					interfMaxCorePoolSize = 20;
+				}
+				ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
+				List<Callable<Map<String,String>>> tasks = new ArrayList<>();
+				if (null != equityList) {
+					int start = 0;
+					int end = 0;
+					int size = equityList.size();
+					int max = (int)Math.ceil((double)size / reportInterfOneTimeDataCount);
+					for (int i = 0; i < max; i++ ) {
+						start = end;
+						end = Math.min(size, reportInterfOneTimeDataCount * (i + 1));
+						List<Map<String, String>> subList = equityList.subList(start, end);
+						logger.info("循环截取equityList处理：i="+i+"；start="+start+";end="+end+"subList.size="+subList.size());
+						tasks.add(new Callable<Map<String,String>>() {
 
-                        @Override
-                        public Map<String,String> call() {
-                            return excuteInvestorsHoldInfoByStepYC(subList, interType, result,
-                                tmpPath, table, subTable, prodRegInfoList, paraDto);
-                        }
-                    });
-                }
-            }
+							@Override
+							public Map<String,String> call() {
+								return excuteInvestorsHoldInfoByStepYC(subList, interType, result,
+										tmpPath, table, subTable, prodRegInfoList, paraDto);
+							}
+						});
+					}
+				}
 
-            // 为线程池添加任务
-            List<Future<Map<String,String>>> taskResult;
-            try {
-                taskResult = service.invokeAll(tasks);
-            } catch (InterruptedException e) {
-                logger.error(e.getMessage(),e);
-                Thread.currentThread().interrupt();
-                return "fail";
-            }
-            for (Future<Map<String,String>> res : taskResult) {
-                try {
+				// 为线程池添加任务
+				List<Future<Map<String,String>>> taskResult;
+				try {
+					taskResult = service.invokeAll(tasks);
+				} catch (InterruptedException e) {
+					logger.error(e.getMessage(),e);
+					Thread.currentThread().interrupt();
+					return "fail";
+				}
+				for (Future<Map<String,String>> res : taskResult) {
+					try {
 //                    success = success && res.get();
-                	resultMap.putAll(res.get());
-                } catch (InterruptedException | ExecutionException e) {
-                    logger.error(e.getMessage(),e);
-                    Thread.currentThread().interrupt();
-                    return "fail";
-                }
-            }
-            // 任务结束，停止线程池的所有线程
-            service.shutdown();
+						resultMap.putAll(res.get());
+					} catch (InterruptedException | ExecutionException e) {
+						logger.error(e.getMessage(),e);
+						Thread.currentThread().interrupt();
+						return "fail";
+					}
+				}
+				// 任务结束，停止线程池的所有线程
+				service.shutdown();
 
-            Collection<File> files = FileUtils.listFiles(new File(tmpPath), new String[] {"tmp"},
-                false);
-            List<String> content = new ArrayList<>(equityList.size());
-            List<String> subContent = new ArrayList<>(equityList.size());
-            for (File f : files) {
-                if (f.getName().startsWith("CHB_INVESTHOLD_INFO_SUB")) {
-                    try {
-                        subContent.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-                    } catch (IOException e) {
-                        logger.error(e.getMessage(),e);
-                        return "fail";
-                    }
-                }
-                else if (f.getName().startsWith(CHB_INVESTHOLD_INFO_NAME)) {
-                    try {
-                        content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-                    } catch (IOException e) {
-                        logger.error(e.getMessage(),e);
-                        return "fail";
-                    }
-                }
+				Collection<File> files = FileUtils.listFiles(new File(tmpPath), new String[] {"tmp"},
+						false);
+				List<String> content = new ArrayList<>(equityList.size());
+				List<String> subContent = new ArrayList<>(equityList.size());
+				for (File f : files) {
+					if (f.getName().startsWith("CHB_INVESTHOLD_INFO_SUB")) {
+						try {
+							subContent.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+						} catch (IOException e) {
+							logger.error(e.getMessage(),e);
+							return "fail";
+						}
+					}
+					else if (f.getName().startsWith(CHB_INVESTHOLD_INFO_NAME)) {
+						try {
+							content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+						} catch (IOException e) {
+							logger.error(e.getMessage(),e);
+							return "fail";
+						}
+					}
 
-                f.delete();
-            }
+					f.delete();
+				}
 
-            // 系统是否使用的db2数据库
-            boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-            if (isDB2DataBase) {
-                // db2数据库处理
-                if (CollectionUtils.isNotEmpty(content)) {
+				// 系统是否使用的db2数据库
+				boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+				if (isDB2DataBase) {
+					// db2数据库处理
+					if (CollectionUtils.isNotEmpty(content)) {
 //                    success = success && ImportGenerator.importToDB(table, tmpPath,
 //                        table.getName() + FileNameUtil.createFileName("del"), content);
-                    try {
-                        success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
-                            reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del", reportSqlldrDatabaseName);
-                    } catch (IOException | InterruptedException e) {
-                        logger.error(e.getMessage(),e);
-                        Thread.currentThread().interrupt();
-                        return "fail";
-                    }
-                }
-                if (CollectionUtils.isNotEmpty(subContent)) {
+						try {
+							success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
+									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del", reportSqlldrDatabaseName);
+						} catch (IOException | InterruptedException e) {
+							logger.error(e.getMessage(),e);
+							Thread.currentThread().interrupt();
+							return "fail";
+						}
+					}
+					if (CollectionUtils.isNotEmpty(subContent)) {
 //                    success = success && ImportGenerator.importToDB(subTable, tmpPath,
 //                        subTable.getName() + FileNameUtil.createFileName("del"), subContent);
-                    try {
-                        success = success && ImportGenerator.importToDBByPart(subTable, tmpPath,
-                            subContent, reportInterfOneTimeSqlLdrDataCount,
-                            reportInterfOneTimeSqlLdrCommitCount, "del", reportSqlldrDatabaseName);
-                    } catch (IOException | InterruptedException e) {
-                        logger.error(e.getMessage(),e);
-                        Thread.currentThread().interrupt();
-                        return "fail";
-                    }
-                }
-            }
-            else {
-                // oracle原逻辑
-                if (CollectionUtils.isNotEmpty(content)) {
+						try {
+							success = success && ImportGenerator.importToDBByPart(subTable, tmpPath,
+									subContent, reportInterfOneTimeSqlLdrDataCount,
+									reportInterfOneTimeSqlLdrCommitCount, "del", reportSqlldrDatabaseName);
+						} catch (IOException | InterruptedException e) {
+							logger.error(e.getMessage(),e);
+							Thread.currentThread().interrupt();
+							return "fail";
+						}
+					}
+				}
+				else {
+					// oracle原逻辑
+					if (CollectionUtils.isNotEmpty(content)) {
 //                    success = success && ImportGenerator.importToDB(table, tmpPath,
 //                        table.getName() + FileNameUtil.createFileName("txt"), content);
-                    try {
-                        success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
-                            reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
-                            "txt", reportSqlldrDatabaseName);
-                    } catch (IOException | InterruptedException e) {
-                        logger.error(e.getMessage(),e);
-                        Thread.currentThread().interrupt();
-                        return "fail";
-                    }
-                }
-                if (CollectionUtils.isNotEmpty(subContent)) {
+						try {
+							success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
+									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
+									"txt", reportSqlldrDatabaseName);
+						} catch (IOException | InterruptedException e) {
+							logger.error(e.getMessage(),e);
+							Thread.currentThread().interrupt();
+							return "fail";
+						}
+					}
+					if (CollectionUtils.isNotEmpty(subContent)) {
 //                    success = success && ImportGenerator.importToDB(subTable, tmpPath,
 //                        subTable.getName() + FileNameUtil.createFileName("txt"), subContent);
-                    try {
-                        success = success && ImportGenerator.importToDBByPart(subTable, tmpPath,
-                            subContent, reportInterfOneTimeSqlLdrDataCount,
-                            reportInterfOneTimeSqlLdrCommitCount, "txt", reportSqlldrDatabaseName);
-                    } catch (IOException | InterruptedException e) {
-                        logger.error(e.getMessage(),e);
-                        Thread.currentThread().interrupt();
-                        return "fail";
-                    }
-                }
-            }
+						try {
+							success = success && ImportGenerator.importToDBByPart(subTable, tmpPath,
+									subContent, reportInterfOneTimeSqlLdrDataCount,
+									reportInterfOneTimeSqlLdrCommitCount, "txt", reportSqlldrDatabaseName);
+						} catch (IOException | InterruptedException e) {
+							logger.error(e.getMessage(),e);
+							Thread.currentThread().interrupt();
+							return "fail";
+						}
+					}
+				}
 
-            // 将库中不存在的产品信息录入表中
-            if (CollectionUtils.isNotEmpty(prodRegInfoList)) {
+				// 将库中不存在的产品信息录入表中
+				if (CollectionUtils.isNotEmpty(prodRegInfoList)) {
 //                investorsHoldInfo001Mapper.insertProdRegInfo(prodRegInfoList);
-                this.insertProdRegInfoByPart(prodRegInfoList);
-            }
-            investorsHoldInfoDistinctService.mergeInvestorsHoldInfolist("01",interType);
-        }
-		 /** 将校验结果与源数据进行拼接 add by xiewei 2017.11.27 start */
-		int successCount=0;
-        for (Map<String, String> sourceData : equityList) {
-            String value = resultMap.get(sourceData.get("INDENTIFY_MARK")+"|"+sourceData.get("ACCOUNT")+"|"+sourceData.get("HOLD_DATE")+"|"+sourceData.get("CCY")+"|"+sourceData.get("QTY")+"|"+sourceData.get("AMOUNT"));
-            if (value != null && !"".equals(value)) {
-                sourceData.put(ReportGlobalConstant.RESULT_CODE,
-                		ReportGlobalConstant.ERROR_CODE);
-                sourceData.put(ReportGlobalConstant.RESULT, value);
-            } else {
-                sourceData.put(ReportGlobalConstant.RESULT_CODE,
-                		ReportGlobalConstant.CORRECT_CODE);
-                sourceData.put(ReportGlobalConstant.RESULT,
-                		ReportGlobalConstant.CORRECT_INFO);
-                successCount++;
-            }
-        }
-        //反馈equityList结果
-        FileIO.sendResponseFile(equityList, realName);
-        
-        totalAmountInfoDto.setFileInData(successCount+"");
-        List<TotalAmountInfoDto> totalAmountInfoDtoList=checkNumMapper.queryTotalAmountInfo(totalAmountInfoDto);
-        if(totalAmountInfoDtoList.size()!=0){
-        	checkNumMapper.deltotalAmountInfoDto(totalAmountInfoDto);
-        }
-        checkNumMapper.insertTotalAmountInfo(totalAmountInfoDto);
-        
-		 Date edate=new Date();
-	        Long et=edate.getTime();
-	        Long time=(et-bt)/1000;
-	    	logger.info("持有信息入库处理结束:"+sdf.format(edate)+"耗时"+time+"秒");
+					this.insertProdRegInfoByPart(prodRegInfoList);
+				}
+				investorsHoldInfoDistinctService.mergeInvestorsHoldInfolist("01",interType);
+			}
+			/** 将校验结果与源数据进行拼接 add by xiewei 2017.11.27 start */
+			int successCount=0;
+			for (Map<String, String> sourceData : equityList) {
+				String value = resultMap.get(sourceData.get("INDENTIFY_MARK")+"|"+sourceData.get("ACCOUNT")+"|"+sourceData.get("HOLD_DATE")+"|"+sourceData.get("CCY")+"|"+sourceData.get("QTY")+"|"+sourceData.get("AMOUNT"));
+				if (value != null && !"".equals(value)) {
+					sourceData.put(ReportGlobalConstant.RESULT_CODE,
+							ReportGlobalConstant.ERROR_CODE);
+					sourceData.put(ReportGlobalConstant.RESULT, value);
+				} else {
+					sourceData.put(ReportGlobalConstant.RESULT_CODE,
+							ReportGlobalConstant.CORRECT_CODE);
+					sourceData.put(ReportGlobalConstant.RESULT,
+							ReportGlobalConstant.CORRECT_INFO);
+					successCount++;
+				}
+			}
+			//反馈equityList结果
+			FileIO.sendResponseFile(equityList, realName);
+
+			totalAmountInfoDto.setFileInData(successCount+"");
+			List<TotalAmountInfoDto> totalAmountInfoDtoList=checkNumMapper.queryTotalAmountInfo(totalAmountInfoDto);
+			if(totalAmountInfoDtoList.size()!=0){
+				checkNumMapper.deltotalAmountInfoDto(totalAmountInfoDto);
+			}
+			checkNumMapper.insertTotalAmountInfo(totalAmountInfoDto);
+
+			Date edate=new Date();
+			Long et=edate.getTime();
+			Long time=(et-bt)/1000;
+			logger.info("持有信息入库处理结束:"+sdf.format(edate)+"耗时"+time+"秒");
 //		}
-		// 数据解析完成，并导入数据库成功后，将ftp文件修改名称
-		if (success) {
-			return "success";
+			// 数据解析完成，并导入数据库成功后，将ftp文件修改名称
+			if (success) {
+				return "success";
+			}
+			//add by liubin start 当无投资者身份信息供转换时更新监控表异常描述
+			monitorInfoDto.setFileHandleResultMsg(this.getMessage("REPORT_FILE_MONITORINFO_NODATA"));
+			//add by liubin end
 		}
-		
-		//add by liubin start 当无投资者身份信息供转换时更新监控表异常描述
-        monitorInfoDto.setFileHandleResultMsg(this.getMessage("REPORT_FILE_MONITORINFO_NODATA"));
-        //add by liubin end
 		return "fail";
 	}
 	
@@ -2673,7 +2674,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
                 return "fail";
             }
 		}
-		logger.info("解析xml文件存入List完成后equityList长度："+equityList.size());
+		if (equityList != null){
+			logger.info("解析xml文件存入List完成后equityList长度："+equityList.size());
+		}
 		// String[] result = ReadConfigurationUtil.readPropertiesByGetResourceAsStream(
 		// CHB_INVESTHOLD_INFO_NAME).split(GlobalConstant.COMMA);
 		String[] result = {};

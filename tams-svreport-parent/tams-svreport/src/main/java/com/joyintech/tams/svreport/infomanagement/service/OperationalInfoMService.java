@@ -369,6 +369,14 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 			logger.error(e1.getMessage(),e1);
 		} catch (IOException e1) {
 			logger.error(e1.getMessage(),e1);
+		}finally {
+			if(xssfWorkBook != null){
+				try {
+					xssfWorkBook.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		try {
 		    int headerNum = operationalInfo001Service.selectHeaderNumByChiName(tableName);
@@ -413,8 +421,14 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 		// 获取导入表名
 		String tableId = null;
 		try(XSSFWorkbook xssfWorkBook = new XSSFWorkbook(new FileInputStream(file))) {
-			XSSFSheet xssfSheet = xssfWorkBook.getSheetAt(0);
-			tableId = xssfSheet.getSheetName();
+			try {
+				XSSFSheet xssfSheet = xssfWorkBook.getSheetAt(0);
+				tableId = xssfSheet.getSheetName();
+			}finally {
+				if (xssfWorkBook != null){
+					xssfWorkBook.close();
+				}
+			}
 		} catch (FileNotFoundException e1) {
 			logger.error(e1.getMessage(),e1);
 		} catch (IOException e1) {

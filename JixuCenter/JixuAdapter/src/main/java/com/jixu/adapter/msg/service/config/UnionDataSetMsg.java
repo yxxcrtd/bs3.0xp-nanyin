@@ -92,9 +92,11 @@ public class UnionDataSetMsg extends MsgExecuteService{
 		}else{
 			BeanUtils.copyProperties(uds, oldUds, "id");
 			adapterDao.updateEntityBean(oldUds);
-			msgcontainer.setObjID(oldUds.getId());
 			msgcontainer.setEntityObj(oldUds);
-			msgcontainer.setErrorMsg("id:"+oldUds.getId()+" 修改成功");
+			if(oldUds != null){
+				msgcontainer.setObjID(oldUds.getId());
+				msgcontainer.setErrorMsg("id:"+oldUds.getId()+" 修改成功");
+			}
 		}
 	}
 

@@ -70,7 +70,7 @@ public class FeeInfoRecService {
             if(StringUtils.isEmpty(Dto.getNetAssetValue())){
                 Dto.setNetAssetValue(zero);
             }
-            if(!StringUtils.isEmpty(feeInfoDto)){
+            if(!StringUtils.isEmpty(feeInfoDto) && feeInfoDto != null){
                 //计息基础
                 dto.setFeeCalcType(feeInfoDto.getFeeCalcType());
                 //费率

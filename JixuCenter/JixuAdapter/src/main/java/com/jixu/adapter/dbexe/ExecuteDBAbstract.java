@@ -1,5 +1,6 @@
 package com.jixu.adapter.dbexe;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.sql.Clob;
 import java.util.ArrayList;
@@ -170,14 +171,23 @@ public abstract class ExecuteDBAbstract implements ExecuteDBScripts{
 					if(valobj!=null && valobj instanceof Clob) {
 						Clob clob=(Clob)valobj;
 						String clobStr="";
+						Reader inStreamDoc = null;
 						try {
-							Reader inStreamDoc =clob.getCharacterStream();
+							inStreamDoc =clob.getCharacterStream();
 							char[] tempDoc = new char[(int) clob.length()];  
 				            inStreamDoc.read(tempDoc);  
-				            inStreamDoc.close();
+
 				            clobStr=new String(tempDoc);
 						}catch(Exception se) {
 							logger.error(msg);
+						}finally {
+							if (inStreamDoc != null){
+								try {
+									inStreamDoc.close();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
 						}
 						valuesList.add(clobStr);
 					}else {

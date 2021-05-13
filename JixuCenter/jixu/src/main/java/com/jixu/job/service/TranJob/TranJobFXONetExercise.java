@@ -63,9 +63,13 @@ public class TranJobFXONetExercise extends TranJobBasic{
 		if(transList.get(0).getTrantype()==TransTypes.FXOption_NetExercise){
 			tranFXExercise=transList.get(0);
 		}
-		
-		double fxGcost=tranFXExercise.getgCost();
-		double fxGcostFunc=tranFXExercise.getgCostFunc();
+
+		double fxGcost= 0;
+		double fxGcostFunc= 0;
+		if(tranFXExercise != null){
+			fxGcost=tranFXExercise.getgCost();
+			fxGcostFunc=tranFXExercise.getgCostFunc();
+		}
 		double diff_func=RoundUtil.roundMoney2Dec(fxGcostFunc-settleCash);
 		
 		//外汇期权-成本

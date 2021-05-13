@@ -207,7 +207,7 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
                             if (StringUtils.isBlank(pobcassetidList)) {
                                 pobcassetidList = pbcCapAssetInfo001Dto.getPobcassetid()+",";
                             }
-                            if (!pobcassetidList.contains(pbcCapAssetInfo001Dto.getPobcassetid())) {
+                            if (pobcassetidList != null && !pobcassetidList.contains(pbcCapAssetInfo001Dto.getPobcassetid())) {
                                 pobcassetidList = pobcassetidList + pbcCapAssetInfo001Dto.getPobcassetid()+",";
                             }
                         }
@@ -270,7 +270,7 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
                         if (StringUtils.isBlank(pobcassetidList)) {
                             pobcassetidList = pbcCapAssetInfo001Dto.getPobcassetid() + ",";
                         }
-                        if (!pobcassetidList.contains(pbcCapAssetInfo001Dto.getPobcassetid())) {
+                        if (pobcassetidList != null && !pobcassetidList.contains(pbcCapAssetInfo001Dto.getPobcassetid())) {
                             pobcassetidList = pobcassetidList + pbcCapAssetInfo001Dto.getPobcassetid() + ",";
                         }
                     }

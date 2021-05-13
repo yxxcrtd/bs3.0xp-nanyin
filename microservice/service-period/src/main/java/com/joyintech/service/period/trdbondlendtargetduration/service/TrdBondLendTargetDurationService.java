@@ -75,7 +75,7 @@ public class TrdBondLendTargetDurationService extends BaseService {
         this.setParamForFindAllData(param);
         Page<TrdBondLendTargetDurationDto> result = null;
         // update by wangcheng SHBS-2192 查询条件输入 资金到账日 ，有效状态选择 待处理 报错
-        if (StringUtil.isNotEmpty((String)param.get("tradeDateStart"))
+        if (statusValid != null && StringUtil.isNotEmpty((String)param.get("tradeDateStart"))
             && ((statusValid.size() == 1) && statusValid.contains("01"))) {
             result = new Page<TrdBondLendTargetDurationDto>();
         }

@@ -404,7 +404,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 											}
 										}
 										//存在系统生成文件
-										if(StringUtil.isNotEmpty(downloadFile)){
+										if(StringUtil.isNotEmpty(downloadFile) && downloadFile != null){
 											String sysFileName=downloadFile.getName();
 											//报表类型
 											String sysFileType=sysFileName.substring(sysFileName.lastIndexOf("."),sysFileName.length());
@@ -479,7 +479,11 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 				        }
 			        catch(Exception e) {
 			        	log.error("",e);
-			        }
+			        }finally {
+			        	if(zipOut != null){
+							zipOut.close();
+						}
+					}
 				}
 				//不需要层级
 				else{
@@ -592,7 +596,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								}
 								//没有人工上传，下载系统文件
 								else{
-									if(StringUtil.isNotEmpty(downloadFile)){
+									if(StringUtil.isNotEmpty(downloadFile) && downloadFile != null){
 										String sysFileName=downloadFile.getName();
 										//文件类型
 										String sysFileType=sysFileName.substring(sysFileName.lastIndexOf("."),sysFileName.length());
@@ -671,10 +675,13 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 					e.printStackTrace();
 				}
 				finally {
-					bis.close();
-					fos.close();
+					if (bis != null){
+						bis.close();
+					}
+					if (fos != null){
+						fos.close();
+					}
 				}
-
         	}
 		}
 		
@@ -717,7 +724,10 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
 				}
 				finally {
-					bis.close();
+					if(bis!=null)
+					{
+						bis.close();
+					}
 					if(fos!=null)
 					{
 						fos.close();

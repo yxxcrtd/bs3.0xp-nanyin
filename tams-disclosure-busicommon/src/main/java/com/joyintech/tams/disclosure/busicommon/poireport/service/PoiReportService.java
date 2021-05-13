@@ -295,21 +295,23 @@ public class PoiReportService {
 		}
 		ResultSet rs;
 		try {
-			rs = ps.executeQuery();
-			// 子表的一行数据
-			List<String> row = new ArrayList<>();
-			while (rs.next()) {
-				row = new ArrayList<>();
-				// 遍历获取每列数据
-				for (int i = 1; i < 50; i++) {
-					try {
-						// 遍历超越列数则异常，跳出for循环
-						row.add(rs.getString(i));
-					} catch (Exception e) {
-						break;
+			if(ps != null){
+				rs = ps.executeQuery();
+				// 子表的一行数据
+				List<String> row = new ArrayList<>();
+				while (rs.next()) {
+					row = new ArrayList<>();
+					// 遍历获取每列数据
+					for (int i = 1; i < 50; i++) {
+						try {
+							// 遍历超越列数则异常，跳出for循环
+							row.add(rs.getString(i));
+						} catch (Exception e) {
+							break;
+						}
 					}
+					rows.add(row);
 				}
-				rows.add(row);
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();

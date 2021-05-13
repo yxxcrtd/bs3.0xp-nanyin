@@ -219,7 +219,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                             // 是否需要下载系统生成报表。01：是，02：否
                             if (StringUtil.equals(CacheUtil.getSysParam(ReportGlobalConstant.IS_NEED_SYSFILE), "01")) {
                                 // 存在人工上传报表
-                                if (StringUtil.isNotEmpty(downloadFilePeople)) {
+                                if (StringUtil.isNotEmpty(downloadFilePeople) && downloadFilePeople != null) {
                                     String filename = downloadFilePeople.getName();
                                     List<String> splitToList = StringUtil.splitToList(".", reportName);
                                     // 将下载的报表文件重命名
@@ -502,8 +502,11 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }
                 catch (Exception e) {
                     log.error("", e);
+                }finally {
+                    if(zipOut != null){
+                        zipOut.close();
+                    }
                 }
-
             }
         }
         return ExportUtil.export(zipFileName, zipFile, true);

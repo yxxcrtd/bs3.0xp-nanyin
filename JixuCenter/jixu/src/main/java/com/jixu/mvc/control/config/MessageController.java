@@ -39,7 +39,7 @@ public class MessageController extends ExceptionControl{
     
     @RequestMapping(value="/config/uploadExeMessage.do", method = RequestMethod.POST, name="管理-消息执行-消息上传并执行")
 	 public void uploadExeMessage(MultipartHttpServletRequest request, HttpServletResponse response){
-		
+		BufferedReader br = null;
     	HashMap<String, Object> result = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("消息编号","文件所在行", "消息内容","执行状态","执行详情");		
 		result.put("titles", titles);
@@ -50,7 +50,7 @@ public class MessageController extends ExceptionControl{
 		while(itr.hasNext()){
 			try {
 				DataInputStream in = new DataInputStream(request.getFile(itr.next()).getInputStream());
-				BufferedReader br=new BufferedReader(new InputStreamReader(in,"gbk"));
+				br=new BufferedReader(new InputStreamReader(in,"gbk"));
 				String line=null;
 				int num=1;
 				while((line=br.readLine())!=null){
@@ -59,7 +59,6 @@ public class MessageController extends ExceptionControl{
 					container.setFieldsHM(fieldsMap);
 					container.setUserID(userID);
 					container = MsgFactory.executeMsgBean(container);
-					
 					List<String> item1 = new ArrayList<String>();
 					item1.add(String.valueOf(num));
 					item1.add(String.valueOf(num));
@@ -76,6 +75,14 @@ public class MessageController extends ExceptionControl{
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}finally {
+				if (br != null){
+					try {
+						br.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		result.put("data", data);

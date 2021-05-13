@@ -541,7 +541,9 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
             利息应收款标的 = basePtlReceInfoService.genPtlReceInfo(mapReceInfo);
         }
         应收款标的dto = 本金应收款标的 != null ? 本金应收款标的:利息应收款标的;
-        dto.setMdate(应收款标的dto.getMdate());
+        if (应收款标的dto != null){
+            dto.setMdate(应收款标的dto.getMdate());
+        }
         List<BaseTradeInfoDto> baseTotalTradeInfoDtoList = new ArrayList<>();
         result.setBaseTradeInfoDtoList(baseTotalTradeInfoDtoList);
 //        转出汇总
@@ -602,8 +604,9 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
         List<BaseTradeInfoDto> 利息转出BaseTradeInfo = new ArrayList<>();
 //        本金转出entity
         if(dto.getPrinAmt()!=null&&BigDecimal.ZERO.compareTo(dto.getPrinAmt()) != 0){
-            //
-            mapReceInfo.put("branch",本金应收款标的.getBranch());
+            if (本金应收款标的 != null){
+                mapReceInfo.put("branch",本金应收款标的.getBranch());
+            }
             List<PtlRecePosition> 应收款持仓信息 = basePtlRecePositionService.genPtlPeceAvailableIntPosition(mapReceInfo);
             if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),dto.getType8())){
                 BigDecimal 累计扣减本金 = BigDecimal.ZERO;
@@ -682,7 +685,9 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
 //                      其他字段同本金转出
                     BaseTradeInfoDto 本金罚息TradeInfo =genDumpBaseTradeInfoDto(本金TradeInfo,本金罚息交易Id,null);
                     本金罚息TradeInfo.getTrdProductDeal().setBusiType(DictCodeList.业务类型_逾期交易.getValue());
-                    本金罚息TradeInfo.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
+                    if (本金应收款标的 != null){
+                        本金罚息TradeInfo.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
+                    }
                     BigDecimal 罚息 =ArithmeticUtil.multiply(dto.getPenaltyInt(),ArithmeticUtil.divide(
                     本金罚息TradeInfo.getTrdProductDeal().getPrinAmt(),ArithmeticUtil.doAdd(dto.getPrinAmt(),dto.getIntAmt()),4));
                     if(ArithmeticUtil.subtract(dto.getPenaltyInt(),ArithmeticUtil.doAdd(已转让罚息,罚息)).compareTo(BigDecimal.ZERO)<0){

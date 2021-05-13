@@ -95,9 +95,12 @@ public class DBConnect {
 			logger.error(e.toString());
 		} finally {
 			try {
-				stmt.close();
-				conn.close();
-				conn.close();
+				if (stmt != null){
+					stmt.close();
+				}
+				if(conn != null){
+					conn.close();
+				}
 			} catch (SQLException e) {
 				logger.error(e.getMessage());
 			}

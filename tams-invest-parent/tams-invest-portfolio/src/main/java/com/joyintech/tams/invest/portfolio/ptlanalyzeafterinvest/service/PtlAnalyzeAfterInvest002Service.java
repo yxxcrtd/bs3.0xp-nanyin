@@ -174,25 +174,32 @@ public class PtlAnalyzeAfterInvest002Service extends CommonExportService<PtlAnal
         reportConfig.setTempleteFile(fileName + fileType);
         // 模板输入流
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
+        try{
+            if (templeteFile.exists()) {
+                stream = new FileInputStream(templeteFile);
+            }
+            else {
+                stream = CommonExportService.class.getResourceAsStream(
+                        "/tpl/" + tempFilePath);
+            }
+            // 工作表对象初始化
+            if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
+                wb = new HSSFWorkbook(stream);
+            }
+            else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
+                wb = new XSSFWorkbook(stream);
+            }
+            else {
+                stream.close();
+                throw new BusinessException("不是一个有效的Excel文件");
+            }
+            return wb;
+        }finally {
+            if(stream != null){
+                stream.close();
+            }
         }
-        else {
-            stream = CommonExportService.class.getResourceAsStream(
-            		"/tpl/" + tempFilePath);
-        }
-        // 工作表对象初始化
-        if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
-            wb = new HSSFWorkbook(stream);
-        }
-        else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
-            wb = new XSSFWorkbook(stream);
-        }
-        else {
-            stream.close();
-            throw new BusinessException("不是一个有效的Excel文件");
-        }
-        return wb;
+
     }
 
     /**
@@ -311,7 +318,15 @@ public class PtlAnalyzeAfterInvest002Service extends CommonExportService<PtlAnal
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        wb.write(new FileOutputStream(file));
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream =new FileOutputStream(file);
+            wb.write(fileOutputStream);
+        }finally {
+            if (fileOutputStream != null){
+                fileOutputStream.close();
+            }
+        }
         return file;
     }
 }

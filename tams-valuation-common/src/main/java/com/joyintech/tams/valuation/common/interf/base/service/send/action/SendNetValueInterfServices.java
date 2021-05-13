@@ -180,12 +180,18 @@ public class SendNetValueInterfServices {
 			}
 
 			// 重新创建文件，写入数据
-			try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "GBK"))) {
+			BufferedWriter bw = null;
+			try {
+				bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "GBK"));
 				bw.write(sendNetValueData.toString());
 				log.info("净值下发接口写入:" + sendNetValueData.toString());
 			} catch (IOException e) {
 				log.info("净值下发接口:" + file + " 文件创建写入失败！" + e.getMessage());
 				return 0;
+			}finally {
+				if(bw != null){
+					bw.close();
+				}
 			}
 
 			// 测试时需要（可直接上传至FTP服务器）

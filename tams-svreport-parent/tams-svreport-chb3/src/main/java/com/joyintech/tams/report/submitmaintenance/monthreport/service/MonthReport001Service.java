@@ -229,6 +229,7 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 			FileInputStream is = null;
 			FileOutputStream out = null;
 			HSSFWorkbook wbs = null;
+		   	FileOutputStream outputStream = null;
 			try{
 	        String reportdate = pageParam.get("exportdate")==null?"":pageParam.get("exportdate").toString();
 	        String reportMonth = "";
@@ -255,7 +256,8 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 	
 	    	is = new FileInputStream(depositfile);
 			wbs = new HSSFWorkbook(is);
-			wbs.write(new FileOutputStream(exportFile));
+			outputStream = new FileOutputStream(exportFile);
+			wbs.write(outputStream);
 			//is.close();
 			//wbs.close();
 			
@@ -272,6 +274,9 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 		    }
 			finally{
 				try {
+					if(null!=outputStream){
+						outputStream.close();
+					}
 					if(null!=is){
 						is.close();
 					}

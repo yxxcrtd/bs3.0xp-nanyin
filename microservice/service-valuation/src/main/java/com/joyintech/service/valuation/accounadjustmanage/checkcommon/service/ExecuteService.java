@@ -2413,7 +2413,7 @@ public class ExecuteService {
 	public String replaceStringForPath(String value) {
 
 		if (StringUtil.isNotEmpty(value)) {
-			value = value.replaceAll("\\\\", "/");
+			value = value.replaceAll("\\\\", File.separator);
 		}
 
 		return value;

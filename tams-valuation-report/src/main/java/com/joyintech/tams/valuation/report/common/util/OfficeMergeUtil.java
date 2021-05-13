@@ -173,9 +173,10 @@ public class OfficeMergeUtil {
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
-                    inputExcel.close();
+                    if (inputExcel !=null){
+                        inputExcel.close();
+                    }
                 }
-
             }
             /** **********将以上缓存中的内容写到EXCEL文件中******** */
             File outputFile = new File(outputFileName);

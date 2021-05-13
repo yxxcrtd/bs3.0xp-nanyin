@@ -271,14 +271,18 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 		String zipFileName = FileNameUtil.createFileName("zip");
 		File zipFile = new File(uploadFilePath + File.separator + zipFileName);
 		ZipOutputStream  zipOut =null;
-		if(filepath.exists()){
-			zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-			zipOut.setEncoding("gbk");
-			compressFile2(zipOut, filepath,filepath.getName());
-			zipOut.close();
-		 }
-		
-		
+		try{
+			if(filepath.exists()){
+				zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+				zipOut.setEncoding("gbk");
+				compressFile2(zipOut, filepath,filepath.getName());
+			}
+		}finally {
+			if(zipOut != null){
+				zipOut.close();
+			}
+		}
+
 		return ExportUtil.export(zipFileName, zipFile, true);
 
 	}

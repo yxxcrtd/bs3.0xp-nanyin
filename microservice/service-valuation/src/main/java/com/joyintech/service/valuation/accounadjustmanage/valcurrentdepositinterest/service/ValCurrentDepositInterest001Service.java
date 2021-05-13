@@ -143,7 +143,7 @@ public class ValCurrentDepositInterest001Service extends CommonExportService<Val
         //画面.年+"年第"+画面.季度+"季度活期存款利息一览表"
         String fileName = params.get("year").toString() + "年第" + params.get("quarter").toString() + "季度活期存款利息一览表"+ ".xls";
         String tempName = "ValCurrentDepositInterest001.xls";
-        String tplFlodPath = "/accounadjustmanage/valcurrentdepositinterest/ValCurrentDepositInterest001.xls";
+        String tplFlodPath = File.separator + "accounadjustmanage" + File.separator + "valcurrentdepositinterest" + File.separator + "ValCurrentDepositInterest001.xls";
         String tplPath = FileNameUtil.getTplFile(tplFlodPath);
         String outPath = exportFilePath + File.separator + fileName;
 

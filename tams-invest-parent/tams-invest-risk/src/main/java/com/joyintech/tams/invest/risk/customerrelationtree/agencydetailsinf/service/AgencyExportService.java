@@ -510,7 +510,15 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        wb.write(new FileOutputStream(file));
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            wb.write(new FileOutputStream(file));
+        }finally {
+            if(fileOutputStream != null){
+                fileOutputStream.close();
+            }
+        }
         return file;
     }
 
@@ -544,38 +552,44 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
         throws IOException{
         // 工作表对象
         Workbook wb = null;
-        String EXPORT_EXCEL_TYPE = CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_TYPE);
-        // 模板文件后缀名
-        String fileType = GlobalConstant.FILE_POSTFIX_XLSX;
-        String fileName = StringUtil.splitToList(GlobalConstant.POINT, reportConfig.getTempleteFile()).get(0);
-        if(StringUtil.equals(EXPORT_EXCEL_TYPE, DictCodeList.是否_否.getValue())){
-        	fileType = GlobalConstant.FILE_POSTFIX_XLS;
-        }
-        // 从配置文件中获取模板文件  以及文件类型
-        String tempFilePath = fileName + fileType;
-        File templeteFile = new File(buildTempleteFilePath(tempFilePath));
-        reportConfig.setTempleteFile(fileName + fileType);
-        // 模板输入流
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
+        try {
+            String EXPORT_EXCEL_TYPE = CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_TYPE);
+            // 模板文件后缀名
+            String fileType = GlobalConstant.FILE_POSTFIX_XLSX;
+            String fileName = StringUtil.splitToList(GlobalConstant.POINT, reportConfig.getTempleteFile()).get(0);
+            if(StringUtil.equals(EXPORT_EXCEL_TYPE, DictCodeList.是否_否.getValue())){
+                fileType = GlobalConstant.FILE_POSTFIX_XLS;
+            }
+            // 从配置文件中获取模板文件  以及文件类型
+            String tempFilePath = fileName + fileType;
+            File templeteFile = new File(buildTempleteFilePath(tempFilePath));
+            reportConfig.setTempleteFile(fileName + fileType);
+            // 模板输入流
+            if (templeteFile.exists()) {
+                stream = new FileInputStream(templeteFile);
+            }
+            else {
+                stream = CommonExportService.class.getResourceAsStream(
+                        TMP_DIR + tempFilePath);
+            }
+            // 工作表对象初始化
+            if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
+                wb = new HSSFWorkbook(stream);
+            }
+            else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
+                wb = new XSSFWorkbook(stream);
+            }
+            else {
+                stream.close();
+                throw new BusinessException("不是一个有效的Excel文件");
+            }
+            return wb;
+        }finally {
+            if(stream != null){
+                stream.close();
+            }
         }
-        else {
-            stream = CommonExportService.class.getResourceAsStream(
-                TMP_DIR + tempFilePath);
-        }
-        // 工作表对象初始化
-        if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
-            wb = new HSSFWorkbook(stream);
-        }
-        else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
-            wb = new XSSFWorkbook(stream);
-        }
-        else {
-            stream.close();
-            throw new BusinessException("不是一个有效的Excel文件");
-        }
-        return wb;
     }
 
     /**

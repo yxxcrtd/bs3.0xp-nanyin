@@ -230,7 +230,7 @@ public final class ImportGenerator {
                                      List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName)
         throws Exception {
         if (!path.endsWith("/")) {
-            path = path + "/";
+            path = path + File.separator;
         }
         String absoultPath = path + dataFileName;
         File tmpFile = new File(absoultPath);
@@ -259,7 +259,7 @@ public final class ImportGenerator {
 
             String importFullPath = REP_DB2_SERVER_FTP_FILEPATH;
             if (!StringUtil.endsWith(importFullPath, "/")) {
-                importFullPath = importFullPath + "/";
+                importFullPath = importFullPath + File.separator;;
             }
             importFullPath = importFullPath + dataFileName;
 

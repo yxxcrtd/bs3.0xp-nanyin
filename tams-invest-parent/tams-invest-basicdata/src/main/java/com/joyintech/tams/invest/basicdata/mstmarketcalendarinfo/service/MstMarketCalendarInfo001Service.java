@@ -409,7 +409,7 @@ public class MstMarketCalendarInfo001Service extends CommonExportService<MstMark
             date = list==null?null:sdf.parse(list.get(0));
             // 获取平台日期
             Date sysDate = DateUtil.platDateFromCache();
-            if (date.before(sysDate)) {
+            if (date != null && date.before(sysDate)) {
                 // 验证导入数据日期是否小于平台日期
                 ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i),
                     this.getMessage("BUSS_COM_E_0003", "平台日期", "导入数据的日期"));

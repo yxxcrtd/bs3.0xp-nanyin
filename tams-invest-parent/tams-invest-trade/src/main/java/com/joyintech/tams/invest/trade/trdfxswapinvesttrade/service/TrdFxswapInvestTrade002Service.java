@@ -688,20 +688,22 @@ public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswa
 
             // 到期交易生成 start
             BaseTradeProductDealDto baseDto = new BaseTradeProductDealDto();
-            baseDto.setTrdProductDealAdd(entity2.getTrdProductDealAdd());
-            baseDto.setTrdProductDeal(entity2.getTrdProductDeal());
-            baseDto.setStlPayOrdersList(entity2.getStlPayOrdersList());
-            List<PtlTrade> ptlTradeList2 = new ArrayList<PtlTrade>();
-            ptlTradeList2.add(entity2.getPtlTrade());
+            if (entity2 != null){
+                baseDto.setTrdProductDealAdd(entity2.getTrdProductDealAdd());
+                baseDto.setTrdProductDeal(entity2.getTrdProductDeal());
+                baseDto.setStlPayOrdersList(entity2.getStlPayOrdersList());
+                List<PtlTrade> ptlTradeList2 = new ArrayList<PtlTrade>();
+                ptlTradeList2.add(entity2.getPtlTrade());
 
-            String pPortfolioId = AllTradeCommonUtil.exchangePortfolio(entity2.getPtlTrade().getPortfolioId());
-            if(StringUtil.isNotEmpty(pPortfolioId) && !pPortfolioId.equals(entity.getPtlTrade().getPortfolioId())){
-                PtlTrade ptlTrade2 = new PtlTrade();
-                BeanUtil.copyPropertiesIgnoreNull(ptlTrade2, entity2.getPtlTrade());
-                ptlTrade2.setPortfolioId(pPortfolioId);
-                ptlTradeList2.add(ptlTrade2);
+                String pPortfolioId = AllTradeCommonUtil.exchangePortfolio(entity2.getPtlTrade().getPortfolioId());
+                if(StringUtil.isNotEmpty(pPortfolioId) && !pPortfolioId.equals(entity.getPtlTrade().getPortfolioId())){
+                    PtlTrade ptlTrade2 = new PtlTrade();
+                    BeanUtil.copyPropertiesIgnoreNull(ptlTrade2, entity2.getPtlTrade());
+                    ptlTrade2.setPortfolioId(pPortfolioId);
+                    ptlTradeList2.add(ptlTrade2);
+                }
+                baseDto.setPtlTrade(ptlTradeList2);
             }
-            baseDto.setPtlTrade(ptlTradeList2);
             finProductTradeDto.getBaseTradeProductDealDtos().add(baseDto);
             // 到期交易生成end
           // jixu接口
@@ -822,7 +824,9 @@ public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswa
     		investInterfCommDto.setStlPayOrdersList(stlPayOrdersList);
 			investInterfCommDto.setTradeFeeDetaillist(trdCommDto.getTradeFeeDetaillist());
 			investInterfCommDto.setFinTradeProduct(trdCommDto.getFinTradeProduct());
-            investInterfCommDto.setOtherTypeForConvert(finTradeProduct.getExcPs());
+			if (finTradeProduct != null){
+                investInterfCommDto.setOtherTypeForConvert(finTradeProduct.getExcPs());
+            }
     		investInterfCommService.doInvestInterf(investInterfCommDto);
         }
         if(entity2 != null ) {
