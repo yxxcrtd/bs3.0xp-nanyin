@@ -283,7 +283,7 @@ public class SvrAssetBasisInterf extends BaseService{
 	/**
 	 * 上游未下方估值数据，取估值资产估值信息表最近一日的数据生成资产估值信息
 	 */
-	public void genAssetValueInfoLast(){
+	public void genAssetValueInfoLast(String InstitutionCode){
 		String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
 		try (SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false)){
 			//批量插入mapper
@@ -291,7 +291,6 @@ public class SvrAssetBasisInterf extends BaseService{
 			// 先删后插
 			Map<String, Object> para = new HashMap<String, Object>();
 			para.put("valDate", "");
-			chbAstValInterfMapper.deleteInfo(para);
 			// 处理最近一日估值表数据
 			List<ChbAstValue> infoList = chbAstValInterfMapper.queryAssetValueInfoLastList();
 			int count = 0;

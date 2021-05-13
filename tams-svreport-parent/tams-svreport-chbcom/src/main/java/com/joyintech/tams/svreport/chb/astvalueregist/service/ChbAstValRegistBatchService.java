@@ -74,10 +74,11 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 		String isBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
 		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDate(DateUtil.format(batchTime),isBtm);
 		if (CollectionUtils.isEmpty(isUpdate)) {
-			svrAssetBasisInterf.genAssetValueInfoLast();
-		}
-		for (Date date : isUpdate) {
-			svrAssetBasisInterf.genAssetValueInfo(date,InstitutionCode);
+			svrAssetBasisInterf.genAssetValueInfoLast(InstitutionCode);
+		} else {
+			for (Date date : isUpdate) {
+				svrAssetBasisInterf.genAssetValueInfo(date, InstitutionCode);
+			}
 		}
 	}
 	
@@ -88,7 +89,6 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 		if (CollectionUtils.isEmpty(isUpdate)) {
 			// 获取登记数据
 			List<ChbAstValueSub> insertDataList =	chbAstValCBMapper.queryInsertGenerateLastList();
-			insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.资产估值信息登记表SUB);
 			for(ChbAstValueSub sub : insertDataList) {
 				sub.setCreateUser(CommonUtil.getUserName());
 				sub.setUpdateUser(CommonUtil.getUserName());

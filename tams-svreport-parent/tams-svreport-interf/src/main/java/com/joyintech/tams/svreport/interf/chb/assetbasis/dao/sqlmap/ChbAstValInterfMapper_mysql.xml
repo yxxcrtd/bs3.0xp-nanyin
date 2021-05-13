@@ -49,7 +49,7 @@
 
 	<select id="queryAssetValueInfoLastList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">
 		SELECT
-			VAL_ID AS valId,
+			f_guid() AS valId,
 			ISSUE_PARTY_ID AS issuePartyId,
 			ASSET_CODE AS assetCode,
 			NOW() AS valDate,

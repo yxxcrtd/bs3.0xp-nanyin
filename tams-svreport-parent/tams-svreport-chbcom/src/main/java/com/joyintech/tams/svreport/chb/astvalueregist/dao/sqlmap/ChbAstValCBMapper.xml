@@ -85,6 +85,8 @@
 			  and VAL2.UNIT_VAL_TOTAL = VAL.UNIT_VAL_TOTAL
 			  )	
 	</insert> -->
+	<select id="queryInsertGenerateLastList" parameterType="map" resultMap="com.joyintech.tams.common.base.dao.ChbAstValueSubMapper.BaseResultMap"></select>
+
 	<select id="queryInsertGenerateList" parameterType="map" resultMap="com.joyintech.tams.common.base.dao.ChbAstValueSubMapper.BaseResultMap">
 		SELECT
 			f_guid() REGIST_SEQNO,

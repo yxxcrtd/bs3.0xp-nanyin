@@ -46,7 +46,7 @@
 			</if>
 		</where>
 	</delete>
-	
+	<select id="queryAssetValueInfoLastList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue"></select>
 	<select id="queryAssetValueInfoList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">
 		with price as (
 	  		SELECT BASIS_CYY CCY,
