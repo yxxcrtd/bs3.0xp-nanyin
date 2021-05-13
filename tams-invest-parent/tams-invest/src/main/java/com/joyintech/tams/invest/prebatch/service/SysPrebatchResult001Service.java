@@ -210,7 +210,22 @@ public class SysPrebatchResult001Service extends CommonExportService<SysPrebatch
         sysBatchgrpExecInfo.setCreateUser(userName);
         sysBatchgrpExecInfo.setUpdateUser(userName);
 
-        sysBatchgrpExecInfo.setDetailName("批前检查-"+DateUtil.format(plateFormDate) +" " + instCode);
+        String instName = "";
+        if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isNotEmpty(instCode)){
+            Object institutionCodeName = CacheUtil.getAppCacheInstitutionCodeName(instCode);
+            if(institutionCodeName!=null){
+                instName = (String)institutionCodeName;
+            }
+        }
+
+        if(StringUtil.isNotEmpty(instName)){
+            sysBatchgrpExecInfo.setDetailName(instName+":批前检查-"+ DateUtil.format(plateFormDate) );
+
+        }else{
+            sysBatchgrpExecInfo.setDetailName("批前检查-"+ DateUtil.format(plateFormDate) );
+
+        }
+
         sysBatchgrpExecInfo.setOtherParam4(instCode);
         return sysBatchgrpExecInfo;
     }
