@@ -119,13 +119,13 @@ public class JasperReportService {
 
 	private void showHtml(String reportfile, HttpServletResponse response) throws IOException {
 		File tempFile = new File(reportfile);
-		String filename = tempFile.getName().substring(0,tempFile.getName().indexOf("."));
+//		String filename = tempFile.getName().substring(0,tempFile.getName().indexOf("."));
 		InputStream ins = null;
 		try {
 			ins = new BufferedInputStream(new FileInputStream(reportfile));
 			//response.setContentType("application/" + resolveContentType(filename));
 			response.setContentType("application/pdf");
-			response.setHeader("filename", filename);
+			response.setHeader("filename", tempFile.getName().substring(0,tempFile.getName().indexOf(".")));
 			//HashMap<String, Object> result = new HashMap<String, Object>();
 			//result.put("filepath", reportfile);
 			//JsonUtil.writeObjToResponse(response, result);
@@ -199,13 +199,13 @@ public class JasperReportService {
 			
 			String exportFile=genFileName(exportReportFolder,sourceJaspFile,portnum,startDate,endDate)+appendType;
 			File file=new File(exportFile);
-			String filename=file.getName();
+//			String filename=file.getName();
 			InputStream ins = null;
 			try {
 				ins = new BufferedInputStream(new FileInputStream(exportFile));
-				response.setContentType("application/" + resolveContentType(filename));
-				response.setHeader("filename", URLEncoder.encode(filename, "UTF-8"));
-				response.setHeader("filename", filename);
+				response.setContentType("application/" + resolveContentType(file.getName()));
+				response.setHeader("filename", URLEncoder.encode(file.getName(), "UTF-8"));
+				response.setHeader("filename", file.getName());
 				FileCopyUtils.copy(ins, response.getOutputStream());
 			}finally {
 				if(ins != null){
