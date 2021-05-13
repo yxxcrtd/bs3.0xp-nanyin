@@ -32,6 +32,7 @@
 					<div class="layui-input-inline input-inline">
 						<select id="assetType" class="layui-input form-input input-select"
 								data-th-data-result='${SVR_ASSETDEBT_TYPE}' placeholder="请选择"
+								childrenIds="assetType2"
 								data-th-initvalue="${assetType}"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="true">
@@ -43,6 +44,7 @@
 					<div class="layui-input-inline input-inline">
 						<select id="assetType2" class="layui-input form-input input-select"
 								data-th-data-result='${SVR_ASSET_TYPE_SECOND_LEVEL}' placeholder="请选择"
+								parentIds="assetType"
 								data-th-initvalue="${assetType2}"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="true">

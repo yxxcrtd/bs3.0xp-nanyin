@@ -2,6 +2,7 @@ package com.joyintech.tams.report.system.investmentdeal.service;
 
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -223,10 +224,11 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             investmentDealInfo001Mapper.updateOne(dto);
         }else {
             dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            dto.setType("01");
             investmentDealInfo001Mapper.insertOne(dto);
             investmentDealInfo001Mapper.deleteErrorDataOne(dto.getTradeCode());
         }
-        webResult.setMessage("保存成功");
+        webResult.setMessage("保存成功", MessageType.提示消息);
         return webResult;
     }
 
@@ -246,7 +248,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
         }else {
             investmentDealInfo001Mapper.deleteErrorDataOne(dto.getTradeCode());
         }
-        webResult.setMessage("删除成功");
+        webResult.setMessage("删除成功",MessageType.提示消息);
         return webResult;
     }
 
