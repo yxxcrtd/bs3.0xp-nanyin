@@ -31,6 +31,11 @@
 			<version>2.1.1</version>
 			<exclusions>
 				<exclusion>
+					<artifactId>service-bankuplink</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+
+				<exclusion>
 					<artifactId>service-asset</artifactId>
 					<groupId>com.joyintech</groupId>
 				</exclusion>
