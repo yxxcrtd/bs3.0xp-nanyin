@@ -55,10 +55,13 @@ import com.joyintech.tams.valuation.common.constants.*;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -72,6 +75,8 @@ import java.util.*;
  */
 @Service
 public class DeltRightCalAmortizationProcessorService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 记账引擎
@@ -455,12 +460,12 @@ public class DeltRightCalAmortizationProcessorService {
                 accountSceneMap.put(BookConstant.INTEREST_RATE, BigDecimal.ZERO);
             }
             else {
-                BigDecimal currDayAmount = BigDecimal.ZERO;
+//                BigDecimal currDayAmount = BigDecimal.ZERO;
                 // 标的信息.到期日 - 1= 计提类账务处理结果.发生日
                 Date ystMdate = addDate(targetFinProduct.getMdate(), -1);
                 if (ystMdate.compareTo(acctEntity.getHappenDate()) == 0) {
                     // 变量.利息调整 = 变量.溢折价科目余额*-1
-                    currDayAmount = spilledPriceBalance.negate();
+                    varLxtz = spilledPriceBalance.negate();
                 }
                 else {
                     // 定义 变量.最新报价
@@ -494,17 +499,33 @@ public class DeltRightCalAmortizationProcessorService {
                                 acctEntityEx, targetFinProduct, interestPayList, quotationList,
                                 payRuleList, spilledPriceBalance, costBalance, interestBalance,
                                 faceValue, latestPrice, acctEntity);
-                            currDayAmount = secDscYieldOutParameter.getCurrDayAmount();
-                            // 调用金额共通方法设置有效小数位
-                            currDayAmount = ArithmeticUtil.round(currDayAmount, NumberEnum.MONEY);
+                            // 赋值 变量.摊销日利率
                             varDayRate = secDscYieldOutParameter.getDayRate();
+
+//                            currDayAmount = secDscYieldOutParameter.getCurrDayAmount();
+
+                            // //变量.利息调整 = 当日摊销发生额
+                            // varLxtz = secDscYieldOutParameter.getCurrDayAmount();
+                            // 变量.利息调整 = 摊销日利率 * (变量.当日计算摊销溢折价科目余额 + 变量.当日计算摊销成本科目余额) -
+                            // 金额元素.应计利息
+                            varLxtz = ArithmeticUtil.subtract(
+                                    ArithmeticUtil.multiply(
+                                            varDayRate,ArithmeticUtil.doAdd(spilledPriceBalance, costBalance)),
+                                    ArithmeticUtil.round(calInterestBalanceNow, NumberEnum.MONEY),
+                                    NumberEnum.MONEY.getCode(), null);
+                            logger.info("资产代码: " + targetFinProduct.getFinprodId() + " 发生日："
+                                    + DateUtil.format(happenDate, "yyyy-MM-dd")
+                                    + " 摊销日利率: " + secDscYieldOutParameter.getDayRate()
+                                    + " 应计利息: "
+                                    + ArithmeticUtil.round(calInterestBalanceNow, NumberEnum.MONEY)
+                                    + " 日摊销额: " + varLxtz);
                         }
                         else {
                             // 变量.当日摊销发生额 = 变量.昨日统计分析账务明细汇总信息.日摊销利率 * (变量.溢折价科目余额 + 变量.成本科目余额) -
                             // 金额元素.应计利息
                             if (bokSummaryTableYestdy != null
                                 && StringUtils.isNotEmpty(bokSummaryTableYestdy.getBooksetId())) {
-                                currDayAmount = ArithmeticUtil.subtract(
+                                varLxtz = ArithmeticUtil.subtract(
                                     ArithmeticUtil.multiply(
                                         bokSummaryTableYestdy.getDailydscYield(),
                                         ArithmeticUtil.doAdd(spilledPriceBalance, costBalance)),
@@ -517,19 +538,19 @@ public class DeltRightCalAmortizationProcessorService {
                     }
                 }
                 // 利息调整 <- 当日摊销发生额
-                if (currDayAmount.compareTo(BigDecimal.ZERO) >= 0) {
+                if (varLxtz.compareTo(BigDecimal.ZERO) >= 0) {
                     // 利息调整（借） = 变量.利息调整
                     accountAmountMap.put(BookConstant.DSCINC_D,
-                        ArithmeticUtil.round(currDayAmount, NumberEnum.MONEY));
+                        ArithmeticUtil.round(varLxtz, NumberEnum.MONEY));
                 }
                 else {
                     // 利息调整（贷） = 变量.利息调整 * -1
                     accountAmountMap.put(BookConstant.DSCINC_C,
                         ArithmeticUtil.multiply(new BigDecimal(-1),
-                            ArithmeticUtil.round(currDayAmount, NumberEnum.MONEY)));
+                            ArithmeticUtil.round(varLxtz, NumberEnum.MONEY)));
                 }
                 // 投资收益 <- 当日摊销发生额 + 3.1 处理的应计利息
-                BigDecimal dscloss = ArithmeticUtil.doAdd(currDayAmount, calInterestBalanceNow);
+                BigDecimal dscloss = ArithmeticUtil.doAdd(varLxtz, calInterestBalanceNow);
                 // 投资收益（借） = 变量.投资收益 * -1
                 accountAmountMap.put(BookConstant.INCOME_C,
                     ArithmeticUtil.round(dscloss, NumberEnum.MONEY));
@@ -542,7 +563,7 @@ public class DeltRightCalAmortizationProcessorService {
                 accountAmountMap.putAll(bccyAmountMap);
                 //定义 变量.投资收益_本位币
                 BigDecimal invIncomeBccy = BigDecimal.ZERO;
-                if (currDayAmount.compareTo(BigDecimal.ZERO) > 0) {
+                if (varLxtz.compareTo(BigDecimal.ZERO) > 0) {
                 	//变量.投资收益_本位币 = 	应计利息_本位币 + 利息调整（借)_本位币
                 	invIncomeBccy = ArithmeticUtil.doAdd(accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT)
                     			, accountAmountMap.get(BookConstant.DSCINC_D + BookConstant.BCCYAMT));
@@ -561,7 +582,6 @@ public class DeltRightCalAmortizationProcessorService {
                     accountCurrencyMap.put(key, ccy);
                 }
                 accountCurrencyMap.put(BookConstant.B_CCY, acctEntityEx.getStandardCcy());
-                varLxtz = currDayAmount;
             }
 
             // map塞入场景要素管理中
@@ -1132,7 +1152,7 @@ public class DeltRightCalAmortizationProcessorService {
 
         SecDscYieldCalculator calculator = CalculatorFactory.createSecDscYieldCalculator();
         SecDscYieldOutParameter output = calculator.calculate(parameter);
-
+        output.setDayRate(output.getDayRate().setScale(12, RoundingMode.HALF_UP));
         return output;
     }
 
