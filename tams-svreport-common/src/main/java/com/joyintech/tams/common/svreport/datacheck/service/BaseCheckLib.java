@@ -198,10 +198,12 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean compareValue(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
         String objValue = rule.getObjvalue();
+        objValue = stripTrailingZeros(objValue);
         String compareTo = rule.getCompareto();
         // add by zhangliang 20201023 判断符号如果是!=的场合 start
         // 此处判断是为了处理condition里比较值是空的场合，对于！=也是成立的
@@ -248,6 +250,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean compareProperty(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
@@ -261,6 +264,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue) )
             return false;        
         String objValue = data.get(rule.getObjvalue());
+        objValue = stripTrailingZeros(objValue);
         if ( objValue==null ) objValue="";
 
         switch (compareTo) {
@@ -313,6 +317,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue) )
             return false;        
         String objValue = rule.getObjvalue();
+        objValue = stripTrailingZeros(objValue);
 
         if (  !isNumeric(srcValue)  || !isNumeric(objValue) ) {
             return false;
@@ -357,6 +362,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean comparePropertyAsNumber(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
@@ -371,6 +377,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue) )
             return false;        
         String objValue = data.get(rule.getObjvalue());
+        objValue = stripTrailingZeros(objValue);
         if ( objValue==null ) objValue="";
 
         if (  !isNumeric(srcValue)  || !isNumeric(objValue) ) {
