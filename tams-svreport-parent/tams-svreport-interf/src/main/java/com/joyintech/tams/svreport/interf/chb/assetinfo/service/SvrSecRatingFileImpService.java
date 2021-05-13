@@ -267,7 +267,7 @@ public class SvrSecRatingFileImpService extends FileImpService {
 		@SuppressWarnings("unused")
 		List<Map<String, String>> listError = checkData(listDataConvert, interfFile.getFilename(),
 				                                        InterfDefine.债券评级数据.getCode(),
-				                                        InterfDefine.债券评级数据.getCode(),
+				                                        "MST_BOND_CREDIT_RATING",
 				                                        null,"O_CODE","GRADE_DATE","GRADE_ORG_ID","O_TYPE","SHORT_LONG_TERM");
 		logger.debug("评级数据检查---结束-----:" +  df.format(new Date()));
 		if(CollectionUtils.isEmpty(listDataConvert)){
