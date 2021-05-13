@@ -51,10 +51,10 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.system.batchstart.dao.ValBatchStart001Mapper;
 import com.joyintech.tams.valuation.system.batchstart.dto.BatchGrpPri;
 import com.joyintech.tams.valuation.system.batchstart.dto.DimensionValue;
-import com.joyintech.tools.mq.MessageQueueManager;
+//import com.joyintech.tools.mq.MessageQueueManager;
 import com.joyintech.tools.mq.constant.OperationType;
 import com.joyintech.tools.mq.constant.SystemList;
-import com.joyintech.tools.mq.entity.PushMessageDto;
+//import com.joyintech.tools.mq.entity.PushMessageDto;
 
 @Service
 public class ValBatchStart001Service extends BaseService<SysBatchTask> {
@@ -73,8 +73,8 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 	@Autowired
 	private SysBatchPrdGrpMapper batchProductGroupMapper;
 
-	@Autowired
-	private MessageQueueManager messageQueueManager;
+//	@Autowired
+//	private MessageQueueManager messageQueueManager;
 
 	@Autowired(required = false)
 	private ProductService productService;
@@ -345,11 +345,12 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		insertBatchExecuteDetail(executeDetail);
 
 		// 添加是否激活activemq的判断 added by qiangchengxi 2018年5月10日(星期四)
-		if (isActivemqActive == null || isActivemqActive) {
-			return executeBatch(executeDetail.getSeqNo());
-		} else {
-			return true;
-		}
+//		if (isActivemqActive == null || isActivemqActive) {
+//			return executeBatch(executeDetail.getSeqNo());
+//		} else {
+//			return true;
+//		}
+		return true;
 	}
 	private String getSystemCode(String taskId) {
 		DynamicDataSourceHolder.putDataSource(DataSourceType.OTHER);
@@ -370,23 +371,23 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		return tasks;
 	}
 
-	public Boolean executeBatch(String detailSeqNo) {
-		boolean flag = true;
-		DynamicDataSourceHolder.putDataSource(DataSourceType.OTHER);
-		valBatchStart001Mapper.updateExeDetailToUnr(detailSeqNo, SecurityUtil.getLoginUser().getUserName());
-		valBatchStart001Mapper.deleteAllBatchInfo(detailSeqNo);
-		if (isActivemqActive == null || isActivemqActive) {
-			PushMessageDto messageDto = new PushMessageDto();
-			messageDto.setMessageId(IDGenerator.generate());
-			messageDto.setDestSystem(SystemList.估值核算_批处理.getValue());
-			messageDto.setBusinessEntity(detailSeqNo);
-			messageDto.setBusinessMode(BusinessMode.批处理启动.getModeCode());
-			messageDto.setOperationType(OperationType.插入.getValue());
-			DynamicDataSourceHolder.clearDataSource();
-			flag = messageQueueManager.sendMessage(messageDto);
-		}
-		return flag;
-	}
+//	public Boolean executeBatch(String detailSeqNo) {
+//		boolean flag = true;
+//		DynamicDataSourceHolder.putDataSource(DataSourceType.OTHER);
+//		valBatchStart001Mapper.updateExeDetailToUnr(detailSeqNo, SecurityUtil.getLoginUser().getUserName());
+//		valBatchStart001Mapper.deleteAllBatchInfo(detailSeqNo);
+//		if (isActivemqActive == null || isActivemqActive) {
+//			PushMessageDto messageDto = new PushMessageDto();
+//			messageDto.setMessageId(IDGenerator.generate());
+//			messageDto.setDestSystem(SystemList.估值核算_批处理.getValue());
+//			messageDto.setBusinessEntity(detailSeqNo);
+//			messageDto.setBusinessMode(BusinessMode.批处理启动.getModeCode());
+//			messageDto.setOperationType(OperationType.插入.getValue());
+//			DynamicDataSourceHolder.clearDataSource();
+//			flag = messageQueueManager.sendMessage(messageDto);
+//		}
+//		return flag;
+//	}
 
 	private void insertGroup(SysBatchGrp batchGroup) {
 		DynamicDataSourceHolder.putDataSource(DataSourceType.OTHER);

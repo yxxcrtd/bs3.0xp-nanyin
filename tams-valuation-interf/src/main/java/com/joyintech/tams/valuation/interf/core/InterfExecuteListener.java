@@ -10,23 +10,23 @@
 
 package com.joyintech.tams.valuation.interf.core;
 
-import com.joyintech.tools.mq.entity.PushMessageDto;
-import com.joyintech.tools.mq.listener.MessagePushListener;
+//import com.joyintech.tools.mq.entity.PushMessageDto;
+//import com.joyintech.tools.mq.listener.MessagePushListener;
 
-public class InterfExecuteListener implements MessagePushListener {
+public class InterfExecuteListener {//implements MessagePushListener {
 
-    @Override
-    public boolean messageFilter(PushMessageDto pmd) {
-        if ("START_INTERF".equals(pmd.getBusinessMode())) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public PushMessageDto onMessage(PushMessageDto pmd) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+//    @Override
+//    public boolean messageFilter(PushMessageDto pmd) {
+//        if ("START_INTERF".equals(pmd.getBusinessMode())) {
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    @Override
+//    public PushMessageDto onMessage(PushMessageDto pmd) {
+//        // TODO Auto-generated method stub
+//        return null;
+//    }
 
 }
