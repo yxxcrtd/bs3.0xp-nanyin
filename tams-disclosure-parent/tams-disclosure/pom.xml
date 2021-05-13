@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.joyintech</groupId>
-		<artifactId>tams-parent-disclosure</artifactId>
+		<artifactId>tams-disclosure-parent</artifactId>
 		<version>3.0.0</version>
 	</parent>
 	<artifactId>tams-disclosure</artifactId>
