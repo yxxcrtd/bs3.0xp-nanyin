@@ -354,7 +354,7 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                 }
                 else {
                     try {
-                        field.set(chbAssetInfo, (value == null || "".equals(value)) ? "" : value);
+                        field.set(chbAssetInfo, (value == null || "".equals(value)) ? null : value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return entities;
