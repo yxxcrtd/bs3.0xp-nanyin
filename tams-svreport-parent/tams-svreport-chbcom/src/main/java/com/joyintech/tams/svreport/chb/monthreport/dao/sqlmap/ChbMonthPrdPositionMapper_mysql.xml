@@ -1,6 +1,423 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthPrdPositionMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
+        <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
+        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
+        <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
+        <result column="BOOKDATE" property="bookdate" jdbcType="TIMESTAMP" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="RAISEMODE" property="raisemode" jdbcType="VARCHAR" />
+        <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+        <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="SALE_TARGET" property="saleTarget" jdbcType="VARCHAR" />
+        <result column="CON_PRD_TRAGET" property="conPrdTraget" jdbcType="VARCHAR" />
+        <result column="ORD_IDENTIFIED" property="ordIdentified" jdbcType="VARCHAR" />
+        <result column="DIRTYAMTSUM" property="dirtyamtsum" jdbcType="DECIMAL" />
+        <result column="CLEANAMTSUM" property="cleanamtsum" jdbcType="DECIMAL" />
+        <result column="REDEEMAMT" property="redeemamt" jdbcType="DECIMAL" />
+        <result column="TERMINATIONAMT" property="terminationamt" jdbcType="DECIMAL" />
+        <result column="ENDAMTSUM_OTH" property="endamtsumOth" jdbcType="DECIMAL" />
+        <result column="CUSTOMERAMT" property="customeramt" jdbcType="DECIMAL" />
+        <result column="REDEEMINTAMT" property="redeemintamt" jdbcType="DECIMAL" />
+        <result column="TERMINATIONINTAMT" property="terminationintamt" jdbcType="DECIMAL" />
+        <result column="CASHAMT" property="cashamt" jdbcType="DECIMAL" />
+        <result column="DURATIONFLAG" property="durationflag" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+        <result column="OPENDURATION" property="openduration" jdbcType="VARCHAR" />
+        <result column="CASH_MANA_CATE" property="cashmanacate" jdbcType="VARCHAR" />
+        <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+        <result column="PAYAMTSUM" property="payamtsum" jdbcType="DECIMAL" />
+        <result column="CLOSETERMDAY" property="closetermday" jdbcType="DECIMAL" />
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+        <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
+        <result column="FUNCTIONAL_CURRENCY" property="functionalCurrency" jdbcType="VARCHAR" />
+        <result column="IS_TRANSFER" property="isTransfer" jdbcType="VARCHAR" />
+        <result column="IS_NOTICE" property="isNotice" jdbcType="VARCHAR" />
+        <result column="YIELD_E" property="yieldE" jdbcType="DECIMAL" />
+        <result column="TERMDAY" property="termday" jdbcType="DECIMAL" />
+        <result column="TERMTYPE2" property="termtype2" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
+    OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM,
+    CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT,
+    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, FUNCTIONAL_CURRENCY FUNCTIONAL_CURRENCY,
+        IS_TRANSFER IS_TRANSFER, IS_NOTICE IS_NOTICE, YIELD_E YIELD_E, TERMDAY TERMDAY, TERMTYPE2 TERMTYPE2
+  </sql>
+    <sql id="Base_Column_List_inst" >
+    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
+    OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM,
+    CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT,
+    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, INSTITUTION_CODE
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List_inst" />
+        from CHB_MONTH_PRD_POSITION
+        <if test="modelType != null">
+        left join (
+            select f.finprod_market_id,di.institution_code
+            from fin_product f
+            left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
+            WHERE f.p_finprod_id is null) di on di.finprod_market_id = CHB_MONTH_PRD_POSITION.PRODID
+        </if>
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_MONTH_PRD_POSITION
+    where POSUUID = #{posuuid,jdbcType=CHAR}
+  </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
+    insert into CHB_MONTH_PRD_POSITION (POSUUID, PRODID, STARTDATE,
+      ENDDATE, BOOKDATE, CCY,
+      RAISEMODE, IVSTORIENTATION, TERMTYPE,
+      OPERATE_MODE, PROFIT_TYPE, SALE_TARGET,
+      CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM,
+      CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT,
+      ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT,
+      TERMINATIONINTAMT, CASHAMT, DURATIONFLAG,
+      VDATE, FUNCTIONAL_CURRENCY, IS_TRANSFER,
+            IS_FPROD, IS_NOTICE, YIELD_E,
+            TERMDAY, TERMTYPE2)
+    values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{startdate,jdbcType=TIMESTAMP},
+      #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR},
+      #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{termtype,jdbcType=VARCHAR},
+      #{operateMode,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{saleTarget,jdbcType=VARCHAR},
+      #{conPrdTraget,jdbcType=VARCHAR}, #{ordIdentified,jdbcType=VARCHAR}, #{dirtyamtsum,jdbcType=DECIMAL},
+      #{cleanamtsum,jdbcType=DECIMAL}, #{redeemamt,jdbcType=DECIMAL}, #{terminationamt,jdbcType=DECIMAL},
+      #{endamtsumOth,jdbcType=DECIMAL}, #{customeramt,jdbcType=DECIMAL}, #{redeemintamt,jdbcType=DECIMAL},
+      #{terminationintamt,jdbcType=DECIMAL}, #{cashamt,jdbcType=DECIMAL}, #{durationflag,jdbcType=VARCHAR},
+      #{vdate,jdbcType=TIMESTAMP}, #{isTransfer,jdbcType=VARCHAR}, #{functionalCurrency,jdbcType=VARCHAR},
+            #{isTransfer,jdbcType=VARCHAR}, #{isNotice,jdbcType=VARCHAR}, #{yieldE,jdbcType=DECIMAL},
+            #{termday,jdbcType=DECIMAL}, #{termtype2,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
+        insert into CHB_MONTH_PRD_POSITION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="posuuid != null" >
+                POSUUID,
+            </if>
+            <if test="prodid != null" >
+                PRODID,
+            </if>
+            <if test="startdate != null" >
+                STARTDATE,
+            </if>
+            <if test="enddate != null" >
+                ENDDATE,
+            </if>
+            <if test="bookdate != null" >
+                BOOKDATE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="raisemode != null" >
+                RAISEMODE,
+            </if>
+            <if test="ivstorientation != null" >
+                IVSTORIENTATION,
+            </if>
+            <if test="termtype != null" >
+                TERMTYPE,
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="saleTarget != null" >
+                SALE_TARGET,
+            </if>
+            <if test="conPrdTraget != null" >
+                CON_PRD_TRAGET,
+            </if>
+            <if test="ordIdentified != null" >
+                ORD_IDENTIFIED,
+            </if>
+            <if test="dirtyamtsum != null" >
+                DIRTYAMTSUM,
+            </if>
+            <if test="cleanamtsum != null" >
+                CLEANAMTSUM,
+            </if>
+            <if test="redeemamt != null" >
+                REDEEMAMT,
+            </if>
+            <if test="terminationamt != null" >
+                TERMINATIONAMT,
+            </if>
+            <if test="endamtsumOth != null" >
+                ENDAMTSUM_OTH,
+            </if>
+            <if test="customeramt != null" >
+                CUSTOMERAMT,
+            </if>
+            <if test="redeemintamt != null" >
+                REDEEMINTAMT,
+            </if>
+            <if test="terminationintamt != null" >
+                TERMINATIONINTAMT,
+            </if>
+            <if test="cashamt != null" >
+                CASHAMT,
+            </if>
+            <if test="durationflag != null" >
+                DURATIONFLAG,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="functionalCurrency != null" >
+                FUNCTIONAL_CURRENCY,
+            </if>
+            <if test="isTransfer != null" >
+                IS_TRANSFER,
+            </if>
+            <if test="isNotice != null" >
+                IS_NOTICE,
+            </if>
+            <if test="yieldE != null" >
+                YIELD_E,
+            </if>
+            <if test="termday != null" >
+                TERMDAY,
+            </if>
+            <if test="termtype2 != null" >
+                TERMTYPE2,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="posuuid != null" >
+                #{posuuid,jdbcType=CHAR},
+            </if>
+            <if test="prodid != null" >
+                #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="startdate != null" >
+                #{startdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enddate != null" >
+                #{enddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="bookdate != null" >
+                #{bookdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="raisemode != null" >
+                #{raisemode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivstorientation != null" >
+                #{ivstorientation,jdbcType=VARCHAR},
+            </if>
+            <if test="termtype != null" >
+                #{termtype,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="saleTarget != null" >
+                #{saleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="conPrdTraget != null" >
+                #{conPrdTraget,jdbcType=VARCHAR},
+            </if>
+            <if test="ordIdentified != null" >
+                #{ordIdentified,jdbcType=VARCHAR},
+            </if>
+            <if test="dirtyamtsum != null" >
+                #{dirtyamtsum,jdbcType=DECIMAL},
+            </if>
+            <if test="cleanamtsum != null" >
+                #{cleanamtsum,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemamt != null" >
+                #{redeemamt,jdbcType=DECIMAL},
+            </if>
+            <if test="terminationamt != null" >
+                #{terminationamt,jdbcType=DECIMAL},
+            </if>
+            <if test="endamtsumOth != null" >
+                #{endamtsumOth,jdbcType=DECIMAL},
+            </if>
+            <if test="customeramt != null" >
+                #{customeramt,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemintamt != null" >
+                #{redeemintamt,jdbcType=DECIMAL},
+            </if>
+            <if test="terminationintamt != null" >
+                #{terminationintamt,jdbcType=DECIMAL},
+            </if>
+            <if test="cashamt != null" >
+                #{cashamt,jdbcType=DECIMAL},
+            </if>
+            <if test="durationflag != null" >
+                #{durationflag,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="functionalCurrency != null" >
+                #{functionalCurrency,jdbcType=VARCHAR},
+            </if>
+            <if test="isTransfer != null" >
+                #{isTransfer,jdbcType=VARCHAR},
+            </if>
+            <if test="isNotice != null" >
+                #{isNotice,jdbcType=VARCHAR},
+            </if>
+            <if test="yieldE != null" >
+                #{yieldE,jdbcType=DECIMAL},
+            </if>
+            <if test="termday != null" >
+                #{termday,jdbcType=DECIMAL},
+            </if>
+            <if test="termtype2 != null" >
+                #{termtype2,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
+        update CHB_MONTH_PRD_POSITION
+        <set >
+            <if test="prodid != null" >
+                PRODID = #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="startdate != null" >
+                STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enddate != null" >
+                ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="bookdate != null" >
+                BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="raisemode != null" >
+                RAISEMODE = #{raisemode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivstorientation != null" >
+                IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+            </if>
+            <if test="termtype != null" >
+                TERMTYPE = #{termtype,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="saleTarget != null" >
+                SALE_TARGET = #{saleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="conPrdTraget != null" >
+                CON_PRD_TRAGET = #{conPrdTraget,jdbcType=VARCHAR},
+            </if>
+            <if test="ordIdentified != null" >
+                ORD_IDENTIFIED = #{ordIdentified,jdbcType=VARCHAR},
+            </if>
+            <if test="dirtyamtsum != null" >
+                DIRTYAMTSUM = #{dirtyamtsum,jdbcType=DECIMAL},
+            </if>
+            <if test="cleanamtsum != null" >
+                CLEANAMTSUM = #{cleanamtsum,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemamt != null" >
+                REDEEMAMT = #{redeemamt,jdbcType=DECIMAL},
+            </if>
+            <if test="terminationamt != null" >
+                TERMINATIONAMT = #{terminationamt,jdbcType=DECIMAL},
+            </if>
+            <if test="endamtsumOth != null" >
+                ENDAMTSUM_OTH = #{endamtsumOth,jdbcType=DECIMAL},
+            </if>
+            <if test="customeramt != null" >
+                CUSTOMERAMT = #{customeramt,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemintamt != null" >
+                REDEEMINTAMT = #{redeemintamt,jdbcType=DECIMAL},
+            </if>
+            <if test="terminationintamt != null" >
+                TERMINATIONINTAMT = #{terminationintamt,jdbcType=DECIMAL},
+            </if>
+            <if test="cashamt != null" >
+                CASHAMT = #{cashamt,jdbcType=DECIMAL},
+            </if>
+            <if test="durationflag != null" >
+                DURATIONFLAG = #{durationflag,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="functionalCurrency != null" >
+                FUNCTIONAL_CURRENCY = #{functionalCurrency,jdbcType=VARCHAR},
+            </if>
+            <if test="isTransfer != null" >
+                IS_TRANSFER = #{isTransfer,jdbcType=VARCHAR},
+            </if>
+            <if test="isNotice != null" >
+                IS_NOTICE = #{isNotice,jdbcType=VARCHAR},
+            </if>
+            <if test="yieldE != null" >
+                YIELD_E = #{yieldE,jdbcType=DECIMAL},
+            </if>
+            <if test="termday != null" >
+                TERMDAY = #{termday,jdbcType=DECIMAL},
+            </if>
+            <if test="termtype2 != null" >
+                TERMTYPE2 = #{termtype2,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
+    update CHB_MONTH_PRD_POSITION
+    set PRODID = #{prodid,jdbcType=VARCHAR},
+      STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+      ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+      BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
+      CCY = #{ccy,jdbcType=VARCHAR},
+      RAISEMODE = #{raisemode,jdbcType=VARCHAR},
+      IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+      TERMTYPE = #{termtype,jdbcType=VARCHAR},
+      OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+      PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+      SALE_TARGET = #{saleTarget,jdbcType=VARCHAR},
+      CON_PRD_TRAGET = #{conPrdTraget,jdbcType=VARCHAR},
+      ORD_IDENTIFIED = #{ordIdentified,jdbcType=VARCHAR},
+      DIRTYAMTSUM = #{dirtyamtsum,jdbcType=DECIMAL},
+      CLEANAMTSUM = #{cleanamtsum,jdbcType=DECIMAL},
+      REDEEMAMT = #{redeemamt,jdbcType=DECIMAL},
+      TERMINATIONAMT = #{terminationamt,jdbcType=DECIMAL},
+      ENDAMTSUM_OTH = #{endamtsumOth,jdbcType=DECIMAL},
+      CUSTOMERAMT = #{customeramt,jdbcType=DECIMAL},
+      REDEEMINTAMT = #{redeemintamt,jdbcType=DECIMAL},
+      TERMINATIONINTAMT = #{terminationintamt,jdbcType=DECIMAL},
+      CASHAMT = #{cashamt,jdbcType=DECIMAL},
+      DURATIONFLAG = #{durationflag,jdbcType=VARCHAR},
+      VDATE = #{vdate,jdbcType=TIMESTAMP},
+      FUNCTIONAL_CURRENCY = #{functionalCurrency,jdbcType=VARCHAR},
+      IS_TRANSFER = #{isTransfer,jdbcType=VARCHAR},
+      IS_NOTICE = #{isNotice,jdbcType=VARCHAR},
+      YIELD_E = #{yieldE,jdbcType=DECIMAL},
+      TERMDAY = #{termday,jdbcType=DECIMAL},
+      TERMTYPE2 = #{termtype2,jdbcType=VARCHAR}
+    where POSUUID = #{posuuid,jdbcType=CHAR}
+  </update>
     <insert id="genPosition"  parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
         insert into chb_month_prd_position (
         POSUUID
@@ -619,7 +1036,61 @@
         </if>
 
     </insert>
-
-
-
+    <select id="select" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
+        select
+            pos.POSUUID, pos.PRODID, pos.STARTDATE, pos.ENDDATE, pos.BOOKDATE, pos.CCY, pos.RAISEMODE, pos.IVSTORIENTATION,
+            pos.TERMTYPE,pos.OPERATE_MODE, pos.PROFIT_TYPE, pos.SALE_TARGET, pos.CON_PRD_TRAGET, pos.ORD_IDENTIFIED, pos.DIRTYAMTSUM,
+            pos.CLEANAMTSUM, pos.REDEEMAMT, pos.TERMINATIONAMT, pos.ENDAMTSUM_OTH, pos.CUSTOMERAMT, pos.REDEEMINTAMT,
+            pos.TERMINATIONINTAMT, pos.CASHAMT, pos.DURATIONFLAG, pos.VDATE,pos.OPENDURATION,pos.CASH_MANA_CATE, di.INSTITUTION_CODE,
+            pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP,pos.FUNCTIONAL_CURRENCY, info.IS_TRANSFER, pos.IS_NOTICE,
+            pos.YIELD_E,pos.TERMDAY,pos.TERMTYPE2
+        from CHB_MONTH_PRD_POSITION pos
+        left join (
+                select f.finprod_market_id,di.institution_code
+                from fin_product f
+                left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id
+                    and di.model_type = '02'
+                    and DI.DATA_TYPE= 'FINPROD04'
+                WHERE f.p_finprod_id is null
+        ) di on di.finprod_market_id = pos.PRODID
+        left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID
+        where startdate = #{startdate,jdbcType=DATE}
+        and enddate = #{enddate,jdbcType=DATE}
+        <if test="prodids !=null and prodids.size()!=0">
+            and prodid in
+            <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+                <if test="(index % 999) == 998">
+                    null) OR prodid in (
+                </if>
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectPrciceByProdAndDate"   resultType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" parameterType="date" >
+  	 select prod_id prodId,ccy,prod_value prodValue from (
+	        select rank() over(partition by prod_id order by change_date desc)
+	        my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
+	        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
+	        ) aa where my_rank=1
+  </select>
+    <delete id="deleteByModel" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
+        delete from CHB_MONTH_PRD_POSITION
+        where 1=1
+        <if test="startdate!=null">
+            and startdate=#{startdate,jdbcType=DATE}
+        </if>
+        <if test="enddate!=null">
+            and enddate=#{enddate,jdbcType=DATE}
+        </if>
+        <if test="prodids !=null">
+            and prodid in
+            <foreach collection="prodids" item="item" open="(" separator=","
+                     close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="prodid!=null and prodid.length > 0">
+            and prodid=#{prodid,jdbcType=VARCHAR}
+        </if>
+    </delete>
 </mapper>
