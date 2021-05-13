@@ -44,6 +44,8 @@ public class ChbInvestReportConstant {
     public static final String XLS文档 = ".xls";
 
     public static final String 日期格式化yyyyMMddHHmmss = "yyyyMMddHHmmss";
+    public static final String 无特定存续期限日期 = "2099-01-01";
+    public static final String 无特定存续期限 = "无特定存续期限";
 
     public static final String 理财产品非标投资运作报告模板文件 = "ChbInvestOperation.ftl";
     public static final String 成立公告模板文件 = "ChbEstablishOperation.ftl";
