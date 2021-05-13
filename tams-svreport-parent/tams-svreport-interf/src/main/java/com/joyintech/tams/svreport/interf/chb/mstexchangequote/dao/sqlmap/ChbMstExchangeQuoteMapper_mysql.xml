@@ -66,23 +66,6 @@
 
         UPDATE  MST_EXCHARGE_QUOTE as A,
         (
-        select TRADE_DATE,
-        DATASOURCE_TYPE,
-        OPEN_PRICE,
-        CLOSE_PRICE,
-        HIGH_PRICE,
-        LOW_PRICE,
-        MID_PRICE,
-        BASIS_CYY,
-        QUOT_CYY,
-        QUOT_UNIT,
-        INPUT_TYPE,
-        CREATE_USER,
-        CREATE_DEPT,
-        CREATE_TIME,
-        UPDATE_USER,
-        UPDATE_TIME from
-        (
         select TEMP.* from
         (
         <foreach collection="list" item="item"  separator="union all">
@@ -107,8 +90,24 @@
             from dual
         </foreach>
         ) TEMP
-        ) de
         ) AS B
-        set  A.* = B.* where exists (select 1 from MST_EXCHARGE_QUOTE CII where CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE);
+        set
+        A.TRADE_DATE = B.TRADE_DATE,
+        A.DATASOURCE_TYPE = B.DATASOURCE_TYPE,
+        A.OPEN_PRICE = B.OPEN_PRICE,
+        A.CLOSE_PRICE = B.CLOSE_PRICE,
+        A.HIGH_PRICE = B.HIGH_PRICE,
+        A.LOW_PRICE = B.LOW_PRICE,
+        A.MID_PRICE = B.MID_PRICE,
+        A.BASIS_CYY = B.BASIS_CYY,
+        A.QUOT_CYY = B.QUOT_CYY,
+        A.QUOT_UNIT = B.QUOT_UNIT,
+        A.INPUT_TYPE = B.INPUT_TYPE,
+        A.CREATE_USER = B.CREATE_USER,
+        A.CREATE_DEPT = B.CREATE_DEPT,
+        A.CREATE_TIME = B.CREATE_TIME,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME
+        where A.EXCHARGE_CODE = B.EXCHARGE_CODE;
     </insert>
 </mapper>

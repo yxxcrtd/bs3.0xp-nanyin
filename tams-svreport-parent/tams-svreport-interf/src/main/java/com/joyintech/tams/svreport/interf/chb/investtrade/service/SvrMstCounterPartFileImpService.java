@@ -57,7 +57,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
 	/**
 	 * 接口类型-交易对手
 	 */
-	private static final String INTERFTYPE_CHB_MST_COUNTERPART = "CHB_MST_COUNTERPART";
+	private static final String INTERFTYPE_CHB_MST_COUNTERPART = "CHB_MST_COUNTER_PARTY";
 	
 	/**
 	 * 检查数据类型-交易对手
