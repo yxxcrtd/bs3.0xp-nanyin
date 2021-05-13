@@ -593,7 +593,7 @@
 		  #{reportStartDate,jdbcType=DATE} startdate,/*报表开始日期*/
 		  #{reportEndDate,jdbcType=DATE}enddate,/*报表结束日期*/
 		  #{batchDate,jdbcType=DATE} bookdate,/*统计日期*/
-	      (case info.is_constracte when 'Y' then '01' else '02' end) isconstracte,/*是否分级产品*/
+	  	  info.is_constracte isconstracte,/*是否分级产品*/
 		  /*--info.prodtype          prodtype,产品标识*/
 		  info.transfer_type     transfertype,/*转让类型*/
 		  deal.buy_place         buyplace,/*销售区域*/
