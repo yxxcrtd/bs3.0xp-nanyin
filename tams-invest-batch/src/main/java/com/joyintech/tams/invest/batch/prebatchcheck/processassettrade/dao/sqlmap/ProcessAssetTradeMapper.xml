@@ -80,6 +80,7 @@
 					T.Trade_id tradeId,
 					deal.TOTLE_TRADE_ID totleTradeId,
                     case 
+                        when ptotal.trade_amt is not null then  decode(ptotal.trade_amt,'',null,ptotal.trade_amt) 
                         when total.trade_amt is not null then  decode(total.trade_amt,'',null,total.trade_amt)
                         when deal.trade_amt is not null then decode(deal.trade_amt,'',null,deal.trade_amt)
                         else decode(amt.tradeAmt,'',null,amt.tradeAmt)
@@ -92,7 +93,8 @@
 				INNER JOIN DEAL ON deal.workflow_id = T.seq_no and T.PROCESS_STATE not in ('END','NEW')
 				left join WFL_TRD_PRODUCT_DEAL_ADD ad on deal.trade_id = ad.trade_id
 				left join wfl_trd_fin_product_deal_total total on deal.TOTLE_TRADE_ID = total.TOTLE_TRADE_ID  or deal.TOTLE_TRADE_ID||'R' = total.TOTLE_TRADE_ID
-				LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+				left join wfl_trd_fin_product_deal_total ptotal on total.p_totle_trade_id =ptotal.TOTLE_TRADE_ID and ptotal.workflow_id = t.seq_no
+                LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
     			LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 				left join fin_product fp on fp.finprod_id = deal.finprod_id
 				left join PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = nvl(ad.PORTFOLIO_ID,total.PORTFOLIO_ID)
