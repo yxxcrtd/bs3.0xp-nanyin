@@ -83,7 +83,7 @@
 			left join deal on deal.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID
 			where deal.finprod_type!='F16' AND  /*过滤产品交易*/
 				(
-                (T5.PA_BUSS_TYPE IN ('01', '02', '04', '138','45', '46','47', '48', '49', '50','38', '40', '41', '144')
+                (T5.PA_BUSS_TYPE IN  ('01', '02', '04', '138','44','45', '46','47', '48', '49', '50','38', '39', '40', '41', '144')
 					AND (FPA.FINPROD_ID IS NULL OR FPA.PAY_TYPE = '01'))/*非通道或逐笔通道*/
                 OR (T5.PA_BUSS_TYPE = '34' AND FPA.PAY_TYPE IS NULL)
                 OR (T5.PA_BUSS_TYPE IN ('77') AND FPA.PAY_TYPE = '01' AND SSAI.TRADE_PLACE IN ('01'))/*逐笔划款: 银行间买断式逆回购到期*/
