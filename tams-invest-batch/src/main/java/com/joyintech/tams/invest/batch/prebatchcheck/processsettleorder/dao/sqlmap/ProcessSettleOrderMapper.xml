@@ -4,7 +4,21 @@
 
     <select id="selectProcessSettleOrderList" parameterType="java.util.Map"
             resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
-			WITH WFL_ORDERS AS (
+		    with tempA as(
+	            select a.*,rank() over(partition by a.workflow_id order by a.HIS_NO desc) as rank
+	            from sys_wfl_business_node A 
+	            inner join sys_wfl_business_list B on A.workflow_id = B.workflow_id and b.process_state = 'BACK'
+            ),
+            /*根据sys_wfl_business_node中结点信息过滤退回后保存的数据*/
+            filter as(
+	            select C.seq_no workflow_id
+	            from tempA A
+                inner join sys_wfl_business_list C on c.workflow_id = a.workflow_id
+	            where A.rank = 2 and exists(
+		            select 1 from tempA B where B.rank = 1 and B.workflow_id = A.workflow_id and b.node_id = a.node_id
+	            )
+            ),
+            WFL_ORDERS AS (
 				SELECT *
                 FROM WFL_STL_PAY_ORDERS T5
                 WHERE T5.ORDER_ID = (SELECT MAX(T52.ORDER_ID) FROM WFL_STL_PAY_ORDERS T52 WHERE T5.TRADE_ID = T52.TRADE_ID)),
@@ -56,6 +70,7 @@
 				LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
 				LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 				where T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+                and not exists (select 1 from filter where t.seq_no = filter.workflow_id)
 			)
 			--来帐分拣-片段1
 			union 
@@ -98,6 +113,7 @@
                 AND T4.PORTFOLIO_ID IS NOT NULL
 				and not exists (select 1 from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL tt where tt.TOTLE_TRADE_ID = t4.P_TOTLE_TRADE_ID)
 				and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+                and not exists (select 1 from filter where t.seq_no = filter.workflow_id)
 			--来帐分拣，片段二
 			union 
 			select 
@@ -136,5 +152,6 @@
 				OR (T3.FINPROD_TYPE2 IN ('F29', 'F30', 'F10', 'F11', 'F12', 'F13') AND WFL_ORDERS.PS = '01'))
 			AND (T5.PA_BUSS_TYPE NOT IN ('58','54','83','56','80','66','67','73','68','125') OR PT.TRADE_ID IS NULL)
 			and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+            and not exists (select 1 from filter where t.seq_no = filter.workflow_id)
     </select>
 </mapper>
