@@ -647,4 +647,18 @@ public class SysCoreController {
     public int isBondExerciseAsset(String finprodId) {
         return sysCoreService.isBondExerciseAsset(finprodId);
     }
+
+    /**
+     * 通过留痕表查询流程中数据,返回list
+     * add by jiangpeng on 20210514 ZGBSSE-388
+     * @param input 查询条件
+     * @return list
+     */
+    @PostMapping("getDataEntityFromProcessMarkList")
+    public List<ProcessMark> getDataEntityFromProcessMarkList(@RequestBody WflValidInputParameter input) {
+        if (null != mstWorkflowCommonService) {
+            return mstWorkflowCommonService.getDataEntityFromProcessMarkList(input);
+        }
+        return null;
+    }
 }
