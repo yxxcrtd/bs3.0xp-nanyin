@@ -1197,7 +1197,7 @@ var indexIdTable=$("#indexIdTable").joyintable({
 				type : 1,
 				title : '请输入方案名称',
 				area : [ '500px', '155px' ],
-				content : '<div id="mydiv"  style="margin-left:35px;margin-top:25px;"><textarea id="planName" style="width:430px;height:25px;resize:none;border-radius:6px;" ></textarea></div>',
+				content : '<div id="mydiv"  style="margin-left:35px;margin-top:25px;"><textarea id="planName" style="width:430px;height:25px;resize:none;border-radius:6px;" >'+data.filterName+'</textarea></div>',
 				btn : [ '完成', '取消' ],
 				yes : function(index) {
 					var planName = $('#planName').val();

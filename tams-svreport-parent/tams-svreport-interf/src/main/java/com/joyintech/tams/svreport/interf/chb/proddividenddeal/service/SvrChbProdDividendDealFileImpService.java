@@ -352,7 +352,7 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
                 }
                 else {
                     try {
-                        field.set(ChbPrdBonusDeal, (value == null || "".equals(value)) ? "" : value);
+                        field.set(ChbPrdBonusDeal, value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return ;

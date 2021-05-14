@@ -351,7 +351,7 @@ public class SvrChbPrdFeeBasisFileImpService extends FileImpService{
                 }
                 else {
                     try {
-                        field.set(chbPrdfeeBasisData, (value == null || "".equals(value)) ? "" : value);
+                        field.set(chbPrdfeeBasisData, value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return ;

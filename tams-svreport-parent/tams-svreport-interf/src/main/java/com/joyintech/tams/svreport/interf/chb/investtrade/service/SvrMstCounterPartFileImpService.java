@@ -514,7 +514,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
                 }
                 else {
                     try {
-                        field.set(chbMstCounterParty, (value == null || "".equals(value)) ? "" : value);
+                        field.set(chbMstCounterParty, value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return entities;

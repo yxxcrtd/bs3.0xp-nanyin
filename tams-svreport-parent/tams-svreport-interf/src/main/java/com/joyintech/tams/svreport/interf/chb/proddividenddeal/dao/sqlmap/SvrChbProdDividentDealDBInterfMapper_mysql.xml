@@ -287,7 +287,6 @@
         ) de
         ) AS B
         set
-        A.SEQNO = B.SEQNO,
         A.PROD_ID = B.PROD_ID,
         A.FPROD_ID = B.FPROD_ID,
         A.TRADE_TYPE = B.TRADE_TYPE,
