@@ -298,7 +298,8 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
 
         // 交易场所
-        String tradePlace = entrustCommonDto.getEtrEntrust().getTradePlat();
+        String tradePlace = entrustCommonDto.getEtrEntrust().getTradePlat() != null ?
+                entrustCommonDto.getEtrEntrust().getTradePlat() : entrustCommonDto.getEtrEntrust().getTradeMarket();
 
         // 通道代码
         String chlId = etrEntrust.getChlId();
@@ -318,14 +319,15 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             if (StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
                 // 1.直投
                 // 可用现金(组合、托管户):减少委托金额
-                if (StringUtil.isEmpty(chlId)) {
+                /*if (StringUtil.isEmpty(chlId)) {
 //                    acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
 //                        DictCodeListExt2.资金账户类型_托管户.getValue());
                     acctId = EtrCommonCashPositionDealService.select证券托管户(etrEntrustAdd.getSecAcctId());
                 }
                 // 2.通道一次性划款
                 // 可用现金(组合、通道):减少委托金额
-                else if (StringUtil.isNotEmpty(chlId) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(chlType)) {
+                else*/
+                if (StringUtil.isNotEmpty(chlId) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(chlType)) {
                     acctId = EtrCommonCashPositionDealService.select通道资金账户(etrEntrust.getChlId());
                 }
                 // 3.通道逐笔划款
