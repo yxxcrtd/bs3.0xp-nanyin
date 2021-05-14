@@ -131,11 +131,6 @@ public class SecDealAccountsService {
     @Autowired
     private LossCommonBatchService lossCommonBatchService;
     /**ADD BY CAOGUO ON 20201015 END**/
-
-    /**ADD BY yanya on 20210316 债券行权改造：行权回售确认、赎回确认 start **/
-    @Autowired
-    SecDealAccountsExecService secDealAccountsExecService;
-    /**ADD BY yanya on 20210316 债券行权改造：行权回售确认、赎回确认 end **/
     /**
      * process 数据处理
      * 
@@ -338,20 +333,14 @@ public class SecDealAccountsService {
 //                quaryFvtplApply(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
 //                    varSecDealFeeSubject);
 //            }
-            /**ADD BY yanya on 20210316 债券行权改造：行权回售确认、赎回确认 start **/
             else if (DictCodeList.交易方向_行权_回售.getValue().equals(dealNow.getPs())) {
-//                quaryFvtplRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-//                    varSecDealFeeSubject, DictCodeListTableId.会计场景代码_公允价值损益类债券_行权回售.getValue(),batchExecuteInfo);
-                secDealAccountsExecService.createFvtplExec(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-                        varSecDealFeeSubject, DictCodeListTableId.会计场景代码_公允价值损益类债券_回售确认.getValue());
+                quaryFvtplRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
+                    varSecDealFeeSubject, DictCodeListTableId.会计场景代码_公允价值损益类债券_行权回售.getValue());
             }
             else if (DictCodeList.交易方向_行权_赎回.getValue().equals(dealNow.getPs())) {
-//                quaryFvtplRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-//                    varSecDealFeeSubject, DictCodeListTableId.会计场景代码_公允价值损益类债券_行权赎回.getValue(),batchExecuteInfo);
-                secDealAccountsExecService.createFvtplExec(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-                        varSecDealFeeSubject, DictCodeListTableId.会计场景代码_公允价值损益类债券_赎回确认.getValue());
+                quaryFvtplRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
+                    varSecDealFeeSubject, DictCodeListTableId.会计场景代码_公允价值损益类债券_行权赎回.getValue());
             }
-            /**ADD BY yanya on 20210316 债券行权改造：行权回售确认、赎回确认 end **/
             //交易方向_应收款项转入 add by yanya on 20191226
             else if (DictCodeList.交易方向_应收款项转入.getValue().equals(dealNow.getPs())) {
                 this.getReceivablesIn(rstBaseinfo, returnResult, dealNow, acctEntity, param);
@@ -2531,20 +2520,14 @@ public class SecDealAccountsService {
 //            				&& DictCodeList.交易方向_买入.getValue().equals(dealNow.getPs()))) {
 //                quaryAcApply(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1);
 //            }
-            /** modify by yanya on 20210316 债券行权改造 start**/
             else if (DictCodeList.交易方向_行权_回售.getValue().equals(dealNow.getPs())) {
-//                quaryAcRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-//                    DictCodeListTableId.会计场景代码_摊余成本类债券_行权回售.getValue(),batchExecuteInfo);
-                secDealAccountsExecService.createACExec(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-                    DictCodeListTableId.会计场景代码_摊余成本债券_回售确认.getValue(),offsetImptDateType);
+                quaryAcRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
+                    DictCodeListTableId.会计场景代码_摊余成本类债券_行权回售.getValue());
             }
             else if (DictCodeList.交易方向_行权_赎回.getValue().equals(dealNow.getPs())) {
-//                quaryAcRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-//                    DictCodeListTableId.会计场景代码_摊余成本类债券_行权赎回.getValue(),batchExecuteInfo);
-                secDealAccountsExecService.createACExec(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-                        DictCodeListTableId.会计场景代码_摊余成本债券_赎回确认.getValue(),offsetImptDateType);
+                quaryAcRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
+                    DictCodeListTableId.会计场景代码_摊余成本类债券_行权赎回.getValue());
             }
-            /** modify by yanya on 20210316 债券行权改造 end**/
             //交易方向_应收款项转入 add by yanya on 20191226
             else if (DictCodeList.交易方向_应收款项转入.getValue().equals(dealNow.getPs())) {
                 this.getReceivablesIn(rstBaseinfo, returnResult, dealNow, acctEntity, param);
@@ -4054,20 +4037,14 @@ public class SecDealAccountsService {
 //            				&& DictCodeList.交易方向_买入.getValue().equals(dealNow.getPs()))) {
 //                quaryFvociApply(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1);
 //            }
-            /** modify by yanya on 20210316 债券行权改造 start**/
             else if (DictCodeList.交易方向_行权_回售.getValue().equals(dealNow.getPs())) {
-//                quaryFvociRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-//                    DictCodeListTableId.会计场景代码_综合收益类债券_行权回售.getValue(),batchExecuteInfo);
-                secDealAccountsExecService.createFvociExec(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-                        DictCodeListTableId.会计场景代码_综合收益债券_回售确认.getValue(), offsetImptDateType);
+                quaryFvociRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
+                    DictCodeListTableId.会计场景代码_综合收益类债券_行权回售.getValue());
             }
             else if (DictCodeList.交易方向_行权_赎回.getValue().equals(dealNow.getPs())) {
-//                quaryFvociRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-//                    DictCodeListTableId.会计场景代码_综合收益类债券_行权赎回.getValue(),batchExecuteInfo);
-                secDealAccountsExecService.createFvociExec(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
-                        DictCodeListTableId.会计场景代码_综合收益债券_赎回确认.getValue(), offsetImptDateType);
+                quaryFvociRight(rstBaseinfo, returnResult, dealNow, acctEntity, param, paramT1,
+                    DictCodeListTableId.会计场景代码_综合收益类债券_行权赎回.getValue());
             }
-            /** modify by yanya on 20210316 债券行权改造 end**/
             //交易方向_应收款项转入 add by yanya on 20191226
             else if (DictCodeList.交易方向_应收款项转入.getValue().equals(dealNow.getPs())) {
                 this.getReceivablesIn(rstBaseinfo, returnResult, dealNow, acctEntity, param);

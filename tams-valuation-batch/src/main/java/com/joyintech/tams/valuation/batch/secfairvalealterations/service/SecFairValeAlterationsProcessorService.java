@@ -606,15 +606,10 @@ public class SecFairValeAlterationsProcessorService {
                             ArithmeticUtil.doAdd(varDrjscbKmye, varDrjstxzyjKmye), varDrjscbKmsl,
                             NumberEnum.HIGH_PREC_NUM.getCode());
                     }
-                    /** modify by yanya on 20210316 债券行权改造 start**/
                     // 变量.公允价值变动 =
                     // （变量.市价*变量.当日计算成本科目数量 - （变量.当日计算成本科目余额 + 变量.当日计算溢折价余额 ））
                     // -变量.当日计算公允价值变动科目余额
-                    //secFairValeAlt = ArithmeticUtil.multiply(marketPrice, varDrjscbKmsl);
-                    //调用共通设计->【详细设计-标的类共通方法设计.xlsx】->债券公允价值变动计算SHEET
-                    secFairValeAlt = finProductCommonService.calculationSecFairValue(booksetId, rstBaseinfo.getFinprodId(), invAim, marketPrice,
-                            varDrjscbKmsl, happenDate);
-                    /** modify by yanya on 20210316 债券行权改造 end**/
+                    secFairValeAlt = ArithmeticUtil.multiply(marketPrice, varDrjscbKmsl);
                     if(债券公允价值变动计算过程小数位!=null && 债券公允价值变动计算过程小数位.compareTo(-1)!=0){
                     	secFairValeAlt = ArithmeticUtil.round(secFairValeAlt,债券公允价值变动计算过程小数位, RoundingMode.HALF_UP);
                     }
@@ -645,12 +640,7 @@ public class SecFairValeAlterationsProcessorService {
                             ArithmeticUtil.doAdd(varDrjscbKmye, varDrjstxzyjKmye), varDrjscbKmsl,
                             NumberEnum.HIGH_PREC_NUM.getCode());
                     }
-                    /** modify by yanya on 20210316 债券行权改造 start**/
-                    //secFairValeAlt = ArithmeticUtil.multiply(marketPrice, varDrjscbKmsl);
-                    //调用共通设计->【详细设计-标的类共通方法设计.xlsx】->债券公允价值变动计算SHEET
-                    secFairValeAlt = finProductCommonService.calculationSecFairValue(booksetId, rstBaseinfo.getFinprodId(), invAim, marketPrice,
-                            varDrjscbKmsl, happenDate);
-                    /** modify by yanya on 20210316 债券行权改造 end**/
+                   secFairValeAlt = ArithmeticUtil.multiply(marketPrice, varDrjscbKmsl);
                     
                     if(债券公允价值变动计算过程小数位!=null && 债券公允价值变动计算过程小数位.compareTo(-1)!=0){
                     	secFairValeAlt = ArithmeticUtil.round(secFairValeAlt,债券公允价值变动计算过程小数位, RoundingMode.HALF_UP);

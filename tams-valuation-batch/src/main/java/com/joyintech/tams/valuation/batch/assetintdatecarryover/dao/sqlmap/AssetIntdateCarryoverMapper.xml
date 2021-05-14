@@ -81,20 +81,6 @@
 		AND (plan.PRIN_AMT != 0 OR plan.INT_AMT != 0 OR plan.CASH_AMT != 0)
 
 		AND (plan.FINPROD_TYPE IN (#{finprodType2},#{finprodType3},#{finprodType4}) or (plan.FINPROD_TYPE = #{finprodType1} and t.TYPE_1 = '01'))
-		/** add by yanya on 20210311 增加债券行权的判定 start**/
-		AND NOT EXISTS (
-			SELECT
-				1
-			FROM
-				TRD_PRODUCT_DEAL deal
-			LEFT JOIN BOK_DEAL_ACCOUNTING account ON deal.TRADE_ID = account.BUSI_NO
-			WHERE
-				plan.FINPROD_ID = deal.FINPROD_ID
-				AND deal.PS = #{execPs,jdbcType=VARCHAR}
-				AND plan.MDATE = deal.MDATE
-				AND bookset.BOOKSET_ID = account.BOOKSET_ID
-		)
-		/** add by yanya on 20210311 增加债券行权的判定 end**/
 	</select>
 	
 <!-- 是否存在已交易生成 -->
