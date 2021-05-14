@@ -459,7 +459,7 @@ public class SvrProdDealFileImpService extends FileImpService {
 		}
 		BigDecimal custCounts=BigDecimal.ZERO;
 		try{
-			custCounts=new BigDecimal(custCountsS);
+			custCounts=new BigDecimal("".equals(custCountsS)?"0":custCountsS);
 		}catch(Exception e){
 			logger.error(e.getMessage(),e);
 //			message.add(this.getMessage("CHB_EQUITYINFO_E_003", "保有量客户数"));
@@ -484,9 +484,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("01");
-				ibdt.setTradePrince(new BigDecimal(map.get("prinamt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("prinamtConfirm")));
-				ibdt.setTradeCost(new BigDecimal(map.get("prinamt")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("prinamt"))?"0":map.get("prinamt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("prinamtConfirm"))?"0":map.get("prinamtConfirm")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("prinamt"))?"0":map.get("prinamt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
@@ -501,9 +501,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("02");
-				ibdt.setTradePrince(new BigDecimal(map.get("sgAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("sgConfirmAmt")));
-				ibdt.setTradeCost(new BigDecimal(map.get("sgAmt")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("sgAmt"))?"0":map.get("sgAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("sgConfirmAmt"))?"0":map.get("sgConfirmAmt")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("sgAmt"))?"0":map.get("sgAmt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
@@ -518,10 +518,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("03");
-				ibdt.setTradePrince(new BigDecimal(map.get("shAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("shQty")));
-				ibdt.setIntAmt(new BigDecimal(map.get("shAmt")).subtract(new BigDecimal(map.get("shPrincipal"))));
-				ibdt.setTradeCost(new BigDecimal(map.get("shPrincipal")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("shAmt"))?"0":map.get("shAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("shQty"))?"0":map.get("shQty")));
+				ibdt.setIntAmt(new BigDecimal("".equals(map.get("shAmt"))?"0":map.get("shAmt")).subtract(new BigDecimal("".equals(map.get("shPrincipal"))?"0":map.get("shPrincipal"))));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("shPrincipal"))?"0":map.get("shPrincipal")));
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
 				ibdt.setTradeId(md5Key);
@@ -535,10 +535,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("16");
-				ibdt.setTradePrince(new BigDecimal(map.get("expireAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("expireAmtQty")));
-				ibdt.setIntAmt(new BigDecimal(map.get("expireAmt")).subtract(new BigDecimal(map.get("expireAmtPrincipal"))));
-				ibdt.setTradeCost(new BigDecimal(map.get("expireAmtPrincipal")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("expireAmt"))?"0":map.get("expireAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("expireAmtQty"))?"0":map.get("expireAmtQty")));
+				ibdt.setIntAmt(new BigDecimal("".equals(map.get("expireAmt"))?"0":map.get("expireAmt")).subtract(new BigDecimal("".equals(map.get("expireAmtPrincipal"))?"0":map.get("expireAmtPrincipal"))));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("expireAmtPrincipal"))?"0":map.get("expireAmtPrincipal")));
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
 				ibdt.setTradeId(md5Key);
@@ -552,10 +552,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("05");
-				ibdt.setIntAmt(new BigDecimal(map.get("rebonusAmt")));
-				ibdt.setTradePrince(new BigDecimal(map.get("rebonusAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("rebonusAmtQty")));
-				ibdt.setTradeCost(new BigDecimal(map.get("rebonusAmt")));
+				ibdt.setIntAmt(new BigDecimal("".equals(map.get("rebonusAmt"))?"0":map.get("rebonusAmt")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("rebonusAmt"))?"0":map.get("rebonusAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("rebonusAmtQty"))?"0":map.get("rebonusAmtQty")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("rebonusAmt"))?"0":map.get("rebonusAmt")));
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
 				ibdt.setTradeId(md5Key);
@@ -569,8 +569,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("04");
-				ibdt.setIntAmt(new BigDecimal(map.get("bonusAmt")));
-				ibdt.setTradePrince(new BigDecimal(map.get("bonusAmt")));
+				ibdt.setIntAmt(new BigDecimal("".equals(map.get("bonusAmt"))?"0":map.get("bonusAmt")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("bonusAmt"))?"0":map.get("bonusAmt")));
 				ibdt.setTradeQty(BigDecimal.ZERO);
 				ibdt.setTradeCost(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
@@ -587,9 +587,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("14");
-				ibdt.setTradeCost(new BigDecimal(map.get("qtyAddAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("qtyAdd")));
-				ibdt.setTradePrince(new BigDecimal(map.get("qtyAddAmt")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("qtyAddAmt"))?"0":map.get("qtyAddAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("qtyAdd"))?"0":map.get("qtyAdd")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("qtyAddAmt"))?"0":map.get("qtyAddAmt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
@@ -605,9 +605,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("15");
-				ibdt.setTradeCost(new BigDecimal(map.get("qtyMinusPrincipal")));
-				ibdt.setTradeQty(new BigDecimal(map.get("qtyMinus")));
-				ibdt.setTradePrince(new BigDecimal(map.get("qtyMinusPrincipal")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("qtyMinusPrincipal"))?"0":map.get("qtyMinusPrincipal")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("qtyMinus"))?"0":map.get("qtyMinus")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("qtyMinusPrincipal"))?"0":map.get("qtyMinusPrincipal")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
