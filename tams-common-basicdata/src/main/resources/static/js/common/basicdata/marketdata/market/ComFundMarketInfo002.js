@@ -15,13 +15,13 @@
         var object = $.serializeToObject('#informationForm');
         object.operateType = operateType;
         object.pageModel = pageModel;
-        Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/check', object, function(result) {
+        Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002/check', object, function(result) {
             Joyin.confirm("是否确定执行？", function() {
                 if(operateType === 'save') {
-                    WorkFlow.doSaveList(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/save', object, "ComFundMarketInfo002_btn_save");
+                    WorkFlow.doSaveList(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002/save', object, "ComFundMarketInfo002_btn_save");
                 }
                 else {
-                    WorkFlow.doSubmitList(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/save', object, "ComFundMarketInfo002_btn_submit");
+                    WorkFlow.doSubmitList(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002/save', object, "ComFundMarketInfo002_btn_submit");
                 }
             });
         });
@@ -56,7 +56,7 @@
                     finprodId: $('#finprodId').val()
                 }
                 //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
-                Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/getAssetInfo', data,
+                Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002/getAssetInfo', data,
                     function (resultObj) {
                         //if (resultObj.fundType) {
                             $('#fundName').val(resultObj.fundName).trigger('change');

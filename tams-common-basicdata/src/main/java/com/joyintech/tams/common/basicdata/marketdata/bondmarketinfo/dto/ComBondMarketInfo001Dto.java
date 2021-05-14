@@ -50,7 +50,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
     /**
      * 金融产品简称
      */
-    @Length(fieldName = "ValBondQuotationInfo001.finprodAbbr", max = 66, groups = {
+    @Length(fieldName = "ComBondQuotationInfo001.finprodAbbr", max = 66, groups = {
         ValidateGroupEdit.class})
     private String finprodAbbr;
 
@@ -120,7 +120,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
         return SysDataUtil.getNameFromDataDict(DictCode.估值来源, this.getValueSource());
     }
     @Override
-    @NotEmpty(fieldName = "ValBondQuotationInfo001.valueSource", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ComBondQuotationInfo001.valueSource", groups = {ValidateGroupEdit.class})
     public String getValueSource(){
         return super.getValueSource();
     }
@@ -136,8 +136,8 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * 债券代码
      */
     @Override
-    @NotEmpty(fieldName = "ValBondQuotationInfo001.secId", groups = {ValidateGroupEdit.class})
-    @Length(fieldName = "ValBondQuotationInfo001.secId", max = 32, groups = {
+    @NotEmpty(fieldName = "ComBondQuotationInfo001.secId", groups = {ValidateGroupEdit.class})
+    @Length(fieldName = "ComBondQuotationInfo001.secId", max = 32, groups = {
         ValidateGroupEdit.class})
     @PrimaryKey(value = Field.PK_1)
     public String getSecId() {
@@ -149,7 +149,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * 
      * @return String
      */
-    // @NotEmpty(fieldName = "ValBondQuotationInfo001.finprodAbbr", groups =
+    // @NotEmpty(fieldName = "ComBondQuotationInfo001.finprodAbbr", groups =
     // {ValidateGroupEdit.class})
     public String getFinprodAbbr() {
         return finprodAbbr;
@@ -161,7 +161,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return Date
      */
     @Override
-    @NotEmpty(fieldName = "ValBondQuotationInfo001.valueDate", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ComBondQuotationInfo001.valueDate", groups = {ValidateGroupEdit.class})
     public Date getValueDate() {
         return super.getValueDate();
     }
@@ -182,7 +182,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return String
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.lastPeriod", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.lastPeriod", max = 30, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getLastPeriod() {
         return super.getLastPeriod();
@@ -194,9 +194,9 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return String
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.price", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.price", max = 30, groups = {
         ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "ValBondQuotationInfo002.price", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ComBondQuotationInfo002.price", groups = {ValidateGroupEdit.class})
     public BigDecimal getPrice() {
         return super.getPrice();
     }
@@ -207,9 +207,9 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return BigDecimal
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.netprice", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.netprice", max = 30, groups = {
         ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "ValBondQuotationInfo002.netprice", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ComBondQuotationInfo002.netprice", groups = {ValidateGroupEdit.class})
     public BigDecimal getNetprice() {
         return super.getNetprice();
     }
@@ -220,7 +220,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return BigDecimal
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.mDuration", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.mDuration", max = 30, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getmDuration() {
         return super.getmDuration();
@@ -232,7 +232,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return BigDecimal
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.mConvexity", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.mConvexity", max = 30, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getmConvexity() {
         return super.getmConvexity();
@@ -244,7 +244,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return BigDecimal
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.bpvalue", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.bpvalue", max = 30, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getBpvalue() {
         return super.getBpvalue();
@@ -256,7 +256,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return BigDecimal
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.sduration", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.sduration", max = 30, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getSduration() {
         return super.getSduration();
@@ -268,7 +268,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return BigDecimal
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.scnvxty", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.scnvxty", max = 30, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getScnvxty() {
         return super.getScnvxty();
@@ -280,7 +280,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return BigDecimal
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.interestDuration", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.interestDuration", max = 30, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getInterestDuration() {
         return super.getInterestDuration();
@@ -292,7 +292,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return BigDecimal
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.interestCnvxty", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.interestCnvxty", max = 30, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getInterestCnvxty() {
         return super.getInterestCnvxty();
@@ -304,7 +304,7 @@ public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements Pro
      * @return BigDecimal
      */
     @Override
-    @Length(fieldName = "ValBondQuotationInfo002.bpyield", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.bpyield", max = 30, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getBpyield() {
         return super.getBpyield();
