@@ -70,7 +70,7 @@ public class AutoPeriodSeclendCommonService extends BaseService {
         trdFinProductDealTotal.setTradeDate(entity.getTradeDate());
         trdFinProductDealTotal.setVdate(entity.getVdate());
         trdFinProductDealTotal.setMdate(entity.getMdate());
-        trdFinProductDealTotal.setSettleDate(entity.getMdate());
+        trdFinProductDealTotal.setSettleDate(entity.getSettleDate());
         trdFinProductDealTotal.setShareAmt(entity.getShareAmt());
         trdFinProductDealTotal.setIntAmt(entity.getmTradeAmt());// 暂时用借贷费用替换实际结算金额
         trdFinProductDealTotal.setTradeAmt(entity.getTradeAmt());// 暂时用借贷费用替换实际结算金额
@@ -137,7 +137,7 @@ public class AutoPeriodSeclendCommonService extends BaseService {
             deal.setTradeDate(iPlatformDate.getSysDate());// 平台日
             deal.setVdate(entity.getVdate());
             deal.setMdate(entity.getMdate());
-            deal.setSettleDate(deal.getTradeDate());
+            deal.setSettleDate(entity.getSettleDate());
             deal.setShareAmt(entity.getShareAmt());
             deal.setDeliveryType(entity.getDeliveryType());
             deal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
@@ -168,7 +168,7 @@ public class AutoPeriodSeclendCommonService extends BaseService {
                 bondAssetCalcInputDto.setFinprodId(entity.getPledgeFinprodId());
                 bondAssetCalcInputDto.setTradeMarket(entity.getTradeMarket());
                 bondAssetCalcInputDto.setPs(DictCodeList.交易方向_买入.getValue());
-                bondAssetCalcInputDto.setSettleDate(deal.getTradeDate());
+                bondAssetCalcInputDto.setSettleDate(entity.getSettleDate());
                 BigDecimal unitInt = null;
                 try {
                     unitInt = bondAssetCalcService.计算债券单位利息(bondAssetCalcInputDto);
