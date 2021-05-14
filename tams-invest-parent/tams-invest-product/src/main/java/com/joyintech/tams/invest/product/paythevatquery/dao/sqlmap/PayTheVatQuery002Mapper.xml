@@ -302,7 +302,22 @@
 		              and deal.is_cancel = #{YES_NO_NO}
 		              and deal.mdate <![CDATA[ <= ]]> #{payment1}
 		          where 1=1
-		             and fee.CDATE = #{payment1}
+		             and fee.CDATE <![CDATA[<=]]> #{payment1}
+					 AND ((SELECT MDATE
+							FROM trd_product_deal deal1
+							WHERE deal1.finprod_id = bok.acct_subject_id
+							  AND deal1.chl_id = fee.chl_id
+							  AND deal1.busi_type = #{BUSI_TYPE_16}
+							  AND deal1.ps = #{taxidenType}
+							  AND deal1.trade_status = #{TRADE_STATUS_01}
+							  AND deal1.is_cancel = #{YES_NO_NO}) is null or (SELECT MDATE
+																	 FROM trd_product_deal deal1
+																	 WHERE deal1.finprod_id = bok.acct_subject_id
+																	   AND deal1.chl_id = fee.chl_id
+																	   AND deal1.busi_type = #{BUSI_TYPE_16}
+																	   AND deal1.ps = #{taxidenType}
+																	   AND deal1.trade_status = #{TRADE_STATUS_01}
+																	   AND deal1.is_cancel = #{YES_NO_NO}) >= #{payment1})
 		             and fin1.finprod_market_id = #{channelId}
 		             and fee.tdy_unpaid_intincexp != 0
 		             and fee.fee_type in (#{TAX0102},#{TAX0202},#{TAX0302},#{ALT0102},#{ALT0202},#{ALT0302},#{ALT0402})
