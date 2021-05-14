@@ -211,6 +211,9 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 		if(StringUtil.isEmpty(dto.getBankCode())){
 			dto.setBankCode(CommonUtil.getUserBankCode());
 		}
+		if(StringUtil.isEmpty(dto.getOrgCode())){
+			dto.setOrgCode(CommonUtil.getOrgCode());
+		}
 		// add by lizhi EEDSZZUAT-4 中债三期-投资者身份信息操作修改动作后，机构代码会被置空 start
 //	   User userInfo = SecurityUtil.getLoginUser();
 //	   dto.setOrgCode(null == userInfo ? null : userInfo.getOrgCode());
