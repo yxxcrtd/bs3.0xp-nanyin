@@ -1,33 +1,4 @@
-/*场外期权标的*/
-------------------------------------新增：资产信息菜单	start---------------------------------
-delete from sys_menu where menu_id = 'VALINFOSERVICE_001_020';
 
-insert into sys_menu 
-(MENU_ID, SYSTEM_CODE, ICON, 
-PARENT_MENU_ID, PAGE_ID, ORDER_NO, 
-IS_SPREAD, REMARK, CREATE_USER, 
-CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values 
-('VALINFOSERVICE_001_020', 'VAL', null, 
-'VALINFOSERVICE_001', null, 19, 
-'03', '资产信息', 'system', 
-null, sysdate, 'system', sysdate);
-------------------------------------新增：资产信息菜单	end---------------------------------
-
-------------------------------------新增：场外期权标的菜单	start---------------------------------
-delete from sys_menu where menu_id = 'VALINFOSERVICE_001_020_001';
-
-insert into sys_menu 
-(MENU_ID, SYSTEM_CODE, ICON, 
-PARENT_MENU_ID, PAGE_ID, ORDER_NO, 
-IS_SPREAD, REMARK, CREATE_USER, 
-CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values 
-('VALINFOSERVICE_001_020_001', 'VAL', null, 
-'VALINFOSERVICE_001_020', 'FinOptionTarget001', 1, 
-'03', '场外期权标的', 'system', 
-null, sysdate, 'system', sysdate);
-------------------------------------新增：场外期权标的菜单	end---------------------------------
 
 
 ------------------------------------新增：场外期权标的页面	start---------------------------------
@@ -106,18 +77,17 @@ values
 
 
 --存款类资产
-DELETE FROM SYS_MENU WHERE MENU_ID='VALINFOSERVICE_001_020_004';
+
 DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('FinDepositTarget001','FinDepositTarget002');
-insert into SYS_MENU values ('VALINFOSERVICE_001_020_004','VAL','','VALINFOSERVICE_001_020','FinDepositTarget001','4','02','存款类资产','system','',to_date('2021/03/08', 'yyyy/mm/dd'), 'system',to_date('2021/03/08', 'yyyy/mm/dd'));
 insert into SYS_PAGE values ('FinDepositTarget001','VAL','/valuation/basicdata/asset/depo/FinDepositTarget001','valuation/basicdata/asset/depo/FinDepositTarget001','VALINFOSERVICE_001_020_004','','','02','01','存款类资产管理','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'));
 insert into SYS_PAGE values ('FinDepositTarget002','VAL','/valuation/basicdata/asset/depo/FinDepositTarget002','valuation/basicdata/asset/depo/FinDepositTarget002','VALINFOSERVICE_001_020_004','','','02','01','存款类资产新建','system','',to_date('2021/03/08', 'yyyy/mm/dd'), 'system',to_date('2021/03/08', 'yyyy/mm/dd'));
 
 
 /*存款类资产_流程模板配置*/
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID ='FinDepositTarget002';
-insert into SYS_WFL_BUSINESS_MODULE values ('FinDepositTarget002','FinDepositTarget001_btn_delete','oneApproval','system','',to_date('2021/03/22', 'yyyy/mm/dd'), 'system',to_date('2021/03/22', 'yyyy/mm/dd'),'ALL','02');
-insert into SYS_WFL_BUSINESS_MODULE values ('FinDepositTarget002','FinDepositTarget002_btn_submit','oneApproval','system','',to_date('2021/03/22', 'yyyy/mm/dd'), 'system',to_date('2021/03/22', 'yyyy/mm/dd'),'ALL','02');
-insert into SYS_WFL_BUSINESS_MODULE values ('FinDepositTarget002','FinDepositTarget002_btn_save','oneApproval','system','',to_date('2021/03/22', 'yyyy/mm/dd'), 'system',to_date('2021/03/22', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('FinDepositTarget002','FinDepositTarget001_btn_delete','oneApproval','system','',to_date('2021/03/22', 'yyyy/mm/dd'), 'system',to_date('2021/03/22', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('FinDepositTarget002','FinDepositTarget002_btn_submit','oneApproval','system','',to_date('2021/03/22', 'yyyy/mm/dd'), 'system',to_date('2021/03/22', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('FinDepositTarget002','FinDepositTarget002_btn_save','oneApproval','system','',to_date('2021/03/22', 'yyyy/mm/dd'), 'system',to_date('2021/03/22', 'yyyy/mm/dd'),'ALL','02');
 
 
 ------------------------------------新增：基金类页面	start---------------------------------
@@ -154,42 +124,24 @@ values
  sysdate, 'system', sysdate);
 ------------------------------------新增：基金类页面	end---------------------------------
 
-
-
-
-------------------------------------新增：基金类菜单	start---------------------------------
-delete from sys_menu where menu_id = 'VALINFOSERVICE_001_020_003';
-
-insert into sys_menu 
-(MENU_ID, SYSTEM_CODE, ICON, 
-PARENT_MENU_ID, PAGE_ID, ORDER_NO, 
-IS_SPREAD, REMARK, CREATE_USER, 
-CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values 
-('VALINFOSERVICE_001_020_003', 'VAL', null, 
-'VALINFOSERVICE_001_020', 'FinFundTarget001', 3, 
-'03', '基金类资产', 'system', 
-null, sysdate, 'system', sysdate);
-------------------------------------新增：基金类菜单	end---------------------------------
-
 /** ----------------业务流程模板  add by 李炳言 计划类标的流程添加 on 20210312 start--------------- **/
 delete from SYS_WFL_BUSINESS_MODULE SWBM WHERE SWBM.PAGE_ID = 'FinPlanAssetC002';
 
-insert into SYS_WFL_BUSINESS_MODULE values ('FinPlanAssetC002','FinPlanAssetC001_btn_delete','oneApproval','system','',to_date('2021/03/12', 'yyyy/mm/dd'), 'system',to_date('2021/03/12', 'yyyy/mm/dd'),'ALL','02');
-insert into SYS_WFL_BUSINESS_MODULE values ('FinPlanAssetC002','FinPlanAssetC002_btn_save','oneApproval','system','',to_date('2021/03/12', 'yyyy/mm/dd'), 'system',to_date('2021/03/12', 'yyyy/mm/dd'),'ALL','02');
-insert into SYS_WFL_BUSINESS_MODULE values ('FinPlanAssetC002','FinPlanAssetC002_btn_submit','oneApproval','system','',to_date('2021/03/12', 'yyyy/mm/dd'), 'system',to_date('2021/03/12', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('FinPlanAssetC002','FinPlanAssetC001_btn_delete','oneApproval','system','',to_date('2021/03/12', 'yyyy/mm/dd'), 'system',to_date('2021/03/12', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('FinPlanAssetC002','FinPlanAssetC002_btn_save','oneApproval','system','',to_date('2021/03/12', 'yyyy/mm/dd'), 'system',to_date('2021/03/12', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('FinPlanAssetC002','FinPlanAssetC002_btn_submit','oneApproval','system','',to_date('2021/03/12', 'yyyy/mm/dd'), 'system',to_date('2021/03/12', 'yyyy/mm/dd'),'ALL','02');
 /** ----------------业务流程模板  add by 李炳言 计划类标的流程添加 on 20210312 end--------------- **/
 
 --画面元素表
 DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID='FinDepositTarget001';
-insert into SYS_PAGE_ELEMENT values ('FinDepositTarget001','FinDepositTarget001_btn_rateAdj','01','01','','利率调整','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('FinDepositTarget001','FinDepositTarget001_btn_add','01','01','','新建','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('FinDepositTarget001','FinDepositTarget001_btn_clear','01','02','','重置','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('FinDepositTarget001','FinDepositTarget001_btn_delete','01','01','','删除','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('FinDepositTarget001','FinDepositTarget001_btn_export','01','01','','导出','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('FinDepositTarget001','FinDepositTarget001_btn_search','01','01','','查询','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('FinDepositTarget001','FinDepositTarget002_btn_save','01','02','','保存','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('FinDepositTarget001','FinDepositTarget002_btn_submit','01','02','','提交','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('FinDepositTarget001','FinDepositTarget001_btn_rateAdj','01','01','','利率调整','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('FinDepositTarget001','FinDepositTarget001_btn_add','01','01','','新建','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('FinDepositTarget001','FinDepositTarget001_btn_clear','01','02','','重置','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('FinDepositTarget001','FinDepositTarget001_btn_delete','01','01','','删除','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('FinDepositTarget001','FinDepositTarget001_btn_export','01','01','','导出','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('FinDepositTarget001','FinDepositTarget001_btn_search','01','01','','查询','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('FinDepositTarget001','FinDepositTarget002_btn_save','01','02','','保存','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('FinDepositTarget001','FinDepositTarget002_btn_submit','01','02','','提交','system','',to_date('2021/03/20', 'yyyy/mm/dd'), 'system',to_date('2021/03/20', 'yyyy/mm/dd'),'COM');
 
 --画面数据字典明细关联表
 DELETE FROM SYS_PAGE_DICTLIST WHERE PAGE_ID='FinDepositTarget002';
@@ -221,8 +173,6 @@ insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_IT
 
 
 /** 标的维护债券类资产画面添加**/
-delete from SYS_MENU where menu_id = 'VALINFOSERVICE_001_020_002';
-insert into SYS_MENU values ('VALINFOSERVICE_001_020_002','VAL','','VALINFOSERVICE_001_020','FinBondTargetAsset001','1','02','债券类资产','system','',to_date('2021/03/05', 'yyyy/mm/dd'), 'system',to_date('2021/03/05', 'yyyy/mm/dd'));
 delete from SYS_PAGE where PAGE_ID in ('FinBondTargetAsset001','FinBondTargetAsset002');
 insert into SYS_PAGE values ('FinBondTargetAsset001','VAL','/valuation/basicdata/asset/bond/FinBondTargetAsset001','valuation/basicdata/asset/bond/FinBondTargetAsset001','VALINFOSERVICE_001_020_002','','','02','01','债券类资产','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'));
 insert into SYS_PAGE values ('FinBondTargetAsset002','VAL','/valuation/basicdata/asset/bond/FinBondTargetAsset002','valuation/basicdata/asset/bond/FinBondTargetAsset002','VALINFOSERVICE_001_020_002','','','02','01','债券类资产-新建','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'));

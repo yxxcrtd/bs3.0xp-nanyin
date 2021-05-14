@@ -7,4 +7,4 @@ IS
 
 -- 系统参数相关
 DELETE FROM SYS_PARA where PARA_CODE = 'IS_SHOW_IBU_TRADER';
-insert into SYS_PARA values ('SYS','IS_SHOW_IBU_TRADER','02','01','','用户新建是否显示银行间交易员ID','system','',to_date('2020/12/25', 'yyyy/mm/dd'), 'system',to_date('2020/12/25', 'yyyy/mm/dd'),null,'01');
+insert into SYS_PARA values ('SYS','IS_SHOW_IBU_TRADER','02','01','','用户新建是否显示银行间交易员ID','system','',to_date('2020/12/25', 'yyyy/mm/dd'), 'system',to_date('2020/12/25', 'yyyy/mm/dd'));

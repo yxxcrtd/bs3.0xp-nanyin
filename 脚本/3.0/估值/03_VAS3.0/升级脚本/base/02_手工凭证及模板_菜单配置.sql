@@ -1,12 +1,3 @@
---菜单调整 增加凭证管理
-DELETE FROM SYS_MENU WHERE PAGE_ID IN ('ValManualVoucher001','ValManualVoucherTemplete001','ValVoucherQuery001','ValSubjectWaterQuery001','ValSubjectBalanceQuery001');
-DELETE FROM SYS_MENU WHERE MENU_ID ='VALFINANCEMANAGE_001_001';
-insert into SYS_MENU values ('VALFINANCEMANAGE_001_001','VAL','','VALFINANCEMANAGE_001','','1','02','凭证管理','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALFINANCEMANAGE_001_001_001','VAL','','VALFINANCEMANAGE_001_001','ValManualVoucher001','1','02','手工凭证','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALFINANCEMANAGE_001_001_002','VAL','','VALFINANCEMANAGE_001_001','ValManualVoucherTemplete001','2','02','手工凭证模板','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALFINANCEMANAGE_001_001_003','VAL','','VALFINANCEMANAGE_001_001','ValVoucherQuery001','3','02','记账凭证查询','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALFINANCEMANAGE_001_001_004','VAL','','VALFINANCEMANAGE_001_001','ValSubjectWaterQuery001','4','02','科目流水查询','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALFINANCEMANAGE_001_001_005','VAL','','VALFINANCEMANAGE_001_001','ValSubjectBalanceQuery001','5','02','科目余额查询','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'));
 
 --手工凭证
 DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('ValManualVoucher001','ValManualVoucher002','ValManualVoucher003');
