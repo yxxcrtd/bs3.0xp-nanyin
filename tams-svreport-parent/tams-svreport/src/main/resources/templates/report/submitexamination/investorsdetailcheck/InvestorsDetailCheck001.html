@@ -1,0 +1,86 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+    <meta charset="utf-8">
+    <title>投资者明细核查</title>
+    <link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="form-button-area"></div>
+    <div class="joyin-form-wrap condition-area">
+        <form class="layui-form" id="searchForm">
+
+            <div class="layui-form-item">
+
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">检查日期</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id="checkDate" name="checkDate" type="text"
+                               class="layui-input form-input input-dateRangeSelect" placeholder="请选择日期区间"
+                        />
+                    </div>
+                </div>
+
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">检查结果</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="checkResult" searchable="false" name="checkResult" data-th-initvalue="${checkResult}" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${SVR_CHECK_RESULT}'  ></select>
+                    </div>
+                </div>
+
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">产品</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="prod" name="prod"
+                               data-th-value="${entity?.prod}" class="layui-input form-input"
+                               placeholder="请输入内容">
+                        </select>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">产品运作模式</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="operateMode" searchable="false" name="operateMode" data-th-initvalue="${operateMode}" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${SVR_OPERATEMODE_DECLARE}'  ></select>
+                    </div>
+                </div>
+
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">起息日</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id="vdate" name="vdate" type="text"
+                               class="layui-input form-input input-dateRangeSelect" placeholder="请选择日期区间"
+                        />
+                    </div>
+                </div>
+
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">到期日</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id="mdate" name="mdate" type="text"
+                               class="layui-input form-input input-dateRangeSelect" placeholder="请选择日期区间"
+                        />
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <div class="layui-table" id="dataTable"></div>
+</div>
+<div layout:fragment="script">
+    <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/submitexamination/investorsdetailcheck/InvestorsDetailCheck001.js}" type="text/javascript"></script>
+</div>
+</body>
+</html>
