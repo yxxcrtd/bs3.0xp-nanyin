@@ -1,0 +1,4 @@
+delete from  SYS_PARA where SYSTEM_CODE = 'SYS' and PARA_CODE in('IS_NULL_CREDIT');
+delete from DATA_AUTH_MAPPER_CONFIG where SQL_ID = 'com.joyintech.service.risk.creditmanagement.ceorg.dao.CeOrgMapper.selectCreditLines';
+INSERT INTO DATA_AUTH_MAPPER_CONFIG (SQL_ID, FILTER_TYPE, IS_NEST, JOIN_COLUMN_NAME, FILTER_SQL, SYSTEM_CODE, PAGE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADD_COLUMN, ADD_COLUMN_NAME, DATA_TYPE) VALUES ('com.joyintech.service.risk.creditmanagement.ceorg.dao.CeOrgMapper.selectCreditLines', '1', '01', null, 'select base99.*,base99.institution_Code as belongInstitutionCode from ( %s ) base99 where base99.institution_Code in %s', 'MST', 'CeOrg001', 'admin', null, TIMESTAMP '2020-07-13 05:04:58', 'admin', TIMESTAMP '2020-07-13 05:04:58', null, null, null);
+

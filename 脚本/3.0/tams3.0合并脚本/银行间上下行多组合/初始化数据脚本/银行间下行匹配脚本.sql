@@ -1,0 +1,132 @@
+
+Alter Table INTERF_TRAD_SECDEAL Add DEAL_FEEAMT NUMERIC(22,4);
+Alter Table INTERF_TRAD_SECDEAL Add SETT_FEEAMT NUMERIC(22,4);
+Alter Table INTERF_OPICS_TRAD_REPO Add DEAL_FEEAMT NUMERIC(22,4);
+Alter Table INTERF_OPICS_TRAD_REPO Add SETT_FEEAMT NUMERIC(22,4);
+Alter Table INTERF_CSTP_TRADE Add CB_FPRICE_AMT NUMERIC(22,4);
+Alter Table INTERF_CSTP_TRADE Add SC_FPRICE_AMT NUMERIC(22,4);
+Alter Table INTERF_OPICS_TRAD_REPO Add CB_FPRICE_AMT NUMERIC(22,4);
+Alter Table INTERF_OPICS_TRAD_REPO Add SC_FPRICE_AMT NUMERIC(22,4);
+Alter Table INTERF_TRAD_REPOASST Add OURDEPOSITACCOUNTNUMBER VARCHAR2(200);
+
+
+COMMENT ON COLUMN INTERF_TRAD_SECDEAL.DEAL_FEEAMT IS '交易手续费';
+COMMENT ON COLUMN INTERF_TRAD_SECDEAL.SETT_FEEAMT IS '结算服务费';
+COMMENT ON COLUMN INTERF_OPICS_TRAD_REPO.DEAL_FEEAMT IS '交易手续费';
+COMMENT ON COLUMN INTERF_OPICS_TRAD_REPO.SETT_FEEAMT IS '结算服务费';
+COMMENT ON COLUMN INTERF_CSTP_TRADE.CB_FPRICE_AMT IS '交易本金(中债登)';
+COMMENT ON COLUMN INTERF_CSTP_TRADE.SC_FPRICE_AMT IS '交易本金(上清所)';
+COMMENT ON COLUMN INTERF_OPICS_TRAD_REPO.CB_FPRICE_AMT IS '交易本金(中债登)';
+COMMENT ON COLUMN INTERF_OPICS_TRAD_REPO.SC_FPRICE_AMT IS '交易本金(上清所)';
+COMMENT ON COLUMN INTERF_TRAD_REPOASST.OURDEPOSITACCOUNTNUMBER IS '托管账号';
+
+Alter Table IBU_QUOTE_ETR_RE Add CB_FPRICE_AMT NUMERIC(22,4);
+Alter Table IBU_QUOTE_ETR_RE Add SC_FPRICE_AMT NUMERIC(22,4);
+Alter Table WFL_IBU_QUOTE_ETR_RE Add CB_FPRICE_AMT NUMERIC(22,4);
+Alter Table WFL_IBU_QUOTE_ETR_RE Add  SC_FPRICE_AMT NUMERIC(22,4);
+Alter Table IBU_QUOTE_ETR_RE_HIS Add CB_FPRICE_AMT NUMERIC(22,4);
+Alter Table IBU_QUOTE_ETR_RE_HIS Add  SC_FPRICE_AMT NUMERIC(22,4);
+
+
+
+COMMENT ON COLUMN IBU_QUOTE_ETR_RE.CB_FPRICE_AMT IS '交易本金(中债登)';
+COMMENT ON COLUMN IBU_QUOTE_ETR_RE.SC_FPRICE_AMT IS '交易本金(上清所)';
+COMMENT ON COLUMN WFL_IBU_QUOTE_ETR_RE.CB_FPRICE_AMT IS '交易本金(中债登)';
+COMMENT ON COLUMN WFL_IBU_QUOTE_ETR_RE.SC_FPRICE_AMT IS '交易本金(上清所)';
+COMMENT ON COLUMN IBU_QUOTE_ETR_RE_HIS.CB_FPRICE_AMT IS '交易本金(中债登)';
+COMMENT ON COLUMN IBU_QUOTE_ETR_RE_HIS.SC_FPRICE_AMT IS '交易本金(上清所)';
+
+
+drop table TRD_PLEDGE_MATCH_INFO cascade constraints;
+
+/*==============================================================*/
+/* Table: TRD_PLEDGE_MATCH_INFO                                 */
+/*==============================================================*/
+create table TRD_PLEDGE_MATCH_INFO
+(
+   SEQNO                VARCHAR(32)          not null,
+   CSTP_TRADE_ID        VARCHAR(32)          not null,
+   PRE_TRADE_ID         VARCHAR(32),
+   ENTRUST_ID           VARCHAR(32)          not null,
+   SEC_ACCT_ID          VARCHAR(32),
+   PLEDGE_FINPROD_ID    VARCHAR(32),
+   MATCH_NUM            NUMERIC(30, 2),
+   MATCH_TYPE           VARCHAR(50),
+   TRADE_DATE           DATE                 not null,
+   CREATE_USER          VARCHAR(20)          not null,
+   CREATE_DEPT          VARCHAR(32),
+   CREATE_TIME          TIMESTAMP            not null,
+   UPDATE_USER          VARCHAR(20)          not null,
+   UPDATE_TIME          TIMESTAMP            not null,
+   F_SYS_ID             VARCHAR(50),
+   constraint PK_TRD_PLEDGE_MATCH_INFO primary key (SEQNO)
+);
+
+comment on table TRD_PLEDGE_MATCH_INFO is
+'下行交易质押品匹配情况表';
+
+comment on column TRD_PLEDGE_MATCH_INFO.SEQNO is
+'流水号';
+
+comment on column TRD_PLEDGE_MATCH_INFO.CSTP_TRADE_ID is
+'下行交易编号';
+
+comment on column TRD_PLEDGE_MATCH_INFO.PRE_TRADE_ID is
+'预录入交易编号';
+
+comment on column TRD_PLEDGE_MATCH_INFO.ENTRUST_ID is
+'委托编号';
+
+comment on column TRD_PLEDGE_MATCH_INFO.SEC_ACCT_ID is
+'证券账户代码';
+
+comment on column TRD_PLEDGE_MATCH_INFO.PLEDGE_FINPROD_ID is
+'质押金融产品代码';
+
+comment on column TRD_PLEDGE_MATCH_INFO.MATCH_NUM is
+'匹配额度';
+
+comment on column TRD_PLEDGE_MATCH_INFO.MATCH_TYPE is
+'匹配方式';
+
+comment on column TRD_PLEDGE_MATCH_INFO.TRADE_DATE is
+'交易日期';
+
+comment on column TRD_PLEDGE_MATCH_INFO.CREATE_USER is
+'创建人';
+
+comment on column TRD_PLEDGE_MATCH_INFO.CREATE_DEPT is
+'创建部门';
+
+comment on column TRD_PLEDGE_MATCH_INFO.CREATE_TIME is
+'创建时间';
+
+comment on column TRD_PLEDGE_MATCH_INFO.UPDATE_USER is
+'更新人';
+
+comment on column TRD_PLEDGE_MATCH_INFO.UPDATE_TIME is
+'更新时间';
+
+comment on column TRD_PLEDGE_MATCH_INFO.F_SYS_ID is
+'上游系统';
+
+Alter Table TRD_MATCH_INFO Add MATCH_NUM_CB NUMERIC(22,4);
+Alter Table TRD_MATCH_INFO Add MATCH_NUM_SC NUMERIC(22,4);
+COMMENT ON COLUMN TRD_MATCH_INFO.MATCH_NUM_CB IS '匹配额度(中债)';
+COMMENT ON COLUMN TRD_MATCH_INFO.MATCH_NUM_SC IS '结算服务费(上清)';
+
+
+
+
+
+
+
+
+
+create sequence CSTP_MATCH_SEQNO
+		minvalue 1
+		maxvalue 9999999999999999999999999
+		start with 1
+		increment by 1
+		nocache;
+

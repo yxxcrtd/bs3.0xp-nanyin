@@ -1,0 +1,32 @@
+--会计科目信息查询中查询条件“科目类型”中删除枚举值“07登记薄类”
+DELETE FROM SYS_PAGE_DICTLIST WHERE PAGE_ID ='ValSubjectSet001' AND DICT_ID='SUBJECT_TYPE';
+insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ValSubjectSet001','SUBJECT_TYPE','01','999999','资产类','','system','',to_date('2021/01/18', 'yyyy/mm/dd'), 'system',to_date('2021/01/18', 'yyyy/mm/dd'));
+insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ValSubjectSet001','SUBJECT_TYPE','02','999999','负债类','','system','',to_date('2021/01/18', 'yyyy/mm/dd'), 'system',to_date('2021/01/18', 'yyyy/mm/dd'));
+insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ValSubjectSet001','SUBJECT_TYPE','03','999999','资产负债共同类','','system','',to_date('2021/01/18', 'yyyy/mm/dd'), 'system',to_date('2021/01/18', 'yyyy/mm/dd'));
+insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ValSubjectSet001','SUBJECT_TYPE','04','999999','所有者权益类','','system','',to_date('2021/01/18', 'yyyy/mm/dd'), 'system',to_date('2021/01/18', 'yyyy/mm/dd'));
+insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ValSubjectSet001','SUBJECT_TYPE','05','999999','损益类','','system','',to_date('2021/01/18', 'yyyy/mm/dd'), 'system',to_date('2021/01/18', 'yyyy/mm/dd'));
+insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ValSubjectSet001','SUBJECT_TYPE','06','999999','表外科目','','system','',to_date('2021/01/18', 'yyyy/mm/dd'), 'system',to_date('2021/01/18', 'yyyy/mm/dd'));
+
+
+--菜单表
+delete from SYS_MENU where menu_id='VALUATION_ACCOUNTING_001_001_005';
+insert into SYS_MENU values ('VALUATION_ACCOUNTING_001_001_005','VAL','','VALUATION_ACCOUNTING_001_001','ValAssetBookParameter001','5','02','账套参数管理','system','',to_date('2021/01/19', 'yyyy/mm/dd'), 'system',to_date('2021/01/19', 'yyyy/mm/dd'));
+
+--画面表
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('ValAssetBookParameter001','ValAssetBookParameter002');
+insert into SYS_PAGE values ('ValAssetBookParameter001','VAL','/valuation/accounadjustmanage/assetbookparameter/ValAssetBookParameter001','valuation/accounadjustmanage/assetbookparameter/ValAssetBookParameter001','VALUATION_ACCOUNTING_001_001_005','','','02','02','账套参数管理','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2021/01/19', 'yyyy/mm/dd'));
+insert into SYS_PAGE values ('ValAssetBookParameter002','VAL','/valuation/accounadjustmanage/assetbookparameter/ValAssetBookParameter002','valuation/accounadjustmanage/assetbookparameter/ValAssetBookParameter002','VALUATION_ACCOUNTING_001_001_005','','','02','01','账套参数管理','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2021/01/19', 'yyyy/mm/dd'));
+
+--画面元素表
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID IN ('ValAssetBookParameter001','ValAssetBookParameter002');
+insert into SYS_PAGE_ELEMENT values ('ValAssetBookParameter001','ValAssetBookParameter001_btn_add','01','01','','新建','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2020/01/07', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValAssetBookParameter001','ValAssetBookParameter001_btn_edit','01','01','','编辑','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2020/01/07', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValAssetBookParameter001','ValAssetBookParameter001_btn_search','01','01','','查询','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2020/01/07', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValAssetBookParameter002','ValAssetBookParameter002_btn_save','01','02','','保存','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2020/01/07', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValAssetBookParameter002','ValAssetBookParameter002_btn_submit','01','02','','提交','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2020/01/07', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValAssetBookParameter002','ValAssetBookParameter002_btn_cancel','01','02','','取消','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2020/01/07', 'yyyy/mm/dd'),'COM');
+
+--业务流程模板
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID IN ('ValAssetBookParameter001','ValAssetBookParameter002');
+insert into SYS_WFL_BUSINESS_MODULE values ('ValAssetBookParameter002','ValAssetBookParameter002_btn_save','oneApproval','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2020/01/07', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE values ('ValAssetBookParameter002','ValAssetBookParameter002_btn_submit','oneApproval','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2020/01/07', 'yyyy/mm/dd'),'ALL','02');

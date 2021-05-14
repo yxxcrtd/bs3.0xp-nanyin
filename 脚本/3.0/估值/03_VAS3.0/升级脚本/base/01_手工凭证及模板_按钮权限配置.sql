@@ -1,0 +1,15 @@
+DELETE FROM SYS_PAGE WHERE PAGE_ID ='ValManualVoucher001';
+insert into SYS_PAGE values ('ValManualVoucher001','VAL','/valuation/accounadjustmanage/manualvoucher/ValManualVoucher001','valuation/accounadjustmanage/manualvoucher/ValManualVoucher001','VALFINANCEMANAGE_001_001_001','','','02','01','手工凭证','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'));
+
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID ='ValManualVoucher003' AND ELEMENT_ID ='ValManualVoucher003_btn_savetmp';
+insert into SYS_PAGE_ELEMENT values ('ValManualVoucher003','ValManualVoucher003_btn_savetmp','01','02','','保存为模板','system','',to_date('2021/03/17', 'yyyy/mm/dd'), 'system',to_date('2021/03/17', 'yyyy/mm/dd'),'COM');
+
+
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID IN('ValManualVoucherTemplete001','ValManualVoucherTemplete003');
+insert into SYS_PAGE_ELEMENT values ('ValManualVoucherTemplete001','ValManualVoucherTemplete001_btn_delete','01','01','','删除','system','',to_date('2021/03/17', 'yyyy/mm/dd'), 'system',to_date('2021/03/17', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValManualVoucherTemplete001','ValManualVoucherTemplete001_btn_reset','01','02','','重置','system','',to_date('2021/03/17', 'yyyy/mm/dd'), 'system',to_date('2021/03/17', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValManualVoucherTemplete001','ValManualVoucherTemplete001_btn_export','01','01','','导出','system','',to_date('2021/03/17', 'yyyy/mm/dd'), 'system',to_date('2021/03/17', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValManualVoucherTemplete001','ValManualVoucherTemplete001_btn_search','01','01','','查询','system','',to_date('2021/03/17', 'yyyy/mm/dd'), 'system',to_date('2021/03/17', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValManualVoucherTemplete001','ValManualVoucherTemplete001_btn_add','01','01','','新建','system','',to_date('2021/03/17', 'yyyy/mm/dd'), 'system',to_date('2021/03/17', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT values ('ValManualVoucherTemplete003','ValManualVoucherTemplete003_btn_submit','01','02','','提交','system','',to_date('2021/03/17', 'yyyy/mm/dd'), 'system',to_date('2021/03/17', 'yyyy/mm/dd'),'COM');
+
