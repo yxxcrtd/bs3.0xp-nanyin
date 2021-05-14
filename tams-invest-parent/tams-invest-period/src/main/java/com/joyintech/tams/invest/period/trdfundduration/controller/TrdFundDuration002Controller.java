@@ -245,7 +245,10 @@ public class TrdFundDuration002Controller extends BaseController {
             dto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(parameter));
         }
         else {
-        	periodCommonService.deleteWflByTradeId(dto.getTotleTradeId());
+
+            if (BussinessConstant.SUBMIT.equals(dto.getOperateType())) {
+                periodCommonService.deleteWflByTradeId(dto.getTotleTradeId());
+            }
         }
         params.setBusinessCode(dto.getTotleTradeId());
         params.setBusinessType(DictCodeList.共通业务类型_基金类资产存续期.getValue());
