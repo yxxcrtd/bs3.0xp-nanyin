@@ -78,7 +78,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 		//获取当前登录用户的机构编码
 		param.put("orgCode", CommonUtil.getTreeInstCode());
-
+        if (StringUtil.isNotEmpty(param.get("assetType")) && String.valueOf(param.get("assetType")).contains(DictCodeListExt2.资产_负债类别_私募基金_公募基金.getValue())){
+        	param.put("assetType",String.valueOf(param.get("assetType")).replace(DictCodeListExt2.资产_负债类别_私募基金_公募基金.getValue(),DictCodeListExt2.资产_负债类别_公募基金.getValue()+","+DictCodeListExt2.资产_负债类别_私募基金.getValue()));
+		}
 		param.put("assetCodes", StringUtil.isNotEmpty(param.get("assetCode"))?(param.get("assetCode").toString().split(",")):null);
 		param.put("assetTypes", StringUtil.isNotEmpty(param.get("assetType"))?(param.get("assetType").toString().split(",")):null);
 		param.put("assetType2s", StringUtil.isNotEmpty(param.get("assetType2"))?(param.get("assetType2").toString().split(",")):null);

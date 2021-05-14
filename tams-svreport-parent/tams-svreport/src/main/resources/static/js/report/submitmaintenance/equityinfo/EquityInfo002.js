@@ -56,11 +56,15 @@ $(function() {
                 }
             })
         })
-        $('#holderType').on('change',function(){
-        	// 当投资者类别选择01、02、03时，机构证件类别置灰，个人证件类别和性别可用
-        	// 否则，机构证件类别可用，个人证件类别和性别置灰
-        	var arr = ["01","02","03"];
-    		holderTypeChange(arr.indexOf($('#holderType').val())>=0);
+        if ($('#holderType').val() != null && $('#holderType').val() != ''){
+            var arr = ["01","02","03"];
+            holderTypeChange(arr.indexOf($('#holderType').val())>=0);
+        }
+        $('#holderType').change(function(){
+            // 当投资者类别选择01、02、03时，机构证件类别置灰，个人证件类别和性别可用
+            // 否则，机构证件类别可用，个人证件类别和性别置灰
+            var arr = ["01","02","03"];
+            holderTypeChange(arr.indexOf($('#holderType').val())>=0);
         });
     })
 }())

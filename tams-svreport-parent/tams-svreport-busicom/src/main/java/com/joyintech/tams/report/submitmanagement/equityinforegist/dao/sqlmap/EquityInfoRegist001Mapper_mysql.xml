@@ -1129,7 +1129,7 @@
 			STATUS AS STATUS,
 			t1.UPDATE_TIME AS updateTime,
 			t2.SUBMIT_FEEDBACK_STATUS AS submitFeedbackStatus,
-			IF( @INDENTIFY_MARK = t1.INDENTIFY_MARK, @rank := @rank + 1, @rank := 1 ) AS rank,
+			IF( @INDENTIFY_MARK = t1.INDENTIFY_MARK, @rank := @rank + 1, @rank := 1 ) AS rank1,
 			@INDENTIFY_MARK := t1.INDENTIFY_MARK
 			FROM
 			( SELECT @rownum := 0, @CASH_ID := NULL, @rank := 0 )b,
@@ -1145,7 +1145,7 @@
 		    AND t1.REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR} 
 		    and  (t1.INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} or t1.ORG_INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR})
 		</where>
-		) where rank = 1
+		) tmp where rank1 = 1
 	</select>
 
     

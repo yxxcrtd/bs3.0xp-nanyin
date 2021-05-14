@@ -1583,6 +1583,11 @@ public class EquityInfoValid {
                     message.add(this.getMessage("CHB_EQUITYINFO_E_035", "投资者所属国家或地区"));
                 }
                 // add by etliu 20180912 end
+                // add by baojunjie 20210514 start
+                if (StringUtil.isNotEmpty(holderRegion) && holderRegion.contains(DictCodeListExt2.所属国家或地区_中国.getValue())){
+                    message.add(this.getMessage("投资者境内外标识选择“境外”时，投资者所属国家或地区不可以选择“CHN：中国”"));
+                }
+                // add by baojunjie 20210514 end
             }
             else if ("01".equals(holderMark)) {
                 if (StringUtil.isNotEmpty(holderRegion)) {
