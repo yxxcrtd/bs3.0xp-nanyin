@@ -236,6 +236,9 @@ public class PayTheVatQuery002Controller extends BaseController{
 				param.setPageId("FinproductPayTheVatQuery002");
 				// 查询该产品流程中的增值税信息 查询出的结果产品id已经与校验数据产品id相同
 				List<ProcessMark> processMarkList = mstWorkflowCommonService.getDataStatusFromProcessMarkList(param);
+				if (processMarkList == null) {
+					continue;
+				}
 				for (ProcessMark processMark : processMarkList) {
 					PayTheVatQuery002Dto payTheVatQuery002Dto = JsonUtils.OBJECT_MAPPER.readValue(processMark.getBusinessData(), PayTheVatQuery002Dto.class);
 					if (!StringUtil.isNotEmpty(payTheVatQuery002Dto)
