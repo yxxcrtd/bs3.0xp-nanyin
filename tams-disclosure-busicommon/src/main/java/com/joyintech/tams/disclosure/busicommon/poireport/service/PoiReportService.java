@@ -293,7 +293,7 @@ public class PoiReportService {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		ResultSet rs;
+		ResultSet rs = null;
 		try {
 			if(ps != null){
 				rs = ps.executeQuery();
@@ -326,6 +326,13 @@ public class PoiReportService {
 			if (null != conn) {
 				try {
 					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (null != rs) {
+				try {
+					rs.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
