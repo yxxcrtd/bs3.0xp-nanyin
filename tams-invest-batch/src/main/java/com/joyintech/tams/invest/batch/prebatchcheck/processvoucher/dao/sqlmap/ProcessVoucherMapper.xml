@@ -5,12 +5,27 @@
     <select id="selectProcessVoucherList" parameterType="java.util.Map"
             resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
             /*获取最新的留痕表信息*/
-      		with TEMP AS (
+            with tempA as(
+	            select a.*,rank() over(partition by a.workflow_id order by a.HIS_NO desc) as rank
+	            from sys_wfl_business_node A 
+                inner join sys_wfl_business_list B on A.workflow_id = B.workflow_id and b.process_state = 'BACK'
+            ),
+            /*根据sys_wfl_business_node表中信息过滤掉退回后再保存的流程*/
+            filter as(
+	            select C.seq_no workflow_id
+                from tempA A
+                inner join sys_wfl_business_list C on c.workflow_id = a.workflow_id
+	            where A.rank = 2 and exists(
+		            select 1 from tempA B where B.rank = 1 and B.workflow_id = A.workflow_id and b.node_id = a.node_id
+	            )
+            ),
+            TEMP AS (
 				SELECT * FROM(
 					select 
 						sys_data_process_mark.*,rank() over(partition by workflow_id order by HIS_NO desc) as rank
 					from sys_data_process_mark 
 					where page_id in ('ValManualVoucher003')
+                    and workflow_id not in (select workflow_id from filter)
 				) WHERE rank = 1
 			)
 			select
