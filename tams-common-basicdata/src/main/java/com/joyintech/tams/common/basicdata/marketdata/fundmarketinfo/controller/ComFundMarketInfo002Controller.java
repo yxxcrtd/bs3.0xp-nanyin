@@ -35,7 +35,7 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  * 每日基金行情新建和编辑
  */
 @Controller
-@PageId("ComFundMarketInfo001")
+@PageId("ComFundMarketInfo002")
 @RequestMapping("/common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002")
 public class ComFundMarketInfo002Controller extends BaseController {
     @Autowired

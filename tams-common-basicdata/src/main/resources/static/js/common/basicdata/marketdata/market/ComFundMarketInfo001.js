@@ -49,7 +49,7 @@ $(function() {
 /*		dblclick:function(table , data) {
 	          console.log(data);
 	          Joyin.dialog(JoyinUtil.getLabel("查看详情"), basePath
-	                  + "common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/init","90%",
+	                  + "common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002/init","90%",
 	                  "90%", {pageModel:PAGE_MODEL_REFERENCE,datas:JSON.stringify(data)},
 	                  function(){
 	                      table.reload();
@@ -139,10 +139,10 @@ $(function() {
 		data.valueDate = new Date(data.valueDate).format();
 		data.pageModel=PAGE_MODEL_EDIT;
 		data.operateType='edit';
-		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/check', data, function(result) {
+		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002/check', data, function(result) {
 			Joyin.confirm("请确认是否要修改？", function(){
 				Joyin.dialog(JoyinUtil.getLabel("每日债券行情编辑"),
-					basePath + "common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/init",
+					basePath + "common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002/init",
 					"85%", "85%",data,
 					function(){table.reload();});
 			});
@@ -160,9 +160,9 @@ $(function() {
 			selectedItem: [data],
 			operateType:"delete"
 		};
-		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/check', object, function(result) {
+		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/check', object, function(result) {
 			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/delete', object, "ComFundMarketInfo001_btn_delete", "ValFundMarketInfo002",function(){
+				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/delete', object, "ComFundMarketInfo001_btn_delete", "ValFundMarketInfo002",function(){
 					table.reload();
 				});
 			});
@@ -199,9 +199,9 @@ $(function() {
 			return;
 		}
 		var object = {selectedItem: selArr, operateType:"delete"};
-		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/check', object, function(result) {
+		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/check', object, function(result) {
 			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/delete', object, "ComFundMarketInfo001_btn_delete", "ValFundMarketInfo002",function () {
+				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/delete', object, "ComFundMarketInfo001_btn_delete", "ValFundMarketInfo002",function () {
 					table.reload();
 				});
 			});
@@ -212,14 +212,14 @@ $(function() {
 	 * 新建
 	 */
 	$('#ComFundMarketInfo001_btn_add').click(function () {
-		Joyin.dialog(JoyinUtil.getLabel("每日基金行情新建"), basePath +'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation002/init', '85%', '85%');
+		Joyin.dialog(JoyinUtil.getLabel("每日基金行情新建"), basePath +'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002/init', '85%', '85%');
 	});
 	/**
 	 * 导入按钮
 	 */
 	$('#ComFundMarketInfo001_btn_import').click(function() {
 		Joyin.uploadFile({pageId:'ValFundMarketInfo001MTM'},function(fileName) {
-			Joyin.ajax(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/checkImportData', {fileName: fileName}, function(checkResult) {
+			Joyin.ajax(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/checkImportData', {fileName: fileName}, function(checkResult) {
 				if (checkResult) {
 					setTimeout( function () {
 						if(checkResult.data.errorMsg){
@@ -231,7 +231,7 @@ $(function() {
 								var data = {
 									tempList: checkResult.data.correctData
 								}
-								Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/importFile', data,
+								Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/importFile', data,
 									function (resultObj) {
 										if (resultObj.statuCode.toString() === '200') {
 											/** modify by yanya on 20210329 修正导入逻辑**/
@@ -248,7 +248,7 @@ $(function() {
 							var data = {
 								tempList: checkResult.data.correctData
 							}
-							Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/finproductvaluation/ValFinProductValuation001/importFile', data,
+							Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/importFile', data,
 								function (resultObj) {
 									if (resultObj.statuCode.toString() === '200') {
 										/** modify by yanya on 20210329 修正导入逻辑**/

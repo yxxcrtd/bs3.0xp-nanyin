@@ -139,7 +139,7 @@
         /**
          * 导入按钮
          */
-        $('#ValBondQuotationInfo001_btn_import').click(function() {
+        $('#ComBondQuotationInfo001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
                     Joyin.ajax(basePath +"common/basicdata/marketdata/mstbondquotationinfo/ComBondQuotationInfo001/importFile", {
