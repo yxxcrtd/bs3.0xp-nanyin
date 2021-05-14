@@ -21,7 +21,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <select type="text" id="finprodId" name="finprodId"
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                                data-th-data-url="@{common/basicdata/marketdata/bondmarketinfo/ComFundMarketInfo002/getFinProductList}"
+                                                data-th-data-url="@{/common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo002/getFinProductList}"
                                                 required="required" data-th-initValue="${entity?.finprodId}">
                                         </select>
                                     </div>
@@ -137,7 +137,7 @@
     </div>
 </div>
 <div layout:fragment="script">
-    <script data-th-src="@{/js/valuation/basedata/marketdata/market/ValFundMarketInfo002.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/common/basicdata/marketdata/market/ComFundMarketInfo002.js}" type="text/javascript"></script>
 </div>
 </body>
 </html>
