@@ -1429,16 +1429,16 @@ public class FinProductAdd extends BaseEntity {
     }
 
     /**
-     * 取得 数据来源；
-     * @return 数据来源；
+     * 取得 数据来源
+     * @return 数据来源
      */
     public String getDataSource() {
         return dataSource;
     }
 
     /**
-     * 设置 数据来源；
-     * @param dataSource 数据来源；
+     * 设置 数据来源
+     * @param dataSource 数据来源
      */
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource == null ? null : dataSource.trim();

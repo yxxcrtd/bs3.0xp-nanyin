@@ -19,13 +19,18 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE_NAME" property="profitTypeName" jdbcType="VARCHAR" />
+        <result column="TRM_FUND_TYPE" property="trmFundType" jdbcType="VARCHAR" />
+        <result column="TRM_FUND_TYPE_NAME" property="trmFundTypeName" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         OPTSN OPTSN, FINPROD_TYPE FINPROD_TYPE, ASSET_TYPE ASSET_TYPE, ASSET_TYPE_NAME ASSET_TYPE_NAME, 
         TRADE_MARKET TRADE_MARKET, BLN_AREA BLN_AREA, ORG_CLASS ORG_CLASS, ORG_CLASS_NAME ORG_CLASS_NAME, 
         ACCOUNTING_CLASS ACCOUNTING_CLASS, ACCOUNTING_CLASS_NAME ACCOUNTING_CLASS_NAME, TAX_CLASS TAX_CLASS, 
         TAX_CLASS_NAME TAX_CLASS_NAME, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, PROFIT_TYPE PROFIT_TYPE, 
+        PROFIT_TYPE_NAME PROFIT_TYPE_NAME, TRM_FUND_TYPE TRM_FUND_TYPE, TRM_FUND_TYPE_NAME TRM_FUND_TYPE_NAME
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -53,13 +58,17 @@
             ORG_CLASS, ORG_CLASS_NAME, ACCOUNTING_CLASS, 
             ACCOUNTING_CLASS_NAME, TAX_CLASS, TAX_CLASS_NAME, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME, PROFIT_TYPE, 
+            PROFIT_TYPE_NAME, TRM_FUND_TYPE, TRM_FUND_TYPE_NAME
+            )
         values (#{optsn,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, 
             #{assetTypeName,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, #{blnArea,jdbcType=VARCHAR}, 
             #{orgClass,jdbcType=VARCHAR}, #{orgClassName,jdbcType=VARCHAR}, #{accountingClass,jdbcType=VARCHAR}, 
             #{accountingClassName,jdbcType=VARCHAR}, #{taxClass,jdbcType=VARCHAR}, #{taxClassName,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{profitType,jdbcType=VARCHAR}, 
+            #{profitTypeName,jdbcType=VARCHAR}, #{trmFundType,jdbcType=VARCHAR}, #{trmFundTypeName,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductClass" >
         insert into FIN_PRODUCT_CLASS
@@ -115,6 +124,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="profitTypeName != null" >
+                PROFIT_TYPE_NAME,
+            </if>
+            <if test="trmFundType != null" >
+                TRM_FUND_TYPE,
+            </if>
+            <if test="trmFundTypeName != null" >
+                TRM_FUND_TYPE_NAME,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="optsn != null" >
@@ -168,15 +189,29 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="profitTypeName != null" >
+                #{profitTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="trmFundType != null" >
+                #{trmFundType,jdbcType=VARCHAR},
+            </if>
+            <if test="trmFundTypeName != null" >
+                #{trmFundTypeName,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProductClass" >
         insert into FIN_PRODUCT_CLASS(OPTSN, FINPROD_TYPE, ASSET_TYPE, ASSET_TYPE_NAME, TRADE_MARKET, 
         BLN_AREA, ORG_CLASS, ORG_CLASS_NAME, ACCOUNTING_CLASS, ACCOUNTING_CLASS_NAME, TAX_CLASS, 
-        TAX_CLASS_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        TAX_CLASS_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        PROFIT_TYPE, PROFIT_TYPE_NAME, TRM_FUND_TYPE, TRM_FUND_TYPE_NAME)
         select OPTSN, FINPROD_TYPE, ASSET_TYPE, ASSET_TYPE_NAME, TRADE_MARKET, 
             BLN_AREA, ORG_CLASS, ORG_CLASS_NAME, ACCOUNTING_CLASS, ACCOUNTING_CLASS_NAME, TAX_CLASS, 
-            TAX_CLASS_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            TAX_CLASS_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            PROFIT_TYPE, PROFIT_TYPE_NAME, TRM_FUND_TYPE, TRM_FUND_TYPE_NAME
              from FIN_PRODUCT_CLASS
              where 1 = 1 and OPTSN = #{optsn,jdbcType=VARCHAR}
     </insert>
@@ -222,6 +257,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="profitTypeName != null" >
+                PROFIT_TYPE_NAME = #{profitTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="trmFundType != null" >
+                TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR},
+            </if>
+            <if test="trmFundTypeName != null" >
+                TRM_FUND_TYPE_NAME = #{trmFundTypeName,jdbcType=VARCHAR},
+            </if>
         </set>
         where OPTSN = #{optsn,jdbcType=VARCHAR}
     </update>
@@ -239,7 +286,11 @@
             TAX_CLASS = #{taxClass,jdbcType=VARCHAR},
             TAX_CLASS_NAME = #{taxClassName,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            PROFIT_TYPE_NAME = #{profitTypeName,jdbcType=VARCHAR},
+            TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR},
+            TRM_FUND_TYPE_NAME = #{trmFundTypeName,jdbcType=VARCHAR}
         where OPTSN = #{optsn,jdbcType=VARCHAR}
     </update>
 </mapper>

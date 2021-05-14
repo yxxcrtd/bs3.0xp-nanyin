@@ -6,11 +6,6 @@ import java.math.BigDecimal;
 
 public class MstExchargeQuote extends MstExchargeQuoteKey {
     /**
-     * 数据来源
-     */
-    private String datasourceType;
-
-    /**
      * 开盘价
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -61,20 +56,14 @@ public class MstExchargeQuote extends MstExchargeQuoteKey {
     private String inputType;
 
     /**
-     * 取得 数据来源
-     * @return 数据来源
+     * 行情类型
      */
-    public String getDatasourceType() {
-        return datasourceType;
-    }
+    private String marketType;
 
     /**
-     * 设置 数据来源
-     * @param datasourceType 数据来源
+     * 期限
      */
-    public void setDatasourceType(String datasourceType) {
-        this.datasourceType = datasourceType == null ? null : datasourceType.trim();
-    }
+    private String deadLine;
 
     /**
      * 取得 开盘价
@@ -218,5 +207,37 @@ public class MstExchargeQuote extends MstExchargeQuoteKey {
      */
     public void setInputType(String inputType) {
         this.inputType = inputType == null ? null : inputType.trim();
+    }
+
+    /**
+     * 取得 行情类型
+     * @return 行情类型
+     */
+    public String getMarketType() {
+        return marketType;
+    }
+
+    /**
+     * 设置 行情类型
+     * @param marketType 行情类型
+     */
+    public void setMarketType(String marketType) {
+        this.marketType = marketType == null ? null : marketType.trim();
+    }
+
+    /**
+     * 取得 期限
+     * @return 期限
+     */
+    public String getDeadLine() {
+        return deadLine;
+    }
+
+    /**
+     * 设置 期限
+     * @param deadLine 期限
+     */
+    public void setDeadLine(String deadLine) {
+        this.deadLine = deadLine == null ? null : deadLine.trim();
     }
 }

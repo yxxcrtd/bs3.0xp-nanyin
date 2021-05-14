@@ -12,11 +12,12 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PARAM_TYPE" property="paramType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         BOOKSET_ID BOOKSET_ID, PARAM_CODE PARAM_CODE, PARAM_VALUE PARAM_VALUE, PARAM_NAME PARAM_NAME, 
         REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
-        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, PARAM_TYPE PARAM_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -44,11 +45,11 @@
         insert into BOK_BOOKSET_EXT (BOOKSET_ID, PARAM_CODE, PARAM_VALUE, 
             PARAM_NAME, REMARK, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME)
+            UPDATE_TIME, PARAM_TYPE)
         values (#{booksetId,jdbcType=VARCHAR}, #{paramCode,jdbcType=VARCHAR}, #{paramValue,jdbcType=VARCHAR}, 
             #{paramName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP})
+            #{updateTime,jdbcType=TIMESTAMP}, #{paramType,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokBooksetExt" >
         insert into BOK_BOOKSET_EXT
@@ -83,6 +84,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="paramType != null" >
+                PARAM_TYPE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="booksetId != null" >
@@ -115,13 +119,16 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="paramType != null" >
+                #{paramType,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokBooksetExt" >
         insert into BOK_BOOKSET_EXT(BOOKSET_ID, PARAM_CODE, PARAM_VALUE, PARAM_NAME, REMARK, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, PARAM_TYPE)
         select BOOKSET_ID, PARAM_CODE, PARAM_VALUE, PARAM_NAME, REMARK, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PARAM_TYPE
              from BOK_BOOKSET_EXT
              where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and PARAM_CODE = #{paramCode,jdbcType=VARCHAR}
     </insert>
@@ -143,6 +150,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="paramType != null" >
+                PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+            </if>
         </set>
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
           and PARAM_CODE = #{paramCode,jdbcType=VARCHAR}
@@ -153,7 +163,8 @@
             PARAM_NAME = #{paramName,jdbcType=VARCHAR},
             REMARK = #{remark,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            PARAM_TYPE = #{paramType,jdbcType=VARCHAR}
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
           and PARAM_CODE = #{paramCode,jdbcType=VARCHAR}
     </update>

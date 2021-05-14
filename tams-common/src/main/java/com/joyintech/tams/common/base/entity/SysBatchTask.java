@@ -34,6 +34,11 @@ public class SysBatchTask extends BaseEntity {
     private Long taskPri;
 
     /**
+     * 是否批处理启动执行对象
+     */
+    private String isBatchStartTarget;
+
+    /**
      * 取得 任务代码
      * @return 任务代码
      */
@@ -127,5 +132,21 @@ public class SysBatchTask extends BaseEntity {
      */
     public void setTaskPri(Long taskPri) {
         this.taskPri = taskPri;
+    }
+
+    /**
+     * 取得 是否批处理启动执行对象
+     * @return 是否批处理启动执行对象
+     */
+    public String getIsBatchStartTarget() {
+        return isBatchStartTarget;
+    }
+
+    /**
+     * 设置 是否批处理启动执行对象
+     * @param isBatchStartTarget 是否批处理启动执行对象
+     */
+    public void setIsBatchStartTarget(String isBatchStartTarget) {
+        this.isBatchStartTarget = isBatchStartTarget == null ? null : isBatchStartTarget.trim();
     }
 }
