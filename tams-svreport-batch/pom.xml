@@ -15,18 +15,17 @@
         <module>tams-svreport-batch-chb3</module>
         <module>tams-svreport-batch-pbc</module>
     </modules>
-    
+
     <properties>
         <!--<framework.version>0.0.1</framework.version>
          <joyintech-tools.version>2.0.7.6.8</joyintech-tools.version>
         <batch-framework.version>2.0.7.6.8</batch-framework.version> -->
-    </properties>   
+    </properties>
 
     <dependencies>
          <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>batch-framework</artifactId>
-            <version>2.1.6.3</version>
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
@@ -61,7 +60,7 @@
 		  </plugin>
 	   </plugins>
 	</build>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -71,6 +70,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
- 
-    
+
+
 </project>
