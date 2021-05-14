@@ -415,10 +415,10 @@ public class ChbPeriodicService {
      */
     private List<ChbPeriodicBonus> qryChbPeriodicBonus(ChbPrdBaseinfo chbPrdBaseinfo, Map<String, Object> params) {
         List<ChbPeriodicBonusDeal> list = qryChbPeriodicBonusDeal(params);
-        return this.dealBonusValue(chbPrdBaseinfo, list);
+        return this.dealBonusValue(chbPrdBaseinfo, list, params);
     }
 
-    private List<ChbPeriodicBonus> dealBonusValue(ChbPrdBaseinfo chbPrdBaseinfo, List<ChbPeriodicBonusDeal> list) {
+    private List<ChbPeriodicBonus> dealBonusValue(ChbPrdBaseinfo chbPrdBaseinfo, List<ChbPeriodicBonusDeal> list, Map<String, Object> params) {
         List<ChbPeriodicBonus> bonusList = new ArrayList<>();
         if (Objects.isNull(list) || list.isEmpty()) {
             ChbPeriodicBonus chbPeriodicBonus = new ChbPeriodicBonus();
@@ -458,7 +458,7 @@ public class ChbPeriodicService {
             if (Objects.isNull(list.get(0).getRegDate())) {
                 chbPeriodicBonus.setRegDate(ChbInvestReportConstant.横线);
             } else {
-                chbPeriodicBonus.setRegDate(DateUtil.format(list.get(0).getRegDate()));
+                chbPeriodicBonus.setRegDate(params.get("startReportDateFmt") + ChbInvestReportConstant.横线 + params.get("endReportDateFmt"));
             }
             if (Objects.isNull(list.get(0).getRegTradeQty()) || BigDecimal.ZERO.compareTo(list.get(0).getRegTradeQty()) == 0
                     || BigDecimal.ZERO.compareTo(totalTradeAmt) == 0) {
@@ -642,9 +642,19 @@ public class ChbPeriodicService {
             chbPeriodicPrdInfo.setLeverUpperLimitFmt(ChbInvestReportConstant.空字符);
         }
         //起息日显示名称
-        chbPeriodicPrdInfo.setVdateFmt(DateUtil.format(chbPeriodicPrdInfo.getVdate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+        if (Objects.isNull(chbPeriodicPrdInfo.getVdate())) {
+            chbPeriodicPrdInfo.setVdateFmt(ChbInvestReportConstant.空字符);
+        } else {
+            chbPeriodicPrdInfo.setVdateFmt(DateUtil.format(chbPeriodicPrdInfo.getVdate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+        }
         //到期日显示名称
-        chbPeriodicPrdInfo.setMdateFmt(DateUtil.format(chbPeriodicPrdInfo.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+        if (Objects.isNull(chbPeriodicPrdInfo.getMdate())) {
+            chbPeriodicPrdInfo.setMdateFmt(ChbInvestReportConstant.空字符);
+        } else if (DateUtil.compareDate(ChbInvestReportConstant.无特定存续期限日期, DateUtil.format(chbPeriodicPrdInfo.getMdate())) == 1) {
+            chbPeriodicPrdInfo.setMdateFmt(ChbInvestReportConstant.无特定存续期限);
+        } else {
+            chbPeriodicPrdInfo.setMdateFmt(DateUtil.format(chbPeriodicPrdInfo.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+        }
 
         //境内外显示名称
         List<String> nameList = new ArrayList<>();

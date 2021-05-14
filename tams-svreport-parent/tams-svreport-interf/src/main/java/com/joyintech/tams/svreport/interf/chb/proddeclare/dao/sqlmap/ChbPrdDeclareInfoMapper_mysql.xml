@@ -1248,7 +1248,7 @@
       A.CREDIT_MODE = B.CREDIT_MODE,
       A.INV_TYPE_RAT = B.INV_TYPE_RAT,
       A.REMARK = B.REMARK,
-      A.STATUS = (case B.STATUS when 'E' then 'M' else B.STATUS end),
+      A.STATUS = B.STATUS,
       A.UPDATE_TIME = NOW(),
       A.ORG_CODE = B.ORG_CODE,
       A.DEPT_CODE = B.DEPT_CODE,

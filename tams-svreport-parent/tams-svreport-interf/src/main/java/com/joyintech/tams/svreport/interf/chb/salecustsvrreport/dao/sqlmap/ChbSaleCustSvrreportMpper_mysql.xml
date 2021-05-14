@@ -135,46 +135,6 @@
 
         UPDATE  SALE_CUST_SVRREPORT as A,
         (
-        select SENDDATE,
-        ISSUEMEMBER,
-        INORABOARD,
-        CUS_CODE,
-        AREA_CODE,
-        CCY,
-        PRINAMT,
-        PRINAMT_RMB,
-        PRINAMT_CONFIRM,
-        SG_AMT,
-        SG_AMT_RMB,
-        SG_CONFIRM_AMT,
-        SH_AMT,
-        SH_AMT_RMB,
-        SH_PRINCIPAL,
-        SH_PRINCIPAL_RMB,
-        SH_QTY,
-        EXPIRE_AMT,
-        EXPIRE_AMT_RMB,
-        EXPIRE_AMT_PRINCIPAL,
-        EXPIRE_AMT_PRINCIPAL_RMB,
-        EXPIRE_AMT_QTY,
-        REBONUS_AMT,
-        REBONUS_AMT_RMB,
-        REBONUS_AMT_QTY,
-        BONUS_AMT,
-        BONUS_AMT_RMB,
-        QTY_ADD_AMT,
-        QTY_ADD_AMT_RMB,
-        QTY_ADD,
-        QTY_MINUS_PRINCIPAL,
-        QTY_MINUS_PRINCIPAL_RMB,
-        QTY_MINUS ,
-        SAVE_AMT,
-        SAVE_CUS_NUM,
-        SAVE_AMT_RMB,
-        SAVE_QTY,
-        EXCHANGE_RATE,
-        CUS_TYPE from
-        (
         select TEMP.* from
         (
         <foreach collection="list" item="item"  separator="union all">
@@ -222,8 +182,47 @@
             from dual
         </foreach>
         ) TEMP
-        ) de
         ) AS B
-        set  A.* = B.* where exists (select 1 from SALE_CUST_SVRREPORT CII where CII.FINPROD_ID = TEMP.FINPROD_ID);
+        set
+        A.SENDDATE = B.SENDDATE,
+        A.ISSUEMEMBER = B.ISSUEMEMBER,
+        A.INORABOARD = B.INORABOARD,
+        A.CUS_CODE = B.CUS_CODE,
+        A.AREA_CODE = B.AREA_CODE,
+        A.CCY = B.CCY,
+        A.PRINAMT = B.PRINAMT,
+        A.PRINAMT_RMB = B.PRINAMT_RMB,
+        A.PRINAMT_CONFIRM = B.PRINAMT_CONFIRM,
+        A.SG_AMT = B.SG_AMT,
+        A.SG_AMT_RMB = B.SG_AMT_RMB,
+        A.SG_CONFIRM_AMT = B.SG_CONFIRM_AMT,
+        A.SH_AMT = B.SH_AMT,
+        A.SH_AMT_RMB = B.SH_AMT_RMB,
+        A.SH_PRINCIPAL = B.SH_PRINCIPAL,
+        A.SH_PRINCIPAL_RMB = B.SH_PRINCIPAL_RMB,
+        A.SH_QTY = B.SH_QTY,
+        A.EXPIRE_AMT = B.EXPIRE_AMT,
+        A.EXPIRE_AMT_RMB = B.EXPIRE_AMT_RMB,
+        A.EXPIRE_AMT_PRINCIPAL = B.EXPIRE_AMT_PRINCIPAL,
+        A.EXPIRE_AMT_PRINCIPAL_RMB = B.EXPIRE_AMT_PRINCIPAL_RMB,
+        A.EXPIRE_AMT_QTY = B.EXPIRE_AMT_QTY,
+        A.REBONUS_AMT = B.REBONUS_AMT,
+        A.REBONUS_AMT_RMB = B.REBONUS_AMT_RMB,
+        A.REBONUS_AMT_QTY = B.REBONUS_AMT_QTY,
+        A.BONUS_AMT = B.BONUS_AMT,
+        A.BONUS_AMT_RMB = B.BONUS_AMT_RMB,
+        A.QTY_ADD_AMT = B.QTY_ADD_AMT,
+        A.QTY_ADD_AMT_RMB = B.QTY_ADD_AMT_RMB,
+        A.QTY_ADD = B.QTY_ADD,
+        A.QTY_MINUS_PRINCIPAL = B.QTY_MINUS_PRINCIPAL,
+        A.QTY_MINUS_PRINCIPAL_RMB = B.QTY_MINUS_PRINCIPAL_RMB,
+        A.QTY_MINUS = B.QTY_MINUS ,
+        A.SAVE_AMT = B.SAVE_AMT,
+        A.SAVE_CUS_NUM = B.SAVE_CUS_NUM,
+        A.SAVE_AMT_RMB = B.SAVE_AMT_RMB,
+        A.SAVE_QTY = B.SAVE_QTY,
+        A.EXCHANGE_RATE = B.EXCHANGE_RATE,
+        A.CUS_TYPE = B.CUS_TYPE
+        where A.FINPROD_ID = B.FINPROD_ID;
     </insert>
 </mapper>

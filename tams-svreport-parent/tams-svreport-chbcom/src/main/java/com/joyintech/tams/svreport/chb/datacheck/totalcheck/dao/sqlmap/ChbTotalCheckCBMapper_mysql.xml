@@ -598,7 +598,7 @@
 		  and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
 		  and DATE_FORMAT(assetinfosub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
 		  and assetdeal.asset_deal_num > 0
-		)
+		) cc
 		<!-- where rowIndex = 1 -->
 		group by asset_code,
 		IS_REG,

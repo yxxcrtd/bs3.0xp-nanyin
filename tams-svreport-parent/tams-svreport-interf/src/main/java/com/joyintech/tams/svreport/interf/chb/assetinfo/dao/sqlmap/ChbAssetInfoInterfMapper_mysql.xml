@@ -12873,7 +12873,7 @@
         A.GOVERN_INVEST_FUND = B.GOVERN_INVEST_FUND,
         A.FUND_ENPE_NAME = B.FUND_ENPE_NAME,
         A.TRUSTEE = B.TRUSTEE,
-        A.STATUS = (case B.STATUS when 'E' then 'M' else 'D' end),
+        A.STATUS = B.STATUS,
         A.CREATE_USER = B.CREATE_USER,
         /*A.CREATE_TIME = B.CREATE_TIME,*/
         A.UPDATE_USER = B.UPDATE_USER,

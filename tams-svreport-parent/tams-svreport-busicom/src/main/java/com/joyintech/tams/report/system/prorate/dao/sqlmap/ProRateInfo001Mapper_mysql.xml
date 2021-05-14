@@ -80,7 +80,7 @@
 		SELECT p.prod_id,p.prod_name FROM chb_prd_baseinfo p
 		where p.status in ('E')
 		<if test="search != null and search !='' ">
-			AND P.PROD_ID LIKE concat_ws(concat_ws('%', #{search}),'%') or p.prod_name like concat_ws(concat_ws('%', #{search}),'%')
+			AND P.PROD_ID LIKE concat(concat('%', #{search}),'%') or p.prod_name like concat(concat('%', #{search}),'%')
 		</if>
 		<if test="initValue != null and initValue != ''">
 			AND P.PROD_ID = #{initValue}

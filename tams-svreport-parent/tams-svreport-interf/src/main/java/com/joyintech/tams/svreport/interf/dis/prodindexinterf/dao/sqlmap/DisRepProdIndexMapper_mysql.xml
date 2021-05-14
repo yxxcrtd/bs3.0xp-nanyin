@@ -602,7 +602,9 @@
             #{item.assetTotalMarket,jdbcType=DECIMAL} ASSET_TOTAL_MARKET
             FROM    dual
         </foreach>
-        ) TEMP where not exists (select 1 from REP_PROD_INDEX CII where CII.PROD_ID = TEMP.PROD_ID)
+        ) TEMP where not exists (select 1 from REP_PROD_INDEX CII
+                                 where CII.PROD_ID = TEMP.PROD_ID
+                                 AND CII.VALUE_DATE = TEMP.VALUE_DATE)
         ) de ;
 
         UPDATE  REP_PROD_INDEX as A,
@@ -773,6 +775,7 @@
         A.PROFIT_CHANGE_TDY = B.PROFIT_CHANGE_TDY,
         A.FLOAT_TOTAL_RATE = B.FLOAT_TOTAL_RATE,
         A.ASSET_TOTAL_MARKET = B.ASSET_TOTAL_MARKET
-        where  A.PROD_ID = B.PROD_ID;
+        where  A.PROD_ID = B.PROD_ID
+        AND A.VALUE_DATE = B.VALUE_DATE;
     </update>
 </mapper>

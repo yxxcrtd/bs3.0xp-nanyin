@@ -85,9 +85,9 @@
           and VAL2.UNIT_VAL_TOTAL = VAL.UNIT_VAL_TOTAL
           )
 </insert> -->
-	<select id="queryInsertGenerateLastList" parameterType="map" resultMap="com.joyintech.tams.common.base.dao.ChbAstValueSubMapper.BaseResultMap">
+	<select id="queryInsertGenerateLastList" resultType="com.joyintech.tams.common.base.entity.ChbAstValueSub">
 		SELECT
-			REGIST_SEQNO AS registSeqno,
+			f_guid() AS registSeqno,
 			REGIST_BANK_CODE AS registBankCode,
 			ISSUE_PARTY_ID AS issuePartyId,
 			ASSET_CODE AS assetCode,
@@ -109,7 +109,7 @@
 		FROM
 			CHB_AST_VAL_SUB
 		WHERE
-			DATE_FORMAT(VAL_DATE,'%Y-%m-%d') = (SELECT max(DATE_FORMAT(VAL_DATE,'%Y-%m-%d'))  FROM	CHB_AST_VAL	ORDER BY VAL_DATE)
+			DATE_FORMAT(VAL_DATE,'%Y-%m-%d') = (SELECT max(DATE_FORMAT(VAL_DATE,'%Y-%m-%d'))  FROM	CHB_AST_VAL_SUB	ORDER BY VAL_DATE)
 	</select>
 	<select id="queryInsertGenerateList" parameterType="map" resultMap="com.joyintech.tams.common.base.dao.ChbAstValueSubMapper.BaseResultMap">
 		SELECT

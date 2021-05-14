@@ -40,7 +40,7 @@
 			p.STATUS in ('E') and
 			p.ASSET_TYPE2 in('1101','1110','1109','1102','1111','1112','1113','1114','1115','1116','1117','2501','2502')
 			<if test="search != null and search !='' ">
-				AND P.ASSET_CODE LIKE concat_ws(concat_ws('%', #{search}),'%') or p.ASSET_NAME like concat_ws(concat_ws('%', #{search}),'%')
+				AND P.ASSET_CODE LIKE concat(concat('%', #{search}),'%') or p.ASSET_NAME like concat(concat('%', #{search}),'%')
 			</if>
 		</where>
 	</select>

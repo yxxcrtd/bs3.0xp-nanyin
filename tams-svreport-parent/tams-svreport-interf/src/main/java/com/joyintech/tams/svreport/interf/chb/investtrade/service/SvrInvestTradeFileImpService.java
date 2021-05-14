@@ -470,7 +470,7 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
                 }
                 else {
                     try {
-                        field.set(chbInvestTrade, null);
+                        field.set(chbInvestTrade, value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return entities;
