@@ -67,7 +67,7 @@ import java.util.*;
 
 /**
  * 债权类资产计提摊销 Processor 对应的逻辑Service
- * 
+ *
  * @author weipeng
  * @version 1.0 2018年6月7日
  * @see DeltRightCalAmortizationProcessorService
@@ -105,22 +105,22 @@ public class DeltRightCalAmortizationProcessorService {
      */
     @Autowired
     private DBUtil dBUtil;
-    
+
     /**
      * 计算类共通方法
      */
     @Autowired
     private CalculationCommonService calculationCommonService;
-    
+
     @Autowired
     private LossCommonService lossCommonService;
-    
+
     @Autowired
     private LossCommonBatchService lossCommonBatchService;
 
     /**
      * process 数据处理
-     * 
+     *
      * @param params 参数
      * @return BookGenerateResult
      * @see
@@ -150,16 +150,16 @@ public class DeltRightCalAmortizationProcessorService {
         if (returnResult.getValBokBookdetailBatch() == null) {
             returnResult.setValBokBookdetailBatch(new ArrayList<ValBokBookdetailBatch>());
         }
-        
+
         /**add by wujie on 20201020 start remark:资产减值**/
         if (returnResult.getBokStatLossPosiitonList() == null) {
             returnResult.setBokStatLossPosiitonList(new ArrayList<BokStatLossPosiiton>());
         }
-        /**add by wujie on 20201020 start remark:资产减值**/ 
+        /**add by wujie on 20201020 start remark:资产减值**/
 
         // 3. 处理交易
         for (DrawBaseInfoSelectComDTO acctEntityEx : acctEntityList) {
-        	
+
             // 获取从reader中拿到的值
             String booksetId = acctEntity.getBooksetId();// 计提类账务处理结果.账套代码
             String bokDetailId = acctEntity.getBokDetailId();// 计提类账务处理结果.账务明细代码
@@ -180,11 +180,11 @@ public class DeltRightCalAmortizationProcessorService {
             // 变量.币种 = 计提类账务处理结果.原币种
             String ccy = acctEntityEx.getoCcy();
             BigDecimal faceValue = new BigDecimal("100");// 百元券面 = 100
-            
+
             /**add by wujie on 20201017 start remark:资产减值改造**/
             // 定义 变量.减值准备类科目余额 = 0
             BigDecimal 减值准备类科目余额 = BigDecimal.ZERO;
-    		
+
             /**add by wujie on 20201017 end**/
 
             // 1.2 汇总信息查询
@@ -280,7 +280,7 @@ public class DeltRightCalAmortizationProcessorService {
                 interestBalance = this.getSubjectBalance(booksetId, bokDetailId, happenDate, bookDate,
                     expBalanceDirect, DictCodeBaseSubjectNatrue.公允价值类类计划类收益型资产_应计利息.getValue(),
                     acctEntityEx.getTaskPri());
-                //应计利息类科目余额-本币 
+                //应计利息类科目余额-本币
                 interestBalanceBccy = this.getSubjectBamt(booksetId, bokDetailId, happenDate, bookDate,
                     expBalanceDirect, DictCodeBaseSubjectNatrue.公允价值类类计划类收益型资产_应计利息.getValue(),
                     acctEntityEx.getTaskPri());
@@ -312,7 +312,7 @@ public class DeltRightCalAmortizationProcessorService {
                 interestBalance = this.getSubjectBalance(booksetId, bokDetailId, happenDate, bookDate,
                     expBalanceDirect, DictCodeBaseSubjectNatrue.应计利息.getValue(),
                     acctEntityEx.getTaskPri());
-                //应计利息类科目余额-本币 
+                //应计利息类科目余额-本币
                 interestBalanceBccy = this.getSubjectBamt(booksetId, bokDetailId, happenDate, bookDate,
                     expBalanceDirect, DictCodeBaseSubjectNatrue.应计利息.getValue(),
                     acctEntityEx.getTaskPri());
@@ -351,7 +351,7 @@ public class DeltRightCalAmortizationProcessorService {
                 interestBalance = this.getSubjectBalance(booksetId, bokDetailId, happenDate, bookDate,
                     expBalanceDirect, DictCodeBaseSubjectNatrue.综合收益类计划类收益型资产_应计利息.getValue(),
                     acctEntityEx.getTaskPri());
-                //应计利息类科目余额-本币 
+                //应计利息类科目余额-本币
                 interestBalanceBccy = this.getSubjectBamt(booksetId, bokDetailId, happenDate, bookDate,
                     expBalanceDirect, DictCodeBaseSubjectNatrue.综合收益类计划类收益型资产_应计利息.getValue(),
                     acctEntityEx.getTaskPri());
@@ -383,17 +383,17 @@ public class DeltRightCalAmortizationProcessorService {
                         expBalanceDirect, DictCodeBaseSubjectNatrue.其它综合收益_减值.getValue(),
                         acctEntityEx.getTaskPri());
                 /**add by wujie on 20201017 end**/
-                
+
             }
             /**modify by wujie on 20201016 end**/
 
 
-            
+
             //账套核算参数查询-调用账务类共通
-            
+
             List<String> paramCodeList = new ArrayList<>();
             paramCodeList.add(ValDictCodeList.账套配置表参数项_计划类利率型资产计提方式.getValue());
-            
+
             /**modify by wujie on 20201020 start remark:资产减值
             List<BokBooksetExt> valBokBooksetExt = accountingCommonService.getValBokBooksetExt(booksetId, paramCodeList,batchExecuteInfo.getBatchExedetailSeqNo());
             //定义 变量.计提方式 = 返回值
@@ -403,13 +403,13 @@ public class DeltRightCalAmortizationProcessorService {
             }
             **/
             paramCodeList.add(ValDictCodeList.账套配置表参数项_本位币差额处理方式.getValue());
-            paramCodeList.add(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue()); 
-            paramCodeList.add(ValDictCodeList.账套配置表参数项_减值资产第三阶段利息计提摊销差额计入科目.getValue()); 
-            
-            
+            paramCodeList.add(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue());
+            paramCodeList.add(ValDictCodeList.账套配置表参数项_减值资产第三阶段利息计提摊销差额计入科目.getValue());
+
+
             Map<String, Object> getValBokBooksetExtMap = accountingCommonService
                     .getValBokBooksetExtForMap(acctEntity.getBooksetId(), paramCodeList);
-            
+
             // 变量.计提方式
             String makeWay = null;
             if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_计划类利率型资产计提方式.getValue()) != null){
@@ -419,18 +419,18 @@ public class DeltRightCalAmortizationProcessorService {
             if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_本位币差额处理方式.getValue()) != null){
             	bccyadjType = (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_本位币差额处理方式.getValue());
             }
-            
+
             String subjectNoType = "";
             if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段利息计提摊销差额计入科目.getValue()) != null){
                 subjectNoType = (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段利息计提摊销差额计入科目.getValue());
             }
-            
+
             String recalcType = "";
             if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue()) != null){
                 recalcType = (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue());
             }
             /**modify by wujie on 20201020 end**/
-            
+
             // 3.1 利息计提
             // if (标的信息.到期日 <= 计提类账务处理结果.发生日 or 标的信息.起息日 > 计提类账务处理结果.发生日 )
             if (DateUtil.compareDate(targetFinProduct.getMdate(), happenDate) <= 0
@@ -483,7 +483,7 @@ public class DeltRightCalAmortizationProcessorService {
             BigDecimal interestBalanceToday = BigDecimal.ZERO;
             // IF 变量.成本科目数量 > 0
             if (costBalance.compareTo(BigDecimal.ZERO) > 0) {
-            	
+
             	//计提类账务处理结果.发生日+1
             	Date addHappenDate = DateUtil.addDay(happenDate, 1);
             	boolean flag = false;
@@ -512,7 +512,7 @@ public class DeltRightCalAmortizationProcessorService {
                 // 变量.当日计提利息金额 = 变量.本日应计利息余额 - 变量.应计利息科目余额
                 calInterestBalanceNow = ArithmeticUtil.doSub(interestBalanceToday,
                     interestBalance);
-               
+
             	}else{
             	    //modify by yanya on 20201229 添加计算金额参数
                     calInterestBalanceNow = this.calcAddInt(targetFinProduct,interestPayList,payRuleList,quotationList,costBalance,happenDate,true);
@@ -550,13 +550,13 @@ public class DeltRightCalAmortizationProcessorService {
             // accountCurrencyMap设置如下：
             // 应计利息 = 变量.币种
             accountCurrencyMap.put(BookConstant.INTAMT, ccy);
-            
+
             // 定义 变量.利息调整
             BigDecimal varLxtz = BigDecimal.ZERO;
-            
+
             // 定义      变量.减值计提 = 0
             BigDecimal jzzb = BigDecimal.ZERO;
-            
+
             // 3.2 摊销计提
             // if(标的信息.到期日 - 1= 计提类账务处理结果.发生日)
             // 结果集发生日 大于 标的到期日前一天
@@ -567,7 +567,7 @@ public class DeltRightCalAmortizationProcessorService {
                     new BigDecimal("-1"));
                 // 定义 变量.投资收益 = 变量.溢折价科目余额*-1 + 3.1 处理的应计利息
                 BigDecimal invIncome = ArithmeticUtil.doAdd(interestAdjust, calInterestBalanceNow);
-                
+
                 // if 变量.利息调整 > 0
                 if (interestAdjust.compareTo(BigDecimal.ZERO) > 0) {
                     // 利息调整（借） <- 变量.利息调整
@@ -581,19 +581,19 @@ public class DeltRightCalAmortizationProcessorService {
                             ArithmeticUtil.multiply(interestAdjust, new BigDecimal("-1")),
                             NumberEnum.MONEY));
                 }
-                
+
                 // 投资收益（借） <- 变量.投资收益
                 accountAmountMap.put(BookConstant.INCOMEAMT,
                     ArithmeticUtil.round(invIncome, NumberEnum.MONEY));
-                
+
                 // 定义 本币金额元素Map
                 Map<String, BigDecimal> bccyAmountMap = new HashMap<>();
                 for(String key : accountAmountMap.keySet()){
-                	bccyAmountMap.put(key + BookConstant.BCCYAMT, 
+                	bccyAmountMap.put(key + BookConstant.BCCYAMT,
                 	    calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null, accountAmountMap.get(key), changeRate));
                 }
                 accountAmountMap.putAll(bccyAmountMap);
-                
+
                 // 变量.投资收益_本位币 = round(变量.利息调整,共通金额位数) * 变量.汇率 + 应计利息_本位币
                 BigDecimal 投资收益本位币 = ArithmeticUtil.doAdd(
                     ArithmeticUtil.round(calculationCommonService.doMultiply(interestAdjust, changeRate), NumberEnum.MONEY),
@@ -602,7 +602,7 @@ public class DeltRightCalAmortizationProcessorService {
                     calculationCommonService.doMultiply(jzzb, changeRate), NumberEnum.MONEY));
                 accountAmountMap.put(BookConstant.INCOMEAMT + BookConstant.BCCYAMT,
                     ArithmeticUtil.round(投资收益本位币, NumberEnum.MONEY));
-               
+
                 // accountCurrencyMap设置如下：
                 for (String key : accountAmountMap.keySet()) {
                     // key = 变量.币种
@@ -646,10 +646,16 @@ public class DeltRightCalAmortizationProcessorService {
                             acctEntityEx, targetFinProduct, interestPayList, quotationList,
                             payRuleList, spilledPriceBalance, costBalance, interestBalance,
                             faceValue, latestPrice, acctEntity);
-                        currDayAmount = secDscYieldOutParameter.getCurrDayAmount();
+//                        currDayAmount = secDscYieldOutParameter.getCurrDayAmount();
                         // 调用金额共通方法设置有效小数位
-                        currDayAmount = ArithmeticUtil.round(currDayAmount, NumberEnum.MONEY);
+//                        currDayAmount = ArithmeticUtil.round(currDayAmount, NumberEnum.MONEY);
                         varDayRate = secDscYieldOutParameter.getDayRate();
+                        currDayAmount = ArithmeticUtil.subtract(
+                                ArithmeticUtil.multiply(
+                                        varDayRate,
+                                        ArithmeticUtil.doAdd(spilledPriceBalance, costBalance)),
+                                ArithmeticUtil.round(calInterestBalanceNow, NumberEnum.MONEY),
+                                NumberEnum.MONEY.getCode(), null);
                     }
                     /**add by wujie on 20201125 start remark:资产减值**/
                     else if (DictCodeListExt3.减值资产第三阶段是否重新计算实际利率_重算.getValue().equals(
@@ -660,10 +666,16 @@ public class DeltRightCalAmortizationProcessorService {
                                         acctEntityEx, targetFinProduct, interestPayList, quotationList,
                                         payRuleList, spilledPriceBalance, costBalance, interestBalance,
                                         faceValue, latestPrice, acctEntity);
-                                    currDayAmount = secDscYieldOutParameter.getCurrDayAmount();
-                                    // 调用金额共通方法设置有效小数位
-                                    currDayAmount = ArithmeticUtil.round(currDayAmount, NumberEnum.MONEY);
+//                                    currDayAmount = secDscYieldOutParameter.getCurrDayAmount();
+//                                    // 调用金额共通方法设置有效小数位
+//                                    currDayAmount = ArithmeticUtil.round(currDayAmount, NumberEnum.MONEY);
                                     varDayRate = secDscYieldOutParameter.getDayRate();
+                                    currDayAmount = ArithmeticUtil.subtract(
+                                            ArithmeticUtil.multiply(
+                                                    varDayRate,
+                                                    ArithmeticUtil.doAdd(spilledPriceBalance, costBalance)),
+                                            ArithmeticUtil.round(calInterestBalanceNow, NumberEnum.MONEY),
+                                            NumberEnum.MONEY.getCode(), null);
                             }
                     }
                     /**add by wujie on 20201125 end remark:资产减值**/
@@ -691,11 +703,11 @@ public class DeltRightCalAmortizationProcessorService {
                     折溢价为零计算标识 = true;
                 }
                 /** modify by yanya on 20201229 折溢价为空的时候，根据票面利率计算 end**/
-               
+
                 // 投资收益 <- 当日摊销发生额 + 3.1 处理的应计利息
                 BigDecimal dscloss = ArithmeticUtil.doAdd(currDayAmount, calInterestBalanceNow);
-                
-                
+
+
                 /**ADD BY CAOGUO ON 20201019 减值相关修改 START **/
                 //公允价值变动无需处理减值计提
                 // 定义      变量.减值计提 = 0
@@ -718,7 +730,7 @@ public class DeltRightCalAmortizationProcessorService {
                         else {
                             //变量.利息调整 = 变量.投资收益 - 3.1 处理的应计利息
                         	currDayAmount = ArithmeticUtil.doSub(dscloss, calInterestBalanceNow);
-                        }                    
+                        }
                     }
                     // if（变量.减值计提 >= 0）
                     if (jzzb.compareTo(BigDecimal.ZERO) >= 0) {
@@ -748,7 +760,7 @@ public class DeltRightCalAmortizationProcessorService {
                         ArithmeticUtil.multiply(new BigDecimal(-1),
                             ArithmeticUtil.round(currDayAmount, NumberEnum.MONEY)));
                 }
-                
+
                 // 投资收益（借） = 变量.投资收益 * -1
                 accountAmountMap.put(BookConstant.INCOMEAMT,
                     ArithmeticUtil.round(dscloss, NumberEnum.MONEY));
@@ -798,8 +810,8 @@ public class DeltRightCalAmortizationProcessorService {
                         ArithmeticUtil.round(投资收益本位币, NumberEnum.MONEY));
                 }
                 /** ADD BY CAOGUO ON 20201019 减值相关修改 START **/
-                
-                
+
+
                 // accountCurrencyMap设置如下：
                 for (String key : accountAmountMap.keySet()) {
                     // key = 变量.币种
@@ -885,7 +897,7 @@ public class DeltRightCalAmortizationProcessorService {
                 acctEntity.getHappenDate(), targetFinProduct.getActmdate())));
             // 变量.当日统计分析账务明细汇总信息.业务明细代码 = 计提类账务处理结果.业务明细代码
             bokSummaryTableNew.setBusiId(acctEntity.getBusiId());
-            
+
             bokSummaryTableNew.setCcy(targetFinProduct.getCcy());
 
 
@@ -903,33 +915,33 @@ public class DeltRightCalAmortizationProcessorService {
             // 当日应计利息_本位币
             bokSummaryTableNew.setTdyIntincexpB(bokSummaryTableNew.getTdyIntincexp());
             // 与金茂东确认：当前【统计分析明细表（账务明细）】 相关本位币字段值 = 对应原币字段值 yangjian 2019/08/13 ======== end
-            
+
             //本位币
             bokSummaryTableNew.setbCcy(acctEntityEx.getStandardCcy());
             //当日发生应计利息_本位币
             bokSummaryTableNew.setTdyIntincexpAddB(accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));
             //当日累计应计利息余额 _本币= 变量.应计利息余额+ 变量.应计利息
-            BigDecimal tdyIntincexpB = ArithmeticUtil.doAdd(interestBalanceBccy, 
+            BigDecimal tdyIntincexpB = ArithmeticUtil.doAdd(interestBalanceBccy,
     										accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));
             bokSummaryTableNew.setTdyIntincexpB(ArithmeticUtil.round(tdyIntincexpB, NumberEnum.MONEY.getCode(), null));
-            
-            
+
+
             /**add by wujie on 20201017 start remark:资产减值**/
             //变量.当日统计分析账务明细汇总信息.减值余额 = 变量.减值准备科目余额 + 变量.减值计提*-1
             bokSummaryTableNew.setTdyLossAmt(ArithmeticUtil.round(ArithmeticUtil.doSub(减值准备类科目余额,jzzb), NumberEnum.MONEY));
             //变量.当日统计分析账务明细汇总信息.减值余额_本位币 = 变量.当日统计分析账务明细汇总信息.减值余额*变量.汇率
-            bokSummaryTableNew.setTdyLossAmtB(calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null, 
+            bokSummaryTableNew.setTdyLossAmtB(calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null,
             		bokSummaryTableNew.getTdyLossAmt(), changeRate));
             /**add by wujie on 20201017 end**/
-            
+
             // 添加到返回值中
             returnResult.getBokSummaryList().add(bokSummaryTableNew);
-            
+
             /**add by wujie on 20201017 start remark:资产减值**/
             if(jzzb.compareTo(BigDecimal.ZERO) != 0){
             	List<ValBokBookdetailBatch> valBokBookdetailBatch = resultNowNow.getValBokBookdetailBatch();
             	List<ValBokBookdetailBatch> valBokBookdetailBatchResult = new ArrayList<ValBokBookdetailBatch>();
-            	
+
             	if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(acctEntity.getInvAim())) {
             		for (ValBokBookdetailBatch dto : valBokBookdetailBatch) {
             			if (dto.getBaseSubjectNature().equals(DictCodeBaseSubjectNatrue.摊余成本类资产减值.getValue())) {
@@ -946,12 +958,12 @@ public class DeltRightCalAmortizationProcessorService {
             	}
             	if (CollectionUtils.isNotEmpty(valBokBookdetailBatchResult)) {
             		ValBokBookdetailBatch valBokBookdetailBatchDto = valBokBookdetailBatchResult.get(0);
-            		BokStatLossPosiiton bokStatLossPosiiton = lossCommonService.setLossInfoAccr(valBokBookdetailBatchDto, 
-            				jzzb, 
-            				calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null, 
-            						ArithmeticUtil.round(jzzb, NumberEnum.MONEY), changeRate), 
-            				ArithmeticUtil.round(ArithmeticUtil.doSub(减值准备类科目余额,jzzb), NumberEnum.MONEY), 
-            				calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null, 
+            		BokStatLossPosiiton bokStatLossPosiiton = lossCommonService.setLossInfoAccr(valBokBookdetailBatchDto,
+            				jzzb,
+            				calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null,
+            						ArithmeticUtil.round(jzzb, NumberEnum.MONEY), changeRate),
+            				ArithmeticUtil.round(ArithmeticUtil.doSub(减值准备类科目余额,jzzb), NumberEnum.MONEY),
+            				calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null,
             						ArithmeticUtil.round(ArithmeticUtil.doSub(减值准备类科目余额,jzzb), NumberEnum.MONEY), changeRate)
             				,null,null);
             		// 统计分析明细表（资产减值）
@@ -1215,7 +1227,7 @@ public class DeltRightCalAmortizationProcessorService {
 
     /**
      * 调用公用方法：【科目余额查询 - 期待方向】，获取科目余额信息中的科目余额数据
-     * 
+     *
      * @param booksetId 账套代码
      * @param bokDetailId 账务明细代码
      * @param happenDate 发生日
@@ -1257,10 +1269,10 @@ public class DeltRightCalAmortizationProcessorService {
 
         return balance;
     }
-    
+
     /**
      * 调用公用方法：【本币科目余额查询 - 期待方向】，获取科目余额信息中的科目余额数据
-     * 
+     *
      * @param booksetId 账套代码
      * @param bokDetailId 账务明细代码
      * @param happenDate 发生日
@@ -1302,10 +1314,10 @@ public class DeltRightCalAmortizationProcessorService {
 
         return balance;
     }
-    
+
     /**
      * 计算债券的日摊销收益率
-     * 
+     *
      * @param acctEntityEx 计提基础信息DTO
      * @param rstBaseinfo 标的信息
      * @param listIntinfo 付息列表
@@ -1341,7 +1353,7 @@ public class DeltRightCalAmortizationProcessorService {
         parameter.setTotalNetPrice(ArithmeticUtil.doAdd(varSpilledPriceAccBal, varOAmtHappenDate));
         // 当日百元券面面值
         parameter.setAmount(varFaceValue);
-        
+
         //减值比例
   		BigDecimal eclVaule = lossCommonBatchService.getStage3Vaule(acctEntity.getHappenDate(), rstBaseinfo.getFinprodMarketId());
         //折算比例
@@ -1351,10 +1363,10 @@ public class DeltRightCalAmortizationProcessorService {
         }
   		// 摊销目标额
         parameter.setTargetAmt(ArithmeticUtil.multiply(acctEntityEx.getNumAmtHappenDate(),zhesuanbili));
-        
+
         /**modify by wujie on 20201130 end**/
-        
-        
+
+
         // 票面利率
         parameter.setPaperRate(newCash);
         // 零息贴现计算方案
@@ -1491,7 +1503,7 @@ public class DeltRightCalAmortizationProcessorService {
 
     /**
      * 利息计提-计算百元面值的债券的利息
-     * 
+     *
      * @param acctEntityEx 计提基础信息DTO
      * @param rstBaseinfo 标的信息
      * @param listIntinfo 付息计划列表
@@ -1651,7 +1663,7 @@ public class DeltRightCalAmortizationProcessorService {
 
     /**
      * 日期加减
-     * 
+     *
      * @param nowDate 传递时间
      * @param days 加减天数
      * @return Date
