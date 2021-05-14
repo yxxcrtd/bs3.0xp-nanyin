@@ -3,20 +3,20 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	
-	<repositories>  
-      <repository>  
-        <id>Ali-Repository</id>  
-        <name>aliyun maven</name>  
+
+	<repositories>
+      <repository>
+        <id>Ali-Repository</id>
+        <name>aliyun maven</name>
         <!-- <url>http://maven.aliyun.com/nexus/content/groups/public/</url>  -->
         <url>http://192.168.90.83:8082/nexus/content/repositories/thirdparty/</url>
-        <layout>default</layout>  
-        <snapshots>  
-          <enabled>false</enabled>  
-        </snapshots>  
-      </repository>  
+        <layout>default</layout>
+        <snapshots>
+          <enabled>false</enabled>
+        </snapshots>
+      </repository>
     </repositories>
-	
+
 	<parent>
 		<groupId>com.jixu</groupId>
 		<artifactId>JixuBasic</artifactId>
@@ -27,29 +27,29 @@
 	<name>adapter</name>
 
 	<dependencies>
-		<dependency>  
-			<groupId>com.jixu</groupId>  
-            <artifactId>JixuUtil</artifactId>  
-            <version>${project.version}</version>  
+		<dependency>
+			<groupId>com.jixu</groupId>
+            <artifactId>JixuUtil</artifactId>
+            <version>${project.version}</version>
         </dependency>
-        
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>fluent-hc</artifactId>
 			<version>4.2.5</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>4.4</version>
 		</dependency>
-		
+
 		<dependency>
     		<groupId>javax.interceptor</groupId>
     		<artifactId>javax.interceptor-api</artifactId>
@@ -78,7 +78,7 @@
 				</execution>
 			 </executions>
 		  </plugin>
-		
+
 			<!-- define the project compile level -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -93,7 +93,7 @@
                  	</compilerArguments>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -103,33 +103,33 @@
 <!--                    </excludes>-->
 <!--                </configuration>-->
             </plugin>
-			
-		 	<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-			
+
+<!--		 	<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--			</plugin>-->
+
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-surefire-plugin</artifactId>-->
+<!--				<configuration>-->
+<!--					<skip>true</skip>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
+
 			<!-- generate java doc -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<javadocDirectory>target/javadoc</javadocDirectory>
-					<reportOutputDirectory>target/javadoc</reportOutputDirectory>
-					<charset>UTF-8</charset>
-					<encoding>UTF-8</encoding>
-					<docencoding>UTF-8</docencoding>
-					<show>private</show>
-				</configuration>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-javadoc-plugin</artifactId>-->
+<!--				<configuration>-->
+<!--					<javadocDirectory>target/javadoc</javadocDirectory>-->
+<!--					<reportOutputDirectory>target/javadoc</reportOutputDirectory>-->
+<!--					<charset>UTF-8</charset>-->
+<!--					<encoding>UTF-8</encoding>-->
+<!--					<docencoding>UTF-8</docencoding>-->
+<!--					<show>private</show>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 </project>
