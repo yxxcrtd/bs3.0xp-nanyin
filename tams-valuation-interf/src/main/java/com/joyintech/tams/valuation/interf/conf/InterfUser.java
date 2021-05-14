@@ -136,10 +136,6 @@ public class InterfUser implements User {
      */
     private transient List<User> selectedItem;
 
-    /**
-     * 银行间交易员ID
-     */
-    private String ibuTrader;
 
     @Override
     public String getUid() {
@@ -382,15 +378,6 @@ public class InterfUser implements User {
         return orgCode;
     }
 
-    @Override
-    public String getIbuTrader() {
-        return null;
-    }
-
-    @Override
-    public void setIbuTrader(String s) {
-
-    }
 
     /**
      * 设置 orgCode
@@ -399,6 +386,16 @@ public class InterfUser implements User {
      */
     public void setOrgCode(String orgCode) {
         this.orgCode = orgCode;
+    }
+
+    @Override
+    public String getIbuTrader() {
+        return null;
+    }
+
+    @Override
+    public void setIbuTrader(String s) {
+
     }
 
     /**
@@ -427,21 +424,5 @@ public class InterfUser implements User {
         this.wechatNum = wechatNum;
     }
 
-    /**
-     * 获取 ibuTrader
-     *
-     * @return ibuTrader.
-     */
-    public String getIbuTrader() {
-        return ibuTrader;
-    }
 
-    /**
-     * 设置 ibuTrader
-     *
-     * @param ibuTrader ibuTrader
-     */
-    public void setIbuTrader(String ibuTrader) {
-        this.ibuTrader = ibuTrader;
-    }
 }

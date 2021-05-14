@@ -141,10 +141,6 @@ public class User extends BaseDto implements com.joyintech.framework.security.Us
     */
    private transient List<User> selectedItem;
 
-    /**
-     * 银行间交易员ID
-     */
-    private String ibuTrader;
 
    @Override
    public String getUid() {
@@ -441,21 +437,4 @@ public boolean isLocked() {
     return StringUtil.equals(this.getIsFrozen(), DictCodeList.是否_是.getValue());
 }
 
-    /**
-     * 获取 ibuTrader
-     *
-     * @return ibuTrader.
-     */
-    public String getIbuTrader() {
-        return ibuTrader;
-    }
-
-    /**
-     * 设置 ibuTrader
-     *
-     * @param ibuTrader ibuTrader
-     */
-    public void setIbuTrader(String ibuTrader) {
-        this.ibuTrader = ibuTrader;
-    }
 }

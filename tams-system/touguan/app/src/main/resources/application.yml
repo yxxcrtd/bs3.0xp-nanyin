@@ -342,23 +342,23 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: BS30INIT
+    password: BS30INIT
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: BS30INIT
+    password: BS30INIT
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: BS30INIT
+    password: BS30INIT
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: BS30INIT
+    password: BS30INIT
 log:
   path: D:/home/tams/logs/tams/touguan
   level: debug
