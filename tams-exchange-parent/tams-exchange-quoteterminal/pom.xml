@@ -68,11 +68,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>net.jctp</groupId>
             <artifactId>jtrader-common</artifactId>
             <scope>system</scope>
