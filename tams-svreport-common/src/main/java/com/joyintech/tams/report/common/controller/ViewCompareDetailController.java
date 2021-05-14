@@ -627,7 +627,9 @@ public class ViewCompareDetailController extends BaseController {
             }
             // 数值类型
             else if (value instanceof Number) {
-                v = StringUtil.numberToString(((Number) value).intValue());
+                //华夏调整，页面展示number转int 修正
+                //v = StringUtil.numberToString(((Number) value).intValue());
+                v = StringUtil.numberToString((Number) value);
             }
             else if(value instanceof String){
                 v = value.toString();
