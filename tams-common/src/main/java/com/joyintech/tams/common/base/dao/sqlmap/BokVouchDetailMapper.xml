@@ -21,13 +21,18 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="B_HAPPEN_AMT" property="bHappenAmt" jdbcType="DECIMAL" />
+        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="DETAIL_SUBJECT_NAME" property="detailSubjectName" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         VOUCH_SUBNUM VOUCH_SUBNUM, VOUCH_NUM VOUCH_NUM, BUS_VOUCHSUBNUM BUS_VOUCHSUBNUM, 
         HAPPEN_DATE HAPPEN_DATE, TABLE_ID TABLE_ID, CD_FLAG CD_FLAG, SUBJECT_NO SUBJECT_NO, 
         HAPPEN_AMT HAPPEN_AMT, HAPPEN_NUMBER HAPPEN_NUMBER, BUSI_ID BUSI_ID, CCY CCY, TRADE_ID TRADE_ID, 
         DETAIL_SUBJECT_NO DETAIL_SUBJECT_NO, BOOK_TYPE BOOK_TYPE, CREATE_USER CREATE_USER, 
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        B_HAPPEN_AMT B_HAPPEN_AMT, B_CCY B_CCY, SUBJECT_NAME SUBJECT_NAME, DETAIL_SUBJECT_NAME DETAIL_SUBJECT_NAME
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -56,15 +61,16 @@
             BUSI_ID, CCY, TRADE_ID, 
             DETAIL_SUBJECT_NO, BOOK_TYPE, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME,B_CCY,B_HAPPEN_AMT,SUBJECT_NAME,DETAIL_SUBJECT_NAME)
+            UPDATE_TIME, B_HAPPEN_AMT, B_CCY, 
+            SUBJECT_NAME, DETAIL_SUBJECT_NAME)
         values (#{vouchSubnum,jdbcType=VARCHAR}, #{vouchNum,jdbcType=VARCHAR}, #{busVouchsubnum,jdbcType=VARCHAR}, 
             #{happenDate,jdbcType=DATE}, #{tableId,jdbcType=VARCHAR}, #{cdFlag,jdbcType=VARCHAR}, 
             #{subjectNo,jdbcType=VARCHAR}, #{happenAmt,jdbcType=DECIMAL}, #{happenNumber,jdbcType=DECIMAL}, 
             #{busiId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, 
             #{detailSubjectNo,jdbcType=VARCHAR}, #{bookType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP},#{bCcy,jdbcType=VARCHAR},#{bHappenAmt,jdbcType=VARCHAR},
-            #{subjectName,jdbcType=VARCHAR},#{detailSubjectName,jdbcType=VARCHAR})
+            #{updateTime,jdbcType=TIMESTAMP}, #{bHappenAmt,jdbcType=DECIMAL}, #{bCcy,jdbcType=VARCHAR}, 
+            #{subjectName,jdbcType=VARCHAR}, #{detailSubjectName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokVouchDetail" >
         insert into BOK_VOUCH_DETAIL
@@ -126,6 +132,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="bHappenAmt != null" >
+                B_HAPPEN_AMT,
+            </if>
+            <if test="bCcy != null" >
+                B_CCY,
+            </if>
+            <if test="subjectName != null" >
+                SUBJECT_NAME,
+            </if>
+            <if test="detailSubjectName != null" >
+                DETAIL_SUBJECT_NAME,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="vouchSubnum != null" >
@@ -185,17 +203,29 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="bHappenAmt != null" >
+                #{bHappenAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCcy != null" >
+                #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectName != null" >
+                #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectName != null" >
+                #{detailSubjectName,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokVouchDetail" >
         insert into BOK_VOUCH_DETAIL(VOUCH_SUBNUM, VOUCH_NUM, BUS_VOUCHSUBNUM, HAPPEN_DATE, 
         TABLE_ID, CD_FLAG, SUBJECT_NO, HAPPEN_AMT, HAPPEN_NUMBER, BUSI_ID, CCY, TRADE_ID, 
         DETAIL_SUBJECT_NO, BOOK_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME)
+        UPDATE_TIME, B_HAPPEN_AMT, B_CCY, SUBJECT_NAME, DETAIL_SUBJECT_NAME)
         select VOUCH_SUBNUM, VOUCH_NUM, BUS_VOUCHSUBNUM, HAPPEN_DATE, 
             TABLE_ID, CD_FLAG, SUBJECT_NO, HAPPEN_AMT, HAPPEN_NUMBER, BUSI_ID, CCY, TRADE_ID, 
             DETAIL_SUBJECT_NO, BOOK_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, B_HAPPEN_AMT, B_CCY, SUBJECT_NAME, DETAIL_SUBJECT_NAME
              from BOK_VOUCH_DETAIL
              where 1 = 1 and VOUCH_SUBNUM = #{vouchSubnum,jdbcType=VARCHAR}
     </insert>
@@ -247,6 +277,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="bHappenAmt != null" >
+                B_HAPPEN_AMT = #{bHappenAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCcy != null" >
+                B_CCY = #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectName != null" >
+                SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectName != null" >
+                DETAIL_SUBJECT_NAME = #{detailSubjectName,jdbcType=VARCHAR},
+            </if>
         </set>
         where VOUCH_SUBNUM = #{vouchSubnum,jdbcType=VARCHAR}
     </update>
@@ -266,7 +308,11 @@
             DETAIL_SUBJECT_NO = #{detailSubjectNo,jdbcType=VARCHAR},
             BOOK_TYPE = #{bookType,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            B_HAPPEN_AMT = #{bHappenAmt,jdbcType=DECIMAL},
+            B_CCY = #{bCcy,jdbcType=VARCHAR},
+            SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            DETAIL_SUBJECT_NAME = #{detailSubjectName,jdbcType=VARCHAR}
         where VOUCH_SUBNUM = #{vouchSubnum,jdbcType=VARCHAR}
     </update>
 </mapper>

@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
         <id column="EXCHARGE_CODE" property="exchargeCode" jdbcType="VARCHAR" />
         <id column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
-        <result column="DATASOURCE_TYPE" property="datasourceType" jdbcType="VARCHAR" />
+        <id column="DATASOURCE_TYPE" property="datasourceType" jdbcType="VARCHAR" />
         <result column="OPEN_PRICE" property="openPrice" jdbcType="DECIMAL" />
         <result column="CLOSE_PRICE" property="closePrice" jdbcType="DECIMAL" />
         <result column="HIGH_PRICE" property="highPrice" jdbcType="DECIMAL" />
@@ -19,13 +19,15 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="MARKET_TYPE" property="marketType" jdbcType="VARCHAR" />
+        <result column="DEAD_LINE" property="deadLine" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         EXCHARGE_CODE EXCHARGE_CODE, TRADE_DATE TRADE_DATE, DATASOURCE_TYPE DATASOURCE_TYPE, 
         OPEN_PRICE OPEN_PRICE, CLOSE_PRICE CLOSE_PRICE, HIGH_PRICE HIGH_PRICE, LOW_PRICE LOW_PRICE, 
         MID_PRICE MID_PRICE, BASIS_CYY BASIS_CYY, QUOT_CYY QUOT_CYY, QUOT_UNIT QUOT_UNIT, 
         INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
-        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, MARKET_TYPE MARKET_TYPE, DEAD_LINE DEAD_LINE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -43,11 +45,13 @@
         from MST_EXCHARGE_QUOTE
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
           and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+          and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuoteKey" >
         delete from MST_EXCHARGE_QUOTE
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
           and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+          and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
         insert into MST_EXCHARGE_QUOTE (EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, 
@@ -55,13 +59,15 @@
             LOW_PRICE, MID_PRICE, BASIS_CYY, 
             QUOT_CYY, QUOT_UNIT, INPUT_TYPE, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME, MARKET_TYPE, 
+            DEAD_LINE)
         values (#{exchargeCode,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, #{datasourceType,jdbcType=VARCHAR}, 
             #{openPrice,jdbcType=DECIMAL}, #{closePrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL}, 
             #{lowPrice,jdbcType=DECIMAL}, #{midPrice,jdbcType=DECIMAL}, #{basisCyy,jdbcType=VARCHAR}, 
             #{quotCyy,jdbcType=VARCHAR}, #{quotUnit,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{marketType,jdbcType=VARCHAR}, 
+            #{deadLine,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
         insert into MST_EXCHARGE_QUOTE
@@ -117,6 +123,12 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="marketType != null" >
+                MARKET_TYPE,
+            </if>
+            <if test="deadLine != null" >
+                DEAD_LINE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="exchargeCode != null" >
@@ -170,24 +182,29 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="marketType != null" >
+                #{marketType,jdbcType=VARCHAR},
+            </if>
+            <if test="deadLine != null" >
+                #{deadLine,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
         insert into MST_EXCHARGE_QUOTE(EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, OPEN_PRICE, 
         CLOSE_PRICE, HIGH_PRICE, LOW_PRICE, MID_PRICE, BASIS_CYY, QUOT_CYY, QUOT_UNIT, INPUT_TYPE, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, MARKET_TYPE, DEAD_LINE
+        )
         select EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, OPEN_PRICE, 
             CLOSE_PRICE, HIGH_PRICE, LOW_PRICE, MID_PRICE, BASIS_CYY, QUOT_CYY, QUOT_UNIT, INPUT_TYPE, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, MARKET_TYPE, DEAD_LINE
+            
              from MST_EXCHARGE_QUOTE
-             where 1 = 1 and EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR} and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+             where 1 = 1 and EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR} and TRADE_DATE = #{tradeDate,jdbcType=DATE} and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
         update MST_EXCHARGE_QUOTE
         <set >
-            <if test="datasourceType != null" >
-                DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR},
-            </if>
             <if test="openPrice != null" >
                 OPEN_PRICE = #{openPrice,jdbcType=DECIMAL},
             </if>
@@ -221,14 +238,20 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="marketType != null" >
+                MARKET_TYPE = #{marketType,jdbcType=VARCHAR},
+            </if>
+            <if test="deadLine != null" >
+                DEAD_LINE = #{deadLine,jdbcType=VARCHAR},
+            </if>
         </set>
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
           and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+          and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
         update MST_EXCHARGE_QUOTE
-        set DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR},
-            OPEN_PRICE = #{openPrice,jdbcType=DECIMAL},
+        set OPEN_PRICE = #{openPrice,jdbcType=DECIMAL},
             CLOSE_PRICE = #{closePrice,jdbcType=DECIMAL},
             HIGH_PRICE = #{highPrice,jdbcType=DECIMAL},
             LOW_PRICE = #{lowPrice,jdbcType=DECIMAL},
@@ -238,8 +261,11 @@
             QUOT_UNIT = #{quotUnit,jdbcType=DECIMAL},
             INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            MARKET_TYPE = #{marketType,jdbcType=VARCHAR},
+            DEAD_LINE = #{deadLine,jdbcType=VARCHAR}
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
           and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+          and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
     </update>
 </mapper>

@@ -178,6 +178,18 @@ public class TrdProductDealAdd extends BaseEntity {
     private String assetRecommandOrg;
 
     /**
+     * 预计转股价值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal expConValue;
+
+    /**
+     * 保证金金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal depositAmt;
+
+    /**
      * 申购方式，网上申购、网下申购
      */
     private String purchModle;
@@ -198,12 +210,6 @@ public class TrdProductDealAdd extends BaseEntity {
     private Date purPayDate;
 
     /**
-     * 保证金金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal depositAmt;
-
-    /**
      * 提前终止利率
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -214,12 +220,6 @@ public class TrdProductDealAdd extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal penaltyIntamt;
-
-    /**
-     * 预计转股价值
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal expConValue;
 
     /**
      * 零星股数
@@ -264,6 +264,16 @@ public class TrdProductDealAdd extends BaseEntity {
      * 转换资产代码
      */
     private String rFinprodId;
+
+    /**
+     * 行权状态
+     */
+    private String exerciseStatus;
+
+    /**
+     * 放弃行权日
+     */
+    private Date cancelExerciseDate;
 
     /**
      * 取得 交易编号
@@ -784,6 +794,38 @@ public class TrdProductDealAdd extends BaseEntity {
     }
 
     /**
+     * 取得 预计转股价值
+     * @return 预计转股价值
+     */
+    public BigDecimal getExpConValue() {
+        return expConValue;
+    }
+
+    /**
+     * 设置 预计转股价值
+     * @param expConValue 预计转股价值
+     */
+    public void setExpConValue(BigDecimal expConValue) {
+        this.expConValue = expConValue;
+    }
+
+    /**
+     * 取得 保证金金额
+     * @return 保证金金额
+     */
+    public BigDecimal getDepositAmt() {
+        return depositAmt;
+    }
+
+    /**
+     * 设置 保证金金额
+     * @param depositAmt 保证金金额
+     */
+    public void setDepositAmt(BigDecimal depositAmt) {
+        this.depositAmt = depositAmt;
+    }
+
+    /**
      * 取得 申购方式，网上申购、网下申购
      * @return 申购方式，网上申购、网下申购
      */
@@ -850,22 +892,6 @@ public class TrdProductDealAdd extends BaseEntity {
     }
 
     /**
-     * 取得 保证金金额
-     * @return 保证金金额
-     */
-    public BigDecimal getDepositAmt() {
-        return depositAmt;
-    }
-
-    /**
-     * 设置 保证金金额
-     * @param depositAmt 保证金金额
-     */
-    public void setDepositAmt(BigDecimal depositAmt) {
-        this.depositAmt = depositAmt;
-    }
-
-    /**
      * 取得 提前终止利率
      * @return 提前终止利率
      */
@@ -895,22 +921,6 @@ public class TrdProductDealAdd extends BaseEntity {
      */
     public void setPenaltyIntamt(BigDecimal penaltyIntamt) {
         this.penaltyIntamt = penaltyIntamt;
-    }
-
-    /**
-     * 取得 预计转股价值
-     * @return 预计转股价值
-     */
-    public BigDecimal getExpConValue() {
-        return expConValue;
-    }
-
-    /**
-     * 设置 预计转股价值
-     * @param expConValue 预计转股价值
-     */
-    public void setExpConValue(BigDecimal expConValue) {
-        this.expConValue = expConValue;
     }
 
     /**
@@ -1039,5 +1049,38 @@ public class TrdProductDealAdd extends BaseEntity {
      */
     public void setrFinprodId(String rFinprodId) {
         this.rFinprodId = rFinprodId == null ? null : rFinprodId.trim();
+    }
+
+    /**
+     * 取得 行权状态
+     * @return 行权状态
+     */
+    public String getExerciseStatus() {
+        return exerciseStatus;
+    }
+
+    /**
+     * 设置 行权状态
+     * @param exerciseStatus 行权状态
+     */
+    public void setExerciseStatus(String exerciseStatus) {
+        this.exerciseStatus = exerciseStatus == null ? null : exerciseStatus.trim();
+    }
+
+    /**
+     * 取得 放弃行权日
+     * @return 放弃行权日
+     */
+    public Date getCancelExerciseDate() {
+        return cancelExerciseDate;
+    }
+
+    /**
+     * 设置 放弃行权日
+     * @param cancelExerciseDate 放弃行权日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setCancelExerciseDate(Date cancelExerciseDate) {
+        this.cancelExerciseDate = cancelExerciseDate;
     }
 }

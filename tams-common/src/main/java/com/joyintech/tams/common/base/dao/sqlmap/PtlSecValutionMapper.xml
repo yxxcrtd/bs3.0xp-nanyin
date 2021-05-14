@@ -43,6 +43,9 @@
         <result column="INT_RATE" property="intRate" jdbcType="DECIMAL" />
         <result column="TDY_DSCLOSS_ADD_B" property="tdyDsclossAddB" jdbcType="DECIMAL" />
         <result column="GEN_TYPE" property="genType" jdbcType="VARCHAR" />
+        <result column="DELAY_PAY_CCY" property="delayPayCcy" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="EXER_YIELD" property="exerYield" jdbcType="DECIMAL" />
         <result column="TDY_LOSS_AMT_B" property="tdyLossAmtB" jdbcType="DECIMAL" />
         <result column="TDY_LOSS_AMT" property="tdyLossAmt" jdbcType="DECIMAL" />
     </resultMap>
@@ -58,8 +61,8 @@
         TDY_FLOAT_INGPL_B TDY_FLOAT_INGPL_B, DSC_COST_AMT_B DSC_COST_AMT_B, DSC_CLEAN_PRICE_B DSC_CLEAN_PRICE_B, 
         DELAY_PAY_AMT_B DELAY_PAY_AMT_B, TDY_INTINCEXP_B TDY_INTINCEXP_B, IN_TDY_INTINCEXP IN_TDY_INTINCEXP, 
         OUT_TDY_INTINCEXP OUT_TDY_INTINCEXP, END_DAYS_1 END_DAYS_1, END_DAYS_2 END_DAYS_2, 
-        INT_RATE INT_RATE, TDY_DSCLOSS_ADD_B TDY_DSCLOSS_ADD_B, GEN_TYPE GEN_TYPE, TDY_LOSS_AMT_B TDY_LOSS_AMT_B, 
-        TDY_LOSS_AMT TDY_LOSS_AMT
+        INT_RATE INT_RATE, TDY_DSCLOSS_ADD_B TDY_DSCLOSS_ADD_B, GEN_TYPE GEN_TYPE, DELAY_PAY_CCY DELAY_PAY_CCY, 
+        YIELD YIELD, EXER_YIELD EXER_YIELD, TDY_LOSS_AMT_B TDY_LOSS_AMT_B, TDY_LOSS_AMT TDY_LOSS_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -103,7 +106,8 @@
             DSC_COST_AMT_B, DSC_CLEAN_PRICE_B, DELAY_PAY_AMT_B, 
             TDY_INTINCEXP_B, IN_TDY_INTINCEXP, OUT_TDY_INTINCEXP, 
             END_DAYS_1, END_DAYS_2, INT_RATE, 
-            TDY_DSCLOSS_ADD_B, GEN_TYPE, TDY_LOSS_AMT_B, 
+            TDY_DSCLOSS_ADD_B, GEN_TYPE, DELAY_PAY_CCY, 
+            YIELD, EXER_YIELD, TDY_LOSS_AMT_B, 
             TDY_LOSS_AMT)
         values (#{cdate,jdbcType=DATE}, #{portfolioId,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
             #{finprodId,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
@@ -118,7 +122,8 @@
             #{dscCostAmtB,jdbcType=DECIMAL}, #{dscCleanPriceB,jdbcType=DECIMAL}, #{delayPayAmtB,jdbcType=DECIMAL}, 
             #{tdyIntincexpB,jdbcType=DECIMAL}, #{inTdyIntincexp,jdbcType=DECIMAL}, #{outTdyIntincexp,jdbcType=DECIMAL}, 
             #{endDays1,jdbcType=DECIMAL}, #{endDays2,jdbcType=DECIMAL}, #{intRate,jdbcType=DECIMAL}, 
-            #{tdyDsclossAddB,jdbcType=DECIMAL}, #{genType,jdbcType=VARCHAR}, #{tdyLossAmtB,jdbcType=DECIMAL}, 
+            #{tdyDsclossAddB,jdbcType=DECIMAL}, #{genType,jdbcType=VARCHAR}, #{delayPayCcy,jdbcType=VARCHAR}, 
+            #{yield,jdbcType=DECIMAL}, #{exerYield,jdbcType=DECIMAL}, #{tdyLossAmtB,jdbcType=DECIMAL}, 
             #{tdyLossAmt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlSecValution" >
@@ -246,6 +251,15 @@
             </if>
             <if test="genType != null" >
                 GEN_TYPE,
+            </if>
+            <if test="delayPayCcy != null" >
+                DELAY_PAY_CCY,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD,
             </if>
             <if test="tdyLossAmtB != null" >
                 TDY_LOSS_AMT_B,
@@ -378,6 +392,15 @@
             <if test="genType != null" >
                 #{genType,jdbcType=VARCHAR},
             </if>
+            <if test="delayPayCcy != null" >
+                #{delayPayCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                #{exerYield,jdbcType=DECIMAL},
+            </if>
             <if test="tdyLossAmtB != null" >
                 #{tdyLossAmtB,jdbcType=DECIMAL},
             </if>
@@ -394,7 +417,7 @@
         CREATE_TIME, UPDATE_USER, UPDATE_TIME, ACT_D_YIELD, DELAY_PAY_AMT, B_CCY, TDY_FLOAT_INGPL_B, 
         DSC_COST_AMT_B, DSC_CLEAN_PRICE_B, DELAY_PAY_AMT_B, TDY_INTINCEXP_B, IN_TDY_INTINCEXP, 
         OUT_TDY_INTINCEXP, END_DAYS_1, END_DAYS_2, INT_RATE, TDY_DSCLOSS_ADD_B, GEN_TYPE, 
-        TDY_LOSS_AMT_B, TDY_LOSS_AMT)
+        DELAY_PAY_CCY, YIELD, EXER_YIELD, TDY_LOSS_AMT_B, TDY_LOSS_AMT)
         select CDATE, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, INV_AIM, 
             CCY, SHARE_AMT, TDY_FLOAT_INGPL, DSC_COST_AMT, DSC_CLEAN_PRICE, TDY_INTINCEXP, BUY_COST_AMT, 
             BUY_CLEAN_PRICE, MARKET_VALUE, MARKET_CLEAN_PRICE, TDY_DSCINCEXP_ADD, TDY_INTINCEXP_ADD, 
@@ -402,7 +425,7 @@
             CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ACT_D_YIELD, DELAY_PAY_AMT, B_CCY, TDY_FLOAT_INGPL_B, 
             DSC_COST_AMT_B, DSC_CLEAN_PRICE_B, DELAY_PAY_AMT_B, TDY_INTINCEXP_B, IN_TDY_INTINCEXP, 
             OUT_TDY_INTINCEXP, END_DAYS_1, END_DAYS_2, INT_RATE, TDY_DSCLOSS_ADD_B, GEN_TYPE, 
-            TDY_LOSS_AMT_B, TDY_LOSS_AMT
+            DELAY_PAY_CCY, YIELD, EXER_YIELD, TDY_LOSS_AMT_B, TDY_LOSS_AMT
              from PTL_SEC_VALUTION
              where 1 = 1 and CDATE = #{cdate,jdbcType=DATE} and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR} and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and INV_AIM = #{invAim,jdbcType=VARCHAR}
     </insert>
@@ -508,6 +531,15 @@
             <if test="genType != null" >
                 GEN_TYPE = #{genType,jdbcType=VARCHAR},
             </if>
+            <if test="delayPayCcy != null" >
+                DELAY_PAY_CCY = #{delayPayCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+            </if>
             <if test="tdyLossAmtB != null" >
                 TDY_LOSS_AMT_B = #{tdyLossAmtB,jdbcType=DECIMAL},
             </if>
@@ -556,6 +588,9 @@
             INT_RATE = #{intRate,jdbcType=DECIMAL},
             TDY_DSCLOSS_ADD_B = #{tdyDsclossAddB,jdbcType=DECIMAL},
             GEN_TYPE = #{genType,jdbcType=VARCHAR},
+            DELAY_PAY_CCY = #{delayPayCcy,jdbcType=VARCHAR},
+            YIELD = #{yield,jdbcType=DECIMAL},
+            EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
             TDY_LOSS_AMT_B = #{tdyLossAmtB,jdbcType=DECIMAL},
             TDY_LOSS_AMT = #{tdyLossAmt,jdbcType=DECIMAL}
         where CDATE = #{cdate,jdbcType=DATE}
