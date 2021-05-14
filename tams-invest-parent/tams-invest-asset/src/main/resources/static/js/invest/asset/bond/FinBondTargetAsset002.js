@@ -250,10 +250,10 @@ $(function() {
         $('#calRateType_div').hide();
     }
     
-    var issuerChange = function(){
+    /*var issuerChange = function(){
         var customerId = $('#issuer').val();
         AssetCommon.getRepInfoByIssuer(customerId);
-    }
+    }*/
 
     var resetForm = function(id,value,pageId){
         //update by zhangnian 20191112 start
@@ -584,6 +584,17 @@ $(function() {
         var customerId = $('#issuer').val();
         if(customerId){
             AssetCommon.getRepInfoByIssuer(customerId);
+            if (typeof pageModel !== 'undefined' && pageModel !== PAGE_MODEL_REFERENCE){
+            　　　Joyin.ajax(basePath + 'invest/asset/bond/FinBondTargetAsset002/getFinBondRatingDto?issuer='+customerId, '' ,function(result){
+                    if (result) {
+                    　　　　$('#busiFinBondRatingInfoTable').data('joyintable').reload({
+                              data : result,
+                              url : null
+                              });
+                           }
+                });
+            }
+          　
         }
     }
     window.componentLoadCallback = function(isDone, pagePath, params){
