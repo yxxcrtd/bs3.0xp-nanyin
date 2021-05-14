@@ -672,6 +672,11 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      */
     private String isYllccp;
 
+    /**
+     * 现金管理类产品-是否完全符合
+     */
+    private String isFullyCompliant;
+
 
     public String getIsTransfer() {
         return isTransfer;
@@ -2724,5 +2729,12 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     public void setAcctName(String acctName) {
         this.acctName = acctName == null ? null : acctName.trim();
     }
-	
+
+    public String getIsFullyCompliant() {
+        return isFullyCompliant;
+    }
+
+    public void setIsFullyCompliant(String isFullyCompliant) {
+        this.isFullyCompliant = isFullyCompliant;
+    }
 }
