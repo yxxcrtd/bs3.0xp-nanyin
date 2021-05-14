@@ -348,7 +348,7 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
                 }
                 else {
                     try {
-                        field.set(chbSubjectBalanceData, (value == null || "".equals(value)) ? "" : value);
+                        field.set(chbSubjectBalanceData,value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return ;

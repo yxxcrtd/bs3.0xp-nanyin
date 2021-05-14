@@ -166,7 +166,7 @@ public class SvrBotAstPosFileImpService extends FileImpService{
                 Type type = field.getGenericType();
                 if("java.lang.String".equals(type.getTypeName())){
                     try {
-                        field.set(t, (value == null || "".equals(value)) ? "" : value);
+                        field.set(t, value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
