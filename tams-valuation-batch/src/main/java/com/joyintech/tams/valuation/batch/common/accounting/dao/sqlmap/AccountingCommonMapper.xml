@@ -1267,7 +1267,7 @@ FROM
 		WHERE 1 =1
 		<if test="booksetId != null and booksetId != ''"> AND crt.bookset_id = #{booksetId}  </if>
 		<if test="tableId != null and tableId != ''"> AND crt.TABLE_ID = #{tableId}  </if>
-		<if test="beginHappenCycDate != null"> AND crt.book_date <![CDATA[>=]]> #{beginHappenCycDate} </if>
+		<if test="beginHappenCycDate != null"> AND crt.book_date <![CDATA[>]]> #{beginHappenCycDate} </if>
 		<if test="baseSubjectNature != null and baseSubjectNature != ''">
 			/**科目性质**/
 			AND crt.BASE_SUBJECT_NATURE =#{baseSubjectNature}
