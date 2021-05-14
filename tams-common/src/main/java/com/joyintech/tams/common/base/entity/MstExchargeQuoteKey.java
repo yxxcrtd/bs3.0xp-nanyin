@@ -15,6 +15,11 @@ public class MstExchargeQuoteKey extends BaseEntity {
     private Date tradeDate;
 
     /**
+     * 数据来源
+     */
+    private String datasourceType;
+
+    /**
      * 取得 行情代码，一般为货币对
      * @return 行情代码，一般为货币对
      */
@@ -44,5 +49,21 @@ public class MstExchargeQuoteKey extends BaseEntity {
      */
     public void setTradeDate(Date tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    /**
+     * 取得 数据来源
+     * @return 数据来源
+     */
+    public String getDatasourceType() {
+        return datasourceType;
+    }
+
+    /**
+     * 设置 数据来源
+     * @param datasourceType 数据来源
+     */
+    public void setDatasourceType(String datasourceType) {
+        this.datasourceType = datasourceType == null ? null : datasourceType.trim();
     }
 }

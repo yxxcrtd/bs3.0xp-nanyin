@@ -14,12 +14,6 @@ public class BokStatDetPosiiton extends BokStatDetPosiitonKey {
     private Date booksetDate;
 
     /**
-     * 当前持仓
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal posAmt;
-
-    /**
      * 计提利率
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -159,6 +153,12 @@ public class BokStatDetPosiiton extends BokStatDetPosiitonKey {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal tdyIntincexpB;
+
+    /**
+     * 当前持仓
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal posAmt;
 
     /**
      * 当日发生利息调整

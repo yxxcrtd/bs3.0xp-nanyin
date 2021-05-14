@@ -121,6 +121,7 @@ $(function() {
                         table.reload();
                     });
                 });
+            });
         });
 
         // add by zwq 20210222  start
@@ -138,6 +139,6 @@ $(function() {
                 });
             });
         });
-        // add by zwq 20210222  end
     });
+        // add by zwq 20210222  end
 }());

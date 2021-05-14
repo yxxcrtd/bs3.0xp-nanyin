@@ -41,6 +41,8 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="PENALTY_INTAMT" property="penaltyIntamt" jdbcType="DECIMAL" />
         <result column="INT_SETT_TYPE" property="intSettType" jdbcType="VARCHAR" />
+        <result column="CLEAR_REC_AMT" property="clearRecAmt" jdbcType="DECIMAL" />
+        <result column="CLEAR_LOSS_AMT" property="clearLossAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, ENTRUST_ID ENTRUST_ID, OUR_SHARE_AMT OUR_SHARE_AMT, 
@@ -53,8 +55,8 @@
         BCON_UNIT_CPRICE2 BCON_UNIT_CPRICE2, CONVERSION_TYPE CONVERSION_TYPE, ASSET_RECOMMAND_ORG ASSET_RECOMMAND_ORG, 
         TERMINATE_RATE TERMINATE_RATE, MP_FINPROD_ID MP_FINPROD_ID, MP_BRANCH MP_BRANCH, 
         IS_CASHSET IS_CASHSET, GEN_TYPE GEN_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, PENALTY_INTAMT PENALTY_INTAMT,
-        INT_SETT_TYPE INT_SETT_TYPE
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, PENALTY_INTAMT PENALTY_INTAMT, 
+        INT_SETT_TYPE INT_SETT_TYPE, CLEAR_REC_AMT CLEAR_REC_AMT, CLEAR_LOSS_AMT CLEAR_LOSS_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -89,8 +91,8 @@
             TERMINATE_RATE, MP_FINPROD_ID, MP_BRANCH, 
             IS_CASHSET, GEN_TYPE, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, PENALTY_INTAMT, INT_SETT_TYPE
-            )
+            UPDATE_TIME, PENALTY_INTAMT, INT_SETT_TYPE, 
+            CLEAR_REC_AMT, CLEAR_LOSS_AMT)
         values (#{totleTradeId,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, #{ourShareAmt,jdbcType=DECIMAL}, 
             #{lendinShareAmt,jdbcType=DECIMAL}, #{ourCpriceAmt,jdbcType=DECIMAL}, #{lendinCpriceAmt,jdbcType=DECIMAL}, 
             #{ourFpriceAmt,jdbcType=DECIMAL}, #{lendinFpriceAmt,jdbcType=DECIMAL}, #{ourFpriceAmt2,jdbcType=DECIMAL}, 
@@ -103,8 +105,8 @@
             #{terminateRate,jdbcType=DECIMAL}, #{mpFinprodId,jdbcType=VARCHAR}, #{mpBranch,jdbcType=DECIMAL}, 
             #{isCashset,jdbcType=VARCHAR}, #{genType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{penaltyIntamt,jdbcType=DECIMAL}, #{intSettType,jdbcType=VARCHAR}
-            )
+            #{updateTime,jdbcType=TIMESTAMP}, #{penaltyIntamt,jdbcType=DECIMAL}, #{intSettType,jdbcType=VARCHAR}, 
+            #{clearRecAmt,jdbcType=DECIMAL}, #{clearLossAmt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdDealTotalAdd" >
         insert into TRD_DEAL_TOTAL_ADD
@@ -226,6 +228,12 @@
             <if test="intSettType != null" >
                 INT_SETT_TYPE,
             </if>
+            <if test="clearRecAmt != null" >
+                CLEAR_REC_AMT,
+            </if>
+            <if test="clearLossAmt != null" >
+                CLEAR_LOSS_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="totleTradeId != null" >
@@ -345,6 +353,12 @@
             <if test="intSettType != null" >
                 #{intSettType,jdbcType=VARCHAR},
             </if>
+            <if test="clearRecAmt != null" >
+                #{clearRecAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="clearLossAmt != null" >
+                #{clearLossAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdDealTotalAdd" >
@@ -354,14 +368,16 @@
         PUR_AMT, DEPOSIT_AMT, FIRST_UNIT_CPRICE3, EXP_CON_VALUE, PREB, PREC, SPO_SHARE_NUM, 
         DEVIATION, CONVERSION_RAT, BCON_UNIT_CPRICE2, CONVERSION_TYPE, ASSET_RECOMMAND_ORG, 
         TERMINATE_RATE, MP_FINPROD_ID, MP_BRANCH, IS_CASHSET, GEN_TYPE, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME, PENALTY_INTAMT, INT_SETT_TYPE)
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, PENALTY_INTAMT, INT_SETT_TYPE, CLEAR_REC_AMT, 
+        CLEAR_LOSS_AMT)
         select TOTLE_TRADE_ID, ENTRUST_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
             OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_FPRICE_AMT2, 
             LENDIN_FPRICE_AMT2, PURCH_MODLE, PURCH_TYPE, PURCH_DATE, PUR_PAY_DATE, PUR_CFM_DATE, 
             PUR_AMT, DEPOSIT_AMT, FIRST_UNIT_CPRICE3, EXP_CON_VALUE, PREB, PREC, SPO_SHARE_NUM, 
             DEVIATION, CONVERSION_RAT, BCON_UNIT_CPRICE2, CONVERSION_TYPE, ASSET_RECOMMAND_ORG, 
             TERMINATE_RATE, MP_FINPROD_ID, MP_BRANCH, IS_CASHSET, GEN_TYPE, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PENALTY_INTAMT, INT_SETT_TYPE
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PENALTY_INTAMT, INT_SETT_TYPE, CLEAR_REC_AMT, 
+            CLEAR_LOSS_AMT
              from TRD_DEAL_TOTAL_ADD
              where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </insert>
@@ -473,8 +489,11 @@
             <if test="intSettType != null" >
                 INT_SETT_TYPE = #{intSettType,jdbcType=VARCHAR},
             </if>
-            <if test="intSettType != null" >
-                INT_SETT_TYPE = #{intSettType,jdbcType=VARCHAR},
+            <if test="clearRecAmt != null" >
+                CLEAR_REC_AMT = #{clearRecAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="clearLossAmt != null" >
+                CLEAR_LOSS_AMT = #{clearLossAmt,jdbcType=DECIMAL},
             </if>
         </set>
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
@@ -515,7 +534,9 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             PENALTY_INTAMT = #{penaltyIntamt,jdbcType=DECIMAL},
-            INT_SETT_TYPE = #{intSettType,jdbcType=VARCHAR}
+            INT_SETT_TYPE = #{intSettType,jdbcType=VARCHAR},
+            CLEAR_REC_AMT = #{clearRecAmt,jdbcType=DECIMAL},
+            CLEAR_LOSS_AMT = #{clearLossAmt,jdbcType=DECIMAL}
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
 </mapper>

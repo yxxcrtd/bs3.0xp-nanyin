@@ -189,11 +189,21 @@ public class PtlSecValution extends PtlSecValutionKey {
     private String genType;
 
     /**
+     * 待清算资金币种
+     */
+    private String delayPayCcy;
+
+    /**
      * 到期收益率
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal yield;
 
+    /**
+     * 行权收益率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal exerYield;
 
     /**
      * 减值余额_本币
@@ -704,6 +714,22 @@ public class PtlSecValution extends PtlSecValutionKey {
     }
 
     /**
+     * 取得 待清算资金币种
+     * @return 待清算资金币种
+     */
+    public String getDelayPayCcy() {
+        return delayPayCcy;
+    }
+
+    /**
+     * 设置 待清算资金币种
+     * @param delayPayCcy 待清算资金币种
+     */
+    public void setDelayPayCcy(String delayPayCcy) {
+        this.delayPayCcy = delayPayCcy == null ? null : delayPayCcy.trim();
+    }
+
+    /**
      * 取得 到期收益率
      * @return 到期收益率
      */
@@ -719,6 +745,21 @@ public class PtlSecValution extends PtlSecValutionKey {
         this.yield = yield;
     }
 
+    /**
+     * 取得 行权收益率
+     * @return 行权收益率
+     */
+    public BigDecimal getExerYield() {
+        return exerYield;
+    }
+
+    /**
+     * 设置 行权收益率
+     * @param exerYield 行权收益率
+     */
+    public void setExerYield(BigDecimal exerYield) {
+        this.exerYield = exerYield;
+    }
 
     /**
      * 取得 减值余额_本币

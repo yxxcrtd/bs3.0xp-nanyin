@@ -81,41 +81,26 @@ public class BokVouchDetail extends BaseEntity {
      */
     private String bookType;
 
-    // add by zwq 2020-12-25 start
+    /**
+     * 本位币发生额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal bHappenAmt;
+
+    /**
+     * 本位币
+     */
+    private String bCcy;
+
     /**
      * 科目名称
      */
     private String subjectName;
 
     /**
-     * 科目尾号名称
+     * 四级科目名称
      */
     private String detailSubjectName;
-    // add by zwq 2020-12-25 end
-
-
-    public String getSubjectName() {
-        return subjectName;
-    }
-
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
-    }
-
-    public String getDetailSubjectName() {
-        return detailSubjectName;
-    }
-
-    public void setDetailSubjectName(String detailSubjectName) {
-        this.detailSubjectName = detailSubjectName;
-    }
-
-    /*start 20190520 add by chufengjie*/
-    //本位币
-    private String bCcy;
-    //本位币发生额
-    private BigDecimal bHappenAmt;
-    /*end 20190520 add by chufengjie*/
 
     /**
      * 取得 凭证子表编号
@@ -342,23 +327,67 @@ public class BokVouchDetail extends BaseEntity {
         this.bookType = bookType == null ? null : bookType.trim();
     }
 
-
-
-    public String getbCcy() {
-        return bCcy;
-    }
-
-    public void setbCcy(String bCcy) {
-        this.bCcy = bCcy;
-    }
-
+    /**
+     * 取得 本位币发生额
+     * @return 本位币发生额
+     */
     public BigDecimal getbHappenAmt() {
         return bHappenAmt;
     }
 
+    /**
+     * 设置 本位币发生额
+     * @param bHappenAmt 本位币发生额
+     */
     public void setbHappenAmt(BigDecimal bHappenAmt) {
         this.bHappenAmt = bHappenAmt;
     }
 
+    /**
+     * 取得 本位币
+     * @return 本位币
+     */
+    public String getbCcy() {
+        return bCcy;
+    }
 
+    /**
+     * 设置 本位币
+     * @param bCcy 本位币
+     */
+    public void setbCcy(String bCcy) {
+        this.bCcy = bCcy == null ? null : bCcy.trim();
+    }
+
+    /**
+     * 取得 科目名称
+     * @return 科目名称
+     */
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    /**
+     * 设置 科目名称
+     * @param subjectName 科目名称
+     */
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName == null ? null : subjectName.trim();
+    }
+
+    /**
+     * 取得 四级科目名称
+     * @return 四级科目名称
+     */
+    public String getDetailSubjectName() {
+        return detailSubjectName;
+    }
+
+    /**
+     * 设置 四级科目名称
+     * @param detailSubjectName 四级科目名称
+     */
+    public void setDetailSubjectName(String detailSubjectName) {
+        this.detailSubjectName = detailSubjectName == null ? null : detailSubjectName.trim();
+    }
 }

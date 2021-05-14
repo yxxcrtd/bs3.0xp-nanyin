@@ -1,52 +1,27 @@
 /** modify by yanya on 20210302 新增市场机构管理画面**/
-delete from SYS_MENU where menu_id = 'VALINFOSERVICE_001_018';
-delete from SYS_MENU where menu_id = 'VALINFOSERVICE_001_018_001';
+
 delete from SYS_PAGE where page_id in ('MstMarketInstitutions001','MstMarketInstitutions002');
 delete from SYS_PAGE_ELEMENT where page_id in ('MstMarketInstitutions001','MstMarketInstitutions002');
 delete from SYS_WFL_BUSINESS_MODULE where page_id in ('MstMarketInstitutions001','MstMarketInstitutions002');
 
-insert into SYS_MENU values ('VALINFOSERVICE_001_018','VAL','','VALINFOSERVICE_001','','18','03','基础信息','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALINFOSERVICE_001_018_001','VAL','','VALINFOSERVICE_001_018','MstMarketInstitutions001','10','02','市场机构管理','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'));
 
 insert into SYS_PAGE values ('MstMarketInstitutions001','VAL','/valuation/basicdata/mstmarketinstitutions/MstMarketInstitutions001','valuation/basicdata/mstmarketinstitutions/MstMarketInstitutions001','VALINFOSERVICE_001_018_001','','','02','01','市场机构管理','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'));
 insert into SYS_PAGE values ('MstMarketInstitutions002','VAL','/valuation/basicdata/mstmarketinstitutions/MstMarketInstitutions002','valuation/basicdata/mstmarketinstitutions/MstMarketInstitutions002','VALINFOSERVICE_001_018_001','','','02','01','市场机构管理-新建','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'));
 
-insert into SYS_PAGE_ELEMENT values ('MstMarketInstitutions001','MstMarketInstitutions001_TBLROW_edit','01','01','','编辑','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_add','01','01','','新建','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_clear','01','02','','重置','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_delete','01','01','','删除','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_export','01','01','','导出','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_search','01','01','','查询','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('MstMarketInstitutions002','MstMarketInstitutions002_btn_save','01','02','','保存','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
-insert into SYS_PAGE_ELEMENT values ('MstMarketInstitutions002','MstMarketInstitutions002_btn_submit','01','02','','提交','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('MstMarketInstitutions001','MstMarketInstitutions001_TBLROW_edit','01','01','','编辑','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_add','01','01','','新建','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_clear','01','02','','重置','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_delete','01','01','','删除','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_export','01','01','','导出','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_search','01','01','','查询','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('MstMarketInstitutions002','MstMarketInstitutions002_btn_save','01','02','','保存','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG) values ('MstMarketInstitutions002','MstMarketInstitutions002_btn_submit','01','02','','提交','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'),'COM');
 
 
-insert into SYS_WFL_BUSINESS_MODULE values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_delete','oneApproval','system','',to_date('2021/02/22', 'yyyy/mm/dd'), 'system',to_date('2021/02/22', 'yyyy/mm/dd'),'ALL','02');
-insert into SYS_WFL_BUSINESS_MODULE values ('MstMarketInstitutions002','MstMarketInstitutions002_btn_save','oneApproval','system','',to_date('2021/02/22', 'yyyy/mm/dd'), 'system',to_date('2021/02/22', 'yyyy/mm/dd'),'ALL','02');
-insert into SYS_WFL_BUSINESS_MODULE values ('MstMarketInstitutions002','MstMarketInstitutions002_btn_submit','oneApproval','system','',to_date('2021/02/22', 'yyyy/mm/dd'), 'system',to_date('2021/02/22', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('MstMarketInstitutions001','MstMarketInstitutions001_btn_delete','oneApproval','system','',to_date('2021/02/22', 'yyyy/mm/dd'), 'system',to_date('2021/02/22', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('MstMarketInstitutions002','MstMarketInstitutions002_btn_save','oneApproval','system','',to_date('2021/02/22', 'yyyy/mm/dd'), 'system',to_date('2021/02/22', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('MstMarketInstitutions002','MstMarketInstitutions002_btn_submit','oneApproval','system','',to_date('2021/02/22', 'yyyy/mm/dd'), 'system',to_date('2021/02/22', 'yyyy/mm/dd'),'ALL','02');
 
-
-
-
-/** ---  菜单  基础信息 and 资产信息 add by 李炳言 on 20210306 start 菜单调整的原因：原来的菜单【市场机构管理】未按顺序，将【市场日历信息】菜单覆盖掉了。--- **/
-delete from SYS_MENU SM WHERE SM.MENU_ID IN 
-('VALINFOSERVICE_001_018',
-'VALINFOSERVICE_001_019',
-'VALINFOSERVICE_001_019_001',
-'VALINFOSERVICE_001_019_002',
-'VALINFOSERVICE_001_020',
-'VALINFOSERVICE_001_020_001',
-'VALINFOSERVICE_001_020_002'
-);
-
-insert into SYS_MENU values ('VALINFOSERVICE_001_018','VAL','','VALINFOSERVICE_001','ValMstMarketCalendarInfo001','18','02','市场日历信息','system','',to_date('2021/01/25', 'yyyy/mm/dd'), 'system',to_date('2020/03/16', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALINFOSERVICE_001_019','VAL','','VALINFOSERVICE_001','','19','02','基础信息','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALINFOSERVICE_001_019_001','VAL','','VALINFOSERVICE_001_019','MstMarketInstitutions001','1','02','市场机构管理','system','',to_date('2021/03/02', 'yyyy/mm/dd'), 'system',to_date('2021/03/02', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALINFOSERVICE_001_019_002','VAL','','VALINFOSERVICE_001_019','MstCalendarType001','2','02','日历类型管理','system','',to_date('2021/03/05', 'yyyy/mm/dd'), 'system',to_date('2021/03/05', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALINFOSERVICE_001_020','VAL','','VALINFOSERVICE_001','','20','02','资产信息','system','',to_date('2021/03/05', 'yyyy/mm/dd'), 'system',to_date('2021/03/05', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALINFOSERVICE_001_020_001','VAL','','VALINFOSERVICE_001_020','FinOptionTarget001','1','02','场外期权标的','system','',to_date('2021/03/05', 'yyyy/mm/dd'), 'system',to_date('2021/03/05', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALINFOSERVICE_001_020_002','VAL','','VALINFOSERVICE_001_020','FinBondTargetAsset001','2','02','债券类资产','system','',to_date('2021/03/05', 'yyyy/mm/dd'), 'system',to_date('2021/03/05', 'yyyy/mm/dd'));
-/** ---  菜单  基础信息 and 资产信息 add by 李炳言 on 20210306 end --- **/
 
 /** ---  画面  市场机构 and 日历类型 add by 李炳言 on 20210306 start --- **/
 delete from sys_page sp where sp.page_id in('MstCalendarType001','MstCalendarType002','MstCalendarType003','MstCalendarType004','MstMarketInstitutions001','MstMarketInstitutions002');
@@ -163,7 +138,7 @@ insert into SYS_DATADICT_LIST_LINK values ('INSTITUTION_INDUSTRY_SECOND_LEVEL','
 
 /** ---  业务流程模板 日历类型 add by 李炳言 on 20210306 start --- **/
 DELETE from SYS_WFL_BUSINESS_MODULE SWBM WHERE SWBM.PAGE_ID IN ('MstCalendarType002');
-insert into SYS_WFL_BUSINESS_MODULE
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG)
 values
   ('MstCalendarType002',
    'MstCalendarType001_btn_delete',
@@ -175,8 +150,8 @@ values
    to_date('2021/03/06', 'yyyy/mm/dd'),
    'ALL',
    '02');
-insert into SYS_WFL_BUSINESS_MODULE values ('MstCalendarType002','MstCalendarType002_btn_save','oneApproval','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'),'ALL','02');
-insert into SYS_WFL_BUSINESS_MODULE values ('MstCalendarType002','MstCalendarType002_btn_submit','oneApproval','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('MstCalendarType002','MstCalendarType002_btn_save','oneApproval','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'),'ALL','02');
+insert into SYS_WFL_BUSINESS_MODULE(PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('MstCalendarType002','MstCalendarType002_btn_submit','oneApproval','system','',to_date('2021/03/06', 'yyyy/mm/dd'), 'system',to_date('2021/03/06', 'yyyy/mm/dd'),'ALL','02');
 /** ---  业务流程模板 日历类型 add by 李炳言 on 20210306 end --- **/
 
 

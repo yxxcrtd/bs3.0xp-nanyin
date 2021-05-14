@@ -312,14 +312,14 @@ values ('COMMON_BUSINESS_TYPE', 'TEDLOSS', '资产减值管理', 1220, '0', 'sys
 delete from SYS_DATADICT where dict_code='BCCYADJ_TYPE';
 insert into SYS_DATADICT values ('BCCYADJ_TYPE','VAL','本位币差额处理方式','','02','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
 delete from SYS_DATADICT_LIST where dict_code='BCCYADJ_TYPE';
-insert into SYS_DATADICT_LIST values ('BCCYADJ_TYPE','01','利息收入','1','0','system','',to_date('2020/10/21', 'yyyy/mm/dd'), 'system',to_date('2020/10/21', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('BCCYADJ_TYPE','02','减值准备','2','0','system','',to_date('2020/10/21', 'yyyy/mm/dd'), 'system',to_date('2020/10/21', 'yyyy/mm/dd'),NULL);
+insert into SYS_DATADICT_LIST values ('BCCYADJ_TYPE','01','利息收入','1','0','system','',to_date('2020/10/21', 'yyyy/mm/dd'), 'system',to_date('2020/10/21', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('BCCYADJ_TYPE','02','减值准备','2','0','system','',to_date('2020/10/21', 'yyyy/mm/dd'), 'system',to_date('2020/10/21', 'yyyy/mm/dd'));
 
 
 delete from SYS_DATADICT_LIST t where t.dict_code = 'BUSI_TYPE' and t.item_code = '35';
-insert into SYS_DATADICT_LIST values ('BUSI_TYPE','35','自定义现金流交易','35','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'),NULL);
+insert into SYS_DATADICT_LIST values ('BUSI_TYPE','35','自定义现金流交易','35','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'));
 delete from SYS_DATADICT_LIST t where t.dict_code = 'CUSTOM_CASHFLOW_TYPE' and t.item_code = '08';
-insert into SYS_DATADICT_LIST values ('CUSTOM_CASHFLOW_TYPE','08','减值资产清理后收回','8','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'),NULL);
+insert into SYS_DATADICT_LIST values ('CUSTOM_CASHFLOW_TYPE','08','减值资产清理后收回','8','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'));
 
 delete from sys_page_dictlist where PAGE_ID = 'PtlCashFlow002' and DICT_ID = 'CUSTOM_CASHFLOW_TYPE' and DICT_ITEM_VAL = '08';
 delete from sys_page_dictlist where PAGE_ID = 'PtlCashFlow001' and DICT_ID = 'CUSTOM_CASHFLOW_TYPE' and DICT_ITEM_VAL = '08';
@@ -332,8 +332,8 @@ values ('PtlCashFlow002', '999999', 'CUSTOM_CASHFLOW_TYPE', '08', null, null, 'a
 
 --数据字典：指令类型
 delete FROM SYS_DATADICT_LIST WHERE DICT_CODE='ORDER_TYPE' AND ITEM_CODE IN ('N2798','N2799');
-insert into SYS_DATADICT_LIST values ('ORDER_TYPE','N2798','资金收款-其他收入到账','176','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('ORDER_TYPE','N2799','资金划款-其他支出划款','177','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'),NULL);
+insert into SYS_DATADICT_LIST values ('ORDER_TYPE','N2798','资金收款-其他收入到账','176','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('ORDER_TYPE','N2799','资金划款-其他支出划款','177','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'));
 
 
 
@@ -344,13 +344,13 @@ insert into SYS_DATADICT values ('OFFSETIMPT_SHELL_TYPE','VAL','卖出冲抵减�
 insert into SYS_DATADICT values ('OFFSETIMPT_SX_TYPE','VAL','收息冲抵减值准备处理方式','','02','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
 
 delete from SYS_DATADICT_LIST where DICT_CODE in ('OFFSETIMPT_DATETYPE','OFFSETIMPT_SHELL_TYPE','OFFSETIMPT_SX_TYPE');
-insert into SYS_DATADICT_LIST values ('OFFSETIMPT_DATETYPE','01','理论日','1','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('OFFSETIMPT_DATETYPE','02','资金到账日','2','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SHELL_TYPE','01','数量占比','1','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SHELL_TYPE','02','金额占比','2','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SHELL_TYPE','03','原金额占比','3','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SX_TYPE','01','金额占比','1','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SX_TYPE','02','原金额占比','2','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'),NULL);
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_DATETYPE','01','理论日','1','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_DATETYPE','02','资金到账日','2','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SHELL_TYPE','01','数量占比','1','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SHELL_TYPE','02','金额占比','2','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SHELL_TYPE','03','原金额占比','3','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SX_TYPE','01','金额占比','1','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SX_TYPE','02','原金额占比','2','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
 
 delete from SYS_DATADICT_LIST where DICT_CODE = 'BUSI_TYPE' and ITEM_CODE = '39';
 Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('BUSI_TYPE','39','清理核销',39,'0','system',null,sysdate,'system',sysdate);
@@ -358,10 +358,10 @@ Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 delete from SYS_DATADICT where DICT_CODE ='LOSS_GEN_TYPE';
 insert into SYS_DATADICT values ('LOSS_GEN_TYPE','VAL','减值生成方式','','02','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/28', 'yyyy/mm/dd'));
 delete from SYS_DATADICT_LIST where DICT_CODE ='LOSS_GEN_TYPE';
-insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','01','计提批处理','1','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','02','交易批处理','2','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','99','其他','99','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','03','减值计提批处理','03','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'),NULL);
+insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','01','计提批处理','1','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','02','交易批处理','2','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','99','其他','99','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','03','减值计提批处理','03','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
 
 delete from sys_datadict where DICT_CODE = 'LOSS_HADDLE_PATTERN';
 
@@ -406,36 +406,36 @@ delete FROM SYS_DATADICT_LIST WHERE DICT_CODE='TABLE_ID' AND ITEM_CODE IN ('2798
 --计划类资产：增加投资目的 add by wujie 20201015
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE='TABLE_ID' AND ITEM_CODE IN ('1510','1511','1512','1513','1514','1515',
 '1530','1531','1532','1533','1534','1535','2712','2713','2738','2739');
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1510','公允价值变动类收益型资产-买入','513','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1511','公允价值变动类收益型资产-利息计提','514','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1512','公允价值变动类收益型资产-收息','515','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1513','公允价值变动类收益型资产-还本到期','516','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1514','公允价值变动类收益型资产-卖出','517','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1515','公允价值变动类收益型资产-公允价值变动','518','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1530','综合收益类收益型资产-买入','519','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1531','综合收益类收益型资产-计提摊销','520','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1532','综合收益类收益型资产-公允价值变动','521','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1533','综合收益类收益型资产-收息','522','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1534','综合收益类收益型资产-还本到期','523','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1535','综合收益类收益型资产-卖出','524','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','2712','资金收款-公允价值变动类计划类资产收息','525','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','2713','资金收款-综合收益类计划类资产收息','526','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','2738','资金收款-公允价值变动类计划类资产还本','527','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','2739','资金收款-综合收益类计划类资产还本','528','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1113','存放同业-减值计提','529','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1114','存放同业-减值清理','530','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1115','拆放同业-减值计提','531','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1116','拆放同业-减值清理','532','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1359','摊余成本类债券-减值计提','533','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1362','摊余成本类债券-减值清理','534','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1364','综合收益类债券-减值计提','535','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1367','综合收益类债券-减值清理','536','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1536','综合收益类收益型资产-减值计提','537','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1537','综合收益类收益型资产-减值清理','538','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1540','摊余成本类收益型计划类资产-减值计提','539','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','1543','摊余成本类收益型计划类资产-减值清理','540','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','2798','资金收款-其他收入到账','541','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('TABLE_ID','2799','资金收款-其他收入到账','542','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'),NULL);
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1510','公允价值变动类收益型资产-买入','513','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1511','公允价值变动类收益型资产-利息计提','514','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1512','公允价值变动类收益型资产-收息','515','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1513','公允价值变动类收益型资产-还本到期','516','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1514','公允价值变动类收益型资产-卖出','517','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1515','公允价值变动类收益型资产-公允价值变动','518','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1530','综合收益类收益型资产-买入','519','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1531','综合收益类收益型资产-计提摊销','520','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1532','综合收益类收益型资产-公允价值变动','521','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1533','综合收益类收益型资产-收息','522','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1534','综合收益类收益型资产-还本到期','523','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1535','综合收益类收益型资产-卖出','524','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','2712','资金收款-公允价值变动类计划类资产收息','525','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','2713','资金收款-综合收益类计划类资产收息','526','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','2738','资金收款-公允价值变动类计划类资产还本','527','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','2739','资金收款-综合收益类计划类资产还本','528','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1113','存放同业-减值计提','529','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1114','存放同业-减值清理','530','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1115','拆放同业-减值计提','531','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1116','拆放同业-减值清理','532','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1359','摊余成本类债券-减值计提','533','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1362','摊余成本类债券-减值清理','534','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1364','综合收益类债券-减值计提','535','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1367','综合收益类债券-减值清理','536','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1536','综合收益类收益型资产-减值计提','537','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1537','综合收益类收益型资产-减值清理','538','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1540','摊余成本类收益型计划类资产-减值计提','539','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','1543','摊余成本类收益型计划类资产-减值清理','540','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','2798','资金收款-其他收入到账','541','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('TABLE_ID','2799','资金收款-其他收入到账','542','0','system','',to_date('2020/10/13', 'yyyy/mm/dd'), 'system',to_date('2020/10/13', 'yyyy/mm/dd'));
 
 delete from sys_datadict where DICT_CODE = 'LOSS_P3_SECACCR_SUBJECT_NO';
 delete from sys_datadict where DICT_CODE = 'LOSS_P3_SECACCR_YEILD_RECALC';
@@ -444,7 +444,7 @@ insert into SYS_DATADICT values ('LOSS_P3_SECACCR_YEILD_RECALC','VAL','减值资
 
 delete from SYS_DATADICT_LIST where DICT_CODE='LOSS_P3_SECACCR_SUBJECT_NO';
 delete from SYS_DATADICT_LIST where DICT_CODE='LOSS_P3_SECACCR_YEILD_RECALC';
-insert into SYS_DATADICT_LIST values ('LOSS_P3_SECACCR_SUBJECT_NO','01','减值准备','1','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('LOSS_P3_SECACCR_SUBJECT_NO','02','原科目','2','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('LOSS_P3_SECACCR_YEILD_RECALC','01','不重算','1','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'),NULL);
-insert into SYS_DATADICT_LIST values ('LOSS_P3_SECACCR_YEILD_RECALC','02','重算','2','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'),NULL);
+insert into SYS_DATADICT_LIST values ('LOSS_P3_SECACCR_SUBJECT_NO','01','减值准备','1','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('LOSS_P3_SECACCR_SUBJECT_NO','02','原科目','2','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('LOSS_P3_SECACCR_YEILD_RECALC','01','不重算','1','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('LOSS_P3_SECACCR_YEILD_RECALC','02','重算','2','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));

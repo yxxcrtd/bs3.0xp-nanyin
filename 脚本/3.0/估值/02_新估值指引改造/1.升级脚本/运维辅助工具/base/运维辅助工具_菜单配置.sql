@@ -1,23 +1,3 @@
------------------------拓展四级科目   sys_menu		start---------------------------------
-delete from sys_menu where menu_id='VALUATION_ACCOUNTING_001_008_002';
-
-insert into sys_menu 
-(MENU_ID, SYSTEM_CODE, ICON, 
-PARENT_MENU_ID, PAGE_ID, ORDER_NO, 
-IS_SPREAD, REMARK, CREATE_USER, 
-CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-UPDATE_TIME)
-values 
-('VALUATION_ACCOUNTING_001_008_002', 'VAL', null, 
-'VALUATION_ACCOUNTING_001_008', 'ValSubDevelopment001', 4, 
-'02', '扩展四级科目', 'system', 
-null, SYSDATE, 'system', SYSDATE);
------------------------拓展四级科目   sys_menu		end---------------------------------
-
-
-
-
-
 
 -----------------------拓展四级科目   sys_page		start---------------------------------
 delete from sys_page where page_id='ValSubDevelopment001';
@@ -36,24 +16,6 @@ null, '02', '02',
 SYSDATE, 'system', SYSDATE);
 
 -----------------------拓展四级科目   sys_page		end---------------------------------
-
-
--------------------------基础科目性质调整(慎用) 	sys_menu		start----------------------------------
-delete from sys_menu where menu_id='VALUATION_ACCOUNTING_001_008_003';
-
-insert into sys_menu 
-(MENU_ID, SYSTEM_CODE, ICON, 
-PARENT_MENU_ID, PAGE_ID, ORDER_NO, 
-IS_SPREAD, REMARK, CREATE_USER, 
-CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-UPDATE_TIME)
-values 
-('VALUATION_ACCOUNTING_001_008_003', 'VAL', null, 
-'VALUATION_ACCOUNTING_001_008', 'ValBasicSubAdjust001', 6, 
-'02', '基础科目性质调整(慎用)', 'system', 
-null, SYSDATE, 'system', SYSDATE);
--------------------------基础科目性质调整(慎用) 	sys_menu		end----------------------------------
-
 
 
 
@@ -75,22 +37,16 @@ SYSDATE, 'system', SYSDATE);
 -------------------------基础科目性质调整(慎用) 	sys_page		end----------------------------------
 
 /** add by yanya on 20201230 增加科目号变更画面及数据字典项**/
-delete from SYS_MENU where menu_id = 'VALUATION_ACCOUNTING_001_008_001';
-insert into SYS_MENU values ('VALUATION_ACCOUNTING_001_008_001','VAL','','VALUATION_ACCOUNTING_001_008','ValChangeSubjectNo001','1','02','科目信息变更','system','',to_date('2020/12/29', 'yyyy/mm/dd'), 'system',to_date('2020/12/29', 'yyyy/mm/dd'));
+
 delete from SYS_PAGE where page_id = 'ValChangeSubjectNo001';
 insert into SYS_PAGE values ('ValChangeSubjectNo001','VAL','/valuation/dailyoperation/dailyaccountmake/changesubjectno/ValChangeSubjectNo001','valuation/dailyoperation/dailyaccountmake/changesubjectno/ValChangeSubjectNo001','VALUATION_ACCOUNTING_001_008_001','','','02','02','科目信息变更','system','',to_date('2020/01/07', 'yyyy/mm/dd'), 'system',to_date('2020/01/07', 'yyyy/mm/dd'));
 delete from SYS_PAGE_ELEMENT where page_id = 'ValChangeSubjectNo001';
-insert into SYS_PAGE_ELEMENT values ('ValChangeSubjectNo001','ValChangeSubjectNo001_btn_submit','01','01','','变更','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'),'01');
-insert into SYS_PAGE_ELEMENT values ('ValChangeSubjectNo001','ValChangeSubjectNo001_btn_reset','01','01','','重置','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'),'01');
-insert into SYS_PAGE_ELEMENT values ('ValChangeSubjectNo001','ValChangeSubjectNo001_btn_TPLDOWLOAD','01','01','','模板下载','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'),'01');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ValChangeSubjectNo001','ValChangeSubjectNo001_btn_submit','01','01','','变更','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'));
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ValChangeSubjectNo001','ValChangeSubjectNo001_btn_reset','01','01','','重置','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'));
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ValChangeSubjectNo001','ValChangeSubjectNo001_btn_TPLDOWLOAD','01','01','','模板下载','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'));
 
 
 --账务明细代码调整
----菜单
-delete from SYS_MENU where MENU_ID in ('VALUATION_ACCOUNTING_001_008','VALUATION_ACCOUNTING_001_008_004','VALUATION_ACCOUNTING_001_008_006');
-insert into SYS_MENU values ('VALUATION_ACCOUNTING_001_008','VAL','','VALUATION_ACCOUNTING_001','','8','02','运维辅助工具','system','',to_date('2020/12/29', 'yyyy/mm/dd'), 'system',to_date('2020/12/29', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALUATION_ACCOUNTING_001_008_004','VAL','','VALUATION_ACCOUNTING_001_008','BokDetailIdUpdate002','4','02','账务明细代码调整','system','',to_date('2020/12/29', 'yyyy/mm/dd'), 'system',to_date('2020/12/29', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALUATION_ACCOUNTING_001_008_006','VAL','','VALUATION_ACCOUNTING_001_008','BokDetailIdUpdate001','4','02','账务明细代码调整(原)','system','',to_date('2020/12/29', 'yyyy/mm/dd'), 'system',to_date('2020/12/29', 'yyyy/mm/dd'));
 
 ---页面
 delete from SYS_PAGE where page_id in('BokDetailIdUpdate002','BokDetailIdUpdate001');
@@ -99,9 +55,9 @@ insert into SYS_PAGE values ('BokDetailIdUpdate002','VAL','/valuation/bokdetaili
 
 ---画面元素表
 delete from SYS_PAGE_ELEMENT where page_id ='BokDetailIdUpdate002';
-insert into SYS_PAGE_ELEMENT values ('BokDetailIdUpdate002','BokDetailIdUpdate002_btn_preview','01','01','','预览','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'),'01');
-insert into SYS_PAGE_ELEMENT values ('BokDetailIdUpdate002','BokDetailIdUpdate002_btn_submit','01','01','','确认调整','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'),'01');
-insert into SYS_PAGE_ELEMENT values ('BokDetailIdUpdate002','BokDetailIdUpdate002_btn_reset','01','01','','重置','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'),'01');
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('BokDetailIdUpdate002','BokDetailIdUpdate002_btn_preview','01','01','','预览','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'));
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('BokDetailIdUpdate002','BokDetailIdUpdate002_btn_submit','01','01','','确认调整','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'));
+insert into SYS_PAGE_ELEMENT(PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('BokDetailIdUpdate002','BokDetailIdUpdate002_btn_reset','01','01','','重置','system','',to_date('2020/12/30', 'yyyy/mm/dd'), 'system',to_date('2020/12/30', 'yyyy/mm/dd'));
 
 
 ---画面数据字典明细关联表
@@ -139,27 +95,8 @@ insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_IT
 insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('BokDetailIdUpdate002','ACCT_TYPE','A06','999999','交易保证金账户','','system','',to_date('2020/12/29', 'yyyy/mm/dd'), 'system',to_date('2020/12/29', 'yyyy/mm/dd'));
 insert into SYS_PAGE_DICTLIST (PAGE_ID,DICT_ID,DICT_ITEM_VAL,SUB_PAGE_ID,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('BokDetailIdUpdate002','ACCT_TYPE','A07','999999','券商资金账户','','system','',to_date('2020/12/29', 'yyyy/mm/dd'), 'system',to_date('2020/12/29', 'yyyy/mm/dd'));
 
--------------------------账务明细代码加密	sys_menu		start----------------------------------
-delete from sys_menu where menu_id='VALUATION_ACCOUNTING_001_008_005';
-
-insert into sys_menu 
-(MENU_ID, SYSTEM_CODE, ICON, 
-PARENT_MENU_ID, PAGE_ID, ORDER_NO, 
-IS_SPREAD, REMARK, CREATE_USER, 
-CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-UPDATE_TIME)
-values 
-('VALUATION_ACCOUNTING_001_008_005', 'VAL', null, 
-'VALUATION_ACCOUNTING_001_008', 'ValAccountEncryption001', 5, 
-'02', '账务明细代码加密', 'system', 
-null, SYSDATE, 'system', 
-SYSDATE);
--------------------------账务明细代码加密	sys_menu		end----------------------------------
-
-
-
 -------------------------账务明细代码加密	sys_page		start----------------------------------
-delete from sys_page where page_id='ValBasicSubAdjust001';
+delete from sys_page where page_id='ValAccountEncryption001';
 
 insert into sys_page 
 (PAGE_ID, SYSTEM_CODE, PAGE_URL, 
