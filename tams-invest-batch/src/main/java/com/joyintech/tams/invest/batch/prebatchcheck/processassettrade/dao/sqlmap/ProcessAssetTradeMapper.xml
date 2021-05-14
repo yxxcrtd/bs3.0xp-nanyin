@@ -142,6 +142,8 @@
 					LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
 					LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 					where mark.page_id = 'TrdFundInvestTrade003'
+                    /*赎回到账不自动生成*/
+                    and replace(replace(to_char(REGEXP_SUBSTR(mark.business_data,'"ps":"[^"]+"',1,1)),'"ps":"',''),'"','') NOT IN('T24')
 					and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
 				)
                 /*撤销基金存续期除权登记*/
