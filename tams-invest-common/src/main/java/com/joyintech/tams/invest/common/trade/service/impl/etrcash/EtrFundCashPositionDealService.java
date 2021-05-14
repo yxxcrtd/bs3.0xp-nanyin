@@ -941,7 +941,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDealAdd dealAdd = finProductTradeDto.getTrdProductDealAdd();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 通道代码
         String chlId = finProductTradeDto.getTrdProductDeal().getChlId();
