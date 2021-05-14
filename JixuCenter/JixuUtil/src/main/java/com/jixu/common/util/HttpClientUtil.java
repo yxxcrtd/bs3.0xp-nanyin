@@ -207,7 +207,7 @@ public class HttpClientUtil {
 	/**
 	 * 发送Get请求
 	 * 
-	 * @param httpPost
+	 * @param httpGet
 	 * @return
 	 */
 	private String sendHttpGet(HttpGet httpGet) {
@@ -228,6 +228,9 @@ public class HttpClientUtil {
 		} finally {
 			try {
 				// 关闭连接,释放资源
+				if (httpClient != null){
+					httpClient.close();
+				}
 				if (response != null) {
 					response.close();
 				}
