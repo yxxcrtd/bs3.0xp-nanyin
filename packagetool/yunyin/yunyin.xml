@@ -57,5 +57,8 @@
         <module>../../tams-valuation-parent</module>
         <module>../../tams-valuation-report</module>
         <module>../../tams-system/yunying/app</module>
+
+        <!-- 接口 -->
+        <module>../../tams-valuation-interf</module>
     </modules>
 </project>

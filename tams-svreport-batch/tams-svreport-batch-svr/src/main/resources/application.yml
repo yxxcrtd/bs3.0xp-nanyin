@@ -9,8 +9,6 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
 #     driverClassName: com.ibm.db2.jcc.DB2Driver
 #     validationQuery: SELECT 1 FROM SYSIBM.SYSDUMMY1
-  activemq:
-    active: false
 batch:
   sysCode: REP
   properties:
@@ -29,7 +27,7 @@ application:
     reportInsertCount: 15 #数据批量一次性insert条数
     reportSelectOrDeleteCount: 50 #数据批量一次查询或者删除条数
     reportInsertLongCount: 10 #数据批量一次性insert条数(单条数据字段较多)
-    reportInterfFileEncoding: UTF-8 #上游接口文件编码格式 
+    reportInterfFileEncoding: UTF-8 #上游接口文件编码格式
     reportInterfOneTimeDataCount: 1000 #上游接口解析读取文件处理,单线程处理数据条数
     reportInterfOneTimeSqlLdrDataCount: 200000 #上游接口解析读取文件处理,单次sqlldr处理最大数据条数
     reportInterfOneTimeSqlLdrCommitCount: 10000 #上游接口解析读取文件处理,单次sqlldr处理单次提交数

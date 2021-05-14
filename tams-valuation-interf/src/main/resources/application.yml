@@ -10,8 +10,6 @@ spring:
     active: dev
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-  activemq:
-    systemId: valuation_interf
 application:
   sysCode: VAL
 interf:
@@ -44,25 +42,25 @@ jixu:
 #3 joyinBatch用户系统
   user:
     type: 2
-    
+
 #是否使用和joyin整合后的缩表版本,该参数为临时存在，在尚未完成缩表结构前,测试人员还是测试用原表进行功能测试
 #true 精简锁表版本
 #false 使用原始的jixu表结构
   joyintables:
     flag: true
-    
+
 #主配置文件，配置了这个会优先读取里面的属性覆盖主配置文件的属性
-##目标数据库的类型 
+##目标数据库的类型
 #Oracle=11;
 #MySQL=12;
 #SQLServer=13;
 #DB2=14;
-#Access=15;   
+#Access=15;
   adapter:
     targetDB:
       dbType: 11
 
-##是否同步数据到数据中心 
+##是否同步数据到数据中心
 #0:不同步
 #1:同步数据
 #如果在StartDate和EndDate输入日期,则是同步一段区间内的数据
@@ -70,24 +68,24 @@ jixu:
 #DataCenter.StartDate=2017-07-19
   dataCenter:
     synchFlag: 0
-    startDate: 
-    endDate: 
-    
+    startDate:
+    endDate:
+
 ##使用Hibernate或MyBatis框架
 #0:使用Hibernate框架
 #1:使用MyBatis框架
   frameWork:
     flag: 0
-    
+
 ##0 jixu独立系统
 ##1 jixu调用joyin的主键生成系统
   keyGenerate:
     flag: 0
-    
-#是否需要生成估值表,余额表等报表。外接入其它系统时，不需要几许生成报表 
+
+#是否需要生成估值表,余额表等报表。外接入其它系统时，不需要几许生成报表
   genValreport:
-    flag: false    
----      
+    flag: false
+---
 spring:
   profiles: dev
   datasource:
@@ -157,4 +155,3 @@ base:
     timeBetweenEvictionRunsMillis: 60000   #默认是-1
     removeAbandonedOnBorrow: true    #默认是false
     removeAbandonedOnMaintenance: true   #默认是false
- 

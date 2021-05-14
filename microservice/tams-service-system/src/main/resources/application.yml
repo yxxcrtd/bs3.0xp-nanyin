@@ -12,17 +12,6 @@ spring:
     name: TamsMicroservice #服务名称
   profiles:
     active: dtx
-  activemq:
-    brokerUrl: tcp://localhost:61616
-    user: system
-    active: false
-    password: manager
-    maximumRedeliveries: 10
-    initialRedeliveryDelay: 1
-    backOffMultiplier: 2
-    useExponentialBackOff: true
-    maximumRedeliveryDelay: -1
-    systemId: framework
   thymeleaf:
     cache: false
   jmx:
@@ -39,7 +28,7 @@ spring:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000  
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
   cache:
     type: redis
   redis:
@@ -47,7 +36,7 @@ spring:
     password: joyin!234
     host: 192.168.90.86
     port: 6379
-    timeout: 20000 
+    timeout: 20000
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 #base数据源
@@ -76,11 +65,11 @@ interf:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000    
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
     testWhileIdle: true
 
 stresstest:
-  datasource:    
+  datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT FUNC_PKG_VALIDATION FROM DUAL  #验证时会将查询无结果的连接关闭，重新从连接池中获取连接，循环操作直到获得有效连接
@@ -95,7 +84,7 @@ stresstest:
     testWhileIdle: true  #指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除
     minEvictableIdleTimeMillis: 5000 #连接有资格被驱逐之前必须在池中闲置的最短时间毫秒，默认30分钟。
     testOnBorrow: true  #从连接池中获取连接时是否进行验证，如果检验失败,则从池中去除连接并尝试取出另一个
-    testOnReturn: true  #指明是否在归还到池中前进行检验. 
+    testOnReturn: true  #指明是否在归还到池中前进行检验.
 #wind数据库配置
 wind:
   datasource:
@@ -168,7 +157,7 @@ application:
   reportSelectOrDeleteCount: 50 #数据批量一次查询或者删除条数
   reportSelectOrDeleteCountForShenFen: 100 #数据批量一次查询或者删除条数(身份信息用)
   reportInsertLongCount: 10 #数据批量一次性insert条数(单条数据字段较多)
-  reportInterfFileEncoding: UTF-8 #上游接口文件编码格式 
+  reportInterfFileEncoding: UTF-8 #上游接口文件编码格式
   reportInterfOneTimeDataCount: 1000 #上游接口解析读取文件处理,单线程处理数据条数
   reportInterfOneTimeSqlLdrDataCount: 200000 #上游接口解析读取文件处理,单次sqlldr处理最大数据条数
   reportInterfOneTimeSqlLdrCommitCount: 10000 #上游接口解析读取文件处理,单次sqlldr处理单次提交数
@@ -191,7 +180,7 @@ spring:
 #  redis：
 #    database：0
 #    cluster:
-#      nodes: 192.168.70.104:6379,192.168.70.104:6380,192.168.90.3:6381,192.168.90.3:6382,192.168.90.79:6383,192.168.90.79:6384  
+#      nodes: 192.168.70.104:6379,192.168.70.104:6380,192.168.90.3:6381,192.168.90.3:6382,192.168.90.79:6383,192.168.90.79:6384
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810

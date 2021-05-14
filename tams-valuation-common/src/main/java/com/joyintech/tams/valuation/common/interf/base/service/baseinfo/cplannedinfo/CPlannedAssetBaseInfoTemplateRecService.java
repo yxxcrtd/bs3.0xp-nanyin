@@ -8,8 +8,24 @@
  */
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.cplannedinfo;
 
-import com.joyintech.tams.common.base.entity.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductClass;
+import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.FinProductValuationPara;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.CPlannedAssetBaseInfoValCommonResult;
@@ -19,14 +35,6 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMngMnfBaseInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 计划类资产(货币型)基础信息模板处理 (ValMngMnfBaseInfo) 
@@ -159,11 +167,10 @@ public class CPlannedAssetBaseInfoTemplateRecService {
 //		valFinProduct.setoFinprodType(DictCodeListExt1.金融产品类型_计划类资产.getValue());
 		//本金收益特征= A.本金收益特征
 		valFinProduct.setCapiIncomeFeature(dto.getCapiProfFeature());
-		/** modify by yanya on 20210222 增加发行人字段入库 start**/
-		valFinProduct.setIssuer(dto.getManagerId());
-		/** modify by yanya on 20210222 增加发行人字段入库 end**/
-        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
+
+		//add by liupengfei for 多级法人改造 S
 		valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
+		//add by liupengfei for 多级法人改造 E
 		return valFinProduct;
 	}
 
@@ -211,8 +218,10 @@ public class CPlannedAssetBaseInfoTemplateRecService {
         fdto.setFinprodType(DictCodeListExt1.金融产品类型_计划类资产.getValue());
         // 资产类型
         fdto.setAssetType(dto.getAssetType());
+        /**modify by wujie on 20210510
         // 交易场所
-        //fdto.setTradeMarket(dto.getTradeMarket());
+        fdto.setTradeMarket(dto.getTradeMarket());
+		 **/
         //境内外
         fdto.setBlnArea(dto.getBlnArea());
 		/*add by sunshuaishuai 计划类资产添加收益类型区分 20210315 start*/

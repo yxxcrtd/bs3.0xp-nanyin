@@ -126,6 +126,18 @@ public class CPrdFloatCalcRuleTemplateRecService {
         valFloatCalcRule.setAstVdateType(dto.getAstVluDate());
         // 生效规则 = E.生效规则
         valFloatCalcRule.setActRule(dto.getActRule());
+
+        /**add by wujie on 20210511 start**/
+
+        // 计算基础 = E.计费基础
+        valFloatCalcRule.setBasis(dto.getChargeBase());
+        // 基数类型 = E.计费基数
+        valFloatCalcRule.setBaseType(dto.getChargeBasis());
+        // 基数日期类型 = E.计费基数日期类型
+        valFloatCalcRule.setBaseDateType(dto.getBasisDate());
+
+        /**add by wujie on 20210511 end**/
+
         return valFloatCalcRule;
     }	
 }

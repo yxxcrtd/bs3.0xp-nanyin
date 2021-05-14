@@ -185,8 +185,14 @@ $(function() {
        	object.opType="03";
         Joyin.ajaxJson(basePath + 'invest/product/messageadjust/supplement/FinSupplementPlanChg001/check', object, function(result) {
             Joyin.confirm(result.data, function() {
-                   WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/supplement/FinSupplementPlanChg001/save', object, "FinSupplementPlanChg001_btn_submit");
-               
+                // modify by jiangpeng on 20210507 start
+                // TISHKBS-2071 CLONE - 【付费计划调整】选择产品提交后，提交按钮置灰，切换产品后还是置灰，必须将画面关闭重新打开才能操作
+                   WorkFlow.doSubmitList(basePath + 'invest/product/messageadjust/supplement/FinSupplementPlanChg001/save', object, "FinSupplementPlanChg001_btn_submit"
+                       ,null, function (){
+                           JoyinUtil.disableButton("FinSupplementPlanChg001_btn_submit", false);
+                       }
+                   );
+                // modify by jiangpeng on 20210507 end
            });
        });
     };

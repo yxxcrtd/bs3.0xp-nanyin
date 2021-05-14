@@ -43,13 +43,10 @@ spring:
     active: dev
   application:
     name: valuation-server #服务名称
-    
+
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
-  activemq:
-    systemId: valuation
-    active: false
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 shiro:
@@ -63,7 +60,7 @@ application:
   logo: /image/valuation/logo.png
   logoPA: /image/valuation/bankNameLog.png
   isDimensionRun: true
-  
+
 jixu:
 #用户系统
 #1 jixu用户系统
@@ -71,7 +68,7 @@ jixu:
 #3 joyinBatch用户系统
   user:
     type: 2
-    
+
 eureka:
   instance:
     hostname: ${spring.cloud.client.ipAddress}
@@ -119,7 +116,7 @@ spring:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 shiro:
   casEnable: false
-  
+
 interf:
   hostname: localhost
   port: 28080
@@ -137,8 +134,7 @@ eureka:
 tams:
   properties:
     maxSqlNum: 500
-# 一体化 
+# 一体化
 application:
   batch:
     sysCode: VAL
-    

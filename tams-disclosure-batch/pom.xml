@@ -56,14 +56,14 @@
 	        <artifactId>joyintech-system</artifactId>
             <version>0.0.4</version>
         </dependency>
-        
+
         <dependency>
         	<groupId>com.deepoove</groupId>
 			<artifactId>poi-tl</artifactId>
 			<version>1.6.0-beta1</version>
         </dependency>
     </dependencies>
-    
+
 <!--     <build> -->
 <!--         <finalName>system</finalName> -->
 <!-- 		<plugins> -->
@@ -127,7 +127,7 @@
                   </execution>
                </executions>
             </plugin>
-			
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

@@ -384,14 +384,6 @@
           <if test="finprodMarketId != null and finprodMarketId != ''">
              AND F_INFO_WINDCODE != #{finprodMarketId,jdbcType=VARCHAR}
           </if>
-        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
-        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
-            AND INF_CHINAMUTUALFUNDDESCRIPTION.TRADE_MARKET in
-            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
-                #{currTradeMarket}
-            </foreach>
-        </if>
-        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
     </select>
     <!-- 新建页面资产代码联想下拉框 条件 -->
     <sql id="getFinprodMarketIdWhere">

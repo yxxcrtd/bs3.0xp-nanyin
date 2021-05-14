@@ -12,23 +12,30 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <!--add by wujie on 20210511 start -->
+        <result column="BASE_TYPE" property="baseType" jdbcType="VARCHAR" />
+        <result column="BASE_DATE_TYPE" property="baseDateType" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <!--add by wujie on 20210511 end -->
     </resultMap>
     <sql id="Base_Column_List" >
         CASH_ID CASH_ID, EFF_DATE EFF_DATE, BASE_RULE BASE_RULE, AST_VDATE_TYPE AST_VDATE_TYPE, 
         ACT_RULE ACT_RULE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
-        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, BASE_TYPE BASE_TYPE,
+        BASE_DATE_TYPE BASE_DATE_TYPE, BASIS BASIS
     </sql>
     <insert id="insertBatch" parameterType="java.util.List" >
         insert into FIN_FLOAT_CALC_RULE (CASH_ID, EFF_DATE, BASE_RULE, 
             AST_VDATE_TYPE, ACT_RULE, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME)
+            UPDATE_TIME, BASE_TYPE,BASE_DATE_TYPE, BASIS)
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close=" from dual)">
             #{item.cashId,jdbcType=VARCHAR}, #{item.effDate,jdbcType=DATE}, #{item.baseRule,jdbcType=VARCHAR}, 
             #{item.astVdateType,jdbcType=VARCHAR}, #{item.actRule,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
             #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, 
-            #{item.updateTime,jdbcType=TIMESTAMP}
+            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.baseType,jdbcType=VARCHAR},
+            #{item.baseDateType,jdbcType=VARCHAR}, #{item.basis,jdbcType=VARCHAR}
         </foreach>
     </insert>
     

@@ -182,13 +182,13 @@ $(function() {
      * 画面加载完成
      */
     $(function() {
-        $("#ComComRateSwapInformation001_btn_add").click(function () {
+        $("#ComRateSwapInformation001_btn_add").click(function () {
             Joyin.dialog(JoyinUtil.getLabel("利率互换行情信息新建"),
                 basePath + "common/basicdata/marketdata/rateswapinformation/ComRateSwapInformation002/init",
                 "98%", "98%");
         });
 
-        $("#ComComRateSwapInformation001_btn_del").click(function () {
+        $("#ComRateSwapInformation001_btn_del").click(function () {
             if(table!=null && table!=''){
                 var selArr = table.getAllRows();
             }
@@ -202,13 +202,13 @@ $(function() {
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/rateswapinformation/ComRateSwapInformation001/check', object, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
                     WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/rateswapinformation/ComRateSwapInformation001/delete', object,
-                        "ComComRateSwapInformation001_btn_del", "ComRateSwapInformation002", function () {
+                        "ComRateSwapInformation001_btn_del", "ComRateSwapInformation002", function () {
                             table.reload();
                         });
                 });
             });
         })
-        $("#ComComRateSwapInformation001_btn_edit").click(function () {
+        $("#ComRateSwapInformation001_btn_edit").click(function () {
             if(table!=null && table!=''){
                 var selArr = table.getAllRows();
             }
@@ -238,7 +238,7 @@ $(function() {
         /**
          * 查询按钮
          */
-        $('#ComComRateSwapInformation001_btn_search').click(function () {
+        $('#ComRateSwapInformation001_btn_search').click(function () {
             if ($("#curveCode").val() == ""){
                 Joyin.error(JoyinUtil.getMessage("MST_RateSwapInfo_0004"));
                 return;
@@ -252,7 +252,7 @@ $(function() {
         /**
          * 导出按钮
          */
-        $('#ComComRateSwapInformation001_btn_export').click(function () {
+        $('#ComRateSwapInformation001_btn_export').click(function () {
             if ($("#curveCode").val() == ""){
                 Joyin.error(JoyinUtil.getMessage("MST_RateSwapInfo_0004"));
                 return;

@@ -7,8 +7,7 @@ spring:
     active: yitihua
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-  activemq:
-    active: false
+
 batch:
   sysCode: REP
   properties:
@@ -195,7 +194,7 @@ log:
 logging:
   path: /home/tamsuser/logs/report
 
-  
+
 ---
 spring:
   profiles: xppocoracle
@@ -219,8 +218,8 @@ log:
   level: info
 logging:
   path: /home/tamsuser/logs/report-batch
-  
-  
+
+
 ---
 spring:
   profiles: xppocdb2
@@ -245,7 +244,7 @@ shiro:
 log:
   path: /home/tamsuser/logs/report-batch
   level: info
-  
+
 ---
 spring:
   profiles: xppocoracleT
@@ -269,7 +268,7 @@ log:
   level: info
 logging:
   path: /home/tamsuser/logs/report-batch
-  
+
 ---
 spring:
   profiles: yitihua
@@ -309,4 +308,3 @@ log:
   level: info
 logging:
   path: /home/tamsuser/logs/report-batch
-  

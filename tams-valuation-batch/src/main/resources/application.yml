@@ -7,9 +7,6 @@ spring:
     active: yitihua
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-  activemq:
-    systemId: valuation_batch
-    active: false
 application:
   sysCode: VAL
 
@@ -21,7 +18,7 @@ batch:
     maxJobPoolSize: 10 #job线程池
     maxExeUser: 2 #最大并发用户数
     maxThreadPerUser: 5 #任务并发数
-    sleeptime: 10000 #轮询时间 
+    sleeptime: 10000 #轮询时间
     maxSqlNum: 50 #批量提交数
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -72,15 +69,6 @@ jixu:
   adapter:
     targetDB:
       dbType: 11
-
-  ##activemq数据源配置
-  activeMQ:
-    serverURL: localhost
-    serverPort: 61616
-    username: admin
-    password: admin
-    maxCon: 100
-    defaultDestinationName: jixuqueue
 
   ##是否同步数据到数据中心
   #0:不同步

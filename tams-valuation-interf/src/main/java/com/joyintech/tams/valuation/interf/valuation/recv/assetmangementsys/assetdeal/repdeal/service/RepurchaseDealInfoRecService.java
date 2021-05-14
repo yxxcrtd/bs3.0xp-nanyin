@@ -29,8 +29,6 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.assetdeal.repdeal.RepurchaseDealTemplateRecService;
 import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.assetdeal.repdeal.dto.RepurchaseDealInfoProcessorResult;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**
  * 批处理启动文件接收批处理 对回购交易信息接口文件系列机型处理，供给Writer使用
@@ -93,6 +91,11 @@ public class RepurchaseDealInfoRecService {
             ps.add(DictCodeListExt3.交易方向_投资端_提前终止.getValue());
             ps.add(DictCodeListExt3.交易方向_投资端_逾期返售.getValue());
             /** modify by yanya on 20191111 增加提前终止、逾期返售 end**/
+
+            /**add by wujie on 20210510 start**/
+            ps.add(DictCodeList.交易方向_到期续做.getValue());
+            /**add by wujie on 20210510 end**/
+
             paramMap.put("pslist", ps);
 
             /**add by wujie on 20210506 start**/
