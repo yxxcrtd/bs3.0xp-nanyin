@@ -434,6 +434,9 @@
 	           <if test="channelId !=null and channelId !=''">
 	            and prd1.finprod_market_id = #{channelId}
 	           </if>
+				<if test="channelId ==null or channelId ==''">
+					and TPD.chl_id is null
+				</if>
 	           <if test="portfolioIdList!=null and portfolioIdList.size()>0">
 	           	and tpa.portfolio_id  in
 		            <foreach collection="portfolioIdList" item="item" open="(" separator="," close=")">
