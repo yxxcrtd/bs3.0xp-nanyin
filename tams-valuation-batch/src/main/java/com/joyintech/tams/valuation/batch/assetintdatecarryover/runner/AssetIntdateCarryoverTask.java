@@ -31,10 +31,8 @@ import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.processor.AssetIntdateCarryoverDelProcessor;
-import com.joyintech.tams.valuation.batch.assetintdatecarryover.processor.AssetIntdateCarryoverExecProcessor;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.processor.AssetIntdateCarryoverProcessor;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.reader.AssetIntdateCarryoverDelReader;
-import com.joyintech.tams.valuation.batch.assetintdatecarryover.reader.AssetIntdateCarryoverExecReader;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.reader.AssetIntdateCarryoverReader;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.writer.AssetIntdateCarryoverDelWriter;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.writer.AssetIntdateCarryoverWriter;
@@ -83,43 +81,23 @@ public class AssetIntdateCarryoverTask extends BatchBaseService {
      */
     @Autowired
     private AssetIntdateCarryoverDelWriter step1Writer;
-
-
     /**
      * step2Reader
      */
     @Autowired
-    private AssetIntdateCarryoverExecReader step2Reader;
+    private AssetIntdateCarryoverReader step2Reader;
 
     /**
      * step2Processor
      */
     @Autowired
-    private AssetIntdateCarryoverExecProcessor step2Processor;
+    private AssetIntdateCarryoverProcessor step2Processor;
 
     /**
      * step2Writer
      */
     @Autowired
     private AssetIntdateCarryoverWriter step2Writer;
-
-    /**
-     * step2Reader
-     */
-    @Autowired
-    private AssetIntdateCarryoverReader step3Reader;
-
-    /**
-     * step2Processor
-     */
-    @Autowired
-    private AssetIntdateCarryoverProcessor step3Processor;
-
-    /**
-     * step2Writer
-     */
-    @Autowired
-    private AssetIntdateCarryoverWriter step3Writer;
     
     @Autowired
     private BookCommonLogic bookCommonLogic;
@@ -156,22 +134,15 @@ public class AssetIntdateCarryoverTask extends BatchBaseService {
         step1Reader.setParams(params);
         step1Processor.setParams(params);
         step1Writer.setParams(params);
-
-        //行权
+        
         step2Reader.setParams(params);
         step2Processor.setParams(params);
         step2Writer.setParams(params);
 
-        //其他类：收息等
-        step3Reader.setParams(params);
-        step3Processor.setParams(params);
-        step3Writer.setParams(params);
-
         return batchBuilder.init(this).batch("step1", (BaseReader)step1Reader,
             (BaseProcessor)step1Processor, (BaseWriter)step1Writer).batch("step2",
                 (BaseReader)step2Reader, (BaseProcessor)step2Processor,
-                (BaseWriter)step2Writer).batch("step3", (BaseReader)step3Reader,
-                (BaseProcessor)step3Processor, (BaseWriter)step3Writer).builder(
+                (BaseWriter)step2Writer).builder(
                     this.getBatchTask().getBeanName() + this.getBatchTask().getTaskId()).run();
     }
 
