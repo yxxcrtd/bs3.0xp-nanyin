@@ -169,11 +169,11 @@ where
 		</foreach>
 	</update>
 	<delete id="deleteByKeyList">
-		delete 
+		delete from
 		CHB_INVESTHOLD_INFO cii
 		where
 		<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY,STATUS) in(" separator="," close=")">
-			(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy},#{item.statusCode})
+			(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy},#{item.statusCode})
 		</foreach>
 	</delete>
 	<insert id="insertChbHoldInfoData" >
