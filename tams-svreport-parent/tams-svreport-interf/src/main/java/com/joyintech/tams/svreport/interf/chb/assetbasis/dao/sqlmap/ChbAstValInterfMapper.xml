@@ -46,6 +46,8 @@
 			</if>
 		</where>
 	</delete>
+	<select id="checkTdyValData" parameterType="map" resultType="java.lang.Integer"></select>
+	<insert id="insertTdyInfo" parameterType="map" ></insert>
 	<select id="queryAssetValueInfoLastList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue"></select>
 	<select id="queryAssetValueInfoList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">
 		with price as (

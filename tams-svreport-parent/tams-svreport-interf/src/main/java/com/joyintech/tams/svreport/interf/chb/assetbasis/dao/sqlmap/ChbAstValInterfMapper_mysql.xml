@@ -20,7 +20,7 @@
 		delete  from CHB_AST_VAL c
 		<where>
 			<if test="valDate != null and valDate != ''">
-				STR_TO_DATE(c.VAL_DATE,'%Y-%m-%d') = #{valDate,jdbcType=VARCHAR}
+				DATE_FORMAT(c.VAL_DATE,'%Y-%m-%d') = #{valDate,jdbcType=VARCHAR}
 			</if>
 			<if test="status != null and status!= ''">
 				and c.STATUS  = #{status,jdbcType=VARCHAR}
@@ -47,25 +47,38 @@
 		</where>
 	</delete>
 
-	<select id="queryAssetValueInfoLastList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">
-		SELECT
-			f_guid() AS valId,
-			ISSUE_PARTY_ID AS issuePartyId,
-			ASSET_CODE AS assetCode,
-			NOW() AS valDate,
-			UNIT_VAL_NET AS unitValNet,
-			UNIT_VAL_TOTAL AS unitValTotal,
-			REMARK AS remark,
-			DATASOURCE AS datasource,
-			STATUS AS status,
-			WORKFLOW_ID AS workflowId,
-			ORG_CODE AS orgCode,
-			DEPT_CODE AS deptCode
-		FROM
-			CHB_AST_VAL
-		WHERE
-			DATE_FORMAT(VAL_DATE,'%Y-%m-%d') = (SELECT max(DATE_FORMAT(VAL_DATE,'%Y-%m-%d'))  FROM	CHB_AST_VAL	ORDER BY VAL_DATE)
+	<select id="checkTdyValData" parameterType="map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM CHB_AST_VAL WHERE VAL_DATE = #{generateDate,jdbcType=VARCHAR}
 	</select>
+
+	<insert id="insertTdyInfo" parameterType="map" >
+		insert into CHB_AST_VAL ( VAL_ID, ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET, UNIT_VAL_TOTAL, REMARK,
+		DATASOURCE, STATUS, WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME
+		)
+		SELECT
+		F_GUID(),
+		ISSUE_PARTY_ID,
+		ASSET_CODE,
+		STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d') AS VAL_DATE,
+		UNIT_VAL_NET,
+		UNIT_VAL_TOTAL,
+		REMARK,
+		DATASOURCE,
+		STATUS,
+		WORKFLOW_ID,
+		ORG_CODE,
+		DEPT_CODE,
+		CREATE_USER,
+		STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d') AS CREATE_TIME,
+		UPDATE_USER,
+		STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d') AS UPDATE_TIME
+		FROM CHB_AST_VAL T
+		WHERE T.VAL_DATE = (SELECT MAX(VAL_DATE)
+		                        FROM CHB_AST_VAL
+		                        WHERE VAL_DATE &lt;= #{generateDate,jdbcType=VARCHAR}
+		                        AND STATUS = 'E')
+	</insert>
 
 	<select id="queryAssetValueInfoList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">
 		with price as (

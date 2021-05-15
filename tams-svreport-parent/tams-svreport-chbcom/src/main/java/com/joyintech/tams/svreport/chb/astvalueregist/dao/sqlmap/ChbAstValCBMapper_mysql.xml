@@ -408,4 +408,10 @@
       #{updateUser,jdbcType=VARCHAR}, now())
   </insert>
 
+	<select id="queryUpdateDateFromVal" resultType="java.util.Date">
+		SELECT DISTINCT VAL_DATE
+		FROM CHB_AST_VAL
+		WHERE DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
+		ORDER BY VAL_DATE
+	</select>
 </mapper>

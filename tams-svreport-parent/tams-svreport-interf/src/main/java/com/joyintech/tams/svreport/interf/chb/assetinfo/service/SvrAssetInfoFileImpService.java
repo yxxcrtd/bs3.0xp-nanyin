@@ -1,16 +1,25 @@
 package com.joyintech.tams.svreport.interf.chb.assetinfo.service;
 
-import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.dao.BaseMapper;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
+import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.interf.common.constant.InterfConstant;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
+import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper;
+import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -22,27 +31,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfDefine;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.base.dao.BaseMapper;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.report.interf.common.constant.InterfConstant;
-import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
-import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper;
-import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 功能:资产要素文件解析方式入库
@@ -343,10 +340,8 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                 else if ("java.util.Date".equals(type.getTypeName())) {
                     if (value != null&&""!=value) {
                         try {
-//                        	System.out.println(string);
-//                        	System.out.println(value);
                             field.set(chbAssetInfo, DateUtil.parse(value));
-                        } catch ( IllegalAccessException e) {
+                        } catch (IllegalAccessException e) {
                             logger.error(e.getMessage(),e);
                             return entities;
                         }
@@ -354,7 +349,7 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                 }
                 else {
                     try {
-                        field.set(chbAssetInfo, (value == null || "".equals(value)) ? null : value);
+                        field.set(chbAssetInfo,value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return entities;
