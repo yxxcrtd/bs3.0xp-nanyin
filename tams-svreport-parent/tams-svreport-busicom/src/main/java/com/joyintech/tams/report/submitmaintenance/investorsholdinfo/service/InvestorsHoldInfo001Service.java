@@ -3095,7 +3095,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 								key = info001Dto.getRegistBankCode() + GlobalConstant.UNDER_LINE
 										+ info001Dto.getIndentifyMark() + GlobalConstant.UNDER_LINE
 										// +info001Dto.getPrdRegistCode()+GlobalConstant.UNDER_LINE+info001Dto.getPrdRegistCode()
-										+prdresistCodeList.get(0).get("REGCODE")  + GlobalConstant.UNDER_LINE + info001Dto.getCcy()
+										+prdresistCodeList.get(0).get("regCode")  + GlobalConstant.UNDER_LINE + info001Dto.getCcy()
 										+ GlobalConstant.UNDER_LINE + DateUtil.format(info001Dto.getHoldDate());
 								if (allHoldInfoDataMap.containsKey(key)) {
 									// excelNumList.add(info001Dto.getRowId());
