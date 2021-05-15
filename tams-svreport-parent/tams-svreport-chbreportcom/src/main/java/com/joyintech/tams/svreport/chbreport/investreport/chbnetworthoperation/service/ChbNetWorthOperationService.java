@@ -1,8 +1,11 @@
 package com.joyintech.tams.svreport.chbreport.investreport.chbnetworthoperation.service;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.report.interf.common.util.FileUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.chbreport.investreport.chbnetworthoperation.dao.ChbNetWorthOperationMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.chbnetworthoperation.dto.ChbNetWorthInfoDto;
@@ -35,7 +38,7 @@ public class ChbNetWorthOperationService extends CommonExportService<ChbNetWorth
     public File createExcel(Map<String, Object> map, String reportName) {
         List<ChbNetWorthInfoExportDto> listFileDto = new ArrayList<ChbNetWorthInfoExportDto>();
         listFileDto.add(this.createData(map));
-        File file = new File(listFileDto.get(0).getFilePath());
+        File file = new File(listFileDto.get(0).getFilePath(),listFileDto.get(0).getFileName());
         return file;
     }
 
@@ -48,7 +51,7 @@ public class ChbNetWorthOperationService extends CommonExportService<ChbNetWorth
     public ResponseEntity<byte[]> exportExcel(Map<String, Object> map, String reportName) {
         List<ChbNetWorthInfoExportDto> listFileDto = new ArrayList<ChbNetWorthInfoExportDto>();
         listFileDto.add(this.createData(map));
-        File file = new File(listFileDto.get(0).getFilePath());
+        File file = new File(listFileDto.get(0).getFilePath(),listFileDto.get(0).getFileName());
         return ExportUtil.export(listFileDto.get(0).getFileName(), file, true);
     }
 
@@ -62,7 +65,9 @@ public class ChbNetWorthOperationService extends CommonExportService<ChbNetWorth
             ChbNetWorthInfoDto chbNetWorthInfoDto = this.qryChbInvestPrdInfo(param);
             List<ChbNetWorthInfoDto> dtoList = chbNetWorthOperationMapper.getNetWorthData(param);
             // 设置文件信息
-            String srcFilePath = FileNameUtil.getTplFile("chbreport/chbnetworthoperation/ChbNetWorthOperationMapper.xls");
+           String srcFilePath = FileNameUtil.getTplFile("chbreport/chbnetworthoperation");
+            // 存放地址
+            String depositfilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String fileName = ChbInvestReportUtil.generateFileNameForReport(DictCodeListExt3.中债披露报告_产品净值披露.getValue(),
                     chbNetWorthInfoDto.getProdName(), chbNetWorthInfoDto.getProdId(), chbNetWorthInfoDto.getCustomerType(),
                     chbNetWorthInfoDto.getEndDate());
@@ -76,6 +81,7 @@ public class ChbNetWorthOperationService extends CommonExportService<ChbNetWorth
             mapinfo.put("title", chbNetWorthInfoDto.getProdName());
             mapinfo.put("dtoList", dtoList);
             TisUtil.createFile(mapinfo, exceltemplate, fileName);
+            FileUtil.removeFileToDirectory(depositfilePath+"/"+fileName+".xls",srcFilePath);
         }
         return exportFileDto;
     }
