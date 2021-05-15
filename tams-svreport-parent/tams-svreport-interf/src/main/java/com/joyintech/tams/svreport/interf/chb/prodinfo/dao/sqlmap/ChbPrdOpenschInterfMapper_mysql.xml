@@ -41,8 +41,8 @@
       #{dto.issuePartyId,jdbcType=VARCHAR}, #{dto.planType,jdbcType=VARCHAR}, #{dto.openStart,jdbcType=TIMESTAMP}, 
       #{dto.openEnd,jdbcType=TIMESTAMP}, #{dto.openVdate,jdbcType=TIMESTAMP}, #{dto.orgCode,jdbcType=VARCHAR}, 
       #{dto.deptCode,jdbcType=VARCHAR}, #{dto.dataSource,jdbcType=VARCHAR}, #{dto.status,jdbcType=VARCHAR}, 
-      #{dto.revDate,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR}, NOW(),
-      #{dto.createUser,jdbcType=VARCHAR}, NOW(), #{dto.remark,jdbcType=VARCHAR}
+      #{dto.revDate,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=VARCHAR},
+      #{dto.createUser,jdbcType=VARCHAR}, #{dto.createTime,jdbcType=VARCHAR}, #{dto.remark,jdbcType=VARCHAR}
       from dual
     </foreach>
   </insert>
@@ -60,8 +60,8 @@
       #{issuePartyId,jdbcType=VARCHAR}, #{planType,jdbcType=VARCHAR}, #{openStart,jdbcType=TIMESTAMP}, 
       #{openEnd,jdbcType=TIMESTAMP}, #{openVdate,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, 
       #{deptCode,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-      #{revDate,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, NOW(),
-      #{createUser,jdbcType=VARCHAR}, NOW(), #{remark,jdbcType=VARCHAR}
+      #{revDate,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR},
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
     )
   </insert>
   

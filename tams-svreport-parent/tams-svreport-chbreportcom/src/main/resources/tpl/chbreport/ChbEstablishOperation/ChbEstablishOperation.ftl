@@ -15,10 +15,12 @@
         <pkg:xmlData>
             <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
                 <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/>
+                <Relationship Id="rId7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>
                 <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
                 <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
-                <Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>
-                <Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>
+                <Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>
+                <Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/endnotes" Target="endnotes.xml"/>
+                <Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes" Target="footnotes.xml"/>
             </Relationships>
         </pkg:xmlData>
     </pkg:part>
@@ -329,7 +331,7 @@
                             </w:rPr>
                         </w:pPr>
                     </w:p>
-                    <w:p w:rsidR="0006224C" w:rsidRPr="00241BF9" w:rsidRDefault="0006224C" w:rsidP="0006224C">
+                    <w:p w:rsidR="004C5300" w:rsidRPr="00241BF9" w:rsidRDefault="0006224C" w:rsidP="004C5300">
                         <w:pPr>
                             <w:snapToGrid w:val="0"/>
                             <w:spacing w:line="560" w:lineRule="exact"/>
@@ -345,17 +347,19 @@
                                 <w:sz w:val="30"/>
                                 <w:szCs w:val="30"/>
                             </w:rPr>
-                            <w:t xml:space="preserve">                                    </w:t>
+                            <w:t xml:space="preserve">    </w:t>
                         </w:r>
-                        <w:r w:rsidRPr="00241BF9">
+                        <w:r w:rsidR="00F95A06">
                             <w:rPr>
-                                <w:rFonts w:ascii="微软简仿宋" w:eastAsia="微软简仿宋" w:hint="eastAsia"/>
+                                <w:rFonts w:ascii="宋体" w:hAnsi="宋体" w:cs="宋体" w:hint="eastAsia"/>
                                 <w:sz w:val="30"/>
                                 <w:szCs w:val="30"/>
                             </w:rPr>
-                            <w:t xml:space="preserve">    </w:t>
+                            <w:t xml:space="preserve">                           </w:t>
                         </w:r>
-                        <w:r w:rsidRPr="00241BF9">
+                        <w:bookmarkStart w:id="0" w:name="_GoBack"/>
+                        <w:bookmarkEnd w:id="0"/>
+                        <w:r w:rsidR="004C5300" w:rsidRPr="00241BF9">
                             <w:rPr>
                                 <w:rFonts w:ascii="微软简仿宋" w:eastAsia="微软简仿宋" w:hint="eastAsia"/>
                                 <w:color w:val="8496B0" w:themeColor="text2" w:themeTint="99"/>
@@ -365,7 +369,11 @@
                             <w:t>${prdInfo.managerFullName!}</w:t>
                         </w:r>
                     </w:p>
-                    <w:p w:rsidR="006505EA" w:rsidRPr="0006224C" w:rsidRDefault="0006224C" w:rsidP="0006224C">
+                    <w:p w:rsidR="006505EA" w:rsidRPr="004C5300" w:rsidRDefault="004C5300" w:rsidP="004C5300">
+                        <w:pPr>
+                            <w:snapToGrid w:val="0"/>
+                            <w:spacing w:line="560" w:lineRule="exact"/>
+                        </w:pPr>
                         <w:r w:rsidRPr="00241BF9">
                             <w:rPr>
                                 <w:rFonts w:ascii="宋体" w:hAnsi="宋体" w:cs="宋体" w:hint="eastAsia"/>
@@ -383,10 +391,8 @@
                             </w:rPr>
                             <w:t>${prdInfo.revealDate!}</w:t>
                         </w:r>
-                        <w:bookmarkStart w:id="0" w:name="_GoBack"/>
-                        <w:bookmarkEnd w:id="0"/>
                     </w:p>
-                    <w:sectPr w:rsidR="006505EA" w:rsidRPr="0006224C">
+                    <w:sectPr w:rsidR="006505EA" w:rsidRPr="004C5300">
                         <w:pgSz w:w="11906" w:h="16838"/>
                         <w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800" w:header="851" w:footer="992" w:gutter="0"/>
                         <w:cols w:space="425"/>
@@ -394,6 +400,58 @@
                     </w:sectPr>
                 </w:body>
             </w:document>
+        </pkg:xmlData>
+    </pkg:part>
+    <pkg:part pkg:name="/word/footnotes.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml">
+        <pkg:xmlData>
+            <w:footnotes xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
+                <w:footnote w:type="separator" w:id="-1">
+                    <w:p w:rsidR="00665FDA" w:rsidRDefault="00665FDA" w:rsidP="00F95A06">
+                        <w:pPr>
+                            <w:spacing w:line="240" w:lineRule="auto"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:separator/>
+                        </w:r>
+                    </w:p>
+                </w:footnote>
+                <w:footnote w:type="continuationSeparator" w:id="0">
+                    <w:p w:rsidR="00665FDA" w:rsidRDefault="00665FDA" w:rsidP="00F95A06">
+                        <w:pPr>
+                            <w:spacing w:line="240" w:lineRule="auto"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:continuationSeparator/>
+                        </w:r>
+                    </w:p>
+                </w:footnote>
+            </w:footnotes>
+        </pkg:xmlData>
+    </pkg:part>
+    <pkg:part pkg:name="/word/endnotes.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml">
+        <pkg:xmlData>
+            <w:endnotes xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
+                <w:endnote w:type="separator" w:id="-1">
+                    <w:p w:rsidR="00665FDA" w:rsidRDefault="00665FDA" w:rsidP="00F95A06">
+                        <w:pPr>
+                            <w:spacing w:line="240" w:lineRule="auto"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:separator/>
+                        </w:r>
+                    </w:p>
+                </w:endnote>
+                <w:endnote w:type="continuationSeparator" w:id="0">
+                    <w:p w:rsidR="00665FDA" w:rsidRDefault="00665FDA" w:rsidP="00F95A06">
+                        <w:pPr>
+                            <w:spacing w:line="240" w:lineRule="auto"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:continuationSeparator/>
+                        </w:r>
+                    </w:p>
+                </w:endnote>
+            </w:endnotes>
         </pkg:xmlData>
     </pkg:part>
     <pkg:part pkg:name="/word/theme/theme1.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.theme+xml">
@@ -669,6 +727,17 @@
                 <w:displayHorizontalDrawingGridEvery w:val="0"/>
                 <w:displayVerticalDrawingGridEvery w:val="2"/>
                 <w:characterSpacingControl w:val="compressPunctuation"/>
+                <w:hdrShapeDefaults>
+                    <o:shapedefaults v:ext="edit" spidmax="2049"/>
+                </w:hdrShapeDefaults>
+                <w:footnotePr>
+                    <w:footnote w:id="-1"/>
+                    <w:footnote w:id="0"/>
+                </w:footnotePr>
+                <w:endnotePr>
+                    <w:endnote w:id="-1"/>
+                    <w:endnote w:id="0"/>
+                </w:endnotePr>
                 <w:compat>
                     <w:spaceForUL/>
                     <w:balanceSingleByteDoubleByteWidth/>
@@ -687,7 +756,10 @@
                     <w:rsidRoot w:val="0006224C"/>
                     <w:rsid w:val="0006224C"/>
                     <w:rsid w:val="00285708"/>
+                    <w:rsid w:val="004C5300"/>
+                    <w:rsid w:val="00665FDA"/>
                     <w:rsid w:val="00CE270D"/>
+                    <w:rsid w:val="00F95A06"/>
                 </w:rsids>
                 <m:mathPr>
                     <m:mathFont m:val="Cambria Math"/>
@@ -705,7 +777,7 @@
                 <w:themeFontLang w:val="en-US" w:eastAsia="zh-CN"/>
                 <w:clrSchemeMapping w:bg1="light1" w:t1="dark1" w:bg2="light2" w:t2="dark2" w:accent1="accent1" w:accent2="accent2" w:accent3="accent3" w:accent4="accent4" w:accent5="accent5" w:accent6="accent6" w:hyperlink="hyperlink" w:followedHyperlink="followedHyperlink"/>
                 <w:shapeDefaults>
-                    <o:shapedefaults v:ext="edit" spidmax="1026"/>
+                    <o:shapedefaults v:ext="edit" spidmax="2049"/>
                     <o:shapelayout v:ext="edit">
                         <o:idmap v:ext="edit" data="1"/>
                     </o:shapelayout>
@@ -717,96 +789,12 @@
             </w:settings>
         </pkg:xmlData>
     </pkg:part>
-    <pkg:part pkg:name="/word/fontTable.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml">
-        <pkg:xmlData>
-            <w:fonts xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" mc:Ignorable="w14 w15">
-                <w:font w:name="Calibri">
-                    <w:panose1 w:val="020F0502020204030204"/>
-                    <w:charset w:val="00"/>
-                    <w:family w:val="swiss"/>
-                    <w:pitch w:val="variable"/>
-                    <w:sig w:usb0="E4002EFF" w:usb1="C000247B" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
-                </w:font>
-                <w:font w:name="宋体">
-                    <w:altName w:val="SimSun"/>
-                    <w:panose1 w:val="02010600030101010101"/>
-                    <w:charset w:val="86"/>
-                    <w:family w:val="auto"/>
-                    <w:pitch w:val="variable"/>
-                    <w:sig w:usb0="00000003" w:usb1="288F0000" w:usb2="00000016" w:usb3="00000000" w:csb0="00040001" w:csb1="00000000"/>
-                </w:font>
-                <w:font w:name="Times New Roman">
-                    <w:panose1 w:val="02020603050405020304"/>
-                    <w:charset w:val="00"/>
-                    <w:family w:val="roman"/>
-                    <w:pitch w:val="variable"/>
-                    <w:sig w:usb0="E0002EFF" w:usb1="C000785B" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
-                </w:font>
-                <w:font w:name="仿宋_GB2312">
-                    <w:altName w:val="仿宋"/>
-                    <w:charset w:val="86"/>
-                    <w:family w:val="auto"/>
-                    <w:pitch w:val="default"/>
-                    <w:sig w:usb0="00000001" w:usb1="080E0000" w:usb2="00000010" w:usb3="00000000" w:csb0="00040000" w:csb1="00000000"/>
-                </w:font>
-                <w:font w:name="微软简标宋">
-                    <w:altName w:val="Times New Roman"/>
-                    <w:charset w:val="00"/>
-                    <w:family w:val="auto"/>
-                    <w:pitch w:val="default"/>
-                </w:font>
-                <w:font w:name="黑体">
-                    <w:altName w:val="SimHei"/>
-                    <w:panose1 w:val="02010609060101010101"/>
-                    <w:charset w:val="86"/>
-                    <w:family w:val="modern"/>
-                    <w:pitch w:val="fixed"/>
-                    <w:sig w:usb0="800002BF" w:usb1="38CF7CFA" w:usb2="00000016" w:usb3="00000000" w:csb0="00040001" w:csb1="00000000"/>
-                </w:font>
-                <w:font w:name="微软简仿宋">
-                    <w:altName w:val="Times New Roman"/>
-                    <w:charset w:val="00"/>
-                    <w:family w:val="auto"/>
-                    <w:pitch w:val="default"/>
-                </w:font>
-                <w:font w:name="Calibri Light">
-                    <w:panose1 w:val="020F0302020204030204"/>
-                    <w:charset w:val="00"/>
-                    <w:family w:val="swiss"/>
-                    <w:pitch w:val="variable"/>
-                    <w:sig w:usb0="E4002EFF" w:usb1="C000247B" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
-                </w:font>
-            </w:fonts>
-        </pkg:xmlData>
-    </pkg:part>
     <pkg:part pkg:name="/word/webSettings.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml">
         <pkg:xmlData>
             <w:webSettings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" mc:Ignorable="w14 w15">
                 <w:optimizeForBrowser/>
                 <w:allowPNG/>
             </w:webSettings>
-        </pkg:xmlData>
-    </pkg:part>
-    <pkg:part pkg:name="/docProps/app.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.extended-properties+xml" pkg:padding="256">
-        <pkg:xmlData>
-            <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
-                <Template>Normal.dotm</Template>
-                <TotalTime>1</TotalTime>
-                <Pages>1</Pages>
-                <Words>40</Words>
-                <Characters>228</Characters>
-                <Application>Microsoft Office Word</Application>
-                <DocSecurity>0</DocSecurity>
-                <Lines>1</Lines>
-                <Paragraphs>1</Paragraphs>
-                <ScaleCrop>false</ScaleCrop>
-                <Company>P R C</Company>
-                <LinksUpToDate>false</LinksUpToDate>
-                <CharactersWithSpaces>267</CharactersWithSpaces>
-                <SharedDoc>false</SharedDoc>
-                <HyperlinksChanged>false</HyperlinksChanged>
-                <AppVersion>15.0000</AppVersion>
-            </Properties>
         </pkg:xmlData>
     </pkg:part>
     <pkg:part pkg:name="/docProps/core.xml" pkg:contentType="application/vnd.openxmlformats-package.core-properties+xml" pkg:padding="256">
@@ -818,9 +806,9 @@
                 <cp:keywords/>
                 <dc:description/>
                 <cp:lastModifiedBy>Windows User</cp:lastModifiedBy>
-                <cp:revision>1</cp:revision>
+                <cp:revision>3</cp:revision>
                 <dcterms:created xsi:type="dcterms:W3CDTF">2021-05-11T12:32:00Z</dcterms:created>
-                <dcterms:modified xsi:type="dcterms:W3CDTF">2021-05-11T12:33:00Z</dcterms:modified>
+                <dcterms:modified xsi:type="dcterms:W3CDTF">2021-05-15T06:57:00Z</dcterms:modified>
             </cp:coreProperties>
         </pkg:xmlData>
     </pkg:part>
@@ -1268,7 +1256,7 @@
                 <w:style w:type="paragraph" w:styleId="a4">
                     <w:name w:val="annotation text"/>
                     <w:basedOn w:val="a"/>
-                    <w:link w:val="Char4"/>
+                    <w:link w:val="Char1"/>
                     <w:uiPriority w:val="99"/>
                     <w:unhideWhenUsed/>
                     <w:qFormat/>
@@ -1286,8 +1274,8 @@
                         <w:szCs w:val="21"/>
                     </w:rPr>
                 </w:style>
-                <w:style w:type="character" w:customStyle="1" w:styleId="Char4">
-                    <w:name w:val="批注文字 Char4"/>
+                <w:style w:type="character" w:customStyle="1" w:styleId="Char1">
+                    <w:name w:val="批注文字 Char1"/>
                     <w:basedOn w:val="a0"/>
                     <w:link w:val="a4"/>
                     <w:uiPriority w:val="99"/>
@@ -1328,7 +1316,169 @@
                         <w:szCs w:val="18"/>
                     </w:rPr>
                 </w:style>
+                <w:style w:type="character" w:customStyle="1" w:styleId="Char4">
+                    <w:name w:val="批注文字 Char4"/>
+                    <w:basedOn w:val="a0"/>
+                    <w:uiPriority w:val="99"/>
+                    <w:qFormat/>
+                    <w:rsid w:val="004C5300"/>
+                    <w:rPr>
+                        <w:rFonts w:ascii="Calibri" w:eastAsia="仿宋_GB2312" w:hAnsi="Calibri" w:cs="Times New Roman"/>
+                        <w:sz w:val="24"/>
+                        <w:szCs w:val="21"/>
+                    </w:rPr>
+                </w:style>
+                <w:style w:type="paragraph" w:styleId="a6">
+                    <w:name w:val="header"/>
+                    <w:basedOn w:val="a"/>
+                    <w:link w:val="Char2"/>
+                    <w:uiPriority w:val="99"/>
+                    <w:unhideWhenUsed/>
+                    <w:rsid w:val="00F95A06"/>
+                    <w:pPr>
+                        <w:pBdr>
+                            <w:bottom w:val="single" w:sz="6" w:space="1" w:color="auto"/>
+                        </w:pBdr>
+                        <w:tabs>
+                            <w:tab w:val="center" w:pos="4153"/>
+                            <w:tab w:val="right" w:pos="8306"/>
+                        </w:tabs>
+                        <w:snapToGrid w:val="0"/>
+                        <w:jc w:val="center"/>
+                    </w:pPr>
+                    <w:rPr>
+                        <w:sz w:val="18"/>
+                        <w:szCs w:val="18"/>
+                    </w:rPr>
+                </w:style>
+                <w:style w:type="character" w:customStyle="1" w:styleId="Char2">
+                    <w:name w:val="页眉 Char"/>
+                    <w:basedOn w:val="a0"/>
+                    <w:link w:val="a6"/>
+                    <w:uiPriority w:val="99"/>
+                    <w:rsid w:val="00F95A06"/>
+                    <w:rPr>
+                        <w:rFonts w:ascii="Calibri" w:eastAsia="仿宋_GB2312" w:hAnsi="Calibri" w:cs="Times New Roman"/>
+                        <w:sz w:val="18"/>
+                        <w:szCs w:val="18"/>
+                    </w:rPr>
+                </w:style>
+                <w:style w:type="paragraph" w:styleId="a7">
+                    <w:name w:val="footer"/>
+                    <w:basedOn w:val="a"/>
+                    <w:link w:val="Char3"/>
+                    <w:uiPriority w:val="99"/>
+                    <w:unhideWhenUsed/>
+                    <w:rsid w:val="00F95A06"/>
+                    <w:pPr>
+                        <w:tabs>
+                            <w:tab w:val="center" w:pos="4153"/>
+                            <w:tab w:val="right" w:pos="8306"/>
+                        </w:tabs>
+                        <w:snapToGrid w:val="0"/>
+                    </w:pPr>
+                    <w:rPr>
+                        <w:sz w:val="18"/>
+                        <w:szCs w:val="18"/>
+                    </w:rPr>
+                </w:style>
+                <w:style w:type="character" w:customStyle="1" w:styleId="Char3">
+                    <w:name w:val="页脚 Char"/>
+                    <w:basedOn w:val="a0"/>
+                    <w:link w:val="a7"/>
+                    <w:uiPriority w:val="99"/>
+                    <w:rsid w:val="00F95A06"/>
+                    <w:rPr>
+                        <w:rFonts w:ascii="Calibri" w:eastAsia="仿宋_GB2312" w:hAnsi="Calibri" w:cs="Times New Roman"/>
+                        <w:sz w:val="18"/>
+                        <w:szCs w:val="18"/>
+                    </w:rPr>
+                </w:style>
             </w:styles>
+        </pkg:xmlData>
+    </pkg:part>
+    <pkg:part pkg:name="/word/fontTable.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml">
+        <pkg:xmlData>
+            <w:fonts xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" mc:Ignorable="w14 w15">
+                <w:font w:name="Calibri">
+                    <w:panose1 w:val="020F0502020204030204"/>
+                    <w:charset w:val="00"/>
+                    <w:family w:val="swiss"/>
+                    <w:pitch w:val="variable"/>
+                    <w:sig w:usb0="E4002EFF" w:usb1="C000247B" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
+                </w:font>
+                <w:font w:name="宋体">
+                    <w:altName w:val="SimSun"/>
+                    <w:panose1 w:val="02010600030101010101"/>
+                    <w:charset w:val="86"/>
+                    <w:family w:val="auto"/>
+                    <w:pitch w:val="variable"/>
+                    <w:sig w:usb0="00000003" w:usb1="288F0000" w:usb2="00000016" w:usb3="00000000" w:csb0="00040001" w:csb1="00000000"/>
+                </w:font>
+                <w:font w:name="Times New Roman">
+                    <w:panose1 w:val="02020603050405020304"/>
+                    <w:charset w:val="00"/>
+                    <w:family w:val="roman"/>
+                    <w:pitch w:val="variable"/>
+                    <w:sig w:usb0="E0002EFF" w:usb1="C000785B" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
+                </w:font>
+                <w:font w:name="仿宋_GB2312">
+                    <w:altName w:val="仿宋"/>
+                    <w:charset w:val="86"/>
+                    <w:family w:val="auto"/>
+                    <w:pitch w:val="default"/>
+                    <w:sig w:usb0="00000001" w:usb1="080E0000" w:usb2="00000010" w:usb3="00000000" w:csb0="00040000" w:csb1="00000000"/>
+                </w:font>
+                <w:font w:name="微软简标宋">
+                    <w:altName w:val="Times New Roman"/>
+                    <w:charset w:val="00"/>
+                    <w:family w:val="auto"/>
+                    <w:pitch w:val="default"/>
+                </w:font>
+                <w:font w:name="黑体">
+                    <w:altName w:val="SimHei"/>
+                    <w:panose1 w:val="02010609060101010101"/>
+                    <w:charset w:val="86"/>
+                    <w:family w:val="modern"/>
+                    <w:pitch w:val="fixed"/>
+                    <w:sig w:usb0="800002BF" w:usb1="38CF7CFA" w:usb2="00000016" w:usb3="00000000" w:csb0="00040001" w:csb1="00000000"/>
+                </w:font>
+                <w:font w:name="微软简仿宋">
+                    <w:altName w:val="Times New Roman"/>
+                    <w:charset w:val="00"/>
+                    <w:family w:val="auto"/>
+                    <w:pitch w:val="default"/>
+                </w:font>
+                <w:font w:name="Calibri Light">
+                    <w:panose1 w:val="020F0302020204030204"/>
+                    <w:charset w:val="00"/>
+                    <w:family w:val="swiss"/>
+                    <w:pitch w:val="variable"/>
+                    <w:sig w:usb0="E4002EFF" w:usb1="C000247B" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
+                </w:font>
+            </w:fonts>
+        </pkg:xmlData>
+    </pkg:part>
+    <pkg:part pkg:name="/docProps/app.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.extended-properties+xml" pkg:padding="256">
+        <pkg:xmlData>
+            <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
+                <Template>Normal.dotm</Template>
+                <TotalTime>2</TotalTime>
+                <Pages>1</Pages>
+                <Words>66</Words>
+                <Characters>381</Characters>
+                <Application>Microsoft Office Word</Application>
+                <DocSecurity>0</DocSecurity>
+                <Lines>3</Lines>
+                <Paragraphs>1</Paragraphs>
+                <ScaleCrop>false</ScaleCrop>
+                <Company>P R C</Company>
+                <LinksUpToDate>false</LinksUpToDate>
+                <CharactersWithSpaces>446</CharactersWithSpaces>
+                <SharedDoc>false</SharedDoc>
+                <HyperlinksChanged>false</HyperlinksChanged>
+                <AppVersion>15.0000</AppVersion>
+            </Properties>
         </pkg:xmlData>
     </pkg:part>
 </pkg:package>

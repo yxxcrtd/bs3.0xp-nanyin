@@ -70,6 +70,9 @@ public class ChbEstablishOperationService extends CommonExportService<ChbEstabli
         }
         //兑付本金币种显示名称
         String showName = ChbInvestReportUtil.getDictCodeAndName(DictCode.币种_中债, chbEstablishPrdInfo.getCcy());
+        if ("人民币".equals(showName)){
+            showName = "元" + showName;
+        }
         if (StringUtil.isNotEmpty(showName)){
             chbEstablishPrdInfo.setCcy(showName);
             chbEstablishPrdInfo.setTradeCost(chbEstablishPrdInfo.getTradeCost() + showName);
