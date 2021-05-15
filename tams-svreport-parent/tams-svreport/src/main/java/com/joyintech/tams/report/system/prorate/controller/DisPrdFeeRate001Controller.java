@@ -177,17 +177,17 @@ public class DisPrdFeeRate001Controller extends BaseController {
     @RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
         List<ChbPrdBaseinfo> list = prorateService.getProdinfo(RequestUtil.getPageParam());
-        Map<String,String> map=new HashMap<String,String>();
+        /*Map<String,String> map=new HashMap<String,String>();
         if(null!=list && list.size()>0){
             for(ChbPrdBaseinfo chbPrdBaseinfo:list){
                 map.put(chbPrdBaseinfo.getProdId(),chbPrdBaseinfo.getProdName());
             }
-        }
+        }*/
         List<DisRepCashYield> dtoList = this.prorateService.queryReportList(RequestUtil.getPageParam());
         dtoList.forEach(item -> {
             item.setCashType2(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.信披费用类型, item.getCashType2()));
-            item.setBusiId(map.get(item.getBusiId()));
+            /*item.setBusiId(map.get(item.getBusiId()));*/
         });
         File outFile = ProRateInfo001Service.makeFile(
                 "/com/joyintech/tams/report/system/prorate/conf/export_conf.xml", dtoList);

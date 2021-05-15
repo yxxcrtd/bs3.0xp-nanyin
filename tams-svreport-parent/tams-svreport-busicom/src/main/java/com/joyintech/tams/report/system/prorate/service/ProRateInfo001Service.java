@@ -61,14 +61,14 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         param.put("selectcashType2", selectcashType2);
         param.put("selectStatus", selectStatus);
         page=  super.queryForPage(pagenum,legth,()->proRateInfo001Mapper.queryForPage(param));
-        List<ChbPrdBaseinfo> list =proRateInfo001Mapper.getProdinfo(param);
+        /*List<ChbPrdBaseinfo> list =proRateInfo001Mapper.getProdinfo(param);
         Map<String,String> map=new HashMap<String,String>();
         if(null!=list && list.size()>0){
             for(ChbPrdBaseinfo chbPrdBaseinfo:list){
                 map.put(chbPrdBaseinfo.getProdId(),chbPrdBaseinfo.getProdName());
             }
-        }
-        dealDataList(page.getRoot(),map);
+        }*/
+        dealDataList(page.getRoot());
         return page;
     }
 
@@ -80,7 +80,7 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
      * @see
      * @since 1.0
      */
-    private void dealDataList(List<DisRepCashYield> list,Map<String,String> map) {
+    private void dealDataList(List<DisRepCashYield> list) {
         list.forEach(item -> {
             item.setCashType2Name(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.信披费用类型, item.getCashType2()));
@@ -88,7 +88,6 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                     DictCode.维护数据状态, item.getStatus()));
             item.setDataSourceName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.数据来源, item.getDataSource()));
-            item.setBusiIdName(map.get(item.getBusiId()));
             if("DB".equals(item.getDataSource())){
                 item.setDataSourceName("DB");
             }
@@ -163,7 +162,7 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         return proRateInfo001Mapper.selectdisPrdFeeRateErrordata( datauuid);
     }
 
-    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
+    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) throws ParseException {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
         //新建时,判断excel表中是否存在重复产品,启用日期,信披费用类型的数据
@@ -195,7 +194,11 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                 SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
                 Date date=null;
                 if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
-                    date=new Date(dataList.get(i).get(2));
+                    if(dataList.get(i).get(2).contains("-")){
+                        date=dfs.parse(dataList.get(i).get(2));
+                    }else{
+                        date=new Date(dataList.get(i).get(2));
+                    }
                 }
                 //信披费用类型
                 String cashType2 ="";
@@ -274,7 +277,11 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                     SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
                     Date date=null;
                     if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
-                        date=new Date(dataList.get(i).get(2));
+                        if(dataList.get(i).get(2).contains("-")){
+                            date=dfs.parse(dataList.get(i).get(2));
+                        }else{
+                            date=new Date(dataList.get(i).get(2));
+                        }
                     }
                     //信披费用类型
                     String cashType2 ="";

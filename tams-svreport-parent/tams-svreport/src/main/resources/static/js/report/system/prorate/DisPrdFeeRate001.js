@@ -18,10 +18,10 @@
         },
         cols: [
             { title: "数据状态", field:'statusName',width:'8%', sortField:'status'},
-            { title: "产品代码", field:'busiIdName',width:'8%', sortField:'busiId'},
+            { title: "产品代码", field:'busiId',width:'8%', sortField:'busiId'},
             { title: "启用日期", field:'startDate',type:'date',width:'12%'},
             { title: "信披费用类型", field:'cashType2Name',width:'10%', sortField:'cashType2'},
-            { title: "busiId",  visible:false, field:'busiId'},
+            /*{ title: "busiId",  visible:false, field:'busiId'},*/
             { title: "status",  visible:false, field:'status'},
             { title: "cashType2",  visible:false, field:'cashType2'},
             { title: "dataSource",  visible:false, field:'dataSource'},
@@ -168,7 +168,7 @@
         //新增点击事件
         $('#DisPrdFeeRate001_btn_add').click(function() {
             var data={"operateType":"add"};
-            Joyin.dialog('产品费率信息新建',basePath+'svreport/system/prorate/DisPrdFeeRate002/init', '98%', '95%',data,function(){table.reload();});
+            Joyin.dialog('产品费率信息新建',basePath+'svreport/system/prorate/DisPrdFeeRate002/init', '1000', '70%',data,function(){table.reload();});
         });
 
         //修改、删除事件绑定
