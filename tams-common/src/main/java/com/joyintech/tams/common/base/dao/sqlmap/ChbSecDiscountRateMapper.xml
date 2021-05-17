@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSecDiscountRateMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSecDiscountRate" >
+        <id column="DATAUUID" property="datauuid" jdbcType="VARCHAR" />
+        <result column="SEC_TYPE" property="secType" jdbcType="VARCHAR" />
+        <result column="ISSUE_TYPE" property="issueType" jdbcType="VARCHAR" />
+        <result column="GRADE_TYPE" property="gradeType" jdbcType="VARCHAR" />
+        <result column="DISCOUNT_RATE" property="discountRate" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DATAUUID DATAUUID, SEC_TYPE SEC_TYPE, ISSUE_TYPE ISSUE_TYPE, GRADE_TYPE GRADE_TYPE, 
+        DISCOUNT_RATE DISCOUNT_RATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSecDiscountRateMapper.Base_Column_List" />
+        from chb_sec_discount_rate
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSecDiscountRateMapper.Base_Column_List" />
+        from chb_sec_discount_rate
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSecDiscountRateMapper.Base_Column_List" />
+        from chb_sec_discount_rate
+        where DATAUUID = #{datauuid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from chb_sec_discount_rate
+        where DATAUUID = #{datauuid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSecDiscountRate" >
+        insert into chb_sec_discount_rate (DATAUUID, SEC_TYPE, ISSUE_TYPE, 
+            GRADE_TYPE, DISCOUNT_RATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{datauuid,jdbcType=VARCHAR}, #{secType,jdbcType=VARCHAR}, #{issueType,jdbcType=VARCHAR}, 
+            #{gradeType,jdbcType=VARCHAR}, #{discountRate,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSecDiscountRate" >
+        insert into chb_sec_discount_rate
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="datauuid != null" >
+                DATAUUID,
+            </if>
+            <if test="secType != null" >
+                SEC_TYPE,
+            </if>
+            <if test="issueType != null" >
+                ISSUE_TYPE,
+            </if>
+            <if test="gradeType != null" >
+                GRADE_TYPE,
+            </if>
+            <if test="discountRate != null" >
+                DISCOUNT_RATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="datauuid != null" >
+                #{datauuid,jdbcType=VARCHAR},
+            </if>
+            <if test="secType != null" >
+                #{secType,jdbcType=VARCHAR},
+            </if>
+            <if test="issueType != null" >
+                #{issueType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeType != null" >
+                #{gradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="discountRate != null" >
+                #{discountRate,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSecDiscountRate" >
+        insert into chb_sec_discount_rate(DATAUUID, SEC_TYPE, ISSUE_TYPE, GRADE_TYPE, DISCOUNT_RATE, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select DATAUUID, SEC_TYPE, ISSUE_TYPE, GRADE_TYPE, DISCOUNT_RATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from chb_sec_discount_rate
+             where 1 = 1 and DATAUUID = #{datauuid,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSecDiscountRate" >
+        update chb_sec_discount_rate
+        <set >
+            <if test="secType != null" >
+                SEC_TYPE = #{secType,jdbcType=VARCHAR},
+            </if>
+            <if test="issueType != null" >
+                ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeType != null" >
+                GRADE_TYPE = #{gradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="discountRate != null" >
+                DISCOUNT_RATE = #{discountRate,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where DATAUUID = #{datauuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSecDiscountRate" >
+        update chb_sec_discount_rate
+        set SEC_TYPE = #{secType,jdbcType=VARCHAR},
+            ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+            GRADE_TYPE = #{gradeType,jdbcType=VARCHAR},
+            DISCOUNT_RATE = #{discountRate,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where DATAUUID = #{datauuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

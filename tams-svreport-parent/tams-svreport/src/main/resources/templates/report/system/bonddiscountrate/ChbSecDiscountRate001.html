@@ -1,0 +1,47 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
+<head>
+<meta charset="utf-8">
+<title>债券折扣率配置</title>
+<link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+<style>
+.input-checkbox .layui-form-checkbox{margin-top: 0;height: 23px;}
+.layui-form-checkbox i { height: 23px; }
+</style>
+</head>
+
+<body>
+  <div layout:fragment="content">
+    <div class="form-button-area" filter="false" export="false">
+    </div>
+    <div class="joyin-form-wrap condition-area">
+        <form class="layui-form" id="searchForm">
+          <div class="layui-form-item">
+
+              <div class="layui-inline layui-col-md4">
+                  <label class="layui-form-label form-lable">债券类型</label>
+                  <div class="layui-input-inline input-inline">
+                      <select id="secType" name="secType" class="layui-input form-input input-select"
+                              data-th-data-result='${SVR_BOND_TYPE}' placeholder="请选择"
+                              data-th-initvalue="${secType}"
+                              data-th-placeholder="#{SysCommon.selectplaceholder}"
+                              allowClear="true" multiple="true">
+                      </select>
+                  </div>
+              </div>
+            
+
+          </div>
+
+        </form>
+        </div>
+    <table class="layui-table" id="table_data"></table>
+  </div>
+<div layout:fragment="script">
+  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/system/bonddiscountrate/ChbSecDiscountRate001.js}" type="text/javascript"></script>
+</div>
+</body>
+</html>

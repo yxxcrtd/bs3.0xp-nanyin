@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.bonddiscountrate.dao.ChbSecDiscountRate001Mapper_mysql">
+
+	<select id="queryForPage" resultType="com.joyintech.tams.report.system.bonddiscountrate.dto.ChbSecDiscountRateDto">
+		SELECT
+			DATAUUID AS datauuid,
+			SEC_TYPE AS secType,
+			ISSUE_TYPE AS issueType,
+			GRADE_TYPE AS gradeType,
+			DISCOUNT_RATE AS discountRate
+		FROM
+			chb_sec_discount_rate
+        <where>
+			<if test="selectSecType != null and selectSecType.size() > 0">
+				<foreach collection="selectSecType" item="secType" open="AND SEC_TYPE IN (" close=")" separator=",">
+					#{secType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="selectOneDate" resultType="com.joyintech.tams.report.system.bonddiscountrate.dto.ChbSecDiscountRateDto">
+		SELECT
+			DATAUUID AS datauuid,
+			SEC_TYPE AS secType,
+			ISSUE_TYPE AS issueType,
+			GRADE_TYPE AS gradeType,
+			DISCOUNT_RATE AS discountRate
+		FROM
+			chb_sec_discount_rate
+        where DATAUUID = #{datauuid}
+	</select>
+
+	<update id="updateOne" parameterType="com.joyintech.tams.report.system.bonddiscountrate.dto.ChbSecDiscountRateDto">
+		update chb_sec_discount_rate
+		<set >
+			<if test="secType != null" >
+				SEC_TYPE = #{secType,jdbcType=VARCHAR},
+			</if>
+			<if test="issueType != null" >
+				ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+			</if>
+			<if test="gradeType != null" >
+				GRADE_TYPE = #{gradeType,jdbcType=VARCHAR},
+			</if>
+			<if test="discountRate != null" >
+				DISCOUNT_RATE = #{discountRate,jdbcType=DECIMAL},
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where DATAUUID = #{datauuid,jdbcType=VARCHAR}
+	</update>
+
+</mapper>
