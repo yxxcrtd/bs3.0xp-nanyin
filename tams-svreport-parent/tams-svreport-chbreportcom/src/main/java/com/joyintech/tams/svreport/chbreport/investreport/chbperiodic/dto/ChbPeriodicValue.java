@@ -19,6 +19,11 @@ public class ChbPeriodicValue extends BaseEntity {
     private String prodId;
 
     /**
+     * 产品名称
+     */
+    private String prodName;
+
+    /**
      * 估值日期
      */
     private String valueDate;
@@ -44,6 +49,31 @@ public class ChbPeriodicValue extends BaseEntity {
     private String assetTotalValue;
 
     /**
+     * 期初估值日期
+     */
+    private String valueDateQC;
+
+    /**
+     * 期初份额总数（格式用千位分隔符，保留小数点后2位）
+     */
+    private String totalValueQC;
+
+    /**
+     * 期初资产净值（格式用千位分隔符，保留小数点后2位）
+     */
+    private String assetUnitValueQC;
+
+    /**
+     * 期初份额净值（保留小数点后4位）
+     */
+    private String unitValueQC;
+
+    /**
+     * 期初累计净值（保留小数点后4位）
+     */
+    private String assetTotalValueQC;
+
+    /**
      * 期间累计净值增长率
      */
     private String increaseRateOfCumulativeValue;
@@ -59,6 +89,14 @@ public class ChbPeriodicValue extends BaseEntity {
 
     public void setProdId(String prodId) {
         this.prodId = prodId;
+    }
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
     }
 
     public String getValueDate() {
@@ -99,6 +137,46 @@ public class ChbPeriodicValue extends BaseEntity {
 
     public void setAssetTotalValue(String assetTotalValue) {
         this.assetTotalValue = assetTotalValue;
+    }
+
+    public String getValueDateQC() {
+        return valueDateQC;
+    }
+
+    public void setValueDateQC(String valueDateQC) {
+        this.valueDateQC = valueDateQC;
+    }
+
+    public String getTotalValueQC() {
+        return totalValueQC;
+    }
+
+    public void setTotalValueQC(String totalValueQC) {
+        this.totalValueQC = totalValueQC;
+    }
+
+    public String getAssetUnitValueQC() {
+        return assetUnitValueQC;
+    }
+
+    public void setAssetUnitValueQC(String assetUnitValueQC) {
+        this.assetUnitValueQC = assetUnitValueQC;
+    }
+
+    public String getUnitValueQC() {
+        return unitValueQC;
+    }
+
+    public void setUnitValueQC(String unitValueQC) {
+        this.unitValueQC = unitValueQC;
+    }
+
+    public String getAssetTotalValueQC() {
+        return assetTotalValueQC;
+    }
+
+    public void setAssetTotalValueQC(String assetTotalValueQC) {
+        this.assetTotalValueQC = assetTotalValueQC;
     }
 
     public String getIncreaseRateOfCumulativeValue() {

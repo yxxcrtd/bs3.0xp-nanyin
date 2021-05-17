@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto;
 import com.joyintech.framework.base.BaseEntity;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName ChbPeriodicPrdInfo
@@ -22,6 +23,17 @@ public class ChbPeriodicPrdInfo extends BaseEntity {
      * 产品代码
      */
     private String prodId;
+
+    /**
+     * 子产品名称
+     */
+    private List<String> sprodNameList;
+
+    /**
+     * 子产品代码
+     */
+    private List<String> sprodIdList;
+
     /**
      * 理财信息系统登记编码
      */
@@ -146,6 +158,22 @@ public class ChbPeriodicPrdInfo extends BaseEntity {
 
     public void setProdId(String prodId) {
         this.prodId = prodId;
+    }
+
+    public List<String> getSprodNameList() {
+        return sprodNameList;
+    }
+
+    public void setSprodNameList(List<String> sprodNameList) {
+        this.sprodNameList = sprodNameList;
+    }
+
+    public List<String> getSprodIdList() {
+        return sprodIdList;
+    }
+
+    public void setSprodIdList(List<String> sprodIdList) {
+        this.sprodIdList = sprodIdList;
     }
 
     public String getRegCode() {

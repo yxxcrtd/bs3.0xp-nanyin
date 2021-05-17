@@ -24,6 +24,11 @@ public class ChbPeriodicIndex extends BaseEntity {
     private String prodId;
 
     /**
+     * 产品名称
+     */
+    private String prodName;
+
+    /**
      * 估值日
      */
     private Date valueDate;
@@ -64,12 +69,26 @@ public class ChbPeriodicIndex extends BaseEntity {
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal yield7;
 
+    /**
+     *本期净值收益
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal valuePercent;
+
     public String getProdId() {
         return prodId;
     }
 
     public void setProdId(String prodId) {
         this.prodId = prodId;
+    }
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
     }
 
     public Date getValueDate() {
@@ -126,5 +145,13 @@ public class ChbPeriodicIndex extends BaseEntity {
 
     public void setYield7(BigDecimal yield7) {
         this.yield7 = yield7;
+    }
+
+    public BigDecimal getValuePercent() {
+        return valuePercent;
+    }
+
+    public void setValuePercent(BigDecimal valuePercent) {
+        this.valuePercent = valuePercent;
     }
 }

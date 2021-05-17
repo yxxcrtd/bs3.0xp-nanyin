@@ -54,9 +54,47 @@
                p.UNIT_VALUE_T           as unitValueT,/** 产品累计单位净值**/
                p.ASSET_VALUE_MARKET     as assetValueMarket,/** 产品资产净值（按市值）**/
                p.W_YIELD                as wYield,/** 当日万份收益**/
-               p.YIELD_7                as yield7/** 7日年化收益率**/
-        from REP_PROD_INDEX p
-        where p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+               p.YIELD_7                as yield7,/** 7日年化收益率**/
+               r.valuePercent           as valuePercent/** 本期净值收益**/
+        from REP_PROD_INDEX p,
+             (
+                 SELECT (SUM(1 + p.W_YIELD / 10000) - 1) * 100 as valuePercent,
+                        q.PROD_ID
+                 FROM rep_prod_index q
+                 WHERE q.PROD_ID = #{prodId,jdbcType=VARCHAR}
+                   AND q.VALUE_DATE BETWEEN #{startReportDate,jdbcType=DATE}
+                     AND #{endReportDate,jdbcType=DATE}
+                 GROUP BY q.PROD_ID
+             ) r
+        where p.PROD_ID = r.PROD_ID
+          and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and p.VALUE_DATE = #{qryDate,jdbcType=DATE}
+    </select>
+
+    <select id="qryChbPeriodicIndexDetail"
+            resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicIndex">
+        select p.PROD_ID                as prodId,
+               p.PROD_NAME              as prodName,
+               #{qryDate,jdbcType=DATE} as valueDate,/** 估值日期**/
+               p.UNIT_VALUE             as unitValue,/** 产品单位净值**/
+               p.CAPITAL                as capital,/** 实收资本**/
+               p.UNIT_VALUE_T           as unitValueT,/** 产品累计单位净值**/
+               p.ASSET_VALUE_MARKET     as assetValueMarket,/** 产品资产净值（按市值）**/
+               p.W_YIELD                as wYield,/** 当日万份收益**/
+               p.YIELD_7                as yield7,/** 7日年化收益率**/
+               r.valuePercent           as valuePercent/** 本期净值收益**/
+        from REP_PROD_INDEX_DETAIL p,
+             (
+                 SELECT (SUM(1 + p.W_YIELD / 10000) - 1) * 100 as valuePercent,
+                        q.PROD_ID
+                 FROM rep_prod_index q
+                 WHERE q.FPROD_ID = #{prodId,jdbcType=VARCHAR}
+                   AND q.VALUE_DATE BETWEEN #{startReportDate,jdbcType=DATE}
+                     AND #{endReportDate,jdbcType=DATE}
+                 GROUP BY q.PROD_ID
+             ) r
+        where p.PROD_ID = r.PROD_ID
+          and p.FPROD_ID = #{prodId,jdbcType=VARCHAR}
           and p.VALUE_DATE = #{qryDate,jdbcType=DATE}
     </select>
 

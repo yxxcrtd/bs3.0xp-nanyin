@@ -11,7 +11,13 @@
 	<select id="qryChbPeriodicIndex" resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicIndex">
 	</select>
 
+	<select id="qryChbPeriodicIndexDetail" resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicIndex">
+	</select>
+
 	<select id="qryChbPeriodicIndexValuePercent" resultType="java.math.BigDecimal">
+	</select>
+
+	<select id="qryChbPeriodicIndexDetailValuePercent" resultType="java.math.BigDecimal">
 	</select>
 
 	<select id="qryChbPeriodicBonusDeal"
