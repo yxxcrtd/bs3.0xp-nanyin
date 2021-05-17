@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.report.system.investmentdeal.dao.InvestmentDealInfo001Mapper">
 	<select id="queryForPage" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 	</select>
-	<select id="queryReportList" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+	<select id="queryReportList" resultType="com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto">
 	</select>
 	<select id="selectOneDate" resultType="com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto">
 	</select>

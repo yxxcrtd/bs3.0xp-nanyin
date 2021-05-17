@@ -112,7 +112,7 @@
 		</where>
 	</select>
 
-	<select id="queryReportList" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+	<select id="queryReportList" resultType="com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto">
 		SELECT
 		'导出' as type,
 		STATUS AS status,
