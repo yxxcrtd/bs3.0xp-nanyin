@@ -255,7 +255,7 @@
 	</select>
 
     <select id="getPtlSecTrdAcctNo" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT 
+        SELECT DISTINCT
             B.TRD_ACCT_ID id,
             C.ACCT_NAME text
         FROM 
