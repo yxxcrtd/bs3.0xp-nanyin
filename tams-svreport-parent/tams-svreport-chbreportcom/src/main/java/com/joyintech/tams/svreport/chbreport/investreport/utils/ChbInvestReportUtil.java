@@ -1,7 +1,9 @@
 package com.joyintech.tams.svreport.chbreport.investreport.utils;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -130,4 +132,20 @@ public class ChbInvestReportUtil {
                 + ChbInvestReportConstant.运行报告 + ChbInvestReportConstant.WORD文档;
         return fileName;
     }
+
+
+    /**
+     * 获取中债报送模板的ftl路径
+     * @return
+     */
+    public static String getFtlPath() {
+        String path =  CacheUtil.getSysParam("SVR_FTL_PATH");
+        if(StringUtil.isNotEmpty(path)) {
+            return path;
+        }
+        else {
+            return FileNameUtil.getTplFile("chbreport");
+        }
+    }
+
 }
