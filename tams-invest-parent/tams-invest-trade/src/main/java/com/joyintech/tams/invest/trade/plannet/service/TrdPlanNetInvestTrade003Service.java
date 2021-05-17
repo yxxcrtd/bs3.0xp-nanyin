@@ -538,7 +538,9 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
      * @since 1.0
      */
     private void prepareEntity(TrdPlanNetInvestTradeConfirmDto dto) {
-        dto.setActPortfolioId(dto.getPortfolioId());
+        if(StringUtil.isEmpty(dto.getActPortfolioId())) {
+            dto.setActPortfolioId(dto.getPortfolioId());
+        }
         dto.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(dto.getPortfolioId()));
 
         // 一体化对应etliu start
@@ -605,14 +607,16 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
         // 组合交易表
         List<PtlTrade> ptlTrades = new ArrayList<>();
         // 组合交易表
-        PtlTrade ptlTrade = new PtlTrade();
-        ptlTrade.setPortfolioId(dto.getPortfolioId());
-        ptlTrade.setBusiNo(dto.getTradeId());
-        ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
-        ptlTrade.setBusiId(dto.getFinprodId());
-        ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
-        ptlTrade.setSettleDate(dto.getSettleDate());
-        ptlTrades.add(ptlTrade);
+        if(StringUtil.isEmpty(dto.getActPortfolioId())) {
+            PtlTrade ptlTrade = new PtlTrade();
+            ptlTrade.setPortfolioId(dto.getPortfolioId());
+            ptlTrade.setBusiNo(dto.getTradeId());
+            ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+            ptlTrade.setBusiId(dto.getFinprodId());
+            ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
+            ptlTrade.setSettleDate(dto.getSettleDate());
+            ptlTrades.add(ptlTrade);
+        }
         if (!dto.getPortfolioId().equals(dto.getActPortfolioId())) {
             // 组合交易表
             PtlTrade ptlTrade1 = new PtlTrade();
