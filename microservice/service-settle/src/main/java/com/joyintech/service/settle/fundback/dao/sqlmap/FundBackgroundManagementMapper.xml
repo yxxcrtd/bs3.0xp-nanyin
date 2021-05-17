@@ -149,8 +149,10 @@
 
     <select id="findPage" resultType="com.joyintech.tams.invest.common.dto.settle.fundback.FundBackgroundManagementDto">
         WITH WFL_ORDERS AS (SELECT * FROM WFL_STL_PAY_ORDERS T5 WHERE T5.ORDER_ID = (
-        SELECT MAX(T52.ORDER_ID) FROM WFL_STL_PAY_ORDERS T52 WHERE T5.TRADE_ID = T52.TRADE_ID)),
+        SELECT MAX(T52.ORDER_ID) FROM WFL_STL_PAY_ORDERS T52 WHERE T5.TRADE_ID = T52.TRADE_ID))
         <!-- modify by mashukai 20201203 TISHKBS-1209 start -->
+        <if test="statusValid == null or statusValid.isEmpty() or statusValid == TRADE_FLOW_STATUS02">
+        ,
         PAY_ORDERS1 AS
         (
             SELECT T5.*
@@ -189,6 +191,7 @@
             UNION ALL
             SELECT * FROM PAY_ORDERS2
         )
+        </if>
         <!-- modify by mashukai 20201203 TISHKBS-1209 end -->
         /*1、 查询产品端交易（产品成立、产品到期、中间付息、产品强减、费用支付， 拆借到期）*/
         <if test="statusValid == null or statusValid.isEmpty() or statusValid == TRADE_FLOW_STATUS01">
