@@ -269,7 +269,9 @@ public class SvrProdInfoFileImpService extends FileImpService {
 					}
 				}else if ("java.math.BigDecimal".equals(type.getTypeName())) {
 					try {
-						field.set(t,(value == null || "".equals(value)) ? BigDecimal.ZERO : new BigDecimal(value));
+						if(!StringUtil.isBlank(value)){
+							field.set(t,new BigDecimal(value));
+						}
 					} catch ( IllegalAccessException e) {
 						logger.error(e.getMessage(),e);
 					}
