@@ -1,18 +1,5 @@
 package com.joyintech.tams.svreport.chb.astvalueregist.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
@@ -20,13 +7,21 @@ import com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseServic
 import com.joyintech.tams.common.base.entity.ChbAstValueSub;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.svreport.chb.astvalueregist.dao.ChbAstValCBMapper;
 import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.interf.chb.assetbasis.service.SvrAssetBasisInterf;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * 功能:资产估值登记批处理
@@ -73,28 +68,34 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 	public void createValueInfo(Date batchTime,List<String> assets,String InstitutionCode) {
 		String isBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
 		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDate(DateUtil.format(batchTime),isBtm);
-		if (CollectionUtils.isEmpty(isUpdate)) {
-			svrAssetBasisInterf.genAssetValueInfoLast(InstitutionCode);
-		} else {
-			for (Date date : isUpdate) {
+		//------delete by lingxq on 2021-05-15 for 今日无估值数据,用最近一日生成今日 ------>>>>>>
+//		if (CollectionUtils.isEmpty(isUpdate)){
+//			return;
+//		} else {
+//			for (Date date : isUpdate) {
+//				svrAssetBasisInterf.genAssetValueInfo(date, InstitutionCode);
+//			}
+//		}
+		//------delete by lingxq on 2021-05-15 for 今日无估值数据,用最近一日生成今日------<<<<<<<
+		//------add by lingxq on 2021-05-15 for 今日无估值数据,用最近一日生成今日------>>>>>>>
+		for (Date date : isUpdate) {
 				svrAssetBasisInterf.genAssetValueInfo(date, InstitutionCode);
-			}
 		}
+		//检查今日无估值数据
+		if(svrAssetBasisInterf.checkTdyValData(batchTime) == 0){
+           //利用最近一日生成今日估值数据
+			svrAssetBasisInterf.genAssetValueInfoLast(batchTime);
+		}
+		//------add by lingxq on 2021-05-15 for 今日无估值数据,用最近一日生成今日------<<<<<<<
 	}
 	
 	// 根据估值信息表生成估值登记
 	public void createRegistAction(Date batchTime,List<String> assets,String InstitutionCode) {
 		String isBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
-		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDate(DateUtil.format(batchTime),isBtm);
-		if (CollectionUtils.isEmpty(isUpdate)) {
-			// 获取登记数据
-			List<ChbAstValueSub> insertDataList =	chbAstValCBMapper.queryInsertGenerateLastList();
-			for(ChbAstValueSub sub : insertDataList) {
-				sub.setCreateUser(CommonUtil.getUserName());
-				sub.setUpdateUser(CommonUtil.getUserName());
-				chbAstValCBMapper.insertSub(sub);
-			}
-		}
+//		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDate(DateUtil.format(batchTime),isBtm); //delete by lingxq on 2021-05-15 for 从估值维护表获取数据
+		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDateFromVal(DateUtil.format(batchTime),isBtm); //add by lingxq on 2021-05-15 for 从估值维护表获取数据
+		if (CollectionUtils.isEmpty(isUpdate))
+			return;
 		for (Date posDate : isUpdate) {
 
 			// 得到底层资产持仓信息

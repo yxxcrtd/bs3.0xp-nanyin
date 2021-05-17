@@ -383,5 +383,7 @@
       #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, sysdate, 
       #{updateUser,jdbcType=VARCHAR}, sysdate)
   </insert>
+
+	<select id="queryUpdateDateFromVal" resultType="java.util.Date"></select>
 	
 </mapper>

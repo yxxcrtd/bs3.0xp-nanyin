@@ -170,7 +170,7 @@
      */
     function showDialog() {
         var data={"operateType":"add"};
-        Joyin.dialog('产品登记编码新建',basePath+'svreport/system/proregistcodemanage/ProRegistCodeManage003/init', '98%', '95%',data,function(){table.reload();});
+        Joyin.dialog('产品登记编码新建',basePath+'svreport/system/proregistcodemanage/ProRegistCodeManage003/init', '1000', '40%',data,function(){table.reload();});
     }
 
     $(function() {

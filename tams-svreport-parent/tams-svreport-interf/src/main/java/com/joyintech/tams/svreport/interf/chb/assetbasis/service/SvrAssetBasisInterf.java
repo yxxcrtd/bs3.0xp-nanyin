@@ -281,36 +281,26 @@ public class SvrAssetBasisInterf extends BaseService{
 	}
 
 	/**
+	 * 检查今日是否有估值数据
+	 * @param date
+	 * @return
+	 */
+	public int checkTdyValData(Date date){
+    	return chbAstValInterfMapper.checkTdyValData(DateUtil.format(date));
+	}
+	/**
 	 * 上游未下方估值数据，取估值资产估值信息表最近一日的数据生成资产估值信息
 	 */
-	public void genAssetValueInfoLast(String InstitutionCode){
-		String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
-		try (SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false)){
-			//批量插入mapper
-			ChbAstValInterfMapper batchMapper =  session.getMapper(ChbAstValInterfMapper.class);
-			// 先删后插
-			Map<String, Object> para = new HashMap<String, Object>();
-			para.put("valDate", "");
-			// 处理最近一日估值表数据
-			List<ChbAstValue> infoList = chbAstValInterfMapper.queryAssetValueInfoLastList();
-			int count = 0;
-			for (ChbAstValue info : infoList) {
-				info.setValId(IDGenerator.generate(36));
-				info.setIssuePartyId(CommonUtil.selectBankCode());
-				info.setCreateUser("system");
-				info.setUpdateUser("system");
-				//info.setStatus("E");
-
-				batchMapper.insertInfo(info);
-				count++;
-				if (count % 1000 == 0) {
-					session.commit();
-					session.clearCache();
-				}
-			}
-			session.commit();
-			session.clearCache();
-		}
+	public void genAssetValueInfoLast(Date date){
+		logger.info("根据昨日生成今日估值数据开始.....");
+		//批量插入mapper
+		// 先删后插
+		Map<String, Object> para = new HashMap<String, Object>();
+		para.put("valDate", DateUtil.format(date));
+		chbAstValInterfMapper.deleteInfo(para);
+		// 处理估值表数据
+		int cnt = chbAstValInterfMapper.insertTdyInfo(DateUtil.format(date));
+		logger.info("根据昨日生成今日估值数据结束,总共生成" + cnt + "条");
 	}
     
 	/**
@@ -345,7 +335,7 @@ public class SvrAssetBasisInterf extends BaseService{
 			}
 			session.commit();
 			session.clearCache();
-		} 
+		}
     }
     
 	@Transactional(propagation=Propagation.REQUIRES_NEW)

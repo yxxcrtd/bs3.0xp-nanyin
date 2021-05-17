@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.chbprd.dao.ChbPrdBaseinfo001Mapper_mysql">
+	<select id="queryForPage" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+		SELECT
+		STATUS              status,
+		PROD_ID             prodId,
+		PROD_NAME           prodName,
+		PROD_INS_ID         prodInsId,
+		PROD_BRAND          prodBrand,
+		PROD_STAGE          prodStage,
+		APPROVER_ID         approverId,
+		APPROVER_NAME       approverName,
+		DESIGNER_ID         designerId,
+		DESIGNER_NAME       designerName,
+		MANAGER_ID          managerId,
+		MANAGER_NAME        managerName,
+		LIAISON_NAME        liaisonName,
+		LIAISON_TEL         liaisonTel,
+		LIAISON_MOBILE      liaisonMobile,
+		LIAISON_EMAIL       liaisonEmail,
+		RAISE_TYPE          raiseType,
+		PROFIT_TYPE         prodtype,
+		IS_FHXGCP           isFhxgcp,
+		TERMTYPE            termtype,
+		EXC_FIN_SECTOR      excFinSector,
+		INVEST_ARAE         investArae,
+		INVEST_COUNTRY      investCountry,
+		FINAN_SER_MODEL     finanSerModel,
+		OPERATE_MODE        operateMode,
+		IS_SHORT_TERM       isShortTerm,
+		SHORT_TERM          shortTerm,
+		IS_FREE_REDEM       isFreeRedem,
+		CASH_MANA_CATE      cashManaCate,
+		CMMODE              cmmode,
+		PMMODE              pmmode,
+		MNAME               mname,
+		PRICED_MODE         pricedMode,
+		IVSTORIENTATION     ivstorientation,
+		CONT_MODE           contMode,
+		COOPERATION_NAME    cooperationName,
+		INV_TYPE_RAT        invTypeRat,
+		YIELD               yield,
+		RISK_TYPE           riskType,
+		SALE_AREA           saleArea,
+		RAISE_CCY           raiseCcy,
+		CASH_PRIN_CCY       cashPrinCcy,
+		CASH_PROF_CCY       cashProfCcy,
+		SALE_AMT_STR        saleAmtStr,
+		RAISE_AMT_PLAN      raiseAmtPlan,
+		RAISE_PSTRDATE      raisePstrdate,
+		RAISE_PENDDATE      raisePenddate,
+		INVEST_PRIN_DATE    investPrinDate,
+		INVEST_PROF_DATE    investProfDate,
+		SALE_FEE_RATE       saleFeeRate,
+		INVEST_FEE_RATE     investFeeRate,
+		IN_DEP_NAME         inDepName,
+		IN_DEP_CODE         inDepCode,
+		OUT_DEP_CTRY        outDepCtry,
+		OUT_DEP_NAME        outDepName,
+		TRU_FEE_RATE        truFeeRate,
+		RISK_LEVEL          riskLevel,
+		TERM_RIGHT_FLAG     termRightFlag,
+		CUS_REDEEM_FLAG     cusRedeemFlag,
+		CREDIT_FLAG         creditFlag,
+		CREDIT_TYPE         creditType,
+		CREDIT_MODE         creditMode,
+		RAISE_VDATE         raiseVdate,
+		RAISE_ENDDATE       raiseEnddate,
+		VDATE               vdate,
+		MDATE               mdate,
+		MANAGE_TYPE         manageType,
+		IS_CONSTRACTE       isConstracte,
+		YIELD_HIGH          yieldHigh,
+		YIELD_LOW           yieldLow,
+		YIELD_REMARK        yieldRemark,
+		OPEN_MODE           openMode,
+		OPEN_CIRCLE         openCircle,
+		OPEN_CIRCLE_DAYS    openCircleDays,
+		RULE_COMMENT        ruleComment,
+		FIRST_OPEN_DAY      firstOpenDay,
+		HOLIDAY_ON_FLAG     holidayOnFlag,
+		AVG_OPEN_COUNT      avgOpenCount,
+		OPEN_BUSS           openBuss,
+		OPEN_BUSS_REMARK    openBussRemark,
+		BUSI_ACCT_NO        busiAcctNo,
+		ACCT_NAME           acctName,
+		FIDUCIARY_DUTY      fiduciaryDuty,
+		CUSTOMER_TYPE       customerType,
+		IS_TRANSFER         isTransfer,
+		IS_FULLY_COMPLIANT  isFullyCompliant,
+		IS_YLLCCP           isYllccp,
+		TRANSFER_TYPE       transferType,
+		REMARK              remark,
+		CREATE_USER         createUser,
+		CREATE_TIME         createTime,
+		UPDATE_USER         updateUser,
+		UPDATE_TIME         updateTime,
+		SVR_DATA_SOURCES    dataSource,
+		''                  dataUuid,
+		''                  orgData,
+		''                  errMsg
+		FROM CHB_PRD_BASEINFO a
+		<where>
+			not EXISTS (
+			SELECT 1 from chb_prd_baseinfo_errordata b where b.PROD_ID=a.PROD_ID
+			and b.STATUS in('A','E')
+			)
+			<if test="selectprodId != null and selectprodId.size() > 0">
+				<foreach collection="selectprodId" item="prodId" open="AND a.PROD_ID IN (" close=")" separator=",">
+					#{prodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="raiseVdate != null and raiseVdate != ''">
+				DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &gt;= #{raiseVdate,jdbcType=VARCHAR}
+			</if>
+			<if test="raiseEnddate != null and raiseEnddate != ''">
+				and DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &lt;= #{raiseEnddate,jdbcType=VARCHAR}
+			</if>
+			<if test="vdate != null and vdate != ''">
+				DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdate,jdbcType=VARCHAR}
+			</if>
+			<if test="mdate != null and mdate != ''">
+				and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{mdate,jdbcType=VARCHAR}
+			</if>
+			<if test="selectStatus != null and selectStatus.size() > 0">
+				<foreach collection="selectStatus" item="status" open="AND a.STATUS IN (" close=")" separator=",">
+					#{status,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+		union all
+		SELECT
+		'A' as status,
+		PROD_ID             prodId,
+		PROD_NAME           prodName,
+		''         prodInsId,
+		''          prodBrand,
+		''          prodStage,
+		''         approverId,
+		''       approverName,
+		''         designerId,
+		''       designerName,
+		''          managerId,
+		''        managerName,
+		''        liaisonName,
+		''         liaisonTel,
+		''      liaisonMobile,
+		''       liaisonEmail,
+		''          raiseType,
+		''         prodtype,
+		''           isFhxgcp,
+		''            termtype,
+		''      excFinSector,
+		''         investArae,
+		''      investCountry,
+		''     finanSerModel,
+		''        operateMode,
+		''       isShortTerm,
+		''          shortTerm,
+		''       isFreeRedem,
+		''      cashManaCate,
+		''              cmmode,
+		''              pmmode,
+		''               mname,
+		''         pricedMode,
+		''     ivstorientation,
+		''           contMode,
+		''    cooperationName,
+		''        invTypeRat,
+		''               yield,
+		''           riskType,
+		''           saleArea,
+		''           raiseCcy,
+		''       cashPrinCcy,
+		''       cashProfCcy,
+		''        saleAmtStr,
+		''      raiseAmtPlan,
+		''      raisePstrdate,
+		''      raisePenddate,
+		''    investPrinDate,
+		''    investProfDate,
+		''       saleFeeRate,
+		''     investFeeRate,
+		''         inDepName,
+		''         inDepCode,
+		''        outDepCtry,
+		''        outDepName,
+		''        truFeeRate,
+		''          riskLevel,
+		''     termRightFlag,
+		''     cusRedeemFlag,
+		''         creditFlag,
+		''         creditType,
+		''         creditMode,
+		RAISE_VDATE         raiseVdate,
+		''       raiseEnddate,
+		VDATE           vdate,
+		''           mdate,
+		''         manageType,
+		''       isConstracte,
+		''          yieldHigh,
+		''           yieldLow,
+		''        yieldRemark,
+		''           openMode,
+		''         openCircle,
+		''    openCircleDays,
+		''        ruleComment,
+		''      firstOpenDay,
+		''     holidayOnFlag,
+		''      avgOpenCount,
+		''           openBuss,
+		''    openBussRemark,
+		''        busiAcctNo,
+		''           acctName,
+		''      fiduciaryDuty,
+		''       customerType,
+		''         isTransfer,
+		''  isFullyCompliant,
+		''           isYllccp,
+		''       transferType,
+		''              remark,
+		CREATE_USER         createUser,
+		CREATE_TIME         createTime,
+		UPDATE_USER         updateUser,
+		UPDATE_TIME         updateTime,
+		'DB'    dataSource,
+		DATAUUID            dataUuid,
+		ORG_DATA            orgData,
+		ERR_MSG             errMsg
+		FROM
+		chb_prd_baseinfo_errordata c
+		<where>
+			c.STATUS in('A','E')
+			<if test="selectprodId != null and selectprodId.size() > 0">
+				<foreach collection="selectprodId" item="prodId" open="AND c.PROD_ID IN (" close=")" separator=",">
+					#{prodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="raiseVdate != null and raiseVdate != ''">
+				DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &gt;= #{raiseVdate,jdbcType=VARCHAR}
+			</if>
+			<if test="raiseEnddate != null and raiseEnddate != ''">
+				and DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &lt;= #{raiseEnddate,jdbcType=VARCHAR}
+			</if>
+			<if test="vdate != null and vdate != ''">
+				DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdate,jdbcType=VARCHAR}
+			</if>
+			<if test="mdate != null and mdate != ''">
+				and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{mdate,jdbcType=VARCHAR}
+			</if>
+			<if test='selectStatus != null and !selectStatus.equals("") and !selectStatus.contains("A") '>
+				and 1 = 2
+			</if>
+		</where>
+	</select>
+	<update id="updateChbPrdBaseinfo" parameterType="java.util.List" >
+		UPDATE CHB_PRD_BASEINFO
+		set
+		STATUS = 'D'
+		where
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			prod_id = #{item.prodId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<delete id="deleteChbPrdBaseinfoErrorData" parameterType="java.util.List">
+		delete from chb_prd_baseinfo_errordata a
+		where 1=1
+		and a.DATAUUID
+		IN
+		<foreach collection="dtoList" item="item" open="(" separator=","  close=")">
+			#{item.dataUuid,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<select id="getProdinfo" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" parameterType="java.util.Map">
+		SELECT p.prod_id,p.prod_name FROM chb_prd_baseinfo p
+		where p.status in ('A','E')
+		and not exists (select 1 from chb_prd_baseinfo_errordata  a where a.PROD_ID=p.prod_id and a.status in ('A','E'))
+		<if test="search != null and search !='' ">
+			AND P.PROD_ID LIKE concat(concat('%', #{search}),'%') or p.prod_name like concat(concat('%', #{search}),'%')
+		</if>
+		<!--<if test="initValue != null and initValue != ''">
+			AND P.PROD_ID = #{initValue}
+		</if>-->
+		union  all
+		select b.prod_id,IFNULL(b.prod_name,b.prod_id) FROM chb_prd_baseinfo_errordata b
+		where b.prod_id is not null and b.status in ('A','E')
+		<if test="search != null and search !='' ">
+			AND b.PROD_ID LIKE concat(concat('%', #{search}),'%') or b.prod_name like concat(concat('%', #{search}),'%')
+		</if>
+	</select>
+
+
+	<select id="getSysDataDict" resultType="com.joyintech.tams.systemtools.dto.SysDataDict" parameterType="java.util.Map">
+		SELECT ITEM_CODE itemCode, ITEM_VALUE itemValue FROM SYS_DATADICT_LIST
+		WHERE DICT_CODE=#{code}
+	</select>
+
+	<select id="selectPrdFeeData" resultType="java.lang.Integer" parameterType="java.util.List">
+			SELECT count(1) from (
+		SELECT 1 from REP_CASH_YIELD a
+			where a.STATUS in('A','E')
+			and not EXISTS (
+			 SELECT 1 from 	REP_CASH_YIELD_ERRORDATA b
+					WHERE b.PROD_ID=a.BUSI_ID
+						and b.CASH_TYPE_2=a.CASH_TYPE2
+					and b.START_DATE=a.START_DATE
+					and b.STATUS in('A','E')
+			) and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			a.BUSI_ID = #{item.busiId,jdbcType=VARCHAR}
+			and a.START_DATE = #{item.startDate,jdbcType=DATE}
+			and a.CASH_TYPE2 = #{item.cashType2,jdbcType=VARCHAR}
+		</foreach>
+
+			union all
+			SELECT 1 from rep_cash_yield_errordata c
+			where c.STATUS in('A','E')
+		and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			c.PROD_ID = #{item.busiId,jdbcType=VARCHAR}
+			and c.START_DATE = #{item.startDate,jdbcType=DATE}
+			and c.CASH_TYPE_2 = #{item.cashType2,jdbcType=VARCHAR}
+		</foreach>
+
+		)tmp
+
+	</select>
+
+	<insert id="insertPrdFeeData" parameterType="java.util.List">
+		insert into
+		chb_prd_baseinfo
+		(STATUS,SVR_DATA_SOURCES,PRODUUID,prod_id,ORG_CODE,RAISE_VDATE,RAISE_ENDDATE,VDATE,MDATE,MANAGE_TYPE,
+		IS_CONSTRACTE,YIELD_HIGH,YIELD_LOW,YIELD_REMARK,OPEN_MODE,OPEN_CIRCLE,OPEN_CIRCLE_DAYS,RULE_COMMENT,
+		FIRST_OPEN_DAY,HOLIDAY_ON_FLAG,AVG_OPEN_COUNT,OPEN_BUSS,OPEN_BUSS_REMARK,BUSI_ACCT_NO,ACCT_NAME,
+		PRODTYPE,BASIC,FIDUCIARY_DUTY,CUSTOMER_TYPE,IS_TRANSFER,IS_FULLY_COMPLIANT,IS_YLLCCP,
+		IS_SYQZCCP,ISSUING_STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+		values (
+		<foreach collection="dtoList" item="item" index="index" separator=",">
+			#{item.status,jdbcType=VARCHAR} ,
+			#{item.dataSource,jdbcType=VARCHAR},
+			#{item.prodId,jdbcType=VARCHAR},
+			#{item.orgCode,jdbcType=VARCHAR},
+			#{item.raiseVdate,jdbcType=DATE},
+			#{item.raiseEnddate,jdbcType=DATE},
+			#{item.vdate,jdbcType=DATE},#{item.mdate,jdbcType=DATE},#{item.manageType,jdbcType=VARCHAR},
+			#{item.isConstracte,jdbcType=VARCHAR},#{item.yieldHigh,jdbcType=DECIMAL},#{item.yieldLow,jdbcType=DECIMAL},
+			#{item.yieldRemark,jdbcType=VARCHAR},
+			#{item.openMode,jdbcType=VARCHAR},#{item.openCircle,jdbcType=VARCHAR},#{item.openCircleDays,jdbcType=DECIMAL},
+			#{item.ruleComment,jdbcType=VARCHAR},#{item.firstOpenDay,jdbcType=DATE},#{item.holidayOnFlag,jdbcType=VARCHAR},
+			#{item.avgOpenCount,jdbcType=DECIMAL},#{item.openBuss,jdbcType=VARCHAR},#{item.openBussRemark,jdbcType=VARCHAR},
+			#{item.busiAcctNo,jdbcType=VARCHAR},#{item.acctName,jdbcType=VARCHAR},#{item.prodtype,jdbcType=VARCHAR},
+			#{item.basic,jdbcType=VARCHAR},
+			#{item.fiduciaryDuty,jdbcType=VARCHAR},#{item.customerType,jdbcType=VARCHAR},#{item.isTransfer,jdbcType=VARCHAR},
+			#{item.isFullyCompliant,jdbcType=VARCHAR},#{item.isYllccp,jdbcType=VARCHAR},
+			#{item.isSyqzccp,jdbcType=VARCHAR},#{item.issuingStatus,jdbcType=VARCHAR},
+			#{item.createUser,jdbcType=VARCHAR} ,
+			#{item.createTime,jdbcType=DATE} ,
+			#{item.updateUser,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=DATE}
+		</foreach>
+		)
+	</insert>
+
+
+
+
+	<select id="queryReportList" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+		SELECT
+		'导出' as type ,p.prod_id,p.prod_name,p.ORG_CODE orgCode,
+		DATE_FORMAT(p.RAISE_VDATE,'%Y-%m-%d')raiseVdateStr,
+		DATE_FORMAT(p.RAISE_ENDDATE,'%Y-%m-%d')raiseEnddateStr,
+		DATE_FORMAT(p.VDATE,'%Y-%m-%d')vdateStr,
+		DATE_FORMAT(p.MDATE,'%Y-%m-%d')mdateStr,
+		p.MANAGE_TYPE,p.IS_CONSTRACTE,p.YIELD_HIGH yieldHigh,p.YIELD_LOW yieldLow,p.YIELD_REMARK yieldRemark,
+		p.OPEN_MODE,p.OPEN_CIRCLE,p.OPEN_CIRCLE_DAYS openCircleDays,p.RULE_COMMENT ruleComment,DATE_FORMAT(p.FIRST_OPEN_DAY,'%Y-%m-%d')firstOpenDayStr,p.HOLIDAY_ON_FLAG,
+		p.AVG_OPEN_COUNT avgOpenCount,p.OPEN_BUSS,p.OPEN_BUSS_REMARK openBussRemark,p.BUSI_ACCT_NO busiAcctNo,p.ACCT_NAME acctName,p.PRODTYPE,p.BASIC,
+		p.FIDUCIARY_DUTY,p.CUSTOMER_TYPE,p.IS_TRANSFER,p.IS_FULLY_COMPLIANT,p.IS_YLLCCP,
+		p.IS_SYQZCCP,p.ISSUING_STATUS
+		FROM chb_prd_baseinfo p
+		<where>
+			<if test="selectprodIds != null and selectprodIds.size() > 0">
+				<foreach collection="selectprodIds" item="prodId" open="AND p.prod_id IN (" close=")" separator=",">
+					#{prodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="selectOneDate" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+		SELECT
+		p.prod_id,p.prod_name,p.ORG_CODE,p.RAISE_VDATE,p.RAISE_ENDDATE,
+		p.VDATE,p.MDATE,p.MANAGE_TYPE,p.IS_CONSTRACTE,p.YIELD_HIGH,p.YIELD_LOW,p.YIELD_REMARK,
+		p.OPEN_MODE,p.OPEN_CIRCLE,p.OPEN_CIRCLE_DAYS,p.RULE_COMMENT,p.FIRST_OPEN_DAY,p.HOLIDAY_ON_FLAG,
+		p.AVG_OPEN_COUNT,p.OPEN_BUSS,p.OPEN_BUSS_REMARK,p.BUSI_ACCT_NO,p.ACCT_NAME,p.PRODTYPE,p.BASIC,
+		p.FIDUCIARY_DUTY,p.CUSTOMER_TYPE,p.IS_TRANSFER,p.IS_FULLY_COMPLIANT,p.IS_YLLCCP,
+		p.IS_SYQZCCP,p.ISSUING_STATUS
+		FROM chb_prd_baseinfo p
+		where
+			prod_id = #{prodId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectchbPrdBaseinfoErrordata" resultType="com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfoErrodataWithBLOBs">
+			SELECT
+			c.STATUS,
+			c.PROD_ID,
+			c.PROD_NAME,
+			c.RAISE_VDATE,
+			/*DATE_FORMAT(c.RAISE_VDATE, '%Y-%m-%d') AS raiseVdateStr,*/
+			c.VDATE,
+			/*DATE_FORMAT(c.VDATE, '%Y-%m-%d') AS prdVdateStr,*/
+			c.CREATE_USER,
+			c.CREATE_TIME,
+			/*DATE_FORMAT(c.CREATE_TIME, '%Y-%m-%d') AS createTime,*/
+			c.UPDATE_USER,
+			c.UPDATE_TIME,
+			/*DATE_FORMAT(c.UPDATE_TIME, '%Y-%m-%d') AS updateTime,*/
+			'DB' AS dataSource,
+			c.DATAUUID AS dataUuid,
+			c.ORG_DATA,
+			c.ERR_MSG
+		FROM
+			chb_prd_baseinfo_errordata c
+		WHERE
+			c.DATAUUID =#{dataUuid,jdbcType=DATE}
+	</select>
+	<insert id="insertOne" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" >
+		insert into chb_prd_baseinfo
+		(STATUS,SVR_DATA_SOURCES,PRODUUID,prod_id,ORG_CODE,RAISE_VDATE,RAISE_ENDDATE,VDATE,MDATE,MANAGE_TYPE,
+		IS_CONSTRACTE,YIELD_HIGH,YIELD_LOW,YIELD_REMARK,OPEN_MODE,OPEN_CIRCLE,OPEN_CIRCLE_DAYS,RULE_COMMENT,
+		FIRST_OPEN_DAY,HOLIDAY_ON_FLAG,AVG_OPEN_COUNT,OPEN_BUSS,OPEN_BUSS_REMARK,BUSI_ACCT_NO,ACCT_NAME,
+		PRODTYPE,BASIC,FIDUCIARY_DUTY,CUSTOMER_TYPE,IS_TRANSFER,IS_FULLY_COMPLIANT,IS_YLLCCP,
+		IS_SYQZCCP,ISSUING_STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+		values (
+			#{status,jdbcType=VARCHAR} ,
+			#{dataSource,jdbcType=VARCHAR},
+			#{prodId,jdbcType=VARCHAR},
+			#{orgCode,jdbcType=VARCHAR},
+			#{raiseVdate,jdbcType=DATE},
+			#{raiseEnddate,jdbcType=DATE},
+		#{vdate,jdbcType=DATE},#{mdate,jdbcType=DATE},#{manageType,jdbcType=VARCHAR},
+		#{isConstracte,jdbcType=VARCHAR},#{yieldHigh,jdbcType=DECIMAL},#{yieldLow,jdbcType=DECIMAL},
+		#{yieldRemark,jdbcType=VARCHAR},
+		#{openMode,jdbcType=VARCHAR},#{openCircle,jdbcType=VARCHAR},#{openCircleDays,jdbcType=DECIMAL},
+		#{ruleComment,jdbcType=VARCHAR},#{firstOpenDay,jdbcType=DATE},#{holidayOnFlag,jdbcType=VARCHAR},
+		#{avgOpenCount,jdbcType=DECIMAL},#{openBuss,jdbcType=VARCHAR},#{openBussRemark,jdbcType=VARCHAR},
+		#{busiAcctNo,jdbcType=VARCHAR},#{acctName,jdbcType=VARCHAR},#{prodtype,jdbcType=VARCHAR},
+		#{basic,jdbcType=VARCHAR},
+		#{fiduciaryDuty,jdbcType=VARCHAR},#{customerType,jdbcType=VARCHAR},#{isTransfer,jdbcType=VARCHAR},
+		#{isFullyCompliant,jdbcType=VARCHAR},#{isYllccp,jdbcType=VARCHAR},
+		#{isSyqzccp,jdbcType=VARCHAR},#{issuingStatus,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR} ,
+			#{createTime,jdbcType=DATE} ,
+			#{updateUser,jdbcType=VARCHAR},
+			#{updateTime,jdbcType=DATE}
+		)
+    </insert>
+	<update id="updateOne" parameterType="java.util.Map">
+		update chb_prd_baseinfo set STATUS =#{status,jdbcType=VARCHAR},SVR_DATA_SOURCES=#{dataSource,jdbcType=VARCHAR},
+		ORG_CODE=#{orgCode1,jdbcType=VARCHAR},RAISE_VDATE=#{raiseVdate,jdbcType=DATE},
+		RAISE_ENDDATE=#{raiseEnddate,jdbcType=DATE},
+		VDATE=#{vdate,jdbcType=DATE},MDATE=#{mdate,jdbcType=DATE},MANAGE_TYPE=#{manageType,jdbcType=VARCHAR},
+		IS_CONSTRACTE=#{isConstracte,jdbcType=VARCHAR},YIELD_HIGH=#{yieldHigh,jdbcType=DECIMAL},YIELD_LOW=#{yieldLow,jdbcType=DECIMAL},
+		YIELD_REMARK=#{yieldRemark,jdbcType=VARCHAR},
+		OPEN_MODE=#{openMode,jdbcType=VARCHAR},OPEN_CIRCLE=#{openCircle,jdbcType=VARCHAR},OPEN_CIRCLE_DAYS=#{openCircleDays,jdbcType=DECIMAL},
+		RULE_COMMENT=#{ruleComment,jdbcType=VARCHAR},FIRST_OPEN_DAY=#{firstOpenDay,jdbcType=DATE},HOLIDAY_ON_FLAG=#{holidayOnFlag,jdbcType=VARCHAR},
+		AVG_OPEN_COUNT=#{avgOpenCount,jdbcType=DECIMAL},OPEN_BUSS=#{openBuss,jdbcType=VARCHAR},OPEN_BUSS_REMARK=#{openBussRemark,jdbcType=VARCHAR},
+		BUSI_ACCT_NO=#{busiAcctNo,jdbcType=VARCHAR},ACCT_NAME=#{acctName,jdbcType=VARCHAR},PRODTYPE=#{prodtype,jdbcType=VARCHAR},
+		BASIC=#{basic,jdbcType=VARCHAR},
+		FIDUCIARY_DUTY=#{fiduciaryDuty,jdbcType=VARCHAR},CUSTOMER_TYPE=#{customerType,jdbcType=VARCHAR},IS_TRANSFER=#{isTransfer,jdbcType=VARCHAR},
+		IS_FULLY_COMPLIANT=#{isFullyCompliant,jdbcType=VARCHAR},IS_YLLCCP=#{isYllccp,jdbcType=VARCHAR},
+		IS_SYQZCCP=#{isSyqzccp,jdbcType=VARCHAR},ISSUING_STATUS=#{issuingStatus,jdbcType=VARCHAR},
+		UPDATE_USER =#{updateUser,jdbcType=VARCHAR},UPDATE_TIME=#{updateTime,jdbcType=DATE}
+		where
+			prod_id = #{prodId,jdbcType=VARCHAR}
+	</update>
+	<update id="deleteOne" >
+		UPDATE chb_prd_baseinfo
+		set
+		STATUS = 'D'
+		where
+			prod_id = #{prodId,jdbcType=VARCHAR}
+	</update>
+	<delete id="deleteErrorDataOne" >
+		delete from chb_prd_baseinfo_errordata a
+		where
+		prod_id = #{prodId,jdbcType=VARCHAR}
+	</delete>
+</mapper>

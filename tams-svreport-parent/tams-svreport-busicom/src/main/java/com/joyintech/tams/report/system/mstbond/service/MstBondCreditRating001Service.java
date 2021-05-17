@@ -142,7 +142,7 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
         return mstBondCreditRating001Mapper.queryReportList(dtoList);
     }
 
-    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
+    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) throws ParseException {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++ ) {
@@ -180,7 +180,11 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
                 SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
                 Date gradeDate=null;
                 if(null!=dataList.get(i).get(3) && !"".equals(dataList.get(i).get(3))){
-                    gradeDate=new Date(dataList.get(i).get(3));
+                    if(dataList.get(i).get(3).contains("-")){
+                        gradeDate=dfs.parse(dataList.get(i).get(3));
+                    }else{
+                        gradeDate=new Date(dataList.get(i).get(3));
+                    }
                 }
                 //评级类型
                 String oType ="";
@@ -259,7 +263,11 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
                     SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
                     Date gradeDate=null;
                     if(null!=dataList.get(i).get(3) && !"".equals(dataList.get(i).get(3))){
-                        gradeDate=new Date(dataList.get(i).get(3));
+                        if(dataList.get(i).get(3).contains("-")){
+                            gradeDate=dfs.parse(dataList.get(i).get(3));
+                        }else{
+                            gradeDate=new Date(dataList.get(i).get(3));
+                        }
                     }
                     //评级类型
                     String oType ="";

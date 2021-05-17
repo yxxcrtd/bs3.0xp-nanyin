@@ -159,7 +159,7 @@
         //新增点击事件
         $('#DisRelOrg001_btn_add').click(function() {
             var data={"operateType":"add"};
-            Joyin.dialog('产品费率信息新建',basePath+'svreport/system/disrelorg/DisRelOrg002/init', '98%', '95%',data,function(){table.reload();});
+            Joyin.dialog('关联机构信息新建',basePath+'svreport/system/disrelorg/DisRelOrg002/init', '1000', '40%',data,function(){table.reload();});
         });
 
         //修改、删除事件绑定

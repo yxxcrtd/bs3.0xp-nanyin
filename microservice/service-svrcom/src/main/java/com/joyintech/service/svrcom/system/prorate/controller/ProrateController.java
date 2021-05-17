@@ -77,7 +77,7 @@ public class ProrateController {
         return list;
     }
     @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
+    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param) throws ParseException {
         List<List<String>> dataList = (List<List<String>>) param.get("dataList");
         return proRateInfo001Service.checkConfirmMsgForImportData(dataList);
     }

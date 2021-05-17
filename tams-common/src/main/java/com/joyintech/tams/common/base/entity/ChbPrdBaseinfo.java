@@ -2,38 +2,385 @@ package com.joyintech.tams.common.base.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
 public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
-	//交易日历
-	private String calendarId;
-	
-	public String getCalendarId() {
-		return calendarId;
-	}
-	public void setCalendarId(String calendarId) {
-		this.calendarId = calendarId;
-	}
+    //交易日历
+    private String calendarId;
 
-	private String finprodid;
-	private String finprodtype2;
-	/**
+    public String getCalendarId() {
+        return calendarId;
+    }
+    public void setCalendarId(String calendarId) {
+        this.calendarId = calendarId;
+    }
+
+    private String finprodid;
+    private String finprodtype2;
+    /**
      * 受托职责（01 主动管理、02 被动管理）
      */
     private String fiduciaryDuty;
-    
+    private String fiduciaryDutyName;
     /**
      * 转让类型（01 收益权转让、99 其他）
      */
     private String transferType;
-    
+    private String transferTypeName;
+
+    public String getFiduciaryDutyName() {
+        return fiduciaryDutyName;
+    }
+
+    public void setFiduciaryDutyName(String fiduciaryDutyName) {
+        this.fiduciaryDutyName = fiduciaryDutyName;
+    }
+
+    public String getTransferTypeName() {
+        return transferTypeName;
+    }
+
+    public void setTransferTypeName(String transferTypeName) {
+        this.transferTypeName = transferTypeName;
+    }
+
+    public String getProfitTypeName() {
+        return profitTypeName;
+    }
+
+    public void setProfitTypeName(String profitTypeName) {
+        this.profitTypeName = profitTypeName;
+    }
+
+    public String getIvstorientationName() {
+        return ivstorientationName;
+    }
+
+    public void setIvstorientationName(String ivstorientationName) {
+        this.ivstorientationName = ivstorientationName;
+    }
+
+    public String getRiskLevelName() {
+        return riskLevelName;
+    }
+
+    public void setRiskLevelName(String riskLevelName) {
+        this.riskLevelName = riskLevelName;
+    }
+
+    public String getTermtypeName() {
+        return termtypeName;
+    }
+
+    public void setTermtypeName(String termtypeName) {
+        this.termtypeName = termtypeName;
+    }
+
+    public String getRaiseCcyName() {
+        return raiseCcyName;
+    }
+
+    public void setRaiseCcyName(String raiseCcyName) {
+        this.raiseCcyName = raiseCcyName;
+    }
+
+    public String getInvestAraeName() {
+        return investAraeName;
+    }
+
+    public void setInvestAraeName(String investAraeName) {
+        this.investAraeName = investAraeName;
+    }
+
+    public String getInvestCountryName() {
+        return investCountryName;
+    }
+
+    public void setInvestCountryName(String investCountryName) {
+        this.investCountryName = investCountryName;
+    }
+
+    public String getFinanSerModelName() {
+        return finanSerModelName;
+    }
+
+    public void setFinanSerModelName(String finanSerModelName) {
+        this.finanSerModelName = finanSerModelName;
+    }
+
+    public String getOperateModeName() {
+        return operateModeName;
+    }
+
+    public void setOperateModeName(String operateModeName) {
+        this.operateModeName = operateModeName;
+    }
+
+    public String getCmmodeName() {
+        return cmmodeName;
+    }
+
+    public void setCmmodeName(String cmmodeName) {
+        this.cmmodeName = cmmodeName;
+    }
+
+    public String getPmmodeName() {
+        return pmmodeName;
+    }
+
+    public void setPmmodeName(String pmmodeName) {
+        this.pmmodeName = pmmodeName;
+    }
+
+    public String getContModeName() {
+        return contModeName;
+    }
+
+    public void setContModeName(String contModeName) {
+        this.contModeName = contModeName;
+    }
+
+    public String getInvTypeRatName() {
+        return invTypeRatName;
+    }
+
+    public void setInvTypeRatName(String invTypeRatName) {
+        this.invTypeRatName = invTypeRatName;
+    }
+
+    public String getRiskTypeName() {
+        return riskTypeName;
+    }
+
+    public void setRiskTypeName(String riskTypeName) {
+        this.riskTypeName = riskTypeName;
+    }
+
+    public String getSaleAreaName() {
+        return saleAreaName;
+    }
+
+    public void setSaleAreaName(String saleAreaName) {
+        this.saleAreaName = saleAreaName;
+    }
+
+    public String getCashPrinCcyName() {
+        return cashPrinCcyName;
+    }
+
+    public void setCashPrinCcyName(String cashPrinCcyName) {
+        this.cashPrinCcyName = cashPrinCcyName;
+    }
+
+    public String getCashProfCcyName() {
+        return cashProfCcyName;
+    }
+
+    public void setCashProfCcyName(String cashProfCcyName) {
+        this.cashProfCcyName = cashProfCcyName;
+    }
+
+    public String getInvestPrinDateName() {
+        return investPrinDateName;
+    }
+
+    public void setInvestPrinDateName(String investPrinDateName) {
+        this.investPrinDateName = investPrinDateName;
+    }
+
+    public String getInvestProfDateName() {
+        return investProfDateName;
+    }
+
+    public void setInvestProfDateName(String investProfDateName) {
+        this.investProfDateName = investProfDateName;
+    }
+
+    public String getInDepNameStr() {
+        return inDepNameStr;
+    }
+
+    public void setInDepNameStr(String inDepNameStr) {
+        this.inDepNameStr = inDepNameStr;
+    }
+
+    public String getOutDepCtryName() {
+        return outDepCtryName;
+    }
+
+    public void setOutDepCtryName(String outDepCtryName) {
+        this.outDepCtryName = outDepCtryName;
+    }
+
+    public String getTermRightFlagName() {
+        return termRightFlagName;
+    }
+
+    public void setTermRightFlagName(String termRightFlagName) {
+        this.termRightFlagName = termRightFlagName;
+    }
+
+    public String getCusRedeemFlagName() {
+        return cusRedeemFlagName;
+    }
+
+    public void setCusRedeemFlagName(String cusRedeemFlagName) {
+        this.cusRedeemFlagName = cusRedeemFlagName;
+    }
+
+    public String getCreditFlagName() {
+        return creditFlagName;
+    }
+
+    public void setCreditFlagName(String creditFlagName) {
+        this.creditFlagName = creditFlagName;
+    }
+
+    public String getCreditTypeName() {
+        return creditTypeName;
+    }
+
+    public void setCreditTypeName(String creditTypeName) {
+        this.creditTypeName = creditTypeName;
+    }
+
+    public String getPricedModeName() {
+        return pricedModeName;
+    }
+
+    public void setPricedModeName(String pricedModeName) {
+        this.pricedModeName = pricedModeName;
+    }
+
+    public String getIsConstracteName() {
+        return isConstracteName;
+    }
+
+    public void setIsConstracteName(String isConstracteName) {
+        this.isConstracteName = isConstracteName;
+    }
+
+    public String getOpenModeName() {
+        return openModeName;
+    }
+
+    public void setOpenModeName(String openModeName) {
+        this.openModeName = openModeName;
+    }
+
+    public String getOpenCircleName() {
+        return openCircleName;
+    }
+
+    public void setOpenCircleName(String openCircleName) {
+        this.openCircleName = openCircleName;
+    }
+
+    public String getHolidayOnFlagName() {
+        return holidayOnFlagName;
+    }
+
+    public void setHolidayOnFlagName(String holidayOnFlagName) {
+        this.holidayOnFlagName = holidayOnFlagName;
+    }
+
+    public String getOpenBussName() {
+        return openBussName;
+    }
+
+    public void setOpenBussName(String openBussName) {
+        this.openBussName = openBussName;
+    }
+
+    public String getCreditModeName() {
+        return creditModeName;
+    }
+
+    public void setCreditModeName(String creditModeName) {
+        this.creditModeName = creditModeName;
+    }
+
+    public String getManageTypeName() {
+        return manageTypeName;
+    }
+
+    public void setManageTypeName(String manageTypeName) {
+        this.manageTypeName = manageTypeName;
+    }
+
+    public String getExcFinSectorName() {
+        return excFinSectorName;
+    }
+
+    public void setExcFinSectorName(String excFinSectorName) {
+        this.excFinSectorName = excFinSectorName;
+    }
+
+    public String getIsShortTermName() {
+        return isShortTermName;
+    }
+
+    public void setIsShortTermName(String isShortTermName) {
+        this.isShortTermName = isShortTermName;
+    }
+
+    public String getIsFreeRedemName() {
+        return isFreeRedemName;
+    }
+
+    public void setIsFreeRedemName(String isFreeRedemName) {
+        this.isFreeRedemName = isFreeRedemName;
+    }
+
+    public String getCashManaCateName() {
+        return cashManaCateName;
+    }
+
+    public void setCashManaCateName(String cashManaCateName) {
+        this.cashManaCateName = cashManaCateName;
+    }
+
+    public String getCustomerTypeName() {
+        return customerTypeName;
+    }
+
+    public void setCustomerTypeName(String customerTypeName) {
+        this.customerTypeName = customerTypeName;
+    }
+
+    public String getIsFullyCompliantName() {
+        return isFullyCompliantName;
+    }
+
+    public void setIsFullyCompliantName(String isFullyCompliantName) {
+        this.isFullyCompliantName = isFullyCompliantName;
+    }
+
+    public String getIsTransferName() {
+        return isTransferName;
+    }
+
+    public void setIsTransferName(String isTransferName) {
+        this.isTransferName = isTransferName;
+    }
+
+    public String getIsYllccpName() {
+        return isYllccpName;
+    }
+
+    public void setIsYllccpName(String isYllccpName) {
+        this.isYllccpName = isYllccpName;
+    }
+
     /**
      * 货币市场基金标识（01 是、02 否）
      */
     private String isMarketFund;
-    
+
     /**
      * 主键，自动生成
      */
@@ -47,6 +394,7 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     /**
      * 产品代码
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String prodId;
 
     /**
@@ -75,9 +423,13 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     private String prodInsId;
 
     /**
-     * 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益  
+     * 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益
      */
     private String profitType;
+    /**
+     * 产品收益类型名称
+     */
+    private String profitTypeName;
 
     /**
      * 投资者类型
@@ -95,18 +447,41 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     private String status;
 
     /**
-     * 计息基础 A/360, A/365  
+     * 计息基础 A/360, A/365
      */
     private String basic;
+    private String basicName;
 
-  
+    public String getBasicName() {
+        return basicName;
+    }
+
+    public void setBasicName(String basicName) {
+        this.basicName = basicName;
+    }
 
     /**
      * 标识哪种产品，净值N，货币M，利率R，客户周期C
      */
     private String prodtype;
 
-   
+    public String getProdtype() {
+        return prodtype;
+    }
+
+    public void setProdtype(String prodtype) {
+        this.prodtype = prodtype;
+    }
+
+    private String prodtypeName;
+
+    public String getProdtypeName() {
+        return prodtypeName;
+    }
+
+    public void setProdtypeName(String prodtypeName) {
+        this.prodtypeName = prodtypeName;
+    }
 
     /**
      * 是否代销，01/02
@@ -119,7 +494,7 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     private String saletarget;
 
     /**
-     * 存续状态  存续01，终止02，未起息03  
+     * 存续状态  存续01，终止02，未起息03
      */
     private String durationflag;
 
@@ -127,11 +502,28 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 到期日
      */
     private Date mdate;
-
+    private String mdateStr;
     /**
      * 起息日
      */
     private Date vdate;
+    private String vdateStr;
+
+    public String getMdateStr() {
+        return mdateStr;
+    }
+
+    public void setMdateStr(String mdateStr) {
+        this.mdateStr = mdateStr;
+    }
+
+    public String getVdateStr() {
+        return vdateStr;
+    }
+
+    public void setVdateStr(String vdateStr) {
+        this.vdateStr = vdateStr;
+    }
 
     /**
      * 提前终止日
@@ -142,7 +534,7 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 投资性质 01固定收益类/02权益类/03混合类/04商品及金融衍生品类
      */
     private String ivstorientation;
-
+    private String ivstorientationName;
     /**
      * 开放期业务说明
      */
@@ -164,35 +556,45 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     private String declareStatus;
 
     /**
-     * 发行状态  确认发行/发行成功/发行失败/不发行  
+     * 发行状态  确认发行/发行成功/发行失败/不发行
      */
     private String issuingStatus;
+    private String issuingStatusName;
+
+    public String getIssuingStatusName() {
+        return issuingStatusName;
+    }
+
+    public void setIssuingStatusName(String issuingStatusName) {
+        this.issuingStatusName = issuingStatusName;
+    }
 
     /**
-     * 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）  
+     * 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）
      */
     private String riskLevel;
-
+    private String riskLevelName;
     /**
      * 产品期限01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/07 1-3年（含）/08 3年以上
      */
     private String termtype;
+    private String termtypeName;
 
     /**
      * 募集币种
      */
     private String raiseCcy;
-
+    private String raiseCcyName;
     /**
      * 募集起始日期
      */
     private Date raiseVdate;
-
+    private String raiseVdateStr;
     /**
      * 募集结束日期
      */
     private Date raiseEnddate;
-
+    private String raiseEnddateStr;
     /**
      * 模板名称
      */
@@ -239,7 +641,7 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     private String managerId;
 
     /**
-     * 会计核算方式  01 表内/02 表外  
+     * 会计核算方式  01 表内/02 表外
      */
     private String bookMode;
 
@@ -264,50 +666,50 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     private String liaisonEmail;
 
     /**
-     * 资金投向地区  01 境内/02 境外/03 境内和境外  
+     * 资金投向地区  01 境内/02 境外/03 境内和境外
      */
     private String investArae;
-
+    private String investAraeName;
     /**
      * 产品投资国家或地区参考《世界各国和地区名称代码》
      */
     private String investCountry;
-
+    private String investCountryName;
     /**
      * 理财业务服务模式01 综合理财服务/02 理财顾问服务/99 其他
      */
     private String finanSerModel;
-
+    private String finanSerModelName;
     /**
-     * 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型  
+     * 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
      */
     private String operateMode;
-
+    private String operateModeName;
     /**
      * 产品资产配置方式01 单一资产配置（一对一）/02 资产组合配置（一对多）/03 其他配置（多对多）
      */
     private String cmmode;
-
+    private String cmmodeName;
     /**
      * 产品管理模式01银行为实际管理人/02 其他机构为实际管理人/03 资产管理公司/04 特殊目的载体（SPV）
      */
     private String pmmode;
-
+    private String pmmodeName;
     /**
      * 实际管理人名称
      */
     private String mname;
 
     /**
-     * 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类  
+     * 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类
      */
     private String invAssetType;
 
     /**
-     * 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他  
+     * 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他
      */
     private String contMode;
-
+    private String contModeName;
     /**
      * 合作机构
      */
@@ -324,7 +726,7 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     private String isYield;
 
     /**
-     * 是否有收益率测算依据  01 是/02 否  
+     * 是否有收益率测算依据  01 是/02 否
      */
     private String isYieldMeasBasis;
 
@@ -332,12 +734,12 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 投资资产种类及比例
      */
     private String invTypeRat;
-
+    private String invTypeRatName;
     /**
      * 投资者风险偏好01 保守型/02 稳健型/03 平衡型/04 成长型/05 进取型
      */
     private String riskType;
-
+    private String riskTypeName;
     /**
      * 预计客户最高年收益率%
      */
@@ -352,6 +754,7 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 产品销售地区
      */
     private String saleArea;
+    private String saleAreaName;
 
     /**
      * 起点销售金额
@@ -362,12 +765,12 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 兑付本金币种
      */
     private String cashPrinCcy;
-
+    private String cashPrinCcyName;
     /**
      * 兑付收益币种
      */
     private String cashProfCcy;
-
+    private String cashProfCcyName;
     /**
      * 计划募集金额（元）
      */
@@ -382,12 +785,12 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 投资本金到账日
      */
     private String investPrinDate;
-
+    private String investPrinDateName;
     /**
      * 投资收益到账日
      */
     private String investProfDate;
-
+    private String investProfDateName;
     /**
      * 托管费率
      */
@@ -402,12 +805,12 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 境内托管机构名称
      */
     private String inDepName;
-
+    private String inDepNameStr;
     /**
      * 境外托管机构国别
      */
     private String outDepCtry;
-
+    private String outDepCtryName;
     /**
      * 境外托管机构名称
      */
@@ -417,37 +820,37 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 发行机构提前终止权标识
      */
     private String termRightFlag;
-
+    private String termRightFlagName;
     /**
      * 客户赎回权标识
      */
     private String cusRedeemFlag;
-
+    private String cusRedeemFlagName;
     /**
      * 产品增信标识
      */
     private String creditFlag;
-
+    private String creditFlagName;
     /**
      * 产品增信机构类型
      */
     private String creditType;
-
+    private String creditTypeName;
     /**
      * 产品定价方式
      */
     private String pricedMode;
-
+    private String pricedModeName;
     /**
      * 产品起始日期
      */
     private Date prdVdate;
-
+    private Date prdVdateStr;
     /**
      * 产品终止日期
      */
     private Date prdMdate;
-
+    private Date prdMdateStr;
     /**
      * 平均预计客户年收益率
      */
@@ -457,9 +860,9 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 是否结构化分层产品
      */
     private String isConstracte;
-
+    private String isConstracteName;
     /**
-     * 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五  
+     * 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五
      */
     private String gradeType;
 
@@ -472,12 +875,12 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      *   开放模式01 有规律开放/02 无规律开放
      */
     private String openMode;
-
+    private String openModeName;
     /**
      * 规律开放周期
      */
     private String openCircle;
-
+    private String openCircleName;
     /**
      * 其他规律开放周期（天）
      */
@@ -492,12 +895,12 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 首次开放周期起始日
      */
     private Date firstOpenDay;
-
+    private String firstOpenDayStr;
     /**
      * 节假日是否开放
      */
     private String holidayOnFlag;
-
+    private String holidayOnFlagName;
     /**
      * 平均开放次数（年化）
      */
@@ -507,7 +910,7 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 开放期业务01申赎皆可/02 仅可申购无限制/ 03仅可赎回无限制 /04仅可申购有限制/05仅可赎回有限制 /99其他
      */
     private String openBuss;
-
+    private String openBussName;
     /**
      * 预计最高收益率-发行
      */
@@ -522,7 +925,7 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 产品增信形式
      */
     private String creditMode;
-
+    private String creditModeName;
     /**
      * 发行机构代码
      */
@@ -582,17 +985,41 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 数据来源
      */
     private String dataSource;
+    /**
+     * 数据来源名称
+     */
+    private String dataSourceName;
+
+    public String getDataSourceName() {
+        return dataSourceName;
+    }
+
+    public void setDataSourceName(String dataSourceName) {
+        this.dataSourceName = dataSourceName;
+    }
 
     /**
      * 募集方式
      */
     private String raiseType;
+    /**
+     * 募集方式名称
+     */
+    private String raiseTypeName;
+
+    public String getRaiseTypeName() {
+        return raiseTypeName;
+    }
+
+    public void setRaiseTypeName(String raiseTypeName) {
+        this.raiseTypeName = raiseTypeName;
+    }
 
     /**
      * 管理方式
      */
     private String manageType;
-
+    private String manageTypeName;
     /**
      * 更新人
      */
@@ -620,16 +1047,170 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
 
     //新增
     private String excFinSector;//是否金融同业专属
+    private String excFinSectorName;//是否金融同业专属名称
     private String isShortTerm;//是否设置最短持有期限
+    private String isShortTermName;//是否设置最短持有期限名称
     private BigDecimal shortTerm;//最短持有期限（天）
     private String isFreeRedem;//最短持有期后是否自由赎回
+    private String isFreeRedemName;//最短持有期后是否自由赎回名称
     private String cashManaCate;//是否现金管理类
+    private String cashManaCateName;//是否现金管理类名称
     private BigDecimal yield;//业绩比较基准%
     private BigDecimal investFeeRate;//投资管理费率%
     //新增字段 CUSTOMER_TYPE 客户类型  支持多选，多选时用英文“,”分隔
     //  3-住户，4-广义政府，5-非金融企业，6-金融机构（实体），7-特定目的载体 ，8-境外  --人行报表
-    private String customerType;//最短持有期后是否自由赎回
-    
+    private String customerType;//客户类型
+    private String customerTypeName;//客户类型名称
+    //20210511 新增
+    /**
+     * 现金管理类产品-是否完全符合
+     */
+    private String isFullyCompliant;
+    private String isFullyCompliantName;
+    /**
+     * 是否收益权转让产品
+     */
+    private String isSyqzccp;
+    private String isSyqzccpName;
+
+    public String getIsSyqzccpName() {
+        return isSyqzccpName;
+    }
+
+    public void setIsSyqzccpName(String isSyqzccpName) {
+        this.isSyqzccpName = isSyqzccpName;
+    }
+
+    /**
+     * 导出类型
+     */
+    private String type;
+    /**
+     * 选择项
+     */
+    private List<ChbPrdBaseinfo> selectedItem;
+    /**
+     * DATAUUID
+     */
+    private String dataUuid;
+
+    public String getRaiseVdateStr() {
+        return raiseVdateStr;
+    }
+
+    public void setRaiseVdateStr(String raiseVdateStr) {
+        this.raiseVdateStr = raiseVdateStr;
+    }
+
+    public String getRaiseEnddateStr() {
+        return raiseEnddateStr;
+    }
+
+    public void setRaiseEnddateStr(String raiseEnddateStr) {
+        this.raiseEnddateStr = raiseEnddateStr;
+    }
+
+    public Date getPrdVdateStr() {
+        return prdVdateStr;
+    }
+
+    public void setPrdVdateStr(Date prdVdateStr) {
+        this.prdVdateStr = prdVdateStr;
+    }
+
+    public Date getPrdMdateStr() {
+        return prdMdateStr;
+    }
+
+    public void setPrdMdateStr(Date prdMdateStr) {
+        this.prdMdateStr = prdMdateStr;
+    }
+
+    public String getFirstOpenDayStr() {
+        return firstOpenDayStr;
+    }
+
+    public void setFirstOpenDayStr(String firstOpenDayStr) {
+        this.firstOpenDayStr = firstOpenDayStr;
+    }
+
+    /**
+     * 原始数据
+     */
+    private String orgData;
+    /**
+     * 错误信息
+     */
+    private String errMsg;
+    /**
+     * 数据状态名称
+     */
+    private String statusName;
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public String getOrgData() {
+        return orgData;
+    }
+
+    public void setOrgData(String orgData) {
+        this.orgData = orgData;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
+    }
+
+    public String getDataUuid() {
+        return dataUuid;
+    }
+
+    public void setDataUuid(String dataUuid) {
+        this.dataUuid = dataUuid;
+    }
+
+    public String getIsFullyCompliant() {
+        return isFullyCompliant;
+    }
+
+    public void setIsFullyCompliant(String isFullyCompliant) {
+        this.isFullyCompliant = isFullyCompliant;
+    }
+
+    public String getIsSyqzccp() {
+        return isSyqzccp;
+    }
+
+    public void setIsSyqzccp(String isSyqzccp) {
+        this.isSyqzccp = isSyqzccp;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<ChbPrdBaseinfo> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<ChbPrdBaseinfo> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
     /**
      * 业绩比较基准下限
      */
@@ -661,21 +1242,27 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 是否母行划转产品
      */
     private String isTransfer;
-
+    private String isTransferName;
     /**
      * 是否合规新产品
      */
     private String isFhxgcp;
+    private String isFhxgcpName;
+
+    public String getIsFhxgcpName() {
+        return isFhxgcpName;
+    }
+
+    public void setIsFhxgcpName(String isFhxgcpName) {
+        this.isFhxgcpName = isFhxgcpName;
+    }
 
     /**
      * 是否养老理财产品
      */
     private String isYllccp;
 
-    /**
-     * 现金管理类产品-是否完全符合
-     */
-    private String isFullyCompliant;
+    private String isYllccpName;
 
 
     public String getIsTransfer() {
@@ -831,16 +1418,16 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益  
-     * @return PROFIT_TYPE 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益  
+     * 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益
+     * @return PROFIT_TYPE 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益
      */
     public String getProfitType() {
         return profitType;
     }
 
     /**
-     * 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益  
-     * @param profitType 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益  
+     * 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益
+     * @param profitType 产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益
      */
     public void setProfitType(String profitType) {
         this.profitType = profitType == null ? null : profitType.trim();
@@ -895,38 +1482,34 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 计息基础 A/360, A/365  
-     * @return BASIC 计息基础 A/360, A/365  
+     * 计息基础 A/360, A/365
+     * @return BASIC 计息基础 A/360, A/365
      */
     public String getBasic() {
         return basic;
     }
 
     /**
-     * 计息基础 A/360, A/365  
-     * @param basic 计息基础 A/360, A/365  
+     * 计息基础 A/360, A/365
+     * @param basic 计息基础 A/360, A/365
      */
     public void setBasic(String basic) {
         this.basic = basic == null ? null : basic.trim();
     }
 
-    
+
 
     /**
      * 标识哪种产品，净值N，货币M，利率R，客户周期C
      * @return PRODTYPE 标识哪种产品，净值N，货币M，利率R，客户周期C
      */
-    public String getProdtype() {
-        return prodtype;
-    }
+
 
     /**
      * 标识哪种产品，净值N，货币M，利率R，客户周期C
      * @param prodtype 标识哪种产品，净值N，货币M，利率R，客户周期C
      */
-    public void setProdtype(String prodtype) {
-        this.prodtype = prodtype == null ? null : prodtype.trim();
-    }
+
 
     /**
      * 是否代销，01/02
@@ -961,16 +1544,16 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 存续状态  存续01，终止02，未起息03  
-     * @return DURATIONFLAG 存续状态  存续01，终止02，未起息03  
+     * 存续状态  存续01，终止02，未起息03
+     * @return DURATIONFLAG 存续状态  存续01，终止02，未起息03
      */
     public String getDurationflag() {
         return durationflag;
     }
 
     /**
-     * 存续状态  存续01，终止02，未起息03  
-     * @param durationflag 存续状态  存续01，终止02，未起息03  
+     * 存续状态  存续01，终止02，未起息03
+     * @param durationflag 存续状态  存续01，终止02，未起息03
      */
     public void setDurationflag(String durationflag) {
         this.durationflag = durationflag == null ? null : durationflag.trim();
@@ -1105,32 +1688,32 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 发行状态  确认发行/发行成功/发行失败/不发行  
-     * @return ISSUING_STATUS 发行状态  确认发行/发行成功/发行失败/不发行  
+     * 发行状态  确认发行/发行成功/发行失败/不发行
+     * @return ISSUING_STATUS 发行状态  确认发行/发行成功/发行失败/不发行
      */
     public String getIssuingStatus() {
         return issuingStatus;
     }
 
     /**
-     * 发行状态  确认发行/发行成功/发行失败/不发行  
-     * @param issuingStatus 发行状态  确认发行/发行成功/发行失败/不发行  
+     * 发行状态  确认发行/发行成功/发行失败/不发行
+     * @param issuingStatus 发行状态  确认发行/发行成功/发行失败/不发行
      */
     public void setIssuingStatus(String issuingStatus) {
         this.issuingStatus = issuingStatus == null ? null : issuingStatus.trim();
     }
 
     /**
-     * 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）  
-     * @return RISK_LEVEL 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）  
+     * 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）
+     * @return RISK_LEVEL 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）
      */
     public String getRiskLevel() {
         return riskLevel;
     }
 
     /**
-     * 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）  
-     * @param riskLevel 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）  
+     * 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）
+     * @param riskLevel 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）
      */
     public void setRiskLevel(String riskLevel) {
         this.riskLevel = riskLevel == null ? null : riskLevel.trim();
@@ -1345,16 +1928,16 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 会计核算方式  01 表内/02 表外  
-     * @return BOOK_MODE 会计核算方式  01 表内/02 表外  
+     * 会计核算方式  01 表内/02 表外
+     * @return BOOK_MODE 会计核算方式  01 表内/02 表外
      */
     public String getBookMode() {
         return bookMode;
     }
 
     /**
-     * 会计核算方式  01 表内/02 表外  
-     * @param bookMode 会计核算方式  01 表内/02 表外  
+     * 会计核算方式  01 表内/02 表外
+     * @param bookMode 会计核算方式  01 表内/02 表外
      */
     public void setBookMode(String bookMode) {
         this.bookMode = bookMode == null ? null : bookMode.trim();
@@ -1425,16 +2008,16 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 资金投向地区  01 境内/02 境外/03 境内和境外  
-     * @return INVEST_ARAE 资金投向地区  01 境内/02 境外/03 境内和境外  
+     * 资金投向地区  01 境内/02 境外/03 境内和境外
+     * @return INVEST_ARAE 资金投向地区  01 境内/02 境外/03 境内和境外
      */
     public String getInvestArae() {
         return investArae;
     }
 
     /**
-     * 资金投向地区  01 境内/02 境外/03 境内和境外  
-     * @param investArae 资金投向地区  01 境内/02 境外/03 境内和境外  
+     * 资金投向地区  01 境内/02 境外/03 境内和境外
+     * @param investArae 资金投向地区  01 境内/02 境外/03 境内和境外
      */
     public void setInvestArae(String investArae) {
         this.investArae = investArae == null ? null : investArae.trim();
@@ -1473,16 +2056,16 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型  
-     * @return OPERATE_MODE 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型  
+     * 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
+     * @return OPERATE_MODE 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
      */
     public String getOperateMode() {
         return operateMode;
     }
 
     /**
-     * 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型  
-     * @param operateMode 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型  
+     * 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
+     * @param operateMode 产品运作模式  01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
      */
     public void setOperateMode(String operateMode) {
         this.operateMode = operateMode == null ? null : operateMode.trim();
@@ -1537,32 +2120,32 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类  
-     * @return INV_ASSET_TYPE 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类  
+     * 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类
+     * @return INV_ASSET_TYPE 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类
      */
     public String getInvAssetType() {
         return invAssetType;
     }
 
     /**
-     * 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类  
-     * @param invAssetType 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类  
+     * 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类
+     * @param invAssetType 投资资产类型  01 结构性投资类/02 货币市场工具类/03 债券类/04 非标准化债权类/05 股票类/06 股权类/07 另类投资类/08 混合类/09代客境外投资类/10 银行存款类/11 理财直接融资工具类/12 新增可投资资产类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类
      */
     public void setInvAssetType(String invAssetType) {
         this.invAssetType = invAssetType == null ? null : invAssetType.trim();
     }
 
     /**
-     * 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他  
-     * @return CONT_MODE 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他  
+     * 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他
+     * @return CONT_MODE 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他
      */
     public String getContMode() {
         return contMode;
     }
 
     /**
-     * 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他  
-     * @param contMode 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他  
+     * 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他
+     * @param contMode 合作模式  01 独立运作/02 银信/03 银保/04 银基/05 银证/07 混合类/99 其他
      */
     public void setContMode(String contMode) {
         this.contMode = contMode == null ? null : contMode.trim();
@@ -1617,16 +2200,16 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 是否有收益率测算依据  01 是/02 否  
-     * @return IS_YIELD_MEAS_BASIS 是否有收益率测算依据  01 是/02 否  
+     * 是否有收益率测算依据  01 是/02 否
+     * @return IS_YIELD_MEAS_BASIS 是否有收益率测算依据  01 是/02 否
      */
     public String getIsYieldMeasBasis() {
         return isYieldMeasBasis;
     }
 
     /**
-     * 是否有收益率测算依据  01 是/02 否  
-     * @param isYieldMeasBasis 是否有收益率测算依据  01 是/02 否  
+     * 是否有收益率测算依据  01 是/02 否
+     * @param isYieldMeasBasis 是否有收益率测算依据  01 是/02 否
      */
     public void setIsYieldMeasBasis(String isYieldMeasBasis) {
         this.isYieldMeasBasis = isYieldMeasBasis == null ? null : isYieldMeasBasis.trim();
@@ -2049,16 +2632,16 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
     }
 
     /**
-     * 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五  
-     * @return GRADE_TYPE 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五  
+     * 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五
+     * @return GRADE_TYPE 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五
      */
     public String getGradeType() {
         return gradeType;
     }
 
     /**
-     * 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五  
-     * @param gradeType 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五  
+     * 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五
+     * @param gradeType 层级类别  11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五
      */
     public void setGradeType(String gradeType) {
         this.gradeType = gradeType == null ? null : gradeType.trim();
@@ -2560,97 +3143,97 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
         this.agent = agent == null ? null : agent.trim();
     }
 
-	public String getFinprodtype2() {
-		return finprodtype2;
-	}
+    public String getFinprodtype2() {
+        return finprodtype2;
+    }
 
-	public void setFinprodtype2(String finprodtype2) {
-		this.finprodtype2 = finprodtype2;
-	}
+    public void setFinprodtype2(String finprodtype2) {
+        this.finprodtype2 = finprodtype2;
+    }
 
-	public String getFinprodid() {
-		return finprodid;
-	}
+    public String getFinprodid() {
+        return finprodid;
+    }
 
-	public void setFinprodid(String finprodid) {
-		this.finprodid = finprodid;
-	}
+    public void setFinprodid(String finprodid) {
+        this.finprodid = finprodid;
+    }
 
-	public String getFiduciaryDuty() {
-		return fiduciaryDuty;
-	}
+    public String getFiduciaryDuty() {
+        return fiduciaryDuty;
+    }
 
-	public void setFiduciaryDuty(String fiduciaryDuty) {
-		this.fiduciaryDuty = fiduciaryDuty;
-	}
+    public void setFiduciaryDuty(String fiduciaryDuty) {
+        this.fiduciaryDuty = fiduciaryDuty;
+    }
 
-	public String getTransferType() {
-		return transferType;
-	}
+    public String getTransferType() {
+        return transferType;
+    }
 
-	public void setTransferType(String transferType) {
-		this.transferType = transferType;
-	}
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
 
-	public String getIsMarketFund() {
-		return isMarketFund;
-	}
+    public String getIsMarketFund() {
+        return isMarketFund;
+    }
 
-	public void setIsMarketFund(String isMarketFund) {
-		this.isMarketFund = isMarketFund;
-	}
+    public void setIsMarketFund(String isMarketFund) {
+        this.isMarketFund = isMarketFund;
+    }
 
-	public String getExcFinSector() {
-		return excFinSector;
-	}
-	public void setExcFinSector(String excFinSector) {
-		this.excFinSector = excFinSector;
-	}
-	public String getIsShortTerm() {
-		return isShortTerm;
-	}
-	public void setIsShortTerm(String isShortTerm) {
-		this.isShortTerm = isShortTerm;
-	}
-	public BigDecimal getShortTerm() {
-		return shortTerm;
-	}
-	public void setShortTerm(BigDecimal shortTerm) {
-		this.shortTerm = shortTerm;
-	}
-	public String getIsFreeRedem() {
-		return isFreeRedem;
-	}
-	public void setIsFreeRedem(String isFreeRedem) {
-		this.isFreeRedem = isFreeRedem;
-	}
-	public String getCashManaCate() {
-		return cashManaCate;
-	}
-	public void setCashManaCate(String cashManaCate) {
-		this.cashManaCate = cashManaCate;
-	}
-	public BigDecimal getYield() {
-		return yield;
-	}
-	public void setYield(BigDecimal yield) {
-		this.yield = yield;
-	}
-	public BigDecimal getInvestFeeRate() {
-		return investFeeRate;
-	}
-	public void setInvestFeeRate(BigDecimal investFeeRate) {
-		this.investFeeRate = investFeeRate;
-	}
+    public String getExcFinSector() {
+        return excFinSector;
+    }
+    public void setExcFinSector(String excFinSector) {
+        this.excFinSector = excFinSector;
+    }
+    public String getIsShortTerm() {
+        return isShortTerm;
+    }
+    public void setIsShortTerm(String isShortTerm) {
+        this.isShortTerm = isShortTerm;
+    }
+    public BigDecimal getShortTerm() {
+        return shortTerm;
+    }
+    public void setShortTerm(BigDecimal shortTerm) {
+        this.shortTerm = shortTerm;
+    }
+    public String getIsFreeRedem() {
+        return isFreeRedem;
+    }
+    public void setIsFreeRedem(String isFreeRedem) {
+        this.isFreeRedem = isFreeRedem;
+    }
+    public String getCashManaCate() {
+        return cashManaCate;
+    }
+    public void setCashManaCate(String cashManaCate) {
+        this.cashManaCate = cashManaCate;
+    }
+    public BigDecimal getYield() {
+        return yield;
+    }
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+    public BigDecimal getInvestFeeRate() {
+        return investFeeRate;
+    }
+    public void setInvestFeeRate(BigDecimal investFeeRate) {
+        this.investFeeRate = investFeeRate;
+    }
 
-	public String getCustomerType() {
-		return customerType;
-	}
+    public String getCustomerType() {
+        return customerType;
+    }
 
-	public void setCustomerType(String customerType) {
-		this.customerType = customerType == null ? null : customerType.trim();
-	}
-	/**
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType == null ? null : customerType.trim();
+    }
+    /**
      * 取得 业绩比较基准下限
      * @return 业绩比较基准下限
      */
@@ -2730,11 +3313,5 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
         this.acctName = acctName == null ? null : acctName.trim();
     }
 
-    public String getIsFullyCompliant() {
-        return isFullyCompliant;
-    }
 
-    public void setIsFullyCompliant(String isFullyCompliant) {
-        this.isFullyCompliant = isFullyCompliant;
-    }
 }

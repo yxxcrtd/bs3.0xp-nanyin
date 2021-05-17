@@ -45,5 +45,18 @@ public interface ChbAstValInterfMapper {
 	int deleteInfo(Map<String,Object> map);
 	
 	List<ChbAstValue> queryAssetValueInfoList(@Param("generateDate")String generateDate,@Param("exchangeSource")String exchangeSource,@Param("isBtm")String isBtm,@Param("InstitutionCode")String InstitutionCode);
-	List<ChbAstValue> queryAssetValueInfoLastList();
+
+	/**
+	 * 检查今日是否有估值数据
+	 * @param generateDate
+	 * @return
+	 */
+	int checkTdyValData(@Param("generateDate")String generateDate);
+
+	/**
+	 * 根据最近一日数据生成今日估值数据
+	 * @param generateDate
+	 * @return
+	 */
+	int insertTdyInfo(@Param("generateDate")String generateDate);
 }
