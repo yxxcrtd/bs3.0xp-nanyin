@@ -137,7 +137,7 @@
 			distinct d.SETTDATE_DATE, d.PROD_ID
 			from CHB_PRD_DEAL d
 		where
-			d.`STATUS` = 'E'
+			d.`STATUS`  in ('E','M')
 			and d.TRADE_TYPE = '16'
 			<if test="endDate !=null and endDate != ''">
 				and  DATE_FORMAT(d.SETTDATE_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
