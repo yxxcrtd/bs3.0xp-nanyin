@@ -153,8 +153,8 @@ public class ChbInvestOperationService extends CommonExportService<ChbInvestPrdI
                     }
                     else {
                         item.setSurplusTerm(String.valueOf(ArithmeticUtil.divide(
-                                ChbInvestReportUtil.getBetweenDayNumber(DateUtil.parse(DateUtil.format(item.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN)),
-                                        DateUtil.parse(dealdateFmt)),
+                                ChbInvestReportUtil.getBetweenDayNumber(DateUtil.parse(dealdateFmt),
+                                        DateUtil.parse(DateUtil.format(item.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN))),
                                 new BigDecimal(365.0000),2)));
                     }
                 }
