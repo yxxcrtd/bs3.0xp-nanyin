@@ -528,10 +528,12 @@ $(function() {
                     });
 
                     //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 start
-                    $('#busiFinExercisePlanTable').data('joyintable').reload({
-                        data : baseFinProductBaseInfoList[0].finExercisePlanList,
-                        url : null
-                    });
+                    if(baseFinProductBaseInfoList != null && baseFinProductBaseInfoList[0].finExercisePlanList != null){
+                    	$('#busiFinExercisePlanTable').data('joyintable').reload({
+                            data : baseFinProductBaseInfoList[0].finExercisePlanList,
+                            url : null
+                        });
+                    }
                     //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 end
 
                     //评级信息
