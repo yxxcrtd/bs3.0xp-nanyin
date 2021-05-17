@@ -168,7 +168,7 @@ public class InterfaceAssembleMsg extends InterfaceFieldsService{
 								builder.append("\r\n");
 								builder.append("Column Value: ");
 								builder.append(colcfg.getFilterFieldValue());
-								container.setErrorMsg(builder.toString() + "		" + e.toString());
+								container.setErrorMsg(builder.toString() + "		" + "系统异常,请联系管理员");
 								return container;
 							}
 						}
@@ -199,7 +199,7 @@ public class InterfaceAssembleMsg extends InterfaceFieldsService{
 				container.setErrorMsg(e.toString());
 			}else{
 				StringBuilder sb=new StringBuilder();
-				sb.append(e.toString());
+				sb.append("系统异常,请联系管理员");
 				sb.append("		\r\n");
 				sb.append(addExe.getFuncName());
 				sb.append(":	");

@@ -256,7 +256,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 								builder.append("\r\n");
 								builder.append("Column Value: ");
 								builder.append(colcfg.getFilterFieldValue());
-								container.setErrorMsg(builder.toString() + "		" + e.toString());
+								container.setErrorMsg(builder.toString() + "		" + "系统异常,请联系管理员");
 								return container;
 							}
 						}
@@ -285,7 +285,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 				container.setErrorMsg(e.toString());
 			} else {
 				StringBuilder sb = new StringBuilder();
-				sb.append(e.toString());
+				sb.append("系统异常,请联系管理员");
 				sb.append("		\r\n");
 				sb.append(addExe.getFuncName());
 				sb.append(":	");
@@ -488,11 +488,11 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 
 			} catch (Exception e) {
 				container.setCorrectFlag(false);
-				String errormsg = e.toString() + " | " + e.getMessage();
-				if (e.getCause() != null) {
-					errormsg = e.getCause().getMessage() + " | " + errormsg;
-				}
-				container.setErrorMsg(errormsg);
+//				String errormsg = e.toString() + " | " + e.getMessage();
+//				if (e.getCause() != null) {
+//					errormsg = e.getCause().getMessage() + " | " + errormsg;
+//				}
+				container.setErrorMsg("系统异常,请联系管理员");
 				logger.error("Error", e);
 			} finally {
 				PreparedStatement ps = dataCounter.getPreparedStatement();

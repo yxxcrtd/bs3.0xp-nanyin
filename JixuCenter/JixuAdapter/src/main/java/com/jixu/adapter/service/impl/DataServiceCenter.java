@@ -340,11 +340,11 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 				
 			}catch(Exception e){
 				container.setCorrectFlag(false);
-				String errormsg=e.toString() + " | " + e.getMessage();
-				if(e.getCause()!=null){
-					errormsg=e.getCause().getMessage()+" | "+errormsg;
-				}
-				container.setErrorMsg(errormsg);
+//				String errormsg=e.toString() + " | " + e.getMessage();
+//				if(e.getCause()!=null){
+//					errormsg=e.getCause().getMessage()+" | "+errormsg;
+//				}
+				container.setErrorMsg("系统异常,请联系管理员");
 				logger.error("Error", e);
 			}finally{
 				PreparedStatement ps=dataCounter.getPreparedStatement();

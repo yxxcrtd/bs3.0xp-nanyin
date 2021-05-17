@@ -138,7 +138,7 @@ public class ProcessController extends ExceptionControl{
 		}catch(NewFundException ne){
 			HashMap<String, Object> result = new HashMap<String, Object>();
 			HashMap<String, Object> issue = new HashMap<String, Object>();
-			issue.put("code", ne.getExceptionType());
+			issue.put("code", 0);
 			issue.put("level", "fail");
 			issue.put("detail", ne.getMessage());
 			result.put("issue", issue);
