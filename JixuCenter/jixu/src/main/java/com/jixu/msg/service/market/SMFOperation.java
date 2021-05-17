@@ -461,7 +461,7 @@ public class SMFOperation extends MsgExecuteService {
 				BeanUtils.copyProperties(sc, oldSc, "id");
 				issueInfoDao.updateEntity(oldSc);
 			}
-			if(JixuUserUtil.isJoyinTablesFlag() && fpd!=null && commService.isJoyinSingleValSystem()){
+			if(JixuUserUtil.isJoyinTablesFlag() && fpd!=null && oldIssue != null && commService.isJoyinSingleValSystem()){
 				FinProductType oldfpd=issueInfoDao.loadFinProductType(oldIssue.getSecurityid());
 				if(oldfpd!=null){
 					BeanUtils.copyProperties(fpd,oldfpd,new String[]{"finprod_id","createDate","createUser"});

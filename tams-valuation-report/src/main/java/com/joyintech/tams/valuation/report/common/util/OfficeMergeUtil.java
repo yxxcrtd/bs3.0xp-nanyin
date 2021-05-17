@@ -91,7 +91,9 @@ public class OfficeMergeUtil {
         OutputStream dest = null;
         try {
             dest = new FileOutputStream(destFile);
-            srcDocumentTmp.write(dest);
+            if (dest != null){
+                srcDocumentTmp.write(dest);
+            }
         }
         catch (IOException e) {
             throw e;

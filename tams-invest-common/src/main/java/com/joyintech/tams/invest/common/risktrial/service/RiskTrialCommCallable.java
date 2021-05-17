@@ -107,7 +107,7 @@ public class RiskTrialCommCallable {
 					if (DictCodeListExt1.指标参数实现类型_SQL.getValue().equals(indicatorParam.getParaDisplayType())) {
 						String sql = indicatorParam.getContent();
 						Object paramValue = supervisionCalcSvc.getIndicatorParamValue(sql, sysParam, rskTaskDto.getIndType(),rskTaskDto.getFoulCond(),"01");// 获取每个参数实际值
-						if (paramValue == null) {
+						if (paramValue == null && params != null) {
 							if(rskTaskDto.getIndType().indexOf(RiskUtil.LIMIT)!=-1){
 								params.put(paramName,new BigDecimal(0));
 							}
@@ -198,7 +198,9 @@ public class RiskTrialCommCallable {
 						            tempTradeAmount = inputDto.getTradeAmount().negate();
 						        }
 
-						        params.put(paramName,ArithmeticUtil.doAdd(new BigDecimal(params.get(paramName).toString()), tempTradeAmount));
+								if(params.get(paramName) != null){
+									params.put(paramName,ArithmeticUtil.doAdd(new BigDecimal(params.get(paramName).toString()), tempTradeAmount));
+								} 
 						    }
 						}
                         // etliu特殊处理: SONGSLLCCPTZ((分子)固定收益类理财产品投资于存款、债券等债权类资产的比例不低于80%) 拆出和逆回购 应该是加
@@ -229,7 +231,7 @@ public class RiskTrialCommCallable {
                                 }
 						    }
 						    
-						    if (needPlusFlg) {
+						    if (needPlusFlg && params.get(paramName) != null) {
 						        params.put(paramName,ArithmeticUtil.doAdd(new BigDecimal(params.get(paramName).toString()),inputDto.getTradeAmount()));
 						    }
 						    else {
