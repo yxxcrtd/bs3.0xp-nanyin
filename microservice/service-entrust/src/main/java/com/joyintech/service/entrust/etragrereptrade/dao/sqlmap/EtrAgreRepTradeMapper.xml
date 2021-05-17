@@ -261,47 +261,42 @@
         FP.FINPROD_MARKET_ID = MBVI.SEC_ID
         AND MBVI.VALUE_DATE <![CDATA[<=]]> #{sysDate}
         AND MBVI.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
-        AND MBVI.VALUE_DATE = (
-        SELECT
-        MAX(MBVI2.VALUE_DATE)
-        FROM
-        MST_BOND_VALUATION_INFO MBVI2
-        WHERE
-        MBVI.SEC_ID = MBVI2.SEC_ID
-        AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
-        AND MBVI2.VALUE_DATE <![CDATA[<=]]> #{sysDate}
-        AND MBVI2.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
-        )
+        INNER JOIN
+            (SELECT MAX(MBVI2.VALUE_DATE) VALUE_DATE,
+                MBVI2.SEC_ID
+            FROM MST_BOND_VALUATION_INFO MBVI2
+            WHERE MBVI2.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+            AND MBVI2.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
+            GROUP BY MBVI2.SEC_ID) MBVTTMP
+        ON MBVI.VALUE_DATE = MBVTTMP.VALUE_DATE
+        AND MBVI.SEC_ID = MBVTTMP.SEC_ID
+        AND  MBVI.VALUE_SOURCE = MBVTTMP.VALUE_SOURCE
         <!-- 基金行情 -->
         LEFT JOIN
         MST_FUND_MARKET_INFO MFMI
         ON
         FP.FINPROD_MARKET_ID = MFMI.FUND_CODE
         AND MFMI.VALUE_DATE <![CDATA[<=]]> #{sysDate}
-        AND MFMI.VALUE_DATE = (
-        SELECT
-        MAX(MFMI2.VALUE_DATE)
-        FROM
-        MST_FUND_MARKET_INFO MFMI2
-        WHERE
-        MFMI.FUND_CODE = MFMI2.FUND_CODE
-        AND MFMI2.VALUE_DATE <![CDATA[<=]]> #{sysDate}
-        )
+        INNER JOIN (SELECT MAX(MFMI2.VALUE_DATE) VALUE_DATE,
+                MFMI2.FUND_CODE
+            FROM MST_FUND_MARKET_INFO MFMI2
+            WHERE MFMI2.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+            GROUP BY MFMI2.FUND_CODE) MFMITMP
+        ON MFMI.VALUE_DATE = MFMITMP.VALUE_DATE
+        AND MFMI.FUND_CODE = MFMITMP.FUND_CODE
         <!-- 股票行情 -->
         LEFT JOIN
         MST_SHARE_PRICE MSP
         ON
         FP.FINPROD_MARKET_ID = MSP.SHARES_ID
         AND MSP.DEAL_DATE <![CDATA[<=]]> #{sysDate}
-        AND MSP.DEAL_DATE = (
-        SELECT
-        MAX(MSP2.DEAL_DATE)
-        FROM
-        MST_SHARE_PRICE MSP2
-        WHERE
-        MSP.SHARES_ID = MSP2.SHARES_ID
-        AND MSP2.DEAL_DATE <![CDATA[<=]]> #{sysDate}
-        )
+        INNER JOIN (SELECT MAX(MSP2.DEAL_DATE) DEAL_DATE,
+                        MSP2.SHARES_ID
+                    FROM MST_SHARE_PRICE MSP2
+                    WHERE MSP2.DEAL_DATE <![CDATA[<=]]> #{sysDate}
+                    GROUP BY MSP2.SHARES_ID) MSPTMP
+        ON MSP.SHARES_ID = MSPTMP.SHARES_ID
+        AND MSP.DEAL_DATE = MSPTMP.DEAL_DATE
         LEFT JOIN
         (
         SELECT
