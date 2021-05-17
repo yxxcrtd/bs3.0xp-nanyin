@@ -65,7 +65,11 @@ public class ChbNetWorthOperationService extends CommonExportService<ChbNetWorth
             ChbNetWorthInfoDto chbNetWorthInfoDto = this.qryChbInvestPrdInfo(param);
             List<ChbNetWorthInfoDto> dtoList = chbNetWorthOperationMapper.getNetWorthData(param);
             // 设置文件信息
-           String srcFilePath = FileNameUtil.getTplFile("chbreport/chbnetworthoperation");
+            String path = FileNameUtil.createUploadFilePath("");//创建路径
+            File filepath = new File(path);
+            if(!filepath.exists()){
+                filepath.mkdirs();
+            }
             // 存放地址
             String depositfilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String fileName = ChbInvestReportUtil.generateFileNameForReport(DictCodeListExt3.中债披露报告_产品净值披露.getValue(),
@@ -75,13 +79,13 @@ public class ChbNetWorthOperationService extends CommonExportService<ChbNetWorth
 
             //设置文件名称和路径
             exportFileDto.setFileName(fileName);
-            exportFileDto.setFilePath(srcFilePath);
+            exportFileDto.setFilePath(path);
             //赋值
             Map<String, Object> mapinfo = new HashMap<>();
             mapinfo.put("title", chbNetWorthInfoDto.getProdName());
             mapinfo.put("dtoList", dtoList);
             TisUtil.createFile(mapinfo, exceltemplate, fileName);
-            FileUtil.removeFileToDirectory(depositfilePath+"/"+fileName+".xls",srcFilePath);
+            FileUtil.removeFileToDirectory(depositfilePath+"/"+fileName,path);
         }
         return exportFileDto;
     }
