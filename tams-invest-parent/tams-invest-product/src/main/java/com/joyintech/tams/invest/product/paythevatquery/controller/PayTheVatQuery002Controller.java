@@ -252,7 +252,7 @@ public class PayTheVatQuery002Controller extends BaseController{
 					}// 增值税品种为通道增值税时,判断通道户是否一致
 					else if (StringUtil.equals(payTheVatQuery002Dto.getChannelId(), mo.getChannelId())) {
 						ms = this.getMessage("COMMON_E_0021", payTheVatQuery002Dto.getTotleTradeId(), mo.getFinprodId());
-						return new AjaxResult(ms, MessageType.错误消息);
+						return new AjaxResult(ms + ",通道:" + mo.getChannelId(), MessageType.错误消息);
 					}
 				}
 			}
