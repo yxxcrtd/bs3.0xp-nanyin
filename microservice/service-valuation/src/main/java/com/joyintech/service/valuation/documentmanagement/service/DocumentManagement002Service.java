@@ -15,6 +15,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class DocumentManagement002Service {
 		// 文件名称
 		String fileName = FileNameUtil.formatFileName(filePath);
 
-		File file = new File(filePath);
+		File file = new SafelyFile(filePath);
 		boolean rec = file.renameTo(new File(fileName));
 		if (rec) {
 			logger.info("处理成功");

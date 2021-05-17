@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jixu.adapter.dao.intf.InterfaceColConfigDao;
@@ -47,7 +48,7 @@ public abstract class ReadFileBasic implements ReadDataFile{
 		compareFilePath=compareFilePath.replaceAll("/", "");
 		compareFilePath=compareFilePath.replaceAll("\\\\", "");
 		List<String> fileList=new ArrayList<String>();
-		File folder=new File(folderPath);
+		File folder=new SafelyFile(folderPath);
 		if(folder.isDirectory()){
 			getDirectory(folderPath, fileList, compareFilePath);
 		}
@@ -63,12 +64,12 @@ public abstract class ReadFileBasic implements ReadDataFile{
 	 */
 	private void getDirectory(String filepath, List<String> fileList, String comparePath){
 		WildcardMatch wildcardMatch = new WildcardMatch();
-		File file = new File(filepath);
+		File file = new SafelyFile(filepath);
 		if (file.isDirectory()) {
 			String[] filelist = file.list();
 			for (int i = 0; i < filelist.length; i++) {
 				String filefullname=filepath + "/" + filelist[i];
-				File readfile = new File(filefullname);
+				File readfile = new SafelyFile(filefullname);
 				if (readfile.isDirectory()) {
 					getDirectory(filefullname, fileList, comparePath);
 				}else{

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class ReadGZCSVFile extends ReadFileBasic {
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		for (String filepath : filePaths) {
 			try {
-				FileInputStream fis=new FileInputStream(filepath);
+				FileInputStream fis=new FileInputStream(new SafelyFile(filepath));
 //				if(fis.available()>52428800){
 //					throw(new InterfaceException("暂时不支持大于50M的文件读取: " + fis.available()));
 //				}

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class SqlldrExecutor {
             // 如果使用已有的控制文件，那么以表名作为KEY从系统参数取出控制文件全名
             String table = ((CtlArg)ctl).getTableName();
             String ctlFile = (String)interfCache.get(table);
-            file = new File(ctlFile);
+            file = new SafelyFile(ctlFile);
         }
         else {
             file = ctl.getCtlFile(ctlPath);

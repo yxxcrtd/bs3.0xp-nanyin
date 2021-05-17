@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -582,7 +583,7 @@ public final class InterfUtil {
      * @see
      * @since 1.0
      */
-    public static void changeFolderPermission(File dirFile)
+    public static void changeFolderPermission(SafelyFile dirFile)
         throws IOException {
         Set<PosixFilePermission> perms = new HashSet<>();
         perms.add(PosixFilePermission.OWNER_READ);

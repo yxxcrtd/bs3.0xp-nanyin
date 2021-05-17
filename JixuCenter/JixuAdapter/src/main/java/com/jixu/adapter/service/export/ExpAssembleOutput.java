@@ -15,6 +15,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -449,7 +450,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 									// 获取文件路径和文件大小
 									String filepath = container.getEntityObj().toString();
 									ExeRecordInfo record = new ExeRecordInfo();
-									File file = new File(filepath);
+									File file = new SafelyFile(filepath);
 									record.setFilePath(filepath);
 									record.setFileSize(file.length());
 									ilog.setRecordInfo(JSONObject.toJSONString(record));
@@ -602,7 +603,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 		ExeRecordInfo record = JSONObject.parseObject(ilog.getRecordInfo(), ExeRecordInfo.class);
 		Map<String, Object> params = new HashMap<>();
 		if (record != null) {
-			File file = new File(record.getFilePath());
+			File file = new SafelyFile(record.getFilePath());
 			params.put("outFileName", file.getName());
 			params.put("outFilePath", file.getParentFile().getPath());
 			if (isplatedate) {

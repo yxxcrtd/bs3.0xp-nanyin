@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -39,7 +40,7 @@ public class ReadXMLFile extends ReadFileBasic {
 		try {
 			for (String filepath : filePaths) {
 				//SAXReader调用read()方法,来读取XML中的内容
-				Document document = reader.read(new File(filepath));
+				Document document = reader.read(new SafelyFile(filepath));
 				//获取XML内容之后   首先读取XML的根元素
 				Element root = document.getRootElement();
 				//通过根元素获取下面的所有子元素/子标签  

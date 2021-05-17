@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -498,7 +499,7 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 			for(MultipartFile mpf:mpfList){
 				//上传的文件先复制到配置的文件夹下,然后上传
 				String filePath = source.getFilepath() + "/" + mpf.getOriginalFilename();
-				FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(filePath));
+				FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(new SafelyFile(filePath)));
 			
 				if(fileBean==null){
 					container.setCorrectFlag(false);

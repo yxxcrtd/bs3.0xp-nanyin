@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class DocumentManagement001Service extends CommonExportService<DocumentMa
 
 		// 文件名称
 		String fileName = dto.getFileName();
-		File file = new File(filePath);
+		File file = new SafelyFile(filePath);
 		
 		return ExportUtil.export(fileName, file, false);
 	}

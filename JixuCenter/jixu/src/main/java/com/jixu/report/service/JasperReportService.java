@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class JasperReportService {
 			try {
 				String exportfile = genFileName(exportReportFolder,sourceJaspFile,portnum,startDate,endDate);
 				
-				File file = new File(exportfile);  
+				File file = new SafelyFile(exportfile);  
 				File fileParent = file.getParentFile();  
 				if(!fileParent.exists()){  
 					fileParent.mkdirs();  
@@ -118,7 +119,7 @@ public class JasperReportService {
 	}
 
 	private void showHtml(String reportfile, HttpServletResponse response) throws IOException {
-		File tempFile = new File(reportfile);
+		File tempFile = new SafelyFile(reportfile);
 //		String filename = tempFile.getName().substring(0,tempFile.getName().indexOf("."));
 		InputStream ins = null;
 		try {
@@ -149,10 +150,10 @@ public class JasperReportService {
 	public void showHtml(HttpServletResponse response, int reportID, String portnum, Date startDate, Date endDate){
 		String sourceJaspFile = initReport.getReportSourceHM().get(reportID);
 		String exportReportFolder = initReport.getReportExportFolder();
-		File sourceFile = new File(sourceJaspFile);
+		File sourceFile = new SafelyFile(sourceJaspFile);
 		if (sourceFile.exists()) {
 			String htmlFile=genFileName(exportReportFolder,sourceJaspFile,portnum,startDate,endDate)+".html";
-			File reportFile=new File(htmlFile);
+			File reportFile=new SafelyFile(htmlFile);
 			if(reportFile.exists()){
 				try{
 					showHtml(htmlFile, response);
@@ -166,10 +167,10 @@ public class JasperReportService {
 	public boolean checkReportExist(int reportID, String portnum, Date startDate, Date endDate){
 		String sourceJaspFile = initReport.getReportSourceHM().get(reportID);
 		String exportReportFolder = initReport.getReportExportFolder();
-		File sourceFile = new File(sourceJaspFile);
+		File sourceFile = new SafelyFile(sourceJaspFile);
 		if (sourceFile.exists()) {
 			String htmlFile=genFileName(exportReportFolder,sourceJaspFile,portnum,startDate,endDate)+".html";
-			File reportFile=new File(htmlFile);
+			File reportFile=new SafelyFile(htmlFile);
 			if(reportFile.exists()){
 				return true;
 			}
@@ -198,7 +199,7 @@ public class JasperReportService {
 			}
 			
 			String exportFile=genFileName(exportReportFolder,sourceJaspFile,portnum,startDate,endDate)+appendType;
-			File file=new File(exportFile);
+			File file=new SafelyFile(exportFile);
 //			String filename=file.getName();
 			InputStream ins = null;
 			try {

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +117,7 @@ public class CtlArg implements Ctl {
         LOGGER.debug("创建ctl文件");
         String filePath = InterfUtil.pathEndAsSeparator(path) + this.getTableName() + ".CTL";
         // 创建控制文件
-        File file = new File(filePath);
+        SafelyFile file = new SafelyFile(filePath);
         if (file.exists() || file.createNewFile()) {
             // 如果控制文件不存在，则创建
             // 赋予权限

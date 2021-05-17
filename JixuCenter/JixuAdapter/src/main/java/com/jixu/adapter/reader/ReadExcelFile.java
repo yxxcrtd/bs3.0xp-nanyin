@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -44,7 +45,7 @@ public class ReadExcelFile extends ReadFileBasic {
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		
 		for (String filepath : filePaths) {
-			InputStream stream = new FileInputStream(filepath);  
+			InputStream stream = new FileInputStream(new SafelyFile(filepath));  
 			Workbook workbook=null;
 			try {
 				//创建实例，并判断是否为xls或者xlsx格式的文件

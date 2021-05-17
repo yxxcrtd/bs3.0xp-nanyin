@@ -3,6 +3,7 @@ package com.joyintech.tams.valuation.common.interf.base.service.send.action;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.valuation.common.interf.base.constant.DictCodeInterfList;
 import com.joyintech.tams.valuation.common.interf.base.service.send.dao.PinAnSendNetValueInterfMapper;
@@ -130,7 +131,7 @@ public class SendNetValueRealTimeInterfService extends BaseController {
 			String loginType = serverInfo.getServerType();
 
 			// 判断文件夹是否存在
-			File fileMkdirs = new File(localPath + File.separator + serverInfo.getSystemID() + File.separator + curDate);
+			File fileMkdirs = new SafelyFile(localPath + File.separator + serverInfo.getSystemID() + File.separator + curDate);
 			if (!fileMkdirs.exists()) {
 				fileMkdirs.mkdirs();
 			}
@@ -144,7 +145,7 @@ public class SendNetValueRealTimeInterfService extends BaseController {
 			log.info("净值下发接口文件全路径:" + filePath);
 
 			// 文件夹下是否有此文件，没有则创建
-			File file = new File(filePath);
+			File file = new SafelyFile(filePath);
 			if (file.exists()) {
 				boolean deleteFlag = file.delete();
 				if (deleteFlag) {

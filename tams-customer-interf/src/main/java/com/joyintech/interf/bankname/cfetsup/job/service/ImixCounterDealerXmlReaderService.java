@@ -1,6 +1,7 @@
 package com.joyintech.interf.bankname.cfetsup.job.service;
 
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.interf.bankname.cfetsup.exception.FTPDirectoryAccessException;
 import com.joyintech.interf.bankname.cfetsup.exception.FTPDownloadException;
 
@@ -841,11 +842,11 @@ public class ImixCounterDealerXmlReaderService {
 	private static File[] getLocalFiles(String filepath) {
 		log.info("从本地文件夹获取文件 filepath = " + filepath);
 		File[] files = new File[downloadFiles.length];
-		File folder = new File(filepath);
+		File folder = new SafelyFile(filepath);
 		if (folder.exists() && folder.isDirectory()) {
 			// find files under folder
 			for (int i = 0; i < downloadFiles.length; i++) {
-				File f = new File(TEMPFOLDER
+				File f = new SafelyFile(TEMPFOLDER
 						+ downloadFiles[i].replaceAll(".zip", ""));
 				if (f.exists()) {
 					files[i] = f;

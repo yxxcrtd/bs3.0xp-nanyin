@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.stereotype.Service;
 
 import com.jixu.common.type.InterfaceConfig;
@@ -31,7 +32,7 @@ public class ReadDbfFile extends ReadFileBasic {
 			InputStream fis = null; 
 			
 			try{
-				fis = new FileInputStream(filepath);
+				fis = new FileInputStream(new SafelyFile(filepath));
 				DBFReader reader=new DBFReader(fis);
 				reader.setCharactersetName("GBK");
 				
