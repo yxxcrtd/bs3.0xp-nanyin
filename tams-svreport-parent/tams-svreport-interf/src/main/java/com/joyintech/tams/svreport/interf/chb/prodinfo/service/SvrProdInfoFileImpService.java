@@ -278,14 +278,18 @@ public class SvrProdInfoFileImpService extends FileImpService {
 				}
 				else if ("java.lang.Integer".equals(type.getTypeName())) {
 					try {
-						field.set(t,(value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
+						if(!StringUtil.isBlank(value)) {
+							field.set(t, value);
+						}
 					} catch (IllegalAccessException e) {
 						logger.error(e.getMessage(),e);
 					}
 				}
 				else if ("java.lang.Short".equals(type.getTypeName())) {
 					try {
-						field.set(t, (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
+						if(!StringUtil.isBlank(value)) {
+							field.set(t, value);
+						}
 					} catch ( IllegalAccessException e) {
 						logger.error(e.getMessage(),e);
 					}
