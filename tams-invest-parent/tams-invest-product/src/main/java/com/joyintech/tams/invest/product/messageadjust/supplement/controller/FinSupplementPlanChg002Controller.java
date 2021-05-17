@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.product.messageadjust.supplement.controller;
 
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.DateUtil;
@@ -70,7 +71,7 @@ public class FinSupplementPlanChg002Controller extends BaseController {
     @RequestMapping("/getAccrDate")
     public String getAccrDate(@RequestParam Map<String, Object> params) {
         String dateStr = finSupplementPlanChg001Service.getAccrDate(params);
-        return dateStr;
+        return JsonSanitizer.sanitize(dateStr);
     }
     
 }

@@ -19,6 +19,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.json.JsonSanitizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -187,7 +188,7 @@ public class DocumentManagement002Controller extends BaseController {
             }
         }
 //        progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0.5D, true);
-        return JsonUtils.object2Json(result);
+        return JsonSanitizer.sanitize(JsonUtils.object2Json(result));
     }
 	    
 	    /**

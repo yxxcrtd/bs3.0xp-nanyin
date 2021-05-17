@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.json.JsonSanitizer;
 
 
 public class JsonUtil {
@@ -21,7 +22,7 @@ public class JsonUtil {
 		PrintWriter pw;  
         try {  
             pw = response.getWriter(); 
-            pw.print(json);  
+            pw.print(JsonSanitizer.sanitize(json));  
             pw.flush(); 
             pw.close();
         } catch (IOException e) {  
