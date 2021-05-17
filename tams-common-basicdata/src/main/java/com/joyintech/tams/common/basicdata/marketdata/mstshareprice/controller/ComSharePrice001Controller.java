@@ -139,7 +139,7 @@ public class ComSharePrice001Controller extends BaseController{
         }
         ProcessParameter<ComSharePriceDto> processParameter = new ProcessParameter<ComSharePriceDto>();
         WorkFlowParameter<ComSharePriceDto> params = new WorkFlowParameter<ComSharePriceDto>();
-        params.setPageId("MstSharePrice002");
+        params.setPageId("ComSharePrice002");
 //        params.setPageId(RequestUtil.getParam("pageId"));
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getSharesId());
