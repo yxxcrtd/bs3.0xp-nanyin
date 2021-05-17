@@ -95,7 +95,7 @@ var QueryFunc=function(){
         }else if(obj["18"].indexOf(repAssetType)>=0){
             //另类资产
             $("#svrBussRepOthKindInfo_div").show();
-        }else if(obj["L01"].indexOf(repAssetType)>=0){
+        }else if(obj["19"].indexOf(repAssetType)>=0 || obj["15"].indexOf(repAssetType)>=0){
             //公募基金/私募基金
             $("#svrBussRepFundInfo_div").show();
         }
@@ -316,7 +316,7 @@ var QueryFunc=function(){
             //其他（负债）类资产
         }else if(obj["18"].indexOf(repAssetType)>=0){
             //另类资产
-        }else if(obj["L01"].indexOf(repAssetType)>=0){
+        }else if(obj["19"].indexOf(repAssetType)>=0 || obj["15"].indexOf(repAssetType)>=0){
             //公募基金/私募基金
             if(repAssetType=='2607'||repAssetType=='2610'||repAssetType=='2613'||
                 repAssetType=='2611'||repAssetType=='2612'||repAssetType=='2617'){
