@@ -1,23 +1,46 @@
 package com.jixu.common.util;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Wang Zhongyuan
  */
+@Component
 public class AESUtil {
 
-	private static String key = "123456789012jixu";
-	private static String endkey="_%^&*)wWw(*&^%";
+	@Value("${jixu.aesKey}")
+	private String aesKey;
 
+	@Value("${jixu.aesEndKey}")
+	private String aesEndKey;
+	
+//	private static String key = "123456789012jixu";
+//	private static String endkey="_%^&*)wWw(*&^%";
+	
+	private static String endkey;
+
+	private static String key;
+
+	@PostConstruct
+	public void setEndkey(){
+		this.endkey = aesEndKey;
+	}
+
+	@PostConstruct
+	public void setKey(){
+		this.key = aesKey;
+	}
+	
 	/**
 	 * AES加密--BASE64二次加密
 	 * 
 	 * @param pwd 明文
-	 * @param key 密匙
 	 * @return String类型的密文
 	 */
 	public static String Encrypt(String pwd) {
@@ -44,7 +67,6 @@ public class AESUtil {
 	 * BASE64解密--AES解密
 	 * 
 	 * @param pwd 密文
-	 * @param key 密匙
 	 * @return String类型的明文
 	 */
 	public static String Decrypt(String pwd) {

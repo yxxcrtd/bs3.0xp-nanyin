@@ -3,12 +3,15 @@ package com.joyintech.tams.svreport.pbc.common.util;
 import java.io.*;
 import java.security.SecureRandom;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 import com.thoughtworks.xstream.core.util.Base64Encoder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * Base64 编码和解码。
@@ -16,19 +19,29 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
  * @author liushuai
  * @date 2019年08月29日
  */
+@Component
 public class Base64 {
-	private static String KEY = "HF*ts303";
-	public static void main(String[] args) {
-		String s = "HF*ts303";
-		String enc1;
-		String dec1;
-		//加密
-		enc1 = encryptData(s);
-		System.out.println(enc1);
-		//解密
-		dec1 = decryptData(enc1);
-		System.out.println(dec1);
-	}
+    @Value("${application.chb.base64Key}")
+    private String base64Key;
+
+    private static String KEY;
+
+    @PostConstruct
+    public void setEndkey(){
+        this.KEY = base64Key;
+    }
+//	private static String KEY = "HF*ts303";
+//	public static void main(String[] args) {
+//		String s = "HF*ts303";
+//		String enc1;
+//		String dec1;
+//		//加密
+//		enc1 = encryptData(s);
+//		System.out.println(enc1);
+//		//解密
+//		dec1 = decryptData(enc1);
+//		System.out.println(dec1);
+//	}
 
 	public Base64() {
 	}

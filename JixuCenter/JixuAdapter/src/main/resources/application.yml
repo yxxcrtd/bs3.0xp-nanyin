@@ -41,6 +41,8 @@ spring:
 jixu:
   user:
     type: 1
+  aesKey: 123456789012jixu
+  aesEndKey: _%^&*)wWw(*&^%  
   #用户组
   project:
     group: Interface-Auto
