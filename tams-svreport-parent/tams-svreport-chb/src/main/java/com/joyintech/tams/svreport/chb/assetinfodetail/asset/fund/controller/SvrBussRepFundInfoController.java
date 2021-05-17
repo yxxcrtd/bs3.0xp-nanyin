@@ -53,7 +53,8 @@ public class SvrBussRepFundInfoController extends BaseController{
          );
 
         //2、当入参assetType2资产/负债二级类别 为【公募基金/私募基金】进行以下处理
-        if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_私募基金_公募基金.getValue()).contains(assetType)){
+        if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_公募基金.getValue()).contains(assetType)||
+                assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_私募基金.getValue()).contains(assetType)){
 
               //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);

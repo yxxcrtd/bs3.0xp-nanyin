@@ -2153,7 +2153,6 @@
 
     </select>
 
-
     <!-- 获取资产代码下拉菜单-->
     <select id="selectAssetCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
@@ -2198,14 +2197,12 @@
 
     </select>
 
-
     <select id="getAssetInfoDetail"  resultMap="BaseResultMap">
           SELECT '02' dataStatus,a.*
           FROM CHB_ASSET_INFO a
           where ASSET_UUID = #{Assetuuid}
           AND A.STATUS IN ('E','M')
     </select>
-
 
     <select id="queryAssetInfo"  parameterType="java.lang.String" resultMap="BaseResultMap">
           SELECT *
@@ -2224,7 +2221,6 @@
             and LINKED_ITEM_CODE = #{linkItemCode}
         </if>
     </select>
-
 
     <select id="getChbAssetInfoByUUid"  resultMap="ChbBaseResultMap">
           SELECT * FROM CHB_ASSET_INFO
@@ -2553,6 +2549,7 @@
         select  * from CHB_ASSET_INFO_ERRODATA
         where  DATAUUID=#{assetUUid}
     </select>
+
     <select id="getTargetAmt" resultType="java.math.BigDecimal" parameterType="java.lang.String">
         select  100 from dual
     </select>
@@ -2580,7 +2577,6 @@
         </if>
     </select>
 
-
     <delete id="deleteError">
         DELETE CHB_ASSET_INFO_ERRODATA WHERE trim(DATAUUID) = #{assetUUid}
     </delete>
@@ -2591,6 +2587,7 @@
             update_time = now()
             WHERE ASSET_UUID = #{assetUUid}
     </update>
+
     <delete id="deleteErrorMsg" parameterType="java.lang.String" >
         delete from CHB_ASSET_INFO_ERRODATA
         where trim(ASSET_CODE) = #{assetCode,jdbcType=CHAR}
