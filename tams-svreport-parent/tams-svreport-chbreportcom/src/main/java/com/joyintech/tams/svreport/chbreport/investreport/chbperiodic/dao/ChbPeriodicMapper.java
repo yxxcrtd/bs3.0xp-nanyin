@@ -43,12 +43,28 @@ public interface ChbPeriodicMapper {
     List<ChbPeriodicIndex> qryChbPeriodicIndex(Map<String, Object> pageParam);
 
     /**
+     * 查询定期报告中净值、存续规模及收益相关信息——子产品
+     *
+     * @param pageParam
+     * @return
+     */
+    List<ChbPeriodicIndex> qryChbPeriodicIndexDetail(Map<String, Object> pageParam);
+
+    /**
      * 查询定期报告中净值、存续规模及收益相关信息--本期净值收益
      *
      * @param pageParam
      * @return
      */
     BigDecimal qryChbPeriodicIndexValuePercent(Map<String, Object> pageParam);
+
+    /**
+     * 查询定期报告中净值、存续规模及收益相关信息--本期净值收益——子产品
+     *
+     * @param pageParam
+     * @return
+     */
+    List<BigDecimal> qryChbPeriodicIndexDetailValuePercent(Map<String, Object> pageParam);
 
     /**
      * 查询定期报告中收益分配相关信息

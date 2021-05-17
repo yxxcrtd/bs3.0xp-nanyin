@@ -1206,7 +1206,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qmValue.valueDate!}</w:t>
+                                        <w:t>${value.valueDate!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1233,7 +1233,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qmValue.unitValue!}</w:t>
+                                        <w:t>${value.unitValue!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1260,7 +1260,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qmValue.totalValue!}</w:t>
+                                        <w:t>${value.totalValue!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1287,7 +1287,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qmValue.assetTotalValue!}</w:t>
+                                        <w:t>${value.assetTotalValue!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1314,7 +1314,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qmValue.assetUnitValue!}</w:t>
+                                        <w:t>${value.assetUnitValue!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1342,7 +1342,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qmValue.increaseRateOfCumulativeValue!}</w:t>
+                                        <w:t>${value.increaseRateOfCurrentValue!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1371,7 +1371,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qcValue.valueDate!}</w:t>
+                                        <w:t>${value.valueDateQC!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1398,7 +1398,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qcValue.unitValue!}</w:t>
+                                        <w:t>${value.unitValueQC!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1425,7 +1425,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qcValue.totalValue!}</w:t>
+                                        <w:t>${value.totalValueQC!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1452,7 +1452,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qcValue.assetTotalValue!}</w:t>
+                                        <w:t>${value.assetTotalValueQC!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -1479,7 +1479,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${qcValue.assetUnitValue!}</w:t>
+                                        <w:t>${value.assetUnitValueQC!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>

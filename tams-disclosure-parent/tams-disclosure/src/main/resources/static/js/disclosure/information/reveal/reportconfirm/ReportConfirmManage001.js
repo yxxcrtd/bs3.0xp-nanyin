@@ -577,7 +577,7 @@ $(function () {
 			    object.pageModel = pageModel;
 			    object.updateTypeFlag = "QR";//当前操作为确认还是下发【确认："QR",下发："XF"】
 			    if(workflowId) {
-			    	Joyin.uploadFile({exts:'pdf|docx|xlsx'},function(fileName,file) {
+			    	Joyin.uploadFile({exts:'pdf|docx|xlsx|doc|xls'},function(fileName,file) {
 			    		Joyin.ajax(basePath +"disclosure/information/reveal/reportconfirm/ReportConfirmManage003/uploadFile?", {
 			    			fileName:fileName,id:param,fileNo:file[0].fileNo,option:option,srcName:file[0].srcName
 			    		},function(result){
@@ -590,7 +590,7 @@ $(function () {
 			    }else {
 			    	Joyin.ajax(basePath + 'disclosure/information/reveal/reportconfirm/ReportConfirmManage001/check',
 			    			object,function(){
-			    		Joyin.uploadFile({exts:'pdf|docx|xlsx'},function(fileName,file) {
+			    		Joyin.uploadFile({exts:'pdf|docx|xlsx|doc|xls'},function(fileName,file) {
 			    			Joyin.ajax(basePath +"disclosure/information/reveal/reportconfirm/ReportConfirmManage003/uploadFile?", {
 			    				fileName:fileName,id:param,fileNo:file[0].fileNo,option:option,srcName:file[0].srcName
 			    			},function(result){

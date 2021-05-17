@@ -153,8 +153,8 @@ public class ChbInvestOperationService extends CommonExportService<ChbInvestPrdI
                     }
                     else {
                         item.setSurplusTerm(String.valueOf(ArithmeticUtil.divide(
-                                ChbInvestReportUtil.getBetweenDayNumber(DateUtil.parse(DateUtil.format(item.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN)),
-                                        DateUtil.parse(dealdateFmt)),
+                                ChbInvestReportUtil.getBetweenDayNumber(DateUtil.parse(dealdateFmt),
+                                        DateUtil.parse(DateUtil.format(item.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN))),
                                 new BigDecimal(365.0000),2)));
                     }
                 }
@@ -256,7 +256,7 @@ public class ChbInvestOperationService extends CommonExportService<ChbInvestPrdI
      * @throws Exception
      */
     public ResponseEntity<byte[]> exportDoc(Map<String, Object> map, String reportName) throws Exception {
-        String srcFilePath = FileNameUtil.getTplFile("chbreport");
+        String srcFilePath = ChbInvestReportUtil.getFtlPath();
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         List<String> titleList = new ArrayList<String>();
         this.createData(reportName, map, mapList, titleList);
@@ -277,7 +277,7 @@ public class ChbInvestOperationService extends CommonExportService<ChbInvestPrdI
      * @throws Exception
      */
     public File createDoc(Map<String, Object> map, String reportName) throws Exception {
-        String srcFilePath = FileNameUtil.getTplFile("chbreport");
+        String srcFilePath = ChbInvestReportUtil.getFtlPath();
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         List<String> titleList = new ArrayList<String>();
         this.createData(reportName, map, mapList, titleList);

@@ -7,8 +7,8 @@
             b.PROD_NAME as prodName,/** 产品名称**/
             b.PROD_ID as prodId,/** 产品代码**/
             DATE_FORMAT(i.VALUE_DATE, '%Y-%m-%d') as endDate, /** 净值日期*/
-            p.PROD_VALUE   as prodValue,  /** 单位净值*/
-            p.UNIT_VALUE_TOTAL as unitValueTotal, /** 累计净值**/
+            i.UNIT_VALUE   as prodValue,  /** 单位净值*/
+            i.UNIT_VALUE_T as unitValueTotal, /** 累计净值**/
             b.CUSTOMER_TYPE as customerType,/** 客户类型**/
             '-' as netAssetValue/** 资产净值*/
         from
@@ -18,8 +18,7 @@
             and l.`STATUS` = 'E'
             and l.PRODID = b.PROD_ID
             and DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
-            left join CHB_PRD_PERIODYIELD p on p.PROD_ID = b.PROD_ID
-
+            and b.PRODTYPE = 'N'
         where
             b.`STATUS` = 'E'
             <if test="prodId !=null and prodId != ''">

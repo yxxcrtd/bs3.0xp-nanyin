@@ -303,6 +303,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean compareValueAsNumber(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 

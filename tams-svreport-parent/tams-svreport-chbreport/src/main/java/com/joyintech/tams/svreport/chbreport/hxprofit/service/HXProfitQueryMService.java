@@ -136,7 +136,7 @@ public class HXProfitQueryMService extends CommonExportService<ChbreportPrdInfoD
     private ChbreportExportFileDto createExcel(String reportDate) throws Exception {
         // 设置文件信息
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-        String fileName = "华夏利润表_" + reportDate + ".xls";
+        String fileName = "华夏理财利润表_" + reportDate + ".xls";
         String outPath = exportFilePath + File.separator + fileName;
         String exceltemplate = "hxprofit/HXProfit";
 

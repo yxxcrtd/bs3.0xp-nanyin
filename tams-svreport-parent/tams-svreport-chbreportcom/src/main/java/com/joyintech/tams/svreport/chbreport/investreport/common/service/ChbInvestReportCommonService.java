@@ -356,13 +356,11 @@ public class ChbInvestReportCommonService extends BaseService {
                 prodId = (String) param.get("prodId");
                 endDate = (String) param.get("endDate");
                 String prodName = (String) param.get("prodName");
-                //查询产品名称的全称
-                ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfoMapper.selectByProdid(prodId);
                 String year = StringUtil.substring(endDate, 0, 4);
                 String reportType = (String) param.get("reportType");
                 reportName = String.format("%s%s年%s报告", prodName, year,
                         DictCodeListExt3.from(DictCode.中债定期报告类型, reportType).getCodeName());
-                file = chbPeriodicService.createDoc(param, reportName, chbPrdBaseinfo);
+                file = chbPeriodicService.createDoc(param, reportName);
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
                 prodId = (String) param.get("prodId");

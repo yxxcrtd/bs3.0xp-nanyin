@@ -4,8 +4,10 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.common.base.entity.ChbPrdBaseinfoDetailWithBLOBs;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 定期报告
@@ -46,6 +49,8 @@ public class ChbPeriodicService {
     private ChbInvestReportCommonService chbInvestReportCommonService;
     @Autowired
     private ChbPrdBaseinfoMapper chbPrdBaseinfoMapper;
+    @Autowired
+    private ChbPrdBaseinfoDetailMapper chbPrdBaseinfoDetailMapper;
 
     /**
      * 导出公告
@@ -56,55 +61,63 @@ public class ChbPeriodicService {
      * @throws Exception
      */
     public ResponseEntity<byte[]> exportDoc(Map<String, Object> map, String reportName) throws Exception {
-        String srcFilePath = FileNameUtil.getTplFile("chbreport");
+        String srcFilePath = ChbInvestReportUtil.getFtlPath();
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         List<String> titleList = new ArrayList<String>();
         String prodId = (String) map.get("prodId");
         ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfoMapper.selectByProdid(prodId);
-        this.createData(reportName, chbPrdBaseinfo, map, mapList, titleList);
+        map.put("chbPrdBaseInfo", chbPrdBaseinfo);
+        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid((String) map.get("prodId"));
+        map.put("chbPrdBaseInfoList", chbPrdBaseinfoDetailList);
 
-        String prodName = null;
+        this.createData(reportName, map, mapList, titleList);
+
         String fProdId = null;
         String prodType = null;
         if (chbPrdBaseinfo != null) {
-            prodName = chbPrdBaseinfo.getProdName();
             fProdId = chbPrdBaseinfo.getFprodId();
             prodType = chbPrdBaseinfo.getProdtype();
         }
         if (mapList.size() == 1) {
-            // 单份额类净值型产品
-            if (StringUtil.isEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
-                return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_单份额类净值型产品模板文件, titleList.get(0));
-            }
-            // 单份额类货币型产品
-            else if (StringUtil.isEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
-                return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_单份额类货币型产品模板文件, titleList.get(0));
-            }
-            // 多份额类净值型产品
-            else if (StringUtil.isNotEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
-                return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_多份额类净值型产品模板文件, titleList.get(0));
-            }
-            // 多份额类货币型产品
-            else if (StringUtil.isNotEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
-                return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_多份额类货币型产品模板文件, titleList.get(0));
+            if (StringUtil.isEmptyList(chbPrdBaseinfoDetailList)) {
+                // 单份额类净值型产品
+                if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
+                    return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_单份额类净值型产品模板文件, titleList.get(0));
+                }
+                // 单份额类货币型产品
+                else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
+                    return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_单份额类货币型产品模板文件, titleList.get(0));
+                }
+            } else {
+                // 多份额类净值型产品
+                if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
+                    return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_多份额类净值型产品模板文件, titleList.get(0));
+                }
+                // 多份额类货币型产品
+                else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
+                    return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_多份额类货币型产品模板文件, titleList.get(0));
+                }
             }
         } else {
             String zipname = reportName + ChbInvestReportConstant.下划线 + DateUtil.format(new Date(), ChbInvestReportConstant.日期格式化yyyyMMddHHmmss);
-            // 单份额类净值型产品
-            if (StringUtil.isEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
-                return WordBatchUtil.exportWordBatch(mapList, titleList, ChbInvestReportConstant.产品定期公告_单份额类净值型产品模板文件, srcFilePath, zipname);
-            }
-            // 单份额类货币型产品
-            else if (StringUtil.isEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
-                return WordBatchUtil.exportWordBatch(mapList, titleList, ChbInvestReportConstant.产品定期公告_单份额类净值型产品模板文件, srcFilePath, zipname);
-            }
-            // 多份额类净值型产品
-            else if (StringUtil.isNotEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
-                return WordBatchUtil.exportWordBatch(mapList, titleList, ChbInvestReportConstant.产品定期公告_多份额类净值型产品模板文件, srcFilePath, zipname);
-            }
-            // 多份额类货币型产品
-            else if (StringUtil.isNotEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
-                return WordBatchUtil.exportWordBatch(mapList, titleList, ChbInvestReportConstant.产品定期公告_多份额类货币型产品模板文件, srcFilePath, zipname);
+            if (StringUtil.isEmptyList(chbPrdBaseinfoDetailList)) {
+                // 单份额类净值型产品
+                if (StringUtil.isEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
+                    return WordBatchUtil.exportWordBatch(mapList, titleList, ChbInvestReportConstant.产品定期公告_单份额类净值型产品模板文件, srcFilePath, zipname);
+                }
+                // 单份额类货币型产品
+                else if (StringUtil.isEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
+                    return WordBatchUtil.exportWordBatch(mapList, titleList, ChbInvestReportConstant.产品定期公告_单份额类净值型产品模板文件, srcFilePath, zipname);
+                }
+            } else {
+                // 多份额类净值型产品
+                if (StringUtil.isNotEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
+                    return WordBatchUtil.exportWordBatch(mapList, titleList, ChbInvestReportConstant.产品定期公告_多份额类净值型产品模板文件, srcFilePath, zipname);
+                }
+                // 多份额类货币型产品
+                else if (StringUtil.isNotEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
+                    return WordBatchUtil.exportWordBatch(mapList, titleList, ChbInvestReportConstant.产品定期公告_多份额类货币型产品模板文件, srcFilePath, zipname);
+                }
             }
         }
         return null;
@@ -118,34 +131,37 @@ public class ChbPeriodicService {
      * @return
      * @throws Exception
      */
-    public File createDoc(Map<String, Object> map, String reportName, ChbPrdBaseinfo chbPrdBaseinfo) throws Exception {
-        String srcFilePath = FileNameUtil.getTplFile("chbreport");
+    public File createDoc(Map<String, Object> map, String reportName) throws Exception {
+        String srcFilePath = ChbInvestReportUtil.getFtlPath();
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         List<String> titleList = new ArrayList<String>();
-        String prodName = null;
-        String fProdId = null;
         String prodType = null;
+        ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfoMapper.selectByProdid((String) map.get("prodId"));
+        map.put("chbPrdBaseInfo", chbPrdBaseinfo);
+        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid((String) map.get("prodId"));
+        map.put("chbPrdBaseInfoList", chbPrdBaseinfoDetailList);
         if (chbPrdBaseinfo != null) {
-            prodName = chbPrdBaseinfo.getProdName();
-            fProdId = chbPrdBaseinfo.getFprodId();
             prodType = chbPrdBaseinfo.getProdtype();
         }
-        this.createData(reportName, chbPrdBaseinfo, map, mapList, titleList);
-        // 单份额类净值型产品
-        if (StringUtil.isEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
-            return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_单份额类净值型产品模板文件, titleList.get(0));
-        }
-        // 单份额类货币型产品
-        else if (StringUtil.isEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
-            return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_单份额类货币型产品模板文件, titleList.get(0));
-        }
-        // 多份额类净值型产品
-        else if (StringUtil.isNotEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
-            return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_多份额类净值型产品模板文件, titleList.get(0));
-        }
-        // 多份额类货币型产品
-        else if (StringUtil.isNotEmpty(fProdId) && StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
-            return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_多份额类货币型产品模板文件, titleList.get(0));
+        this.createData(reportName, map, mapList, titleList);
+        if (StringUtil.isEmptyList(chbPrdBaseinfoDetailList)) {
+            // 单份额类净值型产品
+            if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
+                return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_单份额类净值型产品模板文件, titleList.get(0));
+            }
+            // 单份额类货币型产品
+            else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
+                return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_单份额类货币型产品模板文件, titleList.get(0));
+            }
+        } else {
+            // 多份额类净值型产品
+            if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), prodType)) {
+                return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_多份额类净值型产品模板文件, titleList.get(0));
+            }
+            // 多份额类货币型产品
+            else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), prodType)) {
+                return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath, ChbInvestReportConstant.产品定期公告_多份额类货币型产品模板文件, titleList.get(0));
+            }
         }
         return null;
     }
@@ -158,10 +174,20 @@ public class ChbPeriodicService {
      * @param mapList
      * @param titleList
      */
-    public void createData(String reportName, ChbPrdBaseinfo chbPrdBaseinfo, Map<String, Object> param, List<Map<String, Object>> mapList, List<String> titleList) {
+    public void createData(String reportName, Map<String, Object> param, List<Map<String, Object>> mapList, List<String> titleList) {
+        ChbPrdBaseinfo chbPrdBaseinfo = (ChbPrdBaseinfo) param.get("chbPrdBaseinfo");
+        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = (List<ChbPrdBaseinfoDetailWithBLOBs>) param.get("chbPrdBaseinfoDetailList");
         if (StringUtil.isNotEmpty(param.get("endDate")) && StringUtil.isNotEmpty(param.get("prodId"))) {
             Map<String, Object> dataMap = new HashMap<String, Object>();
             ChbPeriodicPrdInfo chbPeriodicPrdInfo = this.qryChbPeriodicPrdInfo(param);
+            if (!StringUtil.isEmptyList(chbPrdBaseinfoDetailList)) {
+                List<String> sprodIdList = chbPrdBaseinfoDetailList.stream().map(ChbPrdBaseinfoDetailWithBLOBs::getProdId).collect(Collectors.toList());
+                List<String> sprodNameList = chbPrdBaseinfoDetailList.stream().map(ChbPrdBaseinfoDetailWithBLOBs::getProdName).collect(Collectors.toList());
+                chbPeriodicPrdInfo.setSprodIdList(sprodIdList);
+                chbPeriodicPrdInfo.setSprodNameList(sprodNameList);
+                param.put("sprodIdList", sprodIdList);
+                param.put("sprodNameList", sprodNameList);
+            }
 
             // 获取报告起始日期和结束日期
             String reportType = (String) param.get("reportType");
@@ -186,15 +212,18 @@ public class ChbPeriodicService {
             dataMap.put(DictCode.产品类型_中债.getValue(), chbPrdBaseinfo.getProdtype());
             dataMap.put("year", StringUtil.substring(dqEndDate, 0, 4));
 
-            Map<String, ChbPeriodicValue> chbPeriodicValueMap = this.qryChbPeriodicValue(param);
+            ChbPeriodicValue chbPeriodicValue = this.qryChbPeriodicValue(param);
+            if (!StringUtil.isEmptyList(chbPrdBaseinfoDetailList)) {
+                List<ChbPeriodicValue> chbPeriodicValues = this.qryChbPeriodicValueDetail(param);
+                dataMap.put("valueList", chbPeriodicValues);
+            }
             List<ChbPeriodicPosition> chbPeriodicPositionList = this.qryChbPeriodicPosition(param);
             List<ChbPeriodicPositionTop10> chbPeriodicPositionTop10List = this.qryChbPeriodicPositionTop10(param);
             List<ChbPeriodicAssetInfo> chbPeriodicAssetInfoList = this.qryChbPeriodicAssetInfo(param);
             List<ChbPeriodicBonus> chbPeriodicBonusList = this.qryChbPeriodicBonus(chbPrdBaseinfo, param);
 
             dataMap.put("prdInfo", chbPeriodicPrdInfo);//产品信息
-            dataMap.put("qcValue", chbPeriodicValueMap.get(ChbInvestReportConstant.期初数据));
-            dataMap.put("qmValue", chbPeriodicValueMap.get(ChbInvestReportConstant.期末数据));
+            dataMap.put("value", chbPeriodicValue);
             dataMap.put("positionList", chbPeriodicPositionList);
             dataMap.put("positionTop10List", chbPeriodicPositionTop10List);
             dataMap.put("assetInfoList", chbPeriodicAssetInfoList);
@@ -212,7 +241,11 @@ public class ChbPeriodicService {
             mapList.add(dataMap);
 
             List<String> prodNameList = new ArrayList<>();
-            prodNameList.add(chbPeriodicPrdInfo.getProdName());
+            if (StringUtil.isEmptyList(chbPrdBaseinfoDetailList)) {
+                prodNameList.add(chbPeriodicPrdInfo.getProdName());
+            } else {
+                prodNameList.addAll((List) param.get("sprodNameList"));
+            }
             titleList.add(ChbInvestReportUtil.generateFileNameForDQ(prodNameList, reportType, year));
         }
     }
@@ -498,12 +531,31 @@ public class ChbPeriodicService {
      * @return
      * @throws Exception
      */
-    private Map<String, ChbPeriodicValue> qryChbPeriodicValue(Map<String, Object> params) {
-        Map<String, ChbPeriodicValue> map = new HashMap<>(4);
+    private ChbPeriodicValue qryChbPeriodicValue(Map<String, Object> params) {
         ChbPeriodicIndex qcChbPeriodicIndex = qryQcPeriodicIndex(params);
         ChbPeriodicIndex qmChbPeriodicIndex = qryQmPeriodicIndex(params);
-        this.dealValue(qcChbPeriodicIndex, qmChbPeriodicIndex, params, map);
-        return map;
+        return this.dealValue(qcChbPeriodicIndex, qmChbPeriodicIndex, params);
+    }
+
+    /**
+     * 查询定期报告中净值、存续规模及收益相关情况——子产品
+     *
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    private List<ChbPeriodicValue> qryChbPeriodicValueDetail(Map<String, Object> params) {
+        List<ChbPeriodicValue> list = new ArrayList<>();
+        List<ChbPeriodicIndex> qcChbPeriodicIndexList = qryQcPeriodicDetailIndex(params);
+        List<ChbPeriodicIndex> qmChbPeriodicIndexList = qryQmPeriodicDetailIndex(params);
+        for (int i = 0; i < qcChbPeriodicIndexList.size(); i++) {
+            ChbPeriodicIndex qcChbPeriodicIndex = qcChbPeriodicIndexList.get(i);
+            ChbPeriodicIndex qmChbPeriodicIndex = qmChbPeriodicIndexList.get(i);
+            Map<String, ChbPeriodicValue> map = new HashMap<>(4);
+            ChbPeriodicValue chbPeriodicValue = this.dealValue(qcChbPeriodicIndex, qmChbPeriodicIndex, params);
+            list.add(chbPeriodicValue);
+        }
+        return list;
     }
 
     /**
@@ -526,6 +578,25 @@ public class ChbPeriodicService {
     }
 
     /**
+     * 查询期初产品指标表——子产品
+     *
+     * @param params
+     * @return
+     */
+    private List<ChbPeriodicIndex> qryQcPeriodicDetailIndex(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap();
+        map.put("prodId", params.get("prodId"));
+        // 若产品起息日>=本次报告开始日，则取产品起息日
+        if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
+                || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
+            map.put("qryDate", params.get("vdate"));
+        } else {
+            map.put("qryDate", DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1));
+        }
+        return qryPeriodicIndexDetailHandler(map);
+    }
+
+    /**
      * 查询期末产品指标表
      *
      * @param params
@@ -536,6 +607,19 @@ public class ChbPeriodicService {
         map.put("prodId", params.get("prodId"));
         map.put("qryDate", params.get("endReportDate"));
         return qryPeriodicIndexHandler(map);
+    }
+
+    /**
+     * 查询期末产品指标表——子产品
+     *
+     * @param params
+     * @return
+     */
+    private List<ChbPeriodicIndex> qryQmPeriodicDetailIndex(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap();
+        map.put("prodId", params.get("prodId"));
+        map.put("qryDate", params.get("endReportDate"));
+        return qryPeriodicIndexDetailHandler(map);
     }
 
     /**
@@ -551,6 +635,17 @@ public class ChbPeriodicService {
             chbPeriodicIndex = list.get(0);
         }
         return chbPeriodicIndex;
+    }
+
+    /**
+     * 查询产品指标表（子产品）
+     *
+     * @param params
+     * @return
+     */
+    private List<ChbPeriodicIndex> qryPeriodicIndexDetailHandler(Map<String, Object> params) {
+        List<ChbPeriodicIndex> list = chbPeriodicMapper.qryChbPeriodicIndexDetail(params);
+        return list;
     }
 
     /**
@@ -671,145 +766,139 @@ public class ChbPeriodicService {
      * @param qcDto  期初dto
      * @param qmDto  期末dto
      * @param params
-     * @param map
      * @return
      */
-    private void dealValue(ChbPeriodicIndex qcDto, ChbPeriodicIndex qmDto, Map<String, Object> params, Map<String, ChbPeriodicValue> map) {
-        ChbPeriodicValue qcValue = new ChbPeriodicValue();
+    private ChbPeriodicValue dealValue(ChbPeriodicIndex qcDto, ChbPeriodicIndex qmDto, Map<String, Object> params) {
+        ChbPeriodicValue value = new ChbPeriodicValue();
         // 期初估值日期
         if (Objects.isNull(qcDto.getValueDate())) {
-            qcValue.setValueDate(ChbInvestReportConstant.横线);
+            value.setValueDateQC(ChbInvestReportConstant.横线);
         } else {
-            qcValue.setValueDate(DateUtil.format(qcDto.getValueDate()));
+            value.setValueDateQC(DateUtil.format(qcDto.getValueDate()));
         }
         // 若产品起息日>本次报告开始日
         if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
             // 期初份额净值
             if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
-                qcValue.setUnitValue(ChbInvestReportConstant.df1.format(1));
+                value.setUnitValueQC(ChbInvestReportConstant.df1.format(1));
             } else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
-                qcValue.setUnitValue(ChbInvestReportConstant.横线);
+                value.setUnitValueQC(ChbInvestReportConstant.横线);
             }
             // 期初份额总数
-            qcValue.setTotalValue(ChbInvestReportConstant.横线);
+            value.setTotalValueQC(ChbInvestReportConstant.横线);
             // 期初累计净值
-            qcValue.setAssetUnitValue(ChbInvestReportConstant.横线);
+            value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
             // 期初资产净值
-            qcValue.setAssetTotalValue(ChbInvestReportConstant.横线);
+            value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
         } else {
             if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
                 // 期初份额净值
                 if (Objects.isNull(qcDto.getUnitValue()) || BigDecimal.ZERO.compareTo(qcDto.getUnitValue()) == 0) {
-                    qcValue.setUnitValue(ChbInvestReportConstant.横线);
+                    value.setUnitValueQC(ChbInvestReportConstant.横线);
                 } else {
-                    qcValue.setUnitValue(ChbInvestReportConstant.df1.format(qcDto.getUnitValue()));
+                    value.setUnitValueQC(ChbInvestReportConstant.df1.format(qcDto.getUnitValue()));
                 }
                 // 期初累计净值
                 if (Objects.isNull(qcDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qcDto.getUnitValueT()) == 0) {
-                    qcValue.setAssetUnitValue(ChbInvestReportConstant.横线);
+                    value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
                 } else {
-                    qcValue.setAssetUnitValue(ChbInvestReportConstant.df1.format(qcDto.getUnitValueT()));
+                    value.setAssetUnitValueQC(ChbInvestReportConstant.df1.format(qcDto.getUnitValueT()));
                 }
             } else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
                 // 期初份额净值
                 if (Objects.isNull(qcDto.getwYield()) || BigDecimal.ZERO.compareTo(qcDto.getwYield()) == 0
                         || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
-                    qcValue.setUnitValue(ChbInvestReportConstant.横线);
+                    value.setUnitValueQC(ChbInvestReportConstant.横线);
                 } else {
-                    qcValue.setUnitValue(ChbInvestReportConstant.df1.format(qcDto.getwYield()));
+                    value.setUnitValueQC(ChbInvestReportConstant.df1.format(qcDto.getwYield()));
                 }
                 // 期初累计净值
                 if (Objects.isNull(qcDto.getYield7()) || BigDecimal.ZERO.compareTo(qcDto.getYield7()) == 0
                         || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
-                    qcValue.setAssetUnitValue(ChbInvestReportConstant.横线);
+                    value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
                 } else {
-                    qcValue.setAssetUnitValue(ChbInvestReportConstant.df1.format(qcDto.getYield7()));
+                    value.setAssetUnitValueQC(ChbInvestReportConstant.df1.format(qcDto.getYield7()));
                 }
-
             }
             // 期初份额总数
             if (Objects.isNull(qcDto.getCapital()) || BigDecimal.ZERO.compareTo(qcDto.getCapital()) == 0) {
-                qcValue.setTotalValue(ChbInvestReportConstant.横线);
+                value.setTotalValueQC(ChbInvestReportConstant.横线);
             } else {
-                qcValue.setTotalValue(ChbInvestReportConstant.df2.format(qcDto.getCapital()));
+                value.setTotalValueQC(ChbInvestReportConstant.df2.format(qcDto.getCapital()));
             }
             // 期初资产净值
             if (Objects.isNull(qcDto.getAssetValueMarket()) || BigDecimal.ZERO.compareTo(qcDto.getAssetValueMarket()) == 0
                     || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
-                qcValue.setAssetTotalValue(ChbInvestReportConstant.横线);
+                value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
             } else {
-                qcValue.setAssetTotalValue(ChbInvestReportConstant.df2.format(qcDto.getAssetValueMarket()));
+                value.setAssetTotalValueQC(ChbInvestReportConstant.df2.format(qcDto.getAssetValueMarket()));
             }
         }
 
-        ChbPeriodicValue qmValue = new ChbPeriodicValue();
         // 期末估值日期
         if (Objects.isNull(qmDto.getValueDate())) {
-            qmValue.setValueDate(ChbInvestReportConstant.横线);
+            value.setValueDate(ChbInvestReportConstant.横线);
         } else {
-            qmValue.setValueDate(DateUtil.format(qmDto.getValueDate()));
+            value.setValueDate(DateUtil.format(qmDto.getValueDate()));
         }
         if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
             // 期末份额净值
             if (Objects.isNull(qmDto.getUnitValue()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValue()) == 0) {
-                qmValue.setUnitValue(ChbInvestReportConstant.横线);
+                value.setUnitValue(ChbInvestReportConstant.横线);
             } else {
-                qmValue.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValue()));
+                value.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValue()));
             }
             // 期末累计净值
             if (Objects.isNull(qmDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValueT()) == 0) {
-                qmValue.setAssetUnitValue(ChbInvestReportConstant.横线);
+                value.setAssetUnitValue(ChbInvestReportConstant.横线);
             } else {
-                qmValue.setAssetUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
+                value.setAssetUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
             }
             // 期间累计净值增长率
             if (!Objects.isNull(qmDto.getAssetValueMarket()) && !Objects.isNull(qcDto.getAssetValueMarket())
                     && BigDecimal.ZERO.compareTo(qcDto.getAssetValueMarket()) == 0) {
-                BigDecimal increaseRateOfCumulativeValue = ((new BigDecimal(qmValue.getAssetTotalValue()))
-                        .subtract(new BigDecimal(qcValue.getAssetTotalValue())))
-                        .divide(new BigDecimal(qcValue.getAssetTotalValue()), 20, BigDecimal.ROUND_FLOOR)
-                        .divide(new BigDecimal(DateUtil.getBetweenDayNumber(qcValue.getValueDate(), qmValue.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
+                BigDecimal increaseRateOfCumulativeValue = ((new BigDecimal(value.getAssetTotalValue()))
+                        .subtract(new BigDecimal(value.getAssetTotalValue())))
+                        .divide(new BigDecimal(value.getAssetTotalValue()), 20, BigDecimal.ROUND_FLOOR)
+                        .divide(new BigDecimal(DateUtil.getBetweenDayNumber(value.getValueDate(), value.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
                         .multiply(new BigDecimal(36500));
-                qmValue.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(increaseRateOfCumulativeValue));
+                value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(increaseRateOfCumulativeValue));
             } else {
-                qmValue.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.横线);
+                value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.横线);
             }
         } else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
             // 期末份额净值
             if (Objects.isNull(qmDto.getUnitValue()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValue()) == 0) {
-                qmValue.setUnitValue(ChbInvestReportConstant.横线);
+                value.setUnitValue(ChbInvestReportConstant.横线);
             } else {
-                qmValue.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValue()));
+                value.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValue()));
             }
             // 期末累计净值
             if (Objects.isNull(qmDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValueT()) == 0) {
-                qmValue.setAssetUnitValue(ChbInvestReportConstant.横线);
+                value.setAssetUnitValue(ChbInvestReportConstant.横线);
             } else {
-                qmValue.setAssetUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
+                value.setAssetUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
             }
             // 本期净值收益率
-            BigDecimal chbPeriodicIndexValuePercent = chbPeriodicMapper.qryChbPeriodicIndexValuePercent(params);
-            if (BigDecimal.ZERO.compareTo(chbPeriodicIndexValuePercent) == 0) {
-                qmValue.setAssetUnitValue(ChbInvestReportConstant.横线);
+            if (Objects.isNull(qmDto.getValuePercent()) || BigDecimal.ZERO.compareTo(qmDto.getValuePercent()) == 0) {
+                value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.横线);
             } else {
-                qmValue.setAssetUnitValue(ChbInvestReportConstant.df3.format(chbPeriodicIndexValuePercent));
+                value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.df3.format(qmDto.getValuePercent()));
             }
         }
         // 期末份额总数
         if (Objects.isNull(qmDto.getCapital()) || BigDecimal.ZERO.compareTo(qmDto.getCapital()) == 0) {
-            qmValue.setTotalValue(ChbInvestReportConstant.横线);
+            value.setTotalValue(ChbInvestReportConstant.横线);
         } else {
-            qmValue.setTotalValue(ChbInvestReportConstant.df2.format(qmDto.getCapital()));
+            value.setTotalValue(ChbInvestReportConstant.df2.format(qmDto.getCapital()));
         }
         // 期末资产净值
         if (Objects.isNull(qmDto.getAssetValueMarket()) || BigDecimal.ZERO.compareTo(qmDto.getAssetValueMarket()) == 0) {
-            qmValue.setAssetTotalValue(ChbInvestReportConstant.横线);
+            value.setAssetTotalValue(ChbInvestReportConstant.横线);
         } else {
-            qmValue.setAssetTotalValue(ChbInvestReportConstant.df2.format(qmDto.getAssetValueMarket()));
+            value.setAssetTotalValue(ChbInvestReportConstant.df2.format(qmDto.getAssetValueMarket()));
         }
 
-
-        map.put(ChbInvestReportConstant.期末数据, qmValue);
-        map.put(ChbInvestReportConstant.期初数据, qcValue);
+        return value;
     }
 }
