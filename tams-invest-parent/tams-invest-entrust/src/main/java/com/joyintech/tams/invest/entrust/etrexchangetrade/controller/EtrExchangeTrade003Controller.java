@@ -179,13 +179,13 @@ public class EtrExchangeTrade003Controller extends BaseController{
 			}
 		}
         // modify by zhangrui1 委托关闭释放剩余预占 start
-        List<String> entrustIdList = new ArrayList<>();
+//        List<String> entrustIdList = new ArrayList<>();
         for(EtrExchangeTrade003Dto item : dto.getSelectedItem()){
             etrExchangeTrade001Service.closeDelegate(item);
             //释放风险接口释放
-            entrustIdList.add(item.getEntrustId());
+//            entrustIdList.add(item.getEntrustId());
         }
-        EntrustCompleteUtil.doComplete(entrustIdList);
+//        EntrustCompleteUtil.doComplete(entrustIdList);
         // modify by zhangrui1 委托关闭释放剩余预占 end
         return new AjaxResult(this.getMessage("ETR_X_003"));
     }
@@ -214,8 +214,8 @@ public class EtrExchangeTrade003Controller extends BaseController{
 			}
 		}
 
-//		for (EtrExchangeTrade003Dto item : dto.getSelectedItem()) {
-//			etrExchangeTrade001Service.recallDelegate(item);
+		for (EtrExchangeTrade003Dto item : dto.getSelectedItem()) {
+			etrExchangeTrade001Service.recallDelegate(item);
 //			// 释放风险接口释放
 //
 //            if(StringUtil.equals(item.getPs(),DictCodeListExt3.交易方向_债转股.getValue())) {
@@ -224,8 +224,8 @@ public class EtrExchangeTrade003Controller extends BaseController{
 //            } else {
 //                EntrustRdsCommonAop.doPreOccupy(item, BussinessDictCodeListRds.接口系统ID_预占释放接口.getValue(),item.getPaAssetType());
 //            }
-//
-//		}
+
+		}
 		return new AjaxResult(this.getMessage("撤回成功"));
     }
 

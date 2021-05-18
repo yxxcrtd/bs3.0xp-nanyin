@@ -1,0 +1,8 @@
+
+delete from SYS_TRASH_NOT_TARGET_PAGE where PAGE_ID = 'EtrProjectNet002';
+insert into SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO, PAGE_ID)
+values ('A96EA0A5352F043FE0538C5AA9C0280A', 'EtrProjectNet002');
+
+delete from SYS_TRASH_NOT_TARGET_PAGE where PAGE_ID = 'TrdProjectNetInvestTrade002';
+insert into SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO, PAGE_ID)
+values ('A96EA0A5352F043FE0538C5AA0C0280A', 'TrdProjectNetInvestTrade002');
