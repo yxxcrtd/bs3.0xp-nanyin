@@ -865,7 +865,7 @@
 	
 	<!-- 自定义二级类型查询 -->
 	<select id="getCustomerTypeTwo" resultType="java.lang.String">
-		select r.type_9
+		select r.type_6
 		  from FIN_PRODUCT t
      left join FIN_PRODUCT_ADD v
 		    on t.finprod_id = v.finprod_id
