@@ -12,6 +12,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.report.system.chbprd.dao.ChbPrdBaseinfo001Mapper;
 import com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dao.ChbPeriodicMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.*;
 import com.joyintech.tams.svreport.chbreport.investreport.common.service.ChbInvestReportCommonService;
@@ -48,7 +49,7 @@ public class ChbPeriodicService {
     @Autowired
     private ChbInvestReportCommonService chbInvestReportCommonService;
     @Autowired
-    private ChbPrdBaseinfoMapper chbPrdBaseinfoMapper;
+    private ChbPrdBaseinfo001Mapper chbPrdBaseinfo001Mapper;
     @Autowired
     private ChbPrdBaseinfoDetailMapper chbPrdBaseinfoDetailMapper;
 
@@ -65,10 +66,14 @@ public class ChbPeriodicService {
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         List<String> titleList = new ArrayList<String>();
         String prodId = (String) map.get("prodId");
-        ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfoMapper.selectByProdid(prodId);
-        map.put("chbPrdBaseInfo", chbPrdBaseinfo);
+        List<ChbPrdBaseinfo> chbPrdBaseinfos = chbPrdBaseinfo001Mapper.selectOneDate(map);
+        if (StringUtil.isEmptyList(chbPrdBaseinfos)) {
+            return null;
+        }
+        ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfos.get(0);
+        map.put("chbPrdBaseinfo", chbPrdBaseinfo);
         List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid((String) map.get("prodId"));
-        map.put("chbPrdBaseInfoList", chbPrdBaseinfoDetailList);
+        map.put("chbPrdBaseinfoDetailList", chbPrdBaseinfoDetailList);
 
         this.createData(reportName, map, mapList, titleList);
 
@@ -136,10 +141,14 @@ public class ChbPeriodicService {
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         List<String> titleList = new ArrayList<String>();
         String prodType = null;
-        ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfoMapper.selectByProdid((String) map.get("prodId"));
-        map.put("chbPrdBaseInfo", chbPrdBaseinfo);
+        List<ChbPrdBaseinfo> chbPrdBaseinfos = chbPrdBaseinfo001Mapper.selectOneDate(map);
+        if (StringUtil.isEmptyList(chbPrdBaseinfos)) {
+            return null;
+        }
+        ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfos.get(0);
+        map.put("chbPrdBaseinfo", chbPrdBaseinfo);
         List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid((String) map.get("prodId"));
-        map.put("chbPrdBaseInfoList", chbPrdBaseinfoDetailList);
+        map.put("chbPrdBaseinfoDetailList", chbPrdBaseinfoDetailList);
         if (chbPrdBaseinfo != null) {
             prodType = chbPrdBaseinfo.getProdtype();
         }
@@ -185,8 +194,8 @@ public class ChbPeriodicService {
                 List<String> sprodNameList = chbPrdBaseinfoDetailList.stream().map(ChbPrdBaseinfoDetailWithBLOBs::getProdName).collect(Collectors.toList());
                 chbPeriodicPrdInfo.setSprodIdList(sprodIdList);
                 chbPeriodicPrdInfo.setSprodNameList(sprodNameList);
-                param.put("sprodIdList", sprodIdList);
-                param.put("sprodNameList", sprodNameList);
+                dataMap.put("sprodIdList", sprodIdList);
+                dataMap.put("sprodNameList", sprodNameList);
             }
 
             // 获取报告起始日期和结束日期
@@ -244,7 +253,7 @@ public class ChbPeriodicService {
             if (StringUtil.isEmptyList(chbPrdBaseinfoDetailList)) {
                 prodNameList.add(chbPeriodicPrdInfo.getProdName());
             } else {
-                prodNameList.addAll((List) param.get("sprodNameList"));
+                prodNameList.addAll((List) dataMap.get("sprodNameList"));
             }
             titleList.add(ChbInvestReportUtil.generateFileNameForDQ(prodNameList, reportType, year));
         }
@@ -302,7 +311,7 @@ public class ChbPeriodicService {
             ChbPeriodicPosition chbPeriodicPosition = new ChbPeriodicPosition();
             chbPeriodicPosition.setSeq(ChbInvestReportConstant.横线);
             chbPeriodicPosition.setAssettype2Fmt(ChbInvestReportConstant.横线);
-            chbPeriodicPosition.setPercentAssetvalueBFmt(ChbInvestReportConstant.横线);
+            chbPeriodicPosition.setPercentAssetvalueAFmt(ChbInvestReportConstant.横线);
             chbPeriodicPosition.setPercentAssetvalueBFmt(ChbInvestReportConstant.横线);
             list.add(chbPeriodicPosition);
         }

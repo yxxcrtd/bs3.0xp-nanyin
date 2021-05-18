@@ -58,7 +58,7 @@
                r.valuePercent           as valuePercent/** 本期净值收益**/
         from REP_PROD_INDEX p,
              (
-                 SELECT (SUM(1 + p.W_YIELD / 10000) - 1) * 100 as valuePercent,
+                 SELECT (SUM(1 + q.W_YIELD / 10000) - 1) * 100 as valuePercent,
                         q.PROD_ID
                  FROM rep_prod_index q
                  WHERE q.PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -85,7 +85,7 @@
                r.valuePercent           as valuePercent/** 本期净值收益**/
         from REP_PROD_INDEX_DETAIL p,
              (
-                 SELECT (SUM(1 + p.W_YIELD / 10000) - 1) * 100 as valuePercent,
+                 SELECT (SUM(1 + q.W_YIELD / 10000) - 1) * 100 as valuePercent,
                         q.PROD_ID
                  FROM REP_PROD_INDEX_DETAIL q
                  WHERE q.FPROD_ID = #{prodId,jdbcType=VARCHAR}

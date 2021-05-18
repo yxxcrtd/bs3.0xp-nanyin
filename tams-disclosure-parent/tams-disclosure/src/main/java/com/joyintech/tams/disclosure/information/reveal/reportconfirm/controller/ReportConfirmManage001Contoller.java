@@ -472,9 +472,11 @@ public class ReportConfirmManage001Contoller extends BaseController {
     	String prodId = RequestUtil.getParam("prodId");
         String reportDate = RequestUtil.getParam("reportDate");
         String reportName = RequestUtil.getParam("reportName");
-    	targetFileName=reportName+formate;
-    	// modify by swwan 20210518 start
-    	/*if (StringUtil.isNotEmpty(reportDate)&&!StringUtil.equals(reportDate, "undefined")){
+
+		// modify by swwan 20210518 start
+		targetFileName = RequestUtil.getParam("sysFileName");
+    	/*targetFileName=reportName+formate;
+    	if (StringUtil.isNotEmpty(reportDate)&&!StringUtil.equals(reportDate, "undefined")){
     	    if(reportDate.lastIndexOf("--")!=-1){
     	        targetFileName=reportDate.substring(reportDate.lastIndexOf("--")+2)+GlobalConstant.UNDER_LINE+targetFileName;
     	    }
