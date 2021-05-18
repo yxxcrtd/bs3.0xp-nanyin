@@ -665,6 +665,8 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
     }
 
 
+    private String totleTradeId;
+
     /**
      * 设置主键
      * {@inheritDoc}
@@ -672,7 +674,11 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
     @Override
     @PrimaryKey(Field.PK_1)
     public String getTotleTradeId(){
-        return StringUtil.isNotEmpty(super.getTotleTradeId())?super.getTotleTradeId():IDGenerator.generate();
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
     }
     /**
      * 业务类型

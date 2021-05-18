@@ -107,7 +107,7 @@ public class TrdPlanCcyInvestTrade002Controller extends BaseController {
     /**
      * 业务编号组件
      */
-    @Autowired(required = false)
+    @Autowired
     private BaseGetBusinessId baseGetBusinessId;
 
     @Autowired(required = false)
