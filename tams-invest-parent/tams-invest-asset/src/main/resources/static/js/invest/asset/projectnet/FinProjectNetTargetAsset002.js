@@ -275,10 +275,10 @@ $(function() {
             $('.btn-save').hide();
         }
         // 绑定按钮事件
-        $('#FinProjectTargetAsset002_btn_save').click(function() {
+        $('#FinProjectNetTargetAsset002_btn_save').click(function() {
             saveOrSubmit('save');
         });
-        $('#FinProjectTargetAsset002_btn_submit').click(function() {
+        $('#FinProjectNetTargetAsset002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
         $("#FinProjectTargetAsset002_DIV").find("input[name='vdate'],input[name='mdate']").change(calTermDays);
