@@ -10,12 +10,18 @@
  
 package com.joyintech.tams.svreport.interf.dis.prodcashyield.servcie;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.svreport.interf.dis.common.DisInterfDecimalUtil;
+import com.joyintech.tams.svreport.interf.dis.prodcashyield.dao.DisRepCashYieldMapper;
+import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,17 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfDefine;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.svreport.interf.dis.common.DisInterfDecimalUtil;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dao.DisRepCashYieldMapper;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 产品费率接口
@@ -190,8 +190,11 @@ public class DisRepCashYieldService extends FileImpService{
         String rs = "success";
         // 对数据list进行处理
         if (!CollectionUtils.isEmpty(dataList)) {
+            //modify by yanya on 20210518 添加待处理数据 start
             // 数据检查
-            checkSaveData(dataList, interfFile);
+            //checkSaveData(dataList, interfFile);
+            checkDataCodeCheck(dataList, interfFile.getFilename(), ChbCheckTableInfo.产品费率数据);
+            //modify by yanya on 20210518 添加待处理数据 end
             // 数据入库
             ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(
                 InterfDefine.产品费率数据.getCode());

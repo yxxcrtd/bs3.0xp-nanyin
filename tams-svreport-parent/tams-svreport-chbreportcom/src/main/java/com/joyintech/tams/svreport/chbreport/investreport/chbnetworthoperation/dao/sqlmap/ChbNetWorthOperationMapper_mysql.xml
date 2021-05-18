@@ -25,7 +25,7 @@
                 and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
             </if>
             <if test="endDate !=null and endDate != ''" >
-                and  DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') between DATE_FORMAT('1970-01-01','%Y-%m-%d') and DATE_FORMAT(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d')
+                and (DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') between DATE_FORMAT('1970-01-01','%Y-%m-%d') and DATE_FORMAT(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d'))
             </if>
             <if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
                 and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/

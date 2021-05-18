@@ -10,7 +10,7 @@
 		<result column="PBC_PROD_TYPE" property="pbcProdType" jdbcType="CHAR" />
 		<result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
 		<result column="PROD_BRAND" property="prodBrand" jdbcType="VARCHAR" />
-		<result column="PROD_STAGE" property="prodStage" jdbcType="DECIMAL" />
+		<result column="PROD_STAGE" property="prodStage" jdbcType="INTEGER" />
 		<result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
 		<result column="SUB_PROD_ID" property="subProdId" jdbcType="VARCHAR" />
 		<result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
@@ -148,7 +148,7 @@
 		#{registSeqno,jdbcType=CHAR}, #{pbcProdId,jdbcType=VARCHAR},
 		#{issuePartyId,jdbcType=VARCHAR},
 		#{pbcProdType,jdbcType=CHAR}, #{prodName,jdbcType=VARCHAR}, #{prodBrand,jdbcType=VARCHAR},
-		#{prodStage,jdbcType=DECIMAL}, #{prodId,jdbcType=VARCHAR},
+		#{prodStage,jdbcType=INTEGER}, #{prodId,jdbcType=VARCHAR},
 		#{raiseCcy,jdbcType=VARCHAR},
 		#{cashPrinCcy,jdbcType=VARCHAR}, #{cashProfCcy,jdbcType=VARCHAR}, #{customerType,jdbcType=VARCHAR},
 		#{raiseType,jdbcType=CHAR}, #{manageType,jdbcType=CHAR},
@@ -363,7 +363,7 @@
 				#{prodBrand,jdbcType=VARCHAR},
 			</if>
 			<if test="prodStage != null">
-				#{prodStage,jdbcType=DECIMAL},
+				#{prodStage,jdbcType=INTEGER},
 			</if>
 			<if test="prodId != null">
 				#{prodId,jdbcType=VARCHAR},
@@ -528,7 +528,7 @@
 				PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
 			</if>
 			<if test="prodStage != null">
-				PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+				PROD_STAGE = #{prodStage,jdbcType=INTEGER},
 			</if>
 			<if test="prodId != null">
 				PROD_ID = #{prodId,jdbcType=VARCHAR},
@@ -682,7 +682,7 @@
 		PBC_PROD_TYPE = #{pbcProdType,jdbcType=CHAR},
 		PROD_NAME = #{prodName,jdbcType=VARCHAR},
 		PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
-		PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+		PROD_STAGE = #{prodStage,jdbcType=INTEGER},
 		PROD_ID = #{prodId,jdbcType=VARCHAR},
 		RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
 		CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},

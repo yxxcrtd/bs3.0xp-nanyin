@@ -205,6 +205,7 @@
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper.Blob_Column_List" />
         from chb_prd_baseinfo_detail
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and STATUS = 'E'
     </select>
     <select id="selectByFprodid" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
         select
@@ -213,6 +214,7 @@
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper.Blob_Column_List" />
         from chb_prd_baseinfo_detail
         where FPROD_ID = #{fprodId,jdbcType=VARCHAR}
+        and STATUS = 'E'
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from chb_prd_baseinfo_detail

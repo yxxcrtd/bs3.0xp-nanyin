@@ -64,7 +64,7 @@ $(function () {
                 {field:'sysFilename', title: '系统生成', width:200,sort: true
                     ,render: function (data, type, row, meta) {
                         // /framework/download/ + SYS_UPLOAD_FILE_INFO.SEQ_NO
-                    	return '<a href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.sysFilepath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName)+ '">' + data + '</a>';
+                    	return '<a href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.sysFilepath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName+'&sysFileName='+row.sysFilename)+ '">' + data + '</a>';
 //                    	return '<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.sysFilepath)+ '">' + data + '</a>';
                     }
                 },
@@ -72,7 +72,7 @@ $(function () {
            //修改
                 {field:'filename', title: '手动上传',width:300,sort: true
                 	,render: function (data, type, row, meta) {
-                		var str = '<div style="width:210px;height:28px; overflow:hidden;float:left">'+'<a href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.filepath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName)+ '">' + data + '</a>'+'</div>';
+                		var str = '<div style="width:210px;height:28px; overflow:hidden;float:left">'+'<a href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.filepath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName+'&sysFileName='+row.sysFilename)+ '">' + data + '</a>'+'</div>';
                 		//'<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.filepath)+ '">'+ data +'</a>'+'</div>';
                 		if(row.filename != null && row.filename != "" && row.confirmStatus == '0'){
                 			str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除文件"></i></a>'+'</div>';

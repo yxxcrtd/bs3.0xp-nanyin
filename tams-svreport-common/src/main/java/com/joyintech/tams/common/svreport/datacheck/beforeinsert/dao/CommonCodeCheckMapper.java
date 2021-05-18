@@ -1,15 +1,11 @@
 package com.joyintech.tams.common.svreport.datacheck.beforeinsert.dao;
 
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.common.base.entity.ChbBotAstPositionSub;
-import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
-import com.joyintech.tams.common.base.entity.ChbPrdIssueSub;
-import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface CommonCodeCheckMapper {
@@ -86,4 +82,36 @@ public interface CommonCodeCheckMapper {
 	int findEmployeeSub(@Param("key") String key);
 
 	int deleteAssetInfoErrorDataByAssetCode(@Param("assetCode") String assetCode);
+
+    //增加产品费率数据、交易对手接口、投资交易信息接口数据、产品基本信息 start by 20210518 start
+
+    /**
+     * 根据产品费率错误表对象删除错误表数据
+     * @param obj
+     * @return
+     */
+    int deleteRepCashYieldErrordataByObj(RepCashYieldErrordataWithBLOBs obj);
+
+    /**
+     * 根据产品编码删除基本信息错误表数据
+     * @param prodId
+     * @return
+     */
+    int deleteChbPrdBaseinfoErrordataByProdId(@Param("prodId") String prodId);
+
+    /**
+     * 根据交易对手编码删除交易对手错误表数据
+     * @param counterId
+     * @return
+     */
+    int deleteChbMstCounterPartyErrordataByCounterId(@Param("counterId") String counterId);
+
+    /**
+     * 根据投资交易编码删除投资交易错误表数据
+     * @param tradeCode
+     * @return
+     */
+    int deleteChbInvestTradeErrordataByTradeCode(@Param("tradeCode") String tradeCode);
+    //增加产品费率数据、交易对手接口、投资交易信息接口数据、产品基本信息 start by 20210518 end
+
 }

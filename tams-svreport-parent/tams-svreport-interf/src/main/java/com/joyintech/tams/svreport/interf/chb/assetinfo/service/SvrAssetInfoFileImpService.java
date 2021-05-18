@@ -13,6 +13,7 @@ import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.interf.common.constant.InterfConstant;
@@ -189,7 +190,7 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
     public String importDB(List<Map<String, String>> assetInfoList,InterfFile interfFile) {
         // 数据检查
         // 添加待处理的数据
-//        checkDataCodeCheck(assetInfoList, interfFile.getFilename(), ChbCheckTableInfo.资产要素登记表INFO);
+        checkDataCodeCheck(assetInfoList, interfFile.getFilename(), ChbCheckTableInfo.资产要素登记表INFO);
 //        checkData(assetInfoList, interfFile.getFilename()
 //                , InterfDefine.资产要素信息接口数据.getCode(), InterfDefine.资产要素信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);
         // 待入库为空则直接返回
