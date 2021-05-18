@@ -18,13 +18,18 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="YIELD_7" property="yield7" jdbcType="DECIMAL" />
+        <result column="TDY_UNPAID_PROFIT" property="tdyUnpaidProfit" jdbcType="DECIMAL" />
+        <result column="DELAY_PAY_AMT" property="delayPayAmt" jdbcType="DECIMAL" />
+        <result column="TOT_BOUNS_AMT" property="totBounsAmt" jdbcType="DECIMAL" />
+        <result column="TDY_PROFIT_CARRY" property="tdyProfitCarry" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         FINPROD_ID FINPROD_ID, BRANCH BRANCH, CDATE CDATE, TDY_PRIN_AMT TDY_PRIN_AMT, TDY_SHARE_AMT TDY_SHARE_AMT, 
         TDY_UNIT_VALUE TDY_UNIT_VALUE, TDY_YIELD TDY_YIELD, TDY_UNPAID_INTINCEXP TDY_UNPAID_INTINCEXP, 
         TDY_ASSET_AMT TDY_ASSET_AMT, TDY_UNIT_VALUE_SUM TDY_UNIT_VALUE_SUM, CREATE_USER CREATE_USER, 
         CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        YIELD_7 YIELD_7
+        YIELD_7 YIELD_7, TDY_UNPAID_PROFIT TDY_UNPAID_PROFIT, DELAY_PAY_AMT DELAY_PAY_AMT, 
+        TOT_BOUNS_AMT TOT_BOUNS_AMT, TDY_PROFIT_CARRY TDY_PROFIT_CARRY
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -56,13 +61,15 @@
             TDY_YIELD, TDY_UNPAID_INTINCEXP, TDY_ASSET_AMT, 
             TDY_UNIT_VALUE_SUM, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            YIELD_7)
+            YIELD_7, TDY_UNPAID_PROFIT, DELAY_PAY_AMT, 
+            TOT_BOUNS_AMT, TDY_PROFIT_CARRY)
         values (#{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{cdate,jdbcType=DATE}, 
             #{tdyPrinAmt,jdbcType=DECIMAL}, #{tdyShareAmt,jdbcType=DECIMAL}, #{tdyUnitValue,jdbcType=DECIMAL}, 
             #{tdyYield,jdbcType=DECIMAL}, #{tdyUnpaidIntincexp,jdbcType=DECIMAL}, #{tdyAssetAmt,jdbcType=DECIMAL}, 
             #{tdyUnitValueSum,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{yield7,jdbcType=DECIMAL})
+            #{yield7,jdbcType=DECIMAL}, #{tdyUnpaidProfit,jdbcType=DECIMAL}, #{delayPayAmt,jdbcType=DECIMAL}, 
+            #{totBounsAmt,jdbcType=DECIMAL}, #{tdyProfitCarry,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokPositionPrd" >
         insert into BOK_POSITION_PRD
@@ -115,6 +122,18 @@
             <if test="yield7 != null" >
                 YIELD_7,
             </if>
+            <if test="tdyUnpaidProfit != null" >
+                TDY_UNPAID_PROFIT,
+            </if>
+            <if test="delayPayAmt != null" >
+                DELAY_PAY_AMT,
+            </if>
+            <if test="totBounsAmt != null" >
+                TOT_BOUNS_AMT,
+            </if>
+            <if test="tdyProfitCarry != null" >
+                TDY_PROFIT_CARRY,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="finprodId != null" >
@@ -165,15 +184,29 @@
             <if test="yield7 != null" >
                 #{yield7,jdbcType=DECIMAL},
             </if>
+            <if test="tdyUnpaidProfit != null" >
+                #{tdyUnpaidProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="delayPayAmt != null" >
+                #{delayPayAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="totBounsAmt != null" >
+                #{totBounsAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyProfitCarry != null" >
+                #{tdyProfitCarry,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokPositionPrd" >
         insert into BOK_POSITION_PRD(FINPROD_ID, BRANCH, CDATE, TDY_PRIN_AMT, TDY_SHARE_AMT, 
         TDY_UNIT_VALUE, TDY_YIELD, TDY_UNPAID_INTINCEXP, TDY_ASSET_AMT, TDY_UNIT_VALUE_SUM, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, YIELD_7)
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, YIELD_7, TDY_UNPAID_PROFIT, 
+        DELAY_PAY_AMT, TOT_BOUNS_AMT, TDY_PROFIT_CARRY)
         select FINPROD_ID, BRANCH, CDATE, TDY_PRIN_AMT, TDY_SHARE_AMT, 
             TDY_UNIT_VALUE, TDY_YIELD, TDY_UNPAID_INTINCEXP, TDY_ASSET_AMT, TDY_UNIT_VALUE_SUM, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, YIELD_7
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, YIELD_7, TDY_UNPAID_PROFIT, 
+            DELAY_PAY_AMT, TOT_BOUNS_AMT, TDY_PROFIT_CARRY
              from BOK_POSITION_PRD
              where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and CDATE = #{cdate,jdbcType=DATE}
     </insert>
@@ -210,6 +243,18 @@
             <if test="yield7 != null" >
                 YIELD_7 = #{yield7,jdbcType=DECIMAL},
             </if>
+            <if test="tdyUnpaidProfit != null" >
+                TDY_UNPAID_PROFIT = #{tdyUnpaidProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="delayPayAmt != null" >
+                DELAY_PAY_AMT = #{delayPayAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="totBounsAmt != null" >
+                TOT_BOUNS_AMT = #{totBounsAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyProfitCarry != null" >
+                TDY_PROFIT_CARRY = #{tdyProfitCarry,jdbcType=DECIMAL},
+            </if>
         </set>
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
@@ -226,7 +271,11 @@
             TDY_UNIT_VALUE_SUM = #{tdyUnitValueSum,jdbcType=DECIMAL},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            YIELD_7 = #{yield7,jdbcType=DECIMAL}
+            YIELD_7 = #{yield7,jdbcType=DECIMAL},
+            TDY_UNPAID_PROFIT = #{tdyUnpaidProfit,jdbcType=DECIMAL},
+            DELAY_PAY_AMT = #{delayPayAmt,jdbcType=DECIMAL},
+            TOT_BOUNS_AMT = #{totBounsAmt,jdbcType=DECIMAL},
+            TDY_PROFIT_CARRY = #{tdyProfitCarry,jdbcType=DECIMAL}
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
           and CDATE = #{cdate,jdbcType=DATE}

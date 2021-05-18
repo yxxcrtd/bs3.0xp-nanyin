@@ -54,6 +54,30 @@ public class BokPositionPrd extends BokPositionPrdKey {
     private BigDecimal yield7;
 
     /**
+     * 当日未分配利润
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyUnpaidProfit;
+
+    /**
+     * 待清算资金
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal delayPayAmt;
+
+    /**
+     * 累计分红金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal totBounsAmt;
+
+    /**
+     * 当日利润结转
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyProfitCarry;
+
+    /**
      * 取得 当前本金
      * @return 当前本金
      */
@@ -179,5 +203,69 @@ public class BokPositionPrd extends BokPositionPrdKey {
      */
     public void setYield7(BigDecimal yield7) {
         this.yield7 = yield7;
+    }
+
+    /**
+     * 取得 当日未分配利润
+     * @return 当日未分配利润
+     */
+    public BigDecimal getTdyUnpaidProfit() {
+        return tdyUnpaidProfit;
+    }
+
+    /**
+     * 设置 当日未分配利润
+     * @param tdyUnpaidProfit 当日未分配利润
+     */
+    public void setTdyUnpaidProfit(BigDecimal tdyUnpaidProfit) {
+        this.tdyUnpaidProfit = tdyUnpaidProfit;
+    }
+
+    /**
+     * 取得 待清算资金
+     * @return 待清算资金
+     */
+    public BigDecimal getDelayPayAmt() {
+        return delayPayAmt;
+    }
+
+    /**
+     * 设置 待清算资金
+     * @param delayPayAmt 待清算资金
+     */
+    public void setDelayPayAmt(BigDecimal delayPayAmt) {
+        this.delayPayAmt = delayPayAmt;
+    }
+
+    /**
+     * 取得 累计分红金额
+     * @return 累计分红金额
+     */
+    public BigDecimal getTotBounsAmt() {
+        return totBounsAmt;
+    }
+
+    /**
+     * 设置 累计分红金额
+     * @param totBounsAmt 累计分红金额
+     */
+    public void setTotBounsAmt(BigDecimal totBounsAmt) {
+        this.totBounsAmt = totBounsAmt;
+    }
+
+    /**
+     * 取得 当日利润结转
+     * @return 当日利润结转
+     */
+    public BigDecimal getTdyProfitCarry() {
+        return tdyProfitCarry;
+    }
+
+    /**
+     * 设置 当日利润结转
+     * @param tdyProfitCarry 当日利润结转
+     */
+    public void setTdyProfitCarry(BigDecimal tdyProfitCarry) {
+        this.tdyProfitCarry = tdyProfitCarry;
     }
 }
