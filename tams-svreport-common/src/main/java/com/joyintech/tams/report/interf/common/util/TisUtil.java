@@ -935,6 +935,9 @@ public class TisUtil {
 		if(datas.get(key) != null && datas.get(key) instanceof Long) {
 			return String.valueOf(datas.get(key));
 		}
+		if(datas.get(key) != null && datas.get(key) instanceof Integer) {
+			return String.valueOf(datas.get(key));
+		}
 		return (String)datas.get(key);
 	}
 
