@@ -20,7 +20,7 @@
 		delete  from CHB_AST_VAL c
 		<where>
 			<if test="valDate != null and valDate != ''">
-				DATE_FORMAT(c.VAL_DATE,'%Y-%m-%d') = #{valDate,jdbcType=VARCHAR}
+				c.VAL_DATE = STR_TO_DATE(#{valDate,jdbcType=VARCHAR},'%Y-%m-%d')
 			</if>
 			<if test="status != null and status!= ''">
 				and c.STATUS  = #{status,jdbcType=VARCHAR}
