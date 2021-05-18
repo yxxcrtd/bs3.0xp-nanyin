@@ -20,7 +20,7 @@ $(function () {
         cols: [
             {field: 'registSeqno', visible: false},
             // { title: "序号", field: 'statusStr',width:150,sortField:'status'},
-            {title: "报告期", field: 'reportDate', width: 150, sortField: 'reportDate'},
+            {title: "统计月份", field: 'reportDate', width: 150, sortField: 'reportDate'},
             {
                 title: '操作', field: 'operation', type: 'action', width: 150,
                 buttons: [{text: '&#xe601;', clas: 'download', title: '导出'}]
@@ -78,7 +78,7 @@ $(function () {
             var reportDate = new Date($('#month_reportDate').val());
             if (isNaN(reportDate)) {
                 // 时间区间必选
-                layer.alert('请选择报告期！', {
+                layer.alert('请选择统计月份！', {
                     icon: 2,
                     skin: 'layer-ext-moon'
                 });
