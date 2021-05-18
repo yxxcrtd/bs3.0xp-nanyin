@@ -288,4 +288,16 @@ public interface PositionMakeWithoutDispatchMapper {
 	 * @return
 	 */
 	int insertPtlSecReceivables(@Param("list") List<PtlSecReceivables> ptlSecReceivablesList);
+
+	/**
+	 * 查询本地待同步组合代码
+	 * ADD BY WUJIE ON 20210517
+	 */
+	List<String> getPortfolioIds(Map<String, Object> param);
+	
+	/**
+	 * 查询本地待同步产品代码
+	 * ADD BY WUJIE ON 20210518
+	 */
+	List<String> getProdIds(Map<String, Object> param);
 }

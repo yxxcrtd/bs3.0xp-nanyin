@@ -3,6 +3,9 @@ package com.joyintech.tams.valuation.batch.positionmake.runner;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.joyintech.tams.valuation.batch.positionmake.processor.PositionMakeInterfProcessor;
+import com.joyintech.tams.valuation.batch.positionmake.reader.PositionMakeInterfReader;
+import com.joyintech.tams.valuation.batch.positionmake.writer.PositionMakeInterfWriter;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +71,20 @@ public class PositionMakeTask extends BatchBaseService {
 	@Autowired
 	private BookCommonLogic bookCommonLogic;
 
+
+	/**add by wujie on 20210517 start**/
+	@Autowired
+	private PositionMakeInterfReader step2Reader;
+
+	@Autowired
+	private PositionMakeInterfProcessor step2Processor;
+
+	@Autowired
+	private PositionMakeInterfWriter step2Writer;
+
+	/**add by wujie on 20210517 end**/
+
+
 	/**
 	 * 批处理入口
 	 */
@@ -98,8 +115,17 @@ public class PositionMakeTask extends BatchBaseService {
 		step1Processor.setParams(params);
 		step1Writer.setParams(params);
 
+		/**add by wujie on 20210517 start**/
+		step2Reader.setParams(params);
+		step2Processor.setParams(params);
+		step2Writer.setParams(params);
+		/**add by wujie on 20210517 end**/
+
 		return batchBuilder.init(this)
 				.batch("step1", (BaseReader) step1Reader, (BaseProcessor) step1Processor, (BaseWriter) step1Writer)
+				/**add by wujie on 20210517 start**/
+				.batch("step2", (BaseReader) step2Reader, (BaseProcessor) step2Processor, (BaseWriter) step2Writer)
+				/**add by wujie on 20210517 end**/
 				.builder(this.getBatchTask().getBeanName() + this.getBatchTask().getTaskId()).run();
 
 	}

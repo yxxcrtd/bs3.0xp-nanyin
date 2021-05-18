@@ -967,4 +967,66 @@
 			#{item.updateUser,jdbcType=VARCHAR},#{item.updateTime,jdbcType=TIMESTAMP}
 		</foreach>
 	</insert>
+
+	<!-- 查询本地待同步组合代码 -->
+	<select id="getPortfolioIds" resultType="java.lang.String"  parameterType="java.util.Map" >
+		SELECT
+		NVL(B.PORTFOLIO_ID,D.ACCT_SUBJECT_ID) AS PORTFOLIO_ID
+		FROM FIN_PRODUCT A,FIN_PRODUCT_ADD B,BOK_ACCT_SUBJECT_INFO C,BOK_BOOKSET D
+		WHERE A.FINPROD_ID = B.FINPROD_ID
+		AND A.FINPROD_ID = C.ACCT_SUBJECT_ID AND A.FINPROD_TYPE = C.ACCT_SUBJECT_TYPE
+		AND A.FINPROD_TYPE = 'F16' AND C.ACCT_SUBJECT_TYPE != 'F18'
+		AND C.ACCT_SUBJECT_ID = D.ACCT_SUBJECT_ID AND C.ACCT_SUBJECT_TYPE = D.ACCT_SUBJECT_TYPE
+		AND TO_CHAR(D.END_DATE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{cdate}
+		AND TO_CHAR(D.START_DATE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{cdate}
+		<if test="booksetIds != null and booksetIds.size > 0">
+			AND (D.BOOKSET_ID IN
+			<foreach collection="booksetIds" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR D.BOOKSET_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+		UNION
+		SELECT
+		C.ACCT_SUBJECT_ID
+		FROM BOK_ACCT_SUBJECT_INFO C,BOK_BOOKSET D
+		WHERE C.ACCT_SUBJECT_TYPE = 'F18'
+		AND C.ACCT_SUBJECT_ID = D.ACCT_SUBJECT_ID AND C.ACCT_SUBJECT_TYPE = D.ACCT_SUBJECT_TYPE
+		AND TO_CHAR(D.END_DATE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{cdate}
+		AND TO_CHAR(D.START_DATE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{cdate}
+		<if test="booksetIds != null and booksetIds.size > 0">
+			AND (D.BOOKSET_ID IN
+			<foreach collection="booksetIds" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR D.BOOKSET_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+	</select>
+	
+	<!-- 查询本地待同步产品代码 -->
+	<select id="getProdIds" resultType="java.lang.String"  parameterType="java.util.Map" >
+		SELECT 
+		  DISTINCT A.BUSI_ID
+		FROM BOK_ACCT_LAYERING_INFO A,BOK_BOOKSET B
+		WHERE A.BOOKSET_ID = B.BOOKSET_ID
+		AND A.BUSI_DETAIL_TYPE != 'F18'
+		AND TO_CHAR(B.END_DATE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{cdate}
+		AND TO_CHAR(B.START_DATE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{cdate}
+		<if test="booksetIds != null and booksetIds.size > 0">
+			AND (B.BOOKSET_ID IN
+			<foreach collection="booksetIds" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR B.BOOKSET_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+	</select>
 </mapper>
