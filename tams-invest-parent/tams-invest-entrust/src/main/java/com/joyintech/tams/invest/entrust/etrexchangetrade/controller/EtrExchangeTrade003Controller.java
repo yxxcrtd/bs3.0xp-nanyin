@@ -179,13 +179,13 @@ public class EtrExchangeTrade003Controller extends BaseController{
 			}
 		}
         // modify by zhangrui1 委托关闭释放剩余预占 start
-        List<String> entrustIdList = new ArrayList<>();
+//        List<String> entrustIdList = new ArrayList<>();
         for(EtrExchangeTrade003Dto item : dto.getSelectedItem()){
             etrExchangeTrade001Service.closeDelegate(item);
             //释放风险接口释放
-            entrustIdList.add(item.getEntrustId());
+//            entrustIdList.add(item.getEntrustId());
         }
-        EntrustCompleteUtil.doComplete(entrustIdList);
+//        EntrustCompleteUtil.doComplete(entrustIdList);
         // modify by zhangrui1 委托关闭释放剩余预占 end
         return new AjaxResult(this.getMessage("ETR_X_003"));
     }
