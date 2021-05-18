@@ -41,9 +41,9 @@ spring:
     #username: rbmq
     #password: rbmq
     # 开发环境使用mq配置如下
-    addresses: 192.168.90.118:5672
-    username: joyin
-    password: joyin123
+    addresses: 192.168.90.119:5672
+    username: rbmq
+    password: rbmq
     publisher-confirms: true
     publisher-returns: true
     listener:
