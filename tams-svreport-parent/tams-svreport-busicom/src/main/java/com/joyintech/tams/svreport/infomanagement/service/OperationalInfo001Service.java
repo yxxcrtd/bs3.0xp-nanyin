@@ -2894,8 +2894,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				for (HashMap<String, String> dataMap : dataUpdateList) {
 					Map<String, String> itemMap = new HashMap<String, String>();
 					for (String key : dataMap.keySet()) {
-						if ("''".equals(dataMap.get(key)) || "'null'".equals(dataMap.get(key))) {
-							dataMap.put(key, null);
+						if (StringUtil.isEmpty(dataMap.get(key)) || "''".equals(dataMap.get(key)) || "'null'".equals(dataMap.get(key))) {
+							//dataMap.put(key, null);
+							dataMap.put(key, "null");
 						}
 						if (null != bisinessPkList && bisinessPkList.contains(key)) {
 							itemMap.put(key, (String) dataMap.get(key));
@@ -2907,8 +2908,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				//向数据库写入数据
 				for (HashMap<String, String> dataMap : dataInsertList) {
 					for (String key : dataMap.keySet()) {
-						if ("''".equals(dataMap.get(key)) || "'null'".equals(dataMap.get(key))) {
-							dataMap.put(key, null);
+						if (StringUtil.isEmpty(dataMap.get(key)) || "''".equals(dataMap.get(key)) || "'null'".equals(dataMap.get(key))) {
+							//dataMap.put(key, null);
+							dataMap.put(key, "null");
 						}
 					}
 					count += baseInformationMapper.insertData(tableName, dataMap);
