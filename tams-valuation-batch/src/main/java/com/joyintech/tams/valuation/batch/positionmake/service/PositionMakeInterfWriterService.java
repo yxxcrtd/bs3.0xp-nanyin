@@ -52,6 +52,7 @@ public class PositionMakeInterfWriterService {
         params.put("preseqno", seqNo);
         params.put("gpcode",gpcode);
         params.put("trigger",trigger);
+        //TODO 暂不考虑请求超时问题
         AjaxResult result = restTemplate.postForObject(url+"/callTrigger", params, AjaxResult.class);
         if(!"成功".equals(result.getMessage())){
         	throw new BatchException(result.getMessage());
