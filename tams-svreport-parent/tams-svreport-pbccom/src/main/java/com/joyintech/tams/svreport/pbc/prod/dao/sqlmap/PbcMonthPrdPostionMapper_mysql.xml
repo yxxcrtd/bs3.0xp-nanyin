@@ -270,7 +270,7 @@
 					endqtysum
 				FROM
 					pbc_month_prd_position
-				WHERE ENDDATE between DATE_ADD(#{reportStartDate,jdbcType=DATE}, interval 1 month) and #{reportStartDate,jdbcType=DATE}
+				WHERE ENDDATE between DATE_ADD(#{reportStartDate,jdbcType=DATE}, interval -1 month) and #{reportStartDate,jdbcType=DATE}
 				UNION ALL
 				/*本周期头寸*/
 				SELECT
