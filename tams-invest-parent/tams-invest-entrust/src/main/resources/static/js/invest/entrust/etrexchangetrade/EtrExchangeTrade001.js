@@ -877,7 +877,7 @@
                 }
             }
             if(!init) {
-                if(priceModel != PRICE_MODEL_PRM03){
+                if(priceModel == PRICE_MODEL_PRM03){
                     // 获取行情价
                     if(finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
                         $("#price_" + currentTab).val(formatPrice(getMktPrice())).trigger('blur').trigger('change');
