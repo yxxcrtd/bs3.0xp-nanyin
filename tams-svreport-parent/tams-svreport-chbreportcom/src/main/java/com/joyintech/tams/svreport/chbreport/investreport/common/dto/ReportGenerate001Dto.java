@@ -34,6 +34,11 @@ public class ReportGenerate001Dto extends BaseEntity {
     private String endDate;
 
     /**
+     * 公告披露日期或报表日期
+     */
+    private String revealDate;
+
+    /**
      * 报表类型
      */
     private String reportType;
@@ -190,4 +195,11 @@ public class ReportGenerate001Dto extends BaseEntity {
     }
 
 
+    public String getRevealDate() {
+        return revealDate;
+    }
+
+    public void setRevealDate(String revealDate) {
+        this.revealDate = revealDate;
+    }
 }

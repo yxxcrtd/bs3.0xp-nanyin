@@ -7,16 +7,16 @@
 			p.PROD_ID AS prodId,	/** 产品代码**/
 			p.PROD_NAME AS prodName,	/** 产品全称**/
 			p.REG_CODE AS regCode, /**理财登记编码**/
-			date_format(p.RAISE_PSTRDATE,'%Y年%m月%d日') AS paisePstrDate,#/**募集起始日**/
-			date_format(p.RAISE_PENDDATE,'%Y年%m月%d日') AS paisePendDate,#/**募集结束日**/
+			date_format(p.RAISE_VDATE,'%Y年%m月%d日') AS paisePstrDate,#/**募集起始日**/
+			date_format(p.RAISE_ENDDATE,'%Y年%m月%d日') AS paisePendDate,#/**募集结束日**/
 		    date_format(p.VDATE,'%Y年%m月%d日') AS vDate, /**产品起息日**/
 			p.ACCT_NAME AS acctName, /**托管账户名称**/
 			p.BUSI_ACCT_NO AS busiAcctNo, /**托管账户账号**/
-			d.TRADE_COST AS tradeCost, /**实际募集金额**/
+		    FORMAT(IFNULL(d.TRADE_COST, 0) / 1, 2) AS tradeCost, /**实际募集金额**/
 			d.CCY AS ccy, /**币种**/
 			'华夏理财有限责任公司' AS managerFullName, /**管理人全称**/
 			'华夏理财' AS managerShortName, /**管理人简称**/
-		    date_format(DATE_ADD(p.VDATE,INTERVAL 1 DAY),'%Y年%m月%d日') AS revealDate, /**公告披露日期**/
+		    #{revealDate,jdbcType=VARCHAR} AS revealDate, /**公告披露日期**/
 			p.CUSTOMER_TYPE as customerType/** 客户类型**/
 		FROM
 			CHB_PRD_BASEINFO p

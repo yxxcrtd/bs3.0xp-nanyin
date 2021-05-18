@@ -9,6 +9,7 @@
 		from CHB_PRD_BASEINFO p
 		where
 			p.`STATUS` = 'E'
+			and p.ISSUING_STATUS = '01'
 		<if test="initValue != null and initValue != ''">
 			and p.PROD_ID IN (#{initValue})
 		</if>

@@ -17,7 +17,7 @@
 			else '-' end AS qtyValue, /**到期日份额净值/每万份净收益**/
 			case when p.PRODTYPE = 'N' THEN  i.UNIT_VALUE_T
 			else '-' end AS totalQtyValue, /**到期日份额累计净值**/
-		    DATE_FORMAT(DATE_ADD(p.MDATE,INTERVAL 1 DAY),'%Y年%m月%d日') AS mDate, /**报表日期**/
+		    #{revealDate,jdbcType=VARCHAR} AS mDate, /**报表日期**/
 			'华夏理财有限责任公司' AS managerFullName, /**管理人全称**/
 			'华夏理财' AS managerShortName, /**管理人简称**/
 			p.CUSTOMER_TYPE as customerType/** 客户类型**/
