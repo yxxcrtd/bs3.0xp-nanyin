@@ -72,9 +72,10 @@
 				where T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
                 and not exists (select 1 from filter where t.seq_no = filter.workflow_id)
 			)
-			--来帐分拣-片段1
-			union 
-			select 
+<!--
+			来帐分拣-片段1
+			union
+			select
 				T.create_user as launchUser,
 				T4.FINPROD_ID finprodId,
 				nvl(T6.finprod_name,t6.finprod_abbr) finprodName,
@@ -114,9 +115,9 @@
 				and not exists (select 1 from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL tt where tt.TOTLE_TRADE_ID = t4.P_TOTLE_TRADE_ID)
 				and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
                 and not exists (select 1 from filter where t.seq_no = filter.workflow_id)
-			--来帐分拣，片段二
-			union 
-			select 
+			来帐分拣，片段二
+			union
+			select
 				T.create_user as launchUser,
 				T3.FINPROD_ID finprodId,
 				nvl(T6.finprod_name,t6.finprod_abbr) finprodName,
@@ -142,7 +143,7 @@
 			LEFT JOIN WFL_ORDERS ON T3.TRADE_ID = WFL_ORDERS.TRADE_ID
 			LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = T3.TRADE_ID
 			where
-			((T5.PA_BUSS_TYPE IN ('58','54','56','80','66','67','73','68','61','62','64','87','125')) 
+			((T5.PA_BUSS_TYPE IN ('58','54','56','80','66','67','73','68','61','62','64','87','125'))
 				OR (T5.PA_BUSS_TYPE IN ('14','13', '83', '15') AND FPA.PAY_TYPE IS NULL)
 				OR (T5.PA_BUSS_TYPE IN ('10') AND FPA.PAY_TYPE = '01' AND T3.TRADE_MARKET IN ('01','03', '04'))/*逐笔划款: 银行间/交易所债券卖出*/
 				OR (T5.PA_BUSS_TYPE IN ('74') AND FPA.PAY_TYPE = '01' AND T3.TRADE_MARKET IN ('01'))/*逐笔划款: 银行间买断式正回购首期*/
@@ -153,5 +154,6 @@
 			AND (T5.PA_BUSS_TYPE NOT IN ('58','54','83','56','80','66','67','73','68','125') OR PT.TRADE_ID IS NULL)
 			and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
             and not exists (select 1 from filter where t.seq_no = filter.workflow_id)
+          -->
     </select>
 </mapper>
