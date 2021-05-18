@@ -98,10 +98,10 @@
             </foreach>
         </if>
         <if test="equityConfDateStart != null and equityConfDateStart != ''" >
-            AND cequdet.EQUITY_CONF_DATE <![CDATA[>=]]> to_date( #{equityConfDateStart},'yyyy-MM-dd')
+            AND DATE_FORMAT(cequdet.EQUITY_CONF_DATE,'%Y-%m-%d') <![CDATA[>=]]> to_date( #{equityConfDateStart},'yyyy-MM-dd')
         </if>
         <if test="equityConfDateEnd != null and equityConfDateEnd != ''" >
-            AND cequdet.EQUITY_CONF_DATE <![CDATA[<=]]> to_date( #{equityConfDateEnd},'yyyy-MM-dd')
+            AND DATE_FORMAT(cequdet.EQUITY_CONF_DATE,'%Y-%m-%d') <![CDATA[<=]]> to_date( #{equityConfDateEnd},'yyyy-MM-dd')
         </if>
         <!-- 渠道 -->
         <if test="channelList != null and channelList.size() > 0">

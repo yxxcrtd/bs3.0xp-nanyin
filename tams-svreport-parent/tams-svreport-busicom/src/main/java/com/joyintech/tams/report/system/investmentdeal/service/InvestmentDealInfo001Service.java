@@ -19,11 +19,13 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.investmentdeal.dao.InvestmentDealInfo001Mapper;
 import com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -96,14 +98,41 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
         List<ValidMessage> resultList = new ArrayList<>();
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        Map<String,Object> map=new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
-            InvestmentDealInfoDto dto=new InvestmentDealInfoDto();
-            coverEntity(dto,dataList,i);
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "InvestmentDealInfo002", "", ValidMessage.class);
+            for (int j = i+1; j < dataList.size(); j++ ) {
+                if(StringUtils.equals(dataList.get(i).get(3), dataList.get(j).get(3))){
+                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行行内交易编码与"+"第"+(j+2)+"行行内交易编码相同");
+                    errorList.add(validMessage);
+                }
+            }
         }
         errorList=resultList;
         if(errorList.size() == 0){
-            webResult.setData(NO_INFO_SHOWOUT);
+            for (int i = 0; i < dataList.size(); i++ ) {
+                //操作类型
+                String type ="";
+                if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
+                    type = dataList.get(i).get(0).toString();
+                }
+                InvestmentDealInfoDto dto=new InvestmentDealInfoDto();
+                coverEntity(dto,dataList,i);
+                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "InvestmentDealInfo002", "", ValidMessage.class);
+                map.put("tradeCode",dto.getTradeCode());
+                InvestmentDealInfoDto infoDto= investmentDealInfo001Mapper.selectOneDate(map);
+                if("新增".equals(type)){
+                    if(StringUtil.isNotEmpty(infoDto)){
+                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行已存在行内交易编码的数据");
+                        errorList.add(validMessage);
+                    }
+                }
+                if("修改".equals(type) || "删除".equals(type)){
+                    if(!StringUtil.isNotEmpty(infoDto)){
+                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行不存在该行内交易编码的数据,请核查");
+                        errorList.add(validMessage);
+                    }
+                }
+            }
         }else{
             webResult.setErrorList(errorList);
         }

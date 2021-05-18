@@ -667,7 +667,6 @@
    <update id="refreshChangeIndentifyMark" parameterType="java.util.List">
     <choose>
        <when  test="list !=null and list.size()>0">
-         begin
 	       <foreach collection="list" item="item" index="index" separator=";">
 			   UPDATE CHB_EQU_HOLD_CHECK HOLDCHECK
 			    SET HOLDCHECK.ORG_INDENTIFY_MARK  =  #{item.orgIndentifyMark,jdbcType=VARCHAR},
@@ -685,7 +684,6 @@
 				SET POS.INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR}
 			   WHERE POS.INDENTIFY_MARK = #{item.orgIndentifyMark,jdbcType=VARCHAR} -->
 	        </foreach>
-        ;end;
       </when>
       <otherwise>
          SELECT 1 FROM DUAL
@@ -697,7 +695,6 @@
   <update id="refreshMergerIndentifyMark"  parameterType="java.util.List">
    <choose>
     <when test="list !=null and list.size()>0">
-      BEGIN
 		<foreach collection="list" item="item" index="index" separator=";">
 			  UPDATE CHB_PRD_DEAL DEAL
 		        SET DEAL.INDENTIFY_MARK = (SELECT T.MERGER_INDENTIFY_MARK
@@ -742,7 +739,6 @@
 									ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 		                  )
 	    </foreach>
-		;END;
 	</when>
 	<otherwise>
 	   SELECT 1 FROM DUAL

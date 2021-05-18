@@ -58,27 +58,41 @@ $(function() {
         })
         if ($('#holderType').val() != null && $('#holderType').val() != ''){
             var arr = ["01","02","03"];
-            holderTypeChange(arr.indexOf($('#holderType').val())>=0);
+            holderTypeChange(arr.indexOf($('#holderType').val())>=0,1);
         }
         $('#holderType').change(function(){
             // 当投资者类别选择01、02、03时，机构证件类别置灰，个人证件类别和性别可用
             // 否则，机构证件类别可用，个人证件类别和性别置灰
             var arr = ["01","02","03"];
-            holderTypeChange(arr.indexOf($('#holderType').val())>=0);
+            holderTypeChange(arr.indexOf($('#holderType').val())>=0,2);
         });
     })
 }())
 
-function holderTypeChange(isperson){
-	// 机构证件类别
-	$("#institutionIdentifyType").val('').trigger('change');
-	$("#institutionIdentifyType").attr('disabled',isperson);
-	// 个人证件类别
-	$("#personalIdentifyType").val('').trigger("change");
-	$("#personalIdentifyType").attr('disabled',!isperson);
-	// 性别
-	$("#holderSex").val('').trigger("change");
-	$("#holderSex").attr('disabled',!isperson);
+function holderTypeChange(isperson,type){
+    if (type === 2){
+        // 机构证件类别
+        $("#institutionIdentifyType").val('').trigger('change');
+        $("#institutionIdentifyType").attr('disabled',isperson);
+        // 个人证件类别
+        $("#personalIdentifyType").val('').trigger("change");
+        $("#personalIdentifyType").attr('disabled',!isperson);
+        // 性别
+        $("#holderSex").val('').trigger("change");
+        $("#holderSex").attr('disabled',!isperson);
+    }
+    if (type === 1){
+        // 机构证件类别
+        $("#institutionIdentifyType").trigger('change');
+        $("#institutionIdentifyType").attr('disabled',isperson);
+        // 个人证件类别
+        $("#personalIdentifyType").trigger("change");
+        $("#personalIdentifyType").attr('disabled',!isperson);
+        // 性别
+        $("#holderSex").trigger("change");
+        $("#holderSex").attr('disabled',!isperson);
+    }
+
 	
 //	$("#holderSex").attr("required",'required');
 //	$("#holderSex").removeAttr("disabled");

@@ -112,6 +112,10 @@ $(function() {
      */
     table.bind('click', '.delt', function(data, index) {
         data.holdDate = Date.ofDate(data.holdDate).format();
+        if(data.status !="有效"){
+            Joyin.Error("只能删除有效数据，请重新选择");
+            return;
+        }
         var object = {selectedItem: [data], operateType:"delete"};
         deleteList(object);
     });
