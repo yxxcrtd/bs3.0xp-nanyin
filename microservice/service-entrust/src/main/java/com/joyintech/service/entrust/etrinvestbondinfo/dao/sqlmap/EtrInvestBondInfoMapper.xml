@@ -648,4 +648,8 @@ SELECT interf.SECID id,
 		and (TSF.ps = '01' or not exists (select 1 from PTL_SEC_POSITION_FLOW pspf where TSF.SEQNO = PSPF.TRADE_ID and pspf.hoding_type='13'))
     	
     </select>
+
+	<select id="getBondVDate" parameterType = "java.lang.String" resultType="java.util.Date">
+		SELECT Distinct VDATE FROM FIN_PRODUCT where FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
+	</select>
 </mapper>
