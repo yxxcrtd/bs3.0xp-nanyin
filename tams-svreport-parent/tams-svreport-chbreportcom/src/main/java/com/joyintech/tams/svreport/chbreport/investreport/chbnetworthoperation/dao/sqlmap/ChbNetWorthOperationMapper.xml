@@ -7,8 +7,8 @@
         b.PROD_NAME as prodName,/** 产品名称**/
         b.PROD_ID as prodId,/** 产品代码**/
         DATE_FORMAT(i.VALUE_DATE, '%Y-%m-%d') as endDate, /** 净值日期*/
-        p.PROD_VALUE   as prodValue,  /** 单位净值*/
-        p.UNIT_VALUE_TOTAL as unitValueTotal, /** 累计净值**/
+        i.UNIT_VALUE   as prodValue,  /** 单位净值*/
+        i.UNIT_VALUE_T as unitValueTotal, /** 累计净值**/
         b.CUSTOMER_TYPE as customerType,/** 客户类型**/
         '-' as netAssetValue/** 资产净值*/
         from
@@ -18,19 +18,17 @@
         and l.`STATUS` = 'E'
         and l.PRODID = b.PROD_ID
         and DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
-        left join CHB_PRD_PERIODYIELD p on p.PROD_ID = b.PROD_ID
-
+        and b.PRODTYPE = 'N'
         where
         b.`STATUS` = 'E'
         <if test="prodId !=null and prodId != ''">
             and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
         </if>
-        <if test="endDate !=null and endDate != ''">
-            and  DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+        <if test="endDate !=null and endDate != ''" >
+            and (DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') between DATE_FORMAT('1970-01-01','%Y-%m-%d') and DATE_FORMAT(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d'))
         </if>
         <if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
             and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
         </if>
     </select>
-
 </mapper>
