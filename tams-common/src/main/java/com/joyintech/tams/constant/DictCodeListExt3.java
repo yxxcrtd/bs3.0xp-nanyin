@@ -1017,7 +1017,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     阶段_买入后出现减值_P3(DictCode.减值阶段,"P3","三阶段"),
 
     // Added by JIAOXUJIN on 2020-10-16
-    共通业务类型_SPPI测试(DictCode.共通业务类型,"FINASSET21","SPPI测试"),
+    共通业务类型_SPPI测试(DictCode.共通业务类型,"FINASSET23","SPPI测试"),
 
     交易方向_清理核销(DictCode.交易方向,"T75","清理核销"),
     交易方向_其他应收款本金清理核销(DictCode.交易方向,"T76","其他应收款本金-清理核销"),
