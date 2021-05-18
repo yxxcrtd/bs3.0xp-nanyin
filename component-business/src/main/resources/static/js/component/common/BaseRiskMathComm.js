@@ -578,7 +578,7 @@
     /**
      * 风险试算{redis版本}
      */
-    var initBaseRiskMathRedis = function(url,initParam,checkParam){
+    var initBaseRiskMathRedis = function(url,initParam,checkParam,callback){
         if(null==checkParam||checkParam.data.length==0){
             return;
         }
@@ -661,6 +661,12 @@
                     }
                     //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
 
+                    /**
+                     * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
+                     */
+                    if(callback) {
+                        callback(result,cluflag);
+                    }
                 }, true);
             },true);
         }else{
@@ -716,6 +722,12 @@
                     }
                     //如果风险试算是软控，存在违规的时候，在点击风险试算按钮的时候就给出提示 add by jqq 20201216 end
 
+                    /**
+                     * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
+                     */
+                    if(callback) {
+                        callback(result,cluflag);
+                    }
                 },true);
             },true);
         }
