@@ -1,0 +1,8 @@
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrInvestBondInfo002', '999999', 'PRICE_MODEL', 'PRM01', null, null, 'system', null, '21-7月 -20 05.28.17.000000 下午', 'system', '21-7月 -20 05.28.17.000000 下午');
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrInvestBondInfo002', '999999', 'PRICE_MODEL', 'PRM02', null, null, 'system', null, '21-7月 -20 05.28.17.000000 下午', 'system', '21-7月 -20 05.28.17.000000 下午');
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrInvestBondInfo002', '999999', 'PRICE_MODEL', 'PRM03', null, null, 'system', null, '21-7月 -20 05.28.17.000000 下午', 'system', '21-7月 -20 05.28.17.000000 下午');
