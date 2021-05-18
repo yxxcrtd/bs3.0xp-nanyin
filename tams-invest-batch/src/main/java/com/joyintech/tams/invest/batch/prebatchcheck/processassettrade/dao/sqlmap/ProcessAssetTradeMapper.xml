@@ -174,7 +174,7 @@
 			            sd.institution_code instCode,
                         '' remark 
                     from SYS_WFL_BUSINESS_LIST T
-                    inner join temp on temp.workflow_id = T.seq_no and temp.page_id ='TrdFundDuration002'
+                    inner join temp on temp.workflow_id = T.seq_no and temp.page_id in ('TrdFundDuration002','TrdBondDuration003')
                     left join WFL_TRD_PRODUCT_DEAl deal on deal.workflow_id = t.seq_no
                     left join fin_product fp on fp.finprod_id = replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"finprodId":"[^"]+"',1,1)),'"finprodId":"',''),'"','')
                     LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
