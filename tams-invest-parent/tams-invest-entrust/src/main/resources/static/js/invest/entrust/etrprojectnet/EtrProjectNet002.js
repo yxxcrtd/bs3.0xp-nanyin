@@ -263,9 +263,9 @@
             var finprodId = $('#finprodIdhid').val();
             if(ps == T04 || ps == T01){
                 if(ps == T01) {
-                    $('#proAvailableCash_div').hide();
-                }else {
                     $('#proAvailableCash_div').show();
+                }else {
+                    $('#proAvailableCash_div').hide();
                 }
 
 
