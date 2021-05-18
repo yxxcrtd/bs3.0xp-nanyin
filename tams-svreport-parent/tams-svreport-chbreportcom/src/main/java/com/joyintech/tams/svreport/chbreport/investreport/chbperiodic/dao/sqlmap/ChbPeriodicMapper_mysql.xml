@@ -87,7 +87,7 @@
              (
                  SELECT (SUM(1 + p.W_YIELD / 10000) - 1) * 100 as valuePercent,
                         q.PROD_ID
-                 FROM rep_prod_index q
+                 FROM REP_PROD_INDEX_DETAIL q
                  WHERE q.FPROD_ID = #{prodId,jdbcType=VARCHAR}
                    AND q.VALUE_DATE BETWEEN #{startReportDate,jdbcType=DATE}
                      AND #{endReportDate,jdbcType=DATE}
