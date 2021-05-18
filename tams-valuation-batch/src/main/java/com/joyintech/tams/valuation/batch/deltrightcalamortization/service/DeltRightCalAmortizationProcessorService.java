@@ -353,19 +353,33 @@ public class DeltRightCalAmortizationProcessorService {
             	    if(StringUtil.isNotEmpty(planSubtractionType) && DictCodeList.项目类计提区间倒减方式_倒减前一日计算结果.getValue().equals(planSubtractionType)
                        && StringUtil.isNotEmpty(finprodType2) && finprodType2.equals(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())
                     ){
-                        DrawBaseInfoSelectComResult acctEntityLast= new DrawBaseInfoSelectComResult();
-                        BeanUtils.copyProperties(acctEntity, acctEntityLast);
-                        acctEntityLast.setHappenDate(DateUtil.addDay(acctEntityLast.getHappenDate(),-1));
-                        // 调用债权类资产应计利息共通
-                        AccurIntCalOutParameter accurIntCalOutParameterIntLast = this.getCalculate(
-                                acctEntityEx, targetFinProduct, interestPayList, quotationList,
-                                payRuleList, faceValue, acctEntityLast);
-                        // 变量.昨日应计利息余额 = 返回值 调用金额共通方法设置有效小数位
-                        BigDecimal interestAmtLast  = ArithmeticUtil.multiply(accurIntCalOutParameterIntLast.getInterest(), costQuantity);
-                        interestAmtLast = ArithmeticUtil.divide(interestAmtLast, faceValue);
+            	            //当天是新的计息区间开始日，则仅仅统计当天
+                            boolean isNotStartDateflag = true;
+                            if(interestPayList != null && interestPayList.size() > 0){
+                                for (int i = 0; i < interestPayList.size(); i++ ) {
+                                    TargetCashPlan targetCashPlan = interestPayList.get(i);
+                                    if(targetCashPlan.getVdate().compareTo(happenDate) == 0){
+                                        isNotStartDateflag = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        BigDecimal interestAmtLast  =BigDecimal.ZERO;
+                        if(isNotStartDateflag){
+                            DrawBaseInfoSelectComResult acctEntityLast= new DrawBaseInfoSelectComResult();
+                            BeanUtils.copyProperties(acctEntity, acctEntityLast);
+                            acctEntityLast.setHappenDate(DateUtil.addDay(acctEntityLast.getHappenDate(),-1));
+                            // 调用债权类资产应计利息共通
+                            AccurIntCalOutParameter accurIntCalOutParameterIntLast = this.getCalculate(
+                                    acctEntityEx, targetFinProduct, interestPayList, quotationList,
+                                    payRuleList, faceValue, acctEntityLast);
+                            // 变量.昨日应计利息余额 = 返回值 调用金额共通方法设置有效小数位
+                            interestAmtLast  = ArithmeticUtil.multiply(accurIntCalOutParameterIntLast.getInterest(), costQuantity);
+                            interestAmtLast = ArithmeticUtil.divide(interestAmtLast, faceValue);
 //                       //调用金额共通方法设置有效小数位
-                        interestAmtLast = ArithmeticUtil.round(interestAmtLast,
-                                NumberEnum.MONEY);
+                            interestAmtLast = ArithmeticUtil.round(interestAmtLast,
+                                    NumberEnum.MONEY);
+                        }
                         // 调用债权类资产应计利息共通
                         AccurIntCalOutParameter accurIntCalOutParameterInt = this.getCalculate(
                                 acctEntityEx, targetFinProduct, interestPayList, quotationList,
@@ -376,7 +390,7 @@ public class DeltRightCalAmortizationProcessorService {
                         // 调用金额共通方法设置有效小数位
                         interestAmt = ArithmeticUtil.round(interestAmt,
                                 NumberEnum.MONEY);
-                        // 变量.当日计提利息金额 = 变量.本日应计利息余额 - 变量.应计利息科目余额
+                        // 变量.当日计提利息金额 = 变量.本日应计利息余额 - 变量.昨日应计利息余额
                         calInterestBalanceNow = ArithmeticUtil.doSub(interestAmt,
                                 interestAmtLast);
 
