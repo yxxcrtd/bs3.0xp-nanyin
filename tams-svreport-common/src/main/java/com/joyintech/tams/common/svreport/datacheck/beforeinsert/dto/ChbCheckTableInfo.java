@@ -38,7 +38,16 @@ public enum ChbCheckTableInfo {
     产品存续登记TMP("CHB_PRD_DEAL_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE", "MDATE"}),
     个人产品申报登记TMP("CHB_PRD_DECLARE_SUB_TMP", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}),
     终止登记TMP("CHB_PRD_END_SUB_TMP", true, "PROD_ID", new String[] {"PROD_ID"}),
-    资产要素登记TMP("CHB_ASSET_INFO_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"});
+    资产要素登记TMP("CHB_ASSET_INFO_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
+
+    /** 华夏文件接入**/
+    //产品费率数据 REP_CASH_YIELD
+    产品费率数据("DIS_PRD_FEE_RATE", true, null, new String[] {"PROD_ID", "CASH_TYPE_2", "START_DATE"}),
+    //交易对手接口 chb_mst_counter_party
+    交易对手接口("CHB_COUNTER_PARTY", true, "COUNTER_ID", new String[] {"COUNTER_ID"}),
+    //投资交易信息接口数据CHB_INVEST_TRADE
+    投资交易信息接口数据("CHB_INVEST_TRADE", true, "TRADE_CODE", new String[] {"TRADE_CODE"}),
+    ;
 
     /**
      * 根据tableName获取枚举对象

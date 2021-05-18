@@ -671,7 +671,7 @@ public class SvrProdInfoFileImpService extends FileImpService {
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
 //		List<Map<String, String>> listA = 
 		String result="success";
-//		checkDataCodeCheck(listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO);
+		checkDataCodeCheck(listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO);
 //		checkData(listData, interfFile.getFilename(),
 //		InterfDefine.产品基本信息接口数据.getCode(), InterfDefine.产品基本信息接口数据.getCode(),
 //		BUSINESSKEY_CHB_PRD_BASEINFO, BUSINESSKEY_CHB_PRD_BASEINFO);

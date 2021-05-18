@@ -1,39 +1,5 @@
 package com.joyintech.tams.svreport.interf.chb.investtrade.service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
-
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -45,18 +11,34 @@ import com.joyintech.tams.common.base.entity.ChbInvestTrade;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbInvestTradeInterfMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+
+import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 功能:投资交易文件解析方式入库
@@ -216,9 +198,12 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
     @Override
     public String importDB(List<Map<String, String>> investTradeList,InterfFile interfFile) {
         // 数据检查
+        //modify by yanya on 20210518 添加待处理数据 start
         // 添加待处理的数据
 //        checkData(investTradeList, interfFile.getFilename(),
 //                InterfDefine.投资交易信息接口数据.getCode(), InterfDefine.投资交易信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);
+        checkDataCodeCheck(investTradeList, interfFile.getFilename(), ChbCheckTableInfo.投资交易信息接口数据);
+        //modify by yanya on 20210518 添加待处理数据 end
         // 待入库为空则直接返回
         if (CollectionUtils.isEmpty(investTradeList)){
             return "success";
