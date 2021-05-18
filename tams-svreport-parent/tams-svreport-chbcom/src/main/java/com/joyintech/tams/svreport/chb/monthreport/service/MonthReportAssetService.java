@@ -1403,7 +1403,7 @@ public class MonthReportAssetService {
 				if(chbAssetInfo.getPlanEdate() != null) {
 					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getPlanEdate()));
 				}
-				else if(supAssetInfo.getPlanEdate() != null) {
+				else if(null != supAssetInfo && supAssetInfo.getPlanEdate() != null) {
 					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), supAssetInfo.getPlanEdate()));
 				}
 			}
@@ -1411,7 +1411,7 @@ public class MonthReportAssetService {
 				if(chbAssetInfo.getMdate() != null) {
 					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getMdate()));
 				}
-				else if(supAssetInfo.getMdate() != null) {
+				else if(null != supAssetInfo && supAssetInfo.getMdate() != null) {
 					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), supAssetInfo.getMdate()));
 				}
 			}
