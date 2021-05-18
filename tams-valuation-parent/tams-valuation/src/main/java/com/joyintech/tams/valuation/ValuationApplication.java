@@ -13,6 +13,8 @@ package com.joyintech.tams.valuation;
 import com.joyintech.framework.JoyinApplication;
 import com.joyintech.framework.config.WebApplication;
 
+import java.util.Locale;
+
 /**
  * 估值核算系统启动类
  * 
@@ -24,6 +26,8 @@ import com.joyintech.framework.config.WebApplication;
 public class ValuationApplication extends WebApplication {
 
 	public static void main(String[] args) {
+		Locale local = new Locale("zh", "CN");
+		Locale.setDefault(local);
 		JoyinApplication.run(ValuationApplication.class, args);
 	}
 

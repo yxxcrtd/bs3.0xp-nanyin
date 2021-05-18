@@ -16,6 +16,8 @@ import org.activiti.spring.boot.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
+import java.util.Locale;
+
 /**
  * 平安银行系统启动类
  *
@@ -31,6 +33,8 @@ public class InvestApplication extends WebApplication {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Locale local = new Locale("zh", "CN");
+		Locale.setDefault(local);
 		JoyinApplication.run(InvestApplication.class, args);
 	}
 

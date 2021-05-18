@@ -13,6 +13,8 @@ package com.joyintech.tams.disclosure;
 import com.joyintech.framework.JoyinApplication;
 import com.joyintech.framework.config.WebApplication;
 
+import java.util.Locale;
+
 /**
  * 中债报送系统启动类
  * 
@@ -23,6 +25,8 @@ import com.joyintech.framework.config.WebApplication;
  */
 public class DisclosureApplication extends WebApplication {
     public static void main(String[] args) {
+        Locale local = new Locale("zh", "CN");
+        Locale.setDefault(local);
         JoyinApplication.run(DisclosureApplication.class, args);
     }
 }

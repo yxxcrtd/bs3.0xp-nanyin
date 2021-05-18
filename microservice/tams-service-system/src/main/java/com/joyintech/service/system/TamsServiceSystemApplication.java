@@ -26,6 +26,8 @@ import com.joyintech.framework.config.Application;
 public class TamsServiceSystemApplication extends Application {
 	
 	public static void main(String[] args) {
+        Locale local = new Locale("zh", "CN");
+        Locale.setDefault(local);
         JoyinApplication.run(TamsServiceSystemApplication.class, args);
     }
 	
