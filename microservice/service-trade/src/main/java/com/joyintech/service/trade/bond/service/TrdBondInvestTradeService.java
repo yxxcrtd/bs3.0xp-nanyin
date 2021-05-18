@@ -199,8 +199,8 @@ public class TrdBondInvestTradeService extends BaseService {
                     resultDto.getEtrEntrust().getPrice(), BigDecimal.valueOf(100)));
             }
             else {
-                resultDto.getEtrEntrust().setEntrustNum(ArithmeticUtil.multiply(
-                    resultDto.getEtrEntrust().getEntrustNum(), BigDecimal.valueOf(100)));
+                resultDto.getEtrEntrust().setEntrustNum(ArithmeticUtil.divide(
+                    resultDto.getEtrEntrust().getEntrustNum(), BigDecimal.valueOf(100),6));
             }
 
             // 查询金融产品名称

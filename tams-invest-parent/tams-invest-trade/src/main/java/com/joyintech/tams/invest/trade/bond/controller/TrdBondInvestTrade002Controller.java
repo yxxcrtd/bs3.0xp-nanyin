@@ -408,8 +408,8 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         baseDto.getEtrEntrust().setEntrustNum(baseDto.getEtrEntrust().getEntrustNum());
 
         // 融入券剩余
-        baseDto.getEtrEntrustAdd().setLendinEntNum(ArithmeticUtil.subtract(ArithmeticUtil.multiply(baseDto.getEtrEntrustAdd().getLendinEntNum(),new BigDecimal(100)),
-                ArithmeticUtil.multiply(wflIntegratePrinAmt,new BigDecimal(100))));
+        baseDto.getEtrEntrustAdd().setLendinEntNum(ArithmeticUtil.subtract(ArithmeticUtil.divide(baseDto.getEtrEntrustAdd().getLendinEntNum(),new BigDecimal(100),6),
+                ArithmeticUtil.divide(wflIntegratePrinAmt,new BigDecimal(100),6)));
 
         // 本方券剩余
         baseDto.getEtrEntrustAdd().setOurEntNum(ArithmeticUtil.multiply(baseDto.getEtrEntrustAdd().getOurEntNum(),new BigDecimal(100)));
