@@ -74,7 +74,18 @@ $(function () {
         });
         // 绑定按钮事件
         $('#SvrG06bMonthReportQuery001_btn_search').click(function () {
-            table.load();
+            debugger;
+            var reportDate = new Date($('#month_reportDate').val());
+            if (isNaN(reportDate)) {
+                // 时间区间必选
+                layer.alert('请选择报告期！', {
+                    icon: 2,
+                    skin: 'layer-ext-moon'
+                });
+                return;
+            } else {
+                table.load();
+            }
         });
         $('#SvrG06bMonthReportQuery001_btn_export').click(function () {
             exportExcel();
