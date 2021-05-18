@@ -122,6 +122,7 @@
             </if>
             AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE2}
             AND T3.PROFIT_TYPE = #{PROFIT_TYPE}
+            AND NOT EXISTS (SELECT 1 FROM WFL_ETR_ENTRUST wee WHERE t1.ENTRUST_ID=wee.ENTRUST_ID)
         </where>
         union all
         SELECT
