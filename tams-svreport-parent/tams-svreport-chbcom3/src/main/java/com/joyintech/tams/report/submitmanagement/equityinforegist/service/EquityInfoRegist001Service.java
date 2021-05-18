@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -2098,7 +2099,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                    +ReportGlobalConstant.VERTICAL_LINE
                            +dto.getOtherCapAccBank()+ReportGlobalConstant.VERTICAL_LINE/*+dto.getSpvRegistCode()+"|"*/
                            //要求原则上境内投资者名称中不得含有空格。
-                           +(dto.getHolderName().replaceAll(StringUtil.EMPTY, ""))+ReportGlobalConstant.VERTICAL_LINE
+                           +(dto.getHolderName().replaceAll(Pattern.quote(StringUtil.EMPTY), ""))+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getHolderSex()+ReportGlobalConstant.VERTICAL_LINE+dto.getHolderRiskPrefer()+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getHolderCellphone()+ReportGlobalConstant.VERTICAL_LINE+dto.getHolderTelephone()+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getHolderEmail()+ReportGlobalConstant.VERTICAL_LINE
@@ -2116,7 +2117,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                            +dto.getIdentifyNumber()+ReportGlobalConstant.VERTICAL_LINE+dto.getSpvCapAccBank()+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getOtherCapAccBank()+ReportGlobalConstant.VERTICAL_LINE/*+dto.getSpvRegistCode()+"|"*/
                            //要求原则上境内投资者名称中不得含有空格。
-                           +(dto.getHolderName().replaceAll(StringUtil.EMPTY, ""))+ReportGlobalConstant.VERTICAL_LINE
+                           +(dto.getHolderName().replaceAll(Pattern.quote(StringUtil.EMPTY), ""))+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getHolderSex()+ReportGlobalConstant.VERTICAL_LINE+dto.getHolderRiskPrefer()+ReportGlobalConstant.VERTICAL_LINE
                            +(StringUtil.equals(dto.getHolderCellphone(), empt)||StringUtil.isEmpty(dto.getHolderCellphone())?defaultPhone:dto.getHolderCellphone())+ReportGlobalConstant.VERTICAL_LINE
                            +(StringUtil.equals(dto.getHolderTelephone(), empt)||StringUtil.isEmpty(dto.getHolderTelephone())?defaultTel:dto.getHolderTelephone())+ReportGlobalConstant.VERTICAL_LINE

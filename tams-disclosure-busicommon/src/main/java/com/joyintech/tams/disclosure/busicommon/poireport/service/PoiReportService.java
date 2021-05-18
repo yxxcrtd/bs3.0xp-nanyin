@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -349,7 +350,7 @@ public class PoiReportService {
 	 */
 	private String replaceSqlParams(String sql, Map<String, Object> params) {
 		for (String key : params.keySet()) {
-			sql = sql.replaceAll("@" + key.trim(), "'" + params.get(key) + "'");
+			sql = sql.replaceAll(Pattern.quote("@" + key.trim()), "'" + params.get(key) + "'");
 		}
 		return sql;
 	}

@@ -216,7 +216,7 @@ public class RiskUtil {
 		}
 		List<String> expArray=new ArrayList<String>();
 		for (Map.Entry<String, String> entry : expMap.entrySet()) {
-			exp=exp.replaceAll(entry.getKey(),entry.getValue());
+			exp=exp.replaceAll(Pattern.quote(entry.getKey()),entry.getValue());
 		}
 		return exp;
 	}

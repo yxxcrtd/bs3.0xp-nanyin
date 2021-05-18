@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -936,10 +937,10 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            subjCode = list.get(subjCodeColIdx);
        }
        if(StringUtil.isEmpty(subjCode)){return null;}else{
-           subjCode.replaceAll(" ", "");
+           subjCode.replaceAll(Pattern.quote(" "), "");
            //add by 张年  2019/07/30
            //科目代码统一去点、去横杠
-           subjCode = subjCode.replaceAll(" ", "").replace(".","").replace("-","");}
+           subjCode = subjCode.replaceAll(Pattern.quote(" "), "").replace(".","").replace("-","");}
           //add by 张年  2019/07/30
        //根据科目代码列 判断是资产科目还是汇总科目
        if(subjCode.length() >= 4) {

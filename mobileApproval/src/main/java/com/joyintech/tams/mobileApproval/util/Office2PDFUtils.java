@@ -220,8 +220,8 @@ public class Office2PDFUtils {
 	 * @return
 	 */
 	private static String getOutputFilePath(String inputFilePath) {
-		String outputFilePath = inputFilePath.replaceAll("."
-				+ getPostfix(inputFilePath), ".pdf");
+		String outputFilePath = inputFilePath.replaceAll(Pattern.quote("."
+				+ getPostfix(inputFilePath)), ".pdf");
 		return outputFilePath;
 	}
 }

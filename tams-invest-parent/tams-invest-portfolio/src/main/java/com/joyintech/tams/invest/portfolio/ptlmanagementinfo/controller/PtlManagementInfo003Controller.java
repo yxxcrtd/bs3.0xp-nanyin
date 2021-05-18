@@ -102,8 +102,8 @@ public class PtlManagementInfo003Controller extends BaseController{
         if(map.get("search") != null &&!map.get("search").toString().isEmpty()){
             for(int i = list.size()-1; i>=0; i--){
                 //实现模糊查询
-                if(!Pattern.matches(".*"+map.get("search").toString()+".*", list.get(i).getId())
-                    && !Pattern.matches(".*"+map.get("search").toString()+".*", list.get(i).getText())){
+                if(!Pattern.matches(Pattern.quote(".*"+map.get("search").toString()+".*"), list.get(i).getId())
+                    && !Pattern.matches(Pattern.quote(".*"+map.get("search").toString()+".*"), list.get(i).getText())){
                     list.remove(i);
                 }
             }
