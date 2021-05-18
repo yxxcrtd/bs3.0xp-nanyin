@@ -533,7 +533,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             // 已占用额度
             hapCreditAmt=creditLines.getHapCreditAmt().add(prehapamt==null?BigDecimal.ZERO:prehapamt);
             // 算上本次已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
-            hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt==null?BigDecimal.ZERO:todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt==null?BigDecimal.ZERO:todocredit_amt):BigDecimal.ZERO;
+            hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt):BigDecimal.ZERO;
             //华商个性化 算上底层资产占用额度 2020年12月15日 start
             if (StringUtil.isNotEmpty(pierceMap) && StringUtil.isNotEmpty(pierceMap.get(creditLines.getCreditMstId()+":"+creditLines.getCustomerId()))) {
                 pierceAmt =  pierceMap.get(creditLines.getCreditMstId()+":"+creditLines.getCustomerId()).get(0).getCreditAmt();

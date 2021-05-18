@@ -102,8 +102,8 @@ $(function(){
     	        ,{field:'unitFprice', title: '全价',width:150,type:'number', digit:6,sortable: false}//全价
     	        ,{field:'fpriceAmt', title: '全价总额',width:150,type:'number', sortable: false}//全价总额
     	        ,{field:'tradeRepAmt', title: '交易金额',width:150,type:'number', sortable: false}//交易金额
-    	        ,{field:'exerYield', title: '到期收益率%',width:150,type:'number', digit: 12, sortable: false}//到期收益率
-    	        ,{field:'yield', title: '行权收益率%',width:150,type:'number', digit: 12, sortable: false}//行权收益率
+    	        ,{field:'yield', title: '到期收益率%',width:150,type:'number', digit: 12, sortable: false}//到期收益率 /*modify by jiangpeng on 20210512 ZGBSSE-258*/
+    	        ,{field:'exerYield', title: '行权收益率%',width:150,type:'number', digit: 12, sortable: false}//行权收益率 /*modify by jiangpeng on 20210512 ZGBSSE-258*/
     	        ,{field:'finprodId', title: '资产代码',width:150, visible:false}//交易组合代码
     	        ,{field:'portfolioId', title: '交易对手',width:150, visible:false}//交易对手
     	        ,{field:'isOutTrade', title: '是否外部交易',width:150, visible:false}//是否外部交易

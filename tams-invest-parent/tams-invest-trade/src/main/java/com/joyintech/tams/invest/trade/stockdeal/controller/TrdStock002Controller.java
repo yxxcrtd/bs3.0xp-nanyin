@@ -150,7 +150,11 @@ public class TrdStock002Controller extends BaseController {
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdStock002Service.getBussinessEntityByWorkflowId(
                 workflowId);
-			dto.setPortfolioId(dto.getActPortfolioId());
+            // add by jiangpeng on 20210512 start ZGBSSE-344
+            if(StringUtil.isNotEmpty(dto.getActPortfolioId())) {
+				dto.setPortfolioId(dto.getActPortfolioId());
+			}
+			// add by jiangpeng on 20210512 start ZGBSSE-344
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             model.addAttribute("workflowId",workflowId);
         }

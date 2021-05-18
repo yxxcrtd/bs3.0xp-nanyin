@@ -1419,7 +1419,7 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
             param.put("cdFlag", DictCodeList.借贷方向_贷.getValue());
             param.put("bookDate", position.getBookDate());
             BigDecimal vouchAmt = accountingCommonService.getVouchAmt(param);
-            BigDecimal profitAmt = ArithmeticUtil.doAdd(vouchAmt, tdyBokPosition.getProfitAmt());
+            BigDecimal profitAmt = ArithmeticUtil.round(ArithmeticUtil.doAdd(vouchAmt, tdyBokPosition.getProfitAmt()), 2, RoundingMode.HALF_UP);
             // add by jiangpeng on 20210427 end
             // 出参.结构集.产品本日收益： 设置
             ProdValuationDto tdyProdProfit = new ProdValuationDto();

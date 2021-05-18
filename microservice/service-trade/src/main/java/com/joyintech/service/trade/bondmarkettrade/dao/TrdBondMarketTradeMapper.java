@@ -158,4 +158,21 @@ public interface TrdBondMarketTradeMapper {
      * @since 1.0
      */
     List<Map<String,Object>> selectTrdProductDealsInfo(Map<String,Object> param);
+    
+    /**
+     * 从风险实占信息里获取amount和number等信息
+     * @param EventId
+     * @return
+     */
+    Map<String,Object> getTradeData(String EventId);
+
+    /**
+     * 根据资产代码查询是否是存在上市流通交易的发行标的
+     *
+     * @param finprodId
+     * @return 大于0则为是
+     * @see
+     * @since 1.0
+     */
+    int selectIssueAsset(@Param("finprodId") String finprodId);
 }

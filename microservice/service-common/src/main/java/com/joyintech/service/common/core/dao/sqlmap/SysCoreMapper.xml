@@ -44,10 +44,12 @@
 		SELECT Max(TRADE_DATE) TRADE_DATE
 		FROM TRD_PRODUCT_DEAL
 		WHERE FINPROD_ID = #{finprodId} AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
+		and BUSI_TYPE not in ('24')/*过滤债券预交易数据*/
 		UNION ALL
 		SELECT Max(TRADE_DATE) TRADE_DATE
 		FROM WFL_TRD_PRODUCT_DEAL
 		WHERE FINPROD_ID = #{finprodId}
+		and BUSI_TYPE not in ('24')/*过滤债券预交易数据*/
 		)
 	</select>
 	

@@ -120,6 +120,14 @@ public class SecTransfer001Controller extends BaseController {
             		}else if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "10")) {
             			entity.getSecResoluteDtoList().get(i).setTradeMarket("境外交易场所");
             		}
+                    /*add by jiangpeng on 20210512 ZGBSSE-258*/
+                    if (StringUtil.isNotEmpty(entity.getSecResoluteDtoList().get(i).getYield())) {
+                        entity.getSecResoluteDtoList().get(i).setYield(ArithmeticUtil.multiply(entity.getSecResoluteDtoList().get(i).getYield(), new BigDecimal(100)));
+                    }
+                    if (StringUtil.isNotEmpty(entity.getSecResoluteDtoList().get(i).getExerYield())) {
+                        entity.getSecResoluteDtoList().get(i).setExerYield(ArithmeticUtil.multiply(entity.getSecResoluteDtoList().get(i).getExerYield(), new BigDecimal(100)));
+                    }
+                    /*add by jiangpeng on 20210512 ZGBSSE-258*/
             	}
             }
             model.addAttribute("entityData", JsonUtils.object2Json(entity.getSecResoluteDtoList()));

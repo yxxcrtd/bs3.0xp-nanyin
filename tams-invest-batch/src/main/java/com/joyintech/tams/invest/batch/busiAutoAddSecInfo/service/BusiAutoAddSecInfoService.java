@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.batch.busiAutoAddSecInfo.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -19,12 +20,17 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dao.BusiAutoAddSecInfoMapper;
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddFinProductBaseInfoDto;
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddTradeProductDealDto;
+import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddTradeProductDealRedisDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
+import com.joyintech.tams.invest.common.redisinit.dao.RskRedisInitMapper;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplAsset;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
 import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
@@ -109,6 +115,9 @@ public class BusiAutoAddSecInfoService {
     
     @Autowired
     private RiskRedisInitService<ImplCond> redisRriter;
+    
+    @Autowired
+    private RskRedisInitMapper rskRedisInitMapper;
 
     /**
      *  债券自动上市流通批处理
@@ -459,6 +468,10 @@ public class BusiAutoAddSecInfoService {
     //生成上市流通交易
     private BusiAutoAddTradeProductDealDto generationDeal(List<PtlSecPositionFlow> ptlSecPositionflowTempList,FinProduct finProduct,String secId,Date batchDate,String totalTradeId) {
         BusiAutoAddTradeProductDealDto busiAutoAddTradeProductDealDto =new BusiAutoAddTradeProductDealDto();
+        //redis处理
+        BusiAutoAddTradeProductDealRedisDto busiAutoAddTradeProductDealRedis =new BusiAutoAddTradeProductDealRedisDto();
+        List<BaseTradeInfoDto> baseTradeInfoList =new ArrayList<BaseTradeInfoDto>();
+
         List<TrdProductDeal> deals = new ArrayList<>();
         List<TrdProductDealAdd> dealAdds = new ArrayList<>();
         List<TrdFinProductBarter> dealBarters = new ArrayList<>();
@@ -543,8 +556,110 @@ public class BusiAutoAddSecInfoService {
             inputDto.setTrdProductDeal(trdProductDeal);
             inputDto.setTrdProductDealAdd(trdProductDealAdd);
             AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
+
+            //组装redis需要的信息
+            busiAutoAddTradeProductDealRedis.setPs(DictCodeList.交易方向_上市流通.getValue());
+            busiAutoAddTradeProductDealRedis.setFinprodId(finProduct.getFinprodId());
+            busiAutoAddTradeProductDealRedis.setAppearMarketId(secId);
+            busiAutoAddTradeProductDealRedis.setTradeDate(batchDate);
+
+            BaseTradeInfoDto baseTradeInfoDto =new BaseTradeInfoDto();
+            baseTradeInfoDto.setTrdProductDeal(trdProductDeal);
+            baseTradeInfoDto.setTrdProductDealAdd(trdProductDealAdd);
+            baseTradeInfoList.add(baseTradeInfoDto);
+
+            Map<String,Object> paraMap = new HashMap<>();
+            paraMap.put("finprodId",finProduct.getFinprodId());
+            paraMap.put("settleDate",DateUtil.format(batchDate));
+            //获取债券面值
+            BigDecimal UnitPrice= busiAutoAddSecInfoMapper.getUnitPrice(paraMap);
+            baseTradeInfoDto.getTrdProductDeal().setShareAmt(ptlSecPositionFlow.getAmount().multiply(UnitPrice));
+            //获取交易前一天组合持有的发行标的资产市值
+            paraMap.put("tradeDate",DateUtil.format(DateUtil.addDay(batchDate,-1)));
+            List<Map<String,Object>> saveList = busiAutoAddSecInfoMapper.getSaveParam(paraMap);
+            //循环list根据组合赋值
+            if (saveList != null && saveList.size() > 0){
+                for (Map<String, Object> stringObjectMap : saveList) {
+                    if (StringUtil.equals(stringObjectMap.get("PORTFOLIOID"),ptlSecPositionFlow.getPortfolioId())
+                            && StringUtil.equals(stringObjectMap.get("INVAIM"),ptlSecPositionFlow.getInvAim())){
+                        if (stringObjectMap.get("PRICE") != null){
+                            baseTradeInfoDto.getTrdProductDeal().setTradeAmt(new BigDecimal(stringObjectMap.get("PRICE").toString()));
+                        }
+                    }
+                }
+            }
+            //TODO
+//            if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+//                AjaxResult ar = interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+//                        BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue(), DictCodeList.平安资产类型_债券.getValue(),
+//                        (en) -> interfRiskRdsService.sendRiskRdsData(dto, en));
+//                if (StringUtil.isNotEmpty(ar)) {
+//                    return null;
+//                }
+//            }
         }
+        busiAutoAddTradeProductDealRedis.setBaseTradeInfoDtos(baseTradeInfoList);
+        //接入风险限额
+        setForRiskRedis(busiAutoAddTradeProductDealRedis);
         return busiAutoAddTradeProductDealDto;
+    }
+    
+    private void setForRiskRedis(BusiAutoAddTradeProductDealRedisDto busiAutoAddTradeProductDealRedis) {
+        //由于无法直接调用实占接口，这里直接插入实占信息表，后续跑redis初始化批会对这里插入的实占信息进行计算。
+        if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+        	//1. 获取资产相关信息
+        	//1.1 资产标的
+        	String reFinprodId = busiAutoAddTradeProductDealRedis.getFinprodId();
+        	String newFinprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue()+"_"+busiAutoAddTradeProductDealRedis.getAppearMarketId();
+        	//1.2 平安资产二级分类 - 通过redis初始化sql中获取
+        	String reType2 = null,newType2 = null;
+        	Map<String,Object> mapPass = new HashMap<>();
+        	mapPass.put("valDate", DateUtil.format(busiAutoAddTradeProductDealRedis.getTradeDate()));
+        	List<String> paramIdList = new ArrayList<>();
+        	paramIdList.add(reFinprodId);
+        	paramIdList.add(newFinprodId);
+        	List<ImplAsset> implAssetList = rskRedisInitMapper.getPtlAssetData(mapPass);
+        	for(ImplAsset asset:implAssetList) {
+        		if(StringUtil.equals(asset.getAssetCode(), reFinprodId)) {
+        			reType2 = asset.getAssetType2();
+        		}
+        		if(StringUtil.equals(asset.getAssetCode(), newFinprodId)) {
+        			newType2 = asset.getAssetType2();
+        		}
+        	}
+        	
+        	for(BaseTradeInfoDto dto:busiAutoAddTradeProductDealRedis.getBaseTradeInfoDtos()) {
+        		Map<String,Object> map = new HashMap<>();
+        		map.put("tradeDate", DateUtil.format(busiAutoAddTradeProductDealRedis.getTradeDate()));
+        		String tradeId =null;
+        		if(dto.getTrdProductDeal()!=null) {
+        			map.put("amount", dto.getTrdProductDeal().getTradeAmt());
+        			map.put("number", dto.getTrdProductDeal().getShareAmt());
+        			tradeId = dto.getTrdProductDeal().getTradeId();
+        		}
+        		if(dto.getTrdProductDealAdd()!=null) {
+        			map.put("prodId",dto.getTrdProductDealAdd().getPortfolioId());
+        		}
+        		if(StringUtil.isNotEmpty(tradeId)) {
+        			//新标的，买入
+        			map.put("uuid",  String.valueOf(System.currentTimeMillis()));
+        			map.put("eventId", tradeId+DictCodeList.交易方向_买入.getValue());
+        			map.put("ps",DictCodeList.交易方向_买入.getValue());
+        			map.put("assetCode", newFinprodId);
+        			map.put("type1", DictCodeList.平安资产类型_债券.getValue());
+        			map.put("type2", reType2);
+        			busiAutoAddSecInfoMapper.insertRskOccupyInfo(map);
+        			//旧标的，卖出
+        			map.put("uuid",  String.valueOf(System.currentTimeMillis()));
+        			map.put("eventId", tradeId+DictCodeList.交易方向_卖出.getValue());
+        			map.put("ps",DictCodeList.交易方向_卖出.getValue());
+        			map.put("assetCode", reFinprodId);
+        			map.put("type1", DictCodeList.平安资产类型_债券.getValue());
+        			map.put("type2", newType2);
+        			busiAutoAddSecInfoMapper.insertRskOccupyInfo(map);
+        		}
+        	}
+        }
     }
 
     //插入上市流通交易表

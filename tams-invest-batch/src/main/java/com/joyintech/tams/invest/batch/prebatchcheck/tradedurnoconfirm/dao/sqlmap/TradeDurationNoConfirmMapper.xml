@@ -160,8 +160,10 @@
         to_char(T4.VDATE, 'yyyy-MM-dd') vDate ,
         to_char(T4.MDATE, 'yyyy-MM-dd') mDate ,
         T1.PRIN_AMT THEORY_PRIN ,
-        FCP.INT_AMT THEORY_INT ,
-        T1.PRIN_AMT + FCP.INT_AMT tradeAmt ,
+<!--        FCP.INT_AMT THEORY_INT ,-->
+<!--        T1.PRIN_AMT + FCP.INT_AMT tradeAmt ,-->
+        T4.M_INT_AMT THEORY_INT,
+        T1.PRIN_AMT + T4.M_INT_AMT tradeAmt ,
         T1.PS
         ,'质押式回购存续期-'||SAI.SEC_ACCT_NAME|| fp1.FINPROD_NAME remark
         FROM TRD_PRODUCT_DEAL T1
@@ -403,10 +405,12 @@
     <select id="selectCJDurationList"
             resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
 
-        SELECT         T1.TRADE_ID tradeId,
-        T1.TRADE_ID totleTradeId,
+        SELECT
+<!--        T1.TRADE_ID tradeId,-->
+<!--        T1.TRADE_ID totleTradeId,-->
         T3.PORTFOLIO_ID portfolioId,
         T2.PORTFOLIO_NAME portfolioName,
+        T1.TRADE_ID finprodId,
         T1.FINPROD_TYPE2 finprodType2,
         T4.MDATE,
         T1.PRIN_AMT prinAmt,

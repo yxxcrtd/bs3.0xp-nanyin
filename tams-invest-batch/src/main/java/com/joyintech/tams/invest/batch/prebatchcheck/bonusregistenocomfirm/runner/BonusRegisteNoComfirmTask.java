@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName BonusRegisteNoComfirmTask.java
+ * @Description 除权登记未确认
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.batch.prebatchcheck.bonusregistenocomfirm.runner;
 
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
@@ -38,6 +45,13 @@ public class BonusRegisteNoComfirmTask  extends BatchBaseService {
     @Autowired
     private BonusRegisteNoComfirmService bonusRegisteNoComfirmService;
 
+    /**
+     * @title 执行
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:05 
+     * @throws 
+     */
     @Override
     public JobExecution execute() throws BatchException {
         JobExecution result = new JobExecution(1l);

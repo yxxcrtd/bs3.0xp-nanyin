@@ -597,7 +597,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
         //获取撤销entity
         dto = restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/getRevokeEntity", inputDto,
                 TrdBondMarketTradeDto.class);    
-        
+        inputDto.setPs(DictCodeList.交易方向_上市流通.getValue());
         inputDto.setBaseTradeInfoDtos(dto.getBaseTradeInfoDtos());
     }
     

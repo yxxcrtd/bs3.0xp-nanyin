@@ -197,7 +197,13 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
 	                confirmDto.setTradeDate(entity.getPurCfmDate());
                     //确认交易的确认日根据申请交易的实际确认日（申请交易确认日允许修改）生成交易 add by xueying 20200723 end
 	                ProcessParameter<TrdPlanNetInvestTradeConfirmDto> workFlowPatameter = getWorkFlowPatameter(confirmDto);
-                    confirmDto.setCreateUser(entity.getCreateUser());
+//                    confirmDto.setCreateUser(dto.getTrdProductDeal().getCreateUser());
+                    //获取最原始留痕表数据
+                    String createUser = restTemplate.getForObject(
+                        ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/getSysDateMark?workflowId="+ entity.getWorkflowId(),
+                        String.class);
+                    confirmDto.setCreateUser(createUser);
+
 	                try {
 	                    WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(),"","", confirmDto.getCreateUser(),OperationType.NEW,false,confirmDto);
 	                }catch (Exception e) {
@@ -224,7 +230,7 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
 				}
            	 }
             }
-            
+
             //删除授信占用
             if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
                 riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
@@ -648,15 +654,16 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
         // 组合交易表
         List<PtlTrade> ptlTrades = new ArrayList<>();
         // 组合交易表
-        PtlTrade ptlTrade = new PtlTrade();
-        ptlTrade.setPortfolioId(dto.getPortfolioId());
-        ptlTrade.setBusiNo(dto.getTradeId());
-        ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
-        ptlTrade.setBusiId(dto.getFinprodId());
-        ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
-        ptlTrade.setSettleDate(dto.getSettleDate());
-        ptlTrades.add(ptlTrade);
-        if (!dto.getPortfolioId().equals(dto.getActPortfolioId())) {
+        if(StringUtil.isEmpty(dto.getActPortfolioId())) {
+            PtlTrade ptlTrade = new PtlTrade();
+            ptlTrade.setPortfolioId(dto.getPortfolioId());
+            ptlTrade.setBusiNo(dto.getTradeId());
+            ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+            ptlTrade.setBusiId(dto.getFinprodId());
+            ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
+            ptlTrade.setSettleDate(dto.getSettleDate());
+            ptlTrades.add(ptlTrade);
+        }else if (!dto.getPortfolioId().equals(dto.getActPortfolioId())) {
             // 组合交易表
             PtlTrade ptlTrade1 = new PtlTrade();
             ptlTrade1.setPortfolioId(dto.getActPortfolioId());

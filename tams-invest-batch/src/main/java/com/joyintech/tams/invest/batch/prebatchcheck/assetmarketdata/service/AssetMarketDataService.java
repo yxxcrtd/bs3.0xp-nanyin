@@ -31,6 +31,11 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchD
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 
+/**
+ * 资产行情数据 service
+ * @author yantianyuan
+ * 创建日期：2021-05-13
+ */
 @Service
 public class AssetMarketDataService extends BaseService{
     @Autowired
@@ -45,14 +50,19 @@ public class AssetMarketDataService extends BaseService{
     @Value("${server.port:8080}")
     private String serverPort;
     
-    
+    /**
+     * 校验函数
+     * @param batchExecuteInfo
+     * @param dto
+     * @param instCode
+     */
     public void execute(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, String instCode){
         Map<String,Object> param = new HashMap<>();
         if(StringUtil.isNotEmpty(instCode)){
-            // 固定key 勿修改
+            //机构代码，框架用该字段进行数据隔离
             param.put("PRE_INST_CODE",instCode);
         }
-
+        //设置检查日
         param.put("checkDate",dto.getCheckDate());
         //1. 获取组合-资产的持仓信息
         List<AssetMarketDataResultDto> details = assetMarketDataMapper.getAssetMarketDataResult(param);
@@ -66,44 +76,38 @@ public class AssetMarketDataService extends BaseService{
         	if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_股票.getValue())) {
         		 Map<String, Object> data = finProductCommonBatchService.getStockMarket(dto.getCheckDate(),resultDto.getBooksetId(),
         				 resultDto.getFinprodId(),resultDto.getTradeMarket(),resultDto.getInvAim());
-        		 if(dto.getCheckDate().equals(data.get("valDate"))){
+        		 if(checkDateEqual((Date)data.get("valDate"),dto.getCheckDate())){
         			 detailIterator.remove();
         		 }
         	}
         	else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_净值型.getValue())) {
         		MarketPriceDto pDto = finProductCommonBatchService.getFundMarketPriceForPlanAsset(dto.getCheckDate(), resultDto.getFinprodId(), resultDto.getBooksetId());
         		if(pDto!=null) {
-        			Date valDate = pDto.getValDate();
-        			if(valDate==null) {
-        				valDate = pDto.getSchemeValDate();
-        			}
-        			if(dto.getCheckDate().equals(valDate)) {
-            			detailIterator.remove();	
+        			Date valDate = pDto.getValDate()==null?pDto.getSchemeValDate():pDto.getValDate();
+        			if(checkDateEqual(dto.getCheckDate(),valDate)) {
+        				detailIterator.remove();	
         			}
         		}
         	}
         	//2.2 债券，基金，计划类货币型需要通过http访问本机服务
-        	else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_债券.getValue())) {
-        		String url = urlHead+"/FinproductCommon/getBondMarketPrice?happenDate="+happenDateStr
-        				+"&booksetId="+resultDto.getBooksetId()+"&finProdId="+resultDto.getFinprodId()+"&invAim="+resultDto.getInvAim();
-        		Date valDate = restTemplate.getForObject(url, Date.class);
-        		if(dto.getCheckDate().equals(valDate)) {
-        			detailIterator.remove();
+        	else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_债券.getValue())
+        			||StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_基金.getValue())
+        			||StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_货币型.getValue())) {
+        		//债券
+        		String url = null;
+        		if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_债券.getValue())) {
+        			url = urlHead+"/FinproductCommon/getBondMarketPrice?happenDate="+happenDateStr
+            				+"&booksetId="+resultDto.getBooksetId()+"&finProdId="+resultDto.getFinprodId()+"&invAim="+resultDto.getInvAim();
         		}
-        	}
-        	else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_基金.getValue())) {
-        		String url =urlHead+"/FinproductCommon/getFundMarketPrice?happenDate="+happenDateStr
-        				+"&booksetId="+resultDto.getBooksetId()+"&finProdId="+resultDto.getFinprodId();
-        		Date valDate = restTemplate.getForObject(url, Date.class);
-        		if(dto.getCheckDate().equals(valDate)) {
-        			detailIterator.remove();
+        		else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_基金.getValue())) {
+        			url = urlHead+"/FinproductCommon/getFundMarketPrice?happenDate="+happenDateStr
+            				+"&booksetId="+resultDto.getBooksetId()+"&finProdId="+resultDto.getFinprodId();
         		}
-        	}
-        	else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_货币型.getValue())) {
-        		String url = urlHead+"/FinproductCommon/queryFinProductValuation?happenDate="+happenDateStr
-        				+"&booksetId="+resultDto.getBooksetId()+"&finprodMarketId="+resultDto.getFinprodId().substring(3)+"&calenderId="+resultDto.getCalenderId();
-        		Date valDate = restTemplate.getForObject(url, Date.class);
-        		if(dto.getCheckDate().equals(valDate)) {
+        		else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_货币型.getValue())) {
+        			url = urlHead+"/FinproductCommon/queryFinProductValuation?happenDate="+happenDateStr
+            				+"&booksetId="+resultDto.getBooksetId()+"&finprodMarketId="+resultDto.getFinprodId().substring(3)+"&calenderId="+resultDto.getCalenderId();
+        		}
+        		if(checkByTemplate(dto.getCheckDate(),url)) {
         			detailIterator.remove();
         		}
         	}
@@ -123,6 +127,12 @@ public class AssetMarketDataService extends BaseService{
         prebatchCheckCommonService.insertBatchResultDetail(dto,finalDetails);
     }
     
+    /**
+     * 设置错误信息与SysPrebatchResultDto关联
+     * @param batchExecuteInfo
+     * @param dto
+     * @param item
+     */
     private void setResultDetail(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, SysPrebatchResultDetail item) {
 
         item.setResultSeqNo(dto.getSeqNo());
@@ -132,5 +142,29 @@ public class AssetMarketDataService extends BaseService{
         item.setSeqNo(IDGenerator.generate());
         item.setCreateUser(dto.getCreateUser());
         item.setUpdateUser(dto.getUpdateUser());
+    }
+    
+    /**
+     * 通过restTemplate进行校验校验
+     * @param checkDate
+     * @param url
+     * @return
+     */
+    private boolean checkByTemplate(Date checkDate,String url) {
+    	Date valDate = restTemplate.getForObject(url, Date.class);
+    	return checkDateEqual(valDate,checkDate);
+    }
+    
+    /**
+     * 判断两个日期是否相等
+     * @param a
+     * @param b
+     * @return
+     */
+    private boolean checkDateEqual(Date a,Date b) {
+    	if(a!=null&&b!=null) {
+    		return StringUtil.equals(DateUtil.format(a), DateUtil.format(b));
+    	}
+    	return false;
     }
 }

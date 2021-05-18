@@ -1195,7 +1195,6 @@
     var comfirmCheck = function(){
         var listSortBefore = getAllRows(),msg;
         var breakflag = true;
-        debugger;
         if(listSortBefore){
             $.each(listSortBefore,function(index,obj){
                 //支付日是否为空 判断该数据是新增还是原始数据

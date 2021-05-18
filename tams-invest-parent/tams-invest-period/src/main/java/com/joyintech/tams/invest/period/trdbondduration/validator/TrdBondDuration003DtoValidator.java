@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondPtlSecExerciseInfo;
 import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration003ProcessDto;
 import com.joyintech.tams.invest.period.trdbondduration.service.TrdBondDuration003Service;
@@ -67,6 +68,7 @@ public class TrdBondDuration003DtoValidator implements PeriodCommonValidator {
                }
                map.put("pageId","TrdBondDuration003");
                 map.put("finprodId",dto.getFinprodId());
+                map.put("ps", DictCodeList.交易方向_行权_赎回.getValue());
                 List<String> list = trdBondDuration003Service.findWorkflowProcessDtos(map);
                 if(list.size()>0){
                     errorList.add(

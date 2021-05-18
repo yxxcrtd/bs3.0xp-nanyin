@@ -233,8 +233,19 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
         String delegateCloseWay = dto.getCloseWay();
         List<String> traderList = new ArrayList<>();
         traderList.add(dto.getTrader());
-        return baseEtrInvestInfoService.checkDelegateOperation(entrustId, delegateOperationType,
-            traderList, delegateCloseWay);
+        // add by jiangpeng on 20210518 start TISHKBS-2126
+        //【投资交易-债券二级指令】新建债券二级指令，如果交易日<债券起息日，指令提交报错
+        List<ValidMessage> errorList = new ArrayList<>();
+        Date vDate = DateUtil.addDay(dto.getVdate(), Integer.parseInt(dto.getSettleSpreed()));//委托开始日+清算速度
+        Date bondVDate = this.getBondVDate(dto.getFinprodMarketId());//债券起息日
+        if (DateUtil.compareDate(vDate, bondVDate) < 0) {//委托开始日+清算速度<债券起息日，不允许提交
+            errorList.add(new ValidMessage(
+                    this.getMessage("ETR_E_0014", dto.getFinprodMarketId())));
+        }
+        errorList.addAll(baseEtrInvestInfoService.checkDelegateOperation(entrustId, delegateOperationType,
+                traderList, delegateCloseWay));
+        return errorList;
+        // add by jiangpeng on 20210518 end TISHKBS-2126
     }
 
     /**
@@ -650,5 +661,17 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
     
     public BigDecimal getStdPosition(Map<String,Object> param) {
     	return etrInvestBondInfoMapper.getStdPosition(param);
+    }
+
+    /**
+     * 获取债券起息日
+     *
+     * @param finprodMarketId 债券市场代码
+     * @return Date
+     * @author jiangpeng
+     */
+    public Date getBondVDate(String finprodMarketId) {
+        Date vDate = etrInvestBondInfoMapper.getBondVDate(finprodMarketId);
+        return vDate;
     }
 }

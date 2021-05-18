@@ -13,6 +13,11 @@ import com.joyintech.tams.valuation.batch.common.finproduct.service.FinProductCo
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.MarketPriceDto;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.ValFinProductValuationDto;
 
+/**
+ * 开放市场价格相关接口-批前检查会用到
+ * @author yantianyuan
+ * 创建日期：2021-05-13
+ */
 @RestController("finproductCommonController")
 @RequestMapping("FinproductCommon")
 public class FinproductCommonController {

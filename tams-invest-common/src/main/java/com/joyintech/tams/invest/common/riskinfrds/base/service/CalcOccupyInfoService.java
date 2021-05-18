@@ -771,6 +771,7 @@ public class CalcOccupyInfoService {
             else {
                 // 构建组合与指标参数索引
                 Map<String, Map<String, String>> ptlParamMap = getPtlParamMap(ptlInd, indMap);
+                putEventParam(ptlParamMap, paraIdList);
                 paraCond = createCondition(paramMap, mapData, ptlParamMap);
             }
         }
@@ -814,6 +815,24 @@ public class CalcOccupyInfoService {
             saveDetails(details, mapData, occupyCode);
             resMap.put("PARA_VAL_DETAILS", details);
         }
+    }
+    
+    /**
+     * 构建组合(包)与风险事件关联的参数关系索引
+     * 
+     * @param ptlParamMap 组合(包)与参数关系索引
+     * @param paraIdList 风险事件
+     */
+    protected void putEventParam(Map<String, Map<String, String>> ptlParamMap, Set<String> paraIdList){
+    	if (CollectionUtils.isEmpty(paraIdList)) {
+    		return;
+    	}
+    	if (!CollectionUtils.isEmpty(ptlParamMap)) {
+    		ptlParamMap.entrySet().forEach(en->{
+    			Map<String, String> value = en.getValue();
+    			paraIdList.forEach(item->value.putIfAbsent(item, StringUtil.EMPTY));
+    		});
+    	}
     }
 
     /**

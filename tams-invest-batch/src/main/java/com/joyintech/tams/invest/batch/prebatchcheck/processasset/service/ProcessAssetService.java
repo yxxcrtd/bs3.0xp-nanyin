@@ -16,6 +16,11 @@ import com.joyintech.tams.invest.batch.prebatchcheck.common.service.PrebatchChec
 import com.joyintech.tams.invest.batch.prebatchcheck.processasset.dao.ProcessAssetMapper;
 import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail;
 
+/**
+ * 流程中资产定义处理service
+ * @author yantianyuan
+ * 创建日期 2020-05-13
+ */
 @Service
 public class ProcessAssetService {
 	
@@ -25,6 +30,12 @@ public class ProcessAssetService {
     @Autowired
     private PrebatchCheckCommonService prebatchCheckCommonService;
 
+    /**
+     * 流程中资产定义处理具体的处理方法
+     * @param batchExecuteInfo
+     * @param dto
+     * @param instCode
+     */
 	public void execute(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, String instCode) {
 		Map<String,Object> param = new HashMap<>();
 		//1. 多级法人模式下需根据机构代码进行数据隔离
@@ -45,6 +56,12 @@ public class ProcessAssetService {
         
 	}
 	
+	/**
+	 * 错误结果设置参数
+	 * @param batchExecuteInfo
+	 * @param dto
+	 * @param item
+	 */
     private void setResultDetail(SysBatchExecInfo batchExecuteInfo, SysPrebatchResultDto dto, SysPrebatchResultDetail item) {
 
         item.setResultSeqNo(dto.getSeqNo());

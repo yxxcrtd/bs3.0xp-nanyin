@@ -57,7 +57,7 @@
             ,{field:'portfolioId', width:'12%', title: 'TrdPlanCcyInvestTrade001.portfolioId',
                 render : function(data, type, row, meta) {
                 return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
-            },sortField:"tpd.PORTFOLIO_ID"}
+            },sortField:"PORTFOLIO_ID"}
             ,{field:'portfolioName', width:'12%', title: 'TrdPlanCcyInvestTrade001.portfolioName',sortField:"PORTFOLIO_NAME"}
             ,{field:'finprodMarketId', width:'12%', title: 'TrdPlanCcyInvestTrade001.finprodId',
                 render : function(data, type, row, meta) {

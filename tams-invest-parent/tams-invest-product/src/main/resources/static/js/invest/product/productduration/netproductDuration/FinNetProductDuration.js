@@ -1631,6 +1631,7 @@ $(function() {
         		,netValueDate:$("#redNetValueDate").val()
         		,workflowId : workflowId
         		, tradeId : $('#tradeId').val()
+				,dealMode : $('#dealMode').val()
 			}
         return pageParam;
     };

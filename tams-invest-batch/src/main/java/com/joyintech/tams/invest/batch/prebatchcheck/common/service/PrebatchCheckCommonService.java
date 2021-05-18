@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName PrebatchCheckCommonService.java
+ * @Description 批前检查 批前检查  公共service
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.batch.prebatchcheck.common.service;
 
 import com.joyintech.framework.base.BaseService;
@@ -44,7 +51,13 @@ public class PrebatchCheckCommonService extends BaseService {
         return prebatchCheckCommonMapper.selectSysPrebatchResult(paramdto);
     }
 
-    // 查询错误信息前//执行任务前 执行此方法
+    /**
+     * @title  // 查询错误信息前//执行任务前 执行此方法
+     * @description
+     * @author wj
+     * @updateTime 2021/5/13 10:59
+     * @throws
+     */
     public SysPrebatchResultDto selAndUpdPrebatchResult(SysPrebatchResultDto paramdto){
         SysPrebatchResultDto dto = selectSysPrebatchResult(paramdto);
 
@@ -63,11 +76,25 @@ public class PrebatchCheckCommonService extends BaseService {
 
     }
 
+    /**
+     * @title 入表
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 10:59 
+     * @throws 
+     */
     public void insertBatchResultDetail(List<SysPrebatchResultDetail> details) {
         prebatchCheckCommonMapper.insertBatchResultDetail(details);
 
     }
 
+    /**
+     * @title 入表 更新
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:00 
+     * @throws 
+     */
     public void insertBatchResultDetail(SysPrebatchResultDto dto, List<SysPrebatchResultDetail> details) {
         if(!StringUtil.isEmptyList(details)){
             if(StringUtil.equals("00",dto.getStopFlag())){
@@ -127,6 +154,13 @@ public class PrebatchCheckCommonService extends BaseService {
 
     }
 
+    /**
+     * @title 组装
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:00 
+     * @throws 
+     */
     private SysPrebatchResultDto packageResultDto(SysBatchExecInfo batchExecuteInfo, SysPrebatchTaskAddDto taskInfo) {
         SysPrebatchResultDto result = new SysPrebatchResultDto();
         result.setSeqNo(IDGenerator.generate());
@@ -145,7 +179,13 @@ public class PrebatchCheckCommonService extends BaseService {
 
     }
 
-
+    /**
+     * @title 删除
+     * @description
+     * @author wj
+     * @updateTime 2021/5/13 11:00
+     * @throws
+     */
     public void deleteResultAndDetailList(Map<String, Object> param) {
         prebatchCheckCommonMapper.deleteResultDetailList(param);
         prebatchCheckCommonMapper.deleteResultList(param);

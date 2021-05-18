@@ -222,8 +222,9 @@ public class SvrSecRatingFileImpService extends FileImpService {
 		String result = "";
 		logger.debug("数据转换---开始-----");
 		List<Map<String, String>> listDataConvert = new ArrayList<>();
-		Map<String,String> mapDataConvert = new HashMap<>();
+
 		for(Map<String, String> mapData : listData){
+			Map<String,String> mapDataConvert = new HashMap<>();
 			// 债券代码
 			mapDataConvert.put("O_CODE",mapData.get("SECID"));
 			// 评级日期
@@ -265,7 +266,10 @@ public class SvrSecRatingFileImpService extends FileImpService {
 
 		logger.debug("评级数据检查---开始-----:" +  df.format(new Date()));
 		@SuppressWarnings("unused")
-		List<Map<String, String>> listError = checkData(listDataConvert, interfFile.getFilename(), InterfDefine.债券评级数据.getCode(), InterfDefine.债券评级数据.getCode(), null,"SECID","PUBDATE","RATINGORG","RATINGTYPE","RATINGSUBTYPE");
+		List<Map<String, String>> listError = checkData(listDataConvert, interfFile.getFilename(),
+				"MST_BOND_CREDIT_RATING",
+				InterfDefine.债券评级数据.getCode(),
+				null,"O_CODE","GRADE_DATE","GRADE_ORG_ID","O_TYPE","SHORT_LONG_TERM");
 		logger.debug("评级数据检查---结束-----:" +  df.format(new Date()));
 		if(CollectionUtils.isEmpty(listDataConvert)){
 			return "success";
@@ -297,7 +301,7 @@ public class SvrSecRatingFileImpService extends FileImpService {
 		logger.debug("评级数据转换dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
 			// 删除评级(当日)
-			deleteAllData();
+		//	deleteAllData();
 			if (tmpPath == null) {
 				insertSecRating(listNE);
 			} else {
@@ -427,8 +431,8 @@ public class SvrSecRatingFileImpService extends FileImpService {
     }
     
     private List<MstBondCreditRating> dataConversionEntity(List<Map<String, String>> datamapList) {
-    	List<MstBondCreditRating> rs = new ArrayList<>();
-    	for(Map<String, String> map : datamapList){
+		List<MstBondCreditRating> rs = new ArrayList<>();
+		for(Map<String, String> map : datamapList){
 			MstBondCreditRating dto = new MstBondCreditRating();
     		dto.setoCode(map.get("O_CODE"));//债券代码（市场代码）
         	dto.setGradeDate(DateUtil.parse(map.get("GRADE_DATE")));//评级日期

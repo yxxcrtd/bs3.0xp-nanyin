@@ -23,6 +23,8 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.component.business.bond.BusiFinBondRatingInfoService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
@@ -48,7 +50,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -74,7 +78,8 @@ public class FinBondTargetAsset002Controller extends BaseController{
     
     @Autowired
     private CommonBusinessService commonBusinessService;
-    
+    @Autowired
+    private BusiFinBondRatingInfoService busiFinBondRatingInfoService;
     /**
      * 初始化数据字典下拉框
      */
@@ -319,5 +324,24 @@ public class FinBondTargetAsset002Controller extends BaseController{
     public Page<SelectOptionDto> getfinprodIdForAdd() 
         throws Exception {
         return finBondTargetAssetService.getfinprodIdForAdd(RequestUtil.getPageParam());
+    }
+    /**
+     * 初始化评级信息
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("/getFinBondRatingDto")
+    @ResponseBody
+    public List<MstBondCreditRating> getFinBondRatingDto(@RequestParam("issuer") String issuer) {
+        List<MstBondCreditRating> mstBondCreditRatingList = new ArrayList<MstBondCreditRating>();
+        Map<String,Object> ztparam = new HashMap<String,Object>();
+        //主体为发行人（债券类资产）
+        if(StringUtil.isNotEmpty(issuer)) {
+            ztparam.put("oCode", issuer);
+            mstBondCreditRatingList.addAll(busiFinBondRatingInfoService.getmstBondCreditRatingByOcode(ztparam));
+        }
+        return mstBondCreditRatingList;
     }
 }

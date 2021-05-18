@@ -75,6 +75,16 @@ $(function() {
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.finCashCalcRuleList = finCashCalcRuleList;
+        // add by jiangpeng on 20210517 TISHKBS-2008 start
+        let bussFinBondRepInfoDto_repPartyType2 = $('#bussFinBondRepInfoDto_repPartyType2').val();//发行机构类型（按经济类型划分）
+        let bussFinBondRepInfoDto_repPartyType3 = $("#bussFinBondRepInfoDto_repPartyType3").val();//发行机构类型（按技术领域划分）
+        let bussFinBondRepInfoDto_repRemark = $("#bussFinBondRepInfoDto_repRemark").val();//发行机构类型（按技术领域划分）
+        if ((bussFinBondRepInfoDto_repPartyType2 === PARTY_TYPE2_99 || bussFinBondRepInfoDto_repPartyType3 === PARTY_TYPE2_99)
+            && (bussFinBondRepInfoDto_repRemark === null || bussFinBondRepInfoDto_repRemark === '')) {
+            Joyin.error("发行机构类型（按经济类型划分）或者发行机构类型（按技术领域划分）选择其他时,请填写备注!")
+            return;
+        }
+        // add by jiangpeng on 20210517 TISHKBS-2008 end
         //update by zhangnian 20200110 start
         //新建 快录提交时  清空主键  避免原标的的多于check
         if(isAutoCoupon&&pageModel==PAGE_MODEL_NEW){
@@ -250,10 +260,10 @@ $(function() {
         $('#calRateType_div').hide();
     }
     
-    var issuerChange = function(){
+    /*var issuerChange = function(){
         var customerId = $('#issuer').val();
         AssetCommon.getRepInfoByIssuer(customerId);
-    }
+    }*/
 
     var resetForm = function(id,value,pageId){
         //update by zhangnian 20191112 start
@@ -584,6 +594,17 @@ $(function() {
         var customerId = $('#issuer').val();
         if(customerId){
             AssetCommon.getRepInfoByIssuer(customerId);
+            if (typeof pageModel !== 'undefined' && pageModel !== PAGE_MODEL_REFERENCE){
+            　　　Joyin.ajax(basePath + 'invest/asset/bond/FinBondTargetAsset002/getFinBondRatingDto?issuer='+customerId, '' ,function(result){
+                    if (result) {
+                    　　　　$('#busiFinBondRatingInfoTable').data('joyintable').reload({
+                              data : result,
+                              url : null
+                              });
+                           }
+                });
+            }
+          　
         }
     }
     window.componentLoadCallback = function(isDone, pagePath, params){

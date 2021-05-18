@@ -225,6 +225,12 @@ $(function() {
             var finprodId = $('#finprodId').val();
             var portfolioId =  $('#portfolioId').val();
             var ccy = $('#ccy').val();
+            //非查看模式下,交易方向不为买入和申购时，清空组合可用金额
+            if (pageModel != PAGE_MODEL_REFERENCE && (ps != ps_T04 || ps != ps_mr)){
+                $('#proAvailableCash').val('').trigger('change');;
+                $('#proAvailableCash1').val('').trigger('change');
+            }
+            
             if(ps == ps_T04){
                 $('#proAvailableCash_div').show();
                 $('#proAvailableCash1_div').show();

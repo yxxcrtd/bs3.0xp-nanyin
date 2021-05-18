@@ -21,7 +21,6 @@
      * 获取期限品种  date(yyyy-MM-dd),repoterm
      */
     function getTermType(date,repoterm) {
-    debugger
     	if(repoterm&&repoterm<=21){
     		//期限品种小于21天
     		if(repoterm==1){
@@ -676,7 +675,6 @@
      * 计算费用
      */
     var calFee = function(){
-//    	debugger;
         if(!$("#tradeDate").val()){
             return;
         }
@@ -1283,16 +1281,20 @@
     			$("#calendarId").textSelect('setValue', '04');
     			//默认回购类型质押式竞价回购
             	if(pageModel!=PAGE_MODEL_REFERENCE){
-            	    $("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
-                    $('#repoType').attr('disabled',false);
-                    //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-25 start
-                    var $repoType = $('#repoType');
-                    if($("#tradeMarket").val() == TRADE_PLACE_02){
-                        $repoType.updateChosenArr({
-                            item: [TARGET_BACK_TYPE_H01,TARGET_BACK_TYPE_H02],
-                            chosen: TARGET_BACK_TYPE_H02,
-                            disabled: false
-                        });
+                    // modify by jiangpeng on 20210511 ZGBSSE-347
+                    // 【质押式协议回购】新建一笔质押式协议逆回购，点击保存按钮，在待办事项中查看到该笔交易的期限品种、质押券信息丢失
+                    if($("#repoType").val()!=TARGET_BACK_TYPE_H01){
+                        $("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
+                        $('#repoType').attr('disabled',false);
+                        //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-25 start
+                        var $repoType = $('#repoType');
+                        if($("#tradeMarket").val() == TRADE_PLACE_02){
+                            $repoType.updateChosenArr({
+                                item: [TARGET_BACK_TYPE_H01,TARGET_BACK_TYPE_H02],
+                                chosen: TARGET_BACK_TYPE_H02,
+                                disabled: false
+                            });
+                        }
                     }
                     //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-25 end
             	}
@@ -1322,7 +1324,6 @@
 	 * 期限品种联动期限
 	 */
 	var termTypeChangeAction = function(){
-	debugger
 		var termType = $('#termTypeReback').val();
 //		if($("#repoType").val()&&$("#repoType").val()==TARGET_BACK_TYPE_H02){
 			if ($('#termTypeReback').val()){
@@ -2020,7 +2021,6 @@
         });
         // 期限品种改变时
         $("#termTypeReback").on("keyup blur",function(){
-        debugger;
                 calFee();
                 changeTradeAmtAndFee();
                 termTypeChangeAction();

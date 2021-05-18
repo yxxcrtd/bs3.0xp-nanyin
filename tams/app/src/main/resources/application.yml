@@ -142,7 +142,7 @@ application:
     #由于一二期直连调用组件包，组件包不能访问缓存，故在此配置同三期一致的路径
     download-file-path: /home/tams/svr_nb_prod/sharedata/chb/recive/CB/
     maxSqlNum: 1000
-    msg-start-time: 0600
+    msg-start-time: '0600'
     msg-end-time: 2200
     reportCbFeedBackHandleCountOneTime: 10000
     isExceptionWhenSendTimeout: 01

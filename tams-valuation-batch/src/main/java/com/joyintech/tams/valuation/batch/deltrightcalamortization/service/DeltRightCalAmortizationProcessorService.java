@@ -260,11 +260,21 @@ public class DeltRightCalAmortizationProcessorService {
             //账套核算参数查询-调用账务类共通
             List<String> paramCodeList = new ArrayList<>();
             paramCodeList.add(ValDictCodeList.账套配置表参数项_计划类利率型资产计提方式.getValue());
+            paramCodeList.add(ValDictCodeList.账套配置表参数项_项目类计提区间倒减方式.getValue());
             List<BokBooksetExt> valBokBooksetExt = accountingCommonService.getValBokBooksetExt(booksetId, paramCodeList);
             //定义 变量.计提方式 = 返回值
             String makeWay = null;
+            //定义 变量.项目类计提区间倒减方式 = 返回值 PLAN_SUBTRACTION_TYPE
+            String planSubtractionType=null;
             if(!CollectionUtils.isEmpty(valBokBooksetExt)){
-            	makeWay = valBokBooksetExt.get(0).getParamValue();
+                for(BokBooksetExt it:valBokBooksetExt){
+                    if(it.getParamCode().equals(ValDictCodeList.账套配置表参数项_计划类利率型资产计提方式.getValue())){
+                        makeWay = it.getParamValue();
+                    }
+                    if(it.getParamCode().equals(ValDictCodeList.账套配置表参数项_项目类计提区间倒减方式.getValue())){
+                        planSubtractionType = it.getParamValue();
+                    }
+                }
             }
 
             // 3.1 利息计提
@@ -338,64 +348,107 @@ public class DeltRightCalAmortizationProcessorService {
             	}
             	//if（变量.计提方式 = 【数据字典】.计提方式."区间倒减" || 计提类账务处理结果.发生日+1 in (变量.付息计划列表.调整后的计算结束日)）
             	if(DictCodeList.计提方式_区间倒减.getValue().equals(makeWay) || flag == true){
-                    // 调用债权类资产应计利息共通
-                    AccurIntCalOutParameter accurIntCalOutParameter = this.getCalculate(
-                        acctEntityEx, targetFinProduct, interestPayList, quotationList,
-                        payRuleList, faceValue, acctEntity);
-                    // 变量.本日应计利息余额 = 返回值 调用金额共通方法设置有效小数位
-                    interestBalanceToday = ArithmeticUtil.multiply(
-                        accurIntCalOutParameter.getInterest(), costQuantity);
-                    interestBalanceToday = ArithmeticUtil.divide(interestBalanceToday, faceValue);
+            	    //获取该资产的金融产品类型（投管分类）
+                    String finprodType2 = finProductCommonService.getfinprodType2(acctEntityEx.getBusiId());
+            	    if(StringUtil.isNotEmpty(planSubtractionType) && DictCodeList.项目类计提区间倒减方式_倒减前一日计算结果.getValue().equals(planSubtractionType)
+                       && StringUtil.isNotEmpty(finprodType2) && finprodType2.equals(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())
+                    ){
+            	            //当天是新的计息区间开始日，则仅仅统计当天
+                            boolean isNotStartDateflag = true;
+                            if(interestPayList != null && interestPayList.size() > 0){
+                                for (int i = 0; i < interestPayList.size(); i++ ) {
+                                    TargetCashPlan targetCashPlan = interestPayList.get(i);
+                                    if(targetCashPlan.getVdate().compareTo(happenDate) == 0){
+                                        isNotStartDateflag = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        BigDecimal interestAmtLast  =BigDecimal.ZERO;
+                        if(isNotStartDateflag){
+                            DrawBaseInfoSelectComResult acctEntityLast= new DrawBaseInfoSelectComResult();
+                            BeanUtils.copyProperties(acctEntity, acctEntityLast);
+                            acctEntityLast.setHappenDate(DateUtil.addDay(acctEntityLast.getHappenDate(),-1));
+                            // 调用债权类资产应计利息共通
+                            AccurIntCalOutParameter accurIntCalOutParameterIntLast = this.getCalculate(
+                                    acctEntityEx, targetFinProduct, interestPayList, quotationList,
+                                    payRuleList, faceValue, acctEntityLast);
+                            // 变量.昨日应计利息余额 = 返回值 调用金额共通方法设置有效小数位
+                            interestAmtLast  = ArithmeticUtil.multiply(accurIntCalOutParameterIntLast.getInterest(), costQuantity);
+                            interestAmtLast = ArithmeticUtil.divide(interestAmtLast, faceValue);
+//                       //调用金额共通方法设置有效小数位
+                            interestAmtLast = ArithmeticUtil.round(interestAmtLast,
+                                    NumberEnum.MONEY);
+                        }
+                        // 调用债权类资产应计利息共通
+                        AccurIntCalOutParameter accurIntCalOutParameterInt = this.getCalculate(
+                                acctEntityEx, targetFinProduct, interestPayList, quotationList,
+                                payRuleList, faceValue, acctEntity);
+                        // 变量.今日应计利息余额 = 返回值 调用金额共通方法设置有效小数位
+                        BigDecimal interestAmt  = ArithmeticUtil.multiply(accurIntCalOutParameterInt.getInterest(), costQuantity);
+                        interestAmt = ArithmeticUtil.divide(interestAmt, faceValue);
+                        // 调用金额共通方法设置有效小数位
+                        interestAmt = ArithmeticUtil.round(interestAmt,
+                                NumberEnum.MONEY);
+                        // 变量.当日计提利息金额 = 变量.本日应计利息余额 - 变量.昨日应计利息余额
+                        calInterestBalanceNow = ArithmeticUtil.doSub(interestAmt,
+                                interestAmtLast);
 
-                    //获取该资产是否还本不带息
-                    String isPayInt = finProductCommonService.getIsPayInt(acctEntityEx.getBusiId());
-                     if(StringUtil.isNotEmpty(isPayInt) && isPayInt.equals("N")){
-                         //若该资产规定还本不付息，该区间出现中间还本，使用分段计算还本利息
-                         //取计算日所在得付息计划
-                         TargetCashPlan cashPlanCalc = null;
-                         if (null != interestPayList) {
-                             for (TargetCashPlan sec : interestPayList) {
-                                 if (BasicUtil.dateBefore(BasicUtil.dateToLocal(happenDate),BasicUtil.dateToLocal(sec.getMdate()))
-                                         && BasicUtil.dateAfter(BasicUtil.dateToLocal(happenDate), BasicUtil.dateToLocal(sec.getVdate()))) {
-                                     cashPlanCalc = sec;
-                                 }
-                             }
-                         }
+                    }
+            	    else{
+                        // 调用债权类资产应计利息共通
+                        AccurIntCalOutParameter accurIntCalOutParameter = this.getCalculate(
+                                acctEntityEx, targetFinProduct, interestPayList, quotationList,
+                                payRuleList, faceValue, acctEntity);
+                        // 变量.本日应计利息余额 = 返回值 调用金额共通方法设置有效小数位
+                        interestBalanceToday = ArithmeticUtil.multiply(
+                                accurIntCalOutParameter.getInterest(), costQuantity);
+                        interestBalanceToday = ArithmeticUtil.divide(interestBalanceToday, faceValue);
 
-                         BigDecimal totalInterestAmt = BigDecimal.ZERO;
-                         // 变量.还本交易列表,查询该区间内所有的还本
-                         List<BookLatestInfoDto> rePayDealList = accountingCommonService.getBookRePayListInfo(
-                                 acctEntity.getBooksetId(), happenDate, acctEntityEx.getBokDetailId(),
-                                 DictCodeBaseSubjectNatrue.计划类资产_成本.getValue(), DictCodeListTableId.会计场景代码_收益型资产_还本到期.getValue(), null, happenDate,
-                                 null, cashPlanCalc.getVdate(), null);
-                         for(BookLatestInfoDto item:rePayDealList){
-                             // 获取总利息金额[调用共通方法：：计算类共通方法 - 通用计算]
-                        /*BigDecimal interestAmt= calculationCommonService.calCommon(cashPlanCalc.getVdate(),
-                                item.getBookDate(), principalInfoList,
-                                quoteInfoList).getTotalInterestAmt();*/
-                             //还本在该区间内的应计利息
+                        //获取该资产是否还本不带息
+                        String isPayInt = finProductCommonService.getIsPayInt(acctEntityEx.getBusiId());
+                        if(StringUtil.isNotEmpty(isPayInt) && isPayInt.equals("N")){
+                            //若该资产规定还本不付息，该区间出现中间还本，使用分段计算还本利息
+                            //取计算日所在得付息计划
+                            TargetCashPlan cashPlanCalc = null;
+                            if (null != interestPayList) {
+                                for (TargetCashPlan sec : interestPayList) {
+                                    if (BasicUtil.dateBefore(BasicUtil.dateToLocal(happenDate),BasicUtil.dateToLocal(sec.getMdate()))
+                                            && BasicUtil.dateAfter(BasicUtil.dateToLocal(happenDate), BasicUtil.dateToLocal(sec.getVdate()))) {
+                                        cashPlanCalc = sec;
+                                    }
+                                }
+                            }
 
-                             //BigDecimal interestAmt = this.calcRePayAddInt(targetFinProduct,interestPayList,payRuleList,quotationList,item.getoHappenAmt(),item.getBookDate());
-                             DrawBaseInfoSelectComResult acctEntityInt= new DrawBaseInfoSelectComResult();
-                             BeanUtils.copyProperties(acctEntity, acctEntityInt);
-                             acctEntityInt.setHappenDate(DateUtil.addDay(item.getBookDate(),-1));
-                             // 调用债权类资产应计利息共通
-                             AccurIntCalOutParameter accurIntCalOutParameterInt = this.getCalculate(
-                                     acctEntityEx, targetFinProduct, interestPayList, quotationList,
-                                     payRuleList, faceValue, acctEntityInt);
-                             // 变量.本日应计利息余额 = 返回值 调用金额共通方法设置有效小数位
-                             BigDecimal interestAmt  = ArithmeticUtil.multiply(accurIntCalOutParameterInt.getInterest(), item.getoHappenAmt());
-                             interestAmt = ArithmeticUtil.divide(interestAmt, faceValue);
-                             totalInterestAmt=totalInterestAmt.add(interestAmt);
-                         }
-                         interestBalanceToday=interestBalanceToday.add(totalInterestAmt);
-                     }
-                    // 调用金额共通方法设置有效小数位
-                    interestBalanceToday = ArithmeticUtil.round(interestBalanceToday,
-                        NumberEnum.MONEY);
-                // 变量.当日计提利息金额 = 变量.本日应计利息余额 - 变量.应计利息科目余额
-                calInterestBalanceNow = ArithmeticUtil.doSub(interestBalanceToday,
-                    interestBalance);
+                            BigDecimal totalInterestAmt = BigDecimal.ZERO;
+                            // 变量.还本交易列表,查询该区间内所有的还本
+                            List<BookLatestInfoDto> rePayDealList = accountingCommonService.getBookRePayListInfo(
+                                    acctEntity.getBooksetId(), happenDate, acctEntityEx.getBokDetailId(),
+                                    DictCodeBaseSubjectNatrue.计划类资产_成本.getValue(), DictCodeListTableId.会计场景代码_收益型资产_还本到期.getValue(), null, happenDate,
+                                    null, cashPlanCalc.getVdate(), null);
+                            for(BookLatestInfoDto item:rePayDealList){
+                                //还本在该区间内的应计利息
+                                DrawBaseInfoSelectComResult acctEntityInt= new DrawBaseInfoSelectComResult();
+                                BeanUtils.copyProperties(acctEntity, acctEntityInt);
+                                acctEntityInt.setHappenDate(DateUtil.addDay(item.getBookDate(),-1));
+                                // 调用债权类资产应计利息共通
+                                AccurIntCalOutParameter accurIntCalOutParameterInt = this.getCalculate(
+                                        acctEntityEx, targetFinProduct, interestPayList, quotationList,
+                                        payRuleList, faceValue, acctEntityInt);
+                                // 变量.本日应计利息余额 = 返回值 调用金额共通方法设置有效小数位
+                                BigDecimal interestAmt  = ArithmeticUtil.multiply(accurIntCalOutParameterInt.getInterest(), item.getoHappenAmt());
+                                interestAmt = ArithmeticUtil.divide(interestAmt, faceValue);
+                                totalInterestAmt=totalInterestAmt.add(interestAmt);
+                            }
+                            interestBalanceToday=interestBalanceToday.add(totalInterestAmt);
+                        }
+                        // 调用金额共通方法设置有效小数位
+                        interestBalanceToday = ArithmeticUtil.round(interestBalanceToday,
+                                NumberEnum.MONEY);
+                        // 变量.当日计提利息金额 = 变量.本日应计利息余额 - 变量.应计利息科目余额
+                        calInterestBalanceNow = ArithmeticUtil.doSub(interestBalanceToday,
+                                interestBalance);
+                    }
                
             	}else{
             	    //modify jinmaodong 20191122 start

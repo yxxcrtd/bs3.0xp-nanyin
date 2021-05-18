@@ -1204,7 +1204,8 @@ public class ValInterfCommonServiceApi {
         // TISHKBS-2046 CLONE - 场内货币基金-存续期-基金份额折算交易审批报错
         // 基金份额折算不生成指令
         if (DictCodeListExt1.金融产品类型_基金.getValue().equals(trdProductDeal.getFinprodType())
-                && DictCodeList.交易方向_份额强增.getValue().equals(trdProductDeal.getPs())) {
+                && (DictCodeList.交易方向_份额强增.getValue().equals(trdProductDeal.getPs())
+                    ||DictCodeList.交易方向_份额强减.getValue().equals(trdProductDeal.getPs()))) {
             dealOrdersBuild = false;
         }
         // add by jiangpeng on 20210426 end

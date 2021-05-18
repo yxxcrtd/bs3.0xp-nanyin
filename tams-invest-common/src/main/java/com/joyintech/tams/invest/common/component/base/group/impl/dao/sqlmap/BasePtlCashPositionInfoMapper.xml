@@ -2,17 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper">
     <select id="selectCashPositionFlow" resultType="java.math.BigDecimal" >
-        select
-        SUM(AMOUNT)
-        from PTL_CASH_POSITION_FLOW
-        where CDATE &lt;= #{cdate,jdbcType=DATE}
-        <include refid="whereSql"/>
-        <if test="acctType != null and !acctType.isEmpty() and needAcctType">
-            and ACCT_ID in (
-            SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
-            <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
-            )
+        <if test="chlFinprodId == null">
+            select
+            SUM(AMOUNT)
+            from PTL_CASH_POSITION_FLOW
+            where CDATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+            <include refid="whereSql"/>
+            <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+                and ACCT_ID in (
+                SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+                <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+                )
+            </if>
         </if>
+        <!-- add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳 -->
+        <if test="chlFinprodId != null">
+            SELECT SUM(pcpf.AMOUNT)
+            FROM PTL_CASH_POSITION_FLOW pcpf
+            left join FIN_PRODUCT fp on fp.FINPROD_ID = pcpf.CHL_FINPROD_ID
+            WHERE pcpf.CDATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+            <if test="hodingType != null and hodingType != ''">
+                and pcpf.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+            </if>
+            <if test="chlFinprodId != null and chlFinprodId != ''">
+                AND fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR}
+            </if>
+            <if test="ccy != null and ccy != ''">
+                and pcpf.CCY = #{ccy,jdbcType=VARCHAR}
+            </if>
+            <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+                and pcpf.ACCT_ID in (
+                SELECT sfpa.ACCT_NO from STL_FIN_PRODUCT_ACCT sfpa where sfpa.FINPROD_ID = fp.FINPROD_ID
+                <foreach collection="acctType" open=" and sfpa.ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+                )
+            </if>
+        </if>
+        <!-- add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳 -->
     </select>
 
     <select id="selectCashPosition" resultType="java.math.BigDecimal" >
@@ -30,17 +55,43 @@
     </select>
     
     <select id="selectCashPositionMaxCdate" resultType="java.util.Date" >
-        select
-        max(CDATE)
-        from PTL_CASH_POSITION
-        where CDATE &lt; = #{cdate,jdbcType=DATE}
-        <include refid="whereSql"/>
-        <if test="acctType != null and !acctType.isEmpty() and needAcctType">
-            and ACCT_ID in (
-            SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
-            <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
-            )
+        <if test="chlFinprodId == null">
+            select
+            max(CDATE)
+            from PTL_CASH_POSITION
+            where CDATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+            <include refid="whereSql"/>
+            <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+                and ACCT_ID in (
+                SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+                <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+                )
+            </if>
         </if>
+        <!-- add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳 -->
+        <if test="chlFinprodId != null">
+            select
+            max(pcp.CDATE)
+            from PTL_CASH_POSITION pcp
+            left join FIN_PRODUCT fp on fp.FINPROD_ID = pcp.CHL_FINPROD_ID
+            WHERE pcp.CDATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+            <if test="hodingType != null and hodingType != ''">
+                and pcp.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+            </if>
+            <if test="chlFinprodId != null and chlFinprodId != ''">
+                AND fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR}
+            </if>
+            <if test="ccy != null and ccy != ''">
+                and pcp.CCY = #{ccy,jdbcType=VARCHAR}
+            </if>
+            <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+                and pcp.ACCT_ID in (
+                SELECT sfpa.ACCT_NO from STL_FIN_PRODUCT_ACCT sfpa where sfpa.FINPROD_ID = fp.FINPROD_ID
+                <foreach collection="acctType" open=" and sfpa.ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+                )
+            </if>
+        </if>
+        <!-- add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳 -->
     </select>
 
     <select id="selectMaxCdate" resultType="string" >
@@ -90,16 +141,42 @@
     </sql>
 
     <select id="selectCashPositionNew" resultType="java.math.BigDecimal" >
-        select
-        SUM(AMOUNT)
-        from PTL_CASH_POSITION_FLOW
-        where CDATE &lt;= #{cdate,jdbcType=DATE}
-        <include refid="whereSql"/>
-        <if test="acctType != null and !acctType.isEmpty() and needAcctType">
-            and ACCT_ID in (
-            SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
-            <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
-            )
+        <if test="chlFinprodId == null">
+            select
+            SUM(AMOUNT)
+            from PTL_CASH_POSITION_FLOW
+            where CDATE &lt;= #{cdate,jdbcType=DATE}
+            <include refid="whereSql"/>
+            <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+                and ACCT_ID in (
+                SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+                <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+                )
+            </if>
         </if>
+        <!-- add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳 -->
+        <if test="chlFinprodId != null">
+            select
+            SUM(pcpf.AMOUNT)
+            from PTL_CASH_POSITION_FLOW pcpf
+            left join FIN_PRODUCT fp on fp.FINPROD_ID = pcpf.CHL_FINPROD_ID
+            WHERE pcpf.CDATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+            <if test="hodingType != null and hodingType != ''">
+                and pcpf.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+            </if>
+            <if test="chlFinprodId != null and chlFinprodId != ''">
+                AND fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR}
+            </if>
+            <if test="ccy != null and ccy != ''">
+                and pcpf.CCY = #{ccy,jdbcType=VARCHAR}
+            </if>
+            <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+                and pcpf.ACCT_ID in (
+                SELECT sfpa.ACCT_NO from STL_FIN_PRODUCT_ACCT sfpa where sfpa.FINPROD_ID = fp.FINPROD_ID
+                <foreach collection="acctType" open=" and sfpa.ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+                )
+            </if>
+        </if>
+        <!-- add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳 -->
     </select>
 </mapper>

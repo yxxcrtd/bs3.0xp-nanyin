@@ -22,7 +22,8 @@
                 <div class="layui-input-inline input-inline">
                     <input required disabled type="text" id="finprodIdStr" name="finprodIdStr"
                            class="layui-input form-input" placeholder="请输入内容"
-                           th:placeholder="#{SysCommon.placeholder}" />
+                           th:placeholder="#{SysCommon.placeholder}"
+                           th:value="${entity?.finprodId}" />
                 </div>
             </div>
             <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
@@ -70,7 +71,8 @@
                 <div class="layui-input-inline input-inline">
                     <input required disabled type="text" id="appearMarketIdStr" name="appearMarketIdStr"
                            class="layui-input form-input" placeholder="请输入内容"
-                           th:placeholder="#{SysCommon.placeholder}"/>
+                           th:placeholder="#{SysCommon.placeholder}"
+                           th:value="${entity?.appearMarketId}" />
                 </div>
             </div>
             <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">

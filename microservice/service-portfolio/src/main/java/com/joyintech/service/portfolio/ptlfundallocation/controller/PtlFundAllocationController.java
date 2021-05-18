@@ -15,13 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.service.portfolio.ptlfundallocation.dto.PtlFundAllocation001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -57,7 +54,7 @@ public class PtlFundAllocationController {
     public List<SuggestDto> getAcct(@RequestBody Map<String,Object> map){
         return ptlFundAllocationService.getAcct(map);
     }
-    
+
     /**
      * 查询组合（资金划拨管理）
      * @param map 请求参数
@@ -80,6 +77,18 @@ public class PtlFundAllocationController {
     @PostMapping("/getPortfolioId")
     public List<SelectOptionDto> getPortfolioId(@RequestBody Map<String,Object> map){
         return ptlFundAllocationService.getPortfolioId(map);
+    }
+
+    /**
+     * 查询组合
+     * @param map 请求参数
+     * @return 组合集合  （多组合新建）
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getPortfolioIdBysecId")
+    public List<SelectOptionDto> getPortfolioIdBysecId(@RequestBody Map<String,Object> map){
+        return ptlFundAllocationService.getPortfolioIdBysecId(map);
     }
     
     /**
@@ -116,6 +125,7 @@ public class PtlFundAllocationController {
     public BigDecimal getAmount(@RequestBody Map<String,Object> map){
         return ptlFundAllocationService.getAmount(map);
     }
+
     
     /**
      * 画面查询方法
@@ -176,4 +186,52 @@ public class PtlFundAllocationController {
     public String doBack(@RequestBody PtlFundAllocationDto entity) {
         return ptlFundAllocationService.doBack(entity);
     }
+
+    /**
+     * 查询收款账号（多组合新建）
+     * @param map 请求参数
+     * @return 收款账号集合
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getAcctNo")
+    public List<SelectOptionDto> getAcctNo(@RequestBody Map<String,Object> map){
+        return ptlFundAllocationService.getAcctNo(map);
+    }
+
+    /**
+     * 获取组合资金账户和账户余额(多组合新建)
+     * @return
+     * @see
+     */
+    @PostMapping("/getPosition")
+    public PtlFundAllocation001Dto getPosition(@RequestBody Map<String,Object> map){
+        return ptlFundAllocationService.getPosition(map);
+    }
+    /* 新增导入功能 add by liuwei 20200220 start */
+    /**
+     * 查询组合名称
+     */
+    @GetMapping("/queryProdInfo")
+    public String queryProdInfo(String portfolioId){
+        return ptlFundAllocationService.queryProdInfo(portfolioId);
+    }
+
+    /**
+     * 校验产品是否真实关联了该账户
+     */
+    @PostMapping("/checkAccount")
+    public String checkAccount(@RequestBody Map<String,Object> param){
+        return ptlFundAllocationService.checkAccount(param);
+    }
+
+    /**
+     * 查询组合托管户以及对应现金余额
+     */
+    @PostMapping("/getAccountInfo")
+    public Map<String,Object> getAccountInfo(@RequestBody Map<String,Object> param){
+        return ptlFundAllocationService.getAccountInfo(param);
+    }
+    /* 新增导入功能 add by liuwei 20200220 end */
+
 }

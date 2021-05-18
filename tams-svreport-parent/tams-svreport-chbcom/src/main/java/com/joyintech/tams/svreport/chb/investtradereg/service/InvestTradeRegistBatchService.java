@@ -692,7 +692,10 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 		// modify by zhangliang 20201205 交易登记日（取跑批日）不是业务数据不参与比较
 		//genDto.setDealRegistDate(dto.getDealRegistDate());
 		genDto.setIsAssetSub(dto.getIsAssetSub());
-		genDto.setRefTradeseqno(dto.getRefTradeseqno());
+		//delete by lpf
+		// 交易信息登记如果已经手工报送过了，然后如果将CHB_INVEST_TRADE表数据库删除了，重新改config日期，重新跑批，就会重新生成接入数据，然后用接入数据和报送过的数据比较，如果不一致就会再生成个修改未报送的数据，因为在比较的时候也用了CHB_INVEST_TRADE表的TRADE_SEQNO字段和CHB_INVEST_TRADE_SUB表的REF_TRADESEQNO字段比较了。
+		//CHB_INVEST_TRADE表数据如果删除过重新接TRADE_SEQNO字段就会重新生成，如果不删除重新接不会重新生成
+		/*genDto.setRefTradeseqno(dto.getRefTradeseqno());*/
 		genDto.setNum(dto.getNum() != null ? dto.getNum().setScale(5) : null);
 		genDto.setAssetMethod(dto.getAssetMethod());
 		genDto.setRivalPartyType(dto.getRivalPartyType());

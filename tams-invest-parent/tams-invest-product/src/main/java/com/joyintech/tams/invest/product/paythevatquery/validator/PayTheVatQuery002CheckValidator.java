@@ -79,14 +79,26 @@ public class PayTheVatQuery002CheckValidator implements BeanValidator{
     	BigDecimal secAcctBalance = BigDecimal.ZERO;
         for(PayTheVatQuery002TableDto payTheVatQuery002TableDto:dto.getListpayTheVatQuery002TableDto()) {
         	params2.put("portfolioId", payTheVatQuery002TableDto.getPortfolioId());
+            // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
+            if(StringUtil.equals(dto.getPayType(),DictCodeListExt2.划款方式_一次性划款.getValue())) { // add by jiangpeng on 20210512 start ZGBSS-1494
+                params2.put("channelId", payTheVatQuery002TableDto.getChannelId());
+            }
+            // add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳
         	
         	if (bussTrdAvailableCashQueryService != null && params2.get("tradeDate") != null) {
         		secAcctBalance = bussTrdAvailableCashQueryService.getSecManageAvailableCash(params2);
             }
 
+            // modify by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
         	if(payTheVatQuery002TableDto.getTaxTotal() !=null && payTheVatQuery002TableDto.getTaxTotal().compareTo(secAcctBalance)>0){
-        		validList.add(new ValidMessage("",getMessage("FIN_PROD_E_0127","产品托管户剩余现金","待缴税额,组合代码："+payTheVatQuery002TableDto.getPortfolioId()+"的托管户剩余现金:"+secAcctBalance+"")));
+                if (StringUtil.equals(dto.getTaxClass(), DictCodeListExt3.增值税品种_通道增值税.getValue())
+                        && StringUtil.equals(dto.getPayType(), DictCodeListExt2.划款方式_一次性划款.getValue())) {// add by jiangpeng on 20210512 start ZGBSS-1494
+                    validList.add(new ValidMessage("",getMessage("FIN_PROD_E_0127","通道账户剩余现金","待缴税额,通道代码："+payTheVatQuery002TableDto.getChannelId()+"的通道账户剩余现金:"+secAcctBalance+"")));
+                } else {
+                    validList.add(new ValidMessage("",getMessage("FIN_PROD_E_0127","产品托管户剩余现金","待缴税额,组合代码："+payTheVatQuery002TableDto.getPortfolioId()+"的托管户剩余现金:"+secAcctBalance+"")));
+                }
         	}
+            // modify by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳
         	
         	portfolioIdList.add(payTheVatQuery002TableDto.getPortfolioId());
         	if(StringUtil.equals(BussinessDictCodeList.收益类型_预期收益.getValue(), payTheVatQuery002TableDto.getProfitType())) {

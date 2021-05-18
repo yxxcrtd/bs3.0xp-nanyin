@@ -10,8 +10,7 @@
  
 package com.joyintech.tams.component.business.core.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,6 +83,19 @@ public class MstWorkflowCommonServiceImpl implements MstWorkflowCommonService{
         return restTemplate.postForObject(
             ServiceApplication.COMMON_SERVICE_NAME + "/core/getDataStatusFromProcessMark", wflValidInputParameter,
             String.class);
+	}
+	/**
+	 * 通过留痕表查询流程中数据,返回list
+	 * add by jiangpeng on 20210514 ZGBSSE-388
+	 * @param wflValidInputParameter 查询条件
+	 * @return list
+	 */
+	@Override
+	public List<ProcessMark> getDataStatusFromProcessMarkList(WflValidInputParameter wflValidInputParameter) {
+		// 获取数据状态
+		return restTemplate.postForList(
+				ServiceApplication.COMMON_SERVICE_NAME + "/core/getDataEntityFromProcessMarkList", wflValidInputParameter,
+				ProcessMark.class);
 	}
 
 	/**

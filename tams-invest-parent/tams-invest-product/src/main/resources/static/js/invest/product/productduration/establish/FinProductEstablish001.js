@@ -153,6 +153,7 @@
         		var data = selArr[0];
         		data.operateType = 'revoke';
         		data.pageModel = PAGE_MODEL_REFERENCE;
+        		data.portfolioId = data.ptlId;
                 Joyin.ajaxJson(basePath + 'invest/product/productduration/establish/FinProductEstablish001/check', data, function(result) {
                 	Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
                     result = result.replace(/\s+/g,"");

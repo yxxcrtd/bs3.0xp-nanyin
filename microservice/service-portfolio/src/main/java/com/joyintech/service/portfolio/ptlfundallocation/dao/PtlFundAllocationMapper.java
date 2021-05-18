@@ -12,6 +12,7 @@ package com.joyintech.service.portfolio.ptlfundallocation.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -61,6 +62,15 @@ public interface PtlFundAllocationMapper {
      * @since 1.0
      */
     List<SelectOptionDto> getPortfolioList(Map<String,Object> map);
+
+    /**
+     * 查询组合（多组合新建）
+     * @param map 请求参数
+     * @return 组合集合
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getPortfolioIdBysecId(Map<String,Object> map);
 
     /**
      * 查询收款账号
@@ -117,4 +127,36 @@ public interface PtlFundAllocationMapper {
     List<PtlCashPositionFlow> selectPtlCashPositionFlowList(Map<String, Object> paramMap);
 
     int deleteFlowByOrderId(@Param("orderId") String orderId, @Param("holdingType") String holdingType);
+
+    /**
+     * 获取组合资金账户和账户余额（多组合新建）
+     * @return
+     * @see
+     */
+    List<PtlCashPositionFlowDto> getPosition(Map<String, Object> map);
+
+    /**
+     * 获取多组合明细
+     * @return
+     * @see
+     */
+    List<PtlCashPositionFlowDto> getPtlFundAllocation001Dtos(Map<String, Object> map);
+
+
+    /* 新增导入功能 add by liuwei 20200220 start */
+    /**
+     * 查询组合名称
+     */
+    String queryProdInfo(Map<String,Object> map);
+
+    /**
+     * 校验产品是否真实关联了该账户
+     */
+    String checkAccount(Map<String,Object> param);
+
+    /**
+     * 查询组合托管户以及对应现金余额
+     */
+    Map<String,String> getAcctNo(Map<String,Object> param);
+    /* 新增导入功能 add by liuwei 20200220 end */
 }

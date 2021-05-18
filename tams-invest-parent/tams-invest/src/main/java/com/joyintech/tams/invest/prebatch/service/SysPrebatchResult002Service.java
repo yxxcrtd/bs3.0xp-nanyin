@@ -1,3 +1,10 @@
+/**
+ * @author wj
+ * @version 1.0.0
+ * @ClassName SysPrebatchResult002Service.java
+ * @Description 批前检查002 页面对应
+ * @createTime 2021年05月13日 10:57:00
+ */
 package com.joyintech.tams.invest.prebatch.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
@@ -26,6 +33,13 @@ public class SysPrebatchResult002Service extends CommonExportService<SysPrebatch
     @Autowired
     private WorkflowConfService workflowConfService;
 
+    /**
+     * @title 查询组合下拉框
+     * @description 
+     * @author wj 
+     * @updateTime 2021/5/13 11:12 
+     * @throws 
+     */
     public Page<SelectOptionDto> queryPortfolioIdInfo(Map<String, Object> pageParam) {
         int page = Integer.valueOf(pageParam.get("page").toString());
         int length =Integer.valueOf(pageParam.get("length").toString());
@@ -34,6 +48,13 @@ public class SysPrebatchResult002Service extends CommonExportService<SysPrebatch
 
     }
 
+    /**
+     * @title 查询资产下拉框
+     * @description
+     * @author wj
+     * @updateTime 2021/5/13 11:12
+     * @throws
+     */
     public  Page<SelectOptionDto> queryFinprodIdInfo(Map<String, Object> pageParam) {
         int page = Integer.valueOf(pageParam.get("page").toString());
         int length =Integer.valueOf(pageParam.get("length").toString());
@@ -42,6 +63,13 @@ public class SysPrebatchResult002Service extends CommonExportService<SysPrebatch
 
     }
 
+    /**
+     * @title 查询页面
+     * @description
+     * @author wj
+     * @updateTime 2021/5/13 11:12
+     * @throws
+     */
     public Page<SysPrebatchResultDetail001Dto> findPage(Map<String, Object> pageParam) {
         int page = Integer.valueOf(pageParam.get("page").toString());
         int length =Integer.valueOf(pageParam.get("length").toString());

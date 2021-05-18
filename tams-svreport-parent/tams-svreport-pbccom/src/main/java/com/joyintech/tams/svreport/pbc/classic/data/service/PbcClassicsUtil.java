@@ -79,7 +79,7 @@ public class PbcClassicsUtil {
 		strbuf.append(yearLast);
 		//5位顺序码
 		//PbcClassicsUtil pbcUtil = new PbcClassicsUtil();
-		long seqNo = sysSeqService.getSysSeq(seqCode,new Date(),"Y");
+		long seqNo = sysSeqService.getSysSeq(seqCode,vdate,"Y");
 		if ( seqNo>99999) {
 		    logger.error("产品顺序码长度大于5位!");
 		    return null;

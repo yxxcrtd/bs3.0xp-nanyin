@@ -51,4 +51,12 @@
 	        </if>
         </where>
     </delete>
+    
+    <select id="getTradeAmtByEventId" parameterType="java.lang.String" resultType="java.lang.String">
+    	SELECT TO_CHAR(CHANGE_VALUE) FROM (
+			select CHANGE_VALUE  from RSK_INDICATOR_PARA_CALCDETAIL
+			where para_code = 'XJGM' AND TRADE_ID = #{eventId,jdbcType=VARCHAR}
+			ORDER BY DOTIMESTAMP DESC
+		)WHERE ROWNUM=1
+    </select>
 </mapper>

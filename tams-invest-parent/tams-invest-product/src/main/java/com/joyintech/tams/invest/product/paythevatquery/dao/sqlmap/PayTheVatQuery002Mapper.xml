@@ -18,6 +18,7 @@
 	         where TPD.BUSI_TYPE = #{BUSI_TYPE_16}
 	           and TPD.Finprod_Type = #{finprodType}
 	           and TPD.Finprod_Type2 = #{finprodType2}
+			   and TPD.CHL_ID is null /* add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳*/
 	           and not exists (
 			              select 1 from TRD_PRODUCT_DEAL b where b.P_TRADE_ID = TPD.TRADE_ID  
 			          )    
@@ -72,6 +73,7 @@
 	                   and nvl(tpd.TRADE_STATUS,'01') = #{TRADE_STATUS_01}
 	                   and tpd.mdate &lt;= #{payment1}
 	                   and tpd.finprod_id = a.finprod_id
+					   and tpd.CHL_ID is null /* add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳*/
 	                   and not exists (
                         select 1 from TRD_PRODUCT_DEAL a1
                         where a1.p_trade_id = tpd.trade_id
@@ -79,55 +81,57 @@
                           and a1.TRADE_STATUS =#{TRADE_STATUS_03} 
                   	    )
 	                   ) as taxStartDate,
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	                   /*modify by jiangpeng on 20210513 start ZGBSSE-387*/
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+						  and bba.CDATE = #{payment1}
 	                      and bba.FEE_TYPE = #{TAX0102}
 	                      and bba.chl_id is null),
 	                   0) as interestIncome, /*利息收入*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where  bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+						  and bba.CDATE = #{payment1}
 	                      and bba.FEE_TYPE = #{TAX0202}
 	                      and bba.chl_id is null),
 	                   0) as dividendIncome, /*红利收入*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
-	                      and bba.CDATE = #{payment1}
+						  and bba.CDATE = #{payment1}
 	                      and bba.FEE_TYPE = #{TAX0302}
 	                      and bba.chl_id is null),
 	                   0) as difbetIncome, /*价差收入*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
 	                      and bba.CDATE = #{payment1}
 	                      and bba.FEE_TYPE = #{ALT0102}
 	                      and bba.chl_id is null),
 	                   0) as constructionTax, /*城建税*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
 	                      and bba.CDATE = #{payment1}
 	                      and bba.FEE_TYPE = #{ALT0202}
 	                      and bba.chl_id is null),
 	                   0) as educationTax, /*教育税*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
 	                      and bba.CDATE = #{payment1}
 	                      and bba.FEE_TYPE = #{ALT0302}
 	                      and bba.chl_id is null),
 	                   0) as placeeducationTax,/*地方教育费*/
-	               nvl((select bba.TDY_UNPAID_INTINCEXP
+	               nvl((select sum(bba.TDY_UNPAID_INTINCEXP) TDY_UNPAID_INTINCEXP
 	                     from BOK_POSITION_PRDFEE bba
 	                    where bba.FINPROD_ID = decode(c.profit_Type,#{profitType_SY},b.portfolio_id,b.finprod_id)
 	                      and bba.CDATE = #{payment1}
 	                      and bba.FEE_TYPE = #{ALT0402}
 	                      and bba.chl_id is null),
 	                   0) as waterTrafficTax/*水利基金税*/
+		/*modify by jiangpeng on 20210513 end ZGBSSE-387*/
 	          from FIN_PRODUCT a
 	         inner join FIN_PRODUCT_ADD b
 	            on a.FINPROD_ID = b.FINPROD_ID
@@ -144,7 +148,8 @@
 	                  and b1.FINPROD_ID = a.FINPROD_ID
 	                  and b1.mdate = #{payment1}
 	                  and c1.p_trade_id is null
-	                  and b1.TRADE_STATUS =#{TRADE_STATUS_01} 
+	                  and b1.TRADE_STATUS =#{TRADE_STATUS_01}
+					  AND b1.CHL_ID is null/* add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳*/
 		          )
 	         <if test="portfolioIdArr!=null and portfolioIdArr.length>0">
 	         	and b.portfolio_id in 
@@ -297,7 +302,22 @@
 		              and deal.is_cancel = #{YES_NO_NO}
 		              and deal.mdate <![CDATA[ <= ]]> #{payment1}
 		          where 1=1
-		             and fee.CDATE = #{payment1}
+		             and fee.CDATE <![CDATA[<=]]> #{payment1}
+					 AND ((SELECT MDATE
+							FROM trd_product_deal deal1
+							WHERE deal1.finprod_id = bok.acct_subject_id
+							  AND deal1.chl_id = fee.chl_id
+							  AND deal1.busi_type = #{BUSI_TYPE_16}
+							  AND deal1.ps = #{taxidenType}
+							  AND deal1.trade_status = #{TRADE_STATUS_01}
+							  AND deal1.is_cancel = #{YES_NO_NO}) is null or (SELECT MDATE
+																	 FROM trd_product_deal deal1
+																	 WHERE deal1.finprod_id = bok.acct_subject_id
+																	   AND deal1.chl_id = fee.chl_id
+																	   AND deal1.busi_type = #{BUSI_TYPE_16}
+																	   AND deal1.ps = #{taxidenType}
+																	   AND deal1.trade_status = #{TRADE_STATUS_01}
+																	   AND deal1.is_cancel = #{YES_NO_NO}) >= #{payment1})
 		             and fin1.finprod_market_id = #{channelId}
 		             and fee.tdy_unpaid_intincexp != 0
 		             and fee.fee_type in (#{TAX0102},#{TAX0202},#{TAX0302},#{ALT0102},#{ALT0202},#{ALT0302},#{ALT0402})
@@ -414,6 +434,9 @@
 	           <if test="channelId !=null and channelId !=''">
 	            and prd1.finprod_market_id = #{channelId}
 	           </if>
+				<if test="channelId ==null or channelId ==''">
+					and TPD.chl_id is null
+				</if>
 	           <if test="portfolioIdList!=null and portfolioIdList.size()>0">
 	           	and tpa.portfolio_id  in
 		            <foreach collection="portfolioIdList" item="item" open="(" separator="," close=")">

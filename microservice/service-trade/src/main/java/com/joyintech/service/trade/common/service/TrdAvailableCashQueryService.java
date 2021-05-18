@@ -123,6 +123,9 @@ public class TrdAvailableCashQueryService {
         List<String> secManager = trdAvailableCashQueryMapper.selectSecManager(param);
         PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
         dto.setPortfolioId((String)param.get("portfolioId"));
+        // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
+        dto.setChlFinprodId((String)param.get("channelId"));
+        // add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳
         dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
         dto.setCdate(DateUtil.parse((String)param.get("tradeDate")));
         dto.setCcy((String)param.get("ccy"));

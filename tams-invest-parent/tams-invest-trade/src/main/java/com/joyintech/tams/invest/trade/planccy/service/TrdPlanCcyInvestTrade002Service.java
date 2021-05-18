@@ -153,7 +153,12 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
             		BeanUtil.copyPropertiesIgnoreNull(confirmDto,entity);
                     confirmDto.setTradeDate(entity.getPurCfmDate());
             		ProcessParameter<TrdPlanCcyInvestTradeConfirmDto> workFlowPatameter = getWorkFlowPatameter(confirmDto);
-                    confirmDto.setCreateUser(entity.getCreateUser());
+                    //confirmDto.setCreateUser(entity.getCreateUser());
+                    //获取最原始留痕表数据
+                    String createUser = restTemplate.getForObject(
+                            ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/getSysDateMark?workflowId="+ entity.getWorkflowId(),
+                            String.class);
+                    confirmDto.setCreateUser(createUser);
             		try {
             			WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(),"","", confirmDto.getCreateUser(),OperationType.NEW,false,confirmDto);
             		}catch (Exception e) {

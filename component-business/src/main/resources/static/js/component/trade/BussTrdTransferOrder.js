@@ -12,8 +12,7 @@
     var table;
     // 生成指令参数保存
     var calcConditionObjBackUp = null;
-
-    //表格初始化
+    //表格初始化n
     var init = function () {
         if (pageModel != PAGE_MODEL_NEW && entity) {
             getElementById('payAcctNo').val(JSON.stringify(entity.payAcctNoList));

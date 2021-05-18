@@ -483,7 +483,12 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 
 				if(MultilevelDataAuthorityUtil.isEnabled()){
 
-					List<String> listCodes = MultilevelDataAuthorityUtil.getChildrenOrgCode(MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+//					List<String> listCodes = MultilevelDataAuthorityUtil.getSelfAndChildrenOrgCode(MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+					List<String> listCodes = new ArrayList<>();
+					String  myinstCode = MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+					if(StringUtil.isNotEmpty(myinstCode)) {
+						listCodes.add(myinstCode);
+					}
 					param.put("instCodes",listCodes);
 
 				}
