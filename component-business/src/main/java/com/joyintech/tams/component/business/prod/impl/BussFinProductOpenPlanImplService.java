@@ -705,6 +705,13 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 
             // 5.开放周期开始日列表、投资周期开始日列表生成
             // 遍历临时变量.调整后结束日区间列表
+            //不调整的“开放结束日”-开放天数来推开放开始日
+            if(StringUtil.equals(DictCodeList.开放天数类型_固定天数.getValue(), inputDto.getOpenDaysType())){
+                for (Date currentNodeDate : adjustBeforeNodeDateList) {
+                    Date tempOpenCycleStartDate = DateUtil.addDay(currentNodeDate, 1 - inputDto.getOpenDays().intValue());
+                    openCycleStartDateList.add(tempOpenCycleStartDate);
+                }
+            }
             for (Date currentNodeDate : openCycleEndDateList) {
                 // 5.1 开放周期开始日生成
                 // 临时变量.调整后结束日区间列表.节点日期 - 输入.开放天数 + 1
@@ -713,11 +720,11 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 //                        DateUtil.format(DateUtil.addDay(currentNodeDate,
 //                            1 - inputDto.getOpenDays().intValue())),
 //                        inputDto.getTradedayRule(), dealCalendarHolidayList));
-                if(StringUtil.equals(DictCodeList.开放天数类型_固定天数.getValue(), inputDto.getOpenDaysType())){
-                    Date tempOpenCycleStartDate = DateUtil.addDay(currentNodeDate, 1 - inputDto.getOpenDays().intValue());
-                    // TODO 开放周期开始日如果比起息日小如何处理（=currentNodeDate？）
-                    openCycleStartDateList.add(tempOpenCycleStartDate);
-                }
+//                if(StringUtil.equals(DictCodeList.开放天数类型_固定天数.getValue(), inputDto.getOpenDaysType())){
+//                    Date tempOpenCycleStartDate = DateUtil.addDay(currentNodeDate, 1 - inputDto.getOpenDays().intValue());
+//                    // TODO 开放周期开始日如果比起息日小如何处理（=currentNodeDate？）
+//                    openCycleStartDateList.add(tempOpenCycleStartDate);
+//                }
 
                 // 5.2 投资周期开始日生成
                 // 交易日推算
@@ -819,6 +826,13 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
             resultDto = new FinOpenPlan();
             Date openCycleStartDate = openCycleStartDateList.get(i);
             Date openCycleEndDat = openCycleEndDateList.get(i);
+            Date openCycleEndDatTemp = null;
+            if(i>0){
+                openCycleEndDatTemp = openCycleEndDateList.get(i-1);
+            }
+            if(DateUtil.compareTo(openCycleStartDate,openCycleEndDatTemp) <= 0){
+                openCycleStartDate = DateUtil.addDay(openCycleEndDatTemp,1);
+            }
             //前五条数据比较
             if(i <= 5){
                 //开放周期开始日 与产品起息日比较
