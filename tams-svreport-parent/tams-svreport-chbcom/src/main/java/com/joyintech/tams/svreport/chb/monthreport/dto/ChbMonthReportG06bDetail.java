@@ -4,6 +4,8 @@ import com.joyintech.framework.base.BaseEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Objects;
 
 public class ChbMonthReportG06bDetail extends BaseEntity implements Serializable {
     /**
@@ -35,6 +37,16 @@ public class ChbMonthReportG06bDetail extends BaseEntity implements Serializable
      * 当月月末期末余额
      */
     private BigDecimal balanceB;
+
+    /**
+     * 上月月末期末余额-显示名称
+     */
+    private String balanceAFmt;
+
+    /**
+     * 当月月末期末余额-显示名称
+     */
+    private String balanceBFmt;
 
     /**
      * 机构代码
@@ -151,6 +163,28 @@ public class ChbMonthReportG06bDetail extends BaseEntity implements Serializable
      */
     public void setBalanceB(BigDecimal balanceB) {
         this.balanceB = balanceB;
+    }
+
+    public String getBalanceAFmt() {
+        if (Objects.isNull(balanceA) || BigDecimal.ZERO.compareTo(balanceA) == 0) {
+            return "0.00";
+        }
+        return new DecimalFormat("0.0000").format(balanceA);
+    }
+
+    public void setBalanceAFmt(String balanceAFmt) {
+        this.balanceAFmt = balanceAFmt;
+    }
+
+    public String getBalanceBFmt() {
+        if (Objects.isNull(balanceB) || BigDecimal.ZERO.compareTo(balanceB) == 0) {
+            return "0.00";
+        }
+        return new DecimalFormat("0.00").format(balanceB);
+    }
+
+    public void setBalanceBFmt(String balanceBFmt) {
+        this.balanceBFmt = balanceBFmt;
     }
 
     /**
