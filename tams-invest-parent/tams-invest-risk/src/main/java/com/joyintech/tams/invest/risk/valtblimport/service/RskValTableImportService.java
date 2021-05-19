@@ -131,6 +131,18 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         List<InterfPayhsrcsecinfoDto>  interfPayhsrcsecinfoList  = commonAutoCouponService.selectWindBondAsset(paramMap);
         //查找wind基金信息
         List<InfChinamutualfunddescriptionDto> infChinamutualfunddescriptionList = commonAutoCouponService.selectWindFundAsset(paramMap);
+
+        Map<String,String> paraMap =new HashMap<String,String>();
+        for(RskValtblAssetSubDto rskValtblAssetSubDtoTemp: dto.getSelectedItem()){
+            if(rskValtblAssetSubDtoTemp.getSubCode().length() ==8){
+                if(paraMap.get(rskValtblAssetSubDtoTemp.getSubCode()) ==null){
+                    paraMap.put(rskValtblAssetSubDtoTemp.getSubCode(),rskValtblAssetSubDtoTemp.getSubName());
+                }else{
+                    continue;
+                }
+            }
+        }
+
         String actMarketCode = null;
         for(RskValtblAssetSubDto entity:dto.getSelectedItem()){
             boolean flag = true;
@@ -176,7 +188,9 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                 }
                 actMarketCode = actMarketCode.replace("CY", "IB");
                 actMarketCode = actMarketCode.replace("OTC", "OF");
-            } else {
+            } else  if(entity.getSubName().contains("上交所")||
+                        entity.getSubName().contains("深交所")||
+                        entity.getSubName().contains("银行间")){
                 if (entity.getSubName().contains("上交所")) {
                     actMarketCode = "SH";
                 }
@@ -186,7 +200,22 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                 if (entity.getSubName().contains("银行间")) {
                     actMarketCode = "IB";
                 }
+            }else {
+                //根据估值表底层资产映射获取债券的交易场所，适用于四级科目无法区分
+                if(entity.getSubCode().length() >8){
+                    String SubName = paraMap.get(entity.getSubCode().substring(0,8));
+                    if (SubName.contains("上交所")) {
+                        actMarketCode = "SH";
+                    }
+                    if (SubName.contains("深交所")) {
+                        actMarketCode = "SZ";
+                    }
+                    if (SubName.contains("银行间")) {
+                        actMarketCode = "IB";
+                    }
+                }
             }
+
             if (StringUtil.isNotEmpty(actMarketCode)) {
                 entity.setMarketId(actMarketCode);
             }
