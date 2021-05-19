@@ -984,16 +984,24 @@
         T5.PA_BUSS_TYPE IN
         ('58', '54', '56', '80', '66', '67', '73', '68')
         AND PT.TRADE_ID IS NULL
-        AND T3.WORKFLOW_ID IS NULL
+        AND(
+        (T3.WORKFLOW_ID IS NULL  and
+        (T10.NODE_ID IS NULL OR T10.NODE_ID = 'BACK_OPERATOR' OR
+        T10.NODE_ID = 'BACK_CHECKER')
+        AND
+        (T9.PROCESS_STATE != 'END' or T9.PROCESS_STATE is null)
+        ) or (
+        T3.WORKFLOW_ID IS not NULL
+        and T10.NODE_ID IS not NULL
+        and T9.PROCESS_STATE = 'BACK'
+        )
+        )
         AND WFL_ORDERS.SETTLE_DATE <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
         AND NOT EXISTS
         (SELECT 1
         FROM SYS_WFL_BUSINESS_NODE TT
         WHERE TT.SEQ_NO = T9.SEQ_NO
-        AND TT.HIS_NO > T10.HIS_NO) and
-        (T10.NODE_ID IS NULL OR T10.NODE_ID = 'BACK_OPERATOR' OR
-        T10.NODE_ID = 'BACK_CHECKER') AND
-        (T9.PROCESS_STATE != 'END' or T9.PROCESS_STATE is null) AND
+        AND TT.HIS_NO > T10.HIS_NO)  AND
         (T3.TRADE_STATUS = '01' AND T3.IS_CANCEL = 'N') AND
         (WFL_ORDERS.COUNTER_ACCT_NO IS NULL OR
         WFL_ORDERS.MY_ACCT_NO != WFL_ORDERS.COUNTER_ACCT_NO) AND
