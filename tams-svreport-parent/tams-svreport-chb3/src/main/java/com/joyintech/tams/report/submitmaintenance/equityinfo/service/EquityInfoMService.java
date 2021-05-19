@@ -68,6 +68,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	public List<ExcelValidDto> importData(String fileName) {
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("fileName", fileName);
+		param.put("orgCode", CommonUtil.getOrgCode());
 //    	param.put("dataList", ExcelUtil.getDataList(fileName));
 //    	param.put("tempList", ExcelUtil.getTempList(fileName));
 		return simpleRestTemplate.postForList(
@@ -131,6 +132,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	public List<ExcelValidDto> importChbData(String fileName){
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("fileName", fileName);
+		param.put("orgCode", CommonUtil.getOrgCode());
 //    	param.put("dataList", ExcelUtil.getDataList(fileName));
 //    	param.put("tempList", ExcelUtil.getTempList(fileName));
 //		param.put("dataTypeList", ExcelUtil.getDataList(fileName));

@@ -604,7 +604,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 List<ExcelValidDto> checkResult = equityInfoValid.checkExcelEquity(dataList,
                         listType, null,spzMap,objFiledsMap);
                 if (checkResult.isEmpty()) {
-                    List<EquityInfo001Dto> equityList = converToBean(dataList);
+                    List<EquityInfo001Dto> equityList = converToBean(dataList,orgCode);
                     EquityInfoDistinctService equityInfoDistinctService =
                             SpringContextUtil.getBean(EquityInfoDistinctService.class);
                     List<String> keys = equityInfoDistinctService.getKeys(equityList);
@@ -1278,7 +1278,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
      * @see
      * @since 1.0
      */
-    private List<EquityInfo001Dto> converToBean(List<List<String>> dataList) {
+    private List<EquityInfo001Dto> converToBean(List<List<String>> dataList,String orgCode) {
         // 返回的list定义
         List<EquityInfo001Dto> returnInfoList = new ArrayList<EquityInfo001Dto>();
         EquityInfo001Dto equityInfo001Dto = null;
@@ -1340,6 +1340,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setHolderEmail(list.get(20));
             equityInfo001Dto.setRemark(list.get(21));
             equityInfo001Dto.setAgent(list.get(22));
+            equityInfo001Dto.setOrgCode(orgCode);
 //            //接口接入数据校验字段置空
 //            if(!EquityInfoCheckUtil.isEmpty(list.get(25))) {
 //                equityInfo001Dto.setInterfCheckResult(" ");
@@ -2391,7 +2392,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         if (!StringUtil.isEmptyList(dataList)) {
             try {
                 if (CollectionUtils.isNotEmpty(dataList)) {
-                    List<EquityInfo001Dto> entities = converToBean(dataList);
+                    List<EquityInfo001Dto> entities = converToBean(dataList,null);
 //                    equityInfoDistinctService.checkSendedData(equityList);
 //                    equityInfoDistinctService.checkAllData(equityList);
 //                    List<EquityInfo001Dto> data = this.selectEquityByKey(entities);
@@ -2628,7 +2629,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 List<ExcelValidDto> checkResult = equityInfoValid.checkExcelEquity(dataList,
                         listType,dataTypeList,spzMap,objFiledsMap);
                 if (checkResult.isEmpty()) {
-                    List<EquityInfo001Dto> equityList = converToBean(dataList);
+                    List<EquityInfo001Dto> equityList = converToBean(dataList,orgCode);
                     EquityInfoDistinctService equityInfoDistinctService =
                             SpringContextUtil.getBean(EquityInfoDistinctService.class);
                     List<String> keys = equityInfoDistinctService.getKeys(equityList);
@@ -2850,7 +2851,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             //将中债的数据格式转换成本系统支持的格式
             toChbList(dataList);
             if (CollectionUtils.isNotEmpty(dataList)) {
-                List<EquityInfo001Dto> entities = converToBean(dataList);
+                List<EquityInfo001Dto> entities = converToBean(dataList,null);
                 List<EquityInfo001Dto> data = new ArrayList<EquityInfo001Dto>();
                 try {
                     data = this.selectEquityByKey(entities);
