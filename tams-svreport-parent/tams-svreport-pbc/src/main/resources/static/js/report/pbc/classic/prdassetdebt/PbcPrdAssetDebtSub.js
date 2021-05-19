@@ -356,19 +356,43 @@ $(function(){
              	   return;
                 }
             })
-            
+                    //针对daTa，判断贷款明细信息和资金信托明细信息是否存在
+                    Joyin.ajaxJson(basePath + '/pbc/prdassetdebt/PbcPrdAssetDebtSub/searchNoDxAndXt',param, function (result) {
+                          var mes;
+                          if(result && result.length>0 ){
+                               mes="资产池";
+                               for (var i = 0; i < result.length; i++) {
+                                    mes+=","+result[i].pbcAccountId;
+                               }
+                               mes+="没有对应的贷款明细信息和资金信托明细信息，不会导出到Excel文件中，是否确认导出其他资产池的资产负债信息？";
+                               Joyin.confirm(mes,function() {
+                                            Joyin.exportExcel("download", param);
+                                			if (isHaveData){
+                                				Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+                                        		//页面添加滚动条
+                                        		layui.layer.open({type:3});
+                                	            Joyin.ajaxJson('doManul', param, function() {
+                                	                table.load();
+                                	                layui.layer.closeAll();
+                                	            });
+                                	        });
+                                            }
+                                });
+                          }else{
+                                			Joyin.exportExcel("download", param);
+                                			if (isHaveData){
+                                				Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+                                        		//页面添加滚动条
+                                        		layui.layer.open({type:3});
+                                	            Joyin.ajaxJson('doManul', param, function() {
+                                	                table.load();
+                                	                layui.layer.closeAll();
+                                	            });
+                                	        });
+                                            }
+                          }
+                     });
             //Joyin.exportExcel("download",paramObj);
-			Joyin.exportExcel("download", param);
-			if (isHaveData){
-				Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
-        		//页面添加滚动条
-        		layui.layer.open({type:3});
-	            Joyin.ajaxJson('doManul', param, function() {
-	                table.load();
-	                layui.layer.closeAll();
-	            });
-	        });
-            }
 			
 		}else{
 			// 用来标注选择数据中存在修改或者已报送数据，默认为false
@@ -393,10 +417,66 @@ $(function(){
 			param.exportflag = 'exportSelected';
 			if (statuFlag) {
 				Joyin.confirm("导出数据包含修改或已报送数据，请确认是否导出！", function() {
-					confirmExport(param, expArr);
+                //针对expArr，判断贷款明细信息和资金信托明细信息是否存在
+			        var datasExpArr = JSON.stringify(expArr);
+			        var data = {
+                    	 datasExpArr: datasExpArr,
+                    	 flag:flag
+                     };
+                    Joyin.ajaxJson(basePath + '/pbc/prdassetdebt/PbcPrdAssetDebtSub/searchNoDxAndXt',data, function (result) {
+                          var mes;
+                          if(result && result.length>0 ){
+                               mes="资产池";
+                               for (var i = 0; i < result.length; i++) {
+                                    mes+=","+result[i].pbcAccountId;
+                                   for(var j=expArr.length-1;j>=0;j--){
+                                       if(expArr[j].reportuuid=result[i].reportuuid){
+                                        expArr.splice(j,1);
+                                        break;
+                                       }
+                                    }
+
+                               }
+                               mes+="没有对应的贷款明细信息和资金信托明细信息，不会导出到Excel文件中，是否确认导出其他资产池的资产负债信息？";
+                               Joyin.confirm(mes,function() {
+                                     confirmExport(param, expArr);
+                                });
+                          }else{
+                                confirmExport(param, expArr);
+                          }
+                     });
+					//confirmExport(param, expArr);
 				});
 			} else {
-				confirmExport(param, expArr);
+			      //针对expArr，判断贷款明细信息和资金信托明细信息是否存在
+			        var datasExpArr = JSON.stringify(expArr);
+			         var data = {
+                    	 datasExpArr: datasExpArr,
+                         flag:flag
+                     };
+                    Joyin.ajaxJson(basePath + '/pbc/prdassetdebt/PbcPrdAssetDebtSub/searchNoDxAndXt',data, function (result) {
+                          var mes;
+                          if(result && result.length>0 ){
+                               mes="资产池";
+                               for (var i = 0; i < result.length; i++) {
+                                    mes+=","+result[i].pbcAccountId;
+                                   for(var j=expArr.length-1;j>=0;j--){
+                                       if(expArr[j].reportuuid=result[i].reportuuid){
+                                        expArr.splice(j,1);
+                                        break;
+                                       }
+                                    }
+
+                               }
+                               mes+="没有对应的贷款明细信息和资金信托明细信息，不会导出到Excel文件中，是否确认导出其他资产池的资产负债信息？";
+                               Joyin.confirm(mes,function() {
+                                     confirmExport(param, expArr);
+                                });
+                          }else{
+                                confirmExport(param, expArr);
+                          }
+                     });
+				//confirmExport(param, expArr);
 			}
 		}
     };

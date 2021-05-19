@@ -223,6 +223,13 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
 			if(SysDataUtil.getNameFromDataDict(DictCode.报送状态, "03").equals(info.getSendStatus())){
 				it.remove();
 			}
+			if(StringUtils.isNotBlank(info.getReportuuid())) {
+				List<PbcLoanDetailInfoSubReportVo> pbcLoanDetailInfoSubReportVoList = pbcReportAssetDebtDetailMapper.selectDetailInfoSubByReportUuid(info.getReportuuid());
+				List<PbcLoanDetailInfoSubReportVo> pbcLoanDetailInfoSubReportVoList2 = pbcReportAssetDebtDetailMapper.selectCapitalTrustDetailByReportUuid(info.getReportuuid());
+				if(CollectionUtils.isEmpty(pbcLoanDetailInfoSubReportVoList) && CollectionUtils.isEmpty(pbcLoanDetailInfoSubReportVoList2)){
+					it.remove();
+				}
+			}
 		}
 		if(infoList.isEmpty())
 			return ;
@@ -462,6 +469,18 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
     	}else{
     		//不选报表导出所有未报送的记录
     		dataList= searchByCondition(selectParam);
+    		//针对全导出时，对于贷款内容和资金信托份额内容都为空时，删除该条记录
+			Iterator<PbcMonthReport> ii=dataList.iterator();
+			while (ii.hasNext()){//判断集合内是否还有元素
+				PbcMonthReport o=ii.next();//获取该元素
+				if(StringUtils.isNotBlank(o.getReportuuid())) {
+					List<PbcLoanDetailInfoSubReportVo> pbcLoanDetailInfoSubReportVoList = pbcReportAssetDebtDetailMapper.selectDetailInfoSubByReportUuid(o.getReportuuid());
+					List<PbcLoanDetailInfoSubReportVo> pbcLoanDetailInfoSubReportVoList2 = pbcReportAssetDebtDetailMapper.selectCapitalTrustDetailByReportUuid(o.getReportuuid());
+					if(CollectionUtils.isEmpty(pbcLoanDetailInfoSubReportVoList) && CollectionUtils.isEmpty(pbcLoanDetailInfoSubReportVoList2)){
+						ii.remove();//【使用迭代器】删除当前指向的元素
+					}
+				}
+			}
     	}
         
     	Map<String, List<PbcMonthReport>> dataParam = new HashMap<String, List<PbcMonthReport>>();
@@ -589,5 +608,37 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
         }
 		return ExportUtil.export(outFile.getName(), outFile, true);
     }
-    
+	/**
+	 * 	导出
+	 * @param pageId
+	 * @param selectParam
+	 * @param datas
+	 * @return
+	 * @throws IOException
+	 */
+	public  List<PbcMonthReport> searchNoDxAndXt(Map<String, Object> params) throws IOException {
+		deaSearchParam(params);
+		List<PbcMonthReport> dataList=new ArrayList<PbcMonthReport>();
+		String datas=(String)params.get("datasExpArr");
+		String flag=params.get("flag").toString();;
+		if (datas != null){
+			dataList=JsonUtils.json2List(datas,PbcMonthReport.class);
+		}else if(StringUtil.isNotEmpty(flag) && flag.equals("0")){
+			//不选报表导出所有未报送的记录
+			dataList= searchByCondition(params);
+		}
+		List<PbcMonthReport> list=new ArrayList<PbcMonthReport>();
+		for (PbcMonthReport dto: dataList){
+			if(StringUtils.isNotBlank(dto.getReportuuid())) {
+				List<PbcLoanDetailInfoSubReportVo> pbcLoanDetailInfoSubReportVoList = pbcReportAssetDebtDetailMapper.selectDetailInfoSubByReportUuid(dto.getReportuuid());
+				List<PbcLoanDetailInfoSubReportVo> pbcLoanDetailInfoSubReportVoList2 = pbcReportAssetDebtDetailMapper.selectCapitalTrustDetailByReportUuid(dto.getReportuuid());
+				if(CollectionUtils.isEmpty(pbcLoanDetailInfoSubReportVoList) && CollectionUtils.isEmpty(pbcLoanDetailInfoSubReportVoList2)){
+					list.add(dto);
+				}
+			}
+
+		}
+		return list;
+	}
+
 }
