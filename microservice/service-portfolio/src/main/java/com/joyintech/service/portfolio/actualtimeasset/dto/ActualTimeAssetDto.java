@@ -70,7 +70,28 @@ public class ActualTimeAssetDto extends BaseEntity {
      * 资产二级类型
      */
     private String type7;
-    
+
+    /**
+     * 资产一级分类
+     */
+    private  String type6;
+
+    /**
+     * 获得 资产一级分类
+     * @return
+     */
+    public String getType6() {
+        return type6;
+    }
+
+    /**
+     * 设置 资产一级分类
+     * @param type6
+     */
+    public void setType6(String type6) {
+        this.type6 = type6;
+    }
+
     /**
      * 实际持仓
      */

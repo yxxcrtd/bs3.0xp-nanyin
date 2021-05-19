@@ -13,9 +13,9 @@ $(function() {
             secManageAcctId=object.secManageAcctId.join(',');
         }
         var portfolioId = object.portfolioId;
-        if(null != portfolioId && "" != portfolioId){
-            portfolioId=object.portfolioId.join(',');
-        }
+//        if(null != portfolioId && "" != portfolioId){
+//            portfolioId=object.portfolioId.join(',');
+//        }
         return {
         	portfolioId : portfolioId,//组合代码
         	cdate : $('#cdate').val(),//日期
@@ -79,9 +79,9 @@ $(function() {
         // 绑定查询按钮
         $('#ActualTimeAsset001_btn_search').click(function() {
         	var strError = '';
-//            if(!$('#portfolioId').val()){
-//                strError = "请输入"+JoyinUtil.getLabel("ActualTimeAsset001.portfolioId")+"<br>";
-//            }
+            if(!$('#portfolioId').val()){
+                strError = "请输入"+JoyinUtil.getLabel("ActualTimeAsset001.portfolioId")+"<br>";
+            }
             if(!$('#cdate').val()){
                 strError = strError + "请输入"+JoyinUtil.getLabel("ActualTimeAsset001.cdate");
             }
