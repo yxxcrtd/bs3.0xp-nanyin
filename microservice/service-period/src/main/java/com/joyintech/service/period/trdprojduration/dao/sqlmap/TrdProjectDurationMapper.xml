@@ -98,15 +98,15 @@
                   /* 资产名称 */ T10.FINPROD_NAME                  finprodMarketName,
                   /* 剩余本金 */ <!--ROUND(SUM(decode(t8.return_Amt,null,T8.QTY - NVL(T8.prinAmt, 0), t8.return_amt)), 4) qty,-->
                   <!-- 处理 还没有做完交易剩余现金已经为零的情况 20190413 start-->
-                    ROUND(SUM(T8.QTY), 4) qty,
+                    ROUND(SUM(T8.QTY), 2) qty,
                     <!--20190413 end-->
-                  /* 还本金额 */ ROUND(SUM(nvl(T8.prinAmt, 0)), 4) returnAmount,
+                  /* 还本金额 */ ROUND(SUM(nvl(T8.prinAmt, 0)), 2) returnAmount,
                   /* 借款利率 */ fccr.YIELD*100 YIELD,
                   /* 计息开始日 */ to_char(t8.VDATE, 'yyyy-MM-dd')  vDate,
                   /* 计息结束日 */ to_char(t8.MDATE, 'yyyy-MM-dd')  mDate,
                   /* 资金到账日 */ null                             arrivalDate,
                   /* 支付日 */ to_char(t8.PAY_DATE, 'yyyy-MM-dd') interestPayDay,
-                  /* 理论本息总额 */ ROUND(SUM(T8.fpriceAmt), 4)                    THEORY_AMT,
+                  /* 理论本息总额 */ ROUND(SUM(T8.fpriceAmt), 2)                    THEORY_AMT,
                   /* 实收本息总额 */ null                            FPRICE_AMT,
 		          <!-- 到账金额查询 add by renping 20191025 start -->
 		          null arrivalAmt,
@@ -795,18 +795,18 @@
                    t10.FINPROD_NAME,
                   <!--处理剩余本金为0的情况 20190413 start-->
     /* 剩余本金 */   <!--ROUND(SUM(decode(t8.return_Amt,null,T8.QTY - NVL(T8.prinAmt, 0), t8.return_amt) - t8.payedPrinAmt), 4) qty,-->
-                  ROUND(SUM(T8.QTY), 4) qty,
+                  ROUND(SUM(T8.QTY), 2) qty,
                   <!-- 20190413 end-->
                    0 intAdjustment,
      /* 借款利率 */  MAX(NVL(fccr.YIELD, 0))*100 yield,
      /*计息开始日 */ to_char(min(t8.VDATE), 'yyyy-MM-dd')       vDate,
      /*计息结束日 */ to_char(t8.MDATE, 'yyyy-MM-dd')    mDate,
      /*理论支付日 */ to_char(t8.PAY_DATE, 'yyyy-MM-dd') interestPayDay,
-     /*还本金额 */   round(sum(nvl(t8.prinAmt, 0)), 4)           returnAmount,
-     /*理论本息总额*/ round(sum(nvl(t8.fpriceAmt, 0)), 4)          theoryAmt,
-     /*实收本息总额*/ round(sum(nvl(t8.prinAmt, 0) + T8.intAmt), 4)    fpriceAmt,
-     /*理论应收利息*/ round(sum(nvl(T8.intAmt, 0)), 4)              intAmtTheory,
-      round(sum(nvl(t8.prinAmt, 0) + T8.intAmt), 4) arrivalAmt,
+     /*还本金额 */   round(sum(nvl(t8.prinAmt, 0)), 2)           returnAmount,
+     /*理论本息总额*/ round(sum(nvl(t8.fpriceAmt, 0)), 2)          theoryAmt,
+     /*实收本息总额*/ round(sum(nvl(t8.prinAmt, 0) + T8.intAmt), 2)    fpriceAmt,
+     /*理论应收利息*/ round(sum(nvl(T8.intAmt, 0)), 2)              intAmtTheory,
+      round(sum(nvl(t8.prinAmt, 0) + T8.intAmt), 2) arrivalAmt,
       CASE WHEN T8.SEC_ACCT_ID= '999999' THEN 0 ELSE 1 END channel,
             CASE WHEN (SUM(T8.intAmt) IS NULL OR SUM(T8.intAmt)=0)THEN 0 ELSE 1 END intAmtUnpayFlag,/*是否展示累计未付*/
      FP.COLLECT_TYPE<!-- add by zhangweiqi 2019-10-15 添加通道费 -->
