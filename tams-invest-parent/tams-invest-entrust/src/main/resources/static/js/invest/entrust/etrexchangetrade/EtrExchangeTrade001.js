@@ -258,7 +258,7 @@
                 $("#finprodType2_" + currentTab).val(param.finprodType2).trigger('change');
             }*/
             if(param.ps) {
-                $("#ps_" + currentTab).val(param.ps).trigger('change');
+                $("#ps_" + currentTab).textSelect('setValue', param.ps);
             }
             if(param.tradeMarket) {
                 $("#tradeMarket_" + currentTab).val(param.tradeMarket).trigger('change');
