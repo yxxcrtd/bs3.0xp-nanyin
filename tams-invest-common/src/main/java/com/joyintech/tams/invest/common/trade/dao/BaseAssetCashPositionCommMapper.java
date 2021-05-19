@@ -91,4 +91,11 @@ public interface BaseAssetCashPositionCommMapper {
 
     int deleteCashPositionByOrderId(@Param("orderId") String orderId);
 
+    /**
+     * 根据通道id,查询通道的划款方式
+     * @param chlId
+     * @return
+     */
+    String findPayTypeByProductId(String chlId);
+
 }

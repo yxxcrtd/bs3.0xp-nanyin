@@ -353,7 +353,9 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 else if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(etrEntrust.getFinprodType2())
                         && (StringUtil.equals(etrEntrust.getPs(),DictCodeList.交易方向_申购.getValue())||
                         		StringUtil.equals(etrEntrust.getPs(),DictCodeListExt1.交易方向_债转股.getValue()))) {
-                    EtrConBondCashPositionDealService.deal可转债EntrustClose(entrustCommonDto, etrPositionHoldDto);
+                    EtrEntrust etr = entrustCommonDto.getEtrEntrust();
+                    String payType = baseAssetCashPositionCommMapper.findPayTypeByProductId(etr.getChlId());
+                    EtrConBondCashPositionDealService.deal可转债EntrustClose(entrustCommonDto, etrPositionHoldDto,payType);
                 }
                 // add by etliu 20210421 权益类资产相关代码合并 start
                 //权益类资产

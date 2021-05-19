@@ -177,4 +177,11 @@
         from PTL_CASH_POSITION_FLOW
         where ORDER_ID = #{orderId,jdbcType=VARCHAR} AND HODING_TYPE IN ('01', '02')
     </delete>
+
+    <select id="findPayTypeByProductId" parameterType="java.lang.String" resultType="string">
+        select T3.PAY_TYPE from FIN_PRODUCT T
+        LEFT JOIN FIN_PRODUCT_ADD T3 ON T3.FINPROD_ID = T.FINPROD_ID
+        where T.finprod_id=#{chlId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

@@ -241,7 +241,7 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
 
     }
 
-    public static void deal可转债EntrustClose(EntrustCommonDto entrustCommonDto, EtrPositionHoldDto etrPositionHoldDto) {
+    public static void deal可转债EntrustClose(EntrustCommonDto entrustCommonDto, EtrPositionHoldDto etrPositionHoldDto,String payType) {
         EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
         BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
         String ps = etrEntrust.getPs();
@@ -262,6 +262,26 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
             // 可用持仓 关闭日增加剩余委托券面总额/100
             etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum(), etrFinish));
             etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+        }
+
+        if (DictCodeList.交易方向_申购.getValue().equals(ps)) {//可转债申购对指令有影响 add by lijie2 20200825
+            EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDtoFromEtr(entrustCommonDto);
+            etrCashPositionFlowDto.setOffsetId(etrEntrust.getEntrustId());
+            //etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select资金账户(entrustCommonDto.getEtrEntrustAdd().getSecAcctId(),etrEntrust.getCcy()));
+            String acctId = "";
+            //add by huanghao 20201211 新增划款方式的判断，如果时逐笔划款则默认使用托管户，不适用通道账户。
+            if(DictCodeListExt2.划款方式_逐笔划款.getValue().equals(payType)){
+                acctId = gen账号("", etrEntrust.getCcy(),
+                        entrustCommonDto.getEtrEntrustAdd().getSecAcctId(), etrEntrust.getPortfolioId(),
+                        entrustCommonDto.getEtrEntrustAdd().getPurchModle(), etrCashPositionFlowDto);
+            }else{
+                acctId = gen账号(etrEntrust.getChlId(), etrEntrust.getCcy(),
+                        entrustCommonDto.getEtrEntrustAdd().getSecAcctId(), etrEntrust.getPortfolioId(),
+                        entrustCommonDto.getEtrEntrustAdd().getPurchModle(), etrCashPositionFlowDto);
+            }
+            etrCashPositionFlowDto.setAcctId(acctId);
+            etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum().multiply(债券面值), etrFinish));//update by huanghao 指令金额采用指令数额*100算出
+            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
         }
     }
 }
