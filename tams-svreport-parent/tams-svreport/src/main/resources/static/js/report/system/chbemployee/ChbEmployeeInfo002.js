@@ -20,6 +20,50 @@
 
     };
 
+    /**
+     * 画星星
+     */
+    var star = function() {
+        // 加红星星
+        // 查找label
+        var _findPrevLabel = function(element, level) {
+            var $el = element.prev();
+            if (!$el.is('label') && level > 0) {
+                $el = $el.find('label');
+                if ($el.length === 0) {
+                    return _findPrevLabel(element.parent(), level - 1);
+                }
+            }
+            return $el;
+        };
+
+        // 非查看模式
+        if (typeof pageModel !== 'undefined'
+            && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
+            $('.must').each(function() {
+                $(this).remove();
+            })
+            $('*[required]').each(function() {
+                var $el = $(this);
+                var $target = _findPrevLabel($el, 3);
+                if ($target.find('> .must').length === 0) {
+                    $target.append($('<i class="must">*</i>'));
+                }
+            });
+        }
+    }
+
+    $("#belongsBank").change(function () {
+        if ($("#belongsBank").val() == '02'
+            || $("#belongsBank").val() == '03'
+            || $("#belongsBank").val() == '04') {
+            $('#companyName').attr("required", true);
+            star();
+        } else {
+            $('#companyName').removeAttr("required");
+            star();
+        }
+    })
 
     $(function() {
         init();
@@ -56,13 +100,25 @@
             object.regEmployeeType=$('#regEmployeeType').val()==null?null:$('#regEmployeeType').val().join();
             object.remark = $("#remark").val();
             object.type =$("#type").val();
+
+            var checkFlag = true;
             if(object.identifyNumber==''){
-                alert("身份证号码不能为空");
+                Joyin.error("身份证号码不能为空");
+                checkFlag = false;
             }
             if(object.employeeType==''){
-                alert("从业人员类型不能为空");
+                Joyin.error("从业人员类型不能为空");
+                checkFlag = false;
             }
-            if(object.identifyNumber!='' && object.employeeType!=''){
+            if ($("#belongsBank").val() == '02'
+                || $("#belongsBank").val() == '03'
+                || $("#belongsBank").val() == '04') {
+                if ($("#companyName").val() == '') {
+                    Joyin.error("具体单位名称不能为空");
+                    checkFlag = false;
+                }
+            }
+            if(checkFlag){
                 Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo002/check', object, function(result) {
                     if(result){
                         Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo002/save',object,function(result){
