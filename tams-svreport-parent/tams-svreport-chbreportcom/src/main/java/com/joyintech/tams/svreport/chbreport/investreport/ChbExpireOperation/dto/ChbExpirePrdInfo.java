@@ -42,6 +42,11 @@ public class ChbExpirePrdInfo extends BaseEntity {
     private String realEndDate;
 
     /**
+     * 系统平台日
+     */
+    private String sysPlatformDate;
+
+    /**
      * 固定管理费率
      */
     private String investFeeRate;
@@ -205,5 +210,13 @@ public class ChbExpirePrdInfo extends BaseEntity {
 
     public void setRealEndDate(String realEndDate) {
         this.realEndDate = realEndDate;
+    }
+
+    public String getSysPlatformDate() {
+        return sysPlatformDate;
+    }
+
+    public void setSysPlatformDate(String sysPlatformDate) {
+        this.sysPlatformDate = sysPlatformDate;
     }
 }
