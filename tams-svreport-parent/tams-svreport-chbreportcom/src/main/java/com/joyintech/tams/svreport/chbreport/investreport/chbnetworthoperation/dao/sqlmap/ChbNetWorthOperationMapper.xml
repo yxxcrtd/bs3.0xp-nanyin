@@ -4,23 +4,23 @@
     <!--获取净值披露报告数据-->
     <select id="getNetWorthData" resultType="com.joyintech.tams.svreport.chbreport.investreport.chbnetworthoperation.dto.ChbNetWorthInfoDto">
         select
-        b.PROD_NAME as prodName,/** 产品名称**/
-        b.PROD_ID as prodId,/** 产品代码**/
-        DATE_FORMAT(i.VALUE_DATE, '%Y-%m-%d') as endDate, /** 净值日期*/
-        i.UNIT_VALUE   as prodValue,  /** 单位净值*/
-        i.UNIT_VALUE_T as unitValueTotal, /** 累计净值**/
-        b.CUSTOMER_TYPE as customerType,/** 客户类型**/
-        '-' as netAssetValue/** 资产净值*/
+            b.PROD_NAME as prodName,/** 产品名称**/
+            b.PROD_ID as prodId,/** 产品代码**/
+            DATE_FORMAT(i.VALUE_DATE, '%Y-%m-%d') as endDate, /** 净值日期*/
+            i.UNIT_VALUE   as prodValue,  /** 单位净值*/
+            i.UNIT_VALUE_T as unitValueTotal, /** 累计净值**/
+            b.CUSTOMER_TYPE as customerType,/** 客户类型**/
+            '-' as netAssetValue/** 资产净值*/
         from
-        CHB_PRD_BASEINFO b
-        inner join REP_PROD_INDEX i on i.PROD_ID = b.PROD_ID
-        left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR}
-        and l.`STATUS` = 'E'
-        and l.PRODID = b.PROD_ID
-        and DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
-        and b.PRODTYPE = 'N'
+            CHB_PRD_BASEINFO b
+            inner join REP_PROD_INDEX i on i.PROD_ID = b.PROD_ID
+            left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR}
+            and l.`STATUS` = 'E'
+            and l.PRODID = b.PROD_ID
+            and DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+            and b.PRODTYPE = 'N'
         where
-        b.`STATUS` = 'E'
+            b.`STATUS` = 'E'
         <if test="prodId !=null and prodId != ''">
             and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
         </if>
@@ -30,5 +30,6 @@
         <if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
             and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
         </if>
+        order by i.VALUE_DATE desc
     </select>
 </mapper>
