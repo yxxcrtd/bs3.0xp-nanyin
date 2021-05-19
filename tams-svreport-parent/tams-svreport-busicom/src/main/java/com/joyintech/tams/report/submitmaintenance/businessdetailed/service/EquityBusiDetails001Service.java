@@ -1566,7 +1566,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     if (!allProdIdMap.containsKey(account)) {
                         message.add(this.getMessage("CHB_EQUITY_CHECKACCOUNT"));
                     }
-                    else if (!allProdIdMap.get(account).startsWith(registBankCode)) {
+                    else if (StringUtil.isNotEmpty(allProdIdMap) && StringUtil.isNotEmpty(allProdIdMap.get(account)) && !allProdIdMap.get(account).startsWith(registBankCode)) {
                         message.add(this.getMessage("CHB_EQUITY_CHECKREGCODEMATCH"));
                     }
                     else {
