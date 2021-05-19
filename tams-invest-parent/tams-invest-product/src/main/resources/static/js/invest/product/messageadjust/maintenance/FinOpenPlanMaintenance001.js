@@ -284,6 +284,7 @@ $(function() {
     	object.dealMode = $("#dealMode").val();
     	object.profitType = PROFIT_TYPE;
     	object.vdate = vdate;
+        object.openType = $("#scheduletype").val();
     	$.each(object.selectedDto, function(i, v) {  
     	    if(v.cashId == null || v.cashId == ''){
     	    	v.cashId = object.cashId;

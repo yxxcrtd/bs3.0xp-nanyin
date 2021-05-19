@@ -108,6 +108,13 @@ public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaint
         List<FinOpenPlanMaintenanceDto> listDto = dto.getSelectedDto();
         List<FinOpenPlan> finOpenPlanList = new ArrayList<FinOpenPlan>();
         if(listDto != null && listDto.size()>0){
+            String openType = new String();
+            for (FinOpenPlanMaintenanceDto finOpenPlanMaintenanceDto : listDto) {
+                if(StringUtil.isNotEmpty(finOpenPlanMaintenanceDto.getOpenType())){
+                    openType = finOpenPlanMaintenanceDto.getOpenType();
+                    break;
+                }
+            }
             for(FinOpenPlanMaintenanceDto entity:listDto){
                 entity.setFinprodId(dto.getFinprodId());
                 //如果数据为新添加的，那么未调整的日期同新建日期
@@ -127,7 +134,7 @@ public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaint
                     entity.setBranch(dto.getBranch());
                 }
                 if(entity.getOpenType() == null){
-                    entity.setOpenType(DictCodeList.申赎开放类型_申赎开放.getValue());
+                    entity.setOpenType(openType);
                 }
                 if(entity.getOpenStatus() == null){
                     entity.setOpenStatus(DictCodeList.开放状态_开放.getValue());

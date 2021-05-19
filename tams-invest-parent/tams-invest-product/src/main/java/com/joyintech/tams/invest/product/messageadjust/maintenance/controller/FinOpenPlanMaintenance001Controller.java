@@ -90,6 +90,7 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
             String finprodMarketId = finOpenPlanMaintenanceService.getFinprodMarketIdByFinprodId(dto.getFinprodId());
             dto.setFinprodMarketId(finprodMarketId);
             model.addAttribute(GlobalConstant.ENTITY, dto);
+            model.addAttribute("scheduletype", dto.getOpenType());
         }
         // 画面元素是否显示
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
