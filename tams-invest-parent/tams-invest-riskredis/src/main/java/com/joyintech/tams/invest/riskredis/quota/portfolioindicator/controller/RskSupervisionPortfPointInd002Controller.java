@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.constant.DictCodeList;
@@ -142,7 +143,7 @@ public class RskSupervisionPortfPointInd002Controller extends BaseController {
             ProcessMark processMark=mstWorkflowCommonService.getDataEntityFromProcessMark(param);
             if (StringUtil.isNotEmpty(processMark)&&StringUtil.isNotEmpty(processMark.getBusinessData())){
                 try {
-                    RskSupervisionIndicator002Dto havRsk002Dto =  JsonUtils.OBJECT_MAPPER.readValue(processMark.getBusinessData(),RskSupervisionIndicator002Dto.class);
+                    RskSupervisionIndicator002Dto havRsk002Dto =  JsonUtils.OBJECT_MAPPER.readValue(JsonSanitizer.sanitize(processMark.getBusinessData()),RskSupervisionIndicator002Dto.class);
                     for(RskPortfolioIndicatorDto item:dto.getSelectedPortfIndItem()){
                         List<RskPortfolioIndicatorDto> filterList=havRsk002Dto.getSelectedPortfIndItem().stream().filter(subItem->subItem.getPortfolioId().equals(item.getPortfolioId())).collect(Collectors.toList());
                         if(filterList.size()>0){

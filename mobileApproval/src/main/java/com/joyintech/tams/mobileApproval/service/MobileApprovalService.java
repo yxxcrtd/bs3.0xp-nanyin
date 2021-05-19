@@ -2,6 +2,7 @@ package com.joyintech.tams.mobileApproval.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.DictCodeList;
@@ -1019,7 +1020,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
             ProcessMark businessEntity = getBusinessObjectForUpdate(flowEntity, businessService);
             try{
                 Object a = JsonUtils.OBJECT_MAPPER.readValue(
-                    businessEntity.getBusinessData(), GenericsUtils.getSuperClassGenricType(
+                        JsonSanitizer.sanitize(businessEntity.getBusinessData()), GenericsUtils.getSuperClassGenricType(
                         ProxyUtil.getTargetClass(businessService.getClass())));
                 WorkflowEntity entity = (WorkflowEntity)a;
                 //未获取到工作流id
@@ -1037,7 +1038,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
                 }
 //                if (!flag) {
                     ProcessMark processMark = WorkflowContext.getBusinessEntity(flowEntity);
-                    Object oldObject = JsonUtils.OBJECT_MAPPER.readValue(processMark.getBusinessData(),
+                    Object oldObject = JsonUtils.OBJECT_MAPPER.readValue(JsonSanitizer.sanitize(processMark.getBusinessData()),
                         GenericsUtils.getSuperClassGenricType(
                             ProxyUtil.getTargetClass(businessService.getClass())));
                     WorkflowEntity entityOld = (WorkflowEntity)oldObject;
@@ -1094,7 +1095,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
                     // request参数转为业务对象
     	ProcessMark make =  WorkflowContext.getProcessMarkService().getBusinessInfo(flowEntity.getWorkflowId());
                     WorkflowEntity newEntity = (WorkflowEntity)JsonUtils.OBJECT_MAPPER.readValue(
-                    make.getBusinessData(), businessEntityClass);
+                            JsonSanitizer.sanitize(make.getBusinessData()), businessEntityClass);
                     if(extendProp) {
                         BeanUtil.setProperty(newEntity, GlobalConstant.STATUS,
                         		make.getStatus());

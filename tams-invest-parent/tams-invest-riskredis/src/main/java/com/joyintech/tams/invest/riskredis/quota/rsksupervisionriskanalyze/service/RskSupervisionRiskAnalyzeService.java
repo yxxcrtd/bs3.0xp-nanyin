@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.riskredis.quota.rsksupervisionriskanalyze.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
@@ -226,7 +227,7 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
     	}
     	else{
     		ObjectMapper mapper = new ObjectMapper();
-    		Map<?, ?>  detailJson= mapper.readValue(foulValue, Map.class);
+    		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(foulValue), Map.class);
         	Map<?, ?> vThreshold1Map = (Map<?, ?>)detailJson.get("threshold_1");
         	String curunit=valueConvertUnit((String)vThreshold1Map.get("unit"));
         	if("PERCENT".equals((String)vThreshold1Map.get("unit"))){
@@ -248,7 +249,7 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
     public String transferWarnFoul(String value,String indCellType) throws Exception{
     	String wg=StringUtil.EMPTY;
     	ObjectMapper mapper = new ObjectMapper();
-		Map<?, ?>  detailJson= mapper.readValue(value, Map.class);
+		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(value), Map.class);
 	
     	Map<?, ?> vThreshold1Map = (Map<?, ?>)detailJson.get("threshold_1");
 		if (StringUtil.isNotEmpty(value)) {

@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.riskredis.quota.portfolioindicator.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.json.JsonSanitizer;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.dto.RskPortfolioIndicator002Dto;
@@ -125,7 +126,7 @@ public class RskSupervisionPortfPoint004Controller extends BaseController {
                 && StringUtil.isNotEmpty(processMark.getBusinessData())) {
                 try {
                     RskPortfolioIndicator002Dto havRsk002Dto = JsonUtils.OBJECT_MAPPER.readValue(
-                        processMark.getBusinessData(), RskPortfolioIndicator002Dto.class);
+                            JsonSanitizer.sanitize(processMark.getBusinessData()), RskPortfolioIndicator002Dto.class);
                     if (havRsk002Dto.getIndId().equals(dto.getIndId())) {
                         resultList.add(new ValidMessage(this.getMessage("COMMON_E_0012",
                             dto.getPortfolioName() + GlobalConstant.COLON + dto.getIndName())));
