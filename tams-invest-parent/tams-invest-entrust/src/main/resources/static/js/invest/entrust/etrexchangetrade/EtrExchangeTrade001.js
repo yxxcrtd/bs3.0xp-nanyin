@@ -993,7 +993,7 @@
             var declaType = $("#declaType_" + currentTab).val();
             // if  画面.价格模式 = 市价指令 or 点击成交成报 or 收盘价固定价格申报 or 日均价固定价格申报
             if(priceModel == PRICE_MODEL_PRM03 || declaType == DECLA_TYPE_PRM08
-                || declaType == DECLA_TYPE_PRM10 || declaType == DECLA_TYPE_PRM11) {
+                 || declaType == DECLA_TYPE_PRM11) {
                 $("#price_" + currentTab).attr("disabled", true);
             }
             else {
