@@ -44,8 +44,8 @@
 				launchUser,
 				finprodId,
 				finprodName,
-				portfolioId,
-				portfolioName,
+<!--				portfolioId,-->
+<!--				portfolioName,-->
 				tradeId,
 				totleTradeId,
 				to_number(tradeAmt) tradeAmt,
@@ -57,8 +57,8 @@
 					T.create_user as launchUser,
 					'' finprodId,
 					'' finprodName,
-					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"portfolioId":"[^"]+"',1,1)),'"portfolioId":"',''),'"','') portfolioId,
-					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"portfolioName":"[^"]+"',1,1)),'"portfolioName":"',''),'"','') portfolioName,
+<!--					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"portfolioId":"[^"]+"',1,1)),'"portfolioId":"',''),'"','') portfolioId,-->
+<!--					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"portfolioName":"[^"]+"',1,1)),'"portfolioName":"',''),'"','') portfolioName,-->
 					t.trade_id tradeId,
 					'' totleTradeId,
 					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"settleAmt":"[^"]+"',1,1)),'"settleAmt":"',''),'"','') tradeAmt,
