@@ -106,7 +106,7 @@ create table FIN_PRODUCT_OTH_CODE
   create_time         TIMESTAMP(6) not null,
   update_user         VARCHAR2(20) not null,
   update_time         TIMESTAMP(6) not null,
-  constraint PK_FIN_PRODUCT_OTH_CODE primary key (FINPROD_ID, BRANCH )
+  constraint PK_FIN_PRODUCT_OTH_CODE primary key (FINPROD_ID, BRANCH,OTH_TYPE)
 );
 -- Add comments to the table 
 comment on table FIN_PRODUCT_OTH_CODE
