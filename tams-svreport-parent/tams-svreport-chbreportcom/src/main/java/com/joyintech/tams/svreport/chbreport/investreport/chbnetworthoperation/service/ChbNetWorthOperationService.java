@@ -74,7 +74,7 @@ public class ChbNetWorthOperationService extends CommonExportService<ChbNetWorth
             String depositfilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String fileName = ChbInvestReportUtil.generateFileNameForReport(DictCodeListExt3.中债披露报告_产品净值披露.getValue(),
                     chbNetWorthInfoDto.getProdName(), chbNetWorthInfoDto.getProdId(), chbNetWorthInfoDto.getCustomerType(),
-                    chbNetWorthInfoDto.getEndDate());
+                    param.get("endDate").toString());
             String exceltemplate = "chbreport/chbnetworthoperation/ChbNetWorthOperationMapper";
 
             //设置文件名称和路径

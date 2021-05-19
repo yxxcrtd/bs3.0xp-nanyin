@@ -34,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -157,6 +158,8 @@ public class ChbInvestReportCommonService extends BaseService {
      */
     public Page<ReportGenerate001Dto> queryDetailData(Map<String, Object> param) {
         Page<ReportGenerate001Dto> page = null;
+        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
+        param.put("revealDate",sysDate);
         Object repId = param.get("repId");
         if (param.get(GlobalConstant.PARAM_PAGE) != null
                 && param.get(GlobalConstant.PARAM_LENGTH) != null) {

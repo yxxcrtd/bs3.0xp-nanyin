@@ -1403,7 +1403,7 @@ public class MonthReportAssetService {
 				if(chbAssetInfo.getPlanEdate() != null) {
 					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getPlanEdate()));
 				}
-				else if(supAssetInfo.getPlanEdate() != null) {
+				else if(null != supAssetInfo && supAssetInfo.getPlanEdate() != null) {
 					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), supAssetInfo.getPlanEdate()));
 				}
 			}
@@ -1411,7 +1411,7 @@ public class MonthReportAssetService {
 				if(chbAssetInfo.getMdate() != null) {
 					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getMdate()));
 				}
-				else if(supAssetInfo.getMdate() != null) {
+				else if(null != supAssetInfo && supAssetInfo.getMdate() != null) {
 					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), supAssetInfo.getMdate()));
 				}
 			}
@@ -1425,7 +1425,7 @@ public class MonthReportAssetService {
 				else {
 					// 获取产品的到期日（封闭式产品：产品到期日；定期开放式产品：下一开放日，高频开放式产品：直接默认期限为1）
 					ChbPrdBaseinfo chbPrdBaseinfo = chbMonthAssetPositionMapper.selectChbPrdBaseinfoByProdId(position.getProdId(), report.getEnddate());
-					if(chbPrdBaseinfo.getMdate() == null) {
+					if(chbPrdBaseinfo == null || chbPrdBaseinfo.getMdate() == null) {
 						terms = BigDecimal.ONE;
 					}
 					else {

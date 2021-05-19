@@ -28,6 +28,7 @@ $(function () {
 			//点击时刷新右侧条件
 			repId = data.id;
 			$('#endDateDiv').hide();
+			$('#prodIdDiv').hide();
 			$('#reportTypeDiv').hide();
 			$('#yearDiv').hide();
 			$('#emptyDiv').hide();
@@ -39,6 +40,8 @@ $(function () {
 			if(repId == CHB_DISCLOSURE_REPORT_01) {
 				$('#endDateDiv').show();
 				$("#endDateLabel").html("成立日期<i class=\"must\">*</i>");
+                $('#prodIdDiv').show();
+                $("#prodIdLabel").html("产品代码");
 				$('#emptyDiv').show();
 				$('#detailTableDiv').show();
 				initDetailTable();
@@ -48,6 +51,8 @@ $(function () {
 			if(repId == CHB_DISCLOSURE_REPORT_02) {
 				$('#endDateDiv').show();
 				$("#endDateLabel").html("变动日<i class=\"must\">*</i>");
+                $('#prodIdDiv').show();
+                $("#prodIdLabel").html("产品代码");
 				$('#emptyDiv').show();
 				$('#detailTableDiv').show();
 				initDetailTable();
@@ -57,6 +62,8 @@ $(function () {
 			if(repId == CHB_DISCLOSURE_REPORT_03) {
 				$('#endDateDiv').show();
 				$("#endDateLabel").html("到期日<i class=\"must\">*</i>");
+                $('#prodIdDiv').show();
+                $("#prodIdLabel").html("产品代码");
 				$('#emptyDiv').show();
 				$('#detailTableDiv').show();
 				initDetailTable();
@@ -64,6 +71,8 @@ $(function () {
 			}
 			//定期公告
 			if(repId == CHB_DISCLOSURE_REPORT_04) {
+                $('#prodIdDiv').show();
+                $("#prodIdLabel").html("产品代码");
 				$('#reportTypeDiv').show();
 				$('#yearDiv').show();
 				$('#dqTipsDiv').show();
@@ -72,6 +81,8 @@ $(function () {
 			if(repId == CHB_DISCLOSURE_REPORT_05){
 				$('#endDateDiv').show();
 				$("#endDateLabel").html("净值日期<i class=\"must\">*</i>");
+				$('#prodIdDiv').show();
+				$("#prodIdLabel").html("产品代码<i class=\"must\">*</i>");
 				$('#emptyDiv').show();
 				$('#detailTableDiv').show();
 				initDetailTable();

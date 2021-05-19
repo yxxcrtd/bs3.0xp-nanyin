@@ -123,6 +123,7 @@ public class ChbReportGenerate001Controller extends BaseController {
             Map<String, Object> param = new HashMap<>();
             param.put("repId", repId);
             param.put("prodId", this.getParam("prodId"));
+            param.put("revealDate", this.getParam("revealDate"));
             param.put("endDate", chbInvestReportCommonService.getDqEndDate(reportType, year));
             param.put("startDate", chbInvestReportCommonService.getDqStartDate(reportType, year));
             param.put("reportType", reportType);
@@ -158,6 +159,7 @@ public class ChbReportGenerate001Controller extends BaseController {
                 param.put("prodId", item.getProdId());
                 param.put("endDate", item.getEndDate());
                 param.put("startDate", item.getStartDate());
+                param.put("revealDate", item.getRevealDate());
                 param.put("prodName", item.getProdName());
                 param.put("prodIdName", item.getProdIdName());
                 boolean flag = chbInvestReportCommonService.createReportDoc(param, isConfirm, isReveal);
