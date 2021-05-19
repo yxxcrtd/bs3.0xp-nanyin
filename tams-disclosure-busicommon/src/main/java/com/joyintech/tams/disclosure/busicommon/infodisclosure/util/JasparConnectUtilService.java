@@ -185,8 +185,6 @@ public class JasparConnectUtilService {
 	 * @param strUrl 连接url
 	 * @param fileName 需要下载的文件名
 	 * @param fileType 下载文件类型
-	 * @param repId 报表id
-	 * @param prodId 产品id
 	 * @return
 	 * @throws Exception
 	 */
@@ -337,8 +335,6 @@ public class JasparConnectUtilService {
     /**
 	 * 连接Jaspar并将url上的连接下载到本地固定位置
 	 * @param strUrl 连接url
-	 * @param fileName 需要下载的文件名
-	 * @param fileType 下载文件类型
 	 * @return
 	 * @throws Exception
 	 */
@@ -445,8 +441,6 @@ public class JasparConnectUtilService {
      * @param serverUrl 服务器url
      * @param serverUser 用户
      * @param serverPwd  密码
-     * @param infoDisclosureGenAndSendEntity 批处理配置
-     * @param check 与报表服务器通信时是否发送完整文件校验字段
      * @return
      */
     public String getAllHtmlUrl(String serverUrl, String serverUser, String serverPwd, String  path, String uri, RepReveal repReveal){
@@ -474,10 +468,10 @@ public class JasparConnectUtilService {
      */
     public String getReportsUrl(String serverUrl, String serverUser, String serverPwd, String  path){
     	String url= serverUrl + "/rest_v2/resources";
-    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
-    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd
-    			+ReportGlobalConstant.AMPERS_AND +"folderUri="+path+ReportGlobalConstant.AMPERS_AND +"type=reportUnit";
-    	url = url+ paramStr;
+//    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
+//    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd
+//    			+ReportGlobalConstant.AMPERS_AND +"folderUri="+path+ReportGlobalConstant.AMPERS_AND +"type=reportUnit";
+//    	url = url+ paramStr;
     	return url;
     }
     /**
@@ -490,9 +484,9 @@ public class JasparConnectUtilService {
      */
     public String getReportsInputsUrl(String serverUrl, String serverUser, String serverPwd, String  path){
     	String url= serverUrl + "/rest_v2/reports"+path+"/inputControls";
-    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
-    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd;
-    	url = url+ paramStr;
+//    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + serverUser +
+//    			ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + serverPwd;
+//    	url = url+ paramStr;
     	return url;
     }
 }
