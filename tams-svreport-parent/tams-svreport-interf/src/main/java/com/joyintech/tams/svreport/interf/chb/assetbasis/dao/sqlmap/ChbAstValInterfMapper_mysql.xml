@@ -11,8 +11,8 @@
 		#{valDate,jdbcType=TIMESTAMP}, #{unitValNet,jdbcType=DECIMAL}, #{unitValTotal,jdbcType=DECIMAL},
 		#{remark,jdbcType=VARCHAR}, #{datasource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
 		#{workflowId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
-		#{createUser,jdbcType=VARCHAR}, now(), #{updateUser,jdbcType=VARCHAR},
-		now()
+		#{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{updateUser,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=DATE}
 		)
 	</insert>
 

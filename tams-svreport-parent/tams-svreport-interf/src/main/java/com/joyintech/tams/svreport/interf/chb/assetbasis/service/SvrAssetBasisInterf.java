@@ -324,6 +324,8 @@ public class SvrAssetBasisInterf extends BaseService{
 				info.setIssuePartyId(CommonUtil.selectBankCode());
 				info.setCreateUser("system");
 				info.setUpdateUser("system");
+				info.setCreateTime(date);
+				info.setUpdateTime(date);
 				info.setStatus("E");
 
 				batchMapper.insertInfo(info);
