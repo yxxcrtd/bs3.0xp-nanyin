@@ -10,6 +10,7 @@
  
 package com.joyintech.service.portfolio.actualtimeasset.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -57,5 +58,26 @@ public interface ActualTimeAssetMapper {
      * @since 1.0
      */
     List<SelectOptionDto> getAssetsInfo(Map<String, Object> map);
+    
+    /**
+     * 获取实际持仓列表  获取实际持仓最大的
+     * @param map
+     * @return
+     */
+    ActualTimeAssetDto getTradePosition(Map<String,Object> map);
+    
+    /**
+     * 获取指令当日持仓汇总
+     * @param map
+     * @return
+     */
+    BigDecimal getEtrAmount(Map<String,Object> map);
+    
+    /**
+     * 获取交易当日持仓汇总
+     * @param map
+     * @return
+     */
+    BigDecimal getTradeAmount(Map<String,Object> map);
     
 }

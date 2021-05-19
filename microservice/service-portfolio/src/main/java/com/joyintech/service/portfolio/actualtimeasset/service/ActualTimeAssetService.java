@@ -1,5 +1,6 @@
 package com.joyintech.service.portfolio.actualtimeasset.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -106,6 +107,30 @@ public class ActualTimeAssetService extends BaseService<ActualTimeAssetDto> {
         pageParam.put("noShowType8List", noShowType8List);
         
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_通道.getValue());
-        return super.queryForPage(page, length, () -> actualTimeAssetMapper.findPage(pageParam));
+        pageParam.put("finprodType2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        //update zhangweiqi SNSTZJY-2370 按照实际持仓最大的优先扣减指令持仓  2020-12-15 begin
+        Page<ActualTimeAssetDto> pageList = super.queryForPage(page, length, () -> actualTimeAssetMapper.findPage(pageParam));
+		for (ActualTimeAssetDto dto : pageList.getRoot()) {
+			if (StringUtil.equals(dto.getType8(), DictCodeList.平安资产类型_债券.getValue())
+					) {
+				pageParam.put("finprodId", dto.getFinprodId());
+				pageParam.put("etrHodingTypeList", Arrays.asList(DictCodeListExt1.持仓类型_委托指令可用.getValue()));
+				//pageParam.put("secAcctId",dto.getSecAcctId());
+				ActualTimeAssetDto maxPositionDto = actualTimeAssetMapper.getTradePosition(pageParam);
+				if (StringUtil.equals(dto.getSecAcctId(), maxPositionDto.getSecAcctId())) {
+					BigDecimal etrAmount = actualTimeAssetMapper.getEtrAmount(pageParam);
+					BigDecimal tradeAmount = actualTimeAssetMapper.getTradeAmount(pageParam);
+					etrAmount = etrAmount.multiply(new BigDecimal(100));
+					tradeAmount = tradeAmount.multiply(new BigDecimal(100));
+					dto.setInstructionsAmount(dto.getActualPositionAmount().add(etrAmount.subtract(tradeAmount)));// 差额出在实际持仓最大的上
+
+				} else {
+					dto.setInstructionsAmount(dto.getActualPositionAmount());
+				}
+			}
+		}
+        
+        return pageList;
+      //update zhangweiqi SNSTZJY-2370 按照实际持仓最大的优先扣减指令持仓  2020-12-15 end
     }
 }
