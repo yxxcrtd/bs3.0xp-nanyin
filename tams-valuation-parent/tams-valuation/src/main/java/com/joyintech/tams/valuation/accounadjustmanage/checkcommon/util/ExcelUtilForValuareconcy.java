@@ -351,13 +351,17 @@ public class ExcelUtilForValuareconcy {
             }
             finally {
                 try {
-                    inputStream.close();
+                    if (inputStream != null){
+                        inputStream.close();
+                    }
                 }
                 catch (IOException e) {
                     logger.error("", e);
                 }
                 try {
-                    fs.close();
+                    if (fs != null){
+                        fs.close();
+                    }
                 }
                 catch (IOException e) {
                     logger.error("", e);
@@ -375,7 +379,9 @@ public class ExcelUtilForValuareconcy {
             }
             finally {
                 try {
-                    inputStream.close();
+                    if (inputStream != null){
+                        inputStream.close();
+                    }
                 }
                 catch (IOException e) {
                     logger.error("", e);
@@ -387,6 +393,10 @@ public class ExcelUtilForValuareconcy {
                 inputStream.close();
             }  catch (IOException e) {
                 logger.error("", e);
+            }finally {
+                if (inputStream !=null){
+                    inputStream.close();
+                }
             }
             throw new Exception("不是一个有效的Excel文件");
         }

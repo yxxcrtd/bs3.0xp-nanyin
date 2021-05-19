@@ -167,7 +167,9 @@ public class TrdFundDuration002Controller extends BaseController {
         }
         model.addAttribute("acctNoList", JsonUtils.object2Json(periodCommonService.queryAcctList(null)));
         model.addAttribute("type",type);
-        model.addAttribute("busiCode", dto.getTotleTradeId());
+        if (dto != null){
+            model.addAttribute("busiCode", dto.getTotleTradeId());
+        }
 //        model.addAttribute("entity_bussTrdTransferOrderDto", JsonUtils.object2Json(CollectionUtils.isNotEmpty(dto.getBussTrdTransferOrder())?dto.getBussTrdTransferOrder().get(0):""));
         model.addAttribute("trader",trader);
 //      画面的业务类型，用于判断画面处于何种模式

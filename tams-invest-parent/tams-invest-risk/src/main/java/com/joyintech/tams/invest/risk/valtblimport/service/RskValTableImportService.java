@@ -516,7 +516,6 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * 底层向上汇总--共通
     * <功能详细描述>
     * @param valList
-    * @param vtaccountMap
     * @param vtcountSubList
     * @param level 03(三级) 02(二级) 01(一级)
     * @return
@@ -1037,7 +1036,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                }else{
                    cellNum = null;
                }
-               if(cellNum != null) {
+               if(cellNum != null && sumNameCodeEntry != null) {
                    if(ValDataType.PERCENT == sumNameCodeEntry.getNextColType()) {
                        cellNum = (BigDecimal.valueOf(cellNum/100)).setScale(6,   BigDecimal.ROUND_HALF_UP).doubleValue();
                    }

@@ -166,7 +166,7 @@ public class PortfolioHdrMsg extends MsgExecuteService{
 			portfolioHdrDao.saveEntity(newPort);
 			msgcontainer.setEntityID(newPort.getId());
 			msgcontainer.setEntityObj(newPort);
-		}else if(operation.equalsIgnoreCase(update)){
+		}else if(oldphdr != null && operation.equalsIgnoreCase(update)){
 			
 			BeanUtils.copyProperties(newPort, oldphdr,new String[]{"id"});
 			portfolioHdrDao.updateEntity(oldphdr);
