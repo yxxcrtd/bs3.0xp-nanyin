@@ -1,5 +1,6 @@
 package com.joyintech.tams.report.system.chbemployee.service;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -86,7 +87,10 @@ public class ChbEmployeeInfo001Service extends CommonExportService<ChbEmployeeIn
 
     public List<ChbEmployeeInfo> queryReportList(Map<String, Object> param) {
         String keys = (String)param.get("keys");
-        String[] strs = keys.split(" ,");
+        String[] strs =  ArrayUtil.newArray(String.class, 0) ;
+        if (StringUtil.isNotEmpty(keys)) {
+            strs = keys.split(" ,");
+        }
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
         List<ChbEmployeeInfo> dtoList=new ArrayList<>();
         for(int i=0;i<strs.length;i++){
