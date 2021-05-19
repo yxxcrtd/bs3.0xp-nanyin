@@ -613,6 +613,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 金融产品交易信息DTO.金融产品交易trdTempDto -> 金融产品交易表
         TrdProductDeal trdProductDeal = new TrdProductDeal();
         BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, trdTempDto.getTrdProductTempDeal());
+        if(StringUtil.equals(trdProductDeal.getPs(),DictCodeListExt3.交易方向_逆回购.getValue()) ||StringUtil.equals(trdProductDeal.getPs(),DictCodeListExt3.交易方向_正回购.getValue()) ) {
+            trdProductDeal.setPs(DictCodeList.交易方向_买入.getValue());
+        }
 
         // 金融产品交易信息DTO.金融产品交易附属表trdTempDto -> 金融产品交易附属表
         TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
