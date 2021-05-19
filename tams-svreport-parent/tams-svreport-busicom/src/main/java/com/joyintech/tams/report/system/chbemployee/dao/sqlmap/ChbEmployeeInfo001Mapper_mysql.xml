@@ -46,7 +46,9 @@
 	<update id="updateChbEmployeeInfo" parameterType="java.util.List" >
 		UPDATE CHB_EMPLOYEE_INFO
 		set
-		STATUS = 'D'
+		STATUS = 'D',
+		UPDATE_USER =#{updateUser,jdbcType=VARCHAR},
+		UPDATE_TIME=NOW()
 		where
 		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
 			IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}

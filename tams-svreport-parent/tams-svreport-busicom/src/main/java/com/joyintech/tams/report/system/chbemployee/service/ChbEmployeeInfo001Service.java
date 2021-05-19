@@ -4,6 +4,7 @@ import cn.hutool.core.util.ArrayUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbEmployeeInfo;
@@ -73,6 +74,9 @@ public class ChbEmployeeInfo001Service extends CommonExportService<ChbEmployeeIn
         });
     }
     public void updateChbEmployeeInfo(List<ChbEmployeeInfo> dtoList) {
+        for (ChbEmployeeInfo chbEmployeeInfo : dtoList) {
+            chbEmployeeInfo.setUpdateUser(LoginUserUtil.getUserName());
+        }
         chbEmployeeInfo001Mapper.updateChbEmployeeInfo(dtoList);
         return;
     }
