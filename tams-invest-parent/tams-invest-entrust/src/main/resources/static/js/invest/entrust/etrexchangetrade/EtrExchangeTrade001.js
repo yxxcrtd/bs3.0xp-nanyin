@@ -218,7 +218,13 @@
             $this.val(obj.chosen);
         if (obj.disabled === true || obj.disabled === false)
             $this.attr('disabled', obj.disabled);
-        $this.trigger("chosen:updated").trigger('change');
+        if(obj.isNotTrigger) {
+            $this.trigger("chosen:updated").trigger('change',obj.isNotTrigger);
+        }
+        else {
+            $this.trigger("chosen:updated").trigger('change');
+        }
+
         if (obj.callback)
             obj.callback($this);
         return $this;
@@ -261,10 +267,10 @@
                 $("#dataSource_" + currentTab).val(param.dataSource).trigger('change');
             }
             if(param.priceModel) {
-                $("#priceModel_" + currentTab).val(param.priceModel).trigger('change');
+                $("#priceModel_" + currentTab).val(param.priceModel).trigger('change',true);
             }
             if(param.declaType) {
-                $("#declaType_" + currentTab).val(param.declaType).trigger('change');
+                $("#declaType_" + currentTab).val(param.declaType).trigger('change',true);
             }
             if(param.calMode) {
                 //$("#declaType_" + currentTab).val(param.calMode).trigger('change');
@@ -353,8 +359,8 @@
         }
         $("#secId_" + currentTab).val("").trigger('change');
         $("#ps_" + currentTab).val('').trigger('change');
-        $("#priceModel_" + currentTab).val('').trigger('change');
-        $("#declaType_" + currentTab).val('').trigger('change');
+        $("#priceModel_" + currentTab).val('').trigger('change',true);
+        $("#declaType_" + currentTab).val('').trigger('change',true);
         $("#price_" + currentTab).val('').trigger('change');
         $("#fprice_" + currentTab).val('').trigger('change');
         $("#yield_" + currentTab).val('').trigger('change');
@@ -817,7 +823,7 @@
     /**
      * 价格模式选择后的联动处理
      */
-    var priceModelChange = function(init) {
+    var priceModelChange = function(init,isNotTrigger) {
         var priceModel = $("#priceModel_" + currentTab).val();
         var declaType = $("#declaType_" + currentTab).val();
         var finprodId = $("#finprodId_" + currentTab).val();
@@ -876,7 +882,7 @@
                     $("#entrustPrice_" + currentTab).attr("disabled", false);
                 }
             }
-            if(!init) {
+            if(!init && !isNotTrigger) {
                 if(priceModel != PRICE_MODEL_PRM03){
                     // 获取行情价
                     if(finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
@@ -928,8 +934,8 @@
     /**
      * 申报类型的联动处理
      */
-    var declaTypeChange = function(init) {
-        priceModelChange(init);
+    var declaTypeChange = function(init, isNotTrigger) {
+        priceModelChange(init,isNotTrigger);
     };
     /**
      * 委托价格变更时联动计算委托金额
@@ -993,7 +999,7 @@
             var declaType = $("#declaType_" + currentTab).val();
             // if  画面.价格模式 = 市价指令 or 点击成交成报 or 收盘价固定价格申报 or 日均价固定价格申报
             if(priceModel == PRICE_MODEL_PRM03 || declaType == DECLA_TYPE_PRM08
-                 || declaType == DECLA_TYPE_PRM11) {
+                || declaType == DECLA_TYPE_PRM10 || declaType == DECLA_TYPE_PRM11) {
                 $("#price_" + currentTab).attr("disabled", true);
             }
             else {
@@ -1610,7 +1616,8 @@
             $("#declaType_" + currentTab).updateChosenArr({
                 item: [DECLA_TYPE_PRM08],
                 chosen: DECLA_TYPE_PRM08,
-                disabled: true
+                disabled: true,
+                isNotTrigger:true
             });
         }
         else if(currentTab == 'dz') {
@@ -1621,7 +1628,8 @@
                 $("#declaType_" + currentTab).updateChosenArr({
                     item: [DECLA_TYPE_PRM06, DECLA_TYPE_PRM09, DECLA_TYPE_PRM10, DECLA_TYPE_PRM05],
                     chosen: $("#declaType_" + currentTab).val(),
-                    disabled: false
+                    disabled: false,
+                    isNotTrigger:true
                 });
             }
             // 画面.金融产品类型 IN（债券、股票、基金）
@@ -1631,7 +1639,8 @@
                 $("#declaType_" + currentTab).updateChosenArr({
                     item: [DECLA_TYPE_PRM10, DECLA_TYPE_PRM11, DECLA_TYPE_PRM05],
                     chosen: $("#declaType_" + currentTab).val(),
-                    disabled: false
+                    disabled: false,
+                    isNotTrigger:true
                 });
             }
             //债券申报类型放开
@@ -1639,7 +1648,8 @@
                 $("#declaType_" + currentTab).updateChosenArr({
                     item: [DECLA_TYPE_PRM06,DECLA_TYPE_PRM08, DECLA_TYPE_PRM09, DECLA_TYPE_PRM07, DECLA_TYPE_PRM10, DECLA_TYPE_PRM11, DECLA_TYPE_PRM05],
                     chosen: $("#declaType_" + currentTab).val(),
-                    disabled: false
+                    disabled: false,
+                    isNotTrigger:true
                 });
             }
             else if(finprodType2 == FINPROD_TYPE_TG_ZYSHG) {
@@ -1647,7 +1657,8 @@
                 $("#declaType_" + currentTab).updateChosenArr({
                     item: [DECLA_TYPE_PRM06, DECLA_TYPE_PRM09, DECLA_TYPE_PRM07, DECLA_TYPE_PRM10, DECLA_TYPE_PRM11, DECLA_TYPE_PRM05],
                     chosen: $("#declaType_" + currentTab).val(),
-                    disabled: false
+                    disabled: false,
+                    isNotTrigger:true
                 });
             }
         }
@@ -1661,7 +1672,8 @@
                     $("#priceModel_" + currentTab).updateChosenArr({
                         item: [PRICE_MODEL_PRM01],
                         chosen: PRICE_MODEL_PRM01,
-                        disabled: true
+                        disabled: true,
+                        isNotTrigger:true
                     });
                 }
                 else {
@@ -1669,7 +1681,8 @@
                     $("#priceModel_" + currentTab).updateChosenArr({
                         item: [PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
                         chosen: $("#priceModel_" + currentTab).val(),
-                        disabled: false
+                        disabled: false,
+                        isNotTrigger:true
                     });
                 }
             }
@@ -1679,7 +1692,8 @@
                 $("#priceModel_" + currentTab).updateChosenArr({
                     item: [PRICE_MODEL_PRM01],
                     chosen: PRICE_MODEL_PRM01,
-                    disabled: true
+                    disabled: true,
+                    isNotTrigger:true
                 });
             }
                 // else if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.质押式回购
@@ -1696,7 +1710,8 @@
                 $("#priceModel_" + currentTab).updateChosenArr({
                     item: [PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
                     chosen: $("#priceModel_" + currentTab).val(),
-                    disabled: false
+                    disabled: false,
+                    isNotTrigger:true
                 });
             }
         }
@@ -1705,12 +1720,13 @@
             $("#declaType_" + currentTab).updateChosenArr({
                 item: [DECLA_TYPE_PRM14],
                 chosen: DECLA_TYPE_PRM14,
-                disabled: true
+                disabled: true,
+                isNotTrigger:true
             });
         }
         else {
-            $("#priceModel_" + currentTab).trigger('change');
-            $("#declaType_" + currentTab).trigger('change');
+            $("#priceModel_" + currentTab).trigger('change',true);
+            $("#declaType_" + currentTab).trigger('change',true);
         }
     };
     /**
@@ -2595,7 +2611,7 @@
                 targetTypeChange(true);
                 entrustNumChange();
                 psChange(true);
-                priceModelChange(true);
+                priceModelChange(true,true);
                 formatEntrustPrice();
                 //页面初始化结束后  是否弹出 <<剩余可用数量存在零股，是否卖出零股？>>
                 if(availableNum!=""){
@@ -2820,18 +2836,15 @@
             secAcctIdChange();
         });
         // 价格模式
-        $("#priceModel_jj,#priceModel_dz,#priceModel_gd").change(function() {
+        $("#priceModel_jj,#priceModel_dz,#priceModel_gd").change(function(e,isNotTrigger) {
             if(setPageItemsFlag){
                 return;
             }
-            if(initFlag){
-            	return;
-            }
-            priceModelChange(false);
+            priceModelChange(false,isNotTrigger);
         });
         // 价格模式
-        $("#declaType_dz,#declaType_gd").change(function() {
-            declaTypeChange(false);
+        $("#declaType_dz,#declaType_gd").change(function(e,isNotTrigger) {
+            declaTypeChange(false,isNotTrigger);
         });
         // 委托价格
         $("#entrustPrice_jj,#entrustPrice_dz,#entrustPrice_gd").change(function() {
@@ -2868,7 +2881,7 @@
         // 委托方向变更时
         $("#ps_jj,#ps_dz,#ps_gd").change(function() {
             if (parentPageModel!=PAGE_MODEL_REFERENCE){  //解决场内交易指令流程代办显示为0
-                psChange();
+                psChange(false);
             }
         });
         // 数据来源变更时
