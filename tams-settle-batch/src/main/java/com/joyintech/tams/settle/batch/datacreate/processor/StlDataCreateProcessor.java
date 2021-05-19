@@ -118,6 +118,7 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     		stlDataCreateWriteDto.setSzdSjsjgList(szdSjsjgList);
     		stlDataCreateWriteDto.setTradeDate(stlDataCreateReaderDto.getTradeDate());
     	}
+    	stlDataCreateWriteDto.setTradeDate(stlDataCreateReaderDto.getTradeDate());
     	return stlDataCreateWriteDto;
     }
     
