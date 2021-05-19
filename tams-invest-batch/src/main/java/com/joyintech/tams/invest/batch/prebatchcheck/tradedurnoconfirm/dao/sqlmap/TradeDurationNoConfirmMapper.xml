@@ -648,8 +648,8 @@
 
         SELECT
         T4.FINPROD_ID finprodId,
-        SUBT2.PORTFOLIO_ID portfolioId,
-        SUBT2.PORTFOLIO_NAME portfolioName,
+<!--        SUBT2.PORTFOLIO_ID portfolioId,-->
+<!--        SUBT2.PORTFOLIO_NAME portfolioName,-->
         T1.FINPROD_TYPE2,
         T4.VDATE,
         T4.MDATE,
@@ -943,14 +943,14 @@
         WFL_ORDERS.SETTLE_AMT tradeAmt,
         WFL_ORDERS.SETTLE_DATE,
         T3.SEC_MANAGE_ACCT_ID,
-        decode(T5.PA_BUSS_TYPE,'54','货币基金现金分红-'||SSAI.Sec_Acct_Name,
-        '56','非货币基金现金分红-'||SSAI.Sec_Acct_Name,
-        '58','净值型计划现金分红-'||SSAI.Sec_Acct_Name,
-        '80','货币型计划现金分红-'||SSAI.Sec_Acct_Name,
-        '66','货币基金赎回到账-'||SSAI.Sec_Acct_Name,
-        '67','非货币基金赎回到账-'||SSAI.Sec_Acct_Name,
-        '68','净值型计划赎回到账-'||SSAI.Sec_Acct_Name,
-        '73','货币型计划赎回到账-'||SSAI.Sec_Acct_Name
+        decode(T5.PA_BUSS_TYPE,'54','货币基金现金分红-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '56','非货币基金现金分红-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '58','净值型计划现金分红-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '80','货币型计划现金分红-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '66','货币基金赎回到账-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '67','非货币基金赎回到账-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '68','净值型计划赎回到账-'||NVL(SSAI.Sec_Acct_Name, '直投'),
+        '73','货币型计划赎回到账-'||NVL(SSAI.Sec_Acct_Name, '直投')
         ) remark
         FROM WFL_TRD_PRODUCT_DEAL T3
         LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD T4
