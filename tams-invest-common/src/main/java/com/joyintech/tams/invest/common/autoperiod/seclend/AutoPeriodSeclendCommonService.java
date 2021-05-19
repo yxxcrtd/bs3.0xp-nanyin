@@ -308,8 +308,10 @@ public class AutoPeriodSeclendCommonService extends BaseService {
                                 不带最大持仓的其他金额 = ArithmeticUtil.doAdd(不带最大持仓的其他金额, deal.getFpriceAmt());
                             }
                         }
-                        最大持仓的交易.setFpriceAmt(ArithmeticUtil.subtract(总金额, 不带最大持仓的其他金额));
-                        最大持仓的交易.setTradeAmt(最大持仓的交易.getFpriceAmt());
+                        if (最大持仓的交易 != null){
+                            最大持仓的交易.setFpriceAmt(ArithmeticUtil.subtract(总金额, 不带最大持仓的其他金额));
+                            最大持仓的交易.setTradeAmt(最大持仓的交易.getFpriceAmt());    
+                        }
                     }
                     deals.addAll(trdProductDeals);
                 }

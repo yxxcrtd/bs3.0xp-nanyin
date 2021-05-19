@@ -73,7 +73,7 @@ public class TranJobFXONetExercise extends TranJobBasic{
 		double diff_func=RoundUtil.roundMoney2Dec(fxGcostFunc-settleCash);
 		
 		//外汇期权-成本
-		if(tranFXExercise.getgCost()>0){
+		if(tranFXExercise != null && tranFXExercise.getgCost()>0){
 			saveGL(pursaleCooa,
 					DBCR.CREDIT, 
 					fxGcostFunc,

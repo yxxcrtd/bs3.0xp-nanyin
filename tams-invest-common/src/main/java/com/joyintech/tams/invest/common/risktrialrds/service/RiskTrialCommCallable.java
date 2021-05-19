@@ -115,7 +115,7 @@ public class RiskTrialCommCallable {
 						params.put(paramName, indicatorParam.getContent());
 					}
 					
-					if(BussinessDictCodeListRds.是否_是.getValue().equals(indicatorParam.getIsMath())&&rskTaskDto.getIndType().indexOf(RiskUtil.LIMIT)!=-1){
+					if(params != null && params.get(paramName) != null && BussinessDictCodeListRds.是否_是.getValue().equals(indicatorParam.getIsMath())&&rskTaskDto.getIndType().indexOf(RiskUtil.LIMIT)!=-1){
 						params.put(paramName,ArithmeticUtil.doAdd(new  BigDecimal(params.get(paramName).toString()),inputDto.getTradeAmount()));
 					}
 				}

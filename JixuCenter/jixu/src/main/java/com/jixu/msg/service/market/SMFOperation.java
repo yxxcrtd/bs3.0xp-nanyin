@@ -456,7 +456,7 @@ public class SMFOperation extends MsgExecuteService {
 				msgcontainer.setEntityID(oldIssue.getId());
 			}
 			//smf辅助表
-			if(oldSc!=null){
+			if(oldSc!=null && oldIssue != null){
 				sc.setCusip(oldIssue.getId());
 				BeanUtils.copyProperties(sc, oldSc, "id");
 				issueInfoDao.updateEntity(oldSc);

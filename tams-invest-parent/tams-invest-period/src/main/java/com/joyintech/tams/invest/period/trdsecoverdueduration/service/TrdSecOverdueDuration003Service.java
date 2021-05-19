@@ -629,10 +629,12 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
 
             }
             else{
-                BaseTradeInfoDto 交易个体本金  =生成交易个体本金(dto,total转出,dto.getPrinAmt(),本金应收款标的.getCcy(),"999999",total转出.getSecManageAcctId());
-                交易个体本金.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
-                交易个体本金.getTrdProductDeal().setStatus(DictCodeListExt3.应收款类型_逾期未收本金.getValue());
-                本金转出BaseTradeInfo.add(交易个体本金);
+                if (本金应收款标的 != null){
+                    BaseTradeInfoDto 交易个体本金  =生成交易个体本金(dto,total转出,dto.getPrinAmt(),本金应收款标的.getCcy(),"999999",total转出.getSecManageAcctId());
+                    交易个体本金.getTrdProductDeal().setBranch(本金应收款标的.getBranch());
+                    交易个体本金.getTrdProductDeal().setStatus(DictCodeListExt3.应收款类型_逾期未收本金.getValue());
+                    本金转出BaseTradeInfo.add(交易个体本金);    
+                }
             }
         }
 //        利息转出entity

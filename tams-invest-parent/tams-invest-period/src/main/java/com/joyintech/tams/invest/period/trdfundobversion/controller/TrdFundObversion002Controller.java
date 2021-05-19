@@ -152,7 +152,9 @@ public class TrdFundObversion002Controller extends BaseController {
             dto = new TrdFundObversionDto();
         }
         model.addAttribute("type",type);
-        model.addAttribute("busiCode", dto.getTotleTradeId());
+        if (dto != null){
+            model.addAttribute("busiCode", dto.getTotleTradeId());    
+        }
         model.addAttribute("trader",trader);
 //      画面的业务类型，用于判断画面处于何种模式
         model.addAttribute(GlobalConstant.ENTITY,dto);
