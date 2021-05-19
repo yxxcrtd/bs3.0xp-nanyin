@@ -92,7 +92,8 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 	// 根据估值信息表生成估值登记
 	public void createRegistAction(Date batchTime,List<String> assets,String InstitutionCode) {
 		String isBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
-		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDate(DateUtil.format(batchTime),isBtm);
+//		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDate(DateUtil.format(batchTime),isBtm); //delete by lingxq on 2021-05-15 for union all估值维护表获取数据
+		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDateFromVal(DateUtil.format(batchTime),isBtm); //add by lingxq on 2021-05-15 for union all估值维护表获取数据
 		if (CollectionUtils.isEmpty(isUpdate))
 			return;
 		for (Date posDate : isUpdate) {
