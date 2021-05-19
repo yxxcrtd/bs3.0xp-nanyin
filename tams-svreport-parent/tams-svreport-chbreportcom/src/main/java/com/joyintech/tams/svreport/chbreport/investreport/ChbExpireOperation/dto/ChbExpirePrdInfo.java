@@ -37,6 +37,11 @@ public class ChbExpirePrdInfo extends BaseEntity {
     private String endDate;
 
     /**
+     * 实际到期日
+     */
+    private String realEndDate;
+
+    /**
      * 固定管理费率
      */
     private String investFeeRate;
@@ -192,5 +197,13 @@ public class ChbExpirePrdInfo extends BaseEntity {
 
     public void setCustomerType(String customerType) {
         this.customerType = customerType;
+    }
+
+    public String getRealEndDate() {
+        return realEndDate;
+    }
+
+    public void setRealEndDate(String realEndDate) {
+        this.realEndDate = realEndDate;
     }
 }
