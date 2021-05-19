@@ -2824,6 +2824,9 @@
             if(setPageItemsFlag){
                 return;
             }
+            if(initFlag){
+            	return;
+            }
             priceModelChange(false);
         });
         // 价格模式
