@@ -373,28 +373,6 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
 	        }
         }
 	    // add by chenlei1 2020-03-17--end----
-        // MODIFY BY WJ 20200818
-        if (  StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue() , inputDto.getPs())
-        && ( StringUtil.equals(inputDto.getTradeMarket(), DictCodeList.交易流通场所_银行间债券市场.getValue())
-                || (  StringUtil.equals(inputDto.getTradeMarket(), DictCodeList.交易流通场所_上海证券交易所.getValue()) && StringUtil.equals(inputDto.getRepoType(), DictCodeList.回购类型_质押式协议回购.getValue()))
-        ) ) {
-
-            if(inputDto.getBussRepoSec() == null || inputDto.getBussRepoSec().getTotalPrinAmt()==null || StringUtil.isEmptyList(inputDto.getBussRepoSec().getPledgeBondList())){
-
-                errorList.add(new ValidMessage("","请输入质押券信息！"));
-
-            }else {
-
-                BigDecimal prinAmt = inputDto.getPrinAmt()==null ? BigDecimal.ZERO :inputDto.getPrinAmt() ;
-                BigDecimal totalPrinAmt = inputDto.getBussRepoSec() == null ? BigDecimal.ZERO : inputDto.getBussRepoSec().getTotalPrinAmt();
-                if (totalPrinAmt.compareTo(prinAmt) < 0) {
-                    ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_00122"));
-                    errorList.add(validMessage);
-                }
-            }
-
-        }
-        // end
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
         if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
