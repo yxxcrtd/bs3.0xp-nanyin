@@ -537,8 +537,11 @@
             if(field == "mdate"){
                 var oldData = generationPlanTable.getRow(data.LAY_TABLE_INDEX+1);
                 oldData.vdate = value;
-                generationPlanTable.renderRow(data.LAY_TABLE_INDEX+1,oldData);   
-                generationPlan(true);
+                generationPlanTable.renderRow(data.LAY_TABLE_INDEX+1,oldData);
+                if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F07){
+                      generationPlan(true);
+                }
+
             }
             if(field == "vdate"){
                 if(data.LAY_TABLE_INDEX-1<0){
@@ -546,8 +549,10 @@
                 }else{
                     var oldData = generationPlanTable.getRow(data.LAY_TABLE_INDEX-1);
                     oldData.mdate = value;
-                    generationPlanTable.renderRow(data.LAY_TABLE_INDEX-1,oldData);  
-                    generationPlan(true);
+                    generationPlanTable.renderRow(data.LAY_TABLE_INDEX-1,oldData);
+                    if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F07){
+                         generationPlan(true);
+                    }
                 }
                   
             }
