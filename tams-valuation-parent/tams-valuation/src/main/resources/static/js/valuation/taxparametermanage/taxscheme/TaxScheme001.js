@@ -814,9 +814,9 @@ $(function () {
 			var object = {};
 	    	object.seqNo = data.seqNo;
 	    	var isDefault =data.isDefault;
-	    	if(isDefault==='Y'){
-	    		Joyin.alert("默认税务方案资产应税信息中内容不可删除",2);
-	    	}else{
+//	    	if(isDefault==='Y'){
+//	    		Joyin.alert("默认税务方案资产应税信息中内容不可删除",2);
+//	    	}else{
 	    		object.operateType = "delete";
 			   	Joyin.ajaxJson(basePath + 'valuation/taxparametermanage/taxscheme/TaxScheme001/check', object, function(result) {
 			           Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
@@ -825,7 +825,7 @@ $(function () {
 	    	              });
 			           });
 		       });
-	    	}
+//	    	}
 	   });
 		
       /** 事件绑定: 资产应税信息-批量删除 */
