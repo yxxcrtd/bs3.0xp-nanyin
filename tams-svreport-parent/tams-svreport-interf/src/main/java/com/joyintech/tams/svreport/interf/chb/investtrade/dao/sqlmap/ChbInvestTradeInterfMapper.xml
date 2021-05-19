@@ -2292,9 +2292,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     NULL TRADE_SEQNO ,/*交易UUID*/                                                                                 
     DEAL.TRADE_ID||'01'  TRADE_CODE,/*行内交易编码 */ 
     '01' INVEST_VARIETY ,/*投资品种*/                                                                              
-    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,<!--/*投资类型/*投资目的 枚举值对应待处理TODO*/-->
+    decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资类型投资目的 枚举值对应待处理TODO*/
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */
-    deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
+    deal.regist_org REGIST_BANK_CODE,/*发行机构代码登记银行编码*/
     DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */   
     DEAL.CCY CCY ,/*币种 */
     /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
@@ -2369,9 +2369,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     NULL TRADE_SEQNO ,/*交易UUID */                                                                                
     DEAL.TRADE_ID||'02'  TRADE_CODE,/*行内交易编码 */ 
     '25' INVEST_VARIETY ,/*投资品种 */                                                                             
-    NULL INVEST_TYPE,<!--/*投资类型/*投资目的 枚举值对应待处理TODO*/-->
+    NULL INVEST_TYPE,/*投资类型投资目的 枚举值对应待处理TODO*/
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码 */                                                                                
-    deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
+    deal.regist_org REGIST_BANK_CODE,/*发行机构代码登记银行编码*/
     /****TOS-260  【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
     secASSET.Finprod_Id ASSET_CODE ,  /*行内资产/负债编码 */
     /*DEAL.FINPROD_ID ASSET_CODE ,  行内资产/负债编码 */
@@ -2448,7 +2448,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     '01' INVEST_VARIETY ,/*投资品种*/                                                                              
     null INVEST_TYPE,/*投资类型  */                                                                                                                                                                  
     DEALADD.PORTFOLIO_ID   PROD_ID ,         /* 产品代码*/                                                                                 
-    deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
+    deal.regist_org REGIST_BANK_CODE,/*发行机构代码登记银行编码*/
     DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产/负债编码 */
     DEAL.CCY CCY ,/*币种 */
     DEAL.TRADE_AMT AMT ,/*发生金额  */
@@ -5370,10 +5370,10 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       NULL TRADE_SEQNO ,/*交易UUID*/
       DEAL.TRADE_ID||'01' TRADE_CODE,/*行内交易编码 */
       '01' INVEST_VARIETY ,/*投资品种*/
-      decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,<!--/*投资类型/*投资目的 枚举值对应待处理TODO*/-->
+      decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS') INVEST_TYPE,/*投资类型投资目的 枚举值对应待处理TODO*/
       DEALADD.PORTFOLIO_ID PROD_ID , /* 产品代码 */
-      deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
-      DEAL.FINPROD_ID ASSET_CODE ,  <!--/*行内资产/负债编码 */-->
+      deal.regist_org REGIST_BANK_CODE,/*发行机构代码登记银行编码*/
+      DEAL.FINPROD_ID ASSET_CODE ,  /*行内资产负债编码 */
       DEAL.CCY CCY ,/*币种 */
       /****TOS-260 【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
       BARTER.PRIN_AMT AMT ,/*发生金额 */
@@ -5450,9 +5450,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       NULL TRADE_SEQNO ,/*交易UUID */
       DEAL.TRADE_ID||'02' TRADE_CODE,/*行内交易编码 */
       '25' INVEST_VARIETY ,/*投资品种 */
-      NULL INVEST_TYPE,<!--/*投资类型/*投资目的 枚举值对应待处理TODO*/-->
+      NULL INVEST_TYPE,/*投资类型投资目的 枚举值对应待处理TODO*/
       DEALADD.PORTFOLIO_ID PROD_ID , /* 产品代码 */
-      deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/-->
+      deal.regist_org REGIST_BANK_CODE,/*发行机构代码登记银行编码*/
       /****TOS-260 【交易信息登记-集成测试】：可转债转股交易，交易信息登记不正确，详见描述 leipeng 20210227****/
       secASSET.Finprod_Id ASSET_CODE , /*行内资产/负债编码 */
       /*DEAL.FINPROD_ID ASSET_CODE , 行内资产/负债编码 */
@@ -5538,7 +5538,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       '01' INVEST_VARIETY ,/*投资品种*/
       null INVEST_TYPE,/*投资类型 */
       DEALADD.PORTFOLIO_ID PROD_ID , /* 产品代码*/
-      deal.regist_org REGIST_BANK_CODE,<!--/*发行机构代码/*登记银行编码*/  -->
+      deal.regist_org REGIST_BANK_CODE,/*发行机构代码登记银行编码*/
       DEAL.FINPROD_ID ASSET_CODE , /*行内资产/负债编码 */
       DEAL.CCY CCY ,/*币种 */
       DEAL.TRADE_AMT AMT ,/*发生金额 */
