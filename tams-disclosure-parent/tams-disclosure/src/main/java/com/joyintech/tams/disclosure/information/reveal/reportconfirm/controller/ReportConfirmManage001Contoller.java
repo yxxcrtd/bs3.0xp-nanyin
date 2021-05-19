@@ -467,7 +467,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
         String formate=reportConfirmManage001Service.getFormate(sysFilepath);
         formate=formate.substring(formate.lastIndexOf(".") );
         // 文件名
-    	targetFileName=reportConfirmManage001Service.getFileName(sysFilepath)+"_"+DateUtil.format(new Date(), DateUtil.DEFAULT_OTHER_FORMAT)+formate;
+//    	targetFileName=reportConfirmManage001Service.getFileName(sysFilepath)+"_"+DateUtil.format(new Date(), DateUtil.DEFAULT_OTHER_FORMAT)+formate;
     	
     	String prodId = RequestUtil.getParam("prodId");
         String reportDate = RequestUtil.getParam("reportDate");
@@ -487,12 +487,11 @@ public class ReportConfirmManage001Contoller extends BaseController {
     	if (StringUtil.isNotEmpty(prodId)&&!StringUtil.equals(prodId, "undefined")) {
     	    targetFileName=prodId+GlobalConstant.UNDER_LINE+targetFileName;
         }
-        
+        */
+		// modify by swwan 20210518 end
     	if(StringUtil.isEmpty(targetFileName)){
         	targetFileName=attachment.getFileName();
-        }*/
-		// modify by swwan 20210518 end
-//        String targetFileName = attachment.getFileName();
+        }
         // 目标文件
         File targetFile = attachment.getTargetFile();
         

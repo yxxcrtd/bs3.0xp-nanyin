@@ -54,7 +54,12 @@ $(function () {
             var allArr = table.getAllRows();
         }
         if (!selArr || selArr.length == 0) {
-            var datas = JSON.stringify(allArr);
+            if (!allArr || allArr.length == 0) {
+                Joyin.alert("无数据，无法导出!", 2);
+                return;
+            } else {
+                var datas = JSON.stringify(allArr);
+            }
         } else {
             var datas = JSON.stringify(selArr);
         }
