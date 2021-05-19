@@ -57,10 +57,15 @@
     // 新增按钮点击事件
     //点击“新增”按钮，在业绩基准信息列表中展示该条信息，并重置上方要素信息	
 	getElementById('btn_create').click(function() {
+		var investDays = getElementById('investDays').val();
+		if (investDays === null || investDays === '' || investDays === 'null') {
+			Joyin.error("投资周期不能为空！");
+			return;
+		}
 	    var tableArry = bussFinProductInvestPeriodTable.getAllRows();
 		var row = {
 				sn: tableArry.length+1,
-				investDays: getElementById('investDays').val()
+				investDays: investDays
     		};
 		bussFinProductInvestPeriodTable.addRow(row);  
 		tableDataChange();
