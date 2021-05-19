@@ -529,7 +529,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             etrSecPositionFlowDtoUnit.setFinprodId(trdTempStasecFlowDetail.getFinprodId());// 金融产品代码
             etrSecPositionFlowDtoUnit.setBranch(new Long(0));// 分支序号
             etrSecPositionFlowDtoUnit.setInvAim("999999");
-            etrSecPositionFlowDtoUnit.setHodingType(DictCodeList.持仓类型_可用.getValue());// 持仓类型
+            etrSecPositionFlowDtoUnit.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());// 持仓类型
             etrSecPositionFlowDtoUnit.setCdate(infContractDetailfile.getTradeDate());// 日期
             etrSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
             etrSecPositionFlowDtoUnit.setAmount(trdTempStasecFlowDetail.getAmt());// 数量
