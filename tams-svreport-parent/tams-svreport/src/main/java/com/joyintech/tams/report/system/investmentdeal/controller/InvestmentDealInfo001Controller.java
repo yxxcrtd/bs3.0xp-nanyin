@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.investmentdeal.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -59,7 +60,9 @@ public class InvestmentDealInfo001Controller extends BaseController {
     @PostMapping("deleteData")
     public AjaxResult deleteData(@RequestBody @Validated({
             ValidateGroupEdit.class}) InvestmentDealInfoDto dto, BindingResult result) {
-        return investmentDealInfoService.delData(dto);
+         investmentDealInfoService.delData(dto);
+
+        return new AjaxResult("删除成功", MessageType.提示消息);
     }
 
     /**

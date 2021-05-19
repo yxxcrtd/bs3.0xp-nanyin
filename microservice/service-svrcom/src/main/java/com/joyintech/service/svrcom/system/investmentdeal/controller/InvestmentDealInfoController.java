@@ -74,9 +74,9 @@ public class InvestmentDealInfoController {
     }
 
     @PostMapping("save")
-    public AjaxResult save(@RequestBody InvestmentDealInfoDto dto)  {
+    public void save(@RequestBody InvestmentDealInfoDto dto)  {
         dto.setDataSource(DictCodeListExt2.数据来源_系统新建.getValue());
-        return investmentDealInfo001Service.save(dto);
+         investmentDealInfo001Service.save(dto);
     }
 
     @PostMapping("getTradeCounter")
@@ -86,8 +86,8 @@ public class InvestmentDealInfoController {
     }
 
     @PostMapping("delData")
-    public AjaxResult delData(@RequestBody InvestmentDealInfoDto dto)  {
-        return investmentDealInfo001Service.delData(dto);
+    public void delData(@RequestBody InvestmentDealInfoDto dto)  {
+         investmentDealInfo001Service.delData(dto);
     }
 
 }

@@ -243,7 +243,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
         return investmentDealInfo001Mapper.getProdId( param);
     }
 
-    public AjaxResult save(InvestmentDealInfoDto dto){
+    public void save(InvestmentDealInfoDto dto){
         AjaxResult webResult = new AjaxResult();
         Map<String, Object> map=new HashMap<>();
         map.put("tradeCode",dto.getTradeCode());
@@ -257,16 +257,13 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             investmentDealInfo001Mapper.insertOne(dto);
             investmentDealInfo001Mapper.deleteErrorDataOne(dto.getTradeCode());
         }
-        webResult.setMessage("保存成功", MessageType.提示消息);
-        return webResult;
     }
 
     public List<SelectOptionDto> getTradeCounter(Map<String, Object> param) {
         return investmentDealInfo001Mapper.getTradeCounter( param);
     }
 
-    public AjaxResult delData(InvestmentDealInfoDto dto){
-        AjaxResult webResult = new AjaxResult();
+    public void delData(InvestmentDealInfoDto dto){
         Map<String, Object> map=new HashMap<>();
         map.put("tradeCode",dto.getTradeCode());
         InvestmentDealInfoDto infoDto= investmentDealInfo001Mapper.selectOneDate(map);
@@ -277,8 +274,6 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
         }else {
             investmentDealInfo001Mapper.deleteErrorDataOne(dto.getTradeCode());
         }
-        webResult.setMessage("删除成功",MessageType.提示消息);
-        return webResult;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.investmentdeal.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -65,8 +66,8 @@ public class InvestmentDealInfo002Controller extends BaseController {
     @PostMapping("save")
     public AjaxResult save(@RequestBody @Validated({
             ValidateGroupEdit.class}) InvestmentDealInfoDto dto, BindingResult result) {
-        AjaxResult webResult = investmentDealInfoService.save(dto);
-        return webResult;
+           investmentDealInfoService.save(dto);
+        return new AjaxResult("保存成功", MessageType.提示消息);
     }
 
     @ResponseBody

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
 /**
  * 描述:CHB_INVEST_TRADE表的实体类
@@ -15,6 +16,7 @@ public class ChbInvestTrade extends BaseEntity implements Cloneable{
     /**
      * 交易UUID
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String tradeSeqno;
 
     /**

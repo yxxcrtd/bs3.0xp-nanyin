@@ -56,7 +56,7 @@ public class ChbSecDiscountRate001Service extends CommonExportService<ChbSecDisc
         return chbSecDiscountRate001Mapper.selectOneDate( param);
     }
 
-    public AjaxResult save(ChbSecDiscountRateDto dto){
+    public void save(ChbSecDiscountRateDto dto){
         AjaxResult webResult = new AjaxResult();
         Map<String, Object> map=new HashMap<>();
         map.put("datauuid",dto.getDatauuid());
@@ -64,8 +64,6 @@ public class ChbSecDiscountRate001Service extends CommonExportService<ChbSecDisc
         if (StringUtil.isNotEmpty(infoDto)){
             chbSecDiscountRate001Mapper.updateOne(dto);
         }
-        webResult.setMessage("保存成功", MessageType.提示消息);
-        return webResult;
     }
 
 

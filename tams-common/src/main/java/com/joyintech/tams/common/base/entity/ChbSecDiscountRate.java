@@ -3,12 +3,15 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+
 import java.math.BigDecimal;
 
 public class ChbSecDiscountRate extends BaseEntity {
     /**
      * 主键UUID
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String datauuid;
 
     /**

@@ -30,8 +30,8 @@ public class ChbSecDiscountRateController {
     }
 
     @PostMapping("save")
-    public AjaxResult save(@RequestBody ChbSecDiscountRateDto dto)  {
-        return chbSecDiscountRate001Service.save(dto);
+    public void save(@RequestBody ChbSecDiscountRateDto dto)  {
+         chbSecDiscountRate001Service.save(dto);
     }
 
 }

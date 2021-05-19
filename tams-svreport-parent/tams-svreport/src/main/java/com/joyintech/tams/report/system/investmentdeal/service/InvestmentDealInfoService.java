@@ -80,10 +80,10 @@ public class InvestmentDealInfoService extends BaseService<InvestmentDealInfoDto
                 SelectOptionDto.class);
     }
 
-    public AjaxResult save(InvestmentDealInfoDto dto) {
-        return restTemplate.postForObject(
+    public void save(InvestmentDealInfoDto dto) {
+         restTemplate.postForObject(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/InvestmentDealInfo/save",dto,
-                AjaxResult.class);
+                 InvestmentDealInfoDto.class);
     }
 
     public List<SelectOptionDto> getTradeCounter(Map<String, Object> param) {
@@ -92,10 +92,10 @@ public class InvestmentDealInfoService extends BaseService<InvestmentDealInfoDto
                 SelectOptionDto.class);
     }
 
-    public AjaxResult delData(InvestmentDealInfoDto dto) {
-        return restTemplate.postForObject(
+    public void delData(InvestmentDealInfoDto dto) {
+         restTemplate.postForObject(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/InvestmentDealInfo/delData",dto,
-                AjaxResult.class);
+                 InvestmentDealInfoDto.class);
     }
 
 

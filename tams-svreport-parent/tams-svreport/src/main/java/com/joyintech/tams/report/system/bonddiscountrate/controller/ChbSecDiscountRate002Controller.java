@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.bonddiscountrate.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.RequestUtil;
@@ -55,8 +56,8 @@ public class ChbSecDiscountRate002Controller extends BaseController {
     @PostMapping("save")
     public AjaxResult save(@RequestBody @Validated({
             ValidateGroupEdit.class}) ChbSecDiscountRateDto dto, BindingResult result) {
-        AjaxResult webResult = chbSecDiscountRateService.save(dto);
-        return webResult;
+           chbSecDiscountRateService.save(dto);
+        return new AjaxResult("保存成功", MessageType.提示消息);
     }
 
 }

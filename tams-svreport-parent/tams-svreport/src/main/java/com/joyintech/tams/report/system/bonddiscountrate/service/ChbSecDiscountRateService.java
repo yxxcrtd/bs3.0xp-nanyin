@@ -29,10 +29,10 @@ public class ChbSecDiscountRateService extends BaseService<ChbSecDiscountRateDto
                 ChbSecDiscountRateDto.class);
     }
 
-    public AjaxResult save(ChbSecDiscountRateDto dto) {
-        return restTemplate.postForObject(
+    public void save(ChbSecDiscountRateDto dto) {
+         restTemplate.postForObject(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSecDiscountRate/save",dto,
-                AjaxResult.class);
+                 ChbSecDiscountRateDto.class);
     }
 
 }
