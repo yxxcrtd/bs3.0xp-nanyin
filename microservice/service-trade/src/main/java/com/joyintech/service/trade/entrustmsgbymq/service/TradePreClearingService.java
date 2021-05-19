@@ -657,32 +657,32 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         }
 
         // 正回购，处理标准券持仓
-        if (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(trdTempDto.getFinprodType2())
-            && StringUtil.isNotBlank(type6) && !DictCodeList.回购类型_质押式协议回购.getValue().equals(type6)
-            && trdTempDto.getFinTradeProduct() != null && trdTempDto.getFinTradeProduct().getPrin() != null) {
-            List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
-            PtlSecPositionFlowDto ptlSecPositionFlowDtoUnit2 = new PtlSecPositionFlowDto();// 组合持仓流水DTO
-            /********************** 持仓流水DTO构造 *************************************/
-            ptlSecPositionFlowDtoUnit2.setSeqno(IDGenerator.generate());
-            ptlSecPositionFlowDtoUnit2.setPortfolioId(trdTempDto.getPortfolioId());// 组合代码
-            ptlSecPositionFlowDtoUnit2.setSecAcctId(trdTempDto.getSecManageAcctId());// 证券账户
-            ptlSecPositionFlowDtoUnit2.setFinprodId("XN_PRODID999");// 金融产品代码
-            ptlSecPositionFlowDtoUnit2.setBranch(new Long(0));// 分支序号
-            ptlSecPositionFlowDtoUnit2.setInvAim(
-                    AllTradeCommonUtil.getInvAim(trdTempDto.getPortfolioId()));
-            ptlSecPositionFlowDtoUnit2.setHodingType(DictCodeList.持仓类型_实际.getValue());// 持仓类型
-            ptlSecPositionFlowDtoUnit2.setCdate(trdTempDto.getSettleDate());// 日期
-            ptlSecPositionFlowDtoUnit2.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            ptlSecPositionFlowDtoUnit2.setAmount(
-                    trdTempDto.getFinTradeProduct().getPrin().multiply(new BigDecimal(-1)));// 数量
-            ptlSecPositionFlowDtoUnit2.setpFinprodId(null);// 母金融产品代码
-            ptlSecPositionFlowDtoUnit2.setTradeId(trdTempDto.getTradeId());// 指令编号
-            ptlSecPositionFlows.add(ptlSecPositionFlowDtoUnit2);
-            // 插入持仓流水
-            for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlSecPositionFlows) {
-                basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
-            }
-        }
+//        if (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(trdTempDto.getFinprodType2())
+//            && StringUtil.isNotBlank(type6) && !DictCodeList.回购类型_质押式协议回购.getValue().equals(type6)
+//            && trdTempDto.getFinTradeProduct() != null && trdTempDto.getFinTradeProduct().getPrin() != null) {
+//            List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
+//            PtlSecPositionFlowDto ptlSecPositionFlowDtoUnit2 = new PtlSecPositionFlowDto();// 组合持仓流水DTO
+//            /********************** 持仓流水DTO构造 *************************************/
+//            ptlSecPositionFlowDtoUnit2.setSeqno(IDGenerator.generate());
+//            ptlSecPositionFlowDtoUnit2.setPortfolioId(trdTempDto.getPortfolioId());// 组合代码
+//            ptlSecPositionFlowDtoUnit2.setSecAcctId(trdTempDto.getSecManageAcctId());// 证券账户
+//            ptlSecPositionFlowDtoUnit2.setFinprodId("XN_PRODID999");// 金融产品代码
+//            ptlSecPositionFlowDtoUnit2.setBranch(new Long(0));// 分支序号
+//            ptlSecPositionFlowDtoUnit2.setInvAim(
+//                    AllTradeCommonUtil.getInvAim(trdTempDto.getPortfolioId()));
+//            ptlSecPositionFlowDtoUnit2.setHodingType(DictCodeList.持仓类型_实际.getValue());// 持仓类型
+//            ptlSecPositionFlowDtoUnit2.setCdate(trdTempDto.getSettleDate());// 日期
+//            ptlSecPositionFlowDtoUnit2.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+//            ptlSecPositionFlowDtoUnit2.setAmount(
+//                    trdTempDto.getFinTradeProduct().getPrin().multiply(new BigDecimal(-1)));// 数量
+//            ptlSecPositionFlowDtoUnit2.setpFinprodId(null);// 母金融产品代码
+//            ptlSecPositionFlowDtoUnit2.setTradeId(trdTempDto.getTradeId());// 指令编号
+//            ptlSecPositionFlows.add(ptlSecPositionFlowDtoUnit2);
+//            // 插入持仓流水
+//            for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlSecPositionFlows) {
+//                basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
+//            }
+//        }
         // 深交所到期续做更新 首期交易的期限、利息、到期交付日、到期结算金额。
         if (StringUtil.equals(trdTempDto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())
             && DictCodeListExt3.交易方向_到期续做.getValue().equals(trdTempDto.getPs())){
