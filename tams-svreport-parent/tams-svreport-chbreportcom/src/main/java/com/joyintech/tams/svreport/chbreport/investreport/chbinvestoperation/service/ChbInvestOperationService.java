@@ -183,8 +183,8 @@ public class ChbInvestOperationService extends CommonExportService<ChbInvestPrdI
         else {
             chbInvestPrdInfo.setCashPrinCcyFmt(ChbInvestReportConstant.空字符);
         }
-        //投资性质显示名称
-        showName = ChbInvestReportUtil.getDictCodeAndName(DictCode.投资性质, chbInvestPrdInfo.getCashPrinCcy());
+        //投资性质显示名称 modify by yanya on 20210520
+        showName = ChbInvestReportUtil.getDictCodeAndName(DictCode.投资性质, chbInvestPrdInfo.getIvstorientation());
         if (StringUtil.isNotEmpty(showName)){
             chbInvestPrdInfo.setIvstorientationFmt(showName);
         }
