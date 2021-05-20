@@ -257,7 +257,10 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             return new CommonResult(CommonResult.FAILD, "处理失败");
         }
         // 调用基础组件.【投资委托组件.取消完成委托】，撤销委托完成状况信息(投资委托场合才执行此步)
-        finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), true);
+        if(!finProductTradeDto.isNeedHandleFinishEntrust()){
+            finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), true);
+        }
+
         return new CommonResult(CommonResult.SUCCED, "处理完成");
     }
 
@@ -343,7 +346,9 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         /*----------------------zhangliang----add------2019/02/23-------------end--------------------*/
         
         // 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
-        finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
+        if(!finProductTradeDto.isNeedHandleFinishEntrust()){
+            finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
+        }
 
         /*----------------------zhangliang----add------2019/02/23-------------start--------------------*/
         baseTradeDto.getTrdProductDeal().setShareAmt(shareAmt);
