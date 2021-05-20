@@ -128,6 +128,7 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
                 List<String> splitToList = StringUtil.splitToList("/", exchargeCode);
                 entity.setBasisCyy(splitToList.get(0));
                 entity.setQuotCyy(splitToList.get(1));
+                entity.setDatasourceType(DictCodeListExt2.数据来源_系统新建.getValue());
                 entity.setQuotUnit((long)1);
             }
             mstExchargeQuoteMapper.insert(entity);
