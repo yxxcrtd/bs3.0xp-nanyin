@@ -123,10 +123,10 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
             // 交易所无通道
             etrCashPositionFlowDto.setChlFinprodId(null);
             //申购方式为网上申购 取资金账户，网下取组合托管户
-            if (StringUtil.equals(purchModle,DictCodeListExt2.申购方式_网上申购.getValue())){
-                return EtrCommonCashPositionDealService.select资金账户(secManageAcctId, ccy);
+            if (StringUtil.equals(purchModle,DictCodeListExt2.申购方式_线下申购.getValue())){
+            	return EtrCommonCashPositionDealService.select组合托管户(portfolioId, ccy, DictCodeListExt2.资金账户类型_托管户.getValue());
             }else {
-                return EtrCommonCashPositionDealService.select组合托管户(portfolioId, ccy, DictCodeListExt2.资金账户类型_托管户.getValue());
+            	return EtrCommonCashPositionDealService.select资金账户(secManageAcctId, ccy);
             }
         }
     }
@@ -280,7 +280,12 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                         entrustCommonDto.getEtrEntrustAdd().getPurchModle(), etrCashPositionFlowDto);
             }
             etrCashPositionFlowDto.setAcctId(acctId);
-            etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum().multiply(债券面值), etrFinish));//update by huanghao 指令金额采用指令数额*100算出
+            if(StringUtil.equals(entrustCommonDto.getEtrEntrustAdd().getPurchModle(), DictCodeListExt2.申购方式_线下申购)) {
+            	etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum().multiply(债券面值), etrFinish));//update by huanghao 指令金额采用指令数额*100算出
+            }
+            else {
+            	etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum().multiply(etrEntrust.getPrice()), etrFinish));//update by huanghao 指令金额采用指令数额*100算出
+            }
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
         }
     }
