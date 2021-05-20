@@ -45,23 +45,15 @@
             object.issuingStatus = $("#issuingStatus").val();
             object.dataUuid =$("#dataUuid").val();
             object.type =$("#type").val();
-            if(object.prodId==''){
-                alert("产品代码不能为空");
-            }
-            if(object.prodName==''){
-                alert("产品名称不能为空");
-            }
-            if(object.prodId!='' && object.prodName!=''){
+
                 Joyin.ajaxJson(basePath + 'svreport/system/chbprd/ChbPrdBaseinfo002/check', object, function(result) {
-                    if(result){
+                    Joyin.confirm(result.data, function() {
                         Joyin.ajaxJson(basePath + 'svreport/system/chbprd/ChbPrdBaseinfo002/save',object,function(result){
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         });
-                    }
+                    });
                 });
-            }
         });
-
     });
 }());

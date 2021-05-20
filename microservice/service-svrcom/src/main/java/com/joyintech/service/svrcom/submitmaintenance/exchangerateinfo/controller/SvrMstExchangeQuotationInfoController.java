@@ -3,11 +3,10 @@ package com.joyintech.service.svrcom.submitmaintenance.exchangerateinfo.controll
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dto.SvrMstExchangeQuotationInfoDto;
@@ -18,7 +17,7 @@ import com.joyintech.tams.report.submitmaintenance.exchangerateinfo.service.SvrM
  * 
  * @author wangzhao
  * @version 1.0 2018年8月9日
- * @see MstExchangeQuotationInfo001Controller
+ * @see SvrMstExchangeQuotationInfoController
  * @since 1.0
  */
 @RestController
@@ -79,5 +78,37 @@ public class SvrMstExchangeQuotationInfoController {
     @RequestMapping("/selectForExport")
     public List<SvrMstExchangeQuotationInfoDto> selectForExport(@RequestBody Map<String, Object> pageParam){
         return svrMstExchangeQuotationInfoService.selectForExport(pageParam);
+    }
+
+    /**
+     * 导入数据文件
+     *
+     * @param  param 导入map，包含fileName
+     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     */
+    @SuppressWarnings("unchecked")
+    @PostMapping("importData")
+    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
+        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
+        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
+        String userName=param.get("userName")==null?null:param.get("userName").toString();
+        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
+        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
+        return this.svrMstExchangeQuotationInfoService.importData(dataList,tempList,userName,orgCode,deptCode);
+    }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param param 导入map，包含fileName
+     * @return 处理结果
+     */
+    @SuppressWarnings("unchecked")
+    @PostMapping("checkConfirmMsgForImportData")
+    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
+        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
+        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
+        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
+        return svrMstExchangeQuotationInfoService.checkConfirmMsgForImportData(dataList);
     }
 }

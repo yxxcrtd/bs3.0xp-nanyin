@@ -13,6 +13,7 @@ import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
+import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportConstant;
 import com.joyintech.tams.svreport.chbreport.prdprofit.dto.PrdProfitQuery001Dto;
 import com.joyintech.tools.util.ExcelTools;
 import org.slf4j.Logger;
@@ -166,9 +167,9 @@ public class PrdProfitQueryMService extends CommonExportService<ChbreportPrdInfo
 
         Map<String, Object> map = new HashMap<>();
         map.put("title", String.format("%s年%s月_利润表_%s_月报", reportDate.substring(0, 4), reportDate.substring(5, 7), prodName));
-        //map.put("org",CacheUtil.getSysParam(GlobalConstant.财务报表_编制单位));
+
+        map.put("org",CacheUtil.getSysParam(ChbInvestReportConstant.财务报表_编制单位));
         map.put("reportDate", DateUtil.format(DateUtil.platDateFromCache()));
-        map.put("org", "华夏银行");
         map.put("prodName", prodName);
         map.put("year", reportDate.substring(0, 4));
         map.put("dtoList", dtoList);

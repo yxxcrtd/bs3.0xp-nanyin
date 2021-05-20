@@ -82,4 +82,12 @@
 		 AND cmei.PUBLISH_DATE=
 		 ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{ccy} and TRADE_DATE &lt;= #{equityConfDate,jdbcType=DATE}) 
     </select>
+	<select id="getRegistExcelList" resultType="java.lang.String">
+		select A.EXCHARGE_CODE AS finprodId
+		from MST_EXCHARGE_QUOTE A
+		where
+			A.EXCHARGE_CODE  =	#{finprodId,jdbcType=VARCHAR}
+			AND	A.TRADE_DATE = #{tradeDate}
+			AND	A.DATASOURCE_TYPE = #{dataSource}
+	</select>
 </mapper>

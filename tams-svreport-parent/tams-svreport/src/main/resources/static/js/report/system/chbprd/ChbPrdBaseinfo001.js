@@ -295,7 +295,7 @@
         //新增点击事件
         $('#ChbPrdBaseinfo001_btn_add').click(function() {
             var data={"operateType":"add"};
-            Joyin.dialog('产品费率信息新建',basePath+'svreport/system/chbprd/ChbPrdBaseinfo002/init', '98%', '95%',data,function(){table.reload();});
+            Joyin.dialog('产品基本信息新建',basePath+'svreport/system/chbprd/ChbPrdBaseinfo002/init', '98%', '95%',data,function(){table.reload();});
         });
 
         //修改、删除事件绑定

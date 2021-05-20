@@ -126,5 +126,18 @@ $(function() {
                   });
               });
         });
+
+        // 导入按钮点击事件
+        $('#SvrMstExchangeQuotationInfo001_btn_import').click(function() {
+            Joyin.confirm("请确认是否要导入数据？", function() {
+                Joyin.uploadFile(function(fileName) {
+                    Joyin.ajax(basePath + 'submitmaintenance/exchangerateinfo/SvrMstExchangeQuotationInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                        Joyin.ajax(basePath + 'submitmaintenance/exchangerateinfo/SvrMstExchangeQuotationInfo001/importFile', {fileName: fileName});
+                    });
+                },function() {
+                    table.reload();
+                });
+            });
+        });
      });
 }());
