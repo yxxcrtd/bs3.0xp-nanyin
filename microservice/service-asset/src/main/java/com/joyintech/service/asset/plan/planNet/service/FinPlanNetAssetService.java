@@ -255,6 +255,7 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
         CreditLines creditLines = new CreditLines();
         creditLines.setCustomerId(dto.getFinprodId());
         assetCommonService.deleteCredit(creditLines);
+        repAssetOtherMapper.deleteByPrimaryKey(dto.getFinprodId());
       //删除委外组合 add wangpeng 2019.07.23
         if(StringUtil.isNotEmpty(dto.getFinprodMarketId())){
         	 ptlPortfolioMapper.deleteByPrimaryKey(dto.getFinprodMarketId());
