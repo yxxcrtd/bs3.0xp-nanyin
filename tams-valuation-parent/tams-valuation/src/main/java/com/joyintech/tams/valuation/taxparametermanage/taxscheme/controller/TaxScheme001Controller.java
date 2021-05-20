@@ -249,7 +249,8 @@ public class TaxScheme001Controller extends BaseController {
 
 
         }else
-        if(StringUtil.isNotEmpty(dto.getIsDefault())&&dto.getIsDefault().equals(DictCodeList.是否_是.getValue())){
+        if(StringUtil.isNotEmpty(dto.getIsDefault())&&dto.getIsDefault().equals(DictCodeList.是否_是.getValue())
+             && !(dto.getOperateType().equals("deletetaxable"))){
              msg = "默认税务方案里面的内容，均不可删除";
              return new AjaxResult(msg, MessageType.错误消息);
         }
