@@ -2,10 +2,7 @@ package com.joyintech.tams.invest.common.trade.service.impl;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.entity.BidOrderBidPrice;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -292,7 +289,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
                 etrPositionHoldDto.setDealEtr(true);
                 EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
-
+                EtrEntrustAdd etrEntrustAdd = entrustCommonDto.getEtrEntrustAdd();
                 // 资产类型
                 String finprodType = etrEntrust.getFinprodType2();
 
@@ -364,9 +361,12 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 }
                 // add by etliu 20210421 权益类资产相关代码合并 end
                 // 委托撤回或拒绝时，当前平台日处理实时持仓
-                etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
-                etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
-                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+                //协议是回购处理头寸  走配置化头寸共通
+                if(!StringUtil.equals(etrEntrustAdd.getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())){
+                    etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
+                    etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
+                    EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+                }
             }
         }
         return new CommonResult(CommonResult.SUCCED, "处理完成");
