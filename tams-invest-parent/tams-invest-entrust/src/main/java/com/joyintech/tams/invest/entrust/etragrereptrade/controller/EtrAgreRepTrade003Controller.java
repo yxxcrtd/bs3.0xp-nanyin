@@ -176,7 +176,7 @@ public class EtrAgreRepTrade003Controller extends BaseController{
 				return webResult;
 			}
 		}
-        List<String> entrustIdList = new ArrayList<>();
+//        List<String> entrustIdList = new ArrayList<>();
         for(EtrAgreRepTrade003Dto item : dto.getSelectedItem()){
             item.setFromEtrExchange(dto.getFromEtrExchange());
             item.setAssetType2(DictCodeList.回购类型_质押式协议回购.getValue());
@@ -187,9 +187,9 @@ public class EtrAgreRepTrade003Controller extends BaseController{
             // 指令持仓流水、现金流水处理
             etrAgreRepTrade001Service.revokeOrCloseEntrust(item);
             //释放风险接口释放
-            entrustIdList.add(item.getEntrustId());
+//            entrustIdList.add(item.getEntrustId());
         }
-        EntrustCompleteUtil.doComplete(entrustIdList);
+//        EntrustCompleteUtil.doComplete(entrustIdList);
         return new AjaxResult(this.getMessage("ETR_X_003"));
     }
 

@@ -48,7 +48,7 @@
         cols:[
             {field:'settleSeqNo',title: '待交割序号', width:'150', visible:false}
             ,{field:'settleStatus', visible:false}
-            ,{field:'settleStatusStr', title: '交收状态', width:'150'}
+            ,{field:'settleStatusStr', title: '交收状态', width:'150',sortField:'settleStatus'}
             ,{field:'entrustNo', title: '指令序号', width:'150'}
             ,{field:'orderId', title: '指令序号', width:'150', visible:false}
             ,{field:'tradeId', title: '原业务编号', width:'150'}
@@ -59,16 +59,16 @@
             ,{field:'acctNo', title: '资金账户', width:'150'}
             ,{field:'secAcctId', title: '证券账户', width:'150'}
             ,{field:'tradeMarket', visible:false}
-            ,{field:'tradeMarketStr', title: '交易市场', width:'150'}
+            ,{field:'tradeMarketStr', title: '交易市场', width:'150',sortField:'tradeMarket'}
             ,{field:'tradePlat', visible:false}
-            ,{field:'tradePlatStr', title: '交易平台', width:'150'}
+            ,{field:'tradePlatStr', title: '交易平台', width:'150',sortField:'tradePlat'}
             ,{field:'finprodId',visible:false}
             ,{field:'finprodMarketId', title: 'EtrTransactionDetail001.finprodId', width:'150'}
             ,{field:'finprodName', title: 'EtrTransactionDetail001.finprodName', width:'150'}
             ,{field:'settleNum',title: '交割数量', width:'150', type:'money'}
             ,{field:'settleAmt', title: '交割金额', width:'150', type:'money'}
             ,{field:'busiType', title: '业务类别', width:'150', visible:false}
-            ,{field:'busiTypeStr', title: '业务类别', width:'150'}
+            ,{field:'busiTypeStr', title: '业务类别', width:'150',sortField:'busiType'}
             ,{field:'counterId', title: '交易对手', width:'150', visible:false}
             ,{field:'counterName', title: '交易对手', width:'150'}
         ],
