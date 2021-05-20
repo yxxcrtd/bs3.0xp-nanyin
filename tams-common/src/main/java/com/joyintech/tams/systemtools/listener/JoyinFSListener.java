@@ -11,6 +11,7 @@ import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.systemtools.dao.JoyinFSMapper;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import com.joyintech.tools.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,9 @@ public class JoyinFSListener implements FileUploadListener, FileAttachmentProces
     public int remove(String fileNo) {
         UploadFile file = this.fetch(fileNo);
         if (null != file) {
+            FileUtil.deleteFile(file.getTargetFile().getPath());
             return joyinFSMapper.deleteByPrimaryKey(fileNo);
+
         }
         return 0;
     }

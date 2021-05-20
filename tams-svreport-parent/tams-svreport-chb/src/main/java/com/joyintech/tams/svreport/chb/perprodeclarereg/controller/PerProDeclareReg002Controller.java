@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Controller
@@ -73,12 +75,10 @@ public class PerProDeclareReg002Controller extends BaseController {
                 for(UploadFile uploadFile:dto.getFileArray()){
                     //文件名称
                     String filename=uploadFile.getSrcName().substring(0,uploadFile.getSrcName().indexOf("."));
-                    //由于数据库字段长度为32位,此处需要把查出的REGIST_SEQNO 多余的四个"-" 祛除,保证正常入库
-                    String FILE_NO=regCodeMap.get(filename).replaceAll("-","");
-                    //perProDeclareReg001Service.updateChbPrdDeclare(regCodeMap.get(filename),filename);
+                    String FILE_NO = IDGenerator.generate(32);
                     perProDeclareReg001Service.updateChbPrdDeclare(FILE_NO,regCodeMap.get(filename));
                     //删除已存在的数据重新插入
-                    perProDeclareReg001Service.deleteBySeqNo(FILE_NO);
+//                    perProDeclareReg001Service.deleteBySeqNo(FILE_NO);
                     //插入数据
                     SysUploadFileInfo sysUploadFileInfo=new SysUploadFileInfo();
                     sysUploadFileInfo.setSeqNo(FILE_NO);
