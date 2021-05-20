@@ -571,12 +571,14 @@
                 psp.PORTFOLIO_ID portfolioId,
                 pp.PORTFOLIO_NAME portfolioName,
                 psp.SEC_ACCT_ID secAcctId,
+				ssai.SEC_ACCT_NAME secAcctName,
                 psp.AMOUNT regDateAmt,
                 psp.CDATE regDate,
                 <!--增加字段 是否投资组合-->
                 pp.INVEST_YESORNO investYesorno
 				<!--增加字段 是否投资组合-->
                 from PTL_SEC_POSITION psp
+				left join STL_SEC_ACCT_INFO ssai on psp.SEC_ACCT_ID = ssai.SEC_ACCT_ID
                 inner join FIN_PRODUCT fp on fp.FINPROD_ID = psp.FINPROD_ID
                 inner join PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = psp.PORTFOLIO_ID
 		WHERE
