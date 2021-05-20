@@ -7,16 +7,17 @@
 			p.PROD_ID AS prodId,	/** 产品代码**/
 			p.PROD_NAME AS prodName,	/** 产品全称**/
 			p.REG_CODE AS regCode, /**理财登记编码**/
-			date_format(p.RAISE_VDATE,'%Y年%m月%d日') AS paisePstrDate,#/**募集起始日**/
-			date_format(p.RAISE_ENDDATE,'%Y年%m月%d日') AS paisePendDate,#/**募集结束日**/
-		    date_format(p.VDATE,'%Y年%m月%d日') AS vDate, /**产品起息日**/
+			DATE_FORMAT(p.RAISE_VDATE,'%Y年%m月%d日') AS paisePstrDate,#/**募集起始日**/
+			DATE_FORMAT(p.RAISE_ENDDATE,'%Y年%m月%d日') AS paisePendDate,#/**募集结束日**/
+			DATE_FORMAT(p.VDATE,'%Y年%m月%d日') AS vDate, /**产品起息日**/
 			p.ACCT_NAME AS acctName, /**托管账户名称**/
 			p.BUSI_ACCT_NO AS busiAcctNo, /**托管账户账号**/
 		    FORMAT(IFNULL(d.TRADE_COST, 0) / 1, 2) AS tradeCost, /**实际募集金额**/
 			d.CCY AS ccy, /**币种**/
 			'华夏理财有限责任公司' AS managerFullName, /**管理人全称**/
 			'华夏理财' AS managerShortName, /**管理人简称**/
-		    #{revealDate,jdbcType=VARCHAR} AS revealDate, /**公告披露日期**/
+		    DATE_FORMAT(#{revealDate,jdbcType=VARCHAR},'%Y年%m月%d日') AS revealDate, /**公告披露日期**/
+		    DATE_FORMAT(#{revealDate,jdbcType=VARCHAR},'%Y%m%d') AS sysPlatformDate, /**系统平台日**/
 			p.CUSTOMER_TYPE as customerType/** 客户类型**/
 		FROM
 			CHB_PRD_BASEINFO p
@@ -26,8 +27,8 @@
 					SUM(TRADE_COST) TRADE_COST,
 					CCY,
 					TRADE_TYPE
-				FROM CHB_PRD_DEAL d GROUP BY PROD_ID HAVING SUM(TRADE_COST)
-			) d ON d.PROD_ID = p.PROD_ID AND d.TRADE_TYPE = '01'
+				FROM CHB_PRD_DEAL d  WHERE d.TRADE_TYPE = '01' GROUP BY PROD_ID HAVING SUM(TRADE_COST)
+			) d ON d.PROD_ID = p.PROD_ID
 			LEFT JOIN REP_REVEAL l ON l.REP_ID = '01'
 			AND l.`STATUS` = 'E'
 			AND l.PRODID = p.PROD_ID

@@ -74,7 +74,7 @@ public class ChbExpireOperationService extends CommonExportService<ChbExpirePrdI
             mapList.add(dataMap);
             titleList.add(ChbInvestReportUtil.generateFileNameForReport(DictCodeListExt3.中债披露报告_到期公告.getValue(),
                     chbExpirePrdInfo.getProdName(), chbExpirePrdInfo.getProdId(), chbExpirePrdInfo.getCustomerType(),
-                    param.get("endDate").toString()));
+                    chbExpirePrdInfo.getSysPlatformDate()));
         }
     }
 

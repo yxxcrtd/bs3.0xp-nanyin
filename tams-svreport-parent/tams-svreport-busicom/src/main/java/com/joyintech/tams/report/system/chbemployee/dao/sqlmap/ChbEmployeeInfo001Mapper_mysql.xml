@@ -46,7 +46,9 @@
 	<update id="updateChbEmployeeInfo" parameterType="java.util.List" >
 		UPDATE CHB_EMPLOYEE_INFO
 		set
-		STATUS = 'D'
+		STATUS = 'D',
+		UPDATE_USER =#{updateUser,jdbcType=VARCHAR},
+		UPDATE_TIME=NOW()
 		where
 		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
 			IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
@@ -82,11 +84,14 @@
 		REG_EMPLOYEE_TYPE regEmployeeType
 		FROM
 		CHB_EMPLOYEE_INFO a
-		where
-		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
-			IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
-			and EMPLOYEE_TYPE = #{item.employeeType,jdbcType=VARCHAR}
-		</foreach>
+		<where>
+			<if test="dtoList != null and dtoList.size() > 0">
+				<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+					IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
+					and EMPLOYEE_TYPE = #{item.employeeType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
 	</select>
 	<select id="selectOneDate" resultType="com.joyintech.tams.common.base.entity.ChbEmployeeInfo">
 		SELECT

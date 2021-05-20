@@ -11,7 +11,7 @@
       <div class="form-inline-wrap">
         <label class="layui-form-label form-lable">身份证号码</label>
         <div class="layui-input-inline input-inline">
-          <input type="text" id="identifyNumber" name="identifyNumber" data-th-value="${entity?.identifyNumber}" class="layui-input form-input" placeholder="请输入内容">
+          <input type="text" id="identifyNumber" name="identifyNumber" data-th-value="${entity?.identifyNumber}" class="layui-input form-input" placeholder="请输入内容" required="true">
           <input type="hidden" id="type" name="type" data-th-value="${entity?.type}" class="layui-input form-input" >
           <input type="hidden" id="oldIdentifyNumber" name="oldIdentifyNumber" data-th-value="${entity?.oldIdentifyNumber}" class="layui-input form-input" >
           <input type="hidden" id="oldEmployeeType" name="oldEmployeeType" data-th-value="${entity?.oldEmployeeType}" class="layui-input form-input" >
@@ -24,7 +24,7 @@
                   data-th-data-result='${SVR_EMPLOYEE_TYPE}'
                   data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select"
                   placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
-                  allowClear="true"
+                  allowClear="true" required="true"
                   >
           </select>
         </div>

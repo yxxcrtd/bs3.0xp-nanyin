@@ -409,9 +409,21 @@
   </insert>
 
 	<select id="queryUpdateDateFromVal" resultType="java.util.Date">
-		SELECT DISTINCT VAL_DATE
+		SELECT DISTINCT T.VALUE_DATE FROM
+		(
+		SELECT VALUE_DATE
+		<if test="isBtm ==null or isBtm=='01' ">
+			FROM CHB_ASSETS_BASIS_DATA
+		</if>
+		<if test="isBtm !=null and isBtm=='02' ">
+			FROM CHB_ASSETS_BASIS_DATA_NOBTM
+		</if>
+		WHERE DATE_FORMAT(UPDATE_TIME,'%y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
+		UNION ALL
+		SELECT VAL_DATE AS VALUE_DATE
 		FROM CHB_AST_VAL
-		WHERE DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
-		ORDER BY VAL_DATE
+		WHERE VAL_DATE = STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		)AS T
+		ORDER BY T.VALUE_DATE
 	</select>
 </mapper>

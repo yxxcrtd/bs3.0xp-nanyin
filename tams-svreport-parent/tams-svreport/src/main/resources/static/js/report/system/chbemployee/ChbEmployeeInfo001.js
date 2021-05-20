@@ -106,12 +106,14 @@
                 return;
             }
             var object = {selectedItem: listdto, operateType:"delete"};
-            Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo001/deleteData', object, function(result) {
-                if(result.message=='删除成功'){
-                    table.load();
-                }else{
-                    alert(result.message);
-                }
+            Joyin.confirm("是否进行删除操作？", function() {
+                Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo001/deleteData', object, function(result) {
+                    if(result.message=='删除成功'){
+                        table.load();
+                    }else{
+                        alert(result.message);
+                    }
+                });
             });
         });
 
@@ -155,12 +157,14 @@
                 return;
             }
             var object = {selectedItem: selArr, operateType:"delete"};
-            Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo001/deleteData', object, function(result) {
-                if(result.message=='删除成功'){
-                    table.load();
-                }else{
-                    alert(result.message);
-                }
+            Joyin.confirm("是否进行删除操作？", function() {
+                Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo001/deleteData', object, function(result) {
+                    if(result.message=='删除成功'){
+                        table.load();
+                    }else{
+                        alert(result.message);
+                    }
+                });
             });
         });
         $('#ChbEmployeeInfo001_btn_search').click(function() {

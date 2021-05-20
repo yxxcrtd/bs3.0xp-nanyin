@@ -7,8 +7,9 @@
 			p.PROD_ID AS prodId,	/** 产品代码**/
 			p.PROD_NAME AS prodName,	/** 产品名称**/
 			p.CASH_PRIN_CCY AS cashPrinCcy, /**投资及收益币种**/
-			p.VDATE AS vDate, /**产品成立日**/
+		    DATE_FORMAT(p.VDATE, '%Y-%m-%d') AS vDate, /**产品成立日**/
 			DATE_FORMAT(r.SETTDATE_DATE, '%Y-%m-%d') AS endDate, /**产品到期日**/
+		    DATE_FORMAT(r.SETTDATE_DATE,'%Y年%m月%d日') AS realEndDate,/**实际到期日**/
 			c1.INVEST_FEE_RATE AS investFeeRate, /**固定管理费率**/
 			c2.TRU_FEE_RATE AS truFeeRate, /**托管费率**/
 			c3.SALE_FEE_RATE AS saleFeeRate, /**销售手续费率**/
@@ -17,7 +18,8 @@
 			else '-' end AS qtyValue, /**到期日份额净值/每万份净收益**/
 			case when p.PRODTYPE = 'N' THEN  i.UNIT_VALUE_T
 			else '-' end AS totalQtyValue, /**到期日份额累计净值**/
-		    #{revealDate,jdbcType=VARCHAR} AS mDate, /**报表日期**/
+		    DATE_FORMAT(#{revealDate,jdbcType=VARCHAR},'%Y年%m月%d日') AS mDate, /**报表日期**/
+            DATE_FORMAT(#{revealDate,jdbcType=VARCHAR},'%Y%m%d') AS sysPlatformDate, /**系统平台日**/
 			'华夏理财有限责任公司' AS managerFullName, /**管理人全称**/
 			'华夏理财' AS managerShortName, /**管理人简称**/
 			p.CUSTOMER_TYPE as customerType/** 客户类型**/
@@ -60,6 +62,7 @@
 					from
 						REP_CASH_YIELD
 					where CASH_TYPE2= 'C03'
+					and STR_TO_DATE(START_DATE,'%Y-%m-%d') between '1970-01-01'  and #{endDate,jdbcType=VARCHAR}
 				)c where my_rank =1
 			) c1 on c1.BUSI_ID = p.PROD_ID
 			left join
@@ -72,6 +75,7 @@
 					from
 						REP_CASH_YIELD
 					where CASH_TYPE2= 'C05'
+					and STR_TO_DATE(START_DATE,'%Y-%m-%d') between '1970-01-01'  and #{endDate,jdbcType=VARCHAR}
 				)c where my_rank =1
 			) c2 on c2.BUSI_ID = p.PROD_ID
 			left join
@@ -84,6 +88,7 @@
 				from
 					REP_CASH_YIELD
 				where CASH_TYPE2= 'C06'
+		        and STR_TO_DATE(START_DATE,'%Y-%m-%d') between '1970-01-01'  and #{endDate,jdbcType=VARCHAR}
 				)c where my_rank =1
 			) c3 on c3.BUSI_ID = p.PROD_ID
 		where
