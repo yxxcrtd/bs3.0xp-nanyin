@@ -107,7 +107,7 @@
 	    /***update by leipeng 20200628**/
 
 		<if test="model_type != null">
-		info.REG_CODE issuePartyId, /*发行机构代码*/
+		nvl(info.REG_CODE,cds.ISSUE_PARTY_ID) issuePartyId, /*发行机构代码*/
 	  </if>
 	  <if test="model_type == null">
 	    cds.ISSUE_PARTY_ID issuePartyId,
@@ -447,7 +447,7 @@
 	
 	 /****add by leipeng 20200628 添加多法人模式查询所属机构**/
 	<if test="model_type != null">
-      	PRD.REG_CODE ISSUE_PARTY_ID ,/*发行机构代码*/
+      	nvl(PRD.REG_CODE,baseinfo.ISSUE_PARTY_ID) ISSUE_PARTY_ID ,/*发行机构代码*/
      </if>
 	<if test="model_type == null">
 		baseinfo.ISSUE_PARTY_ID ,/*发行机构代码*/
@@ -520,10 +520,11 @@
 	/****add by leipeng 20200628 添加多法人模式查询所属机构**/
 	<if test="model_type != null">
       LEFT JOIN CHB_PRD_BASEINFO PRD on PRD.PROD_ID=baseinfo.PROD_INS_ID
+		LEFT JOIN CHB_ORG_REGIST_BANK_CODE COD ON baseinfo.ISSUE_PARTY_ID=COD.REGIST_BANK_CODE
       </if>
 	
 	where 1 =1
-	<if test="prodInfos!=null and prodInfos.size()!=0">
+	<!--<if test="prodInfos!=null and prodInfos.size()!=0">
 		AND trim(baseinfo.PROD_INS_ID) in
 		<foreach collection="prodInfos" item="item" index="index" open="(" separator="," close=")">
 			<if test="(index % 999) == 998">
@@ -531,6 +532,9 @@
 			</if>
 			#{item}
 		</foreach>
+	</if>-->
+	<if test="model_type != null　and InstitutionCode != null and InstitutionCode != '' "  >
+			AND COD.ORG_CODE  =#{InstitutionCode,jdbcType=VARCHAR}
 	</if>
     <!-- 根据产品的更新时间和创建时间生成报表 -->
     <if test="generateDate != null">

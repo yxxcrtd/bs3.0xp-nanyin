@@ -37,7 +37,7 @@ public interface PerProDeclareReg001Mapper {
 	public List<PerProDeclareRegDto> selectPerProdList(@Param("generateDate")String generateDate,
 	        @Param("prodInfos")List<String> prodIds);
 	
-	public List<PerProDeclareRegDto> selectPerProdListEx(@Param("generateDate")String generateDate,@Param("model_type")String model_type,@Param("prodInfos")List<String> prodIds);
+	public List<PerProDeclareRegDto> selectPerProdListEx(@Param("generateDate")String generateDate,@Param("model_type")String model_type,@Param("InstitutionCode")String InstitutionCode);
 	public List<PerProDeclareRegDto> selectPerProdListEx(@Param("generateDate")String generateDate, @Param("model_type")String model_type);
 
 	public void insertList(List<PerProDeclareRegDto> list);
