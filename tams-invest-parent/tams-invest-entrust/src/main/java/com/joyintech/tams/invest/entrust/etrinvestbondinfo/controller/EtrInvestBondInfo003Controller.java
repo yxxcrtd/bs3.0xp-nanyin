@@ -97,6 +97,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.清算速度);
         this.setSelectOptionToModel(model, DictCode.投资目的);
         this.setSelectOptionToModel(model, DictCode.交易平台);
+        this.setSelectOptionToModel(model, DictCode.价格模式);
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("bankRoom", DictCodeListExt1.交易场所_银行间.getValue());
