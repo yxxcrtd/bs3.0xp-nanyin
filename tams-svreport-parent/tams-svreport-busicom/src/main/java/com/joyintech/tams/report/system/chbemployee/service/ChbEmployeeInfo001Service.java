@@ -74,9 +74,6 @@ public class ChbEmployeeInfo001Service extends CommonExportService<ChbEmployeeIn
         });
     }
     public void updateChbEmployeeInfo(List<ChbEmployeeInfo> dtoList) {
-        for (ChbEmployeeInfo chbEmployeeInfo : dtoList) {
-            chbEmployeeInfo.setUpdateUser(LoginUserUtil.getUserName());
-        }
         chbEmployeeInfo001Mapper.updateChbEmployeeInfo(dtoList);
         return;
     }
