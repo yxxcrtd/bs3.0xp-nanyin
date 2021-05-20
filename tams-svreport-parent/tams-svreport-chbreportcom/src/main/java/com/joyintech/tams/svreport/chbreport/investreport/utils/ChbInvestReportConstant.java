@@ -61,4 +61,9 @@ public class ChbInvestReportConstant {
     public static final DecimalFormat df1 = new DecimalFormat("0.0000");
     public static final DecimalFormat df2 = new DecimalFormat("###,##0.00");
     public static final DecimalFormat df3 = new DecimalFormat("0.00%");
+
+    /**
+     * 财务报表编制单位
+     */
+     public static final String 财务报表_编制单位 = "REPORT_ORG";
 }

@@ -13,6 +13,7 @@ import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto;
+import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportConstant;
 import com.joyintech.tools.util.ExcelCellValueFunction;
 import com.joyintech.tools.util.ExcelTools;
 import org.apache.poi.ss.usermodel.*;
@@ -181,7 +182,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
         //map.put("org",CacheUtil.getSysParam(GlobalConstant.财务报表_编制单位));
         map.put("platDate", DateUtil.format(DateUtil.platDateFromCache()));
         map.put("reportDate", reportDate);
-        map.put("org", "华夏银行");
+        map.put("org",CacheUtil.getSysParam(ChbInvestReportConstant.财务报表_编制单位));
         String ccy = null;
         for (int i = 0; i < finAssetLiabilityList.size(); i++) {
             if (StringUtil.isNotEmpty(finAssetLiabilityList.get(i).getCcy())) {

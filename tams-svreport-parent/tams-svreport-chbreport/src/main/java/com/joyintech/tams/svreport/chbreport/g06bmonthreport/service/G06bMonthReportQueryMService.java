@@ -12,6 +12,7 @@ import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportG06bDetail;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
+import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportConstant;
 import com.joyintech.tools.util.ExcelTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,9 +142,8 @@ public class G06bMonthReportQueryMService extends CommonExportService<ChbreportP
 
         // 设置 Excel 元素
         Map<String, Object> map = createData(reportDate);
-        //map.put("org",CacheUtil.getSysParam(GlobalConstant.财务报表_编制单位));
+        map.put("org",CacheUtil.getSysParam(ChbInvestReportConstant.财务报表_编制单位));
         map.put("reportDate", reportDate);
-        map.put("org", "华夏银行");
         TisUtil.createFile(map, exceltemplate, fileName);
 
         return exportFileDto;
