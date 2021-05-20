@@ -120,11 +120,7 @@
 	<!-- 证件匹配-不合格数据信息 -->
 	<select id="searchTableZJPP" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 
-		 select temp.PERSONAL_IDENTIFY_TYPE,
-		temp.INSTITUTION_IDENTIFY_TYPE,
-		temp.IDENTIFY_NUMBER,
-		temp.counts
-		 from (
+		with temp as (
 		select
 		ces1.PERSONAL_IDENTIFY_TYPE,
 		ces1.INSTITUTION_IDENTIFY_TYPE,
@@ -138,10 +134,10 @@
 				#{orgCode,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		and STR_TO_DATE(DATE_FORMAT(ces1.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+		and STR_TO_DATE(ces1.SUBMIT_TIME, '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
 		group by ces1.PERSONAL_IDENTIFY_TYPE, ces1.INSTITUTION_IDENTIFY_TYPE, ces1.IDENTIFY_NUMBER
 		having count(1) > 1
-		) temp
+		)
 
 		select
 		ces.REGIST_BANK_CODE registBankCode,
