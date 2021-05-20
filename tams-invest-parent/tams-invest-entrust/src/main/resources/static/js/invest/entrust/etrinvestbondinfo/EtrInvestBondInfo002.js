@@ -416,6 +416,9 @@
          * 交易方向
          */
         $('#ps').change(function () {
+                if(pageModel !== PAGE_MODEL_NEW && pageModel !== PAGE_MODEL_EDIT){
+                    return;
+                }
                 var ps = $('#ps').val();
                 var ccy = $('#ccy').val();
                 var portfolioId = $('#portfolioId').val();
@@ -952,7 +955,7 @@
          */
         $('#priceModel').change(function () {
             if (pageModel != PAGE_MODEL_REFERENCE) {
-                if ($('#priceModel').val() == PRICEMODEL_03) {
+                if ($('#priceModel').val() == 'PRM03') {
                     $('#price').val('').attr('disabled', true);
                     $('#fpriceAmt').val('');
                     $('#matureYield').val('').attr('disabled', true);
