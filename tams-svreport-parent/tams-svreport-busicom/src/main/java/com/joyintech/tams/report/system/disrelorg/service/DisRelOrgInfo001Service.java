@@ -151,6 +151,7 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
     }
 
     public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList,String userName, String orgCode, String deptCode) throws ParseException {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
         if (!StringUtil.isEmptyList(dataList)) {
             List<String> headList = new ArrayList<String>();
             headList.add("操作类型");
@@ -164,6 +165,7 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
                 List<DisAssociatedInstitutions> entities = new ArrayList<DisAssociatedInstitutions>();
                 Map<String,Object> map=new HashMap<>();
                 for (int i = 0; i < dataList.size(); i++ ) {
+                    List<String> message = new ArrayList<>();
                     //操作类型
                     String type ="";
                     if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
@@ -181,8 +183,7 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
                     }
                     if("新增".equals(type)){
                         addDisAssociatedInstitutions(relorgId,userName,organName);
-                    }
-                    if("修改".equals(type)){
+                    }else if("修改".equals(type)){
                         //根据关联机构代码查询出数据,有数据则更新,无数据则插入
                         List<DisAssociatedInstitutions> entitys=disRelOrgInfo001Mapper.selectOne(relorgId);
                         if(null!=entitys.get(0) && !"".equals(entitys.get(0).getRelorgId())){
@@ -196,21 +197,24 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
                         }else{
                             addDisAssociatedInstitutions(relorgId,userName,organName);
                         }
-                    }
-                    if("删除".equals(type)){
+                    }else if("删除".equals(type)){
                         disRelOrgInfo001Mapper.updateOneStatus(relorgId);
+                    }else {
+                        message.add("操作类型值不在可选范围内");
+                    }
+                    if (!message.isEmpty()) {
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                                StringUtil.joinString(message, GlobalConstant.COMMA)));
                     }
                 }
             }
         }else{
-            List<ExcelValidDto> checkResult = new ArrayList<>();
             ExcelValidDto excelValidDto = new ExcelValidDto();
             String errorMsg = "模板为空，请输入数据！";
             excelValidDto.setErrorInfo(errorMsg);
             checkResult.add(excelValidDto);
-            return checkResult;
         }
-        return null;
+        return checkResult;
     }
 
     private void addDisAssociatedInstitutions(String relorgId,String userName,String organName){

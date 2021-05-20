@@ -200,6 +200,7 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
     }
 
     public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList,String userName, String orgCode, String deptCode) throws ParseException {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
         if (!StringUtil.isEmptyList(dataList)) {
             List<String> headList = new ArrayList<String>();
             headList.add("操作类型");
@@ -214,6 +215,7 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
                 List<DisRepCashYield> entities = new ArrayList<>(dataList.size());
                 Map<String,Object> map=new HashMap<>();
                 for (int i = 0; i < dataList.size(); i++ ) {
+                    List<String> message = new ArrayList<>();
                     //操作类型
                     String type ="";
                     if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
@@ -243,22 +245,25 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
 
                     if("新增".equals(type) || "修改".equals(type)){
                         updateInfo(ChbMstCounterPartys,counterId, counterName, counterType2,deptCode,userName);
-                    }
-                    if("删除".equals(type)){
+                    }else if("删除".equals(type)){
                         chbMstCounterParty001Mapper.deleteOne(counterId);
                         chbMstCounterParty001Mapper.deleteErrorDataOne(counterId);
+                    }else {
+                        message.add("操作类型值不在可选范围内");
+                    }
+                    if (!message.isEmpty()) {
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                                StringUtil.joinString(message, GlobalConstant.COMMA)));
                     }
                 }
             }
         }else{
-            List<ExcelValidDto> checkResult = new ArrayList<>();
             ExcelValidDto excelValidDto = new ExcelValidDto();
             String errorMsg = "模板为空，请输入数据！";
             excelValidDto.setErrorInfo(errorMsg);
             checkResult.add(excelValidDto);
-            return checkResult;
         }
-        return null;
+        return checkResult;
     }
 
     private void addDisRepCashYield(String counterId,String counterName,String counterType2,String deptCode,String userName){
