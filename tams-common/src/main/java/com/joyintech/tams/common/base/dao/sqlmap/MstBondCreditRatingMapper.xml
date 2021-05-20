@@ -54,7 +54,7 @@
           and O_TYPE = #{oType,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstBondCreditRating" >
-        REPLACE into MST_BOND_CREDIT_RATING (O_CODE, GRADE_ORG_ID, GRADE_DATE,
+        insert into MST_BOND_CREDIT_RATING (O_CODE, GRADE_ORG_ID, GRADE_DATE,
             O_TYPE, SHORT_LONG_TERM, GRADE_RESULT, 
             INPUT_TYPE, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
