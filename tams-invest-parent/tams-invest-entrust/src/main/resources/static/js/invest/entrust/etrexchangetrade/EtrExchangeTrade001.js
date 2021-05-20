@@ -2796,6 +2796,10 @@
         });
 
         initPage();
+        if(calculateField){
+        	$("input[name=calculateField_" + currentTab + "][value='"+ calculateField +"']").attr("checked",true);
+        	layui.form.render(); //更新
+        }
 
         // 绑定各种字段的change事件
         // 组合名称

@@ -154,6 +154,9 @@ public class EtrExchangeTrade001Controller extends BaseController{
 		} else {
 			model.addAttribute("BOND_SCALE", 3);
 		}
+		if(null != entity && null != entity.getCalculateField()) {
+			 model.addAttribute("calculateField", entity.getCalculateField());
+		}
         //最小价差List
         List<MinPirceDto> minPriceWhole = getInterfSysMinPriceAll(new HashMap<>());
         model.addAttribute("minPriceWhole", minPriceWhole);
