@@ -2,9 +2,11 @@ package com.joyintech.tams.component.business.trade;
 
 import com.joyintech.tams.common.base.entity.PtlTrade;
 import com.joyintech.tams.invest.common.CommonResult;
+import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 提供金融产品交易共通业务逻辑处理
@@ -60,4 +62,12 @@ public interface BaseTradeProductDealCommService {
      * @date:
      */
     Integer insertPtlTrade(PtlTrade ptlTrade);
+
+    /**
+     *委托完成状况信息
+     * @param BaseTradeProductDealDtoList
+     * @param isCancel
+     * @return
+     */
+    public Boolean finishEntrust(List<BaseTradeProductDealDto> BaseTradeProductDealDtoList, boolean isCancel);
 }

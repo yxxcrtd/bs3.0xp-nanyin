@@ -25,6 +25,7 @@ import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -756,13 +757,47 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
 
             // 查询委托额度
             EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
+            // 指令已完成状态更新逻辑修改 modify by yufei 20200807 start
+            EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
             if (etrFinishAmtDto != null && etrEntrust != null) {
-                BigDecimal 委托额度 = etrEntrust.getEntrustAmt();
-                if (委托额度 == null) {
-                    委托额度 = etrEntrust.getEntrustNum();
+                BigDecimal 委托额度 = BigDecimal.ZERO;
+                // 根据指令的目标类型判断
+                if(StringUtil.equals(etrEntrust.getPs(),DictCodeListExt3.交易方向_解除质押.getValue())
+                        || StringUtil.equals(etrEntrust.getPs(),DictCodeListExt3.交易方向_中途换券.getValue())){
+                    // 解除质押/中途换券 委托额度取值修改成质押数量 add by yufei 2020-10-16
+                    EtrPledgeKey key = new EtrPledgeKey();
+                    key.setEntrustId(entrustId);
+                    key.setFinprodId(etrEntrust.getFinprodId());
+                    EtrPledge etrPledge = etrPledgeMapper.selectByPrimaryKey(key);
+                    if(etrPledge != null){
+                        委托额度 = etrPledge.getPledgeNumber();
+                    }
+                }else if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())){
+                    if(StringUtil.equals(DictCodeListExt3.目标类型_数量.getValue(),etrEntrustAdd.getTargetType())){
+                        // 如果是数量则取份额来判断是否已完成
+                        委托额度 = etrEntrust.getEntrustNum();
+                    }
+                    else {
+                        // 否则取份额来判断是否已完成
+                        委托额度 = etrEntrust.getEntrustAmt();
+                    }
                 }
-
-                BigDecimal 总交易完成度 = ArithmeticUtil.divide(etrFinishAmtDto.getSumFinishAmt(), 委托额度, 4);
+                else {
+                	// 如果是期货 则按数量来判断  add by lijie2 20201120 start
+					if (StringUtils.equals(DictCodeListExt3.平安资产类型_期货.getValue(), etrEntrustAdd.getAssetType())) {
+						委托额度 = etrEntrust.getEntrustNum();
+					} else {
+						//add by lijie2 20201120 end
+						// 如果不存在目标类型，则按照原来的逻辑获取委托额度
+						委托额度 = etrEntrust.getEntrustAmt();
+					}
+                    if (委托额度 == null) {
+                        委托额度 = etrEntrust.getEntrustNum();
+                    }
+                }
+                // 指令已完成状态更新逻辑修改 modify by yufei 20200807 end
+                BigDecimal 总交易完成度 = ArithmeticUtil.divide(etrFinishAmtDto.getSumFinishAmt(),
+                    委托额度, 4);
                 总交易完成度 = ArithmeticUtil.multiply(总交易完成度, BigDecimal.valueOf(100));
                 etrFinishAmtDto.setSumFinishPercent(总交易完成度);
 

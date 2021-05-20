@@ -356,7 +356,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         return new CommonResult(CommonResult.SUCCED, "处理完成");
     }
 
-    private Boolean finishEntrust(List<BaseTradeProductDealDto> BaseTradeProductDealDtoList, boolean isCancel) {
+    public Boolean finishEntrust(List<BaseTradeProductDealDto> BaseTradeProductDealDtoList, boolean isCancel) {
         List<EtrFinishStatusDto> baseEtrInvestInfoDtos = new ArrayList<>();
         for (BaseTradeProductDealDto baseTradeProductDealDto : BaseTradeProductDealDtoList) {
             if(StringUtil.isNotBlank(baseTradeProductDealDto.getPreTradeId())){

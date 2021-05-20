@@ -782,6 +782,11 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             parameter.setCustom(trdTempDto);
             logger.info("持仓请求报文:" + JsonUtils.object2Json(parameter));
             commonPositionService.process(parameter);
+
+            // 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
+            if(!finProductTradeDto.isNeedHandleFinishEntrust()){
+                baseTradeProductDealCommService.finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
+            }
         }else {
             baseTradeProductDealCommService.execute(finProductTradeDto);
         }
