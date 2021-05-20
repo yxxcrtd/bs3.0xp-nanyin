@@ -3,7 +3,38 @@
  * @auth zhangliang
  */
 (function(){
+	/**
+	 * 画星星
+	 */
+	function star() {
+		// 加红星星
+		// 查找label
+		var _findPrevLabel = function (element, level) {
+			var $el = element.prev();
+			if (!$el.is('label') && level > 0) {
+				$el = $el.find('label');
+				if ($el.length === 0) {
+					return _findPrevLabel(element.parent(), level - 1);
+				}
+			}
+			return $el;
+		};
 
+		// 非查看模式
+		if (typeof pageModel !== 'undefined'
+			&& (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
+			$('.must').each(function () {
+				$(this).remove();
+			});
+			$('*[required]').each(function () {
+				var $el = $(this);
+				var $target = _findPrevLabel($el, 3);
+				if ($target.find('> .must').length === 0) {
+					$target.append($('<i class="must">*</i>'));
+				}
+			});
+		}
+	}
 	var getElementById = function(id) {
 		return $('#' + bussRepFinProductInfo + '_' + id);
 	};
@@ -34,29 +65,43 @@
 			getElementById('repInvestCountry').prop('disabled',false);
 			getElementById('repOutDepCtry').prop('disabled',false);
 			getElementById('repOutDepName').prop('disabled',false);
+			getElementById('repInvestCountry').attr('required',true);
+			getElementById('repOutDepCtry').attr('required',true);
+			getElementById('repOutDepName').attr('required',true);
 		}else{
 			getElementById('repInvestCountry').val('').trigger('change').prop('disabled',true);
 			getElementById('repOutDepCtry').val('').trigger('change').prop('disabled',true);
 			getElementById('repOutDepName').val('').trigger('change').prop('disabled',true);
+			getElementById('repInvestCountry').removeAttr('required');
+			getElementById('repOutDepCtry').removeAttr('required');
+			getElementById('repOutDepName').removeAttr('required');
 		}
 		if (repInvestArea === saleAreaDeclareIn || repInvestArea === saleAreaDeclareInOut){
 			getElementById('repFinanSerModel').prop('disabled',false);
 			getElementById('repInDepName').prop('disabled',false);
 			getElementById('repInDepCode').prop('disabled',false);
+			getElementById('repFinanSerModel').attr('required',true);
+			getElementById('repInDepName').attr('required',true);
 		}else{
 			getElementById('repFinanSerModel').val('').trigger('change').prop('disabled',true);
 			getElementById('repInDepName').val('').trigger('change').prop('disabled',true);
 			getElementById('repInDepCode').val('').trigger('change').prop('disabled',true);
+			getElementById('repFinanSerModel').removeAttr('required');
+			getElementById('repInDepName').removeAttr('required');
 		}
+		star();
 	}
 	
 	var repPmmodeChange = function(){
 		var repPmmode = getElementById('repPmmode').val();
 		if (repPmmode === prodManageModeActM || repPmmode === prodManageModeOthO){
 			getElementById('repMname').prop('disabled',false);
+			getElementById('repMname').attr('required',true);
 		}else{
 			getElementById('repMname').val('').trigger('change').prop('disabled',true);
+			getElementById('repMname').removeAttr('required');
 		}
+		star();
 	}
 	
 	 var repIsYieldChange = function(){
@@ -76,9 +121,12 @@
 		var repContMode = getElementById('repContMode').val();
 		if (repContMode === copModeSigRun){
 			getElementById('repCoopName').val('').trigger('change').prop('disabled',true);
+			getElementById('repCoopName').removeAttr('required');
 		}else{
 			getElementById('repCoopName').prop('disabled',false);
+			getElementById('repCoopName').attr('required',true);
 		}
+		star();
 	}
 	
 	var repCreditFlagChange = function(){
@@ -86,10 +134,15 @@
 		if (repIsYield){
 			getElementById('repCreditType').prop('disabled',false);
 			getElementById('repCreditMode').prop('disabled',false);
+			getElementById('repCreditType').attr('required',true);
+			getElementById('repCreditMode').attr('required',true);
 		}else{
 			getElementById('repCreditType').val('').trigger('change').prop('disabled',true);
 			getElementById('repCreditMode').val('').trigger('change').prop('disabled',true);
+			getElementById('repCreditType').removeAttr('required');
+			getElementById('repCreditMode').removeAttr('required');
 		}
+		star();
 	}
 	
 	var repOperateModeChange = function(){
@@ -104,6 +157,12 @@
 			getElementById('repOpenBussRemark').val('').trigger('change').prop('disabled',true);
 			getElementById('repOpenMode').val('').trigger('change').prop('disabled',true);
 			getElementById('repHolidayOnFlag').val('').trigger('change').prop('disabled',true);
+			getElementById('repAvgOpenCount').removeAttr('required');
+			getElementById('repOpenBuss').removeAttr('required');
+			getElementById('repOpenBussRemark').removeAttr('required');
+			getElementById('repOpenMode').removeAttr('required');
+			getElementById('repOpenCircle').removeAttr('required');
+			getElementById('repHolidayOnFlag').removeAttr('required');
 		}else{
 			getElementById('repOpenCircle').prop('disabled',false);
 			getElementById('repOpenCircleDays').prop('disabled',false);
@@ -114,7 +173,41 @@
 			getElementById('repOpenBussRemark').prop('disabled',false);
 			getElementById('repOpenMode').prop('disabled',false);
 			getElementById('repHolidayOnFlag').prop('disabled',false);
+			getElementById('repAvgOpenCount').attr('required',true);
+			getElementById('repOpenBuss').attr('required',true);
+			getElementById('repOpenBussRemark').attr('required',true);
+			getElementById('repOpenMode').attr('required',true);
+			getElementById('repOpenCircle').attr('required',true);
+			getElementById('repHolidayOnFlag').attr('required',true);
 		}
+		star();
+	}
+	/**
+	 * 规律开放周期 当“开放模式”选择“01 有规律开放”时必填
+	 * 无规律开放说明 “开放模式”选择“02 无规律开放”时必填，必须在此处描述理财产品的无规律开放周期的特点
+	 */
+	var repOpenModeChange = function(){
+		var repOpenMode = getElementById('repOpenMode').val();
+		if (repOpenMode === '01'){
+			getElementById('repOpenCircle').attr('required',true);
+			getElementById('repRuleComment').removeAttr('required');
+		}else{
+			getElementById('repOpenCircle').removeAttr('required');
+			getElementById('repRuleComment').attr('required',true);
+		}
+		star();
+	}
+	/**
+	 * 开放期业务说明 “开放期业务”选择“99 其他”时必填，必须在此处描述理财产品在开放周期内的业务开展方式
+	 */
+	var repOpenBussChange = function(){
+		var repOpenBuss = getElementById('repOpenBuss').val();
+		if (repOpenBuss === '99'){
+			getElementById('repOpenBussRemark').attr('required',true);
+		}else{
+			getElementById('repOpenBussRemark').removeAttr('required');
+		}
+		star();
 	}
 	
 	var repTermChangeAction = function(){
@@ -132,12 +225,24 @@
 			}
 		})
 	};
+	/**
+	 * 其他规律开放周期（天） 对“规律开放周期”选择“99 其他规律开放周期”的开放式产品必填
+	 */
 	var changeRepOpenCircle = function(){
 		var repOpenCircle = getElementById('repOpenCircle').val();
 		if(repOpenCircle !='99'){
 			getElementById('repOpenCircleDays').val("").prop('disabled',true);
 		}else{
 			getElementById('repOpenCircleDays').prop('disabled',false);
+		}
+		var repOpenMode = getElementById('repOpenMode').val();
+		if (repOpenMode === '01') {
+			if (repOpenCircle === '99'){
+				getElementById('repOpenCircleDays').attr('required',true);
+			}else{
+				getElementById('repOpenCircleDays').removeAttr('required');
+			}
+			star();
 		}
 	};
 	
@@ -147,10 +252,15 @@
 		if (isShortTerm == '01'){
 			getElementById('shortTerm').attr('disabled', false);
             getElementById('isFreeRedem').attr('disabled', false);
+			getElementById('shortTerm').attr('required',true);
+			getElementById('isFreeRedem').attr('required',true);
 		} else{
             getElementById('shortTerm').val('').attr('disabled', true);
             getElementById('isFreeRedem').val('').trigger('change').attr('disabled', true);
+			getElementById('shortTerm').removeAttr('required');
+			getElementById('isFreeRedem').removeAttr('required');
 		}
+		star();
 	};
     //是否设置最短持有期限 如果是 则 最短持有期限（天）必输 ，否则置灰 yjm end 20190807
 	
@@ -301,6 +411,12 @@
 			layui.form.on('switch(repCreditFlagFilter)', repCreditFlagChange);
 			// 产品运作模式
 			getElementById('repOperateMode').change(repOperateModeChange);
+			// 开放模式
+			getElementById('repOpenMode').change(repOpenModeChange);
+			// 开放期业务
+			getElementById('repOpenBuss').change(repOpenBussChange);
+			// 规律开放周期
+			getElementById('repOpenCircle').change(changeRepOpenCircle);
 			// 投资资产种类及比例
 			getElementById('repInvTypeRat_showRule').click(function(){
 				Joyin.alert(JoyinUtil.getLabel("BussRepFinProductInfo.repInvTypeRat.showRule"));
@@ -310,8 +426,6 @@
 			getElementById('repYieldComment_showRule').click(function(){
 				Joyin.alert(JoyinUtil.getLabel("BussRepFinProductInfo.repYieldComment.showRule"));
 			});
-			// 规律开放周期
-			getElementById('repOpenCircle').change(changeRepOpenCircle);
 			// 产品新建时联动改变期限品种
 	    	if (pageId === 'FinProductBuild002'||pageId === 'FinNetValueProductBuild002'){
 	    		// 主画面起息日和到期日联动改变期限品种
@@ -370,5 +484,6 @@
         }else{  
         	getElementById('isFhxgcp').prop('disabled',false);      
         }
+		star();
 	});
 }());

@@ -1,5 +1,37 @@
 (function(){
 	/**
+	 * 画星星
+	 */
+	function star() {
+		// 加红星星
+		// 查找label
+		var _findPrevLabel = function (element, level) {
+			var $el = element.prev();
+			if (!$el.is('label') && level > 0) {
+				$el = $el.find('label');
+				if ($el.length === 0) {
+					return _findPrevLabel(element.parent(), level - 1);
+				}
+			}
+			return $el;
+		};
+
+		// 非查看模式
+		if (typeof pageModel !== 'undefined'
+			&& (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
+			$('.must').each(function () {
+				$(this).remove();
+			});
+			$('*[required]').each(function () {
+				var $el = $(this);
+				var $target = _findPrevLabel($el, 3);
+				if ($target.find('> .must').length === 0) {
+					$target.append($('<i class="must">*</i>'));
+				}
+			});
+		}
+	}
+	/**
 	 * 初始化方法
 	 */
 	var finProductBuildInit = function(){
@@ -678,9 +710,11 @@
             //OPEX-572 产品端-浮动管理费首次计提日应为-1日 guyunfei end
 			//end
 			//封闭式置灰 中债报送tab的 是否设置最短持有期限 和 最短持有期限（天） start yjm 20190807
+			$('#bussRepFinProductInfoDto_isShortTerm').removeAttr('required');
 			$('#bussRepFinProductInfoDto_isShortTerm').val('').trigger('change').attr('disabled',true);
             //封闭式置灰 中债报送tab的 是否设置最短持有期限 和 最短持有期限（天） end yjm 20190807
             //封闭式置灰 基本信息的 是否现金管理类产品 start yjm 20190828
+			$('#FinNetValueProductBuild002_isCashManage').removeAttr('required');
             $('#FinNetValueProductBuild002_isCashManage').val('').trigger('change').attr('disabled',true);
             //封闭式置灰 基本信息的 是否现金管理类产品 end yjm 20190828
 		}else{
@@ -712,14 +746,17 @@
 //				chk.checked = true;
 	    		FinProductCommon.isSus();
                 //开放式 中债报送tab的 是否设置最短持有期限 和 最短持有期限（天） 必输 start yjm 20190807
+				$('#bussRepFinProductInfoDto_isShortTerm').attr('required', true);
                 $('#bussRepFinProductInfoDto_isShortTerm').attr('disabled', false);
                 //开放式 中债报送tab的 是否设置最短持有期限 和 最短持有期限（天） 必输 end yjm 20190807
                 //开放式必输 基本信息的 是否现金管理类产品 start yjm 20190828
+				$('#FinNetValueProductBuild002_isCashManage').attr('required',true);
                 $('#FinNetValueProductBuild002_isCashManage').attr('disabled', false);
                 //开放式必输 基本信息的 是否现金管理类产品 end yjm 20190828
 			}
 			//add by yejiejie 2019-3-7 end
 		}
+		star();
 	};
 	//add by yejiejie 2019-03-05 end
 	//add by yejiejie 2019-3-8 start
