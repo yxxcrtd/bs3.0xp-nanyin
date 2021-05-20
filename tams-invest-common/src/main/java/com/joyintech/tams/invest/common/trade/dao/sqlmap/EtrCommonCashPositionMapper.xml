@@ -376,7 +376,9 @@
     </select>
 
     <select id="getEtrFinishAmt" resultType="java.math.BigDecimal">
-        SELECT SUM(FINISH_AMT) FROM ETR_FINISH_STATUS WHERE ENTRUST_ID = #{entrustId}
+        <!--update by  zhangnian 20210520-->
+        <!--去除委托本身那笔完成度-->
+        SELECT SUM(FINISH_AMT) FROM ETR_FINISH_STATUS WHERE ENTRUST_ID = #{entrustId} and TRADE_ID != #{entrustId}
     </select>
     <select id="getEtrSurplusAmt" resultType="java.math.BigDecimal">
          SELECT
