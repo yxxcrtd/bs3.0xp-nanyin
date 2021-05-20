@@ -159,5 +159,11 @@
         and data_type = #{dataType}
     </select>
 
+    <select id="getSequenceIndexByParam" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
+
+    </select>
+
+    <update id="updateSequenceIndexData" >
+    </update>
 
 </mapper>

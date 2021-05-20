@@ -489,6 +489,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			List<ChbInvestholdInfoSub> updateList = new ArrayList<ChbInvestholdInfoSub>();
 			//插入list
 			List<ChbInvestholdInfoSub> insertList = new ArrayList<ChbInvestholdInfoSub>();
+			//增加批量查询序列 modify by yanya on 20210520
+			List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, keyList.size());
+			int index = 0;
 			for (InvestorsHoldInfo001Dto investorsHoldInfo001Dto : keyList) {
 				String key = investorsHoldInfo001Dto.getIndentifyMark() + GlobalConstant.UNDER_LINE
 						+ investorsHoldInfo001Dto.getRegistBankCode()+GlobalConstant.UNDER_LINE
@@ -527,7 +530,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 							chbInvesthold.setIndentifyMark(investorsHoldInfo001Dto.getIndentifyMark());
 							chbInvesthold.setRegistBankCode(investorsHoldInfo001Dto.getRegistBankCode());
 							chbInvesthold.setSendStatus(investorsHoldInfo.getSendStatus());
-							chbInvesthold.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+							//chbInvesthold.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+							chbInvesthold.setRegistSeqno(getSequenceStr(sequenceList, index));
+							index++;
 							chbInvesthold.setHoldDate(investorsHoldInfo001Dto.getHoldDate());
 							chbInvesthold.setPrdRegistCode(investorsHoldInfo001Dto.getPrdRegistCode());
 							chbInvesthold.setCcy(investorsHoldInfo001Dto.getCcy());
@@ -908,6 +913,13 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 		Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 		//对比临时dto
 		ChbInvestholdInfoSub chbInvestholdInfoSubTemp = null;
+		//获取多个序列 add by yanya on 20210520
+		List<String> sequenceList = null;
+		if(!"001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE")) && listE != null){
+			sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, listE.size());
+		}
+		//当前序列的数标 add by yanya on 20210520
+		int index = 0;
 		for (InvestorsHoldInfo001Dto action : listE) {
 			// 数据来源
 			action.setDataSource(type);
@@ -1009,7 +1021,10 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
 					chbInvestholdInfoSub.setRegistSeqno(getId());
 				}else{
-				chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+					//从获取的序列list中拿 add by yanya on 20210520
+					//chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+					chbInvestholdInfoSub.setRegistSeqno(getSequenceStr(sequenceList, index));
+					index++;
 				}
 				// add by etliu 20180829 start
 				if (isDB2DataBase) {
@@ -1263,6 +1278,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			// 更新操作
 			List<ChbInvestholdInfoSub> subListUp = new ArrayList<>();
 			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+			//增加批量序列 modify by yanya on 20210520
+			List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, listE.size());
+			int index = 0;
 			for (InvestorsHoldInfo001Dto action : listE) {
 				// 数据来源
 				action.setDataSource(DictCodeListExt2.数据来源_系统新建.getValue());
@@ -1300,7 +1318,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 							.get(dataKey + GlobalConstant.UNDER_LINE + SEND_STATUS_01).getRegistSeqno());
 					subListUp.add(chbInvestholdInfoSub);
 				} else {
-					chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+					//chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+					chbInvestholdInfoSub.setRegistSeqno(getSequenceStr(sequenceList, index));
+					index++;
 					subListIn.add(chbInvestholdInfoSub);
 				}
 			}
@@ -3613,4 +3633,20 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 
 		return "R0" + nowStr.toString() + String.format("%05d", new Object[] { Integer.valueOf(addPart) });
 	}
+
+	/**
+	 * 获取序列
+	 * @param list
+	 * @param index
+	 * @return
+	 */
+	public String getSequenceStr(List<String> list, int index) {
+		if(StringUtil.isEmptyList(list) || index >= list.size()) {
+			return getId();
+		}
+		else {
+			return list.get(index);
+		}
+	}
+
 }
