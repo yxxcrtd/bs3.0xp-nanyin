@@ -51,6 +51,7 @@ import com.joyintech.tams.systemtools.listener.TamsAuthorizationListener;
 import com.joyintech.tams.systemtools.service.SystemToolService;
 import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 
+@Lazy(false)
 @Component
 public class CommonUtil {
 	
