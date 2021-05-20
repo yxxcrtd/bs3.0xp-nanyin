@@ -1707,6 +1707,30 @@
 				$('#bussFinProductOpenPlanDto_purSpeed').val('1');
 			}
 		});
-        /**20200305 add by taoran 净值型产品，开放计划，确认天数不应支持T+0 end*/	
+        /**20200305 add by taoran 净值型产品，开放计划，确认天数不应支持T+0 end*/
+//        debugger;
+
+        var loadDartEnd = false, maxCount = 5;
+        var _timmer = setInterval(function() {
+              if(loadDartEnd && maxCount <= 0) {
+                 clearInterval(_timmer);
+                 _timmer = null;
+                 return;
+              }
+              maxCount--;
+              loadDartEnd = $("input[name='bussFinProductOpenPlanDto.openDateRadio']:first").next('.layui-form-radio').length > 0;
+              if(isDraft && loadDartEnd){
+                 if(openDateRadio  ){
+     //                $("input[name='bussFinProductOpenPlanDto.openDateRadio'][value='"+openDateRadio+"']").attr('checked',true);
+                     $("input[name='bussFinProductOpenPlanDto.openDateRadio'][value='"+openDateRadio+"']").prop('checked',true);
+                 }
+                 if(openDateRadioRed){
+                     $("input[name='bussFinProductOpenPlanRedDto.openDateRadio'][value='"+openDateRadioRed+"']").prop('checked',true);
+                 }
+                 layui.form.render('radio');
+
+             }
+         }, 1000);
+
     });
 }());
