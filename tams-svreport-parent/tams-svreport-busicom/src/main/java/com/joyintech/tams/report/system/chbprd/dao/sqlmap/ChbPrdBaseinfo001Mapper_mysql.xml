@@ -331,7 +331,7 @@
 	<insert id="insertPrdFeeData" parameterType="java.util.List">
 		insert into
 		chb_prd_baseinfo
-		(STATUS,PRODUUID,SVR_DATA_SOURCES,prod_id,ORG_CODE,RAISE_VDATE,RAISE_ENDDATE,VDATE,MDATE,MANAGE_TYPE,
+		(STATUS,PRODUUID,SVR_DATA_SOURCES,prod_id,prod_name,ORG_CODE,RAISE_VDATE,RAISE_ENDDATE,VDATE,MDATE,MANAGE_TYPE,
 		IS_CONSTRACTE,YIELD_HIGH,YIELD_LOW,YIELD_REMARK,OPEN_MODE,OPEN_CIRCLE,OPEN_CIRCLE_DAYS,RULE_COMMENT,
 		FIRST_OPEN_DAY,HOLIDAY_ON_FLAG,AVG_OPEN_COUNT,OPEN_BUSS,OPEN_BUSS_REMARK,BUSI_ACCT_NO,ACCT_NAME,
 		PRODTYPE,BASIC,FIDUCIARY_DUTY,CUSTOMER_TYPE,IS_TRANSFER,IS_FULLY_COMPLIANT,IS_YLLCCP,
@@ -342,6 +342,7 @@
 			#{item.produuid,jdbcType=CHAR},
 			#{item.dataSource,jdbcType=VARCHAR},
 			#{item.prodId,jdbcType=VARCHAR},
+			#{item.prodName,jdbcType=VARCHAR},
 			#{item.orgCode,jdbcType=VARCHAR},
 			#{item.raiseVdate,jdbcType=DATE},
 			#{item.raiseEnddate,jdbcType=DATE},
