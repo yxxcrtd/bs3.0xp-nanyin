@@ -204,7 +204,8 @@ $(function () {
             cid: $('#calendarId').val(),
             portfolioId: $('#portfolioId').val(),
             finprodId: isChange && $('#ps').val() == ps_T66 ? $('#changeToFinprodMarketId').select2('data')[0].object.finprodId : $('#finprodId').select2('data')[0].object.finprodId,
-            secAcctId: $("#chlId").val()
+            secAcctId: $("#chlId").val(),
+            shuhuishareAmt: $("#shareAmt").val()
         }
         Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade003/getcarryAmt', param,
             function (result) {
