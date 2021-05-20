@@ -142,8 +142,8 @@ var QueryFunc=function(){
             }else if(repAssetType=='1107'||repAssetType=='1901'){
                 $("#svrBussRepPlacementInfoDto_targetType1").val('').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
-                $("#issueAmt").attr("disabled",true);
-                $("#issueAmt").val('');
+                $("#targetAmt").attr("disabled",true);
+                $("#targetAmt").val('');
             }
             if (repAssetType=='1902'){
                 $("#svrBussRepPlacementInfoDto_checkCode").attr("required",true);
