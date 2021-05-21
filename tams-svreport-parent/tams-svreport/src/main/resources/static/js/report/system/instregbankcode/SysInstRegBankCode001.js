@@ -26,7 +26,6 @@
             { title: "登记银行代码", field:'registBankCode'},
             { title: "总行机构代码", field:'pbcBankCode'},
             { title: "是否理财子公司", field:'isFinSubCompany'},
-            { title: "母行登记银行代码", field:'fregistBankCode'},
             { title: "社会信用代码", field:'insitituteCode'},
             { field:'operation', title: '操作', type:'action', buttons: ['edit', 'delt']}
         ]
@@ -77,10 +76,10 @@
          */
         $('#SysInstRegBankCode001_btn_add').click(function() {
             var paramObj = {
-                pageModel : PAGE_MODEL_NEW
-            }
+                    pageModel : PAGE_MODEL_NEW
+                }
             var pageUrl = basePath + "svreport/system/instregbankcode/SysInstRegBankCode002/init";
-            Joyin.dialog("新建机构登记银行代码", pageUrl, '34%', '50%', paramObj, function() {
+            Joyin.dialog("新建机构登记银行代码", pageUrl, '50%', '70%', paramObj, function() {
                 SysInstRegBankCode001_table001.reload();
             });
         });
@@ -88,11 +87,11 @@
         // 行内编辑按钮点击事件
         SysInstRegBankCode001_table001.bind('click', '.edit', function(row) {
             var paramObj = {
-                orgCode : row.orgCode,
-                pageModel : PAGE_MODEL_EDIT
+                    orgCode : row.orgCode,
+                    pageModel : PAGE_MODEL_EDIT
             }
             var pageUrl = basePath + "svreport/system/instregbankcode/SysInstRegBankCode002/init";
-            Joyin.dialog("编辑机构登记银行代码", pageUrl, '34%', '50%', paramObj, function() {
+            Joyin.dialog("编辑机构登记银行代码", pageUrl, '50%', '70%', paramObj, function() {
                 SysInstRegBankCode001_table001.reload();
             });
         });
