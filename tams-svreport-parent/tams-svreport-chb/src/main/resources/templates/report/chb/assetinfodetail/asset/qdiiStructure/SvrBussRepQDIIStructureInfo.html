@@ -48,14 +48,14 @@
 					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepQDIIStructureInfo.incomeRatio}">固定收益部分所占比例%</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" th:id="|${entityName}_incomeRatio|" th:name="|${entityName}.incomeRatio|"   th:value="${entity?.incomeRatio}"  required
-							   class="layui-input form-input text-number" data-textrange="4"/>
+							   class="layui-input form-input text-number" data-textrange="5"/>
 					</div>
 				</div>
 				<div class="form-inline-wrap" th:id="|${entityName}_rate_div|">
 					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepQDIIStructureInfo.derInstrRatio}">衍生金融工具所占比例%</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" th:id="|${entityName}_derInstrRatio|" th:name="|${entityName}.derInstrRatio|"   th:value="${entity?.derInstrRatio}"  required
-							   class="layui-input form-input text-number" data-textrange="4"/>
+							   class="layui-input form-input text-number" data-textrange="5"/>
 					</div>
 				</div>
 			</div>
@@ -90,14 +90,14 @@
 					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepQDIIStructureInfo.maxYield}">结构性票据最高收益率%</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" th:id="|${entityName}_maxYield|" th:name="|${entityName}.maxYield|"   th:value="${entity?.maxYield}"  required
-							   class="layui-input form-input text-number" data-textrange="4"/>
+							   class="layui-input form-input text-number" data-textrange="5"/>
 					</div>
 				</div>
 				<div class="form-inline-wrap" th:id="|${entityName}_rate_div|">
 					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepQDIIStructureInfo.minYield}">结构性票据最低收益率%</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" th:id="|${entityName}_minYield|" th:name="|${entityName}.minYield|"   th:value="${entity?.minYield}"
-							   class="layui-input form-input text-number" data-textrange="4"/>
+							   class="layui-input form-input text-number" data-textrange="5"/>
 					</div>
 				</div>
 			</div>
