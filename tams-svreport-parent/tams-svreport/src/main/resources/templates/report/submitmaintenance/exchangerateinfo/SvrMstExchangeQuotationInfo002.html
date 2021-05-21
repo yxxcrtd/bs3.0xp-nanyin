@@ -16,7 +16,7 @@
                 <div class="layui-form-item">
                     <div >
                         <label class="layui-form-label form-lable mst-lable"
-                               data-th-text="#{SvrMstExchangeQuotationInfo001.exchargeCode}">币种对</label>
+                               data-th-text="#{SvrMstExchangeQuotationInfo001.exchargeCode}">货币对</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="exchargeCode" name="exchargeCode"
                                     class="layui-input form-input input-select"
@@ -31,13 +31,27 @@
                 <div class="layui-form-item">
                     <div >
                         <label class="layui-form-label form-lable mst-lable"
-                               data-th-text="#{SvrMstExchangeQuotationInfo001.tradeDate}">生效日</label>
+                               data-th-text="#{SvrMstExchangeQuotationInfo001.tradeDate}">交易日期</label>
                         <div class="layui-input-inline input-inline">
                             <input id="tradeDate" name="tradeDate"
                                    class="layui-input form-input input-dateSelect"
                                    data-th-data-result='${COMMON_BUSINESS_TYPE}' placeholder="请输入内容"
                                    data-th-value="${#dates.format(entity?.tradeDate,'yyyy-MM-dd')}"
                                    required="required" data-th-placeholder="#{SysCommon.placeholder}">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div >
+                        <label class="layui-form-label form-lable mst-lable"
+                               data-th-text="#{SvrMstExchangeQuotationInfo002.datasourceType}">数据来源</label>
+                        <div class="layui-input-inline input-inline">
+                            <select type="text" id="datasourceType" name="datasourceType"
+                                    class="layui-input form-input input-select"
+                                    data-th-data-result='${SVR_DATA_SOURCE}' allowClear="true" placeholder="请输入内容"
+                                    data-th-initValue="${entity?.datasourceType}" required="required"
+                                    data-th-placeholder="#{SysCommon.placeholder}" formatoption="true">
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -97,6 +111,18 @@
                             <input id="midPrice" name="midPrice" maxlength="20" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                    data-th-value="${entity?.midPrice}" required="required" data-fixtype="2"
+                                   data-th-placeholder="#{SysCommon.placeholder}">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div >
+                        <label class="layui-form-label form-lable mst-lable"
+                               data-th-text="#{SvrMstExchangeQuotationInfo002.quotUnit}">报价单位</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="quotUnit" name="quotUnit" maxlength="20" type="text"
+                                   class="layui-input form-input text-number" placeholder="请输入内容"
+                                   data-th-value="${entity?.quotUnit}" required="required" data-fixtype="2" data-textrange="0"
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
