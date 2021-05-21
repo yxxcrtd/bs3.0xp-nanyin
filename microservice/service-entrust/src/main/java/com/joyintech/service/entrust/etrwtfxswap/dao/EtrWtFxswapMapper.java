@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.service.entrust.etrwtfxswap.dto.EtrWtFxswapDto;
 
@@ -26,7 +27,7 @@ import com.joyintech.service.entrust.etrwtfxswap.dto.EtrWtFxswapDto;
  * @see EtrWtFxswapMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrWtFxswapMapper {
     /**
      * 外汇掉期委托分页查询

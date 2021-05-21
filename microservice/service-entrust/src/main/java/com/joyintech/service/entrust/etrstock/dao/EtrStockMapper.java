@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
@@ -19,7 +20,7 @@ import com.joyintech.service.entrust.etrstock.dto.EtrStockDto;
  * @author: junYin
  * @date: 2019-06-04 11:12
 */
-@Component
+@Repository
 public interface EtrStockMapper {
 
 

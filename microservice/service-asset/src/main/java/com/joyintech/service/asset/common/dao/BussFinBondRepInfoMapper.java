@@ -11,6 +11,7 @@
 package com.joyintech.service.asset.common.dao;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.service.asset.common.dto.BussFinBondRepInfoDto;
 
@@ -22,6 +23,7 @@ import com.joyintech.service.asset.common.dto.BussFinBondRepInfoDto;
  * @see BussFinBondRepInfoMapper
  * @since 1.0
  */
+@Repository
 public interface BussFinBondRepInfoMapper {
 
     BussFinBondRepInfoDto getBussFinBondRepInfoByProductId(@Param("finprodId") String finprodId);
