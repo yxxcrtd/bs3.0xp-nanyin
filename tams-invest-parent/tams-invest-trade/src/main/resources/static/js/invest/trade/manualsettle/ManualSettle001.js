@@ -31,7 +31,7 @@
      * 定义数据表格
      */
     var table=$("#dataTable").joyintable({
-        height:'300',
+        height: 300,
         ajax: {
             url: 'findPage',
             type: 'POST',
