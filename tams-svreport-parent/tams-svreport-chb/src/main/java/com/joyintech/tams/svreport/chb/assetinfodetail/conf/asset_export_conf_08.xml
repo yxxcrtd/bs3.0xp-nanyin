@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="AssetSvrBussRepQDII.xlsx" name="资产要素表模板-QDII">
+	<Worksheet dataStart="2" javaBean="java.util.Map">
+		<Row>
+			<Cell order="1" name="*行内资产/负债编码">assetCode</Cell>
+			<Cell order="2" name="*发行机构代码">issuePartyId</Cell>
+			<Cell order="3" name="*资产/负债类别">assetType2Str</Cell>
+			<Cell order="4" name="*交易流通场所">tradeMarketStr</Cell>
+			<Cell order="5" name="*币种">ccyStr</Cell>
+			<Cell order="6" name="*所属国家或地区">countryArea</Cell>
+			<Cell order="7" name="*债券名称">assetName</Cell>
+			<Cell order="8" name="*债券代码">assetCode</Cell>
+			<Cell order="9" name="*发行机构">issuePartyId</Cell>
+			<Cell order="10" name="*发行机构所属行业">industry</Cell>
+			<Cell order="11" name="*起息日">vdate</Cell>
+			<Cell order="12" name="*到期日">mdate</Cell>
+			<Cell order="13" name="*期限（月）">termDate</Cell>
+			<Cell order="14" name="*发行机构主体信用评级">partyGrade</Cell>
+			<Cell order="15" name="*债券信用评级">secCreditGradeType</Cell>
+			<Cell order="16" name="*票面利率%">assetYield</Cell>
+			<Cell order="17" name="*付息频率（个月/次）">intpayCycle</Cell>
+			<Cell order="18" name="*担保情况说明">guaranteeCmt</Cell>
+			<Cell order="19" name="*是否含权等特殊条款情况说明">specialCmt</Cell>
+			<Cell order="20" name="*所属国家或地区">countryArea</Cell>
+			<Cell order="21" name="*起息日">vdate</Cell>
+			<Cell order="22" name="*到期日">mdate</Cell>
+			<Cell order="23" name="*对手方">rivalParty</Cell>
+			<Cell order="24" name="*年利率%">assetYield</Cell>
+			<Cell order="25" name="*计息基础">basis</Cell>
+			<Cell order="26" name="*所属国家或地区">countryArea</Cell>
+			<Cell order="27" name="*股票/基金代码">assetCode</Cell>
+			<Cell order="28" name="*股票/基金名称">assetName</Cell>
+			<Cell order="29" name="*发行机构">issuePartyId</Cell>
+			<Cell order="30" name="*行业">industry</Cell>
+			<Cell order="31" name="*所属国家或地区">countryArea</Cell>
+			<Cell order="32" name="*合约名称">contractName</Cell>
+			<Cell order="33" name="*起息日">vdate</Cell>
+			<Cell order="34" name="*到期日">mdate</Cell>
+			<Cell order="35" name="票面利率%">assetYield</Cell>
+			<Cell order="36" name="付息频率（个月/次）">intpayCycle</Cell>
+			<Cell order="37" name="*固定收益部分所占比例(%)">incomeRatio</Cell>
+			<Cell order="38" name="*衍生金融工具所占比例(%)">derInstrRatio</Cell>
+			<Cell order="39" name="*衍生金融工具具体投资方式">derInstrInvType</Cell>
+			<Cell order="40" name="*衍生金融工具挂钩的标的资产">derInstrTarget</Cell>
+			<Cell order="41" name="*利息结算方式">acctMode</Cell>
+			<Cell order="42" name="*含权情况说明">specialCmt1</Cell>
+			<Cell order="43" name="*结构性票据最高收益率%">maxYield</Cell>
+			<Cell order="44" name="结构性票据最低收益率%">minYield</Cell>
+			<Cell order="45" name="挂钩标的资产基准价格">basicPrice</Cell>
+			<Cell order="46" name="*挂钩标的资产登记日价格">regDatePrice</Cell>
+			<Cell order="47" name="*交易费">tradeFee</Cell>
+			<Cell order="48" name="备注">remark</Cell>
+			<Cell order="49" name="新人行一级分类">pbcAssetType1Str</Cell>
+			<Cell order="50" name="新人行二级分类">pbcAssetType2Str</Cell>
+			<Cell order="51" name="新人行三级分类">pbcAssetType3Str</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

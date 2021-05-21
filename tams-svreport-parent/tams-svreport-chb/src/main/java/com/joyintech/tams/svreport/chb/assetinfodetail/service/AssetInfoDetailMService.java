@@ -7,39 +7,37 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
-import com.joyintech.tams.report.errormessage.dto.ErrorMessage001;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetExport;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetInfoDetailUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import org.apache.ibatis.annotations.Options;
+import org.apache.commons.beanutils.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -66,6 +64,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 
 	static Map<String,Set<String>> map = null;
+
+	@Autowired
+	private AssetExport assetExport;
 	/**
 	 *
 	 * 业务画面查询事件
@@ -325,5 +326,185 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				list,
 				ExcelValidDto.class);
 	}
+
+	public ResponseEntity<byte[]> exportExcel(Map<String, Object> param) throws Exception {
+		List<AssetInfoDetailDto> dtoList = setDataList(param);
+		List<File> fileList = createExcel(dtoList);
+		File targetFile = null;
+		// 如果只有一个excel文件，不需要生成压缩文件
+		if (fileList.size() == 1) {
+			return ExportUtil.export(
+					"资产基本信息" + GlobalConstant.OPEN_PARENTHESIS
+							+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
+							+ GlobalConstant.POINT + FileNameUtil.getFileExtName(fileList.get(0)),
+					fileList.get(0), true);
+		}
+		else {
+			String exportFilePath = CacheUtil.getSysParam(
+					GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+			String zipFileName = FileNameUtil.createFileName("zip");
+			targetFile = new File(exportFilePath + File.separator + zipFileName);
+			try {
+				ZipFileUtil.compressZip(targetFile, true, fileList.toArray(new File[] {}));
+			}
+			catch (Exception e) {
+				// 压缩文件失败后，删除所有临时文件
+				for(File file : fileList) {
+					if(file.exists()) {
+						file.delete();
+					}
+				}
+			}
+		}
+		return ExportUtil.export(
+				"资产基本信息" + GlobalConstant.OPEN_PARENTHESIS
+						+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
+						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(targetFile),
+				targetFile, true);
+	}
+
+	public List<File> createExcel(List<AssetInfoDetailDto> ds){
+		List<File> fileList = new ArrayList<>();
+		List<Map<String,Object>> dtoList_01 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_02 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_03 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_04 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_05 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_06 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_07 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_08 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_12 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_14 = new ArrayList<>();
+		List<Map<String,Object>> dtoList_L01 = new ArrayList<>();
+		ds.forEach(assetInfoDetailDto -> {
+			String type = checkType(assetInfoDetailDto.getAssetType())?assetInfoDetailDto.getAssetType():null;
+			Map<String,Object> map = object2Map(assetInfoDetailDto,type);
+			map.put("assetCode",assetInfoDetailDto.getAssetCode());
+			map.put("issuePartyId",assetInfoDetailDto.getIssuePartyId());
+			map.put("assetType2Str", SysDataUtil.getNameFromDataDict(
+					DictCode.资产_负债二级类别, assetInfoDetailDto.getAssetType2()));
+			map.put("tradeMarketStr",SysDataUtil.getNameFromDataDict(
+					DictCode.交易流通场所_中债, assetInfoDetailDto.getTradeMarket()));
+			map.put("ccyStr",SysDataUtil.getNameFromDataDict(
+					DictCode.币种_中债, assetInfoDetailDto.getCcy()));
+			map.put("pbcAssetType1Str",SysDataUtil.getNameFromDataDict(
+					DictCode.人行资产一级分类, assetInfoDetailDto.getPbcAssetType1()));
+			map.put("pbcAssetType2Str",SysDataUtil.getNameFromDataDict(
+					DictCode.人行资产二级分类, assetInfoDetailDto.getPbcAssetType2()));
+			map.put("pbcAssetType3Str",SysDataUtil.getNameFromDataDict(
+					DictCode.人行资产三级分类, assetInfoDetailDto.getPbcAssetType3()));
+			if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue())){
+			    dtoList_01.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue())){
+				dtoList_02.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue())){
+				dtoList_03.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_非标准化债权类资产_信贷资产流转项目.getValue())){
+				dtoList_04.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_票据类资产_信用证类资产.getValue()) ||
+					StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_商品类资产.getValue()) ||
+					StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_另类资产.getValue()) ||
+					StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue()) ||
+					StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_其他_负债_类资产.getValue())){
+				dtoList_05.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_权益类资产.getValue())){
+				dtoList_06.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_金融衍生品.getValue())){
+				dtoList_07.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_QDII债券资产.getValue())
+			|| StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_QDII拆出_逆回购资产.getValue()) ||
+					StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_QDII股票_基金类资产.getValue()) ||
+					StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_QDII结构性票据.getValue())){
+				dtoList_08.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_资产管理产品.getValue())){
+				dtoList_12.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_各类资产的其他项.getValue())){
+				dtoList_14.add(map);
+			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_私募基金_公募基金.getValue())
+			|| StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_公募基金.getValue()) ||
+					StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_私募基金.getValue())){
+				dtoList_L01.add(map);
+			}
+		});
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_01.xml",dtoList_01,getAssetFileName(DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_02.xml",dtoList_02,getAssetFileName(DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_03.xml",dtoList_03,getAssetFileName(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_04.xml",dtoList_04,getAssetFileName(DictCodeListExt2.资产_负债类别_非标准化债权类资产_信贷资产流转项目.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_05.xml",dtoList_05,getAssetFileName(DictCodeListExt2.资产_负债类别_票据类资产_信用证类资产.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_06.xml",dtoList_06,getAssetFileName(DictCodeListExt2.资产_负债类别_权益类资产.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_07.xml",dtoList_07,getAssetFileName(DictCodeListExt2.资产_负债类别_金融衍生品.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_08.xml",dtoList_08,getAssetFileName(DictCodeListExt2.资产_负债类别_QDII债券资产.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_12.xml",dtoList_12,getAssetFileName(DictCodeListExt2.资产_负债类别_资产管理产品.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_14.xml",dtoList_14,getAssetFileName(DictCodeListExt2.资产_负债类别_各类资产的其他项.getValue())));
+		fileList.add(assetExport.makeFile("/com/joyintech/tams/svreport/chb/assetinfodetail/conf/asset_export_conf_L01.xml",dtoList_L01,getAssetFileName(DictCodeListExt2.资产_负债类别_私募基金_公募基金.getValue())));
+		return fileList;
+	}
+
+	private boolean checkType(String type){
+		if (StringUtil.equals(type,DictCodeListExt2.资产_负债类别_票据类资产_信用证类资产.getValue()) ||
+				StringUtil.equals(type,DictCodeListExt2.资产_负债类别_商品类资产.getValue()) ||
+				StringUtil.equals(type,DictCodeListExt2.资产_负债类别_另类资产.getValue()) ||
+				StringUtil.equals(type,DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue()) ||
+				StringUtil.equals(type,DictCodeListExt2.资产_负债类别_其他_负债_类资产.getValue()) ||
+				StringUtil.equals(type,DictCodeListExt2.资产_负债类别_QDII债券资产.getValue())
+				|| StringUtil.equals(type,DictCodeListExt2.资产_负债类别_QDII拆出_逆回购资产.getValue()) ||
+				StringUtil.equals(type,DictCodeListExt2.资产_负债类别_QDII股票_基金类资产.getValue()) ||
+				StringUtil.equals(type,DictCodeListExt2.资产_负债类别_QDII结构性票据.getValue())){
+			return true;
+		}
+		return false;
+	}
+
+	private String getAssetFileName(String assetType){
+		String name = "";
+		if (DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue().equals(assetType)){
+			name = "资产要素表模板-存款";
+		}else if (DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue().equals(assetType)){
+			name = "资产要素表模板-回购";
+		} else if (DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue().equals(assetType)){
+			name = "资产要素表模板-债券";
+		} else if (DictCodeListExt2.资产_负债类别_非标准化债权类资产_信贷资产流转项目.getValue().equals(assetType)){
+			name = "资产要素表模板-非标";
+		}else if (DictCodeListExt2.资产_负债类别_票据类资产_信用证类资产.getValue().equals(assetType)){
+			name = "资产要素表模板-票据及其他";
+		}else if (DictCodeListExt2.资产_负债类别_权益类资产.getValue().equals(assetType)){
+			name = "资产要素表模板-权益类";
+		}else if (DictCodeListExt2.资产_负债类别_金融衍生品.getValue().equals(assetType)){
+			name = "资产要素表模板-金融衍生品";
+		}else if (DictCodeListExt2.资产_负债类别_QDII债券资产.getValue().equals(assetType)){
+			name = "资产要素表模板-QDII";
+		}else if (DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(assetType)){
+			name = "资产要素表模板-资产管理产品";
+		}else if (DictCodeListExt2.资产_负债类别_商品类资产.getValue().equals(assetType)){
+			name = "资产要素表模板-票据及其他";
+		}else if (DictCodeListExt2.资产_负债类别_各类资产的其他项.getValue().equals(assetType)){
+			name = "资产要素表模板-各类资产其他项";
+		}else if (DictCodeListExt2.资产_负债类别_私募基金_公募基金.getValue().equals(assetType)){
+			name = "资产要素表模板-基金";
+		}
+		return name;
+	}
+
+	private Map<String, Object> object2Map(Object obj,String type) {
+		Map<String, Object> result = new HashMap<>();
+		if (obj == null) {
+			return null;
+		}
+
+		BeanMap beanMap = new BeanMap(obj);
+		beanMap.forEach((key, value) -> {
+			if (!StringUtil.equals("class", key.toString())) {
+				if (StringUtil.isNotEmpty(type)){
+					result.put(key.toString() + GlobalConstant.UNDER_LINE + type, value);
+				}else {
+					result.put(key.toString() , value);
+				}
+
+			}
+		});
+		return result;
+	}
+
+
 
 }
