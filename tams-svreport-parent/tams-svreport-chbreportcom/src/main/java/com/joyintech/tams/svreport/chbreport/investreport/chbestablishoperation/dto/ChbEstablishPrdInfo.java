@@ -75,6 +75,11 @@ public class ChbEstablishPrdInfo extends BaseEntity {
     private String revealDate;
 
     /**
+     * 系统平台日
+     */
+    private String sysPlatformDate;
+
+    /**
      * 客户类型
      */
     private String customerType;
@@ -189,5 +194,13 @@ public class ChbEstablishPrdInfo extends BaseEntity {
 
     public void setCustomerType(String customerType) {
         this.customerType = customerType;
+    }
+
+    public String getSysPlatformDate() {
+        return sysPlatformDate;
+    }
+
+    public void setSysPlatformDate(String sysPlatformDate) {
+        this.sysPlatformDate = sysPlatformDate;
     }
 }

@@ -25,6 +25,10 @@ public class ChbNetWorthInfoDto extends BaseEntity {
      */
     private String endDate;
     /**
+     * 系统平台日
+     */
+    private String sysPlatformDate;
+    /**
      * 单位净值
      */
     private String prodValue;
@@ -97,5 +101,13 @@ public class ChbNetWorthInfoDto extends BaseEntity {
 
     public void setCustomerType(String customerType) {
         this.customerType = customerType;
+    }
+
+    public String getSysPlatformDate() {
+        return sysPlatformDate;
+    }
+
+    public void setSysPlatformDate(String sysPlatformDate) {
+        this.sysPlatformDate = sysPlatformDate;
     }
 }

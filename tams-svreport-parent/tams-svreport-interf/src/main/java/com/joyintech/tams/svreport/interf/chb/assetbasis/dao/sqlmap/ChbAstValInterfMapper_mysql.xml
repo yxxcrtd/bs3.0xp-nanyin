@@ -92,7 +92,7 @@
 		</choose>
 		FROM ( select t.*,row_number() over(partition by BASIS_CYY order by TRADE_DATE DESC) myrank
 				from MST_EXCHARGE_QUOTE t
-				where STR_TO_DATE(t.TRADE_DATE,'%Y-%m-%d') &lt;= #{generateDate,jdbcType=VARCHAR}
+				where t.TRADE_DATE &lt;= STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')
 				and QUOT_CYY='CNY' and DATASOURCE_TYPE='SAFE'
 		)as t
 		WHERE  myrank=1
@@ -145,7 +145,7 @@
 		<if test="isBtm !=null and isBtm=='02' ">
 			FROM CHB_ASSETS_BASIS_DATA_NOBTM  basis
 		</if>
-		where STR_TO_DATE(VALUE_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
+		where VALUE_DATE = STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')
 		and basis.status !='D'
 		and pos_amt != 0
 		and pos_amt is not null

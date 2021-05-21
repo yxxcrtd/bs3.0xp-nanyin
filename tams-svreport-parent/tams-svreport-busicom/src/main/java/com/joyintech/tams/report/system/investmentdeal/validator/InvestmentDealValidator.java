@@ -20,7 +20,7 @@ public class InvestmentDealValidator implements BeanValidator {
     public List<ValidMessage> valid(Object o) {
         InvestmentDealInfoDto dto=(InvestmentDealInfoDto)o;
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "InvestmentDealInfo002", null, ValidMessage.class);
+        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbInvestTrade002", null, ValidMessage.class);
         return resultList;
     }
 }

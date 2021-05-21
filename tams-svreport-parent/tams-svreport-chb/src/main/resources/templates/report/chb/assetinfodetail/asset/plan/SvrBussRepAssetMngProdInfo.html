@@ -169,7 +169,7 @@
                     <label class="layui-form-label form-label-wrap">资管计划成立日期</label>
                     <div class="layui-input-inline input-inline">
 
-                        <input type="text" id="planSdate" name="planSdate" required
+                        <input type="text" th:id="|${entityName}_planSdate|" th:name="|${entityName}.planSdate|" required
                                data-th-value='${#dates.format(entity?.planSdate,"yyyy-MM-dd")}'
                                class="layui-input form-input input-dateSelect" />
                     </div>
@@ -183,7 +183,7 @@
                     <label class="layui-form-label form-label-wrap">资管计划终止日期</label>
                     <div class="layui-input-inline input-inline">
 
-                        <input type="text" id="planEdate" name="planEdate" required
+                        <input type="text" th:id="|${entityName}_planEdate|" th:name="|${entityName}.planEdate|" required
                                data-th-value='${#dates.format(entity?.planEdate,"yyyy-MM-dd")}'
                                class="layui-input form-input input-dateSelect" />
                     </div>

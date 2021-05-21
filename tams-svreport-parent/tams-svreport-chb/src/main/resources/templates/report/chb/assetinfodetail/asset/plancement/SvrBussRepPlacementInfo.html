@@ -22,7 +22,7 @@
                     <label class="layui-form-label form-label-wrap">起息日</label>
                     <div class="layui-input-inline input-inline">
 
-                        <input type="text" id="vdate" name="vdate" required
+                        <input type="text" th:id="|${entityName}_vdate|" th:name="|${entityName}.vdate|" required
                                data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
 
                                class="layui-input form-input input-dateSelect" />
@@ -33,7 +33,7 @@
                     <label class="layui-form-label form-label-wrap">到期日</label>
                     <div class="layui-input-inline input-inline">
 
-                        <input type="text" id="mdate" name="mdate" required
+                        <input type="text" th:id="|${entityName}_mdate|" th:name="|${entityName}.mdate|" required
                                data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
                                class="layui-input form-input input-dateSelect" />
                     </div>
@@ -119,8 +119,8 @@
                            data-th-text="#{SvrBussRepPlacementInfo.targetAmt}">回购类标的金额</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" data-fixtype="2" unit="1"
-                               class="layui-input form-input text-money" id="issueAmt"
-                               th:name="|${entityName}.issueAmt|" data-th-value="${entity?.targetAmt}"
+                               class="layui-input form-input text-money" id="targetAmt"
+                               th:name="|${entityName}.targetAmt|" data-th-value="${entity?.targetAmt}"
                                data-moneymemory="" data-th-data-textrange="2">
                         <span class="input-right-show">元</span>
                     </div>

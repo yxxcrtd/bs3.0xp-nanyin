@@ -10,6 +10,7 @@
             i.UNIT_VALUE   as prodValue,  /** 单位净值*/
             i.UNIT_VALUE_T as unitValueTotal, /** 累计净值**/
             b.CUSTOMER_TYPE as customerType,/** 客户类型**/
+            DATE_FORMAT(#{revealDate,jdbcType=VARCHAR},'%Y%m%d') AS sysPlatformDate, /**系统平台日**/
             '-' as netAssetValue/** 资产净值*/
         from
             CHB_PRD_BASEINFO b

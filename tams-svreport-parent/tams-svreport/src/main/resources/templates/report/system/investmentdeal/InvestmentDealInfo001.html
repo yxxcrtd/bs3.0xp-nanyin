@@ -13,7 +13,7 @@
 <body>
   <div layout:fragment="content">
     <div class="form-button-area" filter="false">
-      <a id="InvestmentDealInfo001_btn_add" class="layui-btn layui-btn-sm btn-create" >新建</a>
+<!--      <a id="InvestmentDealInfo001_btn_add" class="layui-btn layui-btn-sm btn-create" >新建</a>-->
       <a id="InvestmentDealInfo001_btn_import" class="layui-btn layui-btn-sm btn-import btn-default">导入</a>
     </div>
     <div class="joyin-form-wrap condition-area">
@@ -76,7 +76,7 @@
               <label class="layui-form-label form-lable">数据状态</label>
               <div class="layui-input-inline input-inline">
                 <select id="status" name="status"
-                        data-th-data-result='${MAINTAIN_STATUS}'
+                        data-th-data-result='${DATA_STATUS}'
                         data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select"
                         placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
                         allowClear="true"

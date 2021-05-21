@@ -836,11 +836,9 @@ $(function() {
 			return;
 		}
 		parm = {};
-		var Seqno=data.registSeqno.replaceAll("-","");
-		data.registSeqno=Seqno;
-		var url = JoyinUtil.getRealPath('/framework/download/' + data.registSeqno);
+		var url = JoyinUtil.getRealPath('/framework/download/' + data.fileNo);
 		Joyin.ajax(url, parm, function downloadFileByForm() {
-			Joyin.exportExcel('/framework/download/' + data.registSeqno, parm);
+			Joyin.exportExcel('/framework/download/' + data.fileNo, parm);
 		},
 		function errorDownload(){
 			Joyin.error("文件未找到！");

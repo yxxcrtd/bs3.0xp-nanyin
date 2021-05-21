@@ -9,7 +9,7 @@
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
         , PBC_BANK_CODE as pbcBankCode
         , IS_FIN_SUB_COMPANY as isFinSubCompany
-        , ORG_CODE as insitituteCode
+        , INSITITUTE_CODE as insitituteCode
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
         ,FREGIST_BANK_CODE as fregistBankCode
         from

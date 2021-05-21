@@ -97,9 +97,9 @@
 		UPDATE_USER         updateUser,
 		UPDATE_TIME         updateTime,
 		SVR_DATA_SOURCES    dataSource,
-		''                  dataUuid,
-		''                  orgData,
-		''                  errMsg
+		null                  dataUuid,
+		null                  orgData,
+		null                  errMsg
 		FROM CHB_PRD_BASEINFO a
 		<where>
 			not EXISTS (
@@ -112,16 +112,16 @@
 				</foreach>
 			</if>
 			<if test="raiseVdate != null and raiseVdate != ''">
-				DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &gt;= #{raiseVdate,jdbcType=VARCHAR}
+				AND DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &gt;= #{raiseVdate,jdbcType=VARCHAR}
 			</if>
 			<if test="raiseEnddate != null and raiseEnddate != ''">
-				and DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &lt;= #{raiseEnddate,jdbcType=VARCHAR}
+				AND DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &lt;= #{raiseEnddate,jdbcType=VARCHAR}
 			</if>
 			<if test="vdate != null and vdate != ''">
-				DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdate,jdbcType=VARCHAR}
+				AND DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdate,jdbcType=VARCHAR}
 			</if>
 			<if test="mdate != null and mdate != ''">
-				and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{mdate,jdbcType=VARCHAR}
+				AND DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{mdate,jdbcType=VARCHAR}
 			</if>
 			<if test="selectStatus != null and selectStatus.size() > 0">
 				<foreach collection="selectStatus" item="status" open="AND a.STATUS IN (" close=")" separator=",">
@@ -134,92 +134,92 @@
 		'A' as status,
 		PROD_ID             prodId,
 		PROD_NAME           prodName,
-		''         prodInsId,
-		''          prodBrand,
-		''          prodStage,
-		''         approverId,
-		''       approverName,
-		''         designerId,
-		''       designerName,
-		''          managerId,
-		''        managerName,
-		''        liaisonName,
-		''         liaisonTel,
-		''      liaisonMobile,
-		''       liaisonEmail,
-		''          raiseType,
-		''         prodtype,
-		''           isFhxgcp,
-		''            termtype,
-		''      excFinSector,
-		''         investArae,
-		''      investCountry,
-		''     finanSerModel,
-		''        operateMode,
-		''       isShortTerm,
-		''          shortTerm,
-		''       isFreeRedem,
-		''      cashManaCate,
-		''              cmmode,
-		''              pmmode,
-		''               mname,
-		''         pricedMode,
-		''     ivstorientation,
-		''           contMode,
-		''    cooperationName,
-		''        invTypeRat,
-		''               yield,
-		''           riskType,
-		''           saleArea,
-		''           raiseCcy,
-		''       cashPrinCcy,
-		''       cashProfCcy,
-		''        saleAmtStr,
-		''      raiseAmtPlan,
-		''      raisePstrdate,
-		''      raisePenddate,
-		''    investPrinDate,
-		''    investProfDate,
-		''       saleFeeRate,
-		''     investFeeRate,
-		''         inDepName,
-		''         inDepCode,
-		''        outDepCtry,
-		''        outDepName,
-		''        truFeeRate,
-		''          riskLevel,
-		''     termRightFlag,
-		''     cusRedeemFlag,
-		''         creditFlag,
-		''         creditType,
-		''         creditMode,
+		null         prodInsId,
+		null          prodBrand,
+		null          prodStage,
+		null         approverId,
+		null       approverName,
+		null         designerId,
+		null       designerName,
+		null          managerId,
+		null        managerName,
+		null        liaisonName,
+		null         liaisonTel,
+		null      liaisonMobile,
+		null       liaisonEmail,
+		null          raiseType,
+		null         prodtype,
+		null           isFhxgcp,
+		null            termtype,
+		null      excFinSector,
+		null         investArae,
+		null      investCountry,
+		null     finanSerModel,
+		null        operateMode,
+		null       isShortTerm,
+		null          shortTerm,
+		null       isFreeRedem,
+		null      cashManaCate,
+		null              cmmode,
+		null              pmmode,
+		null               mname,
+		null         pricedMode,
+		null     ivstorientation,
+		null           contMode,
+		null    cooperationName,
+		null        invTypeRat,
+		null               yield,
+		null           riskType,
+		null           saleArea,
+		null           raiseCcy,
+		null       cashPrinCcy,
+		null       cashProfCcy,
+		null        saleAmtStr,
+		null      raiseAmtPlan,
+		null      raisePstrdate,
+		null      raisePenddate,
+		null    investPrinDate,
+		null    investProfDate,
+		null       saleFeeRate,
+		null     investFeeRate,
+		null         inDepName,
+		null         inDepCode,
+		null        outDepCtry,
+		null        outDepName,
+		null        truFeeRate,
+		null          riskLevel,
+		null     termRightFlag,
+		null     cusRedeemFlag,
+		null         creditFlag,
+		null         creditType,
+		null         creditMode,
 		RAISE_VDATE         raiseVdate,
-		''       raiseEnddate,
+		null       raiseEnddate,
 		VDATE           vdate,
-		''           mdate,
-		''         manageType,
-		''       isConstracte,
-		''          yieldHigh,
-		''           yieldLow,
-		''        yieldRemark,
-		''           openMode,
-		''         openCircle,
-		''    openCircleDays,
-		''        ruleComment,
-		''      firstOpenDay,
-		''     holidayOnFlag,
-		''      avgOpenCount,
-		''           openBuss,
-		''    openBussRemark,
-		''        busiAcctNo,
-		''           acctName,
-		''      fiduciaryDuty,
-		''       customerType,
-		''         isTransfer,
-		''  isFullyCompliant,
-		''           isYllccp,
-		''       transferType,
-		''              remark,
+		null           mdate,
+		null         manageType,
+		null       isConstracte,
+		null          yieldHigh,
+		null           yieldLow,
+		null        yieldRemark,
+		null           openMode,
+		null         openCircle,
+		null    openCircleDays,
+		null        ruleComment,
+		null      firstOpenDay,
+		null     holidayOnFlag,
+		null      avgOpenCount,
+		null           openBuss,
+		null    openBussRemark,
+		null        busiAcctNo,
+		null           acctName,
+		null      fiduciaryDuty,
+		null       customerType,
+		null         isTransfer,
+		null  isFullyCompliant,
+		null           isYllccp,
+		null       transferType,
+		null              remark,
 		CREATE_USER         createUser,
 		CREATE_TIME         createTime,
 		UPDATE_USER         updateUser,
@@ -238,18 +238,18 @@
 				</foreach>
 			</if>
 			<if test="raiseVdate != null and raiseVdate != ''">
-				DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &gt;= #{raiseVdate,jdbcType=VARCHAR}
+				AND DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &gt;= #{raiseVdate,jdbcType=VARCHAR}
 			</if>
 			<if test="raiseEnddate != null and raiseEnddate != ''">
 				and DATE_FORMAT(RAISE_VDATE,'%Y-%m-%d') &lt;= #{raiseEnddate,jdbcType=VARCHAR}
 			</if>
 			<if test="vdate != null and vdate != ''">
-				DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdate,jdbcType=VARCHAR}
+				AND DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdate,jdbcType=VARCHAR}
 			</if>
 			<if test="mdate != null and mdate != ''">
 				and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{mdate,jdbcType=VARCHAR}
 			</if>
-			<if test='selectStatus != null and !selectStatus.equals("") and !selectStatus.contains("A") '>
+			<if test='selectStatus != null and selectStatus.size()!=0 and !selectStatus.contains("A") '>
 				and 1 = 2
 			</if>
 		</where>
@@ -331,16 +331,18 @@
 	<insert id="insertPrdFeeData" parameterType="java.util.List">
 		insert into
 		chb_prd_baseinfo
-		(STATUS,SVR_DATA_SOURCES,PRODUUID,prod_id,ORG_CODE,RAISE_VDATE,RAISE_ENDDATE,VDATE,MDATE,MANAGE_TYPE,
+		(STATUS,PRODUUID,SVR_DATA_SOURCES,prod_id,prod_name,ORG_CODE,RAISE_VDATE,RAISE_ENDDATE,VDATE,MDATE,MANAGE_TYPE,
 		IS_CONSTRACTE,YIELD_HIGH,YIELD_LOW,YIELD_REMARK,OPEN_MODE,OPEN_CIRCLE,OPEN_CIRCLE_DAYS,RULE_COMMENT,
 		FIRST_OPEN_DAY,HOLIDAY_ON_FLAG,AVG_OPEN_COUNT,OPEN_BUSS,OPEN_BUSS_REMARK,BUSI_ACCT_NO,ACCT_NAME,
 		PRODTYPE,BASIC,FIDUCIARY_DUTY,CUSTOMER_TYPE,IS_TRANSFER,IS_FULLY_COMPLIANT,IS_YLLCCP,
 		IS_SYQZCCP,ISSUING_STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
 		values (
 		<foreach collection="dtoList" item="item" index="index" separator=",">
-			#{item.status,jdbcType=VARCHAR} ,
+			#{item.status,jdbcType=VARCHAR},
+			#{item.produuid,jdbcType=CHAR},
 			#{item.dataSource,jdbcType=VARCHAR},
 			#{item.prodId,jdbcType=VARCHAR},
+			#{item.prodName,jdbcType=VARCHAR},
 			#{item.orgCode,jdbcType=VARCHAR},
 			#{item.raiseVdate,jdbcType=DATE},
 			#{item.raiseEnddate,jdbcType=DATE},

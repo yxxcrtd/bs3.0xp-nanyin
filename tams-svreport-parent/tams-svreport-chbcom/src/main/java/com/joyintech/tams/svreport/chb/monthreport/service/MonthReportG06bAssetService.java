@@ -177,15 +177,13 @@ public class MonthReportG06bAssetService {
                     //	汇总值数据组装
                     if (assetMonthReportG06bDetailMap.containsKey(singleRule.getPropertyCode())) {
                         // 非合计值
-                        if (assetMonthReportG06bDetailMap.containsKey(singleRule.getPropertyCode())) {
-                            ChbMonthReportG06bDetail detail = assetMonthReportG06bDetailMap.get(singleRule.getPropertyCode());
-                            // 已存在计入本次头寸值，否则不计入本次头寸值
-                            if (isPattern) {
-                                // 期初余额 = 期初余额 + 新增值
-                                detail.setBalanceA(detail.getBalanceA().add(position.getQcAssetValue() == null ? BigDecimal.ZERO : position.getQcAssetValue()));
-                                // 期末余额 = 期末余额 + 新增值
-                                detail.setBalanceB(detail.getBalanceB().add(position.getQmAssetValue() == null ? BigDecimal.ZERO : position.getQmAssetValue()));
-                            }
+                        ChbMonthReportG06bDetail detail = assetMonthReportG06bDetailMap.get(singleRule.getPropertyCode());
+                        // 已存在计入本次头寸值，否则不计入本次头寸值
+                        if (isPattern) {
+                            // 期初余额 = 期初余额 + 新增值
+                            detail.setBalanceA(detail.getBalanceA().add(position.getQcAssetValue() == null ? BigDecimal.ZERO : position.getQcAssetValue()));
+                            // 期末余额 = 期末余额 + 新增值
+                            detail.setBalanceB(detail.getBalanceB().add(position.getQmAssetValue() == null ? BigDecimal.ZERO : position.getQmAssetValue()));
                         }
                     } else {
                         BigDecimal balanceA = BigDecimal.ZERO;

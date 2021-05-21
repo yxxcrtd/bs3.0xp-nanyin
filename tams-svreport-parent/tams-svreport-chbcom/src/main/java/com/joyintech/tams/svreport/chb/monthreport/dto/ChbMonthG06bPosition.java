@@ -57,6 +57,12 @@ public class ChbMonthG06bPosition {
      */
     private String isConstracte;
 
+    /**
+     * 是否非标转标资产
+     */
+    private String isFbzb;
+
+
     public String getProdid() {
         return prodid;
     }
@@ -119,5 +125,13 @@ public class ChbMonthG06bPosition {
 
     public void setIsConstracte(String isConstracte) {
         this.isConstracte = isConstracte;
+    }
+
+    public String getIsFbzb() {
+        return isFbzb;
+    }
+
+    public void setIsFbzb(String isFbzb) {
+        this.isFbzb = isFbzb;
     }
 }

@@ -2277,6 +2277,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             Map<String, BigDecimal> rateMap = new HashMap<>();
             List<Date> dateList = null;
             logger.info("逻辑处理后的equityList.size: " + equityList.size());
+            //modify by yanya on 20210521 批量获取索引，避免死锁
+            List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
+            int index = 0;
             for (int i = 0; i < equityList.size(); i++ ) {
 //            	String errorMessage = null;
 //            	if(errMap.containsKey(String.valueOf(i+2))){
@@ -2346,8 +2349,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 } // 原数据没有，新接入数据是“有效”的处理
                 else if (chbEqudet == null && "E".equals(ibd.getStatus())) {
                     if (tmpPath == null) {
-                        ibd.setSumitSeq(
-                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                        //modify by yanya on 20210521 批量获取索引，避免死锁
+//                        ibd.setSumitSeq(
+//                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                        ibd.setSumitSeq(getSequenceStr(sequenceList, index));
+                        index++;
                     }
                     listNE.add(ibd);
                 } // 原数据“待处理”，新接入数据是“待处理”的处理
@@ -2355,16 +2361,22 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     listAA.add(ibd);
                 } // 原数据“待处理”，新接入数据是“有效”的处理
                 else if ("A".equals(chbEqudet.getStatus()) && "E".equals(ibd.getStatus())) {
-                    ibd.setSumitSeq(
-                            CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                    //modify by yanya on 20210521 批量获取索引，避免死锁
+//                    ibd.setSumitSeq(
+//                            CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                    ibd.setSumitSeq(getSequenceStr(sequenceList, index));
+                    index++;
                     listAE.add(ibd);
                 } // 原数据“有效”，新接入数据是“待处理”的处理
                 else if ("E".equals(chbEqudet.getStatus()) && "A".equals(ibd.getStatus())) {
                     listOA.add(ibd);
                 } // 原数据“有效”，新接入数据是“有效”的处理
                 else if ("E".equals(chbEqudet.getStatus()) && "E".equals(ibd.getStatus())) {
-                    ibd.setSumitSeq(
-                            CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                    //modify by yanya on 20210521 批量获取索引，避免死锁
+//                    ibd.setSumitSeq(
+//                            CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                    ibd.setSumitSeq(getSequenceStr(sequenceList, index));
+                    index++;
                     listOE.add(ibd);
                 }
             }
@@ -3600,6 +3612,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                                 x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
                                         + x.getIndentifyMark()));
                 Map<String, BigDecimal> rateMap = new HashMap<>();
+                //modify by yanya on 20210521 批量获取索引，避免死锁
+                List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, statusAEqudetData.size());
+                int index = 0;
                 for(EquiteBusiDetails001Dto equiteBusiDetails001Dto:statusAEqudetData){
                     List<Map<String, String>> dataMapList = new ArrayList<Map<String, String>>();
                     equiteBusiDetails001Dto.setRegCode(chbPrdresistCode.getRegCode());
@@ -3629,8 +3644,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         listAA.add(ibd);
                     } // 原数据“待处理”，新接入数据是“有效”的处理
                     else if ("E".equals(ibd.getStatus())) {
-                        ibd.setSumitSeq(
-                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+//                        ibd.setSumitSeq(
+//                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                        ibd.setSumitSeq(getSequenceStr(sequenceList, index));
+                        index++;
                         listAE.add(ibd);
                     }
                 }
@@ -3729,4 +3746,19 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
 
     //add by dengyu 20201022 监管要求投资者明细修改 end
+
+    /**
+     * 获取序列
+     * @param list
+     * @param index
+     * @return
+     */
+    public String getSequenceStr(List<String> list, int index) {
+        if(StringUtil.isEmptyList(list) || index >= list.size()) {
+            return null;
+        }
+        else {
+            return list.get(index);
+        }
+    }
 }

@@ -1,10 +1,12 @@
 package com.joyintech.tams.report.system.mstbond.service;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -18,12 +20,11 @@ import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.report.system.mstbond.dao.MstBondCreditRating001Mapper;
-import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
+import com.joyintech.tams.report.system.mstbond.dto.MstBondCreditRatingDto;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,9 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
 
     @Autowired
     private MstBondCreditRating001Mapper mstBondCreditRating001Mapper;
+
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
     /**
      * 当在做导入前的check就是判断业务数据是否需要覆盖的时候在webresult的data中塞入这个值可以不会弹框两次
      */
@@ -227,6 +231,7 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
     }
 
     public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList,String userName, String orgCode, String deptCode) throws ParseException {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
         if (!StringUtil.isEmptyList(dataList)) {
             List<String> headList = new ArrayList<String>();
             headList.add("操作类型");
@@ -243,6 +248,7 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
                 List<DisRepCashYield> entities = new ArrayList<>(dataList.size());
                 Map<String,Object> map=new HashMap<>();
                 for (int i = 0; i < dataList.size(); i++ ) {
+                    List<String> message = new ArrayList<>();
                     //操作类型
                     String type ="";
                     if(null!=dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))){
@@ -288,24 +294,37 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
                     map.put("oType",oType);
                     //map.put("gradeResult",gradeResult);
                     List<MstBondCreditRating> mstBondCreditRatings= mstBondCreditRating001Mapper.selectOneDate(map);
-
-                    if("新增".equals(type) || "修改".equals(type)){
-                        updateInfo(mstBondCreditRatings,oCode, gradeOrgId,gradeDate,oType,gradeResult,deptCode,userName);
+                    List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+                    resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, BeanUtil.mapToObject(map, MstBondCreditRatingDto.class), "MstBondCreditRating002", null, ValidMessage.class);
+                    if (!StringUtil.isEmptyList(resultList)){
+                        resultList.forEach(validMessage -> {
+                            message.add(validMessage.getMessage());
+                        });
                     }
-                    if("删除".equals(type)){
-                        mstBondCreditRating001Mapper.deleteOne(map);
+                    if("新增".equals(type) || "修改".equals(type)){
+                        if (StringUtil.isEmptyList(resultList)){
+                            updateInfo(mstBondCreditRatings,oCode, gradeOrgId,gradeDate,oType,gradeResult,deptCode,userName);
+                        }
+                    }else if("删除".equals(type)){
+                        if (StringUtil.isEmptyList(resultList)) {
+                            mstBondCreditRating001Mapper.deleteOne(map);
+                        }
+                    }else {
+                        message.add("操作类型值不在可选范围内");
+                    }
+                    if (!message.isEmpty()) {
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                                StringUtil.joinString(message, GlobalConstant.COMMA)));
                     }
                 }
             }
         }else{
-            List<ExcelValidDto> checkResult = new ArrayList<>();
             ExcelValidDto excelValidDto = new ExcelValidDto();
             String errorMsg = "模板为空，请输入数据！";
             excelValidDto.setErrorInfo(errorMsg);
             checkResult.add(excelValidDto);
-            return checkResult;
         }
-        return null;
+        return checkResult;
     }
 
 

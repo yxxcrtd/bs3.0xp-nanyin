@@ -72,12 +72,8 @@ public class SysInstRegBankCode002Service extends BaseService<SysInstRegBankCode
         /*机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin*/
         chbOrgRegistBankCode.setPbcBankCode(inputDto.getPbcBankCode());
         chbOrgRegistBankCode.setIsFinSubCompany(inputDto.getIsFinSubCompany());
+        chbOrgRegistBankCode.setInsitituteCode(inputDto.getInsitituteCode());
         /*机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end*/
-        //是理财子公司   则存入母行登记银行代码，否该字段为空    add by shaohuchen 20200422 start
-        if(StringUtil.equals(inputDto.getIsFinSubCompany(), "1")){
-            chbOrgRegistBankCode.setFregistBankCode(inputDto.getFregistBankCode());
-        }
-        //是理财子公司   则存入母行登记银行代码，否该字段为空    add by shaohuchen 20200422 end
         if (StringUtil.equals(inputDto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
             chbOrgRegistBankCodeMapper.insert(chbOrgRegistBankCode);
         }

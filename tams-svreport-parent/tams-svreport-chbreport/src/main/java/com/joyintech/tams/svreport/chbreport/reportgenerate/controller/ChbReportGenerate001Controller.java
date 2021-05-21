@@ -7,6 +7,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.progressbar.ProgressBarService;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,6 +116,7 @@ public class ChbReportGenerate001Controller extends BaseController {
     public AjaxResult createReportDoc() throws Exception {
         String pageId = this.getPageId();
         String barId = "createReportDoc001";
+        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
         double currentProcessD = 0.05D;//更新进度条
         this.updatePercent(pageId, barId, currentProcessD);//更新进度
         try {
@@ -123,7 +126,6 @@ public class ChbReportGenerate001Controller extends BaseController {
             Map<String, Object> param = new HashMap<>();
             param.put("repId", repId);
             param.put("prodId", this.getParam("prodId"));
-            param.put("revealDate", this.getParam("revealDate"));
             param.put("endDate", chbInvestReportCommonService.getDqEndDate(reportType, year));
             param.put("startDate", chbInvestReportCommonService.getDqStartDate(reportType, year));
             param.put("reportType", reportType);
@@ -159,7 +161,7 @@ public class ChbReportGenerate001Controller extends BaseController {
                 param.put("prodId", item.getProdId());
                 param.put("endDate", item.getEndDate());
                 param.put("startDate", item.getStartDate());
-                param.put("revealDate", item.getRevealDate());
+                param.put("revealDate", sysDate);
                 param.put("prodName", item.getProdName());
                 param.put("prodIdName", item.getProdIdName());
                 boolean flag = chbInvestReportCommonService.createReportDoc(param, isConfirm, isReveal);

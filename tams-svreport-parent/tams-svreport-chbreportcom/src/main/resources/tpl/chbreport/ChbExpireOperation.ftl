@@ -105,7 +105,7 @@
                                 <w:color w:val="00B0F0"/>
                                 <w:szCs w:val="28"/>
                             </w:rPr>
-                            <w:t>${prdInfo.endDate!}</w:t>
+                            <w:t>${prdInfo.realEndDate!}</w:t>
                         </w:r>
                         <w:r w:rsidRPr="009652B5">
                             <w:rPr>

@@ -480,6 +480,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         List<Date> dateList = null;
 
         // List<RegTimePoints001Dto> listTime = regTimePointsDtoMapper.searchPage(map);
+        //modify by yanya on 20210521 批量获取索引，避免死锁
+        List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
+        int index = 0;
         for (EquityInfo001Dto equityInfo001Dto : equityList) {
             chbEquHold = new ChbEquHold();
             chbEquHold.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
@@ -512,8 +515,11 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         equityInfo.getSubmitStatus()))
                         &&!DictCodeListExt2.报送数据状态_删除.getValue().equals(equityInfo.getStatus())) {
                     equityInfo001Dto.setType(equityInfo.getType());
-                    equityInfo001Dto.setSumitSeq(
-                            CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                    //modify by yanya on 20210521 批量获取索引，避免死锁
+//                    equityInfo001Dto.setSumitSeq(
+//                            CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                    equityInfo001Dto.setSumitSeq(getSequenceStr(sequenceList, index));
+                    index++;
                     equityInfo001Dto.setStatus(DictCodeListExt2.报送数据状态_删除.getValue());
                     equityInfoRegist001Mapper.insertDeleteEquityReg(equityInfo001Dto);
                 }
@@ -651,6 +657,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         Map<String, String> map = new HashMap<String, String>();
         // RegTimePoints001Dto regTimePoints001Dto =
         // regTimePointsDtoMapper.findByReportCode(DictCodeList.报表名称_投资者身份信息登记.getValue(),null);
+        //modify by yanya on 20210521 批量获取索引，避免死锁
+        List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
+        int index = 0;
         for (int i = 0; i < equityList.size(); i++ ) {
             equityInfo001Dto = equityList.get(i);
             equityInfo001Dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -676,8 +685,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 equityInfo001Dto.setSubmitDeadline(dateList.get(1));
             }
 
-            equityInfo001Dto.setSumitSeq(
-                    CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+//            equityInfo001Dto.setSumitSeq(
+//                    CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+            equityInfo001Dto.setSumitSeq(getSequenceStr(sequenceList, index));
+            index++;
             equityInfo001Dto.setType(statusType);
             equityInfo001Dto.setDeptCode(deptCode);
             equityInfo001Dto.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
@@ -3114,7 +3125,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             //add by liubin end
 
             tempItem = new TreeMap<String,String>();
-
+            //modify by yanya on 20210521 批量获取索引，避免死锁
+            List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
+            int index = 0;
             for (Map<String, String> map : equityList) {
                 equityInfo001Dto = new EquityInfo001Dto();
                 equityInfo001DtoTemp =new EquityInfo001Dto();
@@ -3191,8 +3204,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 if(DictCodeListExt1.维护数据状态_有效.getValue().equals(equityInfo001Dto.getStatus())){
                     BeanUtil.copyPropertiesIgnoreNull(equityInfo001DtoTemp, equityInfo001Dto);
                     if (tmpPath == null || isDB2DataBase) {
-                        equityInfo001DtoTemp.setSumitSeq(
-                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+//                        equityInfo001DtoTemp.setSumitSeq(
+//                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                        equityInfo001DtoTemp.setSumitSeq(getSequenceStr(sequenceList, index));
+                        index++;
                     }
                     equityInfo001DtoTemp.setCheckSeqno("0");
                     equityInfo001DtoTemp.setSubmitStatus(DictCodeListExt2.报送状态_未报送.getValue());
@@ -3519,6 +3534,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 file = new File(checkDataLogFilePath+File.separator+"check_data_log_"+System.currentTimeMillis()+".txt");
             }
             StringBuffer messageInfo = new StringBuffer();
+            //modify by yanya on 20210521 批量获取索引，避免死锁
+            List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
+            int index = 0;
             //add by liubin end
             for (Map<String, String> map : equityList) {
                 equityInfo001Dto = new EquityInfo001Dto();
@@ -3596,8 +3614,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 if(DictCodeListExt1.维护数据状态_有效.getValue().equals(equityInfo001Dto.getStatus())){
                     BeanUtil.copyPropertiesIgnoreNull(equityInfo001DtoTemp, equityInfo001Dto);
                     if (tmpPath == null || isDB2DataBase) {
-                        equityInfo001DtoTemp.setSumitSeq(
-                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+//                        equityInfo001DtoTemp.setSumitSeq(
+//                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                        equityInfo001DtoTemp.setSumitSeq(getSequenceStr(sequenceList, index));
+                        index++;
                     }
                     equityInfo001DtoTemp.setCheckSeqno("0");
                     equityInfo001DtoTemp.setSubmitStatus(DictCodeListExt2.报送状态_未报送.getValue());
@@ -3882,5 +3902,20 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         EquityInfoRegistCommonUtil.format(pageList," ");
         return pageList;
 
+    }
+
+    /**
+     * 获取序列
+     * @param list
+     * @param index
+     * @return
+     */
+    public String getSequenceStr(List<String> list, int index) {
+        if(StringUtil.isEmptyList(list) || index >= list.size()) {
+            return null;
+        }
+        else {
+            return list.get(index);
+        }
     }
 }

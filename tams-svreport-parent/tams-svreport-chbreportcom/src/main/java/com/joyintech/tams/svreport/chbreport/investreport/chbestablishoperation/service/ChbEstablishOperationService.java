@@ -97,7 +97,7 @@ public class ChbEstablishOperationService extends CommonExportService<ChbEstabli
             mapList.add(dataMap);
             titleList.add(ChbInvestReportUtil.generateFileNameForReport(DictCodeListExt3.中债披露报告_成立公告.getValue(),
                     chbEstablishPrdInfo.getProdName(), chbEstablishPrdInfo.getProdId(), chbEstablishPrdInfo.getCustomerType(),
-                    param.get("endDate").toString()));
+                    chbEstablishPrdInfo.getSysPlatformDate()));
         }
     }
 

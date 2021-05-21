@@ -248,6 +248,7 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
     }
 
     public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList,String userName, String orgCode, String deptCode) throws ParseException {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
         if (!StringUtil.isEmptyList(dataList)) {
             List<String> headList = new ArrayList<String>();
             headList.add("操作类型");
@@ -263,6 +264,7 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                 List<DisRepCashYield> entities = new ArrayList<>(dataList.size());
                 Map<String,Object> map=new HashMap<>();
                 for (int i = 0; i < dataList.size(); i++ ) {
+                    List<String> message = new ArrayList<>();
                     //操作类型
                     String type ="";
                     if(null!=dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))){
@@ -308,21 +310,25 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                     /*if("修改".equals(type)){
                         updateInfo(disRepCashYields,busiId, date, cashType2, cashType2Name,bigDecimal,deptCode,userName);
                     }*/
-                    if("删除".equals(type)){
+                    else if("删除".equals(type)){
                         proRateInfo001Mapper.deleteOne(busiId,date,cashType2);
                         proRateInfo001Mapper.deleteErrorDataOne(busiId,date,cashType2);
+                    }else {
+                        message.add("操作类型值不在可选范围内");
+                    }
+                    if (!message.isEmpty()) {
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                                StringUtil.joinString(message, GlobalConstant.COMMA)));
                     }
                 }
             }
         }else{
-            List<ExcelValidDto> checkResult = new ArrayList<>();
             ExcelValidDto excelValidDto = new ExcelValidDto();
             String errorMsg = "模板为空，请输入数据！";
             excelValidDto.setErrorInfo(errorMsg);
             checkResult.add(excelValidDto);
-            return checkResult;
         }
-        return null;
+        return checkResult;
     }
 
     private void addDisRepCashYield(String busiId,Date date,String cashType2,String cashType2Name,BigDecimal bigDecimal,String deptCode,String userName){

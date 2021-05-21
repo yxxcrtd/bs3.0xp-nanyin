@@ -385,22 +385,27 @@ public class MonthReportAssetService {
 					//银行资本补充工具
 					if(StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())) {
 						key5 = chbAssetInfo.getBankCapital();
+						key1 = null;
 					}
 					//是否PPN等低流动性债券
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsPpn())) {
 						key6 = chbAssetInfo.getIsPpn();
+						key1 = null;
 					}
 					//是否商业银行优先股
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getBankSecPrefer())) {
 						key7 = chbAssetInfo.getBankSecPrefer();
+						key1 = null;
 					}
 					//创业投资基金
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsGovernFund())) {
 						key8 = chbAssetInfo.getIsGovernFund();
+						key1 = null;
 					}
 					//是否未上市企业-政府出资产业投资基金
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsunlisted())) {
 						key9 = chbAssetInfo.getIsunlisted();
+						key1 = null;
 					}
 					else if(supAssetInfo != null){
 						key4 = supAssetInfo.getAssetType2();

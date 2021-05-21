@@ -32,21 +32,6 @@ public class ChbPrdBaseinfoDetailWithBLOBs extends ChbPrdBaseinfoDetail {
     private String remark;
 
     /**
-     * 投资资产种类及比例
-     */
-    private String invTypeRat;
-
-    /**
-     * 产品销售地区
-     */
-    private String saleArea;
-
-    /**
-     * 收益率分档情况说明
-     */
-    private String yieldComment;
-
-    /**
      * 取得 境外托管机构国别
      * @return 境外托管机构国别
      */
@@ -140,53 +125,5 @@ public class ChbPrdBaseinfoDetailWithBLOBs extends ChbPrdBaseinfoDetail {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
-    }
-
-    /**
-     * 取得 投资资产种类及比例
-     * @return 投资资产种类及比例
-     */
-    public String getInvTypeRat() {
-        return invTypeRat;
-    }
-
-    /**
-     * 设置 投资资产种类及比例
-     * @param invTypeRat 投资资产种类及比例
-     */
-    public void setInvTypeRat(String invTypeRat) {
-        this.invTypeRat = invTypeRat == null ? null : invTypeRat.trim();
-    }
-
-    /**
-     * 取得 产品销售地区
-     * @return 产品销售地区
-     */
-    public String getSaleArea() {
-        return saleArea;
-    }
-
-    /**
-     * 设置 产品销售地区
-     * @param saleArea 产品销售地区
-     */
-    public void setSaleArea(String saleArea) {
-        this.saleArea = saleArea == null ? null : saleArea.trim();
-    }
-
-    /**
-     * 取得 收益率分档情况说明
-     * @return 收益率分档情况说明
-     */
-    public String getYieldComment() {
-        return yieldComment;
-    }
-
-    /**
-     * 设置 收益率分档情况说明
-     * @param yieldComment 收益率分档情况说明
-     */
-    public void setYieldComment(String yieldComment) {
-        this.yieldComment = yieldComment == null ? null : yieldComment.trim();
     }
 }
