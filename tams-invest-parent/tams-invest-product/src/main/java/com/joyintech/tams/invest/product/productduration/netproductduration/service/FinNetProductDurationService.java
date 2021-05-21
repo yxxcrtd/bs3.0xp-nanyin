@@ -2005,7 +2005,8 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                     trdProductDealInt.setPs(DictCodeList.交易方向_赎回收益确认.getValue());
 
                     trdProductDealInt.setVdate(dto.getvDate());
-                    trdProductDealInt.setMdate(dto.getmDate());
+//                    trdProductDealInt.setMdate(dto.getmDate());
+					trdProductDealInt.setMdate(dto.getRedConfirmDate03());
 
                     // trdProductDealInt.setPrinAmt(dto.getRedPrinAmt03());
                     trdProductDealInt.setFpriceAmt(dto.getRedProfit03());
