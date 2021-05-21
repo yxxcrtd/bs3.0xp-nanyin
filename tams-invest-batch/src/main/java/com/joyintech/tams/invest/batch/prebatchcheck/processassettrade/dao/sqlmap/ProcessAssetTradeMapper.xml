@@ -172,12 +172,14 @@
 			            T.NEXT_USER  AS nextUser,
 			            T.CRT_DATE AS createTaskTime,
 			            sd.institution_code instCode,
-                        '' remark 
+						nvl(chlfp.finprod_name,ssai.sec_acct_name) remark
                     from SYS_WFL_BUSINESS_LIST T
                     inner join temp on temp.workflow_id = T.seq_no and temp.page_id in ('TrdFundDuration002','TrdBondDuration003')
                     left join WFL_TRD_PRODUCT_DEAl deal on deal.workflow_id = t.seq_no
                     left join fin_product fp on fp.finprod_id = replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"finprodId":"[^"]+"',1,1)),'"finprodId":"',''),'"','')
-                    LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+					left join fin_product chlfp on chlfp.finprod_id = replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"chlId":"[^"]+"',1,1)),'"chlId":"',''),'"','')
+					left join  STL_SEC_ACCT_INFO ssai ON  ssai.sec_acct_id = replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"secManageAcctId":"[^"]+"',1,1)),'"secManageAcctId":"',''),'"','')
+					LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
 		            LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
                     where T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
                         and deal.trade_id is null
