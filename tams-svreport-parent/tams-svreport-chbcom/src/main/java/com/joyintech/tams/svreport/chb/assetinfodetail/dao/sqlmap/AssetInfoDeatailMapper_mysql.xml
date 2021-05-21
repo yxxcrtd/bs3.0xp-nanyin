@@ -1161,6 +1161,9 @@
                 <if test="item.rivalParty != null">
                     RIVAL_PARTY = #{item.rivalParty},
                 </if>
+                <if test="item.rivalPartyType != null">
+                    RIVAL_PARTY_TYPE = #{item.rivalPartyType,jdbcType=VARCHAR},
+                </if>
                 <if test="item.targetType1 != null">
                     TARGET_TYPE1 = #{item.targetType1},
                 </if>
@@ -2593,6 +2596,20 @@
         where trim(ASSET_CODE) = #{assetCode,jdbcType=CHAR}
     </delete>
 
+    <select id="getTradeCounter" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        COUNTER_ID AS id,
+        COUNTER_NAME AS text,
+        COUNTER_TYPE AS object
+        FROM
+        chb_mst_counter_party
+        WHERE
+        STATUS = 'E'
+        <if test="search != null and search !='' ">
+            AND (COUNTER_ID LIKE concat('%', #{search},'%') or COUNTER_NAME like concat('%', #{search},'%'))
+        </if>
 
+
+    </select>
 
 </mapper>

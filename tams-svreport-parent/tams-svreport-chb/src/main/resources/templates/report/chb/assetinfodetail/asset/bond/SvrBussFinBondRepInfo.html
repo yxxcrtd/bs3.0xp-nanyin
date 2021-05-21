@@ -62,8 +62,8 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{BussFinBondRepInfo.partyGrade}">主体评级</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repPartyGrade|" th:name="|${entityName}.repPartyGrade|"
-                                data-th-data-result="${CHB_BODY_GRADE}" th:initValue="${entity?.repPartyGrade}"
+                        <select th:id="|${entityName}_repPartyGrade|" th:name="|${entityName}.secMainGrade|"
+                                data-th-data-result="${CHB_BODY_GRADE}" th:initValue="${entity?.secMainGrade}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" >
                         </select>
@@ -116,7 +116,7 @@
                            data-th-utext="#{BussFinBondRepInfo.industryLevel2}">发行机构所属行业</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_repIndustryLevel2|" th:name="|${entityName}.repIndustryLevel2|"
-                                data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}" th:initValue="${entity?.repIndustryLevel2}"
+                                data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}" th:initValue="${entity?.repIndustryLevel2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" >
                         </select>
@@ -146,7 +146,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_repRegistorgComment|" th:name="|${entityName}.repRegistorgComment|"
                                th:value="${entity?.repRegistorgComment}" class="layui-input form-input" maxlength="32"
-                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required/>
+                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"/>
                     </div>
                 </div>
 
@@ -185,6 +185,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_repIsFbzb|" th:name="|${entityName}.repIsFbzb|"
                                 th:initValue="${entity?.repIsFbzb}"
+                                data-th-value="${SVR_YES_OR_NO_default}" lay-text="是|否"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
@@ -216,6 +217,7 @@
                         <select th:id="|${entityName}_bankSecZxzq|" th:name="|${entityName}.bankSecZxzq|"
                                 th:initValue="${entity?.bankSecZxzq}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-value="${SVR_YES_OR_NO_default}" lay-text="是|否"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
@@ -229,6 +231,7 @@
                         <select th:id="|${entityName}_isPpn|" th:name="|${entityName}.isPpn|"
                                 th:initValue="${entity?.isPpn}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-value="${SVR_YES_OR_NO_default}" lay-text="是|否"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>

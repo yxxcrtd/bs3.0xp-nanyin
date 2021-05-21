@@ -120,6 +120,11 @@
         //     star();
         //     layui.form.render();
         // });
+
+        $('#svrBussRepPlacementInfoDto_rivalPartyCode').change(function(){
+            document.getElementById("rivalPartyType").value=$('#svrBussRepPlacementInfoDto_rivalPartyCode').select2('data')[0].object;
+        });
+
         var initplace = function(){
             var assetTvalue=$('#assetType2').val();
             if(assetTvalue=='1108'||assetTvalue=='1902'){

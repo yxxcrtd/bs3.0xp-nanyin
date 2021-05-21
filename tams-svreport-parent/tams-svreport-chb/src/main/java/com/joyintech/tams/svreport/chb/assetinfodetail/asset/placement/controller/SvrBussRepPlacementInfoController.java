@@ -2,6 +2,8 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.controll
 
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,6 +74,14 @@ public class SvrBussRepPlacementInfoController extends BaseController {
     @RequestMapping(value="getInfoByIssuer",method = RequestMethod.POST)
     public SvrBussRepPlacementInfoDto getInfoByIssuer(@RequestBody Map<String, Object> param){
         return bussAssetInfoService.getInfoByIssuer(param);
+    }
+
+    @ResponseBody
+    @RequestMapping("/getTradeCounter")
+    public List<SelectOptionDto> getTradeCounter() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        List<SelectOptionDto> list = bussAssetInfoService.getTradeCounter(param);
+        return list;
     }
 
 }

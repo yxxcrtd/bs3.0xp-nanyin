@@ -57,7 +57,7 @@ public interface AssetInfoDetailMapper {
 
 	List<SelectOptionDto>  getAssetTye2(Map<String, Object> pageParam);
 
-
+	List<SelectOptionDto> getTradeCounter(Map<String, Object> param);
 
 
 	int deleteError(String assetUUid);
@@ -66,6 +66,8 @@ public interface AssetInfoDetailMapper {
 
 
 	int deleteErrorMsg(String assetCode);
+
+
 
 
 }
