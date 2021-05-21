@@ -252,15 +252,15 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
             if(null!=dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))){
                 type = dataList.get(i).get(0).toString();
                 if("导出".equals(type)){
-                    message.add("不要使用“操作类型”为“导出”的进行导入!" +","+String.valueOf(i + 2));
-                    errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                    message.add("不要使用“操作类型”为“导出”的进行导入!");
+                    errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                     continue;
                 }
             }
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1))){
-                    message.add("第"+(i+2)+"行产品代码与"+"第"+(j+2)+"行产品代码相同!");
-                    errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                    message.add("产品代码与"+"第"+(j+2)+"行产品代码相同!");
+                    errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                 }
             }
         }
@@ -282,15 +282,15 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                 List<ChbPrdBaseinfo> rst = chbPrdBaseinfo001Mapper.selectOneDate(map);
                 if("新增".equals(type)){
                     if(null!=rst && rst.size()>0){
-                        message.add("第"+(i+2)+"行已存在重复产品代码的数据!");
-                        errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                        message.add("已存在重复产品代码的数据!");
+                        errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                         continue;
                     }
                 }
                 if("修改".equals(type) || "删除".equals(type)){
                     if(rst.size()<=0){
-                        message.add("第"+(i+2)+"行产品代码系统中不存在!");
-                        errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                        message.add("产品代码系统中不存在!");
+                        errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                         continue;
                     }
                 }
@@ -308,8 +308,8 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                             raiseVdate=dfs.parse(dataList.get(i).get(3));
                         } catch (ParseException e) {
                             e.printStackTrace();
-                            message.add("第"+(i+2)+"行募集起始日期格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                            message.add("募集起始日期格式不正确!");
+                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                         }
                     }else{
                         raiseVdate=new Date(dataList.get(i).get(3));
@@ -323,8 +323,8 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                             raiseEnddate=dfs.parse(dataList.get(i).get(4));
                         } catch (ParseException e) {
                             e.printStackTrace();
-                            message.add("第"+(i+2)+"行募集结束日期格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                            message.add("募集结束日期格式不正确!");
+                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                         }
                     }else{
                         raiseEnddate=new Date(dataList.get(i).get(4));
@@ -338,8 +338,8 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                             vdate=dfs.parse(dataList.get(i).get(5));
                         } catch (ParseException e) {
                             e.printStackTrace();
-                            message.add("第"+(i+2)+"行起息日格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                            message.add("起息日格式不正确!");
+                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                         }
                     }else{
                         vdate=new Date(dataList.get(i).get(5));
@@ -353,8 +353,8 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                             mdate=dfs.parse(dataList.get(i).get(6));
                         } catch (ParseException e) {
                             e.printStackTrace();
-                            message.add("第"+(i+2)+"行到期日格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                            message.add("到期日格式不正确!");
+                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                         }
                     }else{
                         mdate=new Date(dataList.get(i).get(6));
@@ -417,8 +417,8 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                             firstOpenDay=dfs.parse(dataList.get(i).get(16));
                         } catch (ParseException e) {
                             e.printStackTrace();
-                            message.add("第"+(i+2)+"行首次开放周期起始日格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                            message.add("首次开放周期起始日格式不正确!");
+                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                         }
                     }else{
                         firstOpenDay=new Date(dataList.get(i).get(16));
@@ -512,7 +512,7 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                 }
                 ChbPrdBaseinfo001Dto dto=new ChbPrdBaseinfo001Dto();
                 dto.setType(type);
-                //dto.setProduuid(IDGenerator.generate(36));
+                dto.setProduuid(IDGenerator.generate(36));
                 dto.setProdId(prodId);
                 dto.setOrgCode(CommonUtil.getOrgCode());
                 dto.setProdName(prodNm);
@@ -544,14 +544,19 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                 dto.setIsFullyCompliant(isFullyCompliant);
                 dto.setIsYllccp(isYllccp);
                 dto.setIsSyqzccp(isSyqzccp);
+                if("修改".equals(type) ||"新增".equals(type)){
+                    dto.setStatus("E");
+                }else if( "删除".equals(type)){
+                    dto.setStatus("D");
+                }
                 dto.setIssuingStatus(issuingStatus);
                 list.add(dto);
                 if(isCheck) {
                     List<ValidMessage> resultList = new ArrayList<ValidMessage>();
                     resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbPrdBaseinfo002", null, ValidMessage.class);
                     for (ValidMessage msg : resultList) {
-                        message.add("第" + (i + 2) + "行" + msg.getMessage());
-                        errorList.add(new ExcelValidDto(prodId,"",StringUtil.joinString(message,"")));
+                        message.add(msg.getMessage());
+                        errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                     }
                 }
             }

@@ -335,8 +335,9 @@
 		FIRST_OPEN_DAY,HOLIDAY_ON_FLAG,AVG_OPEN_COUNT,OPEN_BUSS,OPEN_BUSS_REMARK,BUSI_ACCT_NO,ACCT_NAME,
 		PRODTYPE,BASIC,FIDUCIARY_DUTY,CUSTOMER_TYPE,IS_TRANSFER,IS_FULLY_COMPLIANT,IS_YLLCCP,
 		IS_SYQZCCP,ISSUING_STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-		values (
+		values
 		<foreach collection="dtoList" item="item" index="index" separator=",">
+			(
 			#{item.status,jdbcType=VARCHAR},
 			#{item.produuid,jdbcType=CHAR},
 			#{item.dataSource,jdbcType=VARCHAR},
@@ -360,8 +361,8 @@
 			#{item.createTime,jdbcType=DATE} ,
 			#{item.updateUser,jdbcType=VARCHAR},
 			#{item.updateTime,jdbcType=DATE}
+			)
 		</foreach>
-		)
 	</insert>
 
 
