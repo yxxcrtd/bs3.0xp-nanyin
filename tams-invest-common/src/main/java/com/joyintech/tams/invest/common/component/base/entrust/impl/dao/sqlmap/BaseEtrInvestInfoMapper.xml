@@ -126,6 +126,7 @@
 		SUM(FINISH_AMT) sumFinishAmt
 		from ETR_FINISH_STATUS
 		where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+		and ENTRUST_ID != TRADE_ID
 		group by ENTRUST_ID
 	</select>
 	
