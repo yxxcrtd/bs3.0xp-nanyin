@@ -130,7 +130,7 @@
     var queryJJHQXX = function(secId,secName,finprodType) {
         $.ajax({
             /**临时用这个地址，后面调整！！！！**/
-//            url: "http://192.168.90.105:8080/tams/joyin/quote/tick?stock_code="+secId,
+            //url: "http://192.168.90.105:8080/tams/joyin/quote/tick?stock_code="+secId,
             url: basePath + "joyin/quote/tick?stock_code="+secId,
             async: false,
             type: "GET",
@@ -185,7 +185,7 @@
 
     }
 
-    var _last_tick_data =null;
+    _last_tick_data =null;
     /**
      * 更新行情面板数据信息
      * @param {TickData} tick_data
@@ -273,11 +273,11 @@
                 $item.$price.textContent = zero;
                 $item.$volume.textContent = 0;
             });
-
-            delete this._last_tick_data;
+            _last_tick_data = null;
+            //delete _last_tick_data;
         }
 
-        else if (this._last_tick_data === undefined || this._last_tick_data.stockCode !== tick_data.stockCode) {
+        else if (_last_tick_data === undefined || _last_tick_data == null || _last_tick_data.stockCode !== tick_data.stockCode) {
 
             /**
              * 新合约
@@ -316,7 +316,7 @@
             $floor.textContent = parent.EtrExchangeTrade001.formatPrice(tick_data.floor);
 
             updateLevels($sells, $buys, tick_data);
-            this._last_tick_data = tick_data;
+            _last_tick_data = tick_data;
         }
         else {
 
@@ -325,7 +325,7 @@
              */
 
             let change = tick_data.latest - tick_data.preclose;
-            let hot_change = tick_data.latest - this._last_tick_data.latest;
+            let hot_change = tick_data.latest - _last_tick_data.latest;
 
             if (hot_change == 0) {
                 return;
@@ -354,7 +354,7 @@
              */
             updateLevels($sells, $buys, tick_data);
 
-            this._last_tick_data = tick_data;
+            _last_tick_data = tick_data;
         }
     }
 
