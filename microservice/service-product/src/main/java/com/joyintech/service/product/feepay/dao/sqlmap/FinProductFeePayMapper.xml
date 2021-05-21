@@ -1569,6 +1569,7 @@
     <!-- 新建界面的费用取值 -->
     <select id="queryFeeInfoListEx" resultType="com.joyintech.framework.select.SelectOptionDto">
         <!-- 一次性费用 -->
+        select distinct id,text from (
         select MST_FEEINFO.FEE_ID id,
         MST_FEEINFO.FEE_ID || ':' || MST_FEEINFO.FEE_NAME text
         from FIN_CASH_INFO,FIN_PRODUCT,MST_FEEINFO,FIN_PRODUCT_ADD ,FIN_CASH_PAY_RULE
@@ -1647,6 +1648,14 @@
         <if test="initValue != null and initValue != ''">
             and MST_FEEINFO.FEE_ID = #{initValue}
         </if>
+        union all
+        SELECT MST_FEEINFO.FEE_ID id
+        ,MST_FEEINFO.FEE_ID || ':' || MST_FEEINFO.FEE_NAME text
+        FROM MST_FEEINFO
+        where MST_FEEINFO.APPLY_TYPE in (#{relationProd}, #{relationOther})
+        AND MST_FEEINFO.CHARGE_TYPE = #{chargeType02}
+        and MST_FEEINFO.FEE_TYPE = #{feeType99}
+        )
     </select>
 
     <select id="queryLastPayDate" resultType="java.lang.String">
