@@ -138,6 +138,7 @@
                         <select th:id="|${entityName}_industryShares|" th:name="|${entityName}.industryShares|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
                                 th:initValue="${entity?.industryShares}"
+                                th:childrenIds="|${entityName}_industryShares2|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
@@ -151,6 +152,7 @@
                         <select th:id="|${entityName}_industryShares2|" th:name="|${entityName}.industryShares2|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
                                 th:initValue="${entity?.industryShares2}"
+                                data-th-parentids="|${entityName}_industryShares|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
