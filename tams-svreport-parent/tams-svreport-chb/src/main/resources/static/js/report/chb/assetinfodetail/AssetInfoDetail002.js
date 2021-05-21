@@ -107,6 +107,7 @@ var QueryFunc=function(){
      */
     var changeReport = function(){
         var repAssetType = $('#assetType2').val();
+        var tradeMarket = $('#tradeMarket').val();
         var obj = JSON.parse(AssetTypeListLink) ;
         if(obj["01"].indexOf(repAssetType)>=0){
             //本行/他行存款||大额存单
@@ -126,12 +127,16 @@ var QueryFunc=function(){
                 $("#svrBussRepDepositInfoDto_bankName").val('').attr("disabled",true);
                 $("#svrBussRepDepositInfoDto_bankName").val('').attr("required",false);
             }
+            if (tradeMarket == '99'){
+                $("#svrBussRepDepositInfoDto_repRemark").attr("required",true);
+            }
         }else if(obj["02"].indexOf(repAssetType)>=0){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
             if(repAssetType=='1108'||repAssetType=='1902'){
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",false);
                 $("#issueAmt").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
+                $("#targetAmt").attr("required",true);
                 // var parms={assetuuid:$("#assetUuid").val()}
                 // Joyin.ajaxJson(
                 //     basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
@@ -142,14 +147,12 @@ var QueryFunc=function(){
             }else if(repAssetType=='1107'||repAssetType=='1901'){
                 $("#svrBussRepPlacementInfoDto_targetType1").val('').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
-                $("#targetAmt").attr("disabled",true);
-                $("#targetAmt").val('');
             }
-            if (repAssetType=='1902'){
-                $("#svrBussRepPlacementInfoDto_checkCode").attr("required",true);
-            }else {
-                $("#svrBussRepPlacementInfoDto_checkCode").attr("required",false);
-            }
+            // if (repAssetType=='1902'){
+            //     $("#svrBussRepPlacementInfoDto_checkCode").attr("required",true);
+            // }else {
+            //     $("#svrBussRepPlacementInfoDto_checkCode").attr("required",false);
+            // }
 
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
@@ -438,6 +441,10 @@ var QueryFunc=function(){
             //assetType2联动子页面的内容
             changeReport();
             assetVal();
+        });
+
+        $('#tradeMarket').change(function(){
+            changeReport();
         });
 
         $('#assetCode').change(function(){

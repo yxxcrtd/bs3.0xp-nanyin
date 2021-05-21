@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.controller;
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.bond.impl.SvrBussFinBondRepInfoImplService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
@@ -58,6 +59,7 @@ public class SvrBussFinBondRepInfoController extends BaseController{
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
         model.addAttribute("entityName",this.getParam("entityName"));
+        model.addAttribute("SVR_YES_OR_NO_default", DictCodeList.是否_中债_否.getValue());
         //3、返回 子组件对应的页面
         return "report/chb/assetinfodetail/asset/bond/SvrBussFinBondRepInfo";
     }

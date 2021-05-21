@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.common.util.asset;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodata;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 资产要素数据获取共通
@@ -54,5 +56,9 @@ public class RechbAassetInfoUtilService {
             infoDto=assetInfoDetailMapper.getChbAssetInfoByUUid(assetUUid);
         }
          return  infoDto;
+    }
+
+    public List<SelectOptionDto> getTradeCounter(Map<String, Object> param) {
+        return assetInfoDetailMapper.getTradeCounter(param);
     }
 }

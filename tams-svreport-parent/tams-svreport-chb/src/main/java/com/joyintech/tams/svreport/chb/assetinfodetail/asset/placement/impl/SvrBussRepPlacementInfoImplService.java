@@ -2,7 +2,9 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.impl;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepPlacementInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,6 +56,10 @@ public class SvrBussRepPlacementInfoImplService extends BaseService<SvrBussRepPl
     public SvrBussRepPlacementInfoDto getInfoByIssuer(@RequestBody Map<String, Object> param){
         SvrBussRepPlacementInfoDto  dto=new  SvrBussRepPlacementInfoDto();
         return dto;
+    }
+
+    public List<SelectOptionDto> getTradeCounter(Map<String, Object> param) {
+        return rechbAassetInfoUtilService.getTradeCounter(param);
     }
 
     /**
