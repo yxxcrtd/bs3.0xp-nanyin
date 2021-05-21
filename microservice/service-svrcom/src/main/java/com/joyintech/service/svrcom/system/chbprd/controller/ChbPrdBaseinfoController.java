@@ -77,7 +77,7 @@ public class ChbPrdBaseinfoController {
         return list;
     }
     @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param) throws ParseException {
+    public List<ExcelValidDto> checkConfirmMsgForImportData(@RequestBody Map<String, Object> param) throws ParseException {
         List<List<String>> dataList = (List<List<String>>) param.get("dataList");
         return chbPrdBaseinfo001Service.checkConfirmMsgForImportData(dataList);
     }

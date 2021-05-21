@@ -4,7 +4,7 @@
 		<Row>
 			<Cell order="1" name="操作类型">type</Cell><!-- 操作类型 -->
 			<Cell order="2" name="产品代码">prodId</Cell>
-		    <Cell order="3" name="发行机构代码">orgCode</Cell>
+		    <Cell order="3" name="产品名称">prodName</Cell>
 			<Cell order="4" name="募集起始日期">raiseVdateStr</Cell>
 			<Cell order="5" name="募集结束日期">raiseEnddateStr</Cell>
 			<Cell order="6" name="起息日">vdateStr</Cell>

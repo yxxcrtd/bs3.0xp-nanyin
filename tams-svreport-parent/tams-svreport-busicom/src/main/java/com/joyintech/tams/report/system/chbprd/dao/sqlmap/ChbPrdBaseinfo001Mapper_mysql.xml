@@ -329,8 +329,7 @@
 	</select>
 
 	<insert id="insertPrdFeeData" parameterType="java.util.List">
-		insert into
-		chb_prd_baseinfo
+		REPLACE  INTO chb_prd_baseinfo
 		(STATUS,PRODUUID,SVR_DATA_SOURCES,prod_id,prod_name,ORG_CODE,RAISE_VDATE,RAISE_ENDDATE,VDATE,MDATE,MANAGE_TYPE,
 		IS_CONSTRACTE,YIELD_HIGH,YIELD_LOW,YIELD_REMARK,OPEN_MODE,OPEN_CIRCLE,OPEN_CIRCLE_DAYS,RULE_COMMENT,
 		FIRST_OPEN_DAY,HOLIDAY_ON_FLAG,AVG_OPEN_COUNT,OPEN_BUSS,OPEN_BUSS_REMARK,BUSI_ACCT_NO,ACCT_NAME,
@@ -455,7 +454,7 @@
 	</select>
 	<insert id="insertOne" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" >
 		insert into chb_prd_baseinfo
-		(STATUS,SVR_DATA_SOURCES,PRODUUID,prod_id,ORG_CODE,RAISE_VDATE,RAISE_ENDDATE,VDATE,MDATE,MANAGE_TYPE,
+		(STATUS,SVR_DATA_SOURCES,PRODUUID,prod_id,PROD_NAME,ORG_CODE,RAISE_VDATE,RAISE_ENDDATE,VDATE,MDATE,MANAGE_TYPE,
 		IS_CONSTRACTE,YIELD_HIGH,YIELD_LOW,YIELD_REMARK,OPEN_MODE,OPEN_CIRCLE,OPEN_CIRCLE_DAYS,RULE_COMMENT,
 		FIRST_OPEN_DAY,HOLIDAY_ON_FLAG,AVG_OPEN_COUNT,OPEN_BUSS,OPEN_BUSS_REMARK,BUSI_ACCT_NO,ACCT_NAME,
 		PRODTYPE,BASIC,FIDUCIARY_DUTY,CUSTOMER_TYPE,IS_TRANSFER,IS_FULLY_COMPLIANT,IS_YLLCCP,
@@ -463,21 +462,23 @@
 		values (
 			#{status,jdbcType=VARCHAR} ,
 			#{dataSource,jdbcType=VARCHAR},
+		    #{produuid,jdbcType=VARCHAR},
 			#{prodId,jdbcType=VARCHAR},
+		    #{prodName,jdbcType=VARCHAR},
 			#{orgCode,jdbcType=VARCHAR},
 			#{raiseVdate,jdbcType=DATE},
 			#{raiseEnddate,jdbcType=DATE},
-		#{vdate,jdbcType=DATE},#{mdate,jdbcType=DATE},#{manageType,jdbcType=VARCHAR},
-		#{isConstracte,jdbcType=VARCHAR},#{yieldHigh,jdbcType=DECIMAL},#{yieldLow,jdbcType=DECIMAL},
-		#{yieldRemark,jdbcType=VARCHAR},
-		#{openMode,jdbcType=VARCHAR},#{openCircle,jdbcType=VARCHAR},#{openCircleDays,jdbcType=DECIMAL},
-		#{ruleComment,jdbcType=VARCHAR},#{firstOpenDay,jdbcType=DATE},#{holidayOnFlag,jdbcType=VARCHAR},
-		#{avgOpenCount,jdbcType=DECIMAL},#{openBuss,jdbcType=VARCHAR},#{openBussRemark,jdbcType=VARCHAR},
-		#{busiAcctNo,jdbcType=VARCHAR},#{acctName,jdbcType=VARCHAR},#{prodtype,jdbcType=VARCHAR},
-		#{basic,jdbcType=VARCHAR},
-		#{fiduciaryDuty,jdbcType=VARCHAR},#{customerType,jdbcType=VARCHAR},#{isTransfer,jdbcType=VARCHAR},
-		#{isFullyCompliant,jdbcType=VARCHAR},#{isYllccp,jdbcType=VARCHAR},
-		#{isSyqzccp,jdbcType=VARCHAR},#{issuingStatus,jdbcType=VARCHAR},
+			#{vdate,jdbcType=DATE},#{mdate,jdbcType=DATE},#{manageType,jdbcType=VARCHAR},
+			#{isConstracte,jdbcType=VARCHAR},#{yieldHigh,jdbcType=DECIMAL},#{yieldLow,jdbcType=DECIMAL},
+			#{yieldRemark,jdbcType=VARCHAR},
+			#{openMode,jdbcType=VARCHAR},#{openCircle,jdbcType=VARCHAR},#{openCircleDays,jdbcType=DECIMAL},
+			#{ruleComment,jdbcType=VARCHAR},#{firstOpenDay,jdbcType=DATE},#{holidayOnFlag,jdbcType=VARCHAR},
+			#{avgOpenCount,jdbcType=DECIMAL},#{openBuss,jdbcType=VARCHAR},#{openBussRemark,jdbcType=VARCHAR},
+			#{busiAcctNo,jdbcType=VARCHAR},#{acctName,jdbcType=VARCHAR},#{prodtype,jdbcType=VARCHAR},
+			#{basic,jdbcType=VARCHAR},
+			#{fiduciaryDuty,jdbcType=VARCHAR},#{customerType,jdbcType=VARCHAR},#{isTransfer,jdbcType=VARCHAR},
+			#{isFullyCompliant,jdbcType=VARCHAR},#{isYllccp,jdbcType=VARCHAR},
+			#{isSyqzccp,jdbcType=VARCHAR},#{issuingStatus,jdbcType=VARCHAR},
 			#{createUser,jdbcType=VARCHAR} ,
 			#{createTime,jdbcType=DATE} ,
 			#{updateUser,jdbcType=VARCHAR},
@@ -485,21 +486,41 @@
 		)
     </insert>
 	<update id="updateOne" parameterType="java.util.Map">
-		update chb_prd_baseinfo set STATUS =#{status,jdbcType=VARCHAR},SVR_DATA_SOURCES=#{dataSource,jdbcType=VARCHAR},
-		ORG_CODE=#{orgCode1,jdbcType=VARCHAR},RAISE_VDATE=#{raiseVdate,jdbcType=DATE},
+		update chb_prd_baseinfo set
+		STATUS =#{status,jdbcType=VARCHAR},
+		SVR_DATA_SOURCES=#{dataSource,jdbcType=VARCHAR},
+		PROD_NAME=#{prodName,jdbcType=VARCHAR},
+		RAISE_VDATE=#{raiseVdate,jdbcType=DATE},
 		RAISE_ENDDATE=#{raiseEnddate,jdbcType=DATE},
-		VDATE=#{vdate,jdbcType=DATE},MDATE=#{mdate,jdbcType=DATE},MANAGE_TYPE=#{manageType,jdbcType=VARCHAR},
-		IS_CONSTRACTE=#{isConstracte,jdbcType=VARCHAR},YIELD_HIGH=#{yieldHigh,jdbcType=DECIMAL},YIELD_LOW=#{yieldLow,jdbcType=DECIMAL},
+		VDATE=#{vdate,jdbcType=DATE},
+		MDATE=#{mdate,jdbcType=DATE},
+		MANAGE_TYPE=#{manageType,jdbcType=VARCHAR},
+		IS_CONSTRACTE=#{isConstracte,jdbcType=VARCHAR},
+		YIELD_HIGH=#{yieldHigh,jdbcType=DECIMAL},
+		YIELD_LOW=#{yieldLow,jdbcType=DECIMAL},
 		YIELD_REMARK=#{yieldRemark,jdbcType=VARCHAR},
-		OPEN_MODE=#{openMode,jdbcType=VARCHAR},OPEN_CIRCLE=#{openCircle,jdbcType=VARCHAR},OPEN_CIRCLE_DAYS=#{openCircleDays,jdbcType=DECIMAL},
-		RULE_COMMENT=#{ruleComment,jdbcType=VARCHAR},FIRST_OPEN_DAY=#{firstOpenDay,jdbcType=DATE},HOLIDAY_ON_FLAG=#{holidayOnFlag,jdbcType=VARCHAR},
-		AVG_OPEN_COUNT=#{avgOpenCount,jdbcType=DECIMAL},OPEN_BUSS=#{openBuss,jdbcType=VARCHAR},OPEN_BUSS_REMARK=#{openBussRemark,jdbcType=VARCHAR},
-		BUSI_ACCT_NO=#{busiAcctNo,jdbcType=VARCHAR},ACCT_NAME=#{acctName,jdbcType=VARCHAR},PRODTYPE=#{prodtype,jdbcType=VARCHAR},
+		OPEN_MODE=#{openMode,jdbcType=VARCHAR},
+		OPEN_CIRCLE=#{openCircle,jdbcType=VARCHAR},
+		OPEN_CIRCLE_DAYS=#{openCircleDays,jdbcType=DECIMAL},
+		RULE_COMMENT=#{ruleComment,jdbcType=VARCHAR},
+		FIRST_OPEN_DAY=#{firstOpenDay,jdbcType=DATE},
+		HOLIDAY_ON_FLAG=#{holidayOnFlag,jdbcType=VARCHAR},
+		AVG_OPEN_COUNT=#{avgOpenCount,jdbcType=DECIMAL},
+		OPEN_BUSS=#{openBuss,jdbcType=VARCHAR},
+		OPEN_BUSS_REMARK=#{openBussRemark,jdbcType=VARCHAR},
+		BUSI_ACCT_NO=#{busiAcctNo,jdbcType=VARCHAR},
+		ACCT_NAME=#{acctName,jdbcType=VARCHAR},
+		PRODTYPE=#{prodtype,jdbcType=VARCHAR},
 		BASIC=#{basic,jdbcType=VARCHAR},
-		FIDUCIARY_DUTY=#{fiduciaryDuty,jdbcType=VARCHAR},CUSTOMER_TYPE=#{customerType,jdbcType=VARCHAR},IS_TRANSFER=#{isTransfer,jdbcType=VARCHAR},
-		IS_FULLY_COMPLIANT=#{isFullyCompliant,jdbcType=VARCHAR},IS_YLLCCP=#{isYllccp,jdbcType=VARCHAR},
-		IS_SYQZCCP=#{isSyqzccp,jdbcType=VARCHAR},ISSUING_STATUS=#{issuingStatus,jdbcType=VARCHAR},
-		UPDATE_USER =#{updateUser,jdbcType=VARCHAR},UPDATE_TIME=#{updateTime,jdbcType=DATE}
+		FIDUCIARY_DUTY=#{fiduciaryDuty,jdbcType=VARCHAR},
+		CUSTOMER_TYPE=#{customerType,jdbcType=VARCHAR},
+		IS_TRANSFER=#{isTransfer,jdbcType=VARCHAR},
+		IS_FULLY_COMPLIANT=#{isFullyCompliant,jdbcType=VARCHAR},
+		IS_YLLCCP=#{isYllccp,jdbcType=VARCHAR},
+		IS_SYQZCCP=#{isSyqzccp,jdbcType=VARCHAR},
+		ISSUING_STATUS=#{issuingStatus,jdbcType=VARCHAR},
+		UPDATE_USER =#{updateUser,jdbcType=VARCHAR},
+		UPDATE_TIME=#{updateTime,jdbcType=DATE}
 		where
 			prod_id = #{prodId,jdbcType=VARCHAR}
 	</update>

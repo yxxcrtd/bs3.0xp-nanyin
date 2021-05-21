@@ -137,36 +137,66 @@ public class ChbPrdBaseinfo001Controller extends BaseController {
             item.setVdateStr(dfs.format(item.getVdateStr()));
             item.setMdateStr(dfs.format(item.getMdateStr()));
             item.setFirstOpenDayStr(dfs.format(item.getFirstOpenDayStr()));*/
-            item.setManageTypeName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.管理方式_发行登记 , item.getManageType()));
-            item.setIsConstracteName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.是或否 , item.getIsConstracte()));
-            item.setOpenModeName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.开放模式_中债 , item.getOpenMode()));
-            item.setOpenCircleName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.规律开放周期 , item.getOpenCircle()));
-            item.setHolidayOnFlagName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.是或否 , item.getHolidayOnFlag()));
-            item.setOpenBussName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.开放期业务 , item.getOpenBuss()));
-            item.setProdtypeName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.产品类型_中债 , item.getProdtype()));
-            item.setBasicName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.计息基础 , item.getBasic()));
-            item.setFiduciaryDutyName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.产品受托职责_中债 , item.getFiduciaryDuty()));
-            item.setCustomerTypeName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.人行客户类型 , item.getCustomerType()));
-            item.setIsTransferName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.是或否 , item.getIsTransfer()));
-            item.setIsFullyCompliantName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.是或否 , item.getIsFullyCompliant()));
-            item.setIsYllccpName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.是或否 , item.getIsYllccp()));
-            item.setIsSyqzccpName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.是或否 , item.getIsSyqzccp()));
-            item.setIssuingStatusName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.发行状态 , item.getIssuingStatus()));
+            if(!StringUtil.isBlank(item.getManageType())) {
+                item.setManageTypeName(item.getManageType() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.管理方式_发行登记, item.getManageType()));
+            }
+            if(!StringUtil.isBlank(item.getIsConstracte())) {
+                item.setIsConstracteName(item.getIsConstracte() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.是或否, item.getIsConstracte()));
+            }
+            if(!StringUtil.isBlank(item.getOpenMode())) {
+                item.setOpenModeName(item.getOpenMode() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.开放模式_中债, item.getOpenMode()));
+            }
+            if(!StringUtil.isBlank(item.getOpenCircle())) {
+                item.setOpenCircleName(item.getOpenCircle() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.规律开放周期, item.getOpenCircle()));
+            }
+            if(!StringUtil.isBlank(item.getHolidayOnFlag())) {
+                item.setHolidayOnFlagName(item.getHolidayOnFlag() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.是或否, item.getHolidayOnFlag()));
+            }
+            if(!StringUtil.isBlank(item.getOpenBuss())) {
+                item.setOpenBussName(item.getOpenBuss() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.开放期业务 , item.getOpenBuss()));
+            }
+            if(!StringUtil.isBlank(item.getProdtype())) {
+                item.setProdtypeName(item.getProdtype() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.产品类型_中债, item.getProdtype()));
+            }
+//            if(!StringUtil.isBlank(item.getBasic())) {
+//                item.setBasicName(item.getBasic() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+//                        DictCode.计息基础, item.getBasic()));
+//            }
+            if(!StringUtil.isBlank(item.getFiduciaryDuty())) {
+                item.setFiduciaryDutyName(item.getFiduciaryDuty() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.产品受托职责_中债, item.getFiduciaryDuty()));
+            }
+            if(!StringUtil.isBlank(item.getCustomerType())) {
+                item.setCustomerTypeName(item.getCustomerType() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.人行客户类型, item.getCustomerType()));
+            }
+            if(!StringUtil.isBlank(item.getIsTransfer())) {
+                item.setIsTransferName(item.getIsTransfer() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.是或否, item.getIsTransfer()));
+            }
+            if(!StringUtil.isBlank(item.getIsFullyCompliant())) {
+                item.setIsFullyCompliantName(item.getIsFullyCompliant() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.是或否, item.getIsFullyCompliant()));
+            }
+            if(!StringUtil.isBlank(item.getIsYllccp())) {
+                item.setIsYllccpName(item.getIsYllccp() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.是或否, item.getIsYllccp()));
+            }
+            if(!StringUtil.isBlank(item.getIsSyqzccp())) {
+                item.setIsSyqzccpName(item.getIsSyqzccp() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.是或否, item.getIsSyqzccp()));
+            }
+            if(!StringUtil.isBlank(item.getIssuingStatus())) {
+                item.setIssuingStatusName(item.getIssuingStatus() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.发行状态, item.getIssuingStatus()));
+            }
         });
         File outFile = chbPrdBaseinfo001Service.makeFile(
                 "/com/joyintech/tams/report/system/chbprd/conf/export_conf.xml", dtoList);
@@ -185,7 +215,7 @@ public class ChbPrdBaseinfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+    public List<ExcelValidDto>  checkConfirmMsgForImportData(String fileName)  {
         return this.chbPrdBaseinfoService.checkConfirmMsgForImportData(fileName);
     }
 

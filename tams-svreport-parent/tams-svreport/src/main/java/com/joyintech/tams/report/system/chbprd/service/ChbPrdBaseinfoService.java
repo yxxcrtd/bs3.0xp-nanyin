@@ -97,15 +97,15 @@ public class ChbPrdBaseinfoService extends BaseService<ChbPrdBaseinfo> {
                 DisPrdFeeRateInfoErrodataWithBLOBs.class);
     }
 
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+    public List<ExcelValidDto>  checkConfirmMsgForImportData(String fileName)  {
         Map<String,Object> param = new HashMap<String,Object>();
         param.put("dataList", ExcelUtil.getDataList1(fileName));
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());
-        return restTemplate.postForObject(
+        return  restTemplate.postForList(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbPrdBaseinfo/checkConfirmMsgForImportData",
                 param,
-                SvrAjaxResult.class);
+                ExcelValidDto.class);
     }
 
     /**
