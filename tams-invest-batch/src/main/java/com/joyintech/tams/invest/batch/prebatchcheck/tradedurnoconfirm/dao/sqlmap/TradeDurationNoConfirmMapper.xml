@@ -989,12 +989,19 @@
         (T10.NODE_ID IS NULL OR T10.NODE_ID = 'BACK_OPERATOR' OR
         T10.NODE_ID = 'BACK_CHECKER')
         AND
-        (T9.PROCESS_STATE != 'END' or T9.PROCESS_STATE is null)
+        ( T9.PROCESS_STATE != 'END' or T9.PROCESS_STATE is null)
         ) or (
         T3.WORKFLOW_ID IS not NULL
         and T10.NODE_ID IS not NULL
         and T9.PROCESS_STATE = 'BACK'
-        )
+        and  exists (
+                select temp.* from (
+                select a.*,rank() over(partition by a.SEQ_NO order by a.HIS_NO desc) as rank
+                from sys_wfl_business_node A
+                ) temp where rank = 2 and temp.seq_no = T9.SEQ_NO
+                and temp.node_id = t10.node_id
+                )
+            )
         )
         AND WFL_ORDERS.SETTLE_DATE <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
         AND NOT EXISTS
