@@ -391,13 +391,40 @@
 	</select>
 
 	<select id="selectOneDate" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
-		SELECT
-		p.prod_id,p.prod_name,p.ORG_CODE,p.RAISE_VDATE,p.RAISE_ENDDATE,
-		p.VDATE,p.MDATE,p.MANAGE_TYPE,p.IS_CONSTRACTE,p.YIELD_HIGH,p.YIELD_LOW,p.YIELD_REMARK,
-		p.OPEN_MODE,p.OPEN_CIRCLE,p.OPEN_CIRCLE_DAYS,p.RULE_COMMENT,p.FIRST_OPEN_DAY,p.HOLIDAY_ON_FLAG,
-		p.AVG_OPEN_COUNT,p.OPEN_BUSS,p.OPEN_BUSS_REMARK,p.BUSI_ACCT_NO,p.ACCT_NAME,p.PRODTYPE,p.BASIC,
-		p.FIDUCIARY_DUTY,p.CUSTOMER_TYPE,p.IS_TRANSFER,p.IS_FULLY_COMPLIANT,p.IS_YLLCCP,
-		p.IS_SYQZCCP,p.ISSUING_STATUS
+		SELECT p.prod_id,
+			p.prod_name,
+			p.ORG_CODE,
+			date_format(p.RAISE_VDATE, '%Y-%m-%d') raiseVdate,
+			date_format(p.RAISE_ENDDATE, '%Y-%m-%d') raiseEnddate,
+			date_format(p.VDATE, '%Y-%m-%d') vdate,
+			date_format(p.MDATE, '%Y-%m-%d') mdate,
+			p.MANAGE_TYPE,
+			p.IS_CONSTRACTE,
+			p.YIELD_HIGH,
+			p.YIELD_LOW,
+			p.YIELD_REMARK,
+			p.OPEN_MODE,
+			p.OPEN_CIRCLE,
+			p.OPEN_CIRCLE_DAYS,
+			p.RULE_COMMENT,
+			p.FIRST_OPEN_DAY,
+			p.HOLIDAY_ON_FLAG,
+			p.AVG_OPEN_COUNT,
+			p.OPEN_BUSS,
+			p.OPEN_BUSS_REMARK,
+			p.BUSI_ACCT_NO,
+			p.ACCT_NAME,
+			p.PRODTYPE,
+			p.BASIC,
+			p.FIDUCIARY_DUTY,
+			p.CUSTOMER_TYPE,
+			p.IS_TRANSFER,
+			p.IS_FULLY_COMPLIANT,
+			p.IS_YLLCCP,
+			p.IS_SYQZCCP,
+			p.ISSUING_STATUS,
+			date_format(p.RAISE_PSTRDATE, '%Y-%m-%d') raisePstrdate,
+			date_format(p.RAISE_PENDDATE, '%Y-%m-%d') raisePenddate
 		FROM chb_prd_baseinfo p
 		where
 			prod_id = #{prodId,jdbcType=VARCHAR}
