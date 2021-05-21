@@ -12,14 +12,6 @@ import java.util.Map;
 public interface ChbPrdBaseinfoDetailMapper {
     int deleteByPrimaryKey(String prodId);
 
-    int deleteByWorkflowId(String workflowId);
-
-    int updateByWorkflowIdSelective(ChbPrdBaseinfoDetailWithBLOBs record);
-
-    int updateByWorkflowId(ChbPrdBaseinfoDetailWithBLOBs record);
-
-    int insertBasicByWorkflowId(Map paraMap);
-
     int insert(ChbPrdBaseinfoDetailWithBLOBs record);
 
     int insertSelective(ChbPrdBaseinfoDetailWithBLOBs record);
