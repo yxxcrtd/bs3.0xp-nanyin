@@ -185,7 +185,7 @@
 
     }
 
-    var _last_tick_data =null;
+    var this._last_tick_data =null;
     /**
      * 更新行情面板数据信息
      * @param {TickData} tick_data
@@ -274,10 +274,10 @@
                 $item.$volume.textContent = 0;
             });
 
-            delete _last_tick_data;
+            delete this._last_tick_data;
         }
 
-        else if (_last_tick_data === undefined || _last_tick_data.stockCode !== tick_data.stockCode) {
+        else if (this._last_tick_data === undefined || this._last_tick_data.stockCode !== tick_data.stockCode) {
 
             /**
              * 新合约
@@ -316,7 +316,7 @@
             $floor.textContent = parent.EtrExchangeTrade001.formatPrice(tick_data.floor);
 
             updateLevels($sells, $buys, tick_data);
-            _last_tick_data = tick_data;
+            this._last_tick_data = tick_data;
         }
         else {
 
@@ -354,7 +354,7 @@
              */
             updateLevels($sells, $buys, tick_data);
 
-            _last_tick_data = tick_data;
+            this._last_tick_data = tick_data;
         }
     }
 
