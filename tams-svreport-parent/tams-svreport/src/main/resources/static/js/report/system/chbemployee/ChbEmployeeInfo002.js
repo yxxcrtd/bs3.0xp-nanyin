@@ -17,7 +17,13 @@
             event.stopPropagation();// 阻止事件冒泡
         });
         $(".layui-fixbar").hide();
-
+        if (typeof pageModel !== 'undefined') {
+            if (pageModel === PAGE_MODEL_EDIT) {
+                $('#identifyNumber').attr("disabled","disabled");
+            } else if (pageModel === PAGE_MODEL_NEW) {
+                $('#identifyNumber').removeAttr("disabled");
+            }
+        }
     };
 
     /**
