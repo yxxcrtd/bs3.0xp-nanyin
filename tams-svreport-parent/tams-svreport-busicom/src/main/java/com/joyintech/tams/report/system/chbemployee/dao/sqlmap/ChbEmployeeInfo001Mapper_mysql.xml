@@ -94,7 +94,6 @@
 		FROM
 		CHB_EMPLOYEE_INFO a
 		<where>
-			STATUS = 'E'
 			<if test="dtoList != null and dtoList.size() > 0">
 				<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
 					IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
