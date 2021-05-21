@@ -37,12 +37,12 @@
 
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap"
-                           data-th-text="#{SvrBussRepOtherInvestTargetInfo.assetValue}">金额</label>
+                           data-th-text="#{SvrBussRepOtherInvestTargetInfo.amt}">金额</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_assetValue|"
-                               th:name="|${entityName}.assetValue|"
+                        <input type="text" th:id="|${entityName}_amt|"
+                               th:name="|${entityName}.amt|"
 
-                               th:value="${entity?.assetValue}" data-textrange="2"
+                               th:value="${entity?.amt}" data-textrange="2"
                                class="layui-input form-input text-number"/>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                                 th:initValue="${entity?.financierType2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
-                                data-th-data-result="${SVR_PARTY_TYPE2}">
+                                data-th-data-result="${SVR_PARTY_TYPE3}">
                         </select>
                     </div>
                 </div>
@@ -181,7 +181,7 @@
                                 th:initValue="${entity?.financierType3}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
-                                data-th-data-result="${SVR_PARTY_TYPE3}">
+                                data-th-data-result="${SVR_PARTY_TYPE2}">
                         </select>
                     </div>
                 </div>

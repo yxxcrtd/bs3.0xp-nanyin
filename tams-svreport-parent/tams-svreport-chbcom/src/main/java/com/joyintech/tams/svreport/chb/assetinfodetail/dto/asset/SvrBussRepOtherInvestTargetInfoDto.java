@@ -50,6 +50,10 @@ public class SvrBussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
      * 资产价值
      */
     private BigDecimal assetValue;
+    /**
+     * 金额
+     */
+    private BigDecimal amt;
 
     /**
      * 所属国家或地区 参考数据字典：COUNTRY_AREA
@@ -420,5 +424,13 @@ public class SvrBussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
 
     public void setRelationFinan(String relationFinan) {
         this.relationFinan = relationFinan;
+    }
+
+    public BigDecimal getAmt() {
+        return amt;
+    }
+
+    public void setAmt(BigDecimal amt) {
+        this.amt = amt;
     }
 }

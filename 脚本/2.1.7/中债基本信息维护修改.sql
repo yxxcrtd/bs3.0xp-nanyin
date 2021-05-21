@@ -1,0 +1,1 @@
+update CHB_DATACHECK_RULE_INV set srcproperty='svrBussRepOtherInvestTargetInfoDto.amt' where page_id='AssetInfoRegist002' and srcproperty='svrBussRepOtherInvestTargetInfoDto.assetValue';
