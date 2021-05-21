@@ -93,15 +93,25 @@
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable">业绩比较基准上限%</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="text" id="yieldHigh" name="yieldHigh" data-th-value="${entity?.yieldHigh}"
-                           class="layui-input form-input">
+                    <input type="text" id="yieldHigh" name="yieldHigh"
+                           class="layui-input form-input text-number" placeholder="请输入内容"
+                           data-th-placeholder="#{SysCommon.placeholder}"
+                           data-th-value='${entity?.yieldHigh}' data-pattern="" data-textrange="5" maxlength="9"
+                           data-fixtype="2"
+                           onkeyup="if(!/^\d{1,3}(\.\d{1,5})?$/.test(this.value)) yieldHighTip.innerHTML='必须输入数字,格式为n(8,5)格式'; else yieldHighTip.innerHTML='';">
+                    <span id="yieldHighTip" style="color:red"></span>
                 </div>
             </div>
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable">业绩比较基准下限%</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="text" id="yieldLow" name="yieldLow" data-th-value="${entity?.yieldLow}"
-                           class="layui-input form-input">
+                    <input type="text" id="yieldLow" name="yieldLow"
+                           class="layui-input form-input text-number" placeholder="请输入内容"
+                           data-th-placeholder="#{SysCommon.placeholder}"
+                           data-th-value="${entity?.yieldLow}" data-pattern="" data-textrange="5" maxlength="9"
+                           data-fixtype="2"
+                           onkeyup="if(!/^\d{1,3}(\.\d{1,5})?$/.test(this.value)) yieldLowTip.innerHTML='必须输入数字,格式为n(8,5)格式'; else yieldLowTip.innerHTML='';">
+                    <span id="yieldLowTip" style="color:red"></span>
                 </div>
             </div>
         </div>
@@ -138,10 +148,13 @@
             </div>
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable">其他规律开放周期（天）</label>
-                <div class="layui-input-inline input-inline">
-                    <input type="text" id="openCircleDays" name="openCircleDays"
-                           data-th-value="${entity?.openCircleDays}" class="layui-input form-input">
-                </div>
+                <input type="text" id="openCircleDays" name="openCircleDays"
+                       class="layui-input form-input text-number" placeholder="请输入内容"
+                       data-th-placeholder="#{SysCommon.placeholder}"
+                       data-th-value="${entity?.openCircleDays}" data-pattern="" data-textrange="0" maxlength="4"
+                       data-fixtype="2"
+                       onkeyup="if(!/^\d{1,4}?$/.test(this.value)) openCircleDaysTip.innerHTML='必须输入数字'; else openCircleDaysTip.innerHTML='';">
+                <span id="openCircleDaysTip" style="color:red"></span>
             </div>
         </div>
 
@@ -177,8 +190,13 @@
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable">平均开放次数（年化）</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="text" id="avgOpenCount" name="avgOpenCount" data-th-value="${entity?.avgOpenCount}"
-                           class="layui-input form-input">
+                    <input type="text" id="avgOpenCount" name="avgOpenCount"
+                           class="layui-input form-input text-number" placeholder="请输入内容"
+                           data-th-placeholder="#{SysCommon.placeholder}"
+                           data-th-value="${entity?.avgOpenCount}" data-pattern="" data-textrange="2" maxlength="7"
+                           data-fixtype="2"
+                           onkeyup="if(!/^\d{1,3}(\.\d{1,2})?$/.test(this.value)) avgOpenCountTip.innerHTML='必须输入数字,大于0不超过366,格式为n(5,2)格式,'; else avgOpenCountTip.innerHTML='';">
+                    <span id="avgOpenCountTip" style="color:red"></span>
                 </div>
             </div>
         </div>
