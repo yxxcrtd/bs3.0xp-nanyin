@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.perprodeclarereg.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.dto.UploadFile;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 @Controller
@@ -61,6 +61,18 @@ public class PerProDeclareReg002Controller extends BaseController {
             }
         }
         if(CollectionUtils.isNotEmpty(dto.getFileArray())){
+            UploadFile file = null;
+            Iterator<UploadFile> iterable = dto.getFileArray().iterator();
+            while (iterable.hasNext()){
+                file = iterable.next();
+                //文件名称
+                String filename = file.getSrcName().substring(0,file.getSrcName().indexOf("."));
+                if(!regCodeMap.containsKey(filename)){
+                    stringBuffer.append("文件【"+filename+ "】无法匹配到申报登记数据,上传失败;").append("\n");
+                    iterable.remove();
+                }
+
+            }
             for(UploadFile uploadFile:dto.getFileArray()){
                 //文件名称
                 String filename=uploadFile.getSrcName().substring(0,uploadFile.getSrcName().indexOf("."));
@@ -68,27 +80,25 @@ public class PerProDeclareReg002Controller extends BaseController {
                     stringBuffer.append("文件"+filename+"无法匹配到申报登记数据,上传失败;");
                 }
             }
-            webResult.setMessage(stringBuffer.toString());
+            webResult.setMessage(stringBuffer.toString(), MessageType.警告消息);
+            for(UploadFile uploadFile:dto.getFileArray()){
+                //文件名称
+                String filename=uploadFile.getSrcName().substring(0,uploadFile.getSrcName().indexOf("."));
+                String FILE_NO = IDGenerator.generate(32);
+                perProDeclareReg001Service.updateChbPrdDeclare(FILE_NO,regCodeMap.get(filename));
+                //删除已存在的数据重新插入
+//                    perProDeclareReg001Service.deleteBySeqNo(FILE_NO);
+                //插入数据
+                SysUploadFileInfo sysUploadFileInfo=new SysUploadFileInfo();
+                sysUploadFileInfo.setSeqNo(FILE_NO);
+                sysUploadFileInfo.setFileName(uploadFile.getSrcName());
+                sysUploadFileInfo.setPath(uploadFile.getFileName());
+                sysUploadFileInfo.setCreateTime(new Date());
+                sysUploadFileInfo.setUpdateTime(new Date());
+                perProDeclareReg001Service.insertSysUploadFileInfo(sysUploadFileInfo);
+            }
             if(stringBuffer.length()!=0){
                 return webResult;
-            }else{
-                for(UploadFile uploadFile:dto.getFileArray()){
-                    //文件名称
-                    String filename=uploadFile.getSrcName().substring(0,uploadFile.getSrcName().indexOf("."));
-                    String FILE_NO = IDGenerator.generate(32);
-                    perProDeclareReg001Service.updateChbPrdDeclare(FILE_NO,regCodeMap.get(filename));
-                    //删除已存在的数据重新插入
-//                    perProDeclareReg001Service.deleteBySeqNo(FILE_NO);
-                    //插入数据
-                    SysUploadFileInfo sysUploadFileInfo=new SysUploadFileInfo();
-                    sysUploadFileInfo.setSeqNo(FILE_NO);
-                    sysUploadFileInfo.setFileName(uploadFile.getSrcName());
-                    sysUploadFileInfo.setPath(uploadFile.getFileName());
-                    sysUploadFileInfo.setCreateTime(new Date());
-                    sysUploadFileInfo.setUpdateTime(new Date());
-                    perProDeclareReg001Service.insertSysUploadFileInfo(sysUploadFileInfo);
-                }
-
             }
         }else{
             webResult.setMessage("请上传.zip文件");

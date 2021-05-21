@@ -142,4 +142,11 @@
         and data_type = #{dataType}
     </select>
 
+    <select id="getSequenceIndexByParam" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
+		SELECT incr FROM SYS_SEQUENCE WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+	</select>
+
+    <update id="updateSequenceIndexData" >
+		 UPDATE SYS_SEQUENCE SET begin_num = ((#{incrNum,jdbcType=INTEGER} * incr) + begin_num) WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+	</update>
 </mapper>

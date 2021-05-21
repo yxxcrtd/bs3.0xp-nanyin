@@ -329,8 +329,6 @@ public class ChbInvestReportCommonService extends BaseService {
      */
     public boolean createReportDoc(Map<String, Object> param, String isConfirm, String isReveal) throws Exception {
         Object repId = param.get("repId");
-        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        param.put("revealDate",sysDate);
         File file = null;//生成的文件
         if(repId != null) {
             String prodId = null;//产品代码

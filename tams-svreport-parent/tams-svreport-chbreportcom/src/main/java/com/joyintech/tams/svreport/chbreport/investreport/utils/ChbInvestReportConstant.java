@@ -65,5 +65,5 @@ public class ChbInvestReportConstant {
     /**
      * 财务报表编制单位
      */
-     public static final String 财务报表_编制单位 = "REPORT_ORG";
+     public static final String 财务报表_编制单位 = "issue_party_name";
 }
