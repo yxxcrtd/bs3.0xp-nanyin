@@ -1,62 +1,62 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper_mysql">
-    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
-        <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
-        <result column="BOOKDATE" property="bookdate" jdbcType="TIMESTAMP" />
-        <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
-        <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
-        <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR" />
-        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
-        <result column="ASSETTYPE" property="assettype" jdbcType="VARCHAR" />
-        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
-        <result column="ASSETVALUE_A" property="assetvalueA" jdbcType="DECIMAL" />
-        <result column="ASSETVALUE_B" property="assetvalueB" jdbcType="DECIMAL" />
-        <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR" />
-        <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
-        <result column="PPPFLAG" property="pppflag" jdbcType="VARCHAR" />
-        <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
-        <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
-        <result column="IS_GOVERN_FUND1" property="isGovernFund1" jdbcType="VARCHAR" />
-        <result column="PRIVATEFUND_FLAG" property="privatefundFlag" jdbcType="VARCHAR" />
-        <result column="PRIVATEPRD_FLAG" property="privateprdFlag" jdbcType="VARCHAR" />
-        <result column="BONDTOSTOCK_FLAG" property="bondtostockFlag" jdbcType="VARCHAR" />
-        <result column="RATING" property="rating" jdbcType="VARCHAR" />
-        <result column="ASSETTYPE2" property="assettype2" jdbcType="VARCHAR" />
-        <result column="IS_UNDER_TRADE" property="isUnderDeal" jdbcType="VARCHAR" />
-        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
-        <result column="ASSET_TYPE3" property="assetType3" jdbcType="VARCHAR" />
-        <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
-        <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
-        <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
-        <result column="ORGID" property="orgId" jdbcType="VARCHAR" />
-        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
-        <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
-        <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
-        <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
-        <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
-        <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
-        <result column="TERMS" property="terms" jdbcType="DECIMAL" />
-        <result column="SUNASSETTYPE" property="sunassettype" jdbcType="VARCHAR" />
-        <result column="SUNASSETTYPE2" property="sunassettype2" jdbcType="VARCHAR" />
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition">
+        <id column="POSUUID" property="posuuid" jdbcType="CHAR"/>
+        <result column="BOOKDATE" property="bookdate" jdbcType="TIMESTAMP"/>
+        <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP"/>
+        <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP"/>
+        <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR"/>
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR"/>
+        <result column="ASSETTYPE" property="assettype" jdbcType="VARCHAR"/>
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR"/>
+        <result column="ASSETVALUE_A" property="assetvalueA" jdbcType="DECIMAL"/>
+        <result column="ASSETVALUE_B" property="assetvalueB" jdbcType="DECIMAL"/>
+        <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR"/>
+        <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR"/>
+        <result column="PPPFLAG" property="pppflag" jdbcType="VARCHAR"/>
+        <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR"/>
+        <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR"/>
+        <result column="IS_GOVERN_FUND1" property="isGovernFund1" jdbcType="VARCHAR"/>
+        <result column="PRIVATEFUND_FLAG" property="privatefundFlag" jdbcType="VARCHAR"/>
+        <result column="PRIVATEPRD_FLAG" property="privateprdFlag" jdbcType="VARCHAR"/>
+        <result column="BONDTOSTOCK_FLAG" property="bondtostockFlag" jdbcType="VARCHAR"/>
+        <result column="RATING" property="rating" jdbcType="VARCHAR"/>
+        <result column="ASSETTYPE2" property="assettype2" jdbcType="VARCHAR"/>
+        <result column="IS_UNDER_TRADE" property="isUnderDeal" jdbcType="VARCHAR"/>
+        <result column="CCY" property="ccy" jdbcType="VARCHAR"/>
+        <result column="ASSET_TYPE3" property="assetType3" jdbcType="VARCHAR"/>
+        <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR"/>
+        <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR"/>
+        <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR"/>
+        <result column="ORGID" property="orgId" jdbcType="VARCHAR"/>
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR"/>
+        <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR"/>
+        <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR"/>
+        <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR"/>
+        <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR"/>
+        <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR"/>
+        <result column="TERMS" property="terms" jdbcType="DECIMAL"/>
+        <result column="SUNASSETTYPE" property="sunassettype" jdbcType="VARCHAR"/>
+        <result column="SUNASSETTYPE2" property="sunassettype2" jdbcType="VARCHAR"/>
     </resultMap>
-    <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
         POSUUID, BOOKDATE, STARTDATE, ENDDATE, INVEST_VARIETY, ASSET_CODE, ASSETTYPE, PROD_ID,
         ASSETVALUE_A, ASSETVALUE_B, INDUSTRY1, IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE, MANAGE_TYPE,
         IS_GOVERN_FUND1, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, RATING,ASSETTYPE2,
         TERMS , SUNASSETTYPE , SUNASSETTYPE2
     </sql>
-    <sql id="Sec_Rating_List" >
-        with a as	(
+    <sql id="Sec_Rating_List">
+        with a as (
         SELECT asset_code,rating FROM (
         select row_number() over(partition by brating.O_CODE order by brating.O_CODE,brating.GRADE_DATE desc
-        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+        <if test="sysflag=='01'.toString()">/*推荐评级*/
             ,brating.is_recommand asc
         </if>
-        <if test="sysflag=='02'.toString()"> /*最大评级*/
+        <if test="sysflag=='02'.toString()">/*最大评级*/
             ,brating.GRADE_RESULT asc
         </if>
-        <if test="sysflag=='03'.toString()"> /*最小评级*/
+        <if test="sysflag=='03'.toString()">/*最小评级*/
             ,brating.GRADE_RESULT desc
         </if>
         ) my_rank
@@ -73,13 +73,13 @@
         (
         SELECT asset_code,rating FROM (
         select row_number() over(partition by brating.O_CODE order by brating.O_CODE,brating.GRADE_DATE desc
-        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+        <if test="sysflag=='01'.toString()">/*推荐评级*/
             ,brating.is_recommand asc
         </if>
-        <if test="sysflag=='02'.toString()"> /*最大评级*/
+        <if test="sysflag=='02'.toString()">/*最大评级*/
             ,brating.GRADE_RESULT asc
         </if>
-        <if test="sysflag=='03'.toString()"> /*最小评级*/
+        <if test="sysflag=='03'.toString()">/*最小评级*/
             ,brating.GRADE_RESULT desc
         </if>
         ) my_rank
@@ -96,13 +96,13 @@
         (
         SELECT asset_code,rating FROM (
         select row_number() over(partition by brating.O_CODE order by brating.O_CODE,brating.GRADE_DATE desc
-        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+        <if test="sysflag=='01'.toString()">/*推荐评级*/
             ,brating.is_recommand asc
         </if>
-        <if test="sysflag=='02'.toString()"> /*最大评级*/
+        <if test="sysflag=='02'.toString()">/*最大评级*/
             ,brating.GRADE_RESULT asc
         </if>
-        <if test="sysflag=='03'.toString()"> /*最小评级*/
+        <if test="sysflag=='03'.toString()">/*最小评级*/
             ,brating.GRADE_RESULT desc
         </if>
         ) my_rank
@@ -119,13 +119,13 @@
         d as(
         SELECT asset_code,rating FROM (
         select row_number() over(partition by brating.O_CODE order by brating.O_CODE,brating.GRADE_DATE desc
-        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+        <if test="sysflag=='01'.toString()">/*推荐评级*/
             ,brating.is_recommand asc
         </if>
-        <if test="sysflag=='02'.toString()"> /*最大评级*/
+        <if test="sysflag=='02'.toString()">/*最大评级*/
             ,brating.GRADE_RESULT asc
         </if>
-        <if test="sysflag=='03'.toString()"> /*最小评级*/
+        <if test="sysflag=='03'.toString()">/*最小评级*/
             ,brating.GRADE_RESULT desc
         </if>
         ) my_rank
@@ -141,9 +141,10 @@
     </sql>
 
 
-    <select id="selectAssetposition" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
-            resultSetType="FORWARD_ONLY" fetchSize="1000" >
-        <include refid="Sec_Rating_List" />
+    <select id="selectAssetposition" resultMap="BaseResultMap"
+            parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        <include refid="Sec_Rating_List"/>
         select
         #{bookdate,jdbcType=DATE} bookdate
         ,#{enddate,jdbcType=DATE} enddate
@@ -158,7 +159,7 @@
         ,(case pos.ASSET_CODE when 'REMAININGCASH' then '1001' else info.ASSET_TYPE2 end) assettype2
         ,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
         ,info.IN_ASSET_TYPE IN_ASSET_TYPE /*行业一级分类*/
-        ,sum(pos.accuamt)  ASSETVALUE_A  /*穿透前资产价值*/
+        ,sum(pos.accuamt) ASSETVALUE_A /*穿透前资产价值*/
         ,sum((case pos.trade_type when '05' then pos.accuqty else null end)) ASSETVALUE_B /*穿透后资产价值*/
         ,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)) rating/*债券评级*/
         ,(case info.PRIVATE_FLAG when '01' then '01' else null end) MONIT_TYPE
@@ -196,7 +197,7 @@
         where 1=1
         and prd.PROFIT_TYPE='03'
         and pos.trade_type in ('01','02','05') /*直投交易,通道交易,资管计划交易*/
-        and  pos.cDATE =#{enddate,jdbcType=DATE}
+        and pos.cDATE =#{enddate,jdbcType=DATE}
         <if test="prodids !=null and prodids.size()>0">
             and pos.prodid in
             <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
@@ -206,18 +207,23 @@
                 #{item}
             </foreach>
         </if>
-        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE}, pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
+        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
+        pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
         (case pos.ASSET_CODE when 'REMAININGCASH' then '01' else info.asset_type end),
         (case pos.ASSET_CODE when 'REMAININGCASH' then '1001' else info.ASSET_TYPE2 end),
-        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
+        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE,
+        null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
         (case info.PRIVATE_FLAG when '01' then '01' else null end),
-        (case info.PPPFLAG when '01' then '01' else null end), (case info.IS_GOVERN_FUND when '01' then '01' else null end),
-        (case info.PRIVATEFUND_FLAG when '01' then '01' else null end), (case info.PRIVATEPRD_FLAG when '01' then '01' else null end),
+        (case info.PPPFLAG when '01' then '01' else null end), (case info.IS_GOVERN_FUND when '01' then '01' else null
+        end),
+        (case info.PRIVATEFUND_FLAG when '01' then '01' else null end), (case info.PRIVATEPRD_FLAG when '01' then '01'
+        else null end),
         (case info.BONDTOSTOCK_FLAG when '01' then '01' else null end),
         info.MANAGE_TYPE
     </select>
 
-    <select id="selectChlDeal" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
+    <select id="selectChlDeal" resultMap="BaseResultMap"
+            parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition">
         select
         #{bookdate,jdbcType=DATE} bookdate
         ,#{enddate,jdbcType=DATE} enddate
@@ -232,7 +238,7 @@
         ,info.ASSET_TYPE2 assettype2
         ,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
         ,info.IN_ASSET_TYPE
-        ,sum(pos.accuamt)  ASSETVALUE_A  /*穿透前资产价值*/
+        ,sum(pos.accuamt) ASSETVALUE_A /*穿透前资产价值*/
         ,sum(pos.accuamt) ASSETVALUE_B /*穿透后资产价值*/
         ,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)) rating/*债券评级*/
         ,(case info.PRIVATE_FLAG when '01' then '01' else null end) MONIT_TYPE
@@ -258,13 +264,13 @@
                 @O_CODE := brating.O_CODE
                 from
                 ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                <if test="sysflag=='01'.toString()">/*推荐评级*/
                     ,is_recommand asc
                 </if>
-                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                <if test="sysflag=='02'.toString()">/*最大评级*/
                     ,GRADE_RESULT asc
                 </if>
-                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                <if test="sysflag=='03'.toString()">/*最小评级*/
                     ,GRADE_RESULT desc
                 </if>) brating,
                 ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -272,7 +278,7 @@
                 and brating.O_TYPE = '01' /*主体评级*/
                 and brating.SHORT_LONG_TERM = '02' /*长期*/
                 and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                ) de  where 1=1 limit 1
+                ) de where 1=1 limit 1
                 ) a
                 on info.FINANCIE=a.ASSET_CODE
                 left join (
@@ -285,13 +291,13 @@
                 @O_CODE := brating.O_CODE
                 from
                 ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                <if test="sysflag=='01'.toString()">/*推荐评级*/
                     ,is_recommand asc
                 </if>
-                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                <if test="sysflag=='02'.toString()">/*最大评级*/
                     ,GRADE_RESULT asc
                 </if>
-                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                <if test="sysflag=='03'.toString()">/*最小评级*/
                     ,GRADE_RESULT desc
                 </if>) brating,
                 ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -299,7 +305,7 @@
                 and brating.O_TYPE = '01' /*主体评级*/
                 and brating.SHORT_LONG_TERM = '01' /*短期*/
                 and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                ) de  where 1=1 limit 1
+                ) de where 1=1 limit 1
                 )b
                 on info.FINANCIE=b.ASSET_CODE
             </when>
@@ -314,13 +320,13 @@
                 @O_CODE := brating.O_CODE
                 from
                 ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                <if test="sysflag=='01'.toString()">/*推荐评级*/
                     ,is_recommand asc
                 </if>
-                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                <if test="sysflag=='02'.toString()">/*最大评级*/
                     ,GRADE_RESULT asc
                 </if>
-                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                <if test="sysflag=='03'.toString()">/*最小评级*/
                     ,GRADE_RESULT desc
                 </if>) brating,
                 ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -328,7 +334,7 @@
                 and brating.O_TYPE = '01' /*主体评级*/
                 and brating.SHORT_LONG_TERM = '02' /*长期*/
                 and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                ) de  where 1=1 limit 1
+                ) de where 1=1 limit 1
                 ) a
                 on pos.ASSET_CODE=a.ASSET_CODE
                 left join (
@@ -341,13 +347,13 @@
                 @O_CODE := brating.O_CODE
                 from
                 ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                <if test="sysflag=='01'.toString()">/*推荐评级*/
                     ,is_recommand asc
                 </if>
-                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                <if test="sysflag=='02'.toString()">/*最大评级*/
                     ,GRADE_RESULT asc
                 </if>
-                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                <if test="sysflag=='03'.toString()">/*最小评级*/
                     ,GRADE_RESULT desc
                 </if>) brating,
                 ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -370,13 +376,13 @@
         @O_CODE := brating.O_CODE
         from
         ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+        <if test="sysflag=='01'.toString()">/*推荐评级*/
             ,is_recommand asc
         </if>
-        <if test="sysflag=='02'.toString()"> /*最大评级*/
+        <if test="sysflag=='02'.toString()">/*最大评级*/
             ,GRADE_RESULT asc
         </if>
-        <if test="sysflag=='03'.toString()"> /*最小评级*/
+        <if test="sysflag=='03'.toString()">/*最小评级*/
             ,GRADE_RESULT desc
         </if>) brating,
         ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -387,7 +393,7 @@
         ) where 1=1 limit 1
         ) c
         on pos.ASSET_CODE=c.ASSET_CODE
-        left join  (
+        left join (
         SELECT asset_code,rating FROM (
         select
         @rownum := @rownum + 1 rownum
@@ -397,13 +403,13 @@
         @O_CODE := brating.O_CODE
         from
         ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+        <if test="sysflag=='01'.toString()">/*推荐评级*/
             ,is_recommand asc
         </if>
-        <if test="sysflag=='02'.toString()"> /*最大评级*/
+        <if test="sysflag=='02'.toString()">/*最大评级*/
             ,GRADE_RESULT asc
         </if>
-        <if test="sysflag=='03'.toString()"> /*最小评级*/
+        <if test="sysflag=='03'.toString()">/*最小评级*/
             ,GRADE_RESULT desc
         </if>) brating,
         ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -420,11 +426,14 @@
         where 1=1
         and prd.PROFIT_TYPE='03'
         and pos.trade_type in ('01','02') /*直投交易,通道交易,资管计划交易*/
-        and  pos.cDATE =#{enddate,jdbcType=DATE}
+        and pos.cDATE =#{enddate,jdbcType=DATE}
         and pos.prod_id = #{prodId,jdbcType=VARCHAR}
         and pos.CHL_ID = #{chlId,jdbcType=VARCHAR}
-        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE}, pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
-        info.asset_type, info.ASSET_TYPE2, ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
+        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
+        pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
+        info.asset_type, info.ASSET_TYPE2,
+        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE,
+        null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
         (case info.PRIVATE_FLAG when '01' then '01' else null end),
         (case info.PPPFLAG when '01' then '01' else null end),
         (case info.IS_GOVERN_FUND when '01' then '01' else null end),
@@ -436,7 +445,8 @@
     </select>
 
 
-    <select id="selectPlanInfo" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+    <select id="selectPlanInfo" resultMap="BaseResultMap"
+            parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             flushCache="true" useCache="false">
         select
         #{bookdate,jdbcType=DATE} bookdate
@@ -466,13 +476,13 @@
                 @O_CODE := brating.O_CODE
                 from
                 ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                <if test="sysflag=='01'.toString()">/*推荐评级*/
                     ,is_recommand asc
                 </if>
-                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                <if test="sysflag=='02'.toString()">/*最大评级*/
                     ,GRADE_RESULT asc
                 </if>
-                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                <if test="sysflag=='03'.toString()">/*最小评级*/
                     ,GRADE_RESULT desc
                 </if>) brating,
                 ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -493,13 +503,13 @@
                 @O_CODE := brating.O_CODE
                 from
                 ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                <if test="sysflag=='01'.toString()">/*推荐评级*/
                     ,is_recommand asc
                 </if>
-                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                <if test="sysflag=='02'.toString()">/*最大评级*/
                     ,GRADE_RESULT asc
                 </if>
-                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                <if test="sysflag=='03'.toString()">/*最小评级*/
                     ,GRADE_RESULT desc
                 </if>) brating,
                 ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -522,13 +532,13 @@
                 @O_CODE := brating.O_CODE
                 from
                 ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                <if test="sysflag=='01'.toString()">/*推荐评级*/
                     ,is_recommand asc
                 </if>
-                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                <if test="sysflag=='02'.toString()">/*最大评级*/
                     ,GRADE_RESULT asc
                 </if>
-                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                <if test="sysflag=='03'.toString()">/*最小评级*/
                     ,GRADE_RESULT desc
                 </if>) brating,
                 ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -549,13 +559,13 @@
                 @O_CODE := brating.O_CODE
                 from
                 ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                <if test="sysflag=='01'.toString()">/*推荐评级*/
                     ,is_recommand asc
                 </if>
-                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                <if test="sysflag=='02'.toString()">/*最大评级*/
                     ,GRADE_RESULT asc
                 </if>
-                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                <if test="sysflag=='03'.toString()">/*最小评级*/
                     ,GRADE_RESULT desc
                 </if>) brating,
                 ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -578,13 +588,13 @@
         @O_CODE := brating.O_CODE
         from
         ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+        <if test="sysflag=='01'.toString()">/*推荐评级*/
             ,is_recommand asc
         </if>
-        <if test="sysflag=='02'.toString()"> /*最大评级*/
+        <if test="sysflag=='02'.toString()">/*最大评级*/
             ,GRADE_RESULT asc
         </if>
-        <if test="sysflag=='03'.toString()"> /*最小评级*/
+        <if test="sysflag=='03'.toString()">/*最小评级*/
             ,GRADE_RESULT desc
         </if>) brating,
         ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -605,13 +615,13 @@
         @O_CODE := brating.O_CODE
         from
         ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+        <if test="sysflag=='01'.toString()">/*推荐评级*/
             ,is_recommand asc
         </if>
-        <if test="sysflag=='02'.toString()"> /*最大评级*/
+        <if test="sysflag=='02'.toString()">/*最大评级*/
             ,GRADE_RESULT asc
         </if>
-        <if test="sysflag=='03'.toString()"> /*最小评级*/
+        <if test="sysflag=='03'.toString()">/*最小评级*/
             ,GRADE_RESULT desc
         </if>) brating,
         ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
@@ -626,7 +636,9 @@
         and info.status !='D'
         and info.ASSET_CODE=#{assetCode,jdbcType=CHAR}
         group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
-        info.asset_type, info.ASSET_TYPE2, ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
+        info.asset_type, info.ASSET_TYPE2,
+        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE,
+        null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
         (case info.PRIVATE_FLAG when '01' then '01' else null end),
         (case info.PPPFLAG when '01' then '01' else null end),
         (case info.IS_GOVERN_FUND when '01' then '01' else null end),
@@ -637,174 +649,196 @@
 
     </select>
 
-    <select id="selectByMonthDate" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select 
-    sum(POSITION.ASSETVALUE_A) ASSETVALUE_A, sum(POSITION.ASSETVALUE_B) ASSETVALUE_B, 
-    POSITION.ASSETTYPE, ifnull(POSITION.INDUSTRY1,'NULL') INDUSTRY1, POSITION.IN_ASSET_TYPE,
-    POSITION.PPPFLAG, POSITION.MONIT_TYPE, POSITION.MANAGE_TYPE, 
-    POSITION.IS_GOVERN_FUND1, POSITION.PRIVATEFUND_FLAG, POSITION.PRIVATEPRD_FLAG, 
-    POSITION.BONDTOSTOCK_FLAG, POSITION.RATING,POSITION.ASSETTYPE2,ASSETINFO.ASSET_TYPE3,
-    ASSETINFO.BANK_SEC_CAPITAL,
-    ASSETINFO.BANK_SEC_PERPETUAL,
-    ASSETINFO.BANK_SEC_PREFER
-    from CHB_MONTH_ASSET_POSITION POSITION
-    LEFT JOIN CHB_ASSET_INFO ASSETINFO
-    ON ASSETINFO.ASSET_CODE = POSITION.ASSET_CODE  and     ASSETINFO.status in('E','M')
-    where 
-    DATE_FORMAT(POSITION.ENDDATE, '%Y-%m-%d') >= #{startDate,jdbcType=VARCHAR}
+    <select id="selectByMonthDate" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select sum(POSITION.ASSETVALUE_A)         ASSETVALUE_A,
+               sum(POSITION.ASSETVALUE_B)         ASSETVALUE_B,
+               POSITION.ASSETTYPE,
+               ifnull(POSITION.INDUSTRY1, 'NULL') INDUSTRY1,
+               POSITION.IN_ASSET_TYPE,
+               POSITION.PPPFLAG,
+               POSITION.MONIT_TYPE,
+               POSITION.MANAGE_TYPE,
+               POSITION.IS_GOVERN_FUND1,
+               POSITION.PRIVATEFUND_FLAG,
+               POSITION.PRIVATEPRD_FLAG,
+               POSITION.BONDTOSTOCK_FLAG,
+               POSITION.RATING,
+               POSITION.ASSETTYPE2,
+               ASSETINFO.ASSET_TYPE3,
+               ASSETINFO.BANK_SEC_CAPITAL,
+               ASSETINFO.BANK_SEC_PERPETUAL,
+               ASSETINFO.BANK_SEC_PREFER
+        from CHB_MONTH_ASSET_POSITION POSITION
+                 LEFT JOIN CHB_ASSET_INFO ASSETINFO
+                           ON ASSETINFO.ASSET_CODE = POSITION.ASSET_CODE and ASSETINFO.status in ('E', 'M')
+        where DATE_FORMAT(POSITION.ENDDATE, '%Y-%m-%d') >= #{startDate,jdbcType=VARCHAR}
     <![CDATA[and DATE_FORMAT(POSITION.ENDDATE, '%Y-%m-%d') <= #{endDate,jdbcType=VARCHAR}]]>
-    group by 
-    POSITION.ASSETTYPE, ifnull(POSITION.INDUSTRY1,'NULL'), POSITION.IN_ASSET_TYPE,
-    POSITION.PPPFLAG, POSITION.MONIT_TYPE, POSITION.MANAGE_TYPE, 
-    POSITION.IS_GOVERN_FUND1, POSITION.PRIVATEFUND_FLAG, POSITION.PRIVATEPRD_FLAG, 
-    POSITION.BONDTOSTOCK_FLAG, POSITION.RATING, POSITION.ASSETTYPE2,ASSETINFO.ASSET_TYPE3,
-    ASSETINFO.BANK_SEC_CAPITAL,
-    ASSETINFO.BANK_SEC_PERPETUAL,
-    ASSETINFO.BANK_SEC_PREFER
-  </select>
+        group by POSITION.ASSETTYPE, ifnull(POSITION.INDUSTRY1, 'NULL'), POSITION.IN_ASSET_TYPE,
+                 POSITION.PPPFLAG, POSITION.MONIT_TYPE, POSITION.MANAGE_TYPE,
+                 POSITION.IS_GOVERN_FUND1, POSITION.PRIVATEFUND_FLAG, POSITION.PRIVATEPRD_FLAG,
+                 POSITION.BONDTOSTOCK_FLAG, POSITION.RATING, POSITION.ASSETTYPE2, ASSETINFO.ASSET_TYPE3,
+                 ASSETINFO.BANK_SEC_CAPITAL,
+                 ASSETINFO.BANK_SEC_PERPETUAL,
+                 ASSETINFO.BANK_SEC_PREFER
+    </select>
 
     <select id="selectPrdCashByDate" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             parameterType="date">
-	SELECT SUM(cashflow) cashamt,CCY ccy,PROD_ID prodId
-		FROM
-		  (SELECT SUM(
-		    CASE prdeal.TRADE_TYPE
-		      WHEN '03'
-		      THEN (ifnull(prdeal.TRADE_PRINCE, 0)+ifnull(prdeal.REDEMPTION_FEE,0))  * -1
-		      WHEN '04'
-		      THEN 0
-		      WHEN '05'
-		      THEN 0
-		      WHEN '14'
-		      THEN 0
-		      WHEN '15'
-		      THEN 0
-		      WHEN '16'
-		      THEN ifnull(prdeal.TRADE_PRINCE, 0) * -1
-		      WHEN '17'
-		      THEN (ifnull(prdeal.TRADE_PRINCE, 0)+ifnull(prdeal.REDEMPTION_FEE,0)) * -1
-		      ELSE ifnull(prdeal.TRADE_PRINCE, 0)
-		    END) cashflow,
-		    prdeal.CCY,prdeal.PROD_ID
-		  FROM chb_prd_deal prdeal
-		   left join CHB_PRD_BASEINFO prd
-		   on prd.PROD_ID=prdeal.PROD_ID
-		  and prd.status !='D'	
-		  WHERE PAY_DATE  <![CDATA[<=]]>#{cdate,jdbcType=DATE}
-		  AND TRADE_TYPE NOT IN ('05','14','15')
-		  and prd.PROFIT_TYPE='03'
-		  AND PRDEAL.STATUS   !='D'
-		  GROUP BY prdeal.CCY,prdeal.PROD_ID
-		  UNION ALL
-		  SELECT SUM(
-		    CASE prdeal.TRADE_TYPE
-		      WHEN '04'
-		      THEN ifnull(prdeal.INT_AMT, 0) * -1
-		      ELSE 0
-		    END) cashflow,
-		    prdeal.CCY,prdeal.PROD_ID
-		  FROM chb_prd_deal prdeal
-	      left join CHB_PRD_BASEINFO prd
-		  on prd.PROD_ID=prdeal.PROD_ID
-		  and prd.status !='D'
-		  WHERE INTEREST_DATE<![CDATA[<=]]>#{cdate,jdbcType=DATE}
-		  and prd.PROFIT_TYPE='03'
-		  AND PRDEAL.STATUS   !='D'
-		  GROUP BY prdeal.CCY,prdeal.PROD_ID
-		  UNION ALL
-		  SELECT SUM(-1*ifnull(fee.AMT,0 ))cashflow,
-		    fee.CCY,fee.PROD_ID
-		  FROM chb_prd_fee_deal fee
-		  left join CHB_PRD_BASEINFO prd
-		  on prd.PROD_ID=fee.PROD_ID
-		  and prd.status !='D'
-		  WHERE fee.PAY_DATE <![CDATA[<=]]>#{cdate,jdbcType=DATE}
-		  and prd.PROFIT_TYPE='03'
-		  AND fee.STATUS     !='D'
-		  GROUP BY fee.CCY,fee.PROD_ID
-		  ) base
-		GROUP BY CCY,PROD_ID
-  </select>
-    <select id="selectAssetCashByDateA" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+        SELECT SUM(cashflow) cashamt, CCY ccy, PROD_ID prodId
+        FROM (SELECT SUM(
+                             CASE prdeal.TRADE_TYPE
+                                 WHEN '03'
+                                     THEN (ifnull(prdeal.TRADE_PRINCE, 0) + ifnull(prdeal.REDEMPTION_FEE, 0)) * -1
+                                 WHEN '04'
+                                     THEN 0
+                                 WHEN '05'
+                                     THEN 0
+                                 WHEN '14'
+                                     THEN 0
+                                 WHEN '15'
+                                     THEN 0
+                                 WHEN '16'
+                                     THEN ifnull(prdeal.TRADE_PRINCE, 0) * -1
+                                 WHEN '17'
+                                     THEN (ifnull(prdeal.TRADE_PRINCE, 0) + ifnull(prdeal.REDEMPTION_FEE, 0)) * -1
+                                 ELSE ifnull(prdeal.TRADE_PRINCE, 0)
+                                 END) cashflow,
+                     prdeal.CCY,
+                     prdeal.PROD_ID
+              FROM chb_prd_deal prdeal
+                       left join CHB_PRD_BASEINFO prd
+                                 on prd.PROD_ID = prdeal.PROD_ID
+                                     and prd.status != 'D'
+              WHERE PAY_DATE  <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+                AND TRADE_TYPE NOT IN ('05', '14', '15')
+                and prd.PROFIT_TYPE = '03'
+                AND PRDEAL.STATUS != 'D'
+              GROUP BY prdeal.CCY, prdeal.PROD_ID
+              UNION ALL
+              SELECT SUM(
+                             CASE prdeal.TRADE_TYPE
+                                 WHEN '04'
+                                     THEN ifnull(prdeal.INT_AMT, 0) * -1
+                                 ELSE 0
+                                 END) cashflow,
+                     prdeal.CCY,
+                     prdeal.PROD_ID
+              FROM chb_prd_deal prdeal
+                       left join CHB_PRD_BASEINFO prd
+                                 on prd.PROD_ID = prdeal.PROD_ID
+                                     and prd.status != 'D'
+              WHERE INTEREST_DATE<![CDATA[ <=]]> #{cdate,jdbcType=DATE}
+                and prd.PROFIT_TYPE = '03'
+                AND PRDEAL.STATUS != 'D'
+              GROUP BY prdeal.CCY, prdeal.PROD_ID
+              UNION ALL
+              SELECT SUM(-1 * ifnull(fee.AMT, 0)) cashflow,
+                     fee.CCY,
+                     fee.PROD_ID
+              FROM chb_prd_fee_deal fee
+                       left join CHB_PRD_BASEINFO prd
+                                 on prd.PROD_ID = fee.PROD_ID
+                                     and prd.status != 'D'
+              WHERE fee.PAY_DATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+                and prd.PROFIT_TYPE = '03'
+                AND fee.STATUS != 'D'
+              GROUP BY fee.CCY, fee.PROD_ID
+             ) base
+        GROUP BY CCY, PROD_ID
+    </select>
+    <select id="selectAssetCashByDateA"
+            resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             parameterType="date">
-	 SELECT 
-		sum(
-		case when deal.CUR_ASSET_TYPE in ('01','03','05','08','10','12')
-		then -1*ifnull(deal.AMT,0)
-		else ifnull(deal.AMT,0)
-		end )  cashamt ,DEAL.PROD_ID,DEAL.CCY  
-		FROM 
-		chb_invest_trade deal
-		left join CHB_PRD_BASEINFO prd
-		  on prd.PROD_ID=deal.PROD_ID
-		  and prd.status !='D'
-		where deal.CHL_CPCT_ID is null
-		and prd.PROFIT_TYPE='03'
-		and deal.DEALDATE <![CDATA[<=]]>#{cdate,jdbcType=DATE}
-		and deal.STATUS !='D'
-		group by DEAL.PROD_ID,DEAL.CCY
-  </select>
-    <select id="selectAssetCashByDateB" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+        SELECT sum(
+                       case
+                           when deal.CUR_ASSET_TYPE in ('01', '03', '05', '08', '10', '12')
+                               then -1 * ifnull(deal.AMT, 0)
+                           else ifnull(deal.AMT, 0)
+                           end) cashamt,
+               DEAL.PROD_ID,
+               DEAL.CCY
+        FROM chb_invest_trade deal
+                 left join CHB_PRD_BASEINFO prd
+                           on prd.PROD_ID = deal.PROD_ID
+                               and prd.status != 'D'
+        where deal.CHL_CPCT_ID is null
+          and prd.PROFIT_TYPE = '03'
+          and deal.DEALDATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+          and deal.STATUS != 'D'
+        group by DEAL.PROD_ID, DEAL.CCY
+    </select>
+    <select id="selectAssetCashByDateB"
+            resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             parameterType="date">
-		SELECT
-			sum(
-				case when deal.CUR_ASSET_TYPE in ('01','03','05','08','10','12')
-				then -1*ifnull(deal.AMT,0)
-				else ifnull(deal.AMT,0)
-				end )  cashamt ,DEAL.PROD_ID,DEAL.CCY  
-			FROM 
-			chb_invest_trade deal
-			left join CHB_PRD_BASEINFO prd
-		  on prd.PROD_ID=deal.PROD_ID
-		  and prd.status !='D'
-			where deal.trade_type !='02'
-			and prd.PROFIT_TYPE='03'
-			and deal.DEALDATE <![CDATA[<=]]>#{cdate,jdbcType=DATE}
-			and deal.STATUS !='D'
-			group by DEAL.PROD_ID,DEAL.CCY
-		
-  </select>
+        SELECT sum(
+                       case
+                           when deal.CUR_ASSET_TYPE in ('01', '03', '05', '08', '10', '12')
+                               then -1 * ifnull(deal.AMT, 0)
+                           else ifnull(deal.AMT, 0)
+                           end) cashamt,
+               DEAL.PROD_ID,
+               DEAL.CCY
+        FROM chb_invest_trade deal
+                 left join CHB_PRD_BASEINFO prd
+                           on prd.PROD_ID = deal.PROD_ID
+                               and prd.status != 'D'
+        where deal.trade_type != '02'
+          and prd.PROFIT_TYPE = '03'
+          and deal.DEALDATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+          and deal.STATUS != 'D'
+        group by DEAL.PROD_ID, DEAL.CCY
+
+    </select>
     <select id="selectBotCash" resultType="java.math.BigDecimal"
             parameterType="date">
-  		SELECT SUM(UNINVEST_CASH) CASHAMT FROM(
-		select  DISTINCT UNINVEST_CASH,PLAN_ASSET_ID   from 
-		chb_bot_ast_pos 
-		where PLAN_ASSET_ID in (SELECT DISTINCT 
-		ASSET_CODE FROM chb_invest_trade deal
-     	left join CHB_PRD_BASEINFO prd
-		on prd.PROD_ID=deal.PROD_ID
-		and prd.status 	!='D'
-	    where deal.trade_type='05'and deal.status !='D' and prd.PROFIT_TYPE='03')
-		and pos_date=#{cdate,jdbcType=DATE}
-		and status !='D') de
-  </select>
+        SELECT SUM(UNINVEST_CASH) CASHAMT
+        FROM (
+                 select DISTINCT UNINVEST_CASH, PLAN_ASSET_ID
+                 from chb_bot_ast_pos
+                 where PLAN_ASSET_ID in (SELECT DISTINCT ASSET_CODE
+                                         FROM chb_invest_trade deal
+                                                  left join CHB_PRD_BASEINFO prd
+                                                            on prd.PROD_ID = deal.PROD_ID
+                                                                and prd.status != 'D'
+                                         where deal.trade_type = '05'
+                                           and deal.status != 'D'
+                                           and prd.PROFIT_TYPE = '03')
+                   and pos_date = #{cdate,jdbcType=DATE}
+                   and status != 'D') de
+    </select>
     <select id="selectBotCashList" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             parameterType="date">
-	    select cp.PROD_ID prodId,Round((cp.accuqty/aq.qty)*ap.UNINVEST_CASH,2) cashamt,
-	    AP.PLAN_ASSET_ID oldAssetCode,ci.ccy
-	    from chb_asset_position  cp
-	    INNER join (
-            select  DISTINCT UNINVEST_CASH,PLAN_ASSET_ID   from
-            chb_bot_ast_pos
-            where PLAN_ASSET_ID in (SELECT DISTINCT
-            ASSET_CODE FROM chb_asset_position deal
-            left join CHB_PRD_BASEINFO prd
-            on prd.PROD_ID=deal.PROD_ID
-            and prd.status 	!='D'
-            where deal.trade_type='05' and prd.PROFIT_TYPE='03'
-            and deal.CDATE=#{cdate,jdbcType=DATE})
-            and pos_date=#{cdate,jdbcType=DATE}
-            and status !='D'
-            and UNINVEST_CASH !=0) ap on ap.PLAN_ASSET_ID=cp.ASSET_CODE
-	    left join (select sum(cp.accuqty) qty,cp.ASSET_CODE from chb_asset_position  cp
-            INNER join ap on ap.PLAN_ASSET_ID=cp.ASSET_CODE
-            where cp.CDATE=#{cdate,jdbcType=DATE}  GROUP by cp.ASSET_CODE) aq  on aq.ASSET_CODE=cp.ASSET_CODE
-            left join chb_asset_info ci on ci.ASSET_CODE=AP.PLAN_ASSET_ID
-    	and ci.status !='D'
-	    where cp.CDATE=#{cdate,jdbcType=DATE}
-  </select>
-    <select id="selectAssetpositionByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
-            resultSetType="FORWARD_ONLY" fetchSize="1000" >
+        select cp.PROD_ID                                         prodId,
+               Round((cp.accuqty / aq.qty) * ap.UNINVEST_CASH, 2) cashamt,
+               AP.PLAN_ASSET_ID                                   oldAssetCode,
+               ci.ccy
+        from chb_asset_position cp
+                 INNER join (
+            select DISTINCT UNINVEST_CASH, PLAN_ASSET_ID
+            from chb_bot_ast_pos
+            where PLAN_ASSET_ID in (SELECT DISTINCT ASSET_CODE
+                                    FROM chb_asset_position deal
+                                             left join CHB_PRD_BASEINFO prd
+                                                       on prd.PROD_ID = deal.PROD_ID
+                                                           and prd.status != 'D'
+                                    where deal.trade_type = '05'
+                                      and prd.PROFIT_TYPE = '03'
+                                      and deal.CDATE = #{cdate,jdbcType=DATE})
+              and pos_date = #{cdate,jdbcType=DATE}
+              and status != 'D'
+              and UNINVEST_CASH != 0) ap on ap.PLAN_ASSET_ID = cp.ASSET_CODE
+                 left join (select sum(cp.accuqty) qty, cp.ASSET_CODE
+                            from chb_asset_position cp
+                                     INNER join ap on ap.PLAN_ASSET_ID = cp.ASSET_CODE
+                            where cp.CDATE = #{cdate,jdbcType=DATE}
+                            GROUP by cp.ASSET_CODE) aq on aq.ASSET_CODE = cp.ASSET_CODE
+                 left join chb_asset_info ci on ci.ASSET_CODE = AP.PLAN_ASSET_ID
+            and ci.status != 'D'
+        where cp.CDATE = #{cdate,jdbcType=DATE}
+    </select>
+    <select id="selectAssetpositionByCommon" resultMap="BaseResultMap"
+            parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
         select
         #{bookdate,jdbcType=DATE} bookdate
         ,#{enddate,jdbcType=DATE} enddate
@@ -819,7 +853,7 @@
         ,(case pos.ASSET_CODE when 'REMAININGCASH' then '1001' else info.ASSET_TYPE2 end) assettype2
         ,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
         ,info.IN_ASSET_TYPE IN_ASSET_TYPE /*行业一级分类*/
-        ,sum(pos.accuamt)  ASSETVALUE_A  /*穿透前资产价值*/
+        ,sum(pos.accuamt) ASSETVALUE_A /*穿透前资产价值*/
         ,sum((case pos.trade_type when '05' then pos.accuqty else null end)) ASSETVALUE_B /*穿透后资产价值*/
         ,ifnull(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT) rating/*债券评级*/
         ,(case info.PRIVATE_FLAG when '01' then '01' else null end) MONIT_TYPE
@@ -844,7 +878,8 @@
         TEMP.OCODE AS OCODE,
         rank() over (partition by TEMP.OCODE order by rownum) rk
         FROM (
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
+        <include
+                refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
@@ -860,7 +895,8 @@
         TEMP.OCODE AS OCODE,
         rank() over (partition by TEMP.OCODE order by rownum) rk
         FROM(
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
+        <include
+                refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
@@ -876,7 +912,8 @@
         pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
         (case pos.ASSET_CODE when 'REMAININGCASH' then '01' else info.asset_type end),
         (case pos.ASSET_CODE when 'REMAININGCASH' then '1001' else info.ASSET_TYPE2 end),
-        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT),
+        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE,
+        null,ifnull(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT),
         (case info.PRIVATE_FLAG when '01' then '01' else null end),
         (case info.PPPFLAG when '01' then '01' else null end),
         (case info.IS_GOVERN_FUND when '01' then '01' else null end),
@@ -906,7 +943,7 @@
         )
         SELECT cp.PROD_ID AS prodId
         , Round(cp.accuqty / ap.TOTAL_NUM * ap.UNINVEST_CASH, 2) AS cashamt
-        , AP.PLAN_ASSET_ID AS oldAssetCode, ci.ccy,prd.IS_FHXGCP  isFhxgcp
+        , AP.PLAN_ASSET_ID AS oldAssetCode, ci.ccy,prd.IS_FHXGCP isFhxgcp
         FROM chb_asset_position cp
         INNER JOIN ap ON ap.PLAN_ASSET_ID = cp.ASSET_CODE
         LEFT JOIN chb_asset_info ci
@@ -926,7 +963,8 @@
             </foreach>
         </if>
     </select>
-    <select id="selectOtherAssetListEx" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+    <select id="selectOtherAssetListEx"
+            resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             parameterType="date">
         SELECT
         A.SUBJECT_NO AS assetCode,
@@ -936,8 +974,9 @@
         FROM BOK_BALANCE A
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO
         ON PRODINFO.PROD_ID = A.BOOKSET_ID
-        WHERE A.BALANCE_DATE =  #{cdate,jdbcType=DATE}
-        AND A.SUBJECT_NO IN (SELECT OBJFIELD1 FROM CHB_TYPE_MAPPING_EX WHERE MAPPINGCODE='MAPPINGCODE_FEE_SUBJECTNO' AND STATUS='E')
+        WHERE A.BALANCE_DATE = #{cdate,jdbcType=DATE}
+        AND A.SUBJECT_NO IN (SELECT OBJFIELD1 FROM CHB_TYPE_MAPPING_EX WHERE MAPPINGCODE='MAPPINGCODE_FEE_SUBJECTNO' AND
+        STATUS='E')
         AND A.BAL_FLAG = 'C'
         <if test="prodids !=null and prodids.size()!=0">
             and A.BOOKSET_ID in
@@ -950,34 +989,28 @@
         </if>
         AND PRODINFO.PROFIT_TYPE = '03'
     </select>
-    <select id="selectAssetValueB" resultType="java.math.BigDecimal" >
-        SELECT
-            ROUND(
-                AA.SMV * (CC.ACCUAMT / BB.COST),
-                5
-            ) assetvalueB
-        FROM
-            RSK_VALTBL_ASSET_SUB AA
-        LEFT JOIN (
-            SELECT
-                IFNULL(SUM.SMV, 0) COST,
-                SUM.PTL_ID
-            FROM
-                RSK_VALTBL_SUM_ASSET_SUB SUM
-            WHERE
-                SUM.VAL_DATE = #{enddate,jdbcType=DATE}
-            AND SUM.SUB_CODE = 601
-            GROUP BY
-                SUM.PTL_ID,
-                SUM.SUB_CODE
+    <select id="selectAssetValueB" resultType="java.math.BigDecimal">
+        SELECT ROUND(
+                       AA.SMV * (CC.ACCUAMT / BB.COST),
+                       5
+                   ) assetvalueB
+        FROM RSK_VALTBL_ASSET_SUB AA
+                 LEFT JOIN (
+            SELECT IFNULL(SUM.SMV, 0) COST,
+                   SUM.PTL_ID
+            FROM RSK_VALTBL_SUM_ASSET_SUB SUM
+            WHERE SUM.VAL_DATE = #{enddate,jdbcType=DATE}
+              AND SUM.SUB_CODE = 601
+            GROUP BY SUM.PTL_ID,
+                     SUM.SUB_CODE
         ) BB ON BB.PTL_ID = AA.PTL_ID
-        LEFT JOIN CHB_ASSET_POSITION CC ON AA.PTL_ID = CC.ASSET_CODE
-        WHERE
-            AA.SUB_CODE = #{assetCode,jdbcType=VARCHAR}
-            AND CC.PROD_ID = #{prodId,jdbcType=VARCHAR}
-            AND AA.VAL_DATE = #{enddate,jdbcType=DATE}
+                 LEFT JOIN CHB_ASSET_POSITION CC ON AA.PTL_ID = CC.ASSET_CODE
+        WHERE AA.SUB_CODE = #{assetCode,jdbcType=VARCHAR}
+          AND CC.PROD_ID = #{prodId,jdbcType=VARCHAR}
+          AND AA.VAL_DATE = #{enddate,jdbcType=DATE}
     </select>
-    <select id="selectPlanInfoByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+    <select id="selectPlanInfoByCommon" resultMap="BaseResultMap"
+            parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             flushCache="true" useCache="false">
         select
         #{bookdate,jdbcType=DATE} bookdate
@@ -1003,7 +1036,8 @@
         TEMP.OCODE AS OCODE,
         rank() over (partition by TEMP.OCODE order by rownum) rk
         FROM (
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
+        <include
+                refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
@@ -1019,7 +1053,8 @@
         TEMP.OCODE AS OCODE,
         rank() over (partition by TEMP.OCODE order by rownum) rk
         FROM(
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
+        <include
+                refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
@@ -1031,7 +1066,9 @@
         and info.status !='D'
         and info.ASSET_CODE=#{assetCode,jdbcType=CHAR}
         group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
-        info.asset_type, info.ASSET_TYPE2, ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT),
+        info.asset_type, info.ASSET_TYPE2,
+        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE,
+        null,ifnull(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT),
         (case info.PRIVATE_FLAG when '01' then '01' else null end),
         (case info.PPPFLAG when '01' then '01' else null end),
         (case info.IS_GOVERN_FUND when '01' then '01' else null end),
@@ -1040,7 +1077,8 @@
         (case info.BONDTOSTOCK_FLAG when '01' then '01' else null end),
         info.MANAGE_TYPE
     </select>
-    <select id="selectChlDealByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
+    <select id="selectChlDealByCommon" resultMap="BaseResultMap"
+            parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition">
         select
         #{bookdate,jdbcType=DATE} bookdate
         ,#{enddate,jdbcType=DATE} enddate
@@ -1055,7 +1093,7 @@
         ,info.ASSET_TYPE2 assettype2
         ,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
         ,info.IN_ASSET_TYPE
-        ,sum(pos.accuamt)  ASSETVALUE_A  /*穿透前资产价值*/
+        ,sum(pos.accuamt) ASSETVALUE_A /*穿透前资产价值*/
         ,sum(pos.accuamt) ASSETVALUE_B /*穿透后资产价值*/
         ,ifnull(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT) rating/*债券评级*/
         ,(case info.PRIVATE_FLAG when '01' then '01' else null end) MONIT_TYPE
@@ -1080,7 +1118,8 @@
         TEMP.OCODE AS OCODE,
         rank() over (partition by TEMP.OCODE order by rownum) rk
         FROM (
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
+        <include
+                refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
@@ -1096,7 +1135,8 @@
         TEMP.OCODE AS OCODE,
         rank() over (partition by TEMP.OCODE order by rownum) rk
         FROM(
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
+        <include
+                refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
@@ -1107,11 +1147,14 @@
         where 1=1
         and prd.PROFIT_TYPE='03'
         and pos.trade_type in ('01','02') /*直投交易,通道交易,资管计划交易*/
-        and  pos.cDATE =#{enddate,jdbcType=DATE}
+        and pos.cDATE =#{enddate,jdbcType=DATE}
         and pos.prod_id = #{prodId,jdbcType=VARCHAR}
         and pos.CHL_ID = #{chlId,jdbcType=VARCHAR}
-        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE}, pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
-        info.asset_type, info.ASSET_TYPE2, ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT),
+        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
+        pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
+        info.asset_type, info.ASSET_TYPE2,
+        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE,
+        null,ifnull(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT),
         (case info.PRIVATE_FLAG when '01' then '01' else null end),
         (case info.PPPFLAG when '01' then '01' else null end),
         (case info.IS_GOVERN_FUND when '01' then '01' else null end),
@@ -1121,40 +1164,41 @@
         info.MANAGE_TYPE
     </select>
 
-    <select id="selectChlG06bPositionByCommon" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthG06bPosition"
+    <select id="selectChlG06bPositionByCommon"
+            resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthG06bPosition"
             parameterType="date">
-        SELECT
-            position.PROD_ID,
-            position.ASSETTYPE2,
-            T.ASSETVALUE_B qcAssetValue,
-            position.ASSETVALUE_B qmAssetValue,
-            assinfo.FINANCIER_GRADE RATING ,
-            assinfo.GUA_TYPE,
-            assinfo.TRADE_MARKET,
-            info.IS_CONSTRACTE
+        SELECT position.PROD_ID        as prodId,
+               position.ASSETTYPE2     as assettype2,
+               T.ASSETVALUE_B          as qcAssetValue,
+               position.ASSETVALUE_B   as qmAssetValue,
+               assinfo.FINANCIER_GRADE as rating,
+               assinfo.GUA_TYPE        as guaType,
+               assinfo.TRADE_MARKET    as tradeMarket,
+               info.IS_CONSTRACTE      as isConstracte,
+               info.IS_FBZB            as isFbzb
         FROM CHB_MONTH_ASSET_POSITION position
-        LEFT JOIN (
-            SELECT
-            lastmonth.prod_id,
-            lastmonth.asset_code,
-            lastmonth.assetvalue_b
+                 LEFT JOIN (
+            SELECT lastmonth.prod_id,
+                   lastmonth.asset_code,
+                   lastmonth.assetvalue_b
             FROM CHB_MONTH_ASSET_POSITION lastmonth
-            WHERE ENDDATE = ADDDATE(str_to_date(#{cdate,jdbcType=DATE}, '%Y-%m-%d'),INTERVAL -1 MONTH)
-            )T
-        ON T.PROD_ID = position.PROD_ID
-            and T.ASSET_CODE = position.ASSET_CODE
-            LEFT JOIN CHB_ASSET_INFO ASSINFO
-            ON position.ASSET_CODE = ASSINFO.ASSET_CODE
-            AND ASSINFO.STATUS IN ('E','M')
-            inner join CHB_PRD_BASEINFO info
-            on info.PROD_ID = position.PROD_ID
-            and info.STATUS in ('M', 'E')
-            and info.PROFIT_TYPE = '03'
+            WHERE ENDDATE = ADDDATE(str_to_date(#{cdate,jdbcType=DATE}, '%Y-%m-%d'), INTERVAL - 1 MONTH)
+        ) T
+                           ON T.PROD_ID = position.PROD_ID
+                               and T.ASSET_CODE = position.ASSET_CODE
+                 LEFT JOIN CHB_ASSET_INFO ASSINFO
+                           ON position.ASSET_CODE = ASSINFO.ASSET_CODE
+                               AND ASSINFO.STATUS IN ('E', 'M')
+                 inner join CHB_PRD_BASEINFO info
+                            on info.PROD_ID = position.PROD_ID
+                                and info.STATUS in ('M', 'E')
+                                and info.PROFIT_TYPE = '03'
         where position.ENDDATE = #{cdate,jdbcType=DATE}
     </select>
 
 
-    <select id="selectChbPrdBaseinfoByProdId" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" fetchSize="1">
+    <select id="selectChbPrdBaseinfoByProdId" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo"
+            fetchSize="1">
         select
         prodInfo.PROD_ID as prodId,
         <!-- 封闭式产品取产品到期日 -->
