@@ -324,6 +324,14 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
                 entity.setExchargeCode(list.get(0));
                 //交易日期
                 entity.setTradeDate(DateUtil.parse(list.get(1)));
+                //开盘价
+                entity.setOpenPrice(new BigDecimal(list.get(2)));
+                //收盘价
+                entity.setClosePrice(new BigDecimal(list.get(2)));
+                //最高价
+                entity.setHighPrice(new BigDecimal(list.get(2)));
+                //最低价
+                entity.setLowPrice(new BigDecimal(list.get(2)));
                 //中间价
                 entity.setMidPrice(new BigDecimal(list.get(2)));
                 //报价单位
