@@ -418,7 +418,7 @@
 		<if test="isBtm !=null and isBtm=='02' ">
 			FROM CHB_ASSETS_BASIS_DATA_NOBTM
 		</if>
-		WHERE DATE_FORMAT(UPDATE_TIME,'%y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
+		WHERE DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
 		UNION ALL
 		SELECT VAL_DATE AS VALUE_DATE
 		FROM CHB_AST_VAL
