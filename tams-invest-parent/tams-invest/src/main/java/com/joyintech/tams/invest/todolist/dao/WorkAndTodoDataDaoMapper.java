@@ -5,6 +5,9 @@ import com.joyintech.tams.invest.todolist.dto.WorkFlowPersonalDto;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public interface WorkAndTodoDataDaoMapper {
 
     List<WorkFlowPersonalDto> searchTodoList(Map<String, Object> paraMap);

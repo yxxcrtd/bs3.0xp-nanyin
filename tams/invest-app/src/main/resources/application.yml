@@ -4,7 +4,7 @@ server:
   port: 8080
   address: 0.0.0.0
   maxHttpHeaderSize: 102400
-  context-path: /invest
+  contextPath: /invest
 spring:
   jmx:
     enabled: false
