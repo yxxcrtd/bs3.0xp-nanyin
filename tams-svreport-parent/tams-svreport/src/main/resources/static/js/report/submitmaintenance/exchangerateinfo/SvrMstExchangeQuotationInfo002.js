@@ -19,6 +19,9 @@ $(function() {
             $('#exchargeCode').attr("disabled",true);
             $('#tradeDate').attr("disabled",true);
         }
+        if(pageModel==PAGE_MODEL_NEW){
+            $('#quotUnit').val("1");
+        }
     };
     /**
      * 画面加载完成

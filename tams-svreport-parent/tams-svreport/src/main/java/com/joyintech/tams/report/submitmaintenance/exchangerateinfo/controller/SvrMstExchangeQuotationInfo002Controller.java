@@ -50,7 +50,7 @@ public class SvrMstExchangeQuotationInfo002Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.货币对);
+        this.setSelectOptionToModel(model, DictCode.货币对, DictCode.数据来源);
         String exchargeCode = getParam("exchargeCode");
         String tradeDate = getParam("tradeDate");
 //        String workflowId = getParam("workflowId");
