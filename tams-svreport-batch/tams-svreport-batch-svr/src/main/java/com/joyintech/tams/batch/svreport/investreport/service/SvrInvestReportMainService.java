@@ -94,7 +94,7 @@ public class SvrInvestReportMainService extends AutoSendCBBaseService {
                     List<ReportGenerate001Dto> data = null;
                     params.put("endDate", DateUtil.format(preMstHoliday.getCdate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
                     params.put("repId", item.getId());
-                    params.put("revealDate",batchDate);
+                    params.put("revealDate",DateUtil.format(preMstHoliday.getCdate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
                     params.put("confirmStatusFlag", DictCodeList.是否_是.getValue());
                     if (StringUtil.equals(DictCodeListExt3.中债披露报告_成立公告.getValue(), item.getId())) {
                         data = chbInvestReportCommonMapper.queryDetailData01(params);
