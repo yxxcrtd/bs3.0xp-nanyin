@@ -8,6 +8,7 @@
 				select 
 					A.*,
 					fp.trade_market,
+					fp.profit_type,
 					nvl(fp.finprod_Name,fp.finprod_abbr) finprodName,
 					decode(ftp.type_8,'F02','02','F11','06','F01','01','F04','10','F09','11') secType
 				from (
@@ -74,7 +75,12 @@
 				from A
 				inner join BOK_BOOKSET_PLAN bbp on  bbp.BOOKSET_ID = a.BOOKSET_ID
 				inner join BOK_VAL_SCHEME_DETAIL bvsd on bbp.SCHEME_ID = bvsd.SCHEME_ID and bvsd.vdate &lt;=  #{checkDate,jdbcType=DATE} 
-					and nvl(a.inv_aim,'999999') = NVL(bvsd.inv_Aim,'999999') AND (A.trade_market IS NULL OR A.trade_market = bvsd.trade_market)
+					and (
+					(   bvsd.sec_type in ('10','11') and  ( A.INV_AIM IS NULL OR nvl(a.inv_aim,'FVTPL') = NVL(bvsd.inv_Aim,'FVTPL') ) )
+					or (  bvsd.sec_type in ('02') and a.profit_type <![CDATA[!=]]> '03'  )
+					or (  nvl(a.inv_aim,'999999') = NVL(bvsd.inv_Aim,'999999') )
+					)
+					AND (A.trade_market IS NULL OR A.trade_market = bvsd.trade_market)
 					and a.secType = bvsd.sec_type
 			),
 			/*特殊估值方案配置*/
@@ -95,6 +101,8 @@
 				a.institution_code instCode
 			FROM a
 			WHERE NOT exists (select 1 from B where a.BOOKSET_ID = b.BOOKSET_ID and a.busi_id = b.busi_id and a.inv_aim = b.inv_aim)
+				and a.profit_type = '03'
+				and a.secType <![CDATA[!=]]> '02'
 				and not exists(select 1 from c where a.BOOKSET_ID = c.BOOKSET_ID and a.busi_id = c.busi_id and a.inv_aim = c.inv_aim)
     </select>
 </mapper>
