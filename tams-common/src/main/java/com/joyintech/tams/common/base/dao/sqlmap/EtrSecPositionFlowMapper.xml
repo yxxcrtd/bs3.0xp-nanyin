@@ -19,12 +19,16 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CLOSE_FLAG" property="closeFlag" jdbcType="VARCHAR" />
+        <result column="OFFSET_ID" property="offsetId" jdbcType="VARCHAR" />
+        <result column="OFFSET_FLAG" property="offsetFlag" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, PORTFOLIO_ID PORTFOLIO_ID, SEC_ACCT_ID SEC_ACCT_ID, FINPROD_ID FINPROD_ID, 
         BRANCH BRANCH, INV_AIM INV_AIM, HODING_TYPE HODING_TYPE, CDATE CDATE, CCY CCY, AMOUNT AMOUNT, 
         P_FINPROD_ID P_FINPROD_ID, TRADE_ID TRADE_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CLOSE_FLAG CLOSE_FLAG, 
+        OFFSET_ID OFFSET_ID, OFFSET_FLAG OFFSET_FLAG
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -52,13 +56,15 @@
             HODING_TYPE, CDATE, CCY, 
             AMOUNT, P_FINPROD_ID, TRADE_ID, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME, CLOSE_FLAG, 
+            OFFSET_ID, OFFSET_FLAG)
         values (#{seqno,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
             #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{invAim,jdbcType=VARCHAR}, 
             #{hodingType,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, 
             #{amount,jdbcType=DECIMAL}, #{pFinprodId,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{closeFlag,jdbcType=VARCHAR}, 
+            #{offsetId,jdbcType=VARCHAR}, #{offsetFlag,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrSecPositionFlow" >
         insert into ETR_SEC_POSITION_FLOW
@@ -114,6 +120,15 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="closeFlag != null" >
+                CLOSE_FLAG,
+            </if>
+            <if test="offsetId != null" >
+                OFFSET_ID,
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -167,15 +182,24 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="closeFlag != null" >
+                #{closeFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetId != null" >
+                #{offsetId,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetFlag != null" >
+                #{offsetFlag,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrSecPositionFlow" >
         insert into ETR_SEC_POSITION_FLOW(SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, 
         INV_AIM, HODING_TYPE, CDATE, CCY, AMOUNT, P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, CLOSE_FLAG, OFFSET_ID, OFFSET_FLAG)
         select SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, 
             INV_AIM, HODING_TYPE, CDATE, CCY, AMOUNT, P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CLOSE_FLAG, OFFSET_ID, OFFSET_FLAG
              from ETR_SEC_POSITION_FLOW
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -221,6 +245,15 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="closeFlag != null" >
+                CLOSE_FLAG = #{closeFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetId != null" >
+                OFFSET_ID = #{offsetId,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -238,7 +271,10 @@
             P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR},
             TRADE_ID = #{tradeId,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CLOSE_FLAG = #{closeFlag,jdbcType=VARCHAR},
+            OFFSET_ID = #{offsetId,jdbcType=VARCHAR},
+            OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>
