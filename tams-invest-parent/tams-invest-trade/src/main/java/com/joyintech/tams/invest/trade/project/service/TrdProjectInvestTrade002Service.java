@@ -1322,7 +1322,8 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         trdProductDeal.setCpriceAmt(entity.getCpriceAmt());
         trdProductDeal.setCcy(entity.getCcy());
         trdProductDeal.setPs(entity.getPs());
-        trdProductDeal.setTradeDate(DateTime.parse(entity.getTradeDate()).toDate());
+       // trdProductDeal.setTradeDate(DateTime.parse(entity.getTradeDate()).toDate());
+        trdProductDeal.setTradeDate(DateTime.parse(entity.getSettleDate()).toDate());
         trdProductDeal.setSettleDate(DateTime.parse(entity.getSettleDate()).toDate());
         trdProductDeal.setSettleSpeed(DictCodeList.清算速度_T_0.getValue().equals(entity.getSettleSpeed()) ? 0 : 1l);
         trdProductDeal.setPrinAmt(entity.getPrinAmt());
