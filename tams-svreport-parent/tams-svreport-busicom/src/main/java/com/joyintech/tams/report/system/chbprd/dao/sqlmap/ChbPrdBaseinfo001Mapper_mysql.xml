@@ -249,7 +249,7 @@
 			<if test="mdate != null and mdate != ''">
 				and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{mdate,jdbcType=VARCHAR}
 			</if>
-			<if test='selectStatus != null and !selectStatus.equals("") and !selectStatus.contains("A") '>
+			<if test='selectStatus != null and selectStatus.size()!=0 and !selectStatus.contains("A") '>
 				and 1 = 2
 			</if>
 		</where>
