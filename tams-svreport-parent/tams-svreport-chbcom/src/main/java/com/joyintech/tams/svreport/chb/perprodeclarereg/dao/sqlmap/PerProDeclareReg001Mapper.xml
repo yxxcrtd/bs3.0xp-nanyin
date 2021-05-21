@@ -533,7 +533,7 @@
 			#{item}
 		</foreach>
 	</if>-->
-	<if test="model_type != null　and InstitutionCode != null and InstitutionCode != '' "  >
+	<if test="model_type != null and InstitutionCode != null and InstitutionCode != '' "  >
 			AND COD.ORG_CODE  =#{InstitutionCode,jdbcType=VARCHAR}
 	</if>
     <!-- 根据产品的更新时间和创建时间生成报表 -->
