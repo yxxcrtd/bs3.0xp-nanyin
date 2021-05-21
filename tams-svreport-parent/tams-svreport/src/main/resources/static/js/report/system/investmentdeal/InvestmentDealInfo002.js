@@ -87,16 +87,17 @@
 
     $(function() {
         init();
-
         //保存点击事件
         $('#ChbMstCounterParty002_btn_save').click(function() {
             var object = $.serializeToObject('#submitForm',true);
-
-            if(object.counterId!='' && object.counterName!='' && object.counterType1!=''&& object.counterType2!=''){
-                Joyin.ajaxJson(basePath + 'svreport/system/investmentdeal/InvestmentDealInfo002/save', object, function(result) {
-
-                });
-            }
+            Joyin.ajaxJson(basePath + 'svreport/system/investmentdeal/InvestmentDealInfo002/check', object, function(result) {
+                if(result){
+                    Joyin.ajaxJson(basePath + 'svreport/system/investmentdeal/InvestmentDealInfo002/save',object,function(result){
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    });
+                }
+            });
         });
 
     });

@@ -9,6 +9,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto;
 import com.joyintech.tams.report.system.investmentdeal.service.InvestmentDealInfo001Service;
@@ -38,6 +39,7 @@ public class InvestmentDealInfo001Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
+        super.setSelectOptionToModel(model, DictCode.中债_处理状态);
         return super.init(model);
     }
 

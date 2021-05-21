@@ -117,7 +117,6 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
                 }
                 InvestmentDealInfoDto dto=new InvestmentDealInfoDto();
                 coverEntity(dto,dataList,i);
-                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "InvestmentDealInfo002", "", ValidMessage.class);
                 map.put("tradeCode",dto.getTradeCode());
                 InvestmentDealInfoDto infoDto= investmentDealInfo001Mapper.selectOneDate(map);
                 if("新增".equals(type)){
@@ -140,6 +139,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
     }
 
     public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList,String userName, String orgCode, String deptCode) throws ParseException {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
         if (!StringUtil.isEmptyList(dataList)) {
             List<String> headList = new ArrayList<String>();
             headList.add("操作类型");
@@ -165,30 +165,44 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 return tempCheckResult;
             }
+
             if (null != dataList) {
                 Map<String,Object> map=new HashMap<>();
                 for (int i = 0; i < dataList.size(); i++ ) {
                     InvestmentDealInfoDto dto = new InvestmentDealInfoDto();
+                    List<String> message = new ArrayList<>();
                     coverEntity(dto,dataList,i);
-                    //根据产品代码，启用日期，信披费用类型 查询出数据,有数据则更新,无数据则插入
-                    map.put("tradeCode",dto.getTradeCode());
-                    if("新增".equals(dto.getType()) || "修改".equals(dto.getType())){
-                        save(dto);
+                    List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+                    resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "InvestmentDealInfo002", "", ValidMessage.class);
+                    if (!StringUtil.isEmptyList(resultList)){
+                        resultList.forEach(validMessage -> {
+                            message.add(validMessage.getMessage());
+                        });
                     }
-                    if("删除".equals(dto.getType())){
-                        delData(dto);
+                    if("新增".equals(dto.getType()) || "修改".equals(dto.getType())){
+                        if (StringUtil.isEmptyList(resultList)){
+                            save(dto);
+                        }
+                    }else if("删除".equals(dto.getType())){
+                        if (StringUtil.isEmptyList(resultList)) {
+                            delData(dto);
+                        }
+                    }else {
+                        message.add("操作类型值不在可选范围内");
+                    }
+                    if (!message.isEmpty()) {
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                                StringUtil.joinString(message, GlobalConstant.COMMA)));
                     }
                 }
             }
         }else{
-            List<ExcelValidDto> checkResult = new ArrayList<>();
             ExcelValidDto excelValidDto = new ExcelValidDto();
             String errorMsg = "模板为空，请输入数据！";
             excelValidDto.setErrorInfo(errorMsg);
             checkResult.add(excelValidDto);
-            return checkResult;
         }
-        return null;
+        return checkResult;
     }
 
     private void coverEntity(InvestmentDealInfoDto dto,List<List<String>> dataList,int i){
