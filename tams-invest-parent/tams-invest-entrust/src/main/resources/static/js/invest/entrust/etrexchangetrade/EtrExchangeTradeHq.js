@@ -185,7 +185,7 @@
 
     }
 
-    var this._last_tick_data =null;
+    var _last_tick_data =null;
     /**
      * 更新行情面板数据信息
      * @param {TickData} tick_data
