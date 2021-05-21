@@ -53,8 +53,8 @@ public class TamsStartupConfiguration extends StartupConfiguration {
         CacheUtil.putAppCache(PageElementUtil.PAGE_ELEMENT_CACHE_KEY, allElementConfig);
     }
 
-    @Override
-    public void run() {
-        logger.info("TAMS服务不重新加载缓存1111");
-    }
+//    @Override
+//    public void run() {
+//        logger.info("TAMS服务不重新加载缓存1111");
+//    }
 }
