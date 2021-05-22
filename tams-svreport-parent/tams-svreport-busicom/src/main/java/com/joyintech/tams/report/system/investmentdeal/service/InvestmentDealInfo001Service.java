@@ -78,7 +78,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             item.setRivalPartyTypeStr (SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.交易对手类型, item.getRivalPartyType()));
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.维护数据状态, item.getStatus()));
+                    DictCode.维护数据状态, item.getStatus2()));
             item.setDataSourceName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.数据来源, item.getDataSource()));
         });

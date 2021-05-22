@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.report.system.investmentdeal.dao.InvestmentDealInfo001Mapper_mysql">
 	<select id="queryForPage" resultType="com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto">
 		SELECT
-		STATUS AS status,
+		STATUS AS status2,
 		TRADE_CODE AS tradeCode,
 		PROD_ID AS prodId,
 		ASSET_CODE AS assetCode,

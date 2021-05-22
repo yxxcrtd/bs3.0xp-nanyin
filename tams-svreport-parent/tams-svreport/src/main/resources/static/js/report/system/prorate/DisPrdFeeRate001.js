@@ -22,7 +22,7 @@
             { title: "启用日期", field:'startDate',type:'date',width:'12%'},
             { title: "信披费用类型", field:'cashType2Name',width:'10%', sortField:'cashType2'},
             /*{ title: "busiId",  visible:false, field:'busiId'},*/
-            { title: "status",  visible:false, field:'status'},
+            { title: "status",  visible:false, field:'status2'},
             { title: "cashType2",  visible:false, field:'cashType2'},
             { title: "dataSource",  visible:false, field:'dataSource'},
             { title: "datauuid",  visible:false, field:'datauuid'},
