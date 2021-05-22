@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.report.system.prorate.dao.ProRateInfo001Mapper_mysql">
 	<select id="queryForPage" resultType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
 		SELECT
-		a.STATUS as status,
+		a.STATUS as status2,
 		a.BUSI_ID as busiId,
 		a.START_DATE as startDate,
 		a.CASH_TYPE2 as cashType2,
