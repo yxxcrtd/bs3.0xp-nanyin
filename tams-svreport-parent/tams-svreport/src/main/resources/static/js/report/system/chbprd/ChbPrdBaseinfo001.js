@@ -234,8 +234,10 @@
         $('#ChbPrdBaseinfo001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'svreport/system/chbprd/ChbPrdBaseinfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                        Joyin.ajax(basePath + 'svreport/system/chbprd/ChbPrdBaseinfo001/importFile', {fileName: fileName});
+                    Joyin.ajax(basePath + 'svreport/system/chbprd/ChbPrdBaseinfo001/checkConfirmMsgForImportData', {fileName: fileName}, function(result) {
+                        if(result.length <=0){
+                           Joyin.ajax(basePath + 'svreport/system/chbprd/ChbPrdBaseinfo001/importFile', {fileName: fileName});
+                        }
                     });
                 },function() {
                     table.reload();

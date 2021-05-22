@@ -232,7 +232,7 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
             return tempCheckResult;
         }
         //2、数据校验
-        List<ExcelValidDto> list = convertToBean(new ArrayList<>(),dataList);
+        List<ExcelValidDto> list = convertToBean(new ArrayList<>(),dataList,true);
         return  list;
     }
 
@@ -240,33 +240,36 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
      *
      * @param list 合格的数据
      * @param dataList excel中的数据
+     * @param isCheck true:导入前检查 false:导入无需再检查
      * @return
      */
-    private List<ExcelValidDto> convertToBean(List<ChbPrdBaseinfo> list,List<List<String>> dataList) {
+    private List<ExcelValidDto> convertToBean(List<ChbPrdBaseinfo> list,List<List<String>> dataList,boolean isCheck) {
         List<ExcelValidDto> errorList = new ArrayList<>();
         //新建时,判断excel表中是否存在重复产品代码的数据
         //更新删除时,查询数据不存在则提示 不存在数据请核查
-        for (int i = 0; i < dataList.size(); i++ ) {
-            List<String> message = new ArrayList<>();
-            //产品代码
-            String prodId ="";
-            if(null!=dataList.get(i).get(1)&& !"".equals(dataList.get(i).get(1))){
-                prodId =dataList.get(i).get(1).toString();
-            }
-            //操作类型
-            String type ="";
-            if(null!=dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))){
-                type = dataList.get(i).get(0).toString();
-                if("导出".equals(type)){
-                    message.add("不要使用“操作类型”为“导出”的进行导入!");
-                    errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
-                    continue;
+        if(isCheck) {
+            for (int i = 0; i < dataList.size(); i++) {
+                List<String> message = new ArrayList<>();
+                //产品代码
+                String prodId = "";
+                if (null != dataList.get(i).get(1) && !"".equals(dataList.get(i).get(1))) {
+                    prodId = dataList.get(i).get(1).toString();
                 }
-            }
-            for (int j = i+1; j < dataList.size(); j++ ) {
-                if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1))){
-                    message.add("产品代码与"+"第"+(j+2)+"行产品代码相同!");
-                    errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                //操作类型
+                String type = "";
+                if (null != dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))) {
+                    type = dataList.get(i).get(0).toString();
+                    if ("导出".equals(type)) {
+                        message.add("不要使用“操作类型”为“导出”的进行导入!");
+                        errorList.add(new ExcelValidDto(prodId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                        continue;
+                    }
+                }
+                for (int j = i + 1; j < dataList.size(); j++) {
+                    if (StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1))) {
+                        message.add("产品代码与" + "第" + (j + 2) + "行产品代码相同!");
+                        errorList.add(new ExcelValidDto(prodId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
                 }
             }
         }
@@ -557,11 +560,13 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                 }
                 dto.setIssuingStatus(issuingStatus);
                 list.add(dto);
-                List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbPrdBaseinfo002", null, ValidMessage.class);
-                for (ValidMessage msg : resultList) {
-                    message.add(msg.getMessage());
-                    errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                if(isCheck) {
+                    List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+                    resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbPrdBaseinfo002", null, ValidMessage.class);
+                    for (ValidMessage msg : resultList) {
+                        message.add(msg.getMessage());
+                        errorList.add(new ExcelValidDto(prodId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
                 }
             }
         }
@@ -577,7 +582,7 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
 //            }
             if (null != dataList) {
                 List<ChbPrdBaseinfo> list = new ArrayList<>();
-                List<ExcelValidDto> errorList = convertToBean(list,dataList);
+                List<ExcelValidDto> errorList = convertToBean(list,dataList,false);
                 if(null != errorList && errorList.size() == 0){
                     List<ChbPrdBaseinfo> insertOrUpdateList = new ArrayList<>();
                     for(ChbPrdBaseinfo info : list){
