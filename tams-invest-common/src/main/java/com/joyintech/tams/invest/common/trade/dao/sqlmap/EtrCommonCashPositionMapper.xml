@@ -866,4 +866,45 @@
     <select id="selectAcctId" resultType="string">
         select TRD_ACCT_ID from STL_SEC_ACCT_INFO where SEC_ACCT_ID = #{secAcctId}
     </select>
+    
+    <select id="selectSumStandardTicket" resultType="java.math.BigDecimal">
+		select sum(T.AMOUNT) AMOUNT from PTL_SEC_POSITION_FLOW T
+		         where TRADE_ID IN (
+		         SELECT TRADE_ID FROM ETR_FINISH_STATUS 
+		         WHERE ENTRUST_ID = #{entrustId,jdbcType=VARCHAR} 
+		         AND TRADE_ID != #{entrustId,jdbcType=VARCHAR}
+		<if test="ps != null and ps != '' and ps == 'T69'">
+			 AND FINPROD_ID ='XN_PRODID999'
+		</if>
+		<if test="ps != null and ps != '' and ps == 'T68'">
+			AND FINPROD_ID !='XN_PRODID999'
+		</if>
+		)
+	</select>
+
+    <select id="getEtrExchangeFinishAmt" resultType="java.math.BigDecimal">
+	     select sum(finishAmt) from
+	     (
+	         select nvl(sum(decode(deal.ps,#{PS_T01},deal.trade_amt,deal.share_amt)),0) as finishAmt
+			  from trd_product_temp_deal deal
+			 inner join trd_product_temp_deal_add ad
+			    on deal.trade_id = ad.trade_id
+			 where ad.entrust_id = #{entrustId}
+			   and ad.portfolio_id = #{portfolioId}
+			   and deal.trade_status = #{TRADE_STATUS_01}
+			   and deal.is_cancel = #{YES_OR_NO_N}
+
+			 union all
+
+             select nvl(sum(decode(deal.ps,#{PS_T01},deal.trade_amt,deal.share_amt)),0) as finishAmt
+              from trd_product_deal deal
+             inner join trd_product_deal_add ad
+                on deal.trade_id = ad.trade_id
+             where ad.entrust_id = #{entrustId}
+               and ad.portfolio_id = #{portfolioId}
+               and deal.trade_status = #{TRADE_STATUS_01}
+               and deal.is_cancel = #{YES_OR_NO_N}
+          )
+    </select>	
+	
 </mapper>

@@ -66,6 +66,16 @@ public class EtrCashPositionFlow extends BaseEntity {
     private String offsetId;
 
     /**
+     * 关闭时冲销标识，关闭：01，重新打开：02
+     */
+    private String closeFlag;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -240,5 +250,37 @@ public class EtrCashPositionFlow extends BaseEntity {
      */
     public void setOffsetId(String offsetId) {
         this.offsetId = offsetId == null ? null : offsetId.trim();
+    }
+
+    /**
+     * 取得 关闭时冲销标识，关闭：01，重新打开：02
+     * @return 关闭时冲销标识，关闭：01，重新打开：02
+     */
+    public String getCloseFlag() {
+        return closeFlag;
+    }
+
+    /**
+     * 设置 关闭时冲销标识，关闭：01，重新打开：02
+     * @param closeFlag 关闭时冲销标识，关闭：01，重新打开：02
+     */
+    public void setCloseFlag(String closeFlag) {
+        this.closeFlag = closeFlag == null ? null : closeFlag.trim();
+    }
+
+    /**
+     * 取得 备注
+     * @return 备注
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * 设置 备注
+     * @param remark 备注
+     */
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 }

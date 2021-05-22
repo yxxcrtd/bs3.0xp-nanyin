@@ -320,4 +320,22 @@ public interface EtrCommonCashPositionMapper {
     List<EtrSecPositionFlowDto> findNegateSecFlowByEntrustId(String entrustId);
 
     String selectAcctId(String secAcctId);
+
+	/**
+	 * 获取汇总的标准券数量
+	 * 
+	 * @param param
+	 */
+	BigDecimal selectSumStandardTicket(Map<String, Object> param);
+
+    /**
+     * 查询场内指令已交易完成金额或者额度
+     * @param map 委托代码
+     * @return 场内指令已交易完成金额或者额度
+     */
+    BigDecimal getEtrExchangeFinishAmt(Map<String,Object> map);
+    
+    
+    
+    
 }

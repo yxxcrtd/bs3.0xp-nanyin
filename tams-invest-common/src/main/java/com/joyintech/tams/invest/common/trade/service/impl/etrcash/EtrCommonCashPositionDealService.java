@@ -1320,4 +1320,31 @@ public class EtrCommonCashPositionDealService extends BaseService {
     public static String select证券托管户(String secAcctId) {
         return etrCommonCashPositionMapper.selectAcctId(secAcctId);
     }
+
+	    /**
+     * 场内指令已完成金额或者额度
+     * @param entrustId
+     * @param portfolioId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static BigDecimal getEtrExchangeFinishAmt(Map<String, Object> map) {
+        map.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        map.put("PS_T01", DictCodeList.交易方向_买入.getValue());
+        return etrCommonCashPositionMapper.getEtrExchangeFinishAmt(map);
+    }
+    
+	/**
+	 * 合计标准券数量
+	 * @param entrustId
+	 * @return
+	 */
+	public BigDecimal selectSumStandardTicket(String entrustId,String ps){
+		Map<String, Object> param = new HashMap<String,Object>();
+		param.put("entrustId", entrustId);
+		param.put("ps", ps);
+		return etrCommonCashPositionMapper.selectSumStandardTicket(param);
+	}
 }
