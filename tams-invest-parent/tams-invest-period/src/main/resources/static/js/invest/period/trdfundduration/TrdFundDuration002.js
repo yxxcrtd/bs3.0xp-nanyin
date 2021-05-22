@@ -1106,6 +1106,28 @@
         $('#TrdFundDuration002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
+        //add by jiangpeng on 20210522 start TISHKBS-1803
+        $("#arriveDate").change(function () {
+            if(isTodo){
+                var index = layer.open({
+                    type: 1,
+                    icon : 16,
+                    area: ['200px', '100px'],
+                    content: '数据加载中',closeBtn: 0
+                });
+                var orderTabel = table.getAllRows();
+                for (var i = 0; i < orderTabel.length; i++) {
+                    orderTabel[i].settleDateText = $("#arriveDate").val();
+                    orderTabel[i].settleDate = $("#arriveDate").val();
+                }
+                table.clear(function () {
+                    layui.layer.close(index);
+                    table.addRow(orderTabel)
+                });
+
+            }
+        });
+        //add by jiangpeng on 20210522 end TISHKBS-1803
         setTimeout(function(){init();},0);
     });
 }());

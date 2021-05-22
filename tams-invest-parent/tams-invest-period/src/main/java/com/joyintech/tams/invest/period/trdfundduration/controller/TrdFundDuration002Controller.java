@@ -17,6 +17,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -68,6 +69,9 @@ public class TrdFundDuration002Controller extends BaseController {
     
     @Autowired
     private PeriodCommonService periodCommonService;
+
+    @Autowired
+    private CommonBusinessService commonBusinessService;
     /**
      * {@inheritDoc}
      */
@@ -135,6 +139,9 @@ public class TrdFundDuration002Controller extends BaseController {
                 pageParam.put("registDate", DateUtil.format(dto.getRegistDate()));
 //              查询利息信息
                 dto.setFinAssetIntInfoList(trdFundDuration001Service.findAssetIntInfo(pageParam));
+            }
+            if(dto != null) {
+                model.addAttribute("isTodo", commonBusinessService.isBackCheckNode(dto.getTotleTradeId()));
             }
 //            处理类型及交易员
             type=dto==null?null:dto.getType();
