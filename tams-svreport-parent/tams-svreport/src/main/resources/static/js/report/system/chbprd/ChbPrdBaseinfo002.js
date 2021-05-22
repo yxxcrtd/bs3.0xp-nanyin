@@ -37,7 +37,7 @@
             object.prodtype = $("#prodtype").val();
             object.basic = $("#basic").val();
             object.fiduciaryDuty = $("#fiduciaryDuty").val();
-            object.customerType = $("#customerType").val();
+            object.customerType = $("#customerType").val()==null?null:$('#customerType').val().join();
             object.isTransfer = $("#isTransfer").val();
             object.isFullyCompliant = $("#isFullyCompliant").val();
             object.isYllccp = $("#isYllccp").val();
