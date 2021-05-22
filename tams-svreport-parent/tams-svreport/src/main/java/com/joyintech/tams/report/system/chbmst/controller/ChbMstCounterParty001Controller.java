@@ -9,13 +9,11 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
-import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.chbmst.service.ChbMstCounterParty001Service;
 import com.joyintech.tams.report.system.chbmst.service.ChbMstCounterPartyService;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
-import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +24,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @PageId("ChbMstCounterParty001")
@@ -52,7 +53,7 @@ public class ChbMstCounterParty001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("searchPage")
-    public Page<ChbMstCounterParty> search() {
+    public Page<ChbMstCounterPartyDto> search() {
         Map<String, Object> param = RequestUtil.getPageParam();
         return chbMstCounterPartyService.searchForPage(param);
     }
@@ -125,7 +126,7 @@ public class ChbMstCounterParty001Controller extends BaseController {
      */
     @RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
-        List<ChbMstCounterParty> dtoList = this.chbMstCounterPartyService.queryReportList(RequestUtil.getPageParam());
+        List<ChbMstCounterPartyDto> dtoList = this.chbMstCounterPartyService.queryReportList(RequestUtil.getPageParam());
         dtoList.forEach(item -> {
             item.setCounterType2 (com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.客户二级类型, item.getCounterType2()));

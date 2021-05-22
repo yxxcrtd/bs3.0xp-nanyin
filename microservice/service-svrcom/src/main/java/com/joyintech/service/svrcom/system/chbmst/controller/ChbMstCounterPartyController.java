@@ -4,10 +4,9 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.report.system.chbmst.service.ChbMstCounterParty001Service;
-import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +26,7 @@ public class ChbMstCounterPartyController {
     private ChbMstCounterParty001Service chbMstCounterParty001Service;
 
     @PostMapping("findPage/{page}/{length}")
-    public Page<ChbMstCounterParty> search(@RequestBody Map<String,Object> paramMap) {
+    public Page<ChbMstCounterPartyDto> search(@RequestBody Map<String,Object> paramMap) {
         return chbMstCounterParty001Service.searchForPage(paramMap);
     }
     @PostMapping("getCounterId")
@@ -46,8 +45,8 @@ public class ChbMstCounterPartyController {
         return ;
     }
     @PostMapping("queryReportList")
-    public List<ChbMstCounterParty> queryReportList(@RequestBody Map<String, Object> param) {
-        List<ChbMstCounterParty> list = chbMstCounterParty001Service.queryReportList(param);
+    public List<ChbMstCounterPartyDto> queryReportList(@RequestBody Map<String, Object> param) {
+        List<ChbMstCounterPartyDto> list = chbMstCounterParty001Service.queryReportList(param);
         return list;
     }
     @PostMapping("checkConfirmMsgForImportData")

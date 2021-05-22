@@ -4,14 +4,12 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
-import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
-import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.stereotype.Service;
@@ -28,10 +26,10 @@ public class ChbMstCounterPartyService extends BaseService<ChbMstCounterParty> {
      *
      * @return DtPage
      */
-    public Page<ChbMstCounterParty> searchForPage(Map<String,Object> paramMap) {
+    public Page<ChbMstCounterPartyDto> searchForPage(Map<String,Object> paramMap) {
         return restTemplate.postForPage(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbMstCounterParty/findPage", paramMap,
-                ChbMstCounterParty.class);
+                ChbMstCounterPartyDto.class);
     }
     /**
      *
@@ -59,10 +57,10 @@ public class ChbMstCounterPartyService extends BaseService<ChbMstCounterParty> {
                 ChbMstCounterParty.class);
         return;
     }
-    public List<ChbMstCounterParty> queryReportList(Map<String, Object> pageParam) {
+    public List<ChbMstCounterPartyDto> queryReportList(Map<String, Object> pageParam) {
         return restTemplate.postForList(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbMstCounterParty/queryReportList",pageParam,
-                ChbMstCounterParty.class);
+                ChbMstCounterPartyDto.class);
     }
     public AjaxResult checkConfirmMsgForImportData(String fileName)  {
         Map<String,Object> param = new HashMap<String,Object>();

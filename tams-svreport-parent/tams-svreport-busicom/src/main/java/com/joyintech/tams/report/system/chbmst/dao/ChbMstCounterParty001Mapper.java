@@ -1,22 +1,19 @@
 package com.joyintech.tams.report.system.chbmst.dao;
 
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
-import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
-import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 public interface ChbMstCounterParty001Mapper {
 
-    List<ChbMstCounterParty> queryForPage(Map<String, Object> param);
+    List<ChbMstCounterPartyDto> queryForPage(Map<String, Object> param);
 
     List<ChbMstCounterParty> getCounterId(Map<String, Object> param);
 
@@ -24,7 +21,7 @@ public interface ChbMstCounterParty001Mapper {
 
     void deleteChbMstCounterPartyErrorData(@Param("dtoList") List<ChbMstCounterParty> dtoList);
 
-    List<ChbMstCounterParty> queryReportList(Map<String, Object> param);
+    List<ChbMstCounterPartyDto> queryReportList(Map<String, Object> param);
 
     List<ChbMstCounterParty> selectOneDate(Map<String, Object> param);
 

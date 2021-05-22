@@ -565,7 +565,10 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                     resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbPrdBaseinfo002", null, ValidMessage.class);
                     for (ValidMessage msg : resultList) {
                         message.add(msg.getMessage());
-                        errorList.add(new ExcelValidDto(prodId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                        //errorList.add(new ExcelValidDto(prodId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
+                    if(!StringUtil.isEmptyList(message)) {
+                        errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                     }
                 }
             }

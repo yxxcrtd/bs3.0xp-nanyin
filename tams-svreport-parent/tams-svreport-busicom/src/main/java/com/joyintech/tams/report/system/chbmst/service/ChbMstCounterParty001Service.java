@@ -18,7 +18,6 @@ import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.system.chbmst.dao.ChbMstCounterParty001Mapper;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
-import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,7 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCounterParty> {
+public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCounterPartyDto> {
 
     @Autowired
     private ChbMstCounterParty001Mapper chbMstCounterParty001Mapper;
@@ -43,8 +42,8 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
      */
     private static final String NO_INFO_SHOWOUT = "noInfoShowOut";
 
-    public Page<ChbMstCounterParty> searchForPage(Map<String, Object> param){
-        Page<ChbMstCounterParty> page;
+    public Page<ChbMstCounterPartyDto> searchForPage(Map<String, Object> param){
+        Page<ChbMstCounterPartyDto> page;
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         String counterId = (String)param.get("counterId");
@@ -69,7 +68,7 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
      * @see
      * @since 1.0
      */
-    private void dealDataList(List<ChbMstCounterParty> list) {
+    private void dealDataList(List<ChbMstCounterPartyDto> list) {
         list.forEach(item -> {
             item.setCounterType1Name (SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.客户一级类型, item.getCounterType1()));
@@ -77,6 +76,8 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
                     DictCode.客户二级类型, item.getCounterType2()));
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.维护数据状态, item.getStatus()));
+            item.setSvrStatusName(SysDataUtil.getZZDictCodeAndNameNew(
+                    DictCode.维护数据状态, item.getSvrStatus()));
             item.setDataSourceName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.数据来源, item.getDataSource()));
             if("DB".equals(item.getDataSource())){
@@ -124,7 +125,7 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
         return;
     }
 
-    public List<ChbMstCounterParty> queryReportList(Map<String, Object> param) {
+    public List<ChbMstCounterPartyDto> queryReportList(Map<String, Object> param) {
         String keys = (String)param.get("keys");
         List<String> selectkeys = StringUtil.splitToList(GlobalConstant.COMMA, keys);
         param.put("selectkeys", selectkeys);
@@ -210,6 +211,10 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 return tempCheckResult;
+            }
+            checkResult = this.checkExcelValidMsg(dataList);
+            if(!StringUtil.isEmptyList(checkResult)) {
+                return checkResult;
             }
             if (null != dataList) {
                 List<DisRepCashYield> entities = new ArrayList<>(dataList.size());
@@ -363,6 +368,77 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
             }
         }
         return checkResult;
+    }
+
+
+    /**
+     * 检验数据
+     * @param dataList
+     * @return
+     */
+    private List<ExcelValidDto> checkExcelValidMsg(List<List<String>> dataList) {
+        List<ExcelValidDto> errorList = new ArrayList<>();
+        Map<String,Object> map=new HashMap<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            for (int j = i+1; j < dataList.size(); j++ ) {
+                if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1)) &&
+                        StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))&&
+                        StringUtils.equals(dataList.get(i).get(3), dataList.get(j).get(3))){
+                    errorList.add(new ExcelValidDto("","第"+(i+2)+"行","第"+(i+2)+"行交易对手代码、交易对手名称、交易对手二级类型与"+"第"+(j+2)+"行交易对手代码、交易对手名称、交易对手二级类型相同"));
+                }
+            }
+            //操作类型
+            String type = "";
+            if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
+                type = dataList.get(i).get(0).toString();
+            }
+            //交易对手代码
+            String counterId ="";
+            if(null!=dataList.get(i).get(1)&& !"".equals(dataList.get(i).get(1))){
+                counterId =dataList.get(i).get(1).toString();
+            }
+            //交易对手名称
+            String counterName ="";
+            if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
+                counterName=dataList.get(i).get(2).toString();
+            }
+            //交易对手二级类型
+            String counterType2 ="";
+            if(null!=dataList.get(i).get(3)&& !"".equals(dataList.get(i).get(3))){
+                String [] arr = dataList.get(i).get(3).toString().split("\\s+");
+                counterType2=arr[0];
+            }
+            ChbMstCounterPartyDto chbMstCounterParty=new ChbMstCounterPartyDto();
+            chbMstCounterParty.setCounterId(counterId);
+            chbMstCounterParty.setCounterName(counterName);
+            if(StringUtil.isNotEmpty(counterType2) && counterType2.length() >=3 ) {
+                chbMstCounterParty.setCounterType1(counterType2.substring(0, 3));
+            }
+            chbMstCounterParty.setCounterType2(counterType2);
+            List<String> message = new ArrayList<>();
+            List<ValidMessage> resultList = new ArrayList<>();
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, chbMstCounterParty, "ChbMstCounterParty002", null, ValidMessage.class);
+            for (ValidMessage msg : resultList) {
+                message.add(msg.getMessage());
+            }
+            if(!StringUtil.isEmptyList(message)) {
+                errorList.add(new ExcelValidDto(counterId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+            }
+
+            map.put("counterId",counterId);
+            List<ChbMstCounterParty> ChbMstCounterPartys= chbMstCounterParty001Mapper.selectOneDate(map);
+            if("新增".equals(type)){
+                if(null!=ChbMstCounterPartys && ChbMstCounterPartys.size()>0){
+                    errorList.add(new ExcelValidDto(counterId,"第"+(i+2)+"行","行已存在交易对手代码的数据"));
+                }
+            }
+            if("修改".equals(type) || "删除".equals(type)){
+                if(ChbMstCounterPartys.size()<=0){
+                    errorList.add(new ExcelValidDto(counterId,"第"+(i+2)+"行","不存在该交易对手代码的数据,请核查"));
+                }
+            }
+        }
+        return errorList;
     }
 
 

@@ -17,7 +17,7 @@
             }
         },
         cols: [
-            { title: "数据状态", field:'statusName',sortField:'status',width:'5%'},
+            { title: "数据状态", field:'svrStatusName',sortField:'svrStatus',width:'5%'},
             { title: "status",  visible:false, field:'status'},
             { title: "交易对手代码", field:'counterId',width:'8%',sortField:'counterId'},
             { title: "交易对手名称", field:'counterName',width:'8%',sortField:'counterName'},
@@ -62,7 +62,7 @@
                 data.type="update";
                 Joyin.dialog(JoyinUtil.getLabel("编辑交易对手信息"),
                     basePath + "svreport/system/chbmst/ChbMstCounterParty002/init",
-                    "95%", "95%", data,function(){
+                    "85%", "70%", data,function(){
                         table.reload();
                     });
             }
@@ -102,9 +102,9 @@
         $('#ChbMstCounterParty001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'svreport/system/chbmst/ChbMstCounterParty001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                        Joyin.ajax(basePath + 'svreport/system/chbmst/ChbMstCounterParty001/importFile', {fileName: fileName});
-                    });
+                    // Joyin.ajax(basePath + 'svreport/system/chbmst/ChbMstCounterParty001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                    Joyin.ajax(basePath + 'svreport/system/chbmst/ChbMstCounterParty001/importFile', {fileName: fileName});
+                    // });
                 },function() {
                     table.reload();
                 });
@@ -162,7 +162,7 @@
         //新增点击事件
         $('#ChbMstCounterParty001_btn_add').click(function() {
             var data={"operateType":"add"};
-            Joyin.dialog('交易对手接口数据信息新建',basePath+'svreport/system/chbmst/ChbMstCounterParty002/init', '1000', '63%',data,function(){table.reload();});
+            Joyin.dialog('交易对手接口数据信息新建',basePath+'svreport/system/chbmst/ChbMstCounterParty002/init', '85%', '70%',data,function(){table.reload();});
         });
 
         //修改、删除事件绑定
