@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.system.chbprd.dao.ChbPrdBaseinfo001Mapper_mysql">
-	<select id="queryForPage" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+	<select id="queryForPage" resultType="com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfo001Dto">
 		SELECT
-		STATUS              status,
+		STATUS              svrStatus,
 		PROD_ID             prodId,
 		PROD_NAME           prodName,
 		PROD_INS_ID         prodInsId,
@@ -131,7 +131,7 @@
 		</where>
 		union all
 		SELECT
-		'A' as status,
+		'A' as svrStatus,
 		PROD_ID             prodId,
 		PROD_NAME           prodName,
 		null         prodInsId,
@@ -368,7 +368,7 @@
 
 
 
-	<select id="queryReportList" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+	<select id="queryReportList" resultType="com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfo001Dto">
 		SELECT
 		'导出' as type ,p.prod_id,p.prod_name,p.ORG_CODE orgCode,
 		DATE_FORMAT(p.RAISE_VDATE,'%Y-%m-%d')raiseVdateStr,
