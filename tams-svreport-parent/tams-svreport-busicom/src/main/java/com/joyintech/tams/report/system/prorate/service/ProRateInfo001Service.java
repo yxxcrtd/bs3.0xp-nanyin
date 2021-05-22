@@ -257,23 +257,61 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                 return tempCheckResult;
             }
             if (null != dataList) {
-                List<DisRepCashYield> entities = new ArrayList<>(dataList.size());
-                checkResult = convertToEntity(dataList, entities, userName, deptCode);
-                if (checkResult.isEmpty()) {
-                    for (DisRepCashYield dto : entities) {
-                        //根据产品代码，启用日期，信披费用类型 查询出数据,有数据则更新,无数据则插入
-                        List<DisRepCashYield> disRepCashYields = proRateInfo001Mapper.selectOneDate(BeanUtil.object2Map(dto));
+                Map<String,Object> map=new HashMap<>(8);
+                for (int i = 0; i < dataList.size(); i++ ) {
+                    List<String> list = dataList.get(i);
+                    map.clear();
+                    List<String> message = new ArrayList<>();
+                    //操作类型
+                    String type = list.get(0);
+                    //产品代码
+                    String busiId = list.get(1);
+                    //启用日期
+                    Date date=null;
+                    if(StringUtil.isNotEmpty(list.get(2))){
+                        date = DateUtil.parse(list.get(2));
+                    }
+                    //信披费用类型
+                    String cashType2 ="";
+                    String cashType2Name ="";
+                    if(StringUtil.isNotEmpty(list.get(3))){
+                        String [] arr = list.get(3).split("\\s+");
+                        cashType2=arr[0];
+                        cashType2Name=arr[1];
+                    }
+                    //费率
+                    BigDecimal bigDecimal=null;
+                    if(StringUtil.isNotEmpty(list.get(4))){
+                        bigDecimal=new BigDecimal(list.get(4));
+                    }
+                    //根据产品代码，启用日期，信披费用类型 查询出数据,有数据则更新,无数据则插入
+                    map.put("busiId",busiId);
+                    map.put("startDate",date);
+                    map.put("cashType2",cashType2);
+                    List<DisRepCashYield> disRepCashYields= proRateInfo001Mapper.selectOneDate(map);
+                    List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+                    resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, BeanUtil.mapToObject(map, ProRateInfo001Dto.class), "DisPrdFeeRate002", null, ValidMessage.class);
+                    if (!StringUtil.isEmptyList(resultList)) {
+                        resultList.forEach(validMessage -> {
+                            message.add(validMessage.getMessage());
+                        });
+                    }
 
-                        if ("新增".equals(dto.getType()) || "修改".equals(dto.getType())) {
-                            updateInfo(disRepCashYields, dto);
-                        }
+                    if("新增".equals(type) || "修改".equals(type)){
+                        updateInfo(disRepCashYields,busiId, date, cashType2,cashType2Name,bigDecimal,deptCode,userName);
+                    }
                     /*if("修改".equals(type)){
                         updateInfo(disRepCashYields,busiId, date, cashType2, cashType2Name,bigDecimal,deptCode,userName);
                     }*/
-                        else if ("删除".equals(dto.getType())) {
-                            proRateInfo001Mapper.deleteOne(dto.getBusiId(), dto.getStartDate(), dto.getCashType2());
-                            proRateInfo001Mapper.deleteErrorDataOne(dto.getBusiId(), dto.getStartDate(), dto.getCashType2());
-                        }
+                    else if("删除".equals(type)){
+                        proRateInfo001Mapper.deleteOne(busiId,date,cashType2);
+                        proRateInfo001Mapper.deleteErrorDataOne(busiId,date,cashType2);
+                    }else {
+                        message.add("操作类型值不在可选范围内");
+                    }
+                    if (!message.isEmpty()) {
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                                StringUtil.joinString(message, GlobalConstant.COMMA)));
                     }
                 }
             }
@@ -285,7 +323,6 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         }
         return checkResult;
     }
-
 
     private void addDisRepCashYield(String busiId, Date date, String cashType2, String cashType2Name, BigDecimal bigDecimal, String deptCode, String userName) {
         DisRepCashYield entity = new DisRepCashYield();
@@ -303,15 +340,6 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         entity.setCreateTime(nowDate);
         entity.setUpdateUser(userName);
         entity.setUpdateTime(nowDate);
-        entity.setStatus("E");
-        proRateInfo001Mapper.insertOne(entity);
-    }
-
-    private void addDisRepCashYield(DisRepCashYield entity) {
-        Date nowDate = new Date();
-        entity.setDataSource("02");
-        entity.setCashId(IDGenerator.generate());
-        entity.setAdapterId("无");
         entity.setStatus("E");
         proRateInfo001Mapper.insertOne(entity);
     }
@@ -336,138 +364,6 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         } else {
             addDisRepCashYield(busiId, date, cashType2, cashType2Name, bigDecimal, deptCode, userName);
         }
-    }
-
-    private void updateInfo(List<DisRepCashYield> disRepCashYields, DisRepCashYield entity) {
-        Map<String, Object> mapOld = new HashMap<>();
-        if (disRepCashYields.size() > 0) {
-            if (!"".equals(disRepCashYields.get(0).getBusiId())) {
-                DisRepCashYield disRepCashYield = disRepCashYields.get(0);
-                mapOld.put("busiId", disRepCashYield.getBusiId());
-                mapOld.put("oldCashType2", disRepCashYield.getOldCashType2());
-                mapOld.put("oldStartDateStr", disRepCashYield.getOldStartDateStr());
-                mapOld.put("cashType2", entity.getCashType2());
-                mapOld.put("startDate", entity.getStartDate());
-                mapOld.put("rate", entity.getRate());
-                mapOld.put("status", "E");
-                mapOld.put("dataSource", "02");
-                mapOld.put("updateUser", LoginUserUtil.getUserName());
-                mapOld.put("updateTime", new Date());
-                proRateInfo001Mapper.updateOne(mapOld);
-            }
-        } else {
-            addDisRepCashYield(entity);
-        }
-    }
-
-
-    private List<ExcelValidDto> convertToEntity(List<List<String>> dataList, List<DisRepCashYield> entities, String userName, String deptCode) throws ParseException {
-        List<ExcelValidDto> checkResult = new ArrayList<>();
-        List<ValidMessage> errorList = new ArrayList<>();
-        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        Date nowDate = DateUtil.now();
-        for (int i = 0; i < dataList.size(); i++) {
-            //是否正常标志
-            boolean flag = true;
-            List<String> list = dataList.get(i);
-            // 验证消息
-            List<String> message = new ArrayList<>();
-            Map<String, Object> param = new HashMap<String, Object>();
-            //操作类型
-            String type = "";
-            if (StringUtils.isNotEmpty(dataList.get(i).get(0))) {
-                type = dataList.get(i).get(0);
-            }
-            //产品代码
-            String busiId = "";
-            if (StringUtils.isNotEmpty(dataList.get(i).get(i))) {
-                busiId = dataList.get(i).get(1);
-            }
-            //启用日期
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = null;
-            if (StringUtils.isNotEmpty(dataList.get(i).get(2))) {
-                if (dataList.get(i).get(2).contains("-")) {
-                    date = dfs.parse(dataList.get(i).get(2));
-                } else {
-                    date = new Date(dataList.get(i).get(2));
-                }
-            }
-            //信披费用类型
-            String cashType2 = "";
-            String cashType2Name = "";
-            if (StringUtils.isNotEmpty(dataList.get(i).get(3))) {
-                String[] arr = dataList.get(i).get(3).split("\\s+");
-                cashType2 = arr[0];
-                cashType2Name = arr[1];
-            }
-            //费率
-            BigDecimal bigDecimal = null;
-            if (StringUtils.isNotEmpty(dataList.get(i).get(4))) {
-                bigDecimal = new BigDecimal(dataList.get(0).get(4));
-            }
-
-            ProRateInfo001Dto dto = new ProRateInfo001Dto();
-            dto.setBusiId(busiId);
-            dto.setStartDate(date);
-            dto.setCashType2(cashType2);
-            dto.setRate(bigDecimal);
-            errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, dto, "DisPrdFeeRate002", null, ValidMessage.class);
-            if (!StringUtil.isEmptyList(errorList)) {
-                flag = false;
-                message.addAll(errorList.stream().map(item -> item.getMessage()).collect(Collectors.toList()));
-            }
-
-            if (flag) {
-                //主键校验
-                Map<String, Object> map = new HashMap<>();
-                map.put("busiId", busiId);
-                map.put("startDate", date);
-                map.put("cashType2", cashType2);
-                List<DisRepCashYield> disRepCashYields = proRateInfo001Mapper.selectOneDate(map);
-
-                if ("新增".equals(type)) {
-                    if (!StringUtil.isEmptyList(disRepCashYields)) {
-                        message.add("第" + (i + 2) + "行已存在重复产品、启用日期、信披费用类型的数据");
-                        flag = false;
-                    }
-                }
-                if ("修改".equals(type) || "删除".equals(type)) {
-                    if (disRepCashYields.size() <= 0) {
-                        message.add("第\"+(i+2)+\"行不存在产品、启用日期、信披费用类型的数据,请核查");
-                        flag = false;
-                    }
-                }
-            }
-
-            if (flag) {
-                DisRepCashYield entity = new DisRepCashYield();
-                entity.setDataSource("02");
-                entity.setBusiId(dataList.get(i).get(1));
-                Date date1 = DateUtil.parse(dataList.get(i).get(2));
-                entity.setStartDate(date1);
-                String[] arr = dataList.get(i).get(3).split("\\s+");
-                entity.setCashType2(arr[0]);
-                entity.setCashName(arr[1]);
-                BigDecimal bigDecimal1 = new BigDecimal(dataList.get(0).get(4));
-                entity.setRate(bigDecimal1);
-                entity.setCashId(IDGenerator.generate());
-                entity.setAdapterId("无");
-                entity.setCreateUser(userName);
-                entity.setCreateDept(deptCode);
-                entity.setCreateTime(nowDate);
-                entity.setUpdateUser(userName);
-                entity.setUpdateTime(nowDate);
-                entity.setStatus("E");
-                entities.add(entity);
-            }
-
-            if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i + 2),
-                        StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
-            }
-        }
-        return checkResult;
     }
 
     public void updateOne(Map<String, Object> mapOld) {

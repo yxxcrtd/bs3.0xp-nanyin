@@ -15,6 +15,7 @@ import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.SysDataUtil;
@@ -77,7 +78,7 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
             item.setoTypeName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.评级类型, item.getoType() ));
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.维护数据状态, item.getStatus()));
+                    DictCode.维护数据状态, item.getStatus2()));
             item.setSvrDataSourcesName (SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.数据来源, item.getSvrDataSources()));
             item.setGradeOrgIdName (SysDataUtil.getZZDictCodeAndNameNew(
@@ -245,80 +246,79 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
                 return tempCheckResult;
             }
             if (null != dataList) {
-                List<DisRepCashYield> entities = new ArrayList<>(dataList.size());
-                Map<String,Object> map=new HashMap<>();
-                for (int i = 0; i < dataList.size(); i++ ) {
+                Map<String, Object> map = new HashMap<>();
+                for (int i = 0; i < dataList.size(); i++) {
                     List<String> message = new ArrayList<>();
                     //操作类型
-                    String type ="";
-                    if(null!=dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))){
+                    String type = "";
+                    if (null != dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))) {
                         type = dataList.get(i).get(0).toString();
                     }
                     //债券代码
-                    String oCode ="";
-                    if(null!=dataList.get(i).get(1) && !"".equals(dataList.get(i).get(1))){
-                        oCode =dataList.get(i).get(1).toString();
+                    String oCode = "";
+                    if (null != dataList.get(i).get(1) && !"".equals(dataList.get(i).get(1))) {
+                        oCode = dataList.get(i).get(1).toString();
                     }
                     //评级机构
-                    String gradeOrgId ="";
-                    if(null!=dataList.get(i).get(2) && !"".equals(dataList.get(i).get(2))){
-                        String [] arr =dataList.get(i).get(2).toString().split("\\s+");
-                        gradeOrgId=arr[0];
+                    String gradeOrgId = "";
+                    if (null != dataList.get(i).get(2) && !"".equals(dataList.get(i).get(2))) {
+                        String[] arr = dataList.get(i).get(2).toString().split("\\s+");
+                        gradeOrgId = arr[0];
                     }
                     //评级日期
                     SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
-                    Date gradeDate=null;
-                    if(null!=dataList.get(i).get(3) && !"".equals(dataList.get(i).get(3))){
-                        if(dataList.get(i).get(3).contains("-")){
-                            gradeDate=dfs.parse(dataList.get(i).get(3));
-                        }else{
-                            gradeDate=new Date(dataList.get(i).get(3));
+                    Date gradeDate = null;
+                    if (null != dataList.get(i).get(3) && !"".equals(dataList.get(i).get(3))) {
+                        if (dataList.get(i).get(3).contains("-")) {
+                            gradeDate = dfs.parse(dataList.get(i).get(3));
+                        } else {
+                            gradeDate = new Date(dataList.get(i).get(3));
                         }
                     }
                     //评级类型
-                    String oType ="";
-                    if(null!=dataList.get(i).get(4) && !"".equals(dataList.get(i).get(4))){
-                        String [] arr = dataList.get(i).get(4).toString().split("\\s+");
-                        oType=arr[0];
+                    String oType = "";
+                    if (null != dataList.get(i).get(4) && !"".equals(dataList.get(i).get(4))) {
+                        String[] arr = dataList.get(i).get(4).toString().split("\\s+");
+                        oType = arr[0];
                     }
                     //评级结果
-                    String gradeResult ="";
-                    if(null!=dataList.get(i).get(5) && !"".equals(dataList.get(i).get(5))){
-                        String [] arr = dataList.get(i).get(5).toString().split("\\s+");
-                        gradeResult=arr[0];
+                    String gradeResult = "";
+                    if (null != dataList.get(i).get(5) && !"".equals(dataList.get(i).get(5))) {
+                        String[] arr = dataList.get(i).get(5).toString().split("\\s+");
+                        gradeResult = arr[0];
                     }
                     //根据债券代码，评级机构，评级日期 ,评级类型 查询出数据,有数据则更新,无数据则插入
-                    map.put("oCode",oCode);
-                    map.put("gradeOrgId",gradeOrgId);
-                    map.put("gradeDate",gradeDate);
-                    map.put("oType",oType);
+                    map.put("oCode", oCode);
+                    map.put("gradeOrgId", gradeOrgId);
+                    map.put("gradeDate", gradeDate);
+                    map.put("oType", oType);
                     //map.put("gradeResult",gradeResult);
-                    List<MstBondCreditRating> mstBondCreditRatings= mstBondCreditRating001Mapper.selectOneDate(map);
+                    List<MstBondCreditRating> mstBondCreditRatings = mstBondCreditRating001Mapper.selectOneDate(map);
                     List<ValidMessage> resultList = new ArrayList<ValidMessage>();
                     resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, BeanUtil.mapToObject(map, MstBondCreditRatingDto.class), "MstBondCreditRating002", null, ValidMessage.class);
-                    if (!StringUtil.isEmptyList(resultList)){
+                    if (!StringUtil.isEmptyList(resultList)) {
                         resultList.forEach(validMessage -> {
                             message.add(validMessage.getMessage());
                         });
                     }
-                    if("新增".equals(type) || "修改".equals(type)){
-                        if (StringUtil.isEmptyList(resultList)){
-                            updateInfo(mstBondCreditRatings,oCode, gradeOrgId,gradeDate,oType,gradeResult,deptCode,userName);
+                    if ("新增".equals(type) || "修改".equals(type)) {
+                        if (StringUtil.isEmptyList(resultList)) {
+                            updateInfo(mstBondCreditRatings, oCode, gradeOrgId, gradeDate, oType, gradeResult, deptCode, userName);
                         }
-                    }else if("删除".equals(type)){
+                    } else if ("删除".equals(type)) {
                         if (StringUtil.isEmptyList(resultList)) {
                             mstBondCreditRating001Mapper.deleteOne(map);
                         }
-                    }else {
+                    } else {
                         message.add("操作类型值不在可选范围内");
                     }
                     if (!message.isEmpty()) {
-                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1),
                                 StringUtil.joinString(message, GlobalConstant.COMMA)));
                     }
                 }
             }
-        }else{
+        } else {
             ExcelValidDto excelValidDto = new ExcelValidDto();
             String errorMsg = "模板为空，请输入数据！";
             excelValidDto.setErrorInfo(errorMsg);
