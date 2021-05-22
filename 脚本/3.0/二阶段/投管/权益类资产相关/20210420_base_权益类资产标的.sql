@@ -1,19 +1,23 @@
 
 --系统菜单表
 delete from SYS_MENU where PAGE_ID in ('FinProjectNetTargetAsset001');
+/*
 insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
  values ('INVEST_MANAGEMENT_001_001_013','FIN','','INVEST_MANAGEMENT_001_001','FinProjectNetTargetAsset001','13','02','权益类标的','system','',sysdate, 'system',sysdate);
-
+*/
+ 
 --系统画面表
 delete from SYS_PAGE where PAGE_ID IN ('FinProjectNetTargetAsset001','FinProjectNetTargetAsset002');
+/*
 insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
  values ('FinProjectNetTargetAsset001','FIN','/invest/asset/projectnet/FinProjectNetTargetAsset001','invest/asset/projectnet/FinProjectNetTargetAsset001','INVEST_MANAGEMENT_001_001_013','','','02','01','权益类资产管理','system','',sysdate, 'system',sysdate);
 insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
  values ('FinProjectNetTargetAsset002','FIN','/invest/asset/projectnet/FinProjectNetTargetAsset002','invest/asset/projectnet/FinProjectNetTargetAsset002','','','','02','01','权益类资产新建','system','',sysdate, 'system',sysdate);
-
+*/
 
 --画面元素表
 delete from SYS_PAGE_ELEMENT where PAGE_ID in ('FinProjectNetTargetAsset001','FinProjectNetTargetAsset002');
+/*
 insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)
  values ('FinProjectNetTargetAsset001','FinProjectNetTargetAsset001_btn_export','01','01','','导出','system','',sysdate, 'system',sysdate, null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)
@@ -30,17 +34,18 @@ insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFE
  values ('FinProjectNetTargetAsset002','FinProjectNetTargetAsset002_btn_save','01','02','','保存','system','',sysdate, 'system',sysdate, null);
 insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)
  values ('FinProjectNetTargetAsset002','FinProjectNetTargetAsset002_btn_submit','01','02','','提交','system','',sysdate, 'system',sysdate, null);
-
+*/
 
 --流程模板
 delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'FinProjectNetTargetAsset002';
+/*
 insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) 
  values ('FinProjectNetTargetAsset002','FinProjectNetTargetAsset001_btn_delete','oneApproval','system','0001',sysdate, 'system',sysdate, 'ALL', '02');
 insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) 
  values ('FinProjectNetTargetAsset002','FinProjectNetTargetAsset002_btn_save','oneApproval','system','0001',sysdate, 'system',sysdate, 'ALL', '02');
 insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) 
  values ('FinProjectNetTargetAsset002','FinProjectNetTargetAsset002_btn_submit','oneApproval','system','0001',sysdate, 'system',sysdate, 'ALL', '02');
-
+*/
 
 ------------------------------五级分类映射 ----------------------------------------------------------------------------
 --delete from FIN_PRODUCT_TYPE_CONFIG where INPUT_VALUE_1 = 'F19' AND CONFIG_TYPE = 'TG_TYPE';
@@ -52,6 +57,7 @@ insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CR
 
 ------------------------------初始化001页面  一级分类限制枚举值 ----------------------------------------------------
 DELETE FROM SYS_PAGE_DICTLIST WHERE PAGE_ID  IN('FinProjectNetTargetAsset001','FinProjectNetTargetAsset002') AND DICT_ID in ('CUSTOM_ASSET_TYPE_TWO', 'CUSTOM_ASSET_TYPE_THREE', 'CUSTOM_ASSET_TYPE_FOUR', 'CUSTOM_ASSET_TYPE_FIVE');
+/*
 insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) 
  values ('FinProjectNetTargetAsset001','999999','CUSTOM_ASSET_TYPE_TWO','04','权益类投资','','admin','',sysdate, 'admin',sysdate, null);
 insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) 
@@ -84,26 +90,33 @@ insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_IT
  values ('FinProjectNetTargetAsset002','999999','CUSTOM_ASSET_TYPE_FIVE','152','未上市公司股权','','admin','',sysdate, 'admin',sysdate, null);
 insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) 
  values ('FinProjectNetTargetAsset002','999999','CUSTOM_ASSET_TYPE_FIVE','157','产业基金','','admin','',sysdate, 'admin',sysdate, null);
-
+*/
 
 --数据字典
 -----------------------------增加平安资产类型---------------------------------------------------------------------
 delete from SYS_DATADICT_LIST where DICT_CODE = 'PINAN_ASSET_TYPE' AND ITEM_CODE = 'F19';
+/*
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) 
  values ('PINAN_ASSET_TYPE','F19','权益类资产','19','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'), null);
+*/
 
 delete from SYS_DATADICT_LIST where DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'FINASSET21';
+/*
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) VALUES 
 ('COMMON_BUSINESS_TYPE','FINASSET21','权益类资产信息',21,'0','system',NULL,sysdate,'system',sysdate)
 ;
-
+*/
 delete from SYS_DATADICT_LIST where DICT_CODE = 'FINPROD_TYPE_TG' and ITEM_CODE = 'F37';
+/*
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) VALUES 
 ('FINPROD_TYPE_TG','F37','权益类资产',37,'0','system',NULL,sysdate,'system',sysdate)
 ;
+*/
 
 
 --主键生成规则
 delete from MST_BUSINESS_ID_RULE where SEQ_NO = '0903';
+/*
 insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('0903', 'FINASSET21', null, null, null, null, null, null, '04', 'QYTZ', null, null, null, 'PROJ_QTQY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
+*/
