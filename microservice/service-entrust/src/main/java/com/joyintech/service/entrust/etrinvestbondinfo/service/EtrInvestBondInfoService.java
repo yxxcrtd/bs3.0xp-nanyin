@@ -236,14 +236,16 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
         // add by jiangpeng on 20210518 start TISHKBS-2126
         //【投资交易-债券二级指令】新建债券二级指令，如果交易日<债券起息日，指令提交报错
         List<ValidMessage> errorList = new ArrayList<>();
-        Date vDate = DateUtil.addDay(dto.getVdate(), Integer.parseInt(dto.getSettleSpreed()));//委托开始日+清算速度
-        Date bondVDate = this.getBondVDate(dto.getFinprodMarketId());//债券起息日
-        if (DateUtil.compareDate(vDate, bondVDate) < 0) {//委托开始日+清算速度<债券起息日，不允许提交
-            errorList.add(new ValidMessage(
-                    this.getMessage("ETR_E_0014", dto.getFinprodMarketId())));
-        }
         errorList.addAll(baseEtrInvestInfoService.checkDelegateOperation(entrustId, delegateOperationType,
                 traderList, delegateCloseWay));
+        if (StringUtil.isNotEmpty(dto.getSettleSpreed()) && StringUtil.isNotEmpty(dto.getVdate()) && StringUtil.isNotEmpty(dto.getFinprodMarketId())) {
+            Date vDate = DateUtil.addDay(dto.getVdate(), Integer.parseInt(dto.getSettleSpreed()));//委托开始日+清算速度
+            Date bondVDate = this.getBondVDate(dto.getFinprodMarketId());//债券起息日
+            if (DateUtil.compareDate(vDate, bondVDate) < 0) {//委托开始日+清算速度<债券起息日，不允许提交
+                errorList.add(new ValidMessage(
+                        this.getMessage("ETR_E_0014", dto.getFinprodMarketId())));
+            }
+        }
         return errorList;
         // add by jiangpeng on 20210518 end TISHKBS-2126
     }
