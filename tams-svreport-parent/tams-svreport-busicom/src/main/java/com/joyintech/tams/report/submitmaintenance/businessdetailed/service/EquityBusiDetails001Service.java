@@ -2054,12 +2054,14 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
                 List<String> content = new ArrayList<>();
                 List<String> subContent = new ArrayList<>(equityList.size());
+                String CHB_EQUDET_JOB_ID= CacheUtil.getSysParam(ReportGlobalConstant.CHB_EQUDET_JOB_ID);;
+                String CHB_EQUDET_SUB_JOB_ID=CacheUtil.getSysParam(ReportGlobalConstant.CHB_EQUDET_SUB_JOB_ID);;
                 for (File f : files) {
                     if (f.getName().startsWith("CHB_EQUDET_SUB")) {
                         try {
                             subContent.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
                             if (subContent.size() >= reportInterfOneTimeSqlLdrDataCount) {
-                                imptDB(subContent, subtable, tmpPath);
+                                imptDBwithAdapter(subContent, subtable, tmpPath,CHB_EQUDET_SUB_JOB_ID);
                                 subContent = null;
                                 subContent = new ArrayList<>();
                             }
@@ -2074,7 +2076,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         try {
                             content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
                             if (content.size() >= reportInterfOneTimeSqlLdrDataCount) {
-                                imptDB(content, table, tmpPath);
+                                imptDBwithAdapter(content, table, tmpPath,CHB_EQUDET_JOB_ID);
                                 content = null;
                                 content = new ArrayList<>();
                             }
@@ -2088,9 +2090,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     f.delete();
                 }
 
-                imptDB(content, table, tmpPath);
-                imptDB(subContent, subtable, tmpPath);
-
+                imptDBwithAdapter(content, table, tmpPath,CHB_EQUDET_JOB_ID);
+                imptDBwithAdapter(subContent, subtable, tmpPath,CHB_EQUDET_SUB_JOB_ID);
             }
         }
         BaseCheckLib.objFiledsMap=null;
@@ -3405,6 +3406,52 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
                             reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
                             "txt", reportSqlldrDatabaseName);
+                }
+                catch (IOException | InterruptedException e) {
+                    logger.error(e.getMessage(), e);
+                    return "fail";
+                }
+            }
+
+        }
+
+        if (success == true) {
+            return "success";
+        }
+        else {
+            return "fail";
+        }
+    }
+
+    public String imptDBwithAdapter(List<String> content, ImpTable table, String tmpPath,String jobId) {
+        // 系统是否使用的db2数据库
+        boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+        boolean success = true;
+        if (isDB2DataBase) {
+            // db2数据库处理
+            if (CollectionUtils.isNotEmpty(content)) {
+                // success = success && ImportGenerator.importToDB(table, tmpPath,
+                // table.getName() + FileNameUtil.createFileName("del"), content);
+                try {
+                    success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
+                            reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
+                            "del", reportSqlldrDatabaseName);
+                }
+                catch (IOException | InterruptedException e) {
+                    logger.error(e.getMessage(), e);
+                    return "fail";
+                }
+            }
+        }
+        else {
+            // oracle原逻辑
+            if (CollectionUtils.isNotEmpty(content)) {
+                // success = success && ImportGenerator.importToDB(table, tmpPath,
+                // table.getName() + FileNameUtil.createFileName("txt"), content);
+                try {
+                    success = success && ImportGenerator.importToDBByPartwithAdapter(table, tmpPath, content,
+                            reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
+                            "txt", reportSqlldrDatabaseName,jobId);
                 }
                 catch (IOException | InterruptedException e) {
                     logger.error(e.getMessage(), e);
