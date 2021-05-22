@@ -184,9 +184,8 @@
                            data-th-text="#{BussFinBondRepInfo.isFbzb}">是否非标转标资产</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_repIsFbzb|" th:name="|${entityName}.repIsFbzb|"
-                                th:initValue="${entity?.repIsFbzb}"
-                                data-th-value="${SVR_YES_OR_NO_default}" lay-text="是|否"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-value="${SVR_YES_OR_NO_default}" lay-text="是|否"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
@@ -215,7 +214,6 @@
                            data-th-text="#{BussFinBondRepInfo.bankSecZxzq}">是否专项债券</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_bankSecZxzq|" th:name="|${entityName}.bankSecZxzq|"
-                                th:initValue="${entity?.bankSecZxzq}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-value="${SVR_YES_OR_NO_default}" lay-text="是|否"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
@@ -229,7 +227,6 @@
                            data-th-text="#{BussFinBondRepInfo.isPpn}">是否PPN等低流动性债券</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_isPpn|" th:name="|${entityName}.isPpn|"
-                                th:initValue="${entity?.isPpn}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-value="${SVR_YES_OR_NO_default}" lay-text="是|否"
                                 data-th-placeholder="#{SysCommon.placeholder}" required

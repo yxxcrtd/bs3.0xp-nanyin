@@ -39,7 +39,7 @@ public class InvestmentDealInfo001Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        super.setSelectOptionToModel(model, DictCode.中债_处理状态);
+        super.setSelectOptionToModel(model, DictCode.维护数据状态);
         return super.init(model);
     }
 

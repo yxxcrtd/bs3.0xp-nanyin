@@ -40,7 +40,7 @@
                         <input type="text" th:id="|${entityName}_repAssetName|" th:name="|${entityName}.repAssetName|"
                                data-th-value="${entity?.repAssetName}"
                                class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}">
+                               data-th-placeholder="#{SysCommon.placeholder}" required>
                     </div>
                 </div>
 
@@ -934,8 +934,8 @@
                     <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepOther.repPrivateprdFlag}">投向地方政府融资平台的部分</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_repPrivateprdFlag|" th:name="|${entityName}.repPrivateprdFlag|"
-                                th:initValue="${entity?.repPrivateprdFlag}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-value="${SVR_YES_OR_NO_default}" lay-text="是|否"
                                 required="required"
                                 data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
@@ -956,7 +956,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="checkbox" th:id="|${entityName}_repBondtostockFlag|" th:name="|${entityName}.repBondtostockFlag|"
                                lay-skin="switch" data-th-value="${SVR_YES_OR_NO}" lay-text="是|否"
-                               data-th-checked="${SVR_YES_OR_NO} ==${entity?.repBondtostockFlag}">
+                               data-th-checked="${SVR_YES_OR_NO} ==${entity?.repBondtostockFlag}" required>
                     </div>
                 </div>
 

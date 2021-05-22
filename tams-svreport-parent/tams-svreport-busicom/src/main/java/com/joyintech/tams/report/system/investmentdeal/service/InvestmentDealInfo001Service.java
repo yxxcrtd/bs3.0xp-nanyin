@@ -18,6 +18,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.investmentdeal.dao.InvestmentDealInfo001Mapper;
@@ -52,7 +53,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
         int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         param.put("prodId", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("prodId")));
         param.put("assetCode", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("assetCode")));
-        param.put("status", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("status")));
+        param.put("selectStatus", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("status")));
         page=  super.queryForPage(pagenum,legth,()->investmentDealInfo001Mapper.queryForPage(param));
         dealDataList(page.getRoot());
         return page;
@@ -95,7 +96,6 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
     }
 
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
-        List<ValidMessage> resultList = new ArrayList<>();
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
         Map<String,Object> map=new HashMap<>();
@@ -107,31 +107,31 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
                 }
             }
         }
-        errorList=resultList;
-        if(errorList.size() == 0){
-            for (int i = 0; i < dataList.size(); i++ ) {
-                //操作类型
-                String type ="";
-                if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
-                    type = dataList.get(i).get(0).toString();
-                }
-                InvestmentDealInfoDto dto=new InvestmentDealInfoDto();
-                coverEntity(dto,dataList,i);
-                map.put("tradeCode",dto.getTradeCode());
-                InvestmentDealInfoDto infoDto= investmentDealInfo001Mapper.selectOneDate(map);
-                if("新增".equals(type)){
-                    if(StringUtil.isNotEmpty(infoDto)){
-                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行已存在行内交易编码的数据");
-                        errorList.add(validMessage);
-                    }
-                }
-                if("修改".equals(type) || "删除".equals(type)){
-                    if(!StringUtil.isNotEmpty(infoDto)){
-                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行不存在该行内交易编码的数据,请核查");
-                        errorList.add(validMessage);
-                    }
+        for (int i = 0; i < dataList.size(); i++ ) {
+            //操作类型
+            String type ="";
+            if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
+                type = dataList.get(i).get(0).toString();
+            }
+            InvestmentDealInfoDto dto=new InvestmentDealInfoDto();
+            coverEntity(dto,dataList,i);
+            map.put("tradeCode",dto.getTradeCode());
+            InvestmentDealInfoDto infoDto= investmentDealInfo001Mapper.selectOneDate(map);
+            if("新增".equals(type)){
+                if(StringUtil.isNotEmpty(infoDto)){
+                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行已存在行内交易编码的数据");
+                    errorList.add(validMessage);
                 }
             }
+            if("修改".equals(type) || "删除".equals(type)){
+                if(!StringUtil.isNotEmpty(infoDto)){
+                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行不存在该行内交易编码的数据,请核查");
+                    errorList.add(validMessage);
+                }
+            }
+        }
+        if(errorList.size() == 0){
+            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
         }else{
             webResult.setErrorList(errorList);
         }
@@ -173,7 +173,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
                     List<String> message = new ArrayList<>();
                     coverEntity(dto,dataList,i);
                     List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                    resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "InvestmentDealInfo002", "", ValidMessage.class);
+                    resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbInvestTrade002", "", ValidMessage.class);
                     if (!StringUtil.isEmptyList(resultList)){
                         resultList.forEach(validMessage -> {
                             message.add(validMessage.getMessage());
