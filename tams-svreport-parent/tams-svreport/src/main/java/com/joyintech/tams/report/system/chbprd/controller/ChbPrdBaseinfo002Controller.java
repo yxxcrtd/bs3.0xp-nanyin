@@ -94,74 +94,82 @@ public class ChbPrdBaseinfo002Controller extends BaseController {
         dto.setDataSource("01");
         dto.setStatus("E");
         dtoList.add(dto);
-        Map<String, Object> map=new HashMap<>();
-        Map<String, Object> mapOld=new HashMap<>();
-        map.put("prodId",dto.getProdId());
-        List<ChbPrdBaseinfo> chbPrdBaseinfoList =chbPrdBaseinfo001Service.selectOneDate(map);
-        if(null!=dto && "add".equals(dto.getType())){
-            if(null!=chbPrdBaseinfoList && chbPrdBaseinfoList.size()>0){
-                webResult.setMessage("已存在相同产品代码的数据", MessageType.错误消息);
-            }else{
-                try{
-                    chbPrdBaseinfo001Service.insertPrdFeeData(dtoList);
-                    webResult.setMessage("保存成功");
-                }catch (Exception e){
-                    e.printStackTrace();
-                    webResult.setMessage("保存失败", MessageType.错误消息);
-                }
-            }
+        try{
+            chbPrdBaseinfo001Service.insertPrdFeeData(dtoList);
+            chbPrdBaseinfoService.deleteChbPrdBaseinfoErrorData(dtoList);
+            webResult.setMessage("保存成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            webResult.setMessage("保存失败", MessageType.错误消息);
         }
-            if(null!=dto && "update".equals(dto.getType())){
-                if(chbPrdBaseinfoList.size()>0){
-                    mapOld.put("prodId",dto.getProdId());
-                    mapOld.put("orgCode1",dto.getOrgCode());
-                    mapOld.put("raiseVdate",dto.getRaiseVdate());
-                    mapOld.put("raiseEnddate",dto.getRaiseEnddate());
-                    mapOld.put("vdate",dto.getVdate());
-                    mapOld.put("mdate",dto.getMdate());
-                    mapOld.put("manageType",dto.getManageType());
-                    mapOld.put("isConstracte",dto.getIsConstracte());
-                    mapOld.put("yieldHigh",dto.getYieldHigh());
-                    mapOld.put("yieldLow",dto.getYieldLow());
-                    mapOld.put("yieldRemark",dto.getYieldRemark());
-                    mapOld.put("openMode",dto.getOpenMode());
-                    mapOld.put("openCircle",dto.getOpencyclep());
-                    mapOld.put("openCircleDays",dto.getOpenCircleDays());
-                    mapOld.put("ruleComment",dto.getRuleComment());
-                    mapOld.put("firstOpenDay",dto.getFirstOpenDay());
-                    mapOld.put("holidayOnFlag",dto.getHolidayOnFlag());
-                    mapOld.put("avgOpenCount",dto.getAvgOpenCount());
-                    mapOld.put("openBuss",dto.getOpenBuss());
-                    mapOld.put("openBussRemark",dto.getOpenBussRemark());
-                    mapOld.put("busiAcctNo",dto.getBusiAcctNo());
-                    mapOld.put("acctName",dto.getAcctName());
-                    mapOld.put("prodtype",dto.getProdtype());
-                    mapOld.put("basic",dto.getBasic());
-                    mapOld.put("fiduciaryDuty",dto.getFiduciaryDuty());
-                    mapOld.put("customerType",dto.getCustomerType());
-                    mapOld.put("isTransfer",dto.getIsTransfer());
-                    mapOld.put("isFullyCompliant",dto.getIsFullyCompliant());
-                    mapOld.put("isYllccp",dto.getIsYllccp());
-                    mapOld.put("isSyqzccp",dto.getIsSyqzccp());
-                    mapOld.put("issuingStatus",dto.getIssuingStatus());
-                    mapOld.put("status","E");
-                    mapOld.put("dataSource","01");
-                    mapOld.put("updateUser",LoginUserUtil.getUserName());
-                    mapOld.put("updateTime",new Date());
-                    chbPrdBaseinfo001Service.updateOne(mapOld);
-                    webResult.setMessage("保存成功");
-                }else{
-                    chbPrdBaseinfo001Service.insertPrdFeeData(dtoList);
-                    List<ChbPrdBaseinfo> deleteList=new ArrayList<>();
-                    if(!"".equals(dto.getProduuid())){
-                        deleteList.add(dto);
-                    }
-                    if(deleteList.size()>0){
-                        chbPrdBaseinfoService.deleteChbPrdBaseinfoErrorData(deleteList);
-                    }
-                }
-
-        }
+//        Map<String, Object> map=new HashMap<>();
+//        Map<String, Object> mapOld=new HashMap<>();
+//        map.put("prodId",dto.getProdId());
+//        List<ChbPrdBaseinfo> chbPrdBaseinfoList =chbPrdBaseinfo001Service.selectOneDate(map);
+//        if(null!=dto && "add".equals(dto.getType())){
+//            if(null!=chbPrdBaseinfoList && chbPrdBaseinfoList.size()>0){
+//                webResult.setMessage("已存在相同产品代码的数据", MessageType.错误消息);
+//            }else{
+//                try{
+//                    chbPrdBaseinfo001Service.insertPrdFeeData(dtoList);
+//                    webResult.setMessage("保存成功");
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                    webResult.setMessage("保存失败", MessageType.错误消息);
+//                }
+//            }
+//        }
+//            if(null!=dto && "update".equals(dto.getType())){
+//                if(chbPrdBaseinfoList.size()>0){
+//                    mapOld.put("prodId",dto.getProdId());
+//                    mapOld.put("orgCode1",dto.getOrgCode());
+//                    mapOld.put("raiseVdate",dto.getRaiseVdate());
+//                    mapOld.put("raiseEnddate",dto.getRaiseEnddate());
+//                    mapOld.put("vdate",dto.getVdate());
+//                    mapOld.put("mdate",dto.getMdate());
+//                    mapOld.put("manageType",dto.getManageType());
+//                    mapOld.put("isConstracte",dto.getIsConstracte());
+//                    mapOld.put("yieldHigh",dto.getYieldHigh());
+//                    mapOld.put("yieldLow",dto.getYieldLow());
+//                    mapOld.put("yieldRemark",dto.getYieldRemark());
+//                    mapOld.put("openMode",dto.getOpenMode());
+//                    mapOld.put("openCircle",dto.getOpencyclep());
+//                    mapOld.put("openCircleDays",dto.getOpenCircleDays());
+//                    mapOld.put("ruleComment",dto.getRuleComment());
+//                    mapOld.put("firstOpenDay",dto.getFirstOpenDay());
+//                    mapOld.put("holidayOnFlag",dto.getHolidayOnFlag());
+//                    mapOld.put("avgOpenCount",dto.getAvgOpenCount());
+//                    mapOld.put("openBuss",dto.getOpenBuss());
+//                    mapOld.put("openBussRemark",dto.getOpenBussRemark());
+//                    mapOld.put("busiAcctNo",dto.getBusiAcctNo());
+//                    mapOld.put("acctName",dto.getAcctName());
+//                    mapOld.put("prodtype",dto.getProdtype());
+//                    mapOld.put("basic",dto.getBasic());
+//                    mapOld.put("fiduciaryDuty",dto.getFiduciaryDuty());
+//                    mapOld.put("customerType",dto.getCustomerType());
+//                    mapOld.put("isTransfer",dto.getIsTransfer());
+//                    mapOld.put("isFullyCompliant",dto.getIsFullyCompliant());
+//                    mapOld.put("isYllccp",dto.getIsYllccp());
+//                    mapOld.put("isSyqzccp",dto.getIsSyqzccp());
+//                    mapOld.put("issuingStatus",dto.getIssuingStatus());
+//                    mapOld.put("status","E");
+//                    mapOld.put("dataSource","01");
+//                    mapOld.put("updateUser",LoginUserUtil.getUserName());
+//                    mapOld.put("updateTime",new Date());
+//                    chbPrdBaseinfo001Service.updateOne(mapOld);
+//                    webResult.setMessage("保存成功");
+//                }else{
+//                    chbPrdBaseinfo001Service.insertPrdFeeData(dtoList);
+//                    List<ChbPrdBaseinfo> deleteList=new ArrayList<>();
+//                    if(!"".equals(dto.getProduuid())){
+//                        deleteList.add(dto);
+//                    }
+//                    if(deleteList.size()>0){
+//                        chbPrdBaseinfoService.deleteChbPrdBaseinfoErrorData(deleteList);
+//                    }
+//                }
+//
+//        }
         return webResult;
     }
 

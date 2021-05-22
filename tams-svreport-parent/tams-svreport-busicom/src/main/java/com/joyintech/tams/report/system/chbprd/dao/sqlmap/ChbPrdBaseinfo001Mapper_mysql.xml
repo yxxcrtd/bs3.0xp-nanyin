@@ -265,14 +265,14 @@
 	</update>
 
 	<delete id="deleteChbPrdBaseinfoErrorData" parameterType="java.util.List">
-		delete from chb_prd_baseinfo_errordata a
-		where 1=1
-		and a.DATAUUID
-		IN
+		DELETE FROM CHB_PRD_BASEINFO_ERRORDATA A
+		WHERE 1=1
+		AND A.PROD_ID IN
 		<foreach collection="dtoList" item="item" open="(" separator=","  close=")">
-			#{item.dataUuid,jdbcType=VARCHAR}
+			#{item.prodId,jdbcType=VARCHAR}
 		</foreach>
 	</delete>
+
 	<select id="getProdinfo" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" parameterType="java.util.Map">
 		SELECT p.prod_id,p.prod_name FROM chb_prd_baseinfo p
 		where p.status in ('A','E')
