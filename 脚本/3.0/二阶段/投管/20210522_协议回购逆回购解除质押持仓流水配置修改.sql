@@ -1,0 +1,2 @@
+UPDATE PTL_POSITION_FLOW_CFG SET PARAMETER_CONFIG ='{"portfolioId": "custom.portfolioId","secAcctId": "999999","finprodId": "custom.finprodId","branch": "0","invAim":"FVTPL","hodingType": "03","cdate": "","ccy": "custom.ccy","amount": "custom.positionBaseData.finTradeProductDto.prin","tradeId": "custom.tradeId","offsetFlag":"01","offsetId":"","entrustId":"custom.entrustId"}'
+WHERE SCENE_ID ='TRD010' AND CFG_NUMBER ='01'
