@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.FinDealPledge;
+import com.joyintech.tams.common.base.entity.FinDealPledgeKey;
 import com.joyintech.tams.common.base.entity.TrdProductTempDeal;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -155,4 +156,6 @@ public interface EntrustMsgbyMQMapper {
     void updateTrdProductTempDeal(TrdProductTempDeal trdProductTempDeal);
 
     void updateTrdProductDeal(TrdProductTempDeal trdProductTempDeal);
+
+	FinDealPledge selectFinDealPledgeByPrimaryKey(FinDealPledgeKey finDealPledgeKey);
 }

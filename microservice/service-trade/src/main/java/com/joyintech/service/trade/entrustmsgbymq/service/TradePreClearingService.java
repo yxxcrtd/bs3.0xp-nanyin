@@ -393,7 +393,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         FinDealPledgeKey finDealPledgeKey = new FinDealPledgeKey();
         finDealPledgeKey.setFinprodId(finprodId);
         finDealPledgeKey.setBranch(0L);
-        FinDealPledge finDealPledge = finDealPledgeMapper.selectByPrimaryKey(finDealPledgeKey);
+        FinDealPledge finDealPledge = entrustMsgbyMQMapper.selectFinDealPledgeByPrimaryKey(finDealPledgeKey);
         positionBaseData.setFinDealPledge(finDealPledge);
     }
 
