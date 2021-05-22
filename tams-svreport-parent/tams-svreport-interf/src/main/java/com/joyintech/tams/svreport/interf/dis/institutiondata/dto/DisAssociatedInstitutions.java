@@ -21,6 +21,14 @@ public class DisAssociatedInstitutions extends BaseEntity{
 	 */
 	private String status;
 
+	/**
+	 * 中债数据状态
+	 * 原status框架上面会做权限控制，所以这里换了name
+	 */
+	private String svrStatus;
+
+	private String svrStatusName;
+
 	public String getStatusName() {
 		return statusName;
 	}
@@ -186,5 +194,21 @@ public class DisAssociatedInstitutions extends BaseEntity{
 
 	public void setRelorgId(String relorgId) {
 		this.relorgId = relorgId;
+	}
+
+	public String getSvrStatus() {
+		return svrStatus;
+	}
+
+	public void setSvrStatus(String svrStatus) {
+		this.svrStatus = svrStatus;
+	}
+
+	public String getSvrStatusName() {
+		return svrStatusName;
+	}
+
+	public void setSvrStatusName(String svrStatusName) {
+		this.svrStatusName = svrStatusName;
 	}
 }

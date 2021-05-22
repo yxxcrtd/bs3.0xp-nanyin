@@ -429,7 +429,7 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
             List<ChbMstCounterParty> ChbMstCounterPartys= chbMstCounterParty001Mapper.selectOneDate(map);
             if("新增".equals(type)){
                 if(null!=ChbMstCounterPartys && ChbMstCounterPartys.size()>0){
-                    errorList.add(new ExcelValidDto(counterId,"第"+(i+2)+"行","行已存在交易对手代码的数据"));
+                    errorList.add(new ExcelValidDto(counterId,"第"+(i+2)+"行","已存在交易对手代码的数据"));
                 }
             }
             if("修改".equals(type) || "删除".equals(type)){
