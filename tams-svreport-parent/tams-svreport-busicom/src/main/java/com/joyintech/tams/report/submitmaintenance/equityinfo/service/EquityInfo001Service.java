@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import org.apache.commons.collections4.CollectionUtils;
@@ -60,11 +61,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.ChbEquHoldMapper;
 import com.joyintech.tams.common.base.dao.ChbEquSubMapper;
@@ -1857,7 +1854,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         boolean success = true;
         if (CollectionUtils.isNotEmpty(equityList)) {
             monitorInfoDto.setFileDataCount(BigDecimal.valueOf(equityList.size()));
-            if (equityList.size() < 1000) {
+            if (equityList.size() < 2) {
                 try {
                     success = excuteEquityInfoByStepNew(equityList, interType, null, null, null,mapRegist,spzMap,objFiledsMap);
                 } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -1946,12 +1943,14 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         new String[] {"tmp"}, false);
                 List<String> content = new ArrayList<>();
                 List<String> subContent = new ArrayList<>(equityList.size());
+                String CHB_EQU_HOLD_JOB_ID= CacheUtil.getSysParam(ReportGlobalConstant.CHB_EQU_HOLD_JOB_ID);;
+                String CHB_EQU_SUB_JOB_ID=CacheUtil.getSysParam(ReportGlobalConstant.CHB_EQU_SUB_JOB_ID);
                 for (File f : files) {
                     if (f.getName().startsWith("CHB_EQU_HOLD")) {
                         try {
                             content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
                             if ( content.size()>= reportInterfOneTimeSqlLdrDataCount ) {
-                                imptDB(content,table,tmpPath);
+                                imptDBwithAdapter(content,table,tmpPath,CHB_EQU_HOLD_JOB_ID);
                                 content = null;
                                 content = new ArrayList<>();
                             }
@@ -1964,7 +1963,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                         try {
                             subContent.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
                             if ( subContent.size()>= reportInterfOneTimeSqlLdrDataCount ) {
-                                imptDB(subContent,subTable,tmpPath);
+                                imptDBwithAdapter(subContent,subTable,tmpPath,CHB_EQU_SUB_JOB_ID);
                                 subContent = null;
                                 subContent = new ArrayList<>();
                             }
@@ -1977,8 +1976,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     f.delete();
                 }
 
-                imptDB(content,table,tmpPath);
-                imptDB(subContent,subTable,tmpPath);
+                imptDBwithAdapter(content,table,tmpPath,CHB_EQU_HOLD_JOB_ID);
+                imptDBwithAdapter(subContent,subTable,tmpPath,CHB_EQU_SUB_JOB_ID);
             }
         }
         // 数据解析完成，并导入数据库成功后，将ftp文件修改名称
@@ -1991,6 +1990,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         //add by liubin end
         return "fail";
     }
+
+
     public String imptDB(List<String> content,ImpTable table, String tmpPath) {
         // 系统是否使用的db2数据库
         boolean isDB2DataBase = CommonUtil.isDB2DataBase();
@@ -2034,6 +2035,61 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             return "fail";
         }
     }
+
+
+    /**
+     * 导入使用适配器
+     *
+     * @see
+     * @since 1.0
+     */
+
+    public String imptDBwithAdapter(List<String> content,ImpTable table, String tmpPath,String jobId) {
+        // 系统是否使用的db2数据库
+        boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+        boolean success=true;
+        if (isDB2DataBase) {
+            // db2数据库处理
+            if (CollectionUtils.isNotEmpty(content)) {
+//                success = success && ImportGenerator.importToDB(table, tmpPath,
+//                    table.getName() + FileNameUtil.createFileName("del"), content);
+                try {
+                    success = success && ImportGenerator.importToDBByPart(table, tmpPath,
+                            content, reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del", reportSqlldrDatabaseName);
+                } catch (IOException | InterruptedException e) {
+                    logger.error(e.getMessage(),e);
+                    Thread.currentThread().interrupt();
+                    return "fail";
+                }
+            }
+        }
+        else {
+            // oracle原逻辑
+            if (CollectionUtils.isNotEmpty(content)) {
+//                success = success && ImportGenerator.importToDB(table, tmpPath,
+//                    table.getName() + FileNameUtil.createFileName("txt"), content);
+                try {
+                    success = success && ImportGenerator.importToDBByPartwithAdapter(table, tmpPath, content,
+                            reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
+                            "txt", reportSqlldrDatabaseName,jobId);
+
+                } catch (IOException | InterruptedException e) {
+                    logger.error(e.getMessage(),e);
+                    Thread.currentThread().interrupt();
+                    return "fail";
+                }
+            }
+
+        }
+
+        if ( success==true ) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
+
     /**
      * 删除导入使用的临时文件
      *

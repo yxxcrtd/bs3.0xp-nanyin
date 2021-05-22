@@ -351,4 +351,23 @@ public class ReportGlobalConstant {
 
     // mysql早期改造代码 add by zoujiamin  2021/04/20  end
 
+    // 调用适配器新增系统参数   add by zoujiamin  2021/05/22
+    public static final String CHB_EQUDET_JOB_ID = "CHB_EQUDET_JOB_ID";
+
+    public static final String CHB_EQUDET_SUB_JOB_ID = "CHB_EQUDET_SUB_JOB_ID";
+
+    public static final String CHB_EQU_HOLD_JOB_ID = "CHB_EQU_HOLD_JOB_ID";
+
+    public static final String CHB_EQU_SUB_JOB_ID = "CHB_EQU_SUB_JOB_ID";
+
+    public static final String CHB_INVESTHOLD_INFO_JOB_ID = "CHB_INVESTHOLD_INFO_JOB_ID";
+
+    public static final String CHB_INVESTHOLD_INFO_SUB_JOB_ID = "CHB_INVESTHOLD_INFO_SUB_JOB_ID";
+
+    public static final String ADAPTER_URL = "ADAPTER_URL";
+
+    public static final String ADAPTER_PATH = "ADAPTER_PATH";
+
+
+
 }

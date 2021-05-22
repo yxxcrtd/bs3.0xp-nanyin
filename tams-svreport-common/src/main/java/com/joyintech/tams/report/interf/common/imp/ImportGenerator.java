@@ -25,10 +25,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.report.interf.common.dto.JobContainer;
+import com.joyintech.tams.report.interf.common.service.AdapterService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jcraft.jsch.Channel;
@@ -39,11 +43,6 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.service.ApplicationParaService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
@@ -73,6 +72,10 @@ public final class ImportGenerator {
      * 日志
      */
     private static Logger logger = LoggerFactory.getLogger(ImportGenerator.class);
+
+//    @Autowired
+//    private static AdapterService adapterService;
+
     public static List<ImpColumn> createImpTableColumns(String tableName) {
 
         SvrTableStructService tableService = SpringContextUtil.getBean(SvrTableStructService.class);
@@ -172,8 +175,9 @@ public final class ImportGenerator {
                     else if (type.equals(JDBCType.TIMESTAMP)) {
                         value = InterfUtil.formatDateTimeWithQuotation((Date)value);
                     }
+                    // mysql数据库时间类型 datetime处理
                     else if (type.equals(JDBCType.VARCHAR)) {
-                        value = InterfUtil.formatDateTimeWithQuotation((Date)value);
+                        value = InterfUtil.format((Date)value, DateUtil.DEFAULT_DATETIME_FORMAT);
                     }
                 }
                 // 如果值为空，则判断该字段是否需要设置默认值
@@ -304,6 +308,17 @@ public final class ImportGenerator {
         // 合并mysql早期改造代码  add by zoujiamin  2021/04/20
         boolean isMySqlDataBase = CommonUtil.isMySqlDataBase(); 
         if(isMySqlDataBase){
+        	 // 将数据文件通过ftp上传到数据库服务器
+            String repMysqlServerFtpIp = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_IP);
+            String repMysqlServerFtpUser = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_USER);
+            String repMysqlServerFtpPassword = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_PASSWORD);
+            String repMysqlServerFtpProt = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_PROT);
+            String repMysqlServerFtpFilepath = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_FILEPATH);
 //        	 // 将数据文件通过ftp上传到数据库服务器
 //            String repMysqlServerFtpIp = CacheUtil.getSysParam(
 //                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_IP);
@@ -405,9 +420,99 @@ public final class ImportGenerator {
 //	            }
 //			}
 
+            int ftpPort = Integer.valueOf(repMysqlServerFtpProt);
+
+            String importFullPath = repMysqlServerFtpFilepath;
+            if (!StringUtil.endsWith(importFullPath, "/")) {
+                importFullPath = importFullPath + "/";
 //            return true;
             //本地执行命令
             return execMysqlLoadData(path, dataFileName, tmpFile, table);
+        }
+            importFullPath = importFullPath + dataFileName;
+
+            // 执行远程数据库服务器shell命令导入数据文件
+            Session session = null;
+            ChannelExec openChannel = null;
+            Channel sftpchannel = null;
+            ChannelSftp sftp = null;
+            JSch jsch = new JSch();
+            BufferedReader reader = null;
+            OutputStreamWriter osw = null;
+            FileOutputStream fout = null;
+            // getSession()只是创建一个session，需要设置必要的认证信息之后，调用connect()才能建立连接。
+            try {
+				session = jsch.getSession(repMysqlServerFtpUser, repMysqlServerFtpIp, ftpPort);
+	            java.util.Properties config = new java.util.Properties();
+	            config.put("StrictHostKeyChecking", "no");
+	            session.setConfig(config);
+	            session.setPassword(repMysqlServerFtpPassword);
+	            session.connect();
+
+	            //上传文件到数据库服务器
+	            sftpchannel = session.openChannel("sftp");
+	            sftpchannel.connect();
+	            sftp = (ChannelSftp)sftpchannel;
+	            if (!StringUtil.endsWith(importFullPath, "/")) {
+	            	sftp.put(path + dataFileName, repMysqlServerFtpFilepath);
+	            }else{
+	            	sftp.put(path + "/" + dataFileName, repMysqlServerFtpFilepath);
+	            }
+	            
+	            openChannel = (ChannelExec) session.openChannel("exec");
+	            openChannel.setInputStream(null);
+	            openChannel.setErrStream(System.err);
+	            //sh /home/tmp/test.sh home/tmp/test.txt
+	            openChannel.setCommand("sh " + repMysqlServerFtpFilepath  + "/" + table.getName()+".sh " + repMysqlServerFtpFilepath+"/"+dataFileName);
+	            openChannel.connect(); 
+
+	            reader = new BufferedReader(new InputStreamReader(openChannel.getInputStream(),Charset.forName("UTF-8")));
+	            String line = null;
+	            String sqlldrLogFilePath = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, "SQLLDRLOGFILEPATH");
+				logger.info("sqlldr输出日志路径："+sqlldrLogFilePath);
+				File file = new File(sqlldrLogFilePath+File.separator+"sqlldr_log.txt");
+       	    	//判断sqlldr输出日志路径下是否存在日志文件，若存在则加上时间戳
+				if(file.exists()){
+					file = new File(sqlldrLogFilePath+File.separator+"sqlldr_log_"+System.currentTimeMillis()+".txt");
+				}
+	            fout = new FileOutputStream(file);
+				osw = new OutputStreamWriter(fout);
+	            while ((line = reader.readLine()) != null) {
+	            	osw.append(line+"\n");
+					osw.flush();
+	            }
+	            reader.close();
+	            logger.info(line);
+
+	            // 删除数据文件
+	            if (tmpFile.exists()) {
+	                tmpFile.delete();
+	            }
+	            
+	            // 删除ftp服务器数据文件
+//	            sftp.rm(repMysqlServerFtpFilepath+"/"+dataFileName);
+	            
+			} catch (JSchException | SftpException e) {
+				e.printStackTrace();
+			}finally{
+				if (reader != null){
+					reader.close();
+				}
+	            if (openChannel != null && !openChannel.isClosed()) {
+	                openChannel.disconnect();
+	            }
+	            if (session != null && session.isConnected()) {
+	                session.disconnect();
+	            }
+	            if(sftpchannel != null && !sftpchannel.isClosed()){
+	            	sftpchannel.disconnect();
+	            }
+	            if(sftp != null && !sftp.isClosed()){
+	            	sftp.disconnect();
+	            }
+			}
+
+            return true;
         }
         // 合并mysql早期改造代码  add by zoujiamin  2021/04/20
 
@@ -431,6 +536,120 @@ public final class ImportGenerator {
             // add by etliu 20181018 start
             ApplicationParaService applicationParaService = SpringContextUtil.getBean(
                 ApplicationParaService.class);
+
+            String reportInterfSplitCharacter = applicationParaService.getReportInterfSplitCharacter();
+            if (StringUtil.isNotBlank(reportInterfSplitCharacter)) {
+                param.setFieldTerm(reportInterfSplitCharacter);
+            }
+            // add by etliu 20181018 end
+
+            Sqlldr sqlldr = new Sqlldr();
+            sqlldr.createCtl(param);
+            return sqlldr.excute(param);
+        }
+    }
+
+    public static boolean importToDBwithAdapter(ImpTable table, String path, String dataFileName,
+                                     List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName,String jobId) throws IOException, InterruptedException {
+        if (!path.endsWith("/")) {
+            path = path + "/";
+        }
+        String absoultPath = path + dataFileName;
+        File tmpFile = new File(absoultPath);
+        FileUtils.writeLines(tmpFile, "UTF-8", content);
+
+        // 系统是否使用的db2数据库
+        boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+        if (isDB2DataBase) {
+            // 将数据文件通过ftp上传到数据库服务器
+            String repDb2ServerFtpIp = CacheUtil.getSysParam(
+                    ReportGlobalConstant.SYS_PARA_REP_DB2_SERVER_FTP_IP);
+            String repDb2ServerFtpUser = CacheUtil.getSysParam(
+                    ReportGlobalConstant.SYS_PARA_REP_DB2_SERVER_FTP_USER);
+            String repDb2ServerFtpPassword = CacheUtil.getSysParam(
+                    ReportGlobalConstant.SYS_PARA_REP_DB2_SERVER_FTP_PASSWORD);
+            String repDb2ServerFtpProt = CacheUtil.getSysParam(
+                    ReportGlobalConstant.SYS_PARA_REP_DB2_SERVER_FTP_PROT);
+            String repDb2ServerFtpFilepath = CacheUtil.getSysParam(
+                    ReportGlobalConstant.SYS_PARA_REP_DB2_SERVER_FTP_FILEPATH);
+
+            int ftpPort = Integer.valueOf(repDb2ServerFtpProt);
+
+            FtpUtil.uploadFile(repDb2ServerFtpIp, ftpPort, repDb2ServerFtpUser,
+                    repDb2ServerFtpPassword, repDb2ServerFtpFilepath, dataFileName,
+                    new FileInputStream(tmpFile));
+
+            String importFullPath = repDb2ServerFtpFilepath;
+            if (!StringUtil.endsWith(importFullPath, "/")) {
+                importFullPath = importFullPath + "/";
+            }
+            importFullPath = importFullPath + dataFileName;
+
+            // 执行import命令导入数据文件
+            SvrInterfCommonMapper interfCommonMapper = SpringContextUtil.getBean(
+                    SvrInterfCommonMapper.class);
+            interfCommonMapper.excuteDb2ImportData(importFullPath, table.getName());
+
+            // 删除数据文件
+            if (tmpFile.exists()) {
+                tmpFile.delete();
+            }
+
+            // 删除ftp服务器数据文件
+            FtpUtil.deleteFile(repDb2ServerFtpIp, ftpPort, repDb2ServerFtpUser,
+                    repDb2ServerFtpPassword, repDb2ServerFtpFilepath, dataFileName);
+
+            return true;
+        }
+        // 合并mysql早期改造代码  add by zoujiamin  2021/04/20
+        boolean isMySqlDataBase = CommonUtil.isMySqlDataBase();
+        if(isMySqlDataBase){
+            //获取适配器读取文件路径，将生成好的导入文件复制到 适配器读取文件路径下
+            String adapterInPath = CacheUtil.getSysParam(ReportGlobalConstant.ADAPTER_PATH);;
+            File destFile = new File(adapterInPath);
+            if (StringUtil.isNotEmpty(adapterInPath)) {
+                FileUtils.moveFileToDirectory(tmpFile,destFile,true);
+            }
+            // 调用对应适配器
+            JobContainer jobContainer= AdapterService.exeDisJob(jobId);
+            if("RUN".equals(jobContainer.getJobStatus())){
+                while(true && "RUN".equals(jobContainer.getJobStatus())){
+                    Thread.sleep(5000);
+                    jobContainer=AdapterService.fetchDisJobStatus(jobContainer.getInstanceid());
+                }
+
+            } else {
+                logger.info("调用适配器失败"+jobContainer.getJobMsg());
+                return false;
+            }
+            if("END".equals(jobContainer.getJobStatus())){
+                return true;
+            } else {
+                logger.info("适配器执行失败"+jobContainer.getJobMsg());
+                return false;
+            }
+
+        }
+        else {
+            // oracle原有逻辑
+            SqlldrImpArgument param = new SqlldrImpArgument();
+            param.setData(absoultPath);
+            param.setControl(path + StringUtil.lowerCase(table.getName()) + ".ctl");
+            param.setLog(path + StringUtil.lowerCase(table.getName()) + ".log");
+            param.setTable(table);
+            param.setRows(reportInterfOneTimeSqlLdrCommitCount);
+
+            // add by etliu 20180926 start
+//            System.out.println("DatabaseName重置前值：" + param.getDatabaseName());
+            logger.info("DatabaseName重置前值：{}", param.getDatabaseName());
+            param.setDatabaseName(reportSqlldrDatabaseName);
+//            System.out.println("DatabaseName重置后值：" + param.getDatabaseName());
+            logger.info("DatabaseName重置后值：{}", param.getDatabaseName());
+            // add by etliu 20180926 end
+
+            // add by etliu 20181018 start
+            ApplicationParaService applicationParaService = SpringContextUtil.getBean(
+                    ApplicationParaService.class);
 
             String reportInterfSplitCharacter = applicationParaService.getReportInterfSplitCharacter();
             if (StringUtil.isNotBlank(reportInterfSplitCharacter)) {
@@ -496,6 +715,61 @@ public final class ImportGenerator {
     }
 
     /**
+     * 导入数据库调用适配器(单次最大200000，分批处理)
+     *
+     * @param table 导入表配置
+     * @param path 路径
+     * @param dataFileName 数据文件名
+     * @param content 导入数据内容
+     * @return 导入是否成功
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public static boolean importToDBByPartwithAdapter(ImpTable table, String path, List<String> content,
+                                           Integer reportInterfOneTimeSqlLdrDataCount,
+                                           Integer reportInterfOneTimeSqlLdrCommitCount,
+                                           String sqlDataFileExtension,
+                                           String reportSqlldrDatabaseName,
+                                                      String jobId) throws IOException, InterruptedException {
+        if (StringUtil.isEmptyList(content)) {
+            return true;
+        }
+
+        boolean result = true;
+
+        int dataCount = content.size();
+        if (dataCount <= reportInterfOneTimeSqlLdrDataCount) {
+            return ImportGenerator.importToDBwithAdapter(table, path,
+                    table.getName() + FileNameUtil.createFileName(sqlDataFileExtension), content,
+                    reportInterfOneTimeSqlLdrCommitCount, reportSqlldrDatabaseName,jobId);
+        }
+
+        List<String> newDataList = new ArrayList<String>();
+        newDataList.addAll(content);
+
+        // 分批处理
+        int part = dataCount / reportInterfOneTimeSqlLdrDataCount; // 分批数
+        for (int i = 0; i < part; i++ ) {
+            result = result && ImportGenerator.importToDBwithAdapter(table, path,
+                    table.getName() + FileNameUtil.createFileName(sqlDataFileExtension),
+                    newDataList.subList(0, reportInterfOneTimeSqlLdrDataCount),
+                    reportInterfOneTimeSqlLdrCommitCount, reportSqlldrDatabaseName,jobId);
+            newDataList.subList(0, reportInterfOneTimeSqlLdrDataCount).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            result = result && ImportGenerator.importToDBwithAdapter(table, path,
+                    table.getName() + FileNameUtil.createFileName(sqlDataFileExtension), newDataList,
+                    reportInterfOneTimeSqlLdrCommitCount, reportSqlldrDatabaseName,jobId);
+        }
+
+        return result;
+    }
+}
+
+
+
+    /**
      * 调用mysql脚本命令进行load数据
      * @param path
      * @param dataFileName
@@ -512,7 +786,17 @@ public final class ImportGenerator {
         String importFullPath = repMysqlServerFtpFilepath;
         if (!StringUtil.endsWith(importFullPath, "/")) {
             importFullPath = importFullPath + "/";
+
+
         }
+
+
+
+
+
+
+
+
         String cmd = "sh " + repMysqlServerFtpFilepath  + "/" + table.getName() + ".sh " + path + dataFileName;
         Process proess = null;
         try {

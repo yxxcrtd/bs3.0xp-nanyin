@@ -2830,6 +2830,8 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 					false);
 			List<String> content = new ArrayList<>(equityList.size());
 			List<String> subContent = new ArrayList<>(equityList.size());
+			String CHB_INVESTHOLD_INFO_JOB_ID= CacheUtil.getSysParam(ReportGlobalConstant.CHB_INVESTHOLD_INFO_JOB_ID);;
+			String CHB_INVESTHOLD_INFO_SUB_JOB_ID=CacheUtil.getSysParam(ReportGlobalConstant.CHB_INVESTHOLD_INFO_SUB_JOB_ID);;
 			for (File f : files) {
 				if (f.getName().startsWith("CHB_INVESTHOLD_INFO_SUB")) {
 					try {
@@ -2887,9 +2889,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 //                    success = success && ImportGenerator.importToDB(table, tmpPath,
 //                        table.getName() + FileNameUtil.createFileName("txt"), content);
 					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
+						success = success && ImportGenerator.importToDBByPartwithAdapter(table, tmpPath, content,
 								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
-								"txt", reportSqlldrDatabaseName);
+								"txt", reportSqlldrDatabaseName,CHB_INVESTHOLD_INFO_JOB_ID);
 					} catch (IOException | InterruptedException e) {
 						logger.error(e.getMessage(),e);
 						Thread.currentThread().interrupt();
@@ -2900,9 +2902,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 //                    success = success && ImportGenerator.importToDB(subTable, tmpPath,
 //                        subTable.getName() + FileNameUtil.createFileName("txt"), subContent);
 					try {
-						success = success && ImportGenerator.importToDBByPart(subTable, tmpPath,
+						success = success && ImportGenerator.importToDBByPartwithAdapter(subTable, tmpPath,
 								subContent, reportInterfOneTimeSqlLdrDataCount,
-								reportInterfOneTimeSqlLdrCommitCount, "txt", reportSqlldrDatabaseName);
+								reportInterfOneTimeSqlLdrCommitCount, "txt", reportSqlldrDatabaseName,CHB_INVESTHOLD_INFO_SUB_JOB_ID);
 					} catch (IOException | InterruptedException e) {
 						logger.error(e.getMessage(),e);
 						Thread.currentThread().interrupt();
