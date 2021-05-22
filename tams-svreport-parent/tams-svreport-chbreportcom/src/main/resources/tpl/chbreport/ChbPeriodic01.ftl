@@ -783,7 +783,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${prdInfo.leverageLevelFmt!}</w:t>
+                                        <w:t>${prdInfo.riskLevelFmt!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>

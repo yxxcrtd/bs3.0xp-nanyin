@@ -708,11 +708,18 @@ public class ChbPeriodicService {
             chbPeriodicPrdInfo.setOperateModeFmt(ChbInvestReportConstant.空字符);
         }
         //投资性质显示名称
-        showName = ChbInvestReportUtil.getDictCodeAndName(DictCode.投资性质, chbPeriodicPrdInfo.getCashPrinCcy());
+        showName = ChbInvestReportUtil.getDictCodeAndName(DictCode.投资性质, chbPeriodicPrdInfo.getIvstorientation());
         if (StringUtil.isNotEmpty(showName)) {
             chbPeriodicPrdInfo.setIvstorientationFmt(showName);
         } else {
             chbPeriodicPrdInfo.setIvstorientationFmt(ChbInvestReportConstant.空字符);
+        }
+        //募集方式显示名称
+        showName = ChbInvestReportUtil.getDictCodeAndName(DictCode.募集方式_中债, chbPeriodicPrdInfo.getRaiseType());
+        if (StringUtil.isNotEmpty(showName)) {
+            chbPeriodicPrdInfo.setRaiseTypeFmt(showName);
+        } else {
+            chbPeriodicPrdInfo.setRaiseTypeFmt(ChbInvestReportConstant.空字符);
         }
         //产品风险评级显示名称
         if (StringUtil.isNotEmpty(chbPeriodicPrdInfo.getRiskLevel())) {
@@ -754,7 +761,7 @@ public class ChbPeriodicService {
         //到期日显示名称
         if (Objects.isNull(chbPeriodicPrdInfo.getMdate())) {
             chbPeriodicPrdInfo.setMdateFmt(ChbInvestReportConstant.空字符);
-        } else if (DateUtil.compareDate(ChbInvestReportConstant.无特定存续期限日期, DateUtil.format(chbPeriodicPrdInfo.getMdate())) == 1) {
+        } else if (DateUtil.compareDate(ChbInvestReportConstant.无特定存续期限日期, DateUtil.format(chbPeriodicPrdInfo.getMdate())) != 1) {
             chbPeriodicPrdInfo.setMdateFmt(ChbInvestReportConstant.无特定存续期限);
         } else {
             chbPeriodicPrdInfo.setMdateFmt(DateUtil.format(chbPeriodicPrdInfo.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN));

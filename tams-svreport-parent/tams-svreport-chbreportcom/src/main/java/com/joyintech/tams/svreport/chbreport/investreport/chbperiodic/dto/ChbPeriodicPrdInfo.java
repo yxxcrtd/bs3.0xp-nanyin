@@ -85,6 +85,11 @@ public class ChbPeriodicPrdInfo extends BaseEntity {
     private String raiseType;
 
     /**
+     * 募集方式显示名称
+     */
+    private String raiseTypeFmt;
+
+    /**
      * 杠杆水平上限显示名称
      */
     private String leverUpperLimitFmt;
@@ -254,6 +259,14 @@ public class ChbPeriodicPrdInfo extends BaseEntity {
 
     public void setRaiseType(String raiseType) {
         this.raiseType = raiseType;
+    }
+
+    public String getRaiseTypeFmt() {
+        return raiseTypeFmt;
+    }
+
+    public void setRaiseTypeFmt(String raiseTypeFmt) {
+        this.raiseTypeFmt = raiseTypeFmt;
     }
 
     public String getLeverUpperLimitFmt() {
