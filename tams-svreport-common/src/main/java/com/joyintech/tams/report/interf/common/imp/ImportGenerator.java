@@ -250,8 +250,8 @@ public final class ImportGenerator {
      * @param dataFileName 数据文件名
      * @param content 导入数据内容
      * @return 导入是否成功
-     * @throws IOException 
-     * @throws InterruptedException 
+     * @throws IOException
+     * @throws InterruptedException
      */
     public static boolean importToDB(ImpTable table, String path, String dataFileName,
                                      List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName) throws IOException, InterruptedException {
@@ -306,7 +306,7 @@ public final class ImportGenerator {
             return true;
         }
         // 合并mysql早期改造代码  add by zoujiamin  2021/04/20
-        boolean isMySqlDataBase = CommonUtil.isMySqlDataBase(); 
+        boolean isMySqlDataBase = CommonUtil.isMySqlDataBase();
         if(isMySqlDataBase){
         	 // 将数据文件通过ftp上传到数据库服务器
             String repMysqlServerFtpIp = CacheUtil.getSysParam(
@@ -458,13 +458,13 @@ public final class ImportGenerator {
 	            }else{
 	            	sftp.put(path + "/" + dataFileName, repMysqlServerFtpFilepath);
 	            }
-	            
+
 	            openChannel = (ChannelExec) session.openChannel("exec");
 	            openChannel.setInputStream(null);
 	            openChannel.setErrStream(System.err);
 	            //sh /home/tmp/test.sh home/tmp/test.txt
 	            openChannel.setCommand("sh " + repMysqlServerFtpFilepath  + "/" + table.getName()+".sh " + repMysqlServerFtpFilepath+"/"+dataFileName);
-	            openChannel.connect(); 
+	            openChannel.connect();
 
 	            reader = new BufferedReader(new InputStreamReader(openChannel.getInputStream(),Charset.forName("UTF-8")));
 	            String line = null;
@@ -488,10 +488,10 @@ public final class ImportGenerator {
 	            if (tmpFile.exists()) {
 	                tmpFile.delete();
 	            }
-	            
+
 	            // 删除ftp服务器数据文件
 //	            sftp.rm(repMysqlServerFtpFilepath+"/"+dataFileName);
-	            
+
 			} catch (JSchException | SftpException e) {
 				e.printStackTrace();
 			}finally{
@@ -671,8 +671,8 @@ public final class ImportGenerator {
      * @param dataFileName 数据文件名
      * @param content 导入数据内容
      * @return 导入是否成功
-     * @throws IOException 
-     * @throws InterruptedException 
+     * @throws IOException
+     * @throws InterruptedException
      */
     public static boolean importToDBByPart(ImpTable table, String path, List<String> content,
                                            Integer reportInterfOneTimeSqlLdrDataCount,
@@ -765,7 +765,7 @@ public final class ImportGenerator {
 
         return result;
     }
-}
+
 
 
 
@@ -836,4 +836,5 @@ public final class ImportGenerator {
 
         return true;
     }
+
 }
