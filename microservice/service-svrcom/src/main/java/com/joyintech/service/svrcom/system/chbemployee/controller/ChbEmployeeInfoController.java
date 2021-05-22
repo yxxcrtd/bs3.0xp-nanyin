@@ -7,6 +7,7 @@ import com.joyintech.tams.common.base.entity.ChbEmployeeInfo;
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.system.chbemployee.dto.ChbEmployeeInfoDto;
 import com.joyintech.tams.report.system.chbemployee.service.ChbEmployeeInfo001Service;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.report.system.mstbond.service.MstBondCreditRating001Service;
@@ -29,7 +30,7 @@ public class ChbEmployeeInfoController {
     private ChbEmployeeInfo001Service chbEmployeeInfo001Service;
 
     @PostMapping("findPage/{page}/{length}")
-    public Page<ChbEmployeeInfo> search(@RequestBody Map<String,Object> paramMap) {
+    public Page<ChbEmployeeInfoDto> search(@RequestBody Map<String,Object> paramMap) {
         return chbEmployeeInfo001Service.searchForPage(paramMap);
     }
 
@@ -40,8 +41,8 @@ public class ChbEmployeeInfoController {
     }
 
     @PostMapping("queryReportList")
-    public List<ChbEmployeeInfo> queryReportList(@RequestBody Map<String, Object> pageParam) {
-        List<ChbEmployeeInfo> list = chbEmployeeInfo001Service.queryReportList(pageParam);
+    public List<ChbEmployeeInfoDto> queryReportList(@RequestBody Map<String, Object> pageParam) {
+        List<ChbEmployeeInfoDto> list = chbEmployeeInfo001Service.queryReportList(pageParam);
         return list;
     }
 

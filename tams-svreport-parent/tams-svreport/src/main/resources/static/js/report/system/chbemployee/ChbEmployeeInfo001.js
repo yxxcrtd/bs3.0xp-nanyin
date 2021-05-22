@@ -16,8 +16,8 @@
             }
         },
         cols: [
-            { title: "数据状态", field:'statusName',sortField:'status',width:'5%'},
-            { title: "status",  visible:false, field:'status'},
+            { title: "数据状态", field:'svrStatusName',sortField:'svrStatus',width:'5%'},
+            { title: "svrStatus",  visible:false, field:'svrStatus'},
             { title: "从业人员类型", field:'employeeTypeStr',width:'8%',sortField:'employeeType'},
             { visible:false, field:'employeeType'},
             { title: "姓名", field:'employeeName',width:'8%',sortField:'employeeName'},
@@ -97,7 +97,7 @@
             var error='';
             var s='D';
             for(var i=0; i<listdto.length; i++){
-                    if(listdto[i].status.indexOf("D")!= -1){
+                    if(listdto[i].svrStatus.indexOf("D")!= -1){
                     error = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }
@@ -148,7 +148,7 @@
             }
             var errorMessage='';
             for(var i=0; i<selArr.length; i++){
-                if(selArr[i].status.indexOf("D")!= -1){
+                if(selArr[i].svrStatus.indexOf("D")!= -1){
                     errorMessage = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }
