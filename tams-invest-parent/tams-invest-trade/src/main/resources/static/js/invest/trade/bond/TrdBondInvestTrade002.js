@@ -2303,11 +2303,11 @@ var table;
                 } else if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
                     // 选择【上海证券交易所】或【深圳证券交易所】时，
                     // 1)交易平台可自主选择;
-                    // if($("#entrustId").val() != ''){
+                    if(/*$("#entrustId").val() != ''*/$('#tradeMarketMode').val()===SHARES_TRADE_MARKET_01){
                         $("#tradePlat").attr("disabled", true);
-                    // }else{
-                    //     $("#tradePlat").attr("disabled", false);
-                    // }
+                    }else{
+                        $("#tradePlat").attr("disabled", false);
+                    }
                     // 3)无交易成交单 此项不可填
                     $("#fTradeId").val("").attr("disabled", false);
 
