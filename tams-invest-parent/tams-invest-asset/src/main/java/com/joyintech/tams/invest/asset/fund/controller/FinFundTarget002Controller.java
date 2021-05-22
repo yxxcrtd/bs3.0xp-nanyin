@@ -135,7 +135,7 @@ public class FinFundTarget002Controller extends BaseController{
             /**jira:TWO-61 add by chendijun start**/
             dto.setCapiIncomeFeature(DictCodeList.是否_否.getValue());
             //add by yanya 20190830 增加投资性质默认值
-            dto.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
+//            dto.setInvestNature(DictCodeList.投资性质_固定收益类.getValue()); //modify by jiangpeng on 20210522 TISHKBS-1373
             /**jira:TWO-61 add by chendijun end**/
             //commonBusinessService.setTradeMarketId(dto,model);
             model.addAttribute("entity", dto);
