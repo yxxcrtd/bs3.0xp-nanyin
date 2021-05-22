@@ -426,8 +426,10 @@
 			date_format(p.RAISE_PSTRDATE, '%Y-%m-%d') raisePstrdate,
 			date_format(p.RAISE_PENDDATE, '%Y-%m-%d') raisePenddate
 		FROM chb_prd_baseinfo p
-		where
-			prod_id = #{prodId,jdbcType=VARCHAR}
+		where 1=1
+		  <if test="prodId != null and prodId != ''">
+			and prod_id = #{prodId,jdbcType=VARCHAR}
+		  </if>
 	</select>
 	<select id="selectchbPrdBaseinfoErrordata" resultType="com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfoErrodataWithBLOBs">
 			SELECT

@@ -79,7 +79,8 @@ public class ChbPrdBaseinfoController {
     @PostMapping("checkConfirmMsgForImportData")
     public List<ExcelValidDto> checkConfirmMsgForImportData(@RequestBody Map<String, Object> param) throws ParseException {
         List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        return chbPrdBaseinfo001Service.checkConfirmMsgForImportData(dataList);
+        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
+        return chbPrdBaseinfo001Service.checkConfirmMsgForImportData(dataList,tempList);
     }
     /**
      * 导入数据文件
@@ -91,11 +92,12 @@ public class ChbPrdBaseinfoController {
     @PostMapping("importData")
     public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) throws ParseException {
         List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-        String userName=param.get("userName")==null?null:param.get("userName").toString();
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return this.chbPrdBaseinfo001Service.importData(dataList,tempList,userName,orgCode,deptCode);
+//        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
+//        String userName=param.get("userName")==null?null:param.get("userName").toString();
+//        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
+//        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
+//        return this.chbPrdBaseinfo001Service.importData(dataList,tempList,userName,orgCode,deptCode);
+        return this.chbPrdBaseinfo001Service.importData(dataList);
     }
 
     @PostMapping("updateOne")

@@ -100,6 +100,7 @@ public class ChbPrdBaseinfoService extends BaseService<ChbPrdBaseinfo> {
     public List<ExcelValidDto>  checkConfirmMsgForImportData(String fileName)  {
         Map<String,Object> param = new HashMap<String,Object>();
         param.put("dataList", ExcelUtil.getDataList1(fileName));
+        param.put("tempList", ExcelUtil.getTempList1(fileName));
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());
         return  restTemplate.postForList(
