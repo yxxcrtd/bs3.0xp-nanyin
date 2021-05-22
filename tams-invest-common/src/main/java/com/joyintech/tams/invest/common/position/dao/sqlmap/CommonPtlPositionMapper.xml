@@ -76,7 +76,7 @@
     
     <select id="selectAcctIdByPortfolioId" resultType="String"  >
         select ACCT_NO from PTL_CAPACCT_INFO 
-        where PORTFOLIO_ID =#{portfolioId} and acct_type='A01  and ccy=#{ccy}
+        where PORTFOLIO_ID =#{portfolioId} and acct_type='A01'  and ccy=#{ccy}
     </select>
     
     <select id="selectAcctIdBySecAcctId" resultType="String"  >
