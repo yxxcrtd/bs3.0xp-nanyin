@@ -9,5 +9,4 @@ public interface RepProdIndexDetailMapper {
 
     int insertSelective(RepProdIndexDetail record);
 
-    int insertBasicByBasicInfo(RepProdIndexDetail record);
 }
