@@ -164,16 +164,15 @@
                         a.FINANCIE    as financie,/** 融资人**/
                         a.ASSET_YIELD as assetYield,/** 项目收益率(利率)%**/
                         a.MDATE       as mdate /** 到期日 **/
-        from CHB_INVEST_TRADE t,
+        from chb_month_asset_position t,
              CHB_ASSET_INFO a
         where t.ASSET_CODE = a.ASSET_CODE
           and a.`STATUS` = 'E'
-			and t.`STATUS` = 'E'
 			and a.ASSET_TYPE2 in (
 				select SRCFIELD1 from chb_type_mapping_ex where MAPPINGCODE = 'ChbInvestOperation001'
 			) /** 指定非标资产的类别**/
 			and t.PROD_ID = #{prodId,jdbcType=VARCHAR}
-          and t.DEALDATE = #{endReportDate,jdbcType=DATE}
+          and t.ENDDATE = #{endReportDate,jdbcType=DATE}
         order by a.ASSET_TYPE2, a.ASSET_CODE
     </select>
 
