@@ -42,7 +42,7 @@
 				</foreach>
 			</if>
 			<if test="tradeCode != null and tradeCode.trim !=''">
-			    and a.TRADE_CODE like concat('%', #{tradeCode},'%')
+			    and a.TRADE_CODE like concat(concat('%', #{tradeCode}),'%')
 			</if>
 			<if  test="dealdateStart != null and dealdateStart.trim !=''">
 				and a.DEALDATE >= #{dealdateStart}
@@ -58,7 +58,7 @@
 		</where>
 		UNION ALL
 		SELECT
-		'A' AS status,
+		'A' AS status2,
 		TRADE_CODE AS tradeCode,
 		PROD_ID AS prodId,
 		ASSET_CODE AS assetCode,
@@ -97,7 +97,7 @@
 			</foreach>
 		</if>
 		<if test="tradeCode != null and tradeCode.trim !=''">
-				and i.TRADE_CODE like concat('%', #{tradeCode},'%')
+				and i.TRADE_CODE like concat(concat('%', #{tradeCode}),'%')
 		</if>
 		<if  test="dealdateStart != null and dealdateStart.trim !=''">
 			and i.DEALDATE >= #{dealdateStart}
@@ -105,11 +105,9 @@
 		<if  test="dealdateEnd != null and dealdateEnd.trim !=''">
 			and i.DEALDATE &lt;= #{dealdateEnd}
 		</if>
-		<if test="selectStatus != null and selectStatus.size() > 0">
-			<foreach collection="selectStatus" item="status" open="AND i.STATUS IN (" close=")" separator=",">
-				#{status,jdbcType=VARCHAR}
-			</foreach>
-		</if>
+			<if test='selectStatus != null and selectStatus.size()!=0 and !selectStatus.contains("A") '>
+				and 1 = 2
+			</if>
 		</where>
 	</select>
 
@@ -143,7 +141,7 @@
 		FROM
 		chb_invest_trade a
 		<where>
-			NOT EXISTS ( SELECT 1 FROM chb_invest_trade_errordata WHERE TRADE_CODE = a.TRADE_CODE AND STATUS IN ( 'A', 'E' ) ) UNION ALL
+			NOT EXISTS ( SELECT 1 FROM chb_invest_trade_errordata WHERE TRADE_CODE = a.TRADE_CODE AND STATUS IN ( 'A', 'E' ) )
 			<if test="prodId != null and prodId.size() > 0">
 				<foreach collection="prodId" item="pId" open="AND a.PROD_ID IN (" close=")" separator=",">
 					#{pId,jdbcType=VARCHAR}
@@ -155,7 +153,7 @@
 				</foreach>
 			</if>
 			<if test="tradeCode != null and tradeCode.trim !=''">
-				and a.TRADE_CODE like concat('%', #{tradeCode},'%')
+				and a.TRADE_CODE like concat(concat('%', #{tradeCode}),'%')
 			</if>
 			<if  test="dealdateStart != null and dealdateStart.trim !=''">
 				and a.DEALDATE >= #{dealdateStart}
@@ -169,6 +167,7 @@
 				</foreach>
 			</if>
 		</where>
+		UNION ALL
 		SELECT
 		'导出' as type,
 		'A' AS status,
@@ -210,7 +209,7 @@
 				</foreach>
 			</if>
 			<if test="tradeCode != null and tradeCode.trim !=''">
-				and i.TRADE_CODE like concat('%', #{tradeCode},'%')
+				and i.TRADE_CODE like concat(concat('%', #{tradeCode}),'%')
 			</if>
 			<if  test="dealdateStart != null and dealdateStart.trim !=''">
 				and i.DEALDATE >= #{dealdateStart}
@@ -218,10 +217,8 @@
 			<if  test="dealdateEnd != null and dealdateEnd.trim !=''">
 				and i.DEALDATE &lt;= #{dealdateEnd}
 			</if>
-			<if test="selectStatus != null and selectStatus.size() > 0">
-				<foreach collection="selectStatus" item="status" open="AND i.STATUS IN (" close=")" separator=",">
-					#{status,jdbcType=VARCHAR}
-				</foreach>
+			<if test='selectStatus != null and selectStatus.size()!=0 and !selectStatus.contains("A") '>
+				and 1 = 2
 			</if>
 		</where>
 	</select>
