@@ -220,16 +220,17 @@ public class ChbPeriodicService {
             dataMap.put("reportTypeFmt", DictCodeListExt3.from(DictCode.中债定期报告类型, reportType).getCodeName());
             dataMap.put(DictCode.产品类型_中债.getValue(), chbPrdBaseinfo.getProdtype());
             dataMap.put("year", StringUtil.substring(dqEndDate, 0, 4));
+            dataMap.putAll(param);
 
-            ChbPeriodicValue chbPeriodicValue = this.qryChbPeriodicValue(param);
+            ChbPeriodicValue chbPeriodicValue = this.qryChbPeriodicValue(dataMap);
             if (!StringUtil.isEmptyList(chbPrdBaseinfoDetailList)) {
-                List<ChbPeriodicValue> chbPeriodicValues = this.qryChbPeriodicValueDetail(param);
+                List<ChbPeriodicValue> chbPeriodicValues = this.qryChbPeriodicValueDetail(dataMap);
                 dataMap.put("valueList", chbPeriodicValues);
             }
-            List<ChbPeriodicPosition> chbPeriodicPositionList = this.qryChbPeriodicPosition(param);
-            List<ChbPeriodicPositionTop10> chbPeriodicPositionTop10List = this.qryChbPeriodicPositionTop10(param);
-            List<ChbPeriodicAssetInfo> chbPeriodicAssetInfoList = this.qryChbPeriodicAssetInfo(param);
-            List<ChbPeriodicBonus> chbPeriodicBonusList = this.qryChbPeriodicBonus(chbPrdBaseinfo, param);
+            List<ChbPeriodicPosition> chbPeriodicPositionList = this.qryChbPeriodicPosition(dataMap);
+            List<ChbPeriodicPositionTop10> chbPeriodicPositionTop10List = this.qryChbPeriodicPositionTop10(dataMap);
+            List<ChbPeriodicAssetInfo> chbPeriodicAssetInfoList = this.qryChbPeriodicAssetInfo(dataMap);
+            List<ChbPeriodicBonus> chbPeriodicBonusList = this.qryChbPeriodicBonus(chbPrdBaseinfo, dataMap);
 
             dataMap.put("prdInfo", chbPeriodicPrdInfo);//产品信息
             dataMap.put("value", chbPeriodicValue);
@@ -575,7 +576,7 @@ public class ChbPeriodicService {
      */
     private ChbPeriodicIndex qryQcPeriodicIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.put("prodId", params.get("prodId"));
+        map.putAll(params);
         // 若产品起息日>=本次报告开始日，则取产品起息日
         if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
                 || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
@@ -594,7 +595,7 @@ public class ChbPeriodicService {
      */
     private List<ChbPeriodicIndex> qryQcPeriodicDetailIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.put("prodId", params.get("prodId"));
+        map.putAll(params);
         // 若产品起息日>=本次报告开始日，则取产品起息日
         if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
                 || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
@@ -613,8 +614,8 @@ public class ChbPeriodicService {
      */
     private ChbPeriodicIndex qryQmPeriodicIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.put("prodId", params.get("prodId"));
         map.put("qryDate", params.get("endReportDate"));
+        map.putAll(params);
         return qryPeriodicIndexHandler(map);
     }
 
@@ -626,7 +627,7 @@ public class ChbPeriodicService {
      */
     private List<ChbPeriodicIndex> qryQmPeriodicDetailIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.put("prodId", params.get("prodId"));
+        map.putAll(params);
         map.put("qryDate", params.get("endReportDate"));
         return qryPeriodicIndexDetailHandler(map);
     }

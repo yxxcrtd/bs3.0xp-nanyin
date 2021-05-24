@@ -559,7 +559,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>公募</w:t>
+                                        <w:t>${prdInfo.raiseTypeFmt!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -839,7 +839,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${prdInfo.leverageLevelFmt!}</w:t>
+                                        <w:t>${prdInfo.leverUpperLimitFmt!}</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
