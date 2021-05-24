@@ -1815,7 +1815,10 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 					}
 					if(StringUtils.isEmpty(confirmMsg)){
 						if (DictCodeListExt2.价格模式_指定价格.getValue().equals(priceModel)) {
-							unit.setPriceModel(DictCodeListExt2.价格模式_限价指令.getValue());
+							confirmMsg = etrCommonService.StringAddByBr(confirmMsg, this.getMessage("ETR_ST_007", lineNo));
+							promptMsg = etrCommonService.StringAddByBr(promptMsg, confirmMsg);
+							confirmMsg = "";
+							//unit.setPriceModel(DictCodeListExt2.价格模式_限价指令.getValue());
 						} else {
 							unit.setPriceModel(priceModel);
 						}
