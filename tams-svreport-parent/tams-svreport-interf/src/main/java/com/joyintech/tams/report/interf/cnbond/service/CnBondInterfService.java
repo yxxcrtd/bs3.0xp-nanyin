@@ -694,10 +694,11 @@ public class CnBondInterfService extends InterfService {
         ExtFprDClient.setRegBankCode(registBankCode);
 
         logger.info("CnBondInterfService 报送中债处理开始：" + DateUtil.getCurrentDateTime());
+        AsynReportEntity asynReportEntity = null;
         if(StrUtil.equals(dangbanFlag, DictCodeList.是否_中债_是.getValue())) {
-            AsynReportEntity asynReportEntity = markDangBan();
+            asynReportEntity = markDangBan();
         }else {
-            CnBondUtil.recurrence(WMRS + fileType + STRING_001_01, cbFilepath + fileZip);
+            asynReportEntity = CnBondUtil.recurrence(WMRS + fileType + STRING_001_01, cbFilepath + fileZip);
         }
         logger.info("CnBondInterfService 报送中债处理结束：" + DateUtil.getCurrentDateTime());
         File a = new File("./AppCfg/DC/cfg");
