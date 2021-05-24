@@ -222,23 +222,21 @@
 	                    <a id="EtrExchangeTrade001_btn_submit" class="layui-btn layui-btn-sm  btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
 	                    <a id="EtrExchangeTrade001_btn_reset" class="layui-btn layui-btn-sm  btn-reset" data-th-text="#{SysCommon.reset}">重置</a>
 	                </div>
-	            </div>	
+	            </div>
 			</div>
 			<div class="right_panel" id="right_panel_div">
 				<div class="right_top_panel" id="right_top_panel_div">
 					<iframe th:src="@{/invest/entrust/etrexchangetrade/EtrExchangeTrade002/init}" width="100%"
 	                        height="100%" frameborder="0" style="border:none;"></iframe>
-				</div>			
+				</div>
 				<div class="right_bottom_panel" id="right_bottom_panel_div">
 					<iframe th:src="@{/invest/entrust/etrexchangetrade/EtrExchangeTrade003/init}" width="100%"
 	                        height="100%" frameborder="0" style="border:none;"></iframe>
-				</div>	
+				</div>
 			</div>
 			<div id="baseRiskMathComm" class="page-component" style="display: none;"  th:data-path="@{/component/common/BaseRiskMathComm/init}"
 			     th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${entrustId}'}|">
-			</div>	
-			
-             
+			</div>
 		</div>
 		
 	</div>
@@ -246,7 +244,7 @@
 		<script data-th-inline="javascript" type="text/javascript">
 			var ENTRUST_STATUS_05 = /*[[${ENTRUST_STATUS_05}]]*/'05';
 			var ENTRUST_STATUS_07 = /*[[${ENTRUST_STATUS_07}]]*/'07';
-			var isFromToDoList = /*[[${isFromToDoList}]]*/;
+			var isFromToDoList = /*[[${isFromToDoList}]]*/'';
             var FINPROD_TYPE_TG_F01 = /*[[${FINPROD_TYPE_TG_F01}]]*/'';
             var FINPROD_TYPE_TG_F02 = /*[[${FINPROD_TYPE_TG_F02}]]*/'';
             var FINPROD_TYPE_TG_F03 = /*[[${FINPROD_TYPE_TG_F03}]]*/'';

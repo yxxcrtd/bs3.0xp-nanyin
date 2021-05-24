@@ -312,9 +312,6 @@ function hideLeftTopPanel(){
     $("div.left_top_panel").each(function(i,v){
         $(v).css("display","none");
     });
-    $(".layui-form-label").css('width','20%');
-    $(".layui-elem-field").css('min-width','800px');
-    $(".left_bottom_panel").css('height','600px');
 }
 
 function showLeftTopPanel(){
