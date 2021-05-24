@@ -379,6 +379,9 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
                 交易流程状态);
             for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtos1) {
                 TrdProductDeal deal1 = baseTradeProductDealDto.getTrdProductDeal();
+                // add by jiangpeng on 20210524 start ZGBSSE-226
+                deal1.setPayDate(entity.getPayDate());
+                // add by jiangpeng on 20210524 end ZGBSSE-226
                 deal1.setTradeId(entity.getBizCode() + 'R');
                 deal1.setCreateUser(tradeDto.getCreateUser());
                 deal1.setCreateTime(tradeDto.getCreateTime());

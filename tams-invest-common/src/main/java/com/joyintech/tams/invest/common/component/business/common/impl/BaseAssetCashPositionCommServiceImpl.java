@@ -153,7 +153,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
          */
         if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
             && DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()) && 卖出_行权_到期.contains(deal.getPs())) {
-            resultDto.setCdate(deal.getSettleDate());
+            resultDto.setCdate(deal.getPayDate());// modify by jiangpeng on 20210524 ZGBSSE-226
             resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
 
             if (DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())
