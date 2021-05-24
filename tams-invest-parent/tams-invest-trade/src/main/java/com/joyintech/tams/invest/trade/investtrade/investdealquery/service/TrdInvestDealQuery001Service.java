@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.trade.investtrade.investdealquery.service;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -563,7 +564,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 			// 传放地址
 			String depositfilePath = CacheUtil.getSysParam(
 					GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-			depositfile = new File(depositfilePath + File.separator + flieName);
+			depositfile = new SafelyFile(depositfilePath + File.separator + flieName);
 			if (!depositfile.getParentFile().exists()) {
 				depositfile.getParentFile().mkdirs();
 			}
@@ -610,7 +611,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	@SuppressWarnings("all")
 	public ResponseEntity<byte[]> exportZip(List<File> files, String fileName) {
 		String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-		File tmpDir = new File(
+		File tmpDir = new SafelyFile(
 				exportFilePath + File.separator + fileName.substring(0, fileName.length()-4));
 		if (tmpDir.exists()) {
 			tmpDir.delete();
@@ -618,7 +619,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		tmpDir.mkdirs();
 		ZipOutputStream zipOut= null;
 		try {
-			File zipFile = new File(exportFilePath + File.separator + fileName);
+			File zipFile = new SafelyFile(exportFilePath + File.separator + fileName);
 			zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
 			InputStream input = null;
 			if (files != null && !files.isEmpty()) {

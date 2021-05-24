@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -225,9 +226,9 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
             String exportFilePath = CacheUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String zipFileName = FileNameUtil.createFileName("zip");
-            targetFile = new File(exportFilePath + File.separator + zipFileName);
+            targetFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             try {
-                ZipFileUtil.compressZip(targetFile, true, fileList.toArray(new File[] {}));
+                ZipFileUtil.compressZip(targetFile, true, fileList.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件
@@ -373,9 +374,9 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
             String exportFilePath = CacheUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String zipFileName = FileNameUtil.createFileName("zip");
-            targetFile = new File(exportFilePath + File.separator + zipFileName);
+            targetFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             try {
-                ZipFileUtil.compressZip(targetFile, true, sourceFiles.toArray(new File[] {}));
+                ZipFileUtil.compressZip(targetFile, true, sourceFiles.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件
@@ -506,7 +507,7 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
         String outFileName = FileNameUtil.createFileName(fileType);
         // 从系统配置参数中获取文件存放路径
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-        File file = new File(exportFilePath + File.separator + outFileName);
+        File file = new SafelyFile(exportFilePath + File.separator + outFileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
@@ -563,7 +564,7 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
             }
             // 从配置文件中获取模板文件  以及文件类型
             String tempFilePath = fileName + fileType;
-            File templeteFile = new File(buildTempleteFilePath(tempFilePath));
+            File templeteFile = new SafelyFile(buildTempleteFilePath(tempFilePath));
             reportConfig.setTempleteFile(fileName + fileType);
             // 模板输入流
             if (templeteFile.exists()) {

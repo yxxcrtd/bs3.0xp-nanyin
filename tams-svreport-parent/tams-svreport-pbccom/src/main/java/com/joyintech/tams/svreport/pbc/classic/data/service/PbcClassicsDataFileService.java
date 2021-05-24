@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -2234,8 +2235,8 @@ public class PbcClassicsDataFileService {
     	for(String folderPath : files){
     		  String zipFileName = folderPath.replace("_", "")+".zip";
     		  zipFileList.add(zipFileName);
-    		  File outFile =  new File(zipFileName);
-    		  File[] allFiles = new File(folderPath).listFiles();
+    		  File outFile =  new SafelyFile(zipFileName);
+    		  File[] allFiles = new SafelyFile(folderPath).listFiles();
     		  if(outFile.exists()){
     			  outFile.delete();
     		  }
@@ -2245,7 +2246,7 @@ public class PbcClassicsDataFileService {
     				  //压缩删除文件
     				  ZipFileUtil.compressZip(outFile, true, allFiles);
     				  //删除文件夹
-    				  new File(folderPath).delete();
+    				  new SafelyFile(folderPath).delete();
     			  } else {
     				  ZipFileUtil.compressZip(outFile, false, allFiles);//压缩文件
     			  }
@@ -2380,12 +2381,12 @@ public class PbcClassicsDataFileService {
         if (size < 1) {
         	return "";
         }
-        File[] allFiles = new File[size];
+        File[] allFiles = new SafelyFile[size];
         // 最终文件路径
     	String finalZipPath = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH") + "temporary" + File.separator + "手工生成人行数据文件" + dateStr + ".zip";
-    	File outFile =  new File(finalZipPath);
+    	File outFile =  new SafelyFile(finalZipPath);
     	for (int i = 0; i < size; i ++) {
-    		allFiles[i] = new File(zipFileName.get(i));
+    		allFiles[i] = new SafelyFile(zipFileName.get(i));
     	}
     	// 压缩文件并删除原文件
     	try {

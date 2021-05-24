@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ResultContext;
@@ -1636,7 +1637,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 }
                 // 任务结束，停止线程池的所有线程
                 service.shutdown();
-                Collection<File> files = FileUtils.listFiles(new File(tmpPath),
+                Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath),
                         new String[] {"tmp"}, false);
                 List<String> content = new ArrayList<>();
                 List<String> subContent = new ArrayList<>(equityList.size());
@@ -1910,7 +1911,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 }
                 // 任务结束，停止线程池的所有线程
                 service.shutdown();
-                Collection<File> files = FileUtils.listFiles(new File(tmpPath),
+                Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath),
                         new String[] {"tmp"}, false);
                 List<String> content = new ArrayList<>();
                 List<String> subContent = new ArrayList<>(equityList.size());
@@ -2350,7 +2351,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
 
 //        equityList.forEach(item -> lines.add(ImportGenerator.buildTxt(item, columns)));
         try {
-            FileUtils.writeLines(new File(path + "_" + UUID.randomUUID().toString() + ".tmp"),
+            FileUtils.writeLines(new SafelyFile(path + "_" + UUID.randomUUID().toString() + ".tmp"),
                 "UTF-8", lines, true);
         }
         catch (IOException e) {
@@ -3085,9 +3086,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             EquityInfo001Dto equityInfo001DtoTemp = null;
             //add by liubin start 将接口接入的数据输出到日志文件中
     	    String checkDataLogFilePath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, InterfConstant.SQLLDR_LOG_FILEPATH);
-    	    File file = new File(checkDataLogFilePath+File.separator+"check_data_log.txt");
+    	    File file = new SafelyFile(checkDataLogFilePath+File.separator+"check_data_log.txt");
     	    if(file.exists()){
-        		file = new File(checkDataLogFilePath+File.separator+"check_data_log_"+System.currentTimeMillis()+".txt");
+        		file = new SafelyFile(checkDataLogFilePath+File.separator+"check_data_log_"+System.currentTimeMillis()+".txt");
         	}
     	    StringBuffer messageInfo = new StringBuffer();
     	    //add by liubin end
@@ -3490,9 +3491,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             EquityInfo001Dto equityInfo001DtoTemp = null;
             //add by liubin start 将接口接入的数据输出到日志文件中
     	    String checkDataLogFilePath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, InterfConstant.SQLLDR_LOG_FILEPATH);
-    	    File file = new File(checkDataLogFilePath+File.separator+"check_data_log.txt");
+    	    File file = new SafelyFile(checkDataLogFilePath+File.separator+"check_data_log.txt");
     	    if(file.exists()){
-        		file = new File(checkDataLogFilePath+File.separator+"check_data_log_"+System.currentTimeMillis()+".txt");
+        		file = new SafelyFile(checkDataLogFilePath+File.separator+"check_data_log_"+System.currentTimeMillis()+".txt");
         	}
     	    StringBuffer messageInfo = new StringBuffer();
     	    //add by liubin end

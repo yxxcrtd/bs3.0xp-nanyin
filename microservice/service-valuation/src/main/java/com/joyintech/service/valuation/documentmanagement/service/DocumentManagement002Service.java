@@ -62,7 +62,7 @@ public class DocumentManagement002Service {
 		String fileName = FileNameUtil.formatFileName(filePath);
 
 		File file = new SafelyFile(filePath);
-		boolean rec = file.renameTo(new File(fileName));
+		boolean rec = file.renameTo(new SafelyFile(fileName));
 		if (rec) {
 			logger.info("处理成功");
 		}

@@ -23,6 +23,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
@@ -266,10 +267,10 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 	 */
 	public ResponseEntity<byte[]> downLoadReportInfo(String filenpath) throws IOException{
 		String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
-		File filepath=new File(uploadFilePath+filenpath);///NB/GLJY
+		File filepath=new SafelyFile(uploadFilePath+filenpath);///NB/GLJY
 		//检查文件夹是否存在
 		String zipFileName = FileNameUtil.createFileName("zip");
-		File zipFile = new File(uploadFilePath + File.separator + zipFileName);
+		File zipFile = new SafelyFile(uploadFilePath + File.separator + zipFileName);
 		ZipOutputStream  zipOut =null;
 		try{
 			if(filepath.exists()){

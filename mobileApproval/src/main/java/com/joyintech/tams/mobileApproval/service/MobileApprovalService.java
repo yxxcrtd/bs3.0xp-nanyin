@@ -9,6 +9,7 @@ import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.PasswordHelper;
 import com.joyintech.framework.security.SecurityUtil;
@@ -1158,7 +1159,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
         List<File> fileList = new ArrayList<>();
         SysUploadFileInfo fileInfo = mobileApprovalMapper.queryFileInfo(param.get("fileNo").toString());
         if (fileInfo != null) {
-            File file = new File(fileInfo.getPath());
+            File file = new SafelyFile(fileInfo.getPath());
             //下载附件
             if (!file.exists()) {
 //                throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");
@@ -1178,7 +1179,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
         List<File> fileList = new ArrayList<>();
         SysUploadFileInfo fileInfo = mobileApprovalMapper.queryFileInfo(param.get("fileNo").toString());
         if (fileInfo != null) {
-            File file = new File(fileInfo.getPath());
+            File file = new SafelyFile(fileInfo.getPath());
             //下载附件
             if (!file.exists()) {
 //                throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");
@@ -1194,7 +1195,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     public Object getFileUrl(Map<String, Object> param) throws IOException {
         SysUploadFileInfo fileInfo = mobileApprovalMapper.queryFileInfo(param.get("fileNo").toString());
         if (fileInfo != null) {
-            File file = new File(fileInfo.getPath());
+            File file = new SafelyFile(fileInfo.getPath());
             //下载附件
             if (!file.exists()) {
                 throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");

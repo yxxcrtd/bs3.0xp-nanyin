@@ -508,7 +508,7 @@ public final class InterfUtil {
      * @since 1.0
      */
     public static boolean createFolder(String path) {
-        File file = new File(path);
+        File file = new SafelyFile(path);
         if (!file.isDirectory()) {
             try {
                 if (file.mkdirs()) {

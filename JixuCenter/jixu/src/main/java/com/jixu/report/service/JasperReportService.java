@@ -123,7 +123,7 @@ public class JasperReportService {
 //		String filename = tempFile.getName().substring(0,tempFile.getName().indexOf("."));
 		InputStream ins = null;
 		try {
-			ins = new BufferedInputStream(new FileInputStream(reportfile));
+			ins = new BufferedInputStream(new FileInputStream(new SafelyFile(reportfile)));
 			//response.setContentType("application/" + resolveContentType(filename));
 			response.setContentType("application/pdf");
 			response.setHeader("filename", tempFile.getName().substring(0,tempFile.getName().indexOf(".")));

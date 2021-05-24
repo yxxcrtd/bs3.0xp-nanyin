@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.interf.chb.assetinfo.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.FileImpService;
 import com.joyintech.tams.common.InterfDefine;
@@ -158,7 +159,7 @@ public class SvrSecRatingFileImpService extends FileImpService {
 			}
 			// 任务结束，停止线程池的所有线程
 			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/MST_BOND_CREDIT_RATING/"), new String[] { "tmp" }, false);
+			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/MST_BOND_CREDIT_RATING/"), new String[] { "tmp" }, false);
 			logger.debug("获取债券评级sqlloder文件个数"+files.size());
 			List<String> content = new ArrayList<>(listData.size());
 			String result = "";

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +94,7 @@ public class JasparConnectUtilService {
         
         String path = FileNameUtil.createUploadFilePath("");
         logger.info("判断是否有指定文件夹开始=====");
-        File localFile = new File(path+ File.separator+filePathName);
+        File localFile = new SafelyFile(path+ File.separator+filePathName);
         File dir = localFile.getParentFile();
         if (!dir.exists()) {
             dir.mkdirs();
@@ -152,7 +153,7 @@ public class JasparConnectUtilService {
 		ReportInfo r1 = reportManager.getReportByURI(templateId);
 		reportManager.setDataSource(master);
 		String path = FileNameUtil.createUploadFilePath("");
-		File filepath = new File(path);
+		File filepath = new SafelyFile(path);
 		if(!filepath.exists()){
 			filepath.mkdirs();
 		}
@@ -160,7 +161,7 @@ public class JasparConnectUtilService {
 				+ DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
 		reportManager.exportReport(r1, params, fileType, path+ File.separator+filePathName);
 		fileName =fileName+GlobalConstant.POINT+fileType;
-		File localFile = new File(path+ File.separator+filePathName);
+		File localFile = new SafelyFile(path+ File.separator+filePathName);
 		logger.info("UploadFile fileName= "  + path+ File.separator+filePathName);
 		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
                 localFile);
@@ -205,7 +206,7 @@ public class JasparConnectUtilService {
         
         String path = FileNameUtil.createUploadFilePath("");
         
-        File localFile = new File(path+ File.separator+fileName);
+        File localFile = new SafelyFile(path+ File.separator+fileName);
         File dir = localFile.getParentFile();
         if (!dir.exists()) {
             dir.mkdirs();
@@ -270,7 +271,7 @@ public class JasparConnectUtilService {
 		ReportInfo r1 = reportManager.getReportByURI(repId);
 		reportManager.setDataSource(master);
 		String path = FileNameUtil.createUploadFilePath("");
-		File filepath = new File(path);
+		File filepath = new SafelyFile(path);
 		if(!filepath.exists()){
 			filepath.mkdirs();
 		}
@@ -278,7 +279,7 @@ public class JasparConnectUtilService {
 		fileName = fileName + GlobalConstant.UNDER_LINE + System.currentTimeMillis() +GlobalConstant.POINT+ fileType;
 		reportManager.exportReport(r1, params, fileType, path+ File.separator+fileName);
 
-		File localFile = new File(path+ File.separator+fileName);
+		File localFile = new SafelyFile(path+ File.separator+fileName);
 		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
 				localFile);
 		//存入SYS_UPLOAD_FILE_INFO表

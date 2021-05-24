@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.aspectj.util.FileUtil;
@@ -313,7 +314,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 			String exportFilePath = CacheUtil.getSysParam(
 	                GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 	        String zipFileName = FileNameUtil.createFileName("zip");
-	        File zipFile = new File(exportFilePath + File.separator + zipFileName);
+	        File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
 	        ZipOutputStream  zipOut =null;
 			if(StringUtil.isNotEmpty(reportList)){
 				String basePath  = CacheUtil.getSysParam(KEY_REPORT_DOWNLOAD_PATH);
@@ -345,8 +346,8 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								
 								if(StringUtil.isNotEmpty(report.getFilepath())){
 									downloadPathPeople = this.getReportPath(report.getFilepath());
-									File downloadFilePeopleTmp = new File(downloadPathPeople);
-									downloadFilePeople = new File(downloadFilePeopleTmp.getParent()+File.separator+report.getFilename());
+									File downloadFilePeopleTmp = new SafelyFile(downloadPathPeople);
+									downloadFilePeople = new SafelyFile(downloadFilePeopleTmp.getParent()+File.separator+report.getFilename());
 									FileUtil.copyFile(downloadFilePeopleTmp, downloadFilePeople);
 								}
 								// 获取报表下载路径
@@ -355,20 +356,20 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								if(StringUtil.isNotEmpty(report.getSysFilepath())){
 									downloadPath = this.getReportPath(report.getSysFilepath());
 									
-									File downloadFileTmp = new File(downloadPath);
-								    downloadFile = new File(downloadFileTmp.getParent()+File.separator+report.getSysFilename());
+									File downloadFileTmp = new SafelyFile(downloadPath);
+								    downloadFile = new SafelyFile(downloadFileTmp.getParent()+File.separator+report.getSysFilename());
 									FileUtil.copyFile(downloadFileTmp, downloadFile);
 								}
 								
 								// 第一层目录
-								firstFile = new File(firstPath);
+								firstFile = new SafelyFile(firstPath);
 								// 判断第一层文件夹是否存在，否则创建
 								if(!firstFile.exists()){
 									firstFile.mkdir();
 								}
 								String secondPath = firstPath + File.separator + report.getReportCategory();
 								// 第二层目录
-								secondFile = new File(secondPath);
+								secondFile = new SafelyFile(secondPath);
 								// 判断第二层文件夹是否存在，否则创建
 								if(!secondFile.exists()){
 									secondFile.mkdir();
@@ -391,7 +392,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 											File secondPeopleFile = null;
 											if(StringUtil.isNotEmpty(newFileName)) {
 												String secondPeoplePath = secondPath + File.separator + newFileName;
-												secondPeopleFile = new File(secondPeoplePath);
+												secondPeopleFile = new SafelyFile(secondPeoplePath);
 											}
 											
 											if(StringUtil.isNotEmpty(downloadFilePeople)){
@@ -413,7 +414,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 											File secondSysFile = null;
 											if(StringUtil.isNotEmpty(newSysFileName)) {
 												String secondSysPath = secondPath + File.separator + newSysFileName;
-												secondSysFile = new File(secondSysPath);
+												secondSysFile = new SafelyFile(secondSysPath);
 											}
 							
 											if(StringUtil.isNotEmpty(secondSysFile)) {
@@ -438,7 +439,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 											File secondPeopleFile = null;
 											if(StringUtil.isNotEmpty(newFileName)) {
 												String secondPeoplePath = secondPath + File.separator + newFileName;
-												secondPeopleFile = new File(secondPeoplePath);
+												secondPeopleFile = new SafelyFile(secondPeoplePath);
 											}
 											if(StringUtil.isNotEmpty(secondPeopleFile)) {
 												FileUtil.copyFile(downloadFilePeople, secondPeopleFile);
@@ -453,7 +454,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 												File secondSysFile = null;
 												if(StringUtil.isNotEmpty(newSysFileName)) {
 													String secondSysPath = secondPath + File.separator + newSysFileName;
-													secondSysFile = new File(secondSysPath);
+													secondSysFile = new SafelyFile(secondSysPath);
 												}
 												if(StringUtil.isNotEmpty(secondSysFile)) {
 														FileUtil.copyFile(downloadFile, secondSysFile);
@@ -499,7 +500,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 reportName=report.getProdid()+GlobalConstant.UNDER_LINE+reportName;
                             }
 							String reportCategoryName=reportConfirmManage001Mapper.getReportCategoryName(report.getReportCategory());
-							File baseFile=new File(basePath);
+							File baseFile=new SafelyFile(basePath);
 							if(!baseFile.exists()){
 								baseFile.mkdir();
 							}
@@ -508,8 +509,8 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 							File downloadFilePeople = null;
 							if(StringUtil.isNotEmpty(report.getFilepath())){
 								downloadPathPeople = this.getReportPath(report.getFilepath());
-								File downloadFilePeopleTmp = new File(downloadPathPeople);
-								downloadFilePeople = new File(downloadFilePeopleTmp.getParent()+File.separator+report.getFilename());
+								File downloadFilePeopleTmp = new SafelyFile(downloadPathPeople);
+								downloadFilePeople = new SafelyFile(downloadFilePeopleTmp.getParent()+File.separator+report.getFilename());
 								FileUtil.copyFile(downloadFilePeopleTmp, downloadFilePeople);
 							}
 							// 获取报表下载路径（系统生成）
@@ -518,9 +519,9 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 							if(StringUtil.isNotEmpty(report.getSysFilepath())){
 								downloadPath = this.getReportPath(report.getSysFilepath());
 								
-								File downloadFileTmp = new File(downloadPath);
+								File downloadFileTmp = new SafelyFile(downloadPath);
 								
-							    downloadFile = new File(downloadFileTmp.getParent()+File.separator+report.getProdName()+report.getSysFilename());
+							    downloadFile = new SafelyFile(downloadFileTmp.getParent()+File.separator+report.getProdName()+report.getSysFilename());
 								FileUtil.copyFile(downloadFileTmp, downloadFile);
 							}
 							//需要系统文件
@@ -539,7 +540,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 									File peopleFile = null;
 									if(StringUtil.isNotEmpty(newFileName)) {
 										String peoplePath = basePath + File.separator + newFileName;
-										peopleFile = new File(peoplePath);
+										peopleFile = new SafelyFile(peoplePath);
 									}
 									if(StringUtil.isNotEmpty(downloadFilePeople)){
 
@@ -559,7 +560,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 									File sysFile = null;
 									if(StringUtil.isNotEmpty(newSysFileName)) {
 										String sysPath = basePath + File.separator + newSysFileName;
-										sysFile = new File(sysPath);
+										sysFile = new SafelyFile(sysPath);
 									}
 									if(StringUtil.isNotEmpty(sysFile)) {
 										FileUtil.copyFile(downloadFile, sysFile);
@@ -583,7 +584,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 									File peopleFile = null;
 									if(StringUtil.isNotEmpty(newFileName)) {
 										String peoplePath = basePath + File.separator + newFileName;
-										peopleFile = new File(peoplePath);
+										peopleFile = new SafelyFile(peoplePath);
 									}
 									
 									if(StringUtil.isNotEmpty(downloadFilePeople)){
@@ -605,7 +606,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 										File sysFile = null;
 										if(StringUtil.isNotEmpty(newSysFileName)) {
 											String sysPath = basePath + File.separator + newSysFileName;
-											sysFile = new File(sysPath);
+											sysFile = new SafelyFile(sysPath);
 										}
 										if(StringUtil.isNotEmpty(sysFile)) {
 											FileUtil.copyFile(downloadFile, sysFile);

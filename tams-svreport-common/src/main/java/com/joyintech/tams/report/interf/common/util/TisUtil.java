@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -47,7 +48,7 @@ public class TisUtil {
 	public static BufferedReader bufread;
 	// 指定文件路径和名称
 	private static String path = "suncity.txt";
-	private static File filename = new File(path);
+	private static File filename = new SafelyFile(path);
 	private static String readStr = "";
 
 	/**
@@ -76,7 +77,7 @@ public class TisUtil {
 	 *
 	 */
 	public static void creatTxtFile(String path) throws IOException {
-		filename = new File(path);
+		filename = new SafelyFile(path);
 		//如果本地已存在同名文件，删除本地重新生成
 		if (filename.exists()) {
 			filename.delete();
@@ -89,7 +90,7 @@ public class TisUtil {
 	 * @throws IOException
 	 */
 	public static void reTxtFilename(String path) throws IOException {
-		File file = new File(path);
+		File file = new SafelyFile(path);
 		if (filename.exists()) {
 			filename.renameTo(file);
 		}
@@ -237,7 +238,7 @@ public class TisUtil {
 		FileOutputStream fos=null;
 		PrintWriter pw =null;
 		try {
-			File file = new File(path);
+			File file = new SafelyFile(path);
 			fis = new FileInputStream(file);
 			isr = new InputStreamReader(fis);
 			br = new BufferedReader(isr);
@@ -472,7 +473,7 @@ public class TisUtil {
 		InputStream inputStream = null;
 		try {
 			// 原文件
-			File srcFile = new File(template);
+			File srcFile = new SafelyFile(template);
 			if (srcFile.exists()) {
 				inputStream = new FileInputStream(srcFile);
 			} else {
@@ -643,7 +644,7 @@ public class TisUtil {
 				sheet.setForceFormulaRecalculation(true);
 			}
 
-			File file = new File(outputFilepath);
+			File file = new SafelyFile(outputFilepath);
 			if (!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
 			}

@@ -22,7 +22,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map; 
+import java.util.Map;
+
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -246,7 +248,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
      String depositfilePath = SvrDataUtil.getSysParam(
              GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
      
-     depositfile = new File(depositfilePath + File.separator + flieName);
+     depositfile = new SafelyFile(depositfilePath + File.separator + flieName);
      if (!depositfile.getParentFile().exists()) {
          depositfile.getParentFile().mkdirs();
      }
@@ -254,9 +256,9 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
      byte[] buffer = new byte[1024];
      String temp = depositfilePath + "ptl.xlsx";
      // 原文件
-     File srcFile = new File(template);
+     File srcFile = new SafelyFile(template);
      // 目标文件
-     File destFile = new File(temp);
+     File destFile = new SafelyFile(temp);
      InputStream fis = null;
      if (srcFile.exists()) {
          fis = new FileInputStream(srcFile);

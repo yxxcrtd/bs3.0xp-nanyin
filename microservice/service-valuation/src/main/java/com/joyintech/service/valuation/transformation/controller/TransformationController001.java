@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.apache.commons.collections.CollectionUtils;
@@ -143,7 +144,7 @@ public class TransformationController001 extends BaseController {
         
         // 获取文件名
         String fileName1 = request.getParameter("fileName");
-        File tempFile1 =new File(fileName1);
+        File tempFile1 =new SafelyFile(fileName1);
         String fName1 = tempFile1.getName();
         // 获取后缀名
         String suffix = fName1.substring(fName1.lastIndexOf(".")+1);
@@ -160,7 +161,7 @@ public class TransformationController001 extends BaseController {
 
         // 文件名
         String fileName = request.getParameter("fileName");
-        File tempFile =new File(fileName);
+        File tempFile =new SafelyFile(fileName);
         String fName=tempFile.getName();
         //校验文件名是否和所选模板一致
         boolean flag=checkFileName(modelType,fName);

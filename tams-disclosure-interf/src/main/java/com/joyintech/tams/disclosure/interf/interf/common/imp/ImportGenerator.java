@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
@@ -233,7 +234,7 @@ public final class ImportGenerator {
             path = path + File.separator;
         }
         String absoultPath = path + dataFileName;
-        File tmpFile = new File(absoultPath);
+        File tmpFile = new SafelyFile(absoultPath);
         FileUtils.writeLines(tmpFile, "UTF-8", content);
 
         // 系统是否使用的db2数据库

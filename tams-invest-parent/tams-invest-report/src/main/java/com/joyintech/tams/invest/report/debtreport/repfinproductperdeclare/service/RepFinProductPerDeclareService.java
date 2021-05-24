@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -183,7 +184,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
                 if(suffix.equalsIgnoreCase("ftl")){
-                	configuration.setDirectoryForTemplateLoading(new File(dirPath));
+                	configuration.setDirectoryForTemplateLoading(new SafelyFile(dirPath));
                     // 设置默认编码
                     configuration.setDefaultEncoding("UTF-8");
                     
@@ -255,24 +256,24 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                     // 加载模板
                     if (ftlName != null) {
                         Template template = configuration.getTemplate(ftlName, "UTF-8");
-                        File f = new File(exportPath+"/"+ftlName);
+                        File f = new SafelyFile(exportPath+"/"+ftlName);
                         w = new OutputStreamWriter(new FileOutputStream(f), "utf-8");
                         template.process(dataMap, w);
-                        arrFileTemp.add(new File(exportPath+"/"+ftlName));
+                        arrFileTemp.add(new SafelyFile(exportPath+"/"+ftlName));
                     }
                 }
                 else{
                 	BufferedInputStream bis =null;
                 	OutputStream os=null;
                     try {
-						bis = new BufferedInputStream(new FileInputStream(templetFileFullPath));
+						bis = new BufferedInputStream(new FileInputStream(new SafelyFile(templetFileFullPath)));
 						byte[] bytes = new byte[bis.available()];
-						os = new FileOutputStream(exportPath+"/"+ftlName);
+						os = new FileOutputStream(new SafelyFile(exportPath+"/"+ftlName));
 						bis.read(bytes);
 						os.write(bytes);
 						bis.close();
 						os.close();
-						arrFileTemp.add(new File(exportPath+"/"+ftlName));
+						arrFileTemp.add(new SafelyFile(exportPath+"/"+ftlName));
 					} finally {
 	                    if (bis != null) {
 	                    	bis.close();
@@ -300,9 +301,9 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
             }
         }
         String strFileName = "申报附件";
-        ZipFileUtil.compressZip(new File(CacheUtil.getSysParam(
+        ZipFileUtil.compressZip(new SafelyFile(CacheUtil.getSysParam(
             GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+selectedItem.get(0).getRepFinprodInsId()+strFileName+".zip"), 
-            false, arrFileTemp.toArray(new File[arrFile.size()]));
+            false, arrFileTemp.toArray(new SafelyFile[arrFile.size()]));
         
         
         //生成附件至浏览器

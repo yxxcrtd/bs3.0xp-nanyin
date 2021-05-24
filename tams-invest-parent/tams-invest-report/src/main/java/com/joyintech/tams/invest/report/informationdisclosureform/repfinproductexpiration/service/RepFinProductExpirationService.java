@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -139,12 +140,12 @@ public class RepFinProductExpirationService extends CommonExportService<RepFinPr
                 String fileName = repFinProductExpirationDto.getFinprodMarketId()+strFile+".xlsx";
                 ExcelTools excelTools = new ExcelTools();
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-                File file = new File(sysUploadFileInfoList.get(0).getPath());
+                File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
                 FileInputStream inputStream = null;
                 try {
                     inputStream = new FileInputStream(file);
                     excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
-                    arrFile.add(new File(exportPath+"/"+fileName));
+                    arrFile.add(new SafelyFile(exportPath+"/"+fileName));
                     i++;
                 }finally {
                     if (inputStream != null){
@@ -177,7 +178,7 @@ public class RepFinProductExpirationService extends CommonExportService<RepFinPr
                 String fileName = repFinProductExpirationDto.getFinprodMarketId()+strFile+".xlsx";
                 ExcelTools excelTools = new ExcelTools();
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-                File file = new File(sysUploadFileInfoList.get(0).getPath());
+                File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
                 FileInputStream inputStream = null;
                 try {
                     inputStream = new FileInputStream(file);
@@ -187,15 +188,15 @@ public class RepFinProductExpirationService extends CommonExportService<RepFinPr
                         inputStream.close();
                     }
                 }
-                arrFile.add(new File(exportPath+"/"+fileName));
+                arrFile.add(new SafelyFile(exportPath+"/"+fileName));
                 i++;
             }
         }
         FileInputStream zipStream = null;
         try {
             zipStream = new FileInputStream(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip");
-            ZipFileUtil.compressZip(new File(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"),
-                    false, arrFile.toArray(new File[arrFile.size()]));
+            ZipFileUtil.compressZip(new SafelyFile(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"),
+                    false, arrFile.toArray(new SafelyFile[arrFile.size()]));
             return ExportUtil.export(strFile+".zip",
                     new FileInputStream(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"));
         }finally {

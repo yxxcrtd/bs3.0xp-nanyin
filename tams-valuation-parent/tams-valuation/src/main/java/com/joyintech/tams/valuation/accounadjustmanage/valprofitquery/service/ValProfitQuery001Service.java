@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.accounadjustmanage.valprofitquery.service;
 
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
@@ -243,7 +244,7 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
     public ResponseEntity<byte[]> exportExcel(Map<String, Object> params)
             throws ParseException, IOException {
         ExportFileDto exportFileDto = createExcel(params);
-        File file = new File(exportFileDto.getFilePath());
+        File file = new SafelyFile(exportFileDto.getFilePath());
         return ExportUtil.export(exportFileDto.getFileName(), file, true);
     }
 
@@ -319,7 +320,7 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
         try {
             
             //针对weblogic环境部署，FileNameUtil.getTplFile无法获取tpl文件夹下模版。
-            File templeteFile = new File(tplPath);
+            File templeteFile = new SafelyFile(tplPath);
             //文件存在情况,直接该路径获取文件流
             if (templeteFile.exists()) {
                 stream = new FileInputStream(templeteFile);

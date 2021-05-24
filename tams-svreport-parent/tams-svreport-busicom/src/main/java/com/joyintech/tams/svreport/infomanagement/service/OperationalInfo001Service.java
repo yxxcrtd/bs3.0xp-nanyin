@@ -17,6 +17,7 @@ import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -1607,7 +1608,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			if (workbook != null) {
 				FileOutputStream out = null;
 				try {
-					File exportFile = new File(fileName);
+					File exportFile = new SafelyFile(fileName);
 					out = new FileOutputStream(exportFile);
 					workbook.write(out);
 					out.close();
@@ -1743,7 +1744,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             this.setSizeColumn(sheet, columnNum);
 			if (workbook != null) {
 				try {
-					File exportFile = new File(fileName);
+					File exportFile = new SafelyFile(fileName);
 					FileOutputStream out = new FileOutputStream(exportFile);
 					workbook.write(out);
 					out.close();

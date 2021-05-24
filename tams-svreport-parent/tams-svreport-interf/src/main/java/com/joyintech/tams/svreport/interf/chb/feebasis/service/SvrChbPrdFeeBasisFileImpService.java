@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -162,7 +163,7 @@ public class SvrChbPrdFeeBasisFileImpService extends FileImpService{
 			ImpTable table = new ImpTable(ASSETBASISDATATABLENAME_2);
 			table.setColumns(ImportGenerator.createImpTableColumns(ASSETBASISDATATABLENAME_2));
 			success = excuteAssetBasisDataByStep(assetList, type, tmpPath, table);
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_CASSET_INDEX/"), new String[] { "tmp" }, false);
+			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_CASSET_INDEX/"), new String[] { "tmp" }, false);
 			List<String> content = new ArrayList<>(listData.size());
 			String result = "";
 			for (File f : files) {

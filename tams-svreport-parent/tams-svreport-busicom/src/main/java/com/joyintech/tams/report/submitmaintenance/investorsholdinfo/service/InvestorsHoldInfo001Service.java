@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -1648,9 +1649,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 	    logger.info("checkDataInfo处理开始 " + DateUtil.getCurrentDateTime());
 	    //add by liubin start 将接口接入的数据输出到日志文件中
 	    String checkDataLogFilePath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, InterfConstant.SQLLDR_LOG_FILEPATH);
-	    File file = new File(checkDataLogFilePath+File.separator+"check_data_log.txt");
+	    File file = new SafelyFile(checkDataLogFilePath+File.separator+"check_data_log.txt");
 	    if(file.exists()){
-    		file = new File(checkDataLogFilePath+File.separator+"check_data_log_"+System.currentTimeMillis()+".txt");
+    		file = new SafelyFile(checkDataLogFilePath+File.separator+"check_data_log_"+System.currentTimeMillis()+".txt");
     	}
 	    StringBuffer messageInfo = new StringBuffer();
 	    //add by liubin end
@@ -2489,7 +2490,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				// 任务结束，停止线程池的所有线程
 				service.shutdown();
 
-				Collection<File> files = FileUtils.listFiles(new File(tmpPath), new String[] {"tmp"},
+				Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath), new String[] {"tmp"},
 						false);
 				List<String> content = new ArrayList<>(equityList.size());
 				List<String> subContent = new ArrayList<>(equityList.size());
@@ -2762,7 +2763,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
             // 任务结束，停止线程池的所有线程
             service.shutdown();
 
-            Collection<File> files = FileUtils.listFiles(new File(tmpPath), new String[] {"tmp"},
+            Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath), new String[] {"tmp"},
                 false);
             List<String> content = new ArrayList<>(equityList.size());
             List<String> subContent = new ArrayList<>(equityList.size());
@@ -3003,11 +3004,11 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 		subList.forEach(item -> subLines.add(ImportGenerator.buildTxt(item, subColumns)));
 		try {
 			if (list.size() > 0) {
-				FileUtils.writeLines(new File(path + "/CHB_INVESTHOLD_INFO" + GlobalConstant.UNDER_LINE
+				FileUtils.writeLines(new SafelyFile(path + "/CHB_INVESTHOLD_INFO" + GlobalConstant.UNDER_LINE
 						+ UUID.randomUUID().toString() + ".tmp"), "UTF-8", lines, true);
 			}
 			if (subList.size() > 0) {
-				FileUtils.writeLines(new File(path + "/CHB_INVESTHOLD_INFO_SUB" + GlobalConstant.UNDER_LINE
+				FileUtils.writeLines(new SafelyFile(path + "/CHB_INVESTHOLD_INFO_SUB" + GlobalConstant.UNDER_LINE
 						+ UUID.randomUUID().toString() + ".tmp"), "UTF-8", subLines, true);
 			}
 		} catch (IOException e) {

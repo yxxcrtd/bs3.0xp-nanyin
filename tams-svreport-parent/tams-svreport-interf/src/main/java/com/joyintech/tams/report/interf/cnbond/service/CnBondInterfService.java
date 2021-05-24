@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -699,7 +700,7 @@ public class CnBondInterfService extends InterfService {
         CnBondUtil.generationXML(entity, BusinessForXMLEntity.class, cbFilepath, fileName);
         logger.info("CnBondInterfService 报文拼装处理结束：" + DateUtil.getCurrentDateTime());
         // 添加报文文件
-        files.add(new File(cbFilepath + fileName));
+        files.add(new SafelyFile(cbFilepath + fileName));
         // 添加压缩文件路径
         resourceFilePath.add(fileName);
         // 压缩文件
@@ -714,7 +715,7 @@ public class CnBondInterfService extends InterfService {
 //        	CnBondUtil.recurrence(WMRS + fileType + STRING_001_01,cbFilepath + fileZip);
             
         logger.info("CnBondInterfService 报送中债处理结束：" + DateUtil.getCurrentDateTime());
-        File a = new File("./AppCfg/DC/cfg");
+        File a = new SafelyFile("./AppCfg/DC/cfg");
         if (asynReportEntity == null) {
             // printLog(log, DictCodeList.接口类型_发送联机交易.getValue(), FAILURE, WARNING,
             // "返回报文为空,文件地址：" + a.exists(), true);

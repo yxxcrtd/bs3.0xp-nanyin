@@ -9,6 +9,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.ExportParam;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -593,7 +594,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		String targetFileSTR=(String) map.get("param[0][targetFile]");
 		String registSeqno=(String) map.get("registSeqno");
 		String prodId=(String) map.get("prodId");
-		File file=new File(targetFileSTR);
+		File file=new SafelyFile(targetFileSTR);
 
 		// add by zhangliang 20201015 验证九大附件 start
 		// 1、校验各个文件夹是否有文档，根据“必填、选填”那一项校验；
@@ -610,7 +611,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		Map<String, List<String>> fileExistsMap = new HashMap<>();
 
 		try (
-			ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+			ZipFile zipFile=new ZipFile(new SafelyFile(targetFileSTR),Charset.forName("GBK"));
 		){
 			List<String> folderNoList = ChbPrdDeclareRegFileCode.genFolderNoList();
 
@@ -880,13 +881,13 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 	public AjaxResult nineFileUploadCheck(Map<String, Object> map) throws IOException {
 		String fileNo=(String) map.get("param[0][fileNo]");
 		String targetFileSTR=(String) map.get("param[0][targetFile]");
-		File file=new File(targetFileSTR);
+		File file=new SafelyFile(targetFileSTR);
 		// 记录错误信息
 		StringBuffer fileCheckMsg = new StringBuffer();
 		// 记录文件信息
 		Map<String, Map<String, List<String>>> prodFileExistsMap = new HashMap<>();
 		// 获取上传的压缩文件
-		ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+		ZipFile zipFile=new ZipFile(new SafelyFile(targetFileSTR),Charset.forName("GBK"));
 		// 记录共同文件
 		Map<String, List<String>> commonFileMap = new HashMap();
 
@@ -1063,7 +1064,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		// 记录文件信息
 		Map<String, Map<String, List<String>>> prodFileExistsMap = new HashMap<>();
 		// 获取上传的压缩文件
-		ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
+		ZipFile zipFile=new ZipFile(new SafelyFile(targetFileSTR),Charset.forName("GBK"));
 		// 记录共同文件
 		Map<String, List<String>> commonFileMap = new HashMap();
 
@@ -1137,14 +1138,14 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		// 本地路径
 		String localPath = CacheUtil.getSysParam("upload_file_path") + File.separator;
 		// 第一步：解压上传的压缩包
-		ZipUtil.unzip(zipFile, new File(localPath + "nineAttachFile"));
+		ZipUtil.unzip(zipFile, new SafelyFile(localPath + "nineAttachFile"));
 
 		// 第二步：循环产品代码生成需要的文件及文件夹
 		for (String prodId : prodFileExistsMap.keySet()){
 			Map<String, List<String>> foldNameMap = prodFileExistsMap.get(prodId);
 			List<File> zipFiles = new ArrayList<>();
 			for (String folderName : foldNameMap.keySet()){
-				File folder = new File(localPath + "nineAttachFile" + File.separator + folderName);
+				File folder = new SafelyFile(localPath + "nineAttachFile" + File.separator + folderName);
 				//  生成文件夹
 				if (!folder.exists()){
 					folder.mkdir();
@@ -1155,17 +1156,17 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				}
 				// 解压的文件复制到各文件夹下
 				for (String sonFile : foldNameMap.get(folderName)){
-					FileUtil.copyFile(new File(localPath + "nineAttachFile" + File.separator + sonFile), folder);
+					FileUtil.copyFile(new SafelyFile(localPath + "nineAttachFile" + File.separator + sonFile), folder);
 				}
 				zipFiles.add(folder);
 			}
 			// 第三步：根据产品代码生成压缩包
-			File [] zipFilesArr = zipFiles.toArray(new File[zipFiles.size()]);
-			ZipUtil.zip(new File(localPath + prodId  + ChbConstant.FILE_ZIP), CharsetUtil.defaultCharset(), true, null, zipFilesArr);
+			File [] zipFilesArr = zipFiles.toArray(new SafelyFile[zipFiles.size()]);
+			ZipUtil.zip(new SafelyFile(localPath + prodId  + ChbConstant.FILE_ZIP), CharsetUtil.defaultCharset(), true, null, zipFilesArr);
 		}
 
 		// 第四步：刪除第一步和第二步生成的文件
-		this.deleteFile(new File(localPath + "nineAttachFile" + File.separator), true);
+		this.deleteFile(new SafelyFile(localPath + "nineAttachFile" + File.separator), true);
 
 		// 第五步：记录文件路径
 		for (String prodId : prodFileExistsMap.keySet()){
@@ -1198,7 +1199,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			perProDeclareReg001Mapper.updateFileNo(perProDeclareRegDto);
 			// 记录文件关联表
 			UploadFile fileInfo = new UploadFile();
-			fileInfo.setTargetFile(new File(localPath + prodId  + ChbConstant.FILE_ZIP));
+			fileInfo.setTargetFile(new SafelyFile(localPath + prodId  + ChbConstant.FILE_ZIP));
 			fileInfo.setFileNo(sonFileNo);
 			uploadListener.upload(fileInfo);
 		}

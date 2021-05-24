@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.RichTextString;
@@ -136,7 +137,7 @@ public class PtlAnalyzeAfterInvest003Service extends CommonExportService<PtlAnal
         }
         // 从配置文件中获取模板文件  以及文件类型
         String tempFilePath = fileName + fileType;
-        File templeteFile = new File(buildTempleteFilePath(tempFilePath));
+        File templeteFile = new SafelyFile(buildTempleteFilePath(tempFilePath));
         reportConfig.setTempleteFile(fileName + fileType);
         // 模板输入流
         InputStream stream = null;
@@ -280,7 +281,7 @@ public class PtlAnalyzeAfterInvest003Service extends CommonExportService<PtlAnal
             String outFileName = FileNameUtil.createFileName(fileType);
             // 从系统配置参数中获取文件存放路径
             String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-            File file = new File(exportFilePath + File.separator + outFileName);
+            File file = new SafelyFile(exportFilePath + File.separator + outFileName);
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }

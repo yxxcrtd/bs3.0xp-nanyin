@@ -7,6 +7,7 @@ package com.joyintech.tams.valuation.report.common.util;
 import java.io.*;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -90,7 +91,7 @@ public class OfficeMergeUtil {
         }
         OutputStream dest = null;
         try {
-            dest = new FileOutputStream(destFile);
+            dest = new FileOutputStream(new SafelyFile(destFile));
             if (dest != null){
                 srcDocumentTmp.write(dest);
             }
@@ -159,7 +160,7 @@ public class OfficeMergeUtil {
                 @SuppressWarnings("resource")
                 Workbook inputExcel = null;
                 try {
-                    inputExcel = new XSSFWorkbook(new FileInputStream(new File(fileName)));
+                    inputExcel = new XSSFWorkbook(new FileInputStream(new SafelyFile(fileName)));
                     // 获取excel文件工作簿的工作表数量sheets
                     Sheet sheet = null;
                     for (int i = 0; i < inputExcel.getNumberOfSheets(); i++ ) {// 获取每个Sheet表
@@ -181,7 +182,7 @@ public class OfficeMergeUtil {
                 }
             }
             /** **********将以上缓存中的内容写到EXCEL文件中******** */
-            File outputFile = new File(outputFileName);
+            File outputFile = new SafelyFile(outputFileName);
             File dir = outputFile.getParentFile();
             if (!dir.exists()) {
                 dir.mkdirs();
