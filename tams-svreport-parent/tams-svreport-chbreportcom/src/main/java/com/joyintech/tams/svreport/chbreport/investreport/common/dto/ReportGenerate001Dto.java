@@ -39,6 +39,11 @@ public class ReportGenerate001Dto extends BaseEntity {
     private String revealDate;
 
     /**
+     * 系统平台日
+     */
+    private String sysPlatformDate;
+
+    /**
      * 报表类型
      */
     private String reportType;
@@ -201,5 +206,13 @@ public class ReportGenerate001Dto extends BaseEntity {
 
     public void setRevealDate(String revealDate) {
         this.revealDate = revealDate;
+    }
+
+    public String getSysPlatformDate() {
+        return sysPlatformDate;
+    }
+
+    public void setSysPlatformDate(String sysPlatformDate) {
+        this.sysPlatformDate = sysPlatformDate;
     }
 }

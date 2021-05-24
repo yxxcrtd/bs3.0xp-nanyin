@@ -162,6 +162,7 @@ public class ChbReportGenerate001Controller extends BaseController {
                 param.put("endDate", item.getEndDate());
                 param.put("startDate", item.getStartDate());
                 param.put("revealDate", sysDate);
+                param.put("sysPlatformDate", sysDate);
                 param.put("prodName", item.getProdName());
                 param.put("prodIdName", item.getProdIdName());
                 boolean flag = chbInvestReportCommonService.createReportDoc(param, isConfirm, isReveal);

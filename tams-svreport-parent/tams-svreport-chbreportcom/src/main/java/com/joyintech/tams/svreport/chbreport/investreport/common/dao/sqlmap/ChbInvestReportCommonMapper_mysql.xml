@@ -59,6 +59,7 @@
 			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
 			DATE_FORMAT(p.VDATE,'%Y-%m-%d') as endDate, /** 成立日期*/
 		    #{revealDate,jdbcType=VARCHAR} AS revealDate, /**公告披露日期**/
+		    #{sysPlatformDate,jdbcType=VARCHAR} AS sysPlatformDate, /**系统平台日**/
 			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
 			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
 			l.CREATE_TIME as createTime /** 生成时间**/
@@ -129,6 +130,7 @@
 			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
 			DATE_FORMAT(r.SETTDATE_DATE,'%Y-%m-%d') as endDate, /** 到期日*/
 		    #{revealDate,jdbcType=VARCHAR} AS revealDate,
+		    #{sysPlatformDate,jdbcType=VARCHAR} AS sysPlatformDate, /**系统平台日**/
 			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
 			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
 			l.CREATE_TIME as createTime /** 生成时间**/
@@ -166,6 +168,7 @@
 			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
 			DATE_FORMAT(i.VALUE_DATE, '%Y-%m-%d') as endDate, /** 净值日期*/
 			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
+		   #{sysPlatformDate,jdbcType=VARCHAR} AS sysPlatformDate, /**系统平台日**/
 			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
 			l.CREATE_TIME as createTime /** 生成时间**/
 		from
