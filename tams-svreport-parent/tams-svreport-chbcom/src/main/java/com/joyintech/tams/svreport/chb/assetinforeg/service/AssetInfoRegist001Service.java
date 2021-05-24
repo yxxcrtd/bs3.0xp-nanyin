@@ -182,6 +182,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
             	}
             }
             pageParam.put("assetTypeList", assetTypeList);
+			//通道投资资产管理产品是否穿透报送
+			String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+			pageParam.put("isChlBtmStr",isChlBtmStr);
             
             //add by leipeng 20200628
     		if(CommonUtil.isBAmodel()){
@@ -869,6 +872,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		//update byleipeng  【资产要素登记】公共资产，发行机构代码根据登录人维护 机构登记银行代码管理 登记银行代码
 
     	 String issuePartyId = CommonUtil.selectBankCode();
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		param.put("isChlBtmStr",isChlBtmStr);
     	//多法人改造
 		if(CommonUtil.isBAmodel()){
 			list = assetInfoRegist001Mapper.selectAssetInfoByPageEx(param);
@@ -891,6 +897,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 
     	String issuePartyId = CommonUtil.selectBankCode();
     	List<AssetInfoRegist001Dto> list = new ArrayList<>();
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		map.put("isChlBtmStr",isChlBtmStr);
     	//多法人改造
 		if(CommonUtil.isBAmodel()){
 			list = assetInfoRegist001Mapper.selectExportSelectListSeqEx(map);
@@ -1081,6 +1090,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		List<AssetInfoRegist001Dto> assetInfoRegListOrg = new ArrayList<AssetInfoRegist001Dto>();
 		//选择的手动处理
 		assetInfoRegListOrg = (List<AssetInfoRegist001Dto>) map.get("investList");
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		map.put("isChlBtmStr",isChlBtmStr);
         if (StringUtil.isEmptyList(assetInfoRegListOrg)) {
         	//未选中数据
             assetInfoRegListOrg = assetInfoRegist001Mapper.selectAssetInfoByPageEx(map);
@@ -1177,11 +1189,16 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
         Map<String, Object> querymap = new HashMap<>();
         querymap.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, DictCodeListExt2.报送状态_未报送.getValue()));
         querymap.put("orgCode", CommonUtil.getTreeInstCode());
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		querymap.put("isChlBtmStr",isChlBtmStr);
         List<AssetInfoRegist001Dto> assetInfoNotRegList = assetInfoRegist001Mapper.selectAssetInfoByPageEx(querymap);
         Map<String,String> assetInfoNotRegMap = assetInfoNotRegList.stream().collect(Collectors.toMap(AssetInfoRegist001Dto::getAssetCode,
                 AssetInfoRegist001Dto::getAssetCode,(key1,key2)->key2));
 		//选择的手动处理
 		assetInfoList = (List<AssetInfoRegist001Dto>) map.get("investList");
+		//通道投资资产管理产品是否穿透报送
+		map.put("isChlBtmStr",isChlBtmStr);
         if (StringUtil.isEmptyList(assetInfoList)) {
         	//未选中数据
         	map.put("sendStatus", "03");
