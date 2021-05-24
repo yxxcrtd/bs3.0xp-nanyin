@@ -803,9 +803,9 @@ public class ChbPeriodicService {
             }
             // 期初份额总数
             value.setTotalValueQC(ChbInvestReportConstant.横线);
-            // 期初累计净值
-            value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
             // 期初资产净值
+            value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
+            // 期初累计净值
             value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
         } else {
             if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
@@ -817,9 +817,9 @@ public class ChbPeriodicService {
                 }
                 // 期初累计净值
                 if (Objects.isNull(qcDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qcDto.getUnitValueT()) == 0) {
-                    value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
+                    value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
                 } else {
-                    value.setAssetUnitValueQC(ChbInvestReportConstant.df1.format(qcDto.getUnitValueT()));
+                    value.setAssetTotalValueQC(ChbInvestReportConstant.df1.format(qcDto.getUnitValueT()));
                 }
             } else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
                 // 期初份额净值
@@ -846,9 +846,9 @@ public class ChbPeriodicService {
             // 期初资产净值
             if (Objects.isNull(qcDto.getAssetValueMarket()) || BigDecimal.ZERO.compareTo(qcDto.getAssetValueMarket()) == 0
                     || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
-                value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
+                value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
             } else {
-                value.setAssetTotalValueQC(ChbInvestReportConstant.df2.format(qcDto.getAssetValueMarket()));
+                value.setAssetUnitValueQC(ChbInvestReportConstant.df2.format(qcDto.getAssetValueMarket()));
             }
         }
 
@@ -861,15 +861,15 @@ public class ChbPeriodicService {
         if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
             // 期末份额净值
             if (Objects.isNull(qmDto.getUnitValue()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValue()) == 0) {
-                value.setUnitValue(ChbInvestReportConstant.横线);
+                value.setUnitValue(ChbInvestReportConstant.df1.format(BigDecimal.ZERO));
             } else {
                 value.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValue()));
             }
             // 期末累计净值
             if (Objects.isNull(qmDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValueT()) == 0) {
-                value.setAssetUnitValue(ChbInvestReportConstant.横线);
+                value.setAssetTotalValue(ChbInvestReportConstant.df1.format(BigDecimal.ZERO));
             } else {
-                value.setAssetUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
+                value.setAssetTotalValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
             }
             // 期间累计净值增长率
             if (!Objects.isNull(qmDto.getAssetValueMarket()) && !Objects.isNull(qcDto.getAssetValueMarket())
@@ -881,39 +881,39 @@ public class ChbPeriodicService {
                         .multiply(new BigDecimal(36500));
                 value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(increaseRateOfCumulativeValue));
             } else {
-                value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.横线);
+                value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(BigDecimal.ZERO));
             }
         } else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
             // 期末份额净值
             if (Objects.isNull(qmDto.getUnitValue()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValue()) == 0) {
-                value.setUnitValue(ChbInvestReportConstant.横线);
+                value.setUnitValue(ChbInvestReportConstant.df1.format(BigDecimal.ZERO));
             } else {
                 value.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValue()));
             }
             // 期末累计净值
             if (Objects.isNull(qmDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValueT()) == 0) {
-                value.setAssetUnitValue(ChbInvestReportConstant.横线);
+                value.setAssetTotalValue(ChbInvestReportConstant.df1.format(BigDecimal.ZERO));
             } else {
-                value.setAssetUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
+                value.setAssetTotalValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
             }
             // 本期净值收益率
             if (Objects.isNull(qmDto.getValuePercent()) || BigDecimal.ZERO.compareTo(qmDto.getValuePercent()) == 0) {
-                value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.横线);
+                value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.df3.format(BigDecimal.ZERO));
             } else {
                 value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.df3.format(qmDto.getValuePercent()));
             }
         }
         // 期末份额总数
         if (Objects.isNull(qmDto.getCapital()) || BigDecimal.ZERO.compareTo(qmDto.getCapital()) == 0) {
-            value.setTotalValue(ChbInvestReportConstant.横线);
+            value.setTotalValue(ChbInvestReportConstant.df2.format(BigDecimal.ZERO));
         } else {
             value.setTotalValue(ChbInvestReportConstant.df2.format(qmDto.getCapital()));
         }
         // 期末资产净值
         if (Objects.isNull(qmDto.getAssetValueMarket()) || BigDecimal.ZERO.compareTo(qmDto.getAssetValueMarket()) == 0) {
-            value.setAssetTotalValue(ChbInvestReportConstant.横线);
+            value.setAssetUnitValue(ChbInvestReportConstant.df2.format(BigDecimal.ZERO));
         } else {
-            value.setAssetTotalValue(ChbInvestReportConstant.df2.format(qmDto.getAssetValueMarket()));
+            value.setAssetUnitValue(ChbInvestReportConstant.df2.format(qmDto.getAssetValueMarket()));
         }
 
         return value;
