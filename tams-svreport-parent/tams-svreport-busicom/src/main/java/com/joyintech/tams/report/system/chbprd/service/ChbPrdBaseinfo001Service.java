@@ -314,61 +314,59 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                 //募集起始日期
                 Date raiseVdate=null;
                 if(null!=dataList.get(i).get(3)&& !"".equals(dataList.get(i).get(3))){
-                    if(dataList.get(i).get(3).contains("-")){
-                        try {
+                    try {
+                        if(dataList.get(i).get(3).contains("-")){
                             raiseVdate=dfs.parse(dataList.get(i).get(3));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                            message.add("募集起始日期格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                        }else{
+                            raiseVdate=new Date(dataList.get(i).get(3));
                         }
-                    }else{
-                        raiseVdate=new Date(dataList.get(i).get(3));
+                    } catch (Exception e) {
+                          //规则check表已经配置
+//                        message.add("募集起始日期格式不正确!");
+//                        errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                     }
                 }
                 //募集结束日期
                 Date raiseEnddate=null;
                 if(null!=dataList.get(i).get(4)&& !"".equals(dataList.get(i).get(4))){
-                    if(dataList.get(i).get(4).contains("-")){
-                        try {
-                            raiseEnddate=dfs.parse(dataList.get(i).get(4));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                            message.add("募集结束日期格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                    try {
+                        if(dataList.get(i).get(4).contains("-")){
+
+                                raiseEnddate=dfs.parse(dataList.get(i).get(4));
+                        }else{
+                            raiseEnddate=new Date(dataList.get(i).get(4));
                         }
-                    }else{
-                        raiseEnddate=new Date(dataList.get(i).get(4));
+                    } catch (Exception e) {
+//                        message.add("募集结束日期格式不正确!");
+//                        errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                     }
                 }
                 //起息日
                 Date vdate=null;
                 if(null!=dataList.get(i).get(5)&& !"".equals(dataList.get(i).get(5))){
-                    if(dataList.get(i).get(5).contains("-")){
-                        try {
-                            vdate=dfs.parse(dataList.get(i).get(5));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                            message.add("起息日格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                    try {
+                        if(dataList.get(i).get(5).contains("-")){
+                                vdate=dfs.parse(dataList.get(i).get(5));
+                        }else{
+                            vdate=new Date(dataList.get(i).get(5));
                         }
-                    }else{
-                        vdate=new Date(dataList.get(i).get(5));
+                    } catch (Exception e) {
+//                        message.add("起息日格式不正确!");
+//                        errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                     }
                 }
                 //到期日
                 Date mdate=null;
                 if(null!=dataList.get(i).get(6)&& !"".equals(dataList.get(i).get(6))){
-                    if(dataList.get(i).get(6).contains("-")){
-                        try {
-                            mdate=dfs.parse(dataList.get(i).get(6));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                            message.add("到期日格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                    try {
+                        if(dataList.get(i).get(6).contains("-")){
+                                mdate=dfs.parse(dataList.get(i).get(6));
+                        }else{
+                            mdate=new Date(dataList.get(i).get(6));
                         }
-                    }else{
-                        mdate=new Date(dataList.get(i).get(6));
+                    } catch (Exception e) {
+//                        message.add("到期日格式不正确!");
+//                        errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                     }
                 }
                 //管理方式
@@ -423,16 +421,17 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                 //首次开放周期起始日
                 Date firstOpenDay=null;
                 if(null!=dataList.get(i).get(16)&& !"".equals(dataList.get(i).get(16))){
-                    if(dataList.get(i).get(16).contains("-")){
-                        try {
-                            firstOpenDay=dfs.parse(dataList.get(i).get(16));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                            message.add("首次开放周期起始日格式不正确!");
-                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                    try {
+                        if(dataList.get(i).get(16).contains("-")){
+
+                                firstOpenDay=dfs.parse(dataList.get(i).get(16));
+                        }else{
+                            firstOpenDay=new Date(dataList.get(i).get(16));
                         }
-                    }else{
-                        firstOpenDay=new Date(dataList.get(i).get(16));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        message.add("首次开放周期起始日格式不正确!");
+                        errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                     }
                 }
                 //节假日是否开放
