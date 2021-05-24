@@ -123,8 +123,11 @@ public class AssetMarketDataService extends BaseService{
 
 				}
         		else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_货币型.getValue())) {
-					url = urlHead + "/FinproductCommon/queryFinProductValuation?happenDate=" + happenDateStr
-							+ "&booksetId=" + resultDto.getBooksetId() + "&finprodMarketId=" + resultDto.getFinprodId().substring(3) + "&calenderId=" + resultDto.getCalenderId();
+
+        			String finprodMarketId = resultDto.getFinprodId() == null?"": resultDto.getFinprodId().startsWith("F17")?resultDto.getFinprodId().substring(4): resultDto.getFinprodId() ;
+
+        			url = urlHead + "/FinproductCommon/queryFinProductValuation?happenDate=" + happenDateStr
+							+ "&booksetId=" + resultDto.getBooksetId() + "&finprodMarketId=" + finprodMarketId + "&calenderId=" + resultDto.getCalenderId();
 
 					if (checkByTemplate(dto.getCheckDate(), url)) {
 						detailIterator.remove();
@@ -146,7 +149,6 @@ public class AssetMarketDataService extends BaseService{
         List<SysPrebatchResultDetail> finalDetails = new ArrayList<>(details);
         prebatchCheckCommonService.insertBatchResultDetail(dto,finalDetails);
     }
-
 
     /**
      * 设置错误信息与SysPrebatchResultDto关联

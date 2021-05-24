@@ -47,7 +47,7 @@
 					/*当天的交易所涉及的资产*/
 					select distinct
 						bda.bookset_id,
-						deal.finprod_id,
+						deal.finprod_id BUSI_ID,
 						deal.inv_aim,
 						pp.portfolio_id,
 						pp.portfolio_name,
