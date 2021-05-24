@@ -65,6 +65,7 @@
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ISSUING_STATUS" property="issuingStatus" jdbcType="VARCHAR" />
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoDetailWithBLOBs" extends="BaseResultMap" >
         <result column="OUT_DEP_CTRY" property="outDepCtry" jdbcType="LONGVARCHAR" />
@@ -91,20 +92,21 @@
         BUSI_ACCT_NO BUSI_ACCT_NO, ACCT_NAME ACCT_NAME, FIDUCIARY_DUTY FIDUCIARY_DUTY, TRANSFER_TYPE TRANSFER_TYPE,
         IS_MARKET_FUND IS_MARKET_FUND, MANAGE_TYPE MANAGE_TYPE, CUSTOMER_TYPE CUSTOMER_TYPE,
         CALENDAR_ID CALENDAR_ID, IS_TRANSFER IS_TRANSFER, IS_FULLY_COMPLIANT IS_FULLY_COMPLIANT,
-        IS_YLLCCP IS_YLLCCP, STATUS STATUS, CREATE_TIME CREATE_TIME, UPDATE_TIME UPDATE_TIME
+        IS_YLLCCP IS_YLLCCP, STATUS STATUS, CREATE_TIME CREATE_TIME, UPDATE_TIME UPDATE_TIME,
+        ISSUING_STATUS ISSUING_STATUS
     </sql>
     <sql id="Blob_Column_List" >
         OUT_DEP_CTRY, OUT_DEP_NAME, YIELD_REMARK, RULE_COMMENT, OPEN_BUSS_REMARK, REMARK
     </sql>
     <sql id="Sql_All_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper.Base_Column_List" />
         ,
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper.Blob_Column_List" />
         from chb_prd_baseinfo_detail
     </sql>
     <sql id="Sql_All_Effective_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper.Base_Column_List" />
         ,
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper.Blob_Column_List" />
@@ -112,7 +114,7 @@
         where STATUS = 'E'
     </sql>
     <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper.Base_Column_List" />
         ,
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper.Blob_Column_List" />
@@ -129,6 +131,10 @@
         where FPROD_ID = #{fprodId,jdbcType=VARCHAR}
         and STATUS = 'E'
     </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from chb_prd_baseinfo_detail
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoDetailWithBLOBs" >
         insert into chb_prd_baseinfo_detail (PROD_ID, FPROD_ID, ISSUE_PARTY_ID,
                                              PROD_NAME, REG_CODE, PROD_INS_ID,
@@ -151,8 +157,8 @@
                                              MANAGE_TYPE, CUSTOMER_TYPE, CALENDAR_ID,
                                              IS_TRANSFER, IS_FULLY_COMPLIANT, IS_YLLCCP,
                                              STATUS, CREATE_TIME, UPDATE_TIME,
-                                             OUT_DEP_CTRY, OUT_DEP_NAME, YIELD_REMARK,
-                                             RULE_COMMENT, OPEN_BUSS_REMARK,
+                                             ISSUING_STATUS, OUT_DEP_CTRY, OUT_DEP_NAME,
+                                             YIELD_REMARK, RULE_COMMENT, OPEN_BUSS_REMARK,
                                              REMARK)
         values (#{prodId,jdbcType=VARCHAR}, #{fprodId,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR},
                 #{prodName,jdbcType=VARCHAR}, #{regCode,jdbcType=VARCHAR}, #{prodInsId,jdbcType=VARCHAR},
@@ -175,8 +181,8 @@
                 #{manageType,jdbcType=VARCHAR}, #{customerType,jdbcType=VARCHAR}, #{calendarId,jdbcType=VARCHAR},
                 #{isTransfer,jdbcType=VARCHAR}, #{isFullyCompliant,jdbcType=VARCHAR}, #{isYllccp,jdbcType=VARCHAR},
                 #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-                #{outDepCtry,jdbcType=LONGVARCHAR}, #{outDepName,jdbcType=LONGVARCHAR}, #{yieldRemark,jdbcType=LONGVARCHAR},
-                #{ruleComment,jdbcType=LONGVARCHAR}, #{openBussRemark,jdbcType=LONGVARCHAR},
+                #{issuingStatus,jdbcType=VARCHAR}, #{outDepCtry,jdbcType=LONGVARCHAR}, #{outDepName,jdbcType=LONGVARCHAR},
+                #{yieldRemark,jdbcType=LONGVARCHAR}, #{ruleComment,jdbcType=LONGVARCHAR}, #{openBussRemark,jdbcType=LONGVARCHAR},
                 #{remark,jdbcType=LONGVARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoDetailWithBLOBs" >
@@ -370,6 +376,9 @@
             </if>
             <if test="updateTime != null" >
                 UPDATE_TIME,
+            </if>
+            <if test="issuingStatus != null" >
+                ISSUING_STATUS,
             </if>
             <if test="outDepCtry != null" >
                 OUT_DEP_CTRY,
@@ -580,6 +589,9 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="issuingStatus != null" >
+                #{issuingStatus,jdbcType=VARCHAR},
+            </if>
             <if test="outDepCtry != null" >
                 #{outDepCtry,jdbcType=LONGVARCHAR},
             </if>
@@ -611,7 +623,8 @@
                                             OPEN_CIRCLE_DAYS, FIRST_OPEN_DAY, HOLIDAY_ON_FLAG, AVG_OPEN_COUNT, OPEN_BUSS, BUSI_ACCT_NO,
                                             ACCT_NAME, FIDUCIARY_DUTY, TRANSFER_TYPE, IS_MARKET_FUND, MANAGE_TYPE, CUSTOMER_TYPE,
                                             CALENDAR_ID, IS_TRANSFER, IS_FULLY_COMPLIANT, IS_YLLCCP, STATUS, CREATE_TIME, UPDATE_TIME,
-                                            OUT_DEP_CTRY, OUT_DEP_NAME, YIELD_REMARK, RULE_COMMENT, OPEN_BUSS_REMARK, REMARK)
+                                            ISSUING_STATUS, OUT_DEP_CTRY, OUT_DEP_NAME, YIELD_REMARK, RULE_COMMENT, OPEN_BUSS_REMARK,
+                                            REMARK)
         select PROD_ID, FPROD_ID, ISSUE_PARTY_ID, PROD_NAME,
                REG_CODE, PROD_INS_ID, PROD_BRAND, PROD_STAGE, RAISE_TYPE, PROFIT_TYPE, TERMTYPE,
                EXC_FIN_SECTOR, OPERATE_MODE, IS_SHORT_TERM, SHORT_TERM, CASH_MANA_CATE, IVSTORIENTATION,
@@ -622,7 +635,8 @@
                OPEN_CIRCLE_DAYS, FIRST_OPEN_DAY, HOLIDAY_ON_FLAG, AVG_OPEN_COUNT, OPEN_BUSS, BUSI_ACCT_NO,
                ACCT_NAME, FIDUCIARY_DUTY, TRANSFER_TYPE, IS_MARKET_FUND, MANAGE_TYPE, CUSTOMER_TYPE,
                CALENDAR_ID, IS_TRANSFER, IS_FULLY_COMPLIANT, IS_YLLCCP, #{status,jdbcType=VARCHAR} STATUS, CREATE_TIME, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-               OUT_DEP_CTRY, OUT_DEP_NAME, YIELD_REMARK, RULE_COMMENT, OPEN_BUSS_REMARK, REMARK
+               ISSUING_STATUS, OUT_DEP_CTRY, OUT_DEP_NAME, YIELD_REMARK, RULE_COMMENT, OPEN_BUSS_REMARK,
+               REMARK
         from chb_prd_baseinfo_detail
         where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
     </insert>
@@ -812,6 +826,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="issuingStatus != null" >
+                ISSUING_STATUS = #{issuingStatus,jdbcType=VARCHAR},
+            </if>
             <if test="outDepCtry != null" >
                 OUT_DEP_CTRY = #{outDepCtry,jdbcType=LONGVARCHAR},
             </if>
@@ -896,6 +913,7 @@
             IS_YLLCCP = #{isYllccp,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ISSUING_STATUS = #{issuingStatus,jdbcType=VARCHAR},
             OUT_DEP_CTRY = #{outDepCtry,jdbcType=LONGVARCHAR},
             OUT_DEP_NAME = #{outDepName,jdbcType=LONGVARCHAR},
             YIELD_REMARK = #{yieldRemark,jdbcType=LONGVARCHAR},
@@ -966,7 +984,8 @@
             IS_FULLY_COMPLIANT = #{isFullyCompliant,jdbcType=VARCHAR},
             IS_YLLCCP = #{isYllccp,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ISSUING_STATUS = #{issuingStatus,jdbcType=VARCHAR}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 </mapper>
