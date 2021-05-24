@@ -965,17 +965,6 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			String subStatus = StringUtil.EMPTY;
 			chbInvestholdInfoSub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 			chbInvestholdInfoSub.setStatusDate(new Date());
-			//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空  add by zoujiamin 2021/04/25
-			if(!StringUtil.isNotEmpty(action.getPrdRegistCode())){
-				action.setPrdRegistCode("");
-			}
-			if(!StringUtil.isNotEmpty(action.getOrgCode())){
-				action.setOrgCode("");
-			}
-			if(!StringUtil.isNotEmpty(action.getRemark())){
-				action.setRemark("");
-			}
-			//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空 add by zoujiamin 2021/04/25
 			if (allHoldInfoDataMap.containsKey(dataKeyNew)) {
 				listUp.add(action);
 			} else {
@@ -1031,19 +1020,6 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 					chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
 				}
 				// add by etliu 20180829 end
-
-				//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空  add by zoujiamin 2021/04/25
-				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getPrdRegistCode())){
-					chbInvestholdInfoSub.setPrdRegistCode("");
-				}
-				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getOrgCode())){
-					chbInvestholdInfoSub.setOrgCode("");
-				}
-				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getRemark())) {
-					chbInvestholdInfoSub.setRemark("");
-				}
-				//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空 add by zoujiamin
-
 				subListIn.add(chbInvestholdInfoSub);
 			}
 		}
@@ -2760,23 +2736,23 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			InvestorsHoldInfo001FileReadParaDto paraDto = this.buildFileReadParaDto(equityList);
 			List<ChbPrdresistCode> prodRegInfoList = this.getProdRegInfoListFromFile(equityList, paraDto);
 
-			if (equityList.size() <= 1000) {
-				success = excuteInvestorsHoldInfoByStep(equityList, interType, result, null, null, null,
-						prodRegInfoList, paraDto);
-			} else {
-			// 创建表
-			ImpTable table = new ImpTable(CHB_INVESTHOLD_INFO_NAME);
-			table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
-			// 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
-			ImpTable subTable = new ImpTable("CHB_INVESTHOLD_INFO_SUB");
-			subTable.setColumns(ImportGenerator.createImpTableColumns(subTable.getName()));
-			subTable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
-			// 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
-			for (ImpColumn column : subTable.getColumns()) {
-				if (StringUtil.equals(column.getName(), "STATUS")) {
-					column.setConstant(DictCodeListExt2.报送数据状态_新建.getValue());
-				}
-			}
+//			if (equityList.size() <= 1000) {
+//				success = excuteInvestorsHoldInfoByStep(equityList, interType, result, null, null, null,
+//						prodRegInfoList, paraDto);
+//			} else {
+				// 创建表
+            ImpTable table = new ImpTable(CHB_INVESTHOLD_INFO_NAME);
+            table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+            // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
+            ImpTable subTable = new ImpTable("CHB_INVESTHOLD_INFO_SUB");
+            subTable.setColumns(ImportGenerator.createImpTableColumns(subTable.getName()));
+            subTable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
+            // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
+            for (ImpColumn column : subTable.getColumns()) {
+                if (StringUtil.equals(column.getName(), "STATUS")) {
+                    column.setConstant(DictCodeListExt2.报送数据状态_新建.getValue());
+                }
+            }
 
 			// 创建一个线程池
 			if (interfMaxCorePoolSize < 1) {
@@ -2924,7 +2900,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 		Long et=edate.getTime();
 		Long time=(et-bt)/1000;
 		logger.info("持有信息入库处理结束:"+sdf.format(edate)+"耗时"+time+"秒");
-		}
+//		}
 		// 数据解析完成，并导入数据库成功后，将ftp文件修改名称
 		if (success) {
 			return "success";
@@ -3026,9 +3002,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			List<InvestorsHoldInfo001Dto> listA = new ArrayList<>();
 			checkDataInfo(dataList, false, listE, listA, prodRegInfoList, paraDto,null,null,null);
 			logger.info("listE.size:"+listE.size()+"###listA.size:"+listA.size());
-			if (listE.size() > 10 || listA.size() > 10) {
+			if (listE.size() > 0 || listA.size() > 0) {
 				afterCheckDeal(listE, listA, type, tmpPath, table, subTable, paraDto);
-
+				
 			}
 			return true;
 		}
