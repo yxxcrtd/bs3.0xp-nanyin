@@ -143,7 +143,7 @@
 		FROM
 		chb_invest_trade a
 		<where>
-			NOT EXISTS ( SELECT 1 FROM chb_invest_trade_errordata WHERE TRADE_CODE = a.TRADE_CODE AND STATUS IN ( 'A', 'E' ) ) UNION ALL
+			NOT EXISTS ( SELECT 1 FROM chb_invest_trade_errordata WHERE TRADE_CODE = a.TRADE_CODE AND STATUS IN ( 'A', 'E' ) )
 			<if test="prodId != null and prodId.size() > 0">
 				<foreach collection="prodId" item="pId" open="AND a.PROD_ID IN (" close=")" separator=",">
 					#{pId,jdbcType=VARCHAR}
@@ -168,7 +168,7 @@
 					#{status,jdbcType=VARCHAR}
 				</foreach>
 			</if>
-		</where>
+		</where> UNION ALL
 		SELECT
 		'导出' as type,
 		'A' AS status,

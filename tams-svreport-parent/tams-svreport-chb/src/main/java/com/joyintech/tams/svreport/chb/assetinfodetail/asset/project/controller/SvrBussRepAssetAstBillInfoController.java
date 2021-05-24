@@ -55,6 +55,7 @@ public class SvrBussRepAssetAstBillInfoController extends BaseController{
               //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
+        model.addAttribute("SVR_YES_OR_NO_Y", DictCodeList.是否_中债_是.getValue());
         model.addAttribute("SVR_YES_OR_NO_N", DictCodeList.是否_中债_否.getValue());
         model.addAttribute("entityName",this.getParam("entityName"));
         //3、返回 子组件对应的页面

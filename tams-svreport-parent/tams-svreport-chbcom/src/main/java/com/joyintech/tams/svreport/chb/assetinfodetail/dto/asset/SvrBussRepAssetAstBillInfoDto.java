@@ -56,6 +56,9 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal repAmtSum;
 
+    private Date vdate;
+
+    private Date mdate;
 
 
 
@@ -109,6 +112,32 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
      * 是否标准化票据
      */
     private String isBzhpj;
+
+    private String privateprdFlag;
+
+    public String getPrivateprdFlag() {
+        return privateprdFlag;
+    }
+
+    public void setPrivateprdFlag(String privateprdFlag) {
+        this.privateprdFlag = privateprdFlag;
+    }
+
+    public Date getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
+    }
 
     public String getIsBzhpj() {
         return isBzhpj;

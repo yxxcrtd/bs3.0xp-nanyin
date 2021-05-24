@@ -267,7 +267,9 @@ var QueryFunc=function(){
 
         }else if(obj["05"].indexOf(repAssetType)>=0){
             //票据类资产/信用证类资产
-            $("#svrBussRepAssetAstBillInfoDto_privateFlag").val('02').trigger("change");
+            $("#svrBussRepAssetAstBillInfoDto_privateprdFlag").val('02').trigger("change");
+            $("#svrBussRepAssetAstBillInfoDto_bondtostockFlag").val('02').trigger("change");
+            $("#svrBussRepAssetAstBillInfoDto_pppflag").val('02').trigger("change");
             if(repAssetType=='1210'){
                 //类型默认05置灰不可修改
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('05').attr('disabled', true).trigger('change');
@@ -349,7 +351,12 @@ var QueryFunc=function(){
         /**【资产基本信息维护】-新建页面（1401、1402、1403、1404、1405、1406、1499），提交报错**/
         object.svrBussRepFinanciallInfoDto.targetType3 = object.svrBussRepFinanciallInfoDto.targetType3?object.svrBussRepFinanciallInfoDto.targetType3.join(","):'';
         object.svrBussRepDepositInfoDto.repTargetType = object.svrBussRepDepositInfoDto.repTargetType?object.svrBussRepDepositInfoDto.repTargetType.join(","):'';
-
+        if (object.SvrBussRepAssetAstBillInfo.pppflag && object.SvrBussRepAssetAstBillInfo.pppflag=='N'){
+            object.SvrBussRepAssetAstBillInfo.pppflag = '02';
+        }
+        if (object.SvrBussRepAssetAstBillInfo.bondtostockFlag && object.SvrBussRepAssetAstBillInfo.bondtostockFlag=='N'){
+            object.SvrBussRepAssetAstBillInfo.bondtostockFlag = '02';
+        }
         object.pageModel = pageModel;
 
         Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){
