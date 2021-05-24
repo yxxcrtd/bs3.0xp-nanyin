@@ -224,7 +224,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
         if(workflowId!=null){
-            return "/invest/trade/bond/TrdBondInvestTrade002";
+            return "invest/trade/bond/TrdBondInvestTrade002";
         }else{
             return super.init(model);
         }
