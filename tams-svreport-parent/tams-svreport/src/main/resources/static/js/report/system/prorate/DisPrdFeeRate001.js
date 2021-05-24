@@ -4,7 +4,7 @@
         return {
             busiId:$('#busiId').val()==null?null:$('#busiId').val().join(),
             cashType2:$('#cashType2').val()==null?null:$('#cashType2').val().join(),
-            status:$('#status').val()==null?null:$('#status').val().join()
+            status:$('#status2').val()==null?null:$('#status2').val().join()
         };
     };
 
@@ -17,12 +17,12 @@
             }
         },
         cols: [
-            { title: "数据状态", field:'statusName',width:'8%', sortField:'status'},
+            { title: "数据状态", field:'statusName',width:'8%', sortField:'statusName'},
             { title: "产品代码", field:'busiId',width:'8%', sortField:'busiId'},
             { title: "启用日期", field:'startDate',type:'date',width:'12%'},
             { title: "信披费用类型", field:'cashType2Name',width:'10%', sortField:'cashType2'},
             /*{ title: "busiId",  visible:false, field:'busiId'},*/
-            { title: "status",  visible:false, field:'status'},
+            { title: "status",  visible:false, field:'status2'},
             { title: "cashType2",  visible:false, field:'cashType2'},
             { title: "dataSource",  visible:false, field:'dataSource'},
             { title: "datauuid",  visible:false, field:'datauuid'},
@@ -77,7 +77,7 @@
             var error='';
             var s='D';
             for(var i=0; i<listdto.length; i++){
-                    if(listdto[i].status.indexOf("D")!= -1){
+                    if(listdto[i].status2.indexOf("D")!= -1){
                     error = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }
@@ -102,9 +102,9 @@
         $('#DisPrdFeeRate001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'svreport/system/prorate/DisPrdFeeRate001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                    // Joyin.ajax(basePath + 'svreport/system/prorate/DisPrdFeeRate001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
                         Joyin.ajax(basePath + 'svreport/system/prorate/DisPrdFeeRate001/importFile', {fileName: fileName});
-                    });
+                    // });
                 },function() {
                     table.reload();
                 });
@@ -145,7 +145,7 @@
             }
             var errorMessage='';
             for(var i=0; i<selArr.length; i++){
-                if(selArr[i].status.indexOf("D")!= -1){
+                if(selArr[i].status2.indexOf("D")!= -1){
                     errorMessage = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }

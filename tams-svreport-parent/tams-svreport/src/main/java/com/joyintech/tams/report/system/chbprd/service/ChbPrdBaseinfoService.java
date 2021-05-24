@@ -1,13 +1,12 @@
 package com.joyintech.tams.report.system.chbprd.service;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfo001Dto;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
@@ -26,10 +25,10 @@ public class ChbPrdBaseinfoService extends BaseService<ChbPrdBaseinfo> {
      *
      * @return DtPage
      */
-    public Page<ChbPrdBaseinfo> searchForPage(Map<String,Object> paramMap) {
+    public Page<ChbPrdBaseinfo001Dto> searchForPage(Map<String,Object> paramMap) {
         return restTemplate.postForPage(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbPrdBaseinfo/findPage", paramMap,
-                ChbPrdBaseinfo.class);
+                ChbPrdBaseinfo001Dto.class);
     }
     /**
      *
@@ -78,10 +77,10 @@ public class ChbPrdBaseinfoService extends BaseService<ChbPrdBaseinfo> {
         return;
     }
 
-    public List<ChbPrdBaseinfo> queryReportList(Map<String, Object> pageParam) {
+    public List<ChbPrdBaseinfo001Dto> queryReportList(Map<String, Object> pageParam) {
         return restTemplate.postForList(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbPrdBaseinfo/queryReportList",pageParam,
-                ChbPrdBaseinfo.class);
+                ChbPrdBaseinfo001Dto.class);
     }
 
 

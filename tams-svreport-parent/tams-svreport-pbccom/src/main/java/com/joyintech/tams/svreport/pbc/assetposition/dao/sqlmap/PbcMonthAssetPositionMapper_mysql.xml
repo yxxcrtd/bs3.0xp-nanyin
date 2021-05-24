@@ -451,9 +451,9 @@
       1 END_DAYS_ONE,/*剩余期限=1*/
       /*剩余期限=产品剩余期限,封闭式取产品到期日-统计日期，开放式：每日开放1，定期开放=下一开放开始日-统计日期*/
     (case (case proddeclare.REP_OPERATE_MODE when '03' then '02' when '04' then '02' else '01' end)
-            when '01' then prod.mdate - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d')
+            when '01' then TIMESTAMPDIFF(DAY, STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'), prod.mdate)
             else (case openrule.OPEN_MODE when '02' then 1
-            else ifnull(OPENPLAN.OPEN_DATE_STR,prod.mdate) - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d') end) end) END_DAYS_PROD,
+            else TIMESTAMPDIFF(DAY,STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'),ifnull(OPENPLAN.OPEN_DATE_STR,prod.mdate)) end) end) END_DAYS_PROD,
       0 END_DAYS_NULL,/*剩余期限=0*/
       balance.BAL_FLAG BAL_FLAG /*余额方向*/
       FROM BOK_BALANCE BALANCE/*科目余额表*/
@@ -544,9 +544,9 @@
       1 END_DAYS_ONE,/*剩余期限=1*/
       /*剩余期限=产品剩余期限,封闭式取产品到期日-统计日期，开放式：每日开放1，定期开放=下一开放开始日-统计日期*/
     (case (case proddeclare.REP_OPERATE_MODE when '03' then '02' when '04' then '02' else '01' end)
-    when '01' then prod.mdate - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d')
+    when '01' then TIMESTAMPDIFF(DAY,STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'), prod.mdate)
     else (case openrule.OPEN_MODE when '02' then 1
-    else ifnull(OPENPLAN.OPEN_DATE_STR,prod.mdate) - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d') end) end) END_DAYS_PROD,
+    else TIMESTAMPDIFF(DAY, STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'), ifnull(OPENPLAN.OPEN_DATE_STR,prod.mdate)) end) end) END_DAYS_PROD,
       0 END_DAYS_NULL,/*剩余期限=0*/
       balance.BAL_FLAG BAL_FLAG /*余额方向*/
       FROM BOK_BALANCE BALANCE/*科目余额表*/
@@ -774,9 +774,9 @@
       /*剩余期限=产品剩余期限,01封闭式取产品到期日-统计日期，02开放式：每日开放1，定期开放=下一开放开始日-统计日期*/
       /*判断每日开放：去开放计划表中找开房计划如果没有找到则为每日开放*/
       (case (case prodinfo.OPERATE_MODE when '01' then '01' when '02' then '01' else '02' end)
-      when '01' then prodinfo.mdate - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d')
+      when '01' then TIMESTAMPDIFF(DAY,STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'),prodinfo.mdate)
       else (case ifnull(oplan.prod_id,'NOPLAN') when 'NOPLAN' then 1
-      else ifnull(OPENPLAN.OPEN_START,prodinfo.mdate) - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d') end) end) END_DAYS_PROD,
+      else TIMESTAMPDIFF(DAY,STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'),ifnull(OPENPLAN.OPEN_START,prodinfo.mdate)) end) end) END_DAYS_PROD,
       0 END_DAYS_NULL,/*剩余期限=0*/
       balance.BAL_FLAG BAL_FLAG /*余额方向*/
       FROM BOK_BALANCE BALANCE/*科目余额表*/

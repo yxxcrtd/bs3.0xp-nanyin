@@ -116,7 +116,7 @@
 				when 'DERIVATIVE' then  (costAmt+floatingpl)
 				when 'OPTION' then (costAmt+floatingpl)
 				else
-				  if(assetbasis.valueDate=assetbasis.mdate,100,100*costAmt/posAmt)
+				  if(assetbasis.valueDate=assetbasis.mdate,100,100*(costAmt+floatingpl)/posAmt)
 				end
 			)) end unitValNet,
 		(ifnull(price.PRICE,1) *

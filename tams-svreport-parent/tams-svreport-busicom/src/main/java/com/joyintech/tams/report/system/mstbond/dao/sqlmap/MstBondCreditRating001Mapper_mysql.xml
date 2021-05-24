@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.report.system.mstbond.dao.MstBondCreditRating001Mapper_mysql">
 	<select id="queryForPage" resultType="com.joyintech.tams.common.base.entity.MstBondCreditRating">
 		SELECT
-		a.STATUS as status,
+		a.STATUS as status2,
 		a.O_CODE as oCode,
 		a.GRADE_ORG_ID as gradeOrgId,
 		a.GRADE_DATE as gradeDate,

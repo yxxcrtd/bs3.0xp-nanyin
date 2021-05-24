@@ -7,55 +7,55 @@
 			<Cell order="3" name="*资产/负债类别">assetType2Str</Cell>
 			<Cell order="4" name="*交易流通场所">tradeMarketStr</Cell>
 			<Cell order="5" name="*币种">ccyStr</Cell>
-			<Cell order="6" name="*是否为收/受益权">isRight</Cell>
-			<Cell order="7" name="*是否属于买入返售">isResale</Cell>
-			<Cell order="8" name="*类型">notstandSecType</Cell>
-			<Cell order="9" name="*数量">notstandSecNum</Cell>
-			<Cell order="10" name="*合计金额">amt</Cell>
-			<Cell order="11" name="*加权剩余期限（天）">remainTerm</Cell>
-			<Cell order="12" name="*最长剩余期限（天）">maxRemainTerm</Cell>
-			<Cell order="13" name="*最短剩余期限（天）">minRemainTerm</Cell>
-			<Cell order="14" name="*起息日">vdate</Cell>
-			<Cell order="15" name="*到期日">mdate</Cell>
-			<Cell order="16" name="*行业">industryShares</Cell>
-			<Cell order="17" name="*贴现利率（%）">discountYield</Cell>
-			<Cell order="18" name="是否标准化票据">isBzhpj</Cell>
-			<Cell order="19" name="*所属国家或地区">countryArea</Cell>
-			<Cell order="20" name="*名称">assetName</Cell>
-			<Cell order="21" name="期限（天）">termDate</Cell>
-			<Cell order="22" name="*资产价值">assetValue</Cell>
-			<Cell order="23" name=" 资产收益率%">assetYield</Cell>
-			<Cell order="24" name="*所属国家或地区">countryArea</Cell>
-			<Cell order="25" name="*名称">assetName</Cell>
-			<Cell order="26" name="*起息日">vdate</Cell>
-			<Cell order="27" name="*到期日">mdate</Cell>
-			<Cell order="28" name="*资产价值">assetValue</Cell>
-			<Cell order="29" name="资产收益率%">assetYield</Cell>
-			<Cell order="30" name="委外投资协议名称">assetName</Cell>
-			<Cell order="31" name="委外投资协议编号">assetCode</Cell>
-			<Cell order="32" name="受托人">trustee</Cell>
-			<Cell order="33" name="实际管理人">chbManagerId</Cell>
-			<Cell order="34" name="托管人">trusteeId</Cell>
-			<Cell order="35" name="委托投资金额">amt</Cell>
-			<Cell order="36" name="资金实际投向">truActType</Cell>
-			<Cell order="37" name="资金运用方式">investType</Cell>
-			<Cell order="38" name="资金运用行业">capUseIndu</Cell>
-			<Cell order="39" name="投资运作起始日期">planSdate</Cell>
-			<Cell order="40" name="投资运作终止日期">planEdate</Cell>
-			<Cell order="41" name="委外投资属性">proProperty</Cell>
-			<Cell order="42" name="是否有预期收益率">rateFlag</Cell>
-			<Cell order="43" name="预期最高收益率">maxYield</Cell>
-			<Cell order="44" name="预期最低收益率">minYield</Cell>
-			<Cell order="45" name="管理费率%">mgrFeeRate</Cell>
-			<Cell order="46" name="托管费率%">truFeeRate</Cell>
-			<Cell order="47" name="交易相关合计费率%">tradeFeeRate</Cell>
-			<Cell order="48" name="中介服务机构合计费率%">agencyFeeRate</Cell>
-			<Cell order="49" name="其他合计费率%">otherFeeRate</Cell>
-			<Cell order="50" name="*所属国家或地区">countryArea</Cell>
-			<Cell order="51" name="*名称">assetName</Cell>
-			<Cell order="52" name="期限（天）">termDate</Cell>
-			<Cell order="53" name="*负债规模">debtScale</Cell>
-			<Cell order="54" name=" 利率%">assetYield</Cell>
+			<Cell order="6" name="*是否为收/受益权">isRight_05</Cell>
+			<Cell order="7" name="*是否属于买入返售">isResale_05</Cell>
+			<Cell order="8" name="*类型">notstandSecType_05</Cell>
+			<Cell order="9" name="*数量">notstandSecNum_05</Cell>
+			<Cell order="10" name="*合计金额">amt_05</Cell>
+			<Cell order="11" name="*加权剩余期限（天）">remainTerm_05</Cell>
+			<Cell order="12" name="*最长剩余期限（天）">maxRemainTerm_05</Cell>
+			<Cell order="13" name="*最短剩余期限（天）">minRemainTerm_05</Cell>
+			<Cell order="14" name="*起息日">vdate_05</Cell>
+			<Cell order="15" name="*到期日">mdate_05</Cell>
+			<Cell order="16" name="*行业">industryShares_05</Cell>
+			<Cell order="17" name="*贴现利率（%）">discountYield_05</Cell>
+			<Cell order="18" name="是否标准化票据">isBzhpj_05</Cell>
+			<Cell order="19" name="*所属国家或地区">countryArea_13</Cell>
+			<Cell order="20" name="*名称">assetName_13</Cell>
+			<Cell order="21" name="期限（天）">termDate_13</Cell>
+			<Cell order="22" name="*资产价值">assetValue_13</Cell>
+			<Cell order="23" name=" 资产收益率%">assetYield_13</Cell>
+			<Cell order="24" name="*所属国家或地区">countryArea_18</Cell>
+			<Cell order="25" name="*名称">assetName_18</Cell>
+			<Cell order="26" name="*起息日">vdate_18</Cell>
+			<Cell order="27" name="*到期日">mdate_18</Cell>
+			<Cell order="28" name="*资产价值">assetValue_18</Cell>
+			<Cell order="29" name="资产收益率%">assetYield_18</Cell>
+			<Cell order="30" name="委外投资协议名称">assetName_16</Cell>
+			<Cell order="31" name="委外投资协议编号">assetCode_16</Cell>
+			<Cell order="32" name="受托人">trustee_16</Cell>
+			<Cell order="33" name="实际管理人">chbManagerId_16</Cell>
+			<Cell order="34" name="托管人">trusteeId_16</Cell>
+			<Cell order="35" name="委托投资金额">amt_16</Cell>
+			<Cell order="36" name="资金实际投向">truActType_16</Cell>
+			<Cell order="37" name="资金运用方式">investType_16</Cell>
+			<Cell order="38" name="资金运用行业">capUseIndu_16</Cell>
+			<Cell order="39" name="投资运作起始日期">planSdate_16</Cell>
+			<Cell order="40" name="投资运作终止日期">planEdate_16</Cell>
+			<Cell order="41" name="委外投资属性">proProperty_16</Cell>
+			<Cell order="42" name="是否有预期收益率">rateFlag_16</Cell>
+			<Cell order="43" name="预期最高收益率">maxYield_16</Cell>
+			<Cell order="44" name="预期最低收益率">minYield_16</Cell>
+			<Cell order="45" name="管理费率%">mgrFeeRate_16</Cell>
+			<Cell order="46" name="托管费率%">truFeeRate_16</Cell>
+			<Cell order="47" name="交易相关合计费率%">tradeFeeRate_16</Cell>
+			<Cell order="48" name="中介服务机构合计费率%">agencyFeeRate_16</Cell>
+			<Cell order="49" name="其他合计费率%">otherFeeRate_16</Cell>
+			<Cell order="50" name="*所属国家或地区">countryArea_17</Cell>
+			<Cell order="51" name="*名称">assetName_17</Cell>
+			<Cell order="52" name="期限（天）">termDate_17</Cell>
+			<Cell order="53" name="*负债规模">debtScale_17</Cell>
+			<Cell order="54" name=" 利率%">assetYield_17</Cell>
 			<Cell order="55" name="备注">remark</Cell>
 			<Cell order="56" name="新人行一级分类">pbcAssetType1Str</Cell>
 			<Cell order="57" name="新人行二级分类">pbcAssetType2Str</Cell>

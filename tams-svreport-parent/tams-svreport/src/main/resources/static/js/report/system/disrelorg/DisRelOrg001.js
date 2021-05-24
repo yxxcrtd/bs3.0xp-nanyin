@@ -18,8 +18,8 @@
             }
         },
         cols: [
-            { title: "数据状态", field:'statusName',width:'8%', sortField:'status'},
-            { title: "status",  visible:false, field:'status'},
+            { title: "数据状态", field:'svrStatusName',width:'8%', sortField:'svrStatus'},
+            { title: "svrStatus",  visible:false, field:'svrStatus'},
             { title: "关联机构代码", field:'relorgId',width:'8%', sortField:'relorgId'},
             { title: "关联机构代码名称", field:'organName',width:'12%', sortField:'organName'},
             { title: "创建人", field:'createUser',width:'8%', sortField:'createUser'},
@@ -73,7 +73,7 @@
             var error='';
             var s='D';
             for(var i=0; i<listdto.length; i++){
-                    if(listdto[i].status.indexOf("D")!= -1){
+                    if(listdto[i].svrStatus.indexOf("D")!= -1){
                     error = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }
@@ -98,9 +98,9 @@
         $('#DisRelOrg001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'svreport/system/disrelorg/DisRelOrg001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                    // Joyin.ajax(basePath + 'svreport/system/disrelorg/DisRelOrg001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
                         Joyin.ajax(basePath + 'svreport/system/disrelorg/DisRelOrg001/importFile', {fileName: fileName});
-                    });
+                    // });
                 },function() {
                     table.reload();
                 });
@@ -136,7 +136,7 @@
             }
             var errorMessage='';
             for(var i=0; i<selArr.length; i++){
-                if(selArr[i].status.indexOf("D")!= -1){
+                if(selArr[i].svrStatus.indexOf("D")!= -1){
                     errorMessage = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }

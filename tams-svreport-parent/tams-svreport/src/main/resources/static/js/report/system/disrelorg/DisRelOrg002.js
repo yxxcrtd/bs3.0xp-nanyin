@@ -11,10 +11,12 @@
             object.organName = $("#organName").val();
             object.type =$("#type").val();
             if(object.relorgId==''){
-                alert("关联机构代码不能为空");
+                Joyin.error("关联机构代码不能为空");
+                return;
             }
             if(object.organName==''){
-                alert("关联机构代码名称不能为空");
+                Joyin.error("关联机构代码名称不能为空");
+                return;
             }
             if(object.relorgId!='' && object.organName!='' ){
                 Joyin.ajaxJson(basePath + 'svreport/system/disrelorg/DisRelOrg002/check', object, function(result) {

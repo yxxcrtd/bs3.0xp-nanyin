@@ -18,7 +18,7 @@
         },
         cols: [
             { title: "数据状态", field:'svrStatusName',sortField:'svrStatus',width:'5%'},
-            { title: "status",  visible:false, field:'status'},
+            { title: "svrStatus",  visible:false, field:'svrStatus'},
             { title: "交易对手代码", field:'counterId',width:'8%',sortField:'counterId'},
             { title: "交易对手名称", field:'counterName',width:'8%',sortField:'counterName'},
             { title: "交易对手一级类型", field:'counterType1Name',width:'12%',sortField:'counterType1'},
@@ -77,7 +77,7 @@
             var error='';
             var s='D';
             for(var i=0; i<listdto.length; i++){
-                    if(listdto[i].status.indexOf("D")!= -1){
+                    if(listdto[i].svrStatus.indexOf("D")!= -1){
                     error = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }
@@ -139,7 +139,7 @@
             }
             var errorMessage='';
             for(var i=0; i<selArr.length; i++){
-                if(selArr[i].status.indexOf("D")!= -1){
+                if(selArr[i].svrStatus.indexOf("D")!= -1){
                     errorMessage = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }

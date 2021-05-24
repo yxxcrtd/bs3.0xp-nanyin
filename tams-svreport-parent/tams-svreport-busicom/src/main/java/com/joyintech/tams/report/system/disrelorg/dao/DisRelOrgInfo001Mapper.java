@@ -15,7 +15,7 @@ import java.util.Map;
 @Repository
 public interface DisRelOrgInfo001Mapper {
 
-    List<DisRepCashYield> queryForPage(Map<String, Object> param);
+    List<DisAssociatedInstitutions> queryForPage(Map<String, Object> param);
 
     List<ChbPrdBaseinfo> getProdinfo(Map<String, Object> param);
 

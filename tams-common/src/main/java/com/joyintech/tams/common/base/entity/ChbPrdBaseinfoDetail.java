@@ -317,6 +317,11 @@ public class ChbPrdBaseinfoDetail extends BaseEntity {
     private String isYllccp;
 
     /**
+     * 发行状态  03确认发行/01发行成功/02发行失败/不发行
+     */
+    private String issuingStatus;
+
+    /**
      * 取得 产品代码
      * @return 产品代码
      */
@@ -1280,5 +1285,21 @@ public class ChbPrdBaseinfoDetail extends BaseEntity {
      */
     public void setIsYllccp(String isYllccp) {
         this.isYllccp = isYllccp == null ? null : isYllccp.trim();
+    }
+
+    /**
+     * 取得 发行状态  03确认发行/01发行成功/02发行失败/不发行
+     * @return 发行状态  03确认发行/01发行成功/02发行失败/不发行
+     */
+    public String getIssuingStatus() {
+        return issuingStatus;
+    }
+
+    /**
+     * 设置 发行状态  03确认发行/01发行成功/02发行失败/不发行
+     * @param issuingStatus 发行状态  03确认发行/01发行成功/02发行失败/不发行
+     */
+    public void setIssuingStatus(String issuingStatus) {
+        this.issuingStatus = issuingStatus == null ? null : issuingStatus.trim();
     }
 }

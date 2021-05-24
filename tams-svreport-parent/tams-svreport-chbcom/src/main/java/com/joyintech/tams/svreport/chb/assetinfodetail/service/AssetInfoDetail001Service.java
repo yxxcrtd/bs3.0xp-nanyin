@@ -51,8 +51,6 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 	@Autowired
 	private ChbAssetInfoErrodataMapper chbAssetInfoErrodataMapper;
 
-
-
     private Logger logger = LoggerFactory.getLogger(getClass());
 
 
@@ -161,48 +159,6 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 		return assetInfoDetailMapper.getAssetInfoDetail(UUid);
 	}
 
-	/**
-	 * 导入文件之前检查文件中的数据在数据库中是否已经存在 如果已经存在，需要提示用户进行确认是否覆盖数据库
-	 *
-	 * @return 检查结果
-	 * @see
-	 * @since 1.0
-	 */
-	public AjaxResult checkConfirmMsgForImportData(List<AssetInfoDetailDto> dataList, String orgCode, String deptCode) {
-		AjaxResult webResult = new AjaxResult();
-		if (!StringUtil.isEmptyList(dataList)){
-			if (CollectionUtils.isNotEmpty(dataList)) {
-//				    List assetCodes = dataList.stream().map(assetInfoDetailDto -> assetInfoDetailDto.getAssetCode()).collect(Collectors.toList());
-//				    Map<String,Object> map = new HashMap<>();
-//				    map.put("assetCodes",assetCodes);
-//				    List<AssetInfoDetailDto> data = assetInfoDetailMapper.selectChbInfoByParam(map);
-//					Map<String, List<AssetInfoDetailDto>> assetInfoMap = dataList.stream().collect(
-//							JoyinCollectors.groupingBy(
-//									x -> x.getAssetCode()));
-//					 Collections.sort(data, Comparator.comparing(AssetInfoDetailDto::getAssetCode));
-//					// 将序号放入list中
-					List<String> excelNumList = new ArrayList<String>();
-//					List<Integer> excelNumIntList = new ArrayList<Integer>();
-//					for (AssetInfoDetailDto dto : data) {
-//						List<AssetInfoDetailDto> listTemp = assetInfoMap.get(dto);
-//                        excelNumList.add(listTemp.get(0).getAssetCode());
-//					}
-					webResult.setMessage(
-							this.getMessage("CHB_ISCOVER_EQU",
-									StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-							MessageType.确认消息);
-				}
-				else {
-					// 防止在进行导入前check时进行了两次的弹框
-					webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-				}
-			}
-			else{
-				// 防止在进行导入前check时进行了两次的弹框
-				webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-			}
-		return webResult;
-	}
 	public List<ExcelValidDto> importData(List<AssetInfoDetailDto> dataList){
 		List<ExcelValidDto> checkResult = new ArrayList<>();
 		List<ChbAssetInfo> assetInfo = new ArrayList<>();
@@ -215,7 +171,7 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 		}
 		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),
 				this.getMessage("REPORT_COMMON_FILE_E_0016")));
-		return       checkResult;
+		return  checkResult;
 	}
 
 }

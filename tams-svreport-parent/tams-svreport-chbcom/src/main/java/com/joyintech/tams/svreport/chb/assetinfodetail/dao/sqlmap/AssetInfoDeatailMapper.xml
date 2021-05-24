@@ -3050,5 +3050,8 @@
 
     </select>
 
+    <select id="selectDataCount" resultType="java.lang.Integer" parameterType="java.util.List">
+    </select>
+
 
 </mapper>

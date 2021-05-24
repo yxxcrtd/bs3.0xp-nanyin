@@ -2732,4 +2732,18 @@
 
     </select>
 
+    <select id="selectDataCount" resultType="java.lang.Integer" parameterType="java.util.List">
+        select
+        count(1)
+        from
+        CHB_ASSET_INFO cai
+        where
+        cai.STATUS = 'E'
+        <foreach collection="keylist" index="index" item="item" open="and (" separator="or" close=")">
+            (
+            cai.ASSET_CODE = #{item.assetCode}
+            )
+        </foreach>
+    </select>
+
 </mapper>

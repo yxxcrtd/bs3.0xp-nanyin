@@ -4,28 +4,29 @@ import cn.hutool.core.util.ArrayUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbEmployeeInfo;
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
-import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.system.chbemployee.dao.ChbEmployeeInfo001Mapper;
+import com.joyintech.tams.report.system.chbemployee.dto.ChbEmployeeInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
-public class ChbEmployeeInfo001Service extends CommonExportService<ChbEmployeeInfo> {
+public class ChbEmployeeInfo001Service extends CommonExportService<ChbEmployeeInfoDto> {
 
     @Autowired
     private ChbEmployeeInfo001Mapper chbEmployeeInfo001Mapper;
 
-    public Page<ChbEmployeeInfo> searchForPage(Map<String, Object> param){
-        Page<ChbEmployeeInfo> page;
+    public Page<ChbEmployeeInfoDto> searchForPage(Map<String, Object> param){
+        Page<ChbEmployeeInfoDto> page;
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         String employeeType = (String)param.get("employeeType");
@@ -47,10 +48,12 @@ public class ChbEmployeeInfo001Service extends CommonExportService<ChbEmployeeIn
      * @see
      * @since 1.0
      */
-    private void dealDataList(List<ChbEmployeeInfo> list) {
+    private void dealDataList(List<ChbEmployeeInfoDto> list) {
         list.forEach(item -> {
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.维护数据状态, item.getStatus()));
+            item.setSvrStatusName(SysDataUtil.getZZDictCodeAndNameNew(
+                    DictCode.维护数据状态, item.getSvrStatus()));
             item.setEmployeeTypeStr(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.从业人员类型, item.getEmployeeType() ));
             item.setEmployeeSexStr (SysDataUtil.getZZDictCodeAndNameNew(
@@ -86,20 +89,20 @@ public class ChbEmployeeInfo001Service extends CommonExportService<ChbEmployeeIn
         return;
     }
 
-    public List<ChbEmployeeInfo> queryReportList(Map<String, Object> param) {
+    public List<ChbEmployeeInfoDto> queryReportList(Map<String, Object> param) {
         String keys = (String)param.get("keys");
         String[] strs =  ArrayUtil.newArray(String.class, 0) ;
         if (StringUtil.isNotEmpty(keys)) {
             strs = keys.split(" ,");
         }
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
-        List<ChbEmployeeInfo> dtoList=new ArrayList<>();
+        List<ChbEmployeeInfoDto> dtoList=new ArrayList<>();
         for(int i=0;i<strs.length;i++){
             String arr =strs[i];
             String[] s =arr.split(",");
             String employeeType=s[0];
             String identifyNumber=s[1];
-            ChbEmployeeInfo ms=new ChbEmployeeInfo();
+            ChbEmployeeInfoDto ms=new ChbEmployeeInfoDto();
             ms.setEmployeeType(employeeType);
             ms.setIdentifyNumber(identifyNumber);
             dtoList.add(ms);

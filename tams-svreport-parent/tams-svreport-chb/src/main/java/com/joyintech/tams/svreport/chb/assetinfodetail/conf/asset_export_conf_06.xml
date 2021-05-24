@@ -19,7 +19,7 @@
 			<Cell order="15" name="*是否为质押融资">isPledge</Cell>
 			<Cell order="16" name="*是否为债转股">deptEquity</Cell>
 			<Cell order="17" name="备注">remark</Cell>
-			<Cell order="18" name="是否商业银行优先股">bankSecKzzq</Cell>
+			<Cell order="18" name="是否商业银行优先股">bankSecPrefer</Cell>
 			<Cell order="19" name="到期日">mdate</Cell>
 			<Cell order="20" name="是否创业投资基金">isGovernFund</Cell>
 			<Cell order="21" name="是否政府出资产业投资基金">isunlisted</Cell>

@@ -129,6 +129,12 @@ public class DisRepCashYield extends BaseEntity {
 
      */
     private String status;
+
+    /**
+     * 数据状态_避免框架隐藏操作
+
+     */
+    private String status2;
     private String statusName;
     /**
      * 创建人
@@ -228,6 +234,14 @@ public class DisRepCashYield extends BaseEntity {
     @Override
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatus2() {
+        return status2;
+    }
+
+    public void setStatus2(String status2) {
+        this.status2 = status2;
     }
 
     /**
