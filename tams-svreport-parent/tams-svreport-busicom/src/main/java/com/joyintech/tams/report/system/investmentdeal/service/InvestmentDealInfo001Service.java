@@ -91,8 +91,19 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
         param.put("assetCode", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("assetCode")));
         param.put("status", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("status")));
         List<InvestmentDealInfoDto> list = investmentDealInfo001Mapper.queryReportList( param);
-        dealDataList(list);
+        dealReportDataList(list);
         return list;
+    }
+
+    private void dealReportDataList(List<InvestmentDealInfoDto> list) {
+        list.forEach(item -> {
+            item.setCcyStr (SysDataUtil.getNameFromDataDict(DictCode.币种_中债, item.getCcy()));
+            item.setAssetMethodStr(SysDataUtil.getNameFromDataDict(DictCode.资产计量方式, item.getAssetMethod()));
+            item.setCurAssetTypeStr (SysDataUtil.getNameFromDataDict(DictCode.资金流动类型, item.getCurAssetType()));
+            item.setRivalPartyTypeStr (SysDataUtil.getNameFromDataDict(DictCode.交易对手类型, item.getRivalPartyType()));
+        });
+
+
     }
 
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
@@ -165,7 +176,6 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 return tempCheckResult;
             }
-
             if (null != dataList) {
                 Map<String,Object> map=new HashMap<>();
                 for (int i = 0; i < dataList.size(); i++ ) {
@@ -209,13 +219,13 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
         dto.setProdId(dataList.get(i).get(1));
         dto.setAssetCode(dataList.get(i).get(2));
         dto.setTradeCode(dataList.get(i).get(3));
-        dto.setCurAssetType(dataList.get(i).get(4));
+        dto.setCurAssetType(SysDataUtil.getZZDictCodeFromName(DictCode.资金流动类型, dataList.get(i).get(4)));
         dto.setCurAssetdetType(dataList.get(i).get(5));
         if (StringUtil.isNotEmpty(dataList.get(i)) && StringUtil.isNotEmpty(dataList.get(i).get(6))){
             dto.setNum(new BigDecimal(dataList.get(i).get(6)));
         }
-        dto.setAssetMethod(dataList.get(i).get(7));
-        dto.setCcy(dataList.get(i).get(8));
+        dto.setAssetMethod(SysDataUtil.getZZDictCodeFromName(DictCode.资产计量方式, dataList.get(i).get(7)));
+        dto.setCcy(SysDataUtil.getZZDictCodeFromName(DictCode.币种_中债, dataList.get(i).get(8)));
         if (StringUtil.isNotEmpty(dataList.get(i)) && StringUtil.isNotEmpty(dataList.get(i).get(9))) {
             dto.setCnyAmt(new BigDecimal(dataList.get(i).get(9)));
         }
@@ -232,12 +242,13 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             dto.setEndRate(new BigDecimal(dataList.get(i).get(13)));
         }
         dto.setTradeCounter(dataList.get(i).get(14));
-        dto.setRivalPartyType(dataList.get(i).get(15));
+        dto.setRivalPartyType(SysDataUtil.getZZDictCodeFromName(DictCode.交易对手类型, dataList.get(i).get(15)));
         dto.setContractCode(dataList.get(i).get(16));
         if (StringUtil.isNotEmpty(dataList.get(i)) && StringUtil.isNotEmpty(dataList.get(i).get(17))) {
             dto.setDealdate(DateUtil.parse(dataList.get(i).get(17)));
         }
         dto.setRemark(dataList.get(i).get(18));
+        dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         dto.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
     }
 

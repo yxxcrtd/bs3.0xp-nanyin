@@ -70,15 +70,6 @@ public class AssetInfoDetailController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@PostMapping("checkConfirmMsgForImportData")
-	public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
-		List<AssetInfoDetailDto> dataList = (List<AssetInfoDetailDto>) param.get("dataList");
-		String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-		String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-		return assetInfoDetail001Service.checkConfirmMsgForImportData(dataList,orgCode,deptCode);
-	}
-
-	@SuppressWarnings("unchecked")
 	@PostMapping("importData")
 	public List<ExcelValidDto> importData(@RequestBody List<AssetInfoDetailDto> dataList ){
 		return this.assetInfoDetail001Service.importData(dataList);

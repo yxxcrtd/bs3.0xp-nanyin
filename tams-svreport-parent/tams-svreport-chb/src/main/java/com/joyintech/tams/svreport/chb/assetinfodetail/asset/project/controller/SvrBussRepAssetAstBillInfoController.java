@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.project.controller
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.project.impl.SvrBussRepAssetAstBillInfoImplService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.project.impl.SvrBussRepAssetCreditNonstdInfoImplService;
@@ -54,6 +55,7 @@ public class SvrBussRepAssetAstBillInfoController extends BaseController{
               //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
+        model.addAttribute("SVR_YES_OR_NO_N", DictCodeList.是否_中债_否.getValue());
         model.addAttribute("entityName",this.getParam("entityName"));
         //3、返回 子组件对应的页面
         return "report/chb/assetinfodetail/asset/project/SvrBussRepAssetAstBillInfo";

@@ -105,6 +105,18 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
      */
     private String pbcAssetType3;
 
+    /**
+     * 是否标准化票据
+     */
+    private String isBzhpj;
+
+    public String getIsBzhpj() {
+        return isBzhpj;
+    }
+
+    public void setIsBzhpj(String isBzhpj) {
+        this.isBzhpj = isBzhpj;
+    }
 
     public String getPppflag() {
         return pppflag;

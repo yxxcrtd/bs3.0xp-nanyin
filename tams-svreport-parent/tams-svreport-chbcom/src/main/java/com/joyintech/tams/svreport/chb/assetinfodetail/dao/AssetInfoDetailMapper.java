@@ -67,7 +67,7 @@ public interface AssetInfoDetailMapper {
 
 	int deleteErrorMsg(String assetCode);
 
-
+    int selectDataCount(@Param("keylist") List<AssetInfoDetailDto> list);
 
 
 }

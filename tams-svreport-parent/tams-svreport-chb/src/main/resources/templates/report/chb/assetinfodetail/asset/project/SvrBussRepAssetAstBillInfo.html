@@ -41,7 +41,6 @@
                         <select th:id="|${entityName}_notstandSecType|" th:name="|${entityName}.notstandSecType|"
                                 th:initValue="${entity?.notstandSecType}" class="layui-input form-input input-select"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
-                                parentIds="assetType2"
                                 data-th-data-result="${SVR_ASSET_TYPE_BILL_LETTERCREDIT}">
                         </select>
                     </div>
@@ -212,8 +211,8 @@
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repPppflag}">公共PPP</label>
                     <div class="layui-input-inline input-inline">
                         <input type="checkbox" th:id="|${entityName}_pppflag|" th:name="|${entityName}.pppflag|"
-                               lay-skin="switch" data-th-value="${SVR_YES_OR_NO}" lay-text="是|否"
-                               data-th-checked="${SVR_YES_OR_NO} ==${entity?.pppflag}" required="required">
+                               lay-skin="switch" data-th-value="${SVR_YES_OR_NO_N}" lay-text="是|否"
+                               data-th-checked="${SVR_YES_OR_NO} ==${entity?.pppflag}" data-th-data-result="${SVR_YES_OR_NO}" required="required">
                     </div>
                 </div>
 
@@ -221,7 +220,7 @@
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repBondtostockFlag}">是否投向市场化债转股相关产品的部分</label>
                     <div class="layui-input-inline input-inline">
                         <input type="checkbox" th:id="|${entityName}_bondtostockFlag|" th:name="|${entityName}.bondtostockFlag|"
-                               lay-skin="switch" data-th-value="${SVR_YES_OR_NO}" lay-text="是|否"
+                               lay-skin="switch" data-th-value="${SVR_YES_OR_NO_N}" lay-text="是|否"  data-th-data-result="${SVR_YES_OR_NO}"
                                data-th-checked="${SVR_YES_OR_NO} ==${entity?.bondtostockFlag}">
                     </div>
                 </div>

@@ -15,7 +15,7 @@
 			<Cell order="11" name="*到期日">mdate</Cell>
 			<Cell order="12" name="*所属国家或地区">countryArea</Cell>
 			<Cell order="13" name="*是否有预期收益率">rateFlag</Cell>
-			<Cell order="14" name="项目收益率（利率）%">rateFlag</Cell>
+			<Cell order="14" name="项目收益率（利率）%">assetYield</Cell>
 			<Cell order="15" name="*付息频率（个月/次）">intpayCycle</Cell>
 			<Cell order="16" name="*融资人">financie</Cell>
 			<Cell order="17" name="*融资人组织机构（社会信用）代码">finOrgCode</Cell>
