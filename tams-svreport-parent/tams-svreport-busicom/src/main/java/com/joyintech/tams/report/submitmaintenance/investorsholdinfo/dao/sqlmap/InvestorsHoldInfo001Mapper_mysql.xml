@@ -571,7 +571,7 @@ where
 		(cii.REGIST_BANK_CODE =#{item.registBankCode} 
 			and cii.INDENTIFY_MARK=#{item.indentifyMark}
 			and cii.PRD_REGIST_CODE=#{item.prdRegistCode}
-			and cii.HOLD_DATE = STR_TO_DATE(DATE_FORMAT(#{item.holdDate},'%Y-%m-%d')
+			and cii.HOLD_DATE = STR_TO_DATE(#{item.holdDate},'%Y-%m-%d')
 			and cii.CCY =#{item.ccy})
 	</foreach>
     </where>
