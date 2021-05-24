@@ -12,15 +12,20 @@ package com.joyintech.tams.report.submitmaintenance.exchangerateinfo.service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.MstExchargeQuote;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -275,6 +280,10 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
             if(list.get(0) == null || list.get(0).trim().equals("")){
                 flag = false;
                 message.add("货币对不能为空");
+            } else if (StringUtil.isEmpty(SysDataUtil.getZZDictCodeAndNameNew(
+                    DictCode.货币对, list.get(0).trim()))) {
+                flag = false;
+                message.add("货币对不在取值范围内");
             }
             //交易日期
             if(list.get(1) == null || list.get(1).trim().equals("")){
@@ -294,6 +303,9 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
                 if(!checkFigure(list.get(2))){
                     flag = false;
                     message.add("中间价不是数字");
+                }else if (!isNumber(list.get(2))) {
+                    flag = false;
+                    message.add("中间件需为n(30,14)");
                 }
             }
             //报价单位
@@ -301,9 +313,9 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
                 flag = false;
                 message.add("报价单位不能为空");
             }else{
-                if(!checkLongFigure(list.get(3))){
+                if(!checkIntFigure(list.get(3))){
                     flag = false;
-                    message.add("报价单位不是长整型数字");
+                    message.add("报价单位不是整型数字");
                 }
             }
             //主键校验
@@ -373,6 +385,17 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
         }
     }
 
+    //数字位数验证
+    public static boolean isNumber(String str){
+        Pattern pattern= Pattern.compile("^[+-]?\\d{1,30}(?:\\.\\d{1,14})?$"); // decimal(30,14)
+        Matcher match=pattern.matcher(str);
+        if(match.matches()==false){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     /**
      * 判断是否为长整型数字
      *
@@ -382,6 +405,21 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
     private boolean checkLongFigure(String longFigure) {
         try{
             Long.parseLong(longFigure);
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    }
+
+    /**
+     * 判断是否为整型数字
+     *
+     * @param
+     * @return 返回boolean
+     */
+    private boolean checkIntFigure(String longFigure) {
+        try{
+            Integer.parseInt(longFigure);
             return true;
         }catch(Exception e){
             return false;
