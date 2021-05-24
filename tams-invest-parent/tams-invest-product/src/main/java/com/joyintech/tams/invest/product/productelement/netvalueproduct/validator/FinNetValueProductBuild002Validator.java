@@ -1076,6 +1076,11 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 if(DateUtil.compareDate(anapleroticEndDate,mdate) >= 1){
                     validList.add(new ValidMessage(getMessage("FIN_PROD_E_0233",getMessage("FIN_PROD_E_0236"),getMessage("FIN_PROD_E_0237"))));
                 }
+                //首次回补日:若为封闭式产品，则默认为产品到期日-1自然日，可修改为产品到期日，修改为其他日期不允许修改成功
+                if (StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_封闭式.getValue())
+                        && !(DateUtil.compareDate(firstAnapleroticDate, mdate) == 0 || DateUtil.compareDate(DateUtil.addDay(mdate, -1), firstAnapleroticDate) == 0)) {
+                    validList.add(new ValidMessage("封闭式产品,首次回补日为产品到期日-1自然日或产品到期日"));
+                }
             }
             //修改bug 回补规则相关校验 20191101 add by wangcheng 20191101 start
             if(entity.getFinProductAnapleroticTabInfoDtoList() != null&&entity.getFinProductAnapleroticTabInfoDtoList().size()>0){
