@@ -72,7 +72,8 @@ public class ChbPeriodicService {
         }
         ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfos.get(0);
         map.put("chbPrdBaseinfo", chbPrdBaseinfo);
-        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid((String) map.get("prodId"));
+        String fprodId = (String) map.get("prodId");
+        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid(fprodId);
         map.put("chbPrdBaseinfoDetailList", chbPrdBaseinfoDetailList);
 
         this.createData(reportName, map, mapList, titleList);
@@ -147,7 +148,8 @@ public class ChbPeriodicService {
         }
         ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfos.get(0);
         map.put("chbPrdBaseinfo", chbPrdBaseinfo);
-        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid((String) map.get("prodId"));
+        String fprodId = (String) map.get("prodId");
+        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid(fprodId);
         map.put("chbPrdBaseinfoDetailList", chbPrdBaseinfoDetailList);
         if (chbPrdBaseinfo != null) {
             prodType = chbPrdBaseinfo.getProdtype();
