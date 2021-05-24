@@ -10,18 +10,33 @@
 
 package com.joyintech.tams.report.interf.cnbond.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import cn.hutool.core.util.StrUtil;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.ChbInfoReportMapper;
+import com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper;
+import com.joyintech.tams.common.base.entity.ChbInfoReport;
+import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
+import com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey;
+import com.joyintech.tams.common.base.entity.ChbSubmitStatus;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.report.interf.cnbond.dao.CnBondInterfMapper;
+import com.joyintech.tams.report.interf.cnbond.dto.BaseInfoEntity;
+import com.joyintech.tams.report.interf.cnbond.dto.BusinessForXMLEntity;
+import com.joyintech.tams.report.interf.cnbond.dto.CnBondInterfItem;
+import com.joyintech.tams.report.interf.cnbond.dto.InterfCnBondSubmitPara;
+import com.joyintech.tams.report.interf.cnbond.ext.ExtFprDClient;
+import com.joyintech.tams.report.interf.common.constant.InterfConstant;
+import com.joyintech.tams.report.interf.common.dto.*;
+import com.joyintech.tams.report.interf.common.service.InterfService;
+import com.joyintech.tams.report.interf.common.util.CnBondUtil;
+import com.joyintech.tams.report.interf.common.util.FileUtil;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,50 +46,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.ChbInfoReportMapper;
-import com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper;
-import com.joyintech.tams.common.base.entity.ChbInfoReport;
-import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
-import com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey;
-import com.joyintech.tams.common.base.entity.ChbSubmitStatus;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import com.joyintech.tams.report.common.util.ReportGlobalConstant;
-import com.joyintech.tams.report.interf.cnbond.dao.CnBondInterfMapper;
-import com.joyintech.tams.report.interf.cnbond.dto.BaseInfoEntity;
-import com.joyintech.tams.report.interf.cnbond.dto.BusinessForXMLEntity;
-import com.joyintech.tams.report.interf.cnbond.dto.CnBondInterfItem;
-import com.joyintech.tams.report.interf.cnbond.dto.InterfCnBondSubmitPara;
-import com.joyintech.tams.report.interf.cnbond.ext.ExtFprDClient;
-import com.joyintech.tams.report.interf.common.constant.InterfConstant;
-import com.joyintech.tams.report.interf.common.dto.AsynBizInfoEntity;
-import com.joyintech.tams.report.interf.common.dto.AsynDocumentEntity;
-import com.joyintech.tams.report.interf.common.dto.AsynMsgHeaderEntity;
-import com.joyintech.tams.report.interf.common.dto.AsynReport40Entity;
-import com.joyintech.tams.report.interf.common.dto.AsynReportEntity;
-import com.joyintech.tams.report.interf.common.dto.AsynSysXcptnEntity;
-import com.joyintech.tams.report.interf.common.dto.CommonNodeEntity;
-import com.joyintech.tams.report.interf.common.dto.CommonNodeListEntity;
-import com.joyintech.tams.report.interf.common.dto.Feild;
-import com.joyintech.tams.report.interf.common.dto.InformationEntity;
-import com.joyintech.tams.report.interf.common.dto.InterfLog;
-import com.joyintech.tams.report.interf.common.dto.LinkSchemaRefEntity;
-import com.joyintech.tams.report.interf.common.dto.XbrliContextEntity;
-import com.joyintech.tams.report.interf.common.dto.XbrliDivide;
-import com.joyintech.tams.report.interf.common.dto.XbrliDownLoadXml;
-import com.joyintech.tams.report.interf.common.dto.XbrliEntity;
-import com.joyintech.tams.report.interf.common.dto.XbrliIdentifierEntity;
-import com.joyintech.tams.report.interf.common.dto.XbrliPeriodEntity;
-import com.joyintech.tams.report.interf.common.dto.XbrliUnitEntity;
-import com.joyintech.tams.report.interf.common.dto.XbrliuUnitDenominator;
-import com.joyintech.tams.report.interf.common.service.InterfService;
-import com.joyintech.tams.report.interf.common.util.CnBondUtil;
-import com.joyintech.tams.report.interf.common.util.FileUtil;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * 中债报送
@@ -432,6 +409,13 @@ public class CnBondInterfService extends InterfService {
      */
     @Autowired
     private InvestorsHoldInfo001InterfService investorsHoldInfo001InterfService;
+
+    /**
+     * 添加中债挡板直连标识
+     * 02直连，01标识挡板
+     */
+    @Value("${application.chb.dangbanFlag:02}")
+    private String dangbanFlag;
     /**
      * 中债报送
      *
@@ -710,9 +694,11 @@ public class CnBondInterfService extends InterfService {
         ExtFprDClient.setRegBankCode(registBankCode);
 
         logger.info("CnBondInterfService 报送中债处理开始：" + DateUtil.getCurrentDateTime());
-        AsynReportEntity asynReportEntity = markDangBan();
-//        	CnBondUtil.recurrence(WMRS + fileType + STRING_001_01,cbFilepath + fileZip);
-            
+        if(StrUtil.equals(dangbanFlag, DictCodeList.是否_中债_是.getValue())) {
+            AsynReportEntity asynReportEntity = markDangBan();
+        }else {
+            CnBondUtil.recurrence(WMRS + fileType + STRING_001_01, cbFilepath + fileZip);
+        }
         logger.info("CnBondInterfService 报送中债处理结束：" + DateUtil.getCurrentDateTime());
         File a = new File("./AppCfg/DC/cfg");
         if (asynReportEntity == null) {
