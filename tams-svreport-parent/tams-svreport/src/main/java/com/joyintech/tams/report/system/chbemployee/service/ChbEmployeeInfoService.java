@@ -11,6 +11,7 @@ import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.system.chbemployee.dto.ChbEmployeeInfoDto;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -28,10 +29,10 @@ public class ChbEmployeeInfoService extends BaseService<ChbEmployeeInfo> {
      *
      * @return DtPage
      */
-    public Page<ChbEmployeeInfo> searchForPage(Map<String,Object> paramMap) {
+    public Page<ChbEmployeeInfoDto> searchForPage(Map<String,Object> paramMap) {
         return restTemplate.postForPage(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbEmployeeInfo/findPage", paramMap,
-                ChbEmployeeInfo.class);
+                ChbEmployeeInfoDto.class);
     }
 
     public void updateChbEmployeeInfo(List<ChbEmployeeInfo> dtoList) {
@@ -42,10 +43,10 @@ public class ChbEmployeeInfoService extends BaseService<ChbEmployeeInfo> {
     }
 
 
-    public List<ChbEmployeeInfo> queryReportList(Map<String, Object> pageParam) {
+    public List<ChbEmployeeInfoDto> queryReportList(Map<String, Object> pageParam) {
         return restTemplate.postForList(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbEmployeeInfo/queryReportList",pageParam,
-                ChbEmployeeInfo.class);
+                ChbEmployeeInfoDto.class);
     }
 
 

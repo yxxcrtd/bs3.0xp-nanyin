@@ -18,4 +18,28 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
         ValidateGroupDelete.class })
 public class ChbEmployeeInfoDto extends ChbEmployeeInfo implements ITableRow, ProcessEntity {
 
+    private static final long serialVersionUID = 5451604657613547357L;
+    /**
+     * 中债数据状态
+     * 原status框架上面会做权限控制，所以这里换了name
+     */
+    private String svrStatus;
+
+    private String svrStatusName;
+
+    public String getSvrStatus() {
+        return svrStatus;
+    }
+
+    public void setSvrStatus(String svrStatus) {
+        this.svrStatus = svrStatus;
+    }
+
+    public String getSvrStatusName() {
+        return svrStatusName;
+    }
+
+    public void setSvrStatusName(String svrStatusName) {
+        this.svrStatusName = svrStatusName;
+    }
 }

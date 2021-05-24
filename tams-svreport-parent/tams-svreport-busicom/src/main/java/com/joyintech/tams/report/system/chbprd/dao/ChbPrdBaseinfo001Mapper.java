@@ -1,22 +1,20 @@
 package com.joyintech.tams.report.system.chbprd.dao;
 
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfo001Dto;
 import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfoErrodataWithBLOBs;
-import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
-import com.joyintech.tams.report.system.prorate.dto.ProRateInfo001Dto;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 public interface ChbPrdBaseinfo001Mapper {
 
-    List<ChbPrdBaseinfo> queryForPage(Map<String, Object> param);
+    List<ChbPrdBaseinfo001Dto> queryForPage(Map<String, Object> param);
 
     List<ChbPrdBaseinfo> getProdinfo(Map<String, Object> param);
 
@@ -30,7 +28,7 @@ public interface ChbPrdBaseinfo001Mapper {
 
     void deleteChbPrdBaseinfoErrorData(@Param("dtoList") List<ChbPrdBaseinfo> dtoList);
 
-    List<ChbPrdBaseinfo> queryReportList(Map<String, Object> param);
+    List<ChbPrdBaseinfo001Dto> queryReportList(Map<String, Object> param);
 
     List<ChbPrdBaseinfo> selectOneDate(Map<String, Object> param);
 

@@ -1,13 +1,11 @@
 package com.joyintech.service.svrcom.system.chbprd.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfo001Dto;
 import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfoErrodataWithBLOBs;
 import com.joyintech.tams.report.system.chbprd.service.ChbPrdBaseinfo001Service;
-import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
-import com.joyintech.tams.report.system.prorate.service.ProRateInfo001Service;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,7 @@ public class ChbPrdBaseinfoController {
     private ChbPrdBaseinfo001Service chbPrdBaseinfo001Service;
 
     @PostMapping("findPage/{page}/{length}")
-    public Page<ChbPrdBaseinfo> search(@RequestBody Map<String,Object> paramMap) {
+    public Page<ChbPrdBaseinfo001Dto> search(@RequestBody Map<String,Object> paramMap) {
         return chbPrdBaseinfo001Service.searchForPage(paramMap);
     }
     @PostMapping("getProdinfo")
@@ -62,8 +60,8 @@ public class ChbPrdBaseinfoController {
         return ;
     }
     @PostMapping("queryReportList")
-    public List<ChbPrdBaseinfo> queryReportList(@RequestBody Map<String, Object> param) {
-        List<ChbPrdBaseinfo> list = chbPrdBaseinfo001Service.queryReportList(param);
+    public List<ChbPrdBaseinfo001Dto> queryReportList(@RequestBody Map<String, Object> param) {
+        List<ChbPrdBaseinfo001Dto> list = chbPrdBaseinfo001Service.queryReportList(param);
         return list;
     }
     @PostMapping("selectOneDate")

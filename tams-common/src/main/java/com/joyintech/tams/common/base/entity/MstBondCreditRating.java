@@ -16,6 +16,10 @@ public class MstBondCreditRating extends MstBondCreditRatingKey {
      */
     private String status;
     /**
+     * 数据状态
+     */
+    private String status2;
+    /**
      * 数据来源
      */
     private String svrDataSources;
@@ -84,6 +88,14 @@ public class MstBondCreditRating extends MstBondCreditRatingKey {
     @Override
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatus2() {
+        return status2;
+    }
+
+    public void setStatus2(String status2) {
+        this.status2 = status2;
     }
 
     public String getSvrDataSources() {

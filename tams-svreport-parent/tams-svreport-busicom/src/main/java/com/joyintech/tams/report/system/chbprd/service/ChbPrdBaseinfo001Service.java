@@ -34,7 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo> {
+public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo001Dto> {
 
     @Autowired
     private ChbPrdBaseinfo001Mapper chbPrdBaseinfo001Mapper;
@@ -42,8 +42,8 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
     @Autowired
     private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
-    public Page<ChbPrdBaseinfo> searchForPage(Map<String, Object> param){
-        Page<ChbPrdBaseinfo> page;
+    public Page<ChbPrdBaseinfo001Dto> searchForPage(Map<String, Object> param){
+        Page<ChbPrdBaseinfo001Dto> page;
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         String prodId = (String)param.get("prodId");
@@ -69,7 +69,7 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
      * @see
      * @since 1.0
      */
-    private void dealDataList(List<ChbPrdBaseinfo> list) {
+    private void dealDataList(List<ChbPrdBaseinfo001Dto> list) {
         list.forEach(item -> {
             item.setRaiseTypeName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.募集方式_中债 , item.getRaiseType()));
@@ -163,6 +163,8 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                     DictCode.产品转让类型_中债 , item.getTransferType()));
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.维护数据状态, item.getStatus()));
+            item.setSvrStatusName(SysDataUtil.getZZDictCodeAndNameNew(
+                    DictCode.维护数据状态, item.getSvrStatus()));
             item.setDataSourceName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.数据来源, item.getDataSource()));
             if("DB".equals(item.getDataSource())){
@@ -209,7 +211,7 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
         return;
     }
 
-    public List<ChbPrdBaseinfo> queryReportList(Map<String, Object> param) {
+    public List<ChbPrdBaseinfo001Dto> queryReportList(Map<String, Object> param) {
         String prodIds = (String)param.get("keyprodIdList");
         List<String> selectprodIds = StringUtil.splitToList(GlobalConstant.COMMA, prodIds);
         param.put("selectprodIds", selectprodIds);

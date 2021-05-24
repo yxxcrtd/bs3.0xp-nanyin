@@ -21,6 +21,8 @@ public class InvestmentDealInfoDto extends ChbInvestTrade implements ITableRow, 
     private List<InvestmentDealInfoDto> selectedItem;
     
     private String statusName;
+
+    private String status2;
     
     private String ccyStr;
     
@@ -59,6 +61,14 @@ public class InvestmentDealInfoDto extends ChbInvestTrade implements ITableRow, 
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    public String getStatus2() {
+        return status2;
+    }
+
+    public void setStatus2(String status2) {
+        this.status2 = status2;
     }
 
     public String getCcyStr() {

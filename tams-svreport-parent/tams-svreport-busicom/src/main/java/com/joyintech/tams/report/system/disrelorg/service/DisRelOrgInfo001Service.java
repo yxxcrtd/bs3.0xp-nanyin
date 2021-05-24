@@ -7,16 +7,15 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.disrelorg.dao.DisRelOrgInfo001Mapper;
-import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
@@ -25,9 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -68,6 +65,8 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
         list.forEach(item -> {
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.维护数据状态, item.getStatus()));
+            item.setSvrStatusName(SysDataUtil.getZZDictCodeAndNameNew(
+                    DictCode.维护数据状态, item.getSvrStatus()));
             item.setSvrDataSourcesName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.数据来源, item.getSvrDataSources()));
         });
@@ -162,6 +161,10 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
                 return tempCheckResult;
             }
             if (null != dataList) {
+                checkResult = this.checkExcelValidMsg(dataList);
+                if(!StringUtil.isEmptyList(checkResult)) {
+                    return checkResult;
+                }
                 List<DisAssociatedInstitutions> entities = new ArrayList<DisAssociatedInstitutions>();
                 Map<String,Object> map=new HashMap<>();
                 for (int i = 0; i < dataList.size(); i++ ) {
@@ -272,5 +275,63 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
 
     public void updateOne(DisAssociatedInstitutions disAssociatedInstitutions) {
         disRelOrgInfo001Mapper.updateOne(disAssociatedInstitutions);
+    }
+
+    /**
+     * 检验数据
+     * @param dataList
+     * @return
+     */
+    private List<ExcelValidDto> checkExcelValidMsg(List<List<String>> dataList) {
+        List<ExcelValidDto> errorList = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            for (int j = i+1; j < dataList.size(); j++ ) {
+                if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1)) &&
+                        StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))){
+                    errorList.add(new ExcelValidDto("","第"+(i+2)+"行","第"+(i+2)+"行关联机构代码、关联机构名称与"+"第"+(j+2)+"行关联机构代码、关联机构名称相同"));
+                }
+            }
+            //操作类型
+            String type ="";
+            if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
+                type = dataList.get(i).get(0).toString();
+            }
+            //关联机构代码
+            String relorgId ="";
+            if(null!=dataList.get(i).get(1)&& !"".equals(dataList.get(i).get(1))){
+                relorgId =dataList.get(i).get(1).toString();
+            }
+            //关联机构名称
+            String organName ="";
+            if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
+                organName=dataList.get(i).get(2).toString();
+            }
+            DisAssociatedInstitutions dis=new DisAssociatedInstitutions();
+            dis.setRelorgId(relorgId);
+            dis.setOrganName(organName);
+            List<String> message = new ArrayList<>();
+            List<ValidMessage> resultList = new ArrayList<>();
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dis, "DisRelOrg002", null, ValidMessage.class);
+            for (ValidMessage msg : resultList) {
+                message.add(msg.getMessage());
+            }
+            if(!StringUtil.isEmptyList(message)) {
+                errorList.add(new ExcelValidDto(relorgId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+            }
+            List<DisAssociatedInstitutions> entitys=disRelOrgInfo001Mapper.selectOne(relorgId);
+            if("新增".equals(type)){
+                if(null!=entitys && entitys.size()>0){
+                    //ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行已存在该关联机构代码的数据");
+                    errorList.add(new ExcelValidDto(relorgId,"第"+(i+2)+"行","已存在该关联机构代码的数据"));
+                }
+            }
+            if("修改".equals(type) || "删除".equals(type)){
+                if(entitys.size()<=0){
+                    //ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行不存在该关联机构代码的数据,请核查");
+                    errorList.add(new ExcelValidDto(relorgId,"第"+(i+2)+"行","不存在该关联机构代码的数据,请核查"));
+                }
+            }
+        }
+        return errorList;
     }
 }

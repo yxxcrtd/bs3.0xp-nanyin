@@ -12,12 +12,9 @@ import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfo001Dto;
 import com.joyintech.tams.report.system.chbprd.service.ChbPrdBaseinfo001Service;
 import com.joyintech.tams.report.system.chbprd.service.ChbPrdBaseinfoService;
-import com.joyintech.tams.report.system.prorate.service.ProRateInfo001Service;
-import com.joyintech.tams.report.system.prorate.service.ProrateService;
-import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
-import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +25,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -57,9 +56,9 @@ public class ChbPrdBaseinfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("searchPage")
-    public Page<ChbPrdBaseinfo> search() {
+    public Page<ChbPrdBaseinfo001Dto> search() {
         Map<String, Object> param = RequestUtil.getPageParam();
-            return chbPrdBaseinfoService.searchForPage(param);
+        return chbPrdBaseinfoService.searchForPage(param);
     }
 
     /**
@@ -130,7 +129,7 @@ public class ChbPrdBaseinfo001Controller extends BaseController {
     @RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
         //SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
-        List<ChbPrdBaseinfo> dtoList = this.chbPrdBaseinfoService.queryReportList(RequestUtil.getPageParam());
+        List<ChbPrdBaseinfo001Dto> dtoList = this.chbPrdBaseinfoService.queryReportList(RequestUtil.getPageParam());
         dtoList.forEach(item -> {
            /* item.setRaiseVdateStr(dfs.format(item.getRaiseVdateStr()));
             item.setRaiseEnddateStr(dfs.format(item.getRaiseEnddateStr()));

@@ -5,7 +5,7 @@
             prodId:$('#prodId').val()==null?null:$('#prodId').val().join(","),
             tradeCode:$('#tradeCode').val()==null?null:$('#tradeCode').val(),
             assetCode:$('#assetCode').val()==null?null:$('#assetCode').val().join(","),
-            status:$('#status').val()==null?null:$('#status').val().join(","),
+            status:$('#status2').val()==null?null:$('#status2').val().join(","),
             dealdateStart : $('#dealdate').val()==null?null:$('#dealdate').startDate(),
             dealdateEnd : $('#dealdate').val()==null?null:$('#dealdate').endDate(),
         };
@@ -20,8 +20,8 @@
             }
         },
         cols: [
-            { title: "数据状态", field:'statusName',sortField:'status',width:'8%'},
-            { title: "status",  visible:false, field:'status'},
+            { title: "数据状态", field:'statusName',sortField:'statusName',width:'8%'},
+            { title: "status",  visible:false, field:'status2'},
             { title: "行内交易编码", field:'tradeCode',width:'8%',sortField:'tradeCode'},
             { title: "产品代码", field:'prodId',width:'8%',sortField:'prodId'},
             { title: "行内资产/负债编码", field:'assetCode',width:'8%',sortField:'assetCode'},
@@ -91,7 +91,7 @@
             var error='';
             var s='D';
             for(var i=0; i<listdto.length; i++){
-                    if(listdto[i].status.indexOf("D")!= -1){
+                    if(listdto[i].status2.indexOf("D")!= -1){
                     error = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }
@@ -116,9 +116,9 @@
         $('#InvestmentDealInfo001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'svreport/system/investmentdeal/InvestmentDealInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                    // Joyin.ajax(basePath + 'svreport/system/investmentdeal/InvestmentDealInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
                         Joyin.ajax(basePath + 'svreport/system/investmentdeal/InvestmentDealInfo001/importFile', {fileName: fileName});
-                    });
+                    // });
                 },function() {
                     table.reload();
                 });
@@ -153,7 +153,7 @@
             }
             var errorMessage='';
             for(var i=0; i<selArr.length; i++){
-                if(selArr[i].status.indexOf("D")!= -1){
+                if(selArr[i].status2.indexOf("D")!= -1){
                     errorMessage = "选择的数据中包含数据状态为删除的数据,请重新选择"+"<br>";
                 }
             }

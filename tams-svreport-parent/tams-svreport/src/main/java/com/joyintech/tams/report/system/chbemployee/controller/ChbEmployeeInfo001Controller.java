@@ -13,6 +13,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.ChbEmployeeInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.system.chbemployee.dto.ChbEmployeeInfoDto;
 import com.joyintech.tams.report.system.chbemployee.service.ChbEmployeeInfo001Service;
 import com.joyintech.tams.report.system.chbemployee.service.ChbEmployeeInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class ChbEmployeeInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("searchPage")
-    public Page<ChbEmployeeInfo> search() {
+    public Page<ChbEmployeeInfoDto> search() {
         Map<String, Object> param = RequestUtil.getPageParam();
         return chbEmployeeInfoService.searchForPage(param);
     }
@@ -85,7 +86,7 @@ public class ChbEmployeeInfo001Controller extends BaseController {
      */
     @RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
-        List<ChbEmployeeInfo> dtoList = this.chbEmployeeInfoService.queryReportList(RequestUtil.getPageParam());
+        List<ChbEmployeeInfoDto> dtoList = this.chbEmployeeInfoService.queryReportList(RequestUtil.getPageParam());
         dtoList.forEach(item -> {
             item.setEmployeeTypeStr(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.从业人员类型, item.getEmployeeType() ));
