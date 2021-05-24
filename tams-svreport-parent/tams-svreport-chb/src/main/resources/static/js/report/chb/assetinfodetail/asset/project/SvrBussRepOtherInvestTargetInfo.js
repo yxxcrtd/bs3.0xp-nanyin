@@ -12,7 +12,7 @@
         var  otherrepRateFlagval=getElementById('rateFlag').val();
         if(otherrepRateFlagval=='02'){
             getElementById('assetYield').val('').trigger("change");
-            getElementById('assetYield').attr('disabled',true);
+            // getElementById('assetYield').attr('disabled',true);
         }else{
             getElementById('assetYield').attr('disabled',false);
         }

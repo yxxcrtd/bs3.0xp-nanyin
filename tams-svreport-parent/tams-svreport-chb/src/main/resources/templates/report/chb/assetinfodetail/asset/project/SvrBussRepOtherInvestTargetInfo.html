@@ -15,7 +15,7 @@
                     <label class="layui-form-label form-label-wrap">名称</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_assetName|" th:name="|${entityName}.assetName|"   th:value="${entity?.assetName}"
-                               class="layui-input form-input text-number" data-textrange="0"/>
+                               class="layui-input form-input" required/>
                     </div>
                 </div>
 
@@ -189,11 +189,11 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepOtherInvestTargetInfo.financierType2}">融资人类型（按技术领域划分）</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_financierType2|" th:name="|${entityName}.financierType2|"
-                                th:initValue="${entity?.financierType2}"
+                        <select th:id="|${entityName}_financierType3|" th:name="|${entityName}.financierType3|"
+                                th:initValue="${entity?.financierType3}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
-                                data-th-data-result="${SVR_PARTY_TYPE2}">
+                                data-th-data-result="${SVR_PARTY_TYPE3}">
                         </select>
                     </div>
                 </div>
@@ -206,11 +206,11 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepOtherInvestTargetInfo.financierType3}">融资人类型（按经济类型划分）</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_financierType3|" th:name="|${entityName}.financierType3|"
-                                th:initValue="${entity?.financierType3}"
+                        <select th:id="|${entityName}_financierType2|" th:name="|${entityName}.financierType2|"
+                                th:initValue="${entity?.financierType2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
-                                data-th-data-result="${SVR_PARTY_TYPE3}">
+                                data-th-data-result="${SVR_PARTY_TYPE2}">
                         </select>
                     </div>
                 </div>
