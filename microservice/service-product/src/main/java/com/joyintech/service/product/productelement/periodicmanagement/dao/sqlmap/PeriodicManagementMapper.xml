@@ -98,6 +98,8 @@
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 start -->
 		  and fpa.term_type != #{termType03}
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 end -->
+		  and days.dates >= fp.VDATE
+		  and days.dates <![CDATA[<]]> fp.MDATE
 		)t
 		where  t.dates &lt;= t.mdate
 		and not exists (select t1.finprod_id
