@@ -170,26 +170,19 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
                 return tempCheckResult;
             }
             if (null != dataList) {
+                tempCheckResult = this.checkExcelValidMsg(dataList);
+                if(!StringUtil.isEmptyList(tempCheckResult)) {
+                    return tempCheckResult;
+                }
                 Map<String,Object> map=new HashMap<>();
                 for (int i = 0; i < dataList.size(); i++ ) {
                     InvestmentDealInfoDto dto = new InvestmentDealInfoDto();
                     List<String> message = new ArrayList<>();
                     coverEntity(dto,dataList,i);
-                    List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                    resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbInvestTrade002", "", ValidMessage.class);
-                    if (!StringUtil.isEmptyList(resultList)){
-                        resultList.forEach(validMessage -> {
-                            message.add(validMessage.getMessage());
-                        });
-                    }
                     if("新增".equals(dto.getType()) || "修改".equals(dto.getType())){
-                        if (StringUtil.isEmptyList(resultList)){
-                            save(dto);
-                        }
+                        save(dto);
                     }else if("删除".equals(dto.getType())){
-                        if (StringUtil.isEmptyList(resultList)) {
-                            delData(dto);
-                        }
+                        delData(dto);
                     }else {
                         message.add("操作类型值不在可选范围内");
                     }
@@ -209,6 +202,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
     }
 
     private void coverEntity(InvestmentDealInfoDto dto,List<List<String>> dataList,int i){
+        dto.setType(dataList.get(i).get(0));//操作类型 add by yanya on 20210524
         dto.setProdId(dataList.get(i).get(1));
         dto.setAssetCode(dataList.get(i).get(2));
         dto.setTradeCode(dataList.get(i).get(3));
@@ -226,10 +220,10 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             dto.setAmt(new BigDecimal(dataList.get(i).get(10)));
         }
         if (StringUtil.isNotEmpty(dataList.get(i)) && StringUtil.isNotEmpty(dataList.get(i).get(11))) {
-            dto.setUnitPriceFull(new BigDecimal(dataList.get(i).get(11)));
+            dto.setUnitPriceNet(new BigDecimal(dataList.get(i).get(11)));
         }
         if (StringUtil.isNotEmpty(dataList.get(i)) && StringUtil.isNotEmpty(dataList.get(i).get(12))) {
-            dto.setUnitPriceNet(new BigDecimal(dataList.get(i).get(12)));
+            dto.setUnitPriceFull(new BigDecimal(dataList.get(i).get(12)));
         }
         if (StringUtil.isNotEmpty(dataList.get(i)) && StringUtil.isNotEmpty(dataList.get(i).get(13))) {
             dto.setEndRate(new BigDecimal(dataList.get(i).get(13)));
@@ -294,4 +288,30 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
         }
     }
 
+
+    /**
+     * 数据检验
+     * @param dataList
+     * @return
+     */
+    private List<ExcelValidDto> checkExcelValidMsg(List<List<String>> dataList) {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            InvestmentDealInfoDto dto = new InvestmentDealInfoDto();
+            List<String> message = new ArrayList<>();
+            coverEntity(dto,dataList,i);
+            List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbInvestTrade002", "", ValidMessage.class);
+            if (!StringUtil.isEmptyList(resultList)){
+                resultList.forEach(validMessage -> {
+                    message.add(validMessage.getMessage());
+                });
+            }
+            if (!message.isEmpty()) {
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                        StringUtil.joinString(message, GlobalConstant.COMMA)));
+            }
+        }
+        return checkResult;
+    }
 }
