@@ -70,7 +70,7 @@ public class ChbFireInterTaskService extends InterfService {
             if (!lockPath.exists()) {
                 lockPath.mkdirs();
             }
-            File lockFile = new File(fileLockPath + File.separator + "up.lockfile");
+            File lockFile = new File(fileLockPath + File.separator + "fire.lockfile");
             if (!lockFile.exists()) {
                 lockFile.createNewFile();
             }
