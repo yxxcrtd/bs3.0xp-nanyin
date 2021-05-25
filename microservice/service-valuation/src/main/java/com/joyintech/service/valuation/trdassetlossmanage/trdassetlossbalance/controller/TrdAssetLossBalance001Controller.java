@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@RestController("TrdAssetLossBalance001Ctr_dtx")
-@RequestMapping("/TrdAssetLossBalance001")
+@RestController(value="serviceTrdAssetLossBalance001Controller")
+@RequestMapping("/${application.service}/TrdAssetLossBalance001")
 public class TrdAssetLossBalance001Controller extends BaseController {
 
     @Autowired
@@ -56,10 +56,14 @@ public class TrdAssetLossBalance001Controller extends BaseController {
     public Page<TrdAssetLossBalance001Dto> findPage(@RequestBody Map<String, Object> params,
             @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
         params.put("PROFITTYPE_VALUE_02", DictCodeListExt2.收益类型_预期收益.getValue());
-        params.put("TYPE_TOUGUAN_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-        params.put("TYPE_TOUGUAN_F07", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
-        params.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
-        params.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+        // 使用估值的金融产品类型做判断
+        params.put("TYPE_GUZHI_F01", DictCodeListExt1.金融产品类型_债券.getValue());
+        params.put("TYPE_GUZHI_F07", DictCodeListExt1.金融产品类型_存款.getValue());
+        params.put("TYPE_GUZHI_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
+//        params.put("TYPE_TOUGUAN_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+//        params.put("TYPE_TOUGUAN_F07", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
+//        params.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+//        params.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
         Page<TrdAssetLossBalance001Dto> p= trdAssetLossBalance001Service.queryPageList(
                 page,length,params);
         return p;
@@ -73,10 +77,14 @@ public class TrdAssetLossBalance001Controller extends BaseController {
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> params,
                                                 @PathVariable("page") int page, @PathVariable("length") int length){
         params.put("PROFITTYPE_VALUE_02", DictCodeListExt2.收益类型_预期收益.getValue());
-        params.put("TYPE_TOUGUAN_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-        params.put("TYPE_TOUGUAN_F07", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
-        params.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
-        params.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+        // 使用估值的金融产品类型做判断
+        params.put("TYPE_GUZHI_F01", DictCodeListExt1.金融产品类型_债券.getValue());
+        params.put("TYPE_GUZHI_F07", DictCodeListExt1.金融产品类型_存款.getValue());
+        params.put("TYPE_GUZHI_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
+//        params.put("TYPE_TOUGUAN_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+//        params.put("TYPE_TOUGUAN_F07", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
+//        params.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+//        params.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
         Page<SelectOptionDto> getFinprodId = trdAssetLossBalance001Service.getFinprodId(params,page, length);
         return getFinprodId;
     }

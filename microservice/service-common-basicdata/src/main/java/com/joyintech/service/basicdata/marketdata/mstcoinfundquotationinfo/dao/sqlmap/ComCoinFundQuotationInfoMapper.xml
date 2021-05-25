@@ -115,8 +115,10 @@
 		FROM 
     		FIN_PRODUCT 
 		WHERE 
-    		FINPROD_MARKET_ID LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
-
+		<!-- update by yzg 20210525 start -->
+    		<!-- FINPROD_MARKET_ID LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%') -->
+			1=1
+		<!-- update by yzg 20210525 end -->
 		<if test="search !=null and search != ''">
 			AND	(
 				FINPROD_MARKET_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))

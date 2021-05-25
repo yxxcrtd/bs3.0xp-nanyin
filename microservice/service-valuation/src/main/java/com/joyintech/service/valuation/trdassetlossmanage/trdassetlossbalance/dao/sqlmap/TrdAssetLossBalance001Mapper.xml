@@ -93,8 +93,11 @@
         AND nvl(A.SEC_ACCT_ID,'999999') = nvl(lxysk.SEC_ACCT_ID,'999999')
         AND lxysk.Finprod_Id = A.FINPROD_ID
         where
-        (F.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
-        OR (F.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND F.Profit_Type in (#{PROFITTYPE_VALUE_02})))
+        <!-- 	估值不接入finprod_type2，使用finprod_type做判断 -->
+        (F.Finprod_Type in (#{TYPE_GUZHI_F01},#{TYPE_GUZHI_F07})
+        OR (F.Finprod_Type = #{TYPE_GUZHI_F17} AND F.Profit_Type in (#{PROFITTYPE_VALUE_02})))
+<!--         (F.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
+        OR (F.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND F.Profit_Type in (#{PROFITTYPE_VALUE_02}))) -->
         <if test="busiId!=null and busiId!=''">
             AND A.FINPROD_ID = #{busiId,jdbcType=VARCHAR}
         </if>
@@ -147,8 +150,11 @@
         F.FINPROD_ABBR as text,
         F.FINPROD_TYPE || F.VDATE || F.MDATE as object
         from FIN_PRODUCT F          /**标的类金融产品**/
-        where (F.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
-        OR (F.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND F.Profit_Type in (#{PROFITTYPE_VALUE_02})))
+        <!-- 	估值不接入finprod_type2，使用finprod_type做判断 -->
+        where (F.Finprod_Type in (#{TYPE_GUZHI_F01},#{TYPE_GUZHI_F07})
+        OR (F.Finprod_Type2 = #{TYPE_GUZHI_F17} AND F.Profit_Type in (#{PROFITTYPE_VALUE_02})))
+<!--         where (F.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
+        OR (F.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND F.Profit_Type in (#{PROFITTYPE_VALUE_02}))) -->
         <if test="search !=null and  search !='' ">
             AND (F.FINPROD_ID like '%' || #{search} || '%'
             OR F.FINPROD_ABBR like '%' || #{search} || '%')
