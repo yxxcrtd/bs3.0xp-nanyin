@@ -533,6 +533,9 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 
     //add by lingxq on 2021-05-07 for mysql小数点后自动按照定义的长度补充0，先去0再校验------>>>>>>
     private static String stripTrailingZeros(String srcValue) {
+        if(!StringUtils.isBlank(srcValue)) {
+            srcValue = srcValue.trim();
+        }
         if(isNumeric(srcValue)) {
             BigDecimal value = new BigDecimal(srcValue);
             BigDecimal noZeros = value.stripTrailingZeros();
