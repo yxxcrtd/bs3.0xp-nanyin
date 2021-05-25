@@ -14,14 +14,12 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.period.trdlendduration.dto.TrdLendDuration001Dto;
 import com.joyintech.tams.invest.period.trdlendduration.service.TrdLendDuration001Service;
@@ -72,26 +70,17 @@ public class TrdLendDuration002Controller extends BaseController {
     @Override
     public String init(Model model) {
         super.setSelectOptionToModel(model, DictCode.币种, DictCode.计息基础,
-            DictCode.回购拆借方向);
+            DictCode.回购拆借方向,DictCode.交易场所);
         Map<String, Object> map = RequestUtil.getPageParam();
         TrdLendDuration001Dto entity = null;
         String workflowId = (String)map.get(GlobalConstant.WORKFLOW_ID);
-        if (StringUtil.isNotEmpty(workflowId)&&(!WorkFlowUtil.isNotFromToDoList())) {
+        if (StringUtil.isNotEmpty(workflowId)) {
             entity = trdLendDuration001Service.getBussinessEntityByWorkflowId(workflowId);
         }
         else {
             entity = trdLendDuration001Service.getMyEntity(map);
             entity.setIntRate(ArithmeticUtil.multiply(entity.getIntRate(), new BigDecimal(100)));
-
-            //TISHKBS-1049
-            //CLONE - 拆借存续期交易---“实收本息和”字段的值在系统跑过批后，到期交易中没有带出值
-            // 现场不愿意手动输入，建议实付金额也带出初始值，且初始值=理论值，可改；
-            if(getParam("pageModel") == null || 
-                !StringUtil.equals(getParam("pageModel"), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE)) {
-                entity.setTradeAmt(entity.getTheoryAmt());
-            } 
         }
-        model.addAttribute("workflowId", workflowId);
         model.addAttribute(GlobalConstant.ENTITY,entity );
         if(CollectionUtils.isNotEmpty(entity.getBussTrdTransferOrder())) {
             model.addAttribute("entity_bussTrdTransferOrderDto", JsonUtils.object2Json(entity.getBussTrdTransferOrder().get(0)));
@@ -100,6 +89,9 @@ public class TrdLendDuration002Controller extends BaseController {
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("BACK_LEND_DIRECTION_CR", DictCodeList.回购拆借方向_拆入.getValue());
         model.addAttribute("BACK_LEND_DIRECTION_CC", DictCodeList.回购拆借方向_拆出.getValue());
+        model.addAttribute("GEN_PAY_ORDERS_AUTO", CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
+        model.addAttribute("BACK_LEND_DIRECTION_01",DictCodeList.回购拆借方向_拆入.getValue());
+        model.addAttribute("BACK_LEND_DIRECTION_02",DictCodeList.回购拆借方向_拆出.getValue());
         return super.init(model);
     }
 

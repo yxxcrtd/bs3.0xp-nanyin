@@ -29,7 +29,6 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
@@ -213,24 +212,6 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
      */
     private BigDecimal avalibleCash;
 
-
-    /**
-     * 组合T日可用现金,用于APP显示
-     * @return
-     */
-    private String appAvalibleCash;
-
-    /**
-     * 组合T+1日可用现金,用于APP显示
-     * @return
-     */
-    private String appAvalibleCash1;
-
-    /**
-     * 授信来源
-     */
-    private String creditSource;
-
     /**
      * 回购/拆借方向，正回购、逆回购、拆入、拆出
      */
@@ -240,9 +221,25 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
-    private RiskCreditListCommonDto riskCreditListCommonDto;
-    
+
+    /**
+     * 清算速度
+     */
+    private Long settleSpreed;
+
+    /**
+     * 清算速度
+     */
+    private String settleSpreedStr;
+
+    // add by dubaojun 2020-08-27 风险接口需要到期日和交易日历 start
+    /**
+     * 交易日历
+     */
+    private String calendarId;
+    // add by dubaojun 2020-08-27 风险接口需要到期日和交易日历 end
+
+
     /**
      * 获取 riskTrialRetDto
      * @return riskTrialRetDto.
@@ -825,36 +822,41 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
     public void setActPortfolioId(String actPortfolioId) {
         this.actPortfolioId = actPortfolioId;
     }
-    
-    public RiskCreditListCommonDto getRiskCreditListCommonDto() {
-        return riskCreditListCommonDto;
+
+    @NotEmpty(fieldName = "TrdRepoTrade002.settleSpeed")
+    public Long getSettleSpreed() {
+        return settleSpreed;
     }
 
-    public void setRiskCreditListCommonDto(RiskCreditListCommonDto riskCreditListCommonDto) {
-        this.riskCreditListCommonDto = riskCreditListCommonDto;
+    public void setSettleSpreed(Long settleSpreed) {
+        this.settleSpreed = settleSpreed;
     }
 
-    public String getAppAvalibleCash() {
-        return appAvalibleCash;
+    public String getSettleSpreedStr() {
+        return settleSpreedStr;
     }
 
-    public void setAppAvalibleCash(String appAvalibleCash) {
-        this.appAvalibleCash = appAvalibleCash;
+    public void setSettleSpreedStr(String settleSpreedStr) {
+        this.settleSpreedStr = settleSpreedStr;
     }
 
-    public String getAppAvalibleCash1() {
-        return appAvalibleCash1;
+    /**
+     * 获取 calendarId
+     * 
+     * @return calendarId
+     */
+    public String getCalendarId() {
+        return calendarId;
     }
 
-    public void setAppAvalibleCash1(String appAvalibleCash1) {
-        this.appAvalibleCash1 = appAvalibleCash1;
+    /**
+     * 设置 calendarId
+     * 
+     * @param calendarId String
+     */
+    public void setCalendarId(String calendarId) {
+        this.calendarId = calendarId;
     }
 
-    public String getCreditSource() {
-        return creditSource;
-    }
 
-    public void setCreditSource(String creditSource) {
-        this.creditSource = creditSource;
-    }
 }

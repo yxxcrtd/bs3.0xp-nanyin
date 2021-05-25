@@ -102,8 +102,17 @@ public class EtrLendSpecInfoDto extends EtrEntrust {
      * 到期日
      */
     private Date mdateAdd;
+
+    private String termType;
+
+    private Long settleSpreed;
     
-    
+    //产品化_SNSTZJY-2384_拆借，交易方向是拆出,指令金额没有改变 add by zhangpei 20201209 start
+    /**
+     * 按钮id
+     */
+    private String elementId;
+    //产品化_SNSTZJY-2384_拆借，交易方向是拆出,指令金额没有改变 add by zhangpei 20201209 end
     
     /**
      * 获取 fileArray
@@ -433,7 +442,43 @@ public class EtrLendSpecInfoDto extends EtrEntrust {
     public void setMinAmt(BigDecimal minAmt) {
         this.minAmt = minAmt;
     }
-    
-    
-    
+
+
+    public String getTermType() {
+        return termType;
+    }
+
+    public void setTermType(String termType) {
+        this.termType = termType;
+    }
+
+    public Long getSettleSpreed() {
+        return settleSpreed;
+    }
+
+    public void setSettleSpreed(Long settleSpreed) {
+        this.settleSpreed = settleSpreed;
+    }
+
+
+
+
+
+
+
+
+	public String getElementId() {
+		return elementId;
+	}
+
+
+
+
+
+
+
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
 }

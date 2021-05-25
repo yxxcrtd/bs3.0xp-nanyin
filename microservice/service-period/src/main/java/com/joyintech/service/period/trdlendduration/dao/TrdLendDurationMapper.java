@@ -67,9 +67,5 @@ public interface TrdLendDurationMapper {
 	 * @since 1.0
 	 */
 	String getBackLendDirection(Map<String, Object> map);
-	
-	String findCeTradeIdByWorkflowId(String workflowId);
-	//add by liupengfei for 多级法人改造 S
-    List<SelectOptionDto> getBusiCode(Map<String, Object> param);
-	//add by liupengfei for 多级法人改造 E
+
 }

@@ -8,19 +8,19 @@
 <body>
     <div layout:fragment="content">
         <div class="form-button-area">
-            <a id="TrdLendInvestTrade001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
-            <a id="TrdLendInvestTrade001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{SysCommon.revoke}"></a>
+            <a th:id="|${pageId}_btn_add|" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
+            <a th:id="|${pageId}_btn_revoke|" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{SysCommon.revoke}"></a>
         </div>
         <div class="joyin-form-wrap joyin-filter-form condition-area">
             <form class="layui-form" id="searchForm">
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-                        <label class="layui-form-label form-lable" data-th-text="#{TrdLendInvestTrade001.entrustId}">委托代码</label>
+                        <label class="layui-form-label form-lable" data-th-text="#{TrdLendInvestTrade001.entrustId}">指令代码</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="entrustId" name="entrustId"
                                 class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
-                                data-th-data-url="@{/invest/trade/lend/TrdLendInvestTrade001/getEntrustIdByType}" data-idfield="code"
+                                data-th-data-url="@{/business/common/CommonSelect/getEntrustId?finprodType=F08}" data-idfield="code"
                                 data-keyfield="name"
                                 data-th-data-effectivefieldsalias='|{"code":"#{TrdLendInvestTrade001.entrustId}","shortName":"#{TrdLendInvestTrade001.entrustId}"}|'
                                 data-th-value="${entity?.entrustId}" maxlength="50" >
@@ -32,7 +32,7 @@
                             <select type="text" id="portfolioId" name="portfolioId"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
-                                data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId}"
+                                data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId?ww=false}"
                                 data-th-value="${entity?.portfolioId}"
                                 multiple="true" >
                              </select>
@@ -79,6 +79,17 @@
                         </div>
                     </div>
                 </div>
+                <!-- <div class="layui-form-item">
+                    <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                        <label class="layui-form-label form-lable" data-th-text="#{TrdLendInvestTrade001.tradeMarket}">交易场所</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="tradeMarket" name="tradeMarket"
+                                   class="layui-input form-input input-select" allowclear="true"
+                                   placeholder="请选择交易场所" data-th-placeholder="#{SysCommon.placeholder}" aria-hidden="true"
+                                   data-th-data-result="${TRADE_PLACE}" formatoption="true">
+                        </div>
+                    </div>
+                </div> -->
             </form>
         </div>
         <div>

@@ -23,6 +23,10 @@
         if($('#entrustStatus').val()){
             var entrustStatus = $('#entrustStatus').val().join(",");
         }
+
+        if($('#tradeMarket').val()){
+            var tradeMarket = $('#tradeMarket').val();
+        }
        return {
             portfolioId:portfolioId
             ,type6:type6
@@ -30,13 +34,14 @@
             ,ps:ps
             ,entrustStatus:entrustStatus
             ,entrustDate:$('#entrustDate').val()
+           ,tradeMarket:tradeMarket
         }
     };
     /** 
      * 新建
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrLendSpecInfo002'), basePath +'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/init', '98%', '95%',function(){table.reload();});
+        Joyin.dialog(JoyinUtil.getLabel('EtrLendSpecInfo002'), basePath +'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/init?parentPageId=' + pageId, '98%', '95%',function(){table.reload();});
     }
     /**
      * 定义数据表格
@@ -72,7 +77,11 @@
             ,{field:'type6', visible:false}
             ,{field:'psStr', title: 'EtrLendSpecInfo001.ps', width:'10%',sortField:"ps"}
             ,{field:'ps', visible:false}
-            ,{field:'termDays',type:'number', title: 'EtrLendSpecInfo001.term', width:'10%',sortField:"termDays"}
+            ,{field:'tradeMarket', visible:false}
+            ,{field:'tradeMarketStr', title: 'EtrInvestAllInfo001.tradeMarket', width:'200',sortField:"tradeMarket"}
+            ,{field:'settleSpreed', visible:false}
+            ,{field:'qssd', title: 'EtrInvestAllInfo001.tradePlat', width:'200',sortField:"settleSpreed"}
+            ,{field:'termDays',type:'number', title: 'EtrLendSpecInfo001.term', width:'10%',sortField:"termDays",digit:0}
             ,{field:'price',type:'number', title: 'EtrLendSpecInfo001.price', width:'10%',type:'number',sortField:"price"}
             ,{field:'ccyStr', title: 'EtrLendSpecInfo001.ccy', width:'10%',sortField:"ccy"}
             ,{field:'ccy', visible:false}
@@ -85,7 +94,7 @@
             }, width:'10%',sortable:false}
             ,{field:'remark', title: 'EtrLendSpecInfo001.remark', width:'10%',sortable:false}
             ,{field:'entrustId',  visible:false}
-            ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
+            ,{field:'operation', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
             ],
     });
     /**
@@ -99,6 +108,10 @@
      * 绑定编辑事件
      */
     table.bind('click', '.edit', function(data, index) {
+        if(data.entrustStatus == '08'){
+            Joyin.error("流程中的数据不允许编辑");
+            return ;
+        }
         data.valueDate = new Date(data.valueDate).format();
         data.pageModel=PAGE_MODEL_EDIT;
         data.operateType='edit'
@@ -139,26 +152,26 @@
         /**
          * 查询按钮
          */
-        $('#EtrLendSpecInfo001_btn_search').click(function() {
+        $('#'+pageId+'_btn_search').click(function() {
             table.load();
-            $('#EtrLendSpecInfo001_btn_close').show();
-            $('#EtrLendSpecInfo001_btn_revoke').show();
+            $('#'+pageId+'_btn_close').show();
+            $('#'+pageId+'_btn_revoke').show();
         });
         /**
          * 导出按钮
          */
-        $('#EtrLendSpecInfo001_btn_export').click(function() {
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
         /**
          * 新建
          */
-        $('#EtrLendSpecInfo001_btn_add').click(function() {
+        $('#'+pageId+'_btn_add').click(function() {
             showDialog();
         });
         
         //add by gaopeng 20191231 导入按钮点击事件 start
-        $('#EtrLendSpecInfo001_btn_import').click(function() {
+        $('#'+pageId+'_btn_import').click(function() {
             Joyin.uploadFile({pageId : 'EtrLendSpecInfo003MTM'}, function(fileName) {
                 Joyin.ajax(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo003/checkImportData', {fileName: fileName}, function(checkResult) {
                     setTimeout( function () {
@@ -185,7 +198,7 @@
         /**
          * 关闭委托
          */
-        $('#EtrLendSpecInfo001_btn_close').click(function() {
+        $('#'+pageId+'_btn_close').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
              }
@@ -198,6 +211,12 @@
 //                 return;
 //             } 
             else {
+                for(var index in selArr){
+                    if(selArr[index].entrustStatus == '08'){
+                        Joyin.error("流程中的数据不允许关闭");
+                        return ;
+                    }
+                }
                 var object = {selectedItem: selArr, operateType:"close"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
@@ -211,7 +230,7 @@
         /**
          * 撤销
          */
-        $('#EtrLendSpecInfo001_btn_revoke').click(function() {
+        $('#'+pageId+'_btn_revoke').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
              }
@@ -222,8 +241,14 @@
 //            else if(selArr && selArr.length>1){
 //                 Joyin.error(JoyinUtil.getMessage("ETR_COM_X"));
 //                 return;
-//             } 
+//             }
             else {
+                for(var index in selArr){
+                    if(selArr[index].entrustStatus == '08'){
+                        Joyin.error("流程中的数据不允许撤回");
+                        return ;
+                    }
+                }
                 var object = {selectedItem: selArr, operateType:"recall"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_C_0032","撤销"), function(){

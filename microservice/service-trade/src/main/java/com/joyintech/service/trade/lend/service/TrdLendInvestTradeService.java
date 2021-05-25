@@ -21,6 +21,7 @@ import com.joyintech.service.trade.lend.dao.TrdLendInvestTradeMapper;
 import com.joyintech.service.trade.lend.dto.TrdLendInvestTradeDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 
 /**
  * 拆借交易微服务Service
@@ -61,7 +62,9 @@ public class TrdLendInvestTradeService extends BaseService<TrdLendInvestTradeDto
         pageParam.put("PINAN_BUSINESS_TYPE_14", DictCodeListExt1.平安业务类型_普通拆入.getValue());
         pageParam.put("PINAN_BUSINESS_TYPE_15", DictCodeListExt1.平安业务类型_特拆拆入.getValue());
         pageParam.put("PINAN_BUSINESS_TYPE_16", DictCodeListExt1.平安业务类型_普通拆出.getValue());
-
+     // add by wangpeng 20210525 银行间场内场外拆分 start
+        pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+        // add by wangpeng 20210525 银行间场内场外拆分 end
         return this.queryForPage(page, length,
             () -> trdLendInvestTradeMapper.selectDeal(pageParam));
     }

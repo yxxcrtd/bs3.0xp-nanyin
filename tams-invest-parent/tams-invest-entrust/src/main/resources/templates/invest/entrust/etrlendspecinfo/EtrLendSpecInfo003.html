@@ -10,11 +10,11 @@
 			<form class="layui-form joyin-form-wrap pro-module-form" id="searchForm">
 				<div class="pro-module-wrapper pro-module-base">
 					<div class="pro-module-wrap">
-					<!-- 委托列表 -->
+					<!-- 指令列表 -->
                 	<div id="combDistribt_div" class="pro-module-wrap">
                     	<div class="pro-module">
 	                        <h3 class="pro-module-title">
-	                            <span class="title-des">委托列表</span>
+	                            <span class="title-des">指令列表</span>
 	                            <i class="iconfont icon-arrow-down pro-down-icon"></i>
 	                        </h3>
 							<div class="pro-module-item">
@@ -25,15 +25,13 @@
 						</div>
 	                </div>
                     <!-- 风险试算 -->
-	                <div th:if="${isEleShow['EtrLendSpecInfo003_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'"
-						 id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}"
+	                <div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}"
 	                	th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
 				</div>
 	            <div class="pro-module-wrapper pro-module-block">
 	                <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
 	                    <div class="text-center">
-	                        <a th:if="${isEleShow['EtrLendSpecInfo003_btn_riskcal']} ne 'N' and ${isEleShow['BaseRiskMathComm_btn_riskcal']} ne 'N'"
-							   id="EtrLendSpecInfo003_btn_riskcal" class="layui-btn layui-btn-sm"
+	                        <a id="EtrLendSpecInfo003_btn_riskcal" class="layui-btn layui-btn-sm"
 	                            data-th-text="#{EtrLendSpecInfo002.riskcal}">风险试算</a>
 	                        <a id="EtrLendSpecInfo003_btn_submit" class="layui-btn layui-btn-sm  btn-submit"
 	                            data-th-text="#{SysCommon.submit}">提交</a>

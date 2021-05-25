@@ -9,30 +9,8 @@
  */
 package com.joyintech.tams.invest.trade.lend.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
-import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeDto;
-import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeRevokeDto;
-import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade001Service;
-import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade002Service;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,8 +20,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
-import java.util.*;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeDto;
+import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeRevokeDto;
+import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade001Service;
+import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade002Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 拆借投资交易查询
@@ -65,13 +61,11 @@ public class TrdLendInvestTrade001Controller extends BaseController {
     @Autowired
     private TrdLendInvestTrade002Service trdLendInvestTrade002Service;
 
-    @Autowired
-    private TrdCommonBaseService trdCommonBaseService;
-
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.回购拆借方向, DictCode.拆借类型,
                 DictCode.交易流程状态);
+        this.setSelectOptionToModel(model, DictCode.交易场所);
         return super.init(model);
     }
     /**
@@ -93,6 +87,7 @@ public class TrdLendInvestTrade001Controller extends BaseController {
      *
      * @return excel
      * @throws Exception 异常
+     * @param parameter 页面参数
      * @see
      * @since 1.0
      */
@@ -115,17 +110,6 @@ public class TrdLendInvestTrade001Controller extends BaseController {
     @ResponseBody
     public AjaxResult check(@Valid @RequestBody TrdLendInvestTradeRevokeDto inputDto,
                             BindingResult result) {
-            TrdProductDeal trdProductDeal = trdCommonBaseService.selectZCDealByTid(inputDto.getTradeId(), false);
-            // 查询到 卖出的转仓交易  说明 点击的是买入。
-            if(trdProductDeal!=null&& StringUtil.equals(DictCodeList.交易方向_卖出.getValue(),trdProductDeal.getPs())){
-                AjaxResult ajaxResult = new AjaxResult();
-                List<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                errorList.add(new ValidMessage(this.getMessage("内部转仓只能撤销卖出交易,买入自动撤销！")));
-                ajaxResult.setErrorList(errorList);
-                return ajaxResult;
-            }
-
-
         return commonCheck(result, inputDto.getOperateType());
     }
 
@@ -141,9 +125,7 @@ public class TrdLendInvestTrade001Controller extends BaseController {
     @ResponseBody
     AjaxResult doRevoke(@RequestBody TrdLendInvestTradeDto inputDto)
         throws Exception {
-        if(StringUtil.isNotEmpty(inputDto.getTradeId())){
-            inputDto = trdLendInvestTrade002Service.getTrdLendInvestTradeDto(inputDto.getTradeId());
-        }
+
         ProcessParameter<TrdLendInvestTradeDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdLendInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);
@@ -161,24 +143,5 @@ public class TrdLendInvestTrade001Controller extends BaseController {
         String msg = trdLendInvestTrade002Service.start(processParameter, inputDto);
 
         return new AjaxResult(msg);
-    }
-
-    /**
-     * 获取委托代码
-     * @return 联想文本框实体类集合
-     * @see
-     * @since 1.0
-     */
-    @ResponseBody
-    @RequestMapping("getEntrustIdByType")
-    public List<SuggestDto> getEntrustIdByType() {
-        String entrustId = getParam("param");
-        Map<String, Object> map = new HashMap<>();
-        map.put("param", entrustId);
-        map.put("finProdType", Arrays.asList(DictCodeListExt1.金融产品类型_拆入.getValue(),
-                DictCodeListExt1.金融产品类型_拆出.getValue()));
-        map.put("ENTRUST_STATUS_LIST", Arrays.asList(DictCodeList.委托状态_已接收.getValue(),
-                DictCodeList.委托状态_已完成.getValue(), DictCodeList.委托状态_已关闭.getValue()));
-        return trdLendInvestTrade001Service.getEntrustIdByType(map);
     }
 }

@@ -11,8 +11,11 @@
 package com.joyintech.tams.invest.entrust.etrlendspecinfo.dto;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.*;
 
 import javax.validation.Valid;
 
@@ -31,7 +34,7 @@ import com.joyintech.framework.validation.annotation.Rate;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.system.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
@@ -107,6 +110,11 @@ public class EtrLendSpecInfoDto extends EtrEntrust implements ProcessEntity {
      * 期限(天)
      */
     private Long termDays;
+
+    /**
+     * 多对多指令导入
+     */
+    private boolean importFlow;
     /**
      * 完成额度
      */
@@ -143,8 +151,12 @@ public class EtrLendSpecInfoDto extends EtrEntrust implements ProcessEntity {
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
-    
+
+    private String termType;
+
+    private Long settleSpreed;
+
+    private String settleSpreedStr;
     
     /**
      * 获取 riskTrialRetDto
@@ -502,6 +514,13 @@ public class EtrLendSpecInfoDto extends EtrEntrust implements ProcessEntity {
     public String getCcyStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
     }
+
+    public String getTradeMarketStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket ());
+    }
+
+
+
     /**
      * 
      * 委托状态数据字典转换
@@ -550,6 +569,7 @@ public class EtrLendSpecInfoDto extends EtrEntrust implements ProcessEntity {
     @NotEmpty(fieldName = "EtrLendSpecInfo002.vdate", groups = {ValidateGroupEdit.class})
     public Date getVdate(){
         return super.getVdate();
+
     }
     /**
      * 
@@ -558,7 +578,8 @@ public class EtrLendSpecInfoDto extends EtrEntrust implements ProcessEntity {
     @Override
     @NotEmpty(fieldName = "EtrLendSpecInfo002.mdate", groups = {ValidateGroupEdit.class})
     public Date getMdate(){
-        return super.getMdate();
+        return super.getMdate ();
+
     }
     /**
      * 
@@ -648,5 +669,57 @@ public class EtrLendSpecInfoDto extends EtrEntrust implements ProcessEntity {
      */
     public void setMinAmt(BigDecimal minAmt) {
         this.minAmt = minAmt;
+    }
+
+    /**
+     * 获取 importFlow
+     *
+     * @return importFlow
+     */
+    public boolean isImportFlow() {
+        return importFlow;
+    }
+
+    /**
+     * 设置 importFlow
+     *
+     * @param importFlow importFlow
+     */
+    public void setImportFlow(boolean importFlow) {
+        this.importFlow = importFlow;
+    }
+
+
+    public String getTermType() {
+        return termType;
+    }
+
+    public void setTermType(String termType) {
+        this.termType = termType;
+    }
+
+    public String getTermTypeStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.期限品种_内部拆借, this.getTermType ());
+    }
+
+    public Long getSettleSpreed() {
+        return settleSpreed;
+    }
+
+    public void setSettleSpreed(Long settleSpreed) {
+        this.settleSpreed = settleSpreed;
+    }
+
+    public String getSettleSpreedStr() {
+        return settleSpreedStr;
+    }
+
+    public void setSettleSpreedStr(String settleSpreedStr) {
+        this.settleSpreedStr = settleSpreedStr;
+    }
+
+
+    public String getQssd(){
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, ("0"+this.getSettleSpreed ()));
     }
 }

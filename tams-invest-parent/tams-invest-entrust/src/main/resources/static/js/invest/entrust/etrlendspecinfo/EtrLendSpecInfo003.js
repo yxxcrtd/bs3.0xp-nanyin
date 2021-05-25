@@ -5,7 +5,14 @@
     var getriskdata = function () {
         var selectedItem = $.serializeToObject('#searchForm').selectedItem;
         if (selectedItem.length > 0) {
-            var objects = new Array();
+            var list = [];
+            var object = {
+                tradeDirection : [ 'ps', 'EtrLendSpecInfo002.ps' ],
+                portfolioCode : [ 'portfolioId', 'EtrLendSpecInfo002.portfolioId' ],
+                tradeAmount : [ 'entrustAmt','EtrLendSpecInfo002.entrustAmt' ],
+                assetType : ['assetType1','EtrLendSpecInfo002.type6'],
+                data : list
+            }
             for ( var index in selectedItem) {
                 var item = selectedItem[index];
                 var trdProductDeal = {};
@@ -64,16 +71,12 @@
                         trdProductDeal : trdProductDeal
 					}
 				}
-                var object = {
-                    tradeDirection : [ 'ps', 'EtrLendSpecInfo002.ps' ],
-                    portfolioCode : [ 'portfolioId', 'EtrLendSpecInfo002.portfolioId' ],
-                    tradeAmount : [ 'entrustAmt','EtrLendSpecInfo002.entrustAmt' ],
-                    assetType : ['assetType1','EtrLendSpecInfo002.type6'],
-                    data : obj
-                }
-                objects.push(object);
+                list.push(obj);
             }
-            return objects;
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'EtrPlanAssetN002.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
+            return object;
         }
     }
 	
@@ -94,6 +97,9 @@
         , {field: 'minAmt', title: 'EtrLendSpecInfo002.minAmt', width: 120, sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'remark', title: 'EtrLendSpecInfo001.remark', width: 150, sortable: false}
+        ,{field:'tradeMarketStr', title:'EtrLendSpecInfo001.tradeMarket',width:150,sortable:false}
+        ,{field:'termType', title:'EtrLendSpecInfo001.termType',width:150,sortable:false}
+        ,{field:'qssd', title:'EtrLendSpecInfo001.settleSpreed',width:150,sortable:false}
         , {
             field: 'operation1', title: 'SysCommon.operation', render: function (data, type, row, meta) {
                 return '<a class="pro-link uploadFile">上传附件</a> ';
@@ -142,11 +148,21 @@
      */
     function saveOrSubmit(operateType) {
         //校验数据  校验表格
+        // alert(operateType)
         var tableData = table.getAllRows();
         if (tableData.length == 0) {
-            Joyin.alert("委托列表至少有一条数据！", 2);
+            Joyin.alert("指令列表至少有一条数据！", 2);
             return false;
         }
+        
+        var s;
+        if(BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+            if(!s && s != ''){
+                return;
+            }
+        }
+        
         /**
          * 获取列表参数
          */
@@ -156,19 +172,24 @@
         var objects = object.selectedItem;
         for (var index in objects) {
             var temp = objects[index];
+            temp.operateType = operateType;
             if (operateType === 'save') {
                 temp.elementId = 'EtrLendSpecInfo002_btn_save';
             } else {
                 temp.elementId = 'EtrLendSpecInfo002_btn_submit';
             }
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo003/check', objects,
+        var allDto = {};
+        allDto.selectedItem = objects;
+        allDto.importFlow = true;
+        allDto.riskTrialRetDto = object.riskTrialRetDto;
+        Joyin.ajaxJson(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo003/check', allDto,
             function (result) {
                 Joyin.confirm(result.data, function () {
                     if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo003/save', objects, "EtrLendSpecInfo002_btn_save",'EtrLendSpecInfo002');
+                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo003/save', allDto, "EtrLendSpecInfo002_btn_save",'EtrLendSpecInfo002');
                     } else {
-                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo003/save', objects, "EtrLendSpecInfo002_btn_submit",'EtrLendSpecInfo002');
+                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo003/save', allDto, "EtrLendSpecInfo002_btn_submit",'EtrLendSpecInfo002');
                     }
                 });
             });
@@ -179,7 +200,24 @@
      */
     $('#EtrLendSpecInfo003_btn_riskcal').click(function(){
     	//window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-        $("#riskMathFlag").val("02");
+        //by zhangnian start
+        var list = $.serializeToObject('#searchForm', true).selectedItem;
+        var objectList = [];
+        for(var i in list){
+            var temp = {};
+            temp.portfolioId = list[i].portfolioId;
+            temp.ps = list[i].ps;
+            temp.ccy = list[i].ccy;
+            temp.entrustAmt = list[i].entrustAmt;
+            temp.tradeMarket = list[i].tradeMarket;
+            temp.price = list[i].price;
+            temp.groupCode = 'F08_0_'+i;//格式类型+委托/交易+序号
+            objectList.push(temp);
+        }
+        window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F08',
+            objectList, getriskdata());
+        //by zhangnian end
+        //$("#riskMathFlag").val("02");
     });
     
     /**

@@ -205,15 +205,6 @@ implements BaseProcessService<TrdLendDuration001Dto>{
         }
         entity.setRepIssuePartyId(CacheUtil.getSysParam("issue_party_id"));
 
-        tradeDto.getBaseTradeProductDealDtos().forEach(item->{
-            if (OperationType.REVOKE == operationType) {
-                getInterfInputDto(item, DictCodeListExt1.交易流程状态_撤销);
-            }
-            else {
-                getInterfInputDto(item, DictCodeListExt1.交易流程状态_有效);
-            }
-        });
-
         baseTradeProductDealCommServiceImpl.execute(tradeDto);
         // 新建交易撤销数据 或 插入Entity到对应的业务DB中, 并删除流程表中的数据
         restTemplate.postForObject(
@@ -224,38 +215,64 @@ implements BaseProcessService<TrdLendDuration001Dto>{
             tradeDto.getBaseTradeProductDealDtos().forEach(
                     baseTradeProductDealDto1 -> {
                         baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getActPortfolioId());
-                        if (OperationType.REVOKE == operationType) {
-                            getInterfInputDto(baseTradeProductDealDto1, DictCodeListExt1.交易流程状态_撤销);
-                        }
-                        else {
-                            getInterfInputDto(baseTradeProductDealDto1, DictCodeListExt1.交易流程状态_有效);
-                        }
                     });
             baseTradeProductDealCommServiceImpl.insertPosition(tradeDto);
             tradeDto.getBaseTradeProductDealDtos().forEach(
                     baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getPortfolioId()));
         }
+
+        // 调用投管接口 add by renping 20200330 start
+//        tradeDto.getBaseTradeProductDealDtos().forEach(item->{
+//            if (OperationType.REVOKE == operationType) {
+//                getInterfInputDto(entity, item, DictCodeListExt1.交易状态_撤销);
+//            }
+//            else {
+//                getInterfInputDto(entity, item, DictCodeListExt1.交易状态_初始);
+//            }
+//        });
+
+        String busiCode = entity.getBusiCode();
+        if(OperationType.REVOKE == operationType) {
+            if(!busiCode.endsWith("R")) {
+                busiCode = busiCode + "R";
+            }
+        }
+
+//        investInterfCommService.doSendTradeToInterf(busiCode,DictCodeList.共通业务类型_拆借存续期交易.getValue());
+
+        // 调用投管接口 add by renping 20200330 end
     }
 
-    private void getInterfInputDto(BaseTradeProductDealDto baseTradeProductDealDto,
-                                   DictCodeListExt1 交易流程状态) {
-        if (baseTradeProductDealDto.getTrdProductDealAdd() == null
-                || StringUtil.isEmpty(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId())
-                || AllTradeCommonUtil.isNotActPortfolio(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId())) {
-            return;
-        }
+    // 调用投管接口 add by renping 20200330 start
+    /**
+     * 存续期调用接口
+     * 
+     * @param entity 画面DTO
+     * @param baseTradeProductDealDto 参数
+     * @param 交易状态 交易状态
+     * @see
+     * @since 1.0
+     */
+    private void getInterfInputDto(TrdLendDuration001Dto entity,
+                                   BaseTradeProductDealDto baseTradeProductDealDto,
+                                   DictCodeListExt1 交易状态) {
         InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
         investInterfCommDto.setPageId("TrdLendDuration002");
-        investInterfCommDto.setTradeStatus(交易流程状态.getValue());
-        baseTradeProductDealDto.getTrdProductDeal().setPs(DictCodeList.交易方向_到期.getValue());
+        investInterfCommDto.setTradeStatus(交易状态.getValue());
+        investInterfCommDto.setPortfolioId(entity.getActPortfolioId());
         investInterfCommDto.setTrdProductDeal(baseTradeProductDealDto.getTrdProductDeal());
         investInterfCommDto.setTrdProductDealAdd(baseTradeProductDealDto.getTrdProductDealAdd());
         if (baseTradeProductDealDto.getStlPayOrdersList() != null
                 && !baseTradeProductDealDto.getStlPayOrdersList().isEmpty()) {
             investInterfCommDto.setStlPayOrders(baseTradeProductDealDto.getStlPayOrdersList().get(0));
         }
+        TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
+        trdFinProductDealTotal.setTotleTradeId(entity.getBusiCode());
+        trdFinProductDealTotal.setTradeAmt(entity.getTradeAmt());
+        investInterfCommDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
         investInterfCommService.doInvestInterf(investInterfCommDto);
     }
+    // 调用投管接口 add by renping 20200330 end
 
     @Override
     public void doDelete(String workflowId) {
@@ -263,28 +280,29 @@ implements BaseProcessService<TrdLendDuration001Dto>{
     }
 
     private void deleteWflDataAndPosition(String workflowId) {
-        TrdLendDuration001Dto entity = getBussinessEntityByWorkflowId(workflowId);
-        /*List<WflTrdProductDeal> wflTrdProductDeals = periodCommonService.findDealByWorkflowId(workflowId);*/
-        List<WflStlPayOrders> wflStlPayOrders = dealEntityService.gen划款指令流程(entity);
-        List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<>();
-        wflStlPayOrders.forEach(wflStlPayOrders1 -> {
-            StlPayOrdersDto orders = new StlPayOrdersDto();
-            BeanUtils.copyProperties(wflStlPayOrders1, orders);
-            stlPayOrdersList.add(orders);
-        });
-        List<PtlSecPositionFlowDto> ptlSecPositions = new ArrayList<>();
-        List<PtlCashPositionFlowDto> ptlCashPositions = new ArrayList<>();
-        TrdProductDeal trdProductDeal = dealEntityService.getTrdProductDeal(entity);
-        periodCommonService.gen可用持仓(entity.getPortfolioId(), stlPayOrdersList, ptlSecPositions,
-            ptlCashPositions, trdProductDeal);
-        TrdCommonDeleteDto trdCommonDeleteDto = new TrdCommonDeleteDto();
-        trdCommonDeleteDto.setWorkflowId(workflowId);
-        trdCommonDeleteDto.setPtlCashPositions(ptlCashPositions);
-        trdCommonDeleteDto.setPtlSecPositions(ptlSecPositions);
-
-        restTemplate.postForObject(
-            ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/doDelete",
-            trdCommonDeleteDto, String.class);
+//        TrdLendDuration001Dto entity = getBussinessEntityByWorkflowId(workflowId);
+//        /*List<WflTrdProductDeal> wflTrdProductDeals = periodCommonService.findDealByWorkflowId(workflowId);*/
+//        List<WflStlPayOrders> wflStlPayOrders = dealEntityService.gen划款指令流程(entity);
+//        List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<>();
+//        wflStlPayOrders.forEach(wflStlPayOrders1 -> {
+//            StlPayOrdersDto orders = new StlPayOrdersDto();
+//            BeanUtils.copyProperties(wflStlPayOrders1, orders);
+//            stlPayOrdersList.add(orders);
+//        });
+//        List<PtlSecPositionFlowDto> ptlSecPositions = new ArrayList<>();
+//        List<PtlCashPositionFlowDto> ptlCashPositions = new ArrayList<>();
+//        TrdProductDeal trdProductDeal = dealEntityService.getTrdProductDeal(entity);
+//        periodCommonService.gen可用持仓(entity.getPortfolioId(), stlPayOrdersList, ptlSecPositions,
+//            ptlCashPositions, trdProductDeal);
+//        TrdCommonDeleteDto trdCommonDeleteDto = new TrdCommonDeleteDto();
+//        trdCommonDeleteDto.setWorkflowId(workflowId);
+//        trdCommonDeleteDto.setPtlCashPositions(ptlCashPositions);
+//        trdCommonDeleteDto.setPtlSecPositions(ptlSecPositions);
+//
+//        restTemplate.postForObject(
+//            ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/doDelete",
+//            trdCommonDeleteDto, String.class);
+        baseTradeProductDealCommServiceImpl.delete(workflowId);
     }
     /**
      * {@inheritDoc}
@@ -411,10 +429,18 @@ implements BaseProcessService<TrdLendDuration001Dto>{
      */
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
-        if(StringUtil.equals("vdate", propName)||StringUtil.equals("mdate", propName)
-            ||StringUtil.equals("settleDate", propName)||StringUtil.equals("tradeDate", propName)) {
-            cell.setCellValue(DateUtil.format((Date)value));
+        // 交易日期+到账日期导出格式化问题修改 modfy by yufei 20200715 start
+        if (StringUtil.equals(propName, "vdate")
+                || StringUtil.equals(propName, "mdate")
+                || StringUtil.equals(propName, "tradeDate")
+                || StringUtil.equals(propName, "settleDate")) {
+            if(value instanceof Date){
+                cell.setCellValue(DateUtil.format((Date)value));
+            }else if (value instanceof Long){
+                cell.setCellValue(DateUtil.format(new Date((Long) value)));
+            }
         }
+        // 交易日期+到账日期导出格式化问题修改 modfy by yufei 20200715 end
     }
     /**
      *
@@ -429,10 +455,9 @@ implements BaseProcessService<TrdLendDuration001Dto>{
         List<String>finProdTypeList = new ArrayList<>();
         finProdTypeList.add(DictCodeListExt1.金融产品类型_投管用_拆入.getValue());
         finProdTypeList.add(DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue());
-        finProdTypeList.add(DictCodeListExt1.金融产品类型_投管用_拆出.getValue());//add by liupengfei for 多级法人改造
         map.put("finProdTypeList",finProdTypeList);
         return restTemplate.postForPage(
-                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdLendDuration/getBusiCode",
+                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdDepoDuration/getBusiCode",
                 map, SelectOptionDto.class);
     }
 

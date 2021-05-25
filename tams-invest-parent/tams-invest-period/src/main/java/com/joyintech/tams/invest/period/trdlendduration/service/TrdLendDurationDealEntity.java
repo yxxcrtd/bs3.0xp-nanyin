@@ -155,7 +155,6 @@ public class TrdLendDurationDealEntity extends BaseService<TrdLendDuration001Dto
         // 一体化对应etliu start
         trdProductDeal.setFpriceAmt(trdProductDeal.getTradeAmt());
         // 一体化对应etliu end
-        trdProductDeal.setRemark(entity.getRemark());
         
         return trdProductDeal;
     }

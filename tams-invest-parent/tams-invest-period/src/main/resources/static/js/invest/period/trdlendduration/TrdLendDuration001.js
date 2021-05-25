@@ -68,18 +68,9 @@ $(function() {
             ,{field:'intAmt',width:'10%', title: 'TrdLendDuration001.intAmt',type:'money'}
             ,{field:'theoryAmt',width:'10%', title: 'TrdLendDuration001.theoryAmt',type:'money'}
             ,{field:'tradeAmt',width:'10%', title: 'TrdLendDuration001.tradeAmt',type:'money'}
-            , {field: 'statusValid', visible: false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']
             ,render: function (data, type, row, meta) {
-                if (row.statusValid != '01')
-                    return "";
-                else
-                    //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 S
-                    if(purviewElements.indexOf('_edit')!=-1){
-                        return '<i class="btn iconfont edit icon-circle-correct_fill" title="确认"></i>';
-                    }
-                    //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 E
-                  }
+                  return '<i class="btn iconfont edit icon-circle-correct_fill" title="确认"></i>';}
             }
         ]
     });
@@ -91,7 +82,7 @@ $(function() {
     	if(data.statusValid != PAGE_DATA_STATUS_01){
     		return Joyin.error(JoyinUtil.getMessage('FIN_ASSET_E_0004'));
     	}
-        data.pageModel = PAGE_MODEL_NEW;
+        data.pageModel = PAGE_MODEL_EDIT;
         data.operateType = 'edit'
         Joyin.ajaxJson(basePath + 'invest/period/trdlendduration/TrdLendDuration001/check', data, function(result) {
         	Joyin.dialog(JoyinUtil.getLabel("TrdLendDuration002.edit"),
@@ -143,9 +134,7 @@ $(function() {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.revoke")), function(){
                 	Joyin.prompt(JoyinUtil.getLabel("TrdLendDuration001.revokeReason"),2,function(res){
                 		object.cancelRemark = res;
-                		WorkFlow.doRevokeList(basePath + 'invest/period/trdlendduration/TrdLendDuration001/revoke', object, "TrdLendDuration001_btn_revoke", "TrdLendDuration002",function(){
-                            table.reload();//回调事件请求及回调函数
-                        });
+                		WorkFlow.doRevokeList(basePath + 'invest/period/trdlendduration/TrdLendDuration001/revoke', object, "TrdLendDuration001_btn_revoke", "TrdLendDuration002");
                 	},null,200);
                 });
             });

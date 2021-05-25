@@ -11,9 +11,8 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -35,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,17 +132,6 @@ public class TrdLendDuration001Controller extends BaseController {
     @ResponseBody
     public AjaxResult check(@RequestBody @Validated({ValidateGroupDelete.class}) TrdLendDuration001Dto dto, BindingResult result,
                             String operateType) {
-        if (StringUtil.equals(dto.getMode(), "revoke")) {
-            if (periodCommonService.isAlreadyRevoked(dto.getBusiCode())) {
-                ValidMessage validMessage = new ValidMessage(getMessage("TRD_W_0001",
-                        getMessage("pingan.common.revoke"), getMessage("pingan.common.revoke")));
-                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                errorList.add(validMessage);
-                AjaxResult ar = new AjaxResult();
-                ar.setErrorList(errorList);
-                return ar;
-            }
-        }
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -170,6 +158,7 @@ public class TrdLendDuration001Controller extends BaseController {
         paramMap.put("statusValid", dto.getStatusValid());
         paramMap.put("busiCode", dto.getpTradeId());
         TrdLendDuration001Dto tempDto = trdLendDuration001Service.getMyEntity(paramMap);
+        tempDto.setIntRate(ArithmeticUtil.multiply(tempDto.getIntRate(), new BigDecimal(100)));
         tempDto.setBussTrdTransferOrder(periodCommonService.selectPayOrders(dto.getpTradeId()));
         tempDto.setMode(OperationType.REVOKE.toString());
         tempDto.setpTradeId(tempDto.getBusiCode());

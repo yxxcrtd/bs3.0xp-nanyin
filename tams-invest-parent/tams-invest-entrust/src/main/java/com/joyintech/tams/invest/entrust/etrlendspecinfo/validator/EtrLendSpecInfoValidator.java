@@ -123,13 +123,13 @@ public class EtrLendSpecInfoValidator implements EtrCommonValidator {
 //                    errorList.add(new ValidMessage("entrustAmt", this.getMessage("ETR_X_010",this.getMessage("EtrLendSpecInfo001.entrustAmt"))));
 //                }
 //            }
-            if(dto.getPortfolioId()!= null && dto.getCcy()!= null) {
-                String acctId = EtrCommonCashPositionDealService.select组合托管户(dto.getPortfolioId(), dto.getCcy(),
-                    DictCodeListExt2.资金账户类型_托管户.getValue());
-                if(!StringUtil.isNotBlank(acctId)) {
-                    errorList.add(new ValidMessage("",this.getMessage("ETR_LSSMTM_002")));
-                }
-            }
+//            if(dto.getPortfolioId()!= null && dto.getCcy()!= null) {
+//                String acctId = EtrCommonCashPositionDealService.select组合托管户(dto.getPortfolioId(), dto.getCcy(),
+//                    DictCodeListExt2.资金账户类型_托管户.getValue());
+//                if(!StringUtil.isNotBlank(acctId)) {
+//                    errorList.add(new ValidMessage("",this.getMessage("ETR_LSSMTM_002")));
+//                }
+//            }
             if (dto.getMdate() != null && dto.getVdate() != null) {
                 if (dto.getMdate().before(dto.getVdate())) {
                     errorList.add(new ValidMessage("vdate", this.getMessage("ETR_X_005")));

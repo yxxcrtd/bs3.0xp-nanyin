@@ -16,11 +16,13 @@
 		T1.MDATE				mdate,
 		T1.ENTRUST_AMT			entrustAmt,
 		<!-- 新增投资经理查询 yzg 20190904 start -->
-		T1.INV_MANAGER_ID       invManagerId,
+		T7.REAL_NAME           invManagerId,
 		<!-- 新增投资经理查询 yzg 20190904 end -->
 		NVL(T4.FINISH_AMT,0)    finishAmt,
 		round(NVL(T4.FINISH_AMT,0)/T1.ENTRUST_AMT,4)*100		transactioncom,
-		T1.REMARK 				remark
+		T1.REMARK 				remark,
+		T1.TRADE_MARKET			tradeMarket,
+		T3.SETTLE_SPREED		settleSpreed
 		FROM 
 		ETR_ENTRUST T1
 		inner join PTL_PORTFOLIO T2 on T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
@@ -31,6 +33,7 @@
 		PTL_PORTFOLIO_AUTHORITY T5
 		on
 		T2.PORTFOLIO_ID=T5.PORTFOLIO_ID and T5.USER_ID= #{loginUser}
+		LEFT JOIN SYS_USER T7 ON T1.INV_MANAGER_ID = T7.USER_NAME
 		<where>
 			<!-- <if test="portfolioId != null and !portfolioId.equals('')">
 				(T1.PORTFOLIO_ID like concat('%',concat(#{portfolioId},'%'))
@@ -80,6 +83,14 @@
 				#{item}
 				</foreach>
 			</if>
+			<!-- add by wangpeng 20210525 银行间场内场外拆分 start -->
+			<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+				AND T1.TRADE_MARKET in
+				<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+					#{currTradeMarket}
+				</foreach>
+			</if>
+			<!-- add by wangpeng 20210525 银行间场内场外拆分 end -->
 			<if test="startDate != null">
 				AND T1.VDATE &gt;= to_date(#{startDate},'yyyy-mm-dd')
 			</if>
@@ -88,7 +99,104 @@
 			</if>
 				AND T1.FINPROD_TYPE2 in(#{lendin},#{lendout}) 
 		</where>
-		ORDER BY T1.ENTRUST_ID DESC
+		union
+		SELECT
+		T1.ENTRUST_ID 			entrustId,
+		T1.ENTRUST_STATUS 		entrustStatus,
+		T1.PORTFOLIO_ID			portfolioId,
+		T2.PORTFOLIO_NAME 		portfolioName,
+		T3.ASSET_TYPE1 			assetType1,
+		T3.BUSI_PS				ps,
+		T3.TERM_DAYS 			termDays,
+		T1.PRICE*100			price,
+		T1.CCY					ccy,
+		T1.VDATE				vdate,
+		T1.MDATE				mdate,
+		T1.ENTRUST_AMT			entrustAmt,
+		<!-- 新增投资经理查询 yzg 20190904 start -->
+		T7.REAL_NAME           invManagerId,
+		<!-- 新增投资经理查询 yzg 20190904 end -->
+		NVL(T4.FINISH_AMT,0)    finishAmt,
+		round(NVL(T4.FINISH_AMT,0)/T1.ENTRUST_AMT,4)*100		transactioncom,
+		T1.REMARK 				remark,
+		T1.TRADE_MARKET			tradeMarket,
+		T3.SETTLE_SPREED		settleSpreed
+		FROM
+		WFL_ETR_ENTRUST T1
+		inner join PTL_PORTFOLIO T2 on T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
+		inner join WFL_ETR_ENTRUST_ADD T3 on T3.ENTRUST_ID = T1.ENTRUST_ID
+		left join (SELECT ENTRUST_ID ,SUM(FINISH_AMT) FINISH_AMT FROM ETR_FINISH_STATUS GROUP BY ENTRUST_ID) T4
+		on T4.ENTRUST_ID=T1.ENTRUST_ID
+		inner join
+		PTL_PORTFOLIO_AUTHORITY T5
+		on
+		T2.PORTFOLIO_ID=T5.PORTFOLIO_ID and T5.USER_ID= #{loginUser}
+		LEFT JOIN SYS_USER T7 ON T1.INV_MANAGER_ID = T7.USER_NAME
+		<where>
+			<!-- <if test="portfolioId != null and !portfolioId.equals('')">
+				(T1.PORTFOLIO_ID like concat('%',concat(#{portfolioId},'%'))
+				OR T2.PORTFOLIO_NAME like concat('%',concat(#{portfolioId},'%')))
+			</if> -->
+			<if test="portfolioIdList != null and portfolioIdList.size() >0">
+				AND (T2.PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR T2.PORTFOLIO_ID IN (
+					</if>
+					#{prot}
+				</foreach>
+				or T2.PARENT_PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR T2.PARENT_PORTFOLIO_ID IN (
+					</if>
+					#{prot}
+				</foreach>
+				)
+			</if>
+			<if test="type6List != null">
+				AND T3.ASSET_TYPE1 in
+				<foreach collection="type6List" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="ccyList != null">
+				AND T1.CCY in
+				<foreach collection="ccyList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="psList != null">
+				AND (T3.BUSI_PS in
+				<foreach collection="psList" item="item" index= "index" open="(" close=")" separator="," >
+					<if test="(index % 998) == 0">
+						null) or T3.BUSI_PS in (
+					</if>
+					#{item}
+				</foreach>)
+			</if>
+			<if test="entrustStatusList != null">
+				AND T1.ENTRUST_STATUS in
+				<foreach collection="entrustStatusList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<!-- add by wangpeng 20210525 银行间场内场外拆分 start -->
+			<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+				AND T1.TRADE_MARKET in
+				<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+					#{currTradeMarket}
+				</foreach>
+			</if>
+			<!-- add by wangpeng 20210525 银行间场内场外拆分 end -->
+			<if test="startDate != null">
+				AND T1.VDATE &gt;= to_date(#{startDate},'yyyy-mm-dd')
+			</if>
+			<if test="endDate != null">
+				AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-mm-dd')
+			</if>
+			AND T1.FINPROD_TYPE2 in(#{lendin},#{lendout})
+		</where>
 	</select>
 	
 	<select id="getentrustId" resultType="com.joyintech.framework.select.SuggestDto">
@@ -145,6 +253,7 @@
 	
 	<resultMap type="com.joyintech.service.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto" id="selByKeyResult">
 		<id column="entrustId" property="entrustId"/>
+		<result column="workflowId"  property="workflowId"/>
 		<result column="portfolioId"  property="portfolioId"/>
 		<result column="vdate"  property="vdate"/>
 		<result column="mdate"  property="mdate"/>
@@ -161,6 +270,9 @@
 		<result column="proAvailableCash"  property="proAvailableCash"/>
 		<result column="accAvailableCash"  property="accAvailableCash"/>
 		<result column="remark"  property="remark"/>
+		<result column="tradeMarket"  property="tradeMarket"/>
+		<result column="termType"  property="termType"/>
+		<result column="settleSpreed"  property="settleSpreed"/>
 		<association property="etrInvestPersonInfo" javaType="com.joyintech.service.entrust.etrlendspecinfo.dto.BussEtrInvestPersonInfoDto">
 		<result column="invManagerId"  property="invManagerId"/>
 		<result column="trader"  property="trader"/>
@@ -171,7 +283,8 @@
 	</resultMap>
 	
 	<select id="selectByKey" resultMap="selByKeyResult">
-	select 
+	select
+		''                      workflowId,
 		T1.ENTRUST_ID			entrustId,
 		T1.PORTFOLIO_ID			portfolioId,
 		T1.VDATE				vdate,
@@ -193,7 +306,10 @@
 		T1.COUNTER_TRADER		counterTrader,
 		T1.CONTACT_INFO			contactInfo,
 		T2.MIN_AMT              minAmt,
-		T1.REMARK				remark
+		T1.REMARK				remark,
+		T1.TRADE_MARKET     	tradeMarket,
+		T2.TERM_TYPE            termType,
+		T2.SETTLE_SPREED        settleSpreed
 	from 
 		ETR_ENTRUST T1
 		LEFT JOIN ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
@@ -201,5 +317,40 @@
 	<where>
 		T1.ENTRUST_ID = #{entrustId}
 	</where>
+	union all
+		select
+		T1.WORKFLOW_ID          workflowId,
+		T1.ENTRUST_ID			entrustId,
+		T1.PORTFOLIO_ID			portfolioId,
+		T1.VDATE				vdate,
+		T1.MDATE				mdate,
+		T1.CCY					ccy,
+		T2.ASSET_TYPE1			assetType1,
+		T2.BUSI_PS				ps,
+		T1.ENTRUST_AMT			entrustAmt,
+		T1.PRICE*100			price,
+		T2.VDATE				vdateAdd,
+		T2.MDATE				mdateAdd,
+		T2.TERM_DAYS			termDays,
+		T1.CALENDAR_ID			calendarId,
+		T1.PRO_AVAILABLE_CASH	proAvailableCash,
+		T1.ACC_AVAILABLE_CASH	accAvailableCash,
+		T1.INV_MANAGER_ID		invManagerId,
+		T3.TRADER				trader,
+		T1.COUNTER_ID			counterId,
+		T1.COUNTER_TRADER		counterTrader,
+		T1.CONTACT_INFO			contactInfo,
+		T2.MIN_AMT              minAmt,
+		T1.REMARK				remark,
+		T1.TRADE_MARKET     	tradeMarket,
+		T2.TERM_TYPE            termType,
+		T2.SETTLE_SPREED        settleSpreed
+		from
+		WFL_ETR_ENTRUST T1
+		LEFT JOIN WFL_ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
+		LEFT JOIN ETR_DISTRIBUTE T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
+		<where>
+			T1.ENTRUST_ID = #{entrustId}
+		</where>
 	</select>
 </mapper>

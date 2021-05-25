@@ -11,6 +11,7 @@
         	,validStatus: $('#validStatus').val()
             ,tradeDateBegin: $('#tradeDate').startDate()
             ,tradeDateEnd: $('#tradeDate').endDate()
+            ,tradeMarket:$('#tradeMarket').val()
         };
         if ($("#portfolioId").val()) {
             pageParam.portfolioId = $("#portfolioId").val().join(",");
@@ -51,7 +52,7 @@
         	,{field:'portfolioName', width:140, sortField:'PORTFOLIO_NAME', title: 'TrdLendInvestTrade001.portfolioName'}
         	,{field:'paBussTypeText', width:110, sortField:'PA_BUSS_TYPE', title: 'TrdLendInvestTrade001.paBussType'}
             ,{field:'busiPsText', width:100, sortField:'BUSI_PS', title: 'TrdLendInvestTrade001.ps'}
-            ,{field:'tradeDate', width:100, sortField:'TRADE_DATE', title: 'TrdLendInvestTrade001.tradeDate', type: 'date'}
+            ,{field:'tradeDateText', width:100, sortField:'TRADE_DATE', title: 'TrdLendInvestTrade001.tradeDate', type: 'date'}
         	,{field:'tradeAmt', width:120, sortField:'TRADE_AMT', title: 'TrdLendInvestTrade001.tradeAmt', type: 'money'}
         	,{field:'ccyText', width:130, sortField:'CCY', title: 'TrdLendInvestTrade001.ccy'}
         	,{field:'remark', width:150, sortField:'REMARK', title: 'TrdLendInvestTrade001.remark'}
@@ -109,24 +110,24 @@
     
     $(function () {
         // 绑定按钮事件
-        $('#TrdLendInvestTrade001_btn_search').click(function() {
+        $('#'+pageId+'_btn_search').click(function() {
             table.load();
-            $('#TrdLendInvestTrade001_btn_revoke').show();
+            $('#'+pageId+'_btn_revoke').show();
         });
         
-        $('#TrdLendInvestTrade001_btn_export').click(function() {
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
-        $('#TrdLendInvestTrade001_btn_add').click(
+        $('#'+pageId+'_btn_add').click(
                 function() {
                     Joyin.dialog(JoyinUtil.getLabel("TrdLendInvestTrade002"), basePath
-                            + "invest/trade/lend/TrdLendInvestTrade002/init", "99%", "99%", {
-                        pageModel : PAGE_MODEL_NEW
+                            + "invest/trade/lend/TrdLendInvestTrade002/init" , "99%", "99%", {
+                        pageModel : PAGE_MODEL_NEW,parentPageId:pageId
                     }, function() {
                         table.reload();
                     });
                 });
-        $('#TrdLendInvestTrade001_btn_revoke').click(function() {
+        $('#'+pageId+'_btn_revoke').click(function() {
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }

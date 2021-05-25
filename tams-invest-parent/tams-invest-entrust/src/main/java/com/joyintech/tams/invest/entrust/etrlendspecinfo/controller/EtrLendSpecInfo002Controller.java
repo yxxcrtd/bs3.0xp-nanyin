@@ -10,13 +10,28 @@
  
 package com.joyintech.tams.invest.entrust.etrlendspecinfo.controller;
 
-import java.util.Date;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
-import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
+//import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
+import com.joyintech.tams.invest.entrust.etrlendspecinfo.service.EtrLendSpecInfoService;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,35 +41,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
-import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
-import com.joyintech.tams.invest.entrust.etrlendspecinfo.service.EtrLendSpecInfoService;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 拆借委托新建页面
@@ -89,6 +77,9 @@ public class EtrLendSpecInfo002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.金融产品类型_投管用);
         this.setSelectOptionToModel(model, DictCode.拆借类型);
         this.setSelectOptionToModel(model, DictCode.回购拆借方向);
+        this.setSelectOptionToModel(model, DictCode.交易场所);
+        this.setSelectOptionToModel(model, DictCode.期限品种_内部拆借);
+        this.setSelectOptionToModel(model, DictCode.清算速度);
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("S01", DictCodeList.拆借类型_普通拆借.getValue());
@@ -97,12 +88,20 @@ public class EtrLendSpecInfo002Controller extends BaseController {
         model.addAttribute("T32name", DictCodeList.回购拆借方向_拆入.getCodeName());
         model.addAttribute("T33", DictCodeList.回购拆借方向_拆出.getValue());
         model.addAttribute("T33name", DictCodeList.回购拆借方向_拆出.getCodeName());
+
         
         String entrustId = getParam("entrustId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             EtrLendSpecInfoDto dto = etrLendSpecInfoService.getBussinessEntityByWorkflowId(
                 workflowId);
+            if(dto.getSettleSpreed()!=null){
+                if(dto.getSettleSpreed()==1){
+                    dto.setSettleSpreedStr(DictCodeList.清算速度_T_0.getValue());
+                }else if(dto.getSettleSpreed()==2){
+                    dto.setSettleSpreedStr(DictCodeList.清算速度_T_1.getValue());
+                }
+            }
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
@@ -110,9 +109,16 @@ public class EtrLendSpecInfo002Controller extends BaseController {
         }
         else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
             EtrLendSpecInfoDto dto = etrLendSpecInfoService.selectByKey(entrustId);
+            if(dto.getSettleSpreed()!=null){
+                if(dto.getSettleSpreed()==1){
+                    dto.setSettleSpreedStr(DictCodeList.清算速度_T_0.getValue());
+                }else if(dto.getSettleSpreed()==2){
+                    dto.setSettleSpreedStr(DictCodeList.清算速度_T_1.getValue());
+                }
+            }
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("tradeId", dto.getEntrustId());
-            model.addAttribute("businessId", dto.getEntrustId());
+            model.addAttribute("businessId", StringUtil.isNotEmpty(dto.getWorkflowId()) ? dto.getWorkflowId() : dto.getEntrustId());
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
         }
       //新建初始化
@@ -127,21 +133,19 @@ public class EtrLendSpecInfo002Controller extends BaseController {
         model.addAttribute("fintype_cr", DictCodeListExt1.金融产品类型_投管用_拆入.getValue());
         model.addAttribute("fintype_cc", DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
         model.addAttribute("fintype_tccr", DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue());
-        model.addAttribute("PINAN_ASSET_TYPE_F08",DictCodeList.平安资产类型_拆借.getValue());
-        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
-        pageElementConfigDto.setPageId("BaseRiskMathComm");
-        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
-        pageElementConfigDto.setPageId(this.getPageId());
-        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
-        isEleShow.putAll(map);
-        model.addAttribute("isEleShow", isEleShow);
+        
+        // add by wangpeng 20210525 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        // add by wangpeng 20210525 银行间场内场外拆分 end
+        
         return super.init(model);
     }
     
     /**
      * 新建页面组合代码联想下拉框 <功能详细描述>
      * 
-     * @param param
+     * @param
      * @return
      * @see
      * @since 1.0
@@ -155,7 +159,7 @@ public class EtrLendSpecInfo002Controller extends BaseController {
      * 
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto
+     * @param
      * @return
      * @see
      * @since 1.0
@@ -194,19 +198,6 @@ public class EtrLendSpecInfo002Controller extends BaseController {
         
         return commonCheck(result, dto.getOperateType());
     }
-    
-    @RequestMapping("checkAuthorization")
-    @ResponseBody
-    public AjaxResult checkAuthorization(@RequestBody EtrLendSpecInfoDto dto) {
-        //授权管理  委托授权额度check
-        if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH),"01")){
-            EtrCommonController etrCommonController = SpringContextUtil.getBean(
-                EtrCommonController.class);
-            return etrCommonController.授权是否匹配(dto);
-        }
-        return new AjaxResult();
-    }
-    
     /**
      * 保存/提交
      * 
@@ -229,6 +220,16 @@ public class EtrLendSpecInfo002Controller extends BaseController {
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
+        // ----------add by yushilong 20200721 预占功能 start----------
+//        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+//            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+//                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+//                    DictCodeList.平安资产类型_拆借.getValue());
+//            if (StringUtil.isNotEmpty(ar)) {
+//                return ar;
+//            }
+//        }
+        // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrLendSpecInfoDto> processParameter = new ProcessParameter<EtrLendSpecInfoDto>();
         WorkFlowParameter<EtrLendSpecInfoDto> params = new WorkFlowParameter<EtrLendSpecInfoDto>();
         params.setPageId(this.getPageId());
@@ -262,6 +263,17 @@ public class EtrLendSpecInfo002Controller extends BaseController {
     @ResponseBody
     public AjaxResult judgeIsHday(@RequestBody Map<String, Object> param){
         return etrLendSpecInfoService.judgeIsHday(param);
+    }
+
+    /**
+     * 是否为节假日 是：日期顺延  否：不做处理
+     * @param param
+     * @return
+     */
+    @RequestMapping("isHoliday")
+    @ResponseBody
+    public Date isHoliday(@RequestBody Map<String, Object> param){
+        return etrLendSpecInfoService.isHoliday(param);
     }
     
 }

@@ -101,6 +101,11 @@ public class TrdLendInvestTradeDto extends TrdProductDeal {
     private TrdInvestPersonInfoDto trdInvestPersonInfo;
 
     /**
+     * 清算速度
+     */
+    private Long settleSpreed;
+
+    /**
      * 获取 bussTrdTransferOrder
      *
      * @return bussTrdTransferOrder
@@ -393,4 +398,11 @@ public class TrdLendInvestTradeDto extends TrdProductDeal {
         this.busiPs = busiPs;
     }
 
+    public Long getSettleSpreed() {
+        return settleSpreed;
+    }
+
+    public void setSettleSpreed(Long settleSpreed) {
+        this.settleSpreed = settleSpreed;
+    }
 }

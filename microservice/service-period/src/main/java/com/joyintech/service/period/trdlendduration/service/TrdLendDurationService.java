@@ -24,7 +24,6 @@ import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonDeleteDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.period.trdrepoduration.RepoInfo;
-import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import org.springframework.beans.BeanUtils;
@@ -114,9 +113,6 @@ public class TrdLendDurationService extends BaseService<TrdLendDurationDto> {
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
-    
-    @Autowired
-    private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
 
     /**
      * 查询组合代码 <功能详细描述>
@@ -232,8 +228,6 @@ public class TrdLendDurationService extends BaseService<TrdLendDurationDto> {
     @Transactional(rollbackFor = Exception.class)
 	public String doComplete(TrdLendDurationDto trdLendDurationDto) {
 		String workflowId = trdLendDurationDto.getWorkflowId();
-		//撤销时查找授信交易编号
-        String tradeid = trdLendDurationMapper.findCeTradeIdByWorkflowId(workflowId);
 		String updateUser = trdLendDurationDto.getUpdateUser();
         Date updateTime = new Date();
         if (BussinessConstant.REVOKE.equalsIgnoreCase(trdLendDurationDto.getOperateType())) {
@@ -244,9 +238,6 @@ public class TrdLendDurationService extends BaseService<TrdLendDurationDto> {
             WflTrdFinProductDealTotal wflTrdFinProductDealTotal = new WflTrdFinProductDealTotal();
             BeanUtils.copyProperties(trdFinProductDealTotal, wflTrdFinProductDealTotal);
             deletePledgeSecPosition(wflTrdFinProductDealTotal);
-            
-            //删除授信占用
-            riskCreditListCommonValidatorService.deleteCredit(tradeid);
 
             return Boolean.TRUE.toString();
         }
@@ -589,10 +580,4 @@ public class TrdLendDurationService extends BaseService<TrdLendDurationDto> {
     public List<WflTrdProductDeal> findDealByWorkflowId(String workflowId) {
         return trdRepoDurationMapper.findDealByWorkflowId(workflowId);
     }
-    //add by liupengfei for 多级法人改造 S
-    public Page<SelectOptionDto> getBusiCode(int page, int length, Map<String, Object> param){
-        param.put("TRADE_STATUS_CX", DictCodeListExt1.交易状态_撤销.getValue());
-        return queryForPageForSelectReturn(page, length, () -> trdLendDurationMapper.getBusiCode(param));
-    }
-    //add by liupengfei for 多级法人改造 E
 }

@@ -18,14 +18,15 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+//import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.service.EtrBrowDepoInfoService;
 import com.joyintech.tams.invest.entrust.etrconbond.dto.EtrConBondDto;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.service.EtrLendSpecInfoService;
-import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
-import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.tools.util.ValidationUtil.ErrorMessage;
 import com.joyintech.tools.util.ValidationUtil.ValidResult;
@@ -41,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -93,13 +95,6 @@ public class EtrLendSpecInfo003Controller extends BaseController {
     model.addAttribute("fintype_cr", DictCodeListExt1.金融产品类型_投管用_拆入.getValue());
     model.addAttribute("fintype_cc", DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
     model.addAttribute("fintype_tccr", DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue());
-    PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
-    pageElementConfigDto.setPageId("BaseRiskMathComm");
-    Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
-    pageElementConfigDto.setPageId(this.getPageId());
-    Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
-    isEleShow.putAll(map);
-    model.addAttribute("isEleShow", isEleShow);
     return super.init(model);
     }
     
@@ -129,8 +124,10 @@ public class EtrLendSpecInfo003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody List<EtrLendSpecInfoDto> dtoList, BindingResult result) {
+    public AjaxResult check(@RequestBody EtrLendSpecInfoDto allDto, BindingResult result) {
         List<ValidMessage> messages = new ArrayList<>();
+        List<EtrLendSpecInfoDto> dtoList = allDto.getSelectedItem();
+        StringBuffer confirmMessage = new StringBuffer();
         for (int i = 0; i < dtoList.size(); i++ ) {
             ValidResult itemResult = ValidationUtil.validateBean(dtoList.get(i),
                 ValidateGroupEdit.class);
@@ -143,11 +140,36 @@ public class EtrLendSpecInfo003Controller extends BaseController {
                 }
                 messages.add(new ValidMessage(message.toString()));
             }
+
+//            if(dtoList.get (i).getEntrustAmt ().compareTo (dtoList.get (i).getProAvailableCash ()) ==1 ){
+//                messages.add (new ValidMessage ("组合可用剩余现金不足，请确认是否继续？"));
+//            }
+            // 指令可用现金软校验
+//            if (dtoList.get (i).getEntrustAmt() != null && dtoList.get (i).getProAvailableCash() != null
+//                    &&StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH),
+//                    DictCodeListExt1.是或否_是.getValue())) {
+                if (dtoList.get (i).getEntrustAmt().compareTo(dtoList.get (i).getProAvailableCash()) == 1) {
+                    if (StringUtil.isNotBlank(confirmMessage)) {
+                        confirmMessage.append("<br />");
+                    }
+                    confirmMessage.append(getMessage("ETR_E_0025", String.valueOf(i + 1)));
+                    confirmMessage.append("<br />");
+                    confirmMessage.append(getMessage("TRD_C_0002"));
+                }
+//            }
         }
+
+
         if (messages.size() > 0) {
             AjaxResult errorRs = new AjaxResult();
             errorRs.setErrorList(messages);
             return errorRs;
+        }
+
+        if (StringUtil.isNotEmpty(confirmMessage.toString())) {
+            AjaxResult wr = new AjaxResult();
+            wr.setData(confirmMessage.toString());
+            return wr;
         }
         return commonCheck(result, dtoList.get(0).getOperateType());
     }
@@ -160,12 +182,13 @@ public class EtrLendSpecInfo003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody List<EtrLendSpecInfoDto> dtoList, BindingResult br)
+    public AjaxResult save(@RequestBody EtrLendSpecInfoDto allDto, BindingResult br)
         throws Exception {
-        AjaxResult ajaxResult = this.check(dtoList, br);
+        AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;
         }
+        List<EtrLendSpecInfoDto> dtoList = allDto.getSelectedItem();
         for(EtrLendSpecInfoDto dto: dtoList) {
             if(!StringUtil.isNotEmpty(dto.getEntrustId())){
                 BussinessCodeParameter param = new BussinessCodeParameter();
@@ -176,8 +199,24 @@ public class EtrLendSpecInfo003Controller extends BaseController {
             }
             dto.getEtrInvestPersonInfo().setInvManagerId(dto.getCreateUser());
             dto.getEtrInvestPersonInfo().setRoom(dto.getCreateDept());
-            dto.setWorkflowParameter("new|||1|EtrLendSpecInfo003|EtrLendSpecInfo003_btn_submit|true");
         }
+        // ----------add by yushilong 20200721 预占功能 start----------
+//        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+//            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
+//                    DictCodeList.平安资产类型_拆借.getValue(),
+//                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+//                    false, null);
+//            if (StringUtil.isNotEmpty(ar)) {
+//                return ar;
+//            }
+//        }
+//        
+//        // add by zhangrui1 批量提交设置风控指标明细 start
+//        EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), dtoList,
+//                (dto, list) -> dto.setRiskTrialRetDto(list));
+        // add by zhangrui1 批量提交设置风控指标明细 end
+        
+        // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrLendSpecInfoDto> processParameter = new ProcessParameter<EtrLendSpecInfoDto>();
         WorkFlowParameter<EtrLendSpecInfoDto> params = new WorkFlowParameter<EtrLendSpecInfoDto>();
         params.setPageId("EtrLendSpecInfo002");

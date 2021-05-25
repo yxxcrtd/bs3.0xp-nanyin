@@ -122,4 +122,13 @@ public class FinTradeProductDto extends FinTradeProduct {
     public BigDecimal getIntRate() {
         return super.getIntRate();
     }
+
+    /**
+     * 取得 交易场所，银行间、上交所、深交所、柜面等
+     * @return 交易场所，银行间、上交所、深交所、柜面等
+     */
+    @NotEmpty(fieldName = "TrdRepoTrade002.tradeMarket")
+    public String getTradeMarket() {
+        return super.getTradeMarket();
+    }
 }

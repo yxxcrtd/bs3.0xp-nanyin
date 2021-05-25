@@ -11,7 +11,9 @@
 package com.joyintech.tams.invest.entrust.etrlendspecinfo.controller;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.service.EtrLendSpecInfoService;
 
@@ -61,6 +64,7 @@ public class EtrLendSpecInfo001Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.币种);
         this.setSelectOptionToModel(model, DictCode.回购拆借方向);
         this.setSelectOptionToModel(model, DictCode.委托状态);
+        this.setSelectOptionToModel(model, DictCode.交易场所);
         return super.init(model);
     }
     
@@ -139,12 +143,21 @@ public class EtrLendSpecInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("close")
-    public AjaxResult closeDelegate(@RequestBody EtrLendSpecInfoDto dto) {
+    public AjaxResult closeDelegate(@RequestBody EtrLendSpecInfoDto dto)
+        // modify by yushilong start
+        throws Exception {
+        // modify by yushilong end
         List<EtrLendSpecInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrLendSpecInfoDto entity : dtolist){
                 etrLendSpecInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
+            // add by zhangrui1 批量委托关闭 start
+            // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
+            List<String> entrustIdList = dtolist.stream().map(
+                EtrLendSpecInfoDto::getEntrustId).collect(Collectors.toList());
+            EntrustCompleteUtil.doComplete(entrustIdList);
+            // add by zhangrui1 批量委托关闭 end
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }
         return new AjaxResult(this.getMessage("ETR_X_004"));

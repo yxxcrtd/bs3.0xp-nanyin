@@ -134,17 +134,4 @@ public class TrdLendDurationController {
                 trdCommonWflParam.getWflDealAdds());
         return "Success";
     }
-    //add by liupengfei for 多级法人改造 S
-    /**
-     * 查询有效、撤销或待处理的存续期交易数据
-     *
-     * @return 查询结果集
-     * @throws Exception 异常
-     */
-    @PostMapping("getBusiCode/{page}/{length}")
-    public Page<SelectOptionDto> getBusiCode(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
-                                             @PathVariable("length") int length) {
-        return trdLendDurationService.getBusiCode(page, length, param);
-    }
-    //add by liupengfei for 多级法人改造 E
 }

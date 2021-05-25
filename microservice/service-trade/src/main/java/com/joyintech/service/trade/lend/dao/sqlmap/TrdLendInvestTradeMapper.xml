@@ -11,7 +11,7 @@
         <result column="WORKFLOW_ID"       property="workflowId"       jdbcType="VARCHAR" />
         <result column="WORKFLOW_STATUS"       property="workflowStatus"       jdbcType="VARCHAR" />
         <result column="BUSI_PS"       property="busiPs"       jdbcType="VARCHAR" />
-        <result column="belongInstitutionCode"       property="belongInstitutionCode"       jdbcType="VARCHAR" />
+        <result column="SETTLE_SPEED"       property="settleSpreed"       jdbcType="NUMERIC" />
         <association property="finTradeProduct" resultMap="com.joyintech.tams.common.base.dao.FinTradeProductMapper.BaseResultMap"></association>
         <association property="trdInvestPersonInfo" javaType="com.joyintech.service.trade.lend.dto.TrdInvestPersonInfoDto">
             <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
@@ -23,7 +23,6 @@
     </resultMap>
     
     <select id="selectDeal" resultMap="trdLendInvestTradeFullResultMap">
-    select * from (
     	<trim prefixOverrides="UNION ALL">
     		<if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_01">
                 SELECT
@@ -64,8 +63,28 @@
                         OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
                     </if>
 		            <if test="entrustId != null and entrustId != ''">
-		                AND wtpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+		                AND wtpda.ENTRUST_ID like CONCAT('%',CONCAT(#{entrustId}, '%'))
 		            </if>
+                    <!-- <if test="tradeMarket != null and tradeMarket != ''">
+                        AND wtpd.TRADE_ID in (SELECT
+                        FINPROD_ID
+                        FROM
+                        FIN_TRADE_PRODUCT
+                        where TRADE_MARKET = #{tradeMarket})
+                    </if> -->
+                	<!-- add by wangpeng 20210525 银行间场内场外拆分 start -->
+					<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+						AND wtpd.TRADE_ID in (SELECT
+                        FINPROD_ID
+                        FROM
+                        FIN_TRADE_PRODUCT
+                        where TRADE_MARKET in
+						<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+							#{currTradeMarket}
+						</foreach>
+						)
+					</if>
+					<!-- add by wangpeng 20210525 银行间场内场外拆分 end -->
 		            <if test="paBussType != null and paBussType != ''">
 		                AND wtpdo.DL_TYPE = #{paBussType}
 		            </if>
@@ -96,7 +115,7 @@
                 LEFT JOIN PTL_TRADE PT ON wtpd.TRADE_ID = PT.BUSI_NO
                 LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
                   left join FIN_PRODUCT_TYPE fpt
-                   on (case when wtpd.IS_OUT_TRADE='N' and wtpd.R_TRADE_ID is not null then wtpd.R_TRADE_ID else wtpd.TRADE_ID END) = fpt.FINPROD_ID
+                   on fpt.FINPROD_ID = wtpd.TRADE_ID
                      and fpt.BRANCH = #{BRANCH_0}
                   left join PA_TRD_PRODUCT_DEAL wptpd
                     on wtpd.TRADE_ID = wptpd.TRADE_ID
@@ -121,8 +140,28 @@
                         OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
                     </if>
 		            <if test="entrustId != null and entrustId != ''">
-		                AND wtpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+		                AND wtpda.ENTRUST_ID like CONCAT('%',CONCAT(#{entrustId}, '%'))
 		            </if>
+                   <!--  <if test="tradeMarket != null and tradeMarket != ''">
+                        AND wtpd.TRADE_ID in (SELECT
+                        FINPROD_ID
+                        FROM
+                        FIN_TRADE_PRODUCT
+                        where TRADE_MARKET = #{tradeMarket})
+                    </if> -->
+                    <!-- add by wangpeng 20210525 银行间场内场外拆分 start -->
+					<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+						AND wtpd.TRADE_ID in (SELECT
+                        FINPROD_ID
+                        FROM
+                        FIN_TRADE_PRODUCT
+                        where TRADE_MARKET in
+						<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+							#{currTradeMarket}
+						</foreach>
+						)
+					</if>
+					<!-- add by wangpeng 20210525 银行间场内场外拆分 end -->
 		            <if test="paBussType != null and paBussType != ''">
 		                AND fpt.TYPE_6 = #{paBussType}
 		            </if>
@@ -152,7 +191,7 @@
                 LEFT JOIN PTL_TRADE PT ON wtpd.TRADE_ID = PT.BUSI_NO
                 LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
                   left join FIN_PRODUCT_TYPE fpt
-                   on (case when wtpd.IS_OUT_TRADE='N' and wtpd.R_TRADE_ID is not null then wtpd.R_TRADE_ID else wtpd.TRADE_ID END) = fpt.FINPROD_ID
+                   on fpt.FINPROD_ID = wtpd.TRADE_ID
                      and fpt.BRANCH = #{BRANCH_0}
                   <!-- left join FIN_TRADE_PRODUCT ftp
                     on ftp.FINPROD_ID = wtpd.TRADE_ID
@@ -179,8 +218,28 @@
                         OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
                     </if>
 		            <if test="entrustId != null and entrustId != ''">
-		                AND wtpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+		                AND wtpda.ENTRUST_ID like CONCAT('%',CONCAT(#{entrustId}, '%'))
 		            </if>
+                    <!-- <if test="tradeMarket != null and tradeMarket != ''">
+                        AND wtpd.TRADE_ID in (SELECT
+                        FINPROD_ID
+                        FROM
+                        FIN_TRADE_PRODUCT
+                        where TRADE_MARKET = #{tradeMarket})
+                    </if> -->
+		            <!-- add by wangpeng 20210525 银行间场内场外拆分 start -->
+					<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+						AND wtpd.TRADE_ID in (SELECT
+                        FINPROD_ID
+                        FROM
+                        FIN_TRADE_PRODUCT
+                        where TRADE_MARKET in
+						<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+							#{currTradeMarket}
+						</foreach>
+						)
+					</if>
+					<!-- add by wangpeng 20210525 银行间场内场外拆分 end -->
 		            <if test="paBussType != null and paBussType != ''">
 		                AND fpt.TYPE_6 = #{paBussType}
 		            </if>
@@ -199,7 +258,7 @@
 		            and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
             </if>
     	</trim>
-    	ORDER BY TRADE_DATE DESC, TRADE_ID DESC)
+    	ORDER BY TRADE_DATE DESC, TRADE_ID DESC
     </select>
 
     <select id="getTrdLendInvestTradeDto" resultMap="trdLendInvestTradeFullResultMap">
@@ -209,17 +268,17 @@
                ftp.VDATE, ftp.MDATE, ftp.TERM, ftp.CALENDAR_ID,
                tpd.CCY, ftp.PRIN, ftp.INT_RATE * 100 as INT_RATE, tpd.REMARK,
                tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,
-               ptrd.DEPT_CODE, fpt.TYPE_6 as PA_BUSS_TYPE
+               ptrd.DEPT_CODE, fpt.TYPE_6 as PA_BUSS_TYPE,tpd.SETTLE_SPEED ,ftp.TRADE_MARKET,ftp.TERM_TYPE
         FROM TRD_PRODUCT_DEAL tpd
         LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda
           ON tpda.TRADE_ID = tpd.TRADE_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt
-          ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = fpt.FINPROD_ID
+          ON fpt.FINPROD_ID = tpd.TRADE_ID
             and fpt.BRANCH = #{BRANCH_0}
         LEFT JOIN PA_TRD_PRODUCT_DEAL ptrd
           ON ptrd.TRADE_ID = tpd.TRADE_ID
         LEFT JOIN FIN_TRADE_PRODUCT ftp
-          ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = ftp.FINPROD_ID
+          ON ftp.FINPROD_ID = tpd.TRADE_ID
           and ftp.BRANCH = #{BRANCH_0}
         LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
         LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID

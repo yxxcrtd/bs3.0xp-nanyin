@@ -24,77 +24,93 @@ $(function() {
         }else{
 
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {valDate:['tradeDate','TrdLendInvestTrade002.tradeDate'],portfolioCode:['portfolioId','TrdBondInvestTrade002.portfolioId'],tradeAmount:['prin','TrdLendInvestTrade002.prin'],assetType:[finType,finMng],tradeDirection:['busiPs','TrdLendInvestTrade002.ps'],data:obj}
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     }
 
-    function saveOrSubmit(operateType) {
-    	// 划款指令隐藏时，自动生成划款指令信息
-    	generateOrders(function () {
-	    	//---add by 裴家俊 2019/03/25-----start---
-	    	 var s;
-            if(typeof(BaseRiskMathComm) != 'undefined') {
-	         if(BaseRiskMathComm) {
-	             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-	             if(!s && s != ''){
-	                 return;
-	             }
-	             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
-	                 return;
-                    }
-	             }
-	         }
-	       //---add by 裴家俊 2019/03/25-----end---
-	        // 检查生成划款指令参数是否发生变化
-	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
-	            return;
-	        }
-	        
-	        var object = $.serializeToObject('#submitForm', true);
-	        object.pageModel = pageModel;
-	        object.operateType = operateType;
-	        object.isGuarantee = $('#portfolioId').select2('data')[0].object; // 是否保本
-	        object.entrustNum = entrustNum; // 委托金额
-	        object.entrustIntRate = entrustIntRate; // 委托所输利率
-	        object.avalibleCash = $("#bussTrdAvailableCashQuery_avalibleCash").val(); // 组合T日可用现金
-	        if(FileCommon) {
-	            object.fileArray = FileCommon.getUploadFileInfo();
-	        }
-	        object.inputValue1 = PINAN_ASSET_TYPE_F08;
-	        
-	        //modify by wj 20200429 TISHKBS-310   拆借交易提交报错 页面无ps属性
-//	        object.inputValue2 = $('#ps').val(); 
-
-	        object.inputValue2 = $('#busiPs').val(); 
-	        object.ps = $('#busiPs').val(); 
-	        
-	        if ($('#trdInvestPersonInfo_counterId').select2('data') && $('#trdInvestPersonInfo_counterId').select2('data')[0]) {
-	            object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;
-	            object.counterId = $('#trdInvestPersonInfo_counterId').select2('data')[0].id;
-	        }
-	        object.prinAmt = $('#prin').val();
-	        object.inputValue3 = object.paBussType;
-	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
-		        Joyin.ajaxJson(basePath + 'invest/trade/lend/TrdLendInvestTrade002/check', object, function(result) {
-		        	object.riskCreditListCommonDto = result1.data;
-		        	Joyin.confirm(result.data, function() {
-		                if(operateType === 'save') {
-		                    WorkFlow.doSaveList(basePath + 'invest/trade/lend/TrdLendInvestTrade002/save', object, "TrdLendInvestTrade002_btn_save");
-		                }
-		                else {
-		                    WorkFlow.doSubmitList(basePath + 'invest/trade/lend/TrdLendInvestTrade002/save', object, "TrdLendInvestTrade002_btn_submit");
-		                }
-		            });
-		        });
-	        });
-    	});
+    function saveOrSubmit(operateType) {        
+        // 根据选择的组合是否保本来动态显示划款
+        var isGuarantee = $('#portfolioId').select2('data')[0].object;
+        if (GEN_PAY_ORDERS_AUTO == '01' && !(isGuarantee == YES_OR_NO_Y)) {
+            window.BussTrdTransferOrder['bussTrdTransferOrder'].generateOrders(function () {
+                realSaveOrSubmit(operateType);
+            });
+        }
+        else {
+            realSaveOrSubmit(operateType);
+        }
+        
     };
+    
+    function realSaveOrSubmit(operateType) {
+        //---add by 裴家俊 2019/03/25-----start---
+        var s;
+        if(BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+            if(!s && s != ''){
+                return;
+            }
+            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+                return;
+            }
+        }
+      //---add by 裴家俊 2019/03/25-----end---
+       // 检查生成划款指令参数是否发生变化
+       // if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
+       //     return;
+       // }
+       
+       var object = $.serializeToObject('#submitForm', true);
+       object.pageModel = pageModel;
+       object.operateType = operateType;
+       object.isGuarantee = $('#portfolioId').select2('data')[0].object; // 是否保本
+       object.entrustNum = entrustNum; // 委托金额
+       object.entrustIntRate = entrustIntRate; // 委托所输利率
+       object.avalibleCash = $("#bussTrdAvailableCashQuery_avalibleCash").val(); // 组合T日可用现金
+       if(FileCommon) {
+           object.fileArray = FileCommon.getUploadFileInfo();
+       }
+       object.inputValue1 = PINAN_ASSET_TYPE_F08;
+       object.inputValue2 = $('#ps').val();
+
+        // add by etliu 20200731 SNSTZJY-718 【0807版本】拆借指令：设置不走流程，交易员设置授权如图，指令额度小于授权额度，交易录单仍需要走流程 start
+        if (object.finTradeProduct && object.finTradeProduct.tradeMarket) {
+            object.tradeMarket = object.finTradeProduct.tradeMarket;
+        }
+        // add by etliu 20200731 end
+        // add by dubaojun 2020-08-27 风险接口需要到期日和交易日历 start
+        if(object.finTradeProduct) {
+            object.mdate = object.finTradeProduct.mdate;
+            object.calendarId = object.finTradeProduct.calendarId;
+        }
+        // add by dubaojun 2020-08-27 风险接口需要到期日和交易日历 start
+
+       Joyin.ajaxJson(basePath + 'invest/trade/lend/TrdLendInvestTrade002/check', object, function(result) {
+           Joyin.confirm(result.data, function() {
+               if(operateType === 'save') {
+                   WorkFlow.doSaveList(basePath + 'invest/trade/lend/TrdLendInvestTrade002/save', object, "TrdLendInvestTrade002_btn_save");
+               }
+               else {
+                   WorkFlow.doSubmitList(basePath + 'invest/trade/lend/TrdLendInvestTrade002/save', object, "TrdLendInvestTrade002_btn_submit");
+               }
+           });
+       });
+    };
+    
     var checkAndAssign = function(el, value, editable){
         if(value != null && value != ''){
-            $(el).val(value).trigger('change').trigger('blur');
+            // modify by dubaojun 2020-07-28 先设置置灰属性，防止change事件导致无法设置 start
             if(!editable){
                 $(el).attr("disabled",true);
             }
+            $(el).val(value).trigger('change').trigger('blur');
+            // modify by dubaojun 2020-07-28 先设置置灰属性，防止change事件导致无法设置 end
         }
     };
     /**
@@ -131,13 +147,24 @@ $(function() {
                 if(data != null && data.etrEntrustAdd != null) {
                     var etrEntrustAdd = data.etrEntrustAdd;
                     checkAndAssign("#paBussType", etrEntrustAdd.assetType1);
-                    checkAndAssign("#term", etrEntrustAdd.termDays, true);
+
+                    var spreed = '01';
+                    if(etrEntrustAdd.settleSpreed==2) {
+                        spreed = '02';
+                    }
+                    checkAndAssign("#settleSpreed", spreed);
+
+                    checkAndAssign("#termType", etrEntrustAdd.termType);
+
 //                    if (etrEntrustAdd.vdate) {
 //                        checkAndAssignForEntrust("#vdate", Date.ofDate(etrEntrustAdd.vdate).format("yyyy-MM-dd"), true);
 //                    }
-                    if (etrEntrustAdd.mdate) {
-                        checkAndAssignForEntrust("#mdate", Date.ofDate(etrEntrustAdd.mdate).format("yyyy-MM-dd"), true);
-                    }
+                    // 到期日应该根据期限计算
+//                     if (etrEntrustAdd.mdate) {
+//                         checkAndAssignForEntrust("#mdate", Date.ofDate(etrEntrustAdd.mdate).format("yyyy-MM-dd"), true);
+//                     }
+
+                    checkAndAssign("#term", etrEntrustAdd.termDays, true);
                 }
                 if(data != null && data.etrEntrust != null){
                     etrEntrust = data.etrEntrust;
@@ -157,6 +184,7 @@ $(function() {
                     $('#calendarId').textSelect('setValue', etrEntrust.calendarId);
                     checkAndAssign("#ccy", etrEntrust.ccy);
                     checkAndAssignForEntrust("#prin", etrEntrust.entrustAmt, true);
+                    checkAndAssign("#tradeMarket", etrEntrust.tradeMarket);
                     entrustNum = etrEntrust.entrustAmt;
                     
                     if (etrEntrust.price) {
@@ -182,13 +210,15 @@ $(function() {
          */
         $("#portfolioId").on('change', function () {
             var isGuarantee = $('#portfolioId').select2('data')[0].object;
-//            if(isGuarantee == YES_OR_NO_Y) {
-//                $("#bussTrdTransferOrder_div").hide();
-//                // TODO OPICS信息隐藏
-//            } else {
-//                $("#bussTrdTransferOrder_div").show();
-//                // TODO OPICS信息展示
-//            }
+            if(isGuarantee == YES_OR_NO_Y) {
+                $("#bussTrdTransferOrder_div").hide();
+                // TODO OPICS信息隐藏
+            } else {
+            	if(GEN_PAY_ORDERS_AUTO!='01'){
+	                $("#bussTrdTransferOrder_div").show();
+	                // TODO OPICS信息展示
+            	}
+            }
             updateCash();
             updateSecAcctBalance();
         });
@@ -200,10 +230,10 @@ $(function() {
         $("#busiPs").on("change", function () {
             var busiPs = $("#busiPs").val();
             if(busiPs == BACK_LEND_DIRECTION_01){
-                window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hideCash();
+                window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hideCash();
             }
             else if(busiPs == BACK_LEND_DIRECTION_02){
-                window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showCash(true);
+                window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showCash(true);
                 $("#bussTrdAvailableCashQuery_div_channelCash").hide();
             }
         });
@@ -234,10 +264,165 @@ $(function() {
         });
         $("#mdate").on("change", function() {
             updateTerm();
+
         });
         $("#term").on("change", function() {
             updateMdate();
+            lendTermChangeAction();
+
         });
+
+        /**
+         * 交易场所
+         */
+        $('#tradeMarket').change(function(){
+            var tradeMarket = $('#tradeMarket').val();
+            if($('#tradeMarket').val()=='09'){//选择OTC
+                $("#termType").val('').change().prop("disabled",true);
+                var $settleSpreed = $("#settleSpreed");
+                var settleSpreed = $settleSpreed.val();
+                $settleSpreed.updateChosenArr({
+                    item: ['01'],
+                    chosen: settleSpreed
+                });
+
+                var $basis = $("#basis");
+                var basistmp = $basis.val();
+                $basis.updateChosenArr({
+                    item: ['A/365','A/360'],
+                    chosen: basistmp
+                });
+
+            }else{//选择银行间
+                $("#termType").prop("disabled",true);
+                $("#settleSpreed").prop("disabled",false);
+                var $settleSpreed = $("#settleSpreed");
+                var settleSpreed = $settleSpreed.val();
+                $settleSpreed.updateChosenArr({
+                    item: ['01','02'],
+                    chosen: settleSpreed
+                });
+
+                var $basis = $("#basis");
+                var basistmp = $basis.val();
+                $basis.updateChosenArr({
+                    item: ['A/360'],
+                    chosen: basistmp
+                });
+
+                lendTermChangeAction();
+            }
+
+            if(entrustId != ''){
+                $("#termType").prop("disabled",true);
+                $("#settleSpreed").prop("disabled",true);
+            }
+        });
+
+        /**
+         * 清算速度
+         */
+        $('#settleSpreed').change(function(){
+            settleSpeedChangeAction();
+        });
+
+        var settleSpeedChangeAction = function(){
+            var settleSpeed = $('#settleSpreed').val();
+            var tradeDate = $('#tradeDate').val();
+            if (settleSpeed && settleSpeed != '' && tradeDate && tradeDate != ''){
+                var num = 0;
+                if (settleSpeed === '02'){
+                    num = 1;
+                }
+                $('#vdate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
+
+            }
+        };
+
+        /**
+         * 回购期限
+         */
+        var lendTermChangeAction = function(){
+            if($("#tradeMarket") && $("#tradeMarket").val()=='01' && $('#term').val()) {
+                var repoterm = $('#term').val();
+                var re = /^[0-9]*$/;
+                if (repoterm && re.test(repoterm)) {
+                    var vdate = $('#vdate').val();
+                    if (vdate) {
+                        //回购期限联动期限品种
+                        var term = getTermType(vdate, repoterm);
+                        $('#termType').val(term).trigger('change');
+                        $('#termType').textSelect('setValue', term);
+                        $('#termType').prop("disabled",true);
+                    }
+                } else {
+                    $('#termType').val("").trigger('change');
+                }
+            }
+        }
+
+        /**
+         * 获取期限品种  date(yyyy-MM-dd),repoterm
+         */
+        function getTermType(date,repoterm) {
+            if(repoterm&&repoterm<=21){
+                //期限品种小于21天
+                if(repoterm==1){
+                    return 'IBO001';
+                }
+                if(repoterm>1&&repoterm<=7){
+                    return 'IBO007';
+                }
+                if(repoterm>7&&repoterm<=14){
+                    return 'IBO014';
+                }
+                if(repoterm>14&&repoterm<=21){
+                    return 'IBO021';
+                }
+            }
+            var day=0;
+            //date为空时  返回0
+            if(date&&repoterm){
+                //获取日期
+                date =DateUtil.parse(date);
+                //获取之后月00天 即本月最后一天
+                day= new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+1,0).getDate();
+                if(repoterm<=day){
+                    return 'IBO1M';
+                }
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+2,0).getDate();
+                if(repoterm<=day){
+                    return 'IBO2M';
+                }
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+3,0).getDate();
+                if(repoterm<=day){
+                    return 'IBO3M';
+                }
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+4,0).getDate();
+                if(repoterm<=day){
+                    return 'IBO4M';
+                }
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+5,0).getDate();
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+6,0).getDate();
+                if(repoterm<=day){
+                    return 'IBO6M';
+                }
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+7,0).getDate();
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+8,0).getDate();
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+9,0).getDate();
+                if(repoterm<=day){
+                    return 'IBO9M';
+                }
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+10,0).getDate();
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+11,0).getDate();
+                day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+12,0).getDate();
+                if(repoterm<=day){
+                    return 'IBO1Y';
+                }
+            }
+            return null;
+        }
+
         /**
          * 根据起息日和到期日自动计算期限
          */
@@ -248,8 +433,11 @@ $(function() {
                 var paramObj = {};
                 paramObj.vdate = vdate;
                 paramObj.mdate = mdate;
-                Joyin.ajax(basePath + 'component/trade/BussTrdCommon/calcTerm', paramObj, function(result) {
-                    $("#term").val(result);
+                Joyin.ajaxSync(basePath + 'component/trade/BussTrdCommon/calcTerm', paramObj, function(result) {
+                    if(result != '0') {
+                        $("#term").val(result);
+                        lendTermChangeAction();
+                    }
                 });
             } else {
                 $("#term").val("");
@@ -265,7 +453,7 @@ $(function() {
                 var paramObj = {};
                 paramObj.vdate = vdate;
                 paramObj.term = term;
-                Joyin.ajax(basePath + 'component/trade/BussTrdCommon/calcMdate', paramObj, function(result) {
+                Joyin.ajaxSync(basePath + 'component/trade/BussTrdCommon/calcMdate', paramObj, function(result) {
                     $("#mdate").val(result);
                 });
             } else {
@@ -277,7 +465,7 @@ $(function() {
          * 1.4 查询组合T+1日可用现金
          */
         var updateCash = function(){
-            window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].updateCash(function () {
+            window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].updateCash(function () {
                 return {
                     'tradeDate': $("#tradeDate").val(),
                     'calendarId': $("#calendarId").val(),
@@ -290,7 +478,7 @@ $(function() {
          * 1.5 查询托管户剩余现金
          */
         var updateSecAcctBalance = function(){
-            window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].updateSecAcctBalance(function () {
+            window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].updateSecAcctBalance(function () {
                 return {
                     'ccy': $("#ccy").val(),
                     'tradeDate': $("#tradeDate").val(),
@@ -300,13 +488,11 @@ $(function() {
         };
         window.componentLoadCallback = function(isDone, pagePath, params){
             if(isDone){
-                if(typeof(BaseRiskMathComm) != 'undefined') {
                 var riskparam = getriskdata();
                 if (pageModel==PAGE_MODEL_NEW){
                     riskparam.data =null;
                 }
                 window.BaseRiskMathComm.getparam(riskparam);
-                }
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     var finprodType2 = "";
                     if ($("#busiPs").val() == BACK_LEND_DIRECTION_01) {
@@ -318,6 +504,7 @@ $(function() {
                         'isTotalTrade':YES_OR_NO_N
                         ,'bankLendingType':$("#paBussType").val()
                         ,'portfolioId':$("#portfolioId").val()
+                        ,'repPageId': 'TrdLendInvestTrade002'
                         ,'deal':{
                             'finprodType2' : finprodType2,
                             'tradeDate' : $('#tradeDate').val(),
@@ -331,7 +518,7 @@ $(function() {
                 });
 //                updateSecAcctBalance();
 //                updateCash();
-                window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showCash(true);
+                window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showCash(true);
                 $("#bussTrdAvailableCashQuery_div_channelCash").hide();
                 if(entrustId != ''){
                     if(etrEntrust){
@@ -345,20 +532,21 @@ $(function() {
                 $("#portfolioId").trigger("change");
                 $("#busiPs").trigger("change");
                 $("#paBussType").trigger("change");
+                lendTermChangeAction();
             }
         }
     };
     
     //add by lizhi 2020-2-26 划款指令是否自动生成  start
-    var generateOrders = function (callback) {
-    	if(GEN_PAY_ORDERS_AUTO =='01'){
-    		$('#bussTrdTransferOrder_btn_generate').click();
-    	}
-    	// 回调方法
-	    if (callback && typeof callback === 'function') {
-	        callback();
-	    }
-    }
+    // var generateOrders = function (callback) {
+    // 	if(GEN_PAY_ORDERS_AUTO =='01'){
+    // 		$('#bussTrdTransferOrder_btn_generate').click();
+    // 	}
+    // 	// 回调方法
+	//     if (callback && typeof callback === 'function') {
+	//         callback();
+	//     }
+    // }
     //add by lizhi 2020-2-26 划款指令是否自动生成  end
     /**
      * 画面加载完成
@@ -384,6 +572,12 @@ $(function() {
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 start----------
             var object = $.serializeToObject('#submitForm', true);
+            // add by dubaojun 2020-08-27 风险试算需要到期日和交易日历 start
+            if(object.finTradeProduct) {
+                object.mdate = object.finTradeProduct.mdate;
+                object.calendarId = object.finTradeProduct.calendarId;
+            }
+            // add by dubaojun 2020-08-27 风险试算需要到期日和交易日历 end
              window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/1/RSK002/F08', object,getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 end----------
              window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());

@@ -160,21 +160,6 @@ public class TrdLendDuration001Dto extends TrdLendDurationCommonDto implements P
     public void setUploadFileList(List<UploadFile> uploadFileList) {
         this.uploadFileList = uploadFileList;
     }
-
-    /**
-     * 金融产品代码
-     */
-    private String finprodId;
-
-    @Override
-    @PrimaryKey(Field.PK_3)
-    public String getFinprodId() {
-        return finprodId;
-    }
-
-    @Override
-    public void setFinprodId(String finprodId) {
-        this.finprodId = finprodId;
-    }
+    
 }
 

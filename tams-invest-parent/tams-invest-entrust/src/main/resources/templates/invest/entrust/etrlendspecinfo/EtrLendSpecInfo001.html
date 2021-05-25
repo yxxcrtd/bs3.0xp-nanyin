@@ -8,15 +8,15 @@
 <body>
     <div layout:fragment="content">
         <div class="form-button-area">
-            <a id="EtrLendSpecInfo001_btn_add" class="layui-btn layui-btn-sm btn-create"
+            <a th:id="|${pageId}_btn_add|" class="layui-btn layui-btn-sm btn-create"
                 data-th-text="#{SysCommon.create}"></a>
             <!-- add by gaopeng 20191231 导入按钮添加 start -->
-            <a id="EtrLendSpecInfo001_btn_import" class="layui-btn layui-btn-sm btn-import"
+            <a th:id="|${pageId}_btn_import|" class="layui-btn layui-btn-sm btn-import"
             data-th-text="#{EtrLendSpecInfo001.import}">导入</a> 
             <!-- add by gaopeng 20191231 导入按钮添加 end -->
-            <a id="EtrLendSpecInfo001_btn_close" class="layui-btn layui-btn-sm btn-close" 
+            <a th:id="|${pageId}_btn_close|" class="layui-btn layui-btn-sm btn-close" 
                 ><i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></span></a>
-            <a id="EtrLendSpecInfo001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke"
+            <a th:id="|${pageId}_btn_revoke|" class="layui-btn layui-btn-sm btn-revoke"
                 ><i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></span></a>
         </div>
         <div class="joyin-form-wrap joyin-filter-form condition-area ">
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-                        <label class="layui-form-label form-lable" data-th-text="#{EtrLendSpecInfo001.entrustDate}">委托日期</label>
+                        <label class="layui-form-label form-lable" data-th-text="#{EtrLendSpecInfo001.entrustDate}">指令日期</label>
                         <div class="layui-input-inline input-inline">
                             <input id='entrustDate' name='entrustDate'
                                 class="layui-input form-input input-dateRangeSelect" placeholder="请选择支持区间"
@@ -82,6 +82,17 @@
                         </div>
                     </div>
                 </div>
+               <!--  <div class="layui-form-item">
+                    <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                        <label class="layui-form-label form-lable" data-th-text="#{EtrLendSpecInfo001.tradeMarket}">交易场所</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="tradeMarket" name="tradeMarket"
+                                   class="layui-input form-input input-select" allowclear="true"
+                                   placeholder="请选择交易场所" data-th-placeholder="#{SysCommon.placeholder}" aria-hidden="true"
+                                   data-th-data-result="${TRADE_PLACE}" formatoption="true">
+                        </div>
+                    </div>
+                </div> -->
             </form>
         </div>
         <div>

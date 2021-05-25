@@ -4,7 +4,7 @@
         <Row>
             <Cell order="1" name="有效状态">validStatusText</Cell>
             <Cell order="2" name="业务编号">tradeId</Cell>
-            <Cell order="3" name="委托代码">entrustId</Cell>
+            <Cell order="3" name="指令代码">entrustId</Cell>
             <Cell order="4" name="组合代码">portfolioId</Cell>
             <Cell order="5" name="组合名称">portfolioName</Cell>
             <Cell order="6" name="拆借类型">paBussTypeText</Cell>

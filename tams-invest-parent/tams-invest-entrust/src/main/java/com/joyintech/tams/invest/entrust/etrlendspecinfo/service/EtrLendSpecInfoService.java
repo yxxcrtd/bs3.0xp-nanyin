@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.entrust.etrlendspecinfo.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,11 +20,20 @@ import java.util.Map;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +58,6 @@ import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -119,6 +128,10 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
             List<String> entrustStatusList = StringUtil.splitToList(",",(String)param.get("entrustStatus"));
             param.put("entrustStatusList", entrustStatusList);
         }
+        if(StringUtil.isNotEmpty(param.get("tradeMarket"))){
+            List<String> entrustStatusList = StringUtil.splitToList(",",(String)param.get("tradeMarket"));
+            param.put("tradeMarketList", entrustStatusList);
+        }
         param.put("lendin", DictCodeListExt1.金融产品类型_投管用_拆入.getValue());
         param.put("lendout", DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
         param.put("loginUser", SecurityUtil.getLoginUser().getUserName());
@@ -131,7 +144,7 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
     /**
      * 查询页面组合代码联想文本框 <功能详细描述>
      *
-     * @param param
+     * @param
      * @return
      * @see
      * @since 1.0
@@ -149,7 +162,7 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
     /**
      * 新建页面组合代码联想下拉框 <功能详细描述>
      *
-     * @param param
+     * @param
      * @return
      * @see
      * @since 1.0
@@ -224,6 +237,7 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrLendSpecInfo/doComplete",dto,
             Integer.class);
+        doDeleteFlow(dto.getWorkflowId());
     }
    /**
     *
@@ -231,12 +245,69 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
     */
     @Override
     public void doInsert(EtrLendSpecInfoDto dto, OperationType type){
+        if ("submit".equals(dto.getOperateType())) {
+            doInsertFlow(dto);
+        }
         dto.setOperateType(type.toString());
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrLendSpecInfo/doInsert",dto,
             Integer.class);
     }
+    private void doInsertFlow(EtrLendSpecInfoDto dto) {
+        try {
+            dto.setOperateType(dto.getOperateType());
+            BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+            EtrEntrust etrEntrust = new EtrEntrust();
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyProperties(etrEntrust,dto);
+            etrEntrust.setPs(DictCodeList.交易方向_买入.getValue());
+            etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
+            etrEntrust.setEntrustStatus(BussinessDictCodeList.委托状态_流程中.getValue());
+            etrEntrust.setFinprodType2(StringUtil.equals(dto.getPs(),DictCodeList.回购拆借方向_拆入.getValue())?DictCodeListExt1.金融产品类型_投管用_拆入.getValue():DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
+            if(dto.getPrice()!=null){
+                BigDecimal num = new BigDecimal(100);
+                etrEntrust.setPrice(dto.getPrice().divide(num));
+            }
+            BeanUtil.copyProperties(etrEntrustAdd,dto);
+            BeanUtil.copyProperties(etrEntrust,dto.getEtrInvestPersonInfo());
+            etrEntrustAdd.setBusiPs(dto.getPs());
+            etrEntrustAdd.setMinAmt(dto.getMinAmt());
+            etrEntrustAdd.setVdate(dto.getVdateAdd());
+            etrEntrustAdd.setMdate(dto.getMdateAdd());
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_拆借.getValue());
+            etrEntrustAdd.setTermType (dto.getTermType ());
+            etrEntrustAdd.setSettleSpreed (dto.getSettleSpreed ());
+            entity.setEtrEntrust(etrEntrust);
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+            MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
+            mstFileInputParameter.setFileList(dto.getFileArray());
+            mstFileInputParameter.setBussinessId(dto.getEntrustId());
+            entity.setMstFileInputParameter(mstFileInputParameter);
+            entity.setWorkFlowId(dto.getWorkflowId());
+            entity.setWorkFlowId(dto.getWorkflowId());
+            restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
+                Boolean.class);
+        }
+        catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void doDelete(String workflowId) {
+        doDeleteFlow(workflowId);
+    }
+    private void doDeleteFlow(String workflowId) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("workflowId",workflowId);
+        restTemplate.postForObject(
+            ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doDeleteEtrFlow", param,
+            Boolean.class);
 
+    }
     /**
      *
      * 流程修改时调用
@@ -246,6 +317,26 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrLendSpecInfo/doInsert",dto,
             Integer.class);
+        if (!StringUtil.equals("revoke", dto.getOperateType()) && !StringUtil.equals("delete", dto.getOperateType()) ) {
+            // 先删除流程中数据
+            doDeleteFlow(dto.getWorkflowId());
+            // 重新insert
+            doInsertFlow(dto);
+            ProcessMark newEntity;
+            try {
+                newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrLendSpecInfoDto.class, true);
+                // 工作流ID
+                newEntity.setWorkflowId(dto.getWorkflowId());
+                newEntity.setStatus(dto.getStatus());
+                newEntity.setBusinessData(JsonUtils.object2Json(dto));
+                // 更新业务表数据
+                // 操作留痕表
+                WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
     /**
      *
@@ -295,7 +386,7 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
     /**
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto
+     * @param
      * @return
      * @see
      * @since 1.0
@@ -349,11 +440,28 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
         msg.setMessageType(MessageType.错误消息);
         return result == true?msg:null;
     }
+
+    /**
+     * 是否为节假日 是：日期顺延  否：不做处理
+     * @param param
+     * @return
+     */
+    public Date isHoliday(Map<String, Object> param){
+        Date mdateAdd = DateUtil.parse(param.get("mdateAdd").toString());
+        String calId = (String)param.get("calId");
+        for (int count = 0 ; count < 10 ; count ++){
+            boolean result = dateCalService.isDealCalendarHoliday(mdateAdd,calId);
+            if (result){
+                mdateAdd=DateUtil.addDays(mdateAdd,1);
+            }
+        }
+        return mdateAdd;
+    }
     /**
      *
      * 查询授权额度
      * <功能详细描述>
-     * @param map
+     * @param
      * @return
      * @see
      * @since 1.0
@@ -375,7 +483,12 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
         EtrLendSpecInfoDto dto = this.getBussinessEntity(entity);
         if (taskId != null) {
             try {
-            	BigDecimal amount = dto.getEntrustAmt();
+                if (dto.isImportFlow()) { // 只有在多对多组合提交时，才为true，供弹出用户选择，选择用户备用，让需要上级审批的流程走到这个人这里，不需要的直接结束
+                    Map<String, Object> param = new HashMap<>();
+                    param.put(BussinessConstant.是否需要上级审批, true);
+                    return param;
+                }
+                BigDecimal amount = dto.getEntrustAmt();
                 if (amount == null) {
                     amount = dto.getEntrustNum();
                 }
@@ -383,6 +496,9 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
                         BussinessDictCodeList.平安资产类型_拆借.getValue(), dto.getAssetType1(), dto.getTradeMarket(), dto.getPs()
                         , null, dto.getWorkflowId()
                         );
+                // add by zhangrui1 风险审批修改 start
+                params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
+                // add by zhangrui1 风险审批修改 end
                 return commonBusinessService.是否需要上级审批_委托用(params);
             }
             catch (WorkFlowException e) {
@@ -426,21 +542,41 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
             //委托金额
             etrLendSpecInfoDto.setEntrustAmt(new BigDecimal((data.get(7).toString())));
             //利率
-            etrLendSpecInfoDto.setPrice(new BigDecimal((data.get(8).toString())));
-            //起息日
-            etrLendSpecInfoDto.setVdateAdd(DateUtil.parse(data.get(9).toString()));
-            //到息日
-            etrLendSpecInfoDto.setMdateAdd(DateUtil.parse(data.get(10).toString()));
-            //期限
-            if(StringUtil.isNotBlank(data.get(11).toString())) {
-            etrLendSpecInfoDto.setTermDays(Long.parseLong(data.get(11).toString()));
+            // add by yushilong 利率为空转换错误问题 20200708 start
+            if(StringUtil.isNotBlank(data.get(8).toString())) {
+                etrLendSpecInfoDto.setPrice(new BigDecimal((data.get(8).toString())));
             }
+            //清算速度
+            etrLendSpecInfoDto.setSettleSpreed(Long.valueOf (data.get (12).toString ().split(":")[0]));
+            //起息日  清算速度=T+1  起息日=指令开始日+1
+            if (StringUtil.equals(DictCodeList.清算速度_T_1.getCodeName(),data.get(12).toString().split(":")[1])){
+                etrLendSpecInfoDto.setVdateAdd(DateUtil.addDays(DateUtil.parse(data.get(1).toString()), 1));
+            }//若 清算速度=T+0  起息日=指令开始日
+            if (StringUtil.equals(DictCodeList.清算速度_T_0.getCodeName(),data.get(12).toString().split(":")[1])){
+                etrLendSpecInfoDto.setVdateAdd(DateUtil.parse(data.get(1).toString()));
+            }
+            //期限
+            if(StringUtil.isNotBlank(data.get(9).toString())) {
+            etrLendSpecInfoDto.setTermDays(Long.parseLong(data.get(9).toString()));
+            }
+            //期限品种
+            etrLendSpecInfoDto.setTermType(this.getTermType(etrLendSpecInfoDto.getVdateAdd(),etrLendSpecInfoDto.getTermDays()));
             //交易日历
-            etrLendSpecInfoDto.setCalendarId(data.get(12).toString().split(":")[0]);
+            etrLendSpecInfoDto.setCalendarId(data.get(10).toString().split(":")[0]);
             //交易日历文本
-            etrLendSpecInfoDto.setCalendarIdName(data.get(12).toString().split(":")[1]);
+            etrLendSpecInfoDto.setCalendarIdName(data.get(10).toString().split(":")[1]);
+            //到期日
+            if(StringUtil.isNotBlank(data.get(9).toString())) {
+            	etrLendSpecInfoDto.setMdateAdd(DateUtil.addDays(etrLendSpecInfoDto.getVdateAdd(),etrLendSpecInfoDto.getTermDays().intValue()));
+            }
+            for (int count = 0 ; count < 10 ; count++ ){
+                Boolean IsHoliday = dateCalService.isDealCalendarHoliday(etrLendSpecInfoDto.getMdateAdd(),etrLendSpecInfoDto.getCalendarId());
+                if (IsHoliday){
+                    etrLendSpecInfoDto.setMdateAdd(DateUtil.addDays(etrLendSpecInfoDto.getMdateAdd(),1));
+                }
+            }
             Map<String, Object> param = new HashMap<>();
-            param.put("initValue", data.get(12).toString());
+            param.put("initValue", data.get(10).toString());
             param.put("page", 1);
             param.put("length", 20);
             Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
@@ -459,7 +595,12 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
             etrLendSpecInfoDto.setMinAmt(new BigDecimal((data.get(13).toString())));
             }
             // 备注
-            etrLendSpecInfoDto.setRemark(data.get(14).toString());
+            if (StringUtil.isNotBlank(data.get(14).toString())){
+                etrLendSpecInfoDto.setRemark(data.get(14).toString());
+            }
+
+            //交易场所
+            etrLendSpecInfoDto.setTradeMarket (data.get (11).toString ().split(":")[0]);
             param = new HashMap<>();
             param.put("portfolioId", etrLendSpecInfoDto.getPortfolioId());
             param.put("ccy", etrLendSpecInfoDto.getCcy());
@@ -482,8 +623,70 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
     }
 
     /**
+     * 根据 期限 获取 期限品种
+     * @param vdateAdd
+     * @param tremDays
+     * @return
+     */
+    public String getTermType(Date vdateAdd, Long tremDays){
+        if(StringUtil.isNotEmpty(tremDays) && tremDays <= 21){
+            //期限品种小于21天
+            if(tremDays == 1){
+                return "IBO001";
+            }
+            if(tremDays > 1 && tremDays <= 7){
+                return "IBO007";
+            }
+            if(tremDays > 7 && tremDays <= 14){
+                return "IBO014";
+            }
+            if(tremDays > 14 && tremDays <=21){
+                return "IBO021";
+            }
+        }
+        if (StringUtil.isNotEmpty(vdateAdd) && StringUtil.isNotEmpty(tremDays)){
+            Date date = DateUtil.addMonths(vdateAdd, 1);
+            Long days = DateUtil.getBetweenDayNumber(vdateAdd,date);
+            if (tremDays <= days){
+                return "IBO1M";
+            }
+            date = DateUtil.addMonths(vdateAdd, 2);
+            days = DateUtil.getBetweenDayNumber(vdateAdd,date);
+            if (tremDays <= days){
+                return "IBO2M";
+            }
+            date = DateUtil.addMonths(vdateAdd, 3);
+            days = DateUtil.getBetweenDayNumber(vdateAdd,date);
+            if (tremDays <= days){
+                return "IBO3M";
+            }
+            date = DateUtil.addMonths(vdateAdd, 4);
+            days = DateUtil.getBetweenDayNumber(vdateAdd,date);
+            if (tremDays <= days){
+                return "IBO4M";
+            }
+            date = DateUtil.addMonths(vdateAdd, 6);
+            days = DateUtil.getBetweenDayNumber(vdateAdd,date);
+            if (tremDays <= days){
+                return "IBO6M";
+            }
+            date = DateUtil.addMonths(vdateAdd, 9);
+            days = DateUtil.getBetweenDayNumber(vdateAdd,date);
+            if (tremDays <= days){
+                return "IBO9M";
+            }
+            date = DateUtil.addMonths(vdateAdd, 12);
+            days = DateUtil.getBetweenDayNumber(vdateAdd,date);
+            if (tremDays <= days){
+                return "IBO1Y";
+            }
+        }
+        return null;
+    }
+
+    /**
      * 验证导入的数据
-     * @param tempList 导入的数据
+     * @param
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
@@ -517,15 +720,51 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
                 // 委托结束日日期格式check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsDate(rowData.get(2).toString(), "EtrLendSpecInfo001.mdate", lineNo));
+                /**** 委托开始日与终止日必须是平台日 作者：mrbbp@qq.com 2020/6/20 14:20****/
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsPlateDate(rowData.get(1).toString(),
+                        rowData.get(2).toString(),lineNo));
+
+                /**** 交易场所和期限品种的check****/
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkMarketQx(rowData.get(11).toString(),rowData.get(9).toString(),lineNo));
+
+
+
                 // 组合代码非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(3).toString(), "EtrLendSpecInfo001.portfolioId", lineNo));
+
+                 /**** 交易场所和清算速度的check****/
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkMarketQs(rowData.get(11).toString(),rowData.get(12).toString(),lineNo));
+
                 // 组合代码check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkPortfolioIdExist(rowData.get(3).toString(), "EtrLendSpecInfo001.portfolioId", lineNo));
+
+//                // modify by yushilong 起息日到期日期限为空则 不进行相关校验 20200708 start
+//                /**** 起息日与到期日check****/
+//                if (StringUtil.isNotEmpty(rowData.get(9).toString()) &&
+//                    StringUtil.isNotEmpty(rowData.get(10).toString()) &&
+//                    StringUtil.isNotEmpty(rowData.get(11).toString())) {
+//                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                            etrCommonService.checkQDQ(rowData.get(9).toString(),rowData.get(10).toString(),rowData.get(11).toString(),lineNo));
+//                }
+//                // modify by yushilong 起息日到期日期限为空则 不进行相关校验 20200708 end
+
                 // 交易方向非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(4).toString(), "EtrLendSpecInfo001.ps", lineNo));
+
+//                // modify by yushilong 起息日到期日期限为空则 不进行相关校验 20200708 start
+//                /**** 起息日与指令开始check****/
+//                if (StringUtil.isNotEmpty(rowData.get(9).toString())) {
+//                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                            etrCommonService.checkQ(rowData.get(1).toString(),rowData.get(9).toString(),lineNo));
+//                }
+//                // modify by yushilong 起息日到期日期限为空则 不进行相关校验 20200708 end
+
                 //拆借类型非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrLendSpecInfo002.type6", lineNo));
@@ -542,41 +781,66 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(7).toString(), "EtrLendSpecInfo001.entrustAmt", lineNo));
                 // 委托金额(元)是数值
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsNumber(rowData.get(7).toString(), "EtrLendSpecInfo001.entrustAmt", lineNo));
+//                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                    etrCommonService.checkIsNumber(rowData.get(7).toString(), "EtrLendSpecInfo001.entrustAmt", lineNo));
                 // 委托金额(元)是大于0
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsGtZero(rowData.get(7).toString(), "EtrLendSpecInfo001.entrustAmt", lineNo));
                 // 利率（%）是数值
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsNumber(rowData.get(8).toString(), "EtrLendSpecInfo001.price", lineNo));
-                // 利率（%）是大于0
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsGtZero(rowData.get(8).toString(), "EtrLendSpecInfo001.price", lineNo));
+//                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                    etrCommonService.checkIsNumber(rowData.get(8).toString(), "EtrLendSpecInfo001.price", lineNo));
+
+
+                /** 利率 大于 0 **/
+                if (StringUtil.isNotBlank(rowData.get(8))){
+                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                            etrCommonService.checkIsGtZero(rowData.get(8).toString(), "EtrLendSpecInfo001.price", lineNo));
+                }
+
+                // modify by yushilong 起息日到期日期限为空则 不进行相关校验 20200708 start
                 // 起息日日期非空
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(9).toString(), "EtrLendSpecInfo002.vdateAdd", lineNo));
+                /*confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    etrCommonService.checkIsBlank(rowData.get(9).toString(), "EtrLendSpecInfo002.vdateAdd", lineNo));*/
                 // 起息日日期格式check
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsDate(rowData.get(9).toString(), "EtrLendSpecInfo002.vdateAdd", lineNo));
+//                if (StringUtil.isNotEmpty(rowData.get(9).toString())) {
+//                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                            etrCommonService.checkIsDate(rowData.get(9).toString(), "EtrLendSpecInfo002.vdateAdd", lineNo));
+//                }
                 // 到息日日期非空
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(10).toString(), "EtrLendSpecInfo002.mdateAdd", lineNo));
-                // 到息日日期格式check
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsDate(rowData.get(10).toString(), "EtrLendSpecInfo002.mdateAdd", lineNo));
+                /*confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsBlank(rowData.get(10).toString(), "EtrLendSpecInfo002.mdateAdd", lineNo));*/
+//                if (StringUtil.isNotEmpty(rowData.get(10).toString())) {
+//                    // 到息日日期格式check
+//                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                            etrCommonService.checkIsDate(rowData.get(10).toString(), "EtrLendSpecInfo002.mdateAdd", lineNo));
+//                }
                 //期限非空
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(11).toString(), "EtrLendSpecInfo002.term", lineNo));
+                /*confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    etrCommonService.checkIsBlank(rowData.get(11).toString(), "EtrLendSpecInfo002.term", lineNo));*/
+                /** 期限 大于 0 **/
+                if (StringUtil.isNotEmpty(rowData.get(9))) {
+                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                            etrCommonService.checkIsGtZero(rowData.get(9).toString(), "EtrLendSpecInfo002.term", lineNo));
+                }
+                // modify by yushilong 起息日到期日期限为空则 不进行相关校验 20200708 end
                 //交易日历非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(12).toString(), "EtrLendSpecInfo002.calendarId", lineNo));
+                    etrCommonService.checkIsBlank(rowData.get(10).toString(), "EtrLendSpecInfo002.calendarId", lineNo));
+
+                // 交易场所非空
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    etrCommonService.checkIsBlank(rowData.get(11).toString(), "EtrLendSpecInfo001.tradeMarket", lineNo));
+
+
                 //最低成交金额是数值
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsNumber(rowData.get(13).toString(), "EtrLendSpecInfo002.minAmt", lineNo));
+//                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                    etrCommonService.checkIsNumber(rowData.get(13).toString(), "EtrLendSpecInfo002.minAmt", lineNo));
                 //最低成交金额是大于0
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsGtZero(rowData.get(13).toString(), "EtrLendSpecInfo002.minAmt", lineNo));
+                if (StringUtil.isNotBlank(rowData.get(13))){
+                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                            etrCommonService.checkIsGtZero(rowData.get(13).toString(), "EtrLendSpecInfo002.minAmt", lineNo));
+                }
+
                 if (StringUtil.isBlank(confirmMsg)) {
                     jsonArrays.add(rowData);
                 } else {
@@ -596,5 +860,18 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
         return wr;
     }
     // add by gaopeng 20191219 多组合多资产导入 end
+
+    // add by zhangrui1 start
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doBack(EtrLendSpecInfoDto entity) {
+        // do nothing just for aspect
+    	//产品化_所有投资指令预占需求_拆借类资产指令 add by longpeng 20201119 start
+    	AllTradeCommonUtil.deletePosition(null, entity.getEntrustId());
+    	//产品化_所有投资指令预占需求_拆借类资产指令 add by longpeng 20201119 end
+    }
+    // add by zhangrui1 end
     
 }

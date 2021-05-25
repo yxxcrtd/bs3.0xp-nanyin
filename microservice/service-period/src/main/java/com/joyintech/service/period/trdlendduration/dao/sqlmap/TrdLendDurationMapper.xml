@@ -333,21 +333,23 @@
             <if test="busiCode != null and busiCode != ''">
                 AND (instr(T1.TOTLE_TRADE_ID, #{busiCode}) > 0)
             </if>
-            <if test="portfolioId != null and portfolioId.size()>0">
-                AND ( (T2.PORTFOLIO_ID in
-                <foreach collection="portfolioId" index= "index" item="item" open="(" close=")" separator=",">
-                <if test="(index % 998) == 0">
-                    null) or T2.PORTFOLIO_ID in (
-                </if>
-                    #{item}
-                </foreach> )
-                OR (T2.PARENT_PORTFOLIO_ID in <foreach collection="portfolioId" index= "index" item="item" open="(" close=")" separator=",">
-                <if test="(index % 998) == 0">
-                    null) or T2.PARENT_PORTFOLIO_ID in (
-                </if>
-                #{item}
-            </foreach>
-                ))
+            <if test="portfolioId != null and portfolioId.size() >0">
+                AND  (T2.PORTFOLIO_ID IN
+                <foreach collection="portfolioId" index="index" item="prot" open="(" separator="," close=")" >
+                    <if test="(index % 998) == 0">
+                        null) OR T2.PORTFOLIO_ID in (
+                    </if>
+                    #{prot,jdbcType=VARCHAR}
+                </foreach>
+                OR
+                T2.PARENT_PORTFOLIO_ID IN
+                <foreach collection="portfolioId" index="index" item="prot" open="(" separator="," close=")" >
+                    <if test="(index % 998) == 0">
+                        null) OR T2.PARENT_PORTFOLIO_ID in (
+                    </if>
+                    #{prot,jdbcType=VARCHAR}
+                </foreach>
+                )
             </if>
             <choose>
                 <when test="finprodType != null and finprodType.equals(FINPROD_TYPE_TGF09)">
@@ -457,24 +459,24 @@
         <if test="busiCode != null and busiCode != ''">
             AND (instr(T1.TOTLE_TRADE_ID, #{busiCode}) > 0)
         </if>
-        <if test="portfolioId != null and portfolioId.size()>0">
-            AND ((T1.PORTFOLIO_ID in
-                <foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
-					<if test="(index % 998) == 0">
-						null) or T1.PORTFOLIO_ID in (
-					</if>                
-                    #{item}
-                </foreach>)
-            or (T2.PARENT_PORTFOLIO_ID in
-                <foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
-					<if test="(index % 998) == 0">
-						null) or T2.PARENT_PORTFOLIO_ID in (
-					</if>                
-                    #{item}
-                </foreach>))
-            
+        <if test="portfolioId != null and portfolioId.size() >0">
+            AND  (T1.PORTFOLIO_ID IN
+            <foreach collection="portfolioId" index="index" item="prot" open="(" separator="," close=")" >
+                <if test="(index % 998) == 0">
+                    null) OR T1.PORTFOLIO_ID in (
+                </if>
+                #{prot,jdbcType=VARCHAR}
+            </foreach>
+            OR
+            T2.PARENT_PORTFOLIO_ID IN
+            <foreach collection="portfolioId" index="index" item="prot" open="(" separator="," close=")" >
+                <if test="(index % 998) == 0">
+                    null) OR T2.PARENT_PORTFOLIO_ID in (
+                </if>
+                #{prot,jdbcType=VARCHAR}
+            </foreach>
+            )
         </if>
-         
         <choose>
             <when test="finprodType != null and finprodType.equals(FINPROD_TYPE_TGF09)">
                 AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF09}
@@ -518,15 +520,15 @@
                   T1.TRADER trader,
                   T1.TRADE_AMT tradeAmt,
                   T1.FINPROD_ID,
-                  T1.REMARK
+                  T4.TRADE_MARKET
                 FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
                 LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
                 <!-- 关联交易收息 -->
                 LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptpdt on ptpdt.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID
                 LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
                 LEFT JOIN FIN_TRADE_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID and t1.BRANCH = t4.BRANCH
-                LEFT JOIN PTL_TRADE PT ON T1.FINPROD_ID = PT.BUSI_NO
-                LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+             LEFT JOIN PTL_TRADE PT ON T1.FINPROD_ID = PT.BUSI_NO AND T1.PORTFOLIO_ID = PT.PORTFOLIO_ID
+            LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
                 <!-- LEFT JOIN FIN_PRODUCT_TYPE T5 ON T4.FINPROD_ID = T5.FINPROD_ID -->
                 WHERE T1.BUSI_TYPE = #{COMMON_BUSINESS_TYPETRD11}
                 <choose>
@@ -571,7 +573,7 @@
                 T4.BASIS,
                 T1.FINPROD_ID,
                 T6.TYPE_6 bankLendingType,
-                T1.REMARK
+                T4.TRADE_MARKET
             FROM TRD_PRODUCT_DEAL T1
             left join PA_TRD_PRODUCT_DEAL T5 on T5.TRADE_ID = T1.TRADE_ID
             LEFT JOIN PTL_TRADE T3 ON T1.TRADE_ID = T3.BUSI_NO
@@ -611,38 +613,4 @@
         where 
         	TRADE_ID = #{tradeId}
     </select>
-    
-    <select id="findCeTradeIdByWorkflowId" resultType="java.lang.String">
-	    select TRADE_ID from TRD_PRODUCT_DEAL
-	    where TOTLE_TRADE_ID in
-	    (
-	    select P_TRADE_ID from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
-		where WORKFLOW_ID = #{workflowId}
-		and PS = 'T07')
-		and TRADE_STATUS = '01'
-		and IS_CANCEL = 'N'
-		and PS = 'T23'
-	</select>
-    <!--add by liupengfei for 多级法人改造 S-->
-    <select id="getBusiCode" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT DISTINCT
-        case when T1.TRADE_STATUS = #{TRADE_STATUS_CX} then T1.P_TRADE_ID ELSE T1.TOTLE_TRADE_ID END id,
-        case when T1.TRADE_STATUS = #{TRADE_STATUS_CX} then T1.P_TRADE_ID ELSE T1.TOTLE_TRADE_ID END text
-        ,T1.PORTFOLIO_ID
-        FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
-        <where>
-            <if test="FINPROD_TYPE != null and FINPROD_TYPE != ''">
-                T1.FINPROD_TYPE2 = #{FINPROD_TYPE}
-            </if>
-            <if test="finProdTypeList != null and finProdTypeList.size()>0">
-                <foreach collection="finProdTypeList" item="item" open="T1.FINPROD_TYPE2 in(" close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="search != null and search != ''">
-                and (instr(TOTLE_TRADE_ID, #{search}) > 0)
-            </if>
-        </where>
-    </select>
-    <!--add by liupengfei for 多级法人改造 E-->
 </mapper>

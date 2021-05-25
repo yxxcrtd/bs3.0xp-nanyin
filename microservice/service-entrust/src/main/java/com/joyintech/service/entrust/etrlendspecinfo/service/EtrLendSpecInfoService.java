@@ -18,22 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
-import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
-import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
-import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
-import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.entity.EtrDistribute;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -45,15 +33,23 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
 import com.joyintech.service.entrust.etrlendspecinfo.dao.EtrLendSpecInfoMapper;
 import com.joyintech.service.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
+import com.joyintech.tams.common.base.entity.EtrDistribute;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
-import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
+import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 
 /**
  * 拆借投资委托微服务service
@@ -119,6 +115,9 @@ public class EtrLendSpecInfoService extends BaseService<EtrLendSpecInfoDto> {
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
+        // add by wangpeng 20210525 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        // add by wangpeng 20210525 银行间场内场外拆分 end
         return queryForPage(page,length,()->etrLendSpecInfoMapper.selectForPage(param));
     }
     /**
@@ -261,6 +260,8 @@ public class EtrLendSpecInfoService extends BaseService<EtrLendSpecInfoDto> {
             etrEntrustAdd.setVdate(dto.getVdateAdd());
             etrEntrustAdd.setMdate(dto.getMdateAdd());
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_拆借.getValue());
+            etrEntrustAdd.setTermType (dto.getTermType ());
+            etrEntrustAdd.setSettleSpreed (dto.getSettleSpreed ());
             //委托指令分发
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
             if(StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())){
@@ -324,6 +325,8 @@ public class EtrLendSpecInfoService extends BaseService<EtrLendSpecInfoDto> {
             etrEntrustAdd.setVdate(dto.getVdateAdd());
             etrEntrustAdd.setMdate(dto.getMdateAdd());
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_拆借.getValue());
+            etrEntrustAdd.setTermType (dto.getTermType ());
+            etrEntrustAdd.setSettleSpreed (dto.getSettleSpreed ());
             //委托指令分发
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
             if(StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())){
@@ -371,9 +374,11 @@ public class EtrLendSpecInfoService extends BaseService<EtrLendSpecInfoDto> {
             entrustCommonDto.setEtrEntrust(etrEntrust);
             entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
         }
-        if (baseEtrCashPositionCommService != null) {
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+      //产品化_所有投资指令预占需求_拆借类资产指令 add by longpeng 20201119 start
+        //if (baseEtrCashPositionCommService != null) {
+          //  baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+       // }
+      //产品化_所有投资指令预占需求_拆借类资产指令 add by longpeng 20201119 start
     }
     /**
      * 组合可用现金查询
@@ -457,5 +462,38 @@ public class EtrLendSpecInfoService extends BaseService<EtrLendSpecInfoDto> {
         if(mstFileCommonService != null){
             mstFileCommonService.updateBusinessId(mstFileInputParameter);
         }
+          //产品化_所有投资指令预占需求_拆借资产指令 add by longpeng 20201119 start
+        //产品化_SNSTZJY-2384_拆借，交易方向是拆出,指令金额没有改变 add by zhangpei 20201209 start
+        //if (baseEtrCashPositionCommService != null && StringUtil.equals(operateType,"EtrLendSpecInfo002_btn_submit")) {
+        if (baseEtrCashPositionCommService != null && StringUtil.equals(dto.getElementId(),"EtrLendSpecInfo002_btn_submit")) {
+        //产品化_SNSTZJY-2384_拆借，交易方向是拆出,指令金额没有改变 add by zhangpei 20201209 end
+        	 EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
+        	 EtrEntrust etrEntrust = new EtrEntrust();
+        	 BeanUtil.copyPropertiesIgnoreNull(etrEntrust,dto);
+             BeanUtil.copyPropertiesIgnoreNull(etrEntrust,dto.getEtrInvestPersonInfo());
+        	 etrEntrust.setPs(DictCodeList.交易方向_买入.getValue());
+             etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
+             etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+             etrEntrust.setFinprodType2(StringUtil.equals(dto.getPs(),DictCodeList.回购拆借方向_拆入.getValue())?DictCodeListExt1.金融产品类型_投管用_拆入.getValue():DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
+             if(dto.getPrice()!=null){
+                 BigDecimal num = new BigDecimal(100);
+                 etrEntrust.setPrice(dto.getPrice().divide(num));
+             }
+             entrustCommonDto.setEtrEntrust(etrEntrust);
+             
+             EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd,dto);
+             etrEntrustAdd.setBusiPs(dto.getPs());
+             etrEntrustAdd.setMinAmt(dto.getMinAmt());
+             etrEntrustAdd.setVdate(dto.getVdateAdd());
+             etrEntrustAdd.setMdate(dto.getMdateAdd());
+             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_拆借.getValue());
+             etrEntrustAdd.setTermType (dto.getTermType ());
+             etrEntrustAdd.setSettleSpreed (dto.getSettleSpreed ());
+             entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+             baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+             
+        	 }
+            //产品化_所有投资指令预占需求_拆借类资产指令 add by longpeng 20201119 start
     }
 }

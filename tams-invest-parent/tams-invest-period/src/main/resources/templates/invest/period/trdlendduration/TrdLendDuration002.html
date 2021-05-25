@@ -27,7 +27,6 @@
                                         <input type="hidden" id="totleTradeId" name="totleTradeId" data-th-value="${entity?.totleTradeId}" class="layui-input form-input" />
                                         <input type="hidden" id="pTradeId" name="pTradeId" data-th-value="${entity?.pTradeId}" class="layui-input form-input" />
                                         <input type="hidden" id="mode" name="mode" data-th-value="${entity?.mode}" class="layui-input form-input" />
-                                        <input id="workflowId" name="workflowId" data-th-value="${workflowId}" type="hidden">
                                         <div class="layui-input-inline input-inline">
                                             <input disabled type="text" id="busiCode" name="busiCode"
                                                 class="layui-input form-input" maxlength="32"
@@ -232,6 +231,15 @@
                                 </div>
 
                                 <div class="layui-form-item">
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap" data-th-text="#{EtrLendSpecInfo002.tradeMarket}">交易场所</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <select type="text" id="tradeMarket" name="tradeMarket"
+                                                    class="layui-input form-input input-select" placeholder="请输入内容" disabled
+                                                    data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result='${TRADE_PLACE}'
+                                                    allowClear="true" formatoption="true" data-th-initvalue="${entity?.tradeMarket}"></select>
+                                        </div>
+                                    </div>
                                     <div th:if = "${BACK_LEND_DIRECTION_CR eq entity.pingAnCodeSin}" class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
                                         <label class="layui-form-label form-lable"
                                             data-th-text="#{TrdLendDuration001.tradeAmt}">实付本息和</label>
@@ -304,6 +312,9 @@
     <div layout:fragment="script">
         <script th:inline="javascript" type="text/javascript">
         var YES_OR_NO_Y = /*[[${YES_OR_NO_Y}]]*/'';
+        var GEN_PAY_ORDERS_AUTO= /*[[${GEN_PAY_ORDERS_AUTO}]]*/''; // 系统参数_是否显示划款指令
+        var BACK_LEND_DIRECTION_01= /*[[${BACK_LEND_DIRECTION_01}]]*/'';
+        var BACK_LEND_DIRECTION_02= /*[[${BACK_LEND_DIRECTION_02}]]*/'';
         </script>
         <script data-th-src="@{/js/invest/period/trdlendduration/TrdLendDuration002.js}" type="text/javascript"></script>
     </div>

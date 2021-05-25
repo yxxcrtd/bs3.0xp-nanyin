@@ -34,13 +34,11 @@ import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
-import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.interf.service.InterfComponentService;
 import com.joyintech.tams.invest.interf.service.InterfComponentService.OrderCaller;
@@ -150,19 +148,16 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
 
     @Autowired(required = false)
     private WflStlPayOrdersMapper wflStlPayOrdersMapper;
+    
+    @Autowired(required = false)
+    private TrdProductDealMapper trdProductDealMapper;
+    
     /**
      * 投管接口共通组件
      * add by cxq 20200212
      */
     @Autowired
     private InvestInterfCommService investInterfCommService;
-    
-    @Autowired
-    private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
-
-    @Autowired
-    private TrdCommonBaseService trdCommonBaseService;
-
 
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。 {@inheritDoc}
@@ -822,15 +817,22 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
         // 一体化对应etliu start
         wflTrdProductDeal.setIntAmt(null);
         // 一体化对应etliu end
+        //授信占用
+        if (StringUtil.equals(entity.getBusiPs(), DictCodeList.回购拆借方向_拆出.getValue())){
+            // 调用授信共同 sjj start
+            TrdProductDeal deal = new TrdProductDeal();
+            BeanUtil.copyPropertiesIgnoreNull(deal, entity);
+            AllTradeCommonInputDto commonInputDto = new AllTradeCommonInputDto();
+            deal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+            deal.setCounterId(entity.getTrdInvestPersonInfo().getCounterId());
+            deal.setPs(DictCodeList.交易方向_买入.getValue());
+            deal.setTgBusiType(DictCodeList.平安资产类型_拆借.getValue());
+            deal.setPsPayment(entity.getBusiPs());
+            commonInputDto.setTrdProductDeal(deal);
+            AllTradeCommonUtil.handleBeforeTradeComplete(commonInputDto,false);
+            // 调用授信共同 sjj end
+        }
         
-        //调用授信
-        TrdProductDeal trdProductDeal = new TrdProductDeal();
-        BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, entity);
-        AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
-        trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-        inputDto.setTrdProductDeal(trdProductDeal);
-        AllTradeCommonUtil.handleBeforeTradeComplete(inputDto, false);
-
         // 金融产品交易信息DTO.金融产品交易附属表Entity -> 金融产品交易附属业务流程表
         WflTrdProductDealAdd wflTrdProductDealAdd = new WflTrdProductDealAdd();
         BeanUtil.copyPropertiesIgnoreNull(wflTrdProductDealAdd, entity.getTrdProductDealAdd());
@@ -945,8 +947,6 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
 
             // 重新insert
             this.handleBussFlowData(entity);
-            // 流程表利率*100
-            entity.getFinTradeProduct().setIntRate(entity.getFinTradeProduct().getIntRate().multiply(new BigDecimal(100)));
         }
     }
 
@@ -958,15 +958,6 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
         // OPCIS表Entity TODO
 
         baseTradeProductDealCommService.delete(workflowId);
-        
-        //根据工作流代码查询交易相关信息
-//        WflTrdProductDealAdd wflTrdProductDealAdd = restTemplate.getForObject(
-//            ServiceApplication.TRADE_SERVICE_NAME
-//                    + "/common/trdcommonbase/selectWflTrdProductDealAdd/" + workflowId, WflTrdProductDealAdd.class);
-//        //删除授信占用
-//        if (null != wflTrdProductDealAdd && null != wflTrdProductDealAdd.getTradeId()){
-//            riskCreditListCommonValidatorService.deleteCredit(wflTrdProductDealAdd.getTradeId());
-//        }
     }
 
     /**
@@ -981,15 +972,6 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
         List<BaseTradeProductDealDto> baseTradeProductDealDtoList = restTemplate.getForList(
             ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/selectTradeInfo?tradeId=" + entity.getTradeId(),
             BaseTradeProductDealDto.class);
-
-        // 提前查询判断  是否  撤销 并且是 有转仓交易 并且转仓交易方向ps为买入
-        String reverseTradeId = "";
-
-        TrdProductDeal reverseTrdProductDeal = trdCommonBaseService.selectZCDealByTid(entity.getTradeId(),false);
-        if (reverseTrdProductDeal != null && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), reverseTrdProductDeal.getPs())) {
-            reverseTradeId = reverseTrdProductDeal.getTradeId();
-        }
-
 
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         if (!StringUtil.isEmptyList(baseTradeProductDealDtoList)) {
@@ -1033,11 +1015,12 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
                 // 调用投管接口 add by cxq 20190212 start
                 InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
                 investInterfCommDto.setPageId("TrdLendInvestTrade002");
-                investInterfCommDto.setTradeStatus(DictCodeListExt1.画面数据状态_撤销.getValue());
+                investInterfCommDto.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
                 investInterfCommDto.setPortfolioId(entity.getActPortfolioId());
                 investInterfCommDto.setRevokeReason(entity.getRevokeReason());
                 investInterfCommDto.setTrdProductDeal(baseDto.getTrdProductDeal());
                 investInterfCommDto.setTrdProductDealAdd(baseDto.getTrdProductDealAdd());
+                investInterfCommDto.setFinTradeProduct(entity.getFinTradeProduct());
                 PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
                 if (StringUtil.equals(entity.getBusiPs(), DictCodeList.回购拆借方向_拆入.getValue())) {
                     if (StringUtil.equals(entity.getPaBussType(), DictCodeList.拆借类型_特殊目的载体.getValue())) {
@@ -1056,6 +1039,8 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
                     		baseDto.getStlPayOrdersList().get(0));
                 }
                 investInterfCommService.doInvestInterf(investInterfCommDto);
+//                investInterfCommService.doSendTradeToInterf(entity.getTradeId()+"R" ,DictCodeList.平安资产类型_拆借.getValue());
+
              // 调用投管接口 add by cxq 20190212 end
             }
             finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
@@ -1080,6 +1065,19 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
                 finProductTradeDto.getBaseTradeProductDealDtos().forEach(
                     baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(
                         entity.getPortfolioId()));
+            }
+            if (StringUtil.equals(entity.getBusiPs(), DictCodeList.回购拆借方向_拆出.getValue())) {
+            	TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(entity.getTradeId());
+//                TrdProductDeal trdProductDeal = new TrdProductDeal();
+//                BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, entity);
+            	trdProductDeal.setPs(DictCodeList.交易方向_买入.getValue());
+                AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+                trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                trdProductDeal.setCounterId(entity.getTrdInvestPersonInfo().getCounterId());
+                trdProductDeal.setTgBusiType(DictCodeList.平安资产类型_拆借.getValue());
+                trdProductDeal.setPsPayment(entity.getBusiPs());
+                inputDto.setTrdProductDeal(trdProductDeal);
+                AllTradeCommonUtil.handleBeforeTradeComplete(inputDto, false);
             }
             // // 一体化对应etliu start
             // // 所有交易生效后调用的共通方法
@@ -1110,21 +1108,6 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
             Arrays.asList(entity.getTradeId()), Boolean.class);
         restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/deleteRepLiabilities",
             Arrays.asList(entity.getTradeId()), Boolean.class);
-
-        // 同步撤销 买入的数据
-        if(StringUtil.isNotEmpty(reverseTradeId)){
-
-            TrdProductDeal trdProductDeal = new TrdProductDeal();
-            trdProductDeal.setTradeId(reverseTradeId);
-            trdProductDeal.setCancelRemark(entity.getCancelRemark());
-            commonBusinessService.revokeReverseTrade(trdProductDeal,false);
-
-        }
-
-        //删除授信占用
-        if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
-            riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
-        }
     }
 
     @Override
@@ -1138,6 +1121,7 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
             // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
             TrdProductDeal trdProductDeal = new TrdProductDeal();
             BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, entity);
+            trdProductDeal.setSettleSpeed(entity.getSettleSpreed());
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             // 一体化对应etliu start
             trdProductDeal.setIntAmt(null);
@@ -1282,15 +1266,33 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
             // 调用投管接口 add by cxq 20190212 start
             InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
             investInterfCommDto.setPageId("TrdLendInvestTrade002");
-            investInterfCommDto.setTradeStatus(DictCodeListExt1.画面数据状态_新建.getValue());
+            investInterfCommDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             investInterfCommDto.setPortfolioId(entity.getActPortfolioId());
             investInterfCommDto.setTrdProductDeal(trdProductDeal);
             investInterfCommDto.setTrdProductDealAdd(trdProductDealAdd);
             investInterfCommDto.setStlPayOrders(inputDto.getStlPayOrders());
-            investInterfCommDto.setPaTrdProductDeal(paTrdProductDeal);
+            investInterfCommDto.setPaTrdProductDeal(paTrdProductDeal);//ArithmeticUtil
+            finTradeProduct.setIntRate(ArithmeticUtil.multiply(finTradeProduct.getIntRate(),new BigDecimal(100)));
             investInterfCommDto.setFinTradeProduct(finTradeProduct);
             investInterfCommService.doInvestInterf(investInterfCommDto);
+
+//            investInterfCommService.doSendTradeToInterf(entity.getTradeId() ,DictCodeList.平安资产类型_拆借.getValue());
             // 调用投管接口 add by cxq 20190212 end
+
+            if (StringUtil.equals(entity.getBusiPs(), DictCodeList.回购拆借方向_拆入.getValue())){
+                // 调用授信共同 sjj start
+                TrdProductDeal deal = new TrdProductDeal();
+                BeanUtil.copyPropertiesIgnoreNull(deal, entity);
+                AllTradeCommonInputDto commonInputDto = new AllTradeCommonInputDto();
+                deal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                deal.setCounterId(entity.getTrdInvestPersonInfo().getCounterId());
+                deal.setPs(DictCodeList.交易方向_卖出.getValue());
+                deal.setTgBusiType(DictCodeList.平安资产类型_拆借.getValue());
+                deal.setPsPayment(entity.getBusiPs());
+                commonInputDto.setTrdProductDeal(deal);
+                AllTradeCommonUtil.handleBeforeTradeComplete(commonInputDto,false);
+                // 调用授信共同 sjj end
+            }
 
             this.deleteBussFlowData(workflowId);
         }
@@ -1475,20 +1477,22 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
         Map<String, Object> variables = new HashMap<>();
         TrdLendInvestTradeDto dto = this.getBussinessEntity(entity);
         if (taskId != null) {
-        	 try {
-//               return commonBusinessService.是否需要上级审批(dto.getCounterId(), dto.getFinTradeProduct().getPrin(),
-//                   LoginUserUtil.getUserName(), DictCodeList.平安资产类型_拆借.getValue(), dto.getPaBussType(), dto.getTradeMarket(),
-//                   dto.getBusiPs()
-//                   // 资产类型改为授权类型 add by renping 2019-08-06 start
-//                   , null
-//               // 资产类型改为授权类型 add by renping 2019-08-06 end
-//               );
-               Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getFinTradeProduct().getPrin(),LoginUserUtil.getUserName(),
-                   DictCodeList.平安资产类型_拆借.getValue(), dto.getPaBussType(), dto.getTradeMarket(), dto.getBusiPs()
-                   , null ,entity.getWorkflowId());
-               params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
-               return commonBusinessService.是否需要上级审批(params);
-           }
+            try {
+//                return commonBusinessService.是否需要上级审批(dto.getCounterId(), dto.getFinTradeProduct().getPrin(),
+//                    LoginUserUtil.getUserName(), DictCodeList.平安资产类型_拆借.getValue(), dto.getPaBussType(), dto.getTradeMarket(),
+//                    dto.getBusiPs()
+//                    // 资产类型改为授权类型 add by renping 2019-08-06 start
+//                    , null
+//                // 资产类型改为授权类型 add by renping 2019-08-06 end
+//                );
+                Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getFinTradeProduct().getPrin(),LoginUserUtil.getUserName(),
+                    DictCodeList.平安资产类型_拆借.getValue(), dto.getPaBussType(), dto.getTradeMarket(), dto.getBusiPs()
+                    , null ,entity.getWorkflowId());
+                
+                params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
+                params.put("entrustId", dto.getEntrustId());
+                return commonBusinessService.是否需要上级审批(params);
+            }
             catch (WorkFlowException e) {
                 // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
                 throw new WorkFlowException(e);
@@ -1503,20 +1507,22 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
     @Override
     public void doBack(TrdLendInvestTradeDto entity) {
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTradeId());
-        
-        //删除授信占用
-        if (null != entity.getTradeId() && !"".equals(entity.getTradeId()) && !StringUtil.isNotEmpty(entity.getRevokeReason())){
-            riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
+        if (StringUtil.equals(entity.getBusiPs(), DictCodeList.回购拆借方向_拆出.getValue())) {
+            TrdProductDeal deal = new TrdProductDeal();
+            BeanUtil.copyPropertiesIgnoreNull(deal, entity);
+            AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+            deal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+            deal.setCounterId(entity.getTrdInvestPersonInfo().getCounterId());
+            deal.setPs(DictCodeList.交易方向_买入.getValue());
+            deal.setTgBusiType(DictCodeList.平安资产类型_拆借.getValue());
+            deal.setPsPayment(entity.getBusiPs());
+            inputDto.setTrdProductDeal(deal);
+            AllTradeCommonUtil.handleBeforeTradeComplete(inputDto, false);
         }
     }
 
     @Override
     public void doRevoke(TrdLendInvestTradeDto entity) {
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTradeId());
-        
-        //删除授信占用
-        if (null != entity.getTradeId() && !"".equals(entity.getTradeId()) && !StringUtil.isNotEmpty(entity.getRevokeReason())){
-            riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
-        }
     }
 }

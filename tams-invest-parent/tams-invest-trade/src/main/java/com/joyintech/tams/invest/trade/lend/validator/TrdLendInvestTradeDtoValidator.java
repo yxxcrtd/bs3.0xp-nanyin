@@ -172,7 +172,7 @@ public class TrdLendInvestTradeDtoValidator implements TradeCommonValidator {
         	BaseEtrInvestInfoDto dto = trdBondInvestTrade002Service.getEntrustInfo(inputDto.getEntrustId());
     		if(inputDto.getFinTradeProduct().getPrin().compareTo(dto.getEtrEntrust().getEntrustAmt()) > 0){
     			 ValidMessage validMessage = new ValidMessage("finTradeProduct.prin",
-    	                    "本金金额不能超过剩余委托金额");
+    	                    "本金金额不能超过剩余指令金额");
     	                errorList.add(validMessage);
     		}
         }
