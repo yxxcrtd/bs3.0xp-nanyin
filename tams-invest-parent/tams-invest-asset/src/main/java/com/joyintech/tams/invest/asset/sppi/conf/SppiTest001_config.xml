@@ -7,8 +7,8 @@
             <Cell order="3" name="资产类型">assetTypeName</Cell>
             <Cell order="4" name="SPPI测试状态">testStatusName</Cell>
             <Cell order="5" name="数据来源">dataSource</Cell>
-            <Cell order="6" name="更新人">updateUserName</Cell>
-            <Cell order="7" name="更新日期">updateTimeStr</Cell>
+            <Cell order="6" name="更新时间">updateTimeStr</Cell>
+            <Cell order="7" name="更新人">updateUserName</Cell>
         </Row>
     </Worksheet>
 </Workbook>
