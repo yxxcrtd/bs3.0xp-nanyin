@@ -902,12 +902,17 @@ public class ChbPeriodicService {
                 value.setAssetTotalValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
             }
             // 期间累计净值增长率
-            if (!Objects.isNull(qmDto.getAssetValueMarket()) && !Objects.isNull(qcDto.getAssetValueMarket())
-                    && BigDecimal.ZERO.compareTo(qcDto.getAssetValueMarket()) == 0) {
-                BigDecimal increaseRateOfCumulativeValue = ((new BigDecimal(value.getAssetTotalValue()))
-                        .subtract(new BigDecimal(value.getAssetTotalValue())))
-                        .divide(new BigDecimal(value.getAssetTotalValue()), 20, BigDecimal.ROUND_FLOOR)
-                        .divide(new BigDecimal(DateUtil.getBetweenDayNumber(value.getValueDate(), value.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
+            // 期初累计净值 默认取1
+            BigDecimal qcUnitValueT = null;
+            if (isNullOrZero(qcDto.getUnitValueT())) {
+                qcUnitValueT = new BigDecimal("1");
+            } else {
+                qcUnitValueT = qcDto.getUnitValueT();
+            }
+            if (!Objects.isNull(qmDto.getUnitValueT())) {
+                BigDecimal increaseRateOfCumulativeValue = (qmDto.getUnitValueT().subtract(qcUnitValueT))
+                        .divide(qcUnitValueT)
+                        .divide(new BigDecimal(DateUtil.getBetweenDayNumber(qcDto.getValueDate(), qmDto.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
                         .multiply(new BigDecimal(36500));
                 value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(increaseRateOfCumulativeValue));
             } else {
