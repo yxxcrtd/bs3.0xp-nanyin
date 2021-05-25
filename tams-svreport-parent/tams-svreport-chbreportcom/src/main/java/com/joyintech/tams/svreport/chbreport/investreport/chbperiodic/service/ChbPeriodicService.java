@@ -7,17 +7,18 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfoDetailWithBLOBs;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.report.system.chbprd.dao.ChbPrdBaseinfo001Mapper;
+import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper;
+import com.joyintech.tams.svreport.chb.monthreport.dto.*;
 import com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dao.ChbPeriodicMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.*;
 import com.joyintech.tams.svreport.chbreport.investreport.common.service.ChbInvestReportCommonService;
 import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportConstant;
 import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportUtil;
 import com.joyintech.tams.svreport.chbreport.investreport.utils.WordBatchUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,8 @@ public class ChbPeriodicService {
     private ChbPrdBaseinfo001Mapper chbPrdBaseinfo001Mapper;
     @Autowired
     private ChbPrdBaseinfoDetailMapper chbPrdBaseinfoDetailMapper;
+    @Autowired
+    private ChbMonthAssetPositionMapper chbMonthAssetPositionMapper;
 
     /**
      * 导出公告
@@ -907,10 +910,10 @@ public class ChbPeriodicService {
             if (isNullOrZero(qcDto.getUnitValueT())) {
                 qcUnitValueT = new BigDecimal("1");
             } else {
-                qcUnitValueT = qcDto.getUnitValueT();
+                qcUnitValueT = new BigDecimal(value.getAssetTotalValueQC());
             }
             if (!Objects.isNull(qmDto.getUnitValueT())) {
-                BigDecimal increaseRateOfCumulativeValue = (qmDto.getUnitValueT().subtract(qcUnitValueT))
+                BigDecimal increaseRateOfCumulativeValue = (new BigDecimal(value.getAssetTotalValue()).subtract(qcUnitValueT))
                         .divide(qcUnitValueT, 20, BigDecimal.ROUND_FLOOR)
                         .divide(new BigDecimal(DateUtil.getBetweenDayNumber(qcDto.getValueDate(), qmDto.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
                         .multiply(new BigDecimal(36500));
@@ -953,4 +956,451 @@ public class ChbPeriodicService {
 
         return value;
     }
+
+    /*private void genMonthAssetData(Map<String, Object> params) {
+        String prodId = ((String) params.get("prodId"));
+        List prodIdList = new ArrayList();
+        prodIdList.add(prodId);
+
+        Date lastday = (Date) params.get("endReportDate");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(lastday);
+        // 获取第一天
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstday = calendar.getTime();
+
+        logger.info("查询期末月报资产头寸开始：");
+        List<ChbMonthAssetPosition> assetMonthPositionList = chbMonthAssetPositionMapper.selectByMonthDate(DateUtil.format(firstday),
+                DateUtil.format(lastday), prodIdList);
+        logger.info("查询期末月报资产头寸结束：");
+        // 用于统计穿透前期末余额 穿透后期末余额,key=propertyCode
+        Map<String, ChbMonthReportDetail> assetMonthReportDetailMap = new HashMap<String,ChbMonthReportDetail>();
+        if (!CollectionUtils.isEmpty(assetMonthPositionList)){
+            // 根据配置属性自动汇总相应属性值
+            logger.info("根据配置属性自动汇总相应属性值开始：");
+            assetMonthReportDetailMap = countMonthReportAmtInvest(assetMonthPositionList,firstday,report);
+            logger.info("根据配置属性自动汇总相应属性值结束：");
+        }
+    }
+
+    *//**
+     * 功能:统计期末资金理财投向情况
+     * @since 1.6.0
+     * @version 1.6.0
+     * @author：weiyuqiang 2019年1月31日
+     * @param assetMonthPositionList
+     * @param reportStartDate 月报开始日期 如：201801
+     * void
+     *//*
+    private Map<String,ChbMonthReportDetail> countMonthReportAmtInvest(List<ChbMonthAssetPosition> assetMonthPositionList
+            , Date reportStartDate, ChbMonthReport report) {
+        // 规则项检查
+        if (!checkRuleIsRight(true)){
+            return null;
+        }
+        // 用于统计穿透前期末余额 穿透后期末余额,key=propertyCode
+        Map<String,ChbMonthReportDetail> assetMonthReportDetailMap = new HashMap<String,ChbMonthReportDetail>();
+
+        // 根据配置规则汇总相应数据
+        for (ChbMonthAssetPosition position :assetMonthPositionList){
+            for (ChbMonthAssetRule singleRule :ChbMonthAssetRule.values()){
+                // 合计值单独处理
+                if (singleRule.getPropertyName().contains("合计")){
+                    //汇总表记录总数
+                    if (!assetMonthReportDetailMap.containsKey(singleRule.getPropertyCode()+"合计")){
+                        assetMonthReportDetailMap.put(singleRule.getPropertyCode()+"合计",
+                                buildDetail(reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO));
+                    }
+                    //保存分支的合计数据
+                    if(null!=deptMap.get(position.getOrgId())){
+                        //拷贝一份相同数据并传入当前机构分支数据中
+                        deptMap.get(position.getOrgId()).put(singleRule.getPropertyCode()+"合计",
+                                buildDetail(reportStartDate, singleRule.getPropertyCode(), BigDecimal.ZERO, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO));
+
+                    }
+                }
+                // 根据配置规则代码匹配资产头寸中相应属性
+                if (!StringUtil.isEmptyList(singleRule.getRuleCodeList())
+                        && !StringUtil.isEmptyList(singleRule.getRuleValueList())){
+                    // 该笔头寸记录是否匹配配置规则
+                    boolean isPattern = true;
+                    // 判断是否多条件交集处理
+                    for (int i = 0; i < singleRule.getRuleCodeList().size(); i++){
+                        // 重新初始化是否匹配配置规则标记
+                        isPattern = true;
+                        // 债券信用评级
+                        if (singleRule.getRuleCodeList().get(i).toUpperCase().equals("RATINGAA+")){
+                            if (!xyz.contains(position.getAssettype2())||position.getRating() == null||compareRating(position.getRating(),singleRule.getRuleValueList().get(i)) < 0
+                            ){
+                                isPattern = false;
+                                break;
+                            }
+                        } else if (singleRule.getRuleCodeList().get(i).toUpperCase().equals("RATINGAA-")){
+                            if (!xyz.contains(position.getAssettype2())||position.getRating() == null||compareRating(position.getRating(),singleRule.getRuleValueList().get(i)) >= 0
+                            ){
+                                isPattern = false;
+                                break;
+                            }
+                        } else if (singleRule.getRuleCodeList().get(i).toUpperCase().equals("RATINGNULL")){
+                            if (!xyz.contains(position.getAssettype2())||position.getRating() != null){
+                                isPattern = false;
+                                break;
+                            }
+                        }  else { // 非债券信用评级
+                            // 判断是否多条件任取其一，即rulecode和value一一对应以“|”隔开，格式为code1|code2,value1|value2
+                            if (singleRule.getRuleCodeList().get(i).contains(GlobalConstant.VERTICAL_LINE)
+                                    || singleRule.getRuleValueList().get(i).contains(GlobalConstant.VERTICAL_LINE)){
+
+                                List<String> ruleCodeList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE,
+                                        singleRule.getRuleCodeList().get(i));
+                                List<String> valueList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE,
+                                        singleRule.getRuleValueList().get(i));
+                                isPattern = false;
+                                String ruleCode = ruleCodeList.get(0);
+                                for (int k = 0; k < valueList.size() ; k++){
+                                    // 如果ruleCode相同但是多条件，则支持只输入一个code，如：code1,value1|value2|value3
+                                    // 否则需一一对应以“|”隔开，格式为code1|code2,value1|value2
+                                    if (ruleCodeList.size() > 1){
+                                        ruleCode = ruleCodeList.get(k);
+                                    }
+                                    // 支持反向判断！value1
+                                    if (valueList.get(k).startsWith("!")){
+                                        // 只要有一条满足则该条头寸不计入
+                                        if (!valueList.get(k).substring(1,valueList.get(k).length())
+                                                .equals((String)getGetMethod(position,ruleCode))){
+                                            isPattern = true;
+                                            break;
+                                        }
+                                    } else {
+                                        // 只有多个条件都不满足时该头寸才不计入
+                                        if (valueList.get(k).equals((String)getGetMethod(position,ruleCode))){
+                                            isPattern = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!isPattern){
+                                    break;
+                                }
+                            }else {// 多条件同时满足才计入
+                                // 支持反向判断！value1
+                                if (singleRule.getRuleValueList().get(i).startsWith("!")){
+                                    // 只要有一条满足则该条头寸不计入
+                                    if (singleRule.getRuleValueList().get(i).substring(1,
+                                            singleRule.getRuleValueList().get(i).length())
+                                            .equals((String)getGetMethod(position,
+                                                    singleRule.getRuleCodeList().get(i)))){
+                                        isPattern = false;
+                                        break;
+                                    }
+                                } else {
+                                    // 只要有一条不满足则该条头寸不计入
+                                    if (!singleRule.getRuleValueList().get(i)
+                                            .equals((String)getGetMethod(position,singleRule.getRuleCodeList()
+                                                    .get(i)))){
+                                        isPattern = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    if(singleRule.getPropertyCode().contains("AMT1_4_10")||
+                            singleRule.getPropertyCode().contains("AMT1_4_c")){
+                        logger.debug("检查数据");
+                    }
+
+                    // 值域匹配则累计，值域不匹配则计0
+                    // 判断key值是否已存在，已存在则累计，未存在则新建
+                    //	汇总值数据组装
+                    if (assetMonthReportDetailMap.containsKey(singleRule.getPropertyCode())
+                            ||  assetMonthReportDetailMap.containsKey(singleRule.getPropertyCode()+"合计")){
+                        // 非合计值
+                        if (assetMonthReportDetailMap.containsKey(singleRule.getPropertyCode())){
+                            ChbMonthReportDetail detail = assetMonthReportDetailMap.get(singleRule.getPropertyCode());
+                            // 已存在计入本次头寸值，否则不计入本次头寸值
+                            if (isPattern){
+                                // 穿透前科目余额 = 穿透前科目余额 + 新增值
+                                detail.setBalance(detail.getBalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+                                // 穿透后科目余额 = 穿透后科目余额 + 新增值
+                                detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+                                *//**G06资产端改造  add by  dongxiangyang  start*//*
+
+                                //合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
+                                if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
+                                    detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+                                    detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+                                }else{
+                                    //合规穿透后科目余额 = 合规穿透后科目余额 + 【是否合规产品】 = 是 【新增穿透后值】 else 【0】
+
+                                    detail.setXgbalance(detail.getXgbalance().add(BigDecimal.ZERO));
+                                    detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
+                                }
+                                *//**G06资产端改造  add by  dongxiangyang  end*//*
+
+                                // 场外(内)股票质押融资（穿透后）计行内一级分类IN_ASSET_TYPE1=01场内股票质押回购的资产价值ASSETVALUE_B+ASSETVALUE_A（除一级分类=资管，委外，私募）
+//    	    					if (singleRule.equals(ChbMonthAssetRule.场内股票质押回购)
+//    	    							|| singleRule.equals(ChbMonthAssetRule.场外股票质押融资)){
+//    	    						if (!position.getAssettype().equals(SVReportDictCodeList.资产负债类别_委外投资协议方式)
+//    	    								&&!position.getAssettype().equals(SVReportDictCodeList.资产负债类别_私募基金)
+//    	    								&&!position.getAssettype().equals(SVReportDictCodeList.资产负债类别_资产管理产品)){
+//    	    							detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+//    	    						}
+//    	    					}
+                            }
+                        } else if (assetMonthReportDetailMap.containsKey(singleRule.getPropertyCode() + "合计")){
+                            ChbMonthReportDetail detail = assetMonthReportDetailMap.get(singleRule.getPropertyCode()+"合计");
+                            // 已存在计入本次头寸值，否则不计入本次头寸值
+                            if (isPattern){
+                                // 穿透前科目余额 = 穿透前科目余额 + 新增值
+                                detail.setBalance(detail.getBalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+                                // 穿透后科目余额 = 穿透后科目余额 + 新增值
+                                detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+                                *//**G06资产端改造  add by  dongxiangyang  start*//*
+
+                                //合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
+                                if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
+                                    detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+                                    detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+                                }else{
+                                    //合规穿透后科目余额 = 合规穿透后科目余额 + 【是否合规产品】 = 是 【新增穿透后值】 else 【0】
+                                    detail.setXgbalance(detail.getXgbalance().add(BigDecimal.ZERO));
+                                    detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
+                                }
+                                *//**G06资产端改造  add by  dongxiangyang  end*//*
+                            }
+                        }
+                    } else {
+
+                        BigDecimal balance = BigDecimal.ZERO;
+
+                        BigDecimal bottombalance = BigDecimal.ZERO;
+
+                        BigDecimal xgbalance = BigDecimal.ZERO;
+
+                        BigDecimal xgbottombalance = BigDecimal.ZERO;
+
+//    					ChbMonthReportDetail detail = new ChbMonthReportDetail();
+//    					// uuid
+//    					detail.setDetailuuid(IDGenerator.generate(36));
+//    					// 期数
+//    					detail.setTermid(DateUtil.format(reportStartDate, "yyyyMM"));
+//    					// 报表类型：BALANCE-资产负债表
+//    					detail.setReporttype(ChbMonthReportPrdConstants.REPORT_TYPE_ASSET);
+//    					// 属性代码
+//    					detail.setPropertycode(singleRule.getPropertyCode());
+                        // 计入本次头寸值
+                        if (isPattern){
+                            balance = position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA();
+
+                            bottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
+
+                            if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
+                                xgbalance=position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA();
+
+                                xgbottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
+                            }
+                            // 期末余额穿透前 = 新增值
+//	    					detail.setBalance(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA());
+//	    					// 期末余额穿透后 = 新增值
+//	    					detail.setBottombalance(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB());
+                            // 场外(内)股票质押融资（穿透后）计行内一级分类IN_ASSET_TYPE1=01场内股票质押回购的资产价值ASSETVALUE_B+ASSETVALUE_A（除一级分类=资管，委外，私募）
+//	    					if (singleRule.equals(ChbMonthAssetRule.场内股票质押回购)
+//	    							|| singleRule.equals(ChbMonthAssetRule.场外股票质押融资)){
+//	    						if (!position.getAssettype().equals(SVReportDictCodeList.资产负债类别_委外投资协议方式)
+//	    								&&!position.getAssettype().equals(SVReportDictCodeList.资产负债类别_私募基金)
+//	    								&&!position.getAssettype().equals(SVReportDictCodeList.资产负债类别_资产管理产品)){
+//	    							detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+//	    						}
+//	    					}
+                        }
+
+                        //如果汇总项无此合计项则填入
+                        assetMonthReportDetailMap.put(singleRule.getPropertyCode(),
+                                buildDetail(reportStartDate, singleRule.getPropertyCode(), balance
+                                        , bottombalance,xgbalance,xgbottombalance));
+
+
+//    					assetMonthReportDetailMap.put(singleRule.getPropertyCode(), detail);
+                    }
+
+                    //update by leipeng 银行模式下报错修改
+                    if(null!=deptMap.get(position.getOrgId())){
+                        //独立机构部分数据组装
+                        if (null!=deptMap.get(position.getOrgId())&&
+                                (deptMap.get(position.getOrgId()).containsKey(singleRule.getPropertyCode())||
+                                        deptMap.get(position.getOrgId()).containsKey(singleRule.getPropertyCode()+"合计"))){
+                            // 非合计值
+                            if (deptMap.get(position.getOrgId()).containsKey(singleRule.getPropertyCode())){
+                                ChbMonthReportDetail detail = deptMap.get(position.getOrgId()).get(singleRule.getPropertyCode());
+                                // 已存在计入本次头寸值，否则不计入本次头寸值
+                                if (isPattern){
+                                    // 穿透前科目余额 = 穿透前科目余额 + 新增值
+                                    detail.setBalance(detail.getBalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+                                    // 穿透后科目余额 = 穿透后科目余额 + 新增值
+                                    detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+
+                                    *//**G06资产端改造  add by  dongxiangyang  start*//*
+
+                                    //合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
+                                    if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
+                                        detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+                                        detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+                                    }else{
+                                        //合规穿透后科目余额 = 合规穿透后科目余额 + 【是否合规产品】 = 是 【新增穿透后值】 else 【0】
+                                        detail.setXgbalance(detail.getXgbalance().add(BigDecimal.ZERO));
+                                        detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
+                                    }
+                                    *//**G06资产端改造  add by  dongxiangyang  end*//*
+                                }
+                            } else if (deptMap.get(position.getOrgId()).containsKey(singleRule.getPropertyCode() + "合计")){
+                                ChbMonthReportDetail detail = deptMap.get(position.getOrgId()).get(singleRule.getPropertyCode()+"合计");
+                                // 已存在计入本次头寸值，否则不计入本次头寸值
+                                if (isPattern){
+                                    // 穿透前科目余额 = 穿透前科目余额 + 新增值
+                                    detail.setBalance(detail.getBalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+                                    // 穿透后科目余额 = 穿透后科目余额 + 新增值
+                                    detail.setBottombalance(detail.getBottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+
+                                    *//**G06资产端改造  add by  dongxiangyang  start*//*
+
+                                    //合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
+                                    if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
+                                        detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
+                                        detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
+                                    }else{
+                                        //合规穿透后科目余额 = 合规穿透后科目余额 + 【是否合规产品】 = 是 【新增穿透后值】 else 【0】
+                                        detail.setXgbalance(detail.getXgbalance().add(BigDecimal.ZERO));
+                                        detail.setXgbottombalance(detail.getXgbottombalance().add(BigDecimal.ZERO));
+                                    }
+                                    *//**G06资产端改造  add by  dongxiangyang  end*//*
+                                }
+                            }
+                        } else {
+                            //新增一个数据集合
+                            BigDecimal balance = BigDecimal.ZERO;
+
+                            BigDecimal bottombalance = BigDecimal.ZERO;
+
+                            BigDecimal xgbalance = BigDecimal.ZERO;
+
+                            BigDecimal xgbottombalance = BigDecimal.ZERO;
+
+                            // 计入本次头寸值
+                            if (isPattern){
+
+                                balance = position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA();
+
+
+                                bottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
+
+                                if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
+                                    xgbalance=position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA();
+
+                                    xgbottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
+                                }
+
+                            }
+                            deptMap.get(position.getOrgId()).put(singleRule.getPropertyCode(),
+                                    buildDetail(reportStartDate, singleRule.getPropertyCode(), balance
+                                            , bottombalance,xgbalance,xgbottombalance));
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+
+        //多级法人改造。不能出汇总数据，会导致分支机构数据删除错误
+        if(!CommonUtil.isBAmodel()){
+            //汇总数据合计
+            sumDetail(assetMonthReportDetailMap);
+            //汇总数据入库
+            insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
+        }else{
+            //机构数据合计以及入库
+            for (Map.Entry<String, Map<String, ChbMonthReportDetail>> details : deptMap.entrySet()) {
+                sumDetail(details.getValue());
+                insertDetail(details.getValue(), report.getTermid(),details.getKey());
+            }
+        }
+
+
+
+        return assetMonthReportDetailMap;
+    }
+
+    *//**
+     * 功能:检查匹配规则是否完善
+     * @since 1.6.0
+     * @version 1.6.0
+     * @author：weiyuqiang 2019年1月31日
+     * @return
+     * boolean
+     *//*
+    private boolean checkRuleIsRight(boolean isIncludeNull){
+        // 检查配置规则项
+        for (ChbMonthAssetRule singleRule :ChbMonthAssetRule.values()){
+            // 检查属性代码是否为空
+            if (StringUtil.isEmpty(singleRule.getPropertyCode())){
+                logger.error("请检查属性代码是否为空！");
+                return false;
+            }
+            if (!isIncludeNull){
+                // 检查配置规则代码域与配置规则值域是否为空,支持为空时请关闭此项
+                if (StringUtil.isEmptyList(singleRule.getRuleCodeList())
+                        || StringUtil.isEmptyList(singleRule.getRuleValueList())){
+                    logger.error("请检查置规则代码域与配置规则值域是否为空！");
+                    return false;
+                }
+            }
+            // 判断配置规则代码域与配置规则值域是否大小一致，即一一对应
+            if (singleRule.getRuleCodeList().size() != singleRule.getRuleValueList().size()){
+                logger.error("请检查属性代码:"+singleRule.getPropertyCode()+"对应规则值域与对应规则代码域大小是否对应一致！");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    *//**
+     * 功能:判断评级信息大小
+     * @since 1.6.0
+     * @version 1.6.0
+     * @author：weiyuqiang 2019年2月11日
+     * @param s1 待比较评级结果
+     * @param s2 评级比较标准    S2固定只能为AA+或AA-
+     * @return >0 s1>s2 =0 s1 = s2 <0 s1<s2
+     *//*
+    private int compareRating(String s1,String s2){
+        if(s1.equals(s2)){
+            return 0;
+        }
+        if(s2.equals("AA+")){
+            if(s1.length()<s2.length()){
+                return -1;
+            }else{
+                if(s1.substring(0, 3).equals(s2)||s1.substring(0, 3).equals("AAA")){
+                    return 1;
+                }else{
+                    return -1;
+                }
+            }
+        }else{
+            if(s1.length()<s2.length()){
+                return -1;
+            }else{
+                if(s1.substring(0, 3).equals(s2)||s1.substring(0, 3).equals("AAA")||s1.substring(0, 3).equals("AA+")){
+                    return 1;
+                }else{
+                    return -1;
+                }
+            }
+        }
+    }*/
+
 }
