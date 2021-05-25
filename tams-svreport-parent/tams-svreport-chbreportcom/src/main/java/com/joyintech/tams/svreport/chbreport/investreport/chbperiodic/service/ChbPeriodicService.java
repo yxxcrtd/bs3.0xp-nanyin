@@ -501,8 +501,8 @@ public class ChbPeriodicService {
             BigDecimal totalIntAmt = new BigDecimal("0");
             for (ChbPeriodicBonusDeal deal : list) {
                 if (!isNullOrZero(deal.getRegTradeQty())) {
-                    totalTradeAmt.add(deal.getTradeAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000)));
-                    totalIntAmt.add(deal.getIntAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000)));
+                    totalTradeAmt = totalTradeAmt.add(deal.getTradeAmt().divide(deal.getRegTradeQty()).multiply(new BigDecimal(10000)));
+                    totalIntAmt = totalIntAmt.add(deal.getIntAmt().divide(deal.getRegTradeQty()).multiply(new BigDecimal(10000)));
                 }
             }
             chbPeriodicBonus = new ChbPeriodicBonus();
