@@ -58,7 +58,7 @@
                r.valuePercent           as valuePercent/** 本期净值收益**/
         from REP_PROD_INDEX p,
              (
-                 SELECT (exp(sum(log(1 + q.W_YIELD / 10000))) - 1) * 100 as valuePercent,
+                 SELECT (exp(sum(log(1 + q.W_YIELD / 10000))) - 1) as valuePercent,
                         q.PROD_ID
                  FROM rep_prod_index q
                  WHERE q.PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -84,7 +84,7 @@
                r.valuePercent           as valuePercent/** 本期净值收益**/
         from REP_PROD_INDEX_DETAIL p,
              (
-                 SELECT (exp(sum(log(1 + q.W_YIELD / 10000))) - 1) * 100 as valuePercent,
+                 SELECT (exp(sum(log(1 + q.W_YIELD / 10000))) - 1) as valuePercent,
                         q.PROD_ID,
                         q.FPROD_ID
                  FROM REP_PROD_INDEX_DETAIL q
@@ -99,7 +99,7 @@
     </select>
 
     <select id="qryChbPeriodicIndexValuePercent" resultType="java.math.BigDecimal">
-        SELECT (SUM(1 + p.W_YIELD / 10000) - 1) * 100 as valuePercent
+        SELECT (SUM(1 + p.W_YIELD / 10000) - 1) as valuePercent
         FROM rep_prod_index p
         WHERE p.PROD_ID = #{prodId,jdbcType=VARCHAR}
           AND p.VALUE_DATE BETWEEN #{startReportDate,jdbcType=DATE}
