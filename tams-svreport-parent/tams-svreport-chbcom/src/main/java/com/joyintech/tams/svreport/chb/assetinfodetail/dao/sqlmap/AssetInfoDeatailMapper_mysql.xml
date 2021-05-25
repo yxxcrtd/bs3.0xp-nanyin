@@ -2163,6 +2163,9 @@
                 <if test="item.bankCapital != null" >
                     BANK_CAPITAL = #{item.bankCapital,jdbcType=VARCHAR},
                 </if>
+                <if test="item.holdPurpose != null">
+                    HOLD_PURPOSE = #{item.holdPurpose},
+                </if>
             </set>
             where ASSET_CODE = #{item.assetCode}
         </foreach>

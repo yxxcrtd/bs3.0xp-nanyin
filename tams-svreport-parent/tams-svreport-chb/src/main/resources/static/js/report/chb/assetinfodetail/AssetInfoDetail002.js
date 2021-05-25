@@ -147,11 +147,11 @@ var QueryFunc=function(){
                 $("#targetAmt").attr("disabled",true);
                 $("#targetAmt").val('');
             }
-            if (repAssetType=='1902'){
-                $("#svrBussRepPlacementInfoDto_checkCode").attr("required",true);
-            }else {
-                $("#svrBussRepPlacementInfoDto_checkCode").attr("required",false);
-            }
+            // if (repAssetType=='1902'){
+            //     $("#svrBussRepPlacementInfoDto_checkCode").attr("required",true);
+            // }else {
+            //     $("#svrBussRepPlacementInfoDto_checkCode").attr("required",false);
+            // }
 
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
