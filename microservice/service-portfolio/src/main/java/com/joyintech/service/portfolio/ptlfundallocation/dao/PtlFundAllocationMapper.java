@@ -12,6 +12,7 @@ package com.joyintech.service.portfolio.ptlfundallocation.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.portfolio.ptlfundallocation.dto.PtlFundAllocation001Dto;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -159,4 +160,11 @@ public interface PtlFundAllocationMapper {
      */
     Map<String,String> getAcctNo(Map<String,Object> param);
     /* 新增导入功能 add by liuwei 20200220 end */
+
+    /**
+     * 获取组合在该证券账户的明细信息
+     * @return
+     * @see
+     */
+    List<PtlFundAllocation001Dto> getDetailInfo(Map<String, Object> map);
 }

@@ -11,9 +11,13 @@
 package com.joyintech.tams.invest.portfolio.ptlfundallocation.service;
 
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.tams.common.base.dao.EtrCashPositionFlowMapper;
 import com.joyintech.tams.common.base.dao.PtlCashPositionFlowMapper;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.portfolio.ptlfundallocation.dto.PtlFundAllocation001Dto;
 import com.joyintech.tams.invest.portfolio.ptlfundallocation.dto.PtlFundAllocation002Dto;
 import com.joyintech.tams.common.base.entity.*;
@@ -67,21 +71,11 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
 
-//    @Autowired
-//    private PtlFundAllocation002ValUtil ptlFundAllocation002ValUtil;
     /**
      * IPlatformDate
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
-//    /**
-//     * 估值信息
-//     */
-//    @Autowired
-//    private SysValuationInterfMapper sysValuationInterfMapper;
-//
-//    @Autowired
-//    private SysValueQueue sysValueQueue;
     /**
      * 查询组合
      * @return 组合集合
@@ -132,6 +126,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             PtlFundAllocation002Dto ptlFundAllocationDto = new PtlFundAllocation002Dto();
             BeanUtil.copyPropertiesIgnoreNull(ptlFundAllocationDto, entity);
             ptlFundAllocationDto.setPortfolioId(ptlFundAllocation001Dto.getPortfolioId());
+            ptlFundAllocationDto.setActPortfolioId(ptlFundAllocation001Dto.getPortfolioId());
             ptlFundAllocationDto.setSettleAmt(ptlFundAllocation001Dto.getSettleAmt());
             if (StringUtil.isEmpty(entity.getMyAcctNo())){
                 ptlFundAllocationDto.setMyAcctNo(ptlFundAllocation001Dto.getAcctNo());
@@ -152,32 +147,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             simpleRestTemplate.postForObject(
                     ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doComplete", this.setEntity(ptlFundAllocationDto,type),
                     Integer.class);
-            //发送到估值系统
-//            SysValuationInterfStatusModel sysValuationInterfStatusModel = new SysValuationInterfStatusModel();
-//            sysValuationInterfStatusModel.setTablepk1(ptlFundAllocationDto.getStlPayOrdersList().get(0).getOrderId());
-//            sysValuationInterfStatusModel.setDatatype(type.toString());
-//            sysValuationInterfStatusModel.setStatus("2");
-//            sysValuationInterfStatusModel.setInterfname(PtlFundAllocationValUtil.class.getName());
-//            sysValuationInterfStatusModel.setCreatetime(entity.getCreateTime());
-//            sysValuationInterfStatusModel.setOrgcode(SecurityUtil.getLoginUser().getOrgCode());
-//            sysValuationInterfStatusModel.setCreateuser(entity.getCreateUser());
-//            sysValuationInterfStatusModel.setDatadate(iPlatformDate.getSysDate());
-//            sysValuationInterfStatusModel.setUpdatetime(entity.getUpdateTime());
-//            sysValuationInterfStatusModel.setUpdateuser(entity.getUpdateUser());
-//            sysValuationInterfMapper.insert(sysValuationInterfStatusModel);
-//            sysValueQueue.addPrdNetvalueToQueue(sysValuationInterfStatusModel);
         }
-//
-//        List<BussTrdTransferOrderDto> bussDtoList = entity.getBussTrdTransferOrder();
-/*        if(NewXmlUtil.VAL_SWITCH) {
-        	try {
-                //发送到估值系统
-            ptlFundAllocation002ValUtil.postValuationSystem(type, entity);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-        }*/
-
     }
 
     @Override
@@ -190,19 +160,17 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
         }
     }
 
-//    @Override
-//    public void doBack(String workflowId) {
-//        PtlFundAllocation002Dto entity = this.getBussinessEntityByWorkflowId(workflowId);
-//        String orderId = null;
-//        if(StringUtil.isNotEmpty(entity.getOrderId())) {
-//            orderId = entity.getOrderId();
-//        }else if(!StringUtil.isNotEmpty(entity.getOrderId()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder().get(0).getOrderId())) {
-//            orderId = entity.getBussTrdTransferOrder().get(0).getOrderId();
-//        }
-//        simpleRestTemplate.postForObject(
-//                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doBack", orderId,
-//                Integer.class);
-//    }
+    @Override
+    public void doBack(PtlFundAllocation002Dto ptlFundAllocation002Dto) {
+        for(BussTrdTransferOrderDto bussTrdTransferOrderDto:ptlFundAllocation002Dto.getBussTrdTransferOrder()){
+            AllTradeCommonUtil.deletePositionByOrderId(bussTrdTransferOrderDto.getOrderId());
+            if (!StringUtil.equals("revoke", ptlFundAllocation002Dto.getOperateType())
+                    && !StringUtil.equals("delete", ptlFundAllocation002Dto.getOperateType())) {
+                restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doBack", bussTrdTransferOrderDto,
+                        String.class);
+            }
+        }
+    }
 
     @Override
     public void doInsert(PtlFundAllocation002Dto entity, OperationType type) {
@@ -213,6 +181,8 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             if (bussCommonMapperDelegateService != null && dto.getPtlCashPositionFlow() != null
                     && StringUtil.isNotBlank(dto.getPtlCashPositionFlow().getAcctId())) {
                 bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, dto.getPtlCashPositionFlow());
+                dto.getPtlCashPositionFlow().setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                bussCommonMapperDelegateService.insert(EtrCashPositionFlowMapper.class, dto.getPtlCashPositionFlow());
                 PtlCashPositionFlow flow = dto.getPtlCashPositionFlow();
                 //flow.setAcctId(entity.getCounterAcctNo());
                 if (BussinessDictCodeList.指令类型_银证转账_银转证.getValue().equals(entity.getPayType())) {
@@ -230,6 +200,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
                 flow.setSeqno(seqno);
                 flow.setPortfolioId(entity.getBussTrdTransferOrder().get(i).getPortfolioId());
                 bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, flow);
+                bussCommonMapperDelegateService.insert(EtrCashPositionFlowMapper.class, flow);
             }
         }
     }
@@ -376,7 +347,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
     public PtlFundAllocation002Dto setEntity(PtlFundAllocation002Dto dto, OperationType type){
         if(!StringUtil.isNotEmpty(dto.getTradeId())) {
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-            bussinessCodeParameter.setCommonBusinessType1(BussinessDictCodeList.共同业务类型_资金划拨管理);
+            bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资金划拨管理);
             dto.setTradeId(baseGetBussinessId !=null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter):IDGenerator.generate());
         }
         // 先处理付款账户，生成可用持仓流水，生效后处理成实际及收款账户
@@ -431,7 +402,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
         PtlTrade ptlTrade = new PtlTrade();
         ptlTrade.setPortfolioId(dto.getPortfolioId());
         ptlTrade.setBusiNo(dto.getTradeId());
-        ptlTrade.setBusiTable(BussinessDictCodeList.业务表_交易资金指令表.getValue());
+        ptlTrade.setBusiTable(DictCodeList.业务表_结算指令表.getValue());
         // 一体化对应etliu start
 //        ptlTrade.setBusiType(BussinessDictCodeList.划款类型_托管划款.getValue());
         ptlTrade.setBusiType(BussinessDictCodeList.平安划款类型_托管划款.getValue());
@@ -515,5 +486,12 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
      */
     public List<PtlFundAllocation001Dto> getPtlFundAllocation001Dtos(Map<String, Object> pageParam) {
         return simpleRestTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/getPtlFundAllocation001Dtos", pageParam, List.class);
+    }
+
+    /**
+     * 获取组合在该证券账户的明细信息
+     */
+    public List<PtlFundAllocation001Dto> getDetailInfo(Map<String, Object> pageParam) {
+        return simpleRestTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/getDetailInfo", pageParam, List.class);
     }
 }

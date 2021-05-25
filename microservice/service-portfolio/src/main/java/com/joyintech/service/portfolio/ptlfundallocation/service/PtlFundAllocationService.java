@@ -173,11 +173,15 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
      * @since 1.0
      */
     public List<SelectOptionDto> getPortfolioIdBysecId(Map<String,Object> map){
-//        //add by wangcheng 二级法人改造
-//        baseSecondLevelCorportionService.secondLevelCorporation(map);
 //        // 组合列表展示存续产品 add by liuwei 20210412 start
         map.put("sysdate",DateUtil.getSysDate());
-//        // 组合列表展示存续产品 add by liuwei 20210412 end
+        if(!StringUtil.isNotEmpty(map.get("acctNo"))){
+            if(map.get("payType") != null && StringUtil.equals(map.get("payType"), DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+                map.put("acctNo",map.get("counterAcctNo"));
+            }else if(map.get("payType") != null && StringUtil.equals(map.get("payType"), DictCodeListExt1.指令类型_银证转账_证转银.getValue())){
+                map.put("acctNo",map.get("myAcctNo"));
+            }
+        }
         return ptlFundAllocationMapper.getPortfolioIdBysecId(map);
     }
 
@@ -680,8 +684,12 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
          EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
          BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
          EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
-         tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));
-         etrCash.add(tempPosition); 
+         if(EtrCashPositionKey != null){
+             tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));
+         }else{
+             tempPosition.setAmount(tempPosition.getAmount());
+         }
+         etrCash.add(tempPosition);
          /*EtrCashPosition tempPosition1 = new EtrCashPosition();     
          tempPosition1.setPortfolioId(entity.getPortfolioId());
          tempPosition1.setAcctId(entity.getCounterAcctNo());
@@ -818,4 +826,17 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
         return result;
     }
     /* 新增导入功能 add by liuwei 20200220 end */
+
+    /**
+     * 获取组合在该证券账户的明细信息
+     * @return
+     * @see
+     */
+    public List<PtlFundAllocation001Dto> getDetailInfo(Map<String, Object> map) {
+        List<PtlFundAllocation001Dto> ptlFundAllocation001Dtos = new ArrayList<>();
+        map.put("acctType01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
+        map.put("acctType07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+        ptlFundAllocation001Dtos = ptlFundAllocationMapper.getDetailInfo(map);
+        return ptlFundAllocation001Dtos;
+    }
 }

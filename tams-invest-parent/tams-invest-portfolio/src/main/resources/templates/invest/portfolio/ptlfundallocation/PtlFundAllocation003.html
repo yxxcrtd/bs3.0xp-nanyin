@@ -65,7 +65,7 @@
                                            data-th-text="#{PtlFundAllocation002.ccy}">币种</label>
                                     <div class="layui-input-inline input-inline">
                                         <select class="layui-input form-input input-select " id="ccy" required
-                                                name="ccy" th:data-result="${CCY}" placeholder="请输入内容" th:initValue='${entity?.ccy}'
+                                                name="ccy" th:data-result="${CCY}" placeholder="请输入内容" th:initValue='${entity?.ccy?:CCY_default}'
                                                 data-th-placeholder="#{SysCommon.placeholder}">
                                         </select>
                                     </div>
@@ -129,6 +129,8 @@
         var Fin_Type = /*[[${Fin_Type}]]*/'';
         var YES_OR_NO_N = /*[[${YES_OR_NO_N}]]*/'';
         var ptlFundAllocation001Dtos = /*[[${ptlFundAllocation001Dtos}]]*/'';
+        var payType1001 =/*[[${payType1001}]]*/'';
+        var payType1002 =/*[[${payType1002}]]*/'';
         function zd(){
             debugger;
             hklx = $('#payType').val();

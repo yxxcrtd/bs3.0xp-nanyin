@@ -234,4 +234,13 @@ public class PtlFundAllocationController {
     }
     /* 新增导入功能 add by liuwei 20200220 end */
 
+    /**
+     * 获取组合在该证券账户的明细信息
+     * @return
+     * @see
+     */
+    @PostMapping("/getDetailInfo")
+    public List<PtlFundAllocation001Dto> getDetailInfo(@RequestBody Map<String,Object> map){
+        return ptlFundAllocationService.getDetailInfo(map);
+    }
 }

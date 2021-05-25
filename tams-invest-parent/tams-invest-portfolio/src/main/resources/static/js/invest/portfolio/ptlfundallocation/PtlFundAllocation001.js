@@ -65,32 +65,32 @@
         Joyin.exportExcel('export', paramObj);//导出
     };
 
-    /* 新增导入功能 add by liuwei 20200220 start */
-        /**
-         * 导入
-         */
-    var importExcel = function () {
-    //导入
-         oyin.confirm(JoyinUtil.getLabel("请确认是否要导入数据"), function () {
-            Joyin.uploadFile(function (fileName) {
-                Joyin.ajax(basePath + "invest/portfolio/ptlfundallocation/PtlFundAllocation001/importFile", {
-                  fileName: fileName
-                }, function (result) {
-                        if (result && result.statuCode == 200) {
-                            // Joyin.confirm(result.message,function () {
-                            Joyin.ajaxJson(basePath + "invest/portfolio/ptlfundallocation/PtlFundAllocation001/doImportSave",result.data,function (result) {
-                                layui.layer.closeAll();
-                                Joyin.dialog(JoyinUtil.getLabel("银证转账多组合新建"),
-                                    JoyinUtil.getRealPath("invest/portfolio/ptlfundallocation/PtlFundAllocation003/init"),
-                                    "98%", "95%",{pageModel : PAGE_MODEL_NEW,pageData:JSON.stringify(result.data),isImportFlag:'01'},function(){table.reload();}
-                                );
-                            });
-                        }
-                   });
-            });
-          });
-    }
-        /* 新增导入功能 add by liuwei 20200220 end */
+//    /* 新增导入功能 add by liuwei 20200220 start */
+//        /**
+//         * 导入
+//         */
+//    var importExcel = function () {
+//    //导入
+//         oyin.confirm(JoyinUtil.getLabel("请确认是否要导入数据"), function () {
+//            Joyin.uploadFile(function (fileName) {
+//                Joyin.ajax(basePath + "invest/portfolio/ptlfundallocation/PtlFundAllocation001/importFile", {
+//                  fileName: fileName
+//                }, function (result) {
+//                        if (result && result.statuCode == 200) {
+//                            // Joyin.confirm(result.message,function () {
+//                            Joyin.ajaxJson(basePath + "invest/portfolio/ptlfundallocation/PtlFundAllocation001/doImportSave",result.data,function (result) {
+//                                layui.layer.closeAll();
+//                                Joyin.dialog(JoyinUtil.getLabel("银证转账多组合新建"),
+//                                    JoyinUtil.getRealPath("invest/portfolio/ptlfundallocation/PtlFundAllocation003/init"),
+//                                    "98%", "95%",{pageModel : PAGE_MODEL_NEW,pageData:JSON.stringify(result.data),isImportFlag:'01'},function(){table.reload();}
+//                                );
+//                            });
+//                        }
+//                   });
+//            });
+//          });
+//    }
+//        /* 新增导入功能 add by liuwei 20200220 end */
     
     /**
      * 画面加载完成
@@ -103,11 +103,11 @@
         $('#PtlFundAllocation001_btn_export').click(function() {
             exportExcel();
         });
-         /* 新增导入功能 add by liuwei 20200220 start */
-        $("#PtlFundAllocation001_btn_import").click(function () {
-            importExcel();
-        });
-                /* 新增导入功能 add by liuwei 20200220 end */
+//         /* 新增导入功能 add by liuwei 20200220 start */
+//        $("#PtlFundAllocation001_btn_import").click(function () {
+//            importExcel();
+//        });
+//                /* 新增导入功能 add by liuwei 20200220 end */
        //新建事件
         $('#PtlFundAllocation001_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("PtlFundAllocation002"),
