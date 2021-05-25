@@ -102,8 +102,12 @@
 		from Fin_Product /** 标的类金融产品 **/
 		where
 		(Fin_Product.FINPROD_MARKET_ID = #{finprodId})
-		AND (Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
-			OR (Fin_Product.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02})))
+		<!-- modify by wujie on 20210525
+		AND (Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_GUZHI_F07},#{TYPE_TOUGUAN_F18})
+			OR (Fin_Product.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02}))) -->
+		AND (Fin_Product.Finprod_Type in (#{TYPE_GUZHI_F01},#{TYPE_GUZHI_F07})
+			OR (Fin_Product.Finprod_Type = #{TYPE_GUZHI_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02})))	
+	    <!-- modify by wujie on 20210525 end -->
 	</select>
 	<select id="getBondAssetInfo" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
 		select

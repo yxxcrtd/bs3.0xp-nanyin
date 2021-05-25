@@ -88,10 +88,15 @@ public class TrdAssetLossService extends BaseService<TrdAssetLoss001Dto> {
     public List<TrdAssetLoss001Dto> getAssetInfo(Map<String, Object> param) {
         param.put("EXEC_DATE_04", DictCodeList.含权债摊销日_到期日.getValue());
         param.put("PROFITTYPE_VALUE_02", DictCodeListExt2.收益类型_预期收益.getValue());
-        param.put("TYPE_TOUGUAN_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-        param.put("TYPE_TOUGUAN_F07", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
-        param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
-        param.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+        
+     // 使用估值的金融产品类型做判断
+        param.put("TYPE_GUZHI_F01", DictCodeListExt1.金融产品类型_债券.getValue());
+        param.put("TYPE_GUZHI_F07", DictCodeListExt1.金融产品类型_存款.getValue());
+        param.put("TYPE_GUZHI_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
+//        param.put("TYPE_TOUGUAN_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+//        param.put("TYPE_TOUGUAN_F07", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
+//        param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+//        param.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
         List<TrdAssetLoss001Dto> list = trdAssetLoss001Mapper.getAssetInfo(param);
         return list;
     }
