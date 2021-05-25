@@ -465,7 +465,7 @@ WHERE
 	
 	<!-- 资产理论结息日结转数据读取 (交易类) -->
 	<select id="queryAssetIntdateCarryoverReaderTransaction"  parameterType="java.util.Map" 
-	resultType="com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverExecReaderDetail" >
+	resultType="com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderDetail" >
 SELECT		
 	plan.CASH_ID,
 	plan.CASH_NUM,
