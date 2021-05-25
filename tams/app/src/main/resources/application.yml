@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: allinone
+    active:    allinone #CESHI
   application:
     name: tams-server
     dfstype: 2
@@ -23,7 +23,7 @@ spring:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
     maxTotal: 10
@@ -292,12 +292,12 @@ spring:
 #  redislock:
 #    redissonEnabled: false
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
     #reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
   sqldiruserName: root
   sqldirpassword: joyin123
 shiro:
@@ -311,26 +311,26 @@ shiro:
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 stresstest:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 wind:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 log:
-  path: E:/logs/hxjgbs/tams
+  path: D:/workspace/HuaXia/logs/tams
   level: debug
 eureka:
   client:
@@ -347,7 +347,7 @@ tx-lcn:
     managerAddress: 192.168.90.197:8070
 ---
 spring:
-  profiles: dtx
+  profiles: CESHI
   redis:
     database: 1
     password: joyin!234
@@ -355,33 +355,33 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+  url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
   username: root
   password: joyin123
 base:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 stresstest:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 wind:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 log:
@@ -389,7 +389,7 @@ log:
   level: DEBUG
 eureka:
   client:
-    enabled: true
+    enabled: false
     serviceUrl:
       defaultZone: http://192.168.90.219:9101/eureka/
   instance:
