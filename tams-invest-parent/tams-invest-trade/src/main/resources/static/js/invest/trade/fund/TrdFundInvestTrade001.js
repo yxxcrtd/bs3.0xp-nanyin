@@ -202,8 +202,8 @@
         });
         $('#'+pageId+'_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("TrdFundInvestTrade002"),
-                    basePath + "invest/trade/fund/TrdFundInvestTrade002/init?parentPageId=" + pageId,
-                    "98%", "90%", {pageModel:PAGE_MODEL_NEW});
+                    basePath + "invest/trade/fund/TrdFundInvestTrade002/init",
+                    "98%", "90%", {pageModel:PAGE_MODEL_NEW,parentPageId:pageId});
         });
         $('#'+pageId+'_btn_revoke').click(function() {
             if(table!=null && table!=''){
@@ -251,8 +251,8 @@
         });
         $('#'+pageId+'_btn_dzhadd').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("TrdFundInvestTrade004"),
-                basePath + "invest/trade/fund/TrdFundInvestTrade004/init?parentPageId=" + pageId,
-                "98%", "90%", {pageModel:PAGE_MODEL_NEW});
+                basePath + "invest/trade/fund/TrdFundInvestTrade004/init",
+                "98%", "90%", {pageModel:PAGE_MODEL_NEW,parentPageId:pageId});
         });
         //是否展示资产四五级分类
         if(IS_SHOW_TYPE == '01'){

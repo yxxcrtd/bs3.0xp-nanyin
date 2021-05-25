@@ -230,8 +230,8 @@
 
         $('#'+pageId+'_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("TrdBondInvestTrade002"), basePath
-                            + "invest/trade/bond/TrdBondInvestTrade002/init?parentPageId=" + pageId, "99%", "99%", {
-                        pageModel : PAGE_MODEL_NEW
+                            + "invest/trade/bond/TrdBondInvestTrade002/init", "99%", "99%", {
+                        pageModel : PAGE_MODEL_NEW,parentPageId:pageId
                     }, function() {
                         table.reload();
                     });
@@ -240,8 +240,8 @@
         // add by zhanggenglin 债券多组合 20190819 start
         $('#TrdBondInvestTrade003_btn_add').click(function() {
             Joyin.dialog('债券类资产多组合交易新建', basePath
-                            + "invest/trade/bond/TrdBondInvestTrade003/init?parentPageId=" + pageId, "99%", "99%", {
-                        pageModel : PAGE_MODEL_NEW
+                            + "invest/trade/bond/TrdBondInvestTrade003/init", "99%", "99%", {
+                        pageModel : PAGE_MODEL_NEW,parentPageId:pageId
                     }, function() {
                         table.reload();
                     });

@@ -166,8 +166,8 @@
         // 绑定新建按钮事件
         $('#'+pageId+'_btn_add').click(function () {
             Joyin.dialog(JoyinUtil.getLabel("TrdRepoTrade002.new"), basePath
-                + "invest/trade/trdrepotrade/TrdRepoTrade002/init?parentPageId=" + pageId, "99%", "99%", {
-                pageModel: PAGE_MODEL_NEW
+                + "invest/trade/trdrepotrade/TrdRepoTrade002/init", "99%", "99%", {
+                pageModel: PAGE_MODEL_NEW,parentPageId:pageId
             }, function () {
                 listTbl.reload();
             });
@@ -175,8 +175,8 @@
         // 绑定多组合新建按钮事件
         $('#TrdRepoTrade003_btn_add').click(function () {
             Joyin.dialog(JoyinUtil.getLabel("TrdRepoTrade003.new"), basePath
-                + "invest/trade/trdrepotrade/TrdRepoTrade003/init?parentPageId=" + pageId, "99%", "99%", {
-                pageModel: PAGE_MODEL_NEW
+                + "invest/trade/trdrepotrade/TrdRepoTrade003/init", "99%", "99%", {
+                pageModel: PAGE_MODEL_NEW,parentPageId:pageId
             }, function () {
                 listTbl.reload();
             });
