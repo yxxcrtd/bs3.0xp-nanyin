@@ -772,12 +772,12 @@ public class ChbPeriodicService {
         if (StringUtil.isNotEmpty(chbPeriodicPrdInfo.getRiskLevel()) && StringUtil.isNotEmpty(chbPeriodicPrdInfo.getOperateMode())) {
             if ((StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())
                     || StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue()))
-                    && (StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.募集方式_中债_公募.getValue())
-                    || StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.募集方式_中债_私募.getValue()))) {
+                    && (StringUtil.equals(chbPeriodicPrdInfo.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())
+                    || StringUtil.equals(chbPeriodicPrdInfo.getRaiseType(), DictCodeListExt2.募集方式_中债_私募.getValue()))) {
                 chbPeriodicPrdInfo.setLeverUpperLimitFmt("200%");
             } else if ((StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_开放式净值型.getValue())
                     || StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue()))
-                    && StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.募集方式_中债_公募.getValue())) {
+                    && StringUtil.equals(chbPeriodicPrdInfo.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())) {
                 chbPeriodicPrdInfo.setLeverUpperLimitFmt("140%");
             }
         } else {
