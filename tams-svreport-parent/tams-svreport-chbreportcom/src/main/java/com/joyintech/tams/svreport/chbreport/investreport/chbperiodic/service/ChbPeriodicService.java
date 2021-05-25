@@ -431,8 +431,8 @@ public class ChbPeriodicService {
                         item.setSurplusTerm(ChbInvestReportConstant.无);
                     } else {
                         item.setSurplusTerm(String.valueOf(
-                                ChbInvestReportUtil.getBetweenDayNumber(DateUtil.parse(DateUtil.format(item.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN)),
-                                        DateUtil.parse(dealdateFmt))));
+                                ChbInvestReportUtil.getBetweenDayNumber(DateUtil.parse(dealdateFmt),
+                                        DateUtil.parse(DateUtil.format(item.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN)))));
                     }
                 } else {
                     item.setSurplusTerm(ChbInvestReportConstant.无);
