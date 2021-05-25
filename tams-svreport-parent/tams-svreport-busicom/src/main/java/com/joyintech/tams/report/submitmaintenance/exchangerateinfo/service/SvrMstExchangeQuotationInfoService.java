@@ -347,11 +347,12 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
                 //中间价
                 entity.setMidPrice(new BigDecimal(list.get(2)));
                 //报价单位
-                entity.setQuotCyy("USD");
-                //基础币种
-                entity.setBasisCyy("CNY");
-                //报价币种
                 entity.setQuotUnit(Long.parseLong(list.get(3)));
+                String[] strings = StringUtil.split(list.get(0), "\\/");
+                //基础币种
+                entity.setBasisCyy(strings[0]);
+                //报价币种
+                entity.setQuotCyy(strings[1]);
                 entity.setInputType(DictCodeListExt1.录入方式_系统导入.getValue());
                 entity.setCreateUser(userName);
                 entity.setCreateDept(deptCode);

@@ -154,7 +154,7 @@
 			#{item.professionalTitle,jdbcType=VARCHAR}, #{item.finProfessionalCrtf,jdbcType=VARCHAR},
 			#{item.finTrainingNo,jdbcType=VARCHAR},#{item.awards,jdbcType=VARCHAR},
 			#{item.officeTel,jdbcType=VARCHAR},#{item.mobileTel,jdbcType=VARCHAR},
-			#{item.regBusiType,jdbcType=VARCHAR},#{item.mail,jdbcType=VARCHAR},
+			#{item.mail,jdbcType=VARCHAR},#{item.regBusiType,jdbcType=VARCHAR},
 			#{item.regEmployeeType,jdbcType=VARCHAR},#{item.remark,jdbcType=VARCHAR},
 			#{item.createUser,jdbcType=VARCHAR},#{item.createTime,jdbcType=TIMESTAMP},
 			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}

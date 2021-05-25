@@ -47,15 +47,7 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         Page<DisRepCashYield> page;
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        String busiId = (String) param.get("busiId");
-        String cashType2 = (String) param.get("cashType2");
-        String status = (String) param.get("status");
-        List<String> selectbusiId = StringUtil.splitToList(GlobalConstant.COMMA, busiId);
-        List<String> selectcashType2 = StringUtil.splitToList(GlobalConstant.COMMA, cashType2);
-        List<String> selectStatus = StringUtil.splitToList(GlobalConstant.COMMA, status);
-        param.put("selectbusiId", selectbusiId);
-        param.put("selectcashType2", selectcashType2);
-        param.put("selectStatus", selectStatus);
+        dealMap(param);
         page = super.queryForPage(pagenum, legth, () -> proRateInfo001Mapper.queryForPage(param));
         /*List<ChbPrdBaseinfo> list =proRateInfo001Mapper.getProdinfo(param);
         Map<String,String> map=new HashMap<String,String>();
@@ -69,6 +61,22 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
     }
 
     /**
+     * 处理参数
+     * @param param
+     */
+    private void dealMap(Map<String, Object> param) {
+        String busiId = (String) param.get("busiId");
+        String cashType2 = (String) param.get("cashType2");
+        String status = (String) param.get("status");
+        List<String> selectbusiId = StringUtil.splitToList(GlobalConstant.COMMA, busiId);
+        List<String> selectcashType2 = StringUtil.splitToList(GlobalConstant.COMMA, cashType2);
+        List<String> selectStatus = StringUtil.splitToList(GlobalConstant.COMMA, status);
+        param.put("selectbusiId", selectbusiId);
+        param.put("selectcashType2", selectcashType2);
+        param.put("selectStatus", selectStatus);
+    }
+
+    /**
      * 处理查询结果 <功能详细描述>
      *
      * @param list 待处理数据
@@ -77,7 +85,7 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
      */
     private void dealDataList(List<DisRepCashYield> list) {
         list.forEach(item -> {
-            item.setCashType2Name(SysDataUtil.getZZDictCodeAndNameNew(
+            item.setCashType2Name(SysDataUtil.getZZDictCodeAndName(
                     DictCode.信披费用类型, item.getCashType2()));
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.维护数据状态, item.getStatus2()));
@@ -129,24 +137,29 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
     }
 
     public List<DisRepCashYield> queryReportList(Map<String, Object> param) {
-        String busiIds = (String) param.get("keybusiIdList");
-        String cashType2s = (String) param.get("keycashType2List");
-        String startDates = (String) param.get("keystartDateList");
-        List<String> selectbusiIds = StringUtil.splitToList(GlobalConstant.COMMA, busiIds);
-        List<String> selectcashType2s = StringUtil.splitToList(GlobalConstant.COMMA, cashType2s);
-        List<String> selectstartDates = StringUtil.splitToList(GlobalConstant.COMMA, startDates);
-        param.put("selectbusiIds", selectbusiIds);
-        param.put("selectcashType2s", selectcashType2s);
-        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
-        if (null != selectstartDates && selectstartDates.size() > 0) {
-            selectstartDates.clear();
-            for (String s : selectstartDates) {
-                String startDate = dfs.format(Long.parseLong(String.valueOf(s)));
-                selectstartDates.add(startDate);
-            }
-        }
-        param.put("selectstartDates", selectstartDates);
-        return proRateInfo001Mapper.queryReportList(param);
+//        String busiIds = (String) param.get("keybusiIdList");
+//        String cashType2s = (String) param.get("keycashType2List");
+//        String startDates = (String) param.get("keystartDateList");
+//        List<String> selectbusiIds = StringUtil.splitToList(GlobalConstant.COMMA, busiIds);
+//        List<String> selectcashType2s = StringUtil.splitToList(GlobalConstant.COMMA, cashType2s);
+//        List<String> selectstartDates = StringUtil.splitToList(GlobalConstant.COMMA, startDates);
+//        param.put("selectbusiIds", selectbusiIds);
+//        param.put("selectcashType2s", selectcashType2s);
+//        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+//        if (null != selectstartDates && selectstartDates.size() > 0) {
+//            selectstartDates.clear();
+//            for (String s : selectstartDates) {
+//                String startDate = dfs.format(Long.parseLong(String.valueOf(s)));
+//                selectstartDates.add(startDate);
+//            }
+//        }
+//        param.put("selectstartDates", selectstartDates);
+//        return proRateInfo001Mapper.queryReportList(param);
+
+        dealMap(param);
+        List<DisRepCashYield> list = proRateInfo001Mapper.queryForPage(param);
+        dealDataList(list);
+        return list;
     }
 
     public List<DisRepCashYield> selectOneDate(Map<String, Object> param) {

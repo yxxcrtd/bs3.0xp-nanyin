@@ -25,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -175,17 +176,25 @@ public class DisPrdFeeRate001Controller extends BaseController {
      * @return 导出
      */
     @RequestMapping(value = ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() {
-        List<ChbPrdBaseinfo> list = prorateService.getProdinfo(RequestUtil.getPageParam());
+    public ResponseEntity<byte[]> export() throws IOException {
+        //List<ChbPrdBaseinfo> list = prorateService.getProdinfo(RequestUtil.getPageParam());
         /*Map<String,String> map=new HashMap<String,String>();
         if(null!=list && list.size()>0){
             for(ChbPrdBaseinfo chbPrdBaseinfo:list){
                 map.put(chbPrdBaseinfo.getProdId(),chbPrdBaseinfo.getProdName());
             }
         }*/
-        List<DisRepCashYield> dtoList = this.prorateService.queryReportList(RequestUtil.getPageParam());
+        String datas = this.getParam("datas");
+        List<DisRepCashYield> dtoList = null;
+        if (StringUtil.isNotEmpty(datas)) {
+            dtoList = JsonUtils.json2List(datas, DisRepCashYield.class);
+        }
+        else {
+            dtoList = this.prorateService.queryReportList(RequestUtil.getPageParam());
+        }
         dtoList.forEach(item -> {
-            item.setCashType2(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndNameNew(
+            item.setStartDateStr(DateUtil.format(item.getStartDate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+            item.setCashType2(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndName(
                     DictCode.信披费用类型, item.getCashType2()));
             /*item.setBusiId(map.get(item.getBusiId()));*/
         });

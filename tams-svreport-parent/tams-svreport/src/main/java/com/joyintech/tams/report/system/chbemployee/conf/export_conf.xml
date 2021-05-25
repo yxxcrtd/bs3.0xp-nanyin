@@ -26,6 +26,7 @@
 			<Cell order="22" name="电子邮箱">mail</Cell>
 			<Cell order="23" name="登记业务分类">regBusiTypeStr</Cell>
 			<Cell order="24" name="登记人员类别">regEmployeeTypeStr</Cell>
+			<Cell order="25" name="备注">remark</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

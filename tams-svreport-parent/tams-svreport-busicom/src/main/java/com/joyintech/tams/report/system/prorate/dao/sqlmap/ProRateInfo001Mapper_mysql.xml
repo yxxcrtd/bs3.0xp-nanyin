@@ -3,6 +3,7 @@
 <mapper namespace="com.joyintech.tams.report.system.prorate.dao.ProRateInfo001Mapper_mysql">
 	<select id="queryForPage" resultType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
 		SELECT
+		'导出' as type,
 		a.STATUS as status2,
 		a.BUSI_ID as busiId,
 		a.START_DATE as startDate,
@@ -43,6 +44,7 @@
 		</where>
 		union all
 		SELECT
+		'导出' as type,
 		'A' as status2,
 		c.PROD_ID as busiId,
 		c.START_DATE as startDate,

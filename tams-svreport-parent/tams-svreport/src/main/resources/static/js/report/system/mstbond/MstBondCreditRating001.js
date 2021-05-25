@@ -4,7 +4,7 @@
         return {
             oCode:$('#oCode').val()==null?null:$('#oCode').val().join(),
             oType:$('#oType').val()==null?null:$('#oType').val().join(),
-            status:$('#status2').val()==null?null:$('#status2').val().join()
+            status:$('#status').val()==null?null:$('#status').val().join()
         };
     };
 
@@ -18,7 +18,7 @@
         },
         cols: [
             { title: "数据状态", field:'statusName',sortField:'statusName',width:'5%'},
-            { title: "status",  visible:false, field:'status2'},
+            { title: "status2",  visible:false, field:'status2'},
             { title: "债券代码", field:'oCode',width:'8%',sortField:'oCode'},
             { title: "评级机构", field:'gradeOrgIdName',width:'8%',sortField:'gradeOrgId'},
             { field:'gradeOrgId',visible:false,width:'10%'},
@@ -117,11 +117,13 @@
             var param ={};
             var rows = table.getAllCheckedRows();
             if(rows.length > 0) {
-                var keyList = [];
-                $.each(rows, function(i, row) {
-                    keyList.push(row.oCode+','+row.gradeOrgId+','+row.gradeDate+','+row.oType+" ");
-                });
-                param.keys = keyList.join();
+                // var keyList = [];
+                // $.each(rows, function(i, row) {
+                //     keyList.push(row.oCode+','+row.gradeOrgId+','+row.gradeDate+','+row.oType+" ");
+                // });
+                // param.keys = keyList.join();
+                var datas = JSON.stringify(rows);
+                param.datas = datas;
             }
             else{
                 //有勾选优先勾选数据

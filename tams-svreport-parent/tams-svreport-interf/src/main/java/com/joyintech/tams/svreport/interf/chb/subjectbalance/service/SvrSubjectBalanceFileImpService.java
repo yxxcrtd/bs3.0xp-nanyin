@@ -249,8 +249,8 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 	public String importDB(List<Map<String, String>> listData,InterfFile interfFile) {
 		// TODO Auto-generated method stub
 		String remoteDir = "success";
-//		checkData(listData, interfFile.getFilename(), InterfDefine.科目余额数据.getCode(),
-//				InterfDefine.科目余额数据.getCode(),null, new String[]{"BOOKSET_ID","SUBJECT_NO","BALANCE_DATE"});
+		checkData(listData, interfFile.getFilename(), InterfDefine.科目余额数据.getCode(),
+				InterfDefine.科目余额数据.getCode(),null, new String[]{"BOOKSET_ID","SUBJECT_NO","BALANCE_DATE"});
 		//有效数据入库 
 		List<Map<String, String>> allData = new ArrayList<Map<String,String>>();
 		allData.addAll(listData);
@@ -294,6 +294,9 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
         	BokBalance chbSubjectBalanceData = new BokBalance();
             for (String string : listCloumn) {
                 String value = map.get(string);
+                if(!StringUtil.isBlank(value)){
+                	value = value.trim();
+				}
                 Field field = ReflectionUtils.findField(chbSubjectBalanceData.getClass(),
                     	this.subBlank(StringUtil.lowerCase(string)));
                 field.setAccessible(true);
