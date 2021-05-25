@@ -2748,11 +2748,12 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
             subTable.setColumns(ImportGenerator.createImpTableColumns(subTable.getName()));
             subTable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
             // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
-            for (ImpColumn column : subTable.getColumns()) {
-                if (StringUtil.equals(column.getName(), "STATUS")) {
-                    column.setConstant(DictCodeListExt2.报送数据状态_新建.getValue());
-                }
-            }
+			//因为设置字段值 Constant，后面生成TXT文件时(isValid=false)会不处理这个字段，所以注释掉这块
+//            for (ImpColumn column : subTable.getColumns()) {
+//                if (StringUtil.equals(column.getName(), "STATUS")) {
+//                    column.setConstant(DictCodeListExt2.报送数据状态_新建.getValue());
+//                }
+//            }
 
 			// 创建一个线程池
 			if (interfMaxCorePoolSize < 1) {
