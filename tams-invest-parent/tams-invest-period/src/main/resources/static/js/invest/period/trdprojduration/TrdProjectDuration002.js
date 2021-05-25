@@ -19,7 +19,7 @@
             	
             }
             if(intAmtUnpayFlag){
-                $('#repayIntAmt_div').show();
+               // $('#repayIntAmt_div').show();
             }
             if($("#finAssetInfo_finprodMarketId").val() && $("#cashType").val()&&($("#cashType").val()=='02'||$("#cashType").val()=='03') ){
                 var objectPayInt = {
@@ -90,8 +90,8 @@
                 , {field: 'vDate', width: "200", title: '计息开始日', sortable:false}
                 , {field: 'mDate', width: "200", title: '计息结束日', sortable:false}
                 , {field: 'yield', width: "200", title: '计提利率(%)', type: 'number', sortable:false}
-                , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
-                , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
+               // , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
+               // , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
                 , {field: 'theoryAmt', width: "200", title: '理论本息总额', type: 'money', sortable:false}
                 , {field: 'fpriceAmt',  width: "200",title: '实收本息总额', type: 'money', sortable:false ,edit: true}
                 , {field: 'channelFee',  width: "200",title: '通道费', type: 'money', sortable:false,visible:CHANNEL}
@@ -151,8 +151,8 @@
                 }),
                 "preMap":JSON.stringify({
                     "returnAmount":data.returnAmount,
-                    "repaymentUnpayInterest":data.repaymentUnpayInterest,
-                    "actrRepaymentUnpayInterest":data.actrRepaymentUnpayInterest,
+                   // "repaymentUnpayInterest":data.repaymentUnpayInterest,
+                  //  "actrRepaymentUnpayInterest":data.actrRepaymentUnpayInterest,
                     "theoryAmt":data.theoryAmt,
                     "fpriceAmt":data.fpriceAmt,
                     "taxAmount":data.taxAmount,
@@ -167,8 +167,8 @@
                     , {field: 'vDate', width: "200", title: '计息开始日', sortable:false}
                     , {field: 'mDate', width: "200", title: '计息结束日', sortable:false}
                     , {field: 'yield', width: "200", title: '计提利率(%)', type: 'money', sortable:false}
-                    , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
-                    , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
+                 //   , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
+                 //   , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
                     , {field: 'theoryAmt', width: "200", title: '理论本息总额', type: 'money', sortable:false}
                     , {field: 'fpriceAmt',  width: "200",title: '实收本息总额', type: 'money', sortable:false}
                     , {field: 'calcRule', visible: false}
