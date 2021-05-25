@@ -864,7 +864,7 @@ public class ChbPeriodicService {
                         || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
                     value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
                 } else {
-                    value.setAssetTotalValueQC(ChbInvestReportConstant.df1.format(qcDto.getYield7()));
+                    value.setAssetTotalValueQC(ChbInvestReportConstant.df4.format(qcDto.getYield7()));
                 }
             }
             // 期初份额总数

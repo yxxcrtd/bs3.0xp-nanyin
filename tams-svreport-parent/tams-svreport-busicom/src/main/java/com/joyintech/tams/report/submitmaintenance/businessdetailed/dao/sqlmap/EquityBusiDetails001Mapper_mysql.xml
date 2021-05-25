@@ -191,6 +191,9 @@
             <if test="prodValue != null" >
                 PROD_VALUE = #{prodValue,jdbcType=DECIMAL},
             </if>
+            <if test="prodValue == null" >
+                PROD_VALUE = null,
+            </if>
             <if test="shares != null" >
                 SHARES = #{shares,jdbcType=DECIMAL},
             </if>

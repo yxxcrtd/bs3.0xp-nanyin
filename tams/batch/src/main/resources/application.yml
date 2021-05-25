@@ -8,7 +8,7 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   profiles:
-    active: dtx1
+    active: dtx1 #CESHI
   thymeleaf:
     cache: false
   #数据源配置
@@ -137,13 +137,13 @@ spring:
     cluster:
       nodes: 192.168.45.20:6379,192.168.45.20:6380,192.168.45.20:6381,192.168.45.20:6382,192.168.45.20:6383,192.168.45.20:6384
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: GDPB
     password: GDPB
-    reportSqlldrDatabaseName: 192.168.60.43:3306/hx2jgbs_test #sqlldr用数据库连接，必须保持这种格式
+    reportSqlldrDatabaseName: 192.168.60.43:3306/hx2jgbs_onlyxiaoqing #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
   sqldiruserName: GDPB
   sqldirpassword: GDPB
   #以下根据实际ip和端口进行修改
@@ -177,13 +177,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: GDPB
     password: GDPB
 #interf数据源配置
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: GDPB
     password: GDPB
 #日志路径配置
@@ -226,13 +226,13 @@ spring:
   #    cluster:
   #      nodes: 192.168.45.20:6379,192.168.45.20:6380,192.168.45.20:6381,192.168.45.20:6382,192.168.45.20:6383,192.168.45.20:6384
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
-    reportSqlldrDatabaseName: 192.168.60.43:3306/hx2jgbs_test #sqlldr用数据库连接，必须保持这种格式
+    reportSqlldrDatabaseName: 192.168.60.43:3306/hx2jgbs_onlyxiaoqing #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
   sqldiruserName: root
   sqldirpassword: joyin123
   loadbalance: false
@@ -266,19 +266,19 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 #interf数据源配置
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: joyin123
 #日志路径配置
 log:
   path: /logs/hxjgbs/batch
-  level: INFO
+  level: debug
 logging:
   path:/logs/hxjgbs/batch
 #注册中心配置
@@ -310,23 +310,43 @@ trade:
       threadSize: 8
 ---
 spring:
-  profiles: yitihua
-  thymeleaf:
-    cache: false
+  profiles: CESHI
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.90.198
+    port: 6379
+    timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams
-    password: zgtams
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
+    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+application:
+  url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+  username: root
+  password: joyin123
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams
-    password: zgtams
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
+stresstest:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams
-    password: zgtams
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
+wind:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 log:
   path: /home/tams/logs/batch-jicheng
   level: INFO

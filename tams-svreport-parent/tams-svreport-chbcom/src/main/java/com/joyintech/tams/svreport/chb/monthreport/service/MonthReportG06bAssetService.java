@@ -202,9 +202,18 @@ public class MonthReportG06bAssetService {
                 }
             }
         }
+        // 单独处理固定收益类证券
+        dealAMT2_1_2(assetMonthReportG06bDetailMap);
         // 入库
         insertDetail(assetMonthReportG06bDetailMap, report);
         return assetMonthReportG06bDetailMap;
+    }
+
+    private void dealAMT2_1_2(Map<String, ChbMonthReportG06bDetail> assetMonthReportG06bDetailMap) {
+        ChbMonthReportG06bDetail detailAMT2_1_2 = assetMonthReportG06bDetailMap.get("AMT2_1_2");
+        ChbMonthReportG06bDetail detailAMT2_1_2_a = assetMonthReportG06bDetailMap.get("AMT2_1_2_a");
+        detailAMT2_1_2.setBalanceA(detailAMT2_1_2.getBalanceA().add(detailAMT2_1_2_a.getBalanceA() == null ? BigDecimal.ZERO : detailAMT2_1_2_a.getBalanceA()));
+        detailAMT2_1_2.setBalanceB(detailAMT2_1_2.getBalanceB().add(detailAMT2_1_2_a.getBalanceB() == null ? BigDecimal.ZERO : detailAMT2_1_2_a.getBalanceB()));
     }
 
     /**

@@ -357,6 +357,7 @@ public class ChbInvestReportCommonService extends BaseService {
             //定期公告里面要考虑传递进去的产品代码，区分出来净值、货币，另外还需要区分出来是否含有多份额的子产品
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
                 prodId = (String) param.get("prodId");
+                startDate = (String) param.get("startDate");
                 endDate = (String) param.get("endDate");
                 reportName = DictCodeListExt3.中债披露报告_产品定期公告.getCodeName();
                 file = chbPeriodicService.createDoc(param, reportName);
