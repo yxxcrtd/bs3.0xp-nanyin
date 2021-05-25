@@ -122,6 +122,11 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      */
    private   String  assetType2;
 
+    /**
+     * 代码
+     * @return
+     */
+    private String assetId;
 
     public String getAssetType2() {
         return assetType2;
@@ -293,5 +298,13 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
 
     public void setRepAssignee(String repAssignee) {
         this.repAssignee = repAssignee;
+    }
+
+    public String getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 }
