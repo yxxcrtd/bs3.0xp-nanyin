@@ -72,7 +72,7 @@ public class SvrBussRepAssetCreditNonstdInfoController extends BaseController{
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
         model.addAttribute("entityName",this.getParam("entityName"));
-        model.addAttribute("SVR_YES_OR_NO_default", DictCodeList.是否_中债_否.getValue());
+        model.addAttribute("SVR_YES_OR_NO_Y", DictCodeList.是否_中债_是.getValue());
 
         //3、返回 子组件对应的页面
         return "report/chb/assetinfodetail/asset/project/SvrBussRepAssetCreditNonstdInfo";

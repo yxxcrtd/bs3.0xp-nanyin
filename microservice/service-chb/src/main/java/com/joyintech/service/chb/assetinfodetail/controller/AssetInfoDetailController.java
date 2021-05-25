@@ -1,6 +1,5 @@
 package com.joyintech.service.chb.assetinfodetail.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;

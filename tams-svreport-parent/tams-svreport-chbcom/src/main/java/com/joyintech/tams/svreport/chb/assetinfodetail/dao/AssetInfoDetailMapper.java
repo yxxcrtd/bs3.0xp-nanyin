@@ -36,6 +36,8 @@ public interface AssetInfoDetailMapper {
 
 	List<AssetInfoDetailDto> selectChbInfoByParam (Map<String,Object> params);
 
+	List<AssetInfoDetailDto> selectReportInfoByParam (Map<String,Object> params);
+
 	AssetInfoDetailDto getAssetInfoDetail (@Param("Assetuuid") String Assetuuid);
 	AssetInfoDetailDto queryAssetInfo (@Param("assetCode") String assetCode);
 
@@ -69,5 +71,7 @@ public interface AssetInfoDetailMapper {
 
     int selectDataCount(@Param("keylist") List<AssetInfoDetailDto> list);
 
+	List<AssetInfoDetailDto> selectKeyListData(@Param("keylist") List<AssetInfoDetailDto> list);
 
+	List<String> selectAssetCode(@Param("keylist") List<AssetInfoDetailDto> list);
 }

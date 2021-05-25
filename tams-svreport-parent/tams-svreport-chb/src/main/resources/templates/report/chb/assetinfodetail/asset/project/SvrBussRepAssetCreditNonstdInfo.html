@@ -77,9 +77,9 @@
                     <label class="layui-form-label form-label-wrap">起息日</label>
                     <div class="layui-input-inline input-inline">
 
-                        <input type="text" th:id="|${entityName}_vdate|"
-                               th:name="|${entityName}.vdate|" required
-                               data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
+                        <input type="text" th:id="|${entityName}_repVdate|"
+                               th:name="|${entityName}.repVdate|" required
+                               data-th-value='${#dates.format(entity?.repVdate,"yyyy-MM-dd")}'
 
                                class="layui-input form-input input-dateSelect" />
                     </div>
@@ -93,9 +93,9 @@
                     <label class="layui-form-label form-label-wrap">到期日</label>
                     <div class="layui-input-inline input-inline">
 
-                        <input type="text" th:id="|${entityName}_mdate|"
-                               th:name="|${entityName}.mdate|" required
-                               data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
+                        <input type="text" th:id="|${entityName}_repMdate|"
+                               th:name="|${entityName}.repMdate|" required
+                               data-th-value='${#dates.format(entity?.repMdate,"yyyy-MM-dd")}'
                                class="layui-input form-input input-dateSelect" />
                     </div>
                 </div>
@@ -935,7 +935,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_repPrivateprdFlag|" th:name="|${entityName}.repPrivateprdFlag|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-value="${SVR_YES_OR_NO_default}"
+                                data-th-value="${entity?.repPrivateprdFlag}"
                                 required="required"
                                 data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
@@ -945,18 +945,18 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repPppflag}">公共PPP</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="checkbox" th:id="|${entityName}_repPppflag|" th:name="|${entityName}.repPppflag|"
-                               lay-skin="switch" data-th-value="${SVR_YES_OR_NO}" lay-text="是|否"
-                               data-th-checked="${SVR_YES_OR_NO} ==${entity?.pppflag}" required="required">
+                        <input type="checkbox" th:id="|${entityName}_pppflag|" th:name="|${entityName}.pppflag|"
+                               lay-skin="switch" data-th-value="${SVR_YES_OR_NO_Y}" lay-text="是|否"
+                               data-th-checked="${SVR_YES_OR_NO_Y} ==${entity?.pppflag}" required="required">
                     </div>
                 </div>
 
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repBondtostockFlag}">是否投向市场化债转股相关产品的部分</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="checkbox" th:id="|${entityName}_repBondtostockFlag|" th:name="|${entityName}.repBondtostockFlag|"
-                               lay-skin="switch" data-th-value="${SVR_YES_OR_NO}" lay-text="是|否"
-                               data-th-checked="${SVR_YES_OR_NO} ==${entity?.repBondtostockFlag}" required>
+                        <input type="checkbox" th:id="|${entityName}_bondtostockFlag|" th:name="|${entityName}.bondtostockFlag|"
+                               lay-skin="switch" data-th-value="${SVR_YES_OR_NO_Y}" lay-text="是|否"
+                               data-th-checked="${SVR_YES_OR_NO_Y} ==${entity?.bondtostockFlag}" required>
                     </div>
                 </div>
 
@@ -967,8 +967,8 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType1}" >新人行一级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repPbcAssetType1|" th:name="|${entityName}.repPbcAssetType1|" th:initValue="${entity?.repPbcAssetType1}"
-                                th:childrenIds="|${entityName}_repPbcAssetType2|"
+                        <select th:id="|${entityName}_pbcAssetType1|" th:name="|${entityName}.pbcAssetType1|" th:initValue="${entity?.pbcAssetType1}"
+                                th:childrenIds="|${entityName}_pbcAssetType2|"
                                 class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_PBC_ASSET_TYPE_1}">
                         </select>
                     </div>
@@ -977,8 +977,8 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType2}" >新人行二级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repPbcAssetType2|" th:name="|${entityName}.repPbcAssetType2|" th:initValue="${entity?.repPbcAssetType2}"
-                                th:childrenIds="|${entityName}_repPbcAssetType3|" th:parentIds="|${entityName}_repPbcAssetType1|"
+                        <select th:id="|${entityName}_pbcAssetType2|" th:name="|${entityName}.pbcAssetType2|" th:initValue="${entity?.pbcAssetType2}"
+                                th:childrenIds="|${entityName}_pbcAssetType3|" th:parentIds="|${entityName}_pbcAssetType1|"
                                 class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_PBC_ASSET_TYPE_2}">
                         </select>
                     </div>
@@ -987,8 +987,8 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType3}" >新人行三级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repPbcAssetType3|" th:name="|${entityName}.repPbcAssetType3|" th:initValue="${entity?.repPbcAssetType3}"
-                                th:parentIds="|${entityName}_repPbcAssetType2|"
+                        <select th:id="|${entityName}_pbcAssetType3|" th:name="|${entityName}.pbcAssetType3|" th:initValue="${entity?.pbcAssetType3}"
+                                th:parentIds="|${entityName}_pbcAssetType2|"
                                 class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_PBC_ASSET_TYPE_3}">
                         </select>
                     </div>

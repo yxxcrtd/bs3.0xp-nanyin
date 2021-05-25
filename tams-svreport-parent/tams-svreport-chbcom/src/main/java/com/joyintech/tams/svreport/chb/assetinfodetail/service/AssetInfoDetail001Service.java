@@ -164,10 +164,23 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 		List<ChbAssetInfo> assetInfo = new ArrayList<>();
 		assetInfo.addAll(dataList);
 		if(!StringUtil.isEmptyList(dataList)){
-			if(CollectionUtils.isNotEmpty(dataList)){
-				assetInfoDetailMapper.insertBatch(assetInfo);
-				return checkResult;
+			List<String> assetCodes = assetInfoDetailMapper.selectAssetCode(dataList);
+			List<ChbAssetInfo> insertList = new ArrayList<>();
+			List<ChbAssetInfo> updateList = new ArrayList<>();
+			dataList.forEach(assetInfoDetailDto -> {
+				if (assetCodes.contains(assetInfoDetailDto.getAssetCode())){
+					updateList.add(assetInfoDetailDto);
+				}else {
+					insertList.add(assetInfoDetailDto);
+				}
+			});
+			if(!StringUtil.isEmptyList(insertList)){
+				assetInfoDetailMapper.insertBatch(insertList);
 			}
+			if(!StringUtil.isEmptyList(updateList)){
+				assetInfoDetailMapper.updateBatch(updateList);
+			}
+			return checkResult;
 		}
 		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),
 				this.getMessage("REPORT_COMMON_FILE_E_0016")));

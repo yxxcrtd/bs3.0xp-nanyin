@@ -167,6 +167,19 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
 
     private Date planEdate;
 
+    /**
+     * 是否掌控计划底层资产详情 01 是/ 02 否
+     */
+    private String isCtrlBottom;
+
+    public String getIsCtrlBottom() {
+        return isCtrlBottom;
+    }
+
+    public void setIsCtrlBottom(String isCtrlBottom) {
+        this.isCtrlBottom = isCtrlBottom;
+    }
+
     public Date getPlanSdate() {
         return planSdate;
     }

@@ -2044,6 +2044,10 @@
         ;end;
     </update>
 
+    <select id="selectReportInfoByParam" resultMap="BaseResultMap">
+
+    </select>
+
     <select id="selectChbInfoByParam"  resultMap="BaseResultMap">
 
         SELECT *
@@ -3053,5 +3057,9 @@
     <select id="selectDataCount" resultType="java.lang.Integer" parameterType="java.util.List">
     </select>
 
+    <select id="selectKeyListData" resultMap="BaseResultMap" parameterType="java.util.List">
+    </select>
 
+    <select id="selectAssetCode" resultType="java.lang.String" parameterType="java.util.List">
+    </select>
 </mapper>

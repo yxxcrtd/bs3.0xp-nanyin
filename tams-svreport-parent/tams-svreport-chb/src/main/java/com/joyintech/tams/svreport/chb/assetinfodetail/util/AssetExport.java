@@ -216,8 +216,7 @@ public class AssetExport {
             int index = sheetCfg.getRowStart();
             // 模板文件最后一行
             Row lastRow = sheet.getRow(sheet.getLastRowNum());
-            for (Object dto : contents) {
-                Map<String, Object> map = BeanUtil.object2Map(dto);
+            for (Map<String, Object> map : contents) {
                 Row row = sheet.getRow(index++ );
                 if (row == null) {
                     handler.copyRow(wb, lastRow, sheet.createRow(index - 1), false);
@@ -382,4 +381,5 @@ public class AssetExport {
 
     protected void beforeCreateExcel(List<Map<String,Object>> contents) {
     }
+
 }

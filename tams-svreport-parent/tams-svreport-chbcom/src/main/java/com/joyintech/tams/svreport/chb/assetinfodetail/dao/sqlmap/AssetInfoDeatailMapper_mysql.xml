@@ -2738,7 +2738,83 @@
         from
         CHB_ASSET_INFO cai
         where
-        cai.STATUS = 'E'
+        cai.status in ('E','M')
+        <foreach collection="keylist" index="index" item="item" open="and (" separator="or" close=")">
+            (
+            cai.ASSET_CODE = #{item.assetCode}
+            )
+        </foreach>
+    </select>
+
+    <select id="selectReportInfoByParam" resultMap="BaseResultMap">
+
+        SELECT '02' dataStatus ,
+        i.*,
+        null   ERRMSG
+        FROM chb_asset_info i
+        WHERE 1=1
+        and i.status in ('E','M')
+        <if test="assetCodes != null and assetCodes.length>0">
+            <foreach collection="assetCodes" item="item" open=" and ASSET_CODE in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="assetTypes != null and assetTypes.length>0">
+            <foreach collection="assetTypes" item="item" open=" and asset_type in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="assetType2s != null and assetType2s.length>0">
+            <foreach collection="assetType2s" item="item" open=" and asset_type2 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orgAssetType1s != null and orgAssetType1s.length>0">
+            <foreach collection="orgAssetType1s" item="item" open=" and org_asset_type1 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orgAssetType2s != null and orgAssetType2s.length>0">
+            <foreach collection="orgAssetType2s" item="item" open=" and org_asset_type2 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="dataStatus != null and dataStatus!='' and !dataStatus.equals('02')">
+            and 1=2
+        </if>
+
+        <if test="Assetuuid != null and Assetuuid!=''">
+            AND ASSET_UUID = #{Assetuuid,jdbcType=VARCHAR}
+        </if>
+
+        and not exists (
+        SELECT 1 FROM CHB_ASSET_INFO_ERRODATA IE WHERE IE.asset_code = i.asset_code
+        )
+
+
+    </select>
+
+    <select id="selectKeyListData" resultMap="BaseResultMap" parameterType="java.util.List">
+        select
+            *
+        from
+            CHB_ASSET_INFO cai
+        where
+        cai.status in ('E','M')
+        <foreach collection="keylist" index="index" item="item" open="and (" separator="or" close=")">
+            (
+            cai.ASSET_CODE = #{item.assetCode}
+            )
+        </foreach>
+    </select>
+
+    <select id="selectAssetCode" resultType="java.lang.String" parameterType="java.util.List">
+        select
+        cai.ASSET_CODE
+        from
+        CHB_ASSET_INFO cai
+        where
+         cai.status in ('E','M')
         <foreach collection="keylist" index="index" item="item" open="and (" separator="or" close=")">
             (
             cai.ASSET_CODE = #{item.assetCode}

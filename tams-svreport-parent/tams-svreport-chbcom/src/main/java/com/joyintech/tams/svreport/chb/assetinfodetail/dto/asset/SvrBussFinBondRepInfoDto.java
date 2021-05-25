@@ -268,6 +268,8 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
    private   String  assetType2;
 
 
+
+
     public String getAssetType2() {
         return assetType2;
     }

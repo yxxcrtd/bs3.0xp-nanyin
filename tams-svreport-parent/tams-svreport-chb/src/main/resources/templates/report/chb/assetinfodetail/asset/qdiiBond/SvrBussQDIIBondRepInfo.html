@@ -73,9 +73,10 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussQDIIBondRepInfo.industry}">发行机构所属一级行业</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industry|" th:name="|${entityName}.industry|"
+                        <select id="industry" th:name="|${entityName}.industry|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
                                 th:initValue="${entity?.industry}"
+                                childrenIds = "industryLevel2"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
@@ -86,8 +87,9 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussQDIIBondRepInfo.industryLevel2}">发行机构所属二级行业</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industryLevel2|" th:name="|${entityName}.industryLevel2|"
+                        <select id="industryLevel2" th:name="|${entityName}.industryLevel2|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
+                                parentIds = "industry"
                                 th:initValue="${entity?.industryLevel2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>

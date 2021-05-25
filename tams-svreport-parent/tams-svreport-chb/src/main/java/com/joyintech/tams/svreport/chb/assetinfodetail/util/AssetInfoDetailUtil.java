@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -998,8 +999,8 @@ public class AssetInfoDetailUtil {
         tempCheckResult.add(excelValidDto);
         List<List<String>> tempDataList;
         try {
-            tempDataList = ExcelUtil.readToList(
-                    FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
+            tempDataList =  ExcelUtil.readToList(
+                    new File(fileName), 0);
         }
         catch (FileNotFoundException e) {
             logger.error(e.getMessage(),e);

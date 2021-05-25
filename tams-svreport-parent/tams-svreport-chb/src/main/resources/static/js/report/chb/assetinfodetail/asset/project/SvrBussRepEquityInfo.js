@@ -47,7 +47,7 @@
             if($("#svrBussRepEquityInfoDto_sharesType").val()!='02'){
                 $("#svrBussRepEquityInfoDto_bankSecPrefer").val('').attr("disabled",true).trigger("change");
             }else{
-                $("#svrBussRepEquityInfoDto_bankSecPrefer").attr("disabled",false)
+                $("#svrBussRepEquityInfoDto_bankSecPrefer").val('02').attr("disabled",false).trigger("change");
             }
         }
 
