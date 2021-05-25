@@ -3,21 +3,24 @@ package com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.service;
 import cn.hutool.json.JSONUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfoDetailWithBLOBs;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.report.system.chbprd.dao.ChbPrdBaseinfo001Mapper;
+import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper;
+import com.joyintech.tams.svreport.chb.monthreport.dto.*;
+import com.joyintech.tams.svreport.chb.monthreport.service.MonthReportServiceUtil;
 import com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dao.ChbPeriodicMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.*;
 import com.joyintech.tams.svreport.chbreport.investreport.common.service.ChbInvestReportCommonService;
 import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportConstant;
 import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportUtil;
 import com.joyintech.tams.svreport.chbreport.investreport.utils.WordBatchUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,6 +57,10 @@ public class ChbPeriodicService {
     private ChbPrdBaseinfo001Mapper chbPrdBaseinfo001Mapper;
     @Autowired
     private ChbPrdBaseinfoDetailMapper chbPrdBaseinfoDetailMapper;
+    @Autowired
+    private ChbMonthAssetPositionMapper chbMonthAssetPositionMapper;
+    @Autowired
+    private MonthReportServiceUtil monthReportServiceUtil;
 
     /**
      * 导出公告
@@ -128,6 +138,13 @@ public class ChbPeriodicService {
         return null;
     }
 
+    private void formatBigDecimal() {
+        ChbInvestReportConstant.df1.setRoundingMode(RoundingMode.HALF_UP);
+        ChbInvestReportConstant.df2.setRoundingMode(RoundingMode.HALF_UP);
+        ChbInvestReportConstant.df3.setRoundingMode(RoundingMode.HALF_UP);
+        ChbInvestReportConstant.df4.setRoundingMode(RoundingMode.HALF_UP);
+    }
+
     /**
      * 创建定期报告
      *
@@ -137,6 +154,7 @@ public class ChbPeriodicService {
      * @throws Exception
      */
     public File createDoc(Map<String, Object> map, String reportName) throws Exception {
+        formatBigDecimal();
         String srcFilePath = ChbInvestReportUtil.getFtlPath();
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         List<String> titleList = new ArrayList<String>();
@@ -913,8 +931,8 @@ public class ChbPeriodicService {
                 BigDecimal increaseRateOfCumulativeValue = (qmDto.getUnitValueT().subtract(qcUnitValueT))
                         .divide(qcUnitValueT, 20, BigDecimal.ROUND_FLOOR)
                         .divide(new BigDecimal(DateUtil.getBetweenDayNumber(qcDto.getValueDate(), qmDto.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
-                        .multiply(new BigDecimal(36500));
-                value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(increaseRateOfCumulativeValue));
+                        .multiply(new BigDecimal(365));
+                value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(increaseRateOfCumulativeValue.abs()));
             } else {
                 value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(BigDecimal.ZERO));
             }
@@ -935,7 +953,7 @@ public class ChbPeriodicService {
             if (Objects.isNull(qmDto.getValuePercent()) || BigDecimal.ZERO.compareTo(qmDto.getValuePercent()) == 0) {
                 value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.df3.format(BigDecimal.ZERO));
             } else {
-                value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.df3.format(qmDto.getValuePercent()));
+                value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.df3.format(qmDto.getValuePercent().abs()));
             }
         }
         // 期末份额总数
@@ -953,4 +971,5 @@ public class ChbPeriodicService {
 
         return value;
     }
+
 }

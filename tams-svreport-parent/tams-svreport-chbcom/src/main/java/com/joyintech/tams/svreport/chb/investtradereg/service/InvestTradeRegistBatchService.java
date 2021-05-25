@@ -679,20 +679,21 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 		genDto.setEndRate(dto.getEndRate() != null ? dto.getEndRate().setScale(14) : null);
 		genDto.setContractCode(dto.getContractCode());
 		genDto.setRemark(dto.getRemark());
-		genDto.setChlCpctId(dto.getChlCpctId());
-		genDto.setTradeType(dto.getTradeType());
-		genDto.setChlAgrtName(dto.getChlAgrtName());
-		genDto.setFeeId(dto.getFeeId());
-		genDto.setFeeName(dto.getFeeName());
-		genDto.setFeeType(dto.getFeeType());
-		genDto.setFeeSectype(dto.getFeeSectype());
-		genDto.setOrgCode(dto.getOrgCode());
-		genDto.setDeleteRes(dto.getDeleteRes());
-		genDto.setDataSource(dto.getDataSource());
+		//modify by lingxiaoqing on 20210525 不是业务数据不参与比较
+//		genDto.setChlCpctId(dto.getChlCpctId());
+//		genDto.setTradeType(dto.getTradeType());
+//		genDto.setChlAgrtName(dto.getChlAgrtName());
+//		genDto.setFeeId(dto.getFeeId());
+//		genDto.setFeeName(dto.getFeeName());
+//		genDto.setFeeType(dto.getFeeType());
+//		genDto.setFeeSectype(dto.getFeeSectype());
+//		genDto.setOrgCode(dto.getOrgCode());
+//		genDto.setDeleteRes(dto.getDeleteRes());
+//		genDto.setDataSource(dto.getDataSource());
 		// modify by zhangliang 20201205 交易登记日（取跑批日）不是业务数据不参与比较
 		//genDto.setDealRegistDate(dto.getDealRegistDate());
-		genDto.setIsAssetSub(dto.getIsAssetSub());
-		genDto.setRefTradeseqno(dto.getRefTradeseqno());
+//		genDto.setIsAssetSub(dto.getIsAssetSub());
+//		genDto.setRefTradeseqno(dto.getRefTradeseqno());
 		genDto.setNum(dto.getNum() != null ? dto.getNum().setScale(5) : null);
 		genDto.setAssetMethod(dto.getAssetMethod());
 		genDto.setRivalPartyType(dto.getRivalPartyType());
