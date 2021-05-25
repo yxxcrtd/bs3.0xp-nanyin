@@ -947,7 +947,7 @@ public class AssetInfoDetailUtil {
             dto.setAssetYield(new BigDecimal(list.get(9)));
         }
         dto.setBasis(SysDataUtil.getZZDictCodeFromName(DictCode.计息基础_中债, list.get(10)));
-        dto.setTargetType1(SysDataUtil.getZZDictCodeFromName(DictCode.回购标的类型, list.get(11)));
+        dto.setTargetType1(SysDataUtil.getZZDictCodeFromName(DictCode.回购标的类别, list.get(11)));
         if (StringUtil.isNotEmpty(list.get(12))) {
             dto.setTargetAmt(new BigDecimal(list.get(12)));
         }
