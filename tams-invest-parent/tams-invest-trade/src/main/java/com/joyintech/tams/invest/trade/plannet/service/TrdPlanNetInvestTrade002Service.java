@@ -663,7 +663,7 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
             ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
             ptlTrade.setSettleDate(dto.getSettleDate());
             ptlTrades.add(ptlTrade);
-        }else if (!dto.getPortfolioId().equals(dto.getActPortfolioId())) {
+        }else{
             // 组合交易表
             PtlTrade ptlTrade1 = new PtlTrade();
             ptlTrade1.setPortfolioId(dto.getActPortfolioId());
