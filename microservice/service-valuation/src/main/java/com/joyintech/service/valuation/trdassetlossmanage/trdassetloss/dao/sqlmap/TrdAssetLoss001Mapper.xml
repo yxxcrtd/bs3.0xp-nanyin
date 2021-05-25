@@ -11,7 +11,8 @@
 			TRD_ASSET_LOSS.LOSS_TEST_TYPE lossTestType, /** 减值测算方式 **/
 			Fin_Product.Vdate vDate,  					/** 资产起息日 **/
 			Fin_Product.Mdate mDate, 					/** 资产到期日 **/
-
+			Fin_Product.finprod_id realFinprodId,
+			Fin_Product.Finprod_Type,
 			TRD_ASSET_LOSS.STR_DATE strDate , 			/** 日期起始日 **/
 			TRD_ASSET_LOSS.END_DATE endDate , 			/** 日期截止日 **/
 			TRD_ASSET_LOSS.Peroid peroid , 				/** 待偿期(年) **/
@@ -66,14 +67,18 @@
 		Fin_Product.Finprod_Abbr text,
 		Fin_Product.FINPROD_TYPE ,
 		Fin_Product.Vdate ,
-		Fin_Product.Mdate
+		Fin_Product.Mdate ,
+		Fin_Product.finprod_id
 		from Fin_Product /** 标的类金融产品 **/
 		<include refid="getfinprodIdForAddWhere"></include>
 	</select>
 	<sql id="getfinprodIdForAddWhere">
 		<where>
-			(Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
-			OR (Fin_Product.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02})))
+<!-- 			估值不接入finprod_type2，使用finprod_type做判断 -->
+	     	(Fin_Product.Finprod_Type in (#{TYPE_GUZHI_F01},#{TYPE_GUZHI_F07})
+			OR (Fin_Product.Finprod_Type = #{TYPE_GUZHI_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02})))
+<!-- 			(Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
+			OR (Fin_Product.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02}))) -->
 			/**Fin_Product.Profit_Type in ('02')  收益类型_收益型 **/
 			/**AND Fin_Product.FINPROD_TYPE in ('F01','F07','F17')  (金融产品类型_债券,金融产品类型_存款,金融产品类型_计划类资产) **/
 			<if test="search != null and !search.equals('')">
