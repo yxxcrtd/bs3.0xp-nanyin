@@ -7,7 +7,10 @@
 		FROM
 		FIN_PRODUCT
 		<where>
-			FINPROD_TYPE2 IN ('F01','F07','F17','F18')
+			<!--modify by wujie on 20210525 start
+			FINPROD_TYPE2 IN ('F01','F07','F17','F18')-->
+			FINPROD_TYPE IN ('F01','F17','F07','F21')
+			<!--modify by wujie on 20210525 end -->
 			AND FINPROD_MARKET_ID IS NOT NULL
 			<if test="search != null and search != ''">
 				and (instr(FINPROD_MARKET_ID, #{search}) > 0 or instr(FINPROD_ABBR,#{search}) > 0 or
