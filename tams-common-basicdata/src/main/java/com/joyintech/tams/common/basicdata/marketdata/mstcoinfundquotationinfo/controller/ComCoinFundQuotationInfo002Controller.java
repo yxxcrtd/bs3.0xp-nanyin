@@ -37,6 +37,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -67,6 +68,7 @@ public class ComCoinFundQuotationInfo002Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
+    	this.setSelectOptionToModel(model, DictCode.基金类型);
         String finprodMarketId = getParam("finprodMarketId");
         // 判断是否存在于留痕表
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
