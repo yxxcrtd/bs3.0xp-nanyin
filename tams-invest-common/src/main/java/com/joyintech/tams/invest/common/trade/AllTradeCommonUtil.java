@@ -128,22 +128,22 @@ public class AllTradeCommonUtil {
             autoGenerateReverseDeal(inputDto);
         }
         // 自动生成反向交易 chenzhili end
-        boolean 子组合调用了接口 = false;
-        if (inputDto.getTrdProductDealAdd() != null) {
-            String 原组合代码 = inputDto.getTrdProductDealAdd().getPortfolioId();
-            if (StringUtil.isNotEmpty(inputDto.getActPortfolioId()) && !inputDto.getActPortfolioId().equals(原组合代码)) {
-                inputDto.getTrdProductDealAdd().setPortfolioId(inputDto.getActPortfolioId());
-                inputDto.setProdid(inputDto.getActPortfolioId());
-                调用估值接口(inputDto); // 子组合调用估值接口
-                inputDto.getTrdProductDealAdd().setPortfolioId(原组合代码);
-                inputDto.setProdid(原组合代码);
-                子组合调用了接口 = true;
-            }
-        }
+//        boolean 子组合调用了接口 = false;
+//        if (inputDto.getTrdProductDealAdd() != null) {
+//            String 原组合代码 = inputDto.getTrdProductDealAdd().getPortfolioId();
+//            if (StringUtil.isNotEmpty(inputDto.getActPortfolioId()) && !inputDto.getActPortfolioId().equals(原组合代码)) {
+//                inputDto.getTrdProductDealAdd().setPortfolioId(inputDto.getActPortfolioId());
+//                inputDto.setProdid(inputDto.getActPortfolioId());
+//                调用估值接口(inputDto); // 子组合调用估值接口
+//                inputDto.getTrdProductDealAdd().setPortfolioId(原组合代码);
+//                inputDto.setProdid(原组合代码);
+//                子组合调用了接口 = true;
+//            }
+//        }
         // 子组合交易时，母组合不需要调接口
-        if (!子组合调用了接口) {
-            调用估值接口(inputDto);
-        }
+//        if (!子组合调用了接口) {
+//            调用估值接口(inputDto);
+//        }
         // }
         // catch (Exception e) {
         // logger.error("接口调用失败", e);
