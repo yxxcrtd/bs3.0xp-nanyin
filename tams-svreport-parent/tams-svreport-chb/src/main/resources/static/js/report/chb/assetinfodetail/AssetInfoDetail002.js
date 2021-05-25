@@ -163,6 +163,7 @@ var QueryFunc=function(){
             }
         }else if(obj["04"].indexOf(repAssetType)>=0){
             $("#svrBussRepAssetCreditNonstdInfoDto_repChose").val('无');
+            $("#svrBussRepAssetCreditNonstdInfoDto_repPrivateprdFlag").val('02').trigger("change");
             //非标准化债权类资产/信贷资产流转项目
             if(repAssetType=='2201'||repAssetType=='2202'){
                 //份额面值置灰不可填

@@ -36,7 +36,7 @@
                         <select th:id="|${entityName}_repSectype|" th:name="|${entityName}.repSectype|"
                                 data-th-data-result="${SVR_SEC_DETAIL_TYPE}" th:initValue="${entity?.repSectype}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required>
+                                data-th-placeholder="#{SysCommon.placeholder}">
                         </select>
                     </div>
                 </div>
@@ -196,8 +196,8 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{BussFinBondRepInfo.bankCapital}">银行资本补充工具</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repBankCapital|" th:name="|${entityName}.repBankCapital|"
-                                th:initValue="${entity?.repBankCapital}"
+                        <select th:id="|${entityName}_bankCapital|" th:name="|${entityName}.bankCapital|"
+                                th:initValue="${entity?.bankCapital}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${BANK_CAPITAL_TOOL}">

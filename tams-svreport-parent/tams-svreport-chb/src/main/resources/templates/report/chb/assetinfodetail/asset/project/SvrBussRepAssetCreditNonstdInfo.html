@@ -34,8 +34,7 @@
                 </div>
 
                 <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-text="#{SvrBussRepAssetCreditNonstdInfo.creditOrgName}">名称</label>
+                    <label class="layui-form-label form-label-wrap">名称</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_repAssetName|" th:name="|${entityName}.repAssetName|"
                                data-th-value="${entity?.repAssetName}"
@@ -935,7 +934,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_repPrivateprdFlag|" th:name="|${entityName}.repPrivateprdFlag|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-value="${entity?.repPrivateprdFlag}"
+                                th:initValue="${entity?.repPrivateprdFlag}"
                                 required="required"
                                 data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
