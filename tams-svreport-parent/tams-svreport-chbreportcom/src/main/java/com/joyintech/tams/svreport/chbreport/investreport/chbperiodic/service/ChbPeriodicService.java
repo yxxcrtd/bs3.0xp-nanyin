@@ -1,11 +1,10 @@
 package com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.service;
 
+import cn.hutool.json.JSONUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper;
-import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfoDetailWithBLOBs;
 import com.joyintech.tams.constant.DictCode;
@@ -72,7 +71,8 @@ public class ChbPeriodicService {
         }
         ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfos.get(0);
         map.put("chbPrdBaseinfo", chbPrdBaseinfo);
-        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid((String) map.get("prodId"));
+        String fprodId = (String) map.get("prodId");
+        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid(fprodId);
         map.put("chbPrdBaseinfoDetailList", chbPrdBaseinfoDetailList);
 
         this.createData(reportName, map, mapList, titleList);
@@ -147,7 +147,8 @@ public class ChbPeriodicService {
         }
         ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfos.get(0);
         map.put("chbPrdBaseinfo", chbPrdBaseinfo);
-        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid((String) map.get("prodId"));
+        String fprodId = (String) map.get("prodId");
+        List<ChbPrdBaseinfoDetailWithBLOBs> chbPrdBaseinfoDetailList = chbPrdBaseinfoDetailMapper.selectByFprodid(fprodId);
         map.put("chbPrdBaseinfoDetailList", chbPrdBaseinfoDetailList);
         if (chbPrdBaseinfo != null) {
             prodType = chbPrdBaseinfo.getProdtype();
@@ -430,8 +431,8 @@ public class ChbPeriodicService {
                         item.setSurplusTerm(ChbInvestReportConstant.无);
                     } else {
                         item.setSurplusTerm(String.valueOf(
-                                ChbInvestReportUtil.getBetweenDayNumber(DateUtil.parse(DateUtil.format(item.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN)),
-                                        DateUtil.parse(dealdateFmt))));
+                                ChbInvestReportUtil.getBetweenDayNumber(DateUtil.parse(dealdateFmt),
+                                        DateUtil.parse(DateUtil.format(item.getMdate(), DateUtil.DEFAULT_DATE_FORMAT_EN)))));
                     }
                 } else {
                     item.setSurplusTerm(ChbInvestReportConstant.无);
@@ -471,23 +472,27 @@ public class ChbPeriodicService {
             bonusList.add(chbPeriodicBonus);
             return bonusList;
         }
-        ChbPeriodicBonus chbPeriodicBonus = new ChbPeriodicBonus();
+        logger.debug("dealBonusValue: List<ChbPeriodicBonusDeal> list=" + JSONUtil.toJsonStr(list));
+        ChbPeriodicBonus chbPeriodicBonus = null;
         if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), chbPrdBaseinfo.getProdtype())) {
             for (ChbPeriodicBonusDeal deal : list) {
+                chbPeriodicBonus = new ChbPeriodicBonus();
                 if (Objects.isNull(deal.getRegDate())) {
                     chbPeriodicBonus.setRegDate(ChbInvestReportConstant.横线);
                 } else {
                     chbPeriodicBonus.setRegDate(DateUtil.format(deal.getRegDate()));
                 }
-                if (Objects.isNull(deal.getTradeAmt()) || BigDecimal.ZERO.compareTo(deal.getTradeAmt()) == 0) {
+                if (isNullOrZero(deal.getTradeAmt())) {
                     chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.横线);
                 } else {
-                    chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.df1.format(deal.getTradeAmt()));
+                    chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.df1.format(
+                            deal.getTradeAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000))));
                 }
-                if (Objects.isNull(deal.getIntAmt()) || BigDecimal.ZERO.compareTo(deal.getIntAmt()) == 0) {
+                if (isNullOrZero(deal.getIntAmt())) {
                     chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.横线);
                 } else {
-                    chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.df1.format(deal.getIntAmt()));
+                    chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.df1.format(
+                            deal.getIntAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000))));
                 }
                 bonusList.add(chbPeriodicBonus);
             }
@@ -495,29 +500,34 @@ public class ChbPeriodicService {
             BigDecimal totalTradeAmt = new BigDecimal("0");
             BigDecimal totalIntAmt = new BigDecimal("0");
             for (ChbPeriodicBonusDeal deal : list) {
-                totalTradeAmt.add(deal.getTradeAmt());
-                totalIntAmt.add(deal.getIntAmt());
+                if (!isNullOrZero(deal.getRegTradeQty())) {
+                    totalTradeAmt.add(deal.getTradeAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000)));
+                    totalIntAmt.add(deal.getIntAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000)));
+                }
             }
+            chbPeriodicBonus = new ChbPeriodicBonus();
             if (Objects.isNull(list.get(0).getRegDate())) {
                 chbPeriodicBonus.setRegDate(ChbInvestReportConstant.横线);
             } else {
                 chbPeriodicBonus.setRegDate(params.get("startReportDateFmt") + ChbInvestReportConstant.横线 + params.get("endReportDateFmt"));
             }
-            if (Objects.isNull(list.get(0).getRegTradeQty()) || BigDecimal.ZERO.compareTo(list.get(0).getRegTradeQty()) == 0
-                    || BigDecimal.ZERO.compareTo(totalTradeAmt) == 0) {
+            if (BigDecimal.ZERO.compareTo(totalTradeAmt) == 0) {
                 chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.横线);
             } else {
-                chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.df1.format(totalTradeAmt.divide(list.get(0).getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(1000))));
+                chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.df1.format(totalTradeAmt));
             }
-            if (Objects.isNull(list.get(0).getRegTradeQty()) || BigDecimal.ZERO.compareTo(list.get(0).getRegTradeQty()) == 0
-                    || BigDecimal.ZERO.compareTo(totalIntAmt) == 0) {
+            if (BigDecimal.ZERO.compareTo(totalIntAmt) == 0) {
                 chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.横线);
             } else {
-                chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.df1.format(totalIntAmt.divide(list.get(0).getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(1000))));
+                chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.df1.format(totalIntAmt));
             }
             bonusList.add(chbPeriodicBonus);
         }
         return bonusList;
+    }
+
+    private boolean isNullOrZero(BigDecimal decimal) {
+        return (Objects.isNull(decimal) || BigDecimal.ZERO.compareTo(decimal) == 0);
     }
 
     /**
@@ -576,7 +586,6 @@ public class ChbPeriodicService {
      */
     private ChbPeriodicIndex qryQcPeriodicIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.putAll(params);
         // 若产品起息日>=本次报告开始日，则取产品起息日
         if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
                 || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
@@ -584,6 +593,9 @@ public class ChbPeriodicService {
         } else {
             map.put("qryDate", DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1));
         }
+        map.put("startReportDate", map.get("qryDate"));
+        map.put("endReportDate", params.get("endReportDate"));
+        map.put("prodId", params.get("prodId"));
         return qryPeriodicIndexHandler(map);
     }
 
@@ -595,7 +607,6 @@ public class ChbPeriodicService {
      */
     private List<ChbPeriodicIndex> qryQcPeriodicDetailIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.putAll(params);
         // 若产品起息日>=本次报告开始日，则取产品起息日
         if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
                 || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
@@ -603,6 +614,9 @@ public class ChbPeriodicService {
         } else {
             map.put("qryDate", DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1));
         }
+        map.put("startReportDate", map.get("qryDate"));
+        map.put("endReportDate", params.get("endReportDate"));
+        map.put("prodId", params.get("prodId"));
         return qryPeriodicIndexDetailHandler(map);
     }
 
@@ -614,8 +628,16 @@ public class ChbPeriodicService {
      */
     private ChbPeriodicIndex qryQmPeriodicIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
+        // 本期净值收益率计算 R1为期初每万份收益
+        if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
+                || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
+            map.put("startReportDate", params.get("vdate"));
+        } else {
+            map.put("startReportDate", DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1));
+        }
         map.put("qryDate", params.get("endReportDate"));
-        map.putAll(params);
+        map.put("endReportDate", params.get("endReportDate"));
+        map.put("prodId", params.get("prodId"));
         return qryPeriodicIndexHandler(map);
     }
 
@@ -627,8 +649,16 @@ public class ChbPeriodicService {
      */
     private List<ChbPeriodicIndex> qryQmPeriodicDetailIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.putAll(params);
+        // 本期净值收益率计算 R1为期初每万份收益
+        if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
+                || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
+            map.put("startReportDate", params.get("vdate"));
+        } else {
+            map.put("startReportDate", DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1));
+        }
         map.put("qryDate", params.get("endReportDate"));
+        map.put("endReportDate", params.get("endReportDate"));
+        map.put("prodId", params.get("prodId"));
         return qryPeriodicIndexDetailHandler(map);
     }
 
@@ -742,12 +772,12 @@ public class ChbPeriodicService {
         if (StringUtil.isNotEmpty(chbPeriodicPrdInfo.getRiskLevel()) && StringUtil.isNotEmpty(chbPeriodicPrdInfo.getOperateMode())) {
             if ((StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())
                     || StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue()))
-                    && (StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.募集方式_中债_公募.getValue())
-                    || StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.募集方式_中债_私募.getValue()))) {
+                    && (StringUtil.equals(chbPeriodicPrdInfo.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())
+                    || StringUtil.equals(chbPeriodicPrdInfo.getRaiseType(), DictCodeListExt2.募集方式_中债_私募.getValue()))) {
                 chbPeriodicPrdInfo.setLeverUpperLimitFmt("200%");
             } else if ((StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_开放式净值型.getValue())
                     || StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue()))
-                    && StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.募集方式_中债_公募.getValue())) {
+                    && StringUtil.equals(chbPeriodicPrdInfo.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())) {
                 chbPeriodicPrdInfo.setLeverUpperLimitFmt("140%");
             }
         } else {
@@ -803,9 +833,9 @@ public class ChbPeriodicService {
             }
             // 期初份额总数
             value.setTotalValueQC(ChbInvestReportConstant.横线);
-            // 期初累计净值
-            value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
             // 期初资产净值
+            value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
+            // 期初累计净值
             value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
         } else {
             if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
@@ -817,9 +847,9 @@ public class ChbPeriodicService {
                 }
                 // 期初累计净值
                 if (Objects.isNull(qcDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qcDto.getUnitValueT()) == 0) {
-                    value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
+                    value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
                 } else {
-                    value.setAssetUnitValueQC(ChbInvestReportConstant.df1.format(qcDto.getUnitValueT()));
+                    value.setAssetTotalValueQC(ChbInvestReportConstant.df1.format(qcDto.getUnitValueT()));
                 }
             } else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
                 // 期初份额净值
@@ -832,9 +862,9 @@ public class ChbPeriodicService {
                 // 期初累计净值
                 if (Objects.isNull(qcDto.getYield7()) || BigDecimal.ZERO.compareTo(qcDto.getYield7()) == 0
                         || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
-                    value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
+                    value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
                 } else {
-                    value.setAssetUnitValueQC(ChbInvestReportConstant.df1.format(qcDto.getYield7()));
+                    value.setAssetTotalValueQC(ChbInvestReportConstant.df1.format(qcDto.getYield7()));
                 }
             }
             // 期初份额总数
@@ -846,9 +876,9 @@ public class ChbPeriodicService {
             // 期初资产净值
             if (Objects.isNull(qcDto.getAssetValueMarket()) || BigDecimal.ZERO.compareTo(qcDto.getAssetValueMarket()) == 0
                     || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
-                value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
+                value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
             } else {
-                value.setAssetTotalValueQC(ChbInvestReportConstant.df2.format(qcDto.getAssetValueMarket()));
+                value.setAssetUnitValueQC(ChbInvestReportConstant.df2.format(qcDto.getAssetValueMarket()));
             }
         }
 
@@ -861,59 +891,64 @@ public class ChbPeriodicService {
         if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
             // 期末份额净值
             if (Objects.isNull(qmDto.getUnitValue()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValue()) == 0) {
-                value.setUnitValue(ChbInvestReportConstant.横线);
+                value.setUnitValue(ChbInvestReportConstant.df1.format(BigDecimal.ZERO));
             } else {
                 value.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValue()));
             }
             // 期末累计净值
             if (Objects.isNull(qmDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValueT()) == 0) {
-                value.setAssetUnitValue(ChbInvestReportConstant.横线);
+                value.setAssetTotalValue(ChbInvestReportConstant.df1.format(BigDecimal.ZERO));
             } else {
-                value.setAssetUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
+                value.setAssetTotalValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
             }
             // 期间累计净值增长率
-            if (!Objects.isNull(qmDto.getAssetValueMarket()) && !Objects.isNull(qcDto.getAssetValueMarket())
-                    && BigDecimal.ZERO.compareTo(qcDto.getAssetValueMarket()) == 0) {
-                BigDecimal increaseRateOfCumulativeValue = ((new BigDecimal(value.getAssetTotalValue()))
-                        .subtract(new BigDecimal(value.getAssetTotalValue())))
-                        .divide(new BigDecimal(value.getAssetTotalValue()), 20, BigDecimal.ROUND_FLOOR)
-                        .divide(new BigDecimal(DateUtil.getBetweenDayNumber(value.getValueDate(), value.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
+            // 期初累计净值 默认取1
+            BigDecimal qcUnitValueT = null;
+            if (isNullOrZero(qcDto.getUnitValueT())) {
+                qcUnitValueT = new BigDecimal("1");
+            } else {
+                qcUnitValueT = qcDto.getUnitValueT();
+            }
+            if (!Objects.isNull(qmDto.getUnitValueT())) {
+                BigDecimal increaseRateOfCumulativeValue = (qmDto.getUnitValueT().subtract(qcUnitValueT))
+                        .divide(qcUnitValueT)
+                        .divide(new BigDecimal(DateUtil.getBetweenDayNumber(qcDto.getValueDate(), qmDto.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
                         .multiply(new BigDecimal(36500));
                 value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(increaseRateOfCumulativeValue));
             } else {
-                value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.横线);
+                value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(BigDecimal.ZERO));
             }
         } else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
             // 期末份额净值
-            if (Objects.isNull(qmDto.getUnitValue()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValue()) == 0) {
-                value.setUnitValue(ChbInvestReportConstant.横线);
+            if (Objects.isNull(qmDto.getwYield()) || BigDecimal.ZERO.compareTo(qmDto.getwYield()) == 0) {
+                value.setUnitValue(ChbInvestReportConstant.df1.format(BigDecimal.ZERO));
             } else {
-                value.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValue()));
+                value.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getwYield()));
             }
             // 期末累计净值
-            if (Objects.isNull(qmDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValueT()) == 0) {
-                value.setAssetUnitValue(ChbInvestReportConstant.横线);
+            if (Objects.isNull(qmDto.getYield7()) || BigDecimal.ZERO.compareTo(qmDto.getYield7()) == 0) {
+                value.setAssetTotalValue(ChbInvestReportConstant.df4.format(BigDecimal.ZERO));
             } else {
-                value.setAssetUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
+                value.setAssetTotalValue(ChbInvestReportConstant.df4.format(qmDto.getYield7()));
             }
             // 本期净值收益率
             if (Objects.isNull(qmDto.getValuePercent()) || BigDecimal.ZERO.compareTo(qmDto.getValuePercent()) == 0) {
-                value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.横线);
+                value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.df3.format(BigDecimal.ZERO));
             } else {
                 value.setIncreaseRateOfCurrentValue(ChbInvestReportConstant.df3.format(qmDto.getValuePercent()));
             }
         }
         // 期末份额总数
         if (Objects.isNull(qmDto.getCapital()) || BigDecimal.ZERO.compareTo(qmDto.getCapital()) == 0) {
-            value.setTotalValue(ChbInvestReportConstant.横线);
+            value.setTotalValue(ChbInvestReportConstant.df2.format(BigDecimal.ZERO));
         } else {
             value.setTotalValue(ChbInvestReportConstant.df2.format(qmDto.getCapital()));
         }
         // 期末资产净值
         if (Objects.isNull(qmDto.getAssetValueMarket()) || BigDecimal.ZERO.compareTo(qmDto.getAssetValueMarket()) == 0) {
-            value.setAssetTotalValue(ChbInvestReportConstant.横线);
+            value.setAssetUnitValue(ChbInvestReportConstant.df2.format(BigDecimal.ZERO));
         } else {
-            value.setAssetTotalValue(ChbInvestReportConstant.df2.format(qmDto.getAssetValueMarket()));
+            value.setAssetUnitValue(ChbInvestReportConstant.df2.format(qmDto.getAssetValueMarket()));
         }
 
         return value;

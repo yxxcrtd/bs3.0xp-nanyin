@@ -988,558 +988,522 @@
                             <w:t>净值、存续规模及收益表现</w:t>
                         </w:r>
                     </w:p>
-                    <#list valueList as value>
-                        <w:p w:rsidR="006D32B6" w:rsidRDefault="006D32B6">
-                            <w:pPr>
-                                <w:pStyle w:val="dqbgyjbt"/>
-                                <w:jc w:val="both"/>
-                                <w:rPr>
-                                    <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/>
-                                </w:rPr>
-                            </w:pPr>
-                            <w:r>
-                                <w:rPr>
-                                    <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                    <w:color w:val="000000"/>
-                                    <w:sz w:val="21"/>
-                                    <w:szCs w:val="21"/>
-                                </w:rPr>
-                                <w:t>${value.prodName!}</w:t>
-                            </w:r>
-                        </w:p>
-                        <w:tbl>
-                            <w:tblPr>
-                                <w:tblW w:w="0" w:type="auto"/>
-                                <w:tblInd w:w="-106" w:type="dxa"/>
-                                <w:tblBorders>
-                                    <w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-                                    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-                                    <w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-                                    <w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-                                </w:tblBorders>
-                                <w:tblLayout w:type="fixed"/>
-                                <w:tblLook w:val="0000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0"
-                                           w:noHBand="0" w:noVBand="0"/>
-                            </w:tblPr>
-                            <w:tblGrid>
-                                <w:gridCol w:w="1311"/>
-                                <w:gridCol w:w="1125"/>
-                                <w:gridCol w:w="1755"/>
-                                <w:gridCol w:w="1095"/>
-                                <w:gridCol w:w="1815"/>
-                                <w:gridCol w:w="1309"/>
-                            </w:tblGrid>
-                            <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1311" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:b/>
-                                                <w:bCs/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>估值日期</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1125" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:b/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>每万份收益（元）</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1755" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:b/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>份额总数（份）</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1095" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:b/>
-                                                <w:bCs/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>7</w:t>
-                                        </w:r>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:b/>
-                                                <w:bCs/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>日年化收益率</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1815" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:b/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>资产净值（元）</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1309" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:b/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:b/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>本期净值收益率</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                            </w:tr>
-                            <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1311" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.valueDate!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1125" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.unitValue!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1755" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.totalValue!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1095" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="00771650">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:ascii="宋体" w:eastAsia="宋体" w:hAnsi="宋体" w:cs="微软简仿宋"
-                                                          w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.assetTotalValue!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1815" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="00771650">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:ascii="宋体" w:eastAsia="宋体" w:hAnsi="宋体" w:cs="微软简仿宋"
-                                                          w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.assetUnitValue!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1309" w:type="dxa"/>
-                                        <w:vMerge w:val="restart"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:ascii="宋体" w:eastAsia="宋体" w:hAnsi="宋体" w:cs="微软简仿宋"
-                                                          w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.increaseRateOfCurrentValue!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                            </w:tr>
-                            <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1125" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.valueDateQC!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1755" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.unitValueQC!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1095" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.totalValueQC!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1815" w:type="dxa"/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.assetTotalValueQC!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1309" w:type="dxa"/>
-                                        <w:vMerge/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                        <w:r w:rsidRPr="006D32B6">
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                            <w:t>${value.assetUnitValueQC!}</w:t>
-                                        </w:r>
-                                    </w:p>
-                                </w:tc>
-                                <w:tc>
-                                    <w:tcPr>
-                                        <w:tcW w:w="1309" w:type="dxa"/>
-                                        <w:vMerge/>
-                                        <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-                                        <w:vAlign w:val="center"/>
-                                    </w:tcPr>
-                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
-                                        <w:pPr>
-                                            <w:pStyle w:val="dqbgbnwz"/>
-                                            <w:rPr>
-                                                <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                                <w:color w:val="000000"/>
-                                                <w:sz w:val="21"/>
-                                                <w:szCs w:val="21"/>
-                                            </w:rPr>
-                                        </w:pPr>
-                                    </w:p>
-                                </w:tc>
-                            </w:tr>
-                        </w:tbl>
-                    </#list>
+                    <w:tbl>
+                        <w:tblPr>
+                            <w:tblW w:w="0" w:type="auto"/>
+                            <w:tblInd w:w="-106" w:type="dxa"/>
+                            <w:tblBorders>
+                                <w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                                <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                                <w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                                <w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                            </w:tblBorders>
+                            <w:tblLayout w:type="fixed"/>
+                            <w:tblLook w:val="0000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0"
+                                       w:noHBand="0" w:noVBand="0"/>
+                        </w:tblPr>
+                        <w:tblGrid>
+                            <w:gridCol w:w="1311"/>
+                            <w:gridCol w:w="1125"/>
+                            <w:gridCol w:w="1755"/>
+                            <w:gridCol w:w="1095"/>
+                            <w:gridCol w:w="1815"/>
+                            <w:gridCol w:w="1309"/>
+                        </w:tblGrid>
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1311" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:b/>
+                                            <w:bCs/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>估值日期</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1125" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:b/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>每万份收益（元）</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1755" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:b/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>份额总数（份）</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1095" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:b/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>7日年化收益率</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1815" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:b/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>资产净值（元）</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1309" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:b/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:b/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>本期净值收益率</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                        </w:tr>
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1311" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.valueDate!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1125" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.unitValue!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1755" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.totalValue!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1095" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.assetTotalValue!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1815" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.assetUnitValue!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1309" w:type="dxa"/>
+                                    <w:vMerge w:val="restart"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.increaseRateOfCurrentValue!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                        </w:tr>
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1311" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.valueDateQC!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1125" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.unitValueQC!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1755" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.totalValueQC!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1095" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.assetTotalValueQC!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1815" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>${value.assetUnitValueQC!}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="1309" w:type="dxa"/>
+                                    <w:vMerge/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:szCs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                </w:p>
+                            </w:tc>
+                        </w:tr>
+                    </w:tbl>
                     <w:p w:rsidR="006D32B6" w:rsidRDefault="006D32B6">
                         <w:pPr>
                             <w:rPr>
@@ -2621,15 +2585,6 @@
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
                                         <w:t>${assetInfo.assetName!}</w:t>
-                                    </w:r>
-                                    <w:r w:rsidRPr="006D32B6">
-                                        <w:rPr>
-                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                            <w:color w:val="000000"/>
-                                            <w:sz w:val="21"/>
-                                            <w:szCs w:val="21"/>
-                                        </w:rPr>
-                                        <w:t>1</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>

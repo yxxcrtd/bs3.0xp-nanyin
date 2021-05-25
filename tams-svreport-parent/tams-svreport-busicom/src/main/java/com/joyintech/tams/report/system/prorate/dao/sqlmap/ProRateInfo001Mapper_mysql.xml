@@ -43,7 +43,7 @@
 		</where>
 		union all
 		SELECT
-		'A' as status,
+		'A' as status2,
 		c.PROD_ID as busiId,
 		c.START_DATE as startDate,
 		c.CASH_TYPE_2 as cashType2,

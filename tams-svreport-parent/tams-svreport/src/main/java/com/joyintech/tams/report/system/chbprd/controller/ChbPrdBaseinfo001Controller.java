@@ -164,10 +164,10 @@ public class ChbPrdBaseinfo001Controller extends BaseController {
                 item.setProdtypeName(item.getProdtype() + " " + SysDataUtil.getZZDictCodeAndNameNew(
                         DictCode.产品类型_中债, item.getProdtype()));
             }
-//            if(!StringUtil.isBlank(item.getBasic())) {
-//                item.setBasicName(item.getBasic() + " " + SysDataUtil.getZZDictCodeAndNameNew(
-//                        DictCode.计息基础, item.getBasic()));
-//            }
+            if(!StringUtil.isBlank(item.getBasic())) {
+                item.setBasicName(item.getBasic() + " " + SysDataUtil.getZZDictCodeAndNameNew(
+                        DictCode.计息基础_中债, item.getBasic()));
+            }
             if(!StringUtil.isBlank(item.getFiduciaryDuty())) {
                 item.setFiduciaryDutyName(item.getFiduciaryDuty() + " " + SysDataUtil.getZZDictCodeAndNameNew(
                         DictCode.产品受托职责_中债, item.getFiduciaryDuty()));

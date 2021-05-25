@@ -5,7 +5,7 @@
             prodId:$('#prodId').val()==null?null:$('#prodId').val().join(","),
             tradeCode:$('#tradeCode').val()==null?null:$('#tradeCode').val(),
             assetCode:$('#assetCode').val()==null?null:$('#assetCode').val().join(","),
-            status:$('#status2').val()==null?null:$('#status2').val().join(","),
+            status:$('#status').val()==null?null:$('#status').val().join(","),
             dealdateStart : $('#dealdate').val()==null?null:$('#dealdate').startDate(),
             dealdateEnd : $('#dealdate').val()==null?null:$('#dealdate').endDate(),
         };
@@ -21,7 +21,7 @@
         },
         cols: [
             { title: "数据状态", field:'statusName',sortField:'statusName',width:'8%'},
-            { title: "status",  visible:false, field:'status2'},
+            { title: "status2",  visible:false, field:'status2'},
             { title: "行内交易编码", field:'tradeCode',width:'8%',sortField:'tradeCode'},
             { title: "产品代码", field:'prodId',width:'8%',sortField:'prodId'},
             { title: "行内资产/负债编码", field:'assetCode',width:'8%',sortField:'assetCode'},

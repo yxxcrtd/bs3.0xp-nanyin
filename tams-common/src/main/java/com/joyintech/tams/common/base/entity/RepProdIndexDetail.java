@@ -1,20 +1,14 @@
 package com.joyintech.tams.common.base.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.framework.json.CustomDateDeserialize;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class RepProdIndexDetail extends BaseEntity {
-    /**
-     * 流水号
-     */
-    private String seqNo;
-
+public class RepProdIndexDetail {
     /**
      * 父产品代码
      */
@@ -38,400 +32,115 @@ public class RepProdIndexDetail extends BaseEntity {
     /**
      * 实收资本
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal capital;
-
-    /**
-     * 损益平准金未实现
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitNo;
-
-    /**
-     * 损益平准金已实现
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitYes;
-
-    /**
-     * 资产类合计(按成本）
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal assetTotalCost;
 
     /**
      * 资产类合计(按市值）
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal assetTotalMarket;
-
-    /**
-     * 负债类合计
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal debtTotal;
-
-    /**
-     * 产品资产净值(按成本）
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal assetValueCost;
-
-    /**
-     * 产品资产净值(按市值）
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal assetValueMarket;
-
-    /**
-     * 产品单位净值
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal unitValue;
-
-    /**
-     * 产品累计单位净值
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal unitValueT;
-
-    /**
-     * 产品昨日单位净值
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal unitValueY;
-
-    /**
-     * 产品资产净值
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal assetsValue;
-
-    /**
-     * 偏离金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal deviationAmt;
-
-    /**
-     * 偏离度%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal deviation;
-
-    /**
-     * 当日客户收益
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitTdy;
-
-    /**
-     * 累计客户收益
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitTotal;
-
-    /**
-     * 万份收益
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal wYield;
-
-    /**
-     * 本年累积万份收益
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal wYieldYear;
-
-    /**
-     * 从成立以来累计万份收益
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal wYieldTotal;
-
-    /**
-     * 本日年化收益率%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal yieldTdy;
-
-    /**
-     * 7日年化收益率%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal yield7;
-
-    /**
-     * 累计年化收益率%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal yieldTotal;
-
-    /**
-     * 预期收益率%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal yieldE;
-
-    /**
-     * 最高收益率%
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal yieldEMax;
-
-    /**
-     * 浮动管理费率%
-     */
-    private Short surplusTerm;
-
-    /**
-     * 投资组合平均到期日
-     */
-    private Short averageMdate;
-
-    /**
-     * 导入方法
-     */
-    private String inputType;
-
-    /**
-     * 导入用户
-     */
-    private String inputUser;
-
-    /**
-     * 适配器ID
-     */
-    private String adapterId;
-
-    /**
-     * 
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal prdUnitValue;
-
-    /**
-     * 年化管理费率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal manageYield;
-
-    /**
-     * 产品份额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal prodShare;
-
-    /**
-     * 近一个月年化收益率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal yieldMonth;
-
-    /**
-     * 分红净值
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal netValue;
-
-    /**
-     * 
-     */
-    private String issueTypeZ;
-
-    /**
-     * 
-     */
-    private Short addsurplusTerm;
-
-    /**
-     * 当日本期利润已实现
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitCurrentYes;
-
-    /**
-     * 当日本期利润未实现
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitCurrentNo;
-
-    /**
-     * 本期利润
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitCurrent;
-
-    /**
-     * 当日可供分配利润
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitTdyAble;
-
-    /**
-     * 当日可供分配产品份额利润
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal prodProfitTdyAble;
-
-    /**
-     * 当日净值收益率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal netvalueTdyYield;
-
-    /**
-     * 累计净值收益率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal netvalueTotalYield;
-
-    /**
-     * 当日净值增长率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal netvalueTdyIncre;
-
-    /**
-     * 累计净值增长率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal netvalueTotalIncre;
-
-    /**
-     * 平均剩余期限
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal avgSurplusTime;
-
-    /**
-     * 当日业绩比较基准利率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal floatBaseRate;
-
-    /**
-     * 
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal bounusValue;
-
-    /**
-     * 
-     */
-    private String issueType;
-
-    /**
-     * 
-     */
-    private String rateType;
-
-    /**
-     * 
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal rateBenchmark;
-
-    /**
-     * 
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal rateAdj;
-
-    /**
-     * 现金形式发放总额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal cashFormGrantTotal;
-
-    /**
-     * 再投资形式发放总额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal reinvestFormGrantTotal;
-
-    /**
-     * 直接通过应付赎回款转出金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal redemptionTurnoutAmt;
-
-    /**
-     * 应付利润本年变动
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitThisyearChange;
-
-    /**
-     * 巨额赎回阀值
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal hugeRedeemThreshold;
-
-    /**
-     * 账套代码
-     */
-    private String booksetId;
-
-    /**
-     * 红利再投金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal reinvestFormGrantTdy;
-
-    /**
-     * 现金分红
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal cashFormGrantTdy;
-
-    /**
-     * 业绩基准说明
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal redemIntamtTdy;
-
-    /**
-     * 应付利润
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitChangeTdy;
-
-    /**
-     * 业绩比较基准累计增长率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal floatTotalRate;
 
     /**
      * 产品资产净值(按成本）_费前
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal assetValueCostFq;
 
     /**
      * 产品资产净值(按市值）_费前
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal assetValueMarketFq;
 
     /**
-     * 产品单位净值_费前
+     * 偏离度%
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal unitValueFq;
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal deviation;
 
     /**
-     * 当日客户收益_费前
+     * 产品单位净值
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal profitTdyFq;
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal unitValue;
 
     /**
-     * 万份收益_费前
+     * 产品累计单位净值
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal wYieldFq;
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal unitValueT;
+
+    /**
+     * 当日客户收益
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal profitTdy;
+
+    /**
+     * 万份收益
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal wYield;
+
+    /**
+     * 本日年化收益率%
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal yieldTdy;
+
+    /**
+     * 7日年化收益率%
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal yield7;
+
+    /**
+     * 当日本期利润已实现
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal profitCurrentYes;
+
+    /**
+     * 当日本期利润未实现
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal profitCurrentNo;
+
+    /**
+     * 业绩比较基准文本说明
+     */
+    private String benchmarkInfo;
+
+    /**
+     * 业绩基准收益率
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal rateBenchmark;
+
+    /**
+     * 现金分红
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal cashFormGrantTdy;
+
+    /**
+     * 红利再投金额
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal reinvestFormGrantTdy;
+
+    /**
+     * 赎回利息金额
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal redemIntamtTdy;
+
+    /**
+     * 应付利润
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal profitChangeTdy;
 
     /**
      * 备注
@@ -439,29 +148,55 @@ public class RepProdIndexDetail extends BaseEntity {
     private String remark;
 
     /**
-     * 
+     * 创建时间
      */
-    private String benchmarkInfo;
+    private String createTime;
 
     /**
-     * 取得 流水号
-     * @return 流水号
+     * 更新时间
      */
-    public String getSeqNo() {
-        return seqNo;
+    private String updateTime;
+
+    /**
+
+     */
+    private static final long serialVersionUID = 1L;
+
+    public RepProdIndexDetail(String fprodId, String prodId, String prodName, Date valueDate, BigDecimal capital, BigDecimal assetTotalMarket, BigDecimal assetValueCostFq, BigDecimal assetValueMarketFq, BigDecimal deviation, BigDecimal unitValue, BigDecimal unitValueT, BigDecimal profitTdy, BigDecimal wYield, BigDecimal yieldTdy, BigDecimal yield7, BigDecimal profitCurrentYes, BigDecimal profitCurrentNo, String benchmarkInfo, BigDecimal rateBenchmark, BigDecimal cashFormGrantTdy, BigDecimal reinvestFormGrantTdy, BigDecimal redemIntamtTdy, BigDecimal profitChangeTdy, String remark, String createTime, String updateTime) {
+        this.fprodId = fprodId;
+        this.prodId = prodId;
+        this.prodName = prodName;
+        this.valueDate = valueDate;
+        this.capital = capital;
+        this.assetTotalMarket = assetTotalMarket;
+        this.assetValueCostFq = assetValueCostFq;
+        this.assetValueMarketFq = assetValueMarketFq;
+        this.deviation = deviation;
+        this.unitValue = unitValue;
+        this.unitValueT = unitValueT;
+        this.profitTdy = profitTdy;
+        this.wYield = wYield;
+        this.yieldTdy = yieldTdy;
+        this.yield7 = yield7;
+        this.profitCurrentYes = profitCurrentYes;
+        this.profitCurrentNo = profitCurrentNo;
+        this.benchmarkInfo = benchmarkInfo;
+        this.rateBenchmark = rateBenchmark;
+        this.cashFormGrantTdy = cashFormGrantTdy;
+        this.reinvestFormGrantTdy = reinvestFormGrantTdy;
+        this.redemIntamtTdy = redemIntamtTdy;
+        this.profitChangeTdy = profitChangeTdy;
+        this.remark = remark;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
+
+    public RepProdIndexDetail() {
+        super();
     }
 
     /**
-     * 设置 流水号
-     * @param seqNo 流水号
-     */
-    public void setSeqNo(String seqNo) {
-        this.seqNo = seqNo == null ? null : seqNo.trim();
-    }
-
-    /**
-     * 取得 父产品代码
-     * @return 父产品代码
+     * 获取 父产品代码
      */
     public String getFprodId() {
         return fprodId;
@@ -469,15 +204,13 @@ public class RepProdIndexDetail extends BaseEntity {
 
     /**
      * 设置 父产品代码
-     * @param fprodId 父产品代码
      */
     public void setFprodId(String fprodId) {
         this.fprodId = fprodId == null ? null : fprodId.trim();
     }
 
     /**
-     * 取得 产品代码
-     * @return 产品代码
+     * 获取 产品代码
      */
     public String getProdId() {
         return prodId;
@@ -485,15 +218,13 @@ public class RepProdIndexDetail extends BaseEntity {
 
     /**
      * 设置 产品代码
-     * @param prodId 产品代码
      */
     public void setProdId(String prodId) {
         this.prodId = prodId == null ? null : prodId.trim();
     }
 
     /**
-     * 取得 产品名称
-     * @return 产品名称
+     * 获取 产品名称
      */
     public String getProdName() {
         return prodName;
@@ -501,15 +232,13 @@ public class RepProdIndexDetail extends BaseEntity {
 
     /**
      * 设置 产品名称
-     * @param prodName 产品名称
      */
     public void setProdName(String prodName) {
         this.prodName = prodName == null ? null : prodName.trim();
     }
 
     /**
-     * 取得 估值日
-     * @return 估值日
+     * 获取 估值日
      */
     public Date getValueDate() {
         return valueDate;
@@ -517,16 +246,13 @@ public class RepProdIndexDetail extends BaseEntity {
 
     /**
      * 设置 估值日
-     * @param valueDate 估值日
      */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setValueDate(Date valueDate) {
         this.valueDate = valueDate;
     }
 
     /**
-     * 取得 实收资本
-     * @return 实收资本
+     * 获取 实收资本
      */
     public BigDecimal getCapital() {
         return capital;
@@ -534,63 +260,13 @@ public class RepProdIndexDetail extends BaseEntity {
 
     /**
      * 设置 实收资本
-     * @param capital 实收资本
      */
     public void setCapital(BigDecimal capital) {
         this.capital = capital;
     }
 
     /**
-     * 取得 损益平准金未实现
-     * @return 损益平准金未实现
-     */
-    public BigDecimal getProfitNo() {
-        return profitNo;
-    }
-
-    /**
-     * 设置 损益平准金未实现
-     * @param profitNo 损益平准金未实现
-     */
-    public void setProfitNo(BigDecimal profitNo) {
-        this.profitNo = profitNo;
-    }
-
-    /**
-     * 取得 损益平准金已实现
-     * @return 损益平准金已实现
-     */
-    public BigDecimal getProfitYes() {
-        return profitYes;
-    }
-
-    /**
-     * 设置 损益平准金已实现
-     * @param profitYes 损益平准金已实现
-     */
-    public void setProfitYes(BigDecimal profitYes) {
-        this.profitYes = profitYes;
-    }
-
-    /**
-     * 取得 资产类合计(按成本）
-     * @return 资产类合计(按成本）
-     */
-    public BigDecimal getAssetTotalCost() {
-        return assetTotalCost;
-    }
-
-    /**
-     * 设置 资产类合计(按成本）
-     * @param assetTotalCost 资产类合计(按成本）
-     */
-    public void setAssetTotalCost(BigDecimal assetTotalCost) {
-        this.assetTotalCost = assetTotalCost;
-    }
-
-    /**
-     * 取得 资产类合计(按市值）
-     * @return 资产类合计(按市值）
+     * 获取 资产类合计(按市值）
      */
     public BigDecimal getAssetTotalMarket() {
         return assetTotalMarket;
@@ -598,943 +274,13 @@ public class RepProdIndexDetail extends BaseEntity {
 
     /**
      * 设置 资产类合计(按市值）
-     * @param assetTotalMarket 资产类合计(按市值）
      */
     public void setAssetTotalMarket(BigDecimal assetTotalMarket) {
         this.assetTotalMarket = assetTotalMarket;
     }
 
     /**
-     * 取得 负债类合计
-     * @return 负债类合计
-     */
-    public BigDecimal getDebtTotal() {
-        return debtTotal;
-    }
-
-    /**
-     * 设置 负债类合计
-     * @param debtTotal 负债类合计
-     */
-    public void setDebtTotal(BigDecimal debtTotal) {
-        this.debtTotal = debtTotal;
-    }
-
-    /**
-     * 取得 产品资产净值(按成本）
-     * @return 产品资产净值(按成本）
-     */
-    public BigDecimal getAssetValueCost() {
-        return assetValueCost;
-    }
-
-    /**
-     * 设置 产品资产净值(按成本）
-     * @param assetValueCost 产品资产净值(按成本）
-     */
-    public void setAssetValueCost(BigDecimal assetValueCost) {
-        this.assetValueCost = assetValueCost;
-    }
-
-    /**
-     * 取得 产品资产净值(按市值）
-     * @return 产品资产净值(按市值）
-     */
-    public BigDecimal getAssetValueMarket() {
-        return assetValueMarket;
-    }
-
-    /**
-     * 设置 产品资产净值(按市值）
-     * @param assetValueMarket 产品资产净值(按市值）
-     */
-    public void setAssetValueMarket(BigDecimal assetValueMarket) {
-        this.assetValueMarket = assetValueMarket;
-    }
-
-    /**
-     * 取得 产品单位净值
-     * @return 产品单位净值
-     */
-    public BigDecimal getUnitValue() {
-        return unitValue;
-    }
-
-    /**
-     * 设置 产品单位净值
-     * @param unitValue 产品单位净值
-     */
-    public void setUnitValue(BigDecimal unitValue) {
-        this.unitValue = unitValue;
-    }
-
-    /**
-     * 取得 产品累计单位净值
-     * @return 产品累计单位净值
-     */
-    public BigDecimal getUnitValueT() {
-        return unitValueT;
-    }
-
-    /**
-     * 设置 产品累计单位净值
-     * @param unitValueT 产品累计单位净值
-     */
-    public void setUnitValueT(BigDecimal unitValueT) {
-        this.unitValueT = unitValueT;
-    }
-
-    /**
-     * 取得 产品昨日单位净值
-     * @return 产品昨日单位净值
-     */
-    public BigDecimal getUnitValueY() {
-        return unitValueY;
-    }
-
-    /**
-     * 设置 产品昨日单位净值
-     * @param unitValueY 产品昨日单位净值
-     */
-    public void setUnitValueY(BigDecimal unitValueY) {
-        this.unitValueY = unitValueY;
-    }
-
-    /**
-     * 取得 产品资产净值
-     * @return 产品资产净值
-     */
-    public BigDecimal getAssetsValue() {
-        return assetsValue;
-    }
-
-    /**
-     * 设置 产品资产净值
-     * @param assetsValue 产品资产净值
-     */
-    public void setAssetsValue(BigDecimal assetsValue) {
-        this.assetsValue = assetsValue;
-    }
-
-    /**
-     * 取得 偏离金额
-     * @return 偏离金额
-     */
-    public BigDecimal getDeviationAmt() {
-        return deviationAmt;
-    }
-
-    /**
-     * 设置 偏离金额
-     * @param deviationAmt 偏离金额
-     */
-    public void setDeviationAmt(BigDecimal deviationAmt) {
-        this.deviationAmt = deviationAmt;
-    }
-
-    /**
-     * 取得 偏离度%
-     * @return 偏离度%
-     */
-    public BigDecimal getDeviation() {
-        return deviation;
-    }
-
-    /**
-     * 设置 偏离度%
-     * @param deviation 偏离度%
-     */
-    public void setDeviation(BigDecimal deviation) {
-        this.deviation = deviation;
-    }
-
-    /**
-     * 取得 当日客户收益
-     * @return 当日客户收益
-     */
-    public BigDecimal getProfitTdy() {
-        return profitTdy;
-    }
-
-    /**
-     * 设置 当日客户收益
-     * @param profitTdy 当日客户收益
-     */
-    public void setProfitTdy(BigDecimal profitTdy) {
-        this.profitTdy = profitTdy;
-    }
-
-    /**
-     * 取得 累计客户收益
-     * @return 累计客户收益
-     */
-    public BigDecimal getProfitTotal() {
-        return profitTotal;
-    }
-
-    /**
-     * 设置 累计客户收益
-     * @param profitTotal 累计客户收益
-     */
-    public void setProfitTotal(BigDecimal profitTotal) {
-        this.profitTotal = profitTotal;
-    }
-
-    /**
-     * 取得 万份收益
-     * @return 万份收益
-     */
-    public BigDecimal getwYield() {
-        return wYield;
-    }
-
-    /**
-     * 设置 万份收益
-     * @param wYield 万份收益
-     */
-    public void setwYield(BigDecimal wYield) {
-        this.wYield = wYield;
-    }
-
-    /**
-     * 取得 本年累积万份收益
-     * @return 本年累积万份收益
-     */
-    public BigDecimal getwYieldYear() {
-        return wYieldYear;
-    }
-
-    /**
-     * 设置 本年累积万份收益
-     * @param wYieldYear 本年累积万份收益
-     */
-    public void setwYieldYear(BigDecimal wYieldYear) {
-        this.wYieldYear = wYieldYear;
-    }
-
-    /**
-     * 取得 从成立以来累计万份收益
-     * @return 从成立以来累计万份收益
-     */
-    public BigDecimal getwYieldTotal() {
-        return wYieldTotal;
-    }
-
-    /**
-     * 设置 从成立以来累计万份收益
-     * @param wYieldTotal 从成立以来累计万份收益
-     */
-    public void setwYieldTotal(BigDecimal wYieldTotal) {
-        this.wYieldTotal = wYieldTotal;
-    }
-
-    /**
-     * 取得 本日年化收益率%
-     * @return 本日年化收益率%
-     */
-    public BigDecimal getYieldTdy() {
-        return yieldTdy;
-    }
-
-    /**
-     * 设置 本日年化收益率%
-     * @param yieldTdy 本日年化收益率%
-     */
-    public void setYieldTdy(BigDecimal yieldTdy) {
-        this.yieldTdy = yieldTdy;
-    }
-
-    /**
-     * 取得 7日年化收益率%
-     * @return 7日年化收益率%
-     */
-    public BigDecimal getYield7() {
-        return yield7;
-    }
-
-    /**
-     * 设置 7日年化收益率%
-     * @param yield7 7日年化收益率%
-     */
-    public void setYield7(BigDecimal yield7) {
-        this.yield7 = yield7;
-    }
-
-    /**
-     * 取得 累计年化收益率%
-     * @return 累计年化收益率%
-     */
-    public BigDecimal getYieldTotal() {
-        return yieldTotal;
-    }
-
-    /**
-     * 设置 累计年化收益率%
-     * @param yieldTotal 累计年化收益率%
-     */
-    public void setYieldTotal(BigDecimal yieldTotal) {
-        this.yieldTotal = yieldTotal;
-    }
-
-    /**
-     * 取得 预期收益率%
-     * @return 预期收益率%
-     */
-    public BigDecimal getYieldE() {
-        return yieldE;
-    }
-
-    /**
-     * 设置 预期收益率%
-     * @param yieldE 预期收益率%
-     */
-    public void setYieldE(BigDecimal yieldE) {
-        this.yieldE = yieldE;
-    }
-
-    /**
-     * 取得 最高收益率%
-     * @return 最高收益率%
-     */
-    public BigDecimal getYieldEMax() {
-        return yieldEMax;
-    }
-
-    /**
-     * 设置 最高收益率%
-     * @param yieldEMax 最高收益率%
-     */
-    public void setYieldEMax(BigDecimal yieldEMax) {
-        this.yieldEMax = yieldEMax;
-    }
-
-    /**
-     * 取得 浮动管理费率%
-     * @return 浮动管理费率%
-     */
-    public Short getSurplusTerm() {
-        return surplusTerm;
-    }
-
-    /**
-     * 设置 浮动管理费率%
-     * @param surplusTerm 浮动管理费率%
-     */
-    public void setSurplusTerm(Short surplusTerm) {
-        this.surplusTerm = surplusTerm;
-    }
-
-    /**
-     * 取得 投资组合平均到期日
-     * @return 投资组合平均到期日
-     */
-    public Short getAverageMdate() {
-        return averageMdate;
-    }
-
-    /**
-     * 设置 投资组合平均到期日
-     * @param averageMdate 投资组合平均到期日
-     */
-    public void setAverageMdate(Short averageMdate) {
-        this.averageMdate = averageMdate;
-    }
-
-    /**
-     * 取得 导入方法
-     * @return 导入方法
-     */
-    public String getInputType() {
-        return inputType;
-    }
-
-    /**
-     * 设置 导入方法
-     * @param inputType 导入方法
-     */
-    public void setInputType(String inputType) {
-        this.inputType = inputType == null ? null : inputType.trim();
-    }
-
-    /**
-     * 取得 导入用户
-     * @return 导入用户
-     */
-    public String getInputUser() {
-        return inputUser;
-    }
-
-    /**
-     * 设置 导入用户
-     * @param inputUser 导入用户
-     */
-    public void setInputUser(String inputUser) {
-        this.inputUser = inputUser == null ? null : inputUser.trim();
-    }
-
-    /**
-     * 取得 适配器ID
-     * @return 适配器ID
-     */
-    public String getAdapterId() {
-        return adapterId;
-    }
-
-    /**
-     * 设置 适配器ID
-     * @param adapterId 适配器ID
-     */
-    public void setAdapterId(String adapterId) {
-        this.adapterId = adapterId == null ? null : adapterId.trim();
-    }
-
-    /**
-     * 取得 
-     * @return 
-     */
-    public BigDecimal getPrdUnitValue() {
-        return prdUnitValue;
-    }
-
-    /**
-     * 设置 
-     * @param prdUnitValue 
-     */
-    public void setPrdUnitValue(BigDecimal prdUnitValue) {
-        this.prdUnitValue = prdUnitValue;
-    }
-
-    /**
-     * 取得 年化管理费率
-     * @return 年化管理费率
-     */
-    public BigDecimal getManageYield() {
-        return manageYield;
-    }
-
-    /**
-     * 设置 年化管理费率
-     * @param manageYield 年化管理费率
-     */
-    public void setManageYield(BigDecimal manageYield) {
-        this.manageYield = manageYield;
-    }
-
-    /**
-     * 取得 产品份额
-     * @return 产品份额
-     */
-    public BigDecimal getProdShare() {
-        return prodShare;
-    }
-
-    /**
-     * 设置 产品份额
-     * @param prodShare 产品份额
-     */
-    public void setProdShare(BigDecimal prodShare) {
-        this.prodShare = prodShare;
-    }
-
-    /**
-     * 取得 近一个月年化收益率
-     * @return 近一个月年化收益率
-     */
-    public BigDecimal getYieldMonth() {
-        return yieldMonth;
-    }
-
-    /**
-     * 设置 近一个月年化收益率
-     * @param yieldMonth 近一个月年化收益率
-     */
-    public void setYieldMonth(BigDecimal yieldMonth) {
-        this.yieldMonth = yieldMonth;
-    }
-
-    /**
-     * 取得 分红净值
-     * @return 分红净值
-     */
-    public BigDecimal getNetValue() {
-        return netValue;
-    }
-
-    /**
-     * 设置 分红净值
-     * @param netValue 分红净值
-     */
-    public void setNetValue(BigDecimal netValue) {
-        this.netValue = netValue;
-    }
-
-    /**
-     * 取得 
-     * @return 
-     */
-    public String getIssueTypeZ() {
-        return issueTypeZ;
-    }
-
-    /**
-     * 设置 
-     * @param issueTypeZ 
-     */
-    public void setIssueTypeZ(String issueTypeZ) {
-        this.issueTypeZ = issueTypeZ == null ? null : issueTypeZ.trim();
-    }
-
-    /**
-     * 取得 
-     * @return 
-     */
-    public Short getAddsurplusTerm() {
-        return addsurplusTerm;
-    }
-
-    /**
-     * 设置 
-     * @param addsurplusTerm 
-     */
-    public void setAddsurplusTerm(Short addsurplusTerm) {
-        this.addsurplusTerm = addsurplusTerm;
-    }
-
-    /**
-     * 取得 当日本期利润已实现
-     * @return 当日本期利润已实现
-     */
-    public BigDecimal getProfitCurrentYes() {
-        return profitCurrentYes;
-    }
-
-    /**
-     * 设置 当日本期利润已实现
-     * @param profitCurrentYes 当日本期利润已实现
-     */
-    public void setProfitCurrentYes(BigDecimal profitCurrentYes) {
-        this.profitCurrentYes = profitCurrentYes;
-    }
-
-    /**
-     * 取得 当日本期利润未实现
-     * @return 当日本期利润未实现
-     */
-    public BigDecimal getProfitCurrentNo() {
-        return profitCurrentNo;
-    }
-
-    /**
-     * 设置 当日本期利润未实现
-     * @param profitCurrentNo 当日本期利润未实现
-     */
-    public void setProfitCurrentNo(BigDecimal profitCurrentNo) {
-        this.profitCurrentNo = profitCurrentNo;
-    }
-
-    /**
-     * 取得 本期利润
-     * @return 本期利润
-     */
-    public BigDecimal getProfitCurrent() {
-        return profitCurrent;
-    }
-
-    /**
-     * 设置 本期利润
-     * @param profitCurrent 本期利润
-     */
-    public void setProfitCurrent(BigDecimal profitCurrent) {
-        this.profitCurrent = profitCurrent;
-    }
-
-    /**
-     * 取得 当日可供分配利润
-     * @return 当日可供分配利润
-     */
-    public BigDecimal getProfitTdyAble() {
-        return profitTdyAble;
-    }
-
-    /**
-     * 设置 当日可供分配利润
-     * @param profitTdyAble 当日可供分配利润
-     */
-    public void setProfitTdyAble(BigDecimal profitTdyAble) {
-        this.profitTdyAble = profitTdyAble;
-    }
-
-    /**
-     * 取得 当日可供分配产品份额利润
-     * @return 当日可供分配产品份额利润
-     */
-    public BigDecimal getProdProfitTdyAble() {
-        return prodProfitTdyAble;
-    }
-
-    /**
-     * 设置 当日可供分配产品份额利润
-     * @param prodProfitTdyAble 当日可供分配产品份额利润
-     */
-    public void setProdProfitTdyAble(BigDecimal prodProfitTdyAble) {
-        this.prodProfitTdyAble = prodProfitTdyAble;
-    }
-
-    /**
-     * 取得 当日净值收益率
-     * @return 当日净值收益率
-     */
-    public BigDecimal getNetvalueTdyYield() {
-        return netvalueTdyYield;
-    }
-
-    /**
-     * 设置 当日净值收益率
-     * @param netvalueTdyYield 当日净值收益率
-     */
-    public void setNetvalueTdyYield(BigDecimal netvalueTdyYield) {
-        this.netvalueTdyYield = netvalueTdyYield;
-    }
-
-    /**
-     * 取得 累计净值收益率
-     * @return 累计净值收益率
-     */
-    public BigDecimal getNetvalueTotalYield() {
-        return netvalueTotalYield;
-    }
-
-    /**
-     * 设置 累计净值收益率
-     * @param netvalueTotalYield 累计净值收益率
-     */
-    public void setNetvalueTotalYield(BigDecimal netvalueTotalYield) {
-        this.netvalueTotalYield = netvalueTotalYield;
-    }
-
-    /**
-     * 取得 当日净值增长率
-     * @return 当日净值增长率
-     */
-    public BigDecimal getNetvalueTdyIncre() {
-        return netvalueTdyIncre;
-    }
-
-    /**
-     * 设置 当日净值增长率
-     * @param netvalueTdyIncre 当日净值增长率
-     */
-    public void setNetvalueTdyIncre(BigDecimal netvalueTdyIncre) {
-        this.netvalueTdyIncre = netvalueTdyIncre;
-    }
-
-    /**
-     * 取得 累计净值增长率
-     * @return 累计净值增长率
-     */
-    public BigDecimal getNetvalueTotalIncre() {
-        return netvalueTotalIncre;
-    }
-
-    /**
-     * 设置 累计净值增长率
-     * @param netvalueTotalIncre 累计净值增长率
-     */
-    public void setNetvalueTotalIncre(BigDecimal netvalueTotalIncre) {
-        this.netvalueTotalIncre = netvalueTotalIncre;
-    }
-
-    /**
-     * 取得 平均剩余期限
-     * @return 平均剩余期限
-     */
-    public BigDecimal getAvgSurplusTime() {
-        return avgSurplusTime;
-    }
-
-    /**
-     * 设置 平均剩余期限
-     * @param avgSurplusTime 平均剩余期限
-     */
-    public void setAvgSurplusTime(BigDecimal avgSurplusTime) {
-        this.avgSurplusTime = avgSurplusTime;
-    }
-
-    /**
-     * 取得 当日业绩比较基准利率
-     * @return 当日业绩比较基准利率
-     */
-    public BigDecimal getFloatBaseRate() {
-        return floatBaseRate;
-    }
-
-    /**
-     * 设置 当日业绩比较基准利率
-     * @param floatBaseRate 当日业绩比较基准利率
-     */
-    public void setFloatBaseRate(BigDecimal floatBaseRate) {
-        this.floatBaseRate = floatBaseRate;
-    }
-
-    /**
-     * 取得 
-     * @return 
-     */
-    public BigDecimal getBounusValue() {
-        return bounusValue;
-    }
-
-    /**
-     * 设置 
-     * @param bounusValue 
-     */
-    public void setBounusValue(BigDecimal bounusValue) {
-        this.bounusValue = bounusValue;
-    }
-
-    /**
-     * 取得 
-     * @return 
-     */
-    public String getIssueType() {
-        return issueType;
-    }
-
-    /**
-     * 设置 
-     * @param issueType 
-     */
-    public void setIssueType(String issueType) {
-        this.issueType = issueType == null ? null : issueType.trim();
-    }
-
-    /**
-     * 取得 
-     * @return 
-     */
-    public String getRateType() {
-        return rateType;
-    }
-
-    /**
-     * 设置 
-     * @param rateType 
-     */
-    public void setRateType(String rateType) {
-        this.rateType = rateType == null ? null : rateType.trim();
-    }
-
-    /**
-     * 取得 
-     * @return 
-     */
-    public BigDecimal getRateBenchmark() {
-        return rateBenchmark;
-    }
-
-    /**
-     * 设置 
-     * @param rateBenchmark 
-     */
-    public void setRateBenchmark(BigDecimal rateBenchmark) {
-        this.rateBenchmark = rateBenchmark;
-    }
-
-    /**
-     * 取得 
-     * @return 
-     */
-    public BigDecimal getRateAdj() {
-        return rateAdj;
-    }
-
-    /**
-     * 设置 
-     * @param rateAdj 
-     */
-    public void setRateAdj(BigDecimal rateAdj) {
-        this.rateAdj = rateAdj;
-    }
-
-    /**
-     * 取得 现金形式发放总额
-     * @return 现金形式发放总额
-     */
-    public BigDecimal getCashFormGrantTotal() {
-        return cashFormGrantTotal;
-    }
-
-    /**
-     * 设置 现金形式发放总额
-     * @param cashFormGrantTotal 现金形式发放总额
-     */
-    public void setCashFormGrantTotal(BigDecimal cashFormGrantTotal) {
-        this.cashFormGrantTotal = cashFormGrantTotal;
-    }
-
-    /**
-     * 取得 再投资形式发放总额
-     * @return 再投资形式发放总额
-     */
-    public BigDecimal getReinvestFormGrantTotal() {
-        return reinvestFormGrantTotal;
-    }
-
-    /**
-     * 设置 再投资形式发放总额
-     * @param reinvestFormGrantTotal 再投资形式发放总额
-     */
-    public void setReinvestFormGrantTotal(BigDecimal reinvestFormGrantTotal) {
-        this.reinvestFormGrantTotal = reinvestFormGrantTotal;
-    }
-
-    /**
-     * 取得 直接通过应付赎回款转出金额
-     * @return 直接通过应付赎回款转出金额
-     */
-    public BigDecimal getRedemptionTurnoutAmt() {
-        return redemptionTurnoutAmt;
-    }
-
-    /**
-     * 设置 直接通过应付赎回款转出金额
-     * @param redemptionTurnoutAmt 直接通过应付赎回款转出金额
-     */
-    public void setRedemptionTurnoutAmt(BigDecimal redemptionTurnoutAmt) {
-        this.redemptionTurnoutAmt = redemptionTurnoutAmt;
-    }
-
-    /**
-     * 取得 应付利润本年变动
-     * @return 应付利润本年变动
-     */
-    public BigDecimal getProfitThisyearChange() {
-        return profitThisyearChange;
-    }
-
-    /**
-     * 设置 应付利润本年变动
-     * @param profitThisyearChange 应付利润本年变动
-     */
-    public void setProfitThisyearChange(BigDecimal profitThisyearChange) {
-        this.profitThisyearChange = profitThisyearChange;
-    }
-
-    /**
-     * 取得 巨额赎回阀值
-     * @return 巨额赎回阀值
-     */
-    public BigDecimal getHugeRedeemThreshold() {
-        return hugeRedeemThreshold;
-    }
-
-    /**
-     * 设置 巨额赎回阀值
-     * @param hugeRedeemThreshold 巨额赎回阀值
-     */
-    public void setHugeRedeemThreshold(BigDecimal hugeRedeemThreshold) {
-        this.hugeRedeemThreshold = hugeRedeemThreshold;
-    }
-
-    /**
-     * 取得 账套代码
-     * @return 账套代码
-     */
-    public String getBooksetId() {
-        return booksetId;
-    }
-
-    /**
-     * 设置 账套代码
-     * @param booksetId 账套代码
-     */
-    public void setBooksetId(String booksetId) {
-        this.booksetId = booksetId == null ? null : booksetId.trim();
-    }
-
-    /**
-     * 取得 红利再投金额
-     * @return 红利再投金额
-     */
-    public BigDecimal getReinvestFormGrantTdy() {
-        return reinvestFormGrantTdy;
-    }
-
-    /**
-     * 设置 红利再投金额
-     * @param reinvestFormGrantTdy 红利再投金额
-     */
-    public void setReinvestFormGrantTdy(BigDecimal reinvestFormGrantTdy) {
-        this.reinvestFormGrantTdy = reinvestFormGrantTdy;
-    }
-
-    /**
-     * 取得 现金分红
-     * @return 现金分红
-     */
-    public BigDecimal getCashFormGrantTdy() {
-        return cashFormGrantTdy;
-    }
-
-    /**
-     * 设置 现金分红
-     * @param cashFormGrantTdy 现金分红
-     */
-    public void setCashFormGrantTdy(BigDecimal cashFormGrantTdy) {
-        this.cashFormGrantTdy = cashFormGrantTdy;
-    }
-
-    /**
-     * 取得 业绩基准说明
-     * @return 业绩基准说明
-     */
-    public BigDecimal getRedemIntamtTdy() {
-        return redemIntamtTdy;
-    }
-
-    /**
-     * 设置 业绩基准说明
-     * @param redemIntamtTdy 业绩基准说明
-     */
-    public void setRedemIntamtTdy(BigDecimal redemIntamtTdy) {
-        this.redemIntamtTdy = redemIntamtTdy;
-    }
-
-    /**
-     * 取得 应付利润
-     * @return 应付利润
-     */
-    public BigDecimal getProfitChangeTdy() {
-        return profitChangeTdy;
-    }
-
-    /**
-     * 设置 应付利润
-     * @param profitChangeTdy 应付利润
-     */
-    public void setProfitChangeTdy(BigDecimal profitChangeTdy) {
-        this.profitChangeTdy = profitChangeTdy;
-    }
-
-    /**
-     * 取得 业绩比较基准累计增长率
-     * @return 业绩比较基准累计增长率
-     */
-    public BigDecimal getFloatTotalRate() {
-        return floatTotalRate;
-    }
-
-    /**
-     * 设置 业绩比较基准累计增长率
-     * @param floatTotalRate 业绩比较基准累计增长率
-     */
-    public void setFloatTotalRate(BigDecimal floatTotalRate) {
-        this.floatTotalRate = floatTotalRate;
-    }
-
-    /**
-     * 取得 产品资产净值(按成本）_费前
-     * @return 产品资产净值(按成本）_费前
+     * 获取 产品资产净值(按成本）_费前
      */
     public BigDecimal getAssetValueCostFq() {
         return assetValueCostFq;
@@ -1542,15 +288,13 @@ public class RepProdIndexDetail extends BaseEntity {
 
     /**
      * 设置 产品资产净值(按成本）_费前
-     * @param assetValueCostFq 产品资产净值(按成本）_费前
      */
     public void setAssetValueCostFq(BigDecimal assetValueCostFq) {
         this.assetValueCostFq = assetValueCostFq;
     }
 
     /**
-     * 取得 产品资产净值(按市值）_费前
-     * @return 产品资产净值(按市值）_费前
+     * 获取 产品资产净值(按市值）_费前
      */
     public BigDecimal getAssetValueMarketFq() {
         return assetValueMarketFq;
@@ -1558,63 +302,223 @@ public class RepProdIndexDetail extends BaseEntity {
 
     /**
      * 设置 产品资产净值(按市值）_费前
-     * @param assetValueMarketFq 产品资产净值(按市值）_费前
      */
     public void setAssetValueMarketFq(BigDecimal assetValueMarketFq) {
         this.assetValueMarketFq = assetValueMarketFq;
     }
 
     /**
-     * 取得 产品单位净值_费前
-     * @return 产品单位净值_费前
+     * 获取 偏离度%
      */
-    public BigDecimal getUnitValueFq() {
-        return unitValueFq;
+    public BigDecimal getDeviation() {
+        return deviation;
     }
 
     /**
-     * 设置 产品单位净值_费前
-     * @param unitValueFq 产品单位净值_费前
+     * 设置 偏离度%
      */
-    public void setUnitValueFq(BigDecimal unitValueFq) {
-        this.unitValueFq = unitValueFq;
+    public void setDeviation(BigDecimal deviation) {
+        this.deviation = deviation;
     }
 
     /**
-     * 取得 当日客户收益_费前
-     * @return 当日客户收益_费前
+     * 获取 产品单位净值
      */
-    public BigDecimal getProfitTdyFq() {
-        return profitTdyFq;
+    public BigDecimal getUnitValue() {
+        return unitValue;
     }
 
     /**
-     * 设置 当日客户收益_费前
-     * @param profitTdyFq 当日客户收益_费前
+     * 设置 产品单位净值
      */
-    public void setProfitTdyFq(BigDecimal profitTdyFq) {
-        this.profitTdyFq = profitTdyFq;
+    public void setUnitValue(BigDecimal unitValue) {
+        this.unitValue = unitValue;
     }
 
     /**
-     * 取得 万份收益_费前
-     * @return 万份收益_费前
+     * 获取 产品累计单位净值
      */
-    public BigDecimal getwYieldFq() {
-        return wYieldFq;
+    public BigDecimal getUnitValueT() {
+        return unitValueT;
     }
 
     /**
-     * 设置 万份收益_费前
-     * @param wYieldFq 万份收益_费前
+     * 设置 产品累计单位净值
      */
-    public void setwYieldFq(BigDecimal wYieldFq) {
-        this.wYieldFq = wYieldFq;
+    public void setUnitValueT(BigDecimal unitValueT) {
+        this.unitValueT = unitValueT;
     }
 
     /**
-     * 取得 备注
-     * @return 备注
+     * 获取 当日客户收益
+     */
+    public BigDecimal getProfitTdy() {
+        return profitTdy;
+    }
+
+    /**
+     * 设置 当日客户收益
+     */
+    public void setProfitTdy(BigDecimal profitTdy) {
+        this.profitTdy = profitTdy;
+    }
+
+    /**
+     * 获取 万份收益
+     */
+    public BigDecimal getwYield() {
+        return wYield;
+    }
+
+    /**
+     * 设置 万份收益
+     */
+    public void setwYield(BigDecimal wYield) {
+        this.wYield = wYield;
+    }
+
+    /**
+     * 获取 本日年化收益率%
+     */
+    public BigDecimal getYieldTdy() {
+        return yieldTdy;
+    }
+
+    /**
+     * 设置 本日年化收益率%
+     */
+    public void setYieldTdy(BigDecimal yieldTdy) {
+        this.yieldTdy = yieldTdy;
+    }
+
+    /**
+     * 获取 7日年化收益率%
+     */
+    public BigDecimal getYield7() {
+        return yield7;
+    }
+
+    /**
+     * 设置 7日年化收益率%
+     */
+    public void setYield7(BigDecimal yield7) {
+        this.yield7 = yield7;
+    }
+
+    /**
+     * 获取 当日本期利润已实现
+     */
+    public BigDecimal getProfitCurrentYes() {
+        return profitCurrentYes;
+    }
+
+    /**
+     * 设置 当日本期利润已实现
+     */
+    public void setProfitCurrentYes(BigDecimal profitCurrentYes) {
+        this.profitCurrentYes = profitCurrentYes;
+    }
+
+    /**
+     * 获取 当日本期利润未实现
+     */
+    public BigDecimal getProfitCurrentNo() {
+        return profitCurrentNo;
+    }
+
+    /**
+     * 设置 当日本期利润未实现
+     */
+    public void setProfitCurrentNo(BigDecimal profitCurrentNo) {
+        this.profitCurrentNo = profitCurrentNo;
+    }
+
+    /**
+     * 获取 业绩比较基准文本说明
+     */
+    public String getBenchmarkInfo() {
+        return benchmarkInfo;
+    }
+
+    /**
+     * 设置 业绩比较基准文本说明
+     */
+    public void setBenchmarkInfo(String benchmarkInfo) {
+        this.benchmarkInfo = benchmarkInfo == null ? null : benchmarkInfo.trim();
+    }
+
+    /**
+     * 获取 业绩基准收益率
+     */
+    public BigDecimal getRateBenchmark() {
+        return rateBenchmark;
+    }
+
+    /**
+     * 设置 业绩基准收益率
+     */
+    public void setRateBenchmark(BigDecimal rateBenchmark) {
+        this.rateBenchmark = rateBenchmark;
+    }
+
+    /**
+     * 获取 现金分红
+     */
+    public BigDecimal getCashFormGrantTdy() {
+        return cashFormGrantTdy;
+    }
+
+    /**
+     * 设置 现金分红
+     */
+    public void setCashFormGrantTdy(BigDecimal cashFormGrantTdy) {
+        this.cashFormGrantTdy = cashFormGrantTdy;
+    }
+
+    /**
+     * 获取 红利再投金额
+     */
+    public BigDecimal getReinvestFormGrantTdy() {
+        return reinvestFormGrantTdy;
+    }
+
+    /**
+     * 设置 红利再投金额
+     */
+    public void setReinvestFormGrantTdy(BigDecimal reinvestFormGrantTdy) {
+        this.reinvestFormGrantTdy = reinvestFormGrantTdy;
+    }
+
+    /**
+     * 获取 业绩基准说明
+     */
+    public BigDecimal getRedemIntamtTdy() {
+        return redemIntamtTdy;
+    }
+
+    /**
+     * 设置 业绩基准说明
+     */
+    public void setRedemIntamtTdy(BigDecimal redemIntamtTdy) {
+        this.redemIntamtTdy = redemIntamtTdy;
+    }
+
+    /**
+     * 获取 应付利润
+     */
+    public BigDecimal getProfitChangeTdy() {
+        return profitChangeTdy;
+    }
+
+    /**
+     * 设置 应付利润
+     */
+    public void setProfitChangeTdy(BigDecimal profitChangeTdy) {
+        this.profitChangeTdy = profitChangeTdy;
+    }
+
+    /**
+     * 获取 备注
      */
     public String getRemark() {
         return remark;
@@ -1622,25 +526,146 @@ public class RepProdIndexDetail extends BaseEntity {
 
     /**
      * 设置 备注
-     * @param remark 备注
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
     }
 
     /**
-     * 取得 
-     * @return 
+     * 获取 创建时间
      */
-    public String getBenchmarkInfo() {
-        return benchmarkInfo;
+    public String getCreateTime() {
+        return createTime;
     }
 
     /**
-     * 设置 
-     * @param benchmarkInfo 
+     * 设置 创建时间
      */
-    public void setBenchmarkInfo(String benchmarkInfo) {
-        this.benchmarkInfo = benchmarkInfo == null ? null : benchmarkInfo.trim();
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    /**
+     * 获取 更新时间
+     */
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    /**
+     * 设置 更新时间
+     */
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        if (that == null) {
+            return false;
+        }
+        if (getClass() != that.getClass()) {
+            return false;
+        }
+        RepProdIndexDetail other = (RepProdIndexDetail) that;
+        return (this.getFprodId() == null ? other.getFprodId() == null : this.getFprodId().equals(other.getFprodId()))
+                && (this.getProdId() == null ? other.getProdId() == null : this.getProdId().equals(other.getProdId()))
+                && (this.getProdName() == null ? other.getProdName() == null : this.getProdName().equals(other.getProdName()))
+                && (this.getValueDate() == null ? other.getValueDate() == null : this.getValueDate().equals(other.getValueDate()))
+                && (this.getCapital() == null ? other.getCapital() == null : this.getCapital().equals(other.getCapital()))
+                && (this.getAssetTotalMarket() == null ? other.getAssetTotalMarket() == null : this.getAssetTotalMarket().equals(other.getAssetTotalMarket()))
+                && (this.getAssetValueCostFq() == null ? other.getAssetValueCostFq() == null : this.getAssetValueCostFq().equals(other.getAssetValueCostFq()))
+                && (this.getAssetValueMarketFq() == null ? other.getAssetValueMarketFq() == null : this.getAssetValueMarketFq().equals(other.getAssetValueMarketFq()))
+                && (this.getDeviation() == null ? other.getDeviation() == null : this.getDeviation().equals(other.getDeviation()))
+                && (this.getUnitValue() == null ? other.getUnitValue() == null : this.getUnitValue().equals(other.getUnitValue()))
+                && (this.getUnitValueT() == null ? other.getUnitValueT() == null : this.getUnitValueT().equals(other.getUnitValueT()))
+                && (this.getProfitTdy() == null ? other.getProfitTdy() == null : this.getProfitTdy().equals(other.getProfitTdy()))
+                && (this.getwYield() == null ? other.getwYield() == null : this.getwYield().equals(other.getwYield()))
+                && (this.getYieldTdy() == null ? other.getYieldTdy() == null : this.getYieldTdy().equals(other.getYieldTdy()))
+                && (this.getYield7() == null ? other.getYield7() == null : this.getYield7().equals(other.getYield7()))
+                && (this.getProfitCurrentYes() == null ? other.getProfitCurrentYes() == null : this.getProfitCurrentYes().equals(other.getProfitCurrentYes()))
+                && (this.getProfitCurrentNo() == null ? other.getProfitCurrentNo() == null : this.getProfitCurrentNo().equals(other.getProfitCurrentNo()))
+                && (this.getBenchmarkInfo() == null ? other.getBenchmarkInfo() == null : this.getBenchmarkInfo().equals(other.getBenchmarkInfo()))
+                && (this.getRateBenchmark() == null ? other.getRateBenchmark() == null : this.getRateBenchmark().equals(other.getRateBenchmark()))
+                && (this.getCashFormGrantTdy() == null ? other.getCashFormGrantTdy() == null : this.getCashFormGrantTdy().equals(other.getCashFormGrantTdy()))
+                && (this.getReinvestFormGrantTdy() == null ? other.getReinvestFormGrantTdy() == null : this.getReinvestFormGrantTdy().equals(other.getReinvestFormGrantTdy()))
+                && (this.getRedemIntamtTdy() == null ? other.getRedemIntamtTdy() == null : this.getRedemIntamtTdy().equals(other.getRedemIntamtTdy()))
+                && (this.getProfitChangeTdy() == null ? other.getProfitChangeTdy() == null : this.getProfitChangeTdy().equals(other.getProfitChangeTdy()))
+                && (this.getRemark() == null ? other.getRemark() == null : this.getRemark().equals(other.getRemark()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((getFprodId() == null) ? 0 : getFprodId().hashCode());
+        result = prime * result + ((getProdId() == null) ? 0 : getProdId().hashCode());
+        result = prime * result + ((getProdName() == null) ? 0 : getProdName().hashCode());
+        result = prime * result + ((getValueDate() == null) ? 0 : getValueDate().hashCode());
+        result = prime * result + ((getCapital() == null) ? 0 : getCapital().hashCode());
+        result = prime * result + ((getAssetTotalMarket() == null) ? 0 : getAssetTotalMarket().hashCode());
+        result = prime * result + ((getAssetValueCostFq() == null) ? 0 : getAssetValueCostFq().hashCode());
+        result = prime * result + ((getAssetValueMarketFq() == null) ? 0 : getAssetValueMarketFq().hashCode());
+        result = prime * result + ((getDeviation() == null) ? 0 : getDeviation().hashCode());
+        result = prime * result + ((getUnitValue() == null) ? 0 : getUnitValue().hashCode());
+        result = prime * result + ((getUnitValueT() == null) ? 0 : getUnitValueT().hashCode());
+        result = prime * result + ((getProfitTdy() == null) ? 0 : getProfitTdy().hashCode());
+        result = prime * result + ((getwYield() == null) ? 0 : getwYield().hashCode());
+        result = prime * result + ((getYieldTdy() == null) ? 0 : getYieldTdy().hashCode());
+        result = prime * result + ((getYield7() == null) ? 0 : getYield7().hashCode());
+        result = prime * result + ((getProfitCurrentYes() == null) ? 0 : getProfitCurrentYes().hashCode());
+        result = prime * result + ((getProfitCurrentNo() == null) ? 0 : getProfitCurrentNo().hashCode());
+        result = prime * result + ((getBenchmarkInfo() == null) ? 0 : getBenchmarkInfo().hashCode());
+        result = prime * result + ((getRateBenchmark() == null) ? 0 : getRateBenchmark().hashCode());
+        result = prime * result + ((getCashFormGrantTdy() == null) ? 0 : getCashFormGrantTdy().hashCode());
+        result = prime * result + ((getReinvestFormGrantTdy() == null) ? 0 : getReinvestFormGrantTdy().hashCode());
+        result = prime * result + ((getRedemIntamtTdy() == null) ? 0 : getRedemIntamtTdy().hashCode());
+        result = prime * result + ((getProfitChangeTdy() == null) ? 0 : getProfitChangeTdy().hashCode());
+        result = prime * result + ((getRemark() == null) ? 0 : getRemark().hashCode());
+        result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
+        result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", fprodId=").append(fprodId);
+        sb.append(", prodId=").append(prodId);
+        sb.append(", prodName=").append(prodName);
+        sb.append(", valueDate=").append(valueDate);
+        sb.append(", capital=").append(capital);
+        sb.append(", assetTotalMarket=").append(assetTotalMarket);
+        sb.append(", assetValueCostFq=").append(assetValueCostFq);
+        sb.append(", assetValueMarketFq=").append(assetValueMarketFq);
+        sb.append(", deviation=").append(deviation);
+        sb.append(", unitValue=").append(unitValue);
+        sb.append(", unitValueT=").append(unitValueT);
+        sb.append(", profitTdy=").append(profitTdy);
+        sb.append(", wYield=").append(wYield);
+        sb.append(", yieldTdy=").append(yieldTdy);
+        sb.append(", yield7=").append(yield7);
+        sb.append(", profitCurrentYes=").append(profitCurrentYes);
+        sb.append(", profitCurrentNo=").append(profitCurrentNo);
+        sb.append(", benchmarkInfo=").append(benchmarkInfo);
+        sb.append(", rateBenchmark=").append(rateBenchmark);
+        sb.append(", cashFormGrantTdy=").append(cashFormGrantTdy);
+        sb.append(", reinvestFormGrantTdy=").append(reinvestFormGrantTdy);
+        sb.append(", redemIntamtTdy=").append(redemIntamtTdy);
+        sb.append(", profitChangeTdy=").append(profitChangeTdy);
+        sb.append(", remark=").append(remark);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

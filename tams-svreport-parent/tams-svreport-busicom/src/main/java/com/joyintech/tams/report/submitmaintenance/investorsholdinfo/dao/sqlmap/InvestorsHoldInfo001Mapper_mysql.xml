@@ -571,7 +571,7 @@ where
 		(cii.REGIST_BANK_CODE =#{item.registBankCode} 
 			and cii.INDENTIFY_MARK=#{item.indentifyMark}
 			and cii.PRD_REGIST_CODE=#{item.prdRegistCode}
-			and DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d') =DATE_FORMAT(#{item.holdDate},'%Y-%m-%d')
+			and cii.HOLD_DATE = STR_TO_DATE(#{item.holdDate},'%Y-%m-%d')
 			and cii.CCY =#{item.ccy})
 	</foreach>
     </where>
@@ -707,7 +707,7 @@ where
 			 	 	and REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR} 
 		 	 		and INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
 		 	 		and CCY = #{investDto.ccy,jdbcType=VARCHAR}
-		 	 		and DATE_FORMAT(HOLD_DATE,'%Y-%m-%d') = DATE_FORMAT(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
+		 	 		and HOLD_DATE = STR_TO_DATE(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
 			</foreach>
 		</where>
 	</select>
@@ -842,7 +842,8 @@ where
 			<foreach collection="keyList" item="item" open="and (" separator="or" close=")">
 			(cii.REGIST_BANK_CODE = #{item.registBankCode}
 			and cii.INDENTIFY_MARK=#{item.indentifyMark} and cii.PRODID=#{item.prodid} and
-				DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d')=DATE_FORMAT(#{item.holdDate},'%Y-%m-%d') and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
+				cii.HOLD_DATE =STR_TO_DATE(#{item.holdDate},'%Y-%m-%d')
+				and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
 			</foreach>
 		</if>
 	</where>
@@ -869,7 +870,7 @@ where
 			 	 	and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR} 
 		 	 		and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
 		 	 		and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
-		 	 		and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') = DATE_FORMAT(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
+		 	 		and ciis.HOLD_DATE = STR_TO_DATE(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
 		 	 		and ciis.SEND_STATUS = '02'	 		
 			</foreach>
 		</where>
@@ -942,7 +943,7 @@ where
 	</select>
 	
 	<select id="selectInvestHoldInfoDataCount" resultType="java.lang.Integer">
-	   select count(1) from CHB_INVESTHOLD_INFO where DATE_FORMAT(HOLD_DATE, '%Y-%m-%d') = #{holdDate,jdbcType=VARCHAR}
+	   select count(1) from CHB_INVESTHOLD_INFO where HOLD_DATE = STR_TO_DATE(#{holdDate,jdbcType=VARCHAR},'%Y-%m-%d')
 	</select>
 	
 	<!-- 批量  -->

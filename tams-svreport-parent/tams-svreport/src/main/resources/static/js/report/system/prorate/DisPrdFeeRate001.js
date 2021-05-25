@@ -4,7 +4,7 @@
         return {
             busiId:$('#busiId').val()==null?null:$('#busiId').val().join(),
             cashType2:$('#cashType2').val()==null?null:$('#cashType2').val().join(),
-            status:$('#status2').val()==null?null:$('#status2').val().join()
+            status:$('#status').val()==null?null:$('#status').val().join()
         };
     };
 
@@ -22,7 +22,7 @@
             { title: "启用日期", field:'startDate',type:'date',width:'12%'},
             { title: "信披费用类型", field:'cashType2Name',width:'10%', sortField:'cashType2'},
             /*{ title: "busiId",  visible:false, field:'busiId'},*/
-            { title: "status",  visible:false, field:'status2'},
+            { title: "status2",  visible:false, field:'status2'},
             { title: "cashType2",  visible:false, field:'cashType2'},
             { title: "dataSource",  visible:false, field:'dataSource'},
             { title: "datauuid",  visible:false, field:'datauuid'},

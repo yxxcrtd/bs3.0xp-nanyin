@@ -1120,7 +1120,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>7日年化收益率（元）</w:t>
+                                        <w:t>7日年化收益率</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -2585,15 +2585,6 @@
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
                                         <w:t>${assetInfo.assetName!}</w:t>
-                                    </w:r>
-                                    <w:r w:rsidRPr="006D32B6">
-                                        <w:rPr>
-                                            <w:rFonts w:eastAsia="微软简仿宋" w:cs="微软简仿宋" w:hint="eastAsia"/>
-                                            <w:color w:val="000000"/>
-                                            <w:sz w:val="21"/>
-                                            <w:szCs w:val="21"/>
-                                        </w:rPr>
-                                        <w:t>1</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>

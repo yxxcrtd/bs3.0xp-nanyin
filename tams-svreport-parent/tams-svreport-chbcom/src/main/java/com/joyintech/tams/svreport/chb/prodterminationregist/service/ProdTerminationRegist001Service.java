@@ -306,7 +306,7 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
         //page.setTotal(data.size());
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
-		if(data!=null){
+		if(data!=null && data.size()>0){
 			page.setTotal(data.size()/pageSize+1);
 		}else{
 			page.setTotal(0);
