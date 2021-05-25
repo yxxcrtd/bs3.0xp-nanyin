@@ -216,7 +216,7 @@
             AND T1.PS = #{PS_T01}
             AND T2.PARENT_PORTFOLIO_ID is null
             AND SUBT2.INVEST_YESORNO = 'Y'
-            AND T1.TRADE_MARKET NOT IN (#{TRADE_MARKET_03},#{TRADE_MARKET_04})
+            <!--AND T1.TRADE_MARKET NOT IN (#{TRADE_MARKET_03},#{TRADE_MARKET_04})-->
             AND (T2.PORTFOLIO_ID <include refid="com.joyintech.service.period.trdbondduration.dao.TrdBondDurationMapper.portfolioAth"/>
                 or SUBT2.PORTFOLIO_ID <include refid="com.joyintech.service.period.trdbondduration.dao.TrdBondDurationMapper.portfolioAth"/>)
             AND NOT EXISTS (
