@@ -150,7 +150,7 @@ public class EquityInfoMaintenanceService extends BaseService{
      */
     public static void maptoDtoByPrpperties(Map<String,String> map,EquityInfo001Dto equityInfo001Dto,
     		Map<String, List<EquityInfo001Dto>> equityInfo001Map,
-    		String[] result,String interType){
+    		String[] result,String interType,List<ChbTypeMappingEx> HoldTypeMappingList){
         List<EquityInfo001Dto> equityInfoCheckList = new ArrayList<EquityInfo001Dto>();
         /**
          *从map中获取维护表中的数据
@@ -238,7 +238,7 @@ public class EquityInfoMaintenanceService extends BaseService{
             equityInfo001Dto.setDeptCode(map.get("DEPT_CODE"));
         }
         //add by lingxq on 2021-05-06 for 需求升级 ------->>>>>
-        updateHoldType(equityInfo001Dto);
+        updateHoldType(equityInfo001Dto,HoldTypeMappingList );
         //add by lingxq on 2021-05-06 for 需求升级 -------<<<<<
     }
     /**
@@ -614,9 +614,7 @@ public class EquityInfoMaintenanceService extends BaseService{
      *
      * @param equityInfo001Dto
      */
-    public static void updateHoldType(EquityInfo001Dto equityInfo001Dto) {
-        ChbTypeMappingExMapper chbTypeMappingExMapper = SpringContextUtil.getBean(ChbTypeMappingExMapper.class);
-        List<ChbTypeMappingEx>  HoldTypeMappingList = chbTypeMappingExMapper.selectByMappingcode("HOLDTYPE");
+    public static void updateHoldType(EquityInfo001Dto equityInfo001Dto,List<ChbTypeMappingEx> HoldTypeMappingList) {
         if (!CollectionUtils.isEmpty(HoldTypeMappingList)){
             boolean flag = false;
             for(ChbTypeMappingEx mapping: HoldTypeMappingList){
