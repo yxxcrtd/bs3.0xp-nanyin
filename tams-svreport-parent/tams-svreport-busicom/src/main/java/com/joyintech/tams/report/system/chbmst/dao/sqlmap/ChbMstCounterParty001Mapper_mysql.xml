@@ -3,6 +3,7 @@
 <mapper namespace="com.joyintech.tams.report.system.chbmst.dao.ChbMstCounterParty001Mapper_mysql">
 	<select id="queryForPage" resultType="com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto">
 		SELECT
+		'导出' as type,
 		/** a.STATUS as status,**/
 		a.STATUS as svrStatus,/** 中债数据状态更改名称 modify by yanya on 20210522**/
 		a.COUNTER_ID as counterId,
@@ -40,6 +41,7 @@
 		</where>
 		union all
 		SELECT
+		'导出' as type,
 		/**'A' as status,**/
 		'A' as svrStatus,/** 中债数据状态更改名称 modify by yanya on 20210522**/
 		c.COUNTER_ID as counterId,

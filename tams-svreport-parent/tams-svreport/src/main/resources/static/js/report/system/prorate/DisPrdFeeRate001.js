@@ -116,17 +116,8 @@
             var param ={};
             var rows = table.getAllCheckedRows();
             if(rows.length > 0) {
-                var busiIdList = [];
-                var cashType2List = [];
-                var startDateList = [];
-                $.each(rows, function(i, row) {
-                    busiIdList.push(row.busiId);
-                    cashType2List.push(row.cashType2);
-                    startDateList.push(row.startDate);
-                });
-                param.keybusiIdList = busiIdList.join();
-                param.keycashType2List = cashType2List.join();
-                param.keystartDateList = startDateList.join();
+                var datas = JSON.stringify(rows);
+                param.datas = datas;
             }
             else{
                 //有勾选优先勾选数据

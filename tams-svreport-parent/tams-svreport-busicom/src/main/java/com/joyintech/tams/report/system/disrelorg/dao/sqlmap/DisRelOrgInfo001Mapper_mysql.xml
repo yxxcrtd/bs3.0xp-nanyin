@@ -3,6 +3,7 @@
 <mapper namespace="com.joyintech.tams.report.system.disrelorg.dao.DisRelOrgInfo001Mapper_mysql">
 	<select id="queryForPage" resultType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
 		SELECT
+		'导出' as type,
 		a.STATUS as svrStatus,
 		a.RELORG_ID as relorgId,
 		a.ORGAN_NAME as organName,

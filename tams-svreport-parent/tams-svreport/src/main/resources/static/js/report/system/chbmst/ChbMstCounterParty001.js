@@ -116,11 +116,13 @@
             var param ={};
             var rows = table.getAllCheckedRows();
             if(rows.length > 0) {
-                var keyList = [];
-                $.each(rows, function(i, row) {
-                    keyList.push(row.counterId);
-                });
-                param.keys = keyList.join();
+                // var keyList = [];
+                // $.each(rows, function(i, row) {
+                //     keyList.push(row.counterId);
+                // });
+                // param.keys = keyList.join();
+                var datas = JSON.stringify(rows);
+                param.datas = datas;
             }
             else{
                 //有勾选优先勾选数据

@@ -9,10 +9,10 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.mstbond.service.MstBondCreditRating001Service;
 import com.joyintech.tams.report.system.mstbond.service.MstBondCreditRatingNewService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,7 +25,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @PageId("MstBondCreditRating001")
@@ -105,8 +109,7 @@ public class MstBondCreditRating001Controller extends BaseController {
      * @return 导出
      */
     @RequestMapping(value = ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() {
-        List<MstBondCreditRating> dtoList = this.mstBondCreditRatingNewService.queryReportList(RequestUtil.getPageParam());
+    public ResponseEntity<byte[]> export() throws IOException {
         /*Map<String, Object> param = RequestUtil.getPageParam();
         List<ChbAssetInfo> list = mstBondCreditRatingNewService.getoCode(param);
         Map<String,Object>map=new HashMap<>();
@@ -115,14 +118,26 @@ public class MstBondCreditRating001Controller extends BaseController {
                 map.put(chbAssetInfo.getAssetCode(),chbAssetInfo.getAssetName());
             }
         }*/
+
+        List<MstBondCreditRating> dtoList = null;
+        String datas = this.getParam("datas");
+        if (StringUtil.isNotEmpty(datas)) {
+            dtoList = JsonUtils.json2List(datas, MstBondCreditRating.class);
+        }
+        else {
+            dtoList = this.mstBondCreditRatingNewService.queryReportList(RequestUtil.getPageParam());
+        }
         dtoList.forEach(item -> {
-            item.setGradeOrgIdName(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.评级机构, item.getGradeOrgId()));
-            item.setoTypeName(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.评级类型, item.getoType()));
-            item.setGradeResultName(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.主体评级_中债, item.getGradeResult()));
+            item.setGradeDateStr(DateUtil.format(item.getGradeDate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
         });
+//        dtoList.forEach(item -> {
+//            item.setGradeOrgIdName(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndName(
+//                    DictCode.评级机构, item.getGradeOrgId()));
+//            item.setoTypeName(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndName(
+//                    DictCode.评级类型, item.getoType()));
+//            item.setGradeResultName(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndName(
+//                    DictCode.主体评级_中债, item.getGradeResult()));
+//        });
         File outFile = mstBondCreditRating001Service.makeFile(
                 "/com/joyintech/tams/report/system/mstbond/conf/export_conf.xml", dtoList);
         return ExportUtil.export(

@@ -44,13 +44,24 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
         Page<DisAssociatedInstitutions> page;
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        String status = (String)param.get("status");
-        List<String> selectStatus = StringUtil.splitToList(GlobalConstant.COMMA, status);
-        param.put("selectStatus", selectStatus);
+//        String status = (String)param.get("status");
+//        List<String> selectStatus = StringUtil.splitToList(GlobalConstant.COMMA, status);
+//        param.put("selectStatus", selectStatus);
+        dealMap(param);
         page=  super.queryForPage(pagenum,legth,()->disRelOrgInfo001Mapper.queryForPage(param));
 
         dealDataList(page.getRoot());
         return page;
+    }
+
+    /**
+     * 处理
+     * @param param
+     */
+    private void dealMap(Map<String, Object> param) {
+        String status = (String)param.get("status");
+        List<String> selectStatus = StringUtil.splitToList(GlobalConstant.COMMA, status);
+        param.put("selectStatus", selectStatus);
     }
 
     /**
@@ -81,11 +92,20 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
         return disRelOrgInfo001Mapper.getSysDataDict( param);
     }
 
+    /**
+     * 查询导出数据
+     * @param param
+     * @return
+     */
     public List<DisAssociatedInstitutions> queryReportList(Map<String, Object> param) {
-        String relorgIds = (String)param.get("keys");
-        List<String> selectrelorgIds = StringUtil.splitToList(GlobalConstant.COMMA, relorgIds);
-        param.put("selectrelorgIds", selectrelorgIds);
-        return disRelOrgInfo001Mapper.queryReportList( param);
+//        String relorgIds = (String)param.get("keys");
+//        List<String> selectrelorgIds = StringUtil.splitToList(GlobalConstant.COMMA, relorgIds);
+//        param.put("selectrelorgIds", selectrelorgIds);
+//        return disRelOrgInfo001Mapper.queryReportList( param);
+        dealMap(param);
+        List<DisAssociatedInstitutions> list = disRelOrgInfo001Mapper.queryForPage(param);
+        dealDataList(list);
+        return list;
     }
 
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {

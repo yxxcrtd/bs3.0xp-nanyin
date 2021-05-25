@@ -51,6 +51,17 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
         Page<MstBondCreditRating> page;
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+        dealMap(param);
+        page=  super.queryForPage(pagenum,legth,()->mstBondCreditRating001Mapper.queryForPage(param));
+        dealDataList(page.getRoot());
+        return page;
+    }
+
+    /**
+     * 处理参数
+     * @param param
+     */
+    private void dealMap(Map<String, Object> param) {
         String oCode = (String)param.get("oCode");
         String oType = (String)param.get("oType");
         String status = (String)param.get("status");
@@ -60,11 +71,7 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
         param.put("selectoCode", selectoCode);
         param.put("selectoType", selectoType);
         param.put("selectStatus", selectStatus);
-        page=  super.queryForPage(pagenum,legth,()->mstBondCreditRating001Mapper.queryForPage(param));
-        dealDataList(page.getRoot());
-        return page;
     }
-
     /**
      * 处理查询结果 <功能详细描述>
      *
@@ -75,15 +82,15 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
      */
     private void dealDataList(List<MstBondCreditRating> list) {
         list.forEach(item -> {
-            item.setoTypeName(SysDataUtil.getZZDictCodeAndNameNew(
+            item.setoTypeName(SysDataUtil.getZZDictCodeAndName(
                     DictCode.评级类型, item.getoType() ));
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.维护数据状态, item.getStatus2()));
             item.setSvrDataSourcesName (SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.数据来源, item.getSvrDataSources()));
-            item.setGradeOrgIdName (SysDataUtil.getZZDictCodeAndNameNew(
+            item.setGradeOrgIdName (SysDataUtil.getZZDictCodeAndName(
                     DictCode.评级机构, item.getGradeOrgId()));
-            item.setGradeResultName (SysDataUtil.getZZDictCodeAndNameNew(
+            item.setGradeResultName (SysDataUtil.getZZDictCodeAndName(
                     DictCode.主体评级_中债, item.getGradeResult()));
         });
 
@@ -121,30 +128,36 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
         return;
     }
 
-
-
+    /**
+     * 查询导出数据
+     * @param param
+     */
     public List<MstBondCreditRating> queryReportList(Map<String, Object> param) {
-        String keys = (String)param.get("keys");
-        String[] strs = keys.split(" ,");
-        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
-        List<MstBondCreditRating> dtoList=new ArrayList<>();
-        for(int i=0;i<strs.length;i++){
-            String arr =strs[i];
-            String[] s =arr.split(",");
-            String oCode=s[0];
-            String gradeOrgId=s[1];
-            String oType=s[3];
-            MstBondCreditRating ms=new MstBondCreditRating();
-            ms.setoCode(oCode);
-            ms.setGradeOrgId(gradeOrgId);
-            ms.setGradeDate(DateUtil.parse(dfs.format(Long.parseLong(String.valueOf(s[2])))));
-            ms.setoType(oType);
-            dtoList.add(ms);
-        }
-        /*List<String> selectkeys = StringUtil.splitToList(GlobalConstant.COMMA, keys);
-        param.put("selectkeys", selectkeys);*/
-
-        return mstBondCreditRating001Mapper.queryReportList(dtoList);
+//        String keys = (String)param.get("keys");
+//        String[] strs = keys.split(" ,");
+//        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+//        List<MstBondCreditRating> dtoList=new ArrayList<>();
+//        for(int i=0;i<strs.length;i++){
+//            String arr =strs[i];
+//            String[] s =arr.split(",");
+//            String oCode=s[0];
+//            String gradeOrgId=s[1];
+//            String oType=s[3];
+//            MstBondCreditRating ms=new MstBondCreditRating();
+//            ms.setoCode(oCode);
+//            ms.setGradeOrgId(gradeOrgId);
+//            ms.setGradeDate(DateUtil.parse(dfs.format(Long.parseLong(String.valueOf(s[2])))));
+//            ms.setoType(oType);
+//            dtoList.add(ms);
+//        }
+//        /*List<String> selectkeys = StringUtil.splitToList(GlobalConstant.COMMA, keys);
+//        param.put("selectkeys", selectkeys);*/
+//
+//        return mstBondCreditRating001Mapper.queryReportList(dtoList);
+        dealMap(param);
+        List<MstBondCreditRating> list = mstBondCreditRating001Mapper.queryForPage(param);
+        dealDataList(list);
+        return list;
     }
 
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) throws ParseException {
