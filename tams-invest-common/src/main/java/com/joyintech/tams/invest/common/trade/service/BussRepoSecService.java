@@ -252,12 +252,8 @@ public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
             
             //resultList = this.queryForPage(page, length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params));
             //resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params);
-            //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201116 start
-            if(DictCodeList.回购拆借方向_正回购.getValue().equals(ps)&&StringUtil.equals(params.get("pageFromTz"), "TrdRepoTrade002")){
-            	resultList = this.queryForPage(page, length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepoForEtrPledge(params));
-            }
             //银行间上下行多组合 正回购
-            else if(DictCodeList.回购拆借方向_正回购.getValue().equals(ps)&&StringUtil.equals(params.get("pageFromTz"), "CfetsRepoDealQuotedPrice003")){
+            if(DictCodeList.回购拆借方向_正回购.getValue().equals(ps)&&StringUtil.equals(params.get("pageFromTz"), "CfetsRepoDealQuotedPrice003")){
                 String portfolioId = (String)params.get("portfolioId");
                 List<String> portfolioIds = Arrays.asList(portfolioId.split(","));
                 if(StringUtil.isNotEmpty(portfolioIds)&&portfolioIds.size()>0){
@@ -268,7 +264,6 @@ public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
             else{
             	resultList = this.queryForPage(page, length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params));
             }
-            //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201116 end
             if (params.get("isWithInvAim") != null && (Boolean) params.get("isWithInvAim") && resultList != null && !resultList.getRoot().isEmpty()) {
                 // 用融入的持仓（投资目的999999）减去卖空和卖空可用的持仓，并且最后结果没有卖空的数据
                 List<PledgeBondInfoDto> resultList1 = new ArrayList<>();
