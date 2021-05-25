@@ -25,7 +25,7 @@
                 and pcpf.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
             </if>
             <if test="chlFinprodId != null and chlFinprodId != ''">
-                AND fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR}
+                AND ( fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR} or pcpf.CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR} )
             </if>
             <if test="ccy != null and ccy != ''">
                 and pcpf.CCY = #{ccy,jdbcType=VARCHAR}
@@ -79,7 +79,7 @@
                 and pcp.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
             </if>
             <if test="chlFinprodId != null and chlFinprodId != ''">
-                AND fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR}
+                AND ( fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR} or pcp.CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR} )
             </if>
             <if test="ccy != null and ccy != ''">
                 and pcp.CCY = #{ccy,jdbcType=VARCHAR}
@@ -165,7 +165,7 @@
                 and pcpf.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
             </if>
             <if test="chlFinprodId != null and chlFinprodId != ''">
-                AND fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR}
+                AND ( fp.FINPROD_MARKET_ID = #{chlFinprodId,jdbcType=VARCHAR} or pcpf.CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR} )
             </if>
             <if test="ccy != null and ccy != ''">
                 and pcpf.CCY = #{ccy,jdbcType=VARCHAR}
