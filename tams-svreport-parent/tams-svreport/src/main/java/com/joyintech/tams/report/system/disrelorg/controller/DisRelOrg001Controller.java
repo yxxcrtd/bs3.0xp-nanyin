@@ -12,6 +12,7 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.system.disrelorg.service.DisRelOrgInfo001Service;
 import com.joyintech.tams.report.system.disrelorg.service.DisRelOrgService;
 import com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions;
+import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @Controller
@@ -109,8 +111,15 @@ public class DisRelOrg001Controller extends BaseController {
      * @return 导出
      */
     @RequestMapping(value = ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() {
-        List<DisAssociatedInstitutions> disAssociatedInstitutionslist = this.disRelOrgService.queryReportList(RequestUtil.getPageParam());
+    public ResponseEntity<byte[]> export() throws IOException {
+        List<DisAssociatedInstitutions> disAssociatedInstitutionslist = null;
+        String datas = this.getParam("datas");
+        if (StringUtil.isNotEmpty(datas)) {
+            disAssociatedInstitutionslist = JsonUtils.json2List(datas, DisAssociatedInstitutions.class);
+        }
+        else {
+            disAssociatedInstitutionslist = this.disRelOrgService.queryReportList(RequestUtil.getPageParam());
+        }
 
         File outFile = disRelOrgInfo001Service.makeFile(
                 "/com/joyintech/tams/report/system/disrelorg/conf/export_conf.xml", disAssociatedInstitutionslist);

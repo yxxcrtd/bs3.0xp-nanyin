@@ -42,16 +42,16 @@ public class RepProdIndexDetail {
     private BigDecimal assetTotalMarket;
 
     /**
-     * 产品资产净值(按成本）_费前
+     * 产品资产净值(按成本）
      */
     @JsonSerialize(using= BigDecimalSerializer.class)
-    private BigDecimal assetValueCostFq;
+    private BigDecimal assetValueCost;
 
     /**
-     * 产品资产净值(按市值）_费前
+     * 产品资产净值(按市值）
      */
     @JsonSerialize(using= BigDecimalSerializer.class)
-    private BigDecimal assetValueMarketFq;
+    private BigDecimal assetValueMarket;
 
     /**
      * 偏离度%
@@ -162,15 +162,15 @@ public class RepProdIndexDetail {
      */
     private static final long serialVersionUID = 1L;
 
-    public RepProdIndexDetail(String fprodId, String prodId, String prodName, Date valueDate, BigDecimal capital, BigDecimal assetTotalMarket, BigDecimal assetValueCostFq, BigDecimal assetValueMarketFq, BigDecimal deviation, BigDecimal unitValue, BigDecimal unitValueT, BigDecimal profitTdy, BigDecimal wYield, BigDecimal yieldTdy, BigDecimal yield7, BigDecimal profitCurrentYes, BigDecimal profitCurrentNo, String benchmarkInfo, BigDecimal rateBenchmark, BigDecimal cashFormGrantTdy, BigDecimal reinvestFormGrantTdy, BigDecimal redemIntamtTdy, BigDecimal profitChangeTdy, String remark, String createTime, String updateTime) {
+    public RepProdIndexDetail(String fprodId, String prodId, String prodName, Date valueDate, BigDecimal capital, BigDecimal assetTotalMarket, BigDecimal assetValueCost, BigDecimal assetValueMarket, BigDecimal deviation, BigDecimal unitValue, BigDecimal unitValueT, BigDecimal profitTdy, BigDecimal wYield, BigDecimal yieldTdy, BigDecimal yield7, BigDecimal profitCurrentYes, BigDecimal profitCurrentNo, String benchmarkInfo, BigDecimal rateBenchmark, BigDecimal cashFormGrantTdy, BigDecimal reinvestFormGrantTdy, BigDecimal redemIntamtTdy, BigDecimal profitChangeTdy, String remark, String createTime, String updateTime) {
         this.fprodId = fprodId;
         this.prodId = prodId;
         this.prodName = prodName;
         this.valueDate = valueDate;
         this.capital = capital;
         this.assetTotalMarket = assetTotalMarket;
-        this.assetValueCostFq = assetValueCostFq;
-        this.assetValueMarketFq = assetValueMarketFq;
+        this.assetValueCost = assetValueCost;
+        this.assetValueMarket = assetValueMarket;
         this.deviation = deviation;
         this.unitValue = unitValue;
         this.unitValueT = unitValueT;
@@ -280,31 +280,31 @@ public class RepProdIndexDetail {
     }
 
     /**
-     * 获取 产品资产净值(按成本）_费前
+     * 获取 产品资产净值(按成本）
      */
-    public BigDecimal getAssetValueCostFq() {
-        return assetValueCostFq;
+    public BigDecimal getAssetValueCost() {
+        return assetValueCost;
     }
 
     /**
-     * 设置 产品资产净值(按成本）_费前
+     * 设置 产品资产净值(按成本）
      */
-    public void setAssetValueCostFq(BigDecimal assetValueCostFq) {
-        this.assetValueCostFq = assetValueCostFq;
+    public void setAssetValueCost(BigDecimal assetValueCost) {
+        this.assetValueCost = assetValueCost;
     }
 
     /**
-     * 获取 产品资产净值(按市值）_费前
+     * 获取 产品资产净值(按市值）
      */
-    public BigDecimal getAssetValueMarketFq() {
-        return assetValueMarketFq;
+    public BigDecimal getAssetValueMarket() {
+        return assetValueMarket;
     }
 
     /**
-     * 设置 产品资产净值(按市值）_费前
+     * 设置 产品资产净值(按市值）
      */
-    public void setAssetValueMarketFq(BigDecimal assetValueMarketFq) {
-        this.assetValueMarketFq = assetValueMarketFq;
+    public void setAssetValueMarket(BigDecimal assetValueMarket) {
+        this.assetValueMarket = assetValueMarket;
     }
 
     /**
@@ -577,8 +577,8 @@ public class RepProdIndexDetail {
                 && (this.getValueDate() == null ? other.getValueDate() == null : this.getValueDate().equals(other.getValueDate()))
                 && (this.getCapital() == null ? other.getCapital() == null : this.getCapital().equals(other.getCapital()))
                 && (this.getAssetTotalMarket() == null ? other.getAssetTotalMarket() == null : this.getAssetTotalMarket().equals(other.getAssetTotalMarket()))
-                && (this.getAssetValueCostFq() == null ? other.getAssetValueCostFq() == null : this.getAssetValueCostFq().equals(other.getAssetValueCostFq()))
-                && (this.getAssetValueMarketFq() == null ? other.getAssetValueMarketFq() == null : this.getAssetValueMarketFq().equals(other.getAssetValueMarketFq()))
+                && (this.getAssetValueCost() == null ? other.getAssetValueCost() == null : this.getAssetValueCost().equals(other.getAssetValueCost()))
+                && (this.getAssetValueMarket() == null ? other.getAssetValueMarket() == null : this.getAssetValueMarket().equals(other.getAssetValueMarket()))
                 && (this.getDeviation() == null ? other.getDeviation() == null : this.getDeviation().equals(other.getDeviation()))
                 && (this.getUnitValue() == null ? other.getUnitValue() == null : this.getUnitValue().equals(other.getUnitValue()))
                 && (this.getUnitValueT() == null ? other.getUnitValueT() == null : this.getUnitValueT().equals(other.getUnitValueT()))
@@ -609,8 +609,8 @@ public class RepProdIndexDetail {
         result = prime * result + ((getValueDate() == null) ? 0 : getValueDate().hashCode());
         result = prime * result + ((getCapital() == null) ? 0 : getCapital().hashCode());
         result = prime * result + ((getAssetTotalMarket() == null) ? 0 : getAssetTotalMarket().hashCode());
-        result = prime * result + ((getAssetValueCostFq() == null) ? 0 : getAssetValueCostFq().hashCode());
-        result = prime * result + ((getAssetValueMarketFq() == null) ? 0 : getAssetValueMarketFq().hashCode());
+        result = prime * result + ((getAssetValueCost() == null) ? 0 : getAssetValueCost().hashCode());
+        result = prime * result + ((getAssetValueMarket() == null) ? 0 : getAssetValueMarket().hashCode());
         result = prime * result + ((getDeviation() == null) ? 0 : getDeviation().hashCode());
         result = prime * result + ((getUnitValue() == null) ? 0 : getUnitValue().hashCode());
         result = prime * result + ((getUnitValueT() == null) ? 0 : getUnitValueT().hashCode());
@@ -644,8 +644,8 @@ public class RepProdIndexDetail {
         sb.append(", valueDate=").append(valueDate);
         sb.append(", capital=").append(capital);
         sb.append(", assetTotalMarket=").append(assetTotalMarket);
-        sb.append(", assetValueCostFq=").append(assetValueCostFq);
-        sb.append(", assetValueMarketFq=").append(assetValueMarketFq);
+        sb.append(", assetValueCost=").append(assetValueCost);
+        sb.append(", assetValueMarket=").append(assetValueMarket);
         sb.append(", deviation=").append(deviation);
         sb.append(", unitValue=").append(unitValue);
         sb.append(", unitValueT=").append(unitValueT);

@@ -46,6 +46,17 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
         Page<ChbMstCounterPartyDto> page;
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+        dealMap(param);
+        page=  super.queryForPage(pagenum,legth,()->chbMstCounterParty001Mapper.queryForPage(param));
+        dealDataList(page.getRoot());
+        return page;
+    }
+
+    /**
+     * 处理参数
+     * @param param
+     */
+    private void dealMap(Map<String, Object> param) {
         String counterId = (String)param.get("counterId");
         String counterType2 = (String)param.get("counterType2");
         String status = (String)param.get("status");
@@ -55,9 +66,6 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
         param.put("selectcounterId", selectcounterId);
         param.put("selectcounterType2", selectcounterType2);
         param.put("selectStatus", selectStatus);
-        page=  super.queryForPage(pagenum,legth,()->chbMstCounterParty001Mapper.queryForPage(param));
-        dealDataList(page.getRoot());
-        return page;
     }
 
     /**
@@ -70,9 +78,9 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
      */
     private void dealDataList(List<ChbMstCounterPartyDto> list) {
         list.forEach(item -> {
-            item.setCounterType1Name (SysDataUtil.getZZDictCodeAndNameNew(
+            item.setCounterType1Name (SysDataUtil.getZZDictCodeAndName(
                     DictCode.客户一级类型, item.getCounterType1()));
-            item.setCounterType2Name (SysDataUtil.getZZDictCodeAndNameNew(
+            item.setCounterType2Name (SysDataUtil.getZZDictCodeAndName(
                     DictCode.客户二级类型, item.getCounterType2()));
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.维护数据状态, item.getStatus()));
@@ -125,11 +133,20 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
         return;
     }
 
+    /**
+     * 查询导出数据
+     * @param param
+     * @return
+     */
     public List<ChbMstCounterPartyDto> queryReportList(Map<String, Object> param) {
-        String keys = (String)param.get("keys");
-        List<String> selectkeys = StringUtil.splitToList(GlobalConstant.COMMA, keys);
-        param.put("selectkeys", selectkeys);
-        return chbMstCounterParty001Mapper.queryReportList( param);
+//        String keys = (String)param.get("keys");
+//        List<String> selectkeys = StringUtil.splitToList(GlobalConstant.COMMA, keys);
+//        param.put("selectkeys", selectkeys);
+//        return chbMstCounterParty001Mapper.queryReportList( param);
+        dealMap(param);
+        List<ChbMstCounterPartyDto> list = chbMstCounterParty001Mapper.queryForPage(param);
+        dealDataList(list);
+        return list;
     }
 
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {

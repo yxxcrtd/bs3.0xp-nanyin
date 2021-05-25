@@ -14,6 +14,7 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.chbmst.service.ChbMstCounterParty001Service;
 import com.joyintech.tams.report.system.chbmst.service.ChbMstCounterPartyService;
+import com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -125,12 +127,19 @@ public class ChbMstCounterParty001Controller extends BaseController {
      * @return 导出
      */
     @RequestMapping(value = ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() {
-        List<ChbMstCounterPartyDto> dtoList = this.chbMstCounterPartyService.queryReportList(RequestUtil.getPageParam());
-        dtoList.forEach(item -> {
-            item.setCounterType2 (com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.客户二级类型, item.getCounterType2()));
-        });
+    public ResponseEntity<byte[]> export() throws IOException {
+        List<ChbMstCounterPartyDto> dtoList = null;
+        String datas = this.getParam("datas");
+        if (StringUtil.isNotEmpty(datas)) {
+            dtoList = JsonUtils.json2List(datas, ChbMstCounterPartyDto.class);
+        }
+        else {
+            dtoList = this.chbMstCounterPartyService.queryReportList(RequestUtil.getPageParam());
+        }
+//        dtoList.forEach(item -> {
+//            item.setCounterType2 (com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndNameNew(
+//                    DictCode.客户二级类型, item.getCounterType2()));
+//        });
         File outFile = chbMstCounterParty001Service.makeFile(
                 "/com/joyintech/tams/report/system/chbmst/conf/export_conf.xml", dtoList);
         return ExportUtil.export(

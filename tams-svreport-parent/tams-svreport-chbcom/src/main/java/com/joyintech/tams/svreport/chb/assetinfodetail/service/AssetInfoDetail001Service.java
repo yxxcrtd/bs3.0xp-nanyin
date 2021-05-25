@@ -161,19 +161,28 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 
 	public List<ExcelValidDto> importData(List<AssetInfoDetailDto> dataList){
 		List<ExcelValidDto> checkResult = new ArrayList<>();
-		List<ChbAssetInfo> assetInfo = new ArrayList<>();
-		assetInfo.addAll(dataList);
 		if(!StringUtil.isEmptyList(dataList)){
-			List<String> assetCodes = assetInfoDetailMapper.selectAssetCode(dataList);
+			List<AssetInfoDetailDto> existAsset = assetInfoDetailMapper.selectKeyListData(dataList);
 			List<ChbAssetInfo> insertList = new ArrayList<>();
 			List<ChbAssetInfo> updateList = new ArrayList<>();
-			dataList.forEach(assetInfoDetailDto -> {
-				if (assetCodes.contains(assetInfoDetailDto.getAssetCode())){
-					updateList.add(assetInfoDetailDto);
-				}else {
-					insertList.add(assetInfoDetailDto);
-				}
-			});
+			if (StringUtil.isEmptyList(existAsset)){
+				insertList.addAll(dataList);
+			}else {
+				List<String> assetCodes = new ArrayList<>();
+				Map<String,String> keyMap = new HashMap<>();
+				existAsset.forEach(assetInfoDetailDto -> {
+                    assetCodes.add(assetInfoDetailDto.getAssetCode());
+                    keyMap.put(assetInfoDetailDto.getAssetCode(),assetInfoDetailDto.getAssetUuid());
+				});
+				dataList.forEach(assetInfoDetailDto -> {
+					if (assetCodes.contains(assetInfoDetailDto.getAssetCode())){
+						assetInfoDetailDto.setAssetUuid(keyMap.get(assetInfoDetailDto.getAssetCode()));
+						updateList.add(assetInfoDetailDto);
+					}else {
+						insertList.add(assetInfoDetailDto);
+					}
+				});
+			}
 			if(!StringUtil.isEmptyList(insertList)){
 				assetInfoDetailMapper.insertBatch(insertList);
 			}

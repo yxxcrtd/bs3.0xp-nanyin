@@ -985,6 +985,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     temp.put("operateMode", allProdIdMap.get(cell));
                 }
             }
+            /** modify by yanya on 20210525 增加是否代销导入模板判定**/
+            temp.put("dxTplFlag", DictCodeList.是否_否.getValue());
             result.add(temp);
         });
         return result;
@@ -1022,6 +1024,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 }
                 temp.put(fieldName[i], cell);
             }
+            /** modify by yanya on 20210525 增加是否代销导入模板判定**/
+            temp.put("dxTplFlag", DictCodeList.是否_否.getValue());
             result.add(temp);
         });
         return result;
@@ -1290,6 +1294,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     temp.put("operateMode", allRegCodeMap.get(cell));
                 }
             }
+            /** modify by yanya on 20210525 增加是否代销导入模板判定**/
+            temp.put("dxTplFlag", DictCodeList.是否_是.getValue());
             result.add(temp);
         });
         return result;
@@ -1328,6 +1334,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 }
                 temp.put(fieldName[i], cell);
             }
+            /** modify by yanya on 20210525 增加是否代销导入模板判定**/
+            temp.put("dxTplFlag", DictCodeList.是否_是.getValue());
             result.add(temp);
         });
         return result;

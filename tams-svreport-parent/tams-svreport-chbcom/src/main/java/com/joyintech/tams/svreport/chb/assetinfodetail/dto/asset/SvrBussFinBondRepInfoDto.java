@@ -129,7 +129,15 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      */
     private String repPbcAssetType3;
 
+    private String bankCapital;
 
+    public String getBankCapital() {
+        return bankCapital;
+    }
+
+    public void setBankCapital(String bankCapital) {
+        this.bankCapital = bankCapital;
+    }
 
     public String getAssetCode() {
         return assetCode;
