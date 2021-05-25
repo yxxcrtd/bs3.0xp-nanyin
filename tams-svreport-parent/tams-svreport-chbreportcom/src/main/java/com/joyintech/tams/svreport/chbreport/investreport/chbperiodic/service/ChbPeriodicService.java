@@ -586,7 +586,6 @@ public class ChbPeriodicService {
      */
     private ChbPeriodicIndex qryQcPeriodicIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.putAll(params);
         // 若产品起息日>=本次报告开始日，则取产品起息日
         if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
                 || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
@@ -594,6 +593,9 @@ public class ChbPeriodicService {
         } else {
             map.put("qryDate", DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1));
         }
+        map.put("startReportDate", map.get("qryDate"));
+        map.put("endReportDate", params.get("endReportDate"));
+        map.put("prodId", params.get("prodId"));
         return qryPeriodicIndexHandler(map);
     }
 
@@ -605,7 +607,6 @@ public class ChbPeriodicService {
      */
     private List<ChbPeriodicIndex> qryQcPeriodicDetailIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.putAll(params);
         // 若产品起息日>=本次报告开始日，则取产品起息日
         if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
                 || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
@@ -613,6 +614,9 @@ public class ChbPeriodicService {
         } else {
             map.put("qryDate", DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1));
         }
+        map.put("startReportDate", map.get("qryDate"));
+        map.put("endReportDate", params.get("endReportDate"));
+        map.put("prodId", params.get("prodId"));
         return qryPeriodicIndexDetailHandler(map);
     }
 
@@ -624,8 +628,16 @@ public class ChbPeriodicService {
      */
     private ChbPeriodicIndex qryQmPeriodicIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
+        // 本期净值收益率计算 R1为期初每万份收益
+        if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
+                || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
+            map.put("startReportDate", params.get("vdate"));
+        } else {
+            map.put("startReportDate", DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1));
+        }
         map.put("qryDate", params.get("endReportDate"));
-        map.putAll(params);
+        map.put("endReportDate", params.get("endReportDate"));
+        map.put("prodId", params.get("prodId"));
         return qryPeriodicIndexHandler(map);
     }
 
@@ -637,8 +649,16 @@ public class ChbPeriodicService {
      */
     private List<ChbPeriodicIndex> qryQmPeriodicDetailIndex(Map<String, Object> params) {
         Map<String, Object> map = new HashMap();
-        map.putAll(params);
+        // 本期净值收益率计算 R1为期初每万份收益
+        if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
+                || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
+            map.put("startReportDate", params.get("vdate"));
+        } else {
+            map.put("startReportDate", DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1));
+        }
         map.put("qryDate", params.get("endReportDate"));
+        map.put("endReportDate", params.get("endReportDate"));
+        map.put("prodId", params.get("prodId"));
         return qryPeriodicIndexDetailHandler(map);
     }
 
@@ -842,9 +862,9 @@ public class ChbPeriodicService {
                 // 期初累计净值
                 if (Objects.isNull(qcDto.getYield7()) || BigDecimal.ZERO.compareTo(qcDto.getYield7()) == 0
                         || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
-                    value.setAssetUnitValueQC(ChbInvestReportConstant.横线);
+                    value.setAssetTotalValueQC(ChbInvestReportConstant.横线);
                 } else {
-                    value.setAssetUnitValueQC(ChbInvestReportConstant.df1.format(qcDto.getYield7()));
+                    value.setAssetTotalValueQC(ChbInvestReportConstant.df1.format(qcDto.getYield7()));
                 }
             }
             // 期初份额总数
@@ -895,16 +915,16 @@ public class ChbPeriodicService {
             }
         } else if (StringUtil.equals(DictCodeListExt2.产品类型_中债_货币型产品.getValue(), params.get(DictCode.产品类型_中债.getValue()))) {
             // 期末份额净值
-            if (Objects.isNull(qmDto.getUnitValue()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValue()) == 0) {
+            if (Objects.isNull(qmDto.getwYield()) || BigDecimal.ZERO.compareTo(qmDto.getwYield()) == 0) {
                 value.setUnitValue(ChbInvestReportConstant.df1.format(BigDecimal.ZERO));
             } else {
-                value.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValue()));
+                value.setUnitValue(ChbInvestReportConstant.df1.format(qmDto.getwYield()));
             }
             // 期末累计净值
-            if (Objects.isNull(qmDto.getUnitValueT()) || BigDecimal.ZERO.compareTo(qmDto.getUnitValueT()) == 0) {
-                value.setAssetTotalValue(ChbInvestReportConstant.df1.format(BigDecimal.ZERO));
+            if (Objects.isNull(qmDto.getYield7()) || BigDecimal.ZERO.compareTo(qmDto.getYield7()) == 0) {
+                value.setAssetTotalValue(ChbInvestReportConstant.df4.format(BigDecimal.ZERO));
             } else {
-                value.setAssetTotalValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
+                value.setAssetTotalValue(ChbInvestReportConstant.df4.format(qmDto.getYield7()));
             }
             // 本期净值收益率
             if (Objects.isNull(qmDto.getValuePercent()) || BigDecimal.ZERO.compareTo(qmDto.getValuePercent()) == 0) {
