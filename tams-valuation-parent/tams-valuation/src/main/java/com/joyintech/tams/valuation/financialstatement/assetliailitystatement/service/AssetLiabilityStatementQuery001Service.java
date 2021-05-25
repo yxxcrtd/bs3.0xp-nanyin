@@ -667,7 +667,7 @@ public class AssetLiabilityStatementQuery001Service extends CommonExportService<
 		String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		String fileName = prefix + "_" + sdf.format(reportDate) + "_资产负债表" + ".xls";
 		String tempName = "AssetLiabilityStatement.xls";
-		String tplFlodPath = "financialstatement/assetliailitystatement/AssetLiabilityStatement.xls";
+		String tplFlodPath = "financialstatement" + File.separator + "assetliailitystatement"  + File.separator +  "AssetLiabilityStatement.xls";
 		String tplPath = FileNameUtil.getTplFile(tplFlodPath);
 		String outPath = exportFilePath + File.separator + fileName;
 

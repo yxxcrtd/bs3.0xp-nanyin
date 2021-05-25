@@ -302,7 +302,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
         }
         String strFileName = "申报附件";
         ZipFileUtil.compressZip(new SafelyFile(CacheUtil.getSysParam(
-            GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+selectedItem.get(0).getRepFinprodInsId()+strFileName+".zip"), 
+            GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+File.separator+selectedItem.get(0).getRepFinprodInsId()+strFileName+".zip"),
             false, arrFileTemp.toArray(new SafelyFile[arrFile.size()]));
         
         

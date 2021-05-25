@@ -316,7 +316,6 @@ public final class ImportGenerator {
      *
      * @param table 导入表配置
      * @param path 路径
-     * @param dataFileName 数据文件名
      * @param content 导入数据内容
      * @throws Exception 异常
      * @return 导入是否成功
