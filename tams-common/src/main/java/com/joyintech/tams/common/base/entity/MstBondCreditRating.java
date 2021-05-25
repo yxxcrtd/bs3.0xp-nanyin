@@ -3,8 +3,133 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.json.CustomDateDeserialize;
 import java.util.Date;
+import java.util.List;
 
 public class MstBondCreditRating extends MstBondCreditRatingKey {
+
+    /**
+     * 数据状态名称
+     */
+    private String statusName;
+    /**
+     * 数据状态
+     */
+    private String status;
+    /**
+     * 数据状态
+     */
+    private String status2;
+    /**
+     * 数据来源
+     */
+    private String svrDataSources;
+    /**
+     * 数据来源名称
+     */
+    private String svrDataSourcesName;
+    /**
+     * 导出类型
+     */
+    private String type;
+    /**
+     * 选择项
+     */
+    private List<MstBondCreditRating> selectedItem;
+    private String oldGradeOrgId;
+    private String oldGradeDateStr;
+    private String oldOType;
+    private String gradeDateStr;
+
+    public String getGradeDateStr() {
+        return gradeDateStr;
+    }
+
+    public void setGradeDateStr(String gradeDateStr) {
+        this.gradeDateStr = gradeDateStr;
+    }
+
+    public String getOldGradeOrgId() {
+        return oldGradeOrgId;
+    }
+
+    public void setOldGradeOrgId(String oldGradeOrgId) {
+        this.oldGradeOrgId = oldGradeOrgId;
+    }
+
+    public String getOldOType() {
+        return oldOType;
+    }
+
+    public String getOldGradeDateStr() {
+        return oldGradeDateStr;
+    }
+
+    public void setOldGradeDateStr(String oldGradeDateStr) {
+        this.oldGradeDateStr = oldGradeDateStr;
+    }
+
+    public void setOldOType(String oldOType) {
+        this.oldOType = oldOType;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    @Override
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus2() {
+        return status2;
+    }
+
+    public void setStatus2(String status2) {
+        this.status2 = status2;
+    }
+
+    public String getSvrDataSources() {
+        return svrDataSources;
+    }
+
+    public void setSvrDataSources(String svrDataSources) {
+        this.svrDataSources = svrDataSources;
+    }
+
+    public String getSvrDataSourcesName() {
+        return svrDataSourcesName;
+    }
+
+    public void setSvrDataSourcesName(String svrDataSourcesName) {
+        this.svrDataSourcesName = svrDataSourcesName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<MstBondCreditRating> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<MstBondCreditRating> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
     /**
      * 长短期
      */
@@ -14,6 +139,42 @@ public class MstBondCreditRating extends MstBondCreditRatingKey {
      * 评级结果
      */
     private String gradeResult;
+    /**
+     * 评级结果名称
+     */
+    private String gradeResultName;
+    /**
+     * 评级类型名称
+     */
+    private String oTypeName;
+    /**
+     * 评级机构名称
+     */
+    private String gradeOrgIdName;
+
+    public String getGradeResultName() {
+        return gradeResultName;
+    }
+
+    public void setGradeResultName(String gradeResultName) {
+        this.gradeResultName = gradeResultName;
+    }
+
+    public String getoTypeName() {
+        return oTypeName;
+    }
+
+    public void setoTypeName(String oTypeName) {
+        this.oTypeName = oTypeName;
+    }
+
+    public String getGradeOrgIdName() {
+        return gradeOrgIdName;
+    }
+
+    public void setGradeOrgIdName(String gradeOrgIdName) {
+        this.gradeOrgIdName = gradeOrgIdName;
+    }
 
     /**
      * 录入方式

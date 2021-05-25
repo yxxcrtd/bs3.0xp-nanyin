@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.system.upinterfmonitor.dao.ReportUpInterfMonitor001Mapper_mysql">
-
+	<select id="queryHandleFileNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
+	SELECT DISTINCT
+	A.HANDLE_FILE_NAME as text,
+	A.HANDLE_FILE_NAME as id
+	FROM CHB_FILE_READ_MONITOR_INFO A
+	</select>
 	<select id="searchForPage"
 		resultType="com.joyintech.tams.report.system.upinterfmonitor.dto.ReportUpInterfMonitor001Dto">
 		SELECT 

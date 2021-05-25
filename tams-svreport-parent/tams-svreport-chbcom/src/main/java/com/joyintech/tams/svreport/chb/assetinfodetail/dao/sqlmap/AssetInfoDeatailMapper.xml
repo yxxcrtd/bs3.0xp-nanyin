@@ -2044,6 +2044,10 @@
         ;end;
     </update>
 
+    <select id="selectReportInfoByParam" resultMap="BaseResultMap">
+
+    </select>
+
     <select id="selectChbInfoByParam"  resultMap="BaseResultMap">
 
         SELECT *
@@ -3034,6 +3038,28 @@
         where trim(ASSET_CODE) = #{assetCode,jdbcType=CHAR}
     </delete>
 
+    <select id="getTradeCounter" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        COUNTER_ID AS id,
+        COUNTER_NAME AS text,
+        COUNTER_TYPE AS object
+        FROM
+        chb_mst_counter_party
+        WHERE
+        STATUS = 'E'
+        <if test="search != null and search !='' ">
+            AND (COUNTER_ID LIKE concat('%', #{search},'%') or COUNTER_NAME like concat('%', #{search},'%'))
+        </if>
 
 
+    </select>
+
+    <select id="selectDataCount" resultType="java.lang.Integer" parameterType="java.util.List">
+    </select>
+
+    <select id="selectKeyListData" resultMap="BaseResultMap" parameterType="java.util.List">
+    </select>
+
+    <select id="selectAssetCode" resultType="java.lang.String" parameterType="java.util.List">
+    </select>
 </mapper>

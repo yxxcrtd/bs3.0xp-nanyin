@@ -176,8 +176,8 @@
               t.ASSET_CODE as assetCode/*资产代码*/,
 		      t.ASSET_NAME as assetName /*资产名称*/,
 		      b.POBCASSETID as pobcassetid/*人行资金信托代码*/,
-              DATE_FORMAT(t.PLAN_SDATE,'%Y-%m-%d  %H:%i:%s') as planSdate /*资产起息日*/,
-              DATE_FORMAT(t.PLAN_EDATE,'%Y-%m-%d  %H:%i:%s') as planEdate /*资产到期日*/,
+              t.PLAN_SDATE as planSdate /*资产起息日*/,
+              t.PLAN_EDATE as planEdate /*资产到期日*/,
               b.UPDATE_TIME as updateTime
             from chb_asset_info t
             left join PBC_CAP_ASSET_INFO b on t.ASSET_CODE = b.ASSETID and b.STATUS!='D'

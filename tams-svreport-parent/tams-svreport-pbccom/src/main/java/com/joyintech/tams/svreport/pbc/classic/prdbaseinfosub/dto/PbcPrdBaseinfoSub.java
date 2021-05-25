@@ -60,7 +60,7 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
     /**
      * 产品期次
      */
-    private BigDecimal prodStage;
+    private int prodStage;
 
     /**
      * 理财产品代码
@@ -598,7 +598,7 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
      * 产品期次
      * @return PROD_STAGE 产品期次
      */
-    public BigDecimal getProdStage() {
+    public int getProdStage() {
         return prodStage;
     }
 
@@ -606,7 +606,7 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
      * 产品期次
      * @param prodStage 产品期次
      */
-    public void setProdStage(BigDecimal prodStage) {
+    public void setProdStage(int prodStage) {
         this.prodStage = prodStage;
     }
 

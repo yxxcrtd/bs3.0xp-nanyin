@@ -49,7 +49,6 @@
 			on files.PRODID = prod.PROD_ID
 			and prod.STATUS = 'E'
 			order by JOB_SEQ desc
-		
 	</select>
 	<select id="getRepPordValueNetByEnddate" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
 		SELECT
@@ -164,7 +163,7 @@
 		REP_VAL_TABLE_DATA dt
 		ON
 		(
-		dt.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%')
+		dt.SUBJECT_NO LIKE CONCAT_WS(rela.SUBJECT_NO,'%')
 		)
 		LEFT JOIN
 		REP_BOK_SUBJECT sbt
@@ -225,7 +224,7 @@
 		REP_VAL_TABLE_DATA dt
 		ON
 		(
-		dt.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%')
+		dt.SUBJECT_NO LIKE CONCAT_WS(rela.SUBJECT_NO,'%')
 		)
 		LEFT JOIN
 		REP_BOK_SUBJECT sbt
@@ -288,7 +287,7 @@
 		REP_VAL_TABLE_DATA dt
 		ON
 		(
-		dt.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%') )
+		dt.SUBJECT_NO LIKE CONCAT_WS(rela.SUBJECT_NO,'%') )
 		LEFT JOIN
 		REP_BOK_SUBJECT sbt
 		ON
@@ -347,7 +346,7 @@
 		REP_VAL_TABLE_DATA dt
 		ON
 		(
-		dt.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%') )
+		dt.SUBJECT_NO LIKE CONCAT_WS(rela.SUBJECT_NO,'%') )
 		LEFT JOIN
 		REP_BOK_SUBJECT sbt
 		ON
@@ -413,7 +412,7 @@
               (SELECT @rownum := 0) a
 		) rvtd
 		LEFT JOIN REP_BOOK_RELATION rela
-		ON rvtd.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%')
+		ON rvtd.SUBJECT_NO LIKE CONCAT_WS(rela.SUBJECT_NO,'%')
 		WHERE
 		rvtd.PROD_ID =#{prodId, jdbcType=VARCHAR}
 		and rvtd.DETAIL_DIST ='01'
@@ -475,7 +474,7 @@
               (SELECT @rownum := 0) a
 		) rvtd
 		LEFT JOIN REP_BOOK_RELATION rela
-		ON rvtd.SUBJECT_NO LIKE CONCAT(rela.SUBJECT_NO,'%')
+		ON rvtd.SUBJECT_NO LIKE CONCAT_WS(rela.SUBJECT_NO,'%')
 		WHERE
 		rvtd.PROD_ID =#{prodId, jdbcType=VARCHAR}
 		and rvtd.DETAIL_DIST ='01'
@@ -1003,4 +1002,159 @@
 		feeTemp.fFee,
 		feeTemp.otherFee
 	</select>
+	<select id="getRepScreenList" resultType="com.joyintech.tams.common.base.entity.RepScreen">
+        SELECT
+        	SCREEN_KEY screenKey,
+        	SCREEN_NAME screenName,
+            SCREEN_TYPE screenType,
+            SCREEN_VALUE screenValue,
+            SCREEN_STATUS screenStatus
+        FROM REP_SCREEN
+       	where REP_ID = #{repId}
+       	AND SCREEN_STATUS = 'Y'
+       	ORDER BY SCREEN_INDEX
+    </select>
+	<update id="updateRepInstallStatus" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.InfoDisclosureGenAndSendEntity">
+        update  REP_INSTALL_FILE set EXEC_STATUS = #{execStatus, jdbcType=VARCHAR}
+        WHERE  ID = #{id, jdbcType=VARCHAR}
+    </update>
+	<update id="updateByJobSeqSelective" parameterType="com.joyintech.tams.common.base.entity.RepInstallLog" >
+		update REP_INSTALL_LOG
+		<set >
+			<if test="jobId != null" >
+				JOB_ID = #{jobId,jdbcType=VARCHAR},
+			</if>
+			<if test="jobName != null" >
+				JOB_NAME = #{jobName,jdbcType=VARCHAR},
+			</if>
+			<if test="endDate != null" >
+				END_DATE = #{endDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="startDate != null" >
+				START_DATE = #{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="execDate != null" >
+				EXEC_DATE = #{execDate,jdbcType=DATE},
+			</if>
+			<if test="flag != null" >
+				FLAG = #{flag,jdbcType=VARCHAR},
+			</if>
+			<if test="execDetail != null" >
+				EXEC_DETAIL = #{execDetail,jdbcType=VARCHAR},
+			</if>
+			<if test="execStatus != null" >
+				EXEC_STATUS = #{execStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="execResult != null" >
+				EXEC_RESULT = #{execResult,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where JOB_SEQ = #{jobSeq,jdbcType=VARCHAR}
+	</update>
+	<!-- 获取各种状态数据count -->
+	<select id="getExecStatusList" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.InfoDisclosureGenAndSendEntity">
+        select EXEC_STATUS execStatus,
+        	count(*) execTotal
+        from REP_INSTALL_LOG_DETAIL detail
+        where detail.JOB_SEQ =  #{jobSeq}
+		GROUP by detail.EXEC_STATUS
+    </select>
+	<!-- 获取所有 -->
+	<select id="getAllRepScreenList" resultType="com.joyintech.tams.common.base.entity.RepScreen">
+        SELECT
+        	REP_ID    repId,
+        	SCREEN_KEY screenKey,
+        	SCREEN_NAME screenName,
+            SCREEN_TYPE screenType,
+            SCREEN_VALUE screenValue,
+            SCREEN_STATUS screenStatus
+        FROM REP_SCREEN
+       	where SCREEN_STATUS = 'Y'
+       	ORDER BY SCREEN_INDEX
+    </select>
+	<!-- 获取指标表参数 -->
+	<select id="getRepPordIndexInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+    	SELECT
+    		prod.VALUE_DATE,
+    		prod.YIELD_7,
+    		prod.W_YIELD,
+    		prod.UNIT_VALUE,
+    		prod.UNIT_VALUE_T
+		FROM
+    		REP_PROD_INDEX prod
+		WHERE
+    		PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND prod.STATUS='E'
+		AND prod.VALUE_DATE =
+    		(
+        		SELECT
+            		MAX(pd1.VALUE_DATE)
+        		FROM
+            		REP_PROD_INDEX pd1
+        		WHERE
+            		prod.PROD_ID = pd1.PROD_ID
+        		AND pd1.VALUE_DATE &lt;=#{endDate, jdbcType=DATE}
+        	)
+    </select>
+	<!-- 获取指标表参数 -->
+	<select id="getRepPordValueIndexInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+    	SELECT
+    		prod.VALUE_DATE,
+    		prod.YIELD_7,
+    		prod.W_YIELD,
+    		prod.UNIT_VALUE,
+    		prod.UNIT_VALUE_T
+		FROM
+    		REP_PROD_INDEX prod
+		WHERE
+    		PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND prod.STATUS='E'
+		AND prod.VALUE_DATE = #{endDate, jdbcType=DATE}
+    </select>
+	<!-- 获取未执行的有多少数据 -->
+	<select id="getTotalByJobSeq" resultType="int">
+    	select count(1) from REP_INSTALL_FILE
+    	where REP_INSTALL_FILE.JOB_SEQ = #{jobSeq, jdbcType=VARCHAR}
+    </select>
+	<!-- 获取指标表参数  货币型产品-->
+	<select id="getRepPordValueCurrencyMdateInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+    	SELECT
+    		prod.VALUE_DATE,
+    		prod.YIELD_7,
+    		prod.W_YIELD,
+    		prod.UNIT_VALUE,
+    		prod.UNIT_VALUE_T
+		FROM
+    		REP_PROD_INDEX prod
+		WHERE
+    		PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND prod.STATUS='E'
+		AND prod.VALUE_DATE = #{endDate, jdbcType=DATE}
+		AND prod.VALUE_DATE &lt; #{actMdate, jdbcType=DATE}
+    </select>
+	<!-- 获取指标表参数  净值型产品-->
+	<select id="getRepPordValueNetMdateInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.RepProdIndexEntity">
+    	SELECT
+    		prod.VALUE_DATE,
+    		prod.YIELD_7,
+    		prod.W_YIELD,
+    		prod.UNIT_VALUE,
+    		prod.UNIT_VALUE_T
+		FROM
+    		REP_PROD_INDEX prod
+		WHERE
+    		PROD_ID = #{prodId, jdbcType=VARCHAR}
+		AND prod.STATUS='E'
+		AND prod.VALUE_DATE = #{endDate, jdbcType=DATE}
+		AND prod.VALUE_DATE &lt;= #{actMdate, jdbcType=DATE}
+    </select>
 </mapper>

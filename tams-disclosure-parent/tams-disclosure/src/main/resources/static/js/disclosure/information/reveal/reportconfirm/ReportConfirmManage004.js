@@ -49,6 +49,13 @@ $(function () {
         	submit();
         });
     });
+
+    // 设置披露截止日设置默认值-平台日 swwan 20210514 start
+	function init() {
+		$("#revealEndDate").val(platDate);
+	}
+	init();
+	// 设置披露截止日设置默认值-平台日 swwan 20210514 end
 });
 //
 var FileCommon = {

@@ -17,6 +17,7 @@ import com.joyintech.tams.common.base.entity.RepAssetOther;
 import com.joyintech.tams.common.base.entity.RepTrustInvestMode;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 委外投资—协议方式中债报送信息组件Dto
@@ -122,6 +123,65 @@ public class SvrBussRepOutInvestAgrInfoDto extends RepAssetBond {
      * 备注
      */
     private String remark;
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
+
+    private Date planSdate;
+
+    private Date planEdate;
+
+    public Date getPlanSdate() {
+        return planSdate;
+    }
+
+    public void setPlanSdate(Date planSdate) {
+        this.planSdate = planSdate;
+    }
+
+    public Date getPlanEdate() {
+        return planEdate;
+    }
+
+    public void setPlanEdate(Date planEdate) {
+        this.planEdate = planEdate;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

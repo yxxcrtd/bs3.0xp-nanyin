@@ -1105,6 +1105,21 @@ public class ChbAssetInfo extends BaseEntity {
     private String isFbzb;
 
     /**
+     * 交易对手代码
+     */
+    private String rivalPartyCode;
+
+    /**
+     * 是否PPN等低流动性债券
+     */
+    private String isPpn;
+
+    /**
+     * 银行资本补充工具
+     */
+    private String bankCapital;
+
+    /**
      * 取得 资产要素uuid（为修改删除使用）
      * @return 资产要素uuid（为修改删除使用）
      */
@@ -4524,5 +4539,29 @@ public class ChbAssetInfo extends BaseEntity {
 
     public void setIsFinLicence(String isFinLicence) {
         this.isFinLicence = isFinLicence;
+    }
+
+    public String getRivalPartyCode() {
+        return rivalPartyCode;
+    }
+
+    public void setRivalPartyCode(String rivalPartyCode) {
+        this.rivalPartyCode = rivalPartyCode;
+    }
+
+    public String getIsPpn() {
+        return isPpn;
+    }
+
+    public void setIsPpn(String isPpn) {
+        this.isPpn = isPpn;
+    }
+
+    public String getBankCapital() {
+        return bankCapital;
+    }
+
+    public void setBankCapital(String bankCapital) {
+        this.bankCapital = bankCapital;
     }
 }

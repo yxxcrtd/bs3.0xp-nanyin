@@ -19,6 +19,11 @@
   		<artifactId>tams-svreport-chb</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+    <dependency>
+	    <groupId>${project.groupId}</groupId>
+	    <artifactId>tams-svreport-chbreport</artifactId>
+	    <version>${project.version}</version>
+    </dependency>
   	<dependency>
   		<groupId>${project.groupId}</groupId>
   		<artifactId>tams-svreport-chb3</artifactId>

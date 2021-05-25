@@ -24,6 +24,10 @@ package com.joyintech.tams.report.common.constant;
  */
 public enum TemplateName {
     /**
+     * 产品费率信息导出模板
+     */
+    产品费率信息导出导入模板("ProRateInfo001", "ProRate.xlsx"),
+    /**
      * 产品登记编码管理导入导出模板
      */
     产品登记编码管理导入导出模板("ProRegistCodeManage001", "ProRegistCode.xlsx"),

@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.project.controller
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.project.impl.SvrBussRepAssetAstBillInfoImplService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.project.impl.SvrBussRepAssetCreditNonstdInfoImplService;
@@ -46,7 +47,7 @@ public class SvrBussRepAssetAstBillInfoController extends BaseController{
 
         //1.赋值界面数据字典
         setSelectOptionToModel(model,   new DictCode[] {DictCode.是否_中债,DictCode.票据类信用证类资产类型,
-                DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类}
+                DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类}
          );
 
         //2、当入参assetType2资产/负债二级类别 为【票据类资产/信用证类资产】进行以下处理
@@ -54,6 +55,8 @@ public class SvrBussRepAssetAstBillInfoController extends BaseController{
               //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model);
         }
+        model.addAttribute("SVR_YES_OR_NO_Y", DictCodeList.是否_中债_是.getValue());
+        model.addAttribute("SVR_YES_OR_NO_N", DictCodeList.是否_中债_否.getValue());
         model.addAttribute("entityName",this.getParam("entityName"));
         //3、返回 子组件对应的页面
         return "report/chb/assetinfodetail/asset/project/SvrBussRepAssetAstBillInfo";

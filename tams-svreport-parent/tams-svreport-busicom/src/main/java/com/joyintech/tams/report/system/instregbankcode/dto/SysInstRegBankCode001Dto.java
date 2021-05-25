@@ -33,8 +33,13 @@ public class SysInstRegBankCode001Dto extends ChbOrgRegistBankCode {
     private String orgName;
 
     /**
+     * 母行登记银行代码
+     */
+    private String fregistBankCode;
+
+    /**
      * 获取 orgName
-     * 
+     *
      * @return orgName.
      */
     public String getOrgName() {
@@ -43,11 +48,18 @@ public class SysInstRegBankCode001Dto extends ChbOrgRegistBankCode {
 
     /**
      * 设置 orgName
-     * 
+     *
      * @param orgName orgName
      */
     public void setOrgName(String orgName) {
         this.orgName = orgName;
     }
 
+    public String getFregistBankCode() {
+        return fregistBankCode;
+    }
+
+    public void setFregistBankCode(String fregistBankCode) {
+        this.fregistBankCode = fregistBankCode;
+    }
 }

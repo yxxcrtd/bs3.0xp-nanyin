@@ -68,10 +68,8 @@
         UPDATE_USER, UPDATE_TIME, CREATE_USER,
         CREATE_TIME, AGENT, CREATE_DEPT
         )
-
 		values
 		<foreach collection="investHoldList" item="dto" separator=",">
-
             #{dto.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE, #{dto.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK, #{dto.prodid,jdbcType=VARCHAR} PRODID,
             #{dto.holdDate,jdbcType=DATE} HOLD_DATE, #{dto.ccy,jdbcType=VARCHAR} CCY, #{dto.status,jdbcType=VARCHAR} STATUS,
             #{dto.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE, #{dto.amount,jdbcType=DECIMAL} AMOUNT, #{dto.qty,jdbcType=DECIMAL} QTY,
@@ -94,10 +92,8 @@
         DEPT_CODE, SUBMIT_TIME, SUMIT_SEQ,
         CREATE_DEPT, CHECK_SEQNO, PRODID
         )
-
 		values
 		<foreach collection="investHoldRegistList" item="dto" separator=",">
-
             #{dto.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO, #{dto.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE, #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
             #{dto.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE, #{dto.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK, #{dto.ccy,jdbcType=VARCHAR} CCY,
             #{dto.holdDate,jdbcType=DATE} HOLD_DATE, #{dto.amount,jdbcType=DECIMAL} AMOUNT, #{dto.qty,jdbcType=DECIMAL} QTY,

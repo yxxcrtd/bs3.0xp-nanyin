@@ -121,44 +121,44 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
     /**
      * 是否底层交易，用作传入参数,1-是,0-否
      */
-     private String isUnderDeal;
-     
-     /**
-      * 通道标示
-      */
-     private String chlId;
-     
-     /**
-      * 交易类型：
-      * 01-产品直投交易
-      * 02-产品购买通道交易
-      * 03-产品通过通道购买底层资产交易
-      * 04-产品通过通道买通道交易，通道嵌套
-      * 05-产品通过通道购买资管计划
-      * 06-产品购买资管计划
-      */
-     private String tradeType;
-     
-     /**
-      * 查询类型:01-直投,02-通道,03-资管计划
-      */
-     private String queryType;
-     /**
-      * 币种（查询剩余现金用）
-      */
-     private String ccy;
-     /**
-      * 剩余现金（资产端1.1.1）
-      */
-     private BigDecimal cashamt;
-     /**
-      * 评级选择设置(01:推荐评级 02:最大评级 03:最小评级)
-      */
-     private String sysflag;
-     /**
-      * 资产二级类型细分类
-      */
-     private String assetType3;
+    private String isUnderDeal;
+
+    /**
+     * 通道标示
+     */
+    private String chlId;
+
+    /**
+     * 交易类型：
+     * 01-产品直投交易
+     * 02-产品购买通道交易
+     * 03-产品通过通道购买底层资产交易
+     * 04-产品通过通道买通道交易，通道嵌套
+     * 05-产品通过通道购买资管计划
+     * 06-产品购买资管计划
+     */
+    private String tradeType;
+
+    /**
+     * 查询类型:01-直投,02-通道,03-资管计划
+     */
+    private String queryType;
+    /**
+     * 币种（查询剩余现金用）
+     */
+    private String ccy;
+    /**
+     * 剩余现金（资产端1.1.1）
+     */
+    private BigDecimal cashamt;
+    /**
+     * 评级选择设置(01:推荐评级 02:最大评级 03:最小评级)
+     */
+    private String sysflag;
+    /**
+     * 资产二级类型细分类
+     */
+    private String assetType3;
 
     /**
      * 主体评级维度
@@ -174,7 +174,7 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
      * 调用共通评级接口需要的主体排序sql
      */
     private String getProductRatingOrderSqlByZt;
-    
+
     /**
      * 穿透后资产价值取值控制
      */
@@ -183,17 +183,17 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
      * 穿透前资产代码（通道代码、资管计划代码）
      */
     private String oldAssetCode;
-    
+
     /**
      * 商业银行二级资本债
      */
     private  String  bankSecCapital;
-    
+
     /**
      * 商业银行永续债
      */
     private  String   bankSecPerpetual;
-    
+
     /**
      * 商业银行优先股
      */
@@ -290,22 +290,22 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
 
 
     public String getOldAssetCode() {
-		return oldAssetCode;
-	}
+        return oldAssetCode;
+    }
 
-	public void setOldAssetCode(String oldAssetCode) {
-		this.oldAssetCode = oldAssetCode;
-	}
+    public void setOldAssetCode(String oldAssetCode) {
+        this.oldAssetCode = oldAssetCode;
+    }
 
-	public String getSysflag() {
-		return sysflag;
-	}
+    public String getSysflag() {
+        return sysflag;
+    }
 
-	public void setSysflag(String sysflag) {
-		this.sysflag = sysflag;
-	}
+    public void setSysflag(String sysflag) {
+        this.sysflag = sysflag;
+    }
 
-	/**
+    /**
      * 头寸编号
      * @return POSUUID 头寸编号
      */
@@ -628,27 +628,27 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
     public String getAssettype2() {
         return assettype2;
     }
-    
+
     public void setAssettype2(String assettype2) {
         this.assettype2 = assettype2;
     }
-    
+
     public String getIsUnderDeal() {
         return isUnderDeal;
     }
-    
+
     public void setIsUnderDeal(String isUnderDeal) {
         this.isUnderDeal = isUnderDeal;
     }
-    
+
     public String getChlId() {
         return chlId;
     }
-    
+
     public void setChlId(String chlId) {
         this.chlId = chlId;
     }
-    
+
     public String getTradeType() {
         return tradeType;
     }
@@ -664,24 +664,24 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
     public void setQueryType(String queryType) {
         this.queryType = queryType;
     }
-    
+
     public String getCcy() {
-		return ccy;
-	}
+        return ccy;
+    }
 
-	public void setCcy(String ccy) {
-		this.ccy = ccy;
-	}
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
 
-	public BigDecimal getCashamt() {
-		return cashamt;
-	}
+    public BigDecimal getCashamt() {
+        return cashamt;
+    }
 
-	public void setCashamt(BigDecimal cashamt) {
-		this.cashamt = cashamt;
-	}
+    public void setCashamt(BigDecimal cashamt) {
+        this.cashamt = cashamt;
+    }
 
-	public Object clone() throws CloneNotSupportedException{
+    public Object clone() throws CloneNotSupportedException{
         return super.clone();
     }
 
@@ -717,29 +717,101 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
         this.getProductRatingOrderSqlByZt = getProductRatingOrderSqlByZt;
     }
 
-	public String getBankSecCapital() {
-		return bankSecCapital;
-	}
+    public String getBankSecCapital() {
+        return bankSecCapital;
+    }
 
-	public void setBankSecCapital(String bankSecCapital) {
-		this.bankSecCapital = bankSecCapital;
-	}
+    public void setBankSecCapital(String bankSecCapital) {
+        this.bankSecCapital = bankSecCapital;
+    }
 
-	public String getBankSecPerpetual() {
-		return bankSecPerpetual;
-	}
+    public String getBankSecPerpetual() {
+        return bankSecPerpetual;
+    }
 
-	public void setBankSecPerpetual(String bankSecPerpetual) {
-		this.bankSecPerpetual = bankSecPerpetual;
-	}
+    public void setBankSecPerpetual(String bankSecPerpetual) {
+        this.bankSecPerpetual = bankSecPerpetual;
+    }
 
-	public String getBankSecPrefer() {
-		return bankSecPrefer;
-	}
+    public String getBankSecPrefer() {
+        return bankSecPrefer;
+    }
 
-	public void setBankSecPrefer(String bankSecPrefer) {
-		this.bankSecPrefer = bankSecPrefer;
-	}
-    
-    
+    public void setBankSecPrefer(String bankSecPrefer) {
+        this.bankSecPrefer = bankSecPrefer;
+    }
+
+    /**
+     * 子公司月报资产一级分类
+     */
+    private String sunassettype;
+
+    public String getSunassettype() {
+        return sunassettype;
+    }
+
+    public void setSunassettype(String sunassettype) {
+        this.sunassettype = sunassettype;
+    }
+
+    /**
+     * 子公司月报资产二级分类
+     */
+    private String sunassettype2;
+
+    public String getSunassettype2() {
+        return sunassettype2;
+    }
+
+    public void setSunassettype2(String sunassettype2) {
+        this.sunassettype2 = sunassettype2;
+    }
+
+    /**
+     * 是否母行产品
+     */
+    private String isFprod;
+
+    public String getIsFprod() {
+        return isFprod;
+    }
+
+    public void setIsFprod(String isFprod) {
+        this.isFprod = isFprod;
+    }
+
+    /**
+     * 剩余期限
+     */
+    private BigDecimal terms;
+
+    public BigDecimal getTerms() {
+        return terms;
+    }
+
+    public void setTerms(BigDecimal terms) {
+        this.terms = terms;
+    }
+
+    /**
+     * 新增：发行方式 issueMode
+     * 作用：PPN低等流通性债券统计非公开发行的特定资产（1112、1113、1114、1115、1116、1117）
+     */
+    private String issueMode;
+
+    /**
+     * 获取 发行方式
+     * @return
+     */
+    public String getIssueMode() {
+        return issueMode;
+    }
+
+    /**
+     * 设置 发行方式
+     * @param issueMode
+     */
+    public void setIssueMode(String issueMode) {
+        this.issueMode = issueMode;
+    }
 }

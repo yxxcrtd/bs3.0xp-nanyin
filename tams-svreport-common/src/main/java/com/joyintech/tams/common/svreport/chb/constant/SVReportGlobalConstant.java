@@ -316,12 +316,12 @@ public class SVReportGlobalConstant {
     /**
      * 人行报表-金融机构编码add by weiyuqiang 
      */
-    //public static final String SVR_FIN_INSTITUTION_CODE = "SVR_FIN_INSTITUTION_CODE";
+    public static final String SVR_FIN_INSTITUTION_CODE = "SVR_FIN_INSTITUTION_CODE";
 
     /**
      * 人行报表-社会信用代码add by weiyuqiang 
      */
-   // public static final String SVR_SOCIAL_CREDIT_CODE = "SVR_SOCIAL_CREDIT_CODE";
+    public static final String SVR_SOCIAL_CREDIT_CODE = "SVR_SOCIAL_CREDIT_CODE";
     /**
      * 人行汇率取值来源(01:开盘价，02:收盘价，03:最高价，04:最低价，05:中间价)
      */
@@ -409,7 +409,7 @@ public class SVReportGlobalConstant {
      /**
      * 系统参数:中债子系统 江苏银行个性化开关配置
      */
-    //public static final String CUSTOMER_JSBANK_CODE  = "CUSTOMER_JSBANK_CODE";
+    public static final String CUSTOMER_JSBANK_CODE  = "CUSTOMER_JSBANK_CODE";
     /**
      * 【中债交易对手取值】0：虚拟交易对手，参数配置， 1：真实交易对手，即交易表存的交易对手
      */
@@ -565,6 +565,10 @@ public class SVReportGlobalConstant {
      * 募集登记客户数是否走投资者明细中取(01:是  02:否)
      */
     public static final String SVR_IS_EQUDET_CONUT = "SVR_IS_EQUDET_CONUT";
+    /**
+     * 中债系统参数:导出excel或预览时，值为0的单元格显示成0还是显示成空，系统实现可配置 add by zhouqiang
+     */
+    public static final String CHB_IS_SHOW_ZERO = "CHB_IS_SHOW_ZERO";
     
     /**
      * 存续期产品余额计算方式(01:投资端持有汇总  02:交易汇总)

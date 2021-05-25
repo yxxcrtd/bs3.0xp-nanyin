@@ -850,6 +850,8 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 				assetTypeList.add(DictCodeListExt2.资产_负债类别_私募基金.getValue());
 				pageParam.put("assetTypes", StringUtil.EMPTY);
 				pageParam.put("assetTypeList", assetTypeList);
+			}else{
+				pageParam.put("assetTypeList", StringUtil.splitToList(GlobalConstant.COMMA,assetTypes));
 			}
 			// add by zhangliang 20201109 公募和私募基金特殊处理 end
             exportParam.config("/com/joyintech/tams/svreport/chb/assetinforeg/conf/export_conf.xml").select(() ->
@@ -930,7 +932,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
-		if(data!=null){
+		if(data!=null && data.size() > 0){
 			page.setTotal(data.size()/pageSize+1);
 		}else{
 			page.setTotal(0);

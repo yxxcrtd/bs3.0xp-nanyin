@@ -279,6 +279,29 @@ public class SvrAssetBasisInterf extends BaseService{
     	logger.info("资产基础指标数据接口导入批处理结束。用时："+(System.currentTimeMillis()-startTime)/1000+"s");
     	return isUpdated;
 	}
+
+	/**
+	 * 检查今日是否有估值数据
+	 * @param date
+	 * @return
+	 */
+	public int checkTdyValData(Date date){
+    	return chbAstValInterfMapper.checkTdyValData(DateUtil.format(date));
+	}
+	/**
+	 * 上游未下方估值数据，取估值资产估值信息表最近一日的数据生成资产估值信息
+	 */
+	public void genAssetValueInfoLast(Date date){
+		logger.info("根据昨日生成今日估值数据开始.....");
+		//批量插入mapper
+		// 先删后插
+		Map<String, Object> para = new HashMap<String, Object>();
+		para.put("valDate", DateUtil.format(date));
+		chbAstValInterfMapper.deleteInfo(para);
+		// 处理估值表数据
+		int cnt = chbAstValInterfMapper.insertTdyInfo(DateUtil.format(date));
+		logger.info("根据昨日生成今日估值数据结束,总共生成" + cnt + "条");
+	}
     
 	/**
 	 * 根据资产基础指标生成资产估值信息
@@ -312,7 +335,7 @@ public class SvrAssetBasisInterf extends BaseService{
 			}
 			session.commit();
 			session.clearCache();
-		} 
+		}
     }
     
 	@Transactional(propagation=Propagation.REQUIRES_NEW)

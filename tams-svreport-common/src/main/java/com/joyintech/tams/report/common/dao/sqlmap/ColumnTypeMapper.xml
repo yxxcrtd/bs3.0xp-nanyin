@@ -28,7 +28,7 @@
 	</select>
 	
 	<select id="queryAllColumnByTableId" resultType="java.lang.String" parameterType="java.lang.String" >
-		SELECT COLUMN_NAME,COMMENTS FROM (
+		<!--SELECT COLUMN_NAME,COMMENTS FROM (
 		SELECT DISTINCT B.COLUMN_NAME COLUMN_NAME, 
 			A.COMMENTS COMMENTS ,B.COLUMN_ID COLUMN_ID
 			FROM USER_COL_COMMENTS A
@@ -38,7 +38,13 @@
  			<if test="tableId != null" >
 			AND A.TABLE_NAME = #{tableId,jdbcType=CHAR}
 			</if>
-			) ORDER BY COLUMN_ID
+			) ORDER BY COLUMN_ID-->
+		<if test="tableId != null" >
+			SELECT DISTINCT B.COLUMN_NAME COLUMN_NAME,
+			B.column_comment COMMENTS
+			FROM information_schema.columns B
+			WHERE B.TABLE_NAME = #{tableId,jdbcType=CHAR}
+		</if>
 	</select>
 	
 	<select id="queryColumn" resultMap="BaseResultMap" parameterType="java.lang.String" >

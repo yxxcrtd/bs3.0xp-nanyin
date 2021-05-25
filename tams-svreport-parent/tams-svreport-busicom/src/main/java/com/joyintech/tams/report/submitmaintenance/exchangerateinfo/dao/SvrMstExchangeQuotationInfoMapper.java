@@ -52,4 +52,14 @@ public interface SvrMstExchangeQuotationInfoMapper {
      * @since 1.0
      */
     BigDecimal selectNewRate(Map<String, Object> map);
+
+    /**
+     * 查询新增数据主键是否重复
+     * @param list 产品list
+     * @return list
+     * @see
+     * @since 1.0
+     */
+
+    String getRegistExcelList( Map<String,Object> param );
 }

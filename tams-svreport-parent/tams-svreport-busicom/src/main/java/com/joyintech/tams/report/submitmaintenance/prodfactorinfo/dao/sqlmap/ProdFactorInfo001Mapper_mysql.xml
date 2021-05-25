@@ -1414,7 +1414,7 @@
 		LOW_YIELD_ISSUE, <!--RAISE_TYPE , MANAGE_TYPE, --> CREDIT_MODE,
 		IS_CONSTRACTE_ISSUE,GRADE_TYPE_ISSUE,TARGET_CUSTOMER_TYPE
 		)
-		select A.* from (
+		values
 		<foreach collection="list" item="item" index="index"
 			separator="union all">
 			select #{item.prodId,jdbcType=VARCHAR},
@@ -1508,7 +1508,7 @@
 			#{item.targetCustomerType,jdbcType=VARCHAR}
 			 from dual
 		</foreach>
-		)A
+
 	</insert>
 	<select id="getAllProdListByKeys"
 		resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
@@ -1618,7 +1618,7 @@
 		</where>
 	</select>
 	<update id="updateBatchByPrimaryKey" parameterType="java.util.List">
-		begin
+
 		<foreach collection="list" item="item" index="index"
 			separator=";">
 			update CHB_PRD_BASEINFO
@@ -1723,7 +1723,7 @@
 			where PROD_ID = #{item.prodId,jdbcType=VARCHAR}
 			and ORG_CODE = #{item.orgCode,jdbcType=VARCHAR}
 		</foreach>
-		;end;
+
 	</update>
 	<select id="getRegistBankCode" resultType="com.joyintech.tams.common.base.entity.ChbSysOrganization">
 		select org.org_code orgCode, org.regist_bank_code registBankCode

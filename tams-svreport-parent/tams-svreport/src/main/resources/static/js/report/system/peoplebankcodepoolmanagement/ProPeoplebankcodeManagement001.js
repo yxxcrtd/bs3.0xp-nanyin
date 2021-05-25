@@ -2,21 +2,21 @@
     var getPageParams = function() {
         var insideProdId = $('#ProPeoplebankcodeManagement001_insideProdId').val();
         if(insideProdId==='为空'){
-        	insideProdId = null;
+            insideProdId = null;
         }
         if (insideProdId) {
-        	insideProdId = insideProdId.join();
+            insideProdId = insideProdId.join();
         }
         var orgCode = $("#orgCode").val();
         if (orgCode) {
-        	orgCode = orgCode.join();
+            orgCode = orgCode.join();
         }
         return {
-        	orgCode : orgCode,
+            orgCode : orgCode,
             // 内部产品代码
-        	insideProdId : insideProdId,
+            insideProdId : insideProdId,
             // 人行产品代码(系统)
-        	pbcProjectCode : $('#ProPeoplebankcodeManagement001_pbcProjectCode').val(),
+            pbcProjectCode : $('#ProPeoplebankcodeManagement001_pbcProjectCode').val(),
             // 人行资产池代码(系统)
             pbcAssetPoolCode : $('#ProPeoplebankcodeManagement001_pbcAssetPoolCode').val()
         };
@@ -38,7 +38,7 @@
             { title: "隐藏列代码类型", field:'codeType',visible:false,width:10},
         ]
     });
-    
+
     $(function() {
         // 查询按钮点击事件
         $('#ProPeoplebankcodeManagement001_btn_search').click(function() {
@@ -59,44 +59,44 @@
                 });
             });
         });
-        
-    	// 导出按钮
-    	$('#ProPeoplebankcodeManagement001_btn_export').click(function(){
-    		var expArr=table.getAllCheckedRows();
-    		if(expArr != null && expArr.length >0){
-    			Joyin.confirm('确认导出选中信息？',function(){
-    				exportExcel(1);
-    			})
-    		}else{
-    			Joyin.confirm('确认导出查询结果？',function(){
-    				exportExcel(0);
-    			})
-    		}
-    	})
-    	
-   	 /**
+
+        // 导出按钮
+        $('#ProPeoplebankcodeManagement001_btn_export').click(function(){
+            var expArr=table.getAllCheckedRows();
+            if(expArr != null && expArr.length >0){
+                Joyin.confirm('确认导出选中信息？',function(){
+                    exportExcel(1);
+                })
+            }else{
+                Joyin.confirm('确认导出查询结果？',function(){
+                    exportExcel(0);
+                })
+            }
+        })
+
+        /**
          * 导出
          * flag:0 全部导出，选中导出
          */
         var exportExcel = function(flag) {
-    		if(flag == 0){
-    	    	 var param = getPageParams();
-    	         Joyin.exportExcel("export",param);
-    		}else{
-    			var param = {};
-    			var expArr=table.getAllCheckedRows();
-   		     	var keyList = [];
-      			 $.each(expArr, function(i, row) {
-       				keyList.push(row.insideProdId);
-      			 });
-    			if(expArr.length > 1){
-        			param.keys = keyList.join(',');
-    			}else{
-    				param.keys = keyList;
-    			}
-    			Joyin.exportExcel("export",param);
-    		}
+            if(flag == 0){
+                var param = getPageParams();
+                Joyin.exportExcel("export",param);
+            }else{
+                var param = {};
+                var expArr=table.getAllCheckedRows();
+                var keyList = [];
+                $.each(expArr, function(i, row) {
+                    keyList.push(row.insideProdId);
+                });
+                if(expArr.length > 1){
+                    param.keys = keyList.join(',');
+                }else{
+                    param.keys = keyList;
+                }
+                Joyin.exportExcel("export",param);
+            }
         };
-        
+
     });
 }());

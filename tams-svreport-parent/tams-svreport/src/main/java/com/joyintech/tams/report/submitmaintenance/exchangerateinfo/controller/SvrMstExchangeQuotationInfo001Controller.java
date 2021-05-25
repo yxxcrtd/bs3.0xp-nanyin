@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -116,7 +118,7 @@ public class SvrMstExchangeQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(){
-    	String msg = this.getMessage("REPORT_COMMON_I_0006");
+    	String msg = this.getMessage("REPORT_COMMON_I_0007");
     	String keyStr = super.getParam("deleteKeys");
     	if (StringUtil.isNotEmpty(keyStr)) {
             List<String> keys = StringUtil.splitToList(GlobalConstant.COMMA, keyStr);
@@ -129,6 +131,30 @@ public class SvrMstExchangeQuotationInfo001Controller extends BaseController {
             });
         }
         return new AjaxResult(msg);
+    }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+        return mstExchangeQuotationInfoMService.checkConfirmMsgForImportData(fileName);
+    }
+
+    /**
+     * 导入数据文件
+     *
+     * @param fileName 导入的文件名
+     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     */
+    @ResponseBody
+    @RequestMapping("/importFile")
+    public List<ExcelValidDto> importData(String fileName) {
+        return this.mstExchangeQuotationInfoMService.importData(fileName);
     }
 
     /**

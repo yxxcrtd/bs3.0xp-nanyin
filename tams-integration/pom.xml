@@ -56,6 +56,7 @@
         <module>../microservice/service-basicdata</module>
         <module>../microservice/service-chb</module>
 		<module>../microservice/service-chb3</module>
+        <module>../microservice/service-chbreport</module>
         <module>../microservice/service-common</module>
         <module>../microservice/service-customer-report</module>
         <module>../microservice/service-disclosure</module>

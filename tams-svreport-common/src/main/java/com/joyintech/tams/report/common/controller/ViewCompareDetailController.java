@@ -442,7 +442,7 @@ public class ViewCompareDetailController extends BaseController {
 
             // 如果是履历表
             if(StringUtil.endsWith(tableName, "_HIS")) {
-                searchParam.put("order", " ORDER BY nvl(UPDATE_TIME,CREATE_TIME) DESC");
+                searchParam.put("order", " ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC");
             }
             else {
                 searchParam.put("order", oder);
@@ -454,8 +454,8 @@ public class ViewCompareDetailController extends BaseController {
         if (StringUtil.equals(pageId, PageFiledList.产品资金募集信息.getPageId())) {
         	dataResultList.forEach(map->{
         		map.forEach((key, value)->{
-        			if(Arrays.asList(PageFiledList.产品资金募集信息.getFiledArr()).contains(key) && StringUtil.isNotEmpty(value)
-        					&& BigDecimal.ZERO.compareTo((BigDecimal)value)==0) {
+                    if(Arrays.asList(PageFiledList.产品资金募集信息.getFiledArr()).contains(key)
+                            &&(value==null?true:(BigDecimal.ZERO.compareTo((BigDecimal)value)==0))) {
         				map.put(key, null);
         			}
         		});
@@ -627,7 +627,9 @@ public class ViewCompareDetailController extends BaseController {
             }
             // 数值类型
             else if (value instanceof Number) {
-                v = StringUtil.numberToString((BigDecimal)value);
+                //华夏调整，页面展示number转int 修正
+                //v = StringUtil.numberToString(((Number) value).intValue());
+                v = StringUtil.numberToString((Number) value);
             }
             else if(value instanceof String){
                 v = value.toString();

@@ -29,13 +29,15 @@
     <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
     <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
     <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
     SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
     REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, 
     CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-    ORG_CODE, DEPT_CODE
+    ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -56,7 +58,7 @@
       STATUS_DATE, STATUS, CREATE_USER, 
       CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
       )
     values (#{registSeqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR}, 
       #{singleTotal,jdbcType=DECIMAL}, #{legalTotal,jdbcType=DECIMAL}, #{unlegalTotal,jdbcType=DECIMAL}, 
@@ -66,7 +68,8 @@
       #{statusDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
       #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, 
-      #{submitDeadline,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}
+      #{submitDeadline,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
+      #{sumitSeq,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.ChbPrdRaisetotSubHis" >
@@ -153,6 +156,12 @@
       <if test="deptCode != null" >
         DEPT_CODE,
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ,
+      </if>
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="registSeqno != null" >
@@ -235,6 +244,12 @@
       </if>
       <if test="deptCode != null" >
         #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sumitSeq != null" >
+        #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="prodRegistCode != null" >
+        #{prodRegistCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -319,6 +334,12 @@
       <if test="deptCode != null" >
         DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
@@ -349,12 +370,14 @@
       CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
       SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
       ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
   
   <insert id="insertSubHisBatch" parameterType="java.lang.String">
-  insert into CHB_PRD_RAISETOT_SUB_HIS (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
+  insert into CHB_PRD_RAISETOT_SUB_HIS (SUMIT_SEQ,PROD_REGIST_CODE,REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
       SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
       SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, 
       RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
@@ -364,7 +387,7 @@
       UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
       SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
       )
-      select
+      select SUMIT_SEQ, PROD_REGIST_CODE,
       REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
       SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
       SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, 

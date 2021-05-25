@@ -1,0 +1,34 @@
+(function() {
+    function init(){
+        $(".layui-fixbar").hide();
+    };
+    $(function() {
+        init();
+        //保存点击事件
+        $('#DisRelOrg002_btn_save').click(function() {
+            var object = $.serializeToObject('#submitForm',true);
+            object.relorgId = $("#relorgId").val();
+            object.organName = $("#organName").val();
+            object.type =$("#type").val();
+            if(object.relorgId==''){
+                Joyin.error("关联机构代码不能为空");
+                return;
+            }
+            if(object.organName==''){
+                Joyin.error("关联机构代码名称不能为空");
+                return;
+            }
+            if(object.relorgId!='' && object.organName!='' ){
+                Joyin.ajaxJson(basePath + 'svreport/system/disrelorg/DisRelOrg002/check', object, function(result) {
+                    if(result){
+                        Joyin.ajaxJson(basePath + 'svreport/system/disrelorg/DisRelOrg002/save',object,function(result){
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }
+                });
+            }
+        });
+
+    });
+}());

@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：中信银行资管系统
  */
- 
+
 package com.joyintech.tams.report.common.util;
 
 import java.lang.reflect.Method;
@@ -44,25 +44,25 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
  * @since 1.0
  */
 public class IBDDataCheckUtil {
-	/**
-	 * 必填方法
-	 * --单一项目检查checkMethod参数常量
-	 */
-	public static final String COMMON_CHECK_METHOD_ISNOTEMPTY = "isNotEmpty";
-	/**
-	 * 字段固定长度判断
-	 * --单一项目检查checkMethod参数常量
-	 */
-	public static final String COMMON_CHECK_METHOD_FIXEDLENGTH = "fixedLength";
-	/**
-	 * 是否在整个白名单判断
-	 * --单一项目检查checkMethod参数常量
-	 */
-	public static final String COMMON_CHECK_METHOD_INWHITELISTALL = "inWhitelistAll";
-    
+    /**
+     * 必填方法
+     * --单一项目检查checkMethod参数常量
+     */
+    public static final String COMMON_CHECK_METHOD_ISNOTEMPTY = "isNotEmpty";
+    /**
+     * 字段固定长度判断
+     * --单一项目检查checkMethod参数常量
+     */
+    public static final String COMMON_CHECK_METHOD_FIXEDLENGTH = "fixedLength";
+    /**
+     * 是否在整个白名单判断
+     * --单一项目检查checkMethod参数常量
+     */
+    public static final String COMMON_CHECK_METHOD_INWHITELISTALL = "inWhitelistAll";
+
     /**
      * 不能为空
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param message msg参数
@@ -79,22 +79,22 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-       
 
-    
+
+
     /**
      * 是否固定长度
      * @param length 长度
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param message msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
     public static boolean fixLength(int length, List<ValidMessage> errorList, String value, String field,
-                                 String message) {
+                                    String message) {
         if(!StringUtil.isEmpty(value) && value.length() != length) {
             if (errorList != null) {
                 errorList.add(new ValidMessage(field,message));
@@ -103,20 +103,20 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-    
+
     /**
      * 最大长度
      * @param maxlength 长度max
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param message msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
     public static boolean maxLength(int maxlength, List<ValidMessage> errorList, String value, String field,
-                                 String message) {
+                                    String message) {
         if(!StringUtil.isEmpty(value) && (value.length() > maxlength)) {
             if (errorList != null) {
                 errorList.add(new ValidMessage(field,message));
@@ -125,20 +125,20 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-    
+
     /**
      * 最小长度
      * @param minlength 长度max
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param message msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
     public static boolean minLength(int minlength, List<ValidMessage> errorList, String value, String field,
-                                 String message) {
+                                    String message) {
         if(!StringUtil.isEmpty(value) && (value.length() < minlength)) {
             if (errorList != null) {
                 errorList.add(new ValidMessage(field,message));
@@ -147,18 +147,18 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-    
-   
-    
+
+
+
     /**
      * 正则表达式
      * @param regstr 表达式字符
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param messageId msg参数
      * @param message msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
@@ -175,22 +175,22 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-    
+
     /**
      * 数字格式check
      * @param intlength 整数位长度
      * @param declength 小数位长度  
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param message msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
-    public static boolean numberFormatCheck(int intlength, int declength, 
+    public static boolean numberFormatCheck(int intlength, int declength,
                                             List<ValidMessage> errorList, String value, String field,
-                                 String message) {
+                                            String message) {
         if(StringUtil.isEmpty(value)) {
             return false;
         }
@@ -198,14 +198,14 @@ public class IBDDataCheckUtil {
             int iLength = intlength - declength - 1;
             String format = null;
             if(declength > 0) {
-                format = "[0]" + "|" + "[-]?[1-9]\\d{0," + iLength + "}" 
-                    + "|" + "[-]?[0-9]"
-                    + "|" + "[-]?[1-9]\\d{0," + iLength + "}" + "[\\.]\\d{1," + declength + "}"
-                    + "|" + "[-]?0[\\.]\\d{1," + declength + "}";
-            } 
+                format = "[0]" + "|" + "[-]?[1-9]\\d{0," + iLength + "}"
+                        + "|" + "[-]?[0-9]"
+                        + "|" + "[-]?[1-9]\\d{0," + iLength + "}" + "[\\.]\\d{1," + declength + "}"
+                        + "|" + "[-]?0[\\.]\\d{1," + declength + "}";
+            }
             else {
                 format = "[-]?[1-9]\\d{0," + iLength + "}"
-                    + "|" + "[-]?[0-9]";
+                        + "|" + "[-]?[0-9]";
             }
             Pattern pattern = Pattern.compile(format);
             Matcher matcher = pattern.matcher(value);
@@ -218,21 +218,21 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-    
+
     /**
      * 日期格式check
      * @param formatStr 格式
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param message msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
-    public static Date dateFormatCheck(String formatStr, 
-                                            List<ValidMessage> errorList, String value, String field,
-                                 String message) {
+    public static Date dateFormatCheck(String formatStr,
+                                       List<ValidMessage> errorList, String value, String field,
+                                       String message) {
         if(value != null) {
             try {
                 return DateUtils.parseDate(value, formatStr);
@@ -246,21 +246,21 @@ public class IBDDataCheckUtil {
         }
         return null;
     }
-    
+
     /**
      * 数字大小check
      * @param compareValue 比较参数
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param message msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
     public static boolean numberLargeThanCheck(BigDecimal compareValue,
-                                            List<ValidMessage> errorList, BigDecimal value, String field,
-                                 String message) {
+                                               List<ValidMessage> errorList, BigDecimal value, String field,
+                                               String message) {
         if(value != null && compareValue != null) {
             if (value.compareTo(compareValue) < 0) {
                 if (errorList != null) {
@@ -271,23 +271,23 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-    
+
     /**
      * 数字大小betcheck
      * @param minValue 比较参数
      * @param maxValue 比较参数
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param message msgId参数
      * @param message msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
     public static boolean numberBetweenCheck(BigDecimal minValue, BigDecimal maxValue,
-                                            List<ValidMessage> errorList, BigDecimal value, String field,
-                                 String message) {
+                                             List<ValidMessage> errorList, BigDecimal value, String field,
+                                             String message) {
         if(minValue != null && maxValue != null && value != null) {
             if (value.compareTo(minValue) < 0 || value.compareTo(maxValue) > 0) {
                 if (errorList != null) {
@@ -298,11 +298,11 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-    
+
     /**
      * 必须相等
-     * @param eqValue 
-     * @param errorList 
+     * @param eqValue
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param msgId msg参数
@@ -322,21 +322,21 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-    
+
     /**
      * 日期大小check 比较参数 <=
      * @param compareValue 比较参数
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param message msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
     public static boolean dateLargeThanCheck(Date compareValue,
-                                            List<ValidMessage> errorList, Date value, String field,
-                                 String message) {
+                                             List<ValidMessage> errorList, Date value, String field,
+                                             String message) {
         if(value != null && compareValue != null) {
             if (value.compareTo(compareValue) < 0) {
                 if (errorList != null) {
@@ -347,20 +347,20 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
-    
+
     /**
      * 参数列表check(单选)
      * @param code 参数
-     * @param errorList 
+     * @param errorList
      * @param value 传入字符
      * @param field 页面field 
      * @param labelResource msg参数
-     * @return 结果 
+     * @return 结果
      * @see
      * @since 1.0
      */
     public static boolean codeListSimpleCheck(DictCode code, List<ValidMessage> errorList, String value, String field,
-                                 String message) {
+                                              String message) {
         if(!StringUtil.isEmpty(value)) {
             if (SysDataUtil.getNameFromDataDict(code, value) == null ) {
                 if (errorList != null) {
@@ -371,7 +371,7 @@ public class IBDDataCheckUtil {
         }
         return true;
     }
- // etliu 20191115 add start
+    // etliu 20191115 add start
     /**
      * 根据数据类型，读取检查规则
      * 根据读取的检查规则，检查数据列表，对于某条数据有一个规则不满足，继续检查其它规则，即每条数据都进行全部规则检查
@@ -387,7 +387,7 @@ public class IBDDataCheckUtil {
 
         DataCheckService dataCheckService = SpringContextUtil.getBean(DataCheckService.class);
         List<CheckRule> listRules = dataCheckService.queryCheckRules(datatype);
-        
+
         List<ExcelValidDto> checkResultList = new ArrayList<ExcelValidDto>();
         ExcelValidDto excelValidDto = null;
         List<String> keyItemValueList = null;
@@ -397,23 +397,23 @@ public class IBDDataCheckUtil {
         for (Map<String, String> dataMap : listData) {
             checkList.clear();
             checkList.add(dataMap);
-            List<Map<String, String>> currCheckResultList = DataCheckService.checkDataList(checkList, listRules);
+            List<Map<String, String>> currCheckResultList = DataCheckService.checkDataList(checkList, listRules,false);
             if (!StringUtil.isEmptyList(currCheckResultList)) {
                 excelValidDto = new ExcelValidDto();
-                
+
                 // 验证标识符（具有代表性的字段值）
                 keyItemValueList = new ArrayList<>();
                 for (String keyItemName : keyItemNameList) {
                     keyItemValueList.add(dataMap.get(keyItemName));
                 }
                 excelValidDto.setValidKey(StringUtil.joinString(keyItemValueList, GlobalConstant.COMMA));
-                
+
                 // excel的行号（导入验证用）
                 excelValidDto.setRowNum(String.valueOf(rowNo));
-                
+
                 // 错误信息
                 ERRMSG = currCheckResultList.get(0).get("ERRMSG");
-                
+
                 List<String> errorMsgList = StringUtil.splitToList(GlobalConstant.SEMICOLON, ERRMSG);
                 List<String> newErrorMsgList = new ArrayList<>();
                 for (String currMsg : errorMsgList) {
@@ -422,10 +422,10 @@ public class IBDDataCheckUtil {
                     }
                     // 处理条件判断中包含的分号
                     if (!(currMsg.contains("[") && currMsg.contains("]")
-                        && currMsg.contains("="))) {
+                            && currMsg.contains("="))) {
                         continue;
                     }
-                    
+
                     if (currMsg.startsWith("-->")) {
                         currMsg = StringUtil.substring(currMsg, 3);
                     }
@@ -438,13 +438,13 @@ public class IBDDataCheckUtil {
 
                 checkResultList.add(excelValidDto);
             }
-            
+
             rowNo++;
         }
-        
+
         return checkResultList;
     }
-    
+
     /**
      * 针对新建修改画面的数据校验，结合数据检查共通，返回符合画面展示用的错误消息
      * @param targetObject 待检查数据实体
@@ -463,7 +463,7 @@ public class IBDDataCheckUtil {
         for (String key : resultObjMap.keySet()) {
             Object value = resultObjMap.get(key);
             if (value != null
-                && value instanceof Date) {
+                    && value instanceof Date) {
                 resultStrMap.put(key, DateUtil.format((Date) value, DateUtil.DEFAULT_OTHER_FORMAT));
             }
             else if (value != null) {
@@ -479,23 +479,23 @@ public class IBDDataCheckUtil {
         List<CheckRule> listRules = dataCheckService.queryCheckRules(datatype);
         List<Map<String, String>> checkList = new ArrayList<>();
         checkList.add(resultStrMap);
-        
+
         // 调用数据检查共通，进行数据检查
-        List<Map<String, String>> currCheckResultList = DataCheckService.checkDataList(checkList, listRules);
+        List<Map<String, String>> currCheckResultList = DataCheckService.checkDataList(checkList, listRules,false);
         if (!StringUtil.isEmptyList(currCheckResultList)) {
             String ERRMSG = currCheckResultList.get(0).get("ERRMSG");
             List<String> errorMsgList = StringUtil.splitToList(GlobalConstant.SEMICOLON, ERRMSG);
-            
+
             for (String currMsg : errorMsgList) {
                 if(StringUtil.isBlank(currMsg)){
                     continue;
                 }
                 // 处理条件判断中包含的分号
                 if (!(currMsg.contains("[") && currMsg.contains("]")
-                    && currMsg.contains("="))) {
+                        && currMsg.contains("="))) {
                     continue;
                 }
-                
+
                 if (currMsg.startsWith("-->")) {
                     currMsg = StringUtil.substring(currMsg, 3);
                 }
@@ -509,7 +509,7 @@ public class IBDDataCheckUtil {
 
         return validMessageList;
     }
-    
+
     /**
      * 按照配置规则check某一个值是否合法
      * @param targetItemValue 待检查数据值
@@ -528,7 +528,7 @@ public class IBDDataCheckUtil {
         StringBuilder sb = new StringBuilder();  //记录错误信息
         for (CheckRule checkRule : listRules) {
             if (StringUtil.equals(srcproperty, checkRule.getSrcproperty())
-                && StringUtil.equals(checkMethod, checkRule.getCheckmethod())) {
+                    && StringUtil.equals(checkMethod, checkRule.getCheckmethod())) {
                 String checkRst = checkOneItem(targetItemValue, checkRule);
                 if (StringUtil.isNotBlank(checkRst)) {
                     sb.append(checkRst);
@@ -542,7 +542,7 @@ public class IBDDataCheckUtil {
 
         return null;
     }
-    
+
     /**
      * 按照配置规则check某一个值是否合法
      * @param targetItemValue 待检查数据值
@@ -569,12 +569,12 @@ public class IBDDataCheckUtil {
             }
             mapClassMethod.put(r.getCheckclass(),mapMethod);
         }
-        
+
         boolean legal=true;  //检查结果
         StringBuilder sb = new StringBuilder();  //记录错误信息
         Map<String, String> x = new HashMap<>();
         x.put(r.getSrcproperty(), targetItemValue);
-        
+
         // 检查逻辑，如果有前置条件，先检查条件是否满足，如果条件满足，执行数据检查，否则不执行数据检查
         // 如果没有前置条件，检查数据
         // 如果有多个前置条件，循环每个条件检查，各条件之间是与的关系

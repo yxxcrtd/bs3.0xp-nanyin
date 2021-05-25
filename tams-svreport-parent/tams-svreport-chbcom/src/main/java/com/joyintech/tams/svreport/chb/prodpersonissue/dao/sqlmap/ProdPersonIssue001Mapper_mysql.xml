@@ -45,7 +45,8 @@
      <result column="YIELD_REMARK" property="yieldRemark" jdbcType="VARCHAR" />
       <result column="BUSI_ACCT_NO" property="busiAcctNo" jdbcType="VARCHAR" />
       <result column="ACCT_NAME" property="acctName" jdbcType="VARCHAR" />
- 
+     <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+
    </resultMap>
   <sql id="Base_Column_List" >
     REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, PRD_MDATE, 
@@ -60,6 +61,7 @@
 			sub.REGIST_SEQNO REGISTSEQNO ,
 			reginfo.REG_CODE PRODREGISTCODE ,
 			sub.PROD_ID PRODID ,
+			cpb.PROD_NAME  PRODNAME,
 			sub.RAISE_VDATE RAISEVDATE ,
 			sub.RAISE_ENDDATE RAISEENDDATE ,
 			sub.PRD_VDATE PRDVDATE ,
@@ -97,10 +99,12 @@
 			sub.YIELD_HIGH YIELDHIGH,
 			sub.YIELD_REMARK YIELDREMARK,
 			sub.BUSI_ACCT_NO BUSIACCTNO,
-			sub.ACCT_NAME ACCTNAME
+			sub.ACCT_NAME ACCTNAME,
+			sub.SUMIT_SEQ sumitSeq
 			from CHB_PRD_ISSUE_SUB sub
 		    left join chb_prdresist_code reginfo
 		    on sub.prod_id = reginfo.prodid
+		    left  join  chb_prd_baseinfo  cpb  on cpb.PROD_ID=sub.prod_id
    </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -604,7 +608,7 @@
 		from CHB_PRD_ISSUE_SUB sub -->
 		select
 			sub.REGIST_SEQNO REGIST_SEQNO ,
-			reginfo.REG_CODE PROD_REGIST_CODE ,
+            sub.PROD_REGIST_CODE PROD_REGIST_CODE ,
 			sub.PROD_ID PROD_ID ,
 			sub.RAISE_VDATE RAISE_VDATE ,
 			sub.RAISE_ENDDATE RAISE_ENDDATE ,
@@ -637,10 +641,18 @@
 			sub.SUBMIT_TIME SUBMIT_TIME ,
 			sub.CHB_SUBMIT_DEADLINE CHB_SUBMIT_DEADLINE ,
 			sub.SUBMIT_DEADLINE SUBMIT_DEADLINE ,
-			sub.ISSUE_PARTY_ID ISSUE_PARTY_ID
+			sub.ISSUE_PARTY_ID ISSUE_PARTY_ID,
+            sub.SUMIT_SEQ,
+            sub.EXP_MIN_YIELD,
+            sub.EXP_MAX_YIELD,
+            sub.EXP_AVG_YIELD,
+            sub.MANAGE_TYPE,
+            sub.YIELD_LOW,
+            sub.YIELD_HIGH,
+            sub.YIELD_REMARK,
+            sub.BUSI_ACCT_NO,
+            sub.ACCT_NAME
 			from CHB_PRD_ISSUE_SUB sub
-		    left join chb_prdresist_code reginfo
-		    on sub.prod_id = reginfo.prodid
 		<where>
 		   	<if test="registList!=null and registList.size()!=0">
 			   	<foreach collection="registList" item="items" 
@@ -719,6 +731,9 @@
             info.YIELD_REMARK,
             info.BUSI_ACCT_NO,
             info.ACCT_NAME
+            <if test="model_type != null">
+		      	,info.REG_CODE ISSUE_PARTY_ID /*发行机构代码*/
+		     </if>
 			FROM chb_prd_baseinfo info
 	    left join chb_prdresist_code reginfo
 	    on info.prod_id = reginfo.prodid
@@ -728,7 +743,10 @@
 		and reginfo.REG_CODE is not null
 		<if test="prodInfos!=null and prodInfos.size()!=0">
 		    AND trim(info.prod_id) in 
-			<foreach item="prodid" collection="prodInfos" open="(" separator="," close=")"> 
+			<foreach item="prodid" collection="prodInfos" index="index"  open="(" separator="," close=")">
+              <if test="(index % 999) == 998">
+                null) OR trim(info.prod_id) in (
+              </if>
 			  #{prodid,jdbcType=VARCHAR}
 			</foreach>
 		</if>
@@ -749,7 +767,7 @@
     
     <!-- 批量 插入登记表-->
     <insert id="insertSub" parameterType="com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto">
-        insert into CHB_PRD_ISSUE_SUB (REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
+        insert into CHB_PRD_ISSUE_SUB (SUMIT_SEQ,REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID,
 	        RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, 
 	        PRD_MDATE, IS_CONSTRACTE, GRADE_TYPE, 
 	        EXP_MIN_YIELD, EXP_MAX_YIELD, EXP_AVG_YIELD, 
@@ -764,7 +782,7 @@
 	        ISSUE_PARTY_ID
 	        ,MANAGE_TYPE,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME
         )
-		values(
+		values(#{sumitSeq,jdbcType=VARCHAR},
 		   #{registSeqno,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
 		   #{raiseVdate,jdbcType=TIMESTAMP}, #{raiseEnddate,jdbcType=TIMESTAMP}, #{prdVdate,jdbcType=TIMESTAMP}, 
 		   #{prdMdate,jdbcType=TIMESTAMP}, #{isConstracte,jdbcType=VARCHAR}, #{gradeType,jdbcType=VARCHAR}, 
@@ -808,7 +826,15 @@
 		  sub.AVG_OPEN_COUNT,/*平均开放次数（年化）*/
 		  sub.OPEN_BUSS,/*开放期业务*/
 		  sub.OPEN_BUSS_REMARK,/*开放期业务说明 */
-		  sub.status
+		  sub.status,
+		  <!-- add by dubaojun 2020-11-05 五月升级字段比较 start -->
+		  sub.MANAGE_TYPE,
+		  sub.YIELD_LOW,
+		  sub.YIELD_HIGH,
+		  sub.YIELD_REMARK,
+		  sub.BUSI_ACCT_NO,
+		  sub.ACCT_NAME
+		  <!-- add by dubaojun 2020-11-05 五月升级字段比较 end -->
 		FROM CHB_PRD_ISSUE_SUB sub
 		LEFT JOIN chb_prdresist_code regsub
 		ON sub.prod_id = regsub.prodid
@@ -843,7 +869,9 @@
       ORG_CODE, CREATE_USER, CREATE_DEPT, 
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ISSUE_PARTY_ID, SUMIT_SEQ
+      ISSUE_PARTY_ID, SUMIT_SEQ,
+       MANAGE_TYPE, YIELD_LOW, YIELD_HIGH, YIELD_REMARK,
+      BUSI_ACCT_NO, ACCT_NAME
       )
       select
       REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
@@ -858,7 +886,9 @@
       ORG_CODE, CREATE_USER, CREATE_DEPT, 
       NOW(), UPDATE_USER, NOW(),
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ISSUE_PARTY_ID, SUMIT_SEQ
+      ISSUE_PARTY_ID, SUMIT_SEQ,
+      MANAGE_TYPE, YIELD_LOW, YIELD_HIGH, YIELD_REMARK,
+      BUSI_ACCT_NO, ACCT_NAME
     from CHB_PRD_ISSUE_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">
@@ -879,14 +909,19 @@
       SEND_STATUS = '01'
       </if>
       <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
-      PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+      PROD_ID = #{item.prodId,jdbcType=VARCHAR} and REGIST_SEQNO != #{item.registSeqno,jdbcType=VARCHAR}
       </foreach>
    </select>
        <select id="selectAllDataByList" resultMap="BaseResultMap">
 	select  
 CPS.PROD_REGIST_CODE,
 CPS.PROD_ID,
-CPS.ISSUE_PARTY_ID,
+<if test="model_type != null">
+   	info.REG_CODE ISSUE_PARTY_ID, /*发行机构代码*/
+  </if>
+  <if test="model_type == null">
+	CPS.ISSUE_PARTY_ID,
+  </if>
 CPS.RAISE_VDATE,
 CPS.RAISE_ENDDATE,
 CPS.PRD_VDATE,
@@ -910,6 +945,10 @@ CPS.ACCT_NAME
 
 
 from  CHB_PRD_ISSUE_SUB  CPS
+<if test="model_type != null">
+left join CHB_PRD_BASEINFO info on info.PROD_ID=CPS.prod_id
+</if>
+
     where 1=1
     <if test="keyList != null and keyList.size()>0">
     <foreach collection="keyList" item="items" open="and CPS.REGIST_SEQNO in (" separator="," close=")">

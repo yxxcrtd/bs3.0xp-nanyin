@@ -18,7 +18,6 @@
        SUM(TT.TdyOCoDAmt) as TdyOCoDAmt
      from 
      (select subjectNo,balFlag,SUM(TdyOCAmt) TdyOCAmt,SUM(TdyODAmt) TdyODAmt from (
-  
           select if(bb.SUBJECT_LEVEL= '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo,
                bb.bal_flag as balFlag, 
                IFNULL(bb.TDY_O_C_AMT, 0) as TdyOCAmt, 
@@ -28,13 +27,12 @@
 			and bb.SUBJECT_NO like '6%' or bb.SUBJECT_NO like '3%' 
 			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{vdate}
 			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}
-  )GROUP BY subjectNo,balFlag)T
+    ) TEMPAA GROUP BY subjectNo,balFlag)T
   
-  LEFT JOIN (
+    LEFT JOIN (
           SELECT subjectNo,balFlag,SUM(IFNULL(TdyOCoCAmt,0)) TdyOCoCAmt,SUM(IFNULL(TdyOCoDAmt,0)) TdyOCoDAmt FROM (
           select if(bb.SUBJECT_LEVEL= '3', CASE WHEN bb.FSUBJECT_NO IN ('611110','611130','611102','611103','611104') THEN bb.subject_no ELSE bb.FSUBJECT_NO END , bb.subject_no) as subjectNo,
-             
-               bb.BALANCE_DATE as balanceDate, 
+               bb.BALANCE_DATE as balanceDate,
                bb.bal_flag as balFlag, 
                IFNULL(TDY_O_CO_C_AMT, 0) as TdyOCoCAmt, 
                IFNULL(TDY_O_CO_D_AMT, 0) as TdyOCoDAmt 
@@ -42,11 +40,9 @@
         where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
 		and bb.SUBJECT_NO like '6%'  or  bb.SUBJECT_NO like '3%'
 		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{sdate}
-		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate})
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}) TEMPBB
 		GROUP BY subjectNo,balFlag) TT ON T.subjectNo=TT.subjectNo AND T.balFlag = TT.balFlag
- group by T.subjectNo,  T.balFlag
-      
-	
+    group by T.subjectNo,  T.balFlag
 	</select>
 	<select id="selectAllBalancebAmt" resultType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance">
 	   select T.subjectNo,
@@ -67,7 +63,7 @@
 			and bb.SUBJECT_NO like '6%' or bb.SUBJECT_NO like '3%' 
 			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{vdate}
 			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}
-  )GROUP BY subjectNo,balFlag)T
+  ) TEMPAA GROUP BY subjectNo,balFlag)T
   
   LEFT JOIN (
           SELECT subjectNo,balFlag,SUM(IFNULL(TdyBCoCAmt,0)) TdyBCoCAmt,SUM(IFNULL(TdyBCoDAmt,0)) TdyBCoDAmt FROM (
@@ -81,11 +77,9 @@
         where bb.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
 		and bb.SUBJECT_NO like '6%'  or  bb.SUBJECT_NO like '3%'
 		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{sdate}
-		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate})
+		and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}) TEMPBB
 		GROUP BY subjectNo,balFlag) TT ON T.subjectNo=TT.subjectNo AND T.balFlag = TT.balFlag
  group by T.subjectNo,  T.balFlag
-      
-	
 	</select>
 	<select id="selectAllBalanceAll" resultMap="com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.BaseResultMap">
 		select <include refid='com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.Base_Column_List'/>
@@ -136,5 +130,34 @@
 			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&gt;=#{vdate}
 			and DATE_FORMAT(bb.BALANCE_DATE,'%Y-%m-%d')&lt;=#{mdate}
 			 group by  bb.subject_no,bb.bal_flag
+    </select>
+    <select id="selectProfitCalculationDtoList" resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dto.DisProfitCalculationDto">
+    	SELECT
+    		proj_name projName,
+			proj_code projCode,
+			proj_level projLevel,
+			subject_no subjectNo,
+			crdr_flg crdrFlg,
+			formula,
+			show_flg showFlg,
+			show_order showOrder
+		FROM REP_BOK_PROFIT_REP_CONFIG
+		   where PROJ_TYPE='03'
+		order by proj_code
+    </select>
+    <!-- 一體化 查询利润表表样 add by dongxiangyang 20200211 start -->
+    <select id="selectProfitCalculationDtoListYth" resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dto.DisProfitCalculationDto">
+    	SELECT
+    		proj_name projName,
+			proj_code projCode,
+			proj_level projLevel,
+			subject_no subjectNo,
+			crdr_flg crdrFlg,
+			formula,
+			show_flg showFlg,
+			show_order showOrder
+		FROM REP_BOK_PROFIT_REP_CONFIG_YTH
+		   where PROJ_TYPE='03'
+		order by proj_code
     </select>
 </mapper>

@@ -412,15 +412,18 @@
     ORG_CODE, CREATE_DEPT, NOW(), UPDATE_USER, NOW()
       from (
       	select <include refid="Base_Column_List2"/>,
-      	rank() over (partition by PBC_ACCOUNT_ID order by ifnull(update_time,create_time) desc) ranknum
-      	from PBC_PRD_ACCOUNT_END_SUB_HIS
+          rank() over (partition by PBC_ACCOUNT_ID order by ifnull(update_time,create_time) desc) ranknum
+          from PBC_PRD_ACCOUNT_END_SUB_HIS
       	where 
       	PBC_ACCOUNT_ID in
        <foreach collection="list" open="(" close=")" separator="," item="item">
       		#{item.pbcAccountId,jdbcType=CHAR}
       </foreach>
-      )
-      where 1 = 1 limit 1
+      order by
+      PBC_ACCOUNT_ID,
+      ifnull(update_time,create_time) desc
+      ) as t
+      where ranknum = 1
 </insert>
 <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
 	delete from PBC_PRD_ACCOUNT_END_SUB_HIS
@@ -428,15 +431,18 @@
 	    select  PBC_ACCOUNT_ID 
 	      from (
 	      	select PBC_ACCOUNT_ID ,
-	      	rank() over (partition by PBC_ACCOUNT_ID  order by ifnull(update_time,create_time) desc) ranknum
-	      	from PBC_PRD_ACCOUNT_END_SUB_HIS
+            rank() over (partition by PBC_ACCOUNT_ID  order by ifnull(update_time,create_time) desc) ranknum
+            from PBC_PRD_ACCOUNT_END_SUB_HIS
 	      	where 
 	      	PBC_ACCOUNT_ID in
 	       <foreach collection="list" open="(" close=")" separator="," item="item">
 	      		#{item.pbcAccountId,jdbcType=CHAR}
 	      </foreach>
-	      )
-	      where 1 = 1 limit 1
+            order by
+            PBC_ACCOUNT_ID,
+            ifnull(update_time,create_time) desc
+	      )as t
+	      where ranknum = 1
     )
 </delete>
 <delete id="deleteBatchBySendStatus" parameterType="java.util.List">

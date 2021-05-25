@@ -32,35 +32,41 @@
     <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
     <result column="PAYAMTSUM" property="payamtsum" jdbcType="DECIMAL" />
     <result column="CLOSETERMDAY" property="closetermday" jdbcType="DECIMAL" />
-    <result column="IS_TRANSFER" property="isTransfer" jdbcType="VARCHAR" />
     <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
     <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
+    <result column="FUNCTIONAL_CURRENCY" property="functionalCurrency" jdbcType="VARCHAR" />
+    <result column="IS_TRANSFER" property="isTransfer" jdbcType="VARCHAR" />
+    <result column="IS_NOTICE" property="isNotice" jdbcType="VARCHAR" />
+    <result column="YIELD_E" property="yieldE" jdbcType="DECIMAL" />
+    <result column="TERMDAY" property="termday" jdbcType="DECIMAL" />
+    <result column="TERMTYPE2" property="termtype2" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
-    OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
-    CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
-    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE
+    OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM,
+    CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT,
+    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, FUNCTIONAL_CURRENCY FUNCTIONAL_CURRENCY,
+        IS_TRANSFER IS_TRANSFER, IS_NOTICE IS_NOTICE, YIELD_E YIELD_E, TERMDAY TERMDAY, TERMTYPE2 TERMTYPE2
   </sql>
-  
+
   <sql id="Base_Column_List_inst" >
     POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
-    OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
-    CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
+    OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM,
+    CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT,
     TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, INSTITUTION_CODE
   </sql>
-  
-  
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List_inst" />
     from CHB_MONTH_PRD_POSITION
     <if test="modelType != null">
-     	left join (      select f.finprod_market_id,di.institution_code 
+      left join (      select f.finprod_market_id,di.institution_code
       from fin_product f
       left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
       WHERE f.p_finprod_id is null) di on di.finprod_market_id = CHB_MONTH_PRD_POSITION.PRODID
-     </if>
+    </if>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </select>
 
@@ -69,24 +75,28 @@
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
-    insert into CHB_MONTH_PRD_POSITION (POSUUID, PRODID, STARTDATE, 
-      ENDDATE, BOOKDATE, CCY, 
+    insert into CHB_MONTH_PRD_POSITION (POSUUID, PRODID, STARTDATE,
+      ENDDATE, BOOKDATE, CCY,
       RAISEMODE, IVSTORIENTATION, TERMTYPE,
-      OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, 
-      CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
-      CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, 
-      ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
-      TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, 
-      VDATE)
-    values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{startdate,jdbcType=TIMESTAMP}, 
-      #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR}, 
+      OPERATE_MODE, PROFIT_TYPE, SALE_TARGET,
+      CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM,
+      CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT,
+      ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT,
+      TERMINATIONINTAMT, CASHAMT, DURATIONFLAG,
+      VDATE, FUNCTIONAL_CURRENCY, IS_TRANSFER,
+            IS_FPROD, IS_NOTICE, YIELD_E,
+            TERMDAY, TERMTYPE2)
+    values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{startdate,jdbcType=TIMESTAMP},
+      #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR},
       #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{termtype,jdbcType=VARCHAR},
-      #{operateMode,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{saleTarget,jdbcType=VARCHAR}, 
-      #{conPrdTraget,jdbcType=VARCHAR}, #{ordIdentified,jdbcType=VARCHAR}, #{dirtyamtsum,jdbcType=DECIMAL}, 
-      #{cleanamtsum,jdbcType=DECIMAL}, #{redeemamt,jdbcType=DECIMAL}, #{terminationamt,jdbcType=DECIMAL}, 
-      #{endamtsumOth,jdbcType=DECIMAL}, #{customeramt,jdbcType=DECIMAL}, #{redeemintamt,jdbcType=DECIMAL}, 
-      #{terminationintamt,jdbcType=DECIMAL}, #{cashamt,jdbcType=DECIMAL}, #{durationflag,jdbcType=VARCHAR}, 
-      #{vdate,jdbcType=TIMESTAMP})
+      #{operateMode,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{saleTarget,jdbcType=VARCHAR},
+      #{conPrdTraget,jdbcType=VARCHAR}, #{ordIdentified,jdbcType=VARCHAR}, #{dirtyamtsum,jdbcType=DECIMAL},
+      #{cleanamtsum,jdbcType=DECIMAL}, #{redeemamt,jdbcType=DECIMAL}, #{terminationamt,jdbcType=DECIMAL},
+      #{endamtsumOth,jdbcType=DECIMAL}, #{customeramt,jdbcType=DECIMAL}, #{redeemintamt,jdbcType=DECIMAL},
+      #{terminationintamt,jdbcType=DECIMAL}, #{cashamt,jdbcType=DECIMAL}, #{durationflag,jdbcType=VARCHAR},
+      #{vdate,jdbcType=TIMESTAMP}, #{isTransfer,jdbcType=VARCHAR}, #{functionalCurrency,jdbcType=VARCHAR},
+            #{isTransfer,jdbcType=VARCHAR}, #{isNotice,jdbcType=VARCHAR}, #{yieldE,jdbcType=DECIMAL},
+            #{termday,jdbcType=DECIMAL}, #{termtype2,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
     insert into CHB_MONTH_PRD_POSITION
@@ -116,7 +126,7 @@
         IVSTORIENTATION,
       </if>
       <if test="termtype != null" >
-          TERMTYPE,
+        TERMTYPE,
       </if>
       <if test="operateMode != null" >
         OPERATE_MODE,
@@ -165,6 +175,24 @@
       </if>
       <if test="vdate != null" >
         VDATE,
+      </if>
+      <if test="functionalCurrency != null" >
+        FUNCTIONAL_CURRENCY,
+      </if>
+      <if test="isTransfer != null" >
+        IS_TRANSFER,
+      </if>
+      <if test="isNotice != null" >
+        IS_NOTICE,
+      </if>
+      <if test="yieldE != null" >
+        YIELD_E,
+      </if>
+      <if test="termday != null" >
+        TERMDAY,
+      </if>
+      <if test="termtype2 != null" >
+        TERMTYPE2,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -243,6 +271,24 @@
       <if test="vdate != null" >
         #{vdate,jdbcType=TIMESTAMP},
       </if>
+      <if test="functionalCurrency != null" >
+        #{functionalCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="isTransfer != null" >
+        #{isTransfer,jdbcType=VARCHAR},
+      </if>
+      <if test="isNotice != null" >
+        #{isNotice,jdbcType=VARCHAR},
+      </if>
+      <if test="yieldE != null" >
+        #{yieldE,jdbcType=DECIMAL},
+      </if>
+      <if test="termday != null" >
+        #{termday,jdbcType=DECIMAL},
+      </if>
+      <if test="termtype2 != null" >
+        #{termtype2,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
@@ -270,7 +316,7 @@
         IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
       </if>
       <if test="termtype != null" >
-          TERMTYPE = #{termtype,jdbcType=VARCHAR},
+        TERMTYPE = #{termtype,jdbcType=VARCHAR},
       </if>
       <if test="operateMode != null" >
         OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
@@ -320,6 +366,24 @@
       <if test="vdate != null" >
         VDATE = #{vdate,jdbcType=TIMESTAMP},
       </if>
+      <if test="functionalCurrency != null" >
+        FUNCTIONAL_CURRENCY = #{functionalCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="isTransfer != null" >
+        IS_TRANSFER = #{isTransfer,jdbcType=VARCHAR},
+      </if>
+      <if test="isNotice != null" >
+        IS_NOTICE = #{isNotice,jdbcType=VARCHAR},
+      </if>
+      <if test="yieldE != null" >
+        YIELD_E = #{yieldE,jdbcType=DECIMAL},
+      </if>
+      <if test="termday != null" >
+        TERMDAY = #{termday,jdbcType=DECIMAL},
+      </if>
+      <if test="termtype2 != null" >
+        TERMTYPE2 = #{termtype2,jdbcType=VARCHAR},
+      </if>
     </set>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
@@ -348,66 +412,81 @@
       TERMINATIONINTAMT = #{terminationintamt,jdbcType=DECIMAL},
       CASHAMT = #{cashamt,jdbcType=DECIMAL},
       DURATIONFLAG = #{durationflag,jdbcType=VARCHAR},
-      VDATE = #{vdate,jdbcType=TIMESTAMP}
+      VDATE = #{vdate,jdbcType=TIMESTAMP},
+            FUNCTIONAL_CURRENCY = #{functionalCurrency,jdbcType=VARCHAR},
+            IS_TRANSFER = #{isTransfer,jdbcType=VARCHAR},
+            IS_NOTICE = #{isNotice,jdbcType=VARCHAR},
+            YIELD_E = #{yieldE,jdbcType=DECIMAL},
+            TERMDAY = #{termday,jdbcType=DECIMAL},
+            TERMTYPE2 = #{termtype2,jdbcType=VARCHAR}
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
-  
+
   <select id="select" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
-       select
+    select
     pos.POSUUID, pos.PRODID, pos.STARTDATE, pos.ENDDATE, pos.BOOKDATE, pos.CCY, pos.RAISEMODE, pos.IVSTORIENTATION,
     pos.TERMTYPE,
     pos.OPERATE_MODE, pos.PROFIT_TYPE, pos.SALE_TARGET, pos.CON_PRD_TRAGET, pos.ORD_IDENTIFIED, pos.DIRTYAMTSUM,
     pos.CLEANAMTSUM, pos.REDEEMAMT, pos.TERMINATIONAMT, pos.ENDAMTSUM_OTH, pos.CUSTOMERAMT, pos.REDEEMINTAMT,
     pos.TERMINATIONINTAMT, pos.CASHAMT, pos.DURATIONFLAG, pos.VDATE,pos.OPENDURATION,pos.CASH_MANA_CATE, di.INSTITUTION_CODE,
-    pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP
-       from CHB_MONTH_PRD_POSITION pos
-      left join (      select f.finprod_market_id,di.institution_code
-      from fin_product f
-      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
-      WHERE f.p_finprod_id is null) di on di.finprod_market_id = pos.PRODID
-     left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID
-      where startdate = #{startdate,jdbcType=DATE}
-      and enddate = #{enddate,jdbcType=DATE}
-      <if test="prodids !=null and prodids.size()!=0">
-          and prodid in
-          <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
-              <if test="(index % 999) == 998">
-                    null) OR prodid in (
-              </if>
-              #{item}
-          </foreach>
-      </if>
+    pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP,pos.FUNCTIONAL_CURRENCY, info.IS_TRANSFER, pos.IS_NOTICE,
+    pos.YIELD_E,pos.TERMDAY,pos.TERMTYPE2
+    from CHB_MONTH_PRD_POSITION pos
+    left join (      select f.finprod_market_id,di.institution_code
+    from fin_product f
+    left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
+    WHERE f.p_finprod_id is null) di on di.finprod_market_id = pos.PRODID
+    left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID
+    where startdate = #{startdate,jdbcType=DATE}
+    and enddate = #{enddate,jdbcType=DATE}
+    <if test="prodids !=null and prodids.size()!=0">
+      and prodid in
+      <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+        <if test="(index % 999) == 998">
+          null) OR prodid in (
+        </if>
+        #{item}
+      </foreach>
+    </if>
   </select>
-  
+
   <insert id="genPosition"  parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
-  	insert into chb_month_prd_position (
-	    POSUUID
-	    ,PRODID
-	    ,STARTDATE
-	    ,ENDDATE
-	    ,BOOKDATE
-	    ,CCY
-	    ,RAISEMODE
-	    ,IVSTORIENTATION
-	    ,TERMTYPE
-	    ,OPERATE_MODE
-	    ,PROFIT_TYPE
-	    ,SALE_TARGET
-	    ,VDATE
-	    ,OPENDURATION
-	    ,CASH_MANA_CATE
-	    ,DURATIONFLAG
-	    ,CON_PRD_TRAGET
-	    ,ORD_IDENTIFIED
-	    ,DIRTYAMTSUM
-	    ,CLEANAMTSUM
-	    ,ENDAMTSUM_OTH
-	    ,CUSTOMERAMT
-	    ,PAYAMTSUM  /**本期兑付金额*/
-	    ,CLOSETERMDAY  /**封闭式产品期限*/
-	)
-	with 
-	/*产品存续状态*/
+    insert into chb_month_prd_position (
+    POSUUID
+    ,PRODID
+    ,STARTDATE
+    ,ENDDATE
+    ,BOOKDATE
+    ,CCY
+    ,RAISEMODE
+    ,IVSTORIENTATION
+    ,TERMTYPE
+    ,OPERATE_MODE
+    ,PROFIT_TYPE
+    ,SALE_TARGET
+    ,VDATE
+    ,OPENDURATION
+    ,CASH_MANA_CATE
+    ,DURATIONFLAG
+    ,CON_PRD_TRAGET
+    ,ORD_IDENTIFIED
+    ,DIRTYAMTSUM
+    ,CLEANAMTSUM
+    ,ENDAMTSUM_OTH
+    ,CUSTOMERAMT
+    ,PAYAMTSUM  /**本期兑付金额*/
+    ,CLOSETERMDAY  /**封闭式产品期限*/
+    <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
+    ,FUNCTIONAL_CURRENCY
+    ,IS_TRANSFER
+    ,IS_NOTICE
+    ,YIELD_E
+    ,TERMDAY
+    ,TERMTYPE2
+    <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 end -->
+    )
+    with
+    /*产品存续状态*/
     pd as(
 	    select DISTINCT info.prod_id,
 	    decode(info.ISSUING_STATUS,
@@ -418,516 +497,590 @@
 	    end,
 	    '03') DURATIONFLAG
 	    from CHB_PRD_BASEINFO info
-	    left join chb_prd_deal deal 
+	    left join chb_prd_deal deal
 	    on nvl(deal.fprod_id,deal.prod_id)=info.prod_id and deal.TRADE_TYPE='16' and  deal.SETTDATE_DATE <![CDATA[<=]]>#{enddate,jdbcType=DATE}
 	    and deal.status !='D'
 	    where info.FPROD_ID is null
     ),
     /*产品信息表*/
-	pi as (
-	    select nvl (info.fprod_id,info.prod_id) prodid
-	    ,info.RAISE_TYPE
-	    ,info.Ivstorientation
-	    ,info.TERMTYPE
-	    ,info.OPERATE_MODE
-	    ,info.OPENTYPEP
-        ,info.CASH_MANA_CATE
-        /***封闭期在半年以上的定期开放式产品：改成按照期限品种统计； leipeng 20201226***/
-      ,          case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
-                      then '02' else
-                      (case when info.SHORT_TERM is null
-                          then null
-                          when info.SHORT_TERM>184
-                          then '02'
-                          else
-                          '01' end)
-                      end openduration
-	    ,info.PROFIT_TYPE
-	    ,decode(info.EXC_FIN_SECTOR,'01','04',info.SALETARGET) saletarget
-	    ,info.CON_PRD_TRAGET
-	    ,pd.DURATIONFLAG
-	    ,info.vdate
-	    ,case when info.operate_mode in ('01','02')
-	    then info.mdate-info.vdate else null
-	    end  closetermday  /**新加字段封闭式产品期限*/
-	    ,nvl(val.prod_value,1) prod_value
-      	,nvl(val.CCY,'CNY') prod_value_ccy
-	    from chb_prd_baseinfo info
-	    left join
-	    (
-	        select prod_id,ccy,prod_value from (
-	        select rank() over(partition by prod_id order by change_date desc) 
-	        my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
-	        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
-	        AND STATUS IN ('E','M')
-	        ) where my_rank=1
-	    )val
-	    on nvl (info.fprod_id,info.prod_id)=val.prod_id
-	     left join pd on info.prod_id=pd.prod_id
-	    where info.FPROD_ID is null
-	    and  info.vdate <![CDATA[<=]]>  #{enddate,jdbcType=DATE}
-       /**历史到期产品不统计*/
-      AND NOT EXISTS (
-          SELECT
-          1
-          FROM
-          chb_prd_deal d
-          WHERE
-          d.trade_type = '16'
-          AND nvl(d.fprod_id, d.prod_id) = info.prod_id
-          and D.status in ('E','M')
-          AND D.SETTDATE_DATE <![CDATA[<]]> #{startdate,jdbcType=DATE}
-      )
-      and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01')
-	)
-  	 ,rate as(
-	     SELECT
-				BASIS_CYY ccyOriginal,
-				QUOT_CYY ccyConvert,
-				TRADE_DATE publishDate,
-	      case when #{status,jdbcType=VARCHAR} = '02'
-	      then
-				CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-	      when #{status,jdbcType=VARCHAR} = '01'
-	      then
-				OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-	      when #{status,jdbcType=VARCHAR} = '03'
-	      then
-				HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) 
-	       when #{status,jdbcType=VARCHAR} = '04'
-	       then
-				LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) 
-	       when #{status,jdbcType=VARCHAR} = '05'
-				then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) 
-	      end yeid
-			 FROM MST_EXCHARGE_QUOTE info
-	    where
-				info.QUOT_CYY = 'CNY'
-				AND INFO.DATASOURCE_TYPE = 'SAFE'
-				and info.TRADE_DATE = (select max(t.TRADE_DATE)
-				from MST_EXCHARGE_QUOTE t
-				where t.BASIS_CYY = info.BASIS_CYY
-				and t.QUOT_CYY = info.QUOT_CYY
-				and t.DATASOURCE_TYPE = 'SAFE'
-				and t.TRADE_DATE <![CDATA[<=]]>#{enddate,jdbcType=DATE}) 
-      ) 
-	/*交易明细表，将产品交易表进行拆分成：本金交易，利息交易*/
-	,dd as (
-	select nvl(d.fprod_id,d.prod_id) prodid
-	,i.prodtype
-	,d.TRADE_ID
-	,d.ISSUE_PARTY_ID
-	,m.objfield1 ord_identified
-	,d.BUY_PLACE
-	,d.TRADE_TYPE
-	,d.SETTDATE_DATE
-	,d.PAY_DATE           paydate
-	,d.TRADE_PRINCE       amount
-	,d.UNIT_BONUS_AMOUNT
-	,d.REDEMPTION_FEE
-	,d.TRADE_QTY tradeQty
-	,nvl(d.ccy,'CNY') ccy
-	,d.STATUS
-	,d.ORG_CODE
-	,d.DEPT_CODE
-	,d.DATA_SOURCE
-	from chb_prd_deal d
-	left join
-		chb_type_mapping_ex m
-		on d.CUSTOMER_TYPE2=m.srcfield1
-		and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
-	left join chb_prd_baseinfo i
-	on nvl(d.fprod_id,d.prod_id)=nvl(i.fprod_id,i.prod_id) and i.status !='D'
-	and i.fprod_id is null
-	where d.status !='D'
-	and (d.BUY_PLACE not in('210200','330200','350200','370200','440300') or d.BUY_PLACE is null)
-	and d.TRADE_PRINCE>0
-	and d.SETTDATE_DATE between #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
-	)
-	
-	/*产品交易简单统计表：按产品，币种，投资者类型分组，根据交易类型将相关金额进行汇总*/
-	,dm as (
-	select dd.prodid,dd.ccy,dd.ord_identified,prodtype
-	,sum(
-	    case when dd.TRADE_TYPE in('01','02','05','14') then amount
-	    else 0 
-	    end ) dirtysum /*募集金额*/
-	,sum(
-	    case when dd.TRADE_TYPE in('01','02','05','14') then tradeQty
-	    else 0 
-	    end ) dirtysumqty /*募集金额-份额*/
-	,sum(
-          case when dd.TRADE_TYPE in('01','02','05','14') then amount
-          when dd.TRADE_TYPE in('03','16','15','17') then 0-amount
-	    else 0
-	    end ) cleansum /*净募集金额*/
-	  ,sum(
-	  case when  dd.TRADE_TYPE in('03','04','05','15','16')
-	  then  amount else 0
-	  end
-      )  payamtsum   /**本期兑付金额*/
-	from dd
-	where 1=1
-	group by dd.prodid,dd.ccy,dd.ord_identified,prodtype
-	)
-     ,di as(
-	select sum(ds.intamt) intamt, ds.prod_id prodid,ds.ccy, ds.ord_identified,ds.prodtype from
-	(select nvl(d.INT_AMT,0) intamt ,d.prod_id,d.ccy,
-	m.objfield1 ord_identified,i.prodtype
-	from chb_prd_deal d
-		left join
-			chb_type_mapping_ex m
-			on d.CUSTOMER_TYPE2=m.srcfield1
-			and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
-		left join chb_prd_baseinfo i
-		on nvl(d.fprod_id,d.prod_id)=nvl(i.fprod_id,i.prod_id) and i.status='E'
-		and i.fprod_id is null
-	where d.status !='D' and d.TRADE_TYPE in ('03','16','17')
-	and (d.BUY_PLACE not in('210200','330200','350200','370200','440300') or d.BUY_PLACE is null)
-	and d.INTEREST_DATE BETWEEN #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
-	
-	UNION all
-	select nvl(d.INT_AMT,0)  ,d.prod_id,d.ccy,
-	m.objfield1 ord_identified,i.prodtype
-	from chb_prd_deal  d
-		left join
-			chb_type_mapping_ex m
-			on d.CUSTOMER_TYPE2=m.srcfield1
-			and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
-		left join chb_prd_baseinfo i
-		on nvl(d.fprod_id,d.prod_id)=nvl(i.fprod_id,i.prod_id) and i.status='E'
-		and i.fprod_id is null
-	where d.status !='D' and d.TRADE_TYPE in ('04','05')
-	and (d.BUY_PLACE not in('210200','330200','350200','370200','440300') or d.BUY_PLACE is null)
-	and d.INTEREST_DATE BETWEEN #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}) ds
-	group by ds.prod_id ,ds.ccy, ds.ord_identified,ds.prodtype
-	)    
-    /*产品头寸表，映射投资者类型*/
-	,pp as (
-	  select p.prod_id,p.indentify_mark,p.ccy,p.balance_amt,p.total_intamt,p.balance_qty,p.cdate,m.objfield1 ord_identified
-           from chb_prd_position p
-           left join (select DISTINCT nvl(fprod_id,prod_id) prod_id,ccy,indentify_mark,CUSTOMER_TYPE2,buy_place from chb_prd_deal) deal
-           on p.prod_id=deal.prod_id and deal.ccy=p.ccy and deal.indentify_mark=p.indentify_mark and p.buy_place=deal.buy_place
-            left join chb_type_mapping_ex m
-        	on deal.CUSTOMER_TYPE2=m.srcfield1
-        	and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'   
-	)
-	/*计算每日头寸：按照产品、投资这类型、币种进行汇总*/
-	,ps as (
-	select 
-	    prod_id,
-	    ord_identified,
-	    ccy,
-	    cdate,
-	    sum(nvl(balance_amt,0)) balance_amt ,
-	    sum(nvl(total_intamt,0)) total_intamt,
-	    sum(nvl(balance_qty,0)) balance_qty
-	    from pp
-	    group by prod_id,ord_identified,ccy,cdate
-	)
-	/*头寸主表：本期与上期的差额*/
-	,pm as (
-	    SELECT
-	    tdy.prod_id       prodid,
-	    tdy.ord_identified,
-	    tdy.ccy,
-	    nvl(tdy.balance_amt,0) - nvl(yst.balance_amt,0) cleanamtsum /*净募集金额*/,
-	    nvl(tdy.total_intamt,0) - nvl(yst.total_intamt,0) customeramt /*客户收益*/,
-	    nvl(tdy.balance_qty,0)   endamtsum /*期末余额*/
-	    FROM
-	    (
-	        SELECT
-	        prod_id,
-	        ord_identified,
-	        ccy,
-	        balance_qty,
-	        balance_amt,
-	        total_intamt
-	        FROM
-	            (
-	                SELECT
-	                    RANK() OVER(
-	                        PARTITION BY prod_id
-	                        ORDER BY
-	                            cdate DESC
-	                    ) my_rank,
-	                    prod_id,
-	                    ord_identified,
-	                    ccy,                                        
-	                    balance_qty,
-	                    balance_amt,
-	                    total_intamt
-	                FROM
-	                    ps
-	                WHERE
-	                    cdate <![CDATA[<=]]> #{enddate,jdbcType=DATE}
-	            )
-	        WHERE
-	            my_rank = 1
-	    
-	    ) tdy
-	    LEFT JOIN (
-	       SELECT
-	        prod_id,
-	        ord_identified,
-	        ccy,
-	        balance_qty,
-	        balance_amt,
-	        total_intamt
-	        FROM
-	            (
-	                SELECT
-	                    RANK() OVER(
-	                        PARTITION BY prod_id
-	                        ORDER BY
-	                            cdate desc
-	                    ) my_rank,
-	                    prod_id,
-	                    ord_identified,
-	                    ccy,
-	                    balance_qty,
-	                    balance_amt,
-	                    total_intamt                        
-	                FROM
-	                    ps
-	                WHERE
-	                    cdate <![CDATA[<=]]> #{startdate,jdbcType=DATE}-1
-	            )
-	        WHERE
-	            my_rank = 1                   
-	    	) yst ON tdy.prod_id = yst.prod_id
-	             AND tdy.ccy = yst.ccy
-	             AND (tdy.ord_identified = yst.ord_identified or (tdy.ord_identified is null and yst.ord_identified is null))
-	    ),
-	    pm2 as(
-		select
-              dd.prodid prodid,
-              dd.ccy ccy,
-              dd.ord_identified ord_identified,
-              sum(case when dd.TRADE_TYPE in('03','15','16','17') then amount
-              else 0
-              end ) amt,
-              sum(case when dd.TRADE_TYPE in('03','15','16','17') then tradeQty
-              else 0
-              end ) qty
-              from  dd
-              where 1=1
-		group by dd.prodid,dd.ccy,dd.ord_identified
-	    )
-     
-	/*月报产品交易头寸表,汇总客户收益，期末余额 */
-	select 
-	    f_guid()
-	    ,prod.prodid
-	    ,#{startdate,jdbcType=DATE} startdate
-	    ,#{enddate,jdbcType=DATE} enddate
-	    ,#{statusDate,jdbcType=DATE} bookdate
-	    ,nvl(deal.ccy,prod.prod_value_ccy) ccy
-	    ,DECODE(prod.RAISE_TYPE, '01', '01', '02', '02', null)
-	    ,prod.IVSTORIENTATION
-	    ,prod.TERMTYPE
-	    ,prod.OPERATE_MODE
-	    ,prod.PROFIT_TYPE    
-	    ,prod.SALETARGET
-	    ,prod.vdate
-	    ,prod.OPENDURATION
-	    ,prod.CASH_MANA_CATE        
-	    ,prod.DURATIONFLAG        
-	    ,null con_prd_traget
-	    ,deal.ORD_IDENTIFIED
-	    <if test="monthReport!=null and monthReport=='01'">
-	    ,deal.dirtysum  /*募集总额*/
-	    </if>
-	    <if test="monthReport!=null and monthReport=='02'">
-	     ,deal.dirtysumqty  /*募集总额-份额*/
-	    </if>
-	    <if test="monthReport=='01' and cleanamttype==01">
-	    ,nvl(pm.cleanamtsum,0) CLEANSUM /*净募集金额*/
-	    </if>
-        <if test="monthReport=='01' and cleanamttype=='02'">
-        ,deal.dirtysum-pm2.amt  CLEANSUM /*净募集金额*/
-        </if>
-        <if test="monthReport=='02'">
-        ,deal.dirtysumqty-pm2.qty CLEANSUM
-        </if>
-        <if test="monthReport!=null and monthReport=='01'">
-        ,case when deal.prodtype in('N') 
-            then round(pm.endamtsum*prod.prod_value,2)*nvl(rate.yeid,1)
-            else pm.endamtsum 
-        end ENDAMTSUM_OTH /*期末余额*/
-        </if>
-        <if test="monthReport!=null and monthReport=='02'">
-        ,pm.endamtsum ENDAMTSUM_OTH /*期末余额*/
-        </if>
-	    <if test="intamttype ==null or intamttype=='01' ">
-	    ,pm.customeramt customeramt /*客户收益*/
-        </if>
-        <if test="intamttype !=null and intamttype=='02' ">
-	    ,di.intamt customeramt /*客户收益*/
-        </if>
-        /*add  新加2个字段   by  dongxiangyang  start*/
-        ,deal.payamtsum   /**本期兑付金额*/
-        ,prod.closetermday  /*封闭式产品期限*/
-         /*add  新加2个字段   by  dongxiangyang  end*/
+    pi as (
+    select nvl (info.fprod_id,info.prod_id) prodid
+    ,info.RAISE_TYPE
+    ,info.Ivstorientation
+    ,info.TERMTYPE
+    ,info.OPERATE_MODE
+    ,info.OPENTYPEP
+    ,info.CASH_MANA_CATE
+    /***封闭期在半年以上的定期开放式产品：改成按照期限品种统计； leipeng 20201226***/
+    ,          case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
+    then '02' else
+    (case when info.SHORT_TERM is null
+    then null
+    when info.SHORT_TERM>184
+    then '02'
+    else
+    '01' end)
+    end openduration
+    ,info.PROFIT_TYPE
+    ,decode(info.EXC_FIN_SECTOR,'01','04',info.SALETARGET) saletarget
+    ,info.CON_PRD_TRAGET
+    ,pd.DURATIONFLAG
+    ,info.vdate
+    ,case when info.operate_mode in ('01','02')
+    then info.mdate-info.vdate else null
+    end  closetermday  /**新加字段封闭式产品期限*/
+    ,nvl(val.prod_value,1) prod_value
+    ,nvl(val.CCY,'CNY') prod_value_ccy
+    <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
+    ,info.FUNCTIONAL_CURRENCY FUNCTIONAL_CURRENCY
+    ,decode(info.CASH_MANA_CATE, '01', position.PROD_TERMS, null) TERMDAY
+    ,case when info.CASH_MANA_CATE = '01' then
+    case when position.PROD_TERMS &lt;= 1 then '01'
+    when position.PROD_TERMS &lt;= 7 then '02'
+    when position.PROD_TERMS &lt;= 31 then '03'
+    when position.PROD_TERMS &lt;= 92 then '04'
+    when position.PROD_TERMS &lt;= 184 then '05'
+    when position.PROD_TERMS &lt;= 366 then '06'
+    when position.PROD_TERMS &lt;= 1096 then '08'
+    else '09'
+    end
+    when info.CASH_MANA_CATE = '02'  or info.CASH_MANA_CATE is null then info.TERMTYPE
+    else null
+    end as TERMTYPE2
+    ,info.IS_TRANSFER IS_TRANSFER
+    ,info.IS_FULLY_COMPLIANT IS_NOTICE
+    ,case when info.PRODTYPE = 'M' then rpi.UNIT_VALUE_T
+    when info.PRODTYPE = 'R' then rpi.YIELD_E
+    when info.PRODTYPE = 'N' then
+    case when val.CHANGE_DATE >= #{startdate, jdbcType=DATE} and val2.CHANGE_DATE >= #{startdate, jdbcType=DATE}
+    <!-- （月末最近公布累计净值-月末次近公布累计净值）/月末次近公布累计净值*计息基础/区间天数*100%；区间天数=两个净值日的差 -->
+    then (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) / nvl(val2.UNIT_VALUE_TOTAL, 1) / to_number(val.CHANGE_DATE - val2.CHANGE_DATE) * 100
+    when val.CHANGE_DATE >= #{startdate, jdbcType=DATE}
+    then (nvl(val.UNIT_VALUE_TOTAL, 1) - 1) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) / to_number(val.CHANGE_DATE - info.RAISE_PENDDATE) * 100
+    else
+    rpi.RATE_BENCHMARK
+    end
+    else 0
+    end as YIELD_E
+    <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 end -->
+    from chb_prd_baseinfo info
+    left join
+    (
+    <!-- modify by dubaojun 2020-06-05 增加理财子公司所需字段的入库-增加CHANGE_DATE取值 start -->
+    select prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL from (
+    <!-- modify by dubaojun 2020-06-05 增加理财子公司所需字段的入库-增加CHANGE_DATE取值 end -->
+    select rank() over(partition by prod_id order by change_date desc)
+    my_rank,prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL from CHB_PRD_PERIODYIELD
+    where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
+    AND STATUS IN ('E','M')
+    ) where my_rank=1
+    )val
+    on nvl (info.fprod_id,info.prod_id)=val.prod_id
+    <!-- add by dubaojun 2020-06-06 增加理财子公司所需字段的入库 start -->
+    left join
+    (
+    select PROD_ID,CCY,PROD_VALUE,CHANGE_DATE,UNIT_VALUE_TOTAL
+    from (
+    select rank() over(partition by prod_id order by change_date desc) my_rank,
+    prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL
+    from CHB_PRD_PERIODYIELD
+    where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+    and CHANG_TYPE='01'
+    ) where my_rank = 2
+    )val2
+    on info.PROD_ID=val2.PROD_ID
+    left join (
+    select PROD_ID,
+    sum(TERMS*ASSETVALUE_B)/sum(ASSETVALUE_B) AS PROD_TERMS
+    from CHB_MONTH_ASSET_POSITION
+    where ENDDATE = #{enddate,jdbcType=DATE}
+    group by PROD_ID
+    ) position
+    on position.PROD_ID = info.PROD_ID
+    left join REP_PROD_INDEX rpi
+    on rpi.PROD_ID = info.PROD_ID
+    and rpi.VALUE_DATE = #{enddate,jdbcType=DATE}
+    <!-- add by dubaojun 2020-06-06 增加理财子公司所需字段的入库 end -->
+    left join pd on info.prod_id=pd.prod_id
+    where info.FPROD_ID is null
+    and  info.vdate <![CDATA[<=]]>  #{enddate,jdbcType=DATE}
+    /**历史到期产品不统计*/
+    AND NOT EXISTS (
+    SELECT
+    1
+    FROM
+    chb_prd_deal d
+    WHERE
+    d.trade_type = '16'
+    AND nvl(d.fprod_id, d.prod_id) = info.prod_id
+    and D.status in ('E','M')
+    AND D.SETTDATE_DATE <![CDATA[<]]> #{startdate,jdbcType=DATE}
+    )
+    and  info.status in  ('E','M') and  info.ISSUING_STATUS in  ('01')
+    )
+    ,rate as(
+    SELECT
+    BASIS_CYY ccyOriginal,
+    QUOT_CYY ccyConvert,
+    TRADE_DATE publishDate,
+    case when #{status,jdbcType=VARCHAR} = '02'
+    then
+    CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '01'
+    then
+    OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '03'
+    then
+    HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '04'
+    then
+    LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '05'
+    then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    end yeid
+    FROM MST_EXCHARGE_QUOTE info
+    where
+    info.QUOT_CYY = 'CNY'
+    AND INFO.DATASOURCE_TYPE = 'SAFE'
+    and info.TRADE_DATE = (select max(t.TRADE_DATE)
+    from MST_EXCHARGE_QUOTE t
+    where t.BASIS_CYY = info.BASIS_CYY
+    and t.QUOT_CYY = info.QUOT_CYY
+    and t.DATASOURCE_TYPE = 'SAFE'
+    and t.TRADE_DATE <![CDATA[<=]]>#{enddate,jdbcType=DATE})
+    )
+    /*交易明细表，将产品交易表进行拆分成：本金交易，利息交易*/
+    ,dd as (
+    select nvl(d.fprod_id,d.prod_id) prodid
+    ,i.prodtype
+    ,d.TRADE_ID
+    ,d.ISSUE_PARTY_ID
+    ,m.objfield1 ord_identified
+    ,d.BUY_PLACE
+    ,d.TRADE_TYPE
+    ,d.SETTDATE_DATE
+    ,d.PAY_DATE           paydate
+    ,d.TRADE_PRINCE       amount
+    ,d.UNIT_BONUS_AMOUNT
+    ,d.REDEMPTION_FEE
+    ,d.TRADE_QTY tradeQty
+    ,nvl(d.ccy,'CNY') ccy
+    ,d.STATUS
+    ,d.ORG_CODE
+    ,d.DEPT_CODE
+    ,d.DATA_SOURCE
+    from chb_prd_deal d
+    left join
+    chb_type_mapping_ex m
+    on d.CUSTOMER_TYPE2=m.srcfield1
+    and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
+    left join chb_prd_baseinfo i
+    on nvl(d.fprod_id,d.prod_id)=nvl(i.fprod_id,i.prod_id) and i.status !='D'
+    and i.fprod_id is null
+    where d.status !='D'
+    and (d.BUY_PLACE not in('210200','330200','350200','370200','440300') or d.BUY_PLACE is null)
+    and d.TRADE_PRINCE>0
+    and d.SETTDATE_DATE between #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
+    )
 
+    /*产品交易简单统计表：按产品，币种，投资者类型分组，根据交易类型将相关金额进行汇总*/
+    ,dm as (
+    select dd.prodid,dd.ccy,dd.ord_identified,prodtype
+    ,sum(
+    case when dd.TRADE_TYPE in('01','02','05','14') then amount
+    else 0
+    end ) dirtysum /*募集金额*/
+    ,sum(
+    case when dd.TRADE_TYPE in('01','02','05','14') then tradeQty
+    else 0
+    end ) dirtysumqty /*募集金额-份额*/
+    ,sum(
+    case when dd.TRADE_TYPE in('01','02','05','14') then amount
+    when dd.TRADE_TYPE in('03','16','15','17') then 0-amount
+    else 0
+    end ) cleansum /*净募集金额*/
+    ,sum(
+    case when  dd.TRADE_TYPE in('03','04','05','15','16')
+    then  amount else 0
+    end
+    )  payamtsum   /**本期兑付金额*/
+    from dd
+    where 1=1
+    group by dd.prodid,dd.ccy,dd.ord_identified,prodtype
+    )
+    ,di as(
+    select sum(ds.intamt) intamt, ds.prod_id prodid,ds.ccy, ds.ord_identified,ds.prodtype from
+    (select nvl(d.INT_AMT,0) intamt ,d.prod_id,d.ccy,
+    m.objfield1 ord_identified,i.prodtype
+    from chb_prd_deal d
+    left join
+    chb_type_mapping_ex m
+    on d.CUSTOMER_TYPE2=m.srcfield1
+    and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
+    left join chb_prd_baseinfo i
+    on nvl(d.fprod_id,d.prod_id)=nvl(i.fprod_id,i.prod_id) and i.status='E'
+    and i.fprod_id is null
+    where d.status !='D' and d.TRADE_TYPE in ('03','16','17')
+    and (d.BUY_PLACE not in('210200','330200','350200','370200','440300') or d.BUY_PLACE is null)
+    and d.INTEREST_DATE BETWEEN #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
+
+    UNION all
+    select nvl(d.INT_AMT,0)  ,d.prod_id,d.ccy,
+    m.objfield1 ord_identified,i.prodtype
+    from chb_prd_deal  d
+    left join
+    chb_type_mapping_ex m
+    on d.CUSTOMER_TYPE2=m.srcfield1
+    and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
+    left join chb_prd_baseinfo i
+    on nvl(d.fprod_id,d.prod_id)=nvl(i.fprod_id,i.prod_id) and i.status='E'
+    and i.fprod_id is null
+    where d.status !='D' and d.TRADE_TYPE in ('04','05')
+    and (d.BUY_PLACE not in('210200','330200','350200','370200','440300') or d.BUY_PLACE is null)
+    and d.INTEREST_DATE BETWEEN #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}) ds
+    group by ds.prod_id ,ds.ccy, ds.ord_identified,ds.prodtype
+    )
+    /*产品头寸表，映射投资者类型*/
+    ,pp as (
+    select p.prod_id,p.indentify_mark,p.ccy,p.balance_amt,p.total_intamt,p.balance_qty,p.cdate,m.objfield1 ord_identified
+    from chb_prd_position p
+    left join (select DISTINCT nvl(fprod_id,prod_id) prod_id,ccy,indentify_mark,CUSTOMER_TYPE2,buy_place from chb_prd_deal) deal
+    on p.prod_id=deal.prod_id and deal.ccy=p.ccy and deal.indentify_mark=p.indentify_mark and p.buy_place=deal.buy_place
+    left join chb_type_mapping_ex m
+    on deal.CUSTOMER_TYPE2=m.srcfield1
+    and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
+    )
+    /*计算每日头寸：按照产品、投资这类型、币种进行汇总*/
+    ,ps as (
+    select
+    prod_id,
+    ord_identified,
+    ccy,
+    cdate,
+    sum(nvl(balance_amt,0)) balance_amt ,
+    sum(nvl(total_intamt,0)) total_intamt,
+    sum(nvl(balance_qty,0)) balance_qty
+    from pp
+    group by prod_id,ord_identified,ccy,cdate
+    )
+    /*头寸主表：本期与上期的差额*/
+    ,pm as (
+    SELECT
+    tdy.prod_id       prodid,
+    tdy.ord_identified,
+    tdy.ccy,
+    nvl(tdy.balance_amt,0) - nvl(yst.balance_amt,0) cleanamtsum /*净募集金额*/,
+    nvl(tdy.total_intamt,0) - nvl(yst.total_intamt,0) customeramt /*客户收益*/,
+    nvl(tdy.balance_qty,0)   endamtsum /*期末余额*/
+    FROM
+    (
+    SELECT
+    prod_id,
+    ord_identified,
+    ccy,
+    balance_qty,
+    balance_amt,
+    total_intamt
+    FROM
+    (
+    SELECT
+    RANK() OVER(
+    PARTITION BY prod_id
+    ORDER BY
+    cdate DESC
+    ) my_rank,
+    prod_id,
+    ord_identified,
+    ccy,
+    balance_qty,
+    balance_amt,
+    total_intamt
+    FROM
+    ps
+    WHERE
+    cdate <![CDATA[<=]]> #{enddate,jdbcType=DATE}
+    )
+    WHERE
+    my_rank = 1
+
+    ) tdy
+    LEFT JOIN (
+    SELECT
+    prod_id,
+    ord_identified,
+    ccy,
+    balance_qty,
+    balance_amt,
+    total_intamt
+    FROM
+    (
+    SELECT
+    RANK() OVER(
+    PARTITION BY prod_id
+    ORDER BY
+    cdate desc
+    ) my_rank,
+    prod_id,
+    ord_identified,
+    ccy,
+    balance_qty,
+    balance_amt,
+    total_intamt
+    FROM
+    ps
+    WHERE
+    cdate <![CDATA[<=]]> #{startdate,jdbcType=DATE}-1
+    )
+    WHERE
+    my_rank = 1
+    ) yst ON tdy.prod_id = yst.prod_id
+    AND tdy.ccy = yst.ccy
+    AND (tdy.ord_identified = yst.ord_identified or (tdy.ord_identified is null and yst.ord_identified is null))
+    ),
+    pm2 as(
+    select
+    dd.prodid prodid,
+    dd.ccy ccy,
+    dd.ord_identified ord_identified,
+    sum(case when dd.TRADE_TYPE in('03','15','16','17') then amount
+    else 0
+    end ) amt,
+    sum(case when dd.TRADE_TYPE in('03','15','16','17') then tradeQty
+    else 0
+    end ) qty
+    from  dd
+    where 1=1
+    group by dd.prodid,dd.ccy,dd.ord_identified
+    )
+
+    /*月报产品交易头寸表,汇总客户收益，期末余额 */
+    select
+    f_guid()
+    ,prod.prodid
+    ,#{startdate,jdbcType=DATE} startdate
+    ,#{enddate,jdbcType=DATE} enddate
+    ,#{statusDate,jdbcType=DATE} bookdate
+    ,nvl(deal.ccy,prod.prod_value_ccy) ccy
+    ,DECODE(prod.RAISE_TYPE, '01', '01', '02', '02', null)
+    ,prod.IVSTORIENTATION
+    ,prod.TERMTYPE
+    ,prod.OPERATE_MODE
+    ,prod.PROFIT_TYPE
+    ,prod.SALETARGET
+    ,prod.vdate
+    ,prod.OPENDURATION
+    ,prod.CASH_MANA_CATE
+    ,prod.DURATIONFLAG
+    ,null con_prd_traget
+    ,deal.ORD_IDENTIFIED
+    <if test="monthReport!=null and monthReport=='01'">
+      ,deal.dirtysum  /*募集总额*/
+    </if>
+    <if test="monthReport!=null and monthReport=='02'">
+      ,deal.dirtysumqty  /*募集总额-份额*/
+    </if>
+    <if test="monthReport=='01' and cleanamttype==01">
+      ,nvl(pm.cleanamtsum,0) CLEANSUM /*净募集金额*/
+    </if>
+    <if test="monthReport=='01' and cleanamttype=='02'">
+      ,deal.dirtysum-pm2.amt  CLEANSUM /*净募集金额*/
+    </if>
+    <if test="monthReport=='02'">
+      ,deal.dirtysumqty-pm2.qty CLEANSUM
+    </if>
+    <if test="monthReport!=null and monthReport=='01'">
+      ,case when deal.prodtype in('N')
+      then round(pm.endamtsum*prod.prod_value,2)*nvl(rate.yeid,1)
+      else pm.endamtsum
+      end ENDAMTSUM_OTH /*期末余额*/
+    </if>
+    <if test="monthReport!=null and monthReport=='02'">
+      ,pm.endamtsum ENDAMTSUM_OTH /*期末余额*/
+    </if>
+    <if test="intamttype ==null or intamttype=='01' ">
+      ,pm.customeramt customeramt /*客户收益*/
+    </if>
+    <if test="intamttype !=null and intamttype=='02' ">
+      ,di.intamt customeramt /*客户收益*/
+    </if>
+    /*add  新加2个字段   by  dongxiangyang  start*/
+    ,deal.payamtsum   /**本期兑付金额*/
+    ,prod.closetermday  /*封闭式产品期限*/
+    /*add  新加2个字段   by  dongxiangyang  end*/
+    <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
+    ,prod.FUNCTIONAL_CURRENCY
+    ,prod.IS_TRANSFER
+    ,prod.IS_NOTICE
+    ,prod.YIELD_E
+    ,prod.TERMDAY
+    ,prod.TERMTYPE2
+    <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 end -->
     from  pi prod
     left join dm deal  on deal.prodid=prod.prodid
-    left join pm on deal.prodid=pm.prodid and deal.ccy=pm.ccy 
-    and  (deal.ord_identified=pm.ord_identified 
+    left join pm on deal.prodid=pm.prodid and deal.ccy=pm.ccy
+    and  (deal.ord_identified=pm.ord_identified
     or (deal.ord_identified is null and pm.ord_identified is null)
     )
-    left join pm2 on deal.prodid=pm2.prodid and deal.ccy=pm2.ccy 
-    and  (deal.ord_identified=pm2.ord_identified 
+    left join pm2 on deal.prodid=pm2.prodid and deal.ccy=pm2.ccy
+    and  (deal.ord_identified=pm2.ord_identified
     or (deal.ord_identified is null and pm2.ord_identified is null)
     )
     left join rate on prod.prod_value_ccy=rate.ccyOriginal
-    left join di on deal.prodid=di.prodid and deal.ccy=di.ccy 
-    and  (deal.ord_identified=di.ord_identified 
+    left join di on deal.prodid=di.prodid and deal.ccy=di.ccy
+    and  (deal.ord_identified=di.ord_identified
     or (deal.ord_identified is null and di.ord_identified is null)
     )
     where 1=1
-        and (prod.vdate >= #{startdate,jdbcType=DATE} or deal.prodid is not null)
+    and (prod.vdate >= #{startdate,jdbcType=DATE} or deal.prodid is not null)
 
-      <if test="prodid!=null">
-          and deal.prodid=#{prodid,jdbcType=VARCHAR}
-      </if>
-      <if test="prodids !=null">
-          and deal.prodid in
-          <foreach collection="prodids" item="item" open="(" separator=","
-                   close=")">
-              #{item}
-          </foreach>
-      </if>
     <if test="prodid!=null">
-    	and deal.prodid=#{prodid,jdbcType=VARCHAR} 
+      and deal.prodid=#{prodid,jdbcType=VARCHAR}
     </if>
-      <if test="prodids !=null">
-          and deal.prodid in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-          </foreach>
-      </if>
+    <if test="prodids !=null">
+      and deal.prodid in
+      <foreach collection="prodids" item="item" open="(" separator=","
+               close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="prodid!=null">
+      and deal.prodid=#{prodid,jdbcType=VARCHAR}
+    </if>
+    <if test="prodids !=null">
+      and deal.prodid in
+      <foreach collection="prodids" item="prodid" open="(" separator=","
+               close=")">
+        #{prodid}
+      </foreach>
+    </if>
 
 
     /*合并已起息，但没进行交易的产品*/
     union all
-        SELECT
-            f_guid(),
-            nvl(prod.fprod_id,prod_id),
-		    #{startdate,jdbcType=DATE} startdate,
-		    #{enddate,jdbcType=DATE} enddate,
-		    #{statusDate,jdbcType=DATE} bookdate,
-             nvl(pos1.CCY,
-            (case when length(prod.raise_ccy)>3
-            then null
-            else prod.raise_ccy
-            end )) ccy,
-            DECODE(prod.raise_type, '01', '01', '02', '02', null),
-            prod.ivstorientation,
-            prod.termtype,
-            prod.operate_mode,
-            prod.profit_type,
-            decode(prod.EXC_FIN_SECTOR,'01','04',prod.SALETARGET) saletarget,
-            prod.vdate,
-            '03' openduration,
-            prod.CASH_MANA_CATE,
-            pi.durationflag,
-            NULL con_prd_traget,
-            pos1.ORD_IDENTIFIED ord_identified,
-            0 dirtysum /*募集总额*/,
-            0 cleansum /*净募集金额*/,
+    SELECT
+    f_guid(),
+    nvl(prod.fprod_id,prod_id),
+    #{startdate,jdbcType=DATE} startdate,
+    #{enddate,jdbcType=DATE} enddate,
+    #{statusDate,jdbcType=DATE} bookdate,
+    nvl(pos1.CCY,
+    (case when length(prod.raise_ccy)>3
+    then null
+    else prod.raise_ccy
+    end )) ccy,
+    DECODE(prod.raise_type, '01', '01', '02', '02', null),
+    prod.ivstorientation,
+    prod.termtype,
+    prod.operate_mode,
+    prod.profit_type,
+    decode(prod.EXC_FIN_SECTOR,'01','04',prod.SALETARGET) saletarget,
+    prod.vdate,
+    '03' openduration,
+    prod.CASH_MANA_CATE,
+    pi.durationflag,
+    NULL con_prd_traget,
+    pos1.ORD_IDENTIFIED ord_identified,
+    0 dirtysum /*募集总额*/,
+    0 cleansum /*净募集金额*/,
 
-            <if test="monthReport!=null and monthReport=='01'">
-               case when prod.prodtype in ('N')
-                then round(pm.endamtsum*pi.prod_value,2)*nvl(rate.yeid,1)
-                else pm.endamtsum
-                end ENDAMTSUM_OTH /*期末余额*/,
-            </if>
-            <if test="monthReport!=null and monthReport=='02'">
-              pm.endamtsum ENDAMTSUM_OTH /*期末余额*/,
-            </if>
-            0 customeramt /*客户收益*/
-           ,0  payamtsum   /**本期兑付金额*/
-           ,case when prod.operate_mode in ('01','02')
-              then prod.mdate-prod.vdate else null
-              end  closetermday  /**新加字段封闭式产品期限*/
-        FROM
-           /* chb_prd_baseinfo prod */
-           /* left join CHB_MONTH_PRD_POSITION pos1*/
-            CHB_MONTH_PRD_POSITION pos1          
-            left join  chb_prd_baseinfo prod
-            on pos1.PRODID = prod.PROD_ID
-            left join pi on pi.prodid=prod.prod_id
-			/*left join pm on pm.prodid=prod.prod_id*/
-			LEFT JOIN PM ON PM.PRODID=POS1.PRODID
-      		and  (PM.ord_identified=pos1.ord_identified 
-    		or (PM.ord_identified is null and pos1.ord_identified is null)
-    		)
-			left join rate on pi.prod_value_ccy=rate.ccyOriginal
-            where 1=1 
-            and ADD_MONTHS(pos1.STARTDATE, 1) = #{startdate,jdbcType=DATE}
-            and prod.status in ('E','M')
-            and prod.vdate <![CDATA[<=]]> #{enddate,jdbcType=DATE}
-            and not exists ( select 1 from chb_prd_deal deal 
-            left join chb_type_mapping_ex m
-            on deal.CUSTOMER_TYPE2=m.srcfield1
-            and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'  
-            where SETTDATE_DATE between #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
-            and nvl(m.objfield1,'0')=nvl(pos1.ord_identified,'0')
-            and nvl(prod.fprod_id,prod.prod_id)=nvl(deal.fprod_id,deal.prod_id) 
-            /***加上有效交易条件**/
-            and deal.status !='D' )
-              <if test="prodids !=null">
-                  and nvl(prod.fprod_id,prod_id) in
-                  <foreach collection="prodids" item="item" open="(" separator=","
-                           close=")">
-                      #{item}
-                  </foreach>
-              </if>
-              <if test="prodid!=null and prodid.length > 0">
-                  and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR}
-              </if>
-		    <if test="prodid!=null">
-		    	and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR} 
-		    </if>
-              <if test="prodids !=null">
-                  and nvl(prod.fprod_id,prod_id) in
-				<foreach collection="prodids" item="item" open="(" separator=","
-					close=")">
-                      #{item}
-                  </foreach>
-              </if>
-    
+    <if test="monthReport!=null and monthReport=='01'">
+      case when prod.prodtype in ('N')
+      then round(pm.endamtsum*pi.prod_value,2)*nvl(rate.yeid,1)
+      else pm.endamtsum
+      end ENDAMTSUM_OTH /*期末余额*/,
+    </if>
+    <if test="monthReport!=null and monthReport=='02'">
+      pm.endamtsum ENDAMTSUM_OTH /*期末余额*/,
+    </if>
+    0 customeramt /*客户收益*/
+    ,0  payamtsum   /**本期兑付金额*/
+    ,case when prod.operate_mode in ('01','02')
+    then prod.mdate-prod.vdate else null
+    end  closetermday  /**新加字段封闭式产品期限*/
+    <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
+    ,pos1.FUNCTIONAL_CURRENCY
+    ,pos1.IS_TRANSFER
+    ,pos1.IS_NOTICE
+    ,pos1.YIELD_E
+    ,pos1.TERMDAY
+    ,pos1.TERMTYPE2
+    <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 end -->
+    FROM
+    /* chb_prd_baseinfo prod */
+    /* left join CHB_MONTH_PRD_POSITION pos1*/
+    CHB_MONTH_PRD_POSITION pos1
+    left join  chb_prd_baseinfo prod
+    on pos1.PRODID = prod.PROD_ID
+    left join pi on pi.prodid=prod.prod_id
+    /*left join pm on pm.prodid=prod.prod_id*/
+    LEFT JOIN PM ON PM.PRODID=POS1.PRODID
+    and  (PM.ord_identified=pos1.ord_identified
+    or (PM.ord_identified is null and pos1.ord_identified is null)
+    )
+    left join rate on pi.prod_value_ccy=rate.ccyOriginal
+    where 1=1
+    and ADD_MONTHS(pos1.STARTDATE, 1) = #{startdate,jdbcType=DATE}
+    and prod.status in ('E','M')
+    and prod.vdate <![CDATA[<=]]> #{enddate,jdbcType=DATE}
+    and not exists ( select 1 from chb_prd_deal deal
+    left join chb_type_mapping_ex m
+    on deal.CUSTOMER_TYPE2=m.srcfield1
+    and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
+    where SETTDATE_DATE between #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
+    and nvl(m.objfield1,'0')=nvl(pos1.ord_identified,'0')
+    and nvl(prod.fprod_id,prod.prod_id)=nvl(deal.fprod_id,deal.prod_id)
+    /***加上有效交易条件**/
+    and deal.status !='D' )
+    <if test="prodids !=null">
+      and nvl(prod.fprod_id,prod_id) in
+      <foreach collection="prodids" item="item" open="(" separator=","
+               close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="prodid!=null and prodid.length > 0">
+      and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR}
+    </if>
+    <if test="prodid!=null">
+      and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR}
+    </if>
+    <if test="prodids !=null">
+      and nvl(prod.fprod_id,prod_id) in
+      <foreach collection="prodids" item="item" open="(" separator=","
+               close=")">
+        #{item}
+      </foreach>
+    </if>
+
   </insert>
-  
+
   <delete id="deleteByModel" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
     delete from CHB_MONTH_PRD_POSITION
     where 1=1
     <if test="startdate!=null">
-    	and startdate=#{startdate,jdbcType=DATE} 
+      and startdate=#{startdate,jdbcType=DATE}
     </if>
     <if test="enddate!=null">
-    	and enddate=#{enddate,jdbcType=DATE} 
+      and enddate=#{enddate,jdbcType=DATE}
     </if>
-      <if test="prodids !=null">
-          and prodid in
-		<foreach collection="prodids" item="item" open="(" separator=","
-			close=")">
-			#{item}
-		</foreach>
-	</if>
-      <if test="prodid!=null and prodid.length > 0">
-          and prodid=#{prodid,jdbcType=VARCHAR}
-      </if>
+    <if test="prodids !=null">
+      and prodid in
+      <foreach collection="prodids" item="item" open="(" separator=","
+               close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="prodid!=null and prodid.length > 0">
+      and prodid=#{prodid,jdbcType=VARCHAR}
+    </if>
   </delete>
   <select id="selectPrciceByProdAndDate"   resultType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" parameterType="date" >
   	 select prod_id prodId,ccy,prod_value prodValue from (
-	        select rank() over(partition by prod_id order by change_date desc) 
+	        select rank() over(partition by prod_id order by change_date desc)
 	        my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
 	        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
 	        ) where my_rank=1
-  </select>  
-    
-    
+  </select>
+
+
 </mapper>

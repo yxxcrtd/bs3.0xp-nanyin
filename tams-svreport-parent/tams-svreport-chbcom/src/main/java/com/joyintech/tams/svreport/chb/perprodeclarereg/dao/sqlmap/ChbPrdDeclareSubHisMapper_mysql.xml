@@ -83,6 +83,7 @@
     <result column="FILE_NUM" jdbcType="DECIMAL" property="fileNum" />
     <result column="SUBMIT_FEEDBACK_STATUS" jdbcType="VARCHAR" property="submitFeedbackStatus" />
     <result column="REG_CODE" jdbcType="VARCHAR" property="regCode" />
+    <result column="IS_FHXGCP" jdbcType="VARCHAR" property="isFhxgcp" />
   </resultMap>
   <sql id="Base_Column_List">
     REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
@@ -97,7 +98,7 @@
     CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE, 
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
     UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
-    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE
+    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, IS_FHXGCP
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -136,7 +137,7 @@
       CREATE_USER, CREATE_DEPT, CREATE_TIME, 
       UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, 
       SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
-      FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE
+      FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, IS_FHXGCP
       )
     values (#{registSeqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
       #{prodInsId,jdbcType=VARCHAR}, #{prodBrand,jdbcType=VARCHAR}, #{prodStage,jdbcType=DECIMAL}, 
@@ -164,7 +165,7 @@
       #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, 
       #{submitDeadline,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, 
-      #{fileNum,jdbcType=DECIMAL}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{regCode,jdbcType=VARCHAR}
+      #{fileNum,jdbcType=DECIMAL}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{regCode,jdbcType=VARCHAR}, #{isFhxgcp,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.ChbPrdDeclareSubHis">
@@ -413,6 +414,9 @@
       <if test="regCode != null">
         REG_CODE,
       </if>
+      <if test="isFhxgcp != null">
+        IS_FHXGCP,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="registSeqno != null">
@@ -657,6 +661,9 @@
       </if>
       <if test="regCode != null">
         #{regCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isFhxgcp != null">
+        #{isFhxgcp,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -903,6 +910,9 @@
       <if test="regCode != null">
         REG_CODE = #{regCode,jdbcType=VARCHAR},
       </if>
+      <if test="isFhxgcp != null">
+        IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+      </if>
     </set>
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
@@ -987,7 +997,8 @@
       ORG_CODE = #{orgCode,jdbcType=VARCHAR},
       FILE_NUM = #{fileNum,jdbcType=DECIMAL},
       SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
-      REG_CODE = #{regCode,jdbcType=VARCHAR}
+      REG_CODE = #{regCode,jdbcType=VARCHAR},
+      IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
   
@@ -1005,7 +1016,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
     UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP
       )
       select 
     REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
@@ -1021,7 +1032,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, NOW(),
     UPDATE_USER, NOW(), CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE,
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP
     from CHB_PRD_DECLARE_SUB
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">
@@ -1045,8 +1056,8 @@
     <foreach collection="regList" item="item" open="(" separator=") or (" close=")">
     prod_id = #{item.prodId,jdbcType=VARCHAR}
     </foreach>
-    )a
-  where 1=1 limit 1
+    ) a
+  where a.myrank = 1
   </select>
   
    <delete id="deleteBySeqno" parameterType="java.lang.String">

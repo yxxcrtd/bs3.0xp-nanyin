@@ -340,7 +340,7 @@
 			<if test="operator != null and operator != ''">
 				and OPERATOR = #{operator,jdbcType=VARCHAR}
 			</if>
-		)
+		) tmp
     </select>
     <select id="selectByDealStatus" resultMap="BaseResultMap">
         select 

@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.report.submitmaintenance.mstmarketcalendarinfo.service;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +18,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.validation.ValidMessage;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,7 +126,8 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
                 // 检查读出信息是否为空
                 if (null != dataList && dataList.size() > 0) {
                     // 将excel表格中的数据转化为dto
-                    List<ExcelValidDto> checkResult = checkExcelData(dataList);
+                    List<ExcelValidDto> checkResult = checkExcelDataNew(dataList,true);
+                    //List<ExcelValidDto> checkResult = checkExcelData(dataList);
                     if (checkResult.isEmpty()) {
                         List<SvrMstMarketCalendarInfo001Dto> equityList = converToBean(dataList);
                         dealAfterCheck(equityList);
@@ -148,8 +152,87 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
     }
 
     /**
+     *
+     * @param dataList excel中的数据
+     * @param isCheck true:导入前检查 false:导入无需再检查
+     * @return
+     */
+    private List<ExcelValidDto> checkExcelDataNew(List<List<String>> dataList,boolean isCheck) {
+        List<ExcelValidDto> errorList = new ArrayList<>();
+        //新建时,判断excel表中是否存在重复产品代码的数据
+        //更新删除时,查询数据不存在则提示 不存在数据请核查
+        if(isCheck) {
+            for (int i = 0; i < dataList.size(); i++) {
+                List<String> message = new ArrayList<>();
+                //市场日历类型
+                String calendarId = "";
+                String calendarIdCheck = "";
+                if (null != dataList.get(i).get(1) && !"".equals(dataList.get(i).get(1))) {
+                    calendarId = dataList.get(i).get(1);
+                    calendarIdCheck = calendarId.substring(0,2);
+                    if (!"01".equals(calendarIdCheck) && !"02".equals(calendarIdCheck) && !"03".equals(calendarIdCheck) && !"04".equals(calendarIdCheck)
+                            && !"05".equals(calendarIdCheck)  && !"06".equals(calendarIdCheck) && !"07".equals(calendarIdCheck) && !"08".equals(calendarIdCheck)
+                            && !"09".equals(calendarIdCheck)  && !"10".equals(calendarIdCheck) && !"11".equals(calendarIdCheck) && !"12".equals(calendarIdCheck)) {
+                        message.add("无效的市场日历类型");
+                        errorList.add(new ExcelValidDto(calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
+                }
+
+
+                //日期
+                DateFormat dfs = new SimpleDateFormat("yyyy/MM/dd");
+                dfs.setLenient(false);
+                String cdateCheck = "";
+                cdateCheck =dataList.get(i).get(0).toString();
+                Date cdate = new Date();
+                if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
+                    if(dataList.get(i).get(0).contains("/")){
+                        try {
+                            cdate=dfs.parse(dataList.get(i).get(0));
+                            // 获取平台日期
+                            Date sysDate =  DateUtil.platDateFromCache();
+                            if (cdate!=null&&cdate.before(sysDate)) {
+                                // 验证导入数据日期是否小于平台日期
+                                message.add("平台日期不能大于导入数据的日期。");
+                                errorList.add(new ExcelValidDto(cdateCheck,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            message.add("无效的日期!");
+                            errorList.add(new ExcelValidDto(cdateCheck,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                        }
+                    }else{
+                        message.add("无效的日期!");
+                        errorList.add(new ExcelValidDto(cdateCheck,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                    }
+                }
+                //节假日标志
+                String isHoliday = "";
+                String isHolidayCheck = "";
+                if (null != dataList.get(i).get(2) && !"".equals(dataList.get(i).get(2))) {
+                    isHoliday = dataList.get(i).get(2);
+                    isHolidayCheck = isHoliday.substring(0,1);
+                    if (!"0".equals(isHolidayCheck) && !"1".equals(isHolidayCheck)) {
+                        message.add("无效的节假日标志");
+                        errorList.add(new ExcelValidDto(isHoliday, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
+                }
+
+                for (int j = i + 1; j < dataList.size(); j++) {
+                    if (StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0)) && StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1))) {
+                        message.add("主键（日期与市场日历类型的联合）与" + "第" + (j + 2) + "行主键冲突!");
+                        errorList.add(new ExcelValidDto(cdateCheck + calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
+                }
+
+            }
+        }
+        return errorList;
+    }
+
+    /**
      * 导入文件内容检查 <功能详细描述>
-     * 
+     *
      * @param dataList 导入数据
      * @return 返回检查结果
      * @throws ParseException 抛出异常

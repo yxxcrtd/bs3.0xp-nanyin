@@ -260,6 +260,162 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
      */
     private BigDecimal  totalFeeRate;
 
+    /**
+     * 资产名称
+     */
+    private String assetName;
+
+    /**
+     * 起息日
+     */
+    private Date vdate;
+
+    /**
+     * 到期日
+     */
+    private Date mdate;
+
+    /**
+     * 公共PPP
+     */
+    private String pppflag;
+
+    /**
+     * 是否投向“市场化债转股相关产品的部分”
+     */
+    private String bondtostockFlag;
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String repPbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String repPbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String repPbcAssetType3;
+
+    /**
+     * 资产名称
+     */
+    private String repAssetName;
+
+    public String getRepAssetName() {
+        return repAssetName;
+    }
+
+    public void setRepAssetName(String repAssetName) {
+        this.repAssetName = repAssetName;
+    }
+
+    public String getRepPbcAssetType1() {
+        return repPbcAssetType1;
+    }
+
+    public void setRepPbcAssetType1(String repPbcAssetType1) {
+        this.repPbcAssetType1 = repPbcAssetType1;
+    }
+
+    public String getRepPbcAssetType2() {
+        return repPbcAssetType2;
+    }
+
+    public void setRepPbcAssetType2(String repPbcAssetType2) {
+        this.repPbcAssetType2 = repPbcAssetType2;
+    }
+
+    public String getRepPbcAssetType3() {
+        return repPbcAssetType3;
+    }
+
+    public void setRepPbcAssetType3(String repPbcAssetType3) {
+        this.repPbcAssetType3 = repPbcAssetType3;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public Date getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
+    }
+
+    public String getPppflag() {
+        return pppflag;
+    }
+
+    public void setPppflag(String pppflag) {
+        this.pppflag = pppflag;
+    }
+
+    public String getBondtostockFlag() {
+        return bondtostockFlag;
+    }
+
+    public void setBondtostockFlag(String bondtostockFlag) {
+        this.bondtostockFlag = bondtostockFlag;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
+    }
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
+
 
     private String  industryLevel2Type;
 

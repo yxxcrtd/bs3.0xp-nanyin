@@ -10,46 +10,28 @@
 
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper;
-import com.joyintech.tams.common.base.dao.ChbAssetSubStatusMapper;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.base.entity.ChbAssetSubStatus;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
-import com.joyintech.tams.svreport.chb.assetinforeg.dao.AssetInfoRegist001Mapper;
-import com.joyintech.tams.svreport.chb.assetinforeg.dao.ChbAssetInfoSubHisMapper;
-import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
-import com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSubHisDto;
-import com.joyintech.tams.svreport.chb.investtrade.dao.MstCounterPartyDtoMapper;
-import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,8 +50,6 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 
 	@Autowired
 	private ChbAssetInfoErrodataMapper chbAssetInfoErrodataMapper;
-
-
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -131,7 +111,12 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 		//数据保存.使用marge模式.避免出现老数据仍然出现的问题
 		if(StringUtil.isNotEmpty(dto)){
 			assetInfo.add(dto);
-			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
+			AssetInfoDetailDto assetInfoDetailDto = assetInfoDetailMapper.queryAssetInfo(dto.getAssetCode());
+			if (StringUtil.isNotEmpty(assetInfoDetailDto)){
+				flag = assetInfoDetailMapper.updateBatch(assetInfo);
+			}else {
+				flag = assetInfoDetailMapper.insertBatch(assetInfo);
+			}
 		}
 		/**
 		 * 如果是待处理数据,则将错误信息表里面的数据删除
@@ -172,6 +157,34 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 	 */
 	public AssetInfoDetailDto getAssetInfoByUUid(String UUid){
 		return assetInfoDetailMapper.getAssetInfoDetail(UUid);
+	}
+
+	public List<ExcelValidDto> importData(List<AssetInfoDetailDto> dataList){
+		List<ExcelValidDto> checkResult = new ArrayList<>();
+		List<ChbAssetInfo> assetInfo = new ArrayList<>();
+		assetInfo.addAll(dataList);
+		if(!StringUtil.isEmptyList(dataList)){
+			List<String> assetCodes = assetInfoDetailMapper.selectAssetCode(dataList);
+			List<ChbAssetInfo> insertList = new ArrayList<>();
+			List<ChbAssetInfo> updateList = new ArrayList<>();
+			dataList.forEach(assetInfoDetailDto -> {
+				if (assetCodes.contains(assetInfoDetailDto.getAssetCode())){
+					updateList.add(assetInfoDetailDto);
+				}else {
+					insertList.add(assetInfoDetailDto);
+				}
+			});
+			if(!StringUtil.isEmptyList(insertList)){
+				assetInfoDetailMapper.insertBatch(insertList);
+			}
+			if(!StringUtil.isEmptyList(updateList)){
+				assetInfoDetailMapper.updateBatch(updateList);
+			}
+			return checkResult;
+		}
+		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),
+				this.getMessage("REPORT_COMMON_FILE_E_0016")));
+		return  checkResult;
 	}
 
 }

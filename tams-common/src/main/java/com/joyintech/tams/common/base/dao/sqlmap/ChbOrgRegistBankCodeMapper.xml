@@ -12,29 +12,28 @@
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="PBC_BANK_CODE" property="pbcBankCode" jdbcType="VARCHAR" />
         <result column="IS_FIN_SUB_COMPANY" property="isFinSubCompany" jdbcType="VARCHAR" />
-        <result column="INSITITUTE_CODE" property="insitituteCode" jdbcType="VARCHAR" />
+        <result column="FREGIST_BANK_CODE" property="fregistBankCode" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        ORG_CODE ORG_CODE, REGIST_BANK_CODE REGIST_BANK_CODE, STATUS STATUS, CREATE_USER CREATE_USER, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+        ORG_CODE ORG_CODE, REGIST_BANK_CODE REGIST_BANK_CODE, STATUS STATUS, CREATE_USER CREATE_USER,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT, FREGIST_BANK_CODE
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
         , PBC_BANK_CODE PBC_BANK_CODE, IS_FIN_SUB_COMPANY IS_FIN_SUB_COMPANY
-        , INSITITUTE_CODE INSITITUTE_CODE
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
     </sql>
     <sql id="Sql_All_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.ChbOrgRegistBankCodeMapper.Base_Column_List" />
         from CHB_ORG_REGIST_BANK_CODE
     </sql>
     <sql id="Sql_All_Effective_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.ChbOrgRegistBankCodeMapper.Base_Column_List" />
         from CHB_ORG_REGIST_BANK_CODE
         where STATUS = 'E'
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.ChbOrgRegistBankCodeMapper.Base_Column_List" />
         from CHB_ORG_REGIST_BANK_CODE
         where ORG_CODE = #{orgCode,jdbcType=VARCHAR}
@@ -48,20 +47,20 @@
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
-        insert into CHB_ORG_REGIST_BANK_CODE (ORG_CODE, REGIST_BANK_CODE, STATUS, 
-            CREATE_USER, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, CREATE_DEPT
-            <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
-            , PBC_BANK_CODE, IS_FIN_SUB_COMPANY,INSITITUTE_CODE
-            <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
-            )
-        values (#{orgCode,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
-            <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
-            , #{pbcBankCode,jdbcType=VARCHAR}, #{isFinSubCompany,jdbcType=VARCHAR}, #{insitituteCode,jdbcType=VARCHAR}
-            <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
-            )
+        insert into CHB_ORG_REGIST_BANK_CODE (ORG_CODE, REGIST_BANK_CODE, STATUS,
+        CREATE_USER, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, CREATE_DEPT, FREGIST_BANK_CODE
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
+        , PBC_BANK_CODE, IS_FIN_SUB_COMPANY
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+        )
+        values (#{orgCode,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+        #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+        #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{fregistBankCode,jdbcType=VARCHAR}
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
+        , #{pbcBankCode,jdbcType=VARCHAR}, #{isFinSubCompany,jdbcType=VARCHAR}
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+        )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
         insert into CHB_ORG_REGIST_BANK_CODE
@@ -90,11 +89,14 @@
             <if test="createDept != null" >
                 CREATE_DEPT,
             </if>
+            <if test="fregistBankCode != null" >
+                FREGIST_BANK_CODE,
+            </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
-             <if test="pbcBankCode != null" >
+            <if test="pbcBankCode != null" >
                 PBC_BANK_CODE,
             </if>
-             <if test="isFinSubCompany != null" >
+            <if test="isFinSubCompany != null" >
                 IS_FIN_SUB_COMPANY,
             </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
@@ -124,30 +126,33 @@
             <if test="createDept != null" >
                 #{createDept,jdbcType=VARCHAR},
             </if>
+            <if test="fregistBankCode != null" >
+                #{fregistBankCode,jdbcType=VARCHAR},
+            </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
             <if test="pbcBankCode != null" >
                 #{pbcBankCode,jdbcType=VARCHAR},
             </if>
-             <if test="isFinSubCompany != null" >
+            <if test="isFinSubCompany != null" >
                 #{isFinSubCompany,jdbcType=VARCHAR},
             </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
-        insert into CHB_ORG_REGIST_BANK_CODE(ORG_CODE, REGIST_BANK_CODE, STATUS, CREATE_USER, 
+        insert into CHB_ORG_REGIST_BANK_CODE(ORG_CODE, REGIST_BANK_CODE, STATUS, CREATE_USER,
         CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT
-         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
-         , PBC_BANK_CODE, IS_FIN_SUB_COMPANY
-          <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
+        , PBC_BANK_CODE, IS_FIN_SUB_COMPANY
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
         )
-        select ORG_CODE, REGIST_BANK_CODE, #{status,jdbcType=VARCHAR} STATUS, CREATE_USER, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
-             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
-             , PBC_BANK_CODE, IS_FIN_SUB_COMPANY
-             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
-             from CHB_ORG_REGIST_BANK_CODE
-             where STATUS = 'E' and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+        select ORG_CODE, REGIST_BANK_CODE, #{status,jdbcType=VARCHAR} STATUS, CREATE_USER,
+        CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
+        , PBC_BANK_CODE, IS_FIN_SUB_COMPANY
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+        from CHB_ORG_REGIST_BANK_CODE
+        where STATUS = 'E' and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
         update CHB_ORG_REGIST_BANK_CODE
@@ -164,11 +169,14 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="fregistBankCode != null" >
+                FREGIST_BANK_CODE = #{fregistBankCode,jdbcType=VARCHAR},
+            </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
             <if test="pbcBankCode != null" >
                 PBC_BANK_CODE = #{pbcBankCode,jdbcType=VARCHAR},
             </if>
-             <if test="isFinSubCompany != null" >
+            <if test="isFinSubCompany != null" >
                 IS_FIN_SUB_COMPANY = #{isFinSubCompany,jdbcType=VARCHAR},
             </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
@@ -193,11 +201,14 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="fregistBankCode != null" >
+                FREGIST_BANK_CODE = #{fregistBankCode,jdbcType=VARCHAR},
+            </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
-             <if test="pbcBankCode != null" >
+            <if test="pbcBankCode != null" >
                 PBC_BANK_CODE = #{pbcBankCode,jdbcType=VARCHAR},
             </if>
-             <if test="isFinSubCompany != null" >
+            <if test="isFinSubCompany != null" >
                 IS_FIN_SUB_COMPANY = #{isFinSubCompany,jdbcType=VARCHAR},
             </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
@@ -206,12 +217,13 @@
     </update>
     <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
         update CHB_ORG_REGIST_BANK_CODE
-        set 
+        set
         ORG_CODE = #{orgCode,jdbcType=VARCHAR},
         REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
         STATUS = #{status,jdbcType=VARCHAR},
         UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        FREGIST_BANK_CODE = #{fregistBankCode,jdbcType=VARCHAR}
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
         , PBC_BANK_CODE = #{pbcBankCode,jdbcType=VARCHAR}
         , IS_FIN_SUB_COMPANY = #{isFinSubCompany,jdbcType=VARCHAR}
@@ -221,14 +233,14 @@
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
         update CHB_ORG_REGIST_BANK_CODE
         set REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
-            STATUS = #{status,jdbcType=VARCHAR},
-            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
-            <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
-            , PBC_BANK_CODE = #{pbcBankCode,jdbcType=VARCHAR}
-            , IS_FIN_SUB_COMPANY = #{isFinSubCompany,jdbcType=VARCHAR}
-            <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
-            , INSITITUTE_CODE = #{insitituteCode,jdbcType=VARCHAR}
+        STATUS = #{status,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        FREGIST_BANK_CODE = #{fregistBankCode,jdbcType=VARCHAR}
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
+        , PBC_BANK_CODE = #{pbcBankCode,jdbcType=VARCHAR}
+        , IS_FIN_SUB_COMPANY = #{isFinSubCompany,jdbcType=VARCHAR}
+        <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
         where ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </update>
 </mapper>

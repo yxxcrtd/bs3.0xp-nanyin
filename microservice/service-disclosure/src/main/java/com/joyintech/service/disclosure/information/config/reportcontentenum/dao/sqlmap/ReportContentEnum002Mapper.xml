@@ -120,6 +120,6 @@
 	            #{id}
 	    	</foreach>
 	    	and pri.is_quote = '01' /*被引用*/
-		)
+		) tmp
     </select>
 </mapper>

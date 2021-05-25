@@ -36,6 +36,8 @@ public interface AssetInfoDetailMapper {
 
 	List<AssetInfoDetailDto> selectChbInfoByParam (Map<String,Object> params);
 
+	List<AssetInfoDetailDto> selectReportInfoByParam (Map<String,Object> params);
+
 	AssetInfoDetailDto getAssetInfoDetail (@Param("Assetuuid") String Assetuuid);
 	AssetInfoDetailDto queryAssetInfo (@Param("assetCode") String assetCode);
 
@@ -57,7 +59,7 @@ public interface AssetInfoDetailMapper {
 
 	List<SelectOptionDto>  getAssetTye2(Map<String, Object> pageParam);
 
-
+	List<SelectOptionDto> getTradeCounter(Map<String, Object> param);
 
 
 	int deleteError(String assetUUid);
@@ -67,5 +69,9 @@ public interface AssetInfoDetailMapper {
 
 	int deleteErrorMsg(String assetCode);
 
+    int selectDataCount(@Param("keylist") List<AssetInfoDetailDto> list);
 
+	List<AssetInfoDetailDto> selectKeyListData(@Param("keylist") List<AssetInfoDetailDto> list);
+
+	List<String> selectAssetCode(@Param("keylist") List<AssetInfoDetailDto> list);
 }

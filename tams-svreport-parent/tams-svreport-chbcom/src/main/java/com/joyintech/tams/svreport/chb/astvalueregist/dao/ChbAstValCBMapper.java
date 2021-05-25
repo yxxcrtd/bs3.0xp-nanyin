@@ -44,8 +44,8 @@ public interface ChbAstValCBMapper {
 	List<ChbAstValueSub> queryInsertGenerateList(@Param("generateDate")String generateDate,@Param("statusDate")Date statusDate,
 			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline,@Param("InstitutionCode")String InstitutionCode);
 
-	
-	
+	List<ChbAstValueSub> queryInsertGenerateLastList();
+
 	
 	/**
 	 * 查询出删除和修改的持仓登记的数据
@@ -99,7 +99,15 @@ public interface ChbAstValCBMapper {
 	 * @return
 	 */
 	List<Date> queryUpdateDate(@Param("generateDate")String generateDate,@Param("isBtm")String isBtm);
-	
+
+	/**
+	 * 从估值维护表查询需要生成估值表的数据日期
+	 * @param generateDate
+	 * @param isBtm
+	 * @return
+	 */
+	List<Date> queryUpdateDateFromVal(@Param("generateDate")String generateDate,@Param("isBtm")String isBtm);
+
 	int insertSub(ChbAstValueSub record);
 
 }

@@ -17,6 +17,7 @@ import com.joyintech.tams.common.base.entity.RepAssetBond;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFinBondRepInfoValidator;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *  资产基本信息_QDII拆出逆回购类信息
@@ -57,6 +58,72 @@ public class SvrBussRepQDIIdemolitionInfoDto extends RepAssetBond{
      * 备注
      */
     private String  remark;
+
+    /**
+     * 起息日
+     */
+    private Date vdate;
+
+    /**
+     * 到期日
+     */
+    private Date mdate;
+
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
+
+    public Date getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
+    }
 
     public String getCountryArea() {
         return countryArea;

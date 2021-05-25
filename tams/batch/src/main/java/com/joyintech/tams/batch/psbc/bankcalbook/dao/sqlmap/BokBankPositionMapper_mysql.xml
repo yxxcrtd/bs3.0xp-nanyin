@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.batch.psbc.bankcalbook.dao.BokBankPositionMapper_mysql">
+    <select id="selectBokBankBalance" resultType="com.joyintech.tams.batch.psbc.bankcalbook.dto.BokBankPositionDto" >
+        select
+             FINPROD_ID   finprodId
+			,BALANCE_DATE   balanceDate
+			,SUBJECT_NO   subjectNo
+			,FSUBJECT_NO   fsubjectNo
+			,BOOKSET_ID   booksetId
+			,SUBJECT_LEVEL   subjectLevel
+			,BAL_FLAG   balFlag
+			,O_CCY   oCcy
+			,O_AMT   oAmt
+			,B_CCY   bCcy
+			,B_AMT   bAmt
+			,IS_LEAF   isLeaf
+			,NUM_AMT   numAmt
+			,CREATE_USER   createUser
+			,CREATE_DEPT   createDept
+			,CREATE_TIME   createTime
+			,UPDATE_USER   updateUser
+			,UPDATE_TIME   updateTime
+        from BOK_BANK_POSITION
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            and BALANCE_DATE = #{balanceDate,jdbcType=DATE}
+            and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </select>
 
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.batch.psbc.bankcalbook.dto.BokBankPositionDto" >
         update BOK_BANK_POSITION
@@ -26,7 +51,6 @@
         insert into BOK_BANK_POSITION (FINPROD_ID, BALANCE_DATE, SUBJECT_NO, BOOKSET_ID, FSUBJECT_NO,
         SUBJECT_LEVEL, BAL_FLAG, O_CCY, O_AMT, B_CCY, B_AMT, IS_LEAF,
         NUM_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,)
-
         values
         <foreach collection="list" item="item" separator=",">
             #{item.finprodId,jdbcType=VARCHAR},

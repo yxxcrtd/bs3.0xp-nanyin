@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
-	namespace="com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper">
+		namespace="com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper">
 	<resultMap id="BaseResultMap"
-		type="com.joyintech.tams.common.base.entity.ChbMgrTableInfo">
+			   type="com.joyintech.tams.common.base.entity.ChbMgrTableInfo">
 		<id column="MGRTABLE_ID" property="mgrTableId" jdbcType="VARCHAR" />
 		<result column="MGRTABLE_NAME" property="mgrTableName"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 		<result column="MGRTABLE_CHI_NAME" property="mgrTableChiName"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 		<result column="DATAOBJECT" property="dataObject"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="DICT_MODE" property="dictMode" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="queryAllchbMgrTableInfo" resultMap="BaseResultMap"
-		parameterType="java.util.Map">
+			parameterType="java.util.Map">
 		SELECT MGRTABLE_ID,
 		MGRTABLE_NAME,
 		MGRTABLE_CHI_NAME,
 		DATAOBJECT,
-		STATUS
+		STATUS,
+		DICT_MODE
 		FROM CHB_MGRTABLE_INFO
 		WHERE 1 = 1
 		<if test="statusList != null and statusList.size() > 0">
 			<foreach collection="statusList" item="status"
-				open=" AND STATUS IN (" close=")" separator=",">
+					 open=" AND STATUS IN (" close=")" separator=",">
 				#{status,jdbcType=VARCHAR}
 			</foreach>
 		</if>
@@ -38,77 +40,82 @@
 	</select>
 
 	<select id="checkTableExist" parameterType="java.util.Map"
-		resultType="java.lang.Integer">
+			resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME =
-		#{mgrTableName,jdbcType=VARCHAR}
+											   #{mgrTableName,jdbcType=VARCHAR}
 	</select>
-	
-	
+
+
 	<select id="checkDoubleInfo" parameterType="java.util.Map"
-		resultType="java.lang.Integer">
+			resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM CHB_MGRTABLE_INFO WHERE MGRTABLE_CHI_NAME =
-		#{mgrTableChiName,jdbcType=VARCHAR}
+													 #{mgrTableChiName,jdbcType=VARCHAR}
 	</select>
 
 	<insert id="insertData" parameterType="java.util.Map">
 		INSERT INTO
-		CHB_MGRTABLE_INFO(
-		MGRTABLE_ID, 
-		MGRTABLE_NAME, 
-		MGRTABLE_CHI_NAME,
-		DATAOBJECT, 
-		STATUS) VALUES
+			CHB_MGRTABLE_INFO(
+			MGRTABLE_ID,
+			MGRTABLE_NAME,
+			MGRTABLE_CHI_NAME,
+			DATAOBJECT,
+			STATUS,
+			DICT_MODE) VALUES
 		(
-	    #{mgrtableID,jdbcType=VARCHAR},
-		#{mgrTableName,jdbcType=VARCHAR},
-		#{mgrTableChiName,jdbcType=VARCHAR},
-		#{dataObject,jdbcType=VARCHAR},
-		'E'
+			#{mgrtableID,jdbcType=VARCHAR},
+			#{mgrTableName,jdbcType=VARCHAR},
+			#{mgrTableChiName,jdbcType=VARCHAR},
+			#{dataObject,jdbcType=VARCHAR},
+			'E',
+			#{dictMode,jdbcType=VARCHAR}
 		)
 	</insert>
-	
+
 	<update id="updateTableStatus" parameterType="java.util.Map">
-	UPDATE CHB_MGRTABLE_INFO SET STATUS = #{status, jdbcType=VARCHAR}
-	WHERE MGRTABLE_ID = #{mgrTableId, jdbcType=VARCHAR}
+		UPDATE CHB_MGRTABLE_INFO SET STATUS = #{status, jdbcType=VARCHAR}
+		WHERE MGRTABLE_ID = #{mgrTableId, jdbcType=VARCHAR}
 	</update>
-	
+
 	<update id="updateTableInfo" parameterType="java.util.Map">
 		UPDATE CHB_MGRTABLE_INFO SET MGRTABLE_CHI_NAME = #{mgrTableChiName, jdbcType=VARCHAR},
-		DATAOBJECT = #{dataObject, jdbcType=VARCHAR}
-	   WHERE MGRTABLE_ID = #{mgrTableId, jdbcType=VARCHAR}
+									 DATAOBJECT = #{dataObject, jdbcType=VARCHAR}
+		WHERE MGRTABLE_ID = #{mgrTableId, jdbcType=VARCHAR}
 	</update>
+
 	<select id="getHeaderNumbyTableId" parameterType="java.lang.String"
-		resultType="java.lang.String">
-		SELECT HEADER_NUM HEADERNUM FROM CHB_MGRTABLE_INFO 
+			resultType="java.lang.String">
+		SELECT HEADER_NUM HEADERNUM FROM CHB_MGRTABLE_INFO
 		WHERE MGRTABLE_ID =
-		#{mgrTableId,jdbcType=VARCHAR}
+			  #{mgrTableId,jdbcType=VARCHAR}
 	</select>
-	
+
 	<select id="getTableInfobyTableId" parameterType="java.lang.String"
-		resultType="com.joyintech.tams.common.base.entity.ChbMgrTableInfo">
-		SELECT  
+			resultType="com.joyintech.tams.common.base.entity.ChbMgrTableInfo">
+		SELECT
 			MGRTABLE_ID MGRTABLEID,
 			MGRTABLE_NAME MGRTABLENAME,
 			MGRTABLE_CHI_NAME MGRTABLECHINAME,
 			DATAOBJECT DATAOBJECT,
 			STATUS STATUS,
-			HEADER_NUM HEADERNUM
-		FROM CHB_MGRTABLE_INFO 
+			HEADER_NUM HEADERNUM,
+			DICT_MODE DICTMODE
+		FROM CHB_MGRTABLE_INFO
 		WHERE MGRTABLE_ID =
-		#{mgrTableId,jdbcType=VARCHAR}
+			  #{mgrTableId,jdbcType=VARCHAR}
 	</select>
-	
+
 	<select id="getTableInfobyChiName" parameterType="java.lang.String"
-		resultType="com.joyintech.tams.common.base.entity.ChbMgrTableInfo">
-		SELECT  
+			resultType="com.joyintech.tams.common.base.entity.ChbMgrTableInfo">
+		SELECT
 			MGRTABLE_ID MGRTABLEID,
 			MGRTABLE_NAME MGRTABLENAME,
 			MGRTABLE_CHI_NAME MGRTABLECHINAME,
 			DATAOBJECT DATAOBJECT,
 			STATUS STATUS,
-			HEADER_NUM HEADERNUM
-		FROM CHB_MGRTABLE_INFO 
+			HEADER_NUM HEADERNUM,
+			DICT_MODE DICTMODE
+		FROM CHB_MGRTABLE_INFO
 		WHERE MGRTABLE_CHI_NAME =
-		#{mgrTableChiName,jdbcType=VARCHAR}
+			  #{mgrTableChiName,jdbcType=VARCHAR}
 	</select>
 </mapper>

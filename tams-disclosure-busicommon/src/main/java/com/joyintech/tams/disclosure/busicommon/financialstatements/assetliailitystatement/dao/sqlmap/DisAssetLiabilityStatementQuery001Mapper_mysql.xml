@@ -19,36 +19,36 @@
         </if>
         <where>
             <if test="search != null and search !=''">
-                sdl.ITEM_VALUE like concat('%' , #{search} , '%')
+                sdl.ITEM_VALUE like concat_ws('%' , #{search} , '%')
             </if>
         </where>
         ORDER BY sdl.ITEM_CODE asc
     </select>
 	<select id="selectBokBalance" parameterType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001SearchDto" 
              resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001Dto">
-         select 
- TT.booksetId,
- TT.subjectNo,
- TT.balanceDate,
-  TT.balFlag,
- sum(oAmt) as oAmt,
- sum(oDAmt) as oDAmt,
- sum(oCAmt) as oCAmt
-from
-( select 
-		       bb.bookset_id as booksetId, 
-		       SUBSTRING(bb.subject_no,1,4)  as subjectNo, 
-		       bb.balance_date as balanceDate, 
-		       bb.bal_flag as balFlag, 
-		       IFNULL(bb.o_amt, 0) as oAmt, 
-		       IFNULL(bb.o_d_amt, 0) as oDAmt, 
-		       IFNULL(bb.o_c_amt, 0) as oCAmt
-		   from  BOK_BALANCE bb
-      INNER JOIN REP_PROD_INFO RP ON BB.BOOKSET_ID=RP.F_PROD_ID
-  where RP.PROD_ID = #{booksetId}
-       and bb.balance_date = #{balanceDate}
-      ) TT
-      GROUP BY TT.booksetId,TT.subjectNo,TT.balanceDate,TT.balFlag
+        select
+            TT.booksetId,
+            TT.subjectNo,
+            TT.balanceDate,
+            TT.balFlag,
+            sum(oAmt) as oAmt,
+            sum(oDAmt) as oDAmt,
+            sum(oCAmt) as oCAmt
+        from
+            ( select
+		         bb.bookset_id as booksetId,
+		        SUBSTRING(bb.subject_no,1,4)  as subjectNo,
+		        bb.balance_date as balanceDate,
+		        bb.bal_flag as balFlag,
+		        IFNULL(bb.o_amt, 0) as oAmt,
+		        IFNULL(bb.o_d_amt, 0) as oDAmt,
+		        IFNULL(bb.o_c_amt, 0) as oCAmt
+		    from  BOK_BALANCE bb
+                 INNER JOIN REP_PROD_INFO RP ON BB.BOOKSET_ID=RP.F_PROD_ID
+            where RP.PROD_ID = #{booksetId}
+            and bb.balance_date = #{balanceDate}
+            ) TT
+        GROUP BY TT.booksetId,TT.subjectNo,TT.balanceDate,TT.balFlag
     </select>
 	<select id="selectBokBalanceAll" parameterType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001SearchDto" 
              resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001Dto">
@@ -91,9 +91,8 @@ from
       where RP2.PROD_ID =  #{booksetId}
       and bb2.balance_date =#{balanceDate}
       and bb2.SUBJECT_LEVEL='1'
-      
-           union  all
-         select     bb2.bookset_id as booksetId, 
+            union  all
+      select     bb2.bookset_id as booksetId,
 		       bb2.subject_no as subjectNo, 
 		       bb2.balance_date as balanceDate, 
 		       bb2.bal_flag as balFlag, 
@@ -122,9 +121,8 @@ from
       where RP2.PROD_ID =  #{booksetId}
       and bb2.balance_date =#{balanceDate}
       and bb2.SUBJECT_LEVEL='1'
-      
            union  all
-         select     bb2.bookset_id as booksetId, 
+      select     bb2.bookset_id as booksetId,
 		       bb2.subject_no as subjectNo, 
 		       bb2.balance_date as balanceDate, 
 		       bb2.bal_flag as balFlag, 
@@ -138,4 +136,34 @@ from
       and bb2.balance_date =#{balanceDate}
       and bb2.SUBJECT_LEVEL='2'
     </select>
+    <select id="selectProfitCalculationDtoList" resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dto.DisProfitCalculationDto">
+    	SELECT
+    		proj_name projName,
+			proj_code projCode,
+			proj_level projLevel,
+			subject_no subjectNo,
+			crdr_flg crdrFlg,
+			formula,
+			show_flg showFlg,
+			show_order showOrder
+		   FROM REP_BOK_PROFIT_REP_CONFIG
+		   where PROJ_TYPE='01'
+		order by proj_code
+    </select>
+    <!-- 一体化查询新增资产负债表表样   add by  dongxiangyang  20200211  start-->
+    <select id="selectProfitCalculationDtoListYth" resultType="com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dto.DisProfitCalculationDto">
+    	SELECT
+    		proj_name projName,
+			proj_code projCode,
+			proj_level projLevel,
+			subject_no subjectNo,
+			crdr_flg crdrFlg,
+			formula,
+			show_flg showFlg,
+			show_order showOrder
+		   FROM REP_BOK_PROFIT_REP_CONFIG_YTH
+		   where PROJ_TYPE='01'
+		order by proj_code
+    </select>
+    <!-- 一体化查询新增资产负债表表样   add by  dongxiangyang  20200211  end-->
 </mapper>

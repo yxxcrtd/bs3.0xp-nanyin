@@ -168,8 +168,7 @@ public class TransformRule001Dto extends BaseEntity {
 		this.fieldUnicode = fieldUnicode;
 	}
 
-
-    @NotEmpty(fieldName = "TransformRule002.pinyin", groups = {ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "拼音", groups = {ValidateGroupEdit.class})
 	public String getPinyin() {
 		return pinyin;
 	}
@@ -178,7 +177,7 @@ public class TransformRule001Dto extends BaseEntity {
 		this.pinyin = pinyin;
 	}
 
-	@NotEmpty(fieldName = "TransformRule002.orgField", groups = {ValidateGroupEdit.class})
+	@NotEmpty(fieldName = "原始值", groups = {ValidateGroupEdit.class})
 	public String getOrgField() {
 		return orgField;
 	}

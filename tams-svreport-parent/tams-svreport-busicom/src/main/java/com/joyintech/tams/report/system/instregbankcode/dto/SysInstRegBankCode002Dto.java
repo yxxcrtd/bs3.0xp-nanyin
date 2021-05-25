@@ -40,49 +40,49 @@ public class SysInstRegBankCode002Dto extends ChbOrgRegistBankCode {
      * 页面的模式
      */
     private String pageModel;
-    
+
     /**
      * 总行机构代码
      */
     @NotEmpty(fieldName = "总行机构代码")
     private String pbcBankCode;
-    
+
     /**
      * 是否理财子公司
      */
     @NotEmpty(fieldName = "是否理财子公司")
     private String isFinSubCompany;
 
-    public String getPbcBankCode() {
-		return pbcBankCode;
-	}
+    /**
+     * 母行登记银行代码
+     */
+    private String fregistBankCode;
 
-	public void setPbcBankCode(String pbcBankCode) {
-		this.pbcBankCode = pbcBankCode;
-	}
-
-    @NotEmpty(fieldName = "社会信用代码")
-	private String insitituteCode;
-
-    @Override
-    public String getInsitituteCode() {
-        return insitituteCode;
+    public String getFregistBankCode() {
+        return fregistBankCode;
     }
 
-    @Override
-    public void setInsitituteCode(String insitituteCode) {
-        this.insitituteCode = insitituteCode;
+    public void setFregistBankCode(String fregistBankCode) {
+        this.fregistBankCode = fregistBankCode;
+    }
+
+    public String getPbcBankCode() {
+        return pbcBankCode;
+    }
+
+    public void setPbcBankCode(String pbcBankCode) {
+        this.pbcBankCode = pbcBankCode;
     }
 
     public String getIsFinSubCompany() {
-		return isFinSubCompany;
-	}
+        return isFinSubCompany;
+    }
 
-	public void setIsFinSubCompany(String isFinSubCompany) {
-		this.isFinSubCompany = isFinSubCompany;
-	}
+    public void setIsFinSubCompany(String isFinSubCompany) {
+        this.isFinSubCompany = isFinSubCompany;
+    }
 
-	/**
+    /**
      * 取得 机构代码
      * @return 机构代码
      */

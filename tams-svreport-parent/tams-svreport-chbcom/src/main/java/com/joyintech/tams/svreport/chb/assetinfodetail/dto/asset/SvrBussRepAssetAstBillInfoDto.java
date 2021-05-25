@@ -56,6 +56,9 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal repAmtSum;
 
+    private Date vdate;
+
+    private Date mdate;
 
 
 
@@ -79,6 +82,110 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
      * 备注
      */
     private String repRemark;
+
+    /**
+     * 公共PPP
+     */
+    private String pppflag;
+
+    /**
+     * 是否投向“市场化债转股相关产品的部分”
+     */
+    private String bondtostockFlag;
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
+
+    /**
+     * 是否标准化票据
+     */
+    private String isBzhpj;
+
+    private String privateprdFlag;
+
+    public String getPrivateprdFlag() {
+        return privateprdFlag;
+    }
+
+    public void setPrivateprdFlag(String privateprdFlag) {
+        this.privateprdFlag = privateprdFlag;
+    }
+
+    public Date getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
+    }
+
+    public String getIsBzhpj() {
+        return isBzhpj;
+    }
+
+    public void setIsBzhpj(String isBzhpj) {
+        this.isBzhpj = isBzhpj;
+    }
+
+    public String getPppflag() {
+        return pppflag;
+    }
+
+    public void setPppflag(String pppflag) {
+        this.pppflag = pppflag;
+    }
+
+    public String getBondtostockFlag() {
+        return bondtostockFlag;
+    }
+
+    public void setBondtostockFlag(String bondtostockFlag) {
+        this.bondtostockFlag = bondtostockFlag;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
+    }
 
     /**
      * 取得 金融产品代码

@@ -34,75 +34,40 @@ public interface ChbInterfConfigMapper {
 	 */
 	int updateLastupdatetime(@Param("interfId")String interfId,@Param("newUpdateTime")Date newUpdateTime);
 
-    /**
-     * 更新接口接入数据的最近更新时间
-     * @param interfId
-     * @return
-     */
-    int updateBySysdate(@Param("interfId")String interfId);
-	
+	/**
+	 * 更新接口接入数据的最近更新时间
+	 * @param interfId
+	 * @return
+	 */
+	int updateBySysdate(@Param("interfId")String interfId);
+
 	/**
 	 * 根据interfId查询接口接入数据的最近更新时间
 	 * @param interfId,newUpdateTime
 	 * @return
 	 */
 	Date queryUpdateTime(@Param("interfId")String interfId);
-	
-	
+
+	int deleteByPrimaryKey(String interfId);
+
+	int insert(ChbInterfConfigDto record);
+
+	int insertSelective(ChbInterfConfigDto record);
+
+	ChbInterfConfigDto selectByPrimaryKey(String interfId);
+
+	int updateByPrimaryKeySelective(ChbInterfConfigDto record);
+
+	int updateByPrimaryKey(ChbInterfConfigDto record);
+
 	/**
-	 * 根据interfId查询接口接入数据的最近更新时间
-	 * @param interfId,newUpdateTime
+	 * 功能:通过interfId查询配置信息
+	 * @since 1.7.0
+	 * @version 1.7.0
+	 * @author：weiyuqiang 2019年5月8日
+	 * @param dataType
 	 * @return
+	 * ChbInterfConfig
 	 */
-	Date queryUpdateTimeEx(@Param("interfId")String interfId,@Param("InstitutionCode")String InstitutionCode);
-
-    int deleteByPrimaryKey(String interfId);
-
-    int insert(ChbInterfConfigDto record);
-
-    int insertSelective(ChbInterfConfigDto record);
-
-    ChbInterfConfigDto selectByPrimaryKey(String interfId);
-
-    int updateByPrimaryKeySelective(ChbInterfConfigDto record);
-
-    int updateByPrimaryKey(ChbInterfConfigDto record);
-
-    /**
-     * 功能:通过interfId查询配置信息
-     * @since 1.7.0
-     * @version 1.7.0
-     * @author：weiyuqiang 2019年5月8日
-     * @param dataType
-     * @return 
-     * ChbInterfConfig
-     */
-    ChbInterfConfigDto selectByInterfId(String interfId);
-    
-    
-    /**
-     * 功能:通过interfId查询配置信息
-     * @since 1.7.0
-     * @version 1.7.0
-     * @author：weiyuqiang 2019年5月8日
-     * @param dataType
-     * @return 
-     * ChbInterfConfig
-     */
-    ChbInterfConfigDto selectByInterfIdEx(@Param("interfId")String interfId,@Param("InstitutionCode")String InstitutionCode);
-    
-    /**
-	 * 更新接口接入数据的最近更新时间-联社数据
-	 * @param interfId,newUpdateTime
-	 * @return
-	 */
-	int updateLastupdatetimeEx(@Param("interfId")String interfId,@Param("newUpdateTime")Date newUpdateTime,@Param("InstitutionCode")String InstitutionCode);
-    
-	
-	/**
-	 * 更新完毕后检查当前接口中最小的分支机构时间,如果都跑过.将config表中的lastupdatetime更新为 add表中的最小时间
-	 * @param interfId,newUpdateTime
-	 * @return
-	 */
-	int updateLastupdatetimeExt(@Param("interfId")String interfId,@Param("newUpdateTime")Date newUpdateTime);
+	ChbInterfConfigDto selectByInterfId(String interfId);
 }

@@ -2,6 +2,8 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.placement.controll
 
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,7 +55,7 @@ public class SvrBussRepPlacementInfoController extends BaseController {
         BigDecimal value=BigDecimal.ZERO;
         //1.赋值界面数据字典
         setSelectOptionToModel(model, new DictCode[] {DictCode.币种_中债,DictCode.交易流通场所,DictCode.交易对手类型,
-                DictCode.计息基础_中债,DictCode.回购标的类型,DictCode.对手方类型});
+                DictCode.计息基础_中债,DictCode.回购标的类型,DictCode.对手方类型,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类});
 
         //2、当入参assetType2资产/负债二级类别 为【拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue()).contains(assetType)){
@@ -71,6 +74,14 @@ public class SvrBussRepPlacementInfoController extends BaseController {
     @RequestMapping(value="getInfoByIssuer",method = RequestMethod.POST)
     public SvrBussRepPlacementInfoDto getInfoByIssuer(@RequestBody Map<String, Object> param){
         return bussAssetInfoService.getInfoByIssuer(param);
+    }
+
+    @ResponseBody
+    @RequestMapping("/getTradeCounter")
+    public List<SelectOptionDto> getTradeCounter() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        List<SelectOptionDto> list = bussAssetInfoService.getTradeCounter(param);
+        return list;
     }
 
 }

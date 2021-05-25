@@ -570,7 +570,7 @@ public class InvestorsHoldInfoDistinctService {
 //		}
 		int dataCount = listE.size();
 		if (dataCount <= maxDataCountOneTime) {
-			allDataList.addAll(chbInvestholdInfoCheckDtoMapper.selectAllHoldInfoData(listE));
+			allDataList.addAll(investorsHoldInfo001Mapper.selectAllHoldInfoData(listE));
 		} else {
 			List<InvestorsHoldInfo001Dto> newKeyList = new ArrayList<InvestorsHoldInfo001Dto>();
 			newKeyList.addAll(listE);
@@ -579,12 +579,12 @@ public class InvestorsHoldInfoDistinctService {
 			int part = dataCount / maxDataCountOneTime; // 分批数
 			for (int i = 0; i < part; i++) {
 				allDataList.addAll(
-						chbInvestholdInfoCheckDtoMapper.selectAllHoldInfoData(newKeyList.subList(0, maxDataCountOneTime)));
+						investorsHoldInfo001Mapper.selectAllHoldInfoData(newKeyList.subList(0, maxDataCountOneTime)));
 				newKeyList.subList(0, maxDataCountOneTime).clear();
 			}
 			// 最后剩下的数据
 			if (CollectionUtils.isNotEmpty(newKeyList)) {
-				allDataList.addAll(chbInvestholdInfoCheckDtoMapper.selectAllHoldInfoData(newKeyList));
+				allDataList.addAll(investorsHoldInfo001Mapper.selectAllHoldInfoData(newKeyList));
 			}
 		}
 		Map<String, InvestorsHoldInfo001Dto> allHoldInfoDataMap = StringUtil.isEmptyList(allDataList)

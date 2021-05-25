@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokStatFeePosiitonMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokStatFeePosiiton" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="HAPPEN_DATE" property="happenDate" jdbcType="DATE" />
+        <id column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <id column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <id column="LAYERING_ID" property="layeringId" jdbcType="VARCHAR" />
+        <result column="BOOKSET_DATE" property="booksetDate" jdbcType="DATE" />
+        <result column="TDY_POSITION" property="tdyPosition" jdbcType="DECIMAL" />
+        <result column="TDY_FEE_RATE" property="tdyFeeRate" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP_ADD" property="tdyIntincexpAdd" jdbcType="DECIMAL" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+        <result column="TDY_INTINCEXP_ADD_B" property="tdyIntincexpAddB" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, HAPPEN_DATE HAPPEN_DATE, BOOK_DATE BOOK_DATE, FEE_TYPE FEE_TYPE,
+        LAYERING_ID LAYERING_ID, BOOKSET_DATE BOOKSET_DATE, TDY_POSITION TDY_POSITION, TDY_FEE_RATE TDY_FEE_RATE,
+        TDY_INTINCEXP_ADD TDY_INTINCEXP_ADD, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE,
+        BRANCH BRANCH, CCY CCY, B_CCY B_CCY, TDY_INTINCEXP_ADD_B TDY_INTINCEXP_ADD_B, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokStatFeePosiitonMapper.Base_Column_List" />
+        from BOK_STAT_FEE_POSIITON
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokStatFeePosiitonMapper.Base_Column_List" />
+        from BOK_STAT_FEE_POSIITON
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokStatFeePosiitonKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokStatFeePosiitonMapper.Base_Column_List" />
+        from BOK_STAT_FEE_POSIITON
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+        and HAPPEN_DATE = #{happenDate,jdbcType=DATE}
+        and BOOK_DATE = #{bookDate,jdbcType=DATE}
+        and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+        and LAYERING_ID = #{layeringId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokStatFeePosiitonKey" >
+        delete from BOK_STAT_FEE_POSIITON
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and HAPPEN_DATE = #{happenDate,jdbcType=DATE}
+          and BOOK_DATE = #{bookDate,jdbcType=DATE}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+          and LAYERING_ID = #{layeringId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokStatFeePosiiton" >
+        insert into BOK_STAT_FEE_POSIITON (BOOKSET_ID, HAPPEN_DATE, BOOK_DATE,
+            FEE_TYPE, LAYERING_ID, BOOKSET_DATE,
+            TDY_POSITION, TDY_FEE_RATE, TDY_INTINCEXP_ADD,
+            FINPROD_ID, FINPROD_TYPE, BRANCH,
+            CCY, B_CCY, TDY_INTINCEXP_ADD_B,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{booksetId,jdbcType=VARCHAR}, #{happenDate,jdbcType=DATE}, #{bookDate,jdbcType=DATE},
+            #{feeType,jdbcType=VARCHAR}, #{layeringId,jdbcType=VARCHAR}, #{booksetDate,jdbcType=DATE},
+            #{tdyPosition,jdbcType=DECIMAL}, #{tdyFeeRate,jdbcType=DECIMAL}, #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            #{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL},
+            #{ccy,jdbcType=VARCHAR}, #{bCcy,jdbcType=VARCHAR}, #{tdyIntincexpAddB,jdbcType=DECIMAL},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokStatFeePosiiton" >
+        insert into BOK_STAT_FEE_POSIITON
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="layeringId != null" >
+                LAYERING_ID,
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE,
+            </if>
+            <if test="tdyPosition != null" >
+                TDY_POSITION,
+            </if>
+            <if test="tdyFeeRate != null" >
+                TDY_FEE_RATE,
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                TDY_INTINCEXP_ADD,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="bCcy != null" >
+                B_CCY,
+            </if>
+            <if test="tdyIntincexpAddB != null" >
+                TDY_INTINCEXP_ADD_B,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="layeringId != null" >
+                #{layeringId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetDate != null" >
+                #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="tdyPosition != null" >
+                #{tdyPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFeeRate != null" >
+                #{tdyFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="bCcy != null" >
+                #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyIntincexpAddB != null" >
+                #{tdyIntincexpAddB,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokStatFeePosiiton" >
+        insert into BOK_STAT_FEE_POSIITON(BOOKSET_ID, HAPPEN_DATE, BOOK_DATE, FEE_TYPE, LAYERING_ID,
+        BOOKSET_DATE, TDY_POSITION, TDY_FEE_RATE, TDY_INTINCEXP_ADD, FINPROD_ID, FINPROD_TYPE,
+        BRANCH, CCY, B_CCY, TDY_INTINCEXP_ADD_B, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        select BOOKSET_ID, HAPPEN_DATE, BOOK_DATE, FEE_TYPE, LAYERING_ID,
+            BOOKSET_DATE, TDY_POSITION, TDY_FEE_RATE, TDY_INTINCEXP_ADD, FINPROD_ID, FINPROD_TYPE,
+            BRANCH, CCY, B_CCY, TDY_INTINCEXP_ADD_B, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_STAT_FEE_POSIITON
+             where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and HAPPEN_DATE = #{happenDate,jdbcType=DATE} and BOOK_DATE = #{bookDate,jdbcType=DATE} and FEE_TYPE = #{feeType,jdbcType=VARCHAR} and LAYERING_ID = #{layeringId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokStatFeePosiiton" >
+        update BOK_STAT_FEE_POSIITON
+        <set >
+            <if test="booksetDate != null" >
+                BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="tdyPosition != null" >
+                TDY_POSITION = #{tdyPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFeeRate != null" >
+                TDY_FEE_RATE = #{tdyFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                TDY_INTINCEXP_ADD = #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="bCcy != null" >
+                B_CCY = #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyIntincexpAddB != null" >
+                TDY_INTINCEXP_ADD_B = #{tdyIntincexpAddB,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+        and HAPPEN_DATE = #{happenDate,jdbcType=DATE}
+        and BOOK_DATE = #{bookDate,jdbcType=DATE}
+        and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+        and LAYERING_ID = #{layeringId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokStatFeePosiiton" >
+        update BOK_STAT_FEE_POSIITON
+        set BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            TDY_POSITION = #{tdyPosition,jdbcType=DECIMAL},
+            TDY_FEE_RATE = #{tdyFeeRate,jdbcType=DECIMAL},
+            TDY_INTINCEXP_ADD = #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            B_CCY = #{bCcy,jdbcType=VARCHAR},
+            TDY_INTINCEXP_ADD_B = #{tdyIntincexpAddB,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and HAPPEN_DATE = #{happenDate,jdbcType=DATE}
+          and BOOK_DATE = #{bookDate,jdbcType=DATE}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+          and LAYERING_ID = #{layeringId,jdbcType=VARCHAR}
+    </update>
+</mapper>

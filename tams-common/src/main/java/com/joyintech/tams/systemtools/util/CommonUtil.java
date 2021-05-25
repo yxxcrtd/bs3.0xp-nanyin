@@ -273,7 +273,7 @@ public class CommonUtil {
 		Map<String, String> param = new HashMap<>();
 		String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_DEPARTMENT_KEY, "database_type_code");
 
-		databaseType = StringUtil.defaultString(databaseType, "Oracle");
+		databaseType = StringUtil.defaultString(databaseType, "Mysql");
 
 		param.put("databaseType", databaseType);
 		param.put("sequenceName", sequenceType.getSequenceName());
@@ -536,6 +536,37 @@ public class CommonUtil {
 		});
 		return resultList;
 	}
+
+	// mysql早期改造代码合并   add by zoujiamin  2021/4/20  start
+	/**
+	 * 判断系统使用的数据库是否是MySql
+	 *
+	 * @return 系统使用的数据库是否是MySql
+	 * @see
+	 * @since 1.0
+	 */
+	public static boolean isMySqlDataBase() {
+		try {
+			Map<String, List<DatabaseInfo>> databaseType = DatabaseTypeHelper.getDatabaseType();
+
+			List<DatabaseInfo> dsList = databaseType.get(DataSourceType.MASERT);
+			if (dsList != null && !dsList.isEmpty()) {
+				for (int i = 0; i < dsList.size(); i++) {
+					DatabaseInfo dbInfo = dsList.get(i);
+					if (StringUtil.equalsIgnoreCase(DatabaseType.DATABASE_TYPE_MYSQL.getValue(),
+							dbInfo.getDbType().getValue())) {
+						return true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	// mysql早期改造代码合并   add by zoujiamin  2021/4/20  end
 
 	/**
 	 * 判断系统使用的数据库是否是db2
@@ -901,4 +932,33 @@ public class CommonUtil {
 	}
 
 
+	/**
+	 * 获取批量序列值
+	 * @param sequenceType
+	 * @param size
+	 * @return
+	 */
+	public static List<String> getBatchSequenceIndexData(DataIndexSequenceType sequenceType, int size) {
+		if(size <= 0) {
+			return new ArrayList<>();
+		}
+		List<String> list = new ArrayList<>();
+		Map<String, Object> param = new HashMap<>();
+		String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_DEPARTMENT_KEY, "database_type_code");
+		databaseType = StringUtil.defaultString(databaseType, "Mysql");
+		param.put("databaseType", databaseType);
+		param.put("sequenceName", sequenceType.getSequenceName());
+		Long result = baseMapper.getSequenceIndexByParam(param);
+		// 加在採番后结果的前缀，以保证各个sequence的採番结果不会出现重复的情况
+		String shortName = sequenceType.getShortName();
+		for(int i = 0;i<size;i++) {
+			result = result + i;
+			String sequenceResult = String.format("%018d", result);
+			sequenceResult = shortName + sequenceResult;
+			list.add(sequenceResult);
+		}
+		param.put("incrNum", size);
+		baseMapper.updateSequenceIndexData(param);
+		return list;
+	}
 }

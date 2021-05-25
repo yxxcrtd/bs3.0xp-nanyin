@@ -9,9 +9,7 @@
 		WHERE
 			REPORT_NAME = #{reportName,jdbcType=VARCHAR}
 		AND PRODID = #{prodId,jdbcType=VARCHAR}
-		/* AND nvl2(DATE_FORMAT(START_DATE,'%Y-%m-%d'),DATE_FORMAT(START_DATE,'%Y-%m-%d'),'0') = #{reportDateBegin} */
 		AND IF(!ISNULL(DATE_FORMAT(START_DATE,'%Y-%m-%d')) , DATE_FORMAT(START_DATE,'%Y-%m-%d') , '0' ) = #{reportDateBegin}
-		/* AND nvl2(DATE_FORMAT(END_DATE,'%Y-%m-%d'),DATE_FORMAT(END_DATE,'%Y-%m-%d'),'0') = #{reportDateEnd} */
 		AND IF(!ISNULL(DATE_FORMAT(END_DATE,'%Y-%m-%d')) , DATE_FORMAT(END_DATE,'%Y-%m-%d') , '0' ) = #{reportDateEnd}
 		AND STATUS='E'
     </select>
@@ -24,9 +22,7 @@
 		WHERE
 			REPORT_NAME = #{reportName,jdbcType=VARCHAR}
 		AND PRODID = #{prodId,jdbcType=VARCHAR}
-		/* AND nvl2(DATE_FORMAT(START_DATE,'%Y-%m-%d'),DATE_FORMAT(START_DATE,'%Y-%m-%d'),'0') = #{reportDateBegin} */
 		AND IF(!ISNULL(DATE_FORMAT(START_DATE,'%Y-%m-%d')) , DATE_FORMAT(START_DATE,'%Y-%m-%d'), '0' ) = #{reportDateBegin}
-		/* AND nvl2(DATE_FORMAT(END_DATE,'%Y-%m-%d'),DATE_FORMAT(END_DATE,'%Y-%m-%d'),'0') = #{reportDateEnd} */
 		AND IF(!ISNULL(DATE_FORMAT(END_DATE,'%Y-%m-%d')) ,DATE_FORMAT(END_DATE,'%Y-%m-%d') , '0' ) = #{reportDateEnd}
 		AND STATUS='E'
     </update>

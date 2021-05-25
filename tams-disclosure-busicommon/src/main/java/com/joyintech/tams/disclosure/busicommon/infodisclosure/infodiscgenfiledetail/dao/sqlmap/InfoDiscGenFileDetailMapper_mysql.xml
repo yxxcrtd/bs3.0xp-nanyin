@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscgenfiledetail.dao.InfoDiscGenFileDetailMapper_mysql">
+	<select id="queryAllPreInstallLog"
+			resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscgenfiledetail.entity.InfoDisclosureReadAndGenEntity">
+		SELECT
+		log.ID,
+		log.JOB_ID,
+		log.JOB_SEQ,
+		log.JOB_NAME,
+		log.END_DATE,
+		log.START_DATE,
+		log.EXEC_DATE,
+		log.LASTEXEC_DATE,
+		log.FLAG,
+		log.EXEC_DETAIL,
+		log.EXEC_STATUS,
+		log.STATUS,
+		log.EXEC_RESULT,
+		log.EXEC_FLAG,
+		job.RULE_ID,
+		job.ISPRODRELATED isProdRelated,
+		info.REPORT_CATEGORY
+		FROM
+		REP_INSTALL_LOG log
+		LEFT JOIN REP_JOB job
+		on log.JOB_ID = job.JOB_ID
+		left join rep_rule rule
+		on rule.ID = job.RULE_ID
+		left join rep_info info
+		on info.REP_ID = rule.REP_ID
+		and info.REPORT_TYPE='Y'
+		WHERE
+		EXEC_STATUS = #{execStatus, jdbcType=VARCHAR}
+		AND STATUS = 'E'
+		AND EXEC_FLAG !=#{execFlag, jdbcType=VARCHAR}
+	</select>
 	<select id="queryMaxIdBySourceId" resultType="int">
 		select IFNULL(max(id),0) from ADPT_MAINTHREADRECORD where SOURCEID = #{sourceid}
 	</select>
@@ -17,6 +51,20 @@
 	<select id="queryAdptDateisReadyFile" resultType="int">
 		select count(1) from ADPT_FILEBACKUPRECORD where 
 		sourceid=#{execflag, jdbcType=VARCHAR} and fromfilepath like 
-		concat('%', #{execDate, jdbcType=VARCHAR}, '%')
+		concat_ws('%', #{execDate, jdbcType=VARCHAR}, '%')
+	</select>
+	<!-- 获取适配器在库中的最大id -->
+	<select id="queryExecDateisReady" resultType="int">
+		select count(1)
+        from REP_BATCH_DATE_STATUS sta
+		where sta.PRODID = #{execDate, jdbcType=DATE}
+	</select>
+	<!-- 获取适配器在库中的最大id -->
+	<select id="queryAdptDateisReady" resultType="int">
+		select count(1)
+        from adpt_interfaceparamslastmax a
+		where a.lastvalstr = #{execDate, jdbcType=VARCHAR}
+		and  cfgid in (select id  from adpt_interfacecolconfig
+		where interfacesourceid = #{execflag, jdbcType=VARCHAR} and coltype=12)
 	</select>
 </mapper>

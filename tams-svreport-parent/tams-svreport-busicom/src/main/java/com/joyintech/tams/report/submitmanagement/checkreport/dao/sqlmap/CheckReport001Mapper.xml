@@ -52,7 +52,6 @@
 		ERROR_INFO errorInfo,
 		WARN_INFO warnInfo,
 		to_char(DATA_TIME,'yyyy-MM-dd') checkTime
-		,ORG_CODE orgCode /* add by songyawei 机构编码 20200702 */
 		from CHB_REPORT_CHECK
 		<where>
 				CHECK_RESULT !='01'

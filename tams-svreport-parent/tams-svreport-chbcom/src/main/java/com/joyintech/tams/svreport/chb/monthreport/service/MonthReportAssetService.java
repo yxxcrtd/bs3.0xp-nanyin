@@ -5,20 +5,23 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.busicommon.productRating.service.CommonProductRatingService;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
+import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper;
-import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportTemplateMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.*;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -72,6 +75,12 @@ public class MonthReportAssetService {
     
     @Autowired
 	private ChbMonthReportTemplateMapper chbMonthReportTemplateMapper;
+
+	/**
+	 * 映射service
+	 */
+	@Autowired
+	private ChbTypeMappingService chbTypeMappingService;
     
     public void genReport(ChbMonthReport report,boolean ifTrigger){
         Calendar calendar = Calendar.getInstance();
@@ -195,7 +204,8 @@ public class MonthReportAssetService {
         	p1.setRating(SvrDataUtil.getNameFromDataDict(DictCode.资产评级,p1.getRating()));
         	// 评级结果 add by jiangxiao end
         	p1.setStartdate(firstday);
-            if ( p1.getChlId()!=null &&!"05".equals(p1.getTradeType())) {
+        	//modify by yanya on 20210513 判定为空 方法更改
+            if ( StringUtil.isNotEmpty(p1.getChlId()) &&!"05".equals(p1.getTradeType())) {
                 if ( "01".equals(p1.getIsUnderDeal()) )  { //排除非首层交易
                     p1.setAssetvalueB(p1.getAssetvalueA());
                     p1.setAssetvalueA(null);
@@ -273,27 +283,144 @@ public class MonthReportAssetService {
                                 m=chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
                             }
                         }
-                        //评级结果 add by jiangxiao start
-                        if(m.getRating()!=null){
-                        	m.setRating(SvrDataUtil.getNameFromDataDict(DictCode.资产评级,m.getRating()));
-                        }
-                        //评级结果 add by jiangxiao end
-                        m.setProdId(p1.getProdId());
-                        m.setAssetCode(p11.getAssetCode());
-                        m.setAssetvalueA(null);
-                        m.setAssetvalueB(p11.getAccuamt());
-                        m.setAssetvalueB(m.getAssetvalueB().setScale(2,RoundingMode.HALF_UP));
-                        m.setPosuuid(IDGenerator.generate(36));
-                        m.setStartdate(firstday);
+						if (m != null) {
+							//评级结果 add by jiangxiao start
+							if (m.getRating() != null) {
+								m.setRating(SvrDataUtil.getNameFromDataDict(DictCode.资产评级, m.getRating()));
+							}
+							//评级结果 add by jiangxiao end
+							m.setProdId(p1.getProdId());
+							m.setAssetCode(p11.getAssetCode());
+							m.setAssetvalueA(null);
+							m.setAssetvalueB(p11.getAccuamt());
+							m.setAssetvalueB(m.getAssetvalueB().setScale(2, RoundingMode.HALF_UP));
+							m.setPosuuid(IDGenerator.generate(36));
+							m.setStartdate(firstday);
 //                        chbMonthAssetPositionMapper.insert(m);
-                        m.setOldAssetCode(p1.getAssetCode());
-                        //新加字段
-						m.setIsFhxgcp(p1.getIsFhxgcp());
-                        positionList.add(m);
+							m.setOldAssetCode(p1.getAssetCode());
+							//新加字段
+							m.setIsFhxgcp(p1.getIsFhxgcp());
+							positionList.add(m);
+						} else{
+							logger.error("资产要素表中未接入该底层资产："+ qm.getAssetCode());
+						}
                     }
+
                 }
             }
         }
+
+		// add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 start
+		if (CollectionUtils.isNotEmpty(positionList)) {
+			// 存储资产对应的期限和子公司资产分类，防止多次计算
+			Map<String, ChbMonthAssetPosition> assetMap = new HashMap<>();
+			// 存储产品代码对应的产品期限
+			Map<String, BigDecimal> prodTermMap = new HashMap<>();
+			for (ChbMonthAssetPosition position : positionList) {
+				// modify by wm 之前资产计算过的key需要假如底层资产的code当做key值
+				String assetKey = position.getAssetCode();
+				if(StringUtil.isNotEmpty(position.getOldAssetCode())){
+					assetKey = assetKey + StringUtil.SPACE + position.getOldAssetCode();
+				}
+				// 如果之前资产已经计算过，则直接设置值即可
+				if(assetMap.containsKey(assetKey)) {
+					ChbMonthAssetPosition assetInfo = assetMap.get(assetKey);
+					position.setTerms(assetInfo.getTerms());
+					position.setSunassettype(assetInfo.getSunassettype());
+					position.setSunassettype2(assetInfo.getSunassettype2());
+					continue;
+				}
+				if ("REMAININGCASH".equals(position.getAssetCode())) {
+					// 资产代码为REMAININGCASH的特殊资产，该字段默认=0
+					//position.setTerms(BigDecimal.ONE);
+					position.setTerms(BigDecimal.ZERO);
+					// 资产代码为REMAININGCASH的特殊资产，该字段默认=F06
+					position.setSunassettype("F06");
+					// 资产代码为REMAININGCASH的特殊资产，该字段默认=F0602
+					position.setSunassettype2("F0602");
+				}
+				else {
+					// 如果中债资产类型
+					if (StringUtil.isEmpty(position.getAssettype2()) || StringUtil.isEmpty(position.getAssetCode())) {
+						continue;
+					}
+					// 资产信息
+					ChbAssetInfo chbAssetInfo = chbMonthAssetPositionMapper.selectChbAssetInfoByAssetCode(position.getAssetCode());
+					if (chbAssetInfo == null) {
+						continue;
+					}
+					// 上层资产信息
+					ChbAssetInfo supAssetInfo = null;
+					if (StringUtil.isNotEmpty(position.getOldAssetCode())) {
+						supAssetInfo = chbMonthAssetPositionMapper.selectChbAssetInfoByAssetCode(position.getOldAssetCode());
+					}
+					// 计算头寸表中的期限
+					this.newCalcTerms(report, prodTermMap, position, chbAssetInfo, supAssetInfo);
+					/**
+					 * 映射月报类型，采用资产负债类别二级进行映射，部分资产再根据上层资产做映射
+					 * 银行资本补充工具、是否PPN等低流动性债券、是否商业银行优先股、创业投资基金、是否未上市企业-政府出资产业投资基金 做特殊映射
+					 * CHB_TYPE_MAPPING_EX为匹配规则配置表，当前方法用srcfield做匹配，用8个字段配置，样例1002||||||||、||||02||||、2101|||1701|||||
+					 **/
+					/* srcField中竖线分隔的字段含义如下：
+					 * 资产负债二级类别                   （主键1）
+					 * 无                               （主键2）
+					 * 无                               （主键3）
+					 * 首层资产二级类型                   （主键4）
+					 * 银行资本补充工具 			        （主键5）
+					 * 是否PPN等低流动性债券              （主键6）
+					 * 是否商业银行优先股                 （主键7）
+					 * 创业投资基金                      （主键8）
+					 * 是否未上市企业-政府出资产业投资基金  （主键9）
+					 */
+					String key1 = position.getAssettype2();//主键1
+					String key2 = null;//主键2
+					String key3 = null;//主键3
+					String key4 = null;//主键4
+					String key5 = null;//主键5
+					String key6 = null;//主键6
+					String key7 = null;//主键7
+					String key8 = null;//主键8
+					String key9 = null;//主键9
+					//特殊处理：银行资本补充工具、是否PPN等低流动性债券、是否商业银行优先股、创业投资基金、是否未上市企业-政府出资产业投资基金
+					//银行资本补充工具
+					if(StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())) {
+						key5 = chbAssetInfo.getBankCapital();
+						key1 = null;
+					}
+					//是否PPN等低流动性债券
+					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsPpn())) {
+						key6 = chbAssetInfo.getIsPpn();
+						key1 = null;
+					}
+					//是否商业银行优先股
+					else if(StringUtil.isNotEmpty(chbAssetInfo.getBankSecPrefer())) {
+						key7 = chbAssetInfo.getBankSecPrefer();
+						key1 = null;
+					}
+					//创业投资基金
+					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsGovernFund())) {
+						key8 = chbAssetInfo.getIsGovernFund();
+						key1 = null;
+					}
+					//是否未上市企业-政府出资产业投资基金
+					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsunlisted())) {
+						key9 = chbAssetInfo.getIsunlisted();
+						key1 = null;
+					}
+					else if(supAssetInfo != null){
+						key4 = supAssetInfo.getAssetType2();
+					}
+					ChbTypeMappingEx mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+							key1, key2, key3, key4, key5, key6, key7, key8, key9);
+					if (mapping != null) {
+						position.setSunassettype(mapping.getObjfield1());
+						position.setSunassettype2(mapping.getObjfield2());
+					}
+					assetMap.put(assetKey, position);
+				}
+			}
+		}
+		// add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 end
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
     	try{
     		ChbMonthAssetPositionMapper batchMapper =  session.getMapper(ChbMonthAssetPositionMapper.class);
@@ -411,6 +538,29 @@ public class MonthReportAssetService {
 //    	}
 //    	chbMonthAssetPositionMapper.insert(cashPosition);
         logger.info("处理剩余现金开始结束：");
+
+		//查询其他负责
+		logger.info("处理其他负责开始：");
+		List<ChbMonthAssetPosition> otherAssetList=chbMonthAssetPositionMapper.selectOtherAssetListEx(lastday,report.getProdids());
+		if(otherAssetList!=null&&!otherAssetList.isEmpty()){
+			for(ChbMonthAssetPosition oal:otherAssetList){
+
+				oal.setPosuuid(IDGenerator.generate(36));
+				oal.setAssettype("99");
+				oal.setAssettype2("2000");
+				//oal.子公司月报资产一级分类(99);
+				//oal.子公司月报资产二级分类(9999);
+				//oal.剩余期限(1);
+				oal.setStartdate(report.getStartdate());
+				oal.setEnddate(report.getEnddate());
+				oal.setBookdate(report.getSubmitTime());
+				oal.setAssetvalueB(oal.getAssetvalueA().add(chbMonthAssetPositionMapper.selectAssetValueB(oal,otherAssetList)));
+				chbMonthAssetPositionMapper.insert(oal);
+			}
+		}
+		logger.info("处理其他负责结束：");
+
+
     }
     
 
@@ -937,18 +1087,21 @@ public class MonthReportAssetService {
         insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
 		}
         //多级法人改造。不能出汇总数据，会导致分支机构数据删除错误
-//        //汇总数据合计
-//        sumDetail(assetMonthReportDetailMap);
-//        //汇总数据入库
-//        insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
-        
-        
-        //机构数据合计以及入库
-        for (Entry<String, Map<String, ChbMonthReportDetail>> details : deptMap.entrySet()) {
-        	sumDetail(details.getValue());
-            insertDetail(details.getValue(), report.getTermid(),details.getKey());
+		if(!CommonUtil.isBAmodel()){
+			//汇总数据合计
+			sumDetail(assetMonthReportDetailMap);
+			//汇总数据入库
+        	insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
+		}else{
+			//机构数据合计以及入库
+			for (Entry<String, Map<String, ChbMonthReportDetail>> details : deptMap.entrySet()) {
+				sumDetail(details.getValue());
+				insertDetail(details.getValue(), report.getTermid(),details.getKey());
+			}
 		}
-        
+
+
+
     	return assetMonthReportDetailMap;
     }
     
@@ -1225,5 +1378,80 @@ public class MonthReportAssetService {
     		}
     	}
 	}
+
+	// add by qfx 2021-04-22 新增理财子公司月报资产头寸字段设置 start
+	/**
+	 * 计算期限
+	 *
+	 * @param report 报送参数
+	 * @param prodTermMap 产品期限Map
+	 * @param position 资产头寸
+	 * @param chbAssetInfo 资产信息
+	 * @param supAssetInfo 上层资产信息
+	 * @return 期限
+	 */
+	private BigDecimal newCalcTerms(ChbMonthReport report, Map<String, BigDecimal> prodTermMap,
+									ChbMonthAssetPosition position, ChbAssetInfo chbAssetInfo, ChbAssetInfo supAssetInfo) {
+		BigDecimal terms = null;
+		// 设置期限字段
+		//公私募基金 05 19  默认为 30
+		if ("05".equals(position.getAssettype()) || "19".equals(position.getAssettype())) {
+			terms = new BigDecimal(30);
+		}
+		// 06 权益类资产
+		else if("06".equals(position.getAssettype())) {
+			terms = BigDecimal.ZERO;
+		}
+		//所有资产mdate != null && mdate<月报最后一天（逾期资产）,该字段默认=0
+		else if(chbAssetInfo.getMdate() != null && DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getMdate()) < 0) {
+			terms = BigDecimal.ZERO;
+		}
+		else {
+			boolean prdFlag = false;
+			//asset_type in（'12','16'） 取plan_edate
+			if ("12".equals(position.getAssettype()) || "16".equals(position.getAssettype())) {
+				if(chbAssetInfo.getPlanEdate() != null) {
+					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getPlanEdate()));
+				}
+				else if(null != supAssetInfo && supAssetInfo.getPlanEdate() != null) {
+					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), supAssetInfo.getPlanEdate()));
+				}
+			}
+			else {
+				if(chbAssetInfo.getMdate() != null) {
+					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getMdate()));
+				}
+				else if(null != supAssetInfo && supAssetInfo.getMdate() != null) {
+					terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), supAssetInfo.getMdate()));
+				}
+			}
+			// 如果期限还是null，则需要设置为产品期限
+			if(terms == null || BigDecimal.ZERO.compareTo(terms) >=0 ) {
+				// 如果之前已经计算过产品期限，则直接取值
+				if (prodTermMap.containsKey(position.getProdId())) {
+					terms = prodTermMap.get(position.getProdId());
+				}
+				// 否则需要计算产品期限
+				else {
+					// 获取产品的到期日（封闭式产品：产品到期日；定期开放式产品：下一开放日，高频开放式产品：直接默认期限为1）
+					ChbPrdBaseinfo chbPrdBaseinfo = chbMonthAssetPositionMapper.selectChbPrdBaseinfoByProdId(position.getProdId(), report.getEnddate());
+					if(chbPrdBaseinfo == null || chbPrdBaseinfo.getMdate() == null) {
+						terms = BigDecimal.ONE;
+					}
+					else {
+						terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), chbPrdBaseinfo.getMdate()));
+					}
+					prodTermMap.put(position.getProdId(), terms);
+				}
+			}
+		}
+		// 剩余期限计算结果若小于等于0，则该字段值=1；
+		if (terms == null || terms.compareTo(BigDecimal.ZERO) <= 0) {
+			terms = BigDecimal.ONE;
+		}
+		position.setTerms(terms);
+		return terms;
+	}
+	// add by qfx 2021-04-22 新增理财子公司月报资产头寸字段设置 start
     
 }

@@ -128,6 +128,17 @@ public class ChbPrdFeeDeal extends BaseEntity{
     private String remark;
 
     /**
+     * 交易对手
+     */
+    private String tradeCounter;
+
+    /**
+     * 对手方类型
+     */
+    private String rivalPartyType;
+
+
+    /**
      * 主键 
      * @return SEQNO 主键 
      */
@@ -486,5 +497,21 @@ public class ChbPrdFeeDeal extends BaseEntity{
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getTradeCounter() {
+        return tradeCounter;
+    }
+
+    public void setTradeCounter(String tradeCounter) {
+        this.tradeCounter = tradeCounter;
+    }
+
+    public String getRivalPartyType() {
+        return rivalPartyType;
+    }
+
+    public void setRivalPartyType(String rivalPartyType) {
+        this.rivalPartyType = rivalPartyType;
     }
 }

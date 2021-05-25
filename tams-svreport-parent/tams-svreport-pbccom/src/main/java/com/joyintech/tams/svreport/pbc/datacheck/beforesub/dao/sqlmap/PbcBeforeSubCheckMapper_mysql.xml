@@ -32,7 +32,15 @@
 	/** and f.OPERATE_MODE in ('4','5')
 	AND DATE_FORMAT(RAISING_DATE,'yyyy-MM')!=DATE_FORMAT(f.VDATE,'yyyy-MM')**/
 	and DATE_FORMAT(r.STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y-%m-%d')
- </select>
-
+ 	</select>
+	<select id="selectPbcAssetDebt" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto"
+			parameterType="map">
+ 	select cai.asset_code assetcode from CHB_ASSET_INFO cai
+	where ASSET_TYPE='02'
+	and PBC_ASSET_TYPE1 is null
+	and mdate>#{enddate,jdbcType=DATE}
+	and EXISTS (select 1 from chb_asset_position cap
+	where cap.asset_code=cai.asset_code and cap.cdate=#{checkdate,jdbcType=DATE})
+ 	</select>
 
 </mapper>

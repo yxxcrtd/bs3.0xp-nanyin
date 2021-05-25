@@ -1,33 +1,19 @@
 package com.joyintech.tams.svreport.chb.monthreport.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseService;
+import com.joyintech.tams.common.svreport.chb.util.ToolsUtil;
+import com.joyintech.tams.report.common.constant.BatchBeanName;
+import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
+import com.joyintech.tams.svreport.chb.subsidiamonthreport.service.SubsidiaMonthReportRegistBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.exception.BusinessException;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseService;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.svreport.chb.util.ToolsUtil;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.constant.BatchBeanName;
-import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
-import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportMapper;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportPrdConstants;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 功能:中债银行月度统计表批处理
@@ -49,6 +35,11 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
     private MonthReportProdService monthReportProdService;
     @Autowired
     private MonthReportAssetService monthReportAssetService;
+    @Autowired
+    private MonthReportG06bAssetService monthReportG06bAssetService;
+
+    @Autowired
+    private SubsidiaMonthReportRegistBatchService subsidiaMonthReportRegistBatchService;
     @Transactional(rollbackFor = Exception.class)
 	public void genReport(Date executeDate,List<String> prodids,boolean ifTrigger){
         // 设置批处理bean
@@ -56,14 +47,15 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
         // 批处理开始
         logInfoBatchStart();
 	    Calendar calendar = Calendar.getInstance();
-        calendar.setTime(executeDate);
-        
+	    calendar.setTime(executeDate);
+
         if ( calendar.get(Calendar.DATE)!=1 &&!ifTrigger) {  //每月1日生成上月的数据
         	return;
         }
         
-        if ( prodids==null ) 
+        if ( prodids==null ) {
             prodids = new ArrayList<String>();
+        }
         // 获取上月的第一天
         calendar.add(Calendar.MONTH, -1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -168,9 +160,18 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
         
     	//生成产品端月报明细
     	monthReportProdService.genReport(report,ifTrigger);
-        
+
         //生成资产端月报明细
     	monthReportAssetService.genReport(report,ifTrigger);
+
+    	// add by wanshiwei G06b 银行理财子公司风险资本计算表 20210428 start
+        monthReportG06bAssetService.genReport(report,ifTrigger);
+        // add by wanshiwei G06b 银行理财子公司风险资本计算表 20210428 end
+
+        /** 中债理财子公司月度统计表-报表生成(从宁银批处理中拆出来放到该逻辑中) modify by yanya on 20210511 start**/
+        subsidiaMonthReportRegistBatchService.genReport(executeDate, prodids, ifTrigger);
+        /** 中债理财子公司月度统计表-报表生成(从宁银批处理中拆出来放到该逻辑中) modify by yanya on 20210511 end**/
+
         // 批处理结束
         logInfoBatchEnd();
 	}
@@ -183,7 +184,7 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
      * @param executeDate
      * @param prodList
      * @param assetList
-     * @throws BusinessException 
+     * @throws BusinessException
      * @see com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseService#execute(java.util.Date, java.util.List, java.util.List)
      */
     @Override

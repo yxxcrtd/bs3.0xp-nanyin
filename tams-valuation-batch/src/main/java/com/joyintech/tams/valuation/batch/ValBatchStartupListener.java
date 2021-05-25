@@ -40,7 +40,7 @@ public class ValBatchStartupListener extends StartupConfiguration {
 //        t.start();
 //        logger.info("估值核算系统批处理启动完成!");
         // 一体化请使用此监听
-        startBatchUnistartListener();
+        // startBatchUnistartListener();
     }
 
     private void startBatchUnistartListener() {

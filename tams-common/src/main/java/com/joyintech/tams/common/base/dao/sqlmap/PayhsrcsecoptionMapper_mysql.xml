@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PayhsrcsecoptionMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.Payhsrcsecoption" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="SECID" property="secid" jdbcType="VARCHAR" />
+        <result column="OPTIONNUM" property="optionnum" jdbcType="DECIMAL" />
+        <result column="OPTIONSTARTDAY" property="optionstartday" jdbcType="DATE" />
+        <result column="OPTIONENDDAY" property="optionendday" jdbcType="DATE" />
+        <result column="OPTIONPAYDAY" property="optionpayday" jdbcType="DATE" />
+        <result column="OPTIONPRICE" property="optionprice" jdbcType="DECIMAL" />
+        <result column="OPTIONTYPE" property="optiontype" jdbcType="VARCHAR" />
+        <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
+        <result column="LSTMNTUSER" property="lstmntuser" jdbcType="VARCHAR" />
+        <result column="EFFECTFLAG" property="effectflag" jdbcType="VARCHAR" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, SECID SECID, OPTIONNUM OPTIONNUM, OPTIONSTARTDAY OPTIONSTARTDAY, 
+        OPTIONENDDAY OPTIONENDDAY, OPTIONPAYDAY OPTIONPAYDAY, OPTIONPRICE OPTIONPRICE, OPTIONTYPE OPTIONTYPE, 
+        LSTMNTDATE LSTMNTDATE, LSTMNTUSER LSTMNTUSER, EFFECTFLAG EFFECTFLAG, OPDATE OPDATE, 
+        OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PayhsrcsecoptionMapper.Base_Column_List" />
+        from PAYHSRCSECOPTION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PayhsrcsecoptionMapper.Base_Column_List" />
+        from PAYHSRCSECOPTION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PayhsrcsecoptionMapper.Base_Column_List" />
+        from PAYHSRCSECOPTION
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PAYHSRCSECOPTION
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.Payhsrcsecoption" >
+        insert into PAYHSRCSECOPTION (OBJECT_ID, SECID, OPTIONNUM, 
+            OPTIONSTARTDAY, OPTIONENDDAY, OPTIONPAYDAY, 
+            OPTIONPRICE, OPTIONTYPE, LSTMNTDATE, 
+            LSTMNTUSER, EFFECTFLAG, OPDATE, 
+            OPMODE)
+        values (#{objectId,jdbcType=VARCHAR}, #{secid,jdbcType=VARCHAR}, #{optionnum,jdbcType=DECIMAL}, 
+            #{optionstartday,jdbcType=DATE}, #{optionendday,jdbcType=DATE}, #{optionpayday,jdbcType=DATE}, 
+            #{optionprice,jdbcType=DECIMAL}, #{optiontype,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}, 
+            #{lstmntuser,jdbcType=VARCHAR}, #{effectflag,jdbcType=VARCHAR}, #{opdate,jdbcType=DATE}, 
+            #{opmode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.Payhsrcsecoption" >
+        insert into PAYHSRCSECOPTION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="secid != null" >
+                SECID,
+            </if>
+            <if test="optionnum != null" >
+                OPTIONNUM,
+            </if>
+            <if test="optionstartday != null" >
+                OPTIONSTARTDAY,
+            </if>
+            <if test="optionendday != null" >
+                OPTIONENDDAY,
+            </if>
+            <if test="optionpayday != null" >
+                OPTIONPAYDAY,
+            </if>
+            <if test="optionprice != null" >
+                OPTIONPRICE,
+            </if>
+            <if test="optiontype != null" >
+                OPTIONTYPE,
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE,
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER,
+            </if>
+            <if test="effectflag != null" >
+                EFFECTFLAG,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="secid != null" >
+                #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="optionnum != null" >
+                #{optionnum,jdbcType=DECIMAL},
+            </if>
+            <if test="optionstartday != null" >
+                #{optionstartday,jdbcType=DATE},
+            </if>
+            <if test="optionendday != null" >
+                #{optionendday,jdbcType=DATE},
+            </if>
+            <if test="optionpayday != null" >
+                #{optionpayday,jdbcType=DATE},
+            </if>
+            <if test="optionprice != null" >
+                #{optionprice,jdbcType=DECIMAL},
+            </if>
+            <if test="optiontype != null" >
+                #{optiontype,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="effectflag != null" >
+                #{effectflag,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.Payhsrcsecoption" >
+        insert into PAYHSRCSECOPTION(OBJECT_ID, SECID, OPTIONNUM, OPTIONSTARTDAY, OPTIONENDDAY, 
+        OPTIONPAYDAY, OPTIONPRICE, OPTIONTYPE, LSTMNTDATE, LSTMNTUSER, EFFECTFLAG, OPDATE, 
+        OPMODE)
+        select OBJECT_ID, SECID, OPTIONNUM, OPTIONSTARTDAY, OPTIONENDDAY, 
+            OPTIONPAYDAY, OPTIONPRICE, OPTIONTYPE, LSTMNTDATE, LSTMNTUSER, EFFECTFLAG, OPDATE, 
+            OPMODE
+             from PAYHSRCSECOPTION
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.Payhsrcsecoption" >
+        update PAYHSRCSECOPTION
+        <set >
+            <if test="secid != null" >
+                SECID = #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="optionnum != null" >
+                OPTIONNUM = #{optionnum,jdbcType=DECIMAL},
+            </if>
+            <if test="optionstartday != null" >
+                OPTIONSTARTDAY = #{optionstartday,jdbcType=DATE},
+            </if>
+            <if test="optionendday != null" >
+                OPTIONENDDAY = #{optionendday,jdbcType=DATE},
+            </if>
+            <if test="optionpayday != null" >
+                OPTIONPAYDAY = #{optionpayday,jdbcType=DATE},
+            </if>
+            <if test="optionprice != null" >
+                OPTIONPRICE = #{optionprice,jdbcType=DECIMAL},
+            </if>
+            <if test="optiontype != null" >
+                OPTIONTYPE = #{optiontype,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="effectflag != null" >
+                EFFECTFLAG = #{effectflag,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.Payhsrcsecoption" >
+        update PAYHSRCSECOPTION
+        set SECID = #{secid,jdbcType=VARCHAR},
+            OPTIONNUM = #{optionnum,jdbcType=DECIMAL},
+            OPTIONSTARTDAY = #{optionstartday,jdbcType=DATE},
+            OPTIONENDDAY = #{optionendday,jdbcType=DATE},
+            OPTIONPAYDAY = #{optionpayday,jdbcType=DATE},
+            OPTIONPRICE = #{optionprice,jdbcType=DECIMAL},
+            OPTIONTYPE = #{optiontype,jdbcType=VARCHAR},
+            LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            EFFECTFLAG = #{effectflag,jdbcType=VARCHAR},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

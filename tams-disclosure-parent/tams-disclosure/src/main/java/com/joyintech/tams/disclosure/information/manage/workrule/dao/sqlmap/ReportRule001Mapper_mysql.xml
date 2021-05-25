@@ -17,15 +17,15 @@
 		WHERE
 		  1=1
 		<if test="repName != null and repName != ''">
-			AND r.REP_NAME like concat(concat('%',#{repName,jdbcType=VARCHAR}),'%')
+			AND r.REP_NAME like concat_ws(concat_ws('%',#{repName,jdbcType=VARCHAR}),'%')
 
 		</if>
 		
 		<if test="ruleName != null and ruleName != ''">
-			AND r.REP_NAME like concat(concat('%',#{ruleName,jdbcType=VARCHAR}),'%')
+			AND r.REP_NAME like concat_ws(concat_ws('%',#{ruleName,jdbcType=VARCHAR}),'%')
 
 		</if>
 		order by r.UPDATE_TIME desc
-		)where 1=1
+		) TEMP where 1=1
     </select>
 </mapper>

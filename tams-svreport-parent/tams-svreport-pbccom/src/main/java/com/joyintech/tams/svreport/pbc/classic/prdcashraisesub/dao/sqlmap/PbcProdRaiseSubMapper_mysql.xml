@@ -155,32 +155,33 @@
       prdposition.ORG_CODE ORG_CODE
     FROM PBC_MONTH_PRD_POSITION PRDPOSITION
     inner JOIN (
-    SELECT 
+      SELECT
       PROD_ID,
       PBC_PROD_ID,
       OPERATE_MODE,
-       HIGH_YIELD_ISSUE,
+      HIGH_YIELD_ISSUE,
       LOW_YIELD_ISSUE,
-      RANK() OVER (PARTITION BY PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
-    from PBC_PRD_BASEINFO_SUB 
+      RANK() OVER (PARTITION BY PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
+      from PBC_PRD_BASEINFO_SUB
+      where  PBC_PROD_ID is not null
 	) prdbaseinfo
     ON PRDPOSITION.PRODID = PRDBASEINFO.PROD_ID
-	AND 1 = 1 limit 1
+    AND RANKNUM = 1
     left join (
       /*取离月末最近的净值和收益率，不需要判断CHANG_TYPE，默认净值型产品存净值，预期收益率产品存收益率*/
-      select 
+      select
         YIELD.PROD_VALUE,
         YIELD.PROD_ID,
         YIELD.UNIT_VALUE_TOTAL,
         YIELD.CCY,
         rank() over (partition by yield.PROD_ID,yield.ccy order by YIELD.CHANGE_DATE desc) ranknum/*按产品+币种维度分类，按变动日期降序排序取最大的日期的净值*/
-      FROM CHB_PRD_PERIODYIELD YIELD
-      WHERE 1 =1 
-      AND YIELD.STATUS != 'D'
+        FROM CHB_PRD_PERIODYIELD YIELD
+        WHERE 1 =1
+        AND YIELD.STATUS != 'D'
       AND DATE_FORMAT(YIELD.CHANGE_DATE,'%Y-%m-%d') &lt;= #{cdate,jdbcType=VARCHAR}
     ) maxyield
     on PRDPOSITION.PRODID = maxyield.PROD_ID
-	where 1 =1 limit 1
+	where maxyield.ranknum = 1
 	and DATE_FORMAT(prdposition.ENDDATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
 	<if test="ifpsbc !=null and ifpsbc='001' ">
 		 and (prdposition.BUY_PLACE not in('210200','330200','350200','370200','440300') or prdposition.BUY_PLACE is null)
@@ -202,16 +203,16 @@
     sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME,info.prod_id
     from PBC_PROD_RAISING_SUB sub
     LEFT JOIN (
-    SELECT 
+      SELECT
       PROD_ID,
       PBC_PROD_ID,
       OPERATE_MODE,
-      RANK() OVER (PARTITION BY PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
-    from PBC_PRD_BASEINFO_SUB 
-	) info
+      RANK() OVER (PARTITION BY PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
+      from PBC_PRD_BASEINFO_SUB
+    ) info
     ON sub.PBC_PROD_ID = info.PBC_PROD_ID
 	AND 1 = 1
-    where 1 =1 limit 1
+    AND info.RANKNUM = 1
     <!-- and sub.send_status in ('02','03') /*已报送数据*/ -->
     and DATE_FORMAT(sub.RAISING_DATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
   </select>
@@ -1467,10 +1468,10 @@
            and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
         </if>
         <if test="vdateStart != null and vdateStart != ''">
-           and DATE_FORMAT(a.RAISING_DATE,'yyyy-MM') &gt;= #{vdateStart,jdbcType=VARCHAR}
+           and DATE_FORMAT(a.RAISING_DATE,'%Y-%m') &gt;= #{vdateStart,jdbcType=VARCHAR}
         </if>
         <if test="vdateEnd != null and vdateEnd != ''">
-           and DATE_FORMAT(a.RAISING_DATE,'yyyy-MM') &lt;= #{vdateEnd,jdbcType=VARCHAR}
+           and DATE_FORMAT(a.RAISING_DATE,'%Y-%m') &lt;= #{vdateEnd,jdbcType=VARCHAR}
         </if>
         <if test="updateTime != null and updateTime != ''">
            and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
@@ -1551,9 +1552,9 @@
     NOW(), UPDATE_USER, NOW()
       from (
       	select <include refid="Base_Column_List2"></include>,
-      	rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-      	from PBC_PROD_RAISING_SUB_HIS
-	    <where>
+        rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+        from PBC_PROD_RAISING_SUB_HIS
+    <where>
 	      <if test="list != null and list.size() >0">
 	          <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
 	                select #{item.pbcProdId,jdbcType=CHAR},
@@ -1561,9 +1562,12 @@
 	                from dual
 	          </foreach>
 	      </if>
-	    </where> 
-      )
-      where 1 = 1 limit 1
+	    </where>
+       order by
+       PBC_PROD_ID,
+       ifnull(update_time,create_time) desc
+      ) AS T
+      where ranknum = 1
 </insert>
 <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
 	delete from PBC_PROD_RAISING_SUB_HIS
@@ -1571,8 +1575,8 @@
 	    select  PBC_PROD_ID
 	      from (
 	      	select PBC_PROD_ID ,
-	      	rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-	      	from PBC_PROD_RAISING_SUB_HIS
+            rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+            from PBC_PROD_RAISING_SUB_HIS
 	        <where>
 	          <if test="list != null and list.size() >0">
 	              <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
@@ -1581,9 +1585,12 @@
 	                    from dual
 	              </foreach>
 	          </if>
-	        </where> 
-	      )
-	      where 1 = 1 limit 1
+	        </where>
+            order by
+            PBC_PROD_ID,
+            ifnull(update_time,create_time) desc
+	      ) as T
+	      where ranknum = 1
     )
 </delete>
 <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
@@ -1784,7 +1791,7 @@
            and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
         </if>
     </where>
-  ) group by 
+  ) tmp group by
   		RAISING_DATE
   		,PBC_PROD_ID
   		<if test="yield == null">
@@ -1989,7 +1996,7 @@
            and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
         </if>
     </where>
-  ) group by 
+  ) tmp group by
   		RAISING_DATE
   		,PBC_PROD_ID
   		<if test="yield == null">
@@ -2043,12 +2050,16 @@
    <!-- 产品资金募集信息页面导出人行Excel报表中的第一个sheet起始募集信息的明细数据  -->
   <select id="searchListDetailSheet1" parameterType="map" resultMap="SearchResultMap">
   	<!--  	WITH  tab AS子查询出不同客户类型、不同币种的当期申购金额、当期申购金额折人民币、当期申购份额的金额 -->
-	SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from (select
-    concat_ws('','buyplace',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
-    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.RAISING_AMTSUM je,a.RAISING_AMTSUM_CNY zrmb,a.RAISING_QTY fe
-    from PBC_PROD_RAISING_SUB a
-    LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-    where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}) tab
+    WITH tab AS (
+      select
+        concat_ws('','buyplace',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.RAISING_AMTSUM je,a.RAISING_AMTSUM_CNY zrmb,a.RAISING_QTY fe
+      from PBC_PROD_RAISING_SUB a
+      LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+      where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+        and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}
+    )
+    SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
 	union all
 	select 'buyplace4000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
 	union all
@@ -2061,18 +2072,23 @@
 	select 'buyplace8000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='8' group by tab.ITEM_VALUE
 	union all
 	select 'buyplace9000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='9' group by tab.ITEM_VALUE
-  	
+
   </select>
   
   <!-- 产品资金募集信息页面导出人行Excel报表中的第二个sheet页当期兑付的明细数据 -->
   <select id="searchListDetailSheet2" parameterType="map" resultMap="SearchResultMap">
     <!-- WITH tab AS子查询出不同客户类型、不同币种的当期兑付金额、当期兑付金额折人民币、当期兑付份额的金额 -->
-	SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from (select
-    concat_ws('','buyplaceSheet2',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
-    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.REDAMT je,a.REDAMT_CNY zrmb,a.REDQTY fe
-    from PBC_PROD_RAISING_SUB a
-    LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-    where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}) tab
+    WITH tab AS (
+      select
+        concat_ws('','buyplaceSheet2',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.REDAMT je,a.REDAMT_CNY zrmb,a.REDQTY fe
+      from PBC_PROD_RAISING_SUB a
+      LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+      where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+        and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}
+        and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}
+    )
+    SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
 	union all
 	select 'buyplaceSheet24000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
 	union all
@@ -2091,13 +2107,17 @@
  <!--  产品资金募集信息页面导出人行Excel报表中的第三个sheet页期末产品的明细数据 -->
   <select id="searchListDetailSheet3" parameterType="map" resultMap="SearchResultMap">
     <!-- tab AS 子查询出不同客户类型、不同币种的期末产品金额、期末产品金额折人民币、期末产品份额的金额 -->
-	SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from  (select
-    concat_ws('','buyplaceSheet3',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
-    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.ENDAMTSUM je,a.ENDAMTSUM_CNY zrmb,a.ENDQTY fe
-    from PBC_PROD_RAISING_SUB a
-    LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-    where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP})
-    tab
+    WITH tab AS (
+      select
+        concat_ws('','buyplaceSheet3',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.ENDAMTSUM je,a.ENDAMTSUM_CNY zrmb,a.ENDQTY fe
+      from PBC_PROD_RAISING_SUB a
+      LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+      where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+      and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}
+    )
+
+    SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
 	union all
 	select 'buyplaceSheet34000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
 	union all

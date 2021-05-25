@@ -467,12 +467,15 @@ public class ReportConfirmManage001Contoller extends BaseController {
         String formate=reportConfirmManage001Service.getFormate(sysFilepath);
         formate=formate.substring(formate.lastIndexOf(".") );
         // 文件名
-    	targetFileName=reportConfirmManage001Service.getFileName(sysFilepath)+"_"+DateUtil.format(new Date(), DateUtil.DEFAULT_OTHER_FORMAT)+formate;
+//    	targetFileName=reportConfirmManage001Service.getFileName(sysFilepath)+"_"+DateUtil.format(new Date(), DateUtil.DEFAULT_OTHER_FORMAT)+formate;
     	
     	String prodId = RequestUtil.getParam("prodId");
         String reportDate = RequestUtil.getParam("reportDate");
         String reportName = RequestUtil.getParam("reportName");
-    	targetFileName=reportName+formate;
+
+		// modify by swwan 20210518 start
+		targetFileName = RequestUtil.getParam("sysFileName");
+    	/*targetFileName=reportName+formate;
     	if (StringUtil.isNotEmpty(reportDate)&&!StringUtil.equals(reportDate, "undefined")){
     	    if(reportDate.lastIndexOf("--")!=-1){
     	        targetFileName=reportDate.substring(reportDate.lastIndexOf("--")+2)+GlobalConstant.UNDER_LINE+targetFileName;
@@ -484,11 +487,11 @@ public class ReportConfirmManage001Contoller extends BaseController {
     	if (StringUtil.isNotEmpty(prodId)&&!StringUtil.equals(prodId, "undefined")) {
     	    targetFileName=prodId+GlobalConstant.UNDER_LINE+targetFileName;
         }
-        
+        */
+		// modify by swwan 20210518 end
     	if(StringUtil.isEmpty(targetFileName)){
         	targetFileName=attachment.getFileName();
         }
-//        String targetFileName = attachment.getFileName();
         // 目标文件
         File targetFile = attachment.getTargetFile();
         

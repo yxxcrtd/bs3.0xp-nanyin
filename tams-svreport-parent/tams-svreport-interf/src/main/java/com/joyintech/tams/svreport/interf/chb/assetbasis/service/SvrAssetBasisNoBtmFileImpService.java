@@ -380,7 +380,7 @@ public class SvrAssetBasisNoBtmFileImpService extends FileImpService{
                 }
                 else {
                     try {
-                        field.set(chbAssetsBasisData, (value == null || "".equals(value)) ? "" : value);
+                        field.set(chbAssetsBasisData,value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return ;

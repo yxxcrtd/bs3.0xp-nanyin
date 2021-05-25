@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 描述:CHB_ASSET_INFO_SUB表的实体类,用于前台分类展示
@@ -109,6 +110,15 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 	private  SvrBussRepQDIIStructureInfoDto   svrBussRepQDIIStructureInfoDto;
 
+	private Map<String,Object> map;
+
+	public Map<String, Object> getMap() {
+		return map;
+	}
+
+	public void setMap(Map<String, Object> map) {
+		this.map = map;
+	}
 
 	public SvrBussQDIISharesInfoDto getSvrBussQDIISharesInfoDto() {
 		return svrBussQDIISharesInfoDto;

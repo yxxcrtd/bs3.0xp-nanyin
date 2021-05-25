@@ -372,7 +372,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 //				ibd.setFprodId(map.get("FPROD_ID").substring(0, 50));
 //			}
 //		} else {
+		if(!StringUtil.isBlank(map.get("FPROD_ID"))) {
 			ibd.setFprodId(map.get("FPROD_ID"));
+		}
 //		}
 			
 		// 销售区域
@@ -457,7 +459,7 @@ public class SvrProdDealFileImpService extends FileImpService {
 		}
 		BigDecimal custCounts=BigDecimal.ZERO;
 		try{
-			custCounts=new BigDecimal(custCountsS);
+			custCounts=new BigDecimal("".equals(custCountsS)?"0":custCountsS);
 		}catch(Exception e){
 			logger.error(e.getMessage(),e);
 //			message.add(this.getMessage("CHB_EQUITYINFO_E_003", "保有量客户数"));
@@ -482,9 +484,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("01");
-				ibdt.setTradePrince(new BigDecimal(map.get("prinamt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("prinamtConfirm")));
-				ibdt.setTradeCost(new BigDecimal(map.get("prinamt")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("prinamt"))?"0":map.get("prinamt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("prinamtConfirm"))?"0":map.get("prinamtConfirm")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("prinamt"))?"0":map.get("prinamt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
@@ -499,9 +501,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("02");
-				ibdt.setTradePrince(new BigDecimal(map.get("sgAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("sgConfirmAmt")));
-				ibdt.setTradeCost(new BigDecimal(map.get("sgAmt")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("sgAmt"))?"0":map.get("sgAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("sgConfirmAmt"))?"0":map.get("sgConfirmAmt")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("sgAmt"))?"0":map.get("sgAmt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
@@ -516,10 +518,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("03");
-				ibdt.setTradePrince(new BigDecimal(map.get("shAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("shQty")));
-				ibdt.setIntAmt(new BigDecimal(map.get("shAmt")).subtract(new BigDecimal(map.get("shPrincipal"))));
-				ibdt.setTradeCost(new BigDecimal(map.get("shPrincipal")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("shAmt"))?"0":map.get("shAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("shQty"))?"0":map.get("shQty")));
+				ibdt.setIntAmt(new BigDecimal("".equals(map.get("shAmt"))?"0":map.get("shAmt")).subtract(new BigDecimal("".equals(map.get("shPrincipal"))?"0":map.get("shPrincipal"))));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("shPrincipal"))?"0":map.get("shPrincipal")));
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
 				ibdt.setTradeId(md5Key);
@@ -533,10 +535,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("16");
-				ibdt.setTradePrince(new BigDecimal(map.get("expireAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("expireAmtQty")));
-				ibdt.setIntAmt(new BigDecimal(map.get("expireAmt")).subtract(new BigDecimal(map.get("expireAmtPrincipal"))));
-				ibdt.setTradeCost(new BigDecimal(map.get("expireAmtPrincipal")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("expireAmt"))?"0":map.get("expireAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("expireAmtQty"))?"0":map.get("expireAmtQty")));
+				ibdt.setIntAmt(new BigDecimal("".equals(map.get("expireAmt"))?"0":map.get("expireAmt")).subtract(new BigDecimal("".equals(map.get("expireAmtPrincipal"))?"0":map.get("expireAmtPrincipal"))));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("expireAmtPrincipal"))?"0":map.get("expireAmtPrincipal")));
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
 				ibdt.setTradeId(md5Key);
@@ -550,10 +552,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("05");
-				ibdt.setIntAmt(new BigDecimal(map.get("rebonusAmt")));
-				ibdt.setTradePrince(new BigDecimal(map.get("rebonusAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("rebonusAmtQty")));
-				ibdt.setTradeCost(new BigDecimal(map.get("rebonusAmt")));
+				ibdt.setIntAmt(new BigDecimal("".equals(map.get("rebonusAmt"))?"0":map.get("rebonusAmt")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("rebonusAmt"))?"0":map.get("rebonusAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("rebonusAmtQty"))?"0":map.get("rebonusAmtQty")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("rebonusAmt"))?"0":map.get("rebonusAmt")));
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
 				ibdt.setTradeId(md5Key);
@@ -567,8 +569,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("04");
-				ibdt.setIntAmt(new BigDecimal(map.get("bonusAmt")));
-				ibdt.setTradePrince(new BigDecimal(map.get("bonusAmt")));
+				ibdt.setIntAmt(new BigDecimal("".equals(map.get("bonusAmt"))?"0":map.get("bonusAmt")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("bonusAmt"))?"0":map.get("bonusAmt")));
 				ibdt.setTradeQty(BigDecimal.ZERO);
 				ibdt.setTradeCost(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
@@ -585,9 +587,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("14");
-				ibdt.setTradeCost(new BigDecimal(map.get("qtyAddAmt")));
-				ibdt.setTradeQty(new BigDecimal(map.get("qtyAdd")));
-				ibdt.setTradePrince(new BigDecimal(map.get("qtyAddAmt")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("qtyAddAmt"))?"0":map.get("qtyAddAmt")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("qtyAdd"))?"0":map.get("qtyAdd")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("qtyAddAmt"))?"0":map.get("qtyAddAmt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
@@ -603,9 +605,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 			try {
 				ChbPrdDeal ibdt = (ChbPrdDeal) ibd.clone();
 				ibdt.setTradeType("15");
-				ibdt.setTradeCost(new BigDecimal(map.get("qtyMinusPrincipal")));
-				ibdt.setTradeQty(new BigDecimal(map.get("qtyMinus")));
-				ibdt.setTradePrince(new BigDecimal(map.get("qtyMinusPrincipal")));
+				ibdt.setTradeCost(new BigDecimal("".equals(map.get("qtyMinusPrincipal"))?"0":map.get("qtyMinusPrincipal")));
+				ibdt.setTradeQty(new BigDecimal("".equals(map.get("qtyMinus"))?"0":map.get("qtyMinus")));
+				ibdt.setTradePrince(new BigDecimal("".equals(map.get("qtyMinusPrincipal"))?"0":map.get("qtyMinusPrincipal")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
 				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
@@ -707,113 +709,113 @@ public class SvrProdDealFileImpService extends FileImpService {
 		String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,
 				GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		boolean success = true;
-		if (listData.size() <= SQLLOADER_MAX_SIZE || com.joyintech.tams.report.interf.common.constant.InterfConstants.SAVEFLAG_ADD.equals(saveFlag)) {
+//		if (listData.size() <= SQLLOADER_MAX_SIZE || com.joyintech.tams.report.interf.common.constant.InterfConstants.SAVEFLAG_ADD.equals(saveFlag)) {
 			if(dealFileType.equals(SVReportGlobalConstant.CHB_PRD_DEAL_FILE_TYPE_01)){
 				success = excuteProdBaseInfoByStep(listData, null, null, saveFlag,dateSource);
 			}else{
 				success = excuteProdDealByStepFx(listData, null, null, saveFlag,dateSource);
 			}
-		} else {
-			// listData= Collections.synchronizedList(listData);
-			// 创建表
-			ImpTable table = new ImpTable(InterfDefine.投资者交易信息接口数据.getCode());
-			table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.投资者交易信息接口数据.getCode()));
-			// 创建一个线程池
-			if (interfMaxCorePoolSize < 1) {
-				interfMaxCorePoolSize = 20;
-			}
-			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-			List<Callable<Boolean>> tasks = new ArrayList<>();
-			if (null != listData) {
-				int start = 0;
-				int end = 0;
-				int size = listData.size();
-				int max = (int) Math.ceil((double) size / 1000);
-				for (int i = 0; i < max; i++) {
-					start = end;
-					end = Math.min(size, 1000 * (i + 1));
-					List<Map<String, String>> subList = listData.subList(start, end);
-					tasks.add(new Callable<Boolean>() {
-
-						@Override
-						public Boolean call() {
-							if(dealFileType.equals(SVReportGlobalConstant.CHB_PRD_DEAL_FILE_TYPE_01)){
-								return excuteProdBaseInfoByStep(subList, tmpPath, table, saveFlag,dateSource);
-							}else{
-								return excuteProdDealByStepFx(listData, null, null, saveFlag,dateSource);
-							}
-						}
-					});
-				}
-			}
-
-			// 为线程池添加任务
-			List<Future<Boolean>> taskResult;
-			try {
-				taskResult = service.invokeAll(tasks);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
-				return "fail";
-			}
-			for (Future<Boolean> res : taskResult) {
-				try {
-					success = success && res.get();
-				} catch (InterruptedException | ExecutionException e) {
-					logger.error(e.getMessage(), e);
-					return "fail";
-				}
-			}
-			// 任务结束，停止线程池的所有线程
-			service.shutdown();
-
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(listData.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(InterfDefine.投资者交易信息接口数据.getCode())) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件" + f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
-					}
-				}
-			}
-			if ("fail".equals(result)) {
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return "fail";
-					}
-				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return "fail";
-					}
-				}
-			}
-		}
+//		} else {
+//			// listData= Collections.synchronizedList(listData);
+//			// 创建表
+//			ImpTable table = new ImpTable(InterfDefine.投资者交易信息接口数据.getCode());
+//			table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.投资者交易信息接口数据.getCode()));
+//			// 创建一个线程池
+//			if (interfMaxCorePoolSize < 1) {
+//				interfMaxCorePoolSize = 20;
+//			}
+//			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
+//			List<Callable<Boolean>> tasks = new ArrayList<>();
+//			if (null != listData) {
+//				int start = 0;
+//				int end = 0;
+//				int size = listData.size();
+//				int max = (int) Math.ceil((double) size / 1000);
+//				for (int i = 0; i < max; i++) {
+//					start = end;
+//					end = Math.min(size, 1000 * (i + 1));
+//					List<Map<String, String>> subList = listData.subList(start, end);
+//					tasks.add(new Callable<Boolean>() {
+//
+//						@Override
+//						public Boolean call() {
+//							if(dealFileType.equals(SVReportGlobalConstant.CHB_PRD_DEAL_FILE_TYPE_01)){
+//								return excuteProdBaseInfoByStep(subList, tmpPath, table, saveFlag,dateSource);
+//							}else{
+//								return excuteProdDealByStepFx(listData, null, null, saveFlag,dateSource);
+//							}
+//						}
+//					});
+//				}
+//			}
+//
+//			// 为线程池添加任务
+//			List<Future<Boolean>> taskResult;
+//			try {
+//				taskResult = service.invokeAll(tasks);
+//			} catch (InterruptedException e) {
+//				logger.error(e.getMessage(), e);
+//				return "fail";
+//			}
+//			for (Future<Boolean> res : taskResult) {
+//				try {
+//					success = success && res.get();
+//				} catch (InterruptedException | ExecutionException e) {
+//					logger.error(e.getMessage(), e);
+//					return "fail";
+//				}
+//			}
+//			// 任务结束，停止线程池的所有线程
+//			service.shutdown();
+//
+//			Collection<File> files = FileUtils.listFiles(new File(tmpPath), new String[] { "tmp" }, false);
+//			List<String> content = new ArrayList<>(listData.size());
+//			String result = "";
+//			for (File f : files) {
+//				if (f.getName().startsWith(InterfDefine.投资者交易信息接口数据.getCode())) {
+//					try {
+//						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+//						logger.debug("查找sqlloder文件" + f);
+//					} catch (IOException e) {
+//						logger.debug("查找sqlloder文件异常");
+//						logger.error(e.getMessage(), e);
+//						result = "fail";
+//					} finally {
+//						f.delete();
+//					}
+//				}
+//			}
+//			if ("fail".equals(result)) {
+//				return result;
+//			}
+//			// 系统是否使用的db2数据库
+//			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+//			if (isDB2DataBase) {
+//				// db2数据库处理
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
+//								reportSqlldrDatabaseName);
+//					} catch (IOException | InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//						return "fail";
+//					}
+//				}
+//			} else {
+//				// oracle原逻辑
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
+//								reportSqlldrDatabaseName);
+//					} catch (IOException | InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//						return "fail";
+//					}
+//				}
+//			}
+//		}
 		// }
 		// 数据解析完成，并导入数据库成功后，将ftp文件修改名称
 		if (success) {

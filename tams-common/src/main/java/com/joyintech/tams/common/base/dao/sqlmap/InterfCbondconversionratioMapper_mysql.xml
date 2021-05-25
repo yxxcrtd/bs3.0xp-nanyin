@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCbondconversionratioMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCbondconversionratio" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="S_INFO_WINDCODE" property="sInfoWindcode" jdbcType="VARCHAR" />
+        <result column="B_CVN_STARTDATE" property="bCvnStartdate" jdbcType="VARCHAR" />
+        <result column="B_CVN_ENDDATE" property="bCvnEnddate" jdbcType="VARCHAR" />
+        <result column="B_CVN_RATEOFSTDBND" property="bCvnRateofstdbnd" jdbcType="DECIMAL" />
+        <result column="B_CVN_CVNTPERHUNDRED" property="bCvnCvntperhundred" jdbcType="DECIMAL" />
+        <result column="B_CVN_RATEOFSTDBNDCSI" property="bCvnRateofstdbndcsi" jdbcType="DECIMAL" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, S_INFO_WINDCODE S_INFO_WINDCODE, B_CVN_STARTDATE B_CVN_STARTDATE, 
+        B_CVN_ENDDATE B_CVN_ENDDATE, B_CVN_RATEOFSTDBND B_CVN_RATEOFSTDBND, B_CVN_CVNTPERHUNDRED B_CVN_CVNTPERHUNDRED, 
+        B_CVN_RATEOFSTDBNDCSI B_CVN_RATEOFSTDBNDCSI, OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbondconversionratioMapper.Base_Column_List" />
+        from INTERF_CBONDCONVERSIONRATIO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbondconversionratioMapper.Base_Column_List" />
+        from INTERF_CBONDCONVERSIONRATIO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbondconversionratioMapper.Base_Column_List" />
+        from INTERF_CBONDCONVERSIONRATIO
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_CBONDCONVERSIONRATIO
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCbondconversionratio" >
+        insert into INTERF_CBONDCONVERSIONRATIO (OBJECT_ID, S_INFO_WINDCODE, B_CVN_STARTDATE, 
+            B_CVN_ENDDATE, B_CVN_RATEOFSTDBND, B_CVN_CVNTPERHUNDRED, 
+            B_CVN_RATEOFSTDBNDCSI, OPDATE, OPMODE
+            )
+        values (#{objectId,jdbcType=VARCHAR}, #{sInfoWindcode,jdbcType=VARCHAR}, #{bCvnStartdate,jdbcType=VARCHAR}, 
+            #{bCvnEnddate,jdbcType=VARCHAR}, #{bCvnRateofstdbnd,jdbcType=DECIMAL}, #{bCvnCvntperhundred,jdbcType=DECIMAL}, 
+            #{bCvnRateofstdbndcsi,jdbcType=DECIMAL}, #{opdate,jdbcType=DATE}, #{opmode,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbondconversionratio" >
+        insert into INTERF_CBONDCONVERSIONRATIO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE,
+            </if>
+            <if test="bCvnStartdate != null" >
+                B_CVN_STARTDATE,
+            </if>
+            <if test="bCvnEnddate != null" >
+                B_CVN_ENDDATE,
+            </if>
+            <if test="bCvnRateofstdbnd != null" >
+                B_CVN_RATEOFSTDBND,
+            </if>
+            <if test="bCvnCvntperhundred != null" >
+                B_CVN_CVNTPERHUNDRED,
+            </if>
+            <if test="bCvnRateofstdbndcsi != null" >
+                B_CVN_RATEOFSTDBNDCSI,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoWindcode != null" >
+                #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="bCvnStartdate != null" >
+                #{bCvnStartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="bCvnEnddate != null" >
+                #{bCvnEnddate,jdbcType=VARCHAR},
+            </if>
+            <if test="bCvnRateofstdbnd != null" >
+                #{bCvnRateofstdbnd,jdbcType=DECIMAL},
+            </if>
+            <if test="bCvnCvntperhundred != null" >
+                #{bCvnCvntperhundred,jdbcType=DECIMAL},
+            </if>
+            <if test="bCvnRateofstdbndcsi != null" >
+                #{bCvnRateofstdbndcsi,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCbondconversionratio" >
+        insert into INTERF_CBONDCONVERSIONRATIO(OBJECT_ID, S_INFO_WINDCODE, B_CVN_STARTDATE, 
+        B_CVN_ENDDATE, B_CVN_RATEOFSTDBND, B_CVN_CVNTPERHUNDRED, B_CVN_RATEOFSTDBNDCSI, OPDATE, 
+        OPMODE)
+        select OBJECT_ID, S_INFO_WINDCODE, B_CVN_STARTDATE, 
+            B_CVN_ENDDATE, B_CVN_RATEOFSTDBND, B_CVN_CVNTPERHUNDRED, B_CVN_RATEOFSTDBNDCSI, OPDATE, 
+            OPMODE
+             from INTERF_CBONDCONVERSIONRATIO
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbondconversionratio" >
+        update INTERF_CBONDCONVERSIONRATIO
+        <set >
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="bCvnStartdate != null" >
+                B_CVN_STARTDATE = #{bCvnStartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="bCvnEnddate != null" >
+                B_CVN_ENDDATE = #{bCvnEnddate,jdbcType=VARCHAR},
+            </if>
+            <if test="bCvnRateofstdbnd != null" >
+                B_CVN_RATEOFSTDBND = #{bCvnRateofstdbnd,jdbcType=DECIMAL},
+            </if>
+            <if test="bCvnCvntperhundred != null" >
+                B_CVN_CVNTPERHUNDRED = #{bCvnCvntperhundred,jdbcType=DECIMAL},
+            </if>
+            <if test="bCvnRateofstdbndcsi != null" >
+                B_CVN_RATEOFSTDBNDCSI = #{bCvnRateofstdbndcsi,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCbondconversionratio" >
+        update INTERF_CBONDCONVERSIONRATIO
+        set S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            B_CVN_STARTDATE = #{bCvnStartdate,jdbcType=VARCHAR},
+            B_CVN_ENDDATE = #{bCvnEnddate,jdbcType=VARCHAR},
+            B_CVN_RATEOFSTDBND = #{bCvnRateofstdbnd,jdbcType=DECIMAL},
+            B_CVN_CVNTPERHUNDRED = #{bCvnCvntperhundred,jdbcType=DECIMAL},
+            B_CVN_RATEOFSTDBNDCSI = #{bCvnRateofstdbndcsi,jdbcType=DECIMAL},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

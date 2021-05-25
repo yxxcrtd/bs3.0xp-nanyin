@@ -1,16 +1,19 @@
 package com.joyintech.tams.svreport.interf.chb.investtrade.service;
-import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.dao.BaseMapper;
+import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -24,19 +27,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfDefine;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.base.dao.BaseMapper;
-import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 功能:交易对手文件解析方式入库
@@ -57,7 +53,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
 	/**
 	 * 接口类型-交易对手
 	 */
-	private static final String INTERFTYPE_CHB_MST_COUNTERPART = "CHB_MST_COUNTERPART";
+	private static final String INTERFTYPE_CHB_MST_COUNTERPART = "CHB_MST_COUNTER_PARTY";
 	
 	/**
 	 * 检查数据类型-交易对手
@@ -201,9 +197,12 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
 	@Override
 	public String importDB(List<Map<String, String>> listData,InterfFile interfFile) {
 	    String remoteDir = "success";
+        //modify by yanya on 20210518 添加待处理数据 start
 		// 添加待处理的数据
-		List<Map<String,String>> listError = checkData(listData, interfFile.getFilename(),
-		 		INTERFTYPE_CHB_MST_COUNTERPART,DATATYPE_CHB_COUNTER_PARTY,BUSSINESSKEY, DUPLICATIED_LIST);
+//		List<Map<String,String>> listError = checkData(listData, interfFile.getFilename(),
+//		 		INTERFTYPE_CHB_MST_COUNTERPART,DATATYPE_CHB_COUNTER_PARTY,BUSSINESSKEY, DUPLICATIED_LIST);
+        checkDataCodeCheck(listData, interfFile.getFilename(), ChbCheckTableInfo.交易对手接口);
+        //modify by yanya on 20210518 添加待处理数据 end
 		//有效数据入库 
         List<Map<String, String>> allData = new ArrayList<Map<String,String>>();
         allData.addAll(listData);
@@ -469,10 +468,9 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
                 String value = map.get(string);
                  Field field = ReflectionUtils.findField(chbMstCounterParty.getClass(),
                         this.subBlank(StringUtil.lowerCase(string)));
-//                if(field==null){
-//                  System.out.println(string);
-//                  continue;
-//                }
+                if(field==null){
+                  continue;
+                }
                 field.setAccessible(true);
                  Type type = field.getGenericType();
                 if ("java.math.BigDecimal".equals(type.getTypeName())) {
@@ -515,7 +513,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
                 }
                 else {
                     try {
-                        field.set(chbMstCounterParty, (value == null || "".equals(value)) ? "" : value);
+                        field.set(chbMstCounterParty, value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return entities;
@@ -525,7 +523,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
             // 创建人
             chbMstCounterParty.setCreateUser(CommonUtil.getUserName());
             // 创建部门
-            chbMstCounterParty.setCreateDept(CommonUtil.getDeptCode());
+            chbMstCounterParty.setCreateDept(null == CommonUtil.getDeptCode() ? "" : CommonUtil.getDeptCode());
             // 设置uuid
             chbMstCounterParty.setUuid(UUID.randomUUID().toString());
         

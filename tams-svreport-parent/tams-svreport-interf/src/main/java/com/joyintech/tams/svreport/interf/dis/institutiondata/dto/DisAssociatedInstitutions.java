@@ -1,17 +1,56 @@
 package com.joyintech.tams.svreport.interf.dis.institutiondata.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
 public class DisAssociatedInstitutions extends BaseEntity{	
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 数据状态名称
+	 */
+	private String statusName;
+	/**
+	 * 数据状态
+	 */
+	private String status;
+
+	/**
+	 * 中债数据状态
+	 * 原status框架上面会做权限控制，所以这里换了name
+	 */
+	private String svrStatus;
+
+	private String svrStatusName;
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	@Override
+	public String getStatus() {
+		return status;
+	}
+
+	@Override
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	/**
      * ID
      */
+	@PrimaryKey(PrimaryKey.Field.PK_1)
     private String relorgId;   
     /**
      * 创建人
@@ -34,7 +73,81 @@ public class DisAssociatedInstitutions extends BaseEntity{
      */
     private Date updateTime;
 
-	
+	/**
+	 * 关联机构名称
+	 */
+	private String organName;
+	/**
+	 * 数据来源
+	 */
+	private String svrDataSources;
+	/**
+	 * 数据来源名称
+	 */
+	private String svrDataSourcesName;
+
+	public String getSvrDataSourcesName() {
+		return svrDataSourcesName;
+	}
+
+	public void setSvrDataSourcesName(String svrDataSourcesName) {
+		this.svrDataSourcesName = svrDataSourcesName;
+	}
+
+	/**
+	 * 导出类型
+	 */
+	private String type;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
+	 * uuid主键
+	 */
+	private String datauuid;
+
+	public String getDatauuid() {
+		return datauuid;
+	}
+
+	public void setDatauuid(String datauuid) {
+		this.datauuid = datauuid;
+	}
+	/**
+	 * 选择项
+	 */
+	private List<DisAssociatedInstitutions> selectedItem;
+
+	public List<DisAssociatedInstitutions> getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(List<DisAssociatedInstitutions> selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	public String getOrganName() {
+		return organName;
+	}
+
+	public void setOrganName(String organName) {
+		this.organName = organName;
+	}
+
+	public String getSvrDataSources() {
+		return svrDataSources;
+	}
+
+	public void setSvrDataSources(String svrDataSources) {
+		this.svrDataSources = svrDataSources;
+	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -81,5 +194,21 @@ public class DisAssociatedInstitutions extends BaseEntity{
 
 	public void setRelorgId(String relorgId) {
 		this.relorgId = relorgId;
+	}
+
+	public String getSvrStatus() {
+		return svrStatus;
+	}
+
+	public void setSvrStatus(String svrStatus) {
+		this.svrStatus = svrStatus;
+	}
+
+	public String getSvrStatusName() {
+		return svrStatusName;
+	}
+
+	public void setSvrStatusName(String svrStatusName) {
+		this.svrStatusName = svrStatusName;
 	}
 }

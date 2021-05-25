@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
 /**
  * 描述:CHB_INVEST_TRADE表的实体类
@@ -15,6 +16,7 @@ public class ChbInvestTrade extends BaseEntity implements Cloneable{
     /**
      * 交易UUID
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String tradeSeqno;
 
     /**
@@ -216,6 +218,11 @@ public class ChbInvestTrade extends BaseEntity implements Cloneable{
      * 划款方式
      */
     private String payType;
+
+    /**
+     * 数据来源
+     */
+    private String svrDataSources;
     
    /**
      * 资产计量方式
@@ -860,7 +867,16 @@ public class ChbInvestTrade extends BaseEntity implements Cloneable{
 	public void setPayType(String payType) {
 		this.payType = payType;
 	}
-	/**
+
+    public String getSvrDataSources() {
+        return svrDataSources;
+    }
+
+    public void setSvrDataSources(String svrDataSources) {
+        this.svrDataSources = svrDataSources;
+    }
+
+    /**
      * 取得 资产计量方式
      * @return 资产计量方式
      */

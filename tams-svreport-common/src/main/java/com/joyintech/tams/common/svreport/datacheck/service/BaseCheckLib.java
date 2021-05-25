@@ -112,25 +112,20 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 //        rule.setObjvalue("6,2");
 //        System.out.println("isNumber方法结果[false]--实际["+map.get("AMOUNT")+"->"+rule.getObjvalue()+"=="+isNumber(map,rule)+"]");
 //        
-//        Map<String, String> map = new HashMap<String, String>();
-//        map.put("TESTID", "1");
-//        map.put("TESTNAME", "test00000990");
-//        map.put("AMOUNT", "12");
-//        map.put("VDATE", "2017-02-28");
-//        map.put("MDATE", "20190731");
-//        map.put("DEAL_TYPE", "01");
-//        map.put("OPEN_PLAN", "100");
-//        map.put("OPERATE_MODE", "0");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("END_RATE", "aaa");
 //
-//        CheckElement rule = new CheckElement();
-//        rule.setCheckmethod("isValidDate");
-//        rule.setNullable("Y");
-//        //rule.setCompareto(">");
-//        rule.setObjvalue("YYYY-MM-dd");
-//        rule.setSrcproperty("VDATE");
+        CheckElement rule = new CheckElement();
+        rule.setCheckmethod("isNumber2");
+        rule.setNullable("Y");
+        //rule.setCompareto(">");
+        rule.setObjvalue("8,5");
+        rule.setSrcproperty("END_RATE");
 //        
 //        System.out.println("结果:"+isValidDate(map,rule));
-        
+
+          System.out.println(isNumber2(map,rule));
+
     }
 
     /**
@@ -203,10 +198,12 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean compareValue(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
         String objValue = rule.getObjvalue();
+        objValue = stripTrailingZeros(objValue);
         String compareTo = rule.getCompareto();
         // add by zhangliang 20201023 判断符号如果是!=的场合 start
         // 此处判断是为了处理condition里比较值是空的场合，对于！=也是成立的
@@ -253,6 +250,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean compareProperty(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
@@ -266,6 +264,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue) )
             return false;        
         String objValue = data.get(rule.getObjvalue());
+        objValue = stripTrailingZeros(objValue);
         if ( objValue==null ) objValue="";
 
         switch (compareTo) {
@@ -304,6 +303,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean compareValueAsNumber(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
@@ -318,6 +318,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue) )
             return false;        
         String objValue = rule.getObjvalue();
+        objValue = stripTrailingZeros(objValue);
 
         if (  !isNumeric(srcValue)  || !isNumeric(objValue) ) {
             return false;
@@ -362,6 +363,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean comparePropertyAsNumber(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
@@ -376,6 +378,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue) )
             return false;        
         String objValue = data.get(rule.getObjvalue());
+        objValue = stripTrailingZeros(objValue);
         if ( objValue==null ) objValue="";
 
         if (  !isNumeric(srcValue)  || !isNumeric(objValue) ) {
@@ -503,6 +506,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean isNumber(Map<String, String> data, CheckElement rule) {
 
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )
@@ -526,6 +530,23 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             return isNumeric(srcValue);
         }
     }
+
+    //add by lingxq on 2021-05-07 for mysql小数点后自动按照定义的长度补充0，先去0再校验------>>>>>>
+    private static String stripTrailingZeros(String srcValue) {
+        if(!StringUtils.isBlank(srcValue)) {
+            srcValue = srcValue.trim();
+        }
+        if(isNumeric(srcValue)) {
+            BigDecimal value = new BigDecimal(srcValue);
+            BigDecimal noZeros = value.stripTrailingZeros();
+            srcValue = noZeros.toPlainString();
+        }else if(null !=srcValue && srcValue.startsWith("0E-")){
+            double value = new BigDecimal(srcValue).doubleValue();
+            srcValue = Double.toString(value);
+        }
+        return srcValue;
+    }
+    //add by lingxq on 2021-05-07 for mysql小数点后自动按照定义的长度补充0，先去0再校验------<<<<<<<
 
     /**
      * 根据指定的规则，判断数据指定的属性的值是否是否是特殊格式的字符串，格式使用正则表达式规则 
@@ -790,6 +811,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     public static boolean isNumber2(Map<String, String> data, CheckElement rule) {
 
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )

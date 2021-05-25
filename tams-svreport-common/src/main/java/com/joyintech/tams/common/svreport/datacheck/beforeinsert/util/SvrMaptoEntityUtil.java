@@ -205,7 +205,8 @@ public class SvrMaptoEntityUtil {
 					if(field.get(clazz)!=null){
 						map.put(str, field.get(clazz).toString());
 					}else {
-						map.put(str, "");
+//						map.put(str, "");
+						map.put(str, null);
 					}
 					
 				}

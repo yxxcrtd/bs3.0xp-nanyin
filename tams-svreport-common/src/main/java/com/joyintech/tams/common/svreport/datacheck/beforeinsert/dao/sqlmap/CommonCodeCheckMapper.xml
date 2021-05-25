@@ -213,4 +213,35 @@
     <delete id="deleteAssetInfoErrorDataByAssetCode">
         delete from CHB_ASSET_INFO_ERRODATA where ASSET_CODE = #{assetCode}
     </delete>
+
+    <delete id="deleteRepCashYieldErrordataByObj" parameterType="com.joyintech.tams.common.base.entity.RepCashYieldErrordataWithBLOBs">
+        delete from REP_CASH_YIELD_ERRORDATA
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+            <if test="cashType2 != null and cashType2 != ''">
+                and CASH_TYPE_2 = #{cashType2,jdbcType=VARCHAR}
+            </if>
+            <if test="cashType2 == null or cashType2 == ''">
+                and CASH_TYPE_2 is null
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and START_DATE = #{startDate,jdbcType=VARCHAR}
+            </if>
+            <if test="startDate == null or startDate == ''">
+                and START_DATE is null
+            </if>
+
+    </delete>
+
+    <delete id="deleteChbPrdBaseinfoErrordataByProdId">
+        delete from CHB_PRD_BASEINFO_ERRORDATA where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteChbMstCounterPartyErrordataByCounterId">
+        delete from CHB_MST_COUNTER_PARTY_ERRORDATA where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteChbInvestTradeErrordataByTradeCode">
+        delete from CHB_INVEST_TRADE_ERRORDATA where TRADE_CODE = #{tradeCode,jdbcType=VARCHAR}
+    </delete>
+
 </mapper>

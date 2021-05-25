@@ -451,9 +451,9 @@
       1 END_DAYS_ONE,/*剩余期限=1*/
       /*剩余期限=产品剩余期限,封闭式取产品到期日-统计日期，开放式：每日开放1，定期开放=下一开放开始日-统计日期*/
     (case (case proddeclare.REP_OPERATE_MODE when '03' then '02' when '04' then '02' else '01' end)
-            when '01' then prod.mdate - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d')
+            when '01' then TIMESTAMPDIFF(DAY, STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'), prod.mdate)
             else (case openrule.OPEN_MODE when '02' then 1
-            else ifnull(OPENPLAN.OPEN_DATE_STR,prod.mdate) - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d') end) end) END_DAYS_PROD,
+            else TIMESTAMPDIFF(DAY,STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'),ifnull(OPENPLAN.OPEN_DATE_STR,prod.mdate)) end) end) END_DAYS_PROD,
       0 END_DAYS_NULL,/*剩余期限=0*/
       balance.BAL_FLAG BAL_FLAG /*余额方向*/
       FROM BOK_BALANCE BALANCE/*科目余额表*/
@@ -465,7 +465,7 @@
       ON proddeclare.REP_FINPROD_ID = PROD.Finprod_Id
       LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
       ON BALANCE.BOOKSET_ID=PRODADD.PORTFOLIO_ID
-	  and prod.finprod_id = PRODADD.Finprod_Id---过滤分档子产品
+	  and prod.finprod_id = PRODADD.Finprod_Id /**过滤分档子产品**/
       LEFT JOIN FIN_CASH_INFO cashinfo  /* 现金流信息表*/
       ON cashinfo.FINPROD_ID = prod.FINPROD_ID
       and cashinfo.cash_type_2 ='C01'
@@ -480,14 +480,22 @@
       OPENSCH.FINPROD_ID FINPROD_ID
       from (
       /*下一开放起始日取值逻辑：OPEN_START>报表结束日期，按照OPEN_START升序排序并且去重，取第一个日期，若取不到，则取产品到期日*/
-      SELECT RANK() OVER(PARTITION BY OPLAN.FINPROD_ID ORDER BY OPLAN.FINPROD_ID,OPLAN.OPEN_DATE_STR ASC) RANKNUM,
-      OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
-      oplan.FINPROD_ID FINPROD_ID
-      FROM FIN_OPEN_PLAN OPLAN
-      WHERE OPLAN.BRANCH = 0
-      AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
+        SELECT
+          OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
+          oplan.FINPROD_ID FINPROD_ID,
+        IF
+          ( @PROD_ID = oplan.PROD_ID, @rank := @rank + 1, @rank := 1 ) AS RANKNUM,
+          @FINPROD_ID := oplan.FINPROD_ID
+        FROM
+            FIN_OPEN_PLAN OPLAN,
+         ( SELECT @FINPROD_ID := NULL, @rank := 0 ) a
+        WHERE OPLAN.BRANCH = 0
+            AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
+        ORDER BY
+          oplan.FINPROD_ID,
+          OPLAN.OPEN_DATE_STR
       ) OPENSCH
-      where 1 = 1 limit 1
+      where 1 = 1 and RANKNUM = 1
       ) OPENPLAN/*开放计划*/
       ON OPENPLAN.FINPROD_ID = PROD.FINPROD_ID
       WHERE 1 =1
@@ -497,7 +505,7 @@
       AND PROD.FINPROD_TYPE2 = 'F16'
       and BOOKSET.ACCT_SUBJECT_TYPE = 'F18'/*取账套表的主体核算类型为F18投资组合*/
       and prodadd.PROFIT_FLAG = '03'/*只取非保本理财产品 */
-	  and prod.p_finprod_id is null---过滤分档子产品
+	  and prod.p_finprod_id is null /*过滤分档子产品*/
       /*科目取初始配置的科目*/
       <if test='subjectNoList!=null and subjectNoList.size()>0'>
           <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
@@ -536,9 +544,9 @@
       1 END_DAYS_ONE,/*剩余期限=1*/
       /*剩余期限=产品剩余期限,封闭式取产品到期日-统计日期，开放式：每日开放1，定期开放=下一开放开始日-统计日期*/
     (case (case proddeclare.REP_OPERATE_MODE when '03' then '02' when '04' then '02' else '01' end)
-    when '01' then prod.mdate - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d')
+    when '01' then TIMESTAMPDIFF(DAY,STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'), prod.mdate)
     else (case openrule.OPEN_MODE when '02' then 1
-    else ifnull(OPENPLAN.OPEN_DATE_STR,prod.mdate) - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d') end) end) END_DAYS_PROD,
+    else TIMESTAMPDIFF(DAY, STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'), ifnull(OPENPLAN.OPEN_DATE_STR,prod.mdate)) end) end) END_DAYS_PROD,
       0 END_DAYS_NULL,/*剩余期限=0*/
       balance.BAL_FLAG BAL_FLAG /*余额方向*/
       FROM BOK_BALANCE BALANCE/*科目余额表*/
@@ -550,7 +558,7 @@
       ON proddeclare.REP_FINPROD_ID = PROD.Finprod_Id
       LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
       ON BALANCE.BOOKSET_ID=PRODADD.FINPROD_ID
-	  and prod.finprod_id = PRODADD.Finprod_Id---过滤分档子产品
+	  and prod.finprod_id = PRODADD.Finprod_Id /*过滤分档子产品*/
       LEFT JOIN FIN_CASH_INFO cashinfo  /* 现金流信息表*/
       ON cashinfo.FINPROD_ID = prod.FINPROD_ID
       and cashinfo.cash_type_2 ='C01'
@@ -565,14 +573,22 @@
       OPENSCH.FINPROD_ID FINPROD_ID
       from (
       /*下一开放起始日取值逻辑：OPEN_START>报表结束日期，按照OPEN_START升序排序并且去重，取第一个日期，若取不到，则取产品到期日*/
-      SELECT RANK() OVER(PARTITION BY OPLAN.FINPROD_ID ORDER BY OPLAN.FINPROD_ID,OPLAN.OPEN_DATE_STR ASC) RANKNUM,
-      OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
-      oplan.FINPROD_ID FINPROD_ID
-      FROM FIN_OPEN_PLAN OPLAN
+      SELECT
+        OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
+        oplan.FINPROD_ID FINPROD_ID,
+      IF
+        ( @PROD_ID = oplan.PROD_ID, @rank := @rank + 1, @rank := 1 ) AS RANKNUM,
+        @FINPROD_ID := oplan.FINPROD_ID
+      FROM
+        FIN_OPEN_PLAN OPLAN,
+        ( SELECT @FINPROD_ID := NULL, @rank := 0 ) a
       WHERE OPLAN.BRANCH = 0
-      AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
+            AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
+      ORDER BY
+        oplan.FINPROD_ID,
+        OPLAN.OPEN_DATE_STR
       ) OPENSCH
-      where 1 = 1 limit 1
+      where 1 = 1 and RANKNUM = 1
       ) OPENPLAN/*开放计划*/
       ON OPENPLAN.FINPROD_ID = PROD.FINPROD_ID
       WHERE 1 =1
@@ -582,7 +598,7 @@
       AND PROD.FINPROD_TYPE2 = 'F16'
       AND BOOKSET.ACCT_SUBJECT_TYPE = 'F16'/*取账套表的主体核算类型为F16净值型产品货币性产品*/
       and prodadd.PROFIT_FLAG = '03'/*只取非保本理财产品 */
-	  and prod.p_finprod_id is null---过滤分档子产品
+	  and prod.p_finprod_id is null/*过滤分档子产品*/
       /*科目取初始配置的科目*/
       <if test='subjectNoList!=null and subjectNoList.size()>0'>
           <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
@@ -758,9 +774,9 @@
       /*剩余期限=产品剩余期限,01封闭式取产品到期日-统计日期，02开放式：每日开放1，定期开放=下一开放开始日-统计日期*/
       /*判断每日开放：去开放计划表中找开房计划如果没有找到则为每日开放*/
       (case (case prodinfo.OPERATE_MODE when '01' then '01' when '02' then '01' else '02' end)
-      when '01' then prodinfo.mdate - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d')
+      when '01' then TIMESTAMPDIFF(DAY,STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'),prodinfo.mdate)
       else (case ifnull(oplan.prod_id,'NOPLAN') when 'NOPLAN' then 1
-      else ifnull(OPENPLAN.OPEN_START,prodinfo.mdate) - STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d') end) end) END_DAYS_PROD,
+      else TIMESTAMPDIFF(DAY,STR_TO_DATE(#{reportEndDate,jdbcType=VARCHAR},'%Y-%m-%d'),ifnull(OPENPLAN.OPEN_START,prodinfo.mdate)) end) end) END_DAYS_PROD,
       0 END_DAYS_NULL,/*剩余期限=0*/
       balance.BAL_FLAG BAL_FLAG /*余额方向*/
       FROM BOK_BALANCE BALANCE/*科目余额表*/
@@ -779,7 +795,7 @@
       WHERE 1 =1
       AND DATE_FORMAT(OPLAN.OPEN_START,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
       ) OPENSCH
-      where 1 = 1 limit 1
+      where OPENSCH.ranknum = 1
       ) OPENPLAN/*开放计划*/
       ON OPENPLAN.PROD_ID = PRODINFO.PROD_ID
       left join (
@@ -788,7 +804,7 @@
 	      from chb_prd_opensch 
       )oplan
       ON oplan.PROD_ID = PRODINFO.PROD_ID
-      and 1 = 1 limit 1
+      and ranknum = 1
       WHERE 1 =1
       /*科目余额.余额日期=报表结束日期*/
       and DATE_FORMAT(balance.BALANCE_DATE,'%Y-%m-%d') = #{reportEndDate,jdbcType=VARCHAR}
@@ -888,7 +904,7 @@
         and VAL.CDATE=#{bookdate,jdbcType=DATE}
         and fd.PROFIT_FLAG = '03'/*只取非保本理财产品*/
         and val.HODING_TYPE = '03' /*只取实际*/
-        and VAL.CHL_FINPROD_ID is not null ---只取通道id不为空的数据
+        and VAL.CHL_FINPROD_ID is not null /*只取通道id不为空的数据*/
         <if test="prodids !=null and prodids.size()>0">
 	        <foreach collection="prodids" item="prodid" open="and VAL.PORTFOLIO_ID in (" separator=","
 	            close=")">

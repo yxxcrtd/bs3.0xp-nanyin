@@ -16,6 +16,7 @@ import com.joyintech.tams.common.base.entity.RepAssetBond;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFinBondRepInfoValidator;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *  资产基本信息_贵金属商品类信息
@@ -54,9 +55,85 @@ public class SvrBussRepNobleMetalInfoDto extends RepAssetBond{
 
 
     /**
+     * 起息日
+     */
+    private Date vdate;
+
+    /**
+     * 到期日
+     */
+    private Date mdate;
+
+    /**
      * 备注
      */
     private String  remark;
+
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
+
+    /**
+     * 资产名称
+     */
+    private String assetName;
+
+    /**
+     * 是否为债转股
+     */
+    private String deptEquity;
+
+    public String getDeptEquity() {
+        return deptEquity;
+    }
+
+    public void setDeptEquity(String deptEquity) {
+        this.deptEquity = deptEquity;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
 
     public String getCountryArea() {
         return countryArea;
@@ -96,5 +173,21 @@ public class SvrBussRepNobleMetalInfoDto extends RepAssetBond{
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Date getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
     }
 }

@@ -10,14 +10,51 @@
         from REP_INDEX_PRIMARY
         where  1=1
            <if test="searchKey != null and !''.equals(searchKey)">
-                AND INDEX_NAME like concat(concat('%',#{searchKey}),'%')
+                AND INDEX_NAME like concat_ws(concat_ws('%',#{searchKey}),'%')
             </if> 
              <if test="indexName != null and !''.equals(indexName)">
                 AND INDEX_NAME = #{indexName}
             </if>
             ORDER BY CREATE_TIME DESC
    </select>
-	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
+    <select id="selectByIndexId" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
+     select
+       ID as id,
+       INDEX_NAME as indexName
+        from REP_INDEX_PRIMARY
+        where id = #{id}
+   </select>
+    <select id="findbyIndexName" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
+     select
+       ID as id,
+       INDEX_NAME as indexName
+        from REP_INDEX_PRIMARY
+        where INDEX_NAME = #{name}
+   </select>
+    <select id="selectById" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
+     select
+       ID as id,
+       INDEX_NAME as indexName,
+       INDEX_DESCRIBE as indexDescribe,
+       PROD_ID AS prodId
+        from REP_INDEX_PRIMARY
+        where ID =#{id}
+   </select>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
+      insert  into  REP_INDEX_PRIMARY(ID,INDEX_NAME,INDEX_DESCRIBE,PROD_ID,
+             CREATE_USER,CREATE_TIME,
+             UPDATE_USER,UPDATE_TIME,CREATE_DEPT)
+      values(#{id,jdbcType=VARCHAR},
+            #{indexName,jdbcType=VARCHAR},
+            #{indexDescribe,jdbcType=VARCHAR},
+            #{prodId,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP},
+            #{createDept,jdbcType=VARCHAR})
+   </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
      update REP_INDEX_PRIMARY 
        <set >
             <if test="indexName != null" >
@@ -35,4 +72,20 @@
         </set>
         where ID=#{id,jdbcType=VARCHAR}
   </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_INDEX_PRIMARY
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteRangeInfo" parameterType="java.lang.String" >
+        delete from REP_JOB_RANGE
+        where JOB_ID = #{jobId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByPriId">
+    	delete from REP_INDEX_SUB
+        where PRI_ID=#{id,jdbcType=VARCHAR}
+    </delete>
+    <select id="getId" resultType="java.lang.String">
+    	select ris.id from REP_INDEX_SUB ris
+    	where  ris.PRI_ID=#{id,jdbcType=VARCHAR}
+    </select>
 </mapper>

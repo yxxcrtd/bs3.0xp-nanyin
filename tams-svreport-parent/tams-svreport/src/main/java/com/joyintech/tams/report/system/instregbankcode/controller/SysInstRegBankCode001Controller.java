@@ -108,12 +108,12 @@ public class SysInstRegBankCode001Controller extends BaseController {
     public ResponseEntity<byte[]> export() {
         List<SysInstRegBankCode001Dto> dtoList = this.sysInstRegBankCodeMService.queryExportList(RequestUtil.getPageParam());
         File outFile = sysInstRegBankCode001Service.makeFile(
-            "/com/joyintech/tams/report/system/instregbankcode/conf/export_conf.xml", dtoList);
+                "/com/joyintech/tams/report/system/instregbankcode/conf/export_conf.xml", dtoList);
         return ExportUtil.export(
-            this.getMessage("SYSTEM_001_999") + GlobalConstant.OPEN_PARENTHESIS
-                                 + DateUtil.format(DateUtil.platDateFromCache()) + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
-                                 + FileNameUtil.getFileExtName(outFile),
-            outFile, true);
+                this.getMessage("SYSTEM_001_999") + GlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 
     /**

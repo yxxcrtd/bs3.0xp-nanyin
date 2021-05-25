@@ -71,13 +71,13 @@ public class BokSubjectInterfService extends FileImpService {
 			try {
 				if (StringUtil.isNotEmpty(map.get("CREATE_TIME"))) {
 					dto.setCreateTime(DateUtil.parseDate(map.get("CREATE_TIME"),
-							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
+							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS,DateUtil.DEFAULT_DATETIME_FORMAT}));
 				} else {
 					dto.setCreateTime(new Date());
 				}
 				if (StringUtil.isNotEmpty(map.get("UPDATE_TIME"))) {
 					dto.setUpdateTime(DateUtil.parseDate(map.get("UPDATE_TIME"),
-							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
+							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS,DateUtil.DEFAULT_DATETIME_FORMAT }));
 				} else {
 					dto.setUpdateTime(new Date());
 				}
@@ -117,7 +117,7 @@ public class BokSubjectInterfService extends FileImpService {
         //检查数据类型
         String dataType = InterfDefine.科目数据.getCode();
         //重复性检查的keys
-        String[] checkEuplicatedKeys = {"PROD_ID","SUBJECT_NO"};
+        String[] checkEuplicatedKeys = {"PROD_ID","SUBJECT_ID"};
         String filename = interfFile == null ? null : interfFile.getFilename();
         List<Map<String, String>>  listA = super.checkData(dataList, filename, inerfType, dataType,null, checkEuplicatedKeys);
 //        dataList.addAll(listA);// listA为错误数据，在checkData时被remove，需要重新放回dataList

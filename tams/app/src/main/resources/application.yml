@@ -15,17 +15,17 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: allinone
+    active:    allinone #CESHI
   application:
     name: tams-server
     dfstype: 2
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -34,7 +34,7 @@ spring:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    #connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
   activemq:
     active: false
     systemId: tams
@@ -55,7 +55,7 @@ spring:
 base:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -64,11 +64,11 @@ base:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    #connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 interf:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
     maxTotal: 10
     maxIdle: 10
@@ -78,7 +78,7 @@ interf:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    #connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
     testWhileIdle: true
 stresstest:
   datasource:
@@ -92,13 +92,13 @@ stresstest:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    #connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
     testWhileIdle: true
 #wind数据库配置
 wind:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
     maxTotal: 50
     maxIdle: 50
@@ -108,7 +108,7 @@ wind:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
+    #connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
 tx-lcn:
   springcloud:
     loadbalance:
@@ -146,6 +146,7 @@ application:
     msg-end-time: 2200
     reportCbFeedBackHandleCountOneTime: 10000
     isExceptionWhenSendTimeout: 01
+    dangbanFlag: '01'
   cache:
     file: classpath:ehcache_app.xml
   remindPage: invest/remindMain  
@@ -195,6 +196,7 @@ application:
 #      disclosureService: http://127.0.0.1:8114
 #      valuationService: http://127.0.0.1:8114
 #      chbService: http://127.0.0.1:8114
+#      chbreportService: http://127.0.0.1:8114
 #      chb3Service: http://127.0.0.1:8114
 #      svrcomService: http://127.0.0.1:8114
 #      pbcService: http://127.0.0.1:8114
@@ -227,6 +229,7 @@ application:
       disclosureService: http://127.0.0.1:${server.port}/tams
       valuationService: http://127.0.0.1:${server.port}/tams
       chbService: http://127.0.0.1:${server.port}/tams
+      chbreportService: http://127.0.0.1:${server.port}/tams
       chb3Service: http://127.0.0.1:${server.port}/tams
       svrcomService: http://127.0.0.1:${server.port}/tams
       pbcService: http://127.0.0.1:${server.port}/tams
@@ -259,6 +262,7 @@ application:
 #      disclosureService: http://TamsMicroservice
 #      valuationService: http://TamsMicroservice
 #      chbService: http://TamsMicroservice
+#      chbreportService: http://TamsMicroservice
 #      chb3Service: http://TamsMicroservice
 #      svrcomService: http://TamsMicroservice
 #      pbcService: http://TamsMicroservice
@@ -288,16 +292,16 @@ spring:
 #  redislock:
 #    redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
+    #reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0810
-  sqldirpassword: zgtams0810_123
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+  sqldiruserName: root
+  sqldirpassword: joyin123
 shiro:
-  ssoEnable: true
+  ssoEnable: false
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
     /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
     /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
@@ -307,26 +311,26 @@ shiro:
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 log:
-  path: /home/tams/logs/tams
+  path: D:/workspace/HuaXia/logs/tams
   level: debug
 eureka:
   client:
@@ -343,7 +347,7 @@ tx-lcn:
     managerAddress: 192.168.90.197:8070
 ---
 spring:
-  profiles: dtx
+  profiles: CESHI
   redis:
     database: 1
     password: joyin!234
@@ -351,41 +355,41 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  username: zgtams0810
-  password: zgtams0810_123
+  url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+  username: root
+  password: joyin123
 base:
   datasource:
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG
 eureka:
   client:
-    enabled: true
+    enabled: false
     serviceUrl:
       defaultZone: http://192.168.90.219:9101/eureka/
   instance:

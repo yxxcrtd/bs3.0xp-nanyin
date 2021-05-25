@@ -1,14 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dao.ReportProdFileManage001Mapper_mysql">
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dto.ReportProdFileManage001Dto" >
+		<id column="PRODUUID" property="produuid" jdbcType="VARCHAR" />
+		<result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+		<result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+		<result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+		<result column="PROD_SERIES" property="prodSeries" jdbcType="VARCHAR" />
+		<result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+		<result column="DEAL_MODE" property="dealMode" jdbcType="VARCHAR" />
+		<result column="ISSUE_TYPE" property="issueType" jdbcType="VARCHAR" />
+		<result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+		<result column="PROFIT_FLAG" property="profitFlag" jdbcType="VARCHAR" />
+		<result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+		<result column="CCY" property="ccy" jdbcType="VARCHAR" />
+		<result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+		<result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+		<result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+		<result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+		<result column="BEFOREEND_FLAG" property="beforeendFlag" jdbcType="VARCHAR" />
+		<result column="RAISE_VDATE" property="raiseVdate" jdbcType="TIMESTAMP" />
+		<result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="TIMESTAMP" />
+		<result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+		<result column="MDATE" property="mdate" jdbcType="TIMESTAMP" />
+		<result column="TERM" property="term" jdbcType="DECIMAL" />
+		<result column="INVESTCLOSE_FLAG" property="investcloseFlag" jdbcType="VARCHAR" />
+		<result column="INVESTCLOSE_STRDATE" property="investcloseStrdate" jdbcType="TIMESTAMP" />
+		<result column="INVESTCLOSE_ENDDATE" property="investcloseEnddate" jdbcType="TIMESTAMP" />
+		<result column="LIQUIDATION_DATE" property="liquidationDate" jdbcType="TIMESTAMP" />
+		<result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+		<result column="INVESTMENT_CYCLE" property="investmentCycle" jdbcType="VARCHAR" />
+		<result column="AUTOCONTINUE_FLAG" property="autocontinueFlag" jdbcType="VARCHAR" />
+		<result column="YIELD" property="yield" jdbcType="DECIMAL" />
+		<result column="BASIC" property="basic" jdbcType="VARCHAR" />
+		<result column="INVEST_MANAGER" property="investManager" jdbcType="VARCHAR" />
+		<result column="TRUSTEE" property="trustee" jdbcType="VARCHAR" />
+		<result column="INVESTMENT_SCOPE" property="investmentScope" jdbcType="VARCHAR" />
+		<result column="PUR_OPEN_DATE" property="purOpenDate" jdbcType="VARCHAR" />
+		<result column="RED_OPEN_DATE" property="redOpenDate" jdbcType="VARCHAR" />
+		<result column="SUBS_RATE" property="subsRate" jdbcType="VARCHAR" />
+		<result column="PUR_RATE" property="purRate" jdbcType="VARCHAR" />
+		<result column="RED_RATE" property="redRate" jdbcType="VARCHAR" />
+		<result column="REP_YIELD" property="repYield" jdbcType="VARCHAR" />
+		<result column="FLOAT_FEE" property="floatFee" jdbcType="VARCHAR" />
+		<result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+		<result column="SALE_MAX" property="saleMax" jdbcType="DECIMAL" />
+		<result column="SALE_MIN" property="saleMin" jdbcType="DECIMAL" />
+		<result column="STARTAMT" property="startamt" jdbcType="DECIMAL" />
+		<result column="LOWESTAMT" property="lowestamt" jdbcType="DECIMAL" />
+		<result column="SUBSAMT_MAX" property="subsamtMax" jdbcType="DECIMAL" />
+		<result column="CUST_SUBSAMT_MAX" property="custSubsamtMax" jdbcType="DECIMAL" />
+		<result column="MIN_RED_QTY" property="minRedQty" jdbcType="DECIMAL" />
+		<result column="MIN_RETAIN_QTY" property="minRetainQty" jdbcType="DECIMAL" />
+		<result column="HUGE_RED_RATIO" property="hugeRedRatio" jdbcType="DECIMAL" />
+		<result column="RED_PRINCIPLE" property="redPrinciple" jdbcType="VARCHAR" />
+		<result column="PUR_CDATE" property="purCdate" jdbcType="VARCHAR" />
+		<result column="RED_CDATE" property="redCdate" jdbcType="VARCHAR" />
+		<result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+		<result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+		<result column="PUR_HOLIDAY_FLAG" property="purHolidayFlag" jdbcType="VARCHAR" />
+		<result column="RED_HOLIDAY_FLAG" property="redHolidayFlag" jdbcType="VARCHAR" />
+		<!-- <result column="INVEST_TYPES" property="investTypes" jdbcType="VARCHAR" />-->
+		<!-- <result column="INVEST_PROPORS" property="investPropors" jdbcType="VARCHAR" />  -->
+		<result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+		PRODUUID, PROD_ID, PROD_NAME, REG_CODE, PROD_SERIES, PROFIT_TYPE, DEAL_MODE, ISSUE_TYPE,
+		OPERATE_MODE, PROFIT_FLAG, IVSTORIENTATION, CCY, RAISE_TYPE, RISK_LEVEL, RISK_TYPE,
+		PAY_TYPE, BEFOREEND_FLAG, RAISE_VDATE, RAISE_ENDDATE, VDATE, MDATE, TERM, INVESTCLOSE_FLAG,
+		INVESTCLOSE_STRDATE, INVESTCLOSE_ENDDATE, LIQUIDATION_DATE, TERMTYPE, INVESTMENT_CYCLE,
+		AUTOCONTINUE_FLAG, YIELD, BASIC, INVEST_MANAGER, TRUSTEE, INVESTMENT_SCOPE, PUR_OPEN_DATE,
+		RED_OPEN_DATE, SUBS_RATE, PUR_RATE, RED_RATE, REP_YIELD,
+		FLOAT_FEE, RAISE_AMT_PLAN, SALE_MAX, SALE_MIN, STARTAMT, LOWESTAMT, SUBSAMT_MAX,
+		CUST_SUBSAMT_MAX, MIN_RED_QTY, MIN_RETAIN_QTY, HUGE_RED_RATIO,
+		RED_PRINCIPLE, PUR_CDATE, RED_CDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE,
+		PUR_HOLIDAY_FLAG, RED_HOLIDAY_FLAG, DATA_STATUS, ORG_CODE, CREATE_USER,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+	</sql>
+	<select id="selectByPrimaryKeyPF" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+		<include refid="Base_Column_List" />
+		from REP_PROD_FILE_PRODINFO
+		where PRODUUID = #{produuid,jdbcType=VARCHAR}
+	</select>
 	<select id="getPrdInfoSelectPF" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select PROD_ID id,
 		    PROD_NAME text
 		from REP_PROD_FILE_PRODINFO
 		where DATA_STATUS='E'
 		<if test="search != null and search != ''">
-		    and (PROD_ID like concat('%', #{search, jdbcType=VARCHAR}, '%')
-		    or PROD_NAME like concat('%', #{search, jdbcType=VARCHAR}, '%'))
+		    and (PROD_ID like concat_ws('%', #{search, jdbcType=VARCHAR}, '%')
+		    or PROD_NAME like concat_ws('%', #{search, jdbcType=VARCHAR}, '%'))
 		</if>
 	</select>
 	<select id="getProdSeriesSelectPF" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -17,7 +105,7 @@
 		from REP_PROD_FILE_PRODINFO
 		where DATA_STATUS='E'
 		<if test="search != null and search != ''">
-		    and PROD_SERIES like concat('%', #{search, jdbcType=VARCHAR}, '%')
+		    and PROD_SERIES like concat_ws('%', #{search, jdbcType=VARCHAR}, '%')
 		</if>
 	</select>
 	<select id="searchPage" resultType="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dto.ReportProdFileManage001Dto">
@@ -120,4 +208,200 @@
             )
         </foreach>
     </insert>
+	<!-- 根据主键更新产品文件要素状态 -->
+	<update id="updateByKeyList">
+		update REP_PROD_FILE_PRODINFO
+		set DATA_STATUS = 'D'
+		where
+		<foreach collection="list" item="items" open="PRODUUID in (" separator="," close=")">
+			#{items.produuid}
+		</foreach>
+	</update>
+
+	<!-- 查询产品代码是否已存在 -->
+	<select id="checkProdInfoExistPF" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    	select count(1) count from REP_PROD_FILE_PRODINFO
+		where DATA_STATUS='E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
+
+	<!-- 查询费用信息 -->
+	<select id="queryFeeInfoList" resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="java.lang.String">
+		select  FEE_ID id,
+		FEE_NAME text
+		from MST_FEEINFO
+		<where>
+			<choose>
+				<when test="finprodType != null and finprodType.equals(yesChannel)">
+					and APPLY_TYPE in (#{relationChannel}, #{relationOther})
+					and CHARGE_TYPE = #{CHARGE_TYPE_01}
+				</when>
+				<otherwise>
+					APPLY_TYPE = #{relationProd}
+				</otherwise>
+			</choose>
+			<if test="search != null and search != ''">
+				and (FEE_ID like concat_ws(concat_ws('%', #{search}), '%') or FEE_NAME like concat_ws(concat_ws('%', #{search}), '%'))
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询费用信息列表 -->
+	<select id="queryFeeInfoPF" resultType="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dto.ReportProdFileManage001Dto">
+    	select
+			FEE_ID feeId,
+			feeRate * 100 feerate,
+			basicBill basicbill,
+			basis basis
+		from REP_PROD_FILE_FEEINFO
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
+
+	<!-- 查询投资比例区间信息列表 -->
+	<select id="queryInvestProporPF" resultType="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dto.ReportProdFileManage001Dto">
+    	select
+			CODE code,
+			T_LIMIT tLimit,
+            D_LIMIT dLimit
+		from REP_INVASSETKIND
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
+
+	<!-- 插入产品文件管理基本信息表 -->
+	<insert id="insertPF" parameterType="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dto.ReportProdFileManage001Dto" >
+		insert into REP_PROD_FILE_PRODINFO (PRODUUID, PROD_ID, PROD_NAME,
+		REG_CODE, PROD_SERIES, PROFIT_TYPE,
+		DEAL_MODE, ISSUE_TYPE, OPERATE_MODE,
+		PROFIT_FLAG, IVSTORIENTATION, CCY,
+		RAISE_TYPE, RISK_LEVEL, RISK_TYPE,
+		PAY_TYPE, BEFOREEND_FLAG, RAISE_VDATE,
+		RAISE_ENDDATE, VDATE, MDATE,
+		TERM, INVESTCLOSE_FLAG, INVESTCLOSE_STRDATE,
+		INVESTCLOSE_ENDDATE, LIQUIDATION_DATE,
+		TERMTYPE, INVESTMENT_CYCLE, AUTOCONTINUE_FLAG,
+		YIELD, BASIC, INVEST_MANAGER,
+		TRUSTEE, INVESTMENT_SCOPE, PUR_OPEN_DATE,
+		RED_OPEN_DATE, SUBS_RATE, PUR_RATE,
+		RED_RATE, REP_YIELD, FLOAT_FEE,
+		RAISE_AMT_PLAN, SALE_MAX, SALE_MIN,
+		STARTAMT, LOWESTAMT, SUBSAMT_MAX,
+		CUST_SUBSAMT_MAX,  MIN_RED_QTY,
+		MIN_RETAIN_QTY, HUGE_RED_RATIO, RED_PRINCIPLE,
+		PUR_CDATE, RED_CDATE, INVEST_PRIN_DATE,
+		INVEST_PROF_DATE, DATA_STATUS,
+		PUR_HOLIDAY_FLAG, RED_HOLIDAY_FLAG,
+		<!-- INVEST_TYPES, INVEST_PROPORS,  -->
+		ORG_CODE, CREATE_USER, CREATE_DEPT,
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME
+		)
+		values (#{produuid,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR},
+		#{regCode,jdbcType=VARCHAR}, #{prodSeries,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR},
+		#{dealMode,jdbcType=VARCHAR}, #{issueType,jdbcType=VARCHAR}, #{operateMode,jdbcType=VARCHAR},
+		#{profitFlag,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
+		#{raiseType,jdbcType=VARCHAR}, #{riskLevel,jdbcType=VARCHAR}, #{riskType,jdbcType=VARCHAR},
+		#{payType,jdbcType=VARCHAR}, #{beforeendFlag,jdbcType=VARCHAR}, #{raiseVdate,jdbcType=TIMESTAMP},
+		#{raiseEnddate,jdbcType=TIMESTAMP}, #{vdate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP},
+		#{term,jdbcType=DECIMAL}, #{investcloseFlag,jdbcType=VARCHAR}, #{investcloseStrdate,jdbcType=TIMESTAMP},
+		#{investcloseEnddate,jdbcType=TIMESTAMP}, #{liquidationDate,jdbcType=TIMESTAMP},
+		#{termtype,jdbcType=VARCHAR}, #{investmentCycle,jdbcType=VARCHAR}, #{autocontinueFlag,jdbcType=VARCHAR},
+		#{yield,jdbcType=DECIMAL}, #{basic,jdbcType=VARCHAR}, #{investManager,jdbcType=VARCHAR},
+		#{trustee,jdbcType=VARCHAR}, #{investmentScope,jdbcType=VARCHAR}, #{purOpenDate,jdbcType=VARCHAR},
+		#{redOpenDate,jdbcType=VARCHAR}, #{subsRate,jdbcType=VARCHAR}, #{purRate,jdbcType=VARCHAR},
+		#{redRate,jdbcType=VARCHAR}, #{repYield,jdbcType=VARCHAR}, #{floatFee,jdbcType=VARCHAR},
+		#{raiseAmtPlan,jdbcType=DECIMAL}, #{saleMax,jdbcType=DECIMAL}, #{saleMin,jdbcType=DECIMAL},
+		#{startamt,jdbcType=DECIMAL}, #{lowestamt,jdbcType=DECIMAL}, #{subsamtMax,jdbcType=DECIMAL},
+		#{custSubsamtMax,jdbcType=DECIMAL}, #{minRedQty,jdbcType=DECIMAL},
+		#{minRetainQty,jdbcType=DECIMAL}, #{hugeRedRatio,jdbcType=DECIMAL}, #{redPrinciple,jdbcType=VARCHAR},
+		#{purCdate,jdbcType=VARCHAR}, #{redCdate,jdbcType=VARCHAR}, #{investPrinDate,jdbcType=VARCHAR},
+		#{investProfDate,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR},
+		#{purHolidayFlag,jdbcType=VARCHAR}, #{redHolidayFlag,jdbcType=VARCHAR},
+		<!-- #{investTypes,jdbcType=VARCHAR}, #{investPropors,jdbcType=VARCHAR}, -->
+		#{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="updateByPrimaryKeyPF" parameterType="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dto.ReportProdFileManage001Dto" >
+		update REP_PROD_FILE_PRODINFO
+		set PROD_ID = #{prodId,jdbcType=VARCHAR},
+		PROD_NAME = #{prodName,jdbcType=VARCHAR},
+		REG_CODE = #{regCode,jdbcType=VARCHAR},
+		PROD_SERIES = #{prodSeries,jdbcType=VARCHAR},
+		PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+		DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+		ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+		OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+		PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+		IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+		CCY = #{ccy,jdbcType=VARCHAR},
+		RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+		RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+		RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+		PAY_TYPE = #{payType,jdbcType=VARCHAR},
+		BEFOREEND_FLAG = #{beforeendFlag,jdbcType=VARCHAR},
+		RAISE_VDATE = #{raiseVdate,jdbcType=TIMESTAMP},
+		RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+		VDATE = #{vdate,jdbcType=TIMESTAMP},
+		MDATE = #{mdate,jdbcType=TIMESTAMP},
+		TERM = #{term,jdbcType=DECIMAL},
+		INVESTCLOSE_FLAG = #{investcloseFlag,jdbcType=VARCHAR},
+		INVESTCLOSE_STRDATE = #{investcloseStrdate,jdbcType=TIMESTAMP},
+		INVESTCLOSE_ENDDATE = #{investcloseEnddate,jdbcType=TIMESTAMP},
+		LIQUIDATION_DATE = #{liquidationDate,jdbcType=TIMESTAMP},
+		TERMTYPE = #{termtype,jdbcType=VARCHAR},
+		INVESTMENT_CYCLE = #{investmentCycle,jdbcType=VARCHAR},
+		AUTOCONTINUE_FLAG = #{autocontinueFlag,jdbcType=VARCHAR},
+		YIELD = #{yield,jdbcType=DECIMAL},
+		BASIC = #{basic,jdbcType=VARCHAR},
+		INVEST_MANAGER = #{investManager,jdbcType=VARCHAR},
+		TRUSTEE = #{trustee,jdbcType=VARCHAR},
+		INVESTMENT_SCOPE = #{investmentScope,jdbcType=VARCHAR},
+		PUR_OPEN_DATE = #{purOpenDate,jdbcType=VARCHAR},
+		RED_OPEN_DATE = #{redOpenDate,jdbcType=VARCHAR},
+		SUBS_RATE = #{subsRate,jdbcType=VARCHAR},
+		PUR_RATE = #{purRate,jdbcType=VARCHAR},
+		RED_RATE = #{redRate,jdbcType=VARCHAR},
+		REP_YIELD = #{repYield,jdbcType=VARCHAR},
+		FLOAT_FEE = #{floatFee,jdbcType=VARCHAR},
+		RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+		SALE_MAX = #{saleMax,jdbcType=DECIMAL},
+		SALE_MIN = #{saleMin,jdbcType=DECIMAL},
+		STARTAMT = #{startamt,jdbcType=DECIMAL},
+		LOWESTAMT = #{lowestamt,jdbcType=DECIMAL},
+		SUBSAMT_MAX = #{subsamtMax,jdbcType=DECIMAL},
+		CUST_SUBSAMT_MAX = #{custSubsamtMax,jdbcType=DECIMAL},
+		MIN_RED_QTY = #{minRedQty,jdbcType=DECIMAL},
+		MIN_RETAIN_QTY = #{minRetainQty,jdbcType=DECIMAL},
+		HUGE_RED_RATIO = #{hugeRedRatio,jdbcType=DECIMAL},
+		RED_PRINCIPLE = #{redPrinciple,jdbcType=VARCHAR},
+		PUR_CDATE = #{purCdate,jdbcType=VARCHAR},
+		RED_CDATE = #{redCdate,jdbcType=VARCHAR},
+		INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+		INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+		PUR_HOLIDAY_FLAG = #{purHolidayFlag,jdbcType=VARCHAR},
+		RED_HOLIDAY_FLAG = #{redHolidayFlag,jdbcType=VARCHAR},
+		<!-- INVEST_TYPES = #{investTypes,jdbcType=VARCHAR},
+        INVEST_PROPORS = #{investPropors,jdbcType=VARCHAR},  -->
+		DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+		UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+		UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+		where PRODUUID = #{produuid,jdbcType=VARCHAR}
+	</update>
+	<!-- 批量删除产品文件管理费用信息表数据 -->
+	<delete id="deleteFeeInfoBatchPF" parameterType="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dto.ReportProdFileManage001Dto" >
+		delete from REP_PROD_FILE_FEEINFO
+		<where>
+			<foreach collection="subList" item="item" open="and (PROD_ID) in(" separator="," close=")">
+				(#{item.prodId})
+			</foreach>
+		</where>
+	</delete>
+	<!-- 批量删除投资资产种类表数据 -->
+	<delete id="deleteInvestKindBatchPF" parameterType="com.joyintech.tams.disclosure.information.manage.prodfilemanage.dto.ReportProdFileManage001Dto" >
+		delete from REP_INVASSETKIND
+		<where>
+			<foreach collection="subList" item="item" open="and (PROD_ID) in(" separator="," close=")">
+				(#{item.prodId})
+			</foreach>
+		</where>
+	</delete>
 </mapper>

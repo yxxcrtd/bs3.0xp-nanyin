@@ -6,9 +6,7 @@
 		subinfo.delaynum as delaynum,
 		subinfo.delayingnum as delayingnum,
 		subinfo.sendnum as sendnum,
-		<!-- 最早的行内截止日 -->
 		DATE_FORMAT(subinfo.mindate,'%Y-%m-%d') as mindate,
-		<!-- 最晚的报送截止日 -->
 		DATE_FORMAT(subinfo.maxdate,'%Y-%m-%d') as maxdate,
 		(subinfo.delaynum+subinfo.delayingnum+subinfo.sendnum) as totalnum,
 		subinfo.reporttype as reporttype
@@ -133,20 +131,213 @@
                 </foreach>
             </if>
 			) sendData
-		<!-- union all
-   		select
-		   	delayData.delaynum as delaynum,
-		    delayingData.mindate as mindate,
-		    delayingData.maxdate as maxdate,
-		    delayingData.delayingnum as delayingnum,
-		    sendData.sendnum as sendnum,
-		   	'3' as reporttype
-		   	FROM
-		   	(select count(ces1.SUBMIT_STATUS) as delaynum from CHB_EQUTOT_SUB  ces1 WHERE ces1.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and  ces1.SUBMIT_STATUS=#{NO_SUBMIT} <if test="orgCode!='' and orgCode != null ">and ces1.ORG_CODE= #{orgCode}</if> ) delayData ,
-			(select count(ces2.SUBMIT_STATUS) as delayingnum , min(ces2.SUBMIT_DEADLINE) as mindate, max(ces2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_EQUTOT_SUB  ces2 WHERE ces2.CHB_SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces2.SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces2.SUBMIT_STATUS=#{NO_SUBMIT} <if test="orgCode!='' and orgCode != null ">and ces2.ORG_CODE= #{orgCode}</if>) delayingData,
-			(select count(ces3.SUBMIT_STATUS) as sendnum from CHB_EQUTOT_SUB  ces3 WHERE ces3.SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces3.SUBMIT_STATUS=#{NO_SUBMIT}  <if test="orgCode!='' and orgCode != null ">and ces3.ORG_CODE= #{orgCode}</if>) sendData -->
 	)subinfo
 </select>
+	<select id="searchInfoArea" resultType="com.joyintech.tams.disclosure.home.dto.InfoAreaDto">
+		select
+		countNum,
+		countType
+		FROM(
+		SELECT
+		count(1) as countNum,
+		'chbEquHold' as countType
+		FROM
+		CHB_EQU_HOLD ceh
+		WHERE ceh.STATUS='A'
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (ceh.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ceh.CREATE_DEPT in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" index="index" open=" and (ceh.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ceh.ORG_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" index="index" open=" and (ceh.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ceh.DEPT_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		union all
+		SELECT
+		count(1) as countNum,
+		'chbEqudet' as countType
+		FROM
+		CHB_EQUDET ce
+		WHERE ce.STATUS='A'
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (ce.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ce.CREATE_DEPT in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" index="index" open=" and (ce.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ce.ORG_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" index="index" open=" and (ce.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ce.DEPT_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		union all
+		SELECT
+		count(1) as countNum,
+		'chbPrdresistCode' as countType
+		FROM
+		CHB_PRDRESIST_CODE cpc
+		WHERE (cpc.REG_CODE is NULL or cpc.REG_CODE = '')
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (cpc.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cpc.CREATE_DEPT in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" index="index" open=" and (cpc.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cpc.ORG_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" index="index" open=" and (cpc.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cpc.DEPT_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		union all
+		SELECT
+		count(1) as countNum,
+		'chbHoldInfo' as countType
+		FROM
+		CHB_INVESTHOLD_INFO cii
+		WHERE cii.STATUS='A'
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (cii.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cii.CREATE_DEPT in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" index="index" open=" and (cii.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cii.ORG_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" index="index" open=" and (cii.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR cii.DEPT_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		)
+	</select>
+	<select id="searcheBatchxportTemplates" resultType="com.joyintech.tams.disclosure.home.dto.InfoAreaDto">
+		select
+		countNum,
+		countType
+		FROM(
+		SELECT
+		count(1) as countNum,
+		'chbEquReg' as countType
+		FROM
+		CHB_EQU_SUB ces
+		WHERE ces.STATUS='03' and ces.SUBMIT_STATUS='01'
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (ces.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) TEMP OR ces.CREATE_DEPT in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" index="index" open=" and (ces.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ces.ORG_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" index="index" open=" and (ces.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ces.DEPT_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+
+		union all
+		SELECT
+		count(1) as countNum,
+		'chbHoldReg' as countType
+		FROM
+		CHB_INVESTHOLD_INFO_SUB ciis
+		WHERE ciis.STATUS='03' and ciis.SEND_STATUS='01'
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" index="index" open="and (ciis.CREATE_DEPT in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ciis.CREATE_DEPT in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" index="index" open=" and (ciis.ORG_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ciis.ORG_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" index="index" open=" and (ciis.DEPT_CODE in(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR ciis.DEPT_CODE in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		)
+	</select>
+	<select id="selectAllpath" resultType="com.joyintech.tams.common.base.entity.RepFtpPath">
+        select
+        	ID id
+        	,NAME name
+        from REP_FTP_PATH
+    </select>
 	<select id="queryYpl" resultType="com.joyintech.tams.disclosure.home.dto.RepFtpPathDto">
 		select 
 			EP.id,
@@ -182,7 +373,7 @@
 		  EP.id
     </select>
 	<select id="queryDpl" resultType="com.joyintech.tams.disclosure.home.dto.RepFtpPathDto">
-		<!--生成失败 -->
+
 		SELECT
 		    '生成失败' firstCol,
 		    EP.id,
@@ -210,7 +401,7 @@
 		GROUP BY
 		    EP.id
 		
-		<!--待确认 -->
+
 		UNION ALL
 		SELECT
 			'待确认' firstCol,
@@ -226,7 +417,7 @@
 		) rr ON EP.ID=rr.REPORT_CATEGORY
 		GROUP BY EP.id
 		
-		<!--待披露 -->
+
 		UNION ALL
 		SELECT
 			'待披露' firstCol,
@@ -272,4 +463,14 @@
 		GROUP BY
 		    EP.id
     </select>
+	<select id="queryRolePageId" resultType="java.lang.String">
+		SELECT DISTINCT srm.PAGE_ID
+		FROM SYS_ROLE_MODULE srm
+		LEFT JOIN SYS_USER_ROLE sur ON srm.ROLE_ID = sur.ROLE_ID
+		WHERE 1=1
+		and (srm.ELEMENT_ID = 'null' or srm.ELEMENT_ID is null)
+		<if test="userName != null and userName !=''">
+			and sur.USER_ID = #{userName,jdbcType=VARCHAR}
+		</if>
+	</select>
 </mapper>

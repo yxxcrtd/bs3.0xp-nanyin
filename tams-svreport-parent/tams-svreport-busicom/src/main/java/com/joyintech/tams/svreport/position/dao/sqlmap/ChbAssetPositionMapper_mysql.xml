@@ -302,7 +302,7 @@
   </select>
   <insert id="insertYsdPosition" parameterType="java.util.Map" >
     insert into CHB_ASSET_POSITION 
-		SELECT f_guid,
+		SELECT f_guid(),
 		PROD_ID,
 		ASSET_CODE,
 		INVEST_TYPE,
@@ -377,7 +377,6 @@
     </if>
     
   </select>
-  
   
   <delete id="deleteByDate" parameterType="java.util.Map" >
     delete from CHB_ASSET_POSITION

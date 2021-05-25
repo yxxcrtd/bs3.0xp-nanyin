@@ -10,8 +10,8 @@
 	    where STATUS='E'
 	    and p_prod_id is null 
 	    <if test="search != null and search != ''">
-	    	and (PROD_ID like concat('%', #{search, jdbcType=VARCHAR}, '%')
-            or PROD_ABBR like concat('%', #{search, jdbcType=VARCHAR}, '%'))
+	    	and (PROD_ID like concat_ws('%', #{search, jdbcType=VARCHAR}, '%')
+            or PROD_ABBR like concat_ws('%', #{search, jdbcType=VARCHAR}, '%'))
 	    </if>
 	    <if test="condition != null and condition != ''">
 			<![CDATA[ ${condition}  ]]>
@@ -25,11 +25,18 @@
 			CHB_EQU_HOLD
 	    where STATUS='E'
 	    <if test="search != null and search != ''">
-	    	and (INDENTIFY_MARK like concat('%', #{search, jdbcType=VARCHAR}, '%')
-            or HOLDER_NAME like concat('%', #{search, jdbcType=VARCHAR}, '%'))
+	    	and (INDENTIFY_MARK like concat_ws('%', #{search, jdbcType=VARCHAR}, '%')
+            or HOLDER_NAME like concat_ws('%', #{search, jdbcType=VARCHAR}, '%'))
 	    </if>
 	    <if test="condition != null and condition != ''">
 			<![CDATA[ ${condition}  ]]>
 		</if>
+	</select>
+	<select id="getInfoSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+			DIS_ID id,
+			DIS_NAME text
+		from
+			DIS_PRAMS
 	</select>
 </mapper>

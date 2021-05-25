@@ -120,7 +120,7 @@
 		<if test="confrom != null and confrom !='' ">
 			REVEAL.REVEAL_STATUS DESC,
 		</if>
-		REVEAL.CREATE_TIME DESC) where 1=1
+		REVEAL.CREATE_TIME DESC) tmp where 1=1
     </select>
 	<select id="getFinprodId" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
     	select prd.finprod_id,IFNULL(prd.finprod_abbr,prd.finprod_name) finprod_abbr from fin_product prd 

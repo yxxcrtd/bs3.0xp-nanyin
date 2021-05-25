@@ -111,7 +111,18 @@
 							class="layui-input form-input input-dateRangeSelect" value="">
 					</div>
 				</div>
+				<!--移除披露渠道 swwan 20210513 start-->
 				<div class="layui-inline layui-col-md4">
+					<label class="layui-form-label form-lable">确认方式</label>
+					<div class="layui-input-inline input-inline">
+						<select id="confirmType" name="confirmType"
+							class="layui-input form-input input-select" placeholder="请选择，可复选"
+							data-th-data-result="${CONFIRM_TYPE}" allowClear="true"
+							multiple="multiple">
+						</select>
+					</div>
+				</div>
+				<!--<div class="layui-inline layui-col-md4">
 					<label class="layui-form-label form-lable">披露渠道</label>
 					<div class="layui-input-inline input-inline">
 						<select id="revealChanel" name="revealChanel"
@@ -120,7 +131,7 @@
 							multiple="multiple">
 						</select>
 					</div>
-				</div>
+				</div>-->
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md4">
@@ -139,7 +150,7 @@
 							class="layui-input form-input input-dateRangeSelect" value="">
 					</div>
 				</div>
-				<div class="layui-inline layui-col-md4">
+				<!--<div class="layui-inline layui-col-md4">
 					<label class="layui-form-label form-lable">确认方式</label>
 					<div class="layui-input-inline input-inline">
 						<select id="confirmType" name="confirmType"
@@ -148,7 +159,8 @@
 							multiple="multiple">
 						</select>
 					</div>
-				</div>
+				</div>-->
+				<!--移除披露渠道 swwan 20210513 end-->
 			</div>
 		</form>
 		<input type="text" id="workflowId" name="workflowId"

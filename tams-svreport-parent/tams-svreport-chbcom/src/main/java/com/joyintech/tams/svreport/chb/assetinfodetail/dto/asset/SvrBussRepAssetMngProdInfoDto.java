@@ -22,6 +22,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCodeList;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 资产管理计划报送信息组件Dto
@@ -145,6 +146,79 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
      * 备注
      */
     private String remark;
+
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
+
+    private Date planSdate;
+
+    private Date planEdate;
+
+    /**
+     * 是否掌控计划底层资产详情 01 是/ 02 否
+     */
+    private String isCtrlBottom;
+
+    public String getIsCtrlBottom() {
+        return isCtrlBottom;
+    }
+
+    public void setIsCtrlBottom(String isCtrlBottom) {
+        this.isCtrlBottom = isCtrlBottom;
+    }
+
+    public Date getPlanSdate() {
+        return planSdate;
+    }
+
+    public void setPlanSdate(Date planSdate) {
+        this.planSdate = planSdate;
+    }
+
+    public Date getPlanEdate() {
+        return planEdate;
+    }
+
+    public void setPlanEdate(Date planEdate) {
+        this.planEdate = planEdate;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

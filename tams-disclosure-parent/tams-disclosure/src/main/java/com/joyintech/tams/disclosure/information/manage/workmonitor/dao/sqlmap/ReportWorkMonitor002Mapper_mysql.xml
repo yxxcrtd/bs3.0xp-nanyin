@@ -35,7 +35,6 @@
 		    REP_FTP_PATH rfp
 		ON
 		    ri.REPORT_CATEGORY = rfp.ID
-<!-- 		LEFT JOIN REP_CHECK_ERRMSG check on check.MSGID = rild.id -->
 		LEFT JOIN (
 			SELECT
 				rep_id,
@@ -60,7 +59,7 @@
 			</foreach>
 		</if>
 		<if test="repName != null and repName != ''">
-			AND rild.REP_NAME like concat(concat('%',#{repName,jdbcType=VARCHAR}),'%')
+			AND rild.REP_NAME like concat_ws(concat_ws('%',#{repName,jdbcType=VARCHAR}),'%')
 		</if>
 		<if test="execStatusArr != null and execStatusArr.length > 0">
 	 		AND rild.EXEC_STATUS IN
@@ -89,25 +88,12 @@
 				#{item}
 			</foreach>
 		</if>
-        <!-- <if test="confromPage == null or confromPage == ''">
-	        <if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
-	            AND DATE_FORMAT(rild.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
-	        </if>
-	        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
-	            AND DATE_FORMAT(rild.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
-	        </if>
-        </if>
-        <if test="confromPage != null and confromPage != ''">
-        	<if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
-	            AND DATE_FORMAT(rild.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
-	        </if>
-        </if> -->
         <if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
             AND DATE_FORMAT(rild.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
         </if>
         <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
             AND DATE_FORMAT(rild.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
         </if>
-        order by rild.UPDATE_TIME desc))where 1=1
+        order by rild.UPDATE_TIME desc) CC )  AA where 1=1
 	</select>
 </mapper>

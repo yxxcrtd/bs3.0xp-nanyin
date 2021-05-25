@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIsupIndicatorMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIsupIndicator" >
+        <id column="IND_ID" property="indId" jdbcType="VARCHAR" />
+        <result column="IND_NAME" property="indName" jdbcType="VARCHAR" />
+        <result column="IND_TYPE" property="indType" jdbcType="VARCHAR" />
+        <result column="EXPR" property="expr" jdbcType="VARCHAR" />
+        <result column="SUP_TYPE" property="supType" jdbcType="VARCHAR" />
+        <result column="TIME_POINT" property="timePoint" jdbcType="VARCHAR" />
+        <result column="SUP_FREQUENCY" property="supFrequency" jdbcType="VARCHAR" />
+        <result column="SUP_DIRECTION" property="supDirection" jdbcType="VARCHAR" />
+        <result column="WARN_COND" property="warnCond" jdbcType="VARCHAR" />
+        <result column="APPROVE_COND" property="approveCond" jdbcType="VARCHAR" />
+        <result column="FOUL_COND" property="foulCond" jdbcType="VARCHAR" />
+        <result column="IS_ADJUST" property="isAdjust" jdbcType="VARCHAR" />
+        <result column="ADJUST" property="adjust" jdbcType="DECIMAL" />
+        <result column="IS_ENABLED" property="isEnabled" jdbcType="VARCHAR" />
+        <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_EXCP_WHEN_DIV_ZERO" property="isExcpWhenDivZero" jdbcType="VARCHAR" />
+        <result column="COMPARE_DAYS" property="compareDays" jdbcType="DECIMAL" />
+        <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        IND_ID IND_ID, IND_NAME IND_NAME, IND_TYPE IND_TYPE, EXPR EXPR, SUP_TYPE SUP_TYPE, 
+        TIME_POINT TIME_POINT, SUP_FREQUENCY SUP_FREQUENCY, SUP_DIRECTION SUP_DIRECTION, 
+        WARN_COND WARN_COND, APPROVE_COND APPROVE_COND, FOUL_COND FOUL_COND, IS_ADJUST IS_ADJUST, 
+        ADJUST ADJUST, IS_ENABLED IS_ENABLED, MEMO MEMO, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_EXCP_WHEN_DIV_ZERO IS_EXCP_WHEN_DIV_ZERO, 
+        COMPARE_DAYS COMPARE_DAYS,INSTITUTION_CODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupIndicatorMapper.Base_Column_List" />
+        from RSK_ISUP_INDICATOR
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupIndicatorMapper.Base_Column_List" />
+        from RSK_ISUP_INDICATOR
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupIndicatorMapper.Base_Column_List" />
+        from RSK_ISUP_INDICATOR
+        where IND_ID = #{indId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from RSK_ISUP_INDICATOR
+        where IND_ID = #{indId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicator" >
+        insert into RSK_ISUP_INDICATOR (IND_ID, IND_NAME, IND_TYPE, 
+            EXPR, SUP_TYPE, TIME_POINT, 
+            SUP_FREQUENCY, SUP_DIRECTION, WARN_COND, 
+            APPROVE_COND, FOUL_COND, IS_ADJUST, 
+            ADJUST, IS_ENABLED, MEMO, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, IS_EXCP_WHEN_DIV_ZERO, 
+            COMPARE_DAYS,INSTITUTION_CODE)
+        values (#{indId,jdbcType=VARCHAR}, #{indName,jdbcType=VARCHAR}, #{indType,jdbcType=VARCHAR}, 
+            #{expr,jdbcType=VARCHAR}, #{supType,jdbcType=VARCHAR}, #{timePoint,jdbcType=VARCHAR}, 
+            #{supFrequency,jdbcType=VARCHAR}, #{supDirection,jdbcType=VARCHAR}, #{warnCond,jdbcType=VARCHAR}, 
+            #{approveCond,jdbcType=VARCHAR}, #{foulCond,jdbcType=VARCHAR}, #{isAdjust,jdbcType=VARCHAR}, 
+            #{adjust,jdbcType=DECIMAL}, #{isEnabled,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{isExcpWhenDivZero,jdbcType=VARCHAR}, 
+            #{compareDays,jdbcType=DECIMAL}, #{institutionCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicator" >
+        insert into RSK_ISUP_INDICATOR
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="indId != null" >
+                IND_ID,
+            </if>
+            <if test="indName != null" >
+                IND_NAME,
+            </if>
+            <if test="indType != null" >
+                IND_TYPE,
+            </if>
+            <if test="expr != null" >
+                EXPR,
+            </if>
+            <if test="supType != null" >
+                SUP_TYPE,
+            </if>
+            <if test="timePoint != null" >
+                TIME_POINT,
+            </if>
+            <if test="supFrequency != null" >
+                SUP_FREQUENCY,
+            </if>
+            <if test="supDirection != null" >
+                SUP_DIRECTION,
+            </if>
+            <if test="warnCond != null" >
+                WARN_COND,
+            </if>
+            <if test="approveCond != null" >
+                APPROVE_COND,
+            </if>
+            <if test="foulCond != null" >
+                FOUL_COND,
+            </if>
+            <if test="isAdjust != null" >
+                IS_ADJUST,
+            </if>
+            <if test="adjust != null" >
+                ADJUST,
+            </if>
+            <if test="isEnabled != null" >
+                IS_ENABLED,
+            </if>
+            <if test="memo != null" >
+                MEMO,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="isExcpWhenDivZero != null" >
+                IS_EXCP_WHEN_DIV_ZERO,
+            </if>
+            <if test="compareDays != null" >
+                COMPARE_DAYS,
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="indId != null" >
+                #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="indName != null" >
+                #{indName,jdbcType=VARCHAR},
+            </if>
+            <if test="indType != null" >
+                #{indType,jdbcType=VARCHAR},
+            </if>
+            <if test="expr != null" >
+                #{expr,jdbcType=VARCHAR},
+            </if>
+            <if test="supType != null" >
+                #{supType,jdbcType=VARCHAR},
+            </if>
+            <if test="timePoint != null" >
+                #{timePoint,jdbcType=VARCHAR},
+            </if>
+            <if test="supFrequency != null" >
+                #{supFrequency,jdbcType=VARCHAR},
+            </if>
+            <if test="supDirection != null" >
+                #{supDirection,jdbcType=VARCHAR},
+            </if>
+            <if test="warnCond != null" >
+                #{warnCond,jdbcType=VARCHAR},
+            </if>
+            <if test="approveCond != null" >
+                #{approveCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulCond != null" >
+                #{foulCond,jdbcType=VARCHAR},
+            </if>
+            <if test="isAdjust != null" >
+                #{isAdjust,jdbcType=VARCHAR},
+            </if>
+            <if test="adjust != null" >
+                #{adjust,jdbcType=DECIMAL},
+            </if>
+            <if test="isEnabled != null" >
+                #{isEnabled,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null" >
+                #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isExcpWhenDivZero != null" >
+                #{isExcpWhenDivZero,jdbcType=VARCHAR},
+            </if>
+            <if test="compareDays != null" >
+                #{compareDays,jdbcType=DECIMAL},
+            </if>
+            <if test="institutionCode != null" >
+                #{institutionCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicator" >
+        insert into RSK_ISUP_INDICATOR(IND_ID, IND_NAME, IND_TYPE, EXPR, SUP_TYPE, TIME_POINT, 
+        SUP_FREQUENCY, SUP_DIRECTION, WARN_COND, APPROVE_COND, FOUL_COND, IS_ADJUST, ADJUST, 
+        IS_ENABLED, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        IS_EXCP_WHEN_DIV_ZERO, COMPARE_DAYS,INSTITUTION_CODE)
+        select IND_ID, IND_NAME, IND_TYPE, EXPR, SUP_TYPE, TIME_POINT, 
+            SUP_FREQUENCY, SUP_DIRECTION, WARN_COND, APPROVE_COND, FOUL_COND, IS_ADJUST, ADJUST, 
+            IS_ENABLED, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            IS_EXCP_WHEN_DIV_ZERO, COMPARE_DAYS,INSTITUTION_CODE
+             from RSK_ISUP_INDICATOR
+             where 1 = 1 and IND_ID = #{indId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicator" >
+        update RSK_ISUP_INDICATOR
+        <set >
+            <if test="indName != null" >
+                IND_NAME = #{indName,jdbcType=VARCHAR},
+            </if>
+            <if test="indType != null" >
+                IND_TYPE = #{indType,jdbcType=VARCHAR},
+            </if>
+            <if test="expr != null" >
+                EXPR = #{expr,jdbcType=VARCHAR},
+            </if>
+            <if test="supType != null" >
+                SUP_TYPE = #{supType,jdbcType=VARCHAR},
+            </if>
+            <if test="timePoint != null" >
+                TIME_POINT = #{timePoint,jdbcType=VARCHAR},
+            </if>
+            <if test="supFrequency != null" >
+                SUP_FREQUENCY = #{supFrequency,jdbcType=VARCHAR},
+            </if>
+            <if test="supDirection != null" >
+                SUP_DIRECTION = #{supDirection,jdbcType=VARCHAR},
+            </if>
+            <if test="warnCond != null" >
+                WARN_COND = #{warnCond,jdbcType=VARCHAR},
+            </if>
+            <if test="approveCond != null" >
+                APPROVE_COND = #{approveCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulCond != null" >
+                FOUL_COND = #{foulCond,jdbcType=VARCHAR},
+            </if>
+            <if test="isAdjust != null" >
+                IS_ADJUST = #{isAdjust,jdbcType=VARCHAR},
+            </if>
+            <if test="adjust != null" >
+                ADJUST = #{adjust,jdbcType=DECIMAL},
+            </if>
+            <if test="isEnabled != null" >
+                IS_ENABLED = #{isEnabled,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null" >
+                MEMO = #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isExcpWhenDivZero != null" >
+                IS_EXCP_WHEN_DIV_ZERO = #{isExcpWhenDivZero,jdbcType=VARCHAR},
+            </if>
+            <if test="compareDays != null" >
+                COMPARE_DAYS = #{compareDays,jdbcType=DECIMAL},
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if> 
+        </set>
+        where IND_ID = #{indId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicator" >
+        update RSK_ISUP_INDICATOR
+        set IND_NAME = #{indName,jdbcType=VARCHAR},
+            IND_TYPE = #{indType,jdbcType=VARCHAR},
+            EXPR = #{expr,jdbcType=VARCHAR},
+            SUP_TYPE = #{supType,jdbcType=VARCHAR},
+            TIME_POINT = #{timePoint,jdbcType=VARCHAR},
+            SUP_FREQUENCY = #{supFrequency,jdbcType=VARCHAR},
+            SUP_DIRECTION = #{supDirection,jdbcType=VARCHAR},
+            WARN_COND = #{warnCond,jdbcType=VARCHAR},
+            APPROVE_COND = #{approveCond,jdbcType=VARCHAR},
+            FOUL_COND = #{foulCond,jdbcType=VARCHAR},
+            IS_ADJUST = #{isAdjust,jdbcType=VARCHAR},
+            ADJUST = #{adjust,jdbcType=DECIMAL},
+            IS_ENABLED = #{isEnabled,jdbcType=VARCHAR},
+            MEMO = #{memo,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_EXCP_WHEN_DIV_ZERO = #{isExcpWhenDivZero,jdbcType=VARCHAR},
+            COMPARE_DAYS = #{compareDays,jdbcType=DECIMAL},
+            INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+        where IND_ID = #{indId,jdbcType=VARCHAR}
+    </update>
+</mapper>

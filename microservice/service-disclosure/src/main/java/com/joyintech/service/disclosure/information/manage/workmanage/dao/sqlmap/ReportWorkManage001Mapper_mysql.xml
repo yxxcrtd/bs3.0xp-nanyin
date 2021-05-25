@@ -47,7 +47,7 @@
 			</foreach>
 		</if>
 		ORDER BY rj.UPDATE_TIME desc
-		) where 1=1
+		) tmp  where 1=1
     </select>
 	<update id="updateConfirmStatusById" parameterType="com.joyintech.service.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto" >
 	      update REP_REVEAL

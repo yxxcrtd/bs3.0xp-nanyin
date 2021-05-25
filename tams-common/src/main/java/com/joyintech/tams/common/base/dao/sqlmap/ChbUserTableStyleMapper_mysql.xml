@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbUserTableStyleMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbUserTableStyle" >
+        <id column="C_U_T_S_USER_ID" property="userId" jdbcType="VARCHAR" />
+        <id column="C_U_T_S_ELEMENT_ID" property="elementId" jdbcType="VARCHAR" />
+        <result column="C_U_T_S_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_U_T_S_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_U_T_S_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_U_T_S_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbUserTableStyle" extends="BaseResultMap" >
+        <result column="COLUMN_STYLE" property="columnStyle" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        USER_ID as C_U_T_S_USER_ID, ELEMENT_ID as C_U_T_S_ELEMENT_ID, CREATE_USER as C_U_T_S_CREATE_USER,
+        CREATE_TIME as C_U_T_S_CREATE_TIME, UPDATE_USER as C_U_T_S_UPDATE_USER, UPDATE_TIME as C_U_T_S_UPDATE_TIME
+    </sql>
+    <sql id="Blob_Column_List" >
+        COLUMN_STYLE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbUserTableStyleMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbUserTableStyleMapper.Blob_Column_List" />
+        from CHB_USER_TABLE_STYLE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbUserTableStyleMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbUserTableStyleMapper.Blob_Column_List" />
+        from CHB_USER_TABLE_STYLE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyleKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbUserTableStyleMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbUserTableStyleMapper.Blob_Column_List" />
+        from CHB_USER_TABLE_STYLE
+        where USER_ID = #{userId,jdbcType=VARCHAR}
+        and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyleKey" >
+        delete from CHB_USER_TABLE_STYLE
+        where USER_ID = #{userId,jdbcType=VARCHAR}
+          and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_USER_TABLE_STYLE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyle" >
+        insert into CHB_USER_TABLE_STYLE (USER_ID, ELEMENT_ID, CREATE_USER,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+            COLUMN_STYLE)
+        values (#{userId,jdbcType=VARCHAR}, #{elementId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{columnStyle,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyle" >
+        insert into CHB_USER_TABLE_STYLE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="userId != null" >
+                USER_ID,
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="columnStyle != null" >
+                COLUMN_STYLE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="userId != null" >
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="columnStyle != null" >
+                #{columnStyle,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyle" >
+        insert into CHB_USER_TABLE_STYLE(USER_ID, ELEMENT_ID, CREATE_USER, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, COLUMN_STYLE)
+        select USER_ID, ELEMENT_ID, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME, COLUMN_STYLE
+             from CHB_USER_TABLE_STYLE
+             where STATUS = 'E' and USER_ID = #{userId,jdbcType=VARCHAR} and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyle" >
+        update CHB_USER_TABLE_STYLE
+        <set >
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="columnStyle != null" >
+                COLUMN_STYLE = #{columnStyle,jdbcType=CLOB},
+            </if>
+        </set>
+        where USER_ID = #{userId,jdbcType=VARCHAR}
+        and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyle" >
+        update CHB_USER_TABLE_STYLE
+        <set >
+            <if test="userId != null" >
+                USER_ID = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="columnStyle != null" >
+                COLUMN_STYLE = #{columnStyle,jdbcType=CLOB},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyle" >
+        update CHB_USER_TABLE_STYLE
+        set
+        USER_ID = #{userId,jdbcType=VARCHAR},
+        ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        COLUMN_STYLE = #{columnStyle,jdbcType=CLOB}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyle" >
+        update CHB_USER_TABLE_STYLE
+        set UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            COLUMN_STYLE = #{columnStyle,jdbcType=CLOB}
+        where USER_ID = #{userId,jdbcType=VARCHAR}
+          and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbUserTableStyle" >
+        update CHB_USER_TABLE_STYLE
+        set UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where USER_ID = #{userId,jdbcType=VARCHAR}
+          and ELEMENT_ID = #{elementId,jdbcType=VARCHAR}
+    </update>
+</mapper>

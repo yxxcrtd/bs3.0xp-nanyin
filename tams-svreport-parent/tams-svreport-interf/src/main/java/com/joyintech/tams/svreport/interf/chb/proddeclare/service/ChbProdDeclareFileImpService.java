@@ -149,7 +149,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
                 Type type = field.getGenericType();
                 if("java.lang.String".equals(type.getTypeName())){
                     try {
-                        field.set(t, (value == null || "".equals(value)) ? "" : value);
+                        field.set(t, value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
@@ -280,8 +280,8 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 		if (!CollectionUtils.isEmpty(dataList)) {
 //			List<Map<String, String>>  listA =
 //			checkDataCodeCheck(dataList, file.getFilename(), ChbCheckTableInfo.个人产品申报登记INFO);
-			checkData(dataList, file.getFilename(), InterfDefine.产品申报信息接口数据.getCode(),
-							InterfDefine.产品申报信息接口数据.getCode(),null, DUPLICATIED_LIST);
+//			checkData(dataList, file.getFilename(), InterfDefine.产品申报信息接口数据.getCode(),
+//							InterfDefine.产品申报信息接口数据.getCode(),null, DUPLICATIED_LIST);
 //			dataList.addAll(listA);
 			if(CollectionUtils.isEmpty(dataList)){
 				return rs;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="AssetSvrBussRepEquityInfo.xlsx" name="资产要素表模板-权益类">
+	<Worksheet dataStart="2" javaBean="java.util.Map">
+		<Row>
+			<Cell order="1" name="*行内资产/负债编码">assetCode</Cell>
+			<Cell order="2" name="*发行机构代码">issuePartyId</Cell>
+			<Cell order="3" name="*资产/负债类别">assetType2Str</Cell>
+			<Cell order="4" name="*交易流通场所">tradeMarketStr</Cell>
+			<Cell order="5" name="*币种">ccyStr</Cell>
+			<Cell order="6" name="股票代码">assetCode</Cell>
+			<Cell order="7" name=" *股票/企业名称">assetName</Cell>
+			<Cell order="8" name="股票类型">sharesType</Cell>
+			<Cell order="9" name="*行业">industryShares</Cell>
+			<Cell order="10" name="投资阶段">investStage</Cell>
+			<Cell order="11" name="股权退出安排">equityQuit</Cell>
+			<Cell order="12" name="*企业类型（按规模划分）">sharesType1</Cell>
+			<Cell order="13" name="*企业类型（按技术领域划分）">sharesType3</Cell>
+			<Cell order="14" name="*企业类型（按经济类型划分）">sharesType2</Cell>
+			<Cell order="15" name="*是否为质押融资">isPledge</Cell>
+			<Cell order="16" name="*是否为债转股">deptEquity</Cell>
+			<Cell order="17" name="备注">remark</Cell>
+			<Cell order="18" name="是否商业银行优先股">bankSecPrefer</Cell>
+			<Cell order="19" name="到期日">mdate</Cell>
+			<Cell order="20" name="是否创业投资基金">isGovernFund</Cell>
+			<Cell order="21" name="是否政府出资产业投资基金">isunlisted</Cell>
+			<Cell order="22" name="新人行一级分类">pbcAssetType1Str</Cell>
+			<Cell order="23" name="新人行二级分类">pbcAssetType2Str</Cell>
+			<Cell order="24" name="新人行三级分类">pbcAssetType3Str</Cell>
+
+		</Row>
+	</Worksheet>
+</Workbook>

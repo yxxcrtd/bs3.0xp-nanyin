@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitexamination.investorsdetailcheck.dao.InvestorsDetailCheck001Mapper_mysql">
+
+    <select id="searchTable" resultType="com.joyintech.tams.report.submitexamination.investorsdetailcheck.dto.InvestorsDetailCheck001Dto">
+        select
+            EQUITY_CONF_DATE as equityConfDate,
+            CHECK_TOTAL as checkTotal,
+            ACCOUNT as account,
+            PROD_REGIST_CODE as prodRegistCode,
+            PROD_NAME as prodName,
+            OPERATE_MODE as operateMode,
+            VDATE as vdate,
+            MDATE as mdate,
+            IS_CONSIGN as isConsign,
+            CHECK_MJ as checkMj,
+            CHECK_SGAMT as checkSgamt,
+            CHECK_SGQTY as checkSgqty,
+            CHECK_SHQTY as checkShqty,
+            CHECK_SHAMT as checkShamt
+        from (
+
+            SELECT
+                T.EQUITY_CONF_DATE,
+                IF
+                    (
+                            MJ_SUB.TOTAL_AMT = T.MJ_AMT
+                            AND CX_SUB.SGAMT = T.SG_AMT
+                            AND CX_SUB.SGQTY = T.SG_QTY
+                            AND CX_SUB.SHAMT = T.SH_AMT
+                            AND CX_SUB.SGQTY = T.SG_QTY,
+                            '01',
+                            '02'
+                    ) CHECK_TOTAL,
+                T.ACCOUNT,
+                MJ_SUB.PROD_REGIST_CODE,
+                CPB.PROD_NAME,
+                CPB.OPERATE_MODE,
+                CPB.VDATE,
+                CPB.MDATE,
+                MJ_SUB.IS_CONSIGN,
+                IF
+                    ( MJ_SUB.TOTAL_AMT = T.MJ_AMT, '01', '02' ) CHECK_MJ,
+                IF
+                    ( CX_SUB.SGAMT = T.SG_AMT, '01', '02' ) CHECK_SGAMT,
+                IF
+                    ( CX_SUB.SGQTY = T.SG_QTY, '01', '02' ) CHECK_SGQTY,
+                IF
+                    ( CX_SUB.SHQTY = T.SH_QTY, '01', '02' ) CHECK_SHQTY,
+                IF
+                    ( CX_SUB.SHAMT = T.SH_AMT, '01', '02' ) CHECK_SHAMT
+            FROM
+                (
+                    SELECT
+                        T1.ACCOUNT,
+                        T1.EQUITY_CONF_DATE,
+                        SUM( IFNULL( T1.MJ_AMT, 0 ) ) AS MJ_AMT,
+                        SUM( IFNULL( T1.SG_QTY, 0 ) ) AS SG_QTY,
+                        SUM( IFNULL( T1.SG_AMT, 0 ) ) AS SG_AMT,
+                        SUM( IFNULL( T1.SH_QTY, 0 ) ) AS SH_QTY,
+                        SUM( IFNULL( T1.SH_AMT, 0 ) ) AS SH_AMT
+                    FROM
+                        (
+                            SELECT
+                                A.ACCOUNT,
+                                if (#{checkDateStart} is not null ,#{checkDateStart},A.EQUITY_CONF_DATE) as EQUITY_CONF_DATE,
+                                SUM( IF ( A.BUSI_TYPE IN ( '01' ), IFNULL( AMOUNT_CNY, 0 ), 0 ) ) AS MJ_AMT,
+                                NULL AS SG_QTY,
+                                NULL AS SG_AMT,
+                                NULL AS SH_QTY,
+                                NULL AS SH_AMT
+                            FROM
+                                CHB_EQUDET A
+                            WHERE
+                                A.BUSI_TYPE = '01'
+                            GROUP BY
+                                A.ACCOUNT,
+                                A.EQUITY_CONF_DATE UNION ALL
+                            SELECT
+                                A.ACCOUNT,
+                                A.EQUITY_CONF_DATE,
+                                NULL AS MJ_AMT,
+                                SUM( IF ( A.BUSI_TYPE IN ( '02', '05', '14' ), IFNULL( SHARES, 0 ), 0 ) ) AS SG_QTY,
+                                SUM( IF ( A.BUSI_TYPE IN ( '02', '05', '14' ), IFNULL( AMOUNT_CNY, 0 ), 0 ) ) AS SG_AMT,
+                                SUM( IF ( A.BUSI_TYPE IN ( '03', '15', '16' ), IFNULL( SHARES, 0 ), 0 ) ) AS SH_QTY,
+                                SUM(
+                                        IF
+                                            ( A.BUSI_TYPE IN ( '03', '04', '05', '15', '16' ), IFNULL( AMOUNT_CNY, 0 ), 0 )
+                                    ) AS SH_AMT
+                            FROM
+                                CHB_EQUDET A
+                            WHERE
+                                A.BUSI_TYPE IN ( '02', '03', '04', '05', '14', '15', '16' )
+                                <if  test="checkDateStart != null and checkDateStart.trim !=''">
+                                    and A.EQUITY_CONF_DATE >= #{checkDateStart}
+                                </if>
+                                <if  test="checkDateEnd != null and checkDateEnd.trim !=''">
+                                    and A.EQUITY_CONF_DATE &lt;= #{checkDateEnd}
+                                </if>
+                            GROUP BY
+                                A.ACCOUNT,
+                                A.EQUITY_CONF_DATE
+                        ) T1
+                    GROUP BY
+                        T1.ACCOUNT,
+                        T1.EQUITY_CONF_DATE
+                ) T
+                    LEFT JOIN (
+                    SELECT
+                        RANK ( ) OVER ( PARTITION BY CPRS.PROD_ID ORDER BY IFNULL( CPRS.CREATE_TIME, CPRS.UPDATE_TIME ) DESC ) MY_RANK,
+                        CPRS.PROD_ID,
+                        CPRS.PROD_REGIST_CODE,
+                        CPRS.IS_CONSIGN,
+                        CPRS.TOTAL_AMT
+                    FROM
+                        CHB_PRD_RAISETOT_SUB CPRS
+                ) MJ_SUB ON T.ACCOUNT = MJ_SUB.PROD_ID
+                    AND MJ_SUB.MY_RANK = 1
+                    LEFT JOIN (
+                    SELECT
+                        RANK ( ) OVER ( PARTITION BY CPDS.PROD_ID ORDER BY IFNULL( CPDS.CREATE_TIME, CPDS.UPDATE_TIME ) DESC ) MY_RANK,
+                        CPDS.PROD_ID,
+                        SUM( IFNULL( CPDS.PURCHASE_QTY, 0 ) ) AS SGQTY,
+                        SUM( IFNULL( CPDS.PURCHASE_QTY, 0 ) * IFNULL( CPDS.PRD_VALUE, 1 ) ) AS SGAMT,
+                        SUM( IFNULL( CPDS.REDEEM_QTY, 0 ) ) AS SHQTY,
+                        SUM( IFNULL( CPDS.REDEEM_QTY, 0 ) * IFNULL( CPDS.PRD_VALUE, 1 ) ) AS SHAMT
+                    FROM
+                        CHB_PRD_DEAL_SUB CPDS
+                    <where>
+                        <if  test="checkDateStart != null and checkDateStart.trim !=''">
+                            and CPDS.MDATE >= #{checkDateStart}
+                        </if>
+                        <if  test="checkDateEnd != null and checkDateEnd.trim !=''">
+                            and CPDS.MDATE &lt;= #{checkDateEnd}
+                        </if>
+                    </where>
+                    GROUP BY
+                        CPDS.PROD_ID
+                ) CX_SUB ON T.ACCOUNT = CX_SUB.PROD_ID
+                    AND CX_SUB.MY_RANK = 1
+                    LEFT JOIN CHB_PRD_BASEINFO CPB ON T.ACCOUNT = CPB.PROD_ID
+            ) t
+        <where>
+            <if  test="checkDateStart != null and checkDateStart.trim !=''">
+                and EQUITY_CONF_DATE >= #{checkDateStart}
+            </if>
+            <if  test="checkDateEnd != null and checkDateEnd.trim !=''">
+                and EQUITY_CONF_DATE &lt;= #{checkDateEnd}
+            </if>
+            <if test="prod != null and prod.trim !=''">
+                and (ACCOUNT like concat('%', #{prod},'%') or   PROD_NAME like concat('%', #{prod},'%'))
+            </if>
+            <if test="operateModeList != null and operateModeList.size() > 0">
+                <foreach collection="operateModeList" item="operateMode" open="AND OPERATE_MODE IN (" close=")" separator=",">
+                    #{operateMode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="checkResultList != null and checkResultList.size() > 0">
+                <foreach collection="checkResultList" item="checkResult" open="AND CHECK_TOTAL IN (" close=")" separator=",">
+                    #{checkResult,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if  test="vdateStart != null and vdateStart.trim !=''">
+                and VDATE >= #{vdateStart}
+            </if>
+            <if  test="vdateEnd != null and vdateEnd.trim !=''">
+                and VDATE &lt;= #{vdateEnd}
+            </if>
+            <if  test="mdateStart != null and mdateStart.trim !=''">
+                and MDATE >= #{mdateStart}
+            </if>
+            <if  test="mdateEnd != null and mdateEnd.trim !=''">
+                and MDATE &lt;= #{checkDateEnd}
+            </if>
+
+        </where>
+        order by EQUITY_CONF_DATE desc,ACCOUNT asc
+
+    </select>
+
+</mapper>

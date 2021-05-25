@@ -61,7 +61,7 @@ public class SvrBussRepFinanciallInfoController extends BaseController{
         String   assetType=requestPargram.getParameter("assetType");
 
         //1.赋值界面数据字典
-        setSelectOptionToModel(model,  new DictCode[] {DictCode.标的类别,DictCode.持有目的}
+        setSelectOptionToModel(model,  new DictCode[] {DictCode.标的类别,DictCode.持有目的,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类}
         );
         //2、当入参assetType2资产/负债二级类别 为【资产_负债类别_金融衍生品】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_金融衍生品.getValue()).contains(assetType)){

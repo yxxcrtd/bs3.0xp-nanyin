@@ -57,7 +57,6 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  * 
  * @author weipeng
  * @version 1.0 2018年5月16日
- * @see ValFinprodTradeQuery001Service
  * @since 1.0
  */
 @Service
@@ -104,7 +103,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
     /**
      * <一句话功能简述> <功能详细描述>
      * 
-     * @param pageParam
+     * @param params
      * @return
      * @see
      * @since 1.0
@@ -128,7 +127,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
     /**
      * 删除service <一句话功能简述> <功能详细描述>
      * 
-     * @param jobId
+     * @param dto
      * @return
      */
     public int deleteComfirmByPrimaryKey(ReportConfirmManage001Dto dto) {
@@ -168,14 +167,18 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                         // TODO
                         String fileType = StringUtil.substring(report.getSysFilename(),
                             report.getSysFilename().lastIndexOf("."));
-                        String reportName = report.getReportName() + fileType;
+                        String reportName = report.getSysFilename();
+                        reportName = StringUtil.substring(reportName, 0, StringUtil.lastIndexOf(reportName, "."));
+                        // modify by swwan 下载名称同生成文件名称 start
+                        /*String reportName = report.getReportName() + fileType;
                         if (StringUtil.isNotEmpty(report.getEndDate()) && report.getEndDate() != null) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
                                          + GlobalConstant.UNDER_LINE + reportName;
                         }
                         if (StringUtil.isNotEmpty(report.getProdid())) {
                             reportName = report.getProdid() + GlobalConstant.UNDER_LINE + reportName;
-                        }
+                        }*/
+                        // modify by swwan 下载名称同生成文件名称 end
 
                         // 报表类别名称
                         String reportCategoryName = reportConfirmManage001Mapper.getReportCategoryName(
@@ -337,15 +340,18 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                     // 设置UTF8编码
                     zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
                     for (RepReveal report : reportList) {
-                        // TODO
-                        String reportName = report.getReportName();
+                        String reportName = report.getSysFilename();
+                        reportName = StringUtil.substring(reportName, 0, StringUtil.lastIndexOf(reportName, "."));
+                        // modify by swwan 下载名称同生成文件名称 start
+                        /*String reportName = report.getReportName();
                         if (StringUtil.isNotEmpty(report.getEndDate()) && report.getEndDate() != null) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
                                          + GlobalConstant.UNDER_LINE + reportName;
                         }
                         if (StringUtil.isNotEmpty(report.getProdid())) {
                             reportName = report.getProdid() + GlobalConstant.UNDER_LINE + reportName;
-                        }
+                        }*/
+                        // modify by swwan 下载名称同生成文件名称 end
                         String reportCategoryName = reportConfirmManage001Mapper.getReportCategoryName(
                             report.getReportCategory());
                         File baseFile = new File(basePath);
@@ -437,11 +443,11 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 if (StringUtil.isNotEmpty(splitToList)) {
                                     String fileType = splitToList.get(splitToList.size() - 1);
                                     splitToList.remove(splitToList.size() - 1);
-
+                                    // modifed by swwan 2021-05-17 start
                                     // modifed by zhangyf 2019-04-22 start
-                                    // newFileName = reportName+"_(手动上传)."+fileType;
-                                    newFileName = reportName + "." + fileType;
-                                    // modifed by zhangyf 2019-04-22 end
+                                     newFileName = reportName + "_(手动上传)." + fileType;
+                                    // newFileName = reportName + "." + fileType;
+                                    // modifed by swwan 2021-05-17 end
                                 }
                                 File peopleFile = null;
                                 if (StringUtil.isNotEmpty(newFileName)) {
