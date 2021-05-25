@@ -170,7 +170,7 @@
                             <textarea th:id="|${entityName}_repRepayCmt|" th:name="|${entityName}.repRepayCmt|"
                                       th:value="${entity?.repRepayCmt}" data-th-text="${entity?.repRepayCmt}"
                                       class="layui-textarea"
-                                      placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"></textarea>
+                                      placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required="required"></textarea>
                     </div>
                 </div>
             </div>
@@ -201,7 +201,7 @@
                         <input type="text" th:id="|${entityName}_repFcrGradeOut|"
                                th:name="|${entityName}.repFcrGradeOut|" data-th-value="${entity?.repFcrGradeOut}"
                                class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}" required>
+                               data-th-placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>
             </div>
@@ -233,8 +233,8 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repFinancierType2}">融资人类型（按经济类型划分）</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repFinancierType2|" th:name="|${entityName}.repFinancierType2|"
-                                th:initValue="${entity?.repFinancierType2}"
+                        <select th:id="|${entityName}_repFinancierType3|" th:name="|${entityName}.repFinancierType3|"
+                                th:initValue="${entity?.repFinancierType3}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_PARTY_TYPE2}">
@@ -245,8 +245,8 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repFinancierType3}">融资人类型（按技术领域划分）</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repFinancierType3|" th:name="|${entityName}.repFinancierType3|"
-                                th:initValue="${entity?.repFinancierType3}"
+                        <select th:id="|${entityName}_repFinancierType2|" th:name="|${entityName}.repFinancierType2|"
+                                th:initValue="${entity?.repFinancierType2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_PARTY_TYPE3}">
