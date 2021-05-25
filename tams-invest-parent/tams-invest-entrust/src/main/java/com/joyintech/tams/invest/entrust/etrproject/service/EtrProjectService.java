@@ -43,8 +43,6 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
@@ -88,10 +86,6 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
     @Autowired
     private EtrCommonService etrCommonService;
     private BussChannelCommonService bussChannelCommonService;
-    
-    @Autowired
-    private WflTrdProductDealMapper wflTrdProductDealMapper;
-    
 
     /**
      * 工作流完成
@@ -101,7 +95,6 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
         dto.setOperateType(operationType.toString());
         Date sysDate = DateUtil.platDateFromCache();
         dto.setEntrustDate(sysDate);
-        wflTrdProductDealMapper.deleteByWorkflowId(dto.getWorkflowId());
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doComplete", dto,
@@ -113,15 +106,6 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     @Override
     public void doInsert(EtrProjectDto dto, OperationType type) {
-    	//流程交易表插入一条记录，用于在待办中显示交易方向
-    	WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
-    	wflTrdProductDeal.setWorkflowId(dto.getWorkflowId());
-    	wflTrdProductDeal.setPs(dto.getPs());
-    	wflTrdProductDeal.setTradeId(dto.getWorkflowId());
-    	wflTrdProductDeal.setFinprodId(dto.getFinprodId());
-    	wflTrdProductDeal.setWorkflowStatus("A");
-    	wflTrdProductDealMapper.insertSelective(wflTrdProductDeal);
-    	
         dto.setOperateType(type.toString());
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doInsert", dto,
@@ -133,11 +117,6 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     @Override
     public void doUpdate(EtrProjectDto dto) {
-    	WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
-    	wflTrdProductDeal.setWorkflowId(dto.getWorkflowId());
-    	wflTrdProductDeal.setPs(dto.getPs());
-    	wflTrdProductDealMapper.updateByWorkflowIdSelective(wflTrdProductDeal);
-    	
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doInsert", dto,
             Integer.class);
@@ -291,7 +270,7 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
                 + "/EtrProject/searchIssueAmt?finprodId=" + finprodId,
             BigDecimal.class);
     }
-    
+
     /**
      * 新建页面组合代码联想下拉框 <功能详细描述>
      *
@@ -711,15 +690,10 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsGtZero(data, labelName, indexId));
         return confirmMsg;
     }
-    
-    @Override
-    public void doDelete(String workflowId) {
-    	wflTrdProductDealMapper.deleteByWorkflowId(workflowId);
-    }
-    
+
     @Override
     public String generateTitle(EtrProjectDto entity, OperationType operationType) {
-    	return this.getMessage("EtrProject001") + "(" + entity.getPortfolioId() + ")"
+        return this.getMessage("EtrProject001") + "(" + entity.getPortfolioId() + ")"
                 + "-" + this.getMessage("EtrProject001.ps") + "-" + "("
                 + this.getMessage("EtrProject001.vdate") + ":" +DateUtil.format(entity.getVdate())
                 + ")-(" + this.getMessage("EtrProject001.mdate") + ":"
