@@ -501,8 +501,8 @@ public class ChbPeriodicService {
             BigDecimal totalIntAmt = new BigDecimal("0");
             for (ChbPeriodicBonusDeal deal : list) {
                 if (!isNullOrZero(deal.getRegTradeQty())) {
-                    totalTradeAmt = totalTradeAmt.add(deal.getTradeAmt().divide(deal.getRegTradeQty()).multiply(new BigDecimal(10000)));
-                    totalIntAmt = totalIntAmt.add(deal.getIntAmt().divide(deal.getRegTradeQty()).multiply(new BigDecimal(10000)));
+                    totalTradeAmt = totalTradeAmt.add(deal.getTradeAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000)));
+                    totalIntAmt = totalIntAmt.add(deal.getIntAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000)));
                 }
             }
             chbPeriodicBonus = new ChbPeriodicBonus();
@@ -911,7 +911,7 @@ public class ChbPeriodicService {
             }
             if (!Objects.isNull(qmDto.getUnitValueT())) {
                 BigDecimal increaseRateOfCumulativeValue = (qmDto.getUnitValueT().subtract(qcUnitValueT))
-                        .divide(qcUnitValueT)
+                        .divide(qcUnitValueT, 20, BigDecimal.ROUND_FLOOR)
                         .divide(new BigDecimal(DateUtil.getBetweenDayNumber(qcDto.getValueDate(), qmDto.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
                         .multiply(new BigDecimal(36500));
                 value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(increaseRateOfCumulativeValue));
