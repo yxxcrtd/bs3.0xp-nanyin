@@ -19,9 +19,9 @@ import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.system.prorate.dao.ProRateInfo001Mapper;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.report.system.prorate.dto.ProRateInfo001Dto;
+import com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> {
@@ -256,56 +255,31 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 return tempCheckResult;
             }
+            if (!StringUtil.isEmptyList(tempCheckResult)) {
+                return tempCheckResult;
+            }
             if (null != dataList) {
-                Map<String,Object> map=new HashMap<>(8);
+                tempCheckResult = this.checkExcelValidMsg(dataList);
+                if(!StringUtil.isEmptyList(tempCheckResult)) {
+                    return tempCheckResult;
+                }
                 for (int i = 0; i < dataList.size(); i++ ) {
                     List<String> list = dataList.get(i);
-                    map.clear();
                     List<String> message = new ArrayList<>();
                     //操作类型
                     String type = list.get(0);
-                    //产品代码
-                    String busiId = list.get(1);
-                    //启用日期
-                    Date date=null;
-                    if(StringUtil.isNotEmpty(list.get(2))){
-                        date = DateUtil.parse(list.get(2));
-                    }
-                    //信披费用类型
-                    String cashType2 ="";
-                    String cashType2Name ="";
-                    if(StringUtil.isNotEmpty(list.get(3))){
-                        String [] arr = list.get(3).split("\\s+");
-                        cashType2=arr[0];
-                        cashType2Name=arr[1];
-                    }
-                    //费率
-                    BigDecimal bigDecimal=null;
-                    if(StringUtil.isNotEmpty(list.get(4))){
-                        bigDecimal=new BigDecimal(list.get(4));
-                    }
-                    //根据产品代码，启用日期，信披费用类型 查询出数据,有数据则更新,无数据则插入
-                    map.put("busiId",busiId);
-                    map.put("startDate",date);
-                    map.put("cashType2",cashType2);
+                    ProRateInfo001Dto dto  = this.getProRateInfo001DtoByExcel(list, message);
+                    Map<String,Object> map = this.getParamMapByDis(dto);
                     List<DisRepCashYield> disRepCashYields= proRateInfo001Mapper.selectOneDate(map);
-                    List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                    resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, BeanUtil.mapToObject(map, ProRateInfo001Dto.class), "DisPrdFeeRate002", null, ValidMessage.class);
-                    if (!StringUtil.isEmptyList(resultList)) {
-                        resultList.forEach(validMessage -> {
-                            message.add(validMessage.getMessage());
-                        });
-                    }
-
                     if("新增".equals(type) || "修改".equals(type)){
-                        updateInfo(disRepCashYields,busiId, date, cashType2,cashType2Name,bigDecimal,deptCode,userName);
+                        updateInfo(disRepCashYields, dto);
                     }
                     /*if("修改".equals(type)){
                         updateInfo(disRepCashYields,busiId, date, cashType2, cashType2Name,bigDecimal,deptCode,userName);
                     }*/
                     else if("删除".equals(type)){
-                        proRateInfo001Mapper.deleteOne(busiId,date,cashType2);
-                        proRateInfo001Mapper.deleteErrorDataOne(busiId,date,cashType2);
+                        proRateInfo001Mapper.deleteOne(dto.getBusiId(), dto.getStartDate(), dto.getCashType2());
+                        proRateInfo001Mapper.deleteErrorDataOne(dto.getBusiId(), dto.getStartDate(), dto.getCashType2());
                     }else {
                         message.add("操作类型值不在可选范围内");
                     }
@@ -324,27 +298,31 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         return checkResult;
     }
 
-    private void addDisRepCashYield(String busiId, Date date, String cashType2, String cashType2Name, BigDecimal bigDecimal, String deptCode, String userName) {
-        DisRepCashYield entity = new DisRepCashYield();
+    /**
+     * 插入数据
+     * @param entity
+     */
+    private void addDisRepCashYield(DisRepCashYield entity) {
         Date nowDate = new Date();
         entity.setDataSource("02");
-        entity.setBusiId(busiId);
-        entity.setStartDate(date);
-        entity.setCashType2(cashType2);
-        entity.setCashName(cashType2Name);
-        entity.setRate(bigDecimal);
         entity.setCashId(IDGenerator.generate());
         entity.setAdapterId("无");
-        entity.setCreateUser(userName);
-        entity.setCreateDept(deptCode);
         entity.setCreateTime(nowDate);
-        entity.setUpdateUser(userName);
         entity.setUpdateTime(nowDate);
+        entity.setCreateUser(LoginUserUtil.getUserName());
+        entity.setCreateTime(new Date());
+        entity.setUpdateTime(new Date());
+        entity.setUpdateUser(LoginUserUtil.getUserName());
         entity.setStatus("E");
         proRateInfo001Mapper.insertOne(entity);
     }
 
-    private void updateInfo(List<DisRepCashYield> disRepCashYields, String busiId, Date date, String cashType2, String cashType2Name, BigDecimal bigDecimal, String deptCode, String userName) {
+    /**
+     * 更新数据
+     * @param disRepCashYields
+     * @param dto
+     */
+    private void updateInfo(List<DisRepCashYield> disRepCashYields, ProRateInfo001Dto dto) {
         Map<String, Object> mapOld = new HashMap<>();
         if (disRepCashYields.size() > 0) {
             if (!"".equals(disRepCashYields.get(0).getBusiId())) {
@@ -352,9 +330,9 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                 mapOld.put("busiId", disRepCashYield.getBusiId());
                 mapOld.put("oldCashType2", disRepCashYield.getOldCashType2());
                 mapOld.put("oldStartDateStr", disRepCashYield.getOldStartDateStr());
-                mapOld.put("cashType2", cashType2);
-                mapOld.put("startDate", date);
-                mapOld.put("rate", bigDecimal);
+                mapOld.put("cashType2", dto.getCashType2());
+                mapOld.put("startDate", dto.getStartDate());
+                mapOld.put("rate", dto.getRate());
                 mapOld.put("status", "E");
                 mapOld.put("dataSource", "02");
                 mapOld.put("updateUser", LoginUserUtil.getUserName());
@@ -362,11 +340,106 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                 proRateInfo001Mapper.updateOne(mapOld);
             }
         } else {
-            addDisRepCashYield(busiId, date, cashType2, cashType2Name, bigDecimal, deptCode, userName);
+            addDisRepCashYield(dto);
         }
     }
 
     public void updateOne(Map<String, Object> mapOld) {
         proRateInfo001Mapper.updateOne(mapOld);
+    }
+
+
+    /**
+     * 根据导入excel 组装 费率实体类
+     * @param list
+     * @param message
+     * @return
+     */
+    private ProRateInfo001Dto getProRateInfo001DtoByExcel(List<String> list, List<String> message) {
+        //产品代码
+        String busiId = list.get(1);
+        //启用日期
+        Date date=null;
+        if(StringUtil.isNotEmpty(list.get(2))){
+            try {
+                date = DateUtil.parse(list.get(2));
+            }
+            catch (Exception e) {
+                message.add("启用日期必须为日期格式");
+            }
+        }
+        //信披费用类型
+        String cashType2 ="";
+        String cashType2Name ="";
+        if(StringUtil.isNotEmpty(list.get(3))){
+            String [] arr = list.get(3).split("\\s+");
+            cashType2 = arr[0];
+            cashType2Name = arr[1];
+        }
+        //费率
+        BigDecimal bigDecimal = null;
+        if(StringUtil.isNotEmpty(list.get(4))) {
+            try {
+                bigDecimal = new BigDecimal(list.get(4));
+            }
+            catch (Exception e) {
+                message.add("费率必须为数字类型");
+            }
+        }
+        ProRateInfo001Dto dto = new ProRateInfo001Dto();
+        dto.setBusiId(busiId);
+        dto.setStartDate(date);
+        dto.setRate(bigDecimal);
+        dto.setCashType2(cashType2);
+        dto.setCashName(cashType2Name);
+        return dto;
+    }
+
+    /**
+     * 根据excel映射的实体类，组装查询重复数据的map参数
+     * @param dto
+     * @return
+     */
+    private Map<String,Object> getParamMapByDis(ProRateInfo001Dto dto) {
+        Map<String,Object> map = new HashMap<>();
+        //根据产品代码，启用日期，信披费用类型 查询出数据,有数据则更新,无数据则插入
+        map.put("busiId", dto.getBusiId());
+        map.put("startDate", dto.getStartDate());
+        map.put("cashType2", dto.getCashType2());
+        return map;
+    }
+
+    /**
+     * 检验数据
+     * @param dataList
+     * @return
+     */
+    private List<ExcelValidDto> checkExcelValidMsg(List<List<String>> dataList) {
+        List<ExcelValidDto> errorList = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list = dataList.get(i);
+            String type = list.get(0);
+            List<String> message = new ArrayList<>();
+            List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+            ProRateInfo001Dto dto  = this.getProRateInfo001DtoByExcel(list, message);
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "DisPrdFeeRate002", null, ValidMessage.class);
+            if (!StringUtil.isEmptyList(resultList)) {
+                resultList.forEach(validMessage -> {
+                    message.add(validMessage.getMessage());
+                });
+            }
+            if("新增".equals(type) || "修改".equals(type)){
+
+            }
+            else if("删除".equals(type)){
+
+            }else {
+                message.add("操作类型值不在可选范围内");
+            }
+            if (!message.isEmpty()) {
+                errorList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+2), StringUtil.joinString(message, GlobalConstant.COMMA)));
+            }
+        }
+        return errorList;
     }
 }
