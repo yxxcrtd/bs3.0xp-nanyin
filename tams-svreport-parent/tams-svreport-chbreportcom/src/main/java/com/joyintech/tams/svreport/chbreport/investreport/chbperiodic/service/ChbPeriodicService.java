@@ -1,11 +1,10 @@
 package com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.service;
 
+import cn.hutool.json.JSONUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoDetailMapper;
-import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfoDetailWithBLOBs;
 import com.joyintech.tams.constant.DictCode;
@@ -473,9 +472,11 @@ public class ChbPeriodicService {
             bonusList.add(chbPeriodicBonus);
             return bonusList;
         }
-        ChbPeriodicBonus chbPeriodicBonus = new ChbPeriodicBonus();
+        logger.debug("dealBonusValue: List<ChbPeriodicBonusDeal> list=" + JSONUtil.toJsonStr(list));
+        ChbPeriodicBonus chbPeriodicBonus = null;
         if (StringUtil.equals(DictCodeListExt2.产品类型_中债_净值型产品.getValue(), chbPrdBaseinfo.getProdtype())) {
             for (ChbPeriodicBonusDeal deal : list) {
+                chbPeriodicBonus = new ChbPeriodicBonus();
                 if (Objects.isNull(deal.getRegDate())) {
                     chbPeriodicBonus.setRegDate(ChbInvestReportConstant.横线);
                 } else {
@@ -484,12 +485,14 @@ public class ChbPeriodicService {
                 if (Objects.isNull(deal.getTradeAmt()) || BigDecimal.ZERO.compareTo(deal.getTradeAmt()) == 0) {
                     chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.横线);
                 } else {
-                    chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.df1.format(deal.getTradeAmt()));
+                    chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.df1.format(
+                            deal.getTradeAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000))));
                 }
                 if (Objects.isNull(deal.getIntAmt()) || BigDecimal.ZERO.compareTo(deal.getIntAmt()) == 0) {
                     chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.横线);
                 } else {
-                    chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.df1.format(deal.getIntAmt()));
+                    chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.df1.format(
+                            deal.getIntAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000))));
                 }
                 bonusList.add(chbPeriodicBonus);
             }
@@ -500,22 +503,27 @@ public class ChbPeriodicService {
                 totalTradeAmt.add(deal.getTradeAmt());
                 totalIntAmt.add(deal.getIntAmt());
             }
+            chbPeriodicBonus = new ChbPeriodicBonus();
             if (Objects.isNull(list.get(0).getRegDate())) {
                 chbPeriodicBonus.setRegDate(ChbInvestReportConstant.横线);
             } else {
                 chbPeriodicBonus.setRegDate(params.get("startReportDateFmt") + ChbInvestReportConstant.横线 + params.get("endReportDateFmt"));
             }
-            if (Objects.isNull(list.get(0).getRegTradeQty()) || BigDecimal.ZERO.compareTo(list.get(0).getRegTradeQty()) == 0
+            if (Objects.isNull(list.get(0).getRegTradeQty())
+                    || BigDecimal.ZERO.compareTo(list.get(0).getRegTradeQty()) == 0
                     || BigDecimal.ZERO.compareTo(totalTradeAmt) == 0) {
                 chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.横线);
             } else {
-                chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.df1.format(totalTradeAmt.divide(list.get(0).getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(1000))));
+                chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.df1.format(
+                        totalTradeAmt.divide(list.get(0).getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000))));
             }
-            if (Objects.isNull(list.get(0).getRegTradeQty()) || BigDecimal.ZERO.compareTo(list.get(0).getRegTradeQty()) == 0
+            if (Objects.isNull(list.get(0).getRegTradeQty())
+                    || BigDecimal.ZERO.compareTo(list.get(0).getRegTradeQty()) == 0
                     || BigDecimal.ZERO.compareTo(totalIntAmt) == 0) {
                 chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.横线);
             } else {
-                chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.df1.format(totalIntAmt.divide(list.get(0).getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(1000))));
+                chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.df1.format(
+                        totalIntAmt.divide(list.get(0).getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000))));
             }
             bonusList.add(chbPeriodicBonus);
         }
