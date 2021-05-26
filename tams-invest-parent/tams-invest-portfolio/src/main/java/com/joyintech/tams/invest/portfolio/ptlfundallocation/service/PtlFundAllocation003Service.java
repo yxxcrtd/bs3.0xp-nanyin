@@ -199,7 +199,9 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
                 String seqno = baseGetBussinessId != null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter) : IDGenerator.generate();
                 flow.setSeqno(seqno);
                 flow.setPortfolioId(entity.getBussTrdTransferOrder().get(i).getPortfolioId());
+                flow.setHodingType(BussinessDictCodeList.持仓类型_可用.getValue());
                 bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, flow);
+                flow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                 bussCommonMapperDelegateService.insert(EtrCashPositionFlowMapper.class, flow);
             }
         }
