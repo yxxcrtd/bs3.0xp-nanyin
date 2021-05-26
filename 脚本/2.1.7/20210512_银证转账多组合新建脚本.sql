@@ -17,5 +17,5 @@ INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 --画面要素
 delete from sys_page_element where PAGE_ID ='PtlFundAllocation001' and ELEMENT_ID='PtlFundAllocation001_btn_add_dzh';
 insert into sys_page_element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG)
-values ('PtlFundAllocation001', 'PtlFundAllocation001_btn_add_dzh', '01', '01', '', '新建', 'system', '', sysdate, 'system', sysdate, 'C');
+values ('PtlFundAllocation001', 'PtlFundAllocation001_btn_add_dzh', '01', '01', '', '多组合新建', 'system', '', sysdate, 'system', sysdate, 'C');
 
