@@ -3188,7 +3188,7 @@
 	<select id="selectAssetInfoByPageEx"
 		resultType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
 		
-		Select * from
+		select * from (Select * from
 		(
 		
 		
@@ -3872,7 +3872,7 @@
 		
 		
 		)
-		order by STATUSDATE desc
+		order by STATUSDATE desc)
 	</select>
 	
 	<select id="selectExportSelectList" resultMap="BaseResultMap"
