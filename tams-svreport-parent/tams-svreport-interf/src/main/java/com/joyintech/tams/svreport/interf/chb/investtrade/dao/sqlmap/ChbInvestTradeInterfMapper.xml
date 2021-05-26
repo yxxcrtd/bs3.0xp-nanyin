@@ -4402,11 +4402,11 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       left join TRD_PRODUCT_DEAL sqdeal
       on sqdeal.TRADE_ID=DEAL.B_TRADE_ID
       left join MST_COUNTER_PARTY party on
-      party.COUNTER_ID=decode(deal.ps,'T22',custinfo.CUSTOMER_ID,'T23',custinfo.CUSTOMER_ID,'T11',custinfo.CUSTOMER_ID,'T12',custinfo.CUSTOMER_ID,'C3',custinfo.CUSTOMER_ID,'C6',custinfo.CUSTOMER_ID,DEAL.COUNTER_ID,DEAL.COUNTER_ID)
+      party.COUNTER_ID=decode(deal.ps,'T22',custinfo.CUSTOMER_ID,'T23',custinfo.CUSTOMER_ID,'T11',custinfo.CUSTOMER_ID,'T12',custinfo.CUSTOMER_ID,'C3',custinfo.CUSTOMER_ID,'C6',custinfo.CUSTOMER_ID,DEAL.COUNTER_ID)
       left join MST_COUNTER_PARTY party2 on
-      party2.LINK_ID=decode(deal.ps,'T22',custinfo.CUSTOMER_ID,'T23',custinfo.CUSTOMER_ID,'T11',custinfo.CUSTOMER_ID,'T12',custinfo.CUSTOMER_ID,'C3',custinfo.CUSTOMER_ID,'C6',custinfo.CUSTOMER_ID,DEAL.COUNTER_ID,DEAL.COUNTER_ID)
+      party2.LINK_ID=decode(deal.ps,'T22',custinfo.CUSTOMER_ID,'T23',custinfo.CUSTOMER_ID,'T11',custinfo.CUSTOMER_ID,'T12',custinfo.CUSTOMER_ID,'C3',custinfo.CUSTOMER_ID,'C6',custinfo.CUSTOMER_ID,DEAL.COUNTER_ID)
       left join MST_COUNTER_PARTY party3 on
-      party3.MANAGER_ID=decode(deal.ps,'T22',custinfo.CUSTOMER_ID,'T23',custinfo.CUSTOMER_ID,'T11',custinfo.CUSTOMER_ID,'T12',custinfo.CUSTOMER_ID,'C3',custinfo.CUSTOMER_ID,'C6',custinfo.CUSTOMER_ID,DEAL.COUNTER_ID,DEAL.COUNTER_ID)
+      party3.MANAGER_ID=decode(deal.ps,'T22',custinfo.CUSTOMER_ID,'T23',custinfo.CUSTOMER_ID,'T11',custinfo.CUSTOMER_ID,'T12',custinfo.CUSTOMER_ID,'C3',custinfo.CUSTOMER_ID,'C6',custinfo.CUSTOMER_ID,DEAL.COUNTER_ID)
       LEFT JOIN DATA_AUTH_NOTIFY_INST T22 ON DEALADD.PORTFOLIO_ID = T22.BUSINESS_ID AND T22.DATA_TYPE = 'PTL01' AND
       T22.MODEL_TYPE='02'
       LEFT JOIN DATA_AUTH_NOTIFY_INST T23 ON nvl(party.counter_id,party2.counter_id) = T23.BUSINESS_ID AND
