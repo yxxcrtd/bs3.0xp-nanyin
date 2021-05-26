@@ -387,7 +387,15 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         if(StringUtil.isNotEmpty(list.get(3))){
             String [] arr = list.get(3).split("\\s+");
             cashType2 = arr[0];
-            cashType2Name = arr[1];
+            if(arr.length > 1) {//防止出现空
+                cashType2Name = arr[1];
+            }
+            else {
+                String name = SysDataUtil.getZZDictCodeAndNameNew(DictCode.信披费用类型, cashType2);
+                if(StringUtil.isNotEmpty(name)) {
+                    cashType2Name = name;
+                }
+            }
         }
         //费率
         BigDecimal bigDecimal = null;

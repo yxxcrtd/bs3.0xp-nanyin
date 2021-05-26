@@ -186,6 +186,9 @@
          * 绑定事件：修改
          */
         table.bind('click', '.edit', function(data, index) {
+            if(data.svrStatusName == "删除"){
+                return Joyin.error("不能操作已被删除的数据");
+            }
             if(data.prodId == null || data.prodId == '' || data.prodId == undefined){
                 Joyin.error("产品代码为空,数据不允许编辑");
                 return;

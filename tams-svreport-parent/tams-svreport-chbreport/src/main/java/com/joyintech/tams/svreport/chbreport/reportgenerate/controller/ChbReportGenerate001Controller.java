@@ -257,10 +257,18 @@ public class ChbReportGenerate001Controller extends BaseController {
                 List<ReportGenerate001Dto> list = chbInvestReportCommonService.selectDqReportList(param);
                 if(!StringUtil.isEmptyList(list)) {
                     String tipMsg = "";
+                    String errMsg = "";
                     for(ReportGenerate001Dto item : list) {
                         if (StringUtil.equals(item.getConfirmStatus(), DictCodeList.确认状态_未确认.getValue())) {
                             tipMsg = tipMsg + item.getProdIdName() + ChbInvestReportConstant.逗号;
                         }
+                        else if(StringUtil.equals(item.getConfirmStatus(), DictCodeList.确认状态_已确认.getValue())) {
+                            errMsg = errMsg + item.getProdName() + ChbInvestReportConstant.左括号 + item.getProdId() +
+                                    ChbInvestReportConstant.右括号 + ChbInvestReportConstant.逗号;
+                        }
+                    }
+                    if(StringUtil.isNotEmpty(errMsg)) {
+                        return new AjaxResult(errMsg + "报告已确认，无法重新生成！", MessageType.错误消息);
                     }
                     if(StringUtil.isNotEmpty(tipMsg)) {
                         return new AjaxResult(tipMsg + "存在相同报告，确认重新生成？", MessageType.确认消息);

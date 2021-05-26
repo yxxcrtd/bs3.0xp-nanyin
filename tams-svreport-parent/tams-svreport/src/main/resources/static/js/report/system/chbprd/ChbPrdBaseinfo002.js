@@ -3,7 +3,7 @@
         $(".layui-fixbar").hide();
         if ('update' == $("#type").val()) {
             $("#prodId").attr("disabled", "disabled");
-            $("#prodName").attr("disabled", "disabled");
+//            $("#prodName").attr("disabled", "disabled");
         }
     }
     $(function () {

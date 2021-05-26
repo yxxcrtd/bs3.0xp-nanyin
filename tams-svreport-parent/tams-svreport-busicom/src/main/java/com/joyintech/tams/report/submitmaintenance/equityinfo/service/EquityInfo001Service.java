@@ -607,7 +607,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 List<ExcelValidDto> checkResult = equityInfoValid.checkExcelEquity(dataList,
                         listType, null,spzMap,objFiledsMap);
                 if (checkResult.isEmpty()) {
-                    List<EquityInfo001Dto> equityList = converToBean(dataList,orgCode);
+                   List<EquityInfo001Dto> equityList = converToBean(dataList,orgCode);
                     EquityInfoDistinctService equityInfoDistinctService =
                             SpringContextUtil.getBean(EquityInfoDistinctService.class);
                     List<String> keys = equityInfoDistinctService.getKeys(equityList);
@@ -1357,10 +1357,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setExcelNum(String.valueOf(i + 2));
             //检查序列号设置初始值
             equityInfo001Dto.setCheckSeqno("0");
-
-            //add by lingxq on 2021-05-06 for 需求升级 ------->>>>>
-            EquityInfoMaintenanceService.updateHoldType(equityInfo001Dto);
-            //add by lingxq on 2021-05-06 for 需求升级 -------<<<<<
             returnInfoList.add(equityInfo001Dto);
         }
         return returnInfoList;
@@ -3184,12 +3180,14 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             tempItem = new TreeMap<String,String>();
             //modify by yanya on 20210521 批量获取索引，避免死锁
             List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
+            ChbTypeMappingExMapper chbTypeMappingExMapper = SpringContextUtil.getBean(ChbTypeMappingExMapper.class);
+            List<ChbTypeMappingEx>  HoldTypeMappingList = chbTypeMappingExMapper.selectByMappingcode("HOLDTYPE");
             int index = 0;
             for (Map<String, String> map : equityList) {
                 equityInfo001Dto = new EquityInfo001Dto();
                 equityInfo001DtoTemp =new EquityInfo001Dto();
                 map1 = new HashMap<String, String>();
-                EquityInfoMaintenanceService.maptoDtoByPrpperties(map,equityInfo001Dto,equityInfo001Map,result,interType);                // 转化为key+空格+value格式
+                EquityInfoMaintenanceService.maptoDtoByPrpperties(map,equityInfo001Dto,equityInfo001Map,result,interType,HoldTypeMappingList);                // 转化为key+空格+value格式
                 //modify by liubin start 修改checkInterfEquitySingle，传入StringBuffer参数
                 equityInfoValid.checkInterfEquitySingle(equityInfo001Dto, registList, map1, true,messageInfo,spzMap,objFiledsMap);
                 //modify by liubin end
@@ -3595,11 +3593,13 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
             int index = 0;
             //add by liubin end
+            ChbTypeMappingExMapper chbTypeMappingExMapper = SpringContextUtil.getBean(ChbTypeMappingExMapper.class);
+            List<ChbTypeMappingEx>  HoldTypeMappingList = chbTypeMappingExMapper.selectByMappingcode("HOLDTYPE");
             for (Map<String, String> map : equityList) {
                 equityInfo001Dto = new EquityInfo001Dto();
                 equityInfo001DtoTemp =new EquityInfo001Dto();
                 map1 = new HashMap<String, String>();
-                EquityInfoMaintenanceService.maptoDtoByPrpperties(map,equityInfo001Dto,equityInfo001Map,result,interType);                // 转化为key+空格+value格式
+                EquityInfoMaintenanceService.maptoDtoByPrpperties(map,equityInfo001Dto,equityInfo001Map,result,interType,HoldTypeMappingList);                // 转化为key+空格+value格式
                 //modify by liubin start 修改checkInterfEquitySingle，传入StringBuffer参数
                 equityInfoValid.checkInterfEquitySingle(equityInfo001Dto, registList, map1, true,messageInfo,spzMap,objFiledsMap);
                 //modify by liubin end

@@ -430,6 +430,7 @@
 		  <if test="prodId != null and prodId != ''">
 			and prod_id = #{prodId,jdbcType=VARCHAR}
 		  </if>
+		  and status = 'E'
 	</select>
 	<select id="selectchbPrdBaseinfoErrordata" resultType="com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfoErrodataWithBLOBs">
 			SELECT

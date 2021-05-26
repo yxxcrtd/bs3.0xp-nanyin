@@ -44,9 +44,9 @@
                            data-th-utext="#{SvrBussRepPlacementInfo.rivalPartyCode}">交易对手代码</label>
                     <div class="layui-input-inline input-inline">
                         <select  th:id="|${entityName}_rivalPartyCode|" th:name="|${entityName}.rivalPartyCode|"
-                                 th:value="${entity?.rivalPartyCode}"
+                                 th:initValue="${entity?.rivalPartyCode}"
                                 data-th-data-url='@{/chb/assetinfodetail/asset/plancement/SvrBussRepPlacementInfo/getTradeCounter}'
-                                data-th-data-formatoption=true
+                                data-th-data-formatoption=false
                                 class="input-select" placeholder="请选择"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}"
                                 allowClear="true"
@@ -113,9 +113,9 @@
                            data-th-utext="#{SvrBussRepPlacementInfo.targetType1}">回购标的类别</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_targetType1|" th:name="|${entityName}.targetType1|"
-                                data-th-data-result="${BONDREP_TYPE}" th:initValue="${entity?.targetType1}"
+                                data-th-data-result="${SVR_TARGET_TYPE2}" th:initValue="${entity?.targetType1}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" >
+                                data-th-placeholder="#{SysCommon.placeholder}" required >
                         </select>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepPlacementInfo.targetAmt}">回购类标的金额</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" data-fixtype="2" unit="1"
+                        <input type="text" data-fixtype="2" unit="1" required
                                class="layui-input form-input text-money" id="targetAmt"
                                th:name="|${entityName}.targetAmt|" data-th-value="${entity?.targetAmt}"
                                data-moneymemory="" data-th-data-textrange="2">

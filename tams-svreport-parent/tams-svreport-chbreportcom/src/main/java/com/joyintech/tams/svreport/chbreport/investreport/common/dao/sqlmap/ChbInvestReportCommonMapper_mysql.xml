@@ -236,7 +236,9 @@
 			and (p.MDATE is null or TIMESTAMPDIFF(DAY, STR_TO_DATE(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d'), p.MDATE) <![CDATA[>=]]> 90)
             /** 当前日期 - 成立日 大于 90**/
             and (TIMESTAMPDIFF(DAY, p.VDATE, STR_TO_DATE(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d')) <![CDATA[>=]]> 90)
-			and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			</if>
 			<if test="prodId !=null and prodId != ''">
 				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
 			</if>

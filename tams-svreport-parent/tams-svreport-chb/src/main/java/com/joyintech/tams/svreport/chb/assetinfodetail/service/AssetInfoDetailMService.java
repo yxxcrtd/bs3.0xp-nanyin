@@ -16,11 +16,9 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
@@ -306,7 +304,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
 		List<AssetInfoDetailDto> list = new ArrayList<>();
 		List<ExcelValidDto> checkResult = assetInfoDetailUtil.convertToBean(list,data);
-		if (!StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list)){
+		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list)){
 			int dataCount = this.assetInfoDetailMapper.selectDataCount(list);
 			if (dataCount > 0) {
 				webResult.setMessage(this.getMessage("REPORT_ASSET_C_0003"), MessageType.确认消息);
@@ -416,7 +414,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue())){
 				map.put("rivalPartyType",SysDataUtil.getZZDictCodeAndName(DictCode.对手方类型, assetInfoDetailDto.getRivalPartyType()));
 				map.put("basis",SysDataUtil.getZZDictCodeAndName(DictCode.计息基础_中债, assetInfoDetailDto.getBasis()));
-				map.put("targetType1",SysDataUtil.getZZDictCodeAndName(DictCode.回购标的类型, assetInfoDetailDto.getTargetType1()));
+				map.put("targetType1",SysDataUtil.getZZDictCodeAndName(DictCode.回购标的类别, assetInfoDetailDto.getTargetType1()));
 				dtoList_02.add(map);
 			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue())){
 				map.put("chbSectype",SysDataUtil.getZZDictCodeAndName(DictCode.具体类别, assetInfoDetailDto.getChbSectype()));
@@ -429,6 +427,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				map.put("registOrg",SysDataUtil.getZZDictCodeAndName(DictCode.登记托管机构_中债, assetInfoDetailDto.getRegistOrg()));
 				map.put("registorgComment",SysDataUtil.getZZDictCodeAndName(DictCode.登记托管机构_监管报送, assetInfoDetailDto.getRegistorgComment()));
 				map.put("bankSecZxzq",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getBankSecZxzq()));
+				map.put("bankCapital",SysDataUtil.getZZDictCodeAndName(DictCode.银行资本补充工具, assetInfoDetailDto.getBankCapital()));
 				map.put("isFbzb",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIsFbzb()));
 				dtoList_03.add(map);
 			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_非标准化债权类资产_信贷资产流转项目.getValue())){

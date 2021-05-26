@@ -298,7 +298,7 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                         continue;
                     }
                 }
-                if("修改".equals(type) || "删除".equals(type)){
+                if("修改".equals(type)){
                     if(rst.size()<=0){
                         message.add("产品代码系统中不存在!");
                         errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
@@ -562,6 +562,14 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                 dto.setIssuingStatus(issuingStatus);
                 list.add(dto);
                 if(isCheck) {
+                    if ("删除".equals(type)) {
+                        if(rst.size()<=0){
+                            message.add("产品代码系统中不存在!");
+                            errorList.add(new ExcelValidDto(prodId,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                        }
+                        //不做下面任何check
+                        continue;
+                    }
                     List<ValidMessage> resultList = new ArrayList<ValidMessage>();
                     resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbPrdBaseinfo002", null, ValidMessage.class);
                     for (ValidMessage msg : resultList) {

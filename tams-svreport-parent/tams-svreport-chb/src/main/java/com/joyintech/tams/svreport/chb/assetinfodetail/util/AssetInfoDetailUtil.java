@@ -108,7 +108,7 @@ public class AssetInfoDetailUtil {
             params.put("linkDictCode", DictCode.资产_负债类别.getValue());
             List<SysDatadictListLink> listLink = assetInfoDetailMapper.getDataListLinkData(params);
             listLink.forEach(sysDatadictListLink -> {
-                dict.put(sysDatadictListLink.getLinkedItemCode(),sysDatadictListLink.getLinkedItemCode());
+                dict.put(sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
             });
             entity.setAssetType(dict.get(entity.getAssetType2()));
             entity.setTradeMarket(SysDataUtil.getZZDictCodeFromName(DictCode.交易流通场所_中债, list.get(3)));
@@ -241,7 +241,7 @@ public class AssetInfoDetailUtil {
                 entity.setSvrBussRepOthKindInfoDto(getSvrBussRepOthKindInfoDto(list));
             }
             else {
-                resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "请上传正确的模板！"));
+                resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产/负债类别不在值域范围内"));
                 return resultList;
             }
             List<String> message = new ArrayList<>();
@@ -947,7 +947,7 @@ public class AssetInfoDetailUtil {
             dto.setAssetYield(new BigDecimal(list.get(9)));
         }
         dto.setBasis(SysDataUtil.getZZDictCodeFromName(DictCode.计息基础_中债, list.get(10)));
-        dto.setTargetType1(SysDataUtil.getZZDictCodeFromName(DictCode.回购标的类型, list.get(11)));
+        dto.setTargetType1(SysDataUtil.getZZDictCodeFromName(DictCode.回购标的类别, list.get(11)));
         if (StringUtil.isNotEmpty(list.get(12))) {
             dto.setTargetAmt(new BigDecimal(list.get(12)));
         }

@@ -9,8 +9,8 @@
             <arg column="VALUE_DATE" javaType="java.util.Date" jdbcType="TIMESTAMP" />
             <arg column="CAPITAL" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
             <arg column="ASSET_TOTAL_MARKET" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
-            <arg column="ASSET_VALUE_COST_FQ" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
-            <arg column="ASSET_VALUE_MARKET_FQ" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="ASSET_VALUE_COST" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="ASSET_VALUE_MARKET" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
             <arg column="DEVIATION" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
             <arg column="UNIT_VALUE" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
             <arg column="UNIT_VALUE_T" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
@@ -34,7 +34,7 @@
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexDetail">
         insert into rep_prod_index_detail (FPROD_ID, PROD_ID, PROD_NAME,
                                            VALUE_DATE, CAPITAL, ASSET_TOTAL_MARKET,
-                                           ASSET_VALUE_COST_FQ, ASSET_VALUE_MARKET_FQ, DEVIATION,
+                                           ASSET_VALUE_COST, ASSET_VALUE_MARKET, DEVIATION,
                                            UNIT_VALUE, UNIT_VALUE_T, PROFIT_TDY,
                                            W_YIELD, YIELD_TDY, YIELD_7,
                                            PROFIT_CURRENT_YES, PROFIT_CURRENT_NO, BENCHMARK_INFO,
@@ -43,7 +43,7 @@
                                            CREATE_TIME, UPDATE_TIME)
         values (#{fprodId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR},
                 #{valueDate,jdbcType=TIMESTAMP}, #{capital,jdbcType=DECIMAL}, #{assetTotalMarket,jdbcType=DECIMAL},
-                #{assetValueCostFq,jdbcType=DECIMAL}, #{assetValueMarketFq,jdbcType=DECIMAL}, #{deviation,jdbcType=DECIMAL},
+                #{assetValueCost,jdbcType=DECIMAL}, #{assetValueMarket,jdbcType=DECIMAL}, #{deviation,jdbcType=DECIMAL},
                 #{unitValue,jdbcType=DECIMAL}, #{unitValueT,jdbcType=DECIMAL}, #{profitTdy,jdbcType=DECIMAL},
                 #{wYield,jdbcType=DECIMAL}, #{yieldTdy,jdbcType=DECIMAL}, #{yield7,jdbcType=DECIMAL},
                 #{profitCurrentYes,jdbcType=DECIMAL}, #{profitCurrentNo,jdbcType=DECIMAL}, #{benchmarkInfo,jdbcType=VARCHAR},
@@ -72,11 +72,11 @@
             <if test="assetTotalMarket != null">
                 ASSET_TOTAL_MARKET,
             </if>
-            <if test="assetValueCostFq != null">
-                ASSET_VALUE_COST_FQ,
+            <if test="assetValueCost != null">
+                ASSET_VALUE_COST,
             </if>
-            <if test="assetValueMarketFq != null">
-                ASSET_VALUE_MARKET_FQ,
+            <if test="assetValueMarket != null">
+                ASSET_VALUE_MARKET,
             </if>
             <if test="deviation != null">
                 DEVIATION,
@@ -152,11 +152,11 @@
             <if test="assetTotalMarket != null">
                 #{assetTotalMarket,jdbcType=DECIMAL},
             </if>
-            <if test="assetValueCostFq != null">
-                #{assetValueCostFq,jdbcType=DECIMAL},
+            <if test="assetValueCost != null">
+                #{assetValueCost,jdbcType=DECIMAL},
             </if>
-            <if test="assetValueMarketFq != null">
-                #{assetValueMarketFq,jdbcType=DECIMAL},
+            <if test="assetValueMarket != null">
+                #{assetValueMarket,jdbcType=DECIMAL},
             </if>
             <if test="deviation != null">
                 #{deviation,jdbcType=DECIMAL},
