@@ -309,16 +309,18 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
      * @since 1.0
      */
     private List<SvrMstMarketCalendarInfo001Dto> converToBean(List<List<String>> dataList)
-        throws ParseException {
+            throws ParseException {
         // 返回的list定义
         List<SvrMstMarketCalendarInfo001Dto> returnInfoList = new ArrayList<SvrMstMarketCalendarInfo001Dto>();
         SvrMstMarketCalendarInfo001Dto mstMarketCalendarInfo001Dto = null;
-        for (int i = 0; i < dataList.size(); i++ ) {
+        for (int i = 0; i < dataList.size(); i++) {
             List<String> list = dataList.get(i);
             mstMarketCalendarInfo001Dto = new SvrMstMarketCalendarInfo001Dto();
             mstMarketCalendarInfo001Dto.setCdate(DateUtil.parse(list.get(0)));
             mstMarketCalendarInfo001Dto.setCalendarId(list.get(1).split(" ")[0]);
-            mstMarketCalendarInfo001Dto.setIsHoliday(Long.parseLong(list.get(2).split(" ")[0]));
+            if (StringUtil.isNotBlank(list.get(2).split(" ")[0])) {
+                mstMarketCalendarInfo001Dto.setIsHoliday(Long.parseLong(list.get(2).split(" ")[0]));
+            }
             returnInfoList.add(mstMarketCalendarInfo001Dto);
         }
         return returnInfoList;
