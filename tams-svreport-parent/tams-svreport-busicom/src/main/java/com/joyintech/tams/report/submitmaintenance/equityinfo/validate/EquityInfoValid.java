@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
+import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +42,7 @@ import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRu
 import com.joyintech.tams.report.submitmanagement.equityinforegist.common.EquityInfoRegistCommonUtil;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dao.EquityInfoRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
+import com.joyintech.tams.report.submitmaintenance.equityinfo.service.EquityInfoMaintenanceService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -2657,6 +2660,19 @@ public class EquityInfoValid {
                 message = checkRemark(message, list.get(21), type,spzMap,objFiledsMap,equityInfo001Dto);
                 // 所属国家或地区
                 message = checkHolderRegion(message, type, list.get(7), list.get(6),spzMap,objFiledsMap,equityInfo001Dto);
+
+                //投资者类别校验
+                //-----add by lingxq on 2021-05-25 for 投资者类别校验----------->>>>>>
+                ChbTypeMappingExMapper chbTypeMappingExMapper = SpringContextUtil.getBean(ChbTypeMappingExMapper.class);
+                List<ChbTypeMappingEx>  HoldTypeMappingList = chbTypeMappingExMapper.selectByMappingcode("HOLDTYPE");
+                if(!StringUtil.isBlank(list.get(8))){
+                    equityInfo001Dto.setHolderType(list.get(8).split(" ")[0]);
+                }
+                if(!StringUtil.isBlank(list.get(15))) {
+                    equityInfo001Dto.setHolderName(list.get(15));
+                }
+                EquityInfoMaintenanceService.checkHoldType(equityInfo001Dto,HoldTypeMappingList,message);
+                //-----add by lingxq on 2021-05-25 for 投资者类别校验 -----------<<<<<<<
             }
             else if ("04".equals(type)) {
                 // 风险偏好
@@ -3119,6 +3135,12 @@ public class EquityInfoValid {
                     message.add(this.getMessage("CHB_EQUITYINFO_E_028"));
                 }
             }
+            //投资者类别校验
+            //-----add by lingxq on 2021-05-25 for 投资者类别校验----------->>>>>>
+            ChbTypeMappingExMapper chbTypeMappingExMapper = SpringContextUtil.getBean(ChbTypeMappingExMapper.class);
+            List<ChbTypeMappingEx>  HoldTypeMappingList = chbTypeMappingExMapper.selectByMappingcode("HOLDTYPE");
+            EquityInfoMaintenanceService.checkHoldType(equityInfo001Dto,HoldTypeMappingList,message);
+            //-----add by lingxq on 2021-05-25 for 投资者类别校验 -----------<<<<<<<
             equityInfo001Dto.setType(type);
         }
         else {
