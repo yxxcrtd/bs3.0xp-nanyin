@@ -5,6 +5,8 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper;
+import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
 import com.joyintech.tams.common.base.entity.TrdFinProductBarter;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
@@ -42,6 +44,11 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
      */
     @Autowired
     private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
+    /**
+     * 组合持仓流水Mapper
+     */
+    @Autowired
+    private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
 
     private static final List<String> 正回购_逆回购 = Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),
         DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue(),
@@ -394,19 +401,37 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
 //                result.add(resultDto);
 //            }
             if (inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue()) && DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs())) {
-                resultDto.setCdate(deal.getTradeDate());
-                resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
-                result.add(resultDto);
-                PtlSecPositionFlowDto resultDtozt = new PtlSecPositionFlowDto();
-                BeanUtils.copyProperties(resultDto, resultDtozt);
-                resultDtozt.setHodingType(DictCodeList.持仓类型_在途.getValue());
-                result.add(resultDtozt);
+                Map<String, Object> params = new HashMap<>();
+                params.put("finprodId",deal.getbTradeId());
+                params.put("holdingType",DictCodeList.持仓类型_在途.getValue());
+                List<PtlSecPositionFlow> list = ptlSecPositionFlowMapper.selectSecFlow(params);
+                if(list.isEmpty()) {
+                    resultDto.setCdate(deal.getTradeDate());
+                    resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+                    result.add(resultDto);
+                    PtlSecPositionFlowDto resultDtozt = new PtlSecPositionFlowDto();
+                    BeanUtils.copyProperties(resultDto, resultDtozt);
+                    resultDtozt.setHodingType(DictCodeList.持仓类型_在途.getValue());
+                    result.add(resultDtozt);
+                }else{
+                    resultDto.setCdate(deal.getTradeDate());
+                    resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+                    result.add(resultDto);
+                    PtlSecPositionFlowDto resultDtozt = new PtlSecPositionFlowDto();
+                    BeanUtils.copyProperties(resultDto, resultDtozt);
+                    resultDtozt.setAmount(list.get(0).getAmount());
+                    resultDtozt.setHodingType(DictCodeList.持仓类型_在途.getValue());
+                    result.add(resultDtozt);
+                }
                 //抵消赎回提交时的可用持仓
-                PtlSecPositionFlowDto resultDtoky = new PtlSecPositionFlowDto();
-                BeanUtils.copyProperties(resultDto, resultDtoky);
-                resultDtoky.setHodingType(DictCodeList.持仓类型_可用.getValue());
-                resultDtoky.setAmount(resultDtoky.getAmount().negate());
-                result.add(resultDtoky);
+                // modify by jiangpeng on 20210526 ZGBSSE-418 计划类净值型提交时没有可用持仓
+                if(!StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue(),deal.getFinprodType2())) {
+                    PtlSecPositionFlowDto resultDtoky = new PtlSecPositionFlowDto();
+                    BeanUtils.copyProperties(resultDto, resultDtoky);
+                    resultDtoky.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                    resultDtoky.setAmount(resultDtoky.getAmount().negate());
+                    result.add(resultDtoky);
+                }
             }
             return result;
         }

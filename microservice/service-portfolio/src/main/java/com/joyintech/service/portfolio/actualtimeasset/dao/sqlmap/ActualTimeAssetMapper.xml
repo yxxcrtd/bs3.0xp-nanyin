@@ -9,6 +9,7 @@
 				portfolio_id,
 				sec_acct_id,
 				finprod_id,
+				nvl(sum(case when hoding_type = '02' then AMOUNT end),0) PTL_AMOUNT02, /* add by jiangpeng on 20210526 ZGBSSE-418 计划类净值型赎回时有在途持仓 */
 				nvl(sum(case when hoding_type = '03' then AMOUNT end),0) PTL_AMOUNT03,
 				nvl(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
 				nvl(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
@@ -113,6 +114,7 @@
 		portfolio_id,
 		sec_acct_id,
 		finprod_id,
+		nvl(sum(case when hoding_type = '02' then AMOUNT end),0) PTL_AMOUNT02,/* add by jiangpeng on 20210526 ZGBSSE-418 计划类净值型赎回时有在途持仓 */
 		nvl(sum(case when hoding_type = '03' then AMOUNT end),0) PTL_AMOUNT03,
 		nvl(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
 		nvl(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
@@ -219,14 +221,14 @@
 		     	select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr,type8,type7,
 			        (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06) as actualPositionAmount,
 					/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
-			        (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08+ PTL_AMOUNT09 - PTL_AMOUNT10) as tradePositionAmount,
+			        (PTL_FLOW_AMOUNT01 - PTL_AMOUNT02 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08+ PTL_AMOUNT09 - PTL_AMOUNT10) as tradePositionAmount,
 			        ETR_FLOW_AMOUNTE01 as instructionsAmount,
 			        /* modify by jiangpeng on 20210416 start ZGBSSE-226 【行权债升级】通道债券行权赎回生效及流程中，交易可用头寸、实际头寸未扣减。*/
 			        /*修改 质押持仓 = 质押持仓(04) - 预占用(08) */
 					nvl(PTL_AMOUNT04 - PTL_AMOUNT08,0) as pledgeAmount,
 					/*修改 预减持仓 = 实际持仓 - 交易可用持仓 =质押持仓(04) - 可用持仓(01) - 预占用(08) - 借贷融入流程中(09) + 借贷融出流程中(10) [债券借贷融入质押券特殊处理]*/
-					case when mm.TYPE8 in ('F01') then nvl(- PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 - PTL_AMOUNT09 + PTL_AMOUNT10,0) else
-					nvl(PTL_AMOUNT04- PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 - PTL_AMOUNT09 + PTL_AMOUNT10,0) end as preReductionAmount
+					case when mm.TYPE8 in ('F01') then nvl(- PTL_FLOW_AMOUNT01 + PTL_AMOUNT02 - PTL_AMOUNT08 - PTL_AMOUNT09 + PTL_AMOUNT10,0) else
+					nvl(PTL_AMOUNT04- PTL_FLOW_AMOUNT01 + PTL_AMOUNT02 - PTL_AMOUNT08 - PTL_AMOUNT09 + PTL_AMOUNT10,0) end as preReductionAmount
 					/* modify by jiangpeng on 20210416 end ZGBSSE-226 【行权债升级】通道债券行权赎回生效及流程中，交易可用头寸、实际头寸未扣减。*/
 			       from
 			       (
@@ -239,6 +241,7 @@
 			       			finprodAbbr,
 			       			type8,
 				       		type7,
+							nvl(sum(PTL_AMOUNT02),0) as PTL_AMOUNT02,
 			       			nvl(sum(PTL_AMOUNT03),0) as PTL_AMOUNT03,
 				            nvl(sum(PTL_AMOUNT04),0) as PTL_AMOUNT04,
 				            nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
@@ -372,6 +375,7 @@
 				       			'' finprodAbbr,
 				       			type8,
 				       			type7,
+								nvl(sum(PTL_AMOUNT02),0) as PTL_AMOUNT02,/* add by jiangpeng on 20210526 ZGBSSE-418 计划类净值型赎回时有在途持仓 */
 				       			nvl(sum(PTL_AMOUNT03),0) as PTL_AMOUNT03,
 				             	nvl(sum(PTL_AMOUNT04),0) as PTL_AMOUNT04,
 				             	nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
@@ -498,6 +502,7 @@
 				       			finprodAbbr,
 				       			type8,
 				       			type7,
+								nvl(sum(PTL_AMOUNT02),0) as PTL_AMOUNT02,/* add by jiangpeng on 20210526 ZGBSSE-418 计划类净值型赎回时有在途持仓 */
 				       			nvl(sum(PTL_AMOUNT03),0) as PTL_AMOUNT03,
 				             	nvl(sum(PTL_AMOUNT04),0) as PTL_AMOUNT04,
 				             	nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
