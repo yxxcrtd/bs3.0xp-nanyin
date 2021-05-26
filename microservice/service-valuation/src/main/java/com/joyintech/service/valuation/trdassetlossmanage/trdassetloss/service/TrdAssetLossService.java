@@ -38,7 +38,7 @@ import java.util.*;
  * @see TrdAssetLossService
  * @since 1.0
  */
-@Service
+@Service(value="serviceTrdAssetLossService")
 @Transactional(rollbackFor = Exception.class)
 public class TrdAssetLossService extends BaseService<TrdAssetLoss001Dto> {
 
