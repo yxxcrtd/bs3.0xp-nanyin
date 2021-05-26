@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@RestController(value="serviceTrdAssetLossBalance001Controller")
-@RequestMapping("/${application.service}/TrdAssetLossBalance001")
+@RestController("TrdAssetLossBalance001Ctr_dtx")
+@RequestMapping("/TrdAssetLossBalance001")
 public class TrdAssetLossBalance001Controller extends BaseController {
 
     @Autowired

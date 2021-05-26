@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.Map;
 
-@RestController(value="serviceTrdAssetLossBalance002Controller")
-@RequestMapping("/${application.service}/TrdAssetLossBalance002")
+@RestController("TrdAssetLossBalance002Ctr_dtx")
+@RequestMapping("/TrdAssetLossBalance002")
 public class TrdAssetLossBalance002Controller extends BaseController {
 
     @Autowired

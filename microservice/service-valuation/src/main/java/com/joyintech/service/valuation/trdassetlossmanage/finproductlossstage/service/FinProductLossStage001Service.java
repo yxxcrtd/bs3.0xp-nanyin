@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Service(value="serviceFinProductLossStage001Service")
+@Service
 public class FinProductLossStage001Service extends CommonExportService<FinProductLossStage001Dto> {
 
     @Autowired

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@RestController(value="serviceFinProductLossStage002Controller")
+@RestController("FinProductLossStage002Ctr_dtx")
 @RequestMapping("/FinProductLossStage002")
 public class FinProductLossStage002Controller extends BaseController {
 

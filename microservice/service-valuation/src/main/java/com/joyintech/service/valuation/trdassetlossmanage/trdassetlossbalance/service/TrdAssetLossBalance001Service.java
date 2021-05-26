@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.Map;
 
-@Service(value="serviceTrdAssetLossBalance001Service")
+@Service
 public class TrdAssetLossBalance001Service  extends CommonExportService<TrdAssetLossBalance001Dto> {
 
     @Autowired

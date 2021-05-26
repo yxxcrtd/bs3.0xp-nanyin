@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-@Service(value="serviceTrdAssetLossBalance002Service")
+@Service
 public class TrdAssetLossBalance002Service extends CommonExportService<TrdAssetLossBalance002Dto> {
 
     @Autowired

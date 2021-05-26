@@ -32,13 +32,13 @@ import java.util.*;
 
 /**
  * 资产减值管理微服务端service 〈功能详细描述〉
- *
+ * 
  * @author lby
  * @version 1.0 2020年10月10日
  * @see TrdAssetLossService
  * @since 1.0
  */
-@Service(value="serviceTrdAssetLossService")
+@Service
 @Transactional(rollbackFor = Exception.class)
 public class TrdAssetLossService extends BaseService<TrdAssetLoss001Dto> {
 
@@ -46,7 +46,7 @@ public class TrdAssetLossService extends BaseService<TrdAssetLoss001Dto> {
     private TrdAssetLoss001Mapper trdAssetLoss001Mapper;
     /**
      * 资产减值管理分页查询 <功能详细描述>
-     *
+     * 
      * @param param
      * @return
      * @throws Exception

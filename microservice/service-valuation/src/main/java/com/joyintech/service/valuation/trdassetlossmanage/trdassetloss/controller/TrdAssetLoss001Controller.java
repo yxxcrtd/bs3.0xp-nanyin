@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
-
+ 
 package com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.controller;
 
 import com.joyintech.framework.annotation.DTXTransaction;
@@ -45,9 +45,9 @@ public class TrdAssetLoss001Controller {
      */
     @Autowired
     private TrdAssetLossService trdAssetLossService;
-
+    
     /**
-     *
+     * 
      * 资产减值管理分页查询
      * <功能详细描述>
      * @param param

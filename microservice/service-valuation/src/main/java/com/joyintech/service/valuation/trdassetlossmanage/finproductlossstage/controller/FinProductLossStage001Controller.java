@@ -13,7 +13,7 @@ import com.joyintech.service.valuation.trdassetlossmanage.finproductlossstage.dt
 import java.util.List;
 import java.util.Map;
 
-@RestController(value="serviceFinProductLossStage001Controller")
+@RestController("FinProductLossStage001Ctr_dtx")
 @RequestMapping("/FinProductLossStage001")
 public class FinProductLossStage001Controller extends BaseController {
 
