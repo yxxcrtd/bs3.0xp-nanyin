@@ -172,7 +172,7 @@ $(function(){
                     var portfolioId2 = options.text();
                     var row = {
                         counterId : options.val(),
-                        portfolioName :options.text(),
+                        portfolioName :options.text().split(':')[1],
                         finprodMarketId : $('#finprodMarketId').val(),
                         tradeDate : $('#tradeDate').val(),
                         settleDate : $('#settleDate').val(),
