@@ -923,9 +923,10 @@ public class ChbPeriodicService {
                 value.setAssetTotalValue(ChbInvestReportConstant.df1.format(qmDto.getUnitValueT()));
             }
             // 期间累计净值增长率
-            // 期初累计净值 默认取1
+            // 期初累计净值 空 或者 起息日>报告开始日 默认取1
             BigDecimal qcUnitValueT = null;
-            if (isNullOrZero(qcDto.getUnitValueT())) {
+            if (isNullOrZero(qcDto.getUnitValueT())
+                    || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1) {
                 qcUnitValueT = new BigDecimal("1");
             } else {
                 qcUnitValueT = qcDto.getUnitValueT();

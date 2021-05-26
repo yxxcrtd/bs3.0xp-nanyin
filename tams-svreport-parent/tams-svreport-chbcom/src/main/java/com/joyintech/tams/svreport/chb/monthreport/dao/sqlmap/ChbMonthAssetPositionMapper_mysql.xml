@@ -1175,7 +1175,7 @@
                assinfo.GUA_TYPE        as guaType,
                assinfo.TRADE_MARKET    as tradeMarket,
                info.IS_CONSTRACTE      as isConstracte,
-               info.IS_FBZB            as isFbzb
+               assinfo.IS_FBZB         as isFbzb
         FROM CHB_MONTH_ASSET_POSITION position
                  LEFT JOIN (
             SELECT lastmonth.prod_id,
