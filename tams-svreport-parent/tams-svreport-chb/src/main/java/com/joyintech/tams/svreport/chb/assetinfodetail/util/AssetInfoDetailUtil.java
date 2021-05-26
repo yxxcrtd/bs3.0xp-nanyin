@@ -108,7 +108,7 @@ public class AssetInfoDetailUtil {
             params.put("linkDictCode", DictCode.资产_负债类别.getValue());
             List<SysDatadictListLink> listLink = assetInfoDetailMapper.getDataListLinkData(params);
             listLink.forEach(sysDatadictListLink -> {
-                dict.put(sysDatadictListLink.getLinkedItemCode(),sysDatadictListLink.getLinkedItemCode());
+                dict.put(sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
             });
             entity.setAssetType(dict.get(entity.getAssetType2()));
             entity.setTradeMarket(SysDataUtil.getZZDictCodeFromName(DictCode.交易流通场所_中债, list.get(3)));

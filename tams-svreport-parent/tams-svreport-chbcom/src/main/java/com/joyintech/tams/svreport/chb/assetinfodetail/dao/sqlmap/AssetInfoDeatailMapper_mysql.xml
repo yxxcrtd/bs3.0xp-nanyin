@@ -2896,7 +2896,8 @@
     <select id="getTradeCounter" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         COUNTER_ID AS id,
-        COUNTER_NAME AS text,
+        COUNTER_ID AS text,
+        COUNTER_NAME AS institutionCode,
         COUNTER_TYPE AS object
         FROM
         chb_mst_counter_party
