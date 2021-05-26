@@ -19,3 +19,6 @@ delete from sys_page_element where PAGE_ID ='PtlFundAllocation001' and ELEMENT_I
 insert into sys_page_element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG)
 values ('PtlFundAllocation001', 'PtlFundAllocation001_btn_add_dzh', '01', '01', '', '多组合新建', 'system', '', sysdate, 'system', sysdate, 'C');
 
+--草稿箱模式非对象画面表
+delete from SYS_TRASH_NOT_TARGET_PAGE where SEQ_NO = 'A6986B98361453A7E08553CAA8C081D0';
+insert into SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO, PAGE_ID) values ('A6986B98361453A7E08553CAA8C081D0', 'PtlFundAllocation003');
