@@ -484,10 +484,10 @@ public class ChbInvestReportCommonService extends BaseService {
             return year + ChbInvestReportConstant.一月第一天;
         }
         else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_三季度报.getValue())) {
-            return year + ChbInvestReportConstant.十月第一天;
+            return year + ChbInvestReportConstant.七月第一天;
         }
         else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_四季度报.getValue())) {
-            return year + ChbInvestReportConstant.十二月最后一天;
+            return year + ChbInvestReportConstant.十月第一天;
         }
         else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_下半年报.getValue())) {
             return year + ChbInvestReportConstant.七月第一天;
