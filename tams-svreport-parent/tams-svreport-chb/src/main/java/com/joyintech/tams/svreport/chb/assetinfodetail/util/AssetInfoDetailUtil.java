@@ -241,7 +241,7 @@ public class AssetInfoDetailUtil {
                 entity.setSvrBussRepOthKindInfoDto(getSvrBussRepOthKindInfoDto(list));
             }
             else {
-                resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "请上传正确的模板！"));
+                resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产/负债类别不在值域范围内"));
                 return resultList;
             }
             List<String> message = new ArrayList<>();
