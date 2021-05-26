@@ -75,7 +75,7 @@ public class InterfRiskRdsController {
                 interfRiskRdsDto.setInfCode(infCode);
                 interfRiskRdsDto.setAssetType(assetType);
                 logger.info("==========调用共通方法sendRiskRdsDataCommon==========");
-                return JsonUtils.object2Json(interfRiskRdsService.sendRiskRdsDataCommon(dataMap, interfRiskRdsDto));
+                return StringUtil.trimHtmlTag(JsonUtils.object2Json(interfRiskRdsService.sendRiskRdsDataCommon(dataMap, interfRiskRdsDto)));
             }else {
                 logger.info("==========系统参数中未开启风险试算开关==========");
                 return null;

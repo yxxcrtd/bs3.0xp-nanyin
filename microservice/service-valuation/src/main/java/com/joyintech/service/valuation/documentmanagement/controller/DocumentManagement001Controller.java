@@ -60,7 +60,7 @@ public class DocumentManagement001Controller extends BaseController {
 	/**
 	 * 导出功能 <功能详细描述>
 	 * 
-	 * @param paraMap
+	 * @param params
 	 * @return
 	 * @see
 	 * @since 1.0
@@ -76,7 +76,7 @@ public class DocumentManagement001Controller extends BaseController {
 	 * 文件下载
 	 * <一句话功能简述>
 	 * <功能详细描述>
-	 * @param request
+	 * @param params
 	 * @return
 	 * @throws Exception
 	 */

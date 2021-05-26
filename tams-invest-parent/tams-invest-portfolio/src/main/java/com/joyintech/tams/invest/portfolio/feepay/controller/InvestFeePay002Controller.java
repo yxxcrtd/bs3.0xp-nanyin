@@ -31,14 +31,12 @@ import com.joyintech.tams.common.base.dao.MstFeeinfoMapper;
 import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
-import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.MstFeeinfo;
 import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotalKey;
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.entity.ProcessMark;
@@ -51,10 +49,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -300,13 +296,12 @@ public class InvestFeePay002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("queryLastPayDate")
     public String queryLastPayDate(String secAcctId, String feeType,String org, String operateType) {
-        return investFeePay002Service.queryLastPayDate(secAcctId, feeType,org, operateType);
+        return StringUtil.trimHtmlTag(investFeePay002Service.queryLastPayDate(secAcctId, feeType,org, operateType));
     }
 
     /**
      * 账户维护费 查询费用上次计提结束日
      * @param secAcctId 证券账户
-     * @param feeType 费用类型
      * @return 上次计提结束日
      * @see
      * @since 1.0
@@ -394,7 +389,7 @@ public class InvestFeePay002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("querySecAcctOrg")
     public String querySecAcctOrg(String secAcctId) {
-        return investFeePay002Service.querySecAcctOrg(secAcctId);
+        return StringUtil.trimHtmlTag(investFeePay002Service.querySecAcctOrg(secAcctId));
     }
 
     /**

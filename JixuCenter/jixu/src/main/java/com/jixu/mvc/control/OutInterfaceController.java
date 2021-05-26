@@ -2,6 +2,7 @@ package com.jixu.mvc.control;
 
 import java.util.Date;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public class OutInterfaceController extends ExceptionControl{
 	
 	/**
 	 * 获取该投资组合的最新单位净值
-	 * @param portnav
+	 * @param params
 	 * @return
 	 */
 	@PostMapping(value="/outInterface/getLatestNav")
@@ -36,7 +37,7 @@ public class OutInterfaceController extends ExceptionControl{
 	
 	/**
 	 * 通过投资组合编号获取代码
-	 * @param portcode
+	 * @param params
 	 * @return
 	 */
 	@PostMapping(value="/outInterface/getPortnumByCode")
@@ -47,7 +48,7 @@ public class OutInterfaceController extends ExceptionControl{
 	
 	/**
 	 * 通过投资组合编号获取代码
-	 * @param portcode
+	 * @param params
 	 * @return
 	 */
 	@PostMapping(value="/outInterface/getBkAccIDByExtacct")
@@ -58,18 +59,18 @@ public class OutInterfaceController extends ExceptionControl{
 	
 	/**
 	 * 通过银行账户查找证券账户
-	 * @param portcode
+	 * @param params
 	 * @return
 	 */
 	@PostMapping(value="/outInterface/getSecAcctByBkAcct")
 	@ResponseBody
 	public String getSecAcctByBkAcct(@RequestBody PortParams params) {
-		return outInterfaceService.getSecAcctByBkAcct(params.getBkAcctID());
+		return StringUtil.trimHtmlTag(outInterfaceService.getSecAcctByBkAcct(params.getBkAcctID()));
 	}
 	
 	/**
 	 * 通过科目名找科目号
-	 * @param portcode
+	 * @param params
 	 * @return
 	 */
 	@PostMapping(value="/outInterface/getCoaacctByPortnumAcctName")
@@ -80,7 +81,7 @@ public class OutInterfaceController extends ExceptionControl{
 	
 	/**
 	 * 通过证券名找cusip
-	 * @param portcode
+	 * @param params
 	 * @return
 	 */
 	@PostMapping(value="/outInterface/getCusipByName")
@@ -91,7 +92,7 @@ public class OutInterfaceController extends ExceptionControl{
 	
 	/**
 	 * 通过证券代码名找cusip
-	 * @param portcode
+	 * @param params
 	 * @return
 	 */
 	@PostMapping(value="/outInterface/getCusipBySecid")

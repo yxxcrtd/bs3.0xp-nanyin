@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joyintech.framework.JoyinApplication;
 import com.joyintech.framework.config.Application;
 
+import java.util.Locale;
+
 /**
  * 微服务系统容器启动入口
  * @author Zim
