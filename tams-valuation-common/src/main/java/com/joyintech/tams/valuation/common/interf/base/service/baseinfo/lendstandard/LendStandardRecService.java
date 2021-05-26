@@ -436,6 +436,9 @@ public class LendStandardRecService {
         result.setFinprodId(dto.getDlId());
         //数据来源 = 常量.估值数据来源
         result.setDataSource(ValInterfCommonConstant.getValDataSource());
+        /**add by wujie on 20210527 start**/
+        result.setTermType(dto.getTermKind());
+        /**add by wujie on 20210527 end**/
         return result;
     }
 
