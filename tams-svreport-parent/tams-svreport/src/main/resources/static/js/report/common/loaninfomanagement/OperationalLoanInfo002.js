@@ -151,6 +151,17 @@
 //        	$('#borrowerCity').prop('disabled',false);
 //        	$('#borrowerCounty').prop('disabled',false);
         }
+    	//modify by yanya on 20210526
+		if(industryInfo === SVR_INDUSTRY_DOOR_CODE_2 || industryInfo === SVR_INDUSTRY_DOOR_CODE_1 ) {//行业门内编码_非居民 或者 行业门内编码_境内个人
+			$('#borrowerProvince').val('').trigger('change').attr('disabled',true);//借款人地区(省)必须为空
+			$('#borrowerCity').val('').trigger('change').attr('disabled',true);//借款人地区(市)必须为空
+			$('#borrowerCounty').val('').trigger('change').attr('disabled',true);//借款人地区(县)必须为空
+		}
+		else {
+			$('#borrowerProvince').val('').trigger('change').attr('disabled',false);//借款人地区(省)
+			$('#borrowerCity').val('').trigger('change').attr('disabled',false);//借款人地区(市)
+			$('#borrowerCounty').val('').trigger('change').attr('disabled',false);//借款人地区(县)
+		}
     }
     
     /**
