@@ -160,7 +160,6 @@ public class ComCoinFundQuotationInfo001Dto extends FinProductValuation implemen
      * 杨文君添加
      */
     @Override
-    @NotEmpty(fieldName = "ComCoinFundQuotationInfo002.cShares", groups = {ValidateGroupEdit.class})
     @Amount(fieldName = "ComCoinFundQuotationInfo002.cShares", maxIntBit = 16,maxDecBit=4, groups = {ValidateGroupEdit.class})
 	public BigDecimal getcShares() {
 		// TODO Auto-generated method stub
