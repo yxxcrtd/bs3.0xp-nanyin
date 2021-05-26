@@ -70,15 +70,7 @@
         });
 
         $("#tradeCounter").change(function(){
-            var COUNTER_TYPE = COUNTER_TYPE;
-            var rivalPartyType=document.getElementById("rivalPartyType"); //得到select的ID
-            var data=rivalPartyType.getElementsByTagName("option");//得到数组option
-            var  rivalPartyType=$('#tradeCounter').select2('data')[0].object;
-            for(i=0;i<data.length;i++){//给select赋值
-                if(rivalPartyType.indexOf(COUNTER_TYPE) >= 0){
-                    data[i].selected=true
-                }
-            }
+            $("#rivalPartyType").val($('#tradeCounter').select2('data')[0].object).trigger('change');
         });
 
         star();

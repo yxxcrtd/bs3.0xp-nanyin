@@ -7,6 +7,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.ChbInvestTradeErrordataWithBLOBs;
@@ -69,7 +70,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             item.setCurAssetTypeStr (SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.资金流动类型, item.getCurAssetType()));
             item.setRivalPartyTypeStr (SysDataUtil.getZZDictCodeAndNameNew(
-                    DictCode.交易对手类型, item.getRivalPartyType()));
+                    DictCode.对手方类型, item.getRivalPartyType()));
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.维护数据状态, item.getStatus2()));
             item.setDataSourceName(SysDataUtil.getZZDictCodeAndNameNew(
@@ -90,10 +91,10 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
 
     private void dealReportDataList(List<InvestmentDealInfoDto> list) {
         list.forEach(item -> {
-            item.setCcyStr (SysDataUtil.getNameFromDataDict(DictCode.币种_中债, item.getCcy()));
-            item.setAssetMethodStr(SysDataUtil.getNameFromDataDict(DictCode.资产计量方式, item.getAssetMethod()));
-            item.setCurAssetTypeStr (SysDataUtil.getNameFromDataDict(DictCode.资金流动类型, item.getCurAssetType()));
-            item.setRivalPartyTypeStr (SysDataUtil.getNameFromDataDict(DictCode.交易对手类型, item.getRivalPartyType()));
+            item.setCcyStr (SysDataUtil.getZZDictCodeAndName(DictCode.币种_中债, item.getCcy()));
+            item.setAssetMethodStr(SysDataUtil.getZZDictCodeAndName(DictCode.资产计量方式, item.getAssetMethod()));
+            item.setCurAssetTypeStr (SysDataUtil.getZZDictCodeAndName(DictCode.资金流动类型, item.getCurAssetType()));
+            item.setRivalPartyTypeStr (SysDataUtil.getZZDictCodeAndName(DictCode.对手方类型, item.getRivalPartyType()));
         });
 
 
@@ -229,7 +230,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             dto.setEndRate(new BigDecimal(dataList.get(i).get(13)));
         }
         dto.setTradeCounter(dataList.get(i).get(14));
-        dto.setRivalPartyType(SysDataUtil.getZZDictCodeFromName(DictCode.交易对手类型, dataList.get(i).get(15)));
+        dto.setRivalPartyType(SysDataUtil.getZZDictCodeFromName(DictCode.对手方类型, dataList.get(i).get(15)));
         dto.setContractCode(dataList.get(i).get(16));
         if (StringUtil.isNotEmpty(dataList.get(i)) && StringUtil.isNotEmpty(dataList.get(i).get(17))) {
             dto.setDealdate(DateUtil.parse(dataList.get(i).get(17)));
@@ -265,6 +266,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             investmentDealInfo001Mapper.updateOne(dto);
         }else {
             dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            dto.setTradeSeqno(IDGenerator.generate(36));
             dto.setType("01");
             investmentDealInfo001Mapper.insertOne(dto);
             investmentDealInfo001Mapper.deleteErrorDataOne(dto.getTradeCode());

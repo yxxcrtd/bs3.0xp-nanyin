@@ -133,21 +133,21 @@ public class AssetInfoDetail002Controller extends BaseController {
         List<SelectOptionDto> list = new ArrayList<>();
         Map<String, Object> params = RequestUtil.getPageParam();
         //如果一级资产未选择.则直接使用系统的资产负债类别
-        if (StringUtil.isEmpty((String) params.get("orgAssetType1")) || "null".equals(params.get("orgAssetType1"))) {
-//            params.put("orgAssetType1", null);
-        }else{
-            if (StringUtil.isEmpty((String) params.get("orgAssetType2")) || "null".equals(params.get("orgAssetType2"))) {
-                params.put("orgAssetType2", null);
-            }
-            else if (StringUtil.isEmpty((String) params.get("orgAssetType3")) || "null".equals(params.get("orgAssetType3"))) {
-                params.put("orgAssetType3", null);
-            }else if (StringUtil.isEmpty((String) params.get("orgAssetType4")) || "null".equals(params.get("orgAssetType4"))) {
-                params.put("orgAssetType4", null);
-            }else if (StringUtil.isEmpty((String) params.get("orgAssetType5")) || "null".equals(params.get("orgAssetType5"))) {
-                params.put("orgAssetType5", null);
-            }
-            list = assetInfoDetailMService.getAssetTye2(params);
-        }
+//        if (StringUtil.isEmpty((String) params.get("orgAssetType1")) || "null".equals(params.get("orgAssetType1"))) {
+////            params.put("orgAssetType1", null);
+//        }else{
+//            if (StringUtil.isEmpty((String) params.get("orgAssetType2")) || "null".equals(params.get("orgAssetType2"))) {
+//                params.put("orgAssetType2", null);
+//            }
+//            else if (StringUtil.isEmpty((String) params.get("orgAssetType3")) || "null".equals(params.get("orgAssetType3"))) {
+//                params.put("orgAssetType3", null);
+//            }else if (StringUtil.isEmpty((String) params.get("orgAssetType4")) || "null".equals(params.get("orgAssetType4"))) {
+//                params.put("orgAssetType4", null);
+//            }else if (StringUtil.isEmpty((String) params.get("orgAssetType5")) || "null".equals(params.get("orgAssetType5"))) {
+//                params.put("orgAssetType5", null);
+//            }
+//            list = assetInfoDetailMService.getAssetTye2(params);
+//        }
         if(StringUtil.isEmptyList(list)){
             SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.资产_负债二级类别, null);
             for (SelectOptionDto dto : selectDto1.getOptions()) {
@@ -162,6 +162,9 @@ public class AssetInfoDetail002Controller extends BaseController {
                 }
 //                list.add(dto);
                 // add by zhangliang 20210204 增加前台输入过滤 end
+            }
+            if (StringUtil.isNotEmpty(params.get("page")) && StringUtil.isNotEmpty(params.get("length"))){
+
             }
         }
         return list;

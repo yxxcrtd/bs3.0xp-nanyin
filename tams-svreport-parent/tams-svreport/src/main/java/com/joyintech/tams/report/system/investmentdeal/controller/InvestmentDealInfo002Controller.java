@@ -36,7 +36,7 @@ public class InvestmentDealInfo002Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        super.setSelectOptionToModel(model, DictCode.币种_中债, DictCode.资产计量方式,DictCode.资金流动类型,DictCode.交易对手类型);
+        super.setSelectOptionToModel(model, DictCode.币种_中债, DictCode.资产计量方式,DictCode.资金流动类型,DictCode.对手方类型);
         InvestmentDealInfoDto dto=new InvestmentDealInfoDto();
         Map<String,Object> map= RequestUtil.getPageParam();
         String uuid= (String) map.get("uuid");
