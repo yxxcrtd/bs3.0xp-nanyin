@@ -372,8 +372,8 @@ public class ChbPeriodicService {
                 if (StringUtil.isEmpty(item.getAssetName())) {
                     item.setAssetName(ChbInvestReportConstant.横线);
                 }
-                // 资产/负债二级类别
-                String showName = ChbInvestReportUtil.getDictCodeAndName(DictCode.资产_负债二级类别, item.getAssettype2());
+                // 资产/负债二级类别 获取G06资产名称
+                String showName = getG06AssetTypeName(item);
                 if (StringUtil.isNotEmpty(showName)) {
                     item.setAssettype2Fmt(showName);
                 } else {
@@ -390,7 +390,7 @@ public class ChbPeriodicService {
                 if (item.getPercentAssetvalueB() == null || BigDecimal.ZERO.compareTo(item.getPercentAssetvalueB()) == 0) {
                     item.setPercentAssetvalueBFmt(ChbInvestReportConstant.空字符);
                 } else {
-                    item.setPercentAssetvalueBFmt(String.valueOf(item.getPercentAssetvalueB()));
+                    item.setPercentAssetvalueBFmt(ChbInvestReportConstant.df3.format(item.getPercentAssetvalueB()));
                 }
             }
         } else {
@@ -402,6 +402,124 @@ public class ChbPeriodicService {
             chbPeriodicPositionTop10.setPercentAssetvalueBFmt(ChbInvestReportConstant.横线);
             list.add(chbPeriodicPositionTop10);
         }
+    }
+
+    /**
+     * 获取资产归属的G06a 资产分类
+     *
+     * @param position
+     * @return
+     * @throws Exception
+     */
+    private String getG06AssetTypeName(ChbPeriodicPositionTop10 position) {
+        //信用债
+        String xyz = "1112,1113,1114,1115,1116,1117";
+
+        ChbMonthAssetRule chbMonthAssetRule = null;
+        for (ChbMonthAssetRule singleRule : ChbMonthAssetRule.values()) {
+            // 根据配置规则代码匹配资产头寸中相应属性
+            if (!StringUtil.isEmptyList(singleRule.getRuleCodeList())
+                    && !StringUtil.isEmptyList(singleRule.getRuleValueList())) {
+                // 该笔头寸记录是否匹配配置规则
+                boolean isPattern = true;
+                // 判断是否多条件交集处理
+                for (int i = 0; i < singleRule.getRuleCodeList().size(); i++) {
+                    // 重新初始化是否匹配配置规则标记
+                    isPattern = true;
+                    // 债券信用评级
+                    if (singleRule.getRuleCodeList().get(i).equalsIgnoreCase("RATINGAA+")) {
+                        if (!xyz.contains(position.getAssettype2()) || position.getRating() == null || compareRating(position.getRating(), singleRule.getRuleValueList().get(i)) < 0
+                        ) {
+                            isPattern = false;
+                            break;
+                        }
+                    } else if (singleRule.getRuleCodeList().get(i).equalsIgnoreCase("RATINGAA-")) {
+                        if (!xyz.contains(position.getAssettype2()) || position.getRating() == null || compareRating(position.getRating(), singleRule.getRuleValueList().get(i)) >= 0
+                        ) {
+                            isPattern = false;
+                            break;
+                        }
+                    } else if (singleRule.getRuleCodeList().get(i).equalsIgnoreCase("RATINGNULL")) {
+                        if (!xyz.contains(position.getAssettype2()) || position.getRating() != null) {
+                            isPattern = false;
+                            break;
+                        }
+                    } else { // 非债券信用评级
+                        // 判断是否多条件任取其一，即rulecode和value一一对应以“|”隔开，格式为code1|code2,value1|value2
+                        if (singleRule.getRuleCodeList().get(i).contains(GlobalConstant.VERTICAL_LINE)
+                                || singleRule.getRuleValueList().get(i).contains(GlobalConstant.VERTICAL_LINE)) {
+
+                            List<String> ruleCodeList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE,
+                                    singleRule.getRuleCodeList().get(i));
+                            List<String> valueList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE,
+                                    singleRule.getRuleValueList().get(i));
+                            isPattern = false;
+                            String ruleCode = ruleCodeList.get(0);
+                            for (int k = 0; k < valueList.size(); k++) {
+                                // 如果ruleCode相同但是多条件，则支持只输入一个code，如：code1,value1|value2|value3
+                                // 否则需一一对应以“|”隔开，格式为code1|code2,value1|value2
+                                if (ruleCodeList.size() > 1) {
+                                    ruleCode = ruleCodeList.get(k);
+                                }
+                                // 支持反向判断！value1
+                                if (valueList.get(k).startsWith("!")) {
+                                    // 只要有一条满足则该条头寸不计入
+                                    if (!valueList.get(k).substring(1)
+                                            .equals(getGetMethod(position, ruleCode))) {
+                                        isPattern = true;
+                                        break;
+                                    }
+                                } else {
+                                    // 只有多个条件都不满足时该头寸才不计入
+                                    if (valueList.get(k).equals(getGetMethod(position, ruleCode))) {
+                                        isPattern = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!isPattern) {
+                                break;
+                            }
+                        } else {// 多条件同时满足才计入
+                            // 支持反向判断！value1
+                            if (singleRule.getRuleValueList().get(i).startsWith("!")) {
+                                // 只要有一条满足则该条头寸不计入
+                                if (singleRule.getRuleValueList().get(i).substring(1
+                                )
+                                        .equals(getGetMethod(position,
+                                                singleRule.getRuleCodeList().get(i)))) {
+                                    isPattern = false;
+                                    break;
+                                }
+                            } else {
+                                // 只要有一条不满足则该条头寸不计入
+                                if (!singleRule.getRuleValueList().get(i)
+                                        .equals(getGetMethod(position, singleRule.getRuleCodeList()
+                                                .get(i)))) {
+                                    isPattern = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (isPattern) {
+                    chbMonthAssetRule = singleRule;
+                    break;
+                }
+            }
+        }
+
+        // 根据G06b子项获取大的类别
+        if (!Objects.isNull(chbMonthAssetRule)) {
+            for (ChbPeriodicG06AssetTypeRule typeRule : ChbPeriodicG06AssetTypeRule.values()) {
+                if (typeRule.getRuleCodeList().contains(chbMonthAssetRule.getPropertyCode())) {
+                    return typeRule.getPropertyName();
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -1493,9 +1611,9 @@ public class ChbPeriodicService {
                     balanceC = balanceC.add(xgbalance);
 
                     // 去除隐藏列的b列值
-                    if (!detail.getKey().startsWith("AMT1_12_9")
-                            && !detail.getKey().startsWith("AMT1_13_7")
-                            && !detail.getKey().startsWith("AMT1_14_8")) {
+                    if (!detail.getKey().startsWith("AMT1_12_9_")
+                            && !detail.getKey().startsWith("AMT1_13_7_")
+                            && !detail.getKey().startsWith("AMT1_14_8_")) {
                         balanceB = balanceB.add(bottombalance);
                         balanceD = balanceD.add(xgbottombalance);
                     }

@@ -143,7 +143,20 @@
                a.ASSETTYPE2                                                   as assettype2,
                ROUND(a.ASSETVALUE_B / c.totalAssetvalueB, 2)                  as percentAssetvalueB,
                a.ASSETVALUE_B                                                 as assetvalueB,
-               b.CCY                                                          as ccy
+               b.CCY                                                          as ccy,
+               a.IN_ASSET_TYPE,
+               a.PPPFLAG, a.MONIT_TYPE, a.MANAGE_TYPE,
+               a.IS_GOVERN_FUND1, a.PRIVATEFUND_FLAG, a.PRIVATEPRD_FLAG,
+               a.BONDTOSTOCK_FLAG, a.RATING, b.ASSET_TYPE3,
+               b.BANK_SEC_CAPITAL,
+               b.BANK_SEC_PERPETUAL,
+               b.BANK_SEC_PREFER,
+               b.BANK_SEC_ZXZQ,
+               b.IS_BZHPJ,
+               b.ISUNLISTED,
+               b.IS_FBZB,
+               b.BANK_SEC_KZZQ,
+               a.IS_FHXGCP
         FROM chb_month_asset_position a,
              chb_asset_info b,
              (SELECT PROD_ID, SUM(ASSETVALUE_B) AS totalAssetvalueB
