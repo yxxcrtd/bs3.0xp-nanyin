@@ -56,7 +56,6 @@
                         xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
                         xmlns:v="urn:schemas-microsoft-com:vml"
                         xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-                        xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
                         xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
             >
                 <w:background w:color="FFFFFF"/>
@@ -1597,8 +1596,7 @@
                             <w:gridCol w:w="2175"/>
                             <w:gridCol w:w="2239"/>
                         </w:tblGrid>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="204F4C27" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:trPr>
                                 <w:trHeight w:val="90"/>
                             </w:trPr>
@@ -1608,8 +1606,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="55CBBCC2" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1640,8 +1637,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="04153207" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1672,8 +1668,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="3C2CD7F6" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1717,8 +1712,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="1F65D2A8" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1744,16 +1738,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="4B952059" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="1D2934D5" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1780,8 +1772,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="50DC9FDA" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1808,8 +1799,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="3AED4B2F" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1836,8 +1826,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="3C6A0D83" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1859,16 +1848,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="2EB43BEA" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="3306D44B" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1895,8 +1882,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="280B128C" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1923,8 +1909,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="4BD33B68" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1951,8 +1936,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="019AE79E" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -1980,16 +1964,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="3A47EA7D" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="536B5D98" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2016,8 +1998,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="58F2708A" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2044,8 +2025,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="67D437E5" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2072,8 +2052,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="53713D42" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2095,16 +2074,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="4A9BC2B1" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="73FB8B42" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2131,8 +2108,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="141A589E" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2159,8 +2135,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="51C65FC4" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2187,8 +2162,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="4254CF26" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2210,16 +2184,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="0E44BCB6" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="5488CAA1" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2246,8 +2218,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="1ED26386" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2274,8 +2245,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="0840C7C7" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2302,8 +2272,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="383CC455" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2325,16 +2294,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="12D4B5A1" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="7E083EB2" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2361,8 +2328,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="1D5A35CB" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2389,8 +2355,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="28CE5B6E" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2417,8 +2382,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="0F9644A9" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2440,16 +2404,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="5C246E14" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="054897BE" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2476,8 +2438,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="4CF1F49E" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2504,8 +2465,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="79422BC2" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2532,8 +2492,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="7A95B3EC" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2555,16 +2514,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="77AA6125" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="7C9FCD27" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2591,8 +2548,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="198E53D8" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2628,8 +2584,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="043356EB" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2656,8 +2611,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="409A39DB" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2679,16 +2633,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="0434B881" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="5E5DB96F" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2715,8 +2667,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="4C9FADDE" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2743,8 +2694,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="24DDEF9F" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2771,8 +2721,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="713E75A9" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2794,16 +2743,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="3623F484" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="7596D3C0" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2830,8 +2777,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="36465101" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2858,8 +2804,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="429E6EB3" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2886,8 +2831,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="5309B2FA" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2909,16 +2853,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="7FDBB134" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="1C6841AC" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2945,8 +2887,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="66AC3587" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -2984,8 +2925,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="778E7845" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3012,8 +2952,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="2FA8F56A" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3035,16 +2974,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="159F458F" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="2A2A25F5" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3071,8 +3008,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="2DFEEA77" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3099,8 +3035,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="2775B57E" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3127,8 +3062,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="69C06994" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3150,16 +3084,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="1FD91C59" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="1A3C3CEB" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3186,8 +3118,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="13F9BF2B" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3214,8 +3145,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="6F278625" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3242,8 +3172,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="5A523C1D" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3265,16 +3194,14 @@
                                 </w:p>
                             </w:tc>
                         </w:tr>
-                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w14:paraId="19169576" w14:textId="77777777"
-                              w:rsidTr="006D32B6">
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="935" w:type="dxa"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="672146D0" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3301,8 +3228,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="02A69A85" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3329,8 +3255,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="4C828495" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
@@ -3357,8 +3282,7 @@
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
-                                <w:p w14:paraId="46251EAC" w14:textId="77777777" w:rsidR="006D32B6" w:rsidRPr="006D32B6"
-                                     w:rsidRDefault="006D32B6">
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
                                     <w:pPr>
                                         <w:pStyle w:val="dqbgbnwz"/>
                                         <w:rPr>
