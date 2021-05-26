@@ -49,7 +49,10 @@
 		B.FINPROD_ID finprodId,/**金融产品代码**/
 		B.FINPROD_TYPE finprodType,/**拆借方向**/
 		B.FINPROD_TYPE finprodTypeCode,/**拆借方向Code**/
-		null prin,/**名义本金**/
+	    <!-- modify by wujie on 20210526 start
+	    null prin, -->
+	    B.ISSUE_AMT prin,/**名义本金**/
+	    <!-- modify by wujie on 20210526 end -->
 		B.CCY ccy,/**本金币种**/
 		B.CCY ccyCode,/**本金币种**/
         to_char(B.VDATE,'yyyy-mm-dd') as vdate,/**起息日**/
