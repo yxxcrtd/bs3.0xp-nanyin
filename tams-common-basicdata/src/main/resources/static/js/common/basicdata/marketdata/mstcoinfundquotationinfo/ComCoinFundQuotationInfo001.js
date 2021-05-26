@@ -40,7 +40,7 @@ $(function() {
          */
         cols:[
             {field:'finprodMarketId',width:'15%',  title: 'ComCoinFundQuotationInfo001.finprodId'}//基金代码
-            ,{field:'finprodAbbr',width:'15%',  title: 'ComCoinFundQuotationInfo001.productName'}//基金名称
+//            ,{field:'finprodAbbr',width:'15%',  title: 'ComCoinFundQuotationInfo001.productName'}//基金名称
             ,{field:'finprodChiType',width:'15%',title:'ComCoinFundQuotationInfo002.finprodType', sortField:'finprodType2'}//基金类型
             ,{field:'valDate',width:'15%',title:'ComCoinFundQuotationInfo002.valuationTime',type:'date'}//估值日期
             ,{field:'publishDate',width:'15%',title:'ComCoinFundQuotationInfo002.publishDate',type:'date'}//估值日期
@@ -50,7 +50,7 @@ $(function() {
             ,{field:'totalValue',width:'10%', title:'ComCoinFundQuotationInfo002.totalValue'}//累计净值
             ,{field:'restNetValue',width:'10%', title:'ComCoinFundQuotationInfo002.restNetValue'}//复权单位净值
             ,{field:'importDay',width:'15%', title: 'ComCoinFundQuotationInfo002.importDay',type:'date'}//导入日
-            ,{field:'cShares',width:'10%', title:'ComCoinFundQuotationInfo002.cShares'}//基金总份额
+//            ,{field:'cShares',width:'10%', title:'ComCoinFundQuotationInfo002.cShares'}//基金总份额
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}//编辑和删除事件
         ]
     });

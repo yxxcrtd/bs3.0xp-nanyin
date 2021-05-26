@@ -156,17 +156,6 @@ public class ComCoinFundQuotationInfo001Dto extends FinProductValuation implemen
     }
     
     /**
-     * 基金总份额为了增加限制条件
-     * 杨文君添加
-     */
-    @Override
-    @Amount(fieldName = "ComCoinFundQuotationInfo002.cShares", maxIntBit = 16,maxDecBit=4, groups = {ValidateGroupEdit.class})
-	public BigDecimal getcShares() {
-		// TODO Auto-generated method stub
-		return super.getcShares();
-	}
-
-	/**
      * 估值日为了增加限制条件
      * {@inheritDoc}
      */
@@ -350,15 +339,6 @@ public class ComCoinFundQuotationInfo001Dto extends FinProductValuation implemen
         return super.getInputType();
     }
 
-    private String finprodAbbr;
-
-    public String getFinprodAbbr() {
-        return finprodAbbr;
-    }
-
-    public void setFinprodAbbr(String finprodAbbr) {
-        this.finprodAbbr = finprodAbbr;
-    }
     public String getValDateFmt() {
         return DateUtil.format(this.getValDate());
     }
@@ -381,4 +361,5 @@ public class ComCoinFundQuotationInfo001Dto extends FinProductValuation implemen
 
     public void setImportDayFmt(String importDayFmt) {
         this.importDayFmt = importDayFmt;
-    }}
+    }
+}
