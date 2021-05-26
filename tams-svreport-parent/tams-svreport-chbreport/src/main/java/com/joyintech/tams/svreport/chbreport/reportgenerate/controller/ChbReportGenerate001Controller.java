@@ -263,7 +263,8 @@ public class ChbReportGenerate001Controller extends BaseController {
                             tipMsg = tipMsg + item.getProdIdName() + ChbInvestReportConstant.逗号;
                         }
                         else if(StringUtil.equals(item.getConfirmStatus(), DictCodeList.确认状态_已确认.getValue())) {
-
+                            errMsg = errMsg + item.getProdName() + ChbInvestReportConstant.左括号 + item.getProdId() +
+                                    ChbInvestReportConstant.右括号 + ChbInvestReportConstant.逗号;
                         }
                     }
                     if(StringUtil.isNotEmpty(errMsg)) {
