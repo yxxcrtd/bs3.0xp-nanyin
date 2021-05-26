@@ -163,9 +163,6 @@ public class AssetInfoDetail002Controller extends BaseController {
 //                list.add(dto);
                 // add by zhangliang 20210204 增加前台输入过滤 end
             }
-            if (StringUtil.isNotEmpty(params.get("page")) && StringUtil.isNotEmpty(params.get("length"))){
-
-            }
         }
         return list;
     }
