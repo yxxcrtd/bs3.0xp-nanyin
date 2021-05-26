@@ -1,3 +1,16 @@
+package com.joyintech.tams.common.basicdata.marketdata.mstrateassetquotationinfo.service;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 /*
  * 文件名：MstNetAssetQuotationInfo001Service.java
  * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
@@ -8,49 +21,36 @@
  * 系统名称：理财资管管理系统V2.0
  */
 
-package com.joyintech.tams.valuation.basedata.marketdata.mstrateassetquotationinfo.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
+import com.joyintech.tams.common.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
-import com.joyintech.tams.valuation.basedata.marketdata.mstrateassetquotationinfo.dto.MstRateAssetQuotationInfo001Dto;
-import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.apache.poi.ss.usermodel.Cell;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.*;
 
 /**
  * 计划类（利率型 ）资产估值行情信息查询service
  * 
  * @author liuwei
  * @version 1.0 2020年10月20日
- * @see MstRateAssetQuotationInfo001Service
+ * @see ComRateAssetQuotationInfo001Service
  * @since 1.0
  */
 
 @Service
 @Transactional
-public class MstRateAssetQuotationInfo001Service extends CommonExportService<MstRateAssetQuotationInfo001Dto>
-    implements BaseProcessService<MstRateAssetQuotationInfo001Dto> {
+public class ComRateAssetQuotationInfo001Service extends CommonExportService<ComRateAssetQuotationInfo001Dto>
+    implements BaseProcessService<ComRateAssetQuotationInfo001Dto> {
 
 
     /**
@@ -62,19 +62,19 @@ public class MstRateAssetQuotationInfo001Service extends CommonExportService<Mst
      * @see
      * @since 1.0
      */
-    public Page<MstRateAssetQuotationInfo001Dto> selectForPage(Map<String, Object> pageParam) {
+    public Page<ComRateAssetQuotationInfo001Dto> selectForPage(Map<String, Object> pageParam) {
         pageParam.put("PROFITTYPE_VALUE_02", DictCodeList.收益类型_收益型.getValue());
         // 估值不接入finprod_type2，故用估值的金融产品类型做判断
         pageParam.put("TYPE_GUZHI_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         // pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         return restTemplate.postForPage(
-            ServiceApplication.VALUATION_SERVICE_NAME + "/MstRateAssetQuotationInfo/selectForPage", pageParam,
-                MstRateAssetQuotationInfo001Dto.class);
+            ServiceApplication.CommonBasicDataService + "/ComRateAssetQuotationInfo/selectForPage", pageParam,
+                ComRateAssetQuotationInfo001Dto.class);
     }
 
 
     @Override
-    public void doComplete(MstRateAssetQuotationInfo001Dto entity, OperationType operationType) {
+    public void doComplete(ComRateAssetQuotationInfo001Dto entity, OperationType operationType) {
         String action = StringUtil.EMPTY;
         if (OperationType.DELETE.equals(operationType)) {
             action = "delete";
@@ -84,17 +84,17 @@ public class MstRateAssetQuotationInfo001Service extends CommonExportService<Mst
             action = "update";
         }
         restTemplate.postForObject(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/MstRateAssetQuotationInfo/" + action, entity,
+                ServiceApplication.CommonBasicDataService + "/ComRateAssetQuotationInfo/" + action, entity,
                 Integer.class);
     }
 
     @Override
-    public void doInsert(MstRateAssetQuotationInfo001Dto entity, OperationType type) {
+    public void doInsert(ComRateAssetQuotationInfo001Dto entity, OperationType type) {
 
     }
 
     @Override
-    public void doUpdate(MstRateAssetQuotationInfo001Dto entity) {
+    public void doUpdate(ComRateAssetQuotationInfo001Dto entity) {
 
     }
 
@@ -105,44 +105,44 @@ public class MstRateAssetQuotationInfo001Service extends CommonExportService<Mst
 
     public List<SuggestDto> getAssetCode(Map<String, Object> map) {
         return restTemplate.postForList(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/MstRateAssetQuotationInfo/getAssetCode", map,
+                ServiceApplication.CommonBasicDataService + "/ComRateAssetQuotationInfo/getAssetCode", map,
                 SuggestDto.class);
     }
 
     public List<SuggestDto> getAssetName(Map<String, Object> map) {
         return restTemplate.postForList(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/MstRateAssetQuotationInfo/getAssetName", map,
+                ServiceApplication.CommonBasicDataService + "/ComRateAssetQuotationInfo/getAssetName", map,
                 SuggestDto.class);
     }
 
-    public MstRateAssetQuotationInfo001Dto selectMstRateAsset(Map<String, Object> param) {
+    public ComRateAssetQuotationInfo001Dto selectMstRateAsset(Map<String, Object> param) {
         return restTemplate.postForObject(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/MstRateAssetQuotationInfo/selectMstRateAsset",
-                param, MstRateAssetQuotationInfo001Dto.class);
+                ServiceApplication.CommonBasicDataService + "/ComRateAssetQuotationInfo/selectMstRateAsset",
+                param, ComRateAssetQuotationInfo001Dto.class);
     }
 
     public List<SelectOptionDto> getAssetCodeList(Map<String, Object> param) {
         return restTemplate.postForList(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/MstRateAssetQuotationInfo/getAssetCodeList", param,
+                ServiceApplication.CommonBasicDataService + "/ComRateAssetQuotationInfo/getAssetCodeList", param,
                 SelectOptionDto.class);
     }
 
-    public MstRateAssetQuotationInfo001Dto getFinProdNameAndFinprodId(Map<String, Object> map) {
-        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME
-                        + "/MstRateAssetQuotationInfo/getFinProdNameAndFinprodId",
-                map, MstRateAssetQuotationInfo001Dto.class);
+    public ComRateAssetQuotationInfo001Dto getFinProdNameAndFinprodId(Map<String, Object> map) {
+        return restTemplate.postForObject(ServiceApplication.CommonBasicDataService
+                        + "/ComRateAssetQuotationInfo/getFinProdNameAndFinprodId",
+                map, ComRateAssetQuotationInfo001Dto.class);
     }
 
-    public List<MstRateAssetQuotationInfo001Dto> selectByIdAndDate(Map<String, Object> param) {
+    public List<ComRateAssetQuotationInfo001Dto> selectByIdAndDate(Map<String, Object> param) {
         return restTemplate.postForList(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/MstRateAssetQuotationInfo/selectByIdAndDate", param,
-                MstRateAssetQuotationInfo001Dto.class);
+                ServiceApplication.CommonBasicDataService + "/ComRateAssetQuotationInfo/selectByIdAndDate", param,
+                ComRateAssetQuotationInfo001Dto.class);
     }
 
-    public List<MstRateAssetQuotationInfo001Dto> selectForExport(Map<String, Object> param) {
+    public List<ComRateAssetQuotationInfo001Dto> selectForExport(Map<String, Object> param) {
         return restTemplate.postForList(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/MstRateAssetQuotationInfo/selectForExport", param,
-                MstRateAssetQuotationInfo001Dto.class);
+                ServiceApplication.CommonBasicDataService + "/ComRateAssetQuotationInfo/selectForExport", param,
+                ComRateAssetQuotationInfo001Dto.class);
     }
     /**
      * 导入check
@@ -159,7 +159,7 @@ public class MstRateAssetQuotationInfo001Service extends CommonExportService<Mst
             return wr;
         }
         String totalMsg = "";
-        JSONArray jsonArrays = new JSONArray();
+        List<List<String>> jsonArrays = new ArrayList<>();
         // 重复数据
         int repeatNum = 0;
         if (objects.size() <= 1) {
@@ -230,7 +230,7 @@ public class MstRateAssetQuotationInfo001Service extends CommonExportService<Mst
         if (StringUtil.isNotBlank(totalMsg)) {
             resultMap.put("confirmMsg", totalMsg);
         }
-        resultMap.put("correctData", JSONArray.toJSONString(jsonArrays));
+        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -241,68 +241,75 @@ public class MstRateAssetQuotationInfo001Service extends CommonExportService<Mst
      * @param tempList
      * @return
      */
-    public MstRateAssetQuotationInfo001Dto getValNetAssetQuotationInfoListData(String tempList) {
-        MstRateAssetQuotationInfo001Dto dto = new MstRateAssetQuotationInfo001Dto();
+    public ComRateAssetQuotationInfo001Dto getValNetAssetQuotationInfoListData(String tempList) {
+        ComRateAssetQuotationInfo001Dto dto = new ComRateAssetQuotationInfo001Dto();
         // 行情信息列表
-        List<MstRateAssetQuotationInfo001Dto> valNetAssetQuotationInfoList = new ArrayList<>();
+        List<ComRateAssetQuotationInfo001Dto> valNetAssetQuotationInfoList = new ArrayList<>();
         dto.setSelectedItem(valNetAssetQuotationInfoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
-
-        for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            MstRateAssetQuotationInfo001Dto mstRateAssetQuotationInfo001Dto = new MstRateAssetQuotationInfo001Dto();
-
-            // 资产代码【0】
-            if (StringUtil.isNotEmpty(rowData.get(0))) {
-                mstRateAssetQuotationInfo001Dto.setFinprodId(rowData.get(0).toString());
-            }
-            // 资产简称【1】
-            if (StringUtil.isNotEmpty(rowData.get(1))) {
-                mstRateAssetQuotationInfo001Dto.setFinProdName(rowData.get(1).toString());
-            }
-            // 估值日期【2】
-            if (StringUtil.isNotEmpty(rowData.get(2))) {
-                mstRateAssetQuotationInfo001Dto.setValDate(DateUtil.parse(rowData.get(2).toString()));
-            }
-            // 估值【3】
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                mstRateAssetQuotationInfo001Dto.setValuation(new BigDecimal(rowData.get(3).toString()));
-            }
-            // 导入日【4】
-            if (StringUtil.isNotEmpty(rowData.get(4))) {
-                mstRateAssetQuotationInfo001Dto.setPublishDate(DateUtil.parse(rowData.get(4).toString()));
-            }
-            // 备注【5】
-            if (StringUtil.isNotEmpty(rowData.get(5))) {
-                mstRateAssetQuotationInfo001Dto.setRemark(rowData.get(5).toString());
-            }
-            Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("finProdMarketId", mstRateAssetQuotationInfo001Dto.getFinprodId());
-            paramMap.put("profitType", DictCodeList.收益类型_收益型.getValue());
-            MstRateAssetQuotationInfo001Dto tmpDto = getFinProdNameAndFinprodId(paramMap);
-            if (StringUtil.isNotEmpty(tmpDto)){
-                mstRateAssetQuotationInfo001Dto.setFinprodType2(tmpDto.getFinprodType2());
-                mstRateAssetQuotationInfo001Dto.setFinprodType(tmpDto.getFinprodType());
-            }
-            valNetAssetQuotationInfoList.add(mstRateAssetQuotationInfo001Dto);
-        }
+        List<Object> objects;
+		try {
+			objects = JsonUtils.json2List(tempList, Object.class);
+	        for (int i = 0; i < objects.size(); i++) {
+	            List<String> rowData = JsonUtils.json2List(JsonUtils.object2Json(objects.get(i)), String.class);  
+	            ComRateAssetQuotationInfo001Dto mstRateAssetQuotationInfo001Dto = new ComRateAssetQuotationInfo001Dto();
+	
+	            // 资产代码【0】
+	            if (StringUtil.isNotEmpty(rowData.get(0))) {
+	                mstRateAssetQuotationInfo001Dto.setFinprodId(rowData.get(0).toString());
+	            }
+	            // 资产简称【1】
+	            if (StringUtil.isNotEmpty(rowData.get(1))) {
+	                mstRateAssetQuotationInfo001Dto.setFinProdName(rowData.get(1).toString());
+	            }
+	            // 估值日期【2】
+	            if (StringUtil.isNotEmpty(rowData.get(2))) {
+	                mstRateAssetQuotationInfo001Dto.setValDate(DateUtil.parse(rowData.get(2).toString()));
+	            }
+	            // 估值【3】
+	            if (StringUtil.isNotEmpty(rowData.get(3))) {
+	                mstRateAssetQuotationInfo001Dto.setValuation(new BigDecimal(rowData.get(3).toString()));
+	            }
+	            // 导入日【4】
+	            if (StringUtil.isNotEmpty(rowData.get(4))) {
+	                mstRateAssetQuotationInfo001Dto.setPublishDate(DateUtil.parse(rowData.get(4).toString()));
+	            }
+	            // 备注【5】
+	            if (StringUtil.isNotEmpty(rowData.get(5))) {
+	                mstRateAssetQuotationInfo001Dto.setRemark(rowData.get(5).toString());
+	            }
+	            Map<String, Object> paramMap = new HashMap<>();
+	            paramMap.put("finProdMarketId", mstRateAssetQuotationInfo001Dto.getFinprodId());
+	            paramMap.put("profitType", DictCodeList.收益类型_收益型.getValue());
+	            ComRateAssetQuotationInfo001Dto tmpDto = getFinProdNameAndFinprodId(paramMap);
+	            if (StringUtil.isNotEmpty(tmpDto)){
+	                mstRateAssetQuotationInfo001Dto.setFinprodType2(tmpDto.getFinprodType2());
+	                mstRateAssetQuotationInfo001Dto.setFinprodType(tmpDto.getFinprodType());
+	            }
+	            valNetAssetQuotationInfoList.add(mstRateAssetQuotationInfo001Dto);
+	        }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         dto.setSelectedItem(valNetAssetQuotationInfoList);
         return dto;
+        
+        
     }
 
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
         String tempList = (String) param.get("tempList");
-        MstRateAssetQuotationInfo001Dto dto = getValNetAssetQuotationInfoListData(tempList);
-        List<MstRateAssetQuotationInfo001Dto> selectedItem = dto.getSelectedItem();
-        List<MstRateAssetQuotationInfo001Dto>  existData = new ArrayList<>();
-        List<MstRateAssetQuotationInfo001Dto>  newData = new ArrayList<>();
-        for (MstRateAssetQuotationInfo001Dto temp:selectedItem
+        ComRateAssetQuotationInfo001Dto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<ComRateAssetQuotationInfo001Dto> selectedItem = dto.getSelectedItem();
+        List<ComRateAssetQuotationInfo001Dto>  existData = new ArrayList<>();
+        List<ComRateAssetQuotationInfo001Dto>  newData = new ArrayList<>();
+        for (ComRateAssetQuotationInfo001Dto temp:selectedItem
         ) {
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("finProdMarketId", temp.getFinprodId());
             paramMap.put("profitType", DictCodeList.收益类型_收益型.getValue());
-            MstRateAssetQuotationInfo001Dto tmpDto = getFinProdNameAndFinprodId(paramMap);
+            ComRateAssetQuotationInfo001Dto tmpDto = getFinProdNameAndFinprodId(paramMap);
 
             Map<String, Object> map = new HashMap<>();
             map.put("finprodId",temp.getFinprodId());
@@ -312,7 +319,7 @@ public class MstRateAssetQuotationInfo001Service extends CommonExportService<Mst
                 map.put("finprodType", tmpDto.getFinprodType());
             }
             map.put("valDate",DateUtil.format(temp.getValDate()));
-            List<MstRateAssetQuotationInfo001Dto> mstRateAssetQuotationInfo001DtoList = this.selectByIdAndDate(map);
+            List<ComRateAssetQuotationInfo001Dto> mstRateAssetQuotationInfo001DtoList = this.selectByIdAndDate(map);
             //数据已存在 【资产代码、估值日 相同】，做更新操作。
             if (!StringUtil.isEmptyList(mstRateAssetQuotationInfo001DtoList)){
                 existData.add(temp);
@@ -321,13 +328,13 @@ public class MstRateAssetQuotationInfo001Service extends CommonExportService<Mst
             }
         }
         //更新操作
-        for (MstRateAssetQuotationInfo001Dto existDataDto : existData
+        for (ComRateAssetQuotationInfo001Dto existDataDto : existData
         ) {
             existDataDto.setFinProdMarketId(existDataDto.getFinprodId());
             this.doComplete(existDataDto,OperationType.MODIFY);
         }
         //插入操作
-        for (MstRateAssetQuotationInfo001Dto newDataDto : newData
+        for (ComRateAssetQuotationInfo001Dto newDataDto : newData
         ) {
             this.doComplete(newDataDto,OperationType.NEW);
         }

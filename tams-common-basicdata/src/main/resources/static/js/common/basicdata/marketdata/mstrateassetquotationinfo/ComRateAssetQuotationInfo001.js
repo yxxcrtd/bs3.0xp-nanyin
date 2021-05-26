@@ -28,7 +28,7 @@ $(function () {
          */
         dblclick: function (table, data) {
             Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo002/init",
+                basePath + "common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002/init",
                 "95%", "90%", {
                     pageModel: PAGE_MODEL_REFERENCE,
                     finprodId: data.finprodId,
@@ -51,10 +51,10 @@ $(function () {
      */
     table.bind('click', '.edit', function (data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-        Joyin.ajaxJson(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo002/check', data, function (result) {
+        Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002/check', data, function (result) {
             Joyin.confirm("请确认是否要修改？", function(){
                 Joyin.dialog("项目类/计划类利率型估值行情编辑",
-                    basePath + "valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo002/init",
+                    basePath + "common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002/init",
                     "95%", "90%", {
                         pageModel: PAGE_MODEL_EDIT,
                         finprodId: data.finprodId,
@@ -71,10 +71,10 @@ $(function () {
      */
     table.bind('click', '.delt', function (data, index) {
         var object = {selectedItem: [data], operateType: "delete"};
-        Joyin.ajaxJson(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/check', object, function (result) {
+        Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/check', object, function (result) {
             Joyin.confirm("请确认是否要删除?", function () {
-                WorkFlow.doDeleteList(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/delete', object,
-                    "MstRateAssetQuotationInfo002_btn_delete", "MstRateAssetQuotationInfo002", function () {
+                WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/delete', object,
+                    "ComRateAssetQuotationInfo002_btn_delete", "ComRateAssetQuotationInfo002", function () {
                         table.reload();
                     });
             });
@@ -89,9 +89,9 @@ $(function () {
             var datas = JSON.stringify(selArr);
         }
         if (!selArr || selArr.length == 0) {
-            Joyin.exportExcel(basePath+"valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/export", getSearchParams());
+            Joyin.exportExcel(basePath+"common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/export", getSearchParams());
         } else {
-            Joyin.exportExcel(basePath+"valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/export", {
+            Joyin.exportExcel(basePath+"common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/export", {
                 datas : datas
             });
         }
@@ -101,19 +101,19 @@ $(function () {
      */
     $(function () {
         // 绑定按钮事件
-        $('#MstRateAssetQuotationInfo001_btn_search').click(function () {
+        $('#ComRateAssetQuotationInfo001_btn_search').click(function () {
             table.load();
-            $('#MstRateAssetQuotationInfo001_btn_delete').show();
+            $('#ComRateAssetQuotationInfo001_btn_delete').show();
         });
-        $('#MstRateAssetQuotationInfo001_btn_export').click(function () {
+        $('#ComRateAssetQuotationInfo001_btn_export').click(function () {
             exportExcel();
         });
-        $('#MstRateAssetQuotationInfo001_btn_add').click(function () {
+        $('#ComRateAssetQuotationInfo001_btn_add').click(function () {
             Joyin.dialog("项目类/计划类利率型估值行情新建",
-                basePath + "valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo002/init",
+                basePath + "common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002/init",
                 "60%", "75%", {pageModel: PAGE_MODEL_NEW});
         });
-        $('#MstRateAssetQuotationInfo001_btn_delete').click(function () {
+        $('#ComRateAssetQuotationInfo001_btn_delete').click(function () {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
             }
@@ -122,20 +122,20 @@ $(function () {
                 return;
             }
             var object = {selectedItem: selArr, operateType: "delete"};
-            Joyin.ajaxJson(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/check', object, function (result) {
+            Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/check', object, function (result) {
                 Joyin.confirm("请确认是否要删除?", function () {
-                    WorkFlow.doDeleteList(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/delete', object,
-                        "MstRateAssetQuotationInfo002_btn_delete", "MstRateAssetQuotationInfo002");
+                    WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/delete', object,
+                        "ComRateAssetQuotationInfo002_btn_delete", "ComRateAssetQuotationInfo002");
                 });
             });
         });
         /**
          * 导入按钮
          */
-        $('#MstRateAssetQuotationInfo001_btn_import').click(function() {
+        $('#ComRateAssetQuotationInfo001_btn_import').click(function() {
             /** modify by yanya on 20210329 修正导入逻辑**/
-            Joyin.uploadFile({pageId:'MstRateAssetQuotationInfo001MTM'},function(fileName) {
-                Joyin.ajax(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/checkImportData', {fileName: fileName}, function(checkResult) {
+            Joyin.uploadFile({pageId:'ComRateAssetQuotationInfo001MTM'},function(fileName) {
+                Joyin.ajax(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/checkImportData', {fileName: fileName}, function(checkResult) {
                     if (checkResult) {
                         setTimeout( function () {
                             if(checkResult.data.errorMsg){
@@ -147,7 +147,7 @@ $(function () {
                                     var data = {
                                         tempList: checkResult.data.correctData
                                     }
-                                    Joyin.ajaxJson(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/importFile', data,
+                                    Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/importFile', data,
                                         function (resultObj) {
                                             if (resultObj.statuCode.toString() === '200') {
                                                 //Joyin.alert("文件导入成功！");
@@ -163,7 +163,7 @@ $(function () {
                                 var data = {
                                     tempList: checkResult.data.correctData
                                 }
-                                Joyin.ajaxJson(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/importFile', data,
+                                Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/importFile', data,
                                     function (resultObj) {
                                         if (resultObj.statuCode.toString() === '200') {
                                             //Joyin.alert("文件导入成功！");

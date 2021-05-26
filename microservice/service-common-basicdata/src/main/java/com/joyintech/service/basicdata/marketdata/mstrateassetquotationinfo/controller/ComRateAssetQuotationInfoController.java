@@ -8,14 +8,15 @@
  * 系统名称：理财资管管理系统V2.0
  */
 
-package com.joyintech.service.valuation.basedata.marketdata.mstrateassetquotationinfo.controller;
+package com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.controller;
 
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.valuation.basedata.marketdata.mstrateassetquotationinfo.dto.MstRateAssetQuotationInfo001Dto;
-import com.joyintech.service.valuation.basedata.marketdata.mstrateassetquotationinfo.service.MstRateAssetQuotationInfo001Service;
+import com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto;
+import com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.service.ComRateAssetQuotationInfo001Service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -28,18 +29,18 @@ import java.util.Map;
  * 〈功能详细描述〉
  * @author lby
  * @version 1.0 2020年10月20日
- * @see MstRateAssetQuotationInfoController
+ * @see ComRateAssetQuotationInfoController
  * @since 1.0
  */
-@RestController(value="serviceMstRateAssetQuotationInfoController")
-@RequestMapping("/MstRateAssetQuotationInfo")
-public class MstRateAssetQuotationInfoController {
+@RestController(value="serviceComRateAssetQuotationInfoController")
+@RequestMapping("/ComRateAssetQuotationInfo")
+public class ComRateAssetQuotationInfoController {
 
     /**
      *
      */
     @Autowired
-    private MstRateAssetQuotationInfo001Service mstRateAssetQuotationInfo001Service;
+    private ComRateAssetQuotationInfo001Service mstRateAssetQuotationInfo001Service;
     /**
      *
      * 分页查询
@@ -53,7 +54,7 @@ public class MstRateAssetQuotationInfoController {
      * @since 1.0
      */
     @PostMapping("selectForPage/{page}/{length}")
-    public Page<MstRateAssetQuotationInfo001Dto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    public Page<ComRateAssetQuotationInfo001Dto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
         return mstRateAssetQuotationInfo001Service.selectForPage(page,length,pageParam);
     }
     /**
@@ -99,7 +100,7 @@ public class MstRateAssetQuotationInfoController {
      * @return
      */
     @PostMapping("getFinProdNameAndFinprodId")
-    public MstRateAssetQuotationInfo001Dto selectNameAndFundManager(@RequestBody Map<String, Object> map) {
+    public ComRateAssetQuotationInfo001Dto selectNameAndFundManager(@RequestBody Map<String, Object> map) {
         return mstRateAssetQuotationInfo001Service.getFinProdNameAndFinprodId(map);
     }
 
@@ -112,7 +113,7 @@ public class MstRateAssetQuotationInfoController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody MstRateAssetQuotationInfo001Dto dto) throws Exception {
+    public int insert(@RequestBody ComRateAssetQuotationInfo001Dto dto) throws Exception {
         return mstRateAssetQuotationInfo001Service.insert(dto);
     }
 
@@ -122,7 +123,7 @@ public class MstRateAssetQuotationInfoController {
      * @return
      */
     @PostMapping("selectByIdAndDate")
-    public List<MstRateAssetQuotationInfo001Dto> selectByIdAndDate(@RequestBody Map<String, Object> map) {
+    public List<ComRateAssetQuotationInfo001Dto> selectByIdAndDate(@RequestBody Map<String, Object> map) {
         return mstRateAssetQuotationInfo001Service.selectByIdAndDate(map);
     }
 
@@ -135,7 +136,7 @@ public class MstRateAssetQuotationInfoController {
      * @since 1.0
      */
     @PostMapping("selectMstRateAsset")
-    public MstRateAssetQuotationInfo001Dto selectMstRateAsset(@RequestBody Map<String, Object> param) {
+    public ComRateAssetQuotationInfo001Dto selectMstRateAsset(@RequestBody Map<String, Object> param) {
         return mstRateAssetQuotationInfo001Service.selectMstRateAsset(param);
     }
 
@@ -150,7 +151,7 @@ public class MstRateAssetQuotationInfoController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody MstRateAssetQuotationInfo001Dto dto) throws Exception {
+    public int update(@RequestBody ComRateAssetQuotationInfo001Dto dto) throws Exception {
         return mstRateAssetQuotationInfo001Service.update(dto);
     }
 
@@ -167,7 +168,7 @@ public class MstRateAssetQuotationInfoController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody MstRateAssetQuotationInfo001Dto dto) throws Exception {
+    public int delete(@RequestBody ComRateAssetQuotationInfo001Dto dto) throws Exception {
         return mstRateAssetQuotationInfo001Service.delete(dto);
     }
 
@@ -179,7 +180,7 @@ public class MstRateAssetQuotationInfoController {
      * @return
      */
     @PostMapping("selectForExport")
-    public List<MstRateAssetQuotationInfo001Dto> selectForExport(@RequestBody Map<String, Object> map) {
+    public List<ComRateAssetQuotationInfo001Dto> selectForExport(@RequestBody Map<String, Object> map) {
         return mstRateAssetQuotationInfo001Service.selectForExport(map);
     }
 }

@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
 
-package com.joyintech.tams.valuation.basedata.marketdata.mstrateassetquotationinfo.controller;
+package com.joyintech.tams.common.basicdata.marketdata.mstrateassetquotationinfo.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
@@ -21,14 +21,12 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto;
+import com.joyintech.tams.common.basicdata.marketdata.mstrateassetquotationinfo.service.ComRateAssetQuotationInfo001Service;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.valuation.basedata.marketdata.mstrateassetquotationinfo.dto.MstRateAssetQuotationInfo001Dto;
-import com.joyintech.tams.valuation.basedata.marketdata.mstrateassetquotationinfo.service.MstRateAssetQuotationInfo001Service;
-import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
-import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -48,22 +46,22 @@ import java.util.*;
  *
  * @author lby
  * @version 1.0 2020年10月22日
- * @see MstRateAssetQuotationInfo002Controller
+ * @see ComRateAssetQuotationInfo002Controller
  * @since 1.0
  */
 @Controller
-@PageId("MstRateAssetQuotationInfo002")
-@RequestMapping("/valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo002")
-public class MstRateAssetQuotationInfo002Controller extends BaseController {
+@PageId("ComRateAssetQuotationInfo002")
+@RequestMapping("/common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002")
+public class ComRateAssetQuotationInfo002Controller extends BaseController {
 
 
     @Autowired
-    private MstRateAssetQuotationInfo001Service mstRateAssetQuotationInfo001Service;
+    private ComRateAssetQuotationInfo001Service mstRateAssetQuotationInfo001Service;
     /**
      * 流程组件
      */
-    @Autowired
-    private MstWorkflowCommonService mstWorkflowCommonService;
+    //@Autowired
+    //private MstWorkflowCommonService mstWorkflowCommonService;
 
     /**
      * 新建、编辑、查看界面的初始化
@@ -87,7 +85,7 @@ public class MstRateAssetQuotationInfo002Controller extends BaseController {
             param.put("finprodId", finprodId);
             param.put("valDate", valDate);
             //根据主键获取业务实体
-            MstRateAssetQuotationInfo001Dto dto = mstRateAssetQuotationInfo001Service.selectMstRateAsset(param);
+            ComRateAssetQuotationInfo001Dto dto = mstRateAssetQuotationInfo001Service.selectMstRateAsset(param);
             //设置到model中
             model.addAttribute("entity", dto);
             model.addAttribute("finprodId", finprodId);
@@ -95,7 +93,7 @@ public class MstRateAssetQuotationInfo002Controller extends BaseController {
         //来自于代办
         else if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             //根据工作流与留痕处理提供的共通方法获取业务实体
-            MstRateAssetQuotationInfo001Dto mstRateAssetQuotationInfo001Dto;
+            ComRateAssetQuotationInfo001Dto mstRateAssetQuotationInfo001Dto;
             mstRateAssetQuotationInfo001Dto = mstRateAssetQuotationInfo001Service.
                     getBussinessEntityByWorkflowId(workflowId);
             //设置到model中
@@ -131,7 +129,7 @@ public class MstRateAssetQuotationInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getFinProdNameAndFinprodId")
-    public MstRateAssetQuotationInfo001Dto getFinProdNameAndFinprodId(String finProdMarketId, String profitType) {
+    public ComRateAssetQuotationInfo001Dto getFinProdNameAndFinprodId(String finProdMarketId, String profitType) {
         //将需要的数据字典和参数添加到map中
         Map<String, Object> map = new HashMap<>();
         map.put("finProdMarketId", getParam("finProdMarketId"));
@@ -152,11 +150,11 @@ public class MstRateAssetQuotationInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) MstRateAssetQuotationInfo001Dto dto, BindingResult result) {
+    public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) ComRateAssetQuotationInfo001Dto dto, BindingResult result) {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
-        WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+        /*WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
         wflValidInputParameter.setPageId("MstRateAssetQuotationInfo002");
         wflValidInputParameter.setBusinessDataPk1(dto.getFinprodId());
         wflValidInputParameter.setBusinessDataPk2(dto.getValDateStr());
@@ -167,7 +165,7 @@ public class MstRateAssetQuotationInfo002Controller extends BaseController {
             AjaxResult ar = new AjaxResult();
             ar.setErrorList(errorList);
             return ar;
-        }
+        }*/
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
         if (WorkFlowUtil.isNotFromToDoList()) {
@@ -189,7 +187,7 @@ public class MstRateAssetQuotationInfo002Controller extends BaseController {
                         /** modify by yanya on 20210329 使用估值侧类型进行过滤**/
                         map.put("finprodType", dto.getFinprodType());
                         //新建时，资产代码+估值日期检索基金行情信息，数据已存在的情况下，报错
-                        List<MstRateAssetQuotationInfo001Dto> list = mstRateAssetQuotationInfo001Service.selectByIdAndDate(map);
+                        List<ComRateAssetQuotationInfo001Dto> list = mstRateAssetQuotationInfo001Service.selectByIdAndDate(map);
                         if (!StringUtil.isEmptyList(list)) {
                             errorList.add(new ValidMessage("finProdMarketId", "资产代码" + dto.getFinProdMarketId() + " 估值日期" + dto.getValDateStr() + " 数据不能重复。"));
                         }
@@ -213,7 +211,7 @@ public class MstRateAssetQuotationInfo002Controller extends BaseController {
                     /** modify by yanya on 20210329 使用估值侧类型进行过滤**/
                     map.put("finprodType", dto.getFinprodType());
                     //新建时，资产代码+估值日期检索基金行情信息，数据已存在的情况下，报错
-                    List<MstRateAssetQuotationInfo001Dto> list = mstRateAssetQuotationInfo001Service.selectByIdAndDate(map);
+                    List<ComRateAssetQuotationInfo001Dto> list = mstRateAssetQuotationInfo001Service.selectByIdAndDate(map);
                     if (!StringUtil.isEmptyList(list)) {
                         errorList.add(new ValidMessage("finProdMarketId", "资产代码" + dto.getFinProdMarketId() + " 估值日期" + dto.getValDateStr() + " 数据不能重复。"));
                     }
@@ -239,12 +237,12 @@ public class MstRateAssetQuotationInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstRateAssetQuotationInfo001Dto dto, BindingResult br) throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ComRateAssetQuotationInfo001Dto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        ProcessParameter<MstRateAssetQuotationInfo001Dto> processParameter = new ProcessParameter<MstRateAssetQuotationInfo001Dto>();
-        WorkFlowParameter<MstRateAssetQuotationInfo001Dto> params = new WorkFlowParameter<MstRateAssetQuotationInfo001Dto>();
+        ProcessParameter<ComRateAssetQuotationInfo001Dto> processParameter = new ProcessParameter<ComRateAssetQuotationInfo001Dto>();
+        WorkFlowParameter<ComRateAssetQuotationInfo001Dto> params = new WorkFlowParameter<ComRateAssetQuotationInfo001Dto>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
         if (StringUtil.isEmpty(dto.getFinprodId())) {

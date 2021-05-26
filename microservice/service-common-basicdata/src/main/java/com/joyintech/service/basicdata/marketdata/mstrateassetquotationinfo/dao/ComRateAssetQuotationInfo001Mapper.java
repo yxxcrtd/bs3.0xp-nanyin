@@ -8,11 +8,12 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.service.valuation.basedata.marketdata.mstrateassetquotationinfo.dao;
+package com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.valuation.basedata.marketdata.mstrateassetquotationinfo.dto.MstRateAssetQuotationInfo001Dto;
+import com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,18 +24,18 @@ import java.util.Map;
  * 
  * @author lby
  * @version 1.0 2020年10月20日
- * @see MstRateAssetQuotationInfo001Mapper
+ * @see ComRateAssetQuotationInfo001Mapper
  * @since 1.0
  */
 @Repository 
-public interface MstRateAssetQuotationInfo001Mapper {
+public interface ComRateAssetQuotationInfo001Mapper {
     /**
      * 根据条件查找数据
      *
      * @param param 查询条件
      * @return 场外金融产品估值信息
      */
-    List<MstRateAssetQuotationInfo001Dto> selectForPage(Map<String, Object> param);
+    List<ComRateAssetQuotationInfo001Dto> selectForPage(Map<String, Object> param);
 
     List<SuggestDto> getAssetCode(Map<String, Object> map);
 
@@ -42,11 +43,11 @@ public interface MstRateAssetQuotationInfo001Mapper {
 
     List<SelectOptionDto> getAssetCodeList(Map<String, Object> map);
 
-    MstRateAssetQuotationInfo001Dto getFinProdNameAndFinprodId(Map<String, Object> map);
+    ComRateAssetQuotationInfo001Dto getFinProdNameAndFinprodId(Map<String, Object> map);
 
-    List<MstRateAssetQuotationInfo001Dto> selectByIdAndDate(Map<String, Object> map);
+    List<ComRateAssetQuotationInfo001Dto> selectByIdAndDate(Map<String, Object> map);
 
-    MstRateAssetQuotationInfo001Dto selectMstRateAsset(Map<String, Object> param);
+    ComRateAssetQuotationInfo001Dto selectMstRateAsset(Map<String, Object> param);
 
-    int update(MstRateAssetQuotationInfo001Dto entity);
+    int update(ComRateAssetQuotationInfo001Dto entity);
 }

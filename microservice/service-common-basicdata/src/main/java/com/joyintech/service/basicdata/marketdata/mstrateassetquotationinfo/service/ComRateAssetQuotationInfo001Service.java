@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
 
-package com.joyintech.service.valuation.basedata.marketdata.mstrateassetquotationinfo.service;
+package com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -17,8 +17,8 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.valuation.basedata.marketdata.mstrateassetquotationinfo.dao.MstRateAssetQuotationInfo001Mapper;
-import com.joyintech.service.valuation.basedata.marketdata.mstrateassetquotationinfo.dto.MstRateAssetQuotationInfo001Dto;
+import com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.dao.ComRateAssetQuotationInfo001Mapper;
+import com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto;
 import com.joyintech.tams.common.base.dao.FinProductValuationMapper;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -33,19 +33,19 @@ import java.util.*;
  *
  * @author lby
  * @version 1.0 2020年10月20日
- * @see MstRateAssetQuotationInfo001Service
+ * @see ComRateAssetQuotationInfo001Service
  * @since 1.0
  */
 
 @Service(value="serviceMstRateAssetQuotationInfo001Service")
 @Transactional
-public class MstRateAssetQuotationInfo001Service extends BaseService<MstRateAssetQuotationInfo001Dto> {
+public class ComRateAssetQuotationInfo001Service extends BaseService<ComRateAssetQuotationInfo001Dto> {
 
     /**
      * 计划类（利率型）资产估值行情信息mapper
      */
     @Autowired
-    private MstRateAssetQuotationInfo001Mapper mstRateAssetQuotationInfo001Mapper;
+    private ComRateAssetQuotationInfo001Mapper mstRateAssetQuotationInfo001Mapper;
 
     /**
      * 场外金融产品估值Mapper
@@ -64,7 +64,7 @@ public class MstRateAssetQuotationInfo001Service extends BaseService<MstRateAsse
      * @see
      * @since 1.0
      */
-    public Page<MstRateAssetQuotationInfo001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<ComRateAssetQuotationInfo001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
         pageParam.put("PROFITTYPE_VALUE_02", DictCodeListExt2.收益类型_预期收益.getValue());
         // 估值不接入finprod_type2，故用估值的金融产品类型做判断
         pageParam.put("TYPE_GUZHI_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
@@ -101,11 +101,11 @@ public class MstRateAssetQuotationInfo001Service extends BaseService<MstRateAsse
         return mstRateAssetQuotationInfo001Mapper.getAssetCodeList(map);
     }
 
-    public MstRateAssetQuotationInfo001Dto getFinProdNameAndFinprodId(Map<String, Object> map) {
+    public ComRateAssetQuotationInfo001Dto getFinProdNameAndFinprodId(Map<String, Object> map) {
         return mstRateAssetQuotationInfo001Mapper.getFinProdNameAndFinprodId(map);
     }
 
-    public int insert(MstRateAssetQuotationInfo001Dto entity) {
+    public int insert(ComRateAssetQuotationInfo001Dto entity) {
         Date sysDate = DateUtil.getSysDate() != null ? DateUtil.parse(DateUtil.getSysDate()) : DateUtil.now();
         entity.setPublishDate(entity.getPublishDate() == null ? sysDate : entity.getPublishDate());
         // 一体化对应etliu start
@@ -123,25 +123,25 @@ public class MstRateAssetQuotationInfo001Service extends BaseService<MstRateAsse
         return finProductValuationMapper.insertSelective(entity);
     }
 
-    public List<MstRateAssetQuotationInfo001Dto> selectByIdAndDate(Map<String, Object> map) {
+    public List<ComRateAssetQuotationInfo001Dto> selectByIdAndDate(Map<String, Object> map) {
         return mstRateAssetQuotationInfo001Mapper.selectByIdAndDate(map);
     }
 
-    public MstRateAssetQuotationInfo001Dto selectMstRateAsset(Map<String, Object> param) {
+    public ComRateAssetQuotationInfo001Dto selectMstRateAsset(Map<String, Object> param) {
         return mstRateAssetQuotationInfo001Mapper.selectMstRateAsset(param);
     }
 
-    public int update(MstRateAssetQuotationInfo001Dto entity) {
+    public int update(ComRateAssetQuotationInfo001Dto entity) {
         entity.setFinprodId(entity.getFinProdMarketId());
         return mstRateAssetQuotationInfo001Mapper.update(entity);
     }
 
-    public int delete(MstRateAssetQuotationInfo001Dto entity) {
+    public int delete(ComRateAssetQuotationInfo001Dto entity) {
         entity.setFinprodId(entity.getFinProdMarketId());
         return finProductValuationMapper.deleteByPrimaryKey(entity);
     }
 
-    public List<MstRateAssetQuotationInfo001Dto> selectForExport(Map<String, Object> param) {
+    public List<ComRateAssetQuotationInfo001Dto> selectForExport(Map<String, Object> param) {
         param.put("PROFITTYPE_VALUE_02", DictCodeListExt2.收益类型_预期收益.getValue());
         param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         param.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());

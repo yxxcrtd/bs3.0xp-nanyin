@@ -11,12 +11,12 @@ $(function () {
         if (pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT) {
             object.finprodId = $('#finProdMarketId').val();
         }
-        Joyin.ajaxJson(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo002/check', object, function (result) {
+        Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002/check', object, function (result) {
             Joyin.confirm(result.data, function () {
                 if (operateType === 'save') {
-                    WorkFlow.doSaveList(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo002/save', object, "MstRateAssetQuotationInfo002_btn_save");
+                    WorkFlow.doSaveList(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002/save', object, "ComRateAssetQuotationInfo002_btn_save");
                 } else {
-                    WorkFlow.doSubmitList(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo002/save', object, "MstRateAssetQuotationInfo002_btn_submit");
+                    WorkFlow.doSubmitList(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002/save', object, "ComRateAssetQuotationInfo002_btn_submit");
                 }
             });
         });
@@ -39,7 +39,7 @@ $(function () {
             return;
         }
         var object = {'finProdMarketId': finProdMarketId, 'profitType': $("#profitType").val()};
-        Joyin.ajax(basePath + 'valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo002/getFinProdNameAndFinprodId', object, function(data){
+        Joyin.ajax(basePath + 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002/getFinProdNameAndFinprodId', object, function(data){
             if(data){
                 $('#finProdName').val(data.finProdName).trigger('change');
                 $('#finprodId').val(data.finprodId).trigger('change');
@@ -52,10 +52,10 @@ $(function () {
         //初始化画面
         init();
         // 绑定按钮事件
-        $('#MstRateAssetQuotationInfo002_btn_save').click(function () {
+        $('#ComRateAssetQuotationInfo002_btn_save').click(function () {
             saveOrSubmit('save');
         });
-        $('#MstRateAssetQuotationInfo002_btn_submit').click(function () {
+        $('#ComRateAssetQuotationInfo002_btn_submit').click(function () {
             saveOrSubmit('submit');
         });
         //资产代码联动事件
