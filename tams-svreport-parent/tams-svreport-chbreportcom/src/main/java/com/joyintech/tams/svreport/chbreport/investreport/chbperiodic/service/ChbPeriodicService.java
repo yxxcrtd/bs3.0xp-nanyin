@@ -990,8 +990,8 @@ public class ChbPeriodicService {
         Date firstday = calendar.getTime();
 
         logger.info("查询期末月报资产头寸开始：");
-        List<ChbMonthAssetPosition> assetMonthPositionList = chbMonthAssetPositionMapper.selectByMonthDate(DateUtil.format(firstday),
-                DateUtil.format(lastday), prodIdList);
+        List<ChbMonthAssetPosition> assetMonthPositionList = chbMonthAssetPositionMapper.selectByMonthDateAndProdId(DateUtil.format(firstday),
+                DateUtil.format(lastday), prodId);
         logger.info("查询期末月报资产头寸结束：");
         // 用于统计穿透前期末余额 穿透后期末余额,key=propertyCode
         Map<String, ChbMonthReportDetail> assetMonthReportDetailMap = new HashMap<String, ChbMonthReportDetail>();

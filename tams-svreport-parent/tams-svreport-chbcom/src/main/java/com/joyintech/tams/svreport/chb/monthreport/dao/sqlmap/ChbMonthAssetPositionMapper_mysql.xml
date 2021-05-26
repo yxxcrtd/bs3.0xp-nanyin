@@ -682,6 +682,40 @@
                  ASSETINFO.BANK_SEC_PREFER
     </select>
 
+    <select id="selectByMonthDateAndProdId" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select sum(POSITION.ASSETVALUE_A)         ASSETVALUE_A,
+               sum(POSITION.ASSETVALUE_B)         ASSETVALUE_B,
+               POSITION.ASSETTYPE,
+               ifnull(POSITION.INDUSTRY1, 'NULL') INDUSTRY1,
+               POSITION.IN_ASSET_TYPE,
+               POSITION.PPPFLAG,
+               POSITION.MONIT_TYPE,
+               POSITION.MANAGE_TYPE,
+               POSITION.IS_GOVERN_FUND1,
+               POSITION.PRIVATEFUND_FLAG,
+               POSITION.PRIVATEPRD_FLAG,
+               POSITION.BONDTOSTOCK_FLAG,
+               POSITION.RATING,
+               POSITION.ASSETTYPE2,
+               ASSETINFO.ASSET_TYPE3,
+               ASSETINFO.BANK_SEC_CAPITAL,
+               ASSETINFO.BANK_SEC_PERPETUAL,
+               ASSETINFO.BANK_SEC_PREFER
+        from CHB_MONTH_ASSET_POSITION POSITION
+                 LEFT JOIN CHB_ASSET_INFO ASSETINFO
+                           ON ASSETINFO.ASSET_CODE = POSITION.ASSET_CODE and ASSETINFO.status in ('E', 'M')
+        where POSITION.PROD_ID = #{prodId,jdbcType=VARCHAR}
+              and DATE_FORMAT(POSITION.ENDDATE, '%Y-%m-%d') >= #{startDate,jdbcType=VARCHAR}
+    <![CDATA[and DATE_FORMAT(POSITION.ENDDATE, '%Y-%m-%d') <= #{endDate,jdbcType=VARCHAR}]]>
+        group by POSITION.ASSETTYPE, ifnull(POSITION.INDUSTRY1, 'NULL'), POSITION.IN_ASSET_TYPE,
+                 POSITION.PPPFLAG, POSITION.MONIT_TYPE, POSITION.MANAGE_TYPE,
+                 POSITION.IS_GOVERN_FUND1, POSITION.PRIVATEFUND_FLAG, POSITION.PRIVATEPRD_FLAG,
+                 POSITION.BONDTOSTOCK_FLAG, POSITION.RATING, POSITION.ASSETTYPE2, ASSETINFO.ASSET_TYPE3,
+                 ASSETINFO.BANK_SEC_CAPITAL,
+                 ASSETINFO.BANK_SEC_PERPETUAL,
+                 ASSETINFO.BANK_SEC_PREFER
+    </select>
+
     <select id="selectPrdCashByDate" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             parameterType="date">
         SELECT SUM(cashflow) cashamt, CCY ccy, PROD_ID prodId
