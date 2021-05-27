@@ -149,12 +149,12 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			dto.setAssetUuid(IDGenerator.generate(36));
 		}
 		dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
-		/***当资产为资管计划或者委外时,需要保存资管计划开始结束日**/
-		if(DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(dto.getAssetType())
-		||DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue().equals(dto.getAssetType())){
-			dto.setPlanSdate(dto.getVdate());
-			dto.setPlanEdate(dto.getMdate());
-		}
+//		/***当资产为资管计划或者委外时,需要保存资管计划开始结束日**/
+//		if(DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(dto.getAssetType())
+//		||DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue().equals(dto.getAssetType())){
+//			dto.setPlanSdate(dto.getVdate());
+//			dto.setPlanEdate(dto.getMdate());
+//		}
 		/***【资产基本信息维护】-新建或修改页面（债券类资产），“具体类别”字段未保存至CHB_ASSET_INFO表**/
 		if(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue().equals(dto.getAssetType())){
 			dto.setChbSectype(dto.getSvrBussFinBondRepInfoDto().getRepSectype());
