@@ -10,17 +10,28 @@
 
 package com.joyintech.tams.disclosure.information.reveal.reportreveal.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftppath.service.FtpPathService;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectSVRService;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
+import com.joyintech.tams.disclosure.common.common.service.BaseCommonService;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageParamDto;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.service.ReportConfirmManage001Service;
+import com.joyintech.tams.disclosure.information.reveal.reportreveal.service.ReportRevealManage001Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,38 +44,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.tams.disclosure.information.config.reportpage.controller.ReportPageManage002Controller;
-import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
-import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageParamDto;
-import com.joyintech.tams.disclosure.information.reveal.reportconfirm.service.ReportConfirmManage001Service;
-import com.joyintech.tams.disclosure.information.reveal.reportreveal.service.ReportRevealManage001Service;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftppath.service.FtpPathService;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCode;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
-import com.joyintech.tams.disclosure.common.common.service.BaseCommonService;
-import com.joyintech.system.constant.SystemGlobalConstant;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
-import com.joyintech.framework.util.CacheUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 /**
  * 
  * 〈一句话功能简述〉
@@ -93,6 +80,9 @@ public class ReportRevealManage001Contoller extends BaseController {
     
     @Autowired
 	private GetPrdInfoSelectService getPrdInfoSelectService;
+
+    @Autowired
+    GetPrdInfoSelectSVRService getPrdInfoSelectSVRService;
     /**
      * 日志
      */
@@ -429,5 +419,20 @@ public class ReportRevealManage001Contoller extends BaseController {
                              + FileNameUtil.getFileExtName(outFile);
         }
 		return ExportUtil.export(exportFileName, outFile, true);
+    }
+
+
+    /**
+     * 分页查询产品下拉框
+     *
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("getSVRPrdInfoSelect")
+    @ResponseBody
+    public Page<SelectOptionDto> getSVRPrdInfoSelect()
+            throws Exception {
+        Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectSVRService.getPrdInfoSelect(RequestUtil.getPageParam());
+        return prdInfoSelect;
     }
 }

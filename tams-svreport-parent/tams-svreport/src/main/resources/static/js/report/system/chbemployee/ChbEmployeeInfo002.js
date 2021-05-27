@@ -119,175 +119,183 @@
             object.remark = $("#remark").val();
             object.type =$("#type").val();
 
-            var checkFlag = true;
-            if(object.identifyNumber==''){
-                Joyin.error("身份证号码不能为空");
-                checkFlag = false;
-            }else if(object.identifyNumber.length>18){
-                Joyin.error("身份证号不能超过18");
-                checkFlag = false;
-            }
-            if(object.employeeType==''){
-                Joyin.error("从业人员类型不能为空");
-                checkFlag = false;
-            }
-            if(object.employeeName==''){
-                Joyin.error("姓名不能为空");
-                checkFlag = false;
-            }else
-                if(object.employeeName.length>200){
-                Joyin.error("姓名不能超过200");
-                checkFlag = false;
-            }
-            if(object.employeeSex==''){
-                Joyin.error("性别不可以为空");
-                checkFlag = false;
-            }
-            if(object.issuePartyId==''){
-                Joyin.error("发行机构代码不能为空");
-                checkFlag = false;
-            }else if(object.issuePartyId.length>6){
-                Joyin.error("发行机构代码不能超过6");
-                checkFlag = false;
-            }
-            if(object.belongsBank==''){
-                Joyin.error("所属总行或分支行不可以为空");
-                checkFlag = false;
-            }
-            if(object.belongsPlace==''){
-                Joyin.error("所属区域不可以为空");
-                checkFlag = false;
-            }else if(object.belongsPlace=='900000'){
-                if(object.remark == ''){
-                    Joyin.error("备注不可为空");
-                    checkFlag = false;
+            // var checkFlag = true;
+            // if(object.identifyNumber==''){
+            //     Joyin.error("身份证号码不能为空");
+            //     checkFlag = false;
+            // }else if(object.identifyNumber.length>18){
+            //     Joyin.error("身份证号不能超过18");
+            //     checkFlag = false;
+            // }
+            // if(object.employeeType==''){
+            //     Joyin.error("从业人员类型不能为空");
+            //     checkFlag = false;
+            // }
+            // if(object.employeeName==''){
+            //     Joyin.error("姓名不能为空");
+            //     checkFlag = false;
+            // }else
+            //     if(object.employeeName.length>200){
+            //     Joyin.error("姓名不能超过200");
+            //     checkFlag = false;
+            // }
+            // if(object.employeeSex==''){
+            //     Joyin.error("性别不可以为空");
+            //     checkFlag = false;
+            // }
+            // if(object.issuePartyId==''){
+            //     Joyin.error("发行机构代码不能为空");
+            //     checkFlag = false;
+            // }else if(object.issuePartyId.length>6){
+            //     Joyin.error("发行机构代码不能超过6");
+            //     checkFlag = false;
+            // }
+            // if(object.belongsBank==''){
+            //     Joyin.error("所属总行或分支行不可以为空");
+            //     checkFlag = false;
+            // }
+            // if(object.belongsPlace==''){
+            //     Joyin.error("所属区域不可以为空");
+            //     checkFlag = false;
+            // }else if(object.belongsPlace=='900000'){
+            //     if(object.remark == ''){
+            //         Joyin.error("备注不可为空");
+            //         checkFlag = false;
+            //     }
+            // }
+            // if(object.belongsDept==''){
+            //     Joyin.error("所属部门不能为空");
+            //     checkFlag = false;
+            // }else if(object.belongsDept.length>40){
+            //     Joyin.error("所属部门不能超过40");
+            //     checkFlag = false;
+            // }
+            // if(object.position==''){
+            //     Joyin.error("职位不能为空");
+            //     checkFlag = false;
+            // }else if(object.position.length>40){
+            //     Joyin.error("职位不能超过40");
+            //     checkFlag = false;
+            // }
+            // if(object.education==''){
+            //     Joyin.error("学历不可以为空");
+            //     checkFlag = false;
+            // }
+            // if(object.academicDegree==''){
+            //     Joyin.error("学位不可以为空");
+            //     checkFlag = false;
+            // }
+            // if(object.firsttime2work==''){
+            //     Joyin.error("首次参加工作时间不可以为空");
+            //     checkFlag = false;
+            // }else if(object.firsttime2work.length>6){
+            //     Joyin.error("首次参加工作时间必须为日期格式（yyyyMM）");
+            //     checkFlag = false;
+            // }
+            // if(object.firsttime2finwork==''){
+            //     Joyin.error("首次从事理财业务时间不可以为空");
+            //     checkFlag = false;
+            // }else if(object.firsttime2finwork.length>6){
+            //     Joyin.error("首次从事理财业务时间必须为日期格式（yyyyMM）");
+            //     checkFlag = false;
+            // }
+            // if(object.professionalTitle==''){
+            //     Joyin.error("专业技术职称不可以为空");
+            //     checkFlag = false;
+            // }else if(object.professionalTitle=='99'){
+            //     if(object.remark == ''){
+            //         Joyin.error("备注不可为空");
+            //         checkFlag = false;
+            //     }
+            // }
+            // if(object.finProfessionalCrtf==null){
+            //     Joyin.error("理财专业证书不可以为空");
+            //     checkFlag = false;
+            // }else if(object.finProfessionalCrtf.indexOf('99') !=-1){
+            //     if(object.remark == ''){
+            //         Joyin.error("备注不可为空");
+            //         checkFlag = false;
+            //     }
+            // }
+            // if(object.finTrainingNo!='' && object.finTrainingNo.length!=14){
+            //     Joyin.error("理财登记培训证书编号应为14位");
+            //     checkFlag = false;
+            // }
+            // if(object.awards==''){
+            //     Joyin.error("所获奖励不能为空");
+            //     checkFlag = false;
+            // }else if(object.awards.length>400){
+            //     Joyin.error("所获奖励不能超过400");
+            //     checkFlag = false;
+            // }
+            // if(object.officeTel==''){
+            //     Joyin.error("办公电话不能为空");
+            //     checkFlag = false;
+            // }else if(object.officeTel.length>30){
+            //     Joyin.error("办公电话不能超过30");
+            //     checkFlag = false;
+            // }else{
+            //     if(! /^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/.test(object.officeTel)){
+            //         Joyin.error("办公电话格式不正确");
+            //         checkFlag = false;
+            //     }
+            // }
+            // if(object.mobileTel==''){
+            //     Joyin.error("移动电话不能为空");
+            //     checkFlag = false;
+            // }else if(object.mobileTel.length>11){
+            //     Joyin.error("移动电话不能超过11");
+            //     checkFlag = false;
+            // }else {
+            //     if(! /^\d{11}$/.test(object.mobileTel)){
+            //         Joyin.error("移动电话格式不正确");
+            //         checkFlag = false;
+            //     }
+            // }
+            // if(object.mail==''){
+            //     Joyin.error("电子邮箱不能为空");
+            //     checkFlag = false;
+            // }else if(object.mail.length>50){
+            //     Joyin.error("电子邮箱不能超过50");
+            //     checkFlag = false;
+            // }
+            // if (object.employeeType == '05') {
+            //    if(object.regBusiType ==null ){
+            //        Joyin.error("登记业务分类不能为空");
+            //        checkFlag = false;
+            //    }
+            //    if(object.regEmployeeType==null){
+            //        Joyin.error("登记人员类别不能为空");
+            //        checkFlag = false;
+            //    }
+            // }
+            //
+            // if ($("#belongsBank").val() == '02'
+            //     || $("#belongsBank").val() == '03'
+            //     || $("#belongsBank").val() == '04') {
+            //     if ($("#companyName").val() == '') {
+            //         Joyin.error("具体单位名称不能为空");
+            //         checkFlag = false;
+            //     }
+            // }
+            // if(checkFlag){
+            //     Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo002/check', object, function(result) {
+            //         if(result){
+            //             Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo002/save',object,function(result){
+            //                 var index = parent.layer.getFrameIndex(window.name);
+            //                 parent.layer.close(index);
+            //             });
+            //         }
+            //     });
+            // }
+            Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo002/check', object, function(result) {
+                if(result){
+                    Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo002/save',object,function(result){
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    });
                 }
-            }
-            if(object.belongsDept==''){
-                Joyin.error("所属部门不能为空");
-                checkFlag = false;
-            }else if(object.belongsDept.length>40){
-                Joyin.error("所属部门不能超过40");
-                checkFlag = false;
-            }
-            if(object.position==''){
-                Joyin.error("职位不能为空");
-                checkFlag = false;
-            }else if(object.position.length>40){
-                Joyin.error("职位不能超过40");
-                checkFlag = false;
-            }
-            if(object.education==''){
-                Joyin.error("学历不可以为空");
-                checkFlag = false;
-            }
-            if(object.academicDegree==''){
-                Joyin.error("学位不可以为空");
-                checkFlag = false;
-            }
-            if(object.firsttime2work==''){
-                Joyin.error("首次参加工作时间不可以为空");
-                checkFlag = false;
-            }else if(object.firsttime2work.length>6){
-                Joyin.error("首次参加工作时间必须为日期格式（yyyyMM）");
-                checkFlag = false;
-            }
-            if(object.firsttime2finwork==''){
-                Joyin.error("首次从事理财业务时间不可以为空");
-                checkFlag = false;
-            }else if(object.firsttime2finwork.length>6){
-                Joyin.error("首次从事理财业务时间必须为日期格式（yyyyMM）");
-                checkFlag = false;
-            }
-            if(object.professionalTitle==''){
-                Joyin.error("专业技术职称不可以为空");
-                checkFlag = false;
-            }else if(object.professionalTitle=='99'){
-                if(object.remark == ''){
-                    Joyin.error("备注不可为空");
-                    checkFlag = false;
-                }
-            }
-            if(object.finProfessionalCrtf==null){
-                Joyin.error("理财专业证书不可以为空");
-                checkFlag = false;
-            }else if(object.finProfessionalCrtf.indexOf('99') !=-1){
-                if(object.remark == ''){
-                    Joyin.error("备注不可为空");
-                    checkFlag = false;
-                }
-            }
-            if(object.finTrainingNo!='' && object.finTrainingNo.length!=14){
-                Joyin.error("理财登记培训证书编号应为14位");
-                checkFlag = false;
-            }
-            if(object.awards==''){
-                Joyin.error("所获奖励不能为空");
-                checkFlag = false;
-            }else if(object.awards.length>400){
-                Joyin.error("所获奖励不能超过400");
-                checkFlag = false;
-            }
-            if(object.officeTel==''){
-                Joyin.error("办公电话不能为空");
-                checkFlag = false;
-            }else if(object.officeTel.length>30){
-                Joyin.error("办公电话不能超过30");
-                checkFlag = false;
-            }else{
-                if(! /^((0\d{2,3})-)(\d{7,8})(-(\d{3,8}))?$/.test(object.officeTel)){
-                    Joyin.error("办公电话格式不正确");
-                    checkFlag = false;
-                }
-            }
-            if(object.mobileTel==''){
-                Joyin.error("移动电话不能为空");
-                checkFlag = false;
-            }else if(object.mobileTel.length>11){
-                Joyin.error("移动电话不能超过11");
-                checkFlag = false;
-            }else {
-                if(! /^\d{11}$/.test(object.mobileTel)){
-                    Joyin.error("移动电话格式不正确");
-                    checkFlag = false;
-                }
-            }
-            if(object.mail==''){
-                Joyin.error("电子邮箱不能为空");
-                checkFlag = false;
-            }else if(object.mail.length>50){
-                Joyin.error("电子邮箱不能超过50");
-                checkFlag = false;
-            }
-            if (object.employeeType == '05') {
-               if(object.regBusiType ==null ){
-                   Joyin.error("登记业务分类不能为空");
-                   checkFlag = false;
-               }
-               if(object.regEmployeeType==null){
-                   Joyin.error("登记人员类别不能为空");
-                   checkFlag = false;
-               }
-            }
-
-            if ($("#belongsBank").val() == '02'
-                || $("#belongsBank").val() == '03'
-                || $("#belongsBank").val() == '04') {
-                if ($("#companyName").val() == '') {
-                    Joyin.error("具体单位名称不能为空");
-                    checkFlag = false;
-                }
-            }
-            if(checkFlag){
-                Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo002/check', object, function(result) {
-                    if(result){
-                        Joyin.ajaxJson(basePath + 'svreport/system/chbemployee/ChbEmployeeInfo002/save',object,function(result){
-                            var index = parent.layer.getFrameIndex(window.name);
-                            parent.layer.close(index);
-                        });
-                    }
-                });
-            }
+            });
         });
 
     });

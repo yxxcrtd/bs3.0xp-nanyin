@@ -90,7 +90,8 @@
 		MOBILE_TEL mobileTel,
 		MAIL mail,
 		REG_BUSI_TYPE regBusiType,
-		REG_EMPLOYEE_TYPE regEmployeeType
+		REG_EMPLOYEE_TYPE regEmployeeType,
+		REMARK remark
 		FROM
 		CHB_EMPLOYEE_INFO a
 		<where>

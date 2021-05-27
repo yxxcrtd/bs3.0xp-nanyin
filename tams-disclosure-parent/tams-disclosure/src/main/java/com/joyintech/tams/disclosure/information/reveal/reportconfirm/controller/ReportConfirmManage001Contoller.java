@@ -10,30 +10,6 @@
 
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -45,22 +21,15 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftppath.service.FtpPathService;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectSVRService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCode;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
 import com.joyintech.tams.disclosure.common.common.service.BaseCommonService;
 import com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
@@ -69,7 +38,24 @@ import com.joyintech.tams.disclosure.information.reveal.reportconfirm.service.Re
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
-import com.joyintech.framework.util.CacheUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 
 /**
@@ -104,6 +90,9 @@ public class ReportConfirmManage001Contoller extends BaseController {
      */
     @Autowired(required = false)
     private FileAttachmentProcess fileAttachmentProcess;
+
+	@Autowired
+	GetPrdInfoSelectSVRService getPrdInfoSelectSVRService;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -504,4 +493,19 @@ public class ReportConfirmManage001Contoller extends BaseController {
         }
         return ExportUtil.export(targetFileName, in);
     }
+
+	/**
+	 * 分页查询产品下拉框
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("getSVRPrdInfoSelect")
+	@ResponseBody
+	public Page<SelectOptionDto> getSVRPrdInfoSelect()
+			throws Exception {
+		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectSVRService.getPrdInfoSelect(RequestUtil.getPageParam());
+		return prdInfoSelect;
+	}
+
 }
