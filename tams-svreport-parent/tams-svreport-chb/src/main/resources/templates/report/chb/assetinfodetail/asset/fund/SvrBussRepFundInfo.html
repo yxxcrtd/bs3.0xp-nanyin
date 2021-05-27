@@ -40,8 +40,8 @@
                            data-th-utext="#{SvrBussRepFundInfo.assetName}">基金名称</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_assetName|" th:name="|${entityName}.assetName|"
-							   data-th-value="${entity?.assetName}"
-                               data-fixtype="2" class="layui-input form-input" required/>
+							   th:value="${entity?.assetName}"
+                               class="layui-input form-input" required/>
                     </div>
                 </div>
 
