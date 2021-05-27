@@ -175,6 +175,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             AllTradeCommonUtil.deletePositionByOrderId(bussTrdTransferOrderDto.getOrderId());
             if (!StringUtil.equals("revoke", ptlFundAllocation002Dto.getOperateType())
                     && !StringUtil.equals("delete", ptlFundAllocation002Dto.getOperateType())) {
+                bussTrdTransferOrderDto.setMyAcctNo(bussTrdTransferOrderDto.getPayAcctNo());
                 restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doBack", bussTrdTransferOrderDto,
                         String.class);
             }
