@@ -181,6 +181,23 @@
         page: false,
         sortfont: true,
         rowno: true,
+        beforeEditCell:function(value, field, data){
+             if(field=='portfolioId'){
+                 if(!$("#settleDate").val()){
+                     Joyin.error(JoyinUtil.getMessage("请选择转账日期！"));
+                     return false;
+                 }
+                 if(!$("#ccy").val()){
+                     Joyin.error(JoyinUtil.getMessage("请选择币种！"));
+                     return false;
+                 }
+                 if(!$("#myAcctNo").val() && !$("#counterAcctNo").val()){
+                     Joyin.error(JoyinUtil.getMessage("收/付款账户不能为空"));
+                     return false;
+                 }
+             }
+             return true;
+        },
         editCell: function(value, data, field, cell, column) {
             setTimeout(function() {
                 var settleAmt = Number(0);
@@ -195,18 +212,6 @@
                     $("#settleAmt").val(settleAmt).trigger('blur');
                 }
                 if(field == 'portfolioId'){
-                    if(!$("#settleDate").val()){
-                        Joyin.error(JoyinUtil.getMessage("请选择转账日期！"));
-                        return;
-                    }
-                    if(!$("#ccy").val()){
-                        Joyin.error(JoyinUtil.getMessage("请选择币种！"));
-                        return;
-                    }
-                    if(!$("#myAcctNo").val() && !$("#counterAcctNo").val()){
-                        Joyin.error(JoyinUtil.getMessage("收/付款账户不能为空"));
-                        return;
-                    }
                     var object = {portfolioId: data.portfolioId, cdate: $("#settleDate").val(),
                                     ccy: $("#ccy").val(),payType:$("#payType").val(),myAcctNo:$("#myAcctNo").val()};
 
