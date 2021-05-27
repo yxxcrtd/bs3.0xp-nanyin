@@ -80,16 +80,13 @@ public class PtlFundAllocation002Validator implements BeanValidator{
                 	
                 	//划款金额
                     BigDecimal settleAmt=tempDto.getSettleAmt();
-                    if (settleAmt==null||settleAmt.equals("")){
-                        errorList.add(new ValidMessage("明细(第"+(i+1)+"行)划款金额不能为空！"));
+                    if (settleAmt==null||settleAmt.equals("")||settleAmt.compareTo(BigDecimal.ZERO)<=0){
+                        errorList.add(new ValidMessage("请删除划款金额为0或者为空的记录！"));
+                        break;
                     }else{
-                        if(settleAmt.compareTo(BigDecimal.ZERO)<=0){
-                            errorList.add(new ValidMessage("明细(第"+(i+1)+"行)划款金额必须大于0！"));
-                        }else{
-                            //划拨金额不能大于付款账户余额的校验
-                            if(settleAmt.compareTo(tempDto.getAmount()) > 0){
-                                errorList.add(new ValidMessage("明细(第"+(i+1)+"行)划款金额不能大于付款账户余额！"));
-                            }
+                        //划拨金额不能大于付款账户余额的校验
+                        if(settleAmt.compareTo(tempDto.getAmount()) > 0){
+                            errorList.add(new ValidMessage("明细(第"+(i+1)+"行)划款金额不能大于付款账户余额！"));
                         }
                     }
                 	//校验逻辑修改，同时增加账户、余额的校验  wyd 20210331 start
