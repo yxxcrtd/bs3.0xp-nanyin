@@ -287,10 +287,12 @@ var QueryFunc=function(){
             if(repAssetType=='1305'||repAssetType=='1302'){
                 $("#svrBussRepEquityInfoDto_equityQuit").val('').trigger("change");
                 $("#svrBussRepEquityInfoDto_equityQuit").attr("disabled",true);
+                $("#svrBussRepEquityInfoDto_isGovernFund").val('').attr("disabled",true).trigger("change");
+                $("#svrBussRepEquityInfoDto_isunlisted").val('').attr("disabled",true).trigger("change");
             }else if(repAssetType=='1301'){
                 $("#svrBussRepEquityInfoDto_equityQuit").attr("disabled",false);
-                $("#svrBussRepEquityInfoDto_isGovernFund").val('02').trigger("change");
-                $("#svrBussRepEquityInfoDto_isunlisted").val('02').trigger("change");
+                $("#svrBussRepEquityInfoDto_isGovernFund").val('02').attr("disabled",false).trigger("change");
+                $("#svrBussRepEquityInfoDto_isunlisted").val('02').attr("disabled",false).trigger("change");
             }
         }else if(obj["07"].indexOf(repAssetType)>=0){
             $("#svrBussRepFinanciallInfoDto_remark").val('无');
