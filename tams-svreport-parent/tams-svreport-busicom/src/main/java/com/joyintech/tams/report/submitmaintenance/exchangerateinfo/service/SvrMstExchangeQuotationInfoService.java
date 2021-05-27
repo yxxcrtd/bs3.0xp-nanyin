@@ -224,7 +224,11 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
             List<String> headList = new ArrayList<String>();
             headList.add("货币对");
             headList.add("交易日期");
+            headList.add("开盘价");
+            headList.add("收盘价");
             headList.add("中间价");
+            headList.add("最高价");
+            headList.add("最低价");
             headList.add("报价单位");
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
@@ -295,27 +299,64 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
                     message.add("交易日期格式不正确");
                 }
             }
-            //中间价
+            //开盘价
             if(list.get(2) == null || list.get(2).trim().equals("")){
                 flag = false;
-                message.add("中间价不能为空");
+                message.add("开盘价不能为空");
             }else{
                 if(!checkFigure(list.get(2))){
                     flag = false;
-                    message.add("中间价不是数字");
-                }else if (!isNumber(list.get(2))) {
+                    message.add("开盘价不是数字");
+                }
+            }
+            //收盘价
+            if(list.get(3) == null || list.get(3).trim().equals("")){
+                flag = false;
+                message.add("收盘价不能为空");
+            }else{
+                if(!checkFigure(list.get(3))){
                     flag = false;
-                    message.add("中间件需为n(30,14)");
+                    message.add("收盘价不是数字");
+                }
+            }
+            //中间价
+            if(list.get(4) == null || list.get(4).trim().equals("")){
+                flag = false;
+                message.add("中间价不能为空");
+            }else{
+                if(!checkFigure(list.get(4))){
+                    flag = false;
+                    message.add("中间价不是数字");
+                }
+            }
+            //最高价
+            if(list.get(5) == null || list.get(5).trim().equals("")){
+                flag = false;
+                message.add("最高价不能为空");
+            }else{
+                if(!checkFigure(list.get(5))){
+                    flag = false;
+                    message.add("最高价不是数字");
+                }
+            }
+            //最低价
+            if(list.get(6) == null || list.get(6).trim().equals("")){
+                flag = false;
+                message.add("最低价不能为空");
+            }else{
+                if(!checkFigure(list.get(6))){
+                    flag = false;
+                    message.add("最低价不是数字");
                 }
             }
             //报价单位
-            if(list.get(3) == null || list.get(3).trim().equals("")){
+            if(list.get(7) == null || list.get(7).trim().equals("")){
                 flag = false;
                 message.add("报价单位不能为空");
             }else{
-                if(!checkIntFigure(list.get(3))){
+                if(!checkLongFigure(list.get(7))){
                     flag = false;
-                    message.add("报价单位不是整型数字");
+                    message.add("报价单位不是长整型数字");
                 }
             }
             //主键校验
@@ -339,15 +380,15 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
                 //开盘价
                 entity.setOpenPrice(new BigDecimal(list.get(2)));
                 //收盘价
-                entity.setClosePrice(new BigDecimal(list.get(2)));
-                //最高价
-                entity.setHighPrice(new BigDecimal(list.get(2)));
-                //最低价
-                entity.setLowPrice(new BigDecimal(list.get(2)));
+                entity.setClosePrice(new BigDecimal(list.get(3)));
                 //中间价
-                entity.setMidPrice(new BigDecimal(list.get(2)));
+                entity.setHighPrice(new BigDecimal(list.get(4)));
+                //最高价
+                entity.setLowPrice(new BigDecimal(list.get(5)));
+                //最低价
+                entity.setMidPrice(new BigDecimal(list.get(6)));
                 //报价单位
-                entity.setQuotUnit(Long.parseLong(list.get(3)));
+                entity.setQuotUnit(Long.parseLong(list.get(7)));
                 String[] strings = StringUtil.split(list.get(0), "\\/");
                 //基础币种
                 entity.setBasisCyy(strings[0]);
@@ -358,7 +399,7 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
                 entity.setCreateDept(deptCode);
                 entity.setCreateTime(nowDate);
                 entity.setUpdateUser(userName);
-                entity.setUpdateUser(userName);
+                entity.setUpdateTime(nowDate);
                 entity.setDatasourceType(dataSource);
                 entities.add(entity);
             }
