@@ -173,6 +173,14 @@ public class EtrInvestBondInfoDto extends EtrEntrust {
      * 最低成交金额
      */
     private BigDecimal minAmt;
+    
+    // add by yushilong 全价入库与画面显示 20200710 start
+    /**
+     * 全价总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal fpriceAmt;
+    // add by yushilong 全价入库与画面显示 20200710 end
 
     /**
      * 取得 最低成交金额
@@ -711,5 +719,21 @@ public class EtrInvestBondInfoDto extends EtrEntrust {
      */
     public void setEntrustIntegrateNum(BigDecimal entrustIntegrateNum) {
         this.entrustIntegrateNum = entrustIntegrateNum;
+    }
+
+    /**
+     * 获取 fpriceAmt
+     * @return fpriceAmt.
+     */
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    /**
+     * 设置 fpriceAmt
+     * @param fpriceAmt fpriceAmt
+     */
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
     }
 }

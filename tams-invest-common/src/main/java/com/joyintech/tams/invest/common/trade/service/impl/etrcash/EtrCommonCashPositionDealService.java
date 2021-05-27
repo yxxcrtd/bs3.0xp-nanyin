@@ -86,10 +86,34 @@ public class EtrCommonCashPositionDealService extends BaseService {
     private static BussRepoSecService bussRepoSecService;
 
     private static PtlCapacctInfoMapper ptlCapacctInfoMapper;
+    
+    private static EtrEntrustMapper etrEntrustMapper;
+
+    private static EtrEntrustAddMapper etrEntrustAddMapper;
 
     @Autowired
     public void setPtlCapacctInfoMapper(PtlCapacctInfoMapper ptlCapacctInfoMapper) {
         EtrCommonCashPositionDealService.ptlCapacctInfoMapper = ptlCapacctInfoMapper;
+    }
+    
+    /**
+     * 设置 etrEntrustMapper
+     *
+     * @param etrEntrustMapper etrEntrustMapper
+     */
+    @Autowired
+    public void setEtrEntrustMapper(EtrEntrustMapper etrEntrustMapper) {
+        EtrCommonCashPositionDealService.etrEntrustMapper = etrEntrustMapper;
+    }
+
+    /**
+     * 设置 etrEntrustAddMapper
+     *
+     * @param etrEntrustAddMapper etrEntrustAddMapper
+     */
+    @Autowired
+    public void setEtrEntrustAddMapper(EtrEntrustAddMapper etrEntrustAddMapper) {
+        EtrCommonCashPositionDealService.etrEntrustAddMapper = etrEntrustAddMapper;
     }
 
     /**
@@ -1107,7 +1131,12 @@ public class EtrCommonCashPositionDealService extends BaseService {
     }
 
     public static EntrustCommonDto findEntrust(String entrustId) {
-        return etrCommonCashPositionMapper.findEntrust(entrustId);
+    	EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
+        EntrustCommonDto result = new EntrustCommonDto();
+        result.setEtrEntrust(etrEntrust);
+        result.setEtrEntrustAdd(etrEntrustAdd);
+        return result;
     }
 
     public static BigDecimal getEtrSurplusAmt(String entrustId, String portfolioId) {
