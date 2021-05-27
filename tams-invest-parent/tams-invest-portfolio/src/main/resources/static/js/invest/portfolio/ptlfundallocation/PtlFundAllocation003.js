@@ -196,7 +196,7 @@
                 }
                 if(field == 'portfolioId'){
                     if(!$("#settleDate").val()){
-                        Joyin.error(JoyinUtil.getMessage("请选择交易时间！"));
+                        Joyin.error(JoyinUtil.getMessage("请选择转账日期！"));
                         return;
                     }
                     if(!$("#ccy").val()){
@@ -204,7 +204,7 @@
                         return;
                     }
                     if(!$("#myAcctNo").val() && !$("#counterAcctNo").val()){
-                        Joyin.error(JoyinUtil.getMessage("收/付款账户不能同时为空"));
+                        Joyin.error(JoyinUtil.getMessage("收/付款账户不能为空"));
                         return;
                     }
                     var object = {portfolioId: data.portfolioId, cdate: $("#settleDate").val(),
