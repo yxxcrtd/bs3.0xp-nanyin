@@ -664,6 +664,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infRiskRdsDto.setTradeNum(finDto.getEntrustNum());
             }
             //update by  zhangnian  20200326  end
+            //
+            if(StringUtil.isNotEmpty(finDto.getPriceModel())){
+                infRiskRdsDto.setPriceModel(finDto.getPriceModel());
+            }
         }
         //基金，计划类
         if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_赎回.getValue()) && !StringUtil.equals(DictCodeList.平安资产类型_计划类资产_净值型.getValue(),v.getAssetType())){

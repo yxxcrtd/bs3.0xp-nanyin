@@ -14,7 +14,8 @@
             tradeAmount: $('#entrustNum').val(),
             assetType: fintype,
             isEnabled: '01',
-            assetCode: $('#finprodIdhid').val()
+            assetCode: $('#finprodIdhid').val(),
+            priceModel: $('#priceModel').val()
         }
         var object = {
             tradeDirection: ['ps', 'EtrInvestBondInfo002.ps'],

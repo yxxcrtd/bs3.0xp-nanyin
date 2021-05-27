@@ -10,38 +10,31 @@
 
 package com.joyintech.service.riskrdsinf.event.rsk002.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.joyintech.service.riskrdsinf.core.constant.InfColumns;
-import com.joyintech.tams.invest.common.riskinfrds.info.entity.IProdInfo;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.redis.common.entity.IValue;
 import com.joyintech.service.riskrdsinf.cache.InterfCacheUtil;
 import com.joyintech.service.riskrdsinf.common.service.EventBaseService;
 import com.joyintech.service.riskrdsinf.core.annotation.INF;
 import com.joyintech.service.riskrdsinf.core.client.ClientData;
 import com.joyintech.service.riskrdsinf.core.exception.InterfException;
 import com.joyintech.service.riskrdsinf.event.rsk002.entity.Rsk002InEntity;
-import com.joyintech.redis.common.entity.IValue;
-import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.common.base.entity.RskIndicatorParaCalcdetail;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.calendar.entity.ICalendar;
 import com.joyintech.tams.invest.common.riskinfrds.event.entity.IEvent;
 import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndicator;
+import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndicatorResult;
+import com.joyintech.tams.invest.common.riskinfrds.info.entity.IProdInfo;
 import com.joyintech.tams.invest.common.riskinfrds.param.entity.IParam;
 import com.joyintech.tams.invest.common.riskinfrds.prod.entity.IPtlIndicator;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.*;
 
 /**
  * 交易完成接口处理详细
@@ -243,7 +236,26 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
             calcIndicator(ptlInd, indMap, mapData, pValMap, false);
             return null;
         });
-        indMap.entrySet().forEach(en -> checkIndTrend(en.getValue()));
+        indMap.entrySet().forEach(en -> {
+            if (StringUtil.isNotEmpty(mapData.get("priceModel"))) {
+                if (StringUtil.equals("信用债债券偏离度", en.getValue().getIndName())) {
+                    Map<String, IIndicatorResult> resMap = en.getValue().getIndicatorResult();
+                    resMap.entrySet().forEach(item -> {
+                        if (StringUtil.equals((String) mapData.get("priceModel"), DictCodeListExt2.价格模式_市价指令.getValue())) {
+                            item.getValue().setIndicatorOldVal(0);
+                            item.getValue().setIndicatorVal(0);
+                            item.getValue().setIndStatus(BussinessDictCodeListRds.指标状态_通过.getValue());
+                        } else {
+                            item.getValue().setIndicatorOldVal((Double) item.getValue().getIndicatorOldVal() > 0
+                                    ? (Double) item.getValue().getIndicatorOldVal() : (Double) item.getValue().getIndicatorOldVal() * -1);
+                            item.getValue().setIndicatorVal((Double) item.getValue().getIndicatorVal() > 0
+                                    ? (Double) item.getValue().getIndicatorVal() : (Double) item.getValue().getIndicatorVal() * -1);
+                        }
+                    });
+                }
+            }
+            checkIndTrend(en.getValue());
+        });
         // TODO 禁（可）投指标处理
         // 处理返回结果
         writeResponse(response, indMap, paramMap);
