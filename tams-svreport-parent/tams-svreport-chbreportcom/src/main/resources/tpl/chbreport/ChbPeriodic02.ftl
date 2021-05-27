@@ -1955,12 +1955,6 @@
                                         </w:rPr>
                                         <w:t>${(AMT1_2_3合计.percentAssetvalueBFmt)!'-'}</w:t>
                                     </w:r>
-                                    <w:r w:rsidRPr="006D32B6">
-                                        <w:rPr>
-                                            <w:color w:val="000000"/>
-                                        </w:rPr>
-                                        <w:commentReference w:id="15"/>
-                                    </w:r>
                                 </w:p>
                             </w:tc>
                         </w:tr>
@@ -3504,7 +3498,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>（元</w:t>
+                                        <w:t>（</w:t>
                                     </w:r>
                                     <w:r w:rsidRPr="006D32B6">
                                         <w:rPr>
@@ -3515,7 +3509,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>/</w:t>
+                                        <w:t>${ccyPositionTop10Fmt!'元/美元'}</w:t>
                                     </w:r>
                                     <w:r w:rsidRPr="006D32B6">
                                         <w:rPr>
@@ -3526,7 +3520,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>美元）</w:t>
+                                        <w:t>）</w:t>
                                     </w:r>
                                 </w:p>
                             </w:tc>

@@ -214,6 +214,12 @@ public class ChbPeriodicService {
                 List<String> sprodNameList = chbPrdBaseinfoDetailList.stream().map(ChbPrdBaseinfoDetailWithBLOBs::getProdName).collect(Collectors.toList());
                 chbPeriodicPrdInfo.setSprodIdList(sprodIdList);
                 chbPeriodicPrdInfo.setSprodNameList(sprodNameList);
+                List<String> colWidthList = new ArrayList<>();
+                for (int i = 0; i < sprodIdList.size(); i++) {
+                    colWidthList.add(Integer.toString(ChbInvestReportConstant.多份额基本信息单元格宽度/sprodIdList.size()));
+                }
+                dataMap.put("colWidthList", colWidthList);
+                dataMap.put("colWidth", colWidthList.get(0));
                 dataMap.put("sprodIdList", sprodIdList);
                 dataMap.put("sprodNameList", sprodNameList);
             }
@@ -348,13 +354,10 @@ public class ChbPeriodicService {
      * @throws Exception
      */
     public List<ChbPeriodicPositionTop10> qryChbPeriodicPositionTop10(Map<String, Object> param) {
-        if (!Objects.isNull(param.get("endReportDate"))) {
-            param.put("endReportDate", param.get("endReportDate"));
-        } else {
-            param.put("endReportDate", null);
-        }
         List<ChbPeriodicPositionTop10> list = chbPeriodicMapper.qryChbPeriodicPositionTop10(param);
-        this.dealPositionTop10Data(list);
+        String ccyPositionTop10Fmt = ChbInvestReportConstant.币种单位_人民币_美元;;
+        this.dealPositionTop10Data(list, ccyPositionTop10Fmt);
+        param.put("ccyPositionTop10Fmt", ccyPositionTop10Fmt);
         return list;
     }
 
@@ -363,9 +366,10 @@ public class ChbPeriodicService {
      *
      * @param list
      */
-    private void dealPositionTop10Data(List<ChbPeriodicPositionTop10> list) {
+    private void dealPositionTop10Data(List<ChbPeriodicPositionTop10> list, String ccyPositionTop10Fmt) {
         if (!StringUtil.isEmptyList(list)) {
             int index = 0;
+            Set<String> ccySet = new HashSet<>();
             for (ChbPeriodicPositionTop10 item : list) {
                 item.setSeq(Integer.toString(++index));
                 // 资产名称
@@ -379,18 +383,27 @@ public class ChbPeriodicService {
                 } else {
                     item.setAssettype2Fmt(ChbInvestReportConstant.横线);
                 }
+                // 持有金额币种单位
+                ccySet.add(item.getCcy());
                 // 持有金额
                 if (item.getAssetvalueB() == null || BigDecimal.ZERO.compareTo(item.getAssetvalueB()) == 0) {
                     item.setAssetvalueBFmt(ChbInvestReportConstant.空字符);
                 } else {
-                    String ccy = ChbInvestReportUtil.getDictCodeAndName(DictCode.币种_中债, item.getCcy());
-                    item.setAssetvalueBFmt(ChbInvestReportConstant.df2.format(item.getAssetvalueB()) + ccy);
+//                    String ccy = ChbInvestReportUtil.getDictCodeAndName(DictCode.币种_中债, item.getCcy());
+                    item.setAssetvalueBFmt(ChbInvestReportConstant.df2.format(item.getAssetvalueB()) /*+ ccy*/);
                 }
                 // 占总资产比例
                 if (item.getPercentAssetvalueB() == null || BigDecimal.ZERO.compareTo(item.getPercentAssetvalueB()) == 0) {
                     item.setPercentAssetvalueBFmt(ChbInvestReportConstant.空字符);
                 } else {
                     item.setPercentAssetvalueBFmt(ChbInvestReportConstant.df3.format(item.getPercentAssetvalueB()));
+                }
+            }
+            if (ccySet.size() == 1) {
+                if (ccySet.contains(DictCodeList.币种_美元_USD.getValue())) {
+                    ccyPositionTop10Fmt = ChbInvestReportConstant.币种单位_美元;
+                } else if (ccySet.contains(DictCodeList.币种_人民币_CNY.getValue())){
+                    ccyPositionTop10Fmt = ChbInvestReportConstant.币种单位_人民币;
                 }
             }
         } else {
