@@ -495,9 +495,9 @@
     var acctNoChange = function(init) {
         var acctNo = $("#acctNo").val();
         var secAcctId = $("#secAcctId").val();
-        if(!secAcctId){
+//        if(!secAcctId){
             linkSecAcctId();
-        }
+//        }
         showCashData();
     };
     /**
