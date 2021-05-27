@@ -3509,7 +3509,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${ccyPositionTop10Fmt!'元/美元'}</w:t>
+                                        <w:t>元</w:t>
                                     </w:r>
                                     <w:r w:rsidRPr="006D32B6">
                                         <w:rPr>

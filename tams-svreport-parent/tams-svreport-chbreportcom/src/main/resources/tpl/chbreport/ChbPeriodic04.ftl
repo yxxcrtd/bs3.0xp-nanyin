@@ -335,7 +335,9 @@
                         </w:tblPr>
                         <w:tblGrid>
                             <w:gridCol w:w="2536"/>
-                            <w:gridCol w:w="5770"/>
+                            <#list colWidthList as width>
+                                <w:gridCol w:w="${width!'5770'}"/>
+                            </#list>
                         </w:tblGrid>
                         <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
@@ -368,6 +370,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -424,6 +427,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -480,6 +484,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -539,6 +544,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -595,6 +601,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -651,6 +658,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -707,6 +715,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -763,6 +772,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -819,6 +829,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -875,6 +886,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -931,6 +943,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -955,6 +968,122 @@
                                     </w:r>
                                 </w:p>
                             </w:tc>
+                        </w:tr>
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="2536" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="CCFFCC"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:fareast="微软简仿宋" w:cs="微软简仿宋" w:hint="fareast"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:sz-cs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:fareast="微软简仿宋" w:cs="微软简仿宋" w:hint="fareast"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:sz-cs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>子份额的产品简称</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <#list sprodNameList as sprodName>
+                                <w:tc>
+                                    <w:tcPr>
+                                        <w:tcW w:w="${colWidth!'2885'}" w:type="dxa"/>
+                                        <w:shd w:val="clear" w:color="auto" w:fill="CCFFCC"/>
+                                        <w:vAlign w:val="center"/>
+                                    </w:tcPr>
+                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="00771650">
+                                        <w:pPr>
+                                            <w:pStyle w:val="dqbgbnwz"/>
+                                            <w:rPr>
+                                                <w:rFonts w:fareast="微软简仿宋" w:cs="微软简仿宋" w:hint="fareast"/>
+                                                <w:color w:val="000000"/>
+                                                <w:sz w:val="21"/>
+                                                <w:sz-cs w:val="21"/>
+                                            </w:rPr>
+                                        </w:pPr>
+                                        <w:r w:rsidRPr="006D32B6">
+                                            <w:rPr>
+                                                <w:rFonts w:fareast="微软简仿宋" w:cs="微软简仿宋" w:hint="fareast"/>
+                                                <w:color w:val="000000"/>
+                                                <w:sz w:val="21"/>
+                                                <w:sz-cs w:val="21"/>
+                                            </w:rPr>
+                                            <w:t>${sprodName!}</w:t>
+                                        </w:r>
+                                    </w:p>
+                                </w:tc>
+                            </#list>
+                        </w:tr>
+                        <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
+                            <w:tc>
+                                <w:tcPr>
+                                    <w:tcW w:w="2536" w:type="dxa"/>
+                                    <w:shd w:val="clear" w:color="auto" w:fill="CCFFCC"/>
+                                    <w:vAlign w:val="center"/>
+                                </w:tcPr>
+                                <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="006D32B6">
+                                    <w:pPr>
+                                        <w:pStyle w:val="dqbgbnwz"/>
+                                        <w:rPr>
+                                            <w:rFonts w:fareast="微软简仿宋" w:cs="微软简仿宋" w:hint="fareast"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:sz-cs w:val="21"/>
+                                        </w:rPr>
+                                    </w:pPr>
+                                    <w:r w:rsidRPr="006D32B6">
+                                        <w:rPr>
+                                            <w:rFonts w:fareast="微软简仿宋" w:cs="微软简仿宋" w:hint="fareast"/>
+                                            <w:color w:val="000000"/>
+                                            <w:sz w:val="21"/>
+                                            <w:sz-cs w:val="21"/>
+                                        </w:rPr>
+                                        <w:t>子份额的产品代码</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <#list sprodIdList as sprodId>
+                                <w:tc>
+                                    <w:tcPr>
+                                        <w:tcW w:w="${colWidth!'2885'}" w:type="dxa"/>
+                                        <w:shd w:val="clear" w:color="auto" w:fill="CCFFCC"/>
+                                        <w:vAlign w:val="center"/>
+                                    </w:tcPr>
+                                    <w:p w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidRDefault="00771650">
+                                        <w:pPr>
+                                            <w:pStyle w:val="dqbgbnwz"/>
+                                            <w:rPr>
+                                                <w:rFonts w:fareast="微软简仿宋" w:cs="微软简仿宋" w:hint="fareast"/>
+                                                <w:color w:val="000000"/>
+                                                <w:sz w:val="21"/>
+                                                <w:sz-cs w:val="21"/>
+                                            </w:rPr>
+                                        </w:pPr>
+                                        <w:r w:rsidRPr="006D32B6">
+                                            <w:rPr>
+                                                <w:rFonts w:fareast="微软简仿宋" w:cs="微软简仿宋" w:hint="fareast"/>
+                                                <w:color w:val="000000"/>
+                                                <w:sz w:val="21"/>
+                                                <w:sz-cs w:val="21"/>
+                                            </w:rPr>
+                                            <w:t>${sprodId!}</w:t>
+                                        </w:r>
+                                    </w:p>
+                                </w:tc>
+                            </#list>
                         </w:tr>
                     </w:tbl>
                     <w:p w:rsidR="006D32B6" w:rsidRDefault="006D32B6">
@@ -3509,7 +3638,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${ccyPositionTop10Fmt!'元/美元'}</w:t>
+                                        <w:t>元</w:t>
                                     </w:r>
                                     <w:r w:rsidRPr="006D32B6">
                                         <w:rPr>
