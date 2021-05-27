@@ -105,7 +105,7 @@ public interface TamsBaseMapper {
 
 
     Long getSequenceIndexByParam(Map<String, Object> param);
-
+    Long getSequenceIncrByParam(Map<String, Object> param);
     int updateSequenceIndexData(Map<String, Object> param);
 
 }

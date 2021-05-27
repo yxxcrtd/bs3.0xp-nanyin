@@ -335,7 +335,9 @@
                         </w:tblPr>
                         <w:tblGrid>
                             <w:gridCol w:w="2536"/>
-                            <w:gridCol w:w="5770"/>
+                            <#list colWidthList as width>
+                                <w:gridCol w:w="${width!'5770'}"/>
+                            </#list>
                         </w:tblGrid>
                         <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
@@ -368,6 +370,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -424,6 +427,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -480,6 +484,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -539,6 +544,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -595,6 +601,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -651,6 +658,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -707,6 +715,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -763,6 +772,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -819,6 +829,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -875,6 +886,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -931,6 +943,7 @@
                             <w:tc>
                                 <w:tcPr>
                                     <w:tcW w:w="5770" w:type="dxa"/>
+                                    <w:gridSpan w:val="${colCount!'2'}"/>
                                     <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
                                     <w:vAlign w:val="center"/>
                                 </w:tcPr>
@@ -987,7 +1000,7 @@
                             <#list sprodNameList as sprodName>
                                 <w:tc>
                                     <w:tcPr>
-                                        <w:tcW w:w="1900" w:type="dxa"/>
+                                        <w:tcW w:w="${colWidth!'2885'}" w:type="dxa"/>
                                         <w:shd w:val="clear" w:color="auto" w:fill="CCFFCC"/>
                                         <w:vAlign w:val="center"/>
                                     </w:tcPr>
@@ -1045,7 +1058,7 @@
                             <#list sprodIdList as sprodId>
                                 <w:tc>
                                     <w:tcPr>
-                                        <w:tcW w:w="1900" w:type="dxa"/>
+                                        <w:tcW w:w="${colWidth!'2885'}" w:type="dxa"/>
                                         <w:shd w:val="clear" w:color="auto" w:fill="CCFFCC"/>
                                         <w:vAlign w:val="center"/>
                                     </w:tcPr>
@@ -2094,12 +2107,6 @@
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
                                         <w:t>${(AMT1_2_3合计.percentAssetvalueBFmt)!'-'}</w:t>
-                                    </w:r>
-                                    <w:r w:rsidRPr="006D32B6">
-                                        <w:rPr>
-                                            <w:color w:val="000000"/>
-                                        </w:rPr>
-                                        <w:commentReference w:id="15"/>
                                     </w:r>
                                 </w:p>
                             </w:tc>
@@ -3655,7 +3662,7 @@
                                             <w:sz w:val="21"/>
                                             <w:szCs w:val="21"/>
                                         </w:rPr>
-                                        <w:t>${ccyPositionTop10Fmt!'元/美元'}</w:t>
+                                        <w:t>元</w:t>
                                     </w:r>
                                     <w:r w:rsidRPr="006D32B6">
                                         <w:rPr>

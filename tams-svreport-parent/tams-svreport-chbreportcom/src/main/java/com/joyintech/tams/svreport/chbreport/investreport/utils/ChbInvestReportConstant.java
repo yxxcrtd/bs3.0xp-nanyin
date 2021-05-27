@@ -67,6 +67,8 @@ public class ChbInvestReportConstant {
     public static final String 币种单位_美元 = "美元";
     public static final String 币种单位_人民币_美元 = "元/美元";
 
+    public static final int 多份额基本信息单元格宽度 = 5770;
+
     /**
      * 财务报表编制单位
      */

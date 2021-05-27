@@ -433,7 +433,7 @@ var QueryFunc=function(){
      */
     var assetVal = function(){
         // $("input[id$='_assetId']").val($('#assetCode').val());
-        $("input[id$='_assetName']").val($('#assetName').val());
+        // $("input[id$='_assetName']").val($('#assetName').val());
     }
     /**
      * 画面加载完成

@@ -949,10 +949,11 @@ public class CommonUtil {
 		param.put("databaseType", databaseType);
 		param.put("sequenceName", sequenceType.getSequenceName());
 		Long result = baseMapper.getSequenceIndexByParam(param);
+		Long incr = baseMapper.getSequenceIncrByParam(param);//序列增长
 		// 加在採番后结果的前缀，以保证各个sequence的採番结果不会出现重复的情况
 		String shortName = sequenceType.getShortName();
 		for(int i = 0;i<size;i++) {
-			result = result + i;
+			result = result + (i * incr);
 			String sequenceResult = String.format("%018d", result);
 			sequenceResult = shortName + sequenceResult;
 			list.add(sequenceResult);

@@ -141,7 +141,7 @@
         SELECT a.PROD_ID                                                      as prodId,
                b.ASSET_NAME                                                   as assetName,
                a.ASSETTYPE2                                                   as assettype2,
-               ROUND(a.ASSETVALUE_B / c.totalAssetvalueB, 2)                  as percentAssetvalueB,
+               ROUND(a.ASSETVALUE_B / c.totalAssetvalueB, 4)                  as percentAssetvalueB,
                a.ASSETVALUE_B                                                 as assetvalueB,
                b.CCY                                                          as ccy,
                a.IN_ASSET_TYPE,
@@ -165,6 +165,7 @@
               GROUP BY PROD_ID) c
         where a.PROD_ID = c.PROD_ID
           and a.ASSET_CODE = b.ASSET_CODE
+          AND a.PROD_ID = #{prodId,jdbcType=VARCHAR}
           AND a.ENDDATE = #{endReportDate,jdbcType=DATE}
         order by a.ASSETVALUE_B desc Limit 10;
     </select>

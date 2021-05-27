@@ -253,6 +253,8 @@ public class AssetInfoDetailUtil {
             }
             getDtoByPageMessgae(entity);
             entity.setCreateUser(LoginUserUtil.getUserName());
+            entity.setCreateTime(new Date());
+            entity.setUpdateTime(new Date());
             entity.setUpdateUser(LoginUserUtil.getUserName());
             entity.setAssetUuid(IDGenerator.generate(36));
             entity.setStatus(DictCodeListExt2.数据状态_有效.getValue());

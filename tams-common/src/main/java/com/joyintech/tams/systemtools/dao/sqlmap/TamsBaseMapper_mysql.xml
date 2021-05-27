@@ -143,6 +143,10 @@
     </select>
 
     <select id="getSequenceIndexByParam" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
+		SELECT (begin_num + incr) FROM SYS_SEQUENCE WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+	</select>
+
+    <select id="getSequenceIncrByParam" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
 		SELECT incr FROM SYS_SEQUENCE WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
 	</select>
 

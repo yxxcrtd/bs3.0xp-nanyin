@@ -214,6 +214,13 @@ public class ChbPeriodicService {
                 List<String> sprodNameList = chbPrdBaseinfoDetailList.stream().map(ChbPrdBaseinfoDetailWithBLOBs::getProdName).collect(Collectors.toList());
                 chbPeriodicPrdInfo.setSprodIdList(sprodIdList);
                 chbPeriodicPrdInfo.setSprodNameList(sprodNameList);
+                List<String> colWidthList = new ArrayList<>();
+                for (int i = 0; i < sprodIdList.size(); i++) {
+                    colWidthList.add(Integer.toString(ChbInvestReportConstant.多份额基本信息单元格宽度/sprodIdList.size()));
+                }
+                dataMap.put("colWidthList", colWidthList);
+                dataMap.put("colWidth", colWidthList.get(0));
+                dataMap.put("colCount", colWidthList.size());
                 dataMap.put("sprodIdList", sprodIdList);
                 dataMap.put("sprodNameList", sprodNameList);
             }
@@ -351,7 +358,7 @@ public class ChbPeriodicService {
         List<ChbPeriodicPositionTop10> list = chbPeriodicMapper.qryChbPeriodicPositionTop10(param);
         String ccyPositionTop10Fmt = ChbInvestReportConstant.币种单位_人民币_美元;;
         this.dealPositionTop10Data(list, ccyPositionTop10Fmt);
-        param.put("ccyPositionTop10Fmt", ccyPositionTop10Fmt);
+//        param.put("ccyPositionTop10Fmt", ccyPositionTop10Fmt);
         return list;
     }
 
@@ -377,8 +384,8 @@ public class ChbPeriodicService {
                 } else {
                     item.setAssettype2Fmt(ChbInvestReportConstant.横线);
                 }
-                // 持有金额币种单位
-                ccySet.add(item.getCcy());
+//                // 持有金额币种单位
+//                ccySet.add(item.getCcy());
                 // 持有金额
                 if (item.getAssetvalueB() == null || BigDecimal.ZERO.compareTo(item.getAssetvalueB()) == 0) {
                     item.setAssetvalueBFmt(ChbInvestReportConstant.空字符);
@@ -393,13 +400,13 @@ public class ChbPeriodicService {
                     item.setPercentAssetvalueBFmt(ChbInvestReportConstant.df3.format(item.getPercentAssetvalueB()));
                 }
             }
-            if (ccySet.size() == 1) {
-                if (ccySet.contains(DictCodeList.币种_美元_USD.getValue())) {
-                    ccyPositionTop10Fmt = ChbInvestReportConstant.币种单位_美元;
-                } else if (ccySet.contains(DictCodeList.币种_人民币_CNY.getValue())){
-                    ccyPositionTop10Fmt = ChbInvestReportConstant.币种单位_人民币;
-                }
-            }
+//            if (ccySet.size() == 1) {
+//                if (ccySet.contains(DictCodeList.币种_美元_USD.getValue())) {
+//                    ccyPositionTop10Fmt = ChbInvestReportConstant.币种单位_美元;
+//                } else if (ccySet.contains(DictCodeList.币种_人民币_CNY.getValue())){
+//                    ccyPositionTop10Fmt = ChbInvestReportConstant.币种单位_人民币;
+//                }
+//            }
         } else {
             ChbPeriodicPositionTop10 chbPeriodicPositionTop10 = new ChbPeriodicPositionTop10();
             chbPeriodicPositionTop10.setSeq(ChbInvestReportConstant.横线);
