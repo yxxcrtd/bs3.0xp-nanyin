@@ -1347,4 +1347,29 @@ public class EtrCommonCashPositionDealService extends BaseService {
 		param.put("ps", ps);
 		return etrCommonCashPositionMapper.selectSumStandardTicket(param);
 	}
+
+
+	/**
+	 * 合计交易份额
+	 *
+	 * @param entrustId
+	 * @return
+	 */
+	public BigDecimal selectSumShareAmt(String entrustId) {
+		Map<String, Object> param = new HashMap<String,Object>();
+		param.put("entrustId", entrustId);
+		return etrCommonCashPositionMapper.selectSumShareAmt(param);
+	}
+
+	/**
+	 * 合计交易金额
+	 *
+	 * @param entrustId
+	 * @return
+	 */
+	public BigDecimal selectSumTradeAmt(String entrustId) {
+		Map<String, Object> param = new HashMap<String,Object>();
+		param.put("entrustId", entrustId);
+		return etrCommonCashPositionMapper.selectSumTradeAmt(param);
+	}
 }

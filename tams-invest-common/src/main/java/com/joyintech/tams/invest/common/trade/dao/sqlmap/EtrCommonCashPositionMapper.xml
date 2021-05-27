@@ -906,5 +906,25 @@
                and deal.is_cancel = #{YES_OR_NO_N}
           )
     </select>	
-	
+    <select id="selectSumShareAmt"  resultType="java.math.BigDecimal">
+      select sum(T.AMOUNT) AMOUNT
+                  from PTL_SEC_POSITION_FLOW T
+                 where TRADE_ID IN
+                       (SELECT TRADE_ID
+                          FROM ETR_FINISH_STATUS
+                         WHERE ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+                           AND TRADE_ID != #{entrustId,jdbcType=VARCHAR})
+    </select>
+    <select id="selectSumTradeAmt"  resultType="java.math.BigDecimal">
+       SELECT sum(T.AMOUNT) AMOUNT
+		  FROM PTL_CASH_POSITION_FLOW T
+		 WHERE ORDER_ID IN
+		       (SELECT ORDER_ID
+		          FROM stl_pay_temp_orders
+		         WHERE stl_pay_temp_orders.TRADE_ID IN
+		               (SELECT TRADE_ID
+		                  FROM ETR_FINISH_STATUS
+		                 WHERE ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+		                   AND TRADE_ID != #{entrustId,jdbcType=VARCHAR}))
+    </select>
 </mapper>
