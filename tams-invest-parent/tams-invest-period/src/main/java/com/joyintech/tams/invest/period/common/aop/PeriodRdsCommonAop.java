@@ -82,6 +82,10 @@ public class PeriodRdsCommonAop extends AopBaseService<InterfRiskRdsDto> {
         if(!CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)||!StringUtil.isNotEmpty(joinPoint.getArgs())||joinPoint.getArgs().length<=1){
             return;
         }
+        // add by czj 20210527 资产减值暂时去除
+        if(joinPoint.getTarget().getClass().getSimpleName().contains("TrdAssetLossClear001Service")){
+            return ;
+        }
         //利率互换_付息_融入券去除
         if(利率互换_付息_融入券_逾期计息要素维护.contains(joinPoint.getTarget().getClass().getSimpleName())){
             return;

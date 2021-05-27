@@ -1033,7 +1033,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     是否不适用_否(DictCode.是否不适用,"N","否"),
     是否不适用_不适用(DictCode.是否不适用,"NA","不适用"),
 
-    共通业务类型_资产减值清理(DictCode.共通业务类型,"TRD76","资产减值清理"),
+    共通业务类型_资产减值清理(DictCode.共通业务类型,"TRD77","资产减值清理"),
 
     本位币差额处理方式_利息收入(DictCode.本位币差额处理方式,"01","利息收入"),
     本位币差额处理方式_减值准备(DictCode.本位币差额处理方式,"02","减值准备"),
