@@ -10,6 +10,7 @@ var table;
     var fTradeIdFromCstp = fTradeId;
     var settleAmt=0; //结算费
     var exchangeAmt=0; //经手费
+    var fTradeIdInitFlag = 0;//成交编号初始化标识 第一次调用时，不触发事件
    //初始计算要素内容
     var saveCalcParam;
     var isautobond = false;
@@ -2695,10 +2696,12 @@ var table;
         if (pageModel==PAGE_MODEL_NEW&&!fTradeId) {
             fTradeIdChangeAction();
             // 中标结果维护画面跳转过来，不重新load画面
-            if($("#fTradeId").val()=='' && $("#bondFirstSign").val() == ''){
-                Joyin.ajax(basePath + 'invest/trade/bond/TrdBondInvestTrade002/init', {entrustId:$('#entrustId').val(),portfolioId:$('#portfolioId').val()}, function (data) {
+            if($("#fTradeId").val()=='' && $("#bondFirstSign").val() == '' &&fTradeIdInitFlag!=0){
+                Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/init', {entrustId:$('#entrustId').val(),portfolioId:$('#portfolioId').val()}, function (data) {
                     $("body").html(data);
                 });
+            }else{
+            	fTradeIdInitFlag =1;
             }
         }
     });
