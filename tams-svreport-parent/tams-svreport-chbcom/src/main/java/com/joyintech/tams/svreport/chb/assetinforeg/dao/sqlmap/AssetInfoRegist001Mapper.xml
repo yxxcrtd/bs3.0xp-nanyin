@@ -3193,7 +3193,7 @@
 		
 		
 		/**公共资产数据*/
-		select
+		select distinct
 			   ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
 		       ASSETINFO.ASSET_CODE             ASSETCODE,
 		       ASSETINFO.ASSET_TYPE             ASSETTYPE,
@@ -3417,7 +3417,12 @@
 				</if>
 				<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
 					select 1
-					from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+					from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+					union all
+					select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+					left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+					on cabd.asset_id=cbap.plan_asset_id
+					)cabds　
 					LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
 					where 1=1 and ASSETINFO.ASSET_CODE=cabds.asset_id
 					<if test="orgCode != null and orgCode.size() > 0">
@@ -3749,7 +3754,12 @@
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
-			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+			union all
+			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+			on cabd.asset_id=cbap.plan_asset_id
+			)cabds　
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D  WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
@@ -3917,7 +3927,7 @@
 		
 		
 		/**公共资产数据*/
-		select
+		select distinct
 			   ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
 		       ASSETINFO.ASSET_CODE             ASSETCODE,
 		       ASSETINFO.ASSET_TYPE             ASSETTYPE,
@@ -4163,7 +4173,12 @@
 			</if>
 			<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
 				select 1
-				from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+				from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+				union all
+				select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+				left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+				on cabd.asset_id=cbap.plan_asset_id
+				)cabds　
 				LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
 				where 1=1 and ASSETINFO.ASSET_CODE=cabds.asset_id
 				<if test="orgCode != null and orgCode.size() > 0">
@@ -4203,7 +4218,7 @@
 		
 		union all
 		/**私有数据*/
-		select 
+		select
 		   DISTINCT ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
 	       ASSETINFO.ASSET_CODE             ASSETCODE,
 	       ASSETINFO.ASSET_TYPE             ASSETTYPE,
@@ -4415,7 +4430,12 @@
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
-			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+			union all
+			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+			on cabd.asset_id=cbap.plan_asset_id
+			)cabds　
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D  WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
@@ -4562,7 +4582,7 @@
 			) b 
 			on a.ASSET_CODE=b.ASSET_CODE
 		) -->
-		SELECT 
+		SELECT distinct
 		null regist_code,
 		NVL(assetinfo.asset_code_old,assetinfo.asset_code) asset_code,
 		assetinfo.ASSET_TYPE,
@@ -4779,7 +4799,12 @@
 				on assetinfo.ASSET_CODE=cabds.asset_id
 			</if>
 			<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
-				left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+				left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+				union all
+				select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+				left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+				on cabd.asset_id=cbap.plan_asset_id
+				)cabds　
 				on assetinfo.ASSET_CODE=cabds.asset_id
 			</if>
 			left join DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
