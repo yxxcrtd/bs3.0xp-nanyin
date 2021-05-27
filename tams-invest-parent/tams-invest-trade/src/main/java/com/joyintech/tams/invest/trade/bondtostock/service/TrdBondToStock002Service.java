@@ -489,7 +489,7 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
             List<StlPayOrders> stlPayOrdersList = new ArrayList<>(baseDto.getStlPayOrdersList());
             trdCommDto.setStlPayOrdersList(stlPayOrdersList);
         }
-        valuationInterfService.runValInvest2Jixu(trdCommDto);
+//        valuationInterfService.runValInvest2Jixu(trdCommDto);
 //        重新的初始化dto 防止被jixu 修改
         BeanUtil.copyPropertiesIgnoreNull(comDeal,baseDto.getTrdProductDeal());
         BeanUtil.copyPropertiesIgnoreNull(comDealAdd,baseDto.getTrdProductDealAdd());
