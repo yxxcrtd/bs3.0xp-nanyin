@@ -721,8 +721,13 @@ public class ChbPeriodicService {
         List<ChbPeriodicValue> list = new ArrayList<>();
         List<ChbPeriodicIndex> qcChbPeriodicIndexList = qryQcPeriodicDetailIndex(params);
         List<ChbPeriodicIndex> qmChbPeriodicIndexList = qryQmPeriodicDetailIndex(params);
-        for (int i = 0; i < qcChbPeriodicIndexList.size(); i++) {
-            ChbPeriodicIndex qcChbPeriodicIndex = qcChbPeriodicIndexList.get(i);
+        for (int i = 0; i < qmChbPeriodicIndexList.size(); i++) {
+            ChbPeriodicIndex qcChbPeriodicIndex = null;
+            if (StringUtil.isEmptyList(qcChbPeriodicIndexList) || Objects.isNull(qcChbPeriodicIndexList.get(i))) {
+                qcChbPeriodicIndex = new ChbPeriodicIndex();
+            } else {
+                qcChbPeriodicIndex = qcChbPeriodicIndexList.get(i);
+            }
             ChbPeriodicIndex qmChbPeriodicIndex = qmChbPeriodicIndexList.get(i);
             Map<String, ChbPeriodicValue> map = new HashMap<>(4);
             ChbPeriodicValue chbPeriodicValue = this.dealValue(qcChbPeriodicIndex, qmChbPeriodicIndex, params);
@@ -922,7 +927,7 @@ public class ChbPeriodicService {
             chbPeriodicPrdInfo.setRiskLevelFmt((ChbInvestReportConstant.空字符));
         }
         //杠杆水平上限显示名称
-        if (StringUtil.isNotEmpty(chbPeriodicPrdInfo.getRiskLevel()) && StringUtil.isNotEmpty(chbPeriodicPrdInfo.getOperateMode())) {
+        if (StringUtil.isNotEmpty(chbPeriodicPrdInfo.getRaiseType()) && StringUtil.isNotEmpty(chbPeriodicPrdInfo.getOperateMode())) {
             if ((StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())
                     || StringUtil.equals(chbPeriodicPrdInfo.getOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue()))
                     && (StringUtil.equals(chbPeriodicPrdInfo.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())
@@ -972,7 +977,13 @@ public class ChbPeriodicService {
         ChbPeriodicValue value = new ChbPeriodicValue();
         // 期初估值日期
         if (Objects.isNull(qcDto.getValueDate())) {
-            value.setValueDateQC(ChbInvestReportConstant.横线);
+            // 若产品起息日>=本次报告开始日，则取产品起息日
+            if (DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 1
+                    || DateUtil.compareDate((Date) params.get("vdate"), (Date) params.get("dqStartDate")) == 0) {
+                value.setValueDateQC(DateUtil.format((Date) params.get("vdate")));
+            } else {
+                value.setValueDateQC(DateUtil.format(DateUtil.addDate((Date) params.get("dqStartDate"), 0, 0, -1)));
+            }
         } else {
             value.setValueDateQC(DateUtil.format(qcDto.getValueDate()));
         }
@@ -1066,7 +1077,7 @@ public class ChbPeriodicService {
             if (!Objects.isNull(qmDto.getUnitValueT())) {
                 BigDecimal increaseRateOfCumulativeValue = (qmDto.getUnitValueT().subtract(qcUnitValueT))
                         .divide(qcUnitValueT, 20, BigDecimal.ROUND_FLOOR)
-                        .divide(new BigDecimal(DateUtil.getBetweenDayNumber(qcDto.getValueDate(), qmDto.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
+                        .divide(new BigDecimal(DateUtil.getBetweenDayNumber(value.getValueDateQC(), value.getValueDate())), 20, BigDecimal.ROUND_FLOOR)
                         .multiply(new BigDecimal(365));
                 value.setIncreaseRateOfCumulativeValue(ChbInvestReportConstant.df3.format(increaseRateOfCumulativeValue.abs()));
             } else {
@@ -1104,6 +1115,8 @@ public class ChbPeriodicService {
         } else {
             value.setAssetUnitValue(ChbInvestReportConstant.df2.format(qmDto.getAssetValueMarket()));
         }
+        // 资产名称
+        value.setProdName(qmDto.getProdName());
 
         return value;
     }
