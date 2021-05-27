@@ -214,6 +214,12 @@ public class ChbPeriodicService {
                 List<String> sprodNameList = chbPrdBaseinfoDetailList.stream().map(ChbPrdBaseinfoDetailWithBLOBs::getProdName).collect(Collectors.toList());
                 chbPeriodicPrdInfo.setSprodIdList(sprodIdList);
                 chbPeriodicPrdInfo.setSprodNameList(sprodNameList);
+                List<String> colWidthList = new ArrayList<>();
+                for (int i = 0; i < sprodIdList.size(); i++) {
+                    colWidthList.add(Integer.toString(ChbInvestReportConstant.多份额基本信息单元格宽度/sprodIdList.size()));
+                }
+                dataMap.put("colWidthList", colWidthList);
+                dataMap.put("colWidth", colWidthList.get(0));
                 dataMap.put("sprodIdList", sprodIdList);
                 dataMap.put("sprodNameList", sprodNameList);
             }

@@ -335,7 +335,9 @@
                         </w:tblPr>
                         <w:tblGrid>
                             <w:gridCol w:w="2536"/>
-                            <w:gridCol w:w="5770"/>
+                            <#list colWidthList as width>
+                                <w:gridCol w:w="${width!'5770'}"/>
+                            </#list>
                         </w:tblGrid>
                         <w:tr w:rsidR="006D32B6" w:rsidRPr="006D32B6" w:rsidTr="006D32B6">
                             <w:tc>
@@ -987,7 +989,7 @@
                             <#list sprodNameList as sprodName>
                                 <w:tc>
                                     <w:tcPr>
-                                        <w:tcW w:w="1900" w:type="dxa"/>
+                                        <w:tcW w:w="${colWidth!'5770'}" w:type="dxa"/>
                                         <w:shd w:val="clear" w:color="auto" w:fill="CCFFCC"/>
                                         <w:vAlign w:val="center"/>
                                     </w:tcPr>
@@ -1045,7 +1047,7 @@
                             <#list sprodIdList as sprodId>
                                 <w:tc>
                                     <w:tcPr>
-                                        <w:tcW w:w="1900" w:type="dxa"/>
+                                        <w:tcW w:w="${colWidth!'5770'}" w:type="dxa"/>
                                         <w:shd w:val="clear" w:color="auto" w:fill="CCFFCC"/>
                                         <w:vAlign w:val="center"/>
                                     </w:tcPr>
