@@ -10,7 +10,10 @@
 
 package com.joyintech.tams.invest.portfolio.ptlfundallocation.service;
 
+import com.google.common.collect.Maps;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.EtrCashPositionFlowMapper;
 import com.joyintech.tams.common.base.dao.PtlCashPositionFlowMapper;
 import com.joyintech.tams.constant.DictCodeList;
@@ -25,16 +28,14 @@ import com.joyintech.tams.component.business.common.service.BussCommonMapperDele
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.service.WorkFlowService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +77,12 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+
+    /**
+     * 业务流程表service
+     */
+    @Autowired(required = false)
+    private WorkFlowService workflowService;
     /**
      * 查询组合
      * @return 组合集合
@@ -223,6 +230,12 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
     }
     @Override
     public void doUpdate(PtlFundAllocation002Dto entity){
+        Map<String, Object> map = Maps.newConcurrentMap();
+        map.put("title", "资金划拨多组合管理,划拨金额:"+entity.getSettleAmt()+",交易日期:("+DateUtil.format(entity.getSettleDate())+")");
+        map.put("workFlowId",entity.getWorkflowId());
+        map.put("updateUser", LoginUserUtil.getUserName());
+        map.put("updateTime",DateUtil.now());
+        workflowService.updateTitle(map);
         if ("save".equals(entity.getOperateType())) {
             return;
         }
