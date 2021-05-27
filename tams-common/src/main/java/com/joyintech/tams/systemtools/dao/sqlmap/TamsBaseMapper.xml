@@ -163,6 +163,9 @@
 
     </select>
 
+    <select id="getSequenceIncrByParam" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
+	</select>
+
     <update id="updateSequenceIndexData" >
     </update>
 
