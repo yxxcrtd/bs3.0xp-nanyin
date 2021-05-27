@@ -141,7 +141,7 @@
         SELECT a.PROD_ID                                                      as prodId,
                b.ASSET_NAME                                                   as assetName,
                a.ASSETTYPE2                                                   as assettype2,
-               ROUND(a.ASSETVALUE_B / c.totalAssetvalueB, 2)                  as percentAssetvalueB,
+               ROUND(a.ASSETVALUE_B / c.totalAssetvalueB, 4)                  as percentAssetvalueB,
                a.ASSETVALUE_B                                                 as assetvalueB,
                b.CCY                                                          as ccy,
                a.IN_ASSET_TYPE,
