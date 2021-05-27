@@ -213,7 +213,7 @@
 		<where>
 			<!-- 改为用估值类型进行数据过滤 modify by yanya on 20210209-->
 			<!-- P.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}-->
-			P.FINPROD_TYPE = #{finprodType2,jdbcType=VARCHAR}
+			P.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
 			<if test="finprodId != null and finprodId != ''">
 				AND P.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
 			</if>
