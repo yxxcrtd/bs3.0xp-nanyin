@@ -185,7 +185,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_repIsFbzb|" th:name="|${entityName}.repIsFbzb|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-value="${SVR_YES_OR_NO_default}"
+                                th:initValue="${entity?.repIsFbzb}"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
@@ -215,7 +215,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_bankSecZxzq|" th:name="|${entityName}.bankSecZxzq|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-value="${SVR_YES_OR_NO_default}"
+                                th:initValue="${entity?.bankSecZxzq}"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
@@ -228,7 +228,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_isPpn|" th:name="|${entityName}.isPpn|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-value="${SVR_YES_OR_NO_default}"
+                                th:initValue="${entity?.isPpn}"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
