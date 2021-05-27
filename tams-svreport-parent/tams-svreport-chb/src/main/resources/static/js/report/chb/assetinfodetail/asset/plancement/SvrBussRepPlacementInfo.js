@@ -122,6 +122,8 @@
         // });
 
         $('#svrBussRepPlacementInfoDto_rivalPartyCode').change(function(){
+            $("#svrBussRepPlacementInfoDto_rivalParty").val($('#svrBussRepPlacementInfoDto_rivalPartyCode').select2('data')[0].institutionCode).trigger("change");
+            $("#svrBussRepPlacementInfoDto_rivalPartyType").val($('#svrBussRepPlacementInfoDto_rivalPartyCode').select2('data')[0].object).trigger("change");
             // document.getElementById("rivalPartyType").value=$('#svrBussRepPlacementInfoDto_rivalPartyCode').select2('data')[0].object;
         });
 

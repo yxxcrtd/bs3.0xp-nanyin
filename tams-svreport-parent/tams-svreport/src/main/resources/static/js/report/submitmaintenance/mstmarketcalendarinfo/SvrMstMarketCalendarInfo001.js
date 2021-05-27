@@ -117,6 +117,8 @@
                   for (var i = 0; i < selArr.length; i++) {
                       if (selArr[i].yorn == yes) {
                           count++;
+                      }else if (selArr[i].yorn == null){
+                          selArr[i].yorn = no;
                       }
                   }
                   if (count != 0) {
@@ -146,6 +148,8 @@
                         for (var i = 0; i < selArr.length; i++) {
                             if (selArr[i].yorn == no) {
                                 count++;
+                            }else if (selArr[i].yorn ==null){
+                                selArr[i].yorn = yes;
                             }
                         }
                         if (count != 0) {

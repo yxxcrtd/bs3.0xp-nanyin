@@ -10,18 +10,17 @@
 
 package com.joyintech.tams.report.submitmaintenance.mstmarketcalendarinfo.dto;
 
-import java.util.List;
-
-import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.base.entity.MstHoliday;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.util.List;
+
 /**
  * 节假日表dto 〈功能详细描述〉
- * 
+ *
  * @author xiexinting
  * @version 1.0 2018年8月3日
  * @see SvrMstMarketCalendarInfo001Dto
@@ -44,7 +43,7 @@ public class SvrMstMarketCalendarInfo001Dto extends MstHoliday implements Proces
 
     /**
      * 获取 yorn
-     * 
+     *
      * @return yorn.
      */
     public String getYorn() {
@@ -58,7 +57,7 @@ public class SvrMstMarketCalendarInfo001Dto extends MstHoliday implements Proces
     public String getCalendarNameStr() {
         return super.getCalendarId()+" "+calendarName;
     }
-    
+
     /**
      * 获取 calendarName
      * @return calendarName.
@@ -67,7 +66,7 @@ public class SvrMstMarketCalendarInfo001Dto extends MstHoliday implements Proces
         return calendarName;
     }
 
-    
+
     /**
      * 设置 calendarName
      * @param calendarName calendarName
@@ -78,7 +77,7 @@ public class SvrMstMarketCalendarInfo001Dto extends MstHoliday implements Proces
 
     /**
      * 设置 yorn
-     * 
+     *
      * @param yorn yorn
      */
     public void setYorn(String yorn) {
@@ -87,16 +86,16 @@ public class SvrMstMarketCalendarInfo001Dto extends MstHoliday implements Proces
 
     /**
      * 获取 节假日标志
-     * 
+     *
      * @return 节假日标志
      */
     public String getIsHolidayStr() {
-        return super.getIsHoliday() != 0 ? "是":"否";
+        return super.getIsHoliday() != null ? (super.getIsHoliday() != 0 ? "是" : "否") : null;
     }
 
     /**
      * 取得 日历编号
-     * 
+     *
      * @return 日历编号
      */
     @Override
@@ -107,7 +106,7 @@ public class SvrMstMarketCalendarInfo001Dto extends MstHoliday implements Proces
 
     /**
      * 取得 日期
-     * 
+     *
      * @return 日期
      */
     @PrimaryKey(Field.PK_2)
@@ -122,7 +121,7 @@ public class SvrMstMarketCalendarInfo001Dto extends MstHoliday implements Proces
 
     /**
      * 获取 selectedItem
-     * 
+     *
      * @return selectedItem.
      */
     public List<SvrMstMarketCalendarInfo001Dto> getSelectedItem() {
@@ -131,7 +130,7 @@ public class SvrMstMarketCalendarInfo001Dto extends MstHoliday implements Proces
 
     /**
      * 设置 selectedItem
-     * 
+     *
      * @param selectedItem selectedItem
      */
     public void setSelectedItem(List<SvrMstMarketCalendarInfo001Dto> selectedItem) {

@@ -77,6 +77,19 @@ public interface ChbMonthAssetPositionMapper {
      * @return List<ChbBotAstPosition>
      */
     List<ChbMonthAssetPosition> selectByMonthDate(@Param("startDate")String startDate,@Param("endDate")String endDate,@Param("prodids")List<String> prodids);
+
+    /**
+     * 功能:根据月度报表日期获取资产头寸数据
+     * @since 1.6.0
+     * @version 1.6.0
+     * @author：swwan 2021年5月26日
+     * @param startDate 月初日期
+     * @param endDate 月末日期
+     * @param prodId 产品代码
+     * @return List<ChbBotAstPosition>
+     */
+    List<ChbMonthAssetPosition> selectByMonthDateAndProdId(@Param("startDate")String startDate,@Param("endDate")String endDate,@Param("prodId")String prodId);
+
     /**
      * 跑批时先删后插
      * @param cdate

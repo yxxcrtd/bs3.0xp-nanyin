@@ -7,12 +7,12 @@
 			// 资产/负债二级类别
 			assetType2 : $('#assetType2').val() == null ? null : $(
 				'#assetType2').val().join(","),
-			// 资产一级分类
-			orgAssetType1 : $('#orgAssetType1').val() == null ? null : $(
-				'#orgAssetType1').val().join(","),
-			//资产二级分类
-			orgAssetType2 : $('#orgAssetType2').val() == null ? null : $(
-				'#orgAssetType2').val().join(","),
+			// // 资产一级分类
+			// orgAssetType1 : $('#orgAssetType1').val() == null ? null : $(
+			// 	'#orgAssetType1').val().join(","),
+			// //资产二级分类
+			// orgAssetType2 : $('#orgAssetType2').val() == null ? null : $(
+			// 	'#orgAssetType2').val().join(","),
 			// 行内资产编码
 			assetCode : $('#assetCode').val() == null ? null : $(
 				'#assetCode').val().join(","),

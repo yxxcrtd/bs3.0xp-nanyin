@@ -154,9 +154,10 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepAssetAstBillInfo.industryShares}">行业一级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industryShares|" th:name="|${entityName}.industryShares|"
+                        <select id="industryShares" th:name="|${entityName}.industryShares|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
                                 th:initValue="${entity?.industryShares}"
+                                childrenIds = "industryShares2"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
@@ -167,9 +168,10 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepAssetAstBillInfo.industryShares2}">行业二级分类</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_industryShares2|" th:name="|${entityName}.industryShares2|"
+                        <select id="industryShares2" th:name="|${entityName}.industryShares2|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
                                 th:initValue="${entity?.industryShares2}"
+                                parentIds="industryShares"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>

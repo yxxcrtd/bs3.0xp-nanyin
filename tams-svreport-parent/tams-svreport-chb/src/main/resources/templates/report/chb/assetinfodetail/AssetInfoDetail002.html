@@ -62,7 +62,7 @@
 							<div class="form-inline-wrap" >
 								<label class="layui-form-label form-label-wrap">币种</label>
 								<div class="layui-input-inline input-inline">
-									<select  id="ccy" name="ccy"
+									<select  id="ccy" name="ccy" autosort= false
 											 data-th-initValue="${entity?.ccy}"
 											 class="layui-input form-input input-select"
 											 data-th-data-result="${CURRENCY_CHB}" required
@@ -81,9 +81,7 @@
 								<select required class="layui-input form-input input-select" placeholder="请输入内容"
 										id="assetType2" name="assetType2"
 										data-th-placeholder="#{SysCommon.placeholder}"
-										data-th-data-url="|@{/chb/assetinfodetail/AssetInfoDetail002/getAssetType2}"
-										data-th-data-effectivefieldsalias='|{"orgAssetType1":"#{orgAssetType1}","orgAssetType2":"#{orgAssetType2}"
-											,"orgAssetType3":"#{orgAssetType3}","orgAssetType4":"#{orgAssetType4}","orgAssetType5":"#{orgAssetType5}"}|'
+										data-th-data-result='${SVR_ASSET_TYPE_SECOND_LEVEL}'
 										th:initValue='${entity?.assetType2}'
 										>
 								</select>

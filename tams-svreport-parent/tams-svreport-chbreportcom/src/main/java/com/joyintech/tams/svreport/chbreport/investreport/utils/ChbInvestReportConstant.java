@@ -63,6 +63,10 @@ public class ChbInvestReportConstant {
     public static final DecimalFormat df3 = new DecimalFormat("0.00%");
     public static final DecimalFormat df4 = new DecimalFormat("0.0000%");
 
+    public static final String 币种单位_人民币 = "元";
+    public static final String 币种单位_美元 = "美元";
+    public static final String 币种单位_人民币_美元 = "元/美元";
+
     /**
      * 财务报表编制单位
      */

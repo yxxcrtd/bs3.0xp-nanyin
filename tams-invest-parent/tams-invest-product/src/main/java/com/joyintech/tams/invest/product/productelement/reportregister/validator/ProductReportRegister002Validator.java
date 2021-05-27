@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,8 +45,8 @@ public class ProductReportRegister002Validator implements BeanValidator {
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
 
-	@Autowired
-	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+//	@Autowired
+//	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
 	@Override
 	public List<ValidMessage> valid(Object value) {

@@ -78,6 +78,10 @@
 		                        FROM CHB_AST_VAL
 		                        WHERE VAL_DATE &lt;= #{generateDate,jdbcType=VARCHAR}
 		                        AND STATUS = 'E')
+		/*资产未到期*/
+		AND EXISTS (SELECT 1 FROM CHB_ASSETS_BASIS_DATA CABD
+		            WHERE CABD.ASSET_ID = T.ASSET_CODE
+		            AND CABD.MDATE >= #{generateDate,jdbcType=VARCHAR})
 	</insert>
 
 	<select id="queryAssetValueInfoList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">

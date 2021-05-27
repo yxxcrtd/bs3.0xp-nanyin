@@ -308,9 +308,6 @@
 			<if test="contractCode != null" >
 				CONTRACT_CODE = #{contractCode,jdbcType=VARCHAR},
 			</if>
-			<if test="svrDataSources != null" >
-				SVR_DATA_SOURCES = #{svrDataSources,jdbcType=VARCHAR},
-			</if>
 			<if test="chlCpctId != null" >
 				CHL_CPCT_ID = #{chlCpctId,jdbcType=VARCHAR},
 			</if>
@@ -382,7 +379,7 @@
 									  CNY_AMT, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE,
 									  DEALDATE, TRADE_COUNTER, UNIT_PRICE_FULL,
 									  UNIT_PRICE_NET, END_RATE, CONTRACT_CODE,
-									  SVR_DATA_SOURCES, CHL_CPCT_ID, TRADE_TYPE,
+									   CHL_CPCT_ID, TRADE_TYPE,
 									  CHL_AGRT_NAME, IS_UNDER_TRADE, STATUS,
 									  ORG_CODE, DEPT_CODE, CREATE_USER,
 									  CREATE_TIME, UPDATE_USER, UPDATE_TIME,
@@ -396,7 +393,7 @@
 				#{cnyAmt,jdbcType=DECIMAL}, #{curAssetType,jdbcType=VARCHAR}, #{curAssetdetType,jdbcType=VARCHAR},
 				#{dealdate,jdbcType=TIMESTAMP}, #{tradeCounter,jdbcType=VARCHAR}, #{unitPriceFull,jdbcType=DECIMAL},
 				#{unitPriceNet,jdbcType=DECIMAL}, #{endRate,jdbcType=DECIMAL}, #{contractCode,jdbcType=VARCHAR},
-				#{svrDataSources,jdbcType=VARCHAR}, #{chlCpctId,jdbcType=VARCHAR}, #{tradeType,jdbcType=VARCHAR},
+			    #{chlCpctId,jdbcType=VARCHAR}, #{tradeType,jdbcType=VARCHAR},
 				#{chlAgrtName,jdbcType=VARCHAR}, #{isUnderTrade,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
 				#{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
 				#{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},

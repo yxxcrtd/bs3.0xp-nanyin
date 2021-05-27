@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -150,7 +148,7 @@ public class EquityInfoMaintenanceService extends BaseService{
      */
     public static void maptoDtoByPrpperties(Map<String,String> map,EquityInfo001Dto equityInfo001Dto,
     		Map<String, List<EquityInfo001Dto>> equityInfo001Map,
-    		String[] result,String interType){
+    		String[] result,String interType,List<ChbTypeMappingEx> HoldTypeMappingList){
         List<EquityInfo001Dto> equityInfoCheckList = new ArrayList<EquityInfo001Dto>();
         /**
          *从map中获取维护表中的数据
@@ -237,9 +235,6 @@ public class EquityInfoMaintenanceService extends BaseService{
             equityInfo001Dto.setAgent(map.get("AGENT"));
             equityInfo001Dto.setDeptCode(map.get("DEPT_CODE"));
         }
-        //add by lingxq on 2021-05-06 for 需求升级 ------->>>>>
-        updateHoldType(equityInfo001Dto);
-        //add by lingxq on 2021-05-06 for 需求升级 -------<<<<<
     }
     /**
      * 根据配置转换dto
@@ -614,9 +609,7 @@ public class EquityInfoMaintenanceService extends BaseService{
      *
      * @param equityInfo001Dto
      */
-    public static void updateHoldType(EquityInfo001Dto equityInfo001Dto) {
-        ChbTypeMappingExMapper chbTypeMappingExMapper = SpringContextUtil.getBean(ChbTypeMappingExMapper.class);
-        List<ChbTypeMappingEx>  HoldTypeMappingList = chbTypeMappingExMapper.selectByMappingcode("HOLDTYPE");
+    public static void checkHoldType(EquityInfo001Dto equityInfo001Dto,List<ChbTypeMappingEx> HoldTypeMappingList,List<String> message) {
         if (!CollectionUtils.isEmpty(HoldTypeMappingList)){
             boolean flag = false;
             for(ChbTypeMappingEx mapping: HoldTypeMappingList){
@@ -641,14 +634,30 @@ public class EquityInfoMaintenanceService extends BaseService{
                             flag = true;
                         }
                     }else{
-                        if(equityInfo001Dto.getHolderName().contains(names[j])){
-                            flag = true;
-                            break;
+                        if(!StringUtil.isBlank(equityInfo001Dto.getHolderName())) {
+                            if (equityInfo001Dto.getHolderName().contains(names[j])) {
+                                flag = true;
+                                break;
+                            }
                         }
                     }
                 }
                 if(flag){
-                    equityInfo001Dto.setHolderType(mapping.getSrcfield1());
+                    if("04".equals(mapping.getSrcfield1()) && !"04".equals(equityInfo001Dto.getHolderType())){
+                        message.add("投资者名称中带银行/信用社/信用合作社/资金互助社/信用合作联社,投资者类别应为\"04 银行\"");
+                    }else if("05".equals(mapping.getSrcfield1()) && !"05".equals(equityInfo001Dto.getHolderType())){
+                        message.add("投资者名称中带信托且有公司,投资者类别应为\"05 信托公司\"");
+                    }else if("06".equals(mapping.getSrcfield1()) && !"06".equals(equityInfo001Dto.getHolderType())){
+                        message.add("投资者名称中带证券且有公司且无咨询/投资,投资者类别应为\"06 证券公司\"");
+                    }else if("08".equals(mapping.getSrcfield1()) && !"08".equals(equityInfo001Dto.getHolderType())){
+                        message.add("投资者名称中带保险且有公司且无经纪/代理/咨询/销售/公估,投资者类别应为“投资者类别为\"08 保险公司\"");
+                    }else if("09".equals(mapping.getSrcfield1()) && !"09".equals(equityInfo001Dto.getHolderType())){
+                        message.add("投资者名称中带期货且有公司,投资者类别为“投资者类别应为\"09 期货公司\"");
+                    }else if("10".equals(mapping.getSrcfield1()) && !"10".equals(equityInfo001Dto.getHolderType())){
+                        message.add("投资者名称中带财务有限公司,投资者类别应为\"10 其他金融机构\"");
+                    }else if("26".equals(mapping.getSrcfield1()) && !"26".equals(equityInfo001Dto.getHolderType())){
+                        message.add("投资者名称中带分公司/办事处/代表处/个体工商户/个体户/居民委员会/社区委员会/居委会,投资者类别应为\"26 其他非法人组织\"");
+                    }
                     break;
                 }
             }

@@ -15,7 +15,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -88,8 +87,8 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
-    @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+//    @Autowired
+//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     /**
      * {@linkplain}

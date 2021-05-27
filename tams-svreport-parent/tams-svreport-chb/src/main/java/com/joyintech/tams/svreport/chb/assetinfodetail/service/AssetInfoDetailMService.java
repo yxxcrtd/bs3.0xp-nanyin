@@ -16,11 +16,9 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
@@ -306,7 +304,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
 		List<AssetInfoDetailDto> list = new ArrayList<>();
 		List<ExcelValidDto> checkResult = assetInfoDetailUtil.convertToBean(list,data);
-		if (!StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list)){
+		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list)){
 			int dataCount = this.assetInfoDetailMapper.selectDataCount(list);
 			if (dataCount > 0) {
 				webResult.setMessage(this.getMessage("REPORT_ASSET_C_0003"), MessageType.确认消息);

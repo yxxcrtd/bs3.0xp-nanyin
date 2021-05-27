@@ -718,6 +718,8 @@
     ,POSITION.ASSETTYPE2
     ,POSITION.IS_FHXGCP
   </select>
+  <select id="selectByMonthDateAndProdId" resultMap="BaseResultMap" parameterType="java.util.Map">
+  </select>
   <delete id="deleteByDate" parameterType="date" >
     delete from CHB_MONTH_ASSET_POSITION
     where STARTDATE<![CDATA[>=]]> #{cdate,jdbcType=DATE}

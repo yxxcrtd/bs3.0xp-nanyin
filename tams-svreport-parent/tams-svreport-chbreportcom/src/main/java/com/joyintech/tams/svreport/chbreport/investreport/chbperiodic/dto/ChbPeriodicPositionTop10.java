@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
 
 import java.math.BigDecimal;
 
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
  * @Date 2021-05-07
  * @Version V1.0
  **/
-public class ChbPeriodicPositionTop10 extends BaseEntity {
+public class ChbPeriodicPositionTop10 extends ChbMonthAssetPosition {
 
     private static final long serialVersionUID = 109399923067388230L;
 
