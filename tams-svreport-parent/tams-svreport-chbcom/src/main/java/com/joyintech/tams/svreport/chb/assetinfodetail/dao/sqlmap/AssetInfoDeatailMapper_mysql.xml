@@ -2483,7 +2483,7 @@
         FROM CHB_ASSET_INFO_ERRODATA data
         <where>
             <if test="search != null and search != ''">
-                and data.ASSET_CODE like concat('%', #{search},'%') or data.ASSET_NAME like concat('%', #{search},'%')
+                and (data.ASSET_CODE like concat('%', #{search},'%') or data.ASSET_NAME like concat('%', #{search},'%'))
             </if>
             <if test="orgCodeList !=null and orgCodeList.size()>0">
                 <!-- 机构代码不为空时 -->
