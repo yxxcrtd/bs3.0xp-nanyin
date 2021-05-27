@@ -30,13 +30,13 @@
         cols:[
 	         {field:'portfolioId',title:'组合代码',width:150}
 	        ,{field:'portfolioNamep',title:'组合名称',width:150}
-	        ,{field:'profitTypeStr',title:'收益类型',sortField:'PROFIT_TYPE',width:150}
+	        ,{field:'profitTypeStr',title:'收益类型',sortField:'profitType',width:150}
             ,{field:'mdatep',title:'组合到期日',type:'date',width:150}
-            ,{field:'type8Str',title:'资产类型',sortField:'PINAN_ASSET_TYPE',width:150}
-            ,{field:'finprodId',  title: '资产代码',sortField:'FINPROD_ID',width:200}//资产代码
+            ,{field:'type8Str',title:'资产类型',sortField:'type8',width:150}
+            ,{field:'finprodId',  title: '资产代码',sortField:'finprodId',width:200}//资产代码
             ,{field:'finprodAbbr',  title: '资产名称',sortField:'FINPROD_ABBR',width:200}//资产简称
             ,{field:'mdate',title:'资产到期日',type:'date',width:150}//到期日
-            ,{field:'invAimStr', title:'投资目的',sortField:'INV_AIM',width:150}
+            ,{field:'invAimStr', title:'投资目的',sortField:'invAim',width:150}
             ,{field:'amountp',title:'持仓数量',type:'number',width:150}
             ,{field:'shareAmt',title:'试算占用数量',type:'number',width:150}
             ,{field:'portfolioName',title:'试算占用组合',width:150}
