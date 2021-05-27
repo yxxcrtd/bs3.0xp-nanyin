@@ -176,6 +176,12 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
                         message.add("无效的市场日历类型");
                         errorList.add(new ExcelValidDto(calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
                     }
+                } else {
+                    calendarId = dataList.get(i).get(1);
+                    if (StringUtil.isEmpty(calendarId)) {
+                        message.add("市场日历类型不能为空");
+                        errorList.add(new ExcelValidDto(calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
                 }
 
 
@@ -214,6 +220,12 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
                     isHolidayCheck = isHoliday.substring(0,1);
                     if (!"0".equals(isHolidayCheck) && !"1".equals(isHolidayCheck)) {
                         message.add("无效的节假日标志");
+                        errorList.add(new ExcelValidDto(isHoliday, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
+                } else {
+                    isHoliday = dataList.get(i).get(2);
+                    if (StringUtil.isEmpty(isHoliday)) {
+                        message.add("节假日标志不能为空");
                         errorList.add(new ExcelValidDto(isHoliday, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
                     }
                 }
