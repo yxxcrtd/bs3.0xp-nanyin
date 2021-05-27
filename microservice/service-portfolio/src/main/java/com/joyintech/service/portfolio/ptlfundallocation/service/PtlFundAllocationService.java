@@ -646,6 +646,31 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
             etrCashPositionFlow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
             bussCommonMapperDelegateService.insert(EtrCashPositionFlowMapper.class, etrCashPositionFlow);
 
+            /**
+             * 指令现金流水
+             */
+            List<EtrCashPosition> etrCash = new ArrayList<>();
+            EtrCashPosition tempPosition = new EtrCashPosition();
+            tempPosition.setPortfolioId(flow.getPortfolioId());
+            tempPosition.setAcctId(entity.getCounterAcctNo());
+            tempPosition.setAmount(flow.getAmount());
+            tempPosition.setCcy(entity.getCcy());
+            tempPosition.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+            tempPosition.setCdate(entity.getSettleDate());
+            EtrCashPositionKey etrCashPositionKey = new EtrCashPosition();
+            BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
+            EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
+            if(EtrCashPositionKey != null){
+                tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));
+            }else{
+                tempPosition.setAmount(tempPosition.getAmount());
+            }
+            etrCash.add(tempPosition);
+
+            for (EtrCashPosition etrCashPosition : etrCash) {
+                etrCashPositionMapper.updateByPrimaryKeySelective(etrCashPosition);
+            }
+
             if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !StringUtil.equals(entity.getPortfolioId(), entity.getActPortfolioId())) {
                 PtlCashPositionFlow flow1 = new PtlCashPositionFlow();
                 BeanUtil.copyPropertiesIgnoreNull(flow1, entity.getPtlCashPositionFlow());
