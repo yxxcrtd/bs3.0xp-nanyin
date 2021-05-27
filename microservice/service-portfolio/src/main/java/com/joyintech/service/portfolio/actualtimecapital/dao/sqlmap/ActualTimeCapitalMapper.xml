@@ -30,8 +30,10 @@
 		          cashBalance,
 		          tradeCash,
 		          cashAvailable,
-		          (case when acctType = 'A07' and retrievalDesirableCash <![CDATA[ > ]]> 0 then cashBalance else tradeCash end) as desirableCash,
-		          (case when acctType = 'A07' and retrievalDesirableCash <![CDATA[ > ]]> 0 then 0 else cashBalance - tradeCash  end) as preReductionCash,
+<!-- 		          (case when acctType = 'A07' and retrievalDesirableCash <![CDATA[ > ]]> 0 then cashBalance else tradeCash end) as desirableCash,
+		          (case when acctType = 'A07' and retrievalDesirableCash <![CDATA[ > ]]> 0 then 0 else cashBalance - tradeCash  end) as preReductionCash, -->		          
+ 				  retrievalDesirableCash AS desirableCash,
+				  (CASH_AMOUNT03 - tradeCash) AS preReductionCash,
 		          advanceCash,
 		          adjustmentAmount
 		     from (select 
@@ -43,16 +45,18 @@
 			          acctType,
 			          cdate,
 			          /**CASH_AMOUNT03 as cashBalance,现金余额**/
-			          (case when CASH_FLOW_AMOUNT99 is not null then CASH_AMOUNT03 + CASH_FLOW_AMOUNT99 
-			          	else CASH_AMOUNT03 end) as cashBalance,
-			          /**(CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT07 + CASH_AMOUNT08) as  tradeCash,交易可用**/
-			          (case when CASH_FLOW_AMOUNT99 is not null then CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT07 + CASH_AMOUNT08 + CASH_FLOW_AMOUNT99 
-			          	else CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT07 + CASH_AMOUNT08 end) as tradeCash,
+			          CASH_AMOUNT03 as CASH_AMOUNT03,
+			          (case when CASH_AMOUNT07 >= 0 then CASH_AMOUNT03 + nvl(CASH_FLOW_AMOUNT99, 0) - CASH_AMOUNT07 
+			          	else CASH_AMOUNT03  + nvl(CASH_FLOW_AMOUNT99, 0) end) as cashBalance,
+			          /**(CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT08) as  tradeCash,交易可用**/
+			          (case when CASH_FLOW_AMOUNT99 is not null then CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT08 + CASH_FLOW_AMOUNT99 
+			          	else CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT08 end) as tradeCash,/**交易可用需要去掉 CASH_AMOUNT07 add by hh 20201218**/
 			          /**(ETR_AMOUNTE01 + ETR_AMOUNTE02) as cashAvailable,指令可用**/
 			          (case when CASH_FLOW_AMOUNT99 is not null then ETR_AMOUNTE01 + ETR_AMOUNTE02 + CASH_FLOW_AMOUNT99 
 			          	else ETR_AMOUNTE01 + ETR_AMOUNTE02 end) as cashAvailable,
 			          ETR_AMOUNTE02 as advanceCash, /**预增金额  资金账户类型_券商资金账户：A07**/
-			          (CASH_FLOW_AMOUNT01 + CASH_AMOUNT07) as retrievalDesirableCash,/**可取现金余额**/
+				      (case when CASH_AMOUNT07 >= 0 then CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 - CASH_AMOUNT07
+				      else CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 END) AS retrievalDesirableCash,/**可取现金余额**/
 			          CASH_FLOW_AMOUNT99 as adjustmentAmount 
 			     from ( 
 			     		select 
@@ -162,28 +166,51 @@
 			                and t4.acct_id = t.acctNo 
 			                and t4.ccy = t.ccy 
 			          left join (
-			          		select 
-			          			portfolio_id,
-			          			acct_id,
-			          			ccy,
-			          			nvl(sum(case when hoding_type = 'E01' then AMOUNT end),0) ETR_AMOUNTE01,/**委托指令可用**/
-			            		nvl(sum(case when hoding_type = 'E02' then AMOUNT end),0) ETR_AMOUNTE02 /**委托指令预增**/
-			            	from ETR_CASH_POSITION 
-			            	where cdate = to_date(#{cdate},'yyyy-MM-dd')  /**and cdate = to_date('2019-10-16','yyyy-MM-dd') **/
-			            		/**and hoding_type in ('E01','E02') **/
-				                <if test="etrHodingTypeList != null and etrHodingTypeList.size > 0">
-						         	<foreach collection="etrHodingTypeList" open="and hoding_type in (" item="etrHodingType" separator="," close=")">
-										#{etrHodingType,jdbcType=VARCHAR}
-									</foreach>
-								</if> 
-							group by 
-								portfolio_id,
-			          			acct_id,
-			          			ccy 
+		                   /** njl 20200726 update 拆借拆入指令生效后应该不增加指令可用头寸、预增现金start**/
+							select aa.portfolio_id,
+							aa.acct_id,
+							aa.ccy,
+							nvl(sum(case
+							when aa.hoding_type = 'E01' then
+							aa.AMOUNT
+							end),
+							0) ETR_AMOUNTE01, /**委托指令可用**/
+							nvl(sum(case
+							when  bb.busi_ps='01' then
+							0
+							when aa.hoding_type = 'E02' then
+							aa.AMOUNT
+							end),
+							0) ETR_AMOUNTE02 /**委托指令预增**/
+							from ETR_CASH_POSITION aa
+							left join ( select distinct t.portfolio_id, t.entrust_date, t1.busi_ps
+							from etr_entrust t, etr_entrust_add t1
+							where t.entrust_id = t1.entrust_id
+							and t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+							and t1.busi_ps = '01'
+							and t.entrust_date = to_date(#{cdate},'yyyy-MM-dd')
+							) bb
+							on aa.cdate = bb.entrust_date and aa.portfolio_id=bb.portfolio_id
+							where cdate = to_date(#{cdate},'yyyy-MM-dd')  /**and cdate = to_date('2019-10-16','yyyy-MM-dd') **/ /**and hoding_type in ('E01','E02') **/
+							<if test="etrHodingTypeList != null and etrHodingTypeList.size > 0">
+								<foreach collection="etrHodingTypeList" open="and hoding_type in (" item="etrHodingType" separator="," close=")">
+									#{etrHodingType,jdbcType=VARCHAR}
+								</foreach>
+							</if>
+							group by aa.portfolio_id, aa.acct_id, aa.ccy
+		                 /** njl 20200726 update 拆借拆入指令生效后应该不增加指令可用头寸、预增现金end**/
 			          ) t5 
 			                on t5.portfolio_id = t.portfolioId 
 			                and t5.acct_id = t.acctNo 
-			                and t5.ccy = t.ccy 
+			                and t5.ccy = t.ccy
+
+						LEFT JOIN
+						CASH_ART_DEAL t6
+						ON
+						t6.PORTFOLIO_ID=t.portfolioId
+						AND t6.ACCT_ID=t.acctNo
+						AND t6.ccy = t.ccy
+						AND t6.ADJ_DATE=to_date(#{cdate},'yyyy-MM-dd')
 			           
 			       ) z 
 		 	) zz 
