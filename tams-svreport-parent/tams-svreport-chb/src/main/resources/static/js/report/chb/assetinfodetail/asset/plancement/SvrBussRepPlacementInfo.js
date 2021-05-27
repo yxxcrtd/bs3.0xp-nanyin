@@ -122,12 +122,12 @@
         // });
 
         $('#svrBussRepPlacementInfoDto_rivalPartyCode').change(function(){
-            if (entity.rivalParty == null || entity.rivalParty == ""){
+            if (entity==null || entity.rivalParty == null || entity.rivalParty == ""){
                 $("#svrBussRepPlacementInfoDto_rivalParty").val($('#svrBussRepPlacementInfoDto_rivalPartyCode').select2('data')[0].institutionCode).trigger("change");
             }else {
                 entity.rivalParty = null
             }
-            if (entity.rivalPartyType == null || entity.rivalPartyType == ""){
+            if (entity==null || entity.rivalPartyType == null || entity.rivalPartyType == ""){
                 $("#svrBussRepPlacementInfoDto_rivalPartyType").val($('#svrBussRepPlacementInfoDto_rivalPartyCode').select2('data')[0].object).trigger("change");
             }else {
                 entity.rivalPartyType = null

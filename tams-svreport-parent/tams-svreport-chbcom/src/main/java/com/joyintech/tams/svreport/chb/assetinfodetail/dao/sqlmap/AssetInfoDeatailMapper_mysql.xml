@@ -2904,11 +2904,13 @@
         COUNTER_ID AS id,
         COUNTER_ID AS text,
         COUNTER_NAME AS institutionCode,
-        COUNTER_TYPE AS object
+        t2.OBJFIELD1 AS object
         FROM
-        chb_mst_counter_party
+        chb_mst_counter_party t1
+        LEFT JOIN chb_type_mapping_ex t2 ON t2.MAPPINGCODE = 'SVR_RIVAL_PARTY_TYPE'
+        AND t1.COUNTER_TYPE2 = t2.SRCFIELD1
         WHERE
-        STATUS = 'E'
+        t1.STATUS = 'E'
         <if test="search != null and search !='' ">
             AND (COUNTER_ID LIKE concat('%', #{search},'%') or COUNTER_NAME like concat('%', #{search},'%'))
         </if>
