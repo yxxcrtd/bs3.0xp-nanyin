@@ -222,6 +222,9 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
     }
     @Override
     public void doUpdate(PtlFundAllocation002Dto entity){
+        if ("save".equals(entity.getOperateType())) {
+            return;
+        }
         String orderId = null;
         if(StringUtil.isNotEmpty(entity.getOrderId())) {
             orderId = entity.getOrderId();
