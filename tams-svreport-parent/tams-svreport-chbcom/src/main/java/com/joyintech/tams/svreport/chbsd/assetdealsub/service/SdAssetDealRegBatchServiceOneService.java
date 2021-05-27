@@ -54,7 +54,7 @@ public class SdAssetDealRegBatchServiceOneService extends AutoSendCBBaseService{
         logger.info("【资产交易信息登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         boolean hasData = true;
         try {
-        	msgSendServiceImpl.sendChbInvestTradeSubMsgs(msgRstList);
+        	msgSendServiceImpl.sendChbInvestTradeSubMsgs(msgRstList, null);
        	    sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【资产交易信息登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

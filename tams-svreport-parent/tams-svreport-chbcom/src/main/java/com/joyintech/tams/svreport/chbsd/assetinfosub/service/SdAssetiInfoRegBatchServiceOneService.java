@@ -54,7 +54,7 @@ public class SdAssetiInfoRegBatchServiceOneService extends AutoSendCBBaseService
         logger.info("【资产要素信息登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         boolean hasData = true;
         try {
-        	msgSendServiceImpl.sendChbAssendInfoMsgs(msgRstList);
+        	msgSendServiceImpl.sendChbAssendInfoMsgs(msgRstList, null);
        	    sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【资产要素信息登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

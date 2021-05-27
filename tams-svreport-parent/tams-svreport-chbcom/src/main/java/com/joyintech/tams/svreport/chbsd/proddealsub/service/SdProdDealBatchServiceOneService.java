@@ -45,7 +45,7 @@ public class SdProdDealBatchServiceOneService extends AutoSendCBBaseService {
         logger.info("【产品存续期登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         try {
-            	 msgSend.sendChbPrdDealSubMsgs(msgRstList);
+            	 msgSend.sendChbPrdDealSubMsgs(msgRstList, null);
             	 sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【产品存续期登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

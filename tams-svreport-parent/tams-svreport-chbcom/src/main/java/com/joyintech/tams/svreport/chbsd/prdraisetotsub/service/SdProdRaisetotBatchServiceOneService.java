@@ -45,7 +45,7 @@ public class SdProdRaisetotBatchServiceOneService extends AutoSendCBBaseService 
         logger.info("【产品募集总量登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         try {
-            	 msgSend.sendChbPrdRaisendotSubMsgs(msgRstList);
+            	 msgSend.sendChbPrdRaisendotSubMsgs(msgRstList, null);
             	 sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【产品募集总量登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

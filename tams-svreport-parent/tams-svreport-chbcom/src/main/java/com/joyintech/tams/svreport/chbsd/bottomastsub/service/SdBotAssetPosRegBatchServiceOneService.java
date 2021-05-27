@@ -55,7 +55,7 @@ public class SdBotAssetPosRegBatchServiceOneService extends AutoSendCBBaseServic
         logger.info("【底层资产持仓信息登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         boolean hasData = true;
         try {
-        	msgSendServiceImpl.sendChbBotAstPosSubMsgs(msgRstList);
+        	msgSendServiceImpl.sendChbBotAstPosSubMsgs(msgRstList, null);
        	    sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【底层资产持仓信息登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());
