@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
@@ -236,6 +237,10 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             dto.setDealdate(DateUtil.parse(dataList.get(i).get(17)));
         }
         dto.setRemark(dataList.get(i).get(18));
+        dto.setCreateUser(LoginUserUtil.getUserName());
+        dto.setCreateTime(new Date());
+        dto.setUpdateTime(new Date());
+        dto.setUpdateUser(LoginUserUtil.getUserName());
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         dto.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
     }
@@ -265,7 +270,6 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             dto.setTradeSeqno(infoDto.getTradeSeqno());
             investmentDealInfo001Mapper.updateOne(dto);
         }else {
-            dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             dto.setTradeSeqno(IDGenerator.generate(36));
             dto.setType("01");
             investmentDealInfo001Mapper.insertOne(dto);

@@ -1677,6 +1677,12 @@
                 <if test="item.holdPurpose != null">
                     HOLD_PURPOSE = #{item.holdPurpose},
                 </if>
+                <if test="item.updateUser != null" >
+                    UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="item.updateTime != null" >
+                    UPDATE_TIME = #{item.updateTime,jdbcType=TIMESTAMP},
+                </if>
             </set>
             where ASSET_UUID = #{item.assetUuid}
         </foreach>
