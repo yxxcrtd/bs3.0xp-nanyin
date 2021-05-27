@@ -89,6 +89,11 @@ public class PtlFundAllocation002Controller extends BaseController {
         String portfolioId = getParam("portfolioId");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             PtlFundAllocationDto dto = ptlFundAllocation002Service.getBussinessEntityByWorkflowId(workflowId);
+            if (StringUtil.equals(dto.getPayType(), DictCodeList.交易方向_银证转账.getValue())) {
+                dto.setPayType(DictCodeListExt1.指令类型_银证转账_银转证.getValue());
+            } else {
+                dto.setPayType(DictCodeListExt1.指令类型_银证转账_证转银.getValue());
+            }
             if (dto.getBussTrdTransferOrder() != null) {
                 model.addAttribute("stlPayOrdersList", JsonUtils.object2Json(dto.getBussTrdTransferOrder().get(0)));
             } else {
