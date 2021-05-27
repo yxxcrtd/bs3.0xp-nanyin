@@ -1,20 +1,5 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -31,11 +16,23 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftppath.service.FtpPathService;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectSVRService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCode;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.service.ReportConfirmManage004Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @PageId("ReportConfirmManage004")
@@ -53,6 +50,9 @@ public class ReportConfirmManage004Contoller extends BaseController {
 	
 	@Autowired
 	private GetPrdInfoSelectService getPrdInfoSelectService;
+
+	@Autowired
+	GetPrdInfoSelectSVRService getPrdInfoSelectSVRService;
 	
 	@Override
 	public String init(Model model) {
@@ -199,4 +199,18 @@ public class ReportConfirmManage004Contoller extends BaseController {
     		return null;
     	}
     }
+
+	/**
+	 * 分页查询产品下拉框
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("getSVRPrdInfoSelect")
+	@ResponseBody
+	public Page<SelectOptionDto> getSVRPrdInfoSelect()
+			throws Exception {
+		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectSVRService.getPrdInfoSelect(RequestUtil.getPageParam());
+		return prdInfoSelect;
+	}
 }
