@@ -10,6 +10,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -55,7 +56,8 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         else if (StringUtil.equals(ps, DictCodeList.交易方向_申购.getValue())) {
             基金_申购(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
-        else if (StringUtil.equals(ps, DictCodeList.交易方向_申购确认.getValue())) {
+        else if (StringUtil.equals(ps, DictCodeList.交易方向_申购确认.getValue())
+            || StringUtil.equals(ps, DictCodeListExt3.交易方向_转换申购确认.getValue())) {
             基金_申购确认(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())) {
@@ -64,7 +66,8 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         else if (StringUtil.equals(ps, DictCodeList.交易方向_卖出.getValue())) {
             基金_卖出(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
-        else if (StringUtil.equals(ps, DictCodeList.交易方向_赎回.getValue())) {
+        else if (StringUtil.equals(ps, DictCodeList.交易方向_赎回.getValue())
+            || StringUtil.equals(ps, DictCodeListExt3.交易方向_转换赎回申请.getValue())) {
             基金_赎回(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(ps, DictCodeList.交易方向_赎回确认.getValue())) {
@@ -245,7 +248,8 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 etrCashPositionFlowDto.setAcctId(acctId);
                 etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
             }
-            else if (DictCodeList.交易方向_赎回.getValue().equals(ps) || DictCodeList.交易方向_卖出.getValue().equals(ps)) {
+            else if (DictCodeList.交易方向_赎回.getValue().equals(ps) || DictCodeList.交易方向_卖出.getValue().equals(ps)
+                || DictCodeListExt2.交易方向_转换申请.getValue().equals(ps)) {
                 // 委托生成的持仓流水
                 EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(
                     entrustCommonDto);
@@ -298,15 +302,82 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
 
         // 交易场所
-        String tradePlace = entrustCommonDto.getEtrEntrust().getTradePlat() !=null ?entrustCommonDto.getEtrEntrust().getTradePlat():entrustCommonDto.getEtrEntrust().getTradeMarket();
+        String tradePlace = entrustCommonDto.getEtrEntrust().getTradeMarket();
 
         // 通道代码
         String chlId = etrEntrust.getChlId();
 
+        //证券托管户
+        String secManageAcctId= etrEntrustAdd.getSecAcctId();
+
         // 通道性质
         String chlType = StringUtil.isEmpty(chlId) ? null : etrCommonCashPositionDealService.queryChlType(chlId);
 
-        if (DictCodeList.交易方向_申购.getValue().equals(ps)) {
+        if(DictCodeList.交易方向_买入.getValue().equals(ps)){
+            // 可用现金 关闭日增加剩余委托本金金额
+            EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDtoFromEtr(
+                    entrustCommonDto);
+
+            String acctId;
+//            if (!StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
+            if(StringUtil.isNotEmpty(secManageAcctId)){
+                acctId =EtrCommonCashPositionDealService.select资金账户(secManageAcctId, etrEntrust.getCcy());
+            }
+            // 1.直投
+            // 可用现金(组合、资金账户):减少委托金额
+            else if (StringUtil.isEmpty(chlId)) {
+                acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
+                        DictCodeListExt2.资金账户类型_托管户.getValue());
+            }
+            // 2.通道一次性划款
+            // 可用现金(组合、通道):减少委托金额
+            else if (StringUtil.isNotEmpty(chlId) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(chlType)) {
+                acctId = EtrCommonCashPositionDealService.select通道资金账户(etrEntrust.getChlId());
+            }
+            // 3.通道逐笔划款
+            // 可用现金(组合、资金账户):减少委托金额
+            else {
+                acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
+                        DictCodeListExt2.资金账户类型_托管户.getValue());
+                etrCashPositionFlowDto.setChlFinprodId(null);
+            }
+            if (etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue())
+                    || etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_深圳证券交易所.getValue())) {
+                BigDecimal tradeAmt = etrCommonCashPositionDealService.selectSumTradeAmt(etrEntrust.getEntrustId());
+                if (null != tradeAmt) {
+                    etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(tradeAmt.multiply(new BigDecimal(-1)), etrEntrust.getEntrustAmt()).multiply(new BigDecimal(-1)));
+                }else{
+                    etrCashPositionFlowDto.setAmount(etrEntrust.getEntrustAmt());
+                }
+            } else {
+                etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustAmt(), etrFinish));
+            }
+            etrCashPositionFlowDto.setAcctId(acctId);
+            etrCashPositionFlowDto.setOffsetId(etrEntrust.getEntrustId());
+            etrCashPositionFlowDto.setCloseFlag("01"); // 委托关闭特殊处理, 委托关闭后, 再撤销交易时, 委托状态会变成已接收, 这时应该要把这笔数据删除
+            etrCashPositionFlowDto.setOffsetFlag("01");
+            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+//            }
+        }
+        else if(DictCodeList.交易方向_卖出.getValue().equals(ps)){
+//            if (!StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
+            EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(entrustCommonDto);
+            if (etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue())
+                    || etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_深圳证券交易所.getValue())) {
+                BigDecimal shartAmt = etrCommonCashPositionDealService.selectSumShareAmt(etrEntrust.getEntrustId());
+                if (null != shartAmt) {
+                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(shartAmt.multiply(new BigDecimal(-1)), etrEntrust.getEntrustNum()).multiply(new BigDecimal(-1)));
+                } else {
+                    etrSecPositionFlowDto.setAmount(etrEntrust.getEntrustNum());
+                }
+            } else {
+                etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum(), etrFinish));
+            }
+            etrSecPositionFlowDto.setCloseFlag("01"); // 委托关闭特殊处理, 委托关闭后, 再撤销交易时, 委托状态会变成已接收, 这时应该要把这笔数据删除
+            etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+//            }
+        }
+        else if (DictCodeList.交易方向_申购.getValue().equals(ps) || DictCodeListExt2.交易方向_认购.getValue().equals(ps)) {
 
             // 可用现金 关闭日增加剩余委托本金金额
             EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDtoFromEtr(
@@ -318,15 +389,14 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             if (StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
                 // 1.直投
                 // 可用现金(组合、托管户):减少委托金额
-               /* if (StringUtil.isEmpty(chlId)) {
-//                    acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
-//                        DictCodeListExt2.资金账户类型_托管户.getValue());
-                    acctId = EtrCommonCashPositionDealService.select证券托管户(etrEntrustAdd.getSecAcctId());
+                if (StringUtil.isEmpty(chlId)) {
+                    acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
+                        DictCodeListExt2.资金账户类型_托管户.getValue());
+
                 }
                 // 2.通道一次性划款
                 // 可用现金(组合、通道):减少委托金额
-                else*/ 
-            	if (StringUtil.isNotEmpty(chlId) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(chlType)) {
+                else if (StringUtil.isNotEmpty(chlId) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(chlType)) {
                     acctId = EtrCommonCashPositionDealService.select通道资金账户(etrEntrust.getChlId());
                 }
                 // 3.通道逐笔划款
@@ -363,6 +433,8 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustAmt(), etrFinish));
             etrCashPositionFlowDto.setAcctId(acctId);
             etrCashPositionFlowDto.setOffsetId(etrEntrust.getEntrustId());
+            etrCashPositionFlowDto.setCloseFlag("01"); // 委托关闭特殊处理, 委托关闭后, 再撤销交易时, 委托状态会变成已接收, 这时应该要把这笔数据删除
+            etrCashPositionFlowDto.setOffsetFlag("01");
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
         }
         else if (DictCodeList.交易方向_赎回.getValue().equals(ps)) {
@@ -385,7 +457,8 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(
                 entrustCommonDto);
             // 可用持仓 关闭日增加剩余委托本金金额
-                etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum(), etrFinish));
+            etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum(), etrFinish));
+            etrSecPositionFlowDto.setCloseFlag("01"); // 委托关闭特殊处理, 委托关闭后, 再撤销交易时, 委托状态会变成已接收, 这时应该要把这笔数据删除
             etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
         }
     }

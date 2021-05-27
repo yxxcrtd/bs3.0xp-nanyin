@@ -173,7 +173,8 @@ public class BasePtlCashPositionInfoServiceImpl implements BasePtlCashPositionIn
 
         // 2.2 输入参数.持仓类型 IN (数据字典缓存.持仓类型.实际, 数据字典缓存.持仓类型.在途)
         if (DictCodeList.持仓类型_实际.getValue().equals(positionFlowDto.getHodingType())
-                || DictCodeList.持仓类型_在途.getValue().equals(positionFlowDto.getHodingType())) {
+                || DictCodeList.持仓类型_在途.getValue().equals(positionFlowDto.getHodingType())
+                || DictCodeListExt1.持仓类型_不可支取.getValue().equals(positionFlowDto.getHodingType())) {
             PtlCashPosition position = new PtlCashPosition();
             BeanUtils.copyProperties(positionFlowDto, position);
             positionFlowDto.setNeedAcctType(false);
