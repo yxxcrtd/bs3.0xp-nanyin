@@ -65,7 +65,7 @@
                         <select th:id="|${entityName}_repPartyGrade|" th:name="|${entityName}.secMainGrade|"
                                 data-th-data-result="${CHB_BODY_GRADE}" th:initValue="${entity?.secMainGrade}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" >
+                                data-th-placeholder="#{SysCommon.placeholder}" required >
                         </select>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                         <select th:id="|${entityName}_repPartyType1|" th:name="|${entityName}.repPartyType1|"
                                 data-th-data-result="${SVR_PARTY_TYPE1}" th:initValue="${entity?.repPartyType1}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" >
+                                data-th-placeholder="#{SysCommon.placeholder}" required >
                         </select>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                         <select th:id="|${entityName}_repPartyType2|" th:name="|${entityName}.repPartyType2|"
                                 data-th-data-result="${SVR_PARTY_TYPE2}" th:initValue="${entity?.repPartyType2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" >
+                                data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                         <select th:id="|${entityName}_repIndustryLevel2|" th:name="|${entityName}.repIndustryLevel2|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}" th:initValue="${entity?.repIndustryLevel2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" >
+                                data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
                     </div>
                 </div>
@@ -185,7 +185,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_repIsFbzb|" th:name="|${entityName}.repIsFbzb|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-value="${SVR_YES_OR_NO_default}"
+                                th:initValue="${entity?.repIsFbzb}"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
@@ -215,7 +215,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_bankSecZxzq|" th:name="|${entityName}.bankSecZxzq|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-value="${SVR_YES_OR_NO_default}"
+                                th:initValue="${entity?.bankSecZxzq}"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
@@ -228,7 +228,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_isPpn|" th:name="|${entityName}.isPpn|"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-value="${SVR_YES_OR_NO_default}"
+                                th:initValue="${entity?.isPpn}"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
