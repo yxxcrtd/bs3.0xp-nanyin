@@ -639,6 +639,12 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
             String seqno = baseGetBussinessId != null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter) : IDGenerator.generate();
             flow.setSeqno(seqno);
             bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, flow);
+            EtrCashPositionFlow etrCashPositionFlow = new EtrCashPositionFlow();
+            BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlow,flow);
+            String seqnoEtr = baseGetBussinessId != null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter) : IDGenerator.generate();
+            etrCashPositionFlow.setSeqno(seqnoEtr);
+            etrCashPositionFlow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+            bussCommonMapperDelegateService.insert(EtrCashPositionFlowMapper.class, etrCashPositionFlow);
 
             if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !StringUtil.equals(entity.getPortfolioId(), entity.getActPortfolioId())) {
                 PtlCashPositionFlow flow1 = new PtlCashPositionFlow();
