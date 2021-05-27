@@ -166,7 +166,7 @@
         where a.PROD_ID = c.PROD_ID
           and a.ASSET_CODE = b.ASSET_CODE
           AND a.ENDDATE = #{endReportDate,jdbcType=DATE}
-        order by a.ASSETVALUE_B Limit 10;
+        order by a.ASSETVALUE_B desc Limit 10;
     </select>
 
     <select id="qryChbPeriodicAssetInfo"
