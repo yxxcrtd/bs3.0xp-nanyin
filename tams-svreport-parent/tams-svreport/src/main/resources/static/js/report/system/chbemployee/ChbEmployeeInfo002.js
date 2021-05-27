@@ -235,7 +235,7 @@
                 Joyin.error("办公电话不能超过30");
                 checkFlag = false;
             }else{
-                if(! /^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/.test(object.officeTel)){
+                if(! /^((0\d{2,3})-)(\d{7,8})(-(\d{3,8}))?$/.test(object.officeTel)){
                     Joyin.error("办公电话格式不正确");
                     checkFlag = false;
                 }
