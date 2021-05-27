@@ -510,6 +510,7 @@
             '${vDate}' vDate,
             '${mDate}' mDate,
             '${yield}' yield,
+            T1.INV_AIM invAim,
         /*组合持仓.数量*/               T1.AMOUNT,
         /*现金流支付规则.支付频率 付息周期*/ T4.PAY_CYCLE CALC_RULE
         /*检索对象 组合持仓*/         FROM PTL_SEC_POSITION T1
@@ -568,6 +569,7 @@
         AND ((TPDA.CHL_ID is NULL and t1.sec_acct_id='999999') OR TPDA.CHL_ID = T1.SEC_ACCT_ID))
         group by T1.PORTFOLIO_ID,
                  T1.AMOUNT,
+                 T1.INV_AIM,
                  T4.PAY_CYCLE) WHERE    AMOUNT &gt;0
         order by AMOUNT
         </if>
@@ -588,6 +590,7 @@
             to_char(MDATE, 'yyyy-MM-dd') mDate,
             <!--持有数量-->
             AMOUNT,
+            INV_AIM invAim,
             /*金融产品交易扩展1.应付利率 借款利率*/
             THEORY_RATE*100 yield,
             /*sum（金融产品交易扩展1.还本金额/理论利息，金融产品交易扩展2.还本金额/理论利息） 理论本息总额*/
@@ -617,6 +620,7 @@
                 t1.PRIN_AMT,
                 T1.VDATE,
                 T1.MDATE,
+                T1.INV_AIM,
                 THEORY_RATE,
                 <!--持有数量-->
                 PTFPDT.REMAIN_PRIN_AMT AMOUNT,
@@ -669,6 +673,7 @@
             MDATE,
             /*金融产品交易扩展1.应付利率 借款利率*/
             THEORY_RATE,
+            INV_AIM,
             AMOUNT,
             TOTLE_TRADE_ID) WHERE    returnAmount &gt; 0 or theoryAmt > 0
             order by AMOUNT
@@ -867,6 +872,7 @@
                             t2.mdate,
                             t2.cash_amt,
                             t2.prin_amt,
+                            T1.INV_AIM,
             case when t2.cash_type IN ('01', '04') then NVL(PSV.TDY_INTINCEXP, (nvl(T2.INT_AMT,0)-nvl(T2.REPAY_WITHOUT_INT,0))*t1.AMOUNT/T2.CASH_BASEAMT)
             WHEN T2.CASH_TYPE IN ('02', '03') AND nvl(T2.INT_AMT,0)-nvl(T2.REPAY_WITHOUT_INT,0) != 0 AND PSV.SHARE_AMT is not null
             THEN ROUND(T2.PRIN_AMT * T1.AMOUNT/T2.CASH_BASEAMT * PSV.TDY_INTINCEXP/PSV.SHARE_AMT, 2)
@@ -881,7 +887,7 @@
                             inner join PTL_PORTFOLIO pp on T1.PORTFOLIO_ID = pp.PORTFOLIO_ID
                             AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF17} AND t1.CDATE &lt; t2.MDATE
             LEFT JOIN PTL_SEC_VALUTION PSV ON t2.MDATE = PSV.CDATE + 1 AND T1.PORTFOLIO_ID = PSV.PORTFOLIO_ID
-            AND T1.FINPROD_ID = PSV.FINPROD_ID AND PSV.INV_AIM = '999999'
+            AND T1.FINPROD_ID = PSV.FINPROD_ID AND PSV.INV_AIM = T1.INV_AIM
                                 <where>
                                 T1.AMOUNT > 0 AND T1.HODING_TYPE = #{POSITION_TYPE03}
                                 AND T2.MDATE = to_date(#{mDate}, 'yyyy-MM-dd')
@@ -936,7 +942,8 @@
                             T6.PRIN_AMT,
                             T6.CASH_BASEAMT,
                             t6.INT_AMT,
-                            t6.PAY_DATE
+                            t6.PAY_DATE,
+                            t6.INV_AIM
                             ) T7
                         GROUP BY
                         T7.FINPROD_ID,

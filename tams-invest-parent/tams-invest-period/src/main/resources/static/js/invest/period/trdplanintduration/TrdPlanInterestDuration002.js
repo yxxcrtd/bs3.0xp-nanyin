@@ -51,6 +51,12 @@
                     calcConditionObjBackUp = tableInitData();
                 }
             },
+            beforeEditCell:function(value, field, data){
+          	   if(field == 'invAim'){
+          		   return false;
+          	   }
+          	   return true;
+             },
             data: []
             /* 增加实收本息总额fpriceAmt与tradeAmt联动   add by caojin 2020/6/5 start*/
             ,editCell: function (value, row, field, cell, column) {
@@ -251,6 +257,7 @@
                     'isTotalTrade': YES_OR_NO_Y
                     , 'bankLendingType': null
                     , 'portfolioId': finAssetIntInfos[i].portfolioId
+                    , 'invAim': finAssetIntInfos[i].invAim
                     , 'deal': {
                         finprodType2: F17,
                         ps: ps,
@@ -260,7 +267,8 @@
                         tradeAmt: finAssetIntInfos[i].fpriceAmt,
                         // modify by renping 2019-10-25 添加通道费 end
                         ccy: $("#finAssetInfo_ccy").val(),
-                        finprodId: $("#finprodId").val()
+                        finprodId: $("#finprodId").val(),
+                        invAim: finAssetIntInfos[i].invAim
                     }
                 })
             }
@@ -393,6 +401,12 @@
             // generateOrders(function () {
                 var object = $.serializeToObject('#informationForm', true);
                 object.operateType = operateType;
+                
+              //附件信息
+                if (FileCommon) {
+                    object.uploadFileList = FileCommon.getUploadFileInfo();
+                }
+                
                 Joyin.ajaxJson(basePath + 'invest/period/trdplanintduration/TrdPlanInterestDuration002/check', object, function (result) {
                     Joyin.confirm(result.data, function () {
                         if (operateType === 'save') {

@@ -155,6 +155,7 @@
                             t6.INT_AMT,
                             /*理论利息*/
                             t6.PAY_DATE,
+                            T6.INV_AIM,
                             MAX(FCP11.CASH_BASEAMT) MAX_CASH_BASEAMT
                        from (
                             select * from (
@@ -163,7 +164,7 @@
                                     T1.AMOUNT,
                                     T1.SEC_ACCT_ID,
                                     T1.PORTFOLIO_ID,
-                                    t2.vdate_term vdate,
+                                    t2.vdate,
                                     t2.mdate,
                                     t2.cash_amt,
                                     t2.prin_amt,
@@ -173,6 +174,7 @@
                                     t2.pay_date,
                                     t2.INT_PRIN_AMT,
                                     t2.CASH_BASEAMT,
+                                    T1.INV_AIM,
                                     rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank
                                 FROM PTL_SEC_POSITION T1 INNER JOIN FIN_CASH_PLAN T2 ON T1.FINPROD_ID = T2.FINPROD_ID
                                 inner join PTL_PORTFOLIO pp on T1.PORTFOLIO_ID = pp.PORTFOLIO_ID
@@ -250,7 +252,8 @@
                             T6.PRIN_AMT,
                             T6.CASH_BASEAMT,
                             t6.INT_AMT,
-                            t6.PAY_DATE
+                            t6.PAY_DATE,
+                            T6.INV_AIM
                         ) T7
                         GROUP BY
             <!-- 增加组合区分防止 合并 start -->
@@ -261,7 +264,8 @@
                             T7.MDATE,
                             /*T7.payedInt,*/
                             /*T7.payedPrinAmt,*/
-                            T7.PAY_DATE
+                            T7.PAY_DATE,
+                            T7.INV_AIM
                     ) T8
                   LEFT JOIN FIN_PRODUCT T10 ON T10.FINPROD_ID = T8.FINPROD_ID
                   LEFT JOIN FIN_PRODUCT_TYPE T4 ON T10.FINPROD_ID = T4.FINPROD_ID
@@ -511,6 +515,7 @@
             '${vDate}' vDate,
             '${mDate}' mDate,
             '${yield}' yield,
+            T1.INV_AIM invAim, /*投资目的*/
         /*组合持仓.数量*/               T1.AMOUNT,
         /*现金流支付规则.支付频率 付息周期*/ T4.PAY_CYCLE CALC_RULE
         /*检索对象 组合持仓*/         FROM PTL_SEC_POSITION T1
@@ -570,6 +575,7 @@
         )
         group by T1.PORTFOLIO_ID,
                  T1.AMOUNT,
+                 T1.INV_AIM,
                  T4.PAY_CYCLE) WHERE    AMOUNT &gt;0
             /*组合持仓为0 的不要显示 yjm end 20190726*/
             order by AMOUNT
@@ -593,6 +599,7 @@
             /*金融产品交易扩展1.应付利率 借款利率*/
             THEORY_RATE*100 yield,
             AMOUNT,
+            INV_AIM invAim,
             /*sum（金融产品交易扩展1.还本金额/理论利息，金融产品交易扩展2.还本金额/理论利息） 理论本息总额*/
             ROUND(THEORY_AMT, 2) theoryAmt,
             ROUND(FPRICE_AMT, 2) fpriceAmt,
@@ -611,6 +618,7 @@
                 THEORY_RATE,
                 PTFPDT.REMAIN_PRIN_AMT AMOUNT,
                 PTFPDT.THEORY_AMT,
+                T1.INV_AIM, /*投资目的*/
                 TOTAL．FPRICE_AMT FPRICE_AMT,
                 TOTAL.FEE_AMT<!-- add by zhangweiqi 2019-10-15 添加通道费 begin-->
             /*金融产品交易 金融产品交易1*/
@@ -656,6 +664,7 @@
             MDATE,
             THEORY_AMT,
             AMOUNT,
+            INV_AIM,
             FPRICE_AMT,
             /*金融产品交易扩展1.应付利率 借款利率*/
             THEORY_RATE, FEE_AMT) WHERE    returnAmount &gt; 0 or theoryAmt > 0
@@ -666,7 +675,7 @@
     <select id="findAssetInfo" resultType="com.joyintech.tams.invest.common.dto.common.FinAssetInfo">
         /*检索项目*/                        SELECT
         /*金融产品分类表.分类6 一级分类*/         T2.TYPE_6,
-        /*金融产品分类表.分类7 二级分类*/         T2.TYPE_9 TYPE_7,
+        /*金融产品分类表.分类7 二级分类*/         T2.TYPE_7,
         /*标的类金融产品.市场代码 资产代码*/       T1.FINPROD_MARKET_ID,
         /*标的类金融产品.金融产品名称 资产名称*/   T1.FINPROD_NAME,
         /*标的类金融产品.发行规模 初始投资金额*/   T1.ISSUE_AMT,
@@ -843,7 +852,8 @@
                             WHEN T6.CASH_TYPE IN (#{CASH_CLASS_TYPE02}, #{CASH_CLASS_TYPE03}) AND T6.INT_AMT is not null and T6.INT_AMT != 0 AND PSV.SHARE_AMT is not null THEN ROUND(T6.PRIN_AMT * T1.AMOUNT/T6.CASH_BASEAMT * PSV.TDY_INTINCEXP/PSV.SHARE_AMT, 2)
                             else t6.INT_AMT * T1.AMOUNT/t6.CASH_BASEAMT end INT_AMT,
                             t6.PAY_DATE,
-                            MAX(FCP11.CASH_BASEAMT) MAX_CASH_BASEAMT
+                            MAX(FCP11.CASH_BASEAMT) MAX_CASH_BASEAMT,
+                            T1.INV_AIM
                         from PTL_SEC_POSITION T1
                                INNER JOIN (select  T2.CASH_TYPE,
                                                     T2.CASH_ID,
@@ -867,7 +877,7 @@
                                 <if test="chlId != null and !chlId.isEmpty()">
                                     AND T1.SEC_ACCT_ID = #{chlId}
                                 </if>
-                                LEFT JOIN PTL_SEC_VALUTION PSV ON T6.MDATE = PSV.CDATE + 1 AND T1.PORTFOLIO_ID = PSV.PORTFOLIO_ID AND T1.FINPROD_ID = PSV.FINPROD_ID AND PSV.INV_AIM = '999999'
+                                LEFT JOIN PTL_SEC_VALUTION PSV ON T6.MDATE = PSV.CDATE + 1 AND T1.PORTFOLIO_ID = PSV.PORTFOLIO_ID AND T1.FINPROD_ID = PSV.FINPROD_ID AND PSV.INV_AIM = T1.INV_AIM
                                 INNER JOIN FIN_CASH_PLAN FCP11 ON T6.FINPROD_ID = FCP11.FINPROD_ID
                                 inner join PTL_PORTFOLIO pp on T1.PORTFOLIO_ID = pp.PORTFOLIO_ID
                                 where
@@ -909,14 +919,16 @@
                                         T6.PRIN_AMT,
                                         PSV.TDY_INTINCEXP,
                                         T6.CASH_BASEAMT,PSV.TDY_INTINCEXP, t6.INT_AMT,PSV.SHARE_AMT,
-                                        t6.PAY_DATE
+                                        t6.PAY_DATE,
+                                        T1.INV_AIM
                           ) T7
                         GROUP BY
                         T7.FINPROD_ID,
                         T7.AMOUNT,
                         T7.MDATE,
                         T7.PORTFOLIO_ID,T7.SEC_ACCT_ID,
-                        T7.PAY_DATE
+                        T7.PAY_DATE,
+                        T7.INV_AIM
                    ) T8
                    LEFT JOIN FIN_PRODUCT T10 ON T10.FINPROD_ID = T8.FINPROD_ID
                    LEFT JOIN FIN_CASH_CALC_RULE fccr ON instr(t8.CASH_ID, fccr.CASH_ID) > 0 AND fccr.EFF_DATE &lt;= t8.MDATE

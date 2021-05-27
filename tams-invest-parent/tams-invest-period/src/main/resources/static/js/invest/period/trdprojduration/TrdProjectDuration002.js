@@ -82,6 +82,12 @@
                     calcConditionObjBackUp = tableInitData();
                 }
             },
+            beforeEditCell:function(value, field, data){
+         	   if(field == 'invAim'){
+         		   return false;
+         	   }
+         	   return true;
+            },
             data: []
         }
         if (finAssetIntInfoList && finAssetIntInfoList.length > 0) {
@@ -274,6 +280,7 @@
                     , 'bankLendingType': null
                     , 'portfolioId': finAssetIntInfos[i].portfolioId
                     ,'finprodId' : $('#finAssetInfo_finprodMarketId').val()
+                    , 'invAim': finAssetIntInfos[i].invAim
                     , 'deal': {
                         finprodType2: F17,
                         ps: ps,
@@ -282,7 +289,8 @@
                         chlId:$('#chlId').val(),
                         tradeAmt:finAssetIntInfos[i].fpriceAmt,
 //                        tradeAmt:  COLLECT_TYPE==COLLECT_TYPE_01?JoyinMath.doMinus(finAssetIntInfos[i].fpriceAmt,finAssetIntInfos[i].channelFee):finAssetIntInfos[i].fpriceAmt,//add by zhangweiqi 通道费修改
-                        ccy: $("#finAssetInfo_ccy").val()
+                        ccy: $("#finAssetInfo_ccy").val(),
+                        'invAim': finAssetIntInfos[i].invAim
                     }
                 })
             }
