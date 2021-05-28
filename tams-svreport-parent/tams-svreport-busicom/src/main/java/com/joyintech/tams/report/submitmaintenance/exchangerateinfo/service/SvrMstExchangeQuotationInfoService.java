@@ -10,22 +10,26 @@
 
 package com.joyintech.tams.report.submitmaintenance.exchangerateinfo.service;
 
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.MstExchargeQuote;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
-
 import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dao.SvrMstExchangeQuotationInfoMapper;
+import com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dao.SvrMstExchargeQuoteMapper;
+import com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dto.SvrMstExchangeQuotationInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -35,17 +39,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.export.ExportParam;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dao.SvrMstExchangeQuotationInfoMapper;
-import com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dao.SvrMstExchargeQuoteMapper;
-import com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dto.SvrMstExchangeQuotationInfoDto;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 汇率行情service 
@@ -273,7 +270,9 @@ public class SvrMstExchangeQuotationInfoService extends CommonExportService<SvrM
             //是否正常标志
             boolean flag = true;
             //数据来源
-            String dataSource = DictCodeListExt2.数据来源_EXCEL导入.getValue();
+            /** modify by yanya on 20210528 修改数据来源为外管局：SAFE**/
+            //String dataSource = DictCodeListExt2.数据来源_EXCEL导入.getValue();
+            String dataSource = DictCodeListExt3.估值来源_外管局.getValue();
             List<String> list = dataList.get(i);
 
             Map<String,Object> param = new HashMap<String,Object>();

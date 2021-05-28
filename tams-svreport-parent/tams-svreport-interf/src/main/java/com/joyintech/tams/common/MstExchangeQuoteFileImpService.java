@@ -27,7 +27,8 @@ public class MstExchangeQuoteFileImpService  extends AbstractFileImpService{
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static String[] CONTAINSFILE = {InterfDefine.汇率信息数据.getCode()};
+    //private static String[] CONTAINSFILE = {InterfDefine.汇率信息数据.getCode()};
+    private static String[] CONTAINSFILE = {"取消重复汇率接入数据"};
 
     @Autowired
     private SvrMstExchangeQuoteFileImpService svrMstExchangeQuoteFileImpService;

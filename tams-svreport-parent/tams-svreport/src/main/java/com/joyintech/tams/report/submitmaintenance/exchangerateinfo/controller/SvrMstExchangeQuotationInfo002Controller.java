@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,7 +51,9 @@ public class SvrMstExchangeQuotationInfo002Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.货币对, DictCode.数据来源);
+        this.setSelectOptionToModel(model, DictCode.货币对, DictCode.数据来源, DictCode.估值来源);
+        /** modify by yanya on 20210528 增加外管局估值来源字典值**/
+        model.addAttribute("VALUATION_SOURCE_SAFE", DictCodeListExt3.估值来源_外管局.getValue());
         String exchargeCode = getParam("exchargeCode");
         String tradeDate = getParam("tradeDate");
 //        String workflowId = getParam("workflowId");
