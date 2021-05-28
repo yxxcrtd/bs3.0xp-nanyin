@@ -151,8 +151,8 @@
 				COEFFICIENT coefficient,
 				SPREAD_RATE * 100 spreadRate,
 				CHARGE_RATIO * 100 chargeRatio
-		from FIN_FLOAT_CALC_RULE_DETAIL, FIN_CASH_INFO, FIN_PRODUCT, FIN_PRODUCT_ADD
-		where FIN_FLOAT_CALC_RULE_DETAIL.CASH_ID = FIN_CASH_INFO.CASH_ID
+		from FIN_FLOAT_CALC_RULE_DETAIL t, FIN_CASH_INFO, FIN_PRODUCT, FIN_PRODUCT_ADD
+		where t.CASH_ID = FIN_CASH_INFO.CASH_ID
 		  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
 		  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
 		  and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
@@ -171,10 +171,15 @@
 		   and FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}
 		  <choose>
 		   	<when test="effDate != null and effDate != ''">
-		   		and FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE = to_date(#{effDate},'yyyy-MM-dd')
-		   	</when>
+				and T.EFF_DATE = <!--to_date(#{effDate},'yyyy-MM-dd')  modify by lizhi 20210527-->
+				(select max(EFF_DATE)
+				from FIN_FLOAT_CALC_RULE_DETAIL T1
+				WHERE T1.CASH_ID = t.CASH_ID
+				AND T1.EFF_DATE >= to_date(#{effDate},'yyyy-MM-dd')
+				AND to_date(#{sysDate},'yyyy-MM-dd') >= T1.EFF_DATE)
+			</when>
 		   	<otherwise>
-		   		and (FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE = FIN_PRODUCT.VDATE
+				and (t.EFF_DATE = FIN_PRODUCT.VDATE
 		   		     OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
 		   	</otherwise>
 		   </choose>
