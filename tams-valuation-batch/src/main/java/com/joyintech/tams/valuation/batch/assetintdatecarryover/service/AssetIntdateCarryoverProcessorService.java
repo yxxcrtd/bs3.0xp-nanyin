@@ -1195,14 +1195,11 @@ public class AssetIntdateCarryoverProcessorService {
     private void handleStep2(AssetIntdateCarryoverReaderDetail detail,
                              AssetIntdateCarryoverResult assetIntdateCarryoverResult,
                              Long maxBranch) {
-       /* // 定义 变量.交易方向 = “债券派息”
-        String ps = DictCodeList.交易方向_收息.getValue();*/
     	// 变量.交易方向 = "收息"
-    	String ps = DictCodeList.交易方向_收息.getValue();
+    	String glb_ps = DictCodeList.交易方向_收息.getValue();
         // if（变量.本金（DTO.计划支付本金） != 0）
         if (!ArithmeticUtil.equals(detail.getPrinAmt(), BigDecimal.ZERO)) {
-           // ps = DictCodeList.交易方向_还本.getValue();
-        	ps = DictCodeList.交易方向_还本.getValue();
+        	glb_ps = DictCodeList.交易方向_还本.getValue();
         }
         // 4.1 查询本次收息还本的债券是否被质押
         List<String> trdFinprodTypeList = new ArrayList<>();
@@ -1219,7 +1216,7 @@ public class AssetIntdateCarryoverProcessorService {
             // 买断式正回购交易存在数量
             int pledgeCount = assetIntdateCarryoverMapper.queryPledgeCount(pledge.getFinprodId(),
                 pledge.getFinprodType(), detail.getBooksetId(), detail.getMdate(),
-                DictCodeList.业务表_金融产品表.getValue(), ps);
+                DictCodeList.业务表_金融产品表.getValue(), glb_ps);
             if (pledgeCount > 0) {
                 continue;
             }
@@ -1243,12 +1240,13 @@ public class AssetIntdateCarryoverProcessorService {
                     BigDecimal.ZERO)) {
                 continue;
             }
+                        
             // 变量.分支序号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"本金"，DTO.调整后的计算结束日）】
             // *通过交易方向区分传入参数“本金”,“利息”
             // 变量.本金分支号
             Long branch = BookConstant.DEFALUT_BRANCH;
             // if（交易方向 = “债券派本”）
-            if (DictCodeList.交易方向_还本.getValue().equals(ps)) {
+            if (DictCodeList.交易方向_还本.getValue().equals(glb_ps)) {
                 // 变量.本金分支号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"本金"，DTO.调整后的计算结束日）】
                 branch = finProductCommonService.queryValFinProductDealBranchNow(
                     detail.getFinprodId(), detail.getFinprodType(),
@@ -1258,6 +1256,50 @@ public class AssetIntdateCarryoverProcessorService {
                     // 变量.本金分支号 = （DTO.调整后的计算结束日 （'YYYYMMDD'）|| 01）转成数值型
                     branch = new Long(DateUtil.format(detail.getMdate(), "yyyyMMdd") + "01");
                 }
+                BokDetailId valbokDetailId = new BokDetailId();
+                valbokDetailId.setBusiId(pledge.getFinprodId());
+                valbokDetailId.setBusiDetailType(pledge.getFinprodType());
+                String bokDetailId = bookAccountCommonService.genMd5BokDetailId(valbokDetailId);
+                
+                
+                //  创建买断式回购派息交易信息(回购交易明细.质押金融产品代码 ，回购交易明细.质押金融产品类型，变量.金额，业务类型=“买断式回购预处理”
+                // ，账务明细共通（回购交易明细.金融产品代码 ，回购交易明细.金融产品类型），回购交易明细.分支序号，变量.交易方向，DTO)
+                AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverRepDeal(
+                    pledge, detail.getPrinAmt(),
+                    DictCodeList.业务类型_买断式回购预处理.getValue(), bokDetailId, branch, glb_ps,
+                    detail, assetIntdateCarryoverResult);
+                assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
+                    assetIntdateCarryoverDeal);
+                
+                if (!ArithmeticUtil.equals(detail.getIntAmt(), BigDecimal.ZERO)) {
+                	// 买断式正回购交易存在数量
+                    pledgeCount = assetIntdateCarryoverMapper.queryPledgeCount(pledge.getFinprodId(),
+                        pledge.getFinprodType(), detail.getBooksetId(), detail.getMdate(),
+                        DictCodeList.业务表_金融产品表.getValue(), DictCodeList.交易方向_收息.getValue());
+                    if (pledgeCount > 0) {
+                        continue;
+                    }
+                    
+                    // 变量.本金分支号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"本金"，DTO.调整后的计算结束日）】
+                    branch = finProductCommonService.queryValFinProductDealBranchNow(
+                        detail.getFinprodId(), detail.getFinprodType(),
+                        DictCodeList.分支类型_应收利息.getValue(), detail.getMdate());
+                    // IF(变量.本金分支号 == null)
+                    if (branch == null) {
+                        // 变量.本金分支号 = （DTO.调整后的计算结束日 （'YYYYMMDD'）|| 01）转成数值型
+                        branch = new Long(DateUtil.format(detail.getMdate(), "yyyyMMdd") + "02");
+                    }
+                    
+                     //  创建买断式回购派息交易信息(回购交易明细.质押金融产品代码 ，回购交易明细.质押金融产品类型，变量.金额，业务类型=“买断式回购预处理”
+                    // ，账务明细共通（回购交易明细.金融产品代码 ，回购交易明细.金融产品类型），回购交易明细.分支序号，变量.交易方向，DTO)
+                    AssetIntdateCarryoverDeal dealInt = creatCarryoverRepDeal(
+                        pledge, detail.getIntAmt(),
+                        DictCodeList.业务类型_买断式回购预处理.getValue(), bokDetailId, branch, DictCodeList.交易方向_收息.getValue(),
+                        detail, assetIntdateCarryoverResult);
+                    assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
+                    		dealInt);
+                }
+                
             }
             else {
                 // 变量.利息分支号 = 调用共通标的【当前计划对应分支序号查询（DTO.金融产品代码，DTO.金融产品类型，"利息"，DTO.调整后的计算结束日）】
@@ -1269,21 +1311,20 @@ public class AssetIntdateCarryoverProcessorService {
                     // 变量.利息分支号 = （DTO.调整后的计算结束日 （'YYYYMMDD'）|| 02）转成数值型
                     branch = new Long(DateUtil.format(detail.getMdate(), "yyyyMMdd") + "02");
                 }
+                // 变量.金额 = DTO.计划支付现金流
+                BokDetailId valbokDetailId = new BokDetailId();
+                valbokDetailId.setBusiId(pledge.getFinprodId());
+                valbokDetailId.setBusiDetailType(pledge.getFinprodType());
+                String bokDetailId = bookAccountCommonService.genMd5BokDetailId(valbokDetailId);
+                //  创建买断式回购派息交易信息(回购交易明细.质押金融产品代码 ，回购交易明细.质押金融产品类型，变量.金额，业务类型=“买断式回购预处理”
+                // ，账务明细共通（回购交易明细.金融产品代码 ，回购交易明细.金融产品类型），回购交易明细.分支序号，变量.交易方向，DTO)
+                AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverRepDeal(
+                    pledge, detail.getIntAmt(),
+                    DictCodeList.业务类型_买断式回购预处理.getValue(), bokDetailId, branch, glb_ps,
+                    detail, assetIntdateCarryoverResult);
+                assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
+                    assetIntdateCarryoverDeal);
             }
-            // 变量.金额 = DTO.计划支付现金流
-            BigDecimal amount = detail.getCashAmt();
-            BokDetailId valbokDetailId = new BokDetailId();
-            valbokDetailId.setBusiId(pledge.getFinprodId());
-            valbokDetailId.setBusiDetailType(pledge.getFinprodType());
-            String bokDetailId = bookAccountCommonService.genMd5BokDetailId(valbokDetailId);
-            //  创建买断式回购派息交易信息(回购交易明细.质押金融产品代码 ，回购交易明细.质押金融产品类型，变量.金额，业务类型=“买断式回购预处理”
-            // ，账务明细共通（回购交易明细.金融产品代码 ，回购交易明细.金融产品类型），回购交易明细.分支序号，变量.交易方向，DTO)
-            AssetIntdateCarryoverDeal assetIntdateCarryoverDeal = creatCarryoverRepDeal(
-                pledge, amount,
-                DictCodeList.业务类型_买断式回购预处理.getValue(), bokDetailId, branch, ps,
-                detail, assetIntdateCarryoverResult);
-            assetIntdateCarryoverResult.getAssetIntdateCarryoverDealList().add(
-                assetIntdateCarryoverDeal);
         }
     }
 }
