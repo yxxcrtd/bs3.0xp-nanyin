@@ -2472,7 +2472,7 @@
             1=1
             and ASSETINFO.STATUS IN ('E','M')
             <if test="search != null and search != ''">
-                and ASSETINFO.ASSET_CODE like concat('%', #{search},'%') or ASSETINFO.ASSET_NAME like concat('%', #{search},'%')
+                and (ASSETINFO.ASSET_CODE like concat('%', #{search},'%') or ASSETINFO.ASSET_NAME like concat('%', #{search},'%'))
             </if>
             <if test="orgCodeList !=null and orgCodeList.size()>0">
                 <!-- 机构代码不为空时 -->

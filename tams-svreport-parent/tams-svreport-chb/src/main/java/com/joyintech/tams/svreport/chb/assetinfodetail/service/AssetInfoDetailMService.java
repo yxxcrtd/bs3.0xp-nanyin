@@ -26,6 +26,8 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetExport;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetInfoDetailUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
+import com.joyintech.tams.svreport.chb.proddurationreg.dao.ProdDurationReg001Mapper;
+import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.beanutils.BeanMap;
 import org.slf4j.Logger;
@@ -35,7 +37,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.*;
@@ -686,6 +689,25 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return result;
 	}
 
+
+	/**
+	 * 资产代码下拉框分页
+	 * @return
+	 */
+	public Page<SelectOptionDto> queryAssetCodePage(Map<String, Object> map) {
+		String orgCode = (String)map.get("orgCode");
+		List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
+		if (StringUtil.isBlank(orgCode)) {
+			orgCodeList = CommonUtil.getOrgCodeListForSearch();
+		}
+		map.put("orgCodeList", orgCodeList);
+		List<SelectOptionDto> dtoList = new ArrayList<SelectOptionDto>();
+		//在所选的机构list不为空或者是用户为管理员时
+//		dtoList = super.queryForPage()assetInfoDetailMapper.selectAssetCodeList(map);
+		int pagenum = StringUtil.integerValueOf(RequestUtil.getParam(GlobalConstant.PARAM_PAGE), 1);
+		int legth = StringUtil.integerValueOf(RequestUtil.getParam(GlobalConstant.PARAM_LENGTH), GlobalConstant.DEFAULT_PAGE_SIZE);
+		return queryForPageForSelectReturn(pagenum, legth,() -> assetInfoDetailMapper.selectAssetCodeList(map));
+	}
 
 
 }
