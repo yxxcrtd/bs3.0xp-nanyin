@@ -564,7 +564,7 @@ create table T_INTEGRATED_ENTRUSTHISTORY
   username              VARCHAR2(255) not null,
   account_id            VARCHAR2(32) not null,
   finance_account       VARCHAR2(32) not null,
-  account_name          VARCHAR2(32) not null,
+  account_name          VARCHAR2(200) not null,
   asset_type            VARCHAR2(3) not null,
   market                VARCHAR2(8) not null,
   stock_code            VARCHAR2(32) not null,
