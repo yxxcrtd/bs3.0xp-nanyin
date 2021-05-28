@@ -72,7 +72,20 @@
 		                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrproject/EtrProject002/save',object,"EtrProject002_btn_submit");
 		                   }
 		               });
-		           });
+		           },null,function (result) {
+                        var msg = result.errorList;
+                        var message ="";
+                        for(var i=0;i<msg.length;i++){
+                            message = msg[i];
+                            if(message.field!=null && message.field=='invAim'){
+                                if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
+                                    $('#invAim').textSelect('setValue', "FVTPL");
+                                    break;
+                                }
+                            }
+                        }
+
+                    });
 	        });
         });
     }

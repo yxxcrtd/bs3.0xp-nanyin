@@ -191,7 +191,7 @@ public class TrdPlanRateInvestTradeDtoValidator implements TradeCommonValidator 
             		if(StringUtil.isNotEmpty(finProduct)) {
             			if(StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试不通过.getValue())) {
             				errorList.add(new ValidMessage("invAim",
-                                    getMessage("该资产SPPI测试不通过，只可以选择以出售该金融资产为目的！")));
+                                    getMessage("ETR_ERROR_0059")));
             			}
             			else if(StringUtil.isEmpty(finProduct.getSppiTestStatus())
             			        || StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_未测试.getValue())
