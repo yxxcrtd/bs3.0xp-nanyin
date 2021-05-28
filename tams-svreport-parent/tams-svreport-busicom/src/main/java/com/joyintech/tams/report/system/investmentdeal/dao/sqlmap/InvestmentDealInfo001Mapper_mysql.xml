@@ -227,6 +227,7 @@
 		SELECT
 			STATUS AS status,
 			TRADE_CODE AS tradeCode,
+			TRADE_SEQNO AS tradeSeqno,
 			PROD_ID AS prodId,
 			ASSET_CODE AS assetCode,
 			CCY AS ccy,
