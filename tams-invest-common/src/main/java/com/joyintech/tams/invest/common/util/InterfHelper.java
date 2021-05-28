@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.*;
 
-@Service
-public class InterfHelper { 
+@Service(value = "interfHelper_inv")
+public class InterfHelper {
     
     public static String getMd5CashId_(String ... cashId){
     	String md5CashId = "";
