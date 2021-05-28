@@ -36,7 +36,7 @@ import java.util.*;
  * @see CalCommonService
  * @since 1.0
  */
-@Service
+@Service(value = "CalCommonService_inv")
 public class CalCommonService {
 
     /**

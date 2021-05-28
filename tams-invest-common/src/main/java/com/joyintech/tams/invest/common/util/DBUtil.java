@@ -29,7 +29,7 @@ import java.util.Map;
  * @see DBUtil
  * @since 1.0
  */
-@Service(value = "dBUtil")
+@Service(value = "dBUtil_inv")
 public class DBUtil {
 	
 	/**
