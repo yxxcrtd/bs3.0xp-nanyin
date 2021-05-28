@@ -2,6 +2,7 @@
  
 package com.joyintech.tams.invest.portfolio.ptlpositionanalysis.controller;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -75,14 +76,20 @@ public class PtlPositionAnalysis002Controller extends BaseController {
             throws Exception {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<PtlPositionAnalysis003Dto> list = ptlPositionAnalysis002Service.selectForPage(map);
-
+        //modify by jiangpeng on 20210528 ZGBSSE-173 资产的持仓市值为0时不显示
+        List<PtlPositionAnalysis003Dto> ptlPositionAnalysis003Dtos = Lists.newArrayList();
         if(list.getRoot().size()>0){
             list.getRoot().forEach(item->{
                 if(item.getRate()!=null){
                     item.setRate(item.getRate().multiply(BigDecimal.valueOf(100)));
                 }
+                if (BigDecimal.ZERO.compareTo(item.getPosValue()) != 0) {
+                    ptlPositionAnalysis003Dtos.add(item);
+                }
             });
         }
+        list.setRoot(ptlPositionAnalysis003Dtos);
+        //modify by jiangpeng on 20210528 ZGBSSE-173 资产的持仓市值为0时不显示
 
         return list;
     }
