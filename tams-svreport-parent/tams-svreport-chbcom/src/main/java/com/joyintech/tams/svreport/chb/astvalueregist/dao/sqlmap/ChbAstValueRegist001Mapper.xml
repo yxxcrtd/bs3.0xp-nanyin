@@ -132,7 +132,7 @@
 				1=1
 				/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
 				<!--AND F.TRADE_MARKET IS NOT NULL-->
-				and ASSETINFO.asset_type in ('03','06','15')
+				and ASSETINFO.asset_type in ('03','06','15') and  ASSETINFO.asset_type2 not in ('1301')
 				
 				
 			/**产品投资交易数据筛选产品交易数据*/
@@ -244,7 +244,7 @@
 					1=1
 					/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
 					<!--AND F.TRADE_MARKET IS NULL-->
-					and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null)
+					and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null or ASSETINFO.asset_type2  in ('1301'))
 				<if test="orgCode != null and orgCode.size() > 0">
 					<foreach collection="orgCode" item="code" 
 		         		open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
@@ -375,7 +375,7 @@
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
 			<!--AND F.TRADE_MARKET IS NOT NULL-->
-			and ASSETINFO.asset_type in ('03','06','15')
+			and ASSETINFO.asset_type in ('03','06','15') and  ASSETINFO.asset_type2 not in ('1301')
 			
 			/**产品投资交易数据筛选产品交易数据*/
 			and EXISTS (
@@ -447,7 +447,7 @@
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
 			<!--AND F.TRADE_MARKET IS NULL-->
-			and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null)
+			and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null or ASSETINFO.asset_type2  in ('1301'))
 		
 		   	<if test="registList!=null and registList.size()!=0">
 			 	<foreach collection="registList" item="regist" open=" and((" close="))" separator=") or (">
