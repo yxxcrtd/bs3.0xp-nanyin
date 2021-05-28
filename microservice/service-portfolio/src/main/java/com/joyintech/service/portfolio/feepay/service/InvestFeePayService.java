@@ -14,6 +14,8 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
+import com.joyintech.tams.invest.common.dto.common.SubjectBalance;
+import com.joyintech.tams.invest.common.dto.common.SubjectBalanceSearchDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,10 +59,6 @@ import com.joyintech.tams.invest.common.dto.common.TrdCommonParam;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonWflParam;
 import com.joyintech.tams.invest.common.product.dto.FinProductExpireBaseTrdDto;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto;
-import com.joyintech.tams.valuation.common.constants.BookConstant;
-import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -545,7 +543,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         // 定义传递参数
         // 若分支序号为空，则查询默认的分支序号
         if (searchDto.getBranch() == null) {
-            searchDto.setBranch(BookConstant.DEFALUT_BRANCH); // 默认分支号
+            searchDto.setBranch(0L); // 默认分支号
         }
         List<SubjectBalance> list = investFeePayMapper.queryCurrentLatestBalance(searchDto);
         return list;
@@ -1162,7 +1160,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
     /**
      * 查询费用上次计提结束日
      * 
-     * @param ptlId 组合代码
+     * @param secAcctId
      * @param feeType 费用类型
      * @return 上次计提结束日
      */

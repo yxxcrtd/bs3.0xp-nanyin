@@ -34,7 +34,6 @@ import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCash
 import com.joyintech.tams.invest.trade.conbond.dto.TrdConBondDto;
 import com.joyintech.tams.invest.trade.pretrdrepotrade.dto.PreTrdRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.pretrdrepotrade.dto.PreTrdRepoTrade002Dto;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -58,8 +57,6 @@ import java.util.stream.Collectors;
 @Service
 public class PreTrdRepoTrade002Service extends BaseService<PreTrdRepoTrade002Dto> implements BaseProcessService<PreTrdRepoTrade002Dto> {
 
-    @Autowired
-    private InterfCommonService interfCommonService;
     @Autowired(required = false)
     private BussRepoSecService bussRepoSecService;
     @Autowired(required = false)

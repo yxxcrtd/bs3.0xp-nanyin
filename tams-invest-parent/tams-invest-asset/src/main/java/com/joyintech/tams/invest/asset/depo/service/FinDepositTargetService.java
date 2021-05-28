@@ -25,7 +25,6 @@ import com.joyintech.tams.invest.asset.interfaceDto.*;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.util.MapParseUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -277,7 +276,7 @@ public class FinDepositTargetService extends CommonExportService<FinDepositTarge
         //----add by jjpei 20190727 添加投资性质----end----
         if (StringUtil.equals(dto.getType6(), DictCodeList.存款类资产类型_同业借款.getValue())) {
             finProductAdd.setTermType(
-                    ValInterfCommonServiceApi.getRepTermType(
+                    commonBusinessService.getRepTermType(
                             DictCodeListExt1.金融产品类型_同业借款.getValue(), finProduct.getTermDays()));
         }
         // 金融产品扩展表 资产提供行入该表

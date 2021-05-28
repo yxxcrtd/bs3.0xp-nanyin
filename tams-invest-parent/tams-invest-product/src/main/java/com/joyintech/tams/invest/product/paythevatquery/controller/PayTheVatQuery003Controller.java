@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,6 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery001Dto;
 import com.joyintech.tams.invest.product.paythevatquery.service.PayTheVatQuery002Service;
 import com.joyintech.tams.invest.product.paythevatquery.service.PayTheVatQuery003Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;

@@ -38,7 +38,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticInfoDto;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.service.FinProductAnapleroticInfo001Service;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.service.FinProductAnapleroticInfo002Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
@@ -97,7 +96,7 @@ public class FinProductAnapleroticInfo001Controller extends BaseController {
         List<FinProductAnapleroticInfoDto> list = finProductAnapleroticInfo001Service.queryAnapleroticInfoById(map);
         if(!StringUtil.isEmptyList(list)){
             FinProductAnapleroticInfoDto dto = list.get(0).getFinProductAnapleroticInfoDto();
-            dto.setOperateType(GlobalConstant.OPERATE_TYPE_DELETE);
+            dto.setOperateType("delete");
             ProcessParameter<FinProductAnapleroticInfoDto> processParameter = new ProcessParameter<FinProductAnapleroticInfoDto>();
             WorkFlowParameter<FinProductAnapleroticInfoDto> params = new WorkFlowParameter<FinProductAnapleroticInfoDto>();
             params.setElementId(dtop.getElementId());

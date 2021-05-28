@@ -15,8 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
-import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.joyintech.framework.constant.GlobalConstant;

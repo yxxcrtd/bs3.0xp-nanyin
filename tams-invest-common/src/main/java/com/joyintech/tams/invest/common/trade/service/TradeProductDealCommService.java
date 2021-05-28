@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
+import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.BussTrdPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
@@ -118,6 +119,9 @@ public class TradeProductDealCommService {
      */
     @Autowired
     private WflStlPayOrdersMapper wflStlPayOrdersMapper;
+
+    @Autowired
+    private TrdCommonBaseMapper trdCommonBaseMapper;
 
     private static final List<String> 申购确认_赎回确认_除权登记_红利再投 = Arrays.asList(DictCodeList.交易方向_申购确认.getValue(),
         DictCodeList.交易方向_赎回确认.getValue(), DictCodeList.交易方向_除权登记.getValue(), DictCodeList.交易方向_红利再投.getValue());
@@ -595,4 +599,30 @@ public class TradeProductDealCommService {
         }
         return new CommonResult(CommonResult.SUCCED, "处理完成");
     }
+
+    //多级法人改造start add by hxy 20200617
+    /**
+     * 银行模式时，返回机构
+     * @return
+     */
+    public String selectBankModeOrgName(){
+        return trdCommonBaseMapper.selectBankModeOrgName();
+
+    }
+    /**
+     * 联社机构时，选择账套时返回机构
+     * @return
+     */
+    public String selectAssociationModeOrgName(Map<String, Object> map){
+        return trdCommonBaseMapper.selectAssociationModeOrgName(map);
+    }
+    /**
+     * 联社机构时，选择账套组时返回机构
+     * @return
+     */
+    public String selectAssociationModeOrgGrpName(Map<String, Object> map){
+        return trdCommonBaseMapper.selectAssociationModeOrgGrpName(map);
+    }
+
+    //多级法人改造end add by hxy 20200617
 }

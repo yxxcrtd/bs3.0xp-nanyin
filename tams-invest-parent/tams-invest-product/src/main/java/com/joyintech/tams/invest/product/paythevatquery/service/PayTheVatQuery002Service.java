@@ -20,6 +20,8 @@ import java.util.Map;
 
 import com.joyintech.tams.component.business.settle.dto.BussSettleOrderParameterDto;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
+import com.joyintech.tams.invest.common.constant.InterfCommonConstant;
+import com.joyintech.tams.invest.product.common.service.ProductCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,8 +71,6 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.product.paythevatquery.dao.PayTheVatQuery002Mapper;
 import com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery002Dto;
 import com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery002TableDto;
-import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
@@ -93,9 +93,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
     /**
      * 接口共通
      */
-    @Autowired
-    private InterfCommonService interfCommonService;
-    
+
     @Autowired
     private BussTrdTransferOrderImplService bussTrdTransferOrderImplService;
     
@@ -125,6 +123,10 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
     
     @Autowired
     private TrdAsynHandleStatusMapper trdAsynHandleStatusMapper;
+
+    @Autowired
+    private ProductCommonService productCommonService;
+
     
     /**
      * 查询
@@ -280,7 +282,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
         
         // 金融产品交易
         TrdProductDeal trdproductdeal = new TrdProductDeal();
-        trdproductdeal.setTradeId(interfCommonService.getTradeid(dto.getTaxidenType(), dto.getCreateTime(), "A"));
+        trdproductdeal.setTradeId(productCommonService.getTradeid(dto.getTaxidenType(), dto.getCreateTime(), "A"));
         trdproductdeal.setTotleTradeId(dto.getTotleTradeId());
         trdproductdeal.setBusiType(BussinessDictCodeList.业务类型_增值税交易.getValue());
         trdproductdeal.setFinprodId(listDto.getFinprodId());
@@ -782,24 +784,18 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
      */
     public List<String> getAddTaxType(List<String> listProdId,String prodType, String queryDate, String queryDateBegin,String queryDateEnd) {
         if(!StringUtil.isEmptyList(listProdId)) {
-            Map<String,Object> paramMap = new HashMap<String,Object>();
-            paramMap.put("listProdId", listProdId);
-            paramMap.put("prodType", prodType);
-            //OPEX-650【产品缴纳】缴纳查询界面，选择纳税日期查询条件进行查询，报数据接口异常 guyunfei 20191227 start
-            if(StringUtil.isNotEmpty(queryDate)){
-                paramMap.put("queryDate", queryDate);
-            }
-            if(StringUtil.isNotEmpty(queryDateBegin)){
-                paramMap.put("queryDateBegin", queryDateBegin);
-            }
-            if(StringUtil.isNotEmpty(queryDateEnd)){
-                paramMap.put("queryDateEnd", queryDateEnd);
-            }
             //OPEX-650【产品缴纳】缴纳查询界面，选择纳税日期查询条件进行查询，报数据接口异常 guyunfei 20191227 end
-            List<String> addTaxTypeList =  restTemplate.postForObject(
-                com.joyintech.tams.valuation.common.constants.ServiceApplication.VALUATION_SERVICE_NAME + "/valApiController/getAddTaxType",
-                paramMap, List.class);
-            return addTaxTypeList;
+            Map<String, Object> params = new HashMap<>();
+            params.put("listFinprodId", listProdId);
+            params.put("finprodType", prodType);
+            params.put("finprodType_F16", DictCodeListExt1.金融产品类型_理财产品.getValue());
+            params.put("queryDate", queryDate);
+            //OPEX-650【产品缴纳】缴纳查询界面，选择纳税日期查询条件进行查询，报数据接口异常 guyunfei 20191227 start
+            params.put("queryDateBegin", queryDateBegin);
+            params.put("queryDateEnd", queryDateEnd);
+            //OPEX-650【产品缴纳】缴纳查询界面，选择纳税日期查询条件进行查询，报数据接口异常 guyunfei 20191227 end
+            params.put("schemeType", DictCodeListExt1.配置方案类型_税务方案.getValue());
+            return payTheVatQuery002Mapper.getAddTaxType(params);
         }
         else {
             return new ArrayList<String>();

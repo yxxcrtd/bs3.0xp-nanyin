@@ -18,10 +18,9 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.interf.dto.TrdInterfDataImport001LogDto;
 import com.joyintech.tams.invest.interf.service.TrdInterfDataImport001Service;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
-import com.joyintech.tams.valuation.common.service.BaseCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,8 +61,11 @@ public class TrdInterfDataImport001Contoller extends BaseController {
 
 	@Autowired
 	private TrdInterfDataImport001Service trdInterfDataImport001Service;
+
     @Autowired
-    private BaseCommonService baseCommonService;
+    private IPlatformDate iPlatformDate;
+//    @Autowired
+//    private BaseCommonService baseCommonService;
 
 
 	/**
@@ -78,7 +80,7 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     public String init(Model model) {
         gpcode = CacheUtil.getSysParam(INTERF_PLACE_GPCODE);
         trigger = CacheUtil.getSysParam(INTERF_PLACE_TGCODE);
-        sysDate=baseCommonService.getSysDateString();
+        sysDate= iPlatformDate.getSysDateStr();
         if(sysDate==null||"".equals(sysDate)){
             sysDate=DateUtil.format(new Date());
         }

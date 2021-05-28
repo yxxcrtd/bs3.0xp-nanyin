@@ -10,9 +10,9 @@
 
 package com.joyintech.tams.invest.entrust.etrconbond.dto;
 
-import com.csii.dc.client.util.StringUtil;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;

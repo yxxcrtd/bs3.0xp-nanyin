@@ -34,7 +34,6 @@ import com.joyintech.tams.invest.common.trade.service.TradeProductDealCommServic
 import com.joyintech.tams.invest.common.trade.service.impl.BaseEtrCashPositionCommServiceImpl;
 import com.joyintech.tams.invest.product.common.service.ProductCommonService;
 import com.joyintech.tams.invest.product.payint.dto.*;
-import com.joyintech.tams.valuation.common.service.BooksetCommonService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,9 +144,6 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
      */
     @Autowired(required = false)
     private BussSettleOrderCommService bussSettleOrderCommService;
-    
-    @Autowired
-    private BooksetCommonService booksetCommonService;
 
     /**
      * 1.6.1产品基本信息
@@ -386,12 +382,12 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
 	        	Map<String, Object> orgmap=new HashMap<String, Object>();
 	        	orgmap.put("booksetOrg", booksetOrg);
 	        	orgmap.put("dataType", "FINPROD04");
-	        	String orgName=booksetCommonService.selectAssociationModeOrgName(orgmap);
+	        	String orgName=baseTradeProductDealCommServiceImpl.selectAssociationModeOrgName(orgmap);
 	        	repDuration.setRepIssuePartyName(orgName);
 	        	
         	}else{
         	//银行模式
-        	String orgName=booksetCommonService.selectBankModeOrgName();
+        	String orgName=baseTradeProductDealCommServiceImpl.selectBankModeOrgName();
         	repDuration.setRepIssuePartyName(orgName);
         	
            }

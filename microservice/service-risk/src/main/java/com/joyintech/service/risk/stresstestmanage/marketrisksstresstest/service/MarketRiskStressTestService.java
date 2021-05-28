@@ -20,10 +20,10 @@ import java.util.Map;
 
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jixu.common.tool.JixuUserUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -150,7 +150,7 @@ public class MarketRiskStressTestService extends BaseService<FlowRiskStressTest0
         int count = marketRiskStressTestMapper.queryStrTesCount();
         //压力测试表
         SttStressTest streTesEnt = new SttStressTest();
-        String username=JixuUserUtil.getLoginUserName();
+        String username= SecurityUtil.getLoginUser().getUserName();
         String testId =username+"-"+(dft.format(sysDate))+"-"+count+ IDGenerator.generate(5).substring(0, 8);
         //压测代码
         streTesEnt.setTestId(testId);

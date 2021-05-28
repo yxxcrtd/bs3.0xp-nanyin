@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.product.productplanning.informationMaintenance
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
@@ -15,7 +16,6 @@ import com.joyintech.tams.invest.product.productplanning.informationMaintenance.
 import com.joyintech.tams.invest.product.productplanning.informationMaintenance.dto.FinProductPlanning002Dto;
 import com.joyintech.tams.invest.product.productplanning.informationMaintenance.service.FinProductPlanningEstablish001Service;
 import com.joyintech.tams.invest.product.productplanning.informationMaintenance.service.FinProductPlanningEstablish002Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -112,7 +112,7 @@ public class FinProductPlanningEstablish001Controller extends BaseController {
     @RequestMapping("/delete")
     public AjaxResult deleteByPrimaryKey(@RequestBody FinProductPlanning001Dto dto)
             throws Exception{
-        dto.setOperateType(GlobalConstant.OPERATE_TYPE_DELETE);
+        dto.setOperateType("delete");
         ProcessParameter<FinProductPlanning002Dto> processParameter = new ProcessParameter<FinProductPlanning002Dto>();
         WorkFlowParameter<FinProductPlanning002Dto> params = new WorkFlowParameter<FinProductPlanning002Dto>();
         params.setElementId(dto.getElementId());
@@ -127,7 +127,7 @@ public class FinProductPlanningEstablish001Controller extends BaseController {
         );
         processParameter.setWorkFlowParameter(params);
         FinProductPlanning002Dto dto1 = finProductPlanningEstablish002Service.getEntityByNo(dto.getPlanningNo());
-        dto1.setOperateType(GlobalConstant.OPERATE_TYPE_DELETE);
+        dto1.setOperateType("delete");
         // 调用工作流事件
         String msg = finProductPlanningEstablish002Service.start(processParameter, dto1);
         // 返回工作流错误信息

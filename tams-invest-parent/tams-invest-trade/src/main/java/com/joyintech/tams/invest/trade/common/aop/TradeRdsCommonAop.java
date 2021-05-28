@@ -29,7 +29,6 @@ import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.tams.invest.common.risktrialrds.RiskTrialComm;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;

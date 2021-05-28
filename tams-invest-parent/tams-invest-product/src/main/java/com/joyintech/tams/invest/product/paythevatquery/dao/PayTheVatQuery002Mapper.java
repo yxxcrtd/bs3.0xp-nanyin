@@ -131,4 +131,13 @@ public interface PayTheVatQuery002Mapper {
      * 查询币种
      */
     List<String> searchCurrency(Map<String, Object> pageParam);
+
+    /**
+     * 查询附加税税则中的附加税类型
+     * @param params 参数
+     * @return 缴纳附加税相关附加税类型
+     * @see
+     * @since 1.0
+     */
+    List<String> getAddTaxType(Map<String, Object> params);
 }

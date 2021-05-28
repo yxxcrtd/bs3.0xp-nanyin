@@ -1,14 +1,10 @@
 package com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.controller;
 
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil; 
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.FinPledgeDisplaceDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -88,8 +84,8 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
         typeSelectOptionTwo.setId(DictCodeList.业务类型_债券借贷交易.getValue());
         typeSelectOptionTwo.setText(DictCodeList.业务类型_债券借贷交易.getCodeName());
         typeList.add(typeSelectOptionTwo);
-        model.addAttribute("TradePs", JsonUtil.objToString(psList));
-        model.addAttribute("TradeType", JsonUtil.objToString(typeList));
+        model.addAttribute("TradePs", JsonUtils.object2Json(psList));
+        model.addAttribute("TradeType", JsonUtils.object2Json(typeList));
         return super.init(model);
     }
 

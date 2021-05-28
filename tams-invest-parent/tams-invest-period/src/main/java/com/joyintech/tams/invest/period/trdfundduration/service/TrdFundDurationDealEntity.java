@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.period.trdfundduration.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -40,7 +41,6 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdfundduration.dto.TrdFundDuration001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;

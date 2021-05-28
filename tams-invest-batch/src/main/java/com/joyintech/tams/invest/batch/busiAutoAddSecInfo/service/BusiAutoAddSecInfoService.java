@@ -19,13 +19,10 @@ import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dao.BusiAutoAddSecInfo
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
+import com.joyintech.tams.invest.common.constant.ValDictCodeList;
+import com.joyintech.tams.invest.common.dto.valuationusemerge.TargetSearchDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
-import com.joyintech.tams.valuation.common.batch.finproduct.dao.FinProductCommonMapper;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.*;
-import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
-import com.joyintech.tams.valuation.common.constants.BookConstant;
-import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +48,6 @@ public class BusiAutoAddSecInfoService {
     private FinProductAddMapper finProductAddMapper;
     @Autowired
     private FinProductTypeMapper finProductTypeMapper;
-    @Autowired
-    private FinProductCommonMapper finProductCommonMapper;
     @Autowired
     private FinCashPayRuleMapper finCashPayRuleMapper;
     @Autowired
@@ -326,7 +321,7 @@ public class BusiAutoAddSecInfoService {
             // 设置sql查询参数map
             Map<String, Object> paMap = new HashMap<String, Object>();
             paMap.put("finprodId", finprodId);// 标的代码
-            paMap.put("branch", BookConstant.DEFALUT_BRANCH);
+            paMap.put("branch", 0L);
             // 根据传递的查询类型，获取不同的标的数据
             if(StringUtil.equals("FINPROD_ADD",queryTypeNow)){
                 FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(finprodId);

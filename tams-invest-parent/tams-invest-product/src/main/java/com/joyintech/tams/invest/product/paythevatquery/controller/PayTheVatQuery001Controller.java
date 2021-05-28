@@ -142,7 +142,7 @@ public class PayTheVatQuery001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getBooksetId")
-	public List<SuggestDto> getBooksetId() throws Exception {
+	public Page<SelectOptionDto> getBooksetId() throws Exception {
 		String param = super.getRequest().getParameter("param");
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("param",param);

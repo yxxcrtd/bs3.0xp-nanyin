@@ -14,6 +14,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.autoperiod.irs.AutoPeriodIRSCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessJixuConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
@@ -31,7 +32,6 @@ import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdirsduration.dto.TrdIRSDuration002ProcessDto;
 import com.joyintech.tams.invest.period.trdirsduration.dto.TrdIRSDuration003ProcessDto;
-import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.CommentFunction;
@@ -177,29 +177,29 @@ public class TrdIRSDuration003Service extends BaseService<TrdIRSDuration003Proce
         restTemplate.postForObject(
             ServiceApplication.PERIOD_SERVICE_NAME + "/TrdIRSDuration/doComplete", entity,
             String.class);
-        // jixu接口 start
-        TrdCommDto trdCommDto = new TrdCommDto();
-        if (OperationType.REVOKE == operationType) {
-            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_DELETE);;
-        }
-        else if (OperationType.NEW == operationType) {
-            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_ADD);
-        }
-        else {
-            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_UPDATE);
-        }
-        BaseTotalTradeInfoDto baseTotalTradeInfoDto = entity.getBaseTotalTradeInfoDto();
-        trdCommDto.setHeader(BussinessJixuConstant.消息头_利率互换付息交易);
-        trdCommDto.setTrdFinProductDealTotal(baseTotalTradeInfoDto.getTrdFinProductDealTotal());
-        trdCommDto.setTrdProductDeal(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal());
-        trdCommDto.setPtlTradeList(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getPtlTrade());
-        List<StlPayOrders> stlPayOrdersList = new ArrayList<>();
-        baseTotalTradeInfoDto.getBaseTradeInfoDtoList().forEach(baseDto->{
-            stlPayOrdersList.add(baseDto.getStlPayOrders());
-        });
-        trdCommDto.setStlPayOrdersList(stlPayOrdersList);
-        valuationInterfService.runValInvest2Jixu(trdCommDto);
-        // jixu接口 end
+//        // jixu接口 start
+//        TrdCommDto trdCommDto = new TrdCommDto();
+//        if (OperationType.REVOKE == operationType) {
+//            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_DELETE);;
+//        }
+//        else if (OperationType.NEW == operationType) {
+//            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_ADD);
+//        }
+//        else {
+//            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_UPDATE);
+//        }
+//        BaseTotalTradeInfoDto baseTotalTradeInfoDto = entity.getBaseTotalTradeInfoDto();
+//        trdCommDto.setHeader(BussinessJixuConstant.消息头_利率互换付息交易);
+//        trdCommDto.setTrdFinProductDealTotal(baseTotalTradeInfoDto.getTrdFinProductDealTotal());
+//        trdCommDto.setTrdProductDeal(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal());
+//        trdCommDto.setPtlTradeList(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getPtlTrade());
+//        List<StlPayOrders> stlPayOrdersList = new ArrayList<>();
+//        baseTotalTradeInfoDto.getBaseTradeInfoDtoList().forEach(baseDto->{
+//            stlPayOrdersList.add(baseDto.getStlPayOrders());
+//        });
+//        trdCommDto.setStlPayOrdersList(stlPayOrdersList);
+//        valuationInterfService.runValInvest2Jixu(trdCommDto);
+//        // jixu接口 end
     }
 
     /**

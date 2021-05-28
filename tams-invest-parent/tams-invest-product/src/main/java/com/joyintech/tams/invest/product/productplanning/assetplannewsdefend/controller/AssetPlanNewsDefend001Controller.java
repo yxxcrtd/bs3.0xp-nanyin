@@ -12,7 +12,6 @@ import com.joyintech.tams.invest.product.productplanning.assetplannewsdefend.dto
 import com.joyintech.tams.invest.product.productplanning.assetplannewsdefend.dto.AssetPlanNewsDefend002Dto;
 import com.joyintech.tams.invest.product.productplanning.assetplannewsdefend.service.AssetPlanNewsDefend001Service;
 import com.joyintech.tams.invest.product.productplanning.assetplannewsdefend.service.AssetPlanNewsDefend002Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +69,7 @@ public class AssetPlanNewsDefend001Controller extends BaseController {
     public AjaxResult deleteByPrimaryKey(@RequestBody AssetPlanNewsDefend001Dto dto)
             throws Exception{
 
-        dto.setOperateType(GlobalConstant.OPERATE_TYPE_DELETE);
+        dto.setOperateType("delete");
         ProcessParameter<AssetPlanNewsDefend002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<AssetPlanNewsDefend002Dto> params = new WorkFlowParameter<>();
         params.setElementId(dto.getElementId());
@@ -85,7 +84,7 @@ public class AssetPlanNewsDefend001Controller extends BaseController {
         processParameter.setWorkFlowParameter(params);
         //根据资产规划编号查出详细数据
         AssetPlanNewsDefend002Dto dto1 = assetPlanNewsDefend002Service.queryData(dto.getAssetPlanCode());
-        dto1.setOperateType(GlobalConstant.OPERATE_TYPE_DELETE);
+        dto1.setOperateType("delete");
         // 调用工作流事件，将详细数据存入工作流
         String msg = assetPlanNewsDefend002Service.start(processParameter, dto1);
         // 返回工作流错误信息

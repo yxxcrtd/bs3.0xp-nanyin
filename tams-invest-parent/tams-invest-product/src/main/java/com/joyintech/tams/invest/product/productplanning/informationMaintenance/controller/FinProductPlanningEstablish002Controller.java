@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.product.productplanning.informationMaintenance
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -26,7 +27,6 @@ import com.joyintech.tams.invest.product.productplanning.informationMaintenance.
 import com.joyintech.tams.invest.product.productplanning.informationMaintenance.dto.FinProductPlanning002DetailDto;
 import com.joyintech.tams.invest.product.productplanning.informationMaintenance.dto.FinProductPlanning002Dto;
 import com.joyintech.tams.invest.product.productplanning.informationMaintenance.service.FinProductPlanningEstablish002Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;

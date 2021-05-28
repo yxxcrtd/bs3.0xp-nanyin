@@ -69,4 +69,11 @@ public interface PayTheVatQuery001Mapper {
 	 * @since 1.0
 	 */
 	List<SelectOptionDto> queryChannelIdInfo(Map<String, Object> param);
+
+	/**
+	 * 账套代码
+	 * @param pageParam
+	 * @return
+	 */
+	List<SelectOptionDto> getBooksetIdForSelect(Map<String, Object> pageParam);
 }

@@ -69,7 +69,6 @@ import com.joyintech.tams.invest.interf.dto.FinProdDto;
 import com.joyintech.tams.invest.product.durdeal.dto.FinProductDurDeal001Dto;
 import com.joyintech.tams.invest.product.durdeal.dto.FinProductDurDealDbDataDto;
 import com.joyintech.tams.invest.product.durdeal.dto.InterfProdInfo001Dto;
-import com.joyintech.tams.valuation.common.service.BooksetCommonService;
 
 /**
  * 产品存续期交易查询Service
@@ -100,8 +99,8 @@ public class FinProductDurDeal001Service extends CommonExportService<FinProductD
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
     
-    @Autowired
-    private BooksetCommonService booksetCommonService;
+//    @Autowired
+//    private BooksetCommonService booksetCommonService;
     /**
      * 产品代码下拉框
      *
@@ -481,38 +480,38 @@ public class FinProductDurDeal001Service extends CommonExportService<FinProductD
      * @since 1.0
      */
     private RepDuration gen存续期报送信息(InterfProdInfo001Dto interfProdInfoDto, String platDate) {
-        RepDuration repDuration = new RepDuration();
-        repDuration.setRepFinprodId(interfProdInfoDto.getFinprodId());
-
-      //  repDuration.setRepIssuePartyName(CacheUtil.getSysParam(BussinessConstant.ISSUE_PARTY_NAME));
-        //多级法人改造start add by hxy 20200620
-        if(MultilevelDataAuthorityUtil.isEnabled()) {
-	        	 //联社模式
-	        	 //根据选择的账套组或者账套，查询出它们的所属机构
-	        	String booksetOrg=interfProdInfoDto.getFinprodId();
-	        	Map<String, Object> orgmap=new HashMap<String, Object>();
-	        	orgmap.put("booksetOrg", booksetOrg);
-	        	orgmap.put("dataType", "FINPROD04");
-	        	String orgName=booksetCommonService.selectAssociationModeOrgName(orgmap);
-	        	repDuration.setRepIssuePartyName(orgName);
-	        	
-        	}else{
-        	//银行模式
-        	String orgName=booksetCommonService.selectBankModeOrgName();
-        	repDuration.setRepIssuePartyName(orgName);
-        	
-           }
-        //多级法人改造end add by hxy 20200620
-        
-        
-        repDuration.setRepIssuePartyId(CacheUtil.getSysParam(BussinessConstant.ISSUE_PARTY_ID));
-        repDuration.setRepFinprodRegId(interfProdInfoDto.getProdRegistCode());
-        repDuration.setRepBankProdCode(interfProdInfoDto.getProdid());
-        repDuration.setRepBusVdate(DateUtil.parse(platDate));
-        repDuration.setRepBusMdate(DateUtil.parse(platDate));
-        repDuration.setRepCcy(interfProdInfoDto.getCcy());
-        // 一体化对应etliu start
-        repDuration.setRepDurationRegDate(DateUtil.parse(platDate));
+//        RepDuration repDuration = new RepDuration();
+//        repDuration.setRepFinprodId(interfProdInfoDto.getFinprodId());
+//
+//      //  repDuration.setRepIssuePartyName(CacheUtil.getSysParam(BussinessConstant.ISSUE_PARTY_NAME));
+//        //多级法人改造start add by hxy 20200620
+//        if(MultilevelDataAuthorityUtil.isEnabled()) {
+//	        	 //联社模式
+//	        	 //根据选择的账套组或者账套，查询出它们的所属机构
+//	        	String booksetOrg=interfProdInfoDto.getFinprodId();
+//	        	Map<String, Object> orgmap=new HashMap<String, Object>();
+//	        	orgmap.put("booksetOrg", booksetOrg);
+//	        	orgmap.put("dataType", "FINPROD04");
+//	        	String orgName=booksetCommonService.selectAssociationModeOrgName(orgmap);
+//	        	repDuration.setRepIssuePartyName(orgName);
+//
+//        	}else{
+//        	//银行模式
+//        	String orgName=booksetCommonService.selectBankModeOrgName();
+//        	repDuration.setRepIssuePartyName(orgName);
+//
+//           }
+//        //多级法人改造end add by hxy 20200620
+//
+//
+//        repDuration.setRepIssuePartyId(CacheUtil.getSysParam(BussinessConstant.ISSUE_PARTY_ID));
+//        repDuration.setRepFinprodRegId(interfProdInfoDto.getProdRegistCode());
+//        repDuration.setRepBankProdCode(interfProdInfoDto.getProdid());
+//        repDuration.setRepBusVdate(DateUtil.parse(platDate));
+//        repDuration.setRepBusMdate(DateUtil.parse(platDate));
+//        repDuration.setRepCcy(interfProdInfoDto.getCcy());
+//        // 一体化对应etliu start
+//        repDuration.setRepDurationRegDate(DateUtil.parse(platDate));
         // 一体化对应etliu end
 
         // 一体化对应etliu start 存续期需要参照强成西共通，暂时先不登

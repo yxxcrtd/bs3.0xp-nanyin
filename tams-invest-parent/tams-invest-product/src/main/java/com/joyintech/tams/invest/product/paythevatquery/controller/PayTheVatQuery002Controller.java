@@ -20,6 +20,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.tams.invest.product.common.service.ProductCommonService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,8 +57,6 @@ import com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery002Dto
 import com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery002TableDto;
 import com.joyintech.tams.invest.product.paythevatquery.service.PayTheVatQuery001Service;
 import com.joyintech.tams.invest.product.paythevatquery.service.PayTheVatQuery002Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -78,15 +78,12 @@ public class PayTheVatQuery002Controller extends BaseController{
     
     @Autowired
     private PayTheVatQuery001Service payTheVatQuery001Service;
-    
-    /**
-     * 接口共通
-     */
-    @Autowired
-    private InterfCommonService interfCommonService;
-    
+
     @Autowired
     private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+
+    @Autowired
+	private ProductCommonService productCommonService;
     /**
      * {@inheritDoc}
      */
@@ -166,7 +163,7 @@ public class PayTheVatQuery002Controller extends BaseController{
     }
     /**
      * 校验缴税/退税日期
-     * @param params
+     * @param dto
      * @return
      * @throws Exception
      * @see
@@ -308,7 +305,7 @@ public class PayTheVatQuery002Controller extends BaseController{
     		// 启动流程
     		ProcessParameter<PayTheVatQuery002Dto> proParam = new ProcessParameter<>();
     		WorkFlowParameter<PayTheVatQuery002Dto> params = new WorkFlowParameter<>();
-    		String busiCode = interfCommonService.getTradeid(dto.getTaxidenType(), dto.getCreateTime(), "A");
+    		String busiCode = productCommonService.getTradeid(dto.getTaxidenType(), dto.getCreateTime(), "A");
     		if (StringUtil.isEmpty(payTheVatQuery002Dto.getTotleTradeId())) {
     			payTheVatQuery002Dto.setTotleTradeId(busiCode);
     		}

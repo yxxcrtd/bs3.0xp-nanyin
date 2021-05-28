@@ -1353,4 +1353,93 @@ public class CommonBusinessService extends BaseService {
         BigDecimal result = commonBusinessMapper.selectFaceValue(params);
         return result == null ? new BigDecimal(100) : result;
     }
+
+    /**
+     * 按规则生成回购期限品种
+     */
+    public  String getRepTermType(String finprodType, long termDay) {
+        String termType = null;
+        if (DictCodeListExt1.金融产品类型_债券质押式正回购.getValue().equals(finprodType)
+                || DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue().equals(finprodType)
+                || DictCodeListExt1.金融产品类型_债券买断式正回购.getValue().equals(finprodType)
+                || DictCodeListExt1.金融产品类型_债券买断式逆回购.getValue().equals(finprodType)) {
+            termType = DictCodeList.期限品种_回购_未知.getValue();
+            if (termDay == 1) {
+                termType = DictCodeList.期限品种_回购_1天.getValue();
+            }
+            else if (termDay > 1 && termDay <= 7) {
+                termType = DictCodeList.期限品种_回购_7天.getValue();
+            }
+            else if (termDay > 7 && termDay <= 14) {
+                termType = DictCodeList.期限品种_回购_14天.getValue();
+            }
+            else if (termDay > 14 && termDay <= 21) {
+                termType = DictCodeList.期限品种_回购_21天.getValue();
+            }
+            else if (termDay > 21 && termDay <= 30) {
+                termType = DictCodeList.期限品种_回购_1个月.getValue();
+            }
+            else if (termDay > 30 && termDay <= 60) {
+                termType = DictCodeList.期限品种_回购_2个月.getValue();
+            }
+            else if (termDay > 60 && termDay <= 91) {
+                termType = DictCodeList.期限品种_回购_3个月.getValue();
+            }
+            else if (termDay > 91 && termDay <= 121) {
+                termType = DictCodeList.期限品种_回购_4个月.getValue();
+            }
+            else if (termDay > 121 && termDay <= 182) {
+                termType = DictCodeList.期限品种_回购_6个月.getValue();
+            }
+            else if (termDay > 182 && termDay <= 273) {
+                termType = DictCodeList.期限品种_回购_9个月.getValue();
+            }
+            else if (termDay > 273 && termDay <= 365) {
+                termType = DictCodeList.期限品种_回购_1年.getValue();
+            }
+            else {
+                termType = DictCodeList.期限品种_回购_未知.getValue();
+            }
+        }
+        else if (DictCodeListExt1.金融产品类型_拆入.getValue().equals(finprodType)
+                || DictCodeListExt1.金融产品类型_拆出.getValue().equals(finprodType)
+                || DictCodeListExt1.金融产品类型_同业借款.getValue().equals(finprodType)) {
+            if (termDay == 1) {
+                termType = DictCodeList.期限品种_内部拆借_隔夜.getValue();
+            }
+            else if (termDay > 1 && termDay <= 7) {
+                termType = DictCodeList.期限品种_内部拆借_7天.getValue();
+            }
+            else if (termDay > 7 && termDay <= 14) {
+                termType = DictCodeList.期限品种_内部拆借_14天.getValue();
+            }
+            else if (termDay > 14 && termDay <= 21) {
+                termType = DictCodeList.期限品种_内部拆借_21天.getValue();
+            }
+            else if (termDay > 21 && termDay <= 30) {
+                termType = DictCodeList.期限品种_内部拆借_1个月.getValue();
+            }
+            else if (termDay > 30 && termDay <= 60) {
+                termType = DictCodeList.期限品种_内部拆借_2个月.getValue();
+            }
+            else if (termDay > 60 && termDay <= 91) {
+                termType = DictCodeList.期限品种_内部拆借_3个月.getValue();
+            }
+            else if (termDay > 91 && termDay <= 182) {
+                termType = DictCodeList.期限品种_内部拆借_6个月.getValue();
+            }
+            else if (termDay > 182 && termDay <= 273) {
+                termType = DictCodeList.期限品种_内部拆借_9个月.getValue();
+            }
+            else if (termDay > 273 && termDay <= 365) {
+                termType = DictCodeList.期限品种_内部拆借_12个月.getValue();
+            }
+            else {
+                termType = DictCodeList.期限品种_内部拆借_1年以上.getValue();
+            }
+        }
+
+        return termType;
+    }
+
 }

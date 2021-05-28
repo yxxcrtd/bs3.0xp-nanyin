@@ -6,6 +6,7 @@
 package com.joyintech.tams.invest.common.autoperiod.planinterest;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -25,7 +26,6 @@ import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.period.trdplanintduration.TrdPlanInterestDurationDto;
 import com.joyintech.tams.invest.common.dto.period.trdprojduration.TrdProjectDurationDto;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

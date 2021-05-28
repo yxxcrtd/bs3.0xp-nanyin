@@ -526,4 +526,14 @@
     	</if>
 		
     </select>
+
+	<select id="queryPdSequences" resultType="Integer" useCache="false"
+			flushCache="true">
+		select PD_SEQUENCE.nextval from dual
+	</select>
+
+	<select id="queryOrderSequences" resultType="Integer" useCache="false"
+			flushCache="true">
+		select ORDER_SEQUENCE.nextval from dual
+	</select>
 </mapper>

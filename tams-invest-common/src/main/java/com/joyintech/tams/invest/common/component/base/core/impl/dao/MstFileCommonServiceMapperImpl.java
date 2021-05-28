@@ -13,7 +13,7 @@ package com.joyintech.tams.invest.common.component.base.core.impl.dao;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;
-import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.invest.common.dto.valuationusemerge.WflValidInputParameter;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

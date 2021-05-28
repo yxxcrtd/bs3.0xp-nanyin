@@ -1,5 +1,6 @@
 package com.joyintech.service.riskrdsinf.http.service;
 
+import com.joyintech.system.user.dto.SysUserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.riskrdsinf.common.dto.HttpResult;
 import com.joyintech.service.riskrdsinf.http.dao.HttpReceiveJsonDao;
-import com.joyintech.system.user.dto.SysUserDto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -168,7 +168,7 @@ public class HttpReceiveJsonService {
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@DataSource(DataSourceType.OTHER)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    private void handleSysUserInfo(Map result,String interfType){
+    public void handleSysUserInfo(Map result,String interfType){
         // 处理用户信息数据
         if(SYS_USER.equals(interfType)){
             logger.info("正在处理用户信息数据");

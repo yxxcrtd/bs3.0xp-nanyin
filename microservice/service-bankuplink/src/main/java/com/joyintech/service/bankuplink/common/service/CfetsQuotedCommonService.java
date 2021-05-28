@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.background.component.uplink.interbank.business.dto.*;
+import com.joyintech.system.base.entity.SysUserAdd;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -54,7 +55,6 @@ import com.joyintech.service.bankuplink.ibu.service.IbuComponentCommonService;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.service.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
-import com.joyintech.system.base.entity.SysUserAdd;
 import com.joyintech.tams.common.base.dao.EtrDistributeInterfTmpMapper;
 import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;

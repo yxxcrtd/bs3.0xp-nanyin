@@ -64,7 +64,6 @@ import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProdu
 import com.joyintech.tams.invest.product.productelement.anaplerotic.service.FinProductAnapleroticInfo002Service;
 import com.joyintech.tams.invest.product.productelement.build.dto.FinProductBuild002Dto;
 import com.joyintech.tams.invest.product.productelement.build.service.FinProductBuild002Service;
-import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -130,12 +129,6 @@ public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment
      */
     @Autowired
     private BussFinProductFeeInfoService bussFinProductFeeInfoService;
-
-    /**
-     * {@linkplain}
-     */
-    @Autowired
-    private ValInterfCommonServiceApi valInterfCommonServiceApi;
 
     /**
      * {@linkplain}
@@ -917,10 +910,10 @@ public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment
         restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinMdateAdjustment/updateProdPlanList",
             finProductBuild002Dto, Integer.class);
         // 调用接口，修改账套起始日和结束日
-        valInterfCommonServiceApi.updateProdMdate(finProductBuild002Dto.getPtlId(), DictCodeListExt1.金融产品类型_投资组合.getValue(), 0l,
-            entity.getMdate());
-        valInterfCommonServiceApi.updateProdMdate(entity.getFinprodId(), DictCodeListExt1.金融产品类型_理财产品.getValue(), 0l,
-            entity.getMdate());
+//        valInterfCommonServiceApi.updateProdMdate(finProductBuild002Dto.getPtlId(), DictCodeListExt1.金融产品类型_投资组合.getValue(), 0l,
+//            entity.getMdate());
+//        valInterfCommonServiceApi.updateProdMdate(entity.getFinprodId(), DictCodeListExt1.金融产品类型_理财产品.getValue(), 0l,
+//            entity.getMdate());
     }
     
     /**

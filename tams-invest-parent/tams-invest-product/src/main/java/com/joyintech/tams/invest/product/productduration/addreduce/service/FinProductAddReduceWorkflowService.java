@@ -24,7 +24,6 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.BussTrdPositionDto;
 import com.joyintech.tams.invest.common.trade.service.TradeProductDealCommService;
 import com.joyintech.tams.invest.product.productduration.addreduce.dto.FinProductAddReduce002Dto;
-import com.joyintech.tams.valuation.common.service.BooksetCommonService;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -108,8 +107,8 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
     @Autowired
     private TrdAsynHandleStatusMapper trdAsynHandleStatusMapper;
     
-    @Autowired
-    private BooksetCommonService booksetCommonService;
+//    @Autowired
+//    private BooksetCommonService booksetCommonService;
 
     @Override
     public void doComplete(FinProductAddReduce002Dto entity, OperationType type) {
@@ -173,12 +172,12 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
 	        	Map<String, Object> orgmap=new HashMap<String, Object>();
 	        	orgmap.put("booksetOrg", booksetOrg);
 	        	orgmap.put("dataType", "FINPROD04");
-	        	String orgName=booksetCommonService.selectAssociationModeOrgName(orgmap);
+	        	String orgName=baseTradeProductDealCommService.selectAssociationModeOrgName(orgmap);
 	        	repDuration.setRepIssuePartyName(orgName);
 	        	
         	}else{
         	//银行模式
-        	String orgName=booksetCommonService.selectBankModeOrgName();
+        	String orgName=baseTradeProductDealCommService.selectBankModeOrgName();
         	repDuration.setRepIssuePartyName(orgName);
         	
            }

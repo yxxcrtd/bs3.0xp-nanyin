@@ -12,6 +12,7 @@ package com.joyintech.tams.component.business.riskrds.service;
 
 import java.math.BigDecimal;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory; 
@@ -52,8 +53,7 @@ import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDt
 import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
-import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;  
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import java.util.*;
 
 /**

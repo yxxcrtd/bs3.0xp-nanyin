@@ -22,7 +22,6 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTrade002Dto;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.OnWayRep002Dto;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.UnOpenQuota002Dto;
-import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,8 +59,8 @@ public class EtrAgreRepTrade002Service extends CommonExportService<EtrAgreRepTra
     // yyyy-MM-dd HH:mm:ss
     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
-    @Autowired
-    private FinProductCommonBatchService finProductCommonBatchService;
+//    @Autowired
+//    private FinProductCommonBatchService finProductCommonBatchService;
     /**
      * 分页查询产品持仓信息
      * <功能详细描述>

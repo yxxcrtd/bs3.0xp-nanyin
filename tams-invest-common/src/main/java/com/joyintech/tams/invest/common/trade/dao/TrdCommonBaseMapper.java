@@ -285,4 +285,47 @@ public interface TrdCommonBaseMapper {
 	
 	List<PtlPortfolio> selectPortfolioIds(Map<String, Object> map);
 
+    /**
+     * 根据投资组合代码查询对应的理财产品信息
+     * @param portfolidId
+     * @return
+     */
+    FinProduct queryFinProductByPortfolidId(String portfolidId);
+
+    //多级法人改造start add by hxy 20200617
+    /**
+     * 银行模式时，返回机构
+     * @return
+     */
+    public String selectBankModeOrgName();
+    /**
+     * 联社机构时，选择账套，返回机构
+     * @return
+     */
+    public String selectAssociationModeOrgName(Map<String,Object> orgmap);
+    /**
+     * 联社机构时，选择账套组返回机构
+     * @return
+     */
+    public String selectAssociationModeOrgGrpName(Map<String,Object> orgmap);
+    //多级法人改造end add by hxy 20200617
+
+    /**
+     * 查询标的现金流计划list
+     *
+     * @param paMap 传递参数
+     * @return List<TargetCashPlan>
+     * @see
+     * @since 1.0
+     */
+    List<FinCashPlan> getTargetCashPlanList(Map<String, Object> paMap);
+
+    /**
+     * 根据採番名採番
+     *
+     * @param param 採番参数
+     * @return 採番结果
+     * @see
+     */
+    Long getSequenceIndexData(Map<String, String> param);
 }

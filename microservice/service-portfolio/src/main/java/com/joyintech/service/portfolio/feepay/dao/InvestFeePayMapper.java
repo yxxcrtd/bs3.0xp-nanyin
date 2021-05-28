@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto;
+import com.joyintech.tams.invest.common.dto.common.SubjectBalance;
+import com.joyintech.tams.invest.common.dto.common.SubjectBalanceSearchDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +35,7 @@ public interface InvestFeePayMapper {
     
     /**
      * 证券账户账号联想下拉框
-     * @param param
+     * @param secAcctId
      * @return List
      * @see
      * @since 1.0  
@@ -201,8 +201,8 @@ public interface InvestFeePayMapper {
     /**
      * 根据产品代码费用Id查现金流二级类型
      * 
-     * @param cashId 现金流代码
-     * @param cashNum 现金流序号
+     * @param finprodId
+     * @param feeId
      * @return 待处理的计划个数
      */
     String selectCashType2(@Param("finprodId") String finprodId, @Param("feeId") String feeId);
@@ -211,8 +211,8 @@ public interface InvestFeePayMapper {
     /**
      * 根据产品代码费用Id查现金流二级类型(分层)
      * 
-     * @param cashId 现金流代码
-     * @param cashNum 现金流序号
+     * @param finprodId
+     * @param feeId
      * @return 待处理的计划个数
      */
     String selectLayyerdCashType2(@Param("finprodId") String finprodId, @Param("feeId") String feeId);
@@ -229,7 +229,7 @@ public interface InvestFeePayMapper {
      * @param map
      * @return
      */
-    Integer checkpayAmtrule(Map<String, Object> ma);
+    Integer checkpayAmtrule(Map<String, Object> map);
 
     /**
      * 通过交易编号查询费用信息
@@ -241,16 +241,14 @@ public interface InvestFeePayMapper {
     /**
      * 根据产品代码费用Id查现金流ID
      * 
-     * @param cashId 现金流代码
-     * @param cashNum 现金流序号
+     * @param map
      * @return 待处理的计划个数
      */
     String selectCashId(Map<String,Object> map);
     /**
      * 根据产品代码，计提日期获取 计提开始日
      * 
-     * @param cashId 现金流代码
-     * @param cashNum 现金流序号
+     * @param map
      * @return 待处理的计划个数
      */
     Date queryAccrStrDate(Map<String,Object> map);
@@ -330,8 +328,7 @@ public interface InvestFeePayMapper {
     
     /**
      * 根据组合id查询产品信息
-     * @param ptlId 组合id
-     * @return 产品信息
+     * @param map
      * @see
      * @since 1.0
      */

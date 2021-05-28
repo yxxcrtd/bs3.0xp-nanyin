@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jixu.common.util.DateUtil;
+import com.joyintech.framework.util.DateUtil;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -183,6 +183,6 @@ public class MstMarketCalendarInfoService
             }
         }
 
-        return DateUtil.convertD2YYYYMMDD(cdate);
+        return DateUtil.format(cdate,DateUtil.DEFAULT_OTHER_FORMAT);
     }
 }

@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

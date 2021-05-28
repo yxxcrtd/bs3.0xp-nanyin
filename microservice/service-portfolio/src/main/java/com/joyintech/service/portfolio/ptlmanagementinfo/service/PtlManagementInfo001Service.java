@@ -91,8 +91,8 @@ import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.invest.common.valuationinterf.dto.ProdOtherInfoInitInputDto;
-import com.joyintech.tams.valuation.common.interf.common.ResultCode;
-import com.joyintech.tams.valuation.common.interf.common.ResultObject;
+//import com.joyintech.tams.valuation.common.interf.common.ResultCode;
+//import com.joyintech.tams.valuation.common.interf.common.ResultObject;
 
 /**
  * 组合管理Service
@@ -205,8 +205,8 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
     @Transactional(rollbackFor = Exception.class)
     // 一体化对应etliu start
 //    public int insertData (PtlManagementInfoDto entity){
-    public ResultObject insertData(PtlManagementInfoDto entity, boolean isNewData) {
-    	ResultObject resultObject = new ResultObject(ResultCode.SUCCESS);
+    public void insertData(PtlManagementInfoDto entity, boolean isNewData) {
+//    	ResultObject resultObject = new ResultObject(ResultCode.SUCCESS);
         // 一体化对应etliu end
         PaPtlPortfolio paPtlPortfolio = new PaPtlPortfolio();
         BeanUtil.copyPropertiesIgnoreNull(paPtlPortfolio, entity);
@@ -273,14 +273,14 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
                 inputDto.setProdAcctDataList(prodAcctDataList);
             }
 
-            resultObject = valuationInterfService.prodOtherInfoInit(inputDto);
+//            resultObject = valuationInterfService.prodOtherInfoInit(inputDto);
         /** modify by yanya on 20191114 子组合也调用估值接口，生成账套
         }**/
         // 一体化对应etliu end
 //        
 //        ptlManagementInfo001Mapper.insertPaPtlPortfolio(entity);
 //        ptlManagementInfo001Mapper.insertPtlPortfolio(entity);
-        return resultObject;
+//        return resultObject;
     }
     /**
      * 匹配组合包以便关联指标
@@ -363,7 +363,7 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
         ptlManagementInfo001Mapper.deleteRskPortfolioPackageDtlByportId(entity.getPortfolioId());
         paPtlPortfolioMapper.deleteByPrimaryKey(entity.getPortfolioId());
         ptlPortfolioMapper.deleteByPrimaryKey(entity.getPortfolioId());
-        ptlManagementInfo001Mapper.deletePtlCapacctInfoByPrimaryKey(entity.getPortfolioId());
+//        ptlManagementInfo001Mapper.deletePtlCapacctInfoByPrimaryKey(entity.getPortfolioId());
 
         //如果是子组合删除组合资金分配比例数据 add by gejiaao 2019/08/27 start
         if (StringUtil.equals(entity.getPortfolioType(), DictCodeListExt1.组合类型_子组合.getValue())
@@ -427,10 +427,11 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
      * @see
      * @since 1.0
      */
-    public ResultObject insert(PtlManagementInfoDto dto) {
+    public void insert(PtlManagementInfoDto dto) {
         // 一体化对应etliu start
 //        return insertData(dto);
-        return insertData(dto, true);
+        insertData(dto, true);
+//        return insertData(dto, true);
         // 一体化对应etliu end
     }
 
@@ -442,12 +443,13 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
      * @see
      * @since 1.0
      */
-    public ResultObject update(PtlManagementInfoDto dto) {
+    public void update(PtlManagementInfoDto dto) {
         deleteData(dto);
 
         // 一体化对应etliu start
 //        return insertData(dto);
-        return insertData(dto, false);
+        insertData(dto, false);
+//        return insertData(dto, false);
         // 一体化对应etliu end
     }
 
@@ -1216,7 +1218,7 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
             }
             inputDto.setProdAcctDataList(prodAcctDataList);
         }
-        valuationInterfService.prodOtherInfoInit(inputDto);
+//        valuationInterfService.prodOtherInfoInit(inputDto);
         /** add by yanya on 20191114 子组合新建调用估值接口 end**/
         return "Success";
     }
@@ -1253,7 +1255,7 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
             }
             inputDto.setProdAcctDataList(prodAcctDataList);
         }
-        valuationInterfService.prodOtherInfoInit(inputDto);
+//        valuationInterfService.prodOtherInfoInit(inputDto);
         /** add by yanya on 20191114 子组合修改调用估值接口 end**/
         return "Success";
     }

@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.constant.DictCodeBaseSubjectNatrue;
+import com.joyintech.tams.invest.common.constant.ValDictCodeList;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,8 +39,6 @@ import com.joyintech.tams.component.business.evaluation.impl.EvalIndexAlgorithmI
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.product.evaluationentrance.dto.EvaluationRateDto;
-import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
-import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 
 /**
  * @author yangxiaofeng 2019年10月9日 评价指标计算 方法调用入口

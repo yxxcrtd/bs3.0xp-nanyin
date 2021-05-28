@@ -24,7 +24,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.trade.investtrade.investdealquery.dto.TrdDealQueryDto;
 import com.joyintech.tams.invest.trade.investtrade.investdealquery.service.TrdInvestDealQuery001Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant; 
 
 /**
  * 〈一句话功能简述〉

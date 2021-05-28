@@ -29,11 +29,11 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
 import com.joyintech.tams.invest.entrust.etragrereptrade.service.EtrAgreRepTrade001Service;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
 import com.joyintech.tams.systemtools.util.SysDatadictUtil;
-import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -79,10 +79,13 @@ public class EtrAgreRepTrade001Controller extends BaseController{
     
     @Autowired
     private EtrAgreRepTrade001Service etrAgreRepTrade001Service;
-    
-    
+
     @Autowired
-    private FinProductCommonBatchService finProductCommonBatchService;
+    private TrdCommonBaseService trdCommonBaseService;
+    
+    
+//    @Autowired
+//    private FinProductCommonBatchService finProductCommonBatchService;
 
     @Autowired
     private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
@@ -218,7 +221,7 @@ public class EtrAgreRepTrade001Controller extends BaseController{
     public String getFaceValue() {
     	String repSecId = getParam("repSecId");
     	String iPlatformDate = getParam("iPlatformDate");
-    	BigDecimal price =  finProductCommonBatchService.getFaceValue(repSecId,DateUtil.parse(iPlatformDate));
+    	BigDecimal price =  trdCommonBaseService.getFaceValue(repSecId,DateUtil.parse(iPlatformDate));
         if(price!=null){
         	return price.toString();
         }

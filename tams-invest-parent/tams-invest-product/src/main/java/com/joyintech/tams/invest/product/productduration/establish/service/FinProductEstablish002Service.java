@@ -622,14 +622,14 @@ public class FinProductEstablish002Service extends BaseService<FinProductEstabli
             if (this.isIsCycle(entity)) {
                 finTradeProductMapper.insertSelective(finTradeProduct);
             }
-            // 一体化对应etliu start
-            // 产品成立 周期型产品申购，调用估值接口
-            ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
-            inputDto.setPageId("FinProductEstablish002");
-            inputDto.setFinTradeProduct(finTradeProduct);
-
-            valuationInterfService.prodOtherInfoInit(inputDto);
-            // 一体化对应etliu end
+//            // 一体化对应etliu start
+//            // 产品成立 周期型产品申购，调用估值接口
+//            ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
+//            inputDto.setPageId("FinProductEstablish002");
+//            inputDto.setFinTradeProduct(finTradeProduct);
+//
+//            valuationInterfService.prodOtherInfoInit(inputDto);
+//            // 一体化对应etliu end
         }
     }
 

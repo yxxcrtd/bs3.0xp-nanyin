@@ -18,6 +18,8 @@ import com.joyintech.framework.base.dto.Product;
 import com.joyintech.framework.base.service.ProductService;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.invest.product.common.service.ProductCommonService;
 import com.joyintech.tams.invest.product.messageadjust.maintenance.service.FinOpenPlanMaintenanceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +51,6 @@ import com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.s
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticInfoDto;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticPlanDto;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.service.FinProductAnapleroticInfo002Service;
-import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
-import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;

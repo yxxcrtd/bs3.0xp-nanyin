@@ -248,98 +248,98 @@ public class TrdStockBonus002Service extends BaseService<TrdStockBonus002Dto>
         // 新建交易撤销数据 或 插入Entity到对应的业务DB中, 并删除流程表中的数据
         restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdStockBonus/doComplete", entity,
             String.class);
-        //调用jixu接口
-        trdcom.setTrdFinProductDealTotal(entity.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal());
-        List<BaseTradeInfoDto> baseTradeInfoDtoList = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
-        // 子组合jixu出账bug对应 modify by renping 20200325 start
-        List<TrdStockBonus002Dto> trdProductDeals =  new ArrayList<>();
-        if(OperationType.REVOKE == type){
-            Map<String, Object> map = new HashMap<>();
-            map.put("totleTradeId", entity.getpTradeId());
-    		trdProductDeals = restTemplate.postForList(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdStockBonus/getRTrdProductDeals", map,
-    		    TrdStockBonus002Dto.class);
-        }
-        // 子组合jixu出账bug对应 modify by renping 20200325 end
-        for (BaseTradeInfoDto baseTradeInfoDto:baseTradeInfoDtoList
-        ) {
-            if(StringUtil.equals(DictCodeList.交易方向_现金分红.getValue(),baseTradeInfoDto.getTrdProductDeal().getPs())
-                    ||StringUtil.equals(DictCodeList.交易方向_红利再投.getValue(),baseTradeInfoDto.getTrdProductDeal().getPs())) {
-                if(baseTradeInfoDto.getStlPayOrders()!=null){
-                	trdcom.setStlPayOrdersList(Arrays.asList(baseTradeInfoDto.getStlPayOrders()));
-                }
-                if(OperationType.REVOKE == type&&trdProductDeals!=null && !trdProductDeals.isEmpty()){
-                    // 子组合jixu出账bug对应 modify by renping 20200325 start
-                    for (TrdStockBonus002Dto deal : trdProductDeals) {
-                        // 交易方向相同、组合相同、证券账户相同才能算是同一种交易
-                        if (StringUtil.equals(deal.getPs(),
-                            baseTradeInfoDto.getTrdProductDeal().getPs())
-                            && StringUtil.equals(deal.getPortfolioId(),
-                                baseTradeInfoDto.getTrdProductDealAdd().getPortfolioId())
-                            && ((StringUtil.isEmpty(deal.getSecManageAcctId())
-                                 && StringUtil.isEmpty(
-                                     baseTradeInfoDto.getTrdProductDeal().getSecManageAcctId()))
-                                || StringUtil.equals(deal.getSecManageAcctId(),
-                                    baseTradeInfoDto.getTrdProductDeal().getSecManageAcctId()))) {
-                            baseTradeInfoDto.getTrdProductDeal().setTradeId(
-                                (String)deal.getBusiCode());
-                            trdcom.setTrdProductDeal(baseTradeInfoDto.getTrdProductDeal());
-                        }
-                    }
-                    // 子组合jixu出账bug对应 modify by renping 20200325 end
-                }else{
-                	trdcom.setTrdProductDeal(baseTradeInfoDto.getTrdProductDeal());
-                }
-                trdcom.setTrdProductDealAdd(baseTradeInfoDto.getTrdProductDealAdd());
-                trdcom.setPtlTradeList(baseTradeInfoDto.getPtlTrade());
-                valuationInterfService.runValInvest2Jixu(trdcom);
-            }
-            // 子组合jixu出账bug对应 add by renping 20200325 start
-            // 如果有子组合交易时，子组合交易也需要调用jixu
-            if (StringUtil.isEmptyList(baseTradeInfoDto.getBaseTradeInfoDtoList())) {
-                continue;
-            }
-            for (BaseTradeInfoDto baseTradeInfoDtoSub : baseTradeInfoDto.getBaseTradeInfoDtoList()) {
-                if (baseTradeInfoDtoSub.getTrdProductDeal() == null) {
-                    continue;
-                }
-                if (StringUtil.equals(DictCodeList.交易方向_现金分红.getValue(),
-                    baseTradeInfoDtoSub.getTrdProductDeal().getPs())
-                    || StringUtil.equals(DictCodeList.交易方向_红利再投.getValue(),
-                        baseTradeInfoDtoSub.getTrdProductDeal().getPs())) {
-                    if (baseTradeInfoDtoSub.getStlPayOrders() != null) {
-                        trdcom.setStlPayOrdersList(
-                            Arrays.asList(baseTradeInfoDtoSub.getStlPayOrders()));
-                    }
-                    if (OperationType.REVOKE == type && trdProductDeals != null
-                        && !trdProductDeals.isEmpty()) {
-                        for (TrdStockBonus002Dto deal : trdProductDeals) {
-                            // 交易方向相同、组合相同、证券账户相同才能算是同一种交易
-                            if (StringUtil.equals(deal.getPs(),
-                                baseTradeInfoDtoSub.getTrdProductDeal().getPs())
-                                && StringUtil.equals(deal.getPortfolioId(),
-                                    baseTradeInfoDtoSub.getTrdProductDealAdd().getPortfolioId())
-                                && ((StringUtil.isEmpty(deal.getSecManageAcctId())
-                                     && StringUtil.isEmpty(
-                                         baseTradeInfoDtoSub.getTrdProductDeal().getSecManageAcctId()))
-                                    || StringUtil.equals(deal.getSecManageAcctId(),
-                                        baseTradeInfoDtoSub.getTrdProductDeal().getSecManageAcctId()))) {
-                                baseTradeInfoDtoSub.getTrdProductDeal().setTradeId(
-                                    (String)deal.getBusiCode());
-                                trdcom.setTrdProductDeal(baseTradeInfoDtoSub.getTrdProductDeal());
-                            }
-                        }
-                    }
-                    else {
-                        trdcom.setTrdProductDeal(baseTradeInfoDtoSub.getTrdProductDeal());
-                    }
-                    trdcom.setTrdProductDealAdd(baseTradeInfoDtoSub.getTrdProductDealAdd());
-                    trdcom.setPtlTradeList(baseTradeInfoDtoSub.getPtlTrade());
-                    valuationInterfService.runValInvest2Jixu(trdcom);
-                }
-            }
-            // 子组合jixu出账bug对应 add by renping 20200325 end
-        }
-		
+//        //调用jixu接口
+//        trdcom.setTrdFinProductDealTotal(entity.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal());
+//        List<BaseTradeInfoDto> baseTradeInfoDtoList = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
+//        // 子组合jixu出账bug对应 modify by renping 20200325 start
+//        List<TrdStockBonus002Dto> trdProductDeals =  new ArrayList<>();
+//        if(OperationType.REVOKE == type){
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("totleTradeId", entity.getpTradeId());
+//    		trdProductDeals = restTemplate.postForList(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdStockBonus/getRTrdProductDeals", map,
+//    		    TrdStockBonus002Dto.class);
+//        }
+//        // 子组合jixu出账bug对应 modify by renping 20200325 end
+//        for (BaseTradeInfoDto baseTradeInfoDto:baseTradeInfoDtoList
+//        ) {
+//            if(StringUtil.equals(DictCodeList.交易方向_现金分红.getValue(),baseTradeInfoDto.getTrdProductDeal().getPs())
+//                    ||StringUtil.equals(DictCodeList.交易方向_红利再投.getValue(),baseTradeInfoDto.getTrdProductDeal().getPs())) {
+//                if(baseTradeInfoDto.getStlPayOrders()!=null){
+//                	trdcom.setStlPayOrdersList(Arrays.asList(baseTradeInfoDto.getStlPayOrders()));
+//                }
+//                if(OperationType.REVOKE == type&&trdProductDeals!=null && !trdProductDeals.isEmpty()){
+//                    // 子组合jixu出账bug对应 modify by renping 20200325 start
+//                    for (TrdStockBonus002Dto deal : trdProductDeals) {
+//                        // 交易方向相同、组合相同、证券账户相同才能算是同一种交易
+//                        if (StringUtil.equals(deal.getPs(),
+//                            baseTradeInfoDto.getTrdProductDeal().getPs())
+//                            && StringUtil.equals(deal.getPortfolioId(),
+//                                baseTradeInfoDto.getTrdProductDealAdd().getPortfolioId())
+//                            && ((StringUtil.isEmpty(deal.getSecManageAcctId())
+//                                 && StringUtil.isEmpty(
+//                                     baseTradeInfoDto.getTrdProductDeal().getSecManageAcctId()))
+//                                || StringUtil.equals(deal.getSecManageAcctId(),
+//                                    baseTradeInfoDto.getTrdProductDeal().getSecManageAcctId()))) {
+//                            baseTradeInfoDto.getTrdProductDeal().setTradeId(
+//                                (String)deal.getBusiCode());
+//                            trdcom.setTrdProductDeal(baseTradeInfoDto.getTrdProductDeal());
+//                        }
+//                    }
+//                    // 子组合jixu出账bug对应 modify by renping 20200325 end
+//                }else{
+//                	trdcom.setTrdProductDeal(baseTradeInfoDto.getTrdProductDeal());
+//                }
+//                trdcom.setTrdProductDealAdd(baseTradeInfoDto.getTrdProductDealAdd());
+//                trdcom.setPtlTradeList(baseTradeInfoDto.getPtlTrade());
+//                valuationInterfService.runValInvest2Jixu(trdcom);
+//            }
+//            // 子组合jixu出账bug对应 add by renping 20200325 start
+//            // 如果有子组合交易时，子组合交易也需要调用jixu
+//            if (StringUtil.isEmptyList(baseTradeInfoDto.getBaseTradeInfoDtoList())) {
+//                continue;
+//            }
+//            for (BaseTradeInfoDto baseTradeInfoDtoSub : baseTradeInfoDto.getBaseTradeInfoDtoList()) {
+//                if (baseTradeInfoDtoSub.getTrdProductDeal() == null) {
+//                    continue;
+//                }
+//                if (StringUtil.equals(DictCodeList.交易方向_现金分红.getValue(),
+//                    baseTradeInfoDtoSub.getTrdProductDeal().getPs())
+//                    || StringUtil.equals(DictCodeList.交易方向_红利再投.getValue(),
+//                        baseTradeInfoDtoSub.getTrdProductDeal().getPs())) {
+//                    if (baseTradeInfoDtoSub.getStlPayOrders() != null) {
+//                        trdcom.setStlPayOrdersList(
+//                            Arrays.asList(baseTradeInfoDtoSub.getStlPayOrders()));
+//                    }
+//                    if (OperationType.REVOKE == type && trdProductDeals != null
+//                        && !trdProductDeals.isEmpty()) {
+//                        for (TrdStockBonus002Dto deal : trdProductDeals) {
+//                            // 交易方向相同、组合相同、证券账户相同才能算是同一种交易
+//                            if (StringUtil.equals(deal.getPs(),
+//                                baseTradeInfoDtoSub.getTrdProductDeal().getPs())
+//                                && StringUtil.equals(deal.getPortfolioId(),
+//                                    baseTradeInfoDtoSub.getTrdProductDealAdd().getPortfolioId())
+//                                && ((StringUtil.isEmpty(deal.getSecManageAcctId())
+//                                     && StringUtil.isEmpty(
+//                                         baseTradeInfoDtoSub.getTrdProductDeal().getSecManageAcctId()))
+//                                    || StringUtil.equals(deal.getSecManageAcctId(),
+//                                        baseTradeInfoDtoSub.getTrdProductDeal().getSecManageAcctId()))) {
+//                                baseTradeInfoDtoSub.getTrdProductDeal().setTradeId(
+//                                    (String)deal.getBusiCode());
+//                                trdcom.setTrdProductDeal(baseTradeInfoDtoSub.getTrdProductDeal());
+//                            }
+//                        }
+//                    }
+//                    else {
+//                        trdcom.setTrdProductDeal(baseTradeInfoDtoSub.getTrdProductDeal());
+//                    }
+//                    trdcom.setTrdProductDealAdd(baseTradeInfoDtoSub.getTrdProductDealAdd());
+//                    trdcom.setPtlTradeList(baseTradeInfoDtoSub.getPtlTrade());
+//                    valuationInterfService.runValInvest2Jixu(trdcom);
+//                }
+//            }
+//            // 子组合jixu出账bug对应 add by renping 20200325 end
+//        }
+//
 	}
 
 	

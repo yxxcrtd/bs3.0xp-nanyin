@@ -16,11 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jixu.common.tool.JixuUserUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
@@ -277,7 +277,7 @@ public class FlowRiskSceneManage002Service extends BaseService<FlowRiskSceneMana
 //    @DataSource(DataSourceType.STRESSTEST)
     public void insert(FlowRiskSceneManage002Dto dto) {
 //        DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
-        String username=JixuUserUtil.getLoginUserName();
+        String username= SecurityUtil.getLoginUser().getUserName();
         SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();
         //情景表新增

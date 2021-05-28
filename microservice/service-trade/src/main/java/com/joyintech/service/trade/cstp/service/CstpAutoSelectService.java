@@ -11,14 +11,15 @@
 package com.joyintech.service.trade.cstp.service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jixu.common.util.DateUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -69,7 +70,7 @@ public class CstpAutoSelectService extends BaseService<CstpSelectDto>{
      * @param map
      * @return
      */
-    public int matchEntrust(Map<String, Object> map){
+    public int matchEntrust(Map<String, Object> map) throws Exception {
     	map.put("cstpType","cstp");
     	map.put("entrustReceive", DictCodeList.委托状态_已接收.getValue());
     	map.put("entrustCompleted", DictCodeList.委托状态_已完成.getValue());
@@ -119,7 +120,7 @@ public class CstpAutoSelectService extends BaseService<CstpSelectDto>{
 			match.setEntrustId(trdCommandReceive001Dto.getEntrustId());
 			match.setMatchNum(match_num);
 			match.setMatchType("1");
-			match.setTradeDate(DateUtil.convertStr2Date2(map.get("tradeDate").toString()));
+			match.setTradeDate(DateUtils.parseDate(map.get("tradeDate").toString()));
 			match.setfSysId("01");
 			match_list.add(match);
 			if(lastqty.compareTo(BigDecimal.ZERO)==0){

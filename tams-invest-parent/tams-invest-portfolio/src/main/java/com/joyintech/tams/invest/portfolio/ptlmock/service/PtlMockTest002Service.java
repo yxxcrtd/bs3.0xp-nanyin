@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.joyintech.calculation.shell.PriceByYieldCalculator;
 import com.joyintech.calculation.shell.param.PriceYieldOutParameter;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.common.base.entity.FinBaseRuleInfo;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinCashInfo;
@@ -132,7 +133,6 @@ import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.portfolio.ptlmock.dto.PtlMockTest002Dto;
 import com.joyintech.tams.invest.portfolio.ptlmock.dto.PtlMockTestTaaDto;
 import com.joyintech.tams.invest.portfolio.ptlmock.dto.PtlMockTestTradeDto;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -2959,7 +2959,7 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
 
     /**
      * 根据组合关联的估值方案查询对应资产的投资目的
-     * @param portfolioId,finprodId
+     * @param pageParam
      * @return 投资目的
      */
     public String findInvAim(Map<String, Object> pageParam) {

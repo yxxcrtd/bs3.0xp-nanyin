@@ -35,7 +35,6 @@ import com.joyintech.tams.valuation.common.interf.val.dao.BorrowBaseInfoInitMapp
 import com.joyintech.tams.valuation.common.interf.val.dto.ProdInfoDto;
 import com.joyintech.tams.valuation.common.interf.val.service.ValSysParaService;
 import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
-import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -2088,6 +2087,11 @@ public class ValInterfCommonServiceApi {
         BigDecimal intAmt = BigDecimal.ZERO;
         // 定义 变量.交易份额
         BigDecimal shareAmt = BigDecimal.ZERO;
+        
+        /**add by wujie on 20210528 start remark:临时处理**/
+        BigDecimal tradeAmt = BigDecimal.ZERO;
+        /**add by wujie on 20210528 end**/
+        
         // 循环交易数据，获取本金金额和实收利息
         for(TrdProductDeal deal : dealList){
             if (DictCodeListExt1.金融产品类型_拆入.getValue().equals(deal.getFinprodType())
@@ -2100,6 +2104,9 @@ public class ValInterfCommonServiceApi {
                     //变量.实收利息 +=L.利息总额
                     intAmt = ArithmeticUtil.doAdd(intAmt,deal.getIntAmt());
                 }
+                /**add by wujie on 20210528 start remark:临时处理**/
+                tradeAmt = ArithmeticUtil.doAdd(deal.getTradeAmt());
+                /**add by wujie on 20210528 end**/
             }
             else if (DictCodeListExt1.金融产品类型_债券质押式正回购.getValue().equals(deal.getFinprodType())
                     || DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue().equals(deal.getFinprodType())
@@ -2116,19 +2123,29 @@ public class ValInterfCommonServiceApi {
                 }
                 else if(DictCodeList.交易方向_收息到账.getValue().equals(deal.getPs())){
                     //变量.实收利息 +=L.利息总额
+                	/**modify by wujie on 20210528 start remark:临时处理
                 	// edit by chengzhong for 回购款实收利息存在收息交易的交易金额里面，使用交易金额 20200107 start
 //                    intAmt = ArithmeticUtil.doAdd(intAmt,deal.getIntAmt());
                     intAmt = ArithmeticUtil.doAdd(intAmt,deal.getTradeAmt());
                     // edit by chengzhong for 回购款实收利息存在收息交易的交易金额里面，使用交易金额 20200107 end
+                    **/
+                    intAmt = ArithmeticUtil.doAdd(intAmt,deal.getIntAmt());
+                    /**modify by wujie on 20210528 end**/
                 }
+                
+                /**add by wujie on 20210528 start remark:临时处理**/
+                tradeAmt = ArithmeticUtil.doAdd(deal.getTradeAmt());
+                /**add by wujie on 20210528 end**/
             }
         }
         // 定义 变量.净价总额
         BigDecimal cpriceAmt = BigDecimal.ZERO;
         // 定义 变量.全价总额
         BigDecimal fpriceAmt = BigDecimal.ZERO;
+        /**modify by wujie on 20210528 remark:临时处理
         // 定义 变量.交易金额
         BigDecimal tradeAmt = BigDecimal.ZERO;
+        **/
         // IF 数据字典：金融产品类型.拆入 eq 输入.汇总交易明细集合.get(0).金融产品类型(估值核算)
         if (DictCodeListExt1.金融产品类型_拆入.getValue().equals(dealList.get(0).getFinprodType())
                 || DictCodeListExt1.金融产品类型_拆出.getValue().equals(dealList.get(0).getFinprodType())) {
@@ -2138,8 +2155,10 @@ public class ValInterfCommonServiceApi {
             shareAmt = prinAmt;
             // 变量.全价总额 = 变量.本金金额 + 变量.实收利息
             fpriceAmt = ArithmeticUtil.doAdd(prinAmt, intAmt);
+            /**modify by wujie on 20210528 remark:临时处理
             // 变量.交易金额 = 变量.本金金额 + 变量.实收利息
             tradeAmt = ArithmeticUtil.doAdd(prinAmt, intAmt);
+            **/
         }
         // ELSE IF 数据字典：金融产品类型.债券质押式正回购 eq 输入.汇总交易明细集合.get(0).金融产品类型(估值核算)
         // OR 数据字典：金融产品类型.债券质押式逆回购 eq 输入.汇总交易明细集合.get(0).金融产品类型(估值核算)
@@ -2149,8 +2168,10 @@ public class ValInterfCommonServiceApi {
             cpriceAmt = shareAmt;
             // 变量.全价总额 = 变量.本金金额 + 变量.实收利息
             fpriceAmt = ArithmeticUtil.doAdd(prinAmt, intAmt);
+            /**modify by wujie on 20210528 remark:临时处理
             // 变量.交易金额 = 变量.本金金额 + 变量.实收利息
             tradeAmt = ArithmeticUtil.doAdd(prinAmt, intAmt);
+            **/
         }
         //ELSE IF 数据字典：金融产品类型.债券买断式正回购 eq 输入.汇总交易明细集合.get(0).金融产品类型(估值核算)
         //OR 数据字典：金融产品类型.债券买断式逆回购 eq 输入.汇总交易明细集合.get(0).金融产品类型(估值核算)
@@ -2162,8 +2183,10 @@ public class ValInterfCommonServiceApi {
             //shareAmt = shareAmt;
             // 变量.全价总额 = NULL
             fpriceAmt = null;
+            /**modify by wujie on 20210528 remark:临时处理
             // 变量.交易金额 = 变量.本金金额 + 变量.实收利息
             tradeAmt = ArithmeticUtil.doAdd(prinAmt, intAmt);
+            **/
         }
         
         /**ADD BY WUJIE ON 20210129 START REMARK:回购区分 到期、到期续作、逾期贩售**/

@@ -550,6 +550,64 @@
   	<select id="searchCurrency" resultType="java.lang.String">
   	 	select CCY from FIN_PRODUCT where finprod_market_id = #{finprodMarketId,jdbcType=VARCHAR} and finprod_type2 = #{finprodType2_F28,jdbcType=VARCHAR}
   	</select>
+
+	<!-- 查询附加税税则中的附加税类型 -->
+	<select id="getAddTaxType" resultType="java.lang.String" parameterType="java.util.Map">
+
+		WITH TEMP AS (
+		SELECT
+		A.SCHEME_ID,
+		A.BOOKSET_ID
+		FROM BOK_BOOKSET_PLAN A
+		INNER JOIN BOK_BOOKSET B ON A.BOOKSET_ID = B.BOOKSET_ID
+		WHERE 1=1
+		<if test="listClosedFinprodId != null and listClosedFinprodId.size > 0">
+			AND B.ACCT_SUBJECT_ID IN
+			<foreach collection="listFinprodId" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 500) == 0">
+					null) OR B.ACCT_SUBJECT_ID in (
+				</if>
+				#{item}
+			</foreach>
+		</if>
+		AND B.ACCT_SUBJECT_TYPE = #{finprodType}
+		AND A.SCHEME_TYPE = #{schemeType}
+		UNION
+		SELECT
+		A.SCHEME_ID,
+		A.BOOKSET_ID
+		FROM BOK_BOOKSET_PLAN A
+		INNER JOIN BOK_BOOKSET B ON A.BOOKSET_ID = B.BOOKSET_ID
+		INNER JOIN FIN_PRODUCT_ADD C ON C.FINPROD_ID = B.ACCT_SUBJECT_ID
+		WHERE 1=1
+		<if test="listClosedFinprodId != null and listClosedFinprodId.size > 0">
+			AND C.PORTFOLIO_ID IN
+			<foreach collection="listFinprodId" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 500) == 0">
+					null) OR C.PORTFOLIO_ID in (
+				</if>
+				#{item}
+			</foreach>
+		</if>
+		AND B.ACCT_SUBJECT_TYPE = #{finprodType_F16}
+		AND A.SCHEME_TYPE = #{schemeType}
+		)
+		SELECT
+		E.ADD_TAX_TYPE
+		FROM TAX_ADT_SCHEDULE  E
+		INNER JOIN TEMP F ON F.SCHEME_ID = E.SCH_ID
+		WHERE 1=1
+		<if test="queryDate != null">
+			AND E.EFF_DATE <![CDATA[<]]>= #{queryDate}
+		</if>
+		<!--OPEX-650【产品缴纳】缴纳查询界面，选择纳税日期查询条件进行查询，报数据接口异常 guyunfei 20191227 start-->
+		<if test="queryDateBegin != null and queryDateEnd != null">
+			AND E.EFF_DATE <![CDATA[>=]]> #{queryDateBegin}
+			AND E.EFF_DATE <![CDATA[<=]]> #{queryDateEnd}
+		</if>
+		<!--OPEX-650【产品缴纳】缴纳查询界面，选择纳税日期查询条件进行查询，报数据接口异常 guyunfei 20191227 end-->
+		GROUP BY E.ADD_TAX_TYPE
+	</select>
 </mapper>
 
 

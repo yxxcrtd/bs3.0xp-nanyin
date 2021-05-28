@@ -2,6 +2,7 @@ package com.joyintech.service.product.common.service;
 
 import java.lang.reflect.InvocationTargetException;
 //import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -1419,18 +1420,18 @@ public class FinProductCommonService extends BaseService {
 
         // 一体化对应etliu start
         // 产品新建，调用估值接口
-        if (StringUtil.equals("FinProductBuild002", finProductCommonInfoDto.getPageId())
-        		||StringUtil.equals("FinNetValueProductBuild002", finProductCommonInfoDto.getPageId())) {//add by zhangweiqi净值产品新建也要掉估值接口
-            ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
-            inputDto.setPageId("FinProductBuild002");
-            inputDto.setFinProduct(finProductCommonInfoDto);
-            inputDto.setFinProductAdd(finProductAdd);
-            inputDto.setPrdValParam(finProductCommonInfoDto.getBussFinProductValuationDto());
-            inputDto.setFinProdAcctDataList(finProductCommonInfoDto.getBussFinProductFundAccountInfoDto());
-            //add by jiangpeng on 20210401 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
-            inputDto.setProductEdit(finProductCommonInfoDto.isProductEdit());
-            valuationInterfService.prodOtherInfoInit(inputDto);
-        }
+//        if (StringUtil.equals("FinProductBuild002", finProductCommonInfoDto.getPageId())
+//        		||StringUtil.equals("FinNetValueProductBuild002", finProductCommonInfoDto.getPageId())) {//add by zhangweiqi净值产品新建也要掉估值接口
+//            ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
+//            inputDto.setPageId("FinProductBuild002");
+//            inputDto.setFinProduct(finProductCommonInfoDto);
+//            inputDto.setFinProductAdd(finProductAdd);
+//            inputDto.setPrdValParam(finProductCommonInfoDto.getBussFinProductValuationDto());
+//            inputDto.setFinProdAcctDataList(finProductCommonInfoDto.getBussFinProductFundAccountInfoDto());
+//            //add by jiangpeng on 20210401 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+//            inputDto.setProductEdit(finProductCommonInfoDto.isProductEdit());
+//            valuationInterfService.prodOtherInfoInit(inputDto);
+//        }
         // 一体化对应etliu end
 		  //update add zhangweiqi 增加产品账户信息  begin
         MstTradeOpponentDto counterDto=new MstTradeOpponentDto();//交易对手 add by zhangweiqi 2019-3-5
@@ -1900,17 +1901,17 @@ public class FinProductCommonService extends BaseService {
 		                }
 		                baseInfoDtoList.add(baseFinProductBaseInfoDto);
 		                baseFinProductBaseInfoService.insert(baseInfoDtoList);
-		                 // 产品报价，调用估值接口
-                        ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
-                        inputDto.setPageId(entity.getPageId());
-                        inputDto.setFinProduct(finProduct);
-                        inputDto.setFinProductAdd(finProductAdd);
-                        PrdValParam prdValParam=new PrdValParam();
-                        BeanUtil.copyProperties(entity.getBussFinProductValuationDto(), entity);
-                        prdValParam.setFinprodId(finProduct.getFinprodId());
-                        inputDto.setPrdValParam(prdValParam);
-
-                        valuationInterfService.prodOtherInfoInit(inputDto);
+//		                 // 产品报价，调用估值接口
+//                        ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
+//                        inputDto.setPageId(entity.getPageId());
+//                        inputDto.setFinProduct(finProduct);
+//                        inputDto.setFinProductAdd(finProductAdd);
+//                        PrdValParam prdValParam=new PrdValParam();
+//                        BeanUtil.copyProperties(entity.getBussFinProductValuationDto(), entity);
+//                        prdValParam.setFinprodId(finProduct.getFinprodId());
+//                        inputDto.setPrdValParam(prdValParam);
+//
+//                        valuationInterfService.prodOtherInfoInit(inputDto);
 		            }
 	}
 		/**
@@ -2682,25 +2683,25 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
                    rskPortfolioPackageDtlMapper.insertSelective(rskPortfolioPackageDtl);
                }
            }
-           // 一体化对应etliu start
-           // 组合新建，调用估值接口
-           ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
-           inputDto.setPageId("PtlManagementInfo002");
-           inputDto.setPtlPortfolio(ptlPortfolio);
-           inputDto.setPtlValParam(ptlPortfolioInfoDto.getPtlValParam());
-           inputDto.setNewData(true);
-           if (!StringUtil.isEmptyList(ptlPortfolioInfoDto.getFundAccountInfoDto())) {
-               List<PtlCapacctInfo> prodAcctDataList = new ArrayList<>();
-               for (FundAccountInfoDto fundAccountInfoDto : ptlPortfolioInfoDto.getFundAccountInfoDto()) {
-                   PtlCapacctInfo ptlCapacctInfo = new PtlCapacctInfo();
-                   BeanUtil.copyPropertiesIgnoreNull(ptlCapacctInfo, fundAccountInfoDto);
-                   prodAcctDataList.add(ptlCapacctInfo);
-               }
-               inputDto.setProdAcctDataList(prodAcctDataList);
-           }
-
-           valuationInterfService.prodOtherInfoInit(inputDto);
-           // 一体化对应etliu end
+//           // 一体化对应etliu start
+//           // 组合新建，调用估值接口
+//           ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
+//           inputDto.setPageId("PtlManagementInfo002");
+//           inputDto.setPtlPortfolio(ptlPortfolio);
+//           inputDto.setPtlValParam(ptlPortfolioInfoDto.getPtlValParam());
+//           inputDto.setNewData(true);
+//           if (!StringUtil.isEmptyList(ptlPortfolioInfoDto.getFundAccountInfoDto())) {
+//               List<PtlCapacctInfo> prodAcctDataList = new ArrayList<>();
+//               for (FundAccountInfoDto fundAccountInfoDto : ptlPortfolioInfoDto.getFundAccountInfoDto()) {
+//                   PtlCapacctInfo ptlCapacctInfo = new PtlCapacctInfo();
+//                   BeanUtil.copyPropertiesIgnoreNull(ptlCapacctInfo, fundAccountInfoDto);
+//                   prodAcctDataList.add(ptlCapacctInfo);
+//               }
+//               inputDto.setProdAcctDataList(prodAcctDataList);
+//           }
+//
+//           valuationInterfService.prodOtherInfoInit(inputDto);
+//           // 一体化对应etliu end
 //
 //               ptlManagementInfo001Mapper.insertPaPtlPortfolio(entity);
 //               ptlManagementInfo001Mapper.insertPtlPortfolio(entity);
@@ -2967,7 +2968,6 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
      * <功能详细描述>
      * @param finProductCommonInfoDto
      * @param baseFinProductBaseInfoDto
-     * @param finOpenRuleBak
      * @throws Exception
      * @see
      * @since 1.0
@@ -3139,7 +3139,6 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
 	 * @param finProductCommonInfoDto
 	 * @param baseFinProductBaseInfoDto
 	 * @param resetType
-	 * @param finOpenRuleBak
 	 * @throws Exception
 	 * @see
 	 * @since 1.0
@@ -3709,7 +3708,7 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
     /**
      * 查询机构
      *
-     * @param dto dto
+     * @param map
      * @return 结
      * @since 1.0
      */
@@ -3746,4 +3745,29 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
 //		pag.setRecords(list.size());
 		return selcectList;
 	}
+
+    /**
+     * 编号生成
+     *
+     * @param map
+     */
+    public String getTradeid(Map<String, Object> map) {
+        String str = (String) map.get("str");
+        String formatDate = (String) map.get("formatDate");
+        String flag = (String) map.get("flag");
+        int sequences;
+        // 查询数据库sequences
+        if ("A".equals(flag)) {
+            // dBUtil.getSequenceIndex(sequenceType);
+            sequences = productCommonMapper.queryPdSequences();
+        }
+        else {
+            sequences = productCommonMapper.queryOrderSequences();
+        }
+        // 组装8位序列号 不足补0
+        String sequence = org.apache.commons.lang3.StringUtils.leftPad(String.valueOf(sequences), 8, '0');
+
+        String tradeid = str + formatDate + sequence;
+        return tradeid;
+    }
 }

@@ -46,7 +46,6 @@ import com.joyintech.tams.invest.trade.trdstandardbond.dto.TrdStandardBond001Dto
 import com.joyintech.tams.invest.trade.trdstandardbond.service.TrdStandardBond001Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -85,8 +84,6 @@ public class PreTrdRepoTrade002Controller extends BaseController {
      */
     @Autowired
     private TrdRepoTrade003Service trdRepoTrade003Service;
-    @Autowired
-    private InterfCommonService interfCommonService;
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
 
