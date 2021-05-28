@@ -2,12 +2,7 @@ package com.joyintech.tams.svreport.chb.monthreport.service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Collections;
+import java.util.*;
 import java.util.Map.Entry;
 
 import com.joyintech.framework.util.StringUtil;
@@ -1505,7 +1500,7 @@ public class MonthReportProdService {
      *将查询出来的头寸进行清洗，筛选出每个产品的期末份额最大的投资者类别数据
      * @param
      */
-    public Map<String,ChbMonthPrdPosition>  getMaxQtyByType(List<ChbMonthPrdPosition> pos) {
+    public  Map<String,ChbMonthPrdPosition>  getMaxQtyByType(List<ChbMonthPrdPosition> pos) {
         Map<String,ChbMonthPrdPosition> resultMap = new HashMap<String, ChbMonthPrdPosition>();
         //根据产品代码对头寸LIST进行分组
         Map<String, List<ChbMonthPrdPosition>> map = pos.stream().collect(JoyinCollectors.groupingBy(ChbMonthPrdPosition::getProdid));
@@ -1515,11 +1510,20 @@ public class MonthReportProdService {
 			List<ChbMonthPrdPosition> tmp = entry.getValue();
 			//根据份额降序排序，相等则按照投资者类型优先级排序
 			Collections.sort(tmp, (o1, o2) -> {
-				int flag = o1.getEndamtsumOth().compareTo(o2.getEndamtsumOth());
-				if (flag == 0) {
-					return o1.getOrdIdentified().compareTo(o2.getOrdIdentified());
+				if(null == o1.getEndamtsumOth()){
+					o1.setEndamtsumOth(BigDecimal.ZERO.stripTrailingZeros());
+				}
+				if(null == o2.getEndamtsumOth()){
+					o2.setEndamtsumOth(BigDecimal.ZERO.stripTrailingZeros());
+				}
+				if (o1.getEndamtsumOth().compareTo(o2.getEndamtsumOth()) == 0) {
+					if(null != o1.getOrdIdentified()){
+						return o1.getOrdIdentified().compareTo(o2.getOrdIdentified());
+					}else{
+						return -1;
+					}
 				} else {
-					return flag;
+					return o2.getEndamtsumOth().compareTo(o1.getEndamtsumOth());
 				}
 			});
 			resultMap.put(tmp.get(0).getProdid(),tmp.get(0));
