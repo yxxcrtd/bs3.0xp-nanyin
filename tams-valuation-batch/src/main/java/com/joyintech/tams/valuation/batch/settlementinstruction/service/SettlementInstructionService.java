@@ -252,7 +252,6 @@ public class SettlementInstructionService {
             		valBokDetailIdForOther = interfCommonService.getBokDetailId(dto.getCounterAcctNo(), null,
                             dto.getCounterAcctNoType(), null, null, dto.getCcy());
             	}
-                
                 if(StringUtil.isNotEmpty(dto.getCounterAcctNoType())&&dto.getCounterAcctNoType().equals(DictCodeListExt1.资金账户类型_待清算款.getValue())){
                 	valBokDetailIdForOther = interfCommonService.getBokDetailId(dto.getFinprodId(), null,
                             dto.getFinprodType(), dto.getInvAim(), null, null);
@@ -302,9 +301,22 @@ public class SettlementInstructionService {
 	            	//补缴款金额
 	                accountAmountMap.put(BookConstant.SUPAMT, deal.getTradeAmt());
 	                accountCurrencyMap.put(BookConstant.SUPAMT, deal.getCcy());
-	            	
+	                
 	                //账务明细代码3
 	                accountSceneMap.put(BookConstant.BOK_DETAIL_ID3,deal.getBokDetailId3());
+	                
+	                /**add by wujie 20210528 start**/
+	                if(deal.getBokDetailId3()==null || StringUtil.isEmpty(deal.getBokDetailId3().getBokDetailId())
+	                		|| (StringUtil.isNotEmpty(dto.getCounterAcctNo()) 
+	                				&& StringUtil.isNotEmpty(dto.getCounterAcctNoType())
+	                				&& !dto.getCounterAcctNoType().equals(DictCodeListExt1.资金账户类型_待清算款.getValue()))
+	                		){
+	                	accountSceneMap.put(BookConstant.BOK_DETAIL_ID3,interfCommonService.getBokDetailId(dto.getCounterAcctNo(), null,
+	            				DictCodeListExt1.资金账户类型_交易保证金账户.getValue(), null, null, dto.getCcy()));
+		                accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,interfCommonService.getBokDetailId(dto.getFinprodId(), null,
+	                            dto.getFinprodType(), dto.getInvAim(), null, null));
+	                }
+	                /**add by wujie 20210528 end**/
             	}
             }
 
