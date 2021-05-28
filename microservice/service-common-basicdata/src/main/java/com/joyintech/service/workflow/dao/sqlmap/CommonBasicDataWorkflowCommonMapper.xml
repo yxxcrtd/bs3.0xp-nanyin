@@ -55,7 +55,7 @@
 			</where>
 			group by  WORKFLOW_ID
     </sql>
-	<select id="getBusinessData" parameterType="com.joyintech.tams.component.business.core.dto.WflValidInputParameter" resultType="java.lang.String">
+	<select id="getBusinessData" parameterType="com.joyintech.tams.invest.common.dto.valuationusemerge.WflValidInputParameter" resultType="java.lang.String">
     	select pm.STATUS status
     	from SYS_DATA_PROCESS_MARK pm
     	inner join (<include refid="getMaxHisNo"/>) tempHis on  pm.HIS_NO = tempHis.HIS_NO and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
