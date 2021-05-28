@@ -16,8 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
@@ -61,6 +64,9 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
      */
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
+    
+    @Autowired
+    private FinProductMapper finProductMapper;
 
     /**
      * TrdBondInvestTrade002Service
@@ -164,6 +170,28 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
                     getMessage("TRD_E_0001", getMessage("TrdBondInvestTrade002.settleDate")));
                 errorList.add(validMessage);
             }
+        }
+        
+      //投资目的
+        if(StringUtil.isNotEmpty(inputDto.getInvAim())) {
+        	if(StringUtil.equals(inputDto.getInvAim(), DictCodeListExt1.投资目的_摊余成本类.getValue())
+        			|| StringUtil.equals(inputDto.getInvAim(), DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())) {
+        		FinProduct finProduct = finProductMapper.selectByPrimaryKey(inputDto.getFinprodId());
+        		if(StringUtil.isNotEmpty(finProduct)) {
+        			if(StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试不通过.getValue())) {
+        				errorList.add(new ValidMessage("invAim",
+                                getMessage("ETR_ERROR_0059")));
+        			}
+        			else if(StringUtil.isEmpty(finProduct.getSppiTestStatus())
+                             || StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_未测试.getValue())
+        					|| StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试中.getValue())
+        					//|| StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_已退回.getValue())
+                    ) {
+        				errorList.add(new ValidMessage("invAim",
+                                getMessage("选择此投资目的时，对应的资产必须先进行SPPI测试！")));
+        			}
+        		}
+        	}
         }
 
         // 银行间成交编号 条件必填

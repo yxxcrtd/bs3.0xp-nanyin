@@ -331,7 +331,20 @@ var table;
                     });
                 }
 		      },false);
-		});
+		},false,function (result) {
+            var msg = result.errorList;
+            var message ="";
+            for(var i=0;i<msg.length;i++){
+                message = msg[i];
+                if(message.field!=null && message.field=='invAim'){
+                    if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
+                        $('#invAim').textSelect('setValue', "FVTPL");
+                        break;
+                    }
+                }
+            }
+
+        });
 		      //update by lwj 20200325 券面总额大于资产可用持仓提示 end
     };
 
