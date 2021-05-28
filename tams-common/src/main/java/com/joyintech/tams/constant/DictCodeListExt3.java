@@ -1359,7 +1359,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     平安业务类型_计划类资产_货币型_卖出(DictCode.平安业务类型,"154","计划类资产（货币型）卖出"),
     共通业务类型_每日债券行情信息(DictCode.共通业务类型,"MST27","每日债券行情信息"),
     共通业务类型_每日基金行情信息(DictCode.共通业务类型,"MST28","每日基金行情信息"),
-
+    指令类型_债券类资产_申购确认(DictCode.指令类型,"2740","资金划款-债券类资产申购确认"),
     ;
     /**
      * 对应于数据字典code

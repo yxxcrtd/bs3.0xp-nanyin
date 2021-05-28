@@ -197,7 +197,7 @@
 			</foreach>
 		</if>
 		<if test="psArr != null and psArr.length > 0">
-			AND JTB.TRANTYPE IN
+			AND to_char(JTB.TRANTYPE)  IN
 			<foreach collection="psArr" item="ps" open="( " close=" )"
 				separator=",">
 				#{ps}
@@ -293,7 +293,7 @@
 			</foreach>
 		</if>
 		<if test="psArr != null and psArr.length > 0">
-			AND JTB.TRANTYPE IN
+			AND to_char(JTB.TRANTYPE)  IN
 			<foreach collection="psArr" item="ps" open="( " close=" )"
 				separator=",">
 				#{ps}
@@ -389,7 +389,7 @@
 			</foreach>
 		</if>
 		<if test="psArr != null and psArr.length > 0">
-			AND JTB.TRANTYPE IN
+			AND to_char(JTB.TRANTYPE)  IN
 			<foreach collection="psArr" item="ps" open="( " close=" )"
 				separator=",">
 				#{ps}
@@ -485,7 +485,7 @@
 			</foreach>
 		</if>
 		<if test="psArr != null and psArr.length > 0">
-			AND JTB.TRANTYPE IN
+			AND to_char(JTB.TRANTYPE)  IN
 			<foreach collection="psArr" item="ps" open="( " close=" )"
 				separator=",">
 				#{ps}
@@ -581,7 +581,7 @@
 			</foreach>
 		</if>
 		<if test="psArr != null and psArr.length > 0">
-			AND JTB.TRANTYPE IN
+			AND to_char(JTB.TRANTYPE)  IN
 			<foreach collection="psArr" item="ps" open="( " close=" )"
 				separator=",">
 				#{ps}

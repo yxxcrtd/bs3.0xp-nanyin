@@ -77,7 +77,6 @@ import com.joyintech.tams.valuation.common.interf.val.dao.BokTradeBuildMapper;
 import com.joyintech.tams.valuation.common.interf.val.service.ValSysParaService;
 import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
-import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -4921,15 +4920,15 @@ public class InterfCommonService {
                 	counterAcctNo = counterAcctNoInfo.getAcctNo();
                 }
             }
-            
-            /**ADD BY WUJIE ON 20200110 START**/
             if(DictCodeListExt3.指令类型_债券类资产_申购划款.getValue().equals(stl.getOrderType()) 
-            		|| DictCodeListExt3.指令类型_债券类资产_申购退款.getValue().equals(stl.getOrderType())){
+            		|| DictCodeListExt3.指令类型_债券类资产_申购退款.getValue().equals(stl.getOrderType())
+            		/**add by wujie on 20210528 start**/
+            		|| DictCodeListExt3.指令类型_债券类资产_申购确认.getValue().equals(stl.getOrderType())
+            		/**add by wujie on 20210528 end**/
+            		){
             	counterAcctType = DictCodeListExt1.资金账户类型_交易保证金账户.getValue();
             	counterAcctNo = frontStlOrdersDto.getCounterAcctNo();
             }
-            /**ADD BY WUJIE ON 20200110 END**/
-            
             // 2020年2月12日 魏鹏：结算日期为空时，不生成指令，直接返回
             if(!StringUtil.isNotEmpty(dealDate)){
                 continue;

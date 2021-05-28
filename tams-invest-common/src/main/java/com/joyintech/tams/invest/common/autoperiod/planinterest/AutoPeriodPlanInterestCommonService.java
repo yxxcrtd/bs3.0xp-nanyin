@@ -513,6 +513,9 @@ public class AutoPeriodPlanInterestCommonService extends BaseService {
         trdFinProductDealTotal.setPayUnpaidintAmt(finAssetIntInfo.getActrRepaymentUnpayInterest());//每个组合的区间实际的未付利息
         trdFinProductDealTotal.setpTotleTradeId(entity.getBusiCode());
         trdFinProductDealTotal.setChlId(entity.getChlId());
+        //添加投资目的赋值 add by yzg 20210528 start
+        trdFinProductDealTotal.setInvAim(finAssetIntInfo.getInvAim());
+        //添加投资目的赋值 add by yzg 20210528 end
 
         baseTradeInfoDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
 

@@ -24,7 +24,7 @@
                         <label class="layui-form-label form-lable">资产代码</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="finProdMarketId" name="finProdMarketId" class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
-                                   data-th-data-url="@{/valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/getAssetCode}"
+                                   data-th-data-url="@{/common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/getAssetCode}"
                                    data-idfield="code" data-keyfield="code" data-th-data-effectivefieldsalias='|{"code":"#{MstNetAssetQuotationInfo001.assetCode}",
                              "shortName":"#{MstNetAssetQuotationInfo001.assetName}"}|' data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
@@ -40,7 +40,7 @@
                         <label class="layui-form-label form-lable">资产简称</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="finProdName" name="finProdName" class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
-                             data-th-data-url="@{/valuation/basedata/marketdata/mstrateassetquotationinfo/MstRateAssetQuotationInfo001/getAssetName}"
+                             data-th-data-url="@{/common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/getAssetName}"
                              data-idfield="shortName" data-keyfield="shortName" data-th-data-effectivefieldsalias='|{"code":"#{MstNetAssetQuotationInfo001.assetCode}",
                              "shortName":"#{MstNetAssetQuotationInfo001.assetName}"}|' data-th-placeholder="#{SysCommon.placeholder}">
                         </div>

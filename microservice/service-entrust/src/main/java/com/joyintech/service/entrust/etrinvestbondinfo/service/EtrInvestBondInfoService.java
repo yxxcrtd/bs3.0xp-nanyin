@@ -378,6 +378,9 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
             etrEntrustAdd.setMdate(null);
             etrEntrustAdd.setOurEntNum(ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
             etrEntrustAdd.setLendinEntNum(ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
+            // add by yushilon 全价入库 20200710 start
+            etrEntrustAdd.setFullPrice(dto.getFpriceAmt());
+            // add by yushilon 全价入库 20200710 end
             if (dto.getExerYield() != null) {
                 etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
             }
@@ -453,6 +456,9 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
             etrEntrustAdd.setMdate(null);
             etrEntrustAdd.setOurEntNum(ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
             etrEntrustAdd.setLendinEntNum(ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
+            // add by yushilon 全价入库 20200710 start
+            etrEntrustAdd.setFullPrice(dto.getFpriceAmt());
+            // add by yushilon 全价入库 20200710 end
             if (dto.getExerYield() != null) {
                 etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
             }

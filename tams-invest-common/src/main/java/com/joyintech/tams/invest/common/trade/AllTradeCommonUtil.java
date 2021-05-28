@@ -534,7 +534,7 @@ public class AllTradeCommonUtil {
 
             valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
 
-            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
+//            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
 
             // 调用授信共通
             for (TrdProductDeal trdProductDeal : inputDto.getTrdProductDealList()) {
