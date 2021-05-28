@@ -38,7 +38,7 @@
 					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepNobleMetalInfo.termDate}">期限（天）</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" th:id="|${entityName}_termDate|" th:name="|${entityName}.termDate|"   th:value="${entity?.termDate}"
-							   class="layui-input form-input text-number" data-textrange="0"/>
+							   class="layui-input form-input text-number" data-textrange="0" required/>
 					</div>
 				</div>
 
