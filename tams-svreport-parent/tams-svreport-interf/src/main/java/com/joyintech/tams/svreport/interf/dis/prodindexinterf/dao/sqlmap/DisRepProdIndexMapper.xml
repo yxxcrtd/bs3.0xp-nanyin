@@ -502,7 +502,8 @@
 		) TEMP
 		<!-- 业务主键匹配 -->
 		ON(
-			RPI.PROD_ID = TEMP.PROD_ID 
+			RPI.PROD_ID = TEMP.PROD_ID
+            AND RPI.VALUE_DATE = TEMP.VALUE_DATE
 		)
 		<!-- 匹配到则更新  start-->
 		WHEN MATCHED THEN 
