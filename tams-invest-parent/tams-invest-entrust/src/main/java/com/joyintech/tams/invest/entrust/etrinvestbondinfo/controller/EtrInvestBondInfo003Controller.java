@@ -258,7 +258,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
                     if (!isAuthorizationSoftcontrol) {
                         ValidMessage validMessage = new ValidMessage(
                             // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 start
-                            getMessage("ETR_E_0014","副总裁/总裁助理"));
+                            getMessage("ETR_E_0014","领导"));
                             // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 end
                         messages.add(validMessage);
                         AjaxResult errorRs = new AjaxResult();
@@ -266,7 +266,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
                         return errorRs;
                     } else {
                         AjaxResult ar = new AjaxResult();
-                        ar.setData("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!");
+                        ar.setData("交易本金金额超过领导授权额度，是否确认提交?");
                         return ar;
                     }
                 }

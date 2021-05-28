@@ -260,7 +260,7 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
             Map<String, Object> params = CommonBusinessService.setParams(counterId, prinAmt, LoginUserUtil.getUserName(),
                     平安资产类型, null, tradeMarket, ps,finprodId, null);
             if (commonBusinessService != null && commonBusinessService.是否超过副总额额度(params)) {
-                ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0016", "副总裁/总裁助理"));
+                ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0016", "领导"));
                 errorList.add(validMessage);
             }
         }

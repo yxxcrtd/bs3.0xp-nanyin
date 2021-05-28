@@ -962,7 +962,7 @@ public interface TradeCommonValidator extends BeanValidator {
                             , finprodId , null);
                     if (commonBusinessService != null && commonBusinessService.是否超过副总额额度(params)) {
                         // 交易本金金额超过副总裁/总裁助理授权额度，无法发起交易!
-                        ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0016", "副总裁/总裁助理"));
+                        ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0016", "领导"));
                         validMessageList.add(validMessage);
                     }
                 }
@@ -975,7 +975,7 @@ public interface TradeCommonValidator extends BeanValidator {
                             , othTrdProductDeal.getFinprodId(), null);
                     if (commonBusinessService != null && commonBusinessService.是否超过副总额额度(params)) {
                         // 交易本金金额超过副总裁/总裁助理授权额度，无法发起交易!
-                        ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0016", "副总裁/总裁助理"));
+                        ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0016", "领导"));
                         validMessageList.add(validMessage);
                     }
                 }
