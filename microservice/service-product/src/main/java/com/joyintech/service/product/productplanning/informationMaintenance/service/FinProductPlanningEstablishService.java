@@ -16,7 +16,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.*;

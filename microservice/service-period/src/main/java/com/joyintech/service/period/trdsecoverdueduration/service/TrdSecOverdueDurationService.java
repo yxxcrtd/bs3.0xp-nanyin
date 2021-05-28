@@ -10,6 +10,11 @@ import java.util.Map;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.dto.valuationusemerge.calc.CalCommonResult;
+import com.joyintech.tams.invest.common.dto.valuationusemerge.calc.PrincipalInfo;
+import com.joyintech.tams.invest.common.dto.valuationusemerge.calc.QuoteInfo;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
+import com.joyintech.tams.invest.common.valuationinterf.CalCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,15 +40,10 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
-import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto;
 import com.joyintech.tams.invest.common.dto.period.trdsecoverdueduration.TrdSecOverdueDurationDto;
 import com.joyintech.tams.invest.common.dto.period.trdsecoverdueduration.TrdSecOverdueDurationZrDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
-import com.joyintech.tams.valuation.common.dto.calc.CalCommonResult;
-import com.joyintech.tams.valuation.common.dto.calc.PrincipalInfo;
-import com.joyintech.tams.valuation.common.dto.calc.QuoteInfo;
-import com.joyintech.tams.valuation.common.service.CalCommonService;
 
 @Service
 public class TrdSecOverdueDurationService extends BaseService<TrdSecOverdueDurationDto> {
@@ -72,11 +72,13 @@ public class TrdSecOverdueDurationService extends BaseService<TrdSecOverdueDurat
      */
     @Autowired
     private BasePtlReceInfoService basePtlReceInfoService;
+
     /**
      *  估计计算共通
      */
     @Autowired
     private CalCommonService calCommonService;
+
     /** @MethodName: theoryFindPage
     * @Description: TODO逾期未结清
     * @Param: [page, length, param]
@@ -322,7 +324,7 @@ public class TrdSecOverdueDurationService extends BaseService<TrdSecOverdueDurat
         BigDecimal 理论本金罚息 = null;
         BigDecimal 理论利息罚息 = null;
 
-//        罚息设置
+        //罚息设置
         if(StringUtil.isNotEmpty(bjBranch)&&BigDecimal.ZERO.compareTo(theoryPrin)!=0){
 //            应收款标的dto = 调用共通【应收款标的共通】.标的查询(传入.金融产品代码，传入.本金分支序号)
             Map<String,Object>ptlReceMap = new HashMap<>();
@@ -351,7 +353,7 @@ public class TrdSecOverdueDurationService extends BaseService<TrdSecOverdueDurat
                 理论本金罚息 = BigDecimal.ZERO;
             }
         }
-//        罚息设置
+       // 罚息设置
         if(StringUtil.isNotEmpty(liBranch)&&BigDecimal.ZERO.compareTo(theoryInt)!=0){
 //            应收款标的dto = 调用共通【应收款标的共通】.标的查询(传入.金融产品代码，传入.本金分支序号)
             Map<String,Object>ptlReceMap = new HashMap<>();

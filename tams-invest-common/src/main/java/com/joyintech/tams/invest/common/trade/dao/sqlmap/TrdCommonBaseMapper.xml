@@ -1084,4 +1084,118 @@
             </foreach>
         </if>
     </select>
+
+
+    <select id="queryFinProductByPortfolidId"  parameterType="string" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+		SELECT A.*
+		FROM FIN_PRODUCT A,FIN_PRODUCT_ADD B
+		WHERE A.FINPROD_ID = B.FINPROD_ID
+		AND B.PORTFOLIO_ID = #{portfolidId,jdbcType=VARCHAR}
+		and A.P_FINPROD_ID is null
+		AND ROWNUM =1
+	</select>
+
+    <!-- 多级法人改造start add by hxy 20200617 -->
+    <select id="selectBankModeOrgName" resultType="java.lang.String">
+       select sysi.institution_name
+		from  chb_org_regist_bank_code corbc
+		inner join sys_institution sysi
+		on corbc.org_code=sysi.institution_code
+		and corbc.status='E'
+		where   rownum=1
+    </select>
+    <select id="selectAssociationModeOrgName" resultType="java.lang.String">
+       select sysi.institution_name
+		from data_auth_notify_inst dani
+		inner join sys_institution sysi
+		on dani.institution_code=sysi.institution_code
+		where dani.business_id=#{booksetOrg,jdbcType=VARCHAR}
+		and dani.data_type=#{dataType,jdbcType=VARCHAR}
+		and dani.model_type='02'
+		and rownum=1
+    </select>
+    <select id="selectAssociationModeOrgGrpName" resultType="java.lang.String">
+        select distinct sysi.institution_name
+	    from  sys_batch_prd_grp sbpg
+	    inner join sys_batch_grp_prdlink sbgpl
+	    on sbpg.seq_no=sbgpl.group_seq
+	    inner join data_auth_notify_inst dani
+	    on sbgpl.product_id=dani.business_id
+	    inner join sys_institution sysi
+	     on dani.institution_code=sysi.institution_code
+	     where seq_no=#{booksetOrg,jdbcType=VARCHAR}
+	     and dani.data_type=#{dataType,jdbcType=VARCHAR}
+	     and dani.model_type='02'
+	     and rownum=1
+    </select>
+    <!-- 多级法人改造end add by hxy 20200617 -->
+
+
+    <!-- 2.2查询标的现金流计划list -->
+    <select id="getTargetCashPlanList"
+            resultType="com.joyintech.tams.common.base.entity.FinCashPlan"
+            parameterType="java.util.Map">
+        SELECT
+        a.CASH_ID AS cashId, /**现金流代码**/
+        a.CASH_NUM AS cashNum,/**现金流序号**/
+        a.VDATE_UNADJUST AS vdateUnadjust,/**未调整的计算开始日**/
+        a.MDATE_UNADJUST AS mdateUnadjust,/**未调整的计算结束日**/
+        a.PAY_DATE_UNADJUST AS payDateUnadjust,/**未调整的计划支付日**/
+        a.VDATE AS vdate,/**调整后的计算开始日**/
+        a.MDATE AS mdate,/**调整后的计算结束日**/
+        a.PAY_DATE AS payDate,/**调整后的计划支付日**/
+        a.TERMDAYS AS termdays,/**计算周期天数**/
+        a.VDATE_Y AS vdateY,/**理论计息年度开始日**/
+        a.VDATE_TERM AS vdateTerm,/**完整周期开始日**/
+        a.MDATE_TERM AS mdateTerm,/**完整周期结束日**/
+        a.TERMDAYS_TERM termdaysTerm,/**完整周期计息天数**/
+        a.PRIN_AMT AS prinAmt,/**计划支付本金**/
+        a.IS_PAY_INT AS isPayInt,/**是否支付利息**/
+        a.INT_AMT AS intAmt,/**计划支付利息**/
+        a.CASH_AMT AS cashAmt,/**计划支付现金流**/
+        a.CASH_UNIT_TYPE AS cashUnitType,/**现金流单位**/
+        a.CALC_FUNCTION AS calcFunction,/**计息算法**/
+        a.FREQUENCY AS frequency,/**年付息次数**/
+        a.FINPROD_ID AS finprodId,/**金融产品代码**/
+        a.FINPROD_TYPE AS finprodType,/**金融产品类型**/
+        a.PAY_TYPE AS payType, /**支付方式**/,
+        a.INT_PRIN_AMT intPrinAmt /**计息本金**/
+        FROM
+        FIN_CASH_PLAN a
+        LEFT JOIN FIN_CASH_INFO  b on a.cash_id = b.cash_id
+        WHERE 1=1
+        AND
+        a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        /**金融产品代码**/
+        <if test="cashType1 != null">
+            AND b.CASH_TYPE_1 = #{cashType1,jdbcType=VARCHAR}
+            /**现金流一级类型**/
+        </if>
+        <if test="cashType2 != null">
+            AND b.CASH_TYPE_2 = #{cashType2,jdbcType=VARCHAR}
+            /**现金流二级类型**/
+        </if>
+        <if test="payStatus != null">
+            AND a.PAY_STATUS = #{payStatus,jdbcType=VARCHAR}
+            /**是否已支付**/
+        </if>
+        <if test="cashId != null">
+            AND a.CASH_ID = #{cashId,jdbcType=VARCHAR} /**现金流代码**/
+        </if>
+        <if test="branch!=null">
+            AND B.BRANCH = #{branch}/**分支序号**/
+        </if>
+        ORDER BY
+        a.FINPROD_ID,b.CASH_TYPE_1,b.CASH_TYPE_2,a.VDATE ASC
+    </select>
+
+    <select id="getSequenceIndexData" parameterType="java.util.Map"
+            resultType="java.lang.Long" useCache="false" flushCache="true">
+        <if test="databaseType == 'DB2'">
+            select nextval for ${sequenceName} from SYSIBM.SYSDUMMY1
+        </if>
+        <if test="databaseType == 'Oracle'">
+            select ${sequenceName}.nextVal from dual
+        </if>
+    </select>
 </mapper>

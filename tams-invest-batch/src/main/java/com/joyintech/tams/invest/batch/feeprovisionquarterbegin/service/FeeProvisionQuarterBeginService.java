@@ -26,8 +26,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.feeprovisionquarterbegin.dao.FeeProvisionQuarterBeginMapper;
 import com.joyintech.tams.invest.batch.feeprovisionquarterbegin.dto.FinTradeProductAddDto;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValBokDetailIdBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 
 /**
  * 费用预提每季度初批处理 Service层
@@ -40,16 +38,16 @@ public class FeeProvisionQuarterBeginService {
 	@Autowired
 	private FeeProvisionQuarterBeginMapper feeProvisionQuarterBeginMapper;
 
-	/**
-     * 接口共通
-     */
-    @Autowired
-    private InterfCommonService interfCommonService;
-    /**
-     * 账务明细代码
-     */
-    @Autowired
-    private ValBokDetailIdBatchMapper valBokDetailIdBatchMapper;
+//	/**
+//     * 接口共通
+//     */
+//    @Autowired
+//    private InterfCommonService interfCommonService;
+//    /**
+//     * 账务明细代码
+//     */
+//    @Autowired
+//    private ValBokDetailIdBatchMapper valBokDetailIdBatchMapper;
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
     @Autowired
@@ -164,10 +162,10 @@ public class FeeProvisionQuarterBeginService {
                     bokDetailId.setBusiId(finTradeProduct.getFinprodId());
                     // 业务明细类型 = 变量.交易类金融产品.金融产品类型
                     bokDetailId.setBusiDetailType(finTradeProduct.getFinprodType2());
-                    // 变量.账务明细代码 = interfCommonService.genMd5BokDetailId(变量.账务明细代码Dto )
-                    String strBokDetailId = interfCommonService.genMd5BokDetailId(bokDetailId);
+//                    // 变量.账务明细代码 = interfCommonService.genMd5BokDetailId(变量.账务明细代码Dto )
+//                    String strBokDetailId = interfCommonService.genMd5BokDetailId(bokDetailId);
                     // 变量.账务明细代码Dto.账务明细代码 = 变量.账务明细代码
-                    bokDetailId.setBokDetailId(strBokDetailId);
+//                    bokDetailId.setBokDetailId(strBokDetailId);
                     
                     // 交易编号 = 变量.交易类金融产品.金融产品代码
                     bokDetailId.setTradeId(finTradeProduct.getFinprodId());
@@ -185,11 +183,11 @@ public class FeeProvisionQuarterBeginService {
     		}
     	}
     	
-    	// 变量.入库账务明细代码List 账务明细代码表 BOK_DETAIL_ID 先根据账套代码、账务明细代码删除，然后入库
-        if (CollectionUtils.isNotEmpty(listBokDetailId)) {
-            valBokDetailIdBatchMapper.deleteBatch(listBokDetailId);
-            valBokDetailIdBatchMapper.insertBatch(listBokDetailId);
-        }
+//    	// 变量.入库账务明细代码List 账务明细代码表 BOK_DETAIL_ID 先根据账套代码、账务明细代码删除，然后入库
+//        if (CollectionUtils.isNotEmpty(listBokDetailId)) {
+//            valBokDetailIdBatchMapper.deleteBatch(listBokDetailId);
+//            valBokDetailIdBatchMapper.insertBatch(listBokDetailId);
+//        }
     	
     }
     

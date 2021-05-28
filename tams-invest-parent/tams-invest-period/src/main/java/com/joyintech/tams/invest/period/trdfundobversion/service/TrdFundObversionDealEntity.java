@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.period.trdfundobversion.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -33,7 +34,6 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdfundobversion.dto.TrdFundObversionDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;

@@ -43,7 +43,6 @@ import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.interf.service.InterfComponentService;
 import com.joyintech.tams.invest.interf.service.InterfComponentService.OrderCaller;
 import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeDto;
-import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -325,7 +324,7 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
         dto.getFinTradeProduct().setCounterId(dto.getCounterId()); // 交易对手
         dto.getFinTradeProduct().setWorkflowId(dto.getWorkflowId()); // 工作流代码
         // 名义本金、名义币种、起息日、到期日、期限(天)、计息基础、交易日历、回购/拆借方向 本身就在dto中
-        dto.getFinTradeProduct().setTermType(ValInterfCommonServiceApi.getRepTermType(
+        dto.getFinTradeProduct().setTermType(commonBusinessService.getRepTermType(
             DictCodeList.回购拆借方向_拆出.getValue().equals(
                 dto.getPs()) ? DictCodeListExt1.金融产品类型_拆出.getValue() : DictCodeListExt1.金融产品类型_拆入.getValue(),
             dto.getFinTradeProduct().getTerm()));

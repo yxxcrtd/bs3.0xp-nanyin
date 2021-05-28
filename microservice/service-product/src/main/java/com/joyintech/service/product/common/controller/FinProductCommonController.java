@@ -411,7 +411,7 @@ public class FinProductCommonController {
     /**
      * 查询机构
      *
-     * @param dto dto
+     * @param map
      * @return 结     
      * @since 1.0
      */
@@ -420,5 +420,10 @@ public class FinProductCommonController {
             @PathVariable("page") int page,
             @PathVariable("length") int length) {
     	return finProductCommonService.queryTrusteeId(map,page,length);
+    }
+
+    @PostMapping("getTradeid")
+    public String getTradeid(@RequestBody Map<String, Object> map) {
+        return finProductCommonService.getTradeid(map);
     }
 }

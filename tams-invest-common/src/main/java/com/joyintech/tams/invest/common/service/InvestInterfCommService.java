@@ -22,7 +22,6 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.system.base.dao.SysUserMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
@@ -53,11 +52,6 @@ public class InvestInterfCommService extends BaseService<InvestInterfCommDto> {
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
 
-    /**
-     * 用户表Mapper
-     */
-    @Autowired(required = false)
-    private SysUserMapper sysUserMapper;
 
     /**
      * 组合表Mapper

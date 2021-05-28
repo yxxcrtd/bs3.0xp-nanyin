@@ -45,8 +45,8 @@ import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.invest.portfolio.ptlmanagementinfo.dto.NodeDto;
 import com.joyintech.tams.invest.portfolio.ptlmanagementinfo.dto.PtlManagementInfo004Dto;
 import com.joyintech.tams.invest.portfolio.ptlmanagementinfo.dto.PtlManagementInfoDto;
-import com.joyintech.tams.valuation.common.interf.common.ResultCode;
-import com.joyintech.tams.valuation.common.interf.common.ResultObject;
+//import com.joyintech.tams.valuation.common.interf.common.ResultCode;
+//import com.joyintech.tams.valuation.common.interf.common.ResultObject;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
@@ -228,10 +228,11 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
                     entity.setInvestYesorno(DictCodeList.是否_是.getValue());
                 }
             }
-            ResultObject resultObject = updatePortfolio(entity);
-            if (!StringUtil.equals(resultObject.getResultCode(), ResultCode.SUCCESS.getCode())) {
-                throw new RuntimeException(resultObject.getResultMsg());
-            }
+//            ResultObject resultObject = updatePortfolio(entity);
+            updatePortfolio(entity);
+//            if (!StringUtil.equals(resultObject.getResultCode(), ResultCode.SUCCESS.getCode())) {
+//                throw new RuntimeException(resultObject.getResultMsg());
+//            }
             String portfolioId = entity.getPortfolioId();
             if (!ptlPortfolios.isEmpty()) {
                 for (PtlManagementInfo004Dto ptlPortfolio : ptlPortfolios) {
@@ -279,7 +280,7 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
         } else {
             restTemplate.postForObject(
                     ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/" + action, entity,
-                    ResultObject.class);
+                    boolean.class);
         }
         // 二级法人权限处理
         if(MultilevelDataAuthorityUtil.isEnabled()) {
@@ -345,7 +346,7 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
                 Integer.class);
     }
 
-    private ResultObject updatePortfolio(PtlManagementInfoDto entity) {
+    private void updatePortfolio(PtlManagementInfoDto entity) {
 //        for(FundAccountInfoDto dto : entity.getFundAccountInfoDto()){
 //            dto.setPortfolioId(entity.getPortfolioId());
 //            FundAccountService.insert(dto);
@@ -363,9 +364,9 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
         FundAccountService.insertMulti(entity.getFundAccountInfoDto(), entity.getPortfolioId());
         securitiesAccountService.insertMulti(entity.getSecuritiesAccountInfoDto(), entity.getPortfolioId());
 
-        return restTemplate.postForObject(
+         restTemplate.postForObject(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/updateInsertPortfolio", entity,
-                ResultObject.class);
+                boolean.class);
     }
 
     /**

@@ -10,16 +10,7 @@
 
 package com.joyintech.service.basicdata.syspara.controller;
 
-import com.joyintech.framework.annotation.DTXTransaction;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.basicdata.projectcatinfo.dto.MstProjectCatInfoDto;
-import com.joyintech.service.basicdata.projectcatinfo.service.MstProjectCatInfoService;
-import com.joyintech.system.base.dao.SysParaMapper;
-import com.joyintech.system.base.entity.SysPara;
-import com.joyintech.system.base.entity.SysParaKey;
-import com.joyintech.system.syspara.service.SysParaService;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +35,8 @@ public class InterfSysParaController {
     @Autowired
     private IPlatformDate platformDateImpl;
 
-    @Autowired
-    private SysParaMapper sysParaMapper;
+//    @Autowired
+//    private SysParaMapper sysParaMapper;
 
     /**
      * 平台日期
@@ -66,15 +57,17 @@ public class InterfSysParaController {
     @PostMapping("getSysPara")
     public Map<String,Object> getSysPara(@RequestBody Map<String, Object> param)
             throws Exception {
-        SysParaKey key = new SysParaKey();
-        key.setParaCode((String)param.get("paraCode"));
-        key.setSystemCode((String)param.get("systemCode"));
+//        SysParaKey key = new SysParaKey();
+//        key.setParaCode((String)param.get("paraCode"));
+//        key.setSystemCode((String)param.get("systemCode"));
+//        Map<String,Object> map = new HashMap<String,Object>();
+//
+//        SysPara sysPara = sysParaMapper.selectByPrimaryKey(key);
+//        if(sysPara!=null) {
+//            map.put("paramValue", sysPara.getParamValue());
+//        }
         Map<String,Object> map = new HashMap<String,Object>();
-
-        SysPara sysPara = sysParaMapper.selectByPrimaryKey(key);
-        if(sysPara!=null) {
-            map.put("paramValue", sysPara.getParamValue());
-        }
+        map.put("paramValue",  CacheUtil.getSysParam((String)param.get("paraCode")));
         return map;
     }
 

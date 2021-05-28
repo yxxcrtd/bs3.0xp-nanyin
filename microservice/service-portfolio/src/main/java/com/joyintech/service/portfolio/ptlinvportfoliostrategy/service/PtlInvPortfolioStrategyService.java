@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.util.InterfHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,6 @@ import com.joyintech.tams.common.base.entity.PtlPortfolioEvalKey;
 import com.joyintech.tams.common.base.entity.PtlPortfolioStgy;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 
 @Service
 public class PtlInvPortfolioStrategyService extends BaseService<PtlInvPortfolioStrategyDto> {
@@ -154,7 +154,7 @@ public class PtlInvPortfolioStrategyService extends BaseService<PtlInvPortfolioS
 	/**
 	 * 新建-唯一性校验
 	 * 
-	 * @param ptlPortfolioStrategy
+	 * @param map
 	 * @return
 	 */
 	public PtlPortfolioStgy newCheck(Map<String, Object> map) {

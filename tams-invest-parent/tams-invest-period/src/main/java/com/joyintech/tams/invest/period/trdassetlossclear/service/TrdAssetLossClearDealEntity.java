@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.period.trdassetlossclear.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -40,7 +41,6 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdassetlossclear.dto.TrdAssetLossClear001Dto;
 import com.joyintech.tams.invest.period.trdplannetduration.dto.TrdPlanNetDuration001Dto;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;

@@ -17,7 +17,6 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.product.common.service.ProductCommonService;
 import com.joyintech.tams.invest.product.resultscovering.dto.FinResultsCovering002Dto;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.lang.StringUtils;
@@ -40,8 +39,8 @@ public class FinResultsCovering002Service extends BaseService<FinResultsCovering
     /**
      * 接口共通
      */
-    @Autowired
-    private InterfCommonService interfCommonService;
+//    @Autowired
+//    private InterfCommonService interfCommonService;
     @Autowired
     private TrdProductDealMapper trdProductDealMapper;
     @Autowired
@@ -53,7 +52,7 @@ public class FinResultsCovering002Service extends BaseService<FinResultsCovering
 	public void doComplete(FinResultsCovering002Dto dto, OperationType type) {
 		if (OperationType.NEW.equals(type)) {
 			//生成汇总交易编号
-			String totalTradeId= interfCommonService.getTradeid("HB", dto.getCreateTime(), "A");
+			String totalTradeId= productCommonService.getTradeid("HB", dto.getCreateTime(), "A");
 			TrdFinProductDealTotal trdFinProductDealTotal=new TrdFinProductDealTotal();
 			trdFinProductDealTotal.setTradeStatus(BussinessDictCodeList.交易状态_初始.getValue());
 			trdFinProductDealTotal.setVdate(dto.getCovCycleStartDate());

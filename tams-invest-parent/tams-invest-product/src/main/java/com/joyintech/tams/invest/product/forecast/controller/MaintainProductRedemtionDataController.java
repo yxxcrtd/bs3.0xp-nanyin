@@ -38,7 +38,6 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.product.forecast.dto.FinFlowForecastDealAmontDto;
 import com.joyintech.tams.invest.product.forecast.service.FinFlowForecastService;
-import com.joyintech.tams.valuation.common.service.BaseCommonService;
 
 /**
  * 流动性预测表维护-产品申赎数据

@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.constant.BussinessJixuConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,6 @@ import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.invest.trade.forwex.dto.TrdForwexInvestTradeDto;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
-import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -470,33 +470,33 @@ public class TrdForwexInvestTrade002Service extends BaseService<TrdForwexInvestT
 			}
 			AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
 
-			// jixu接口 start
-			List<StlFinProductAcct> stlFinProductAcctList = new ArrayList<>();
-			stlFinProductAcctList.add(stlFinProductAcct);
-			stlFinProductAcctList.add(stlFinProductAcctCor);
+//			// jixu接口 start
+//			List<StlFinProductAcct> stlFinProductAcctList = new ArrayList<>();
+//			stlFinProductAcctList.add(stlFinProductAcct);
+//			stlFinProductAcctList.add(stlFinProductAcctCor);
 			List<StlPayOrders> stlPayOrdersList = new ArrayList<>();
 			if (entity.getStlPayOrdersList() != null) {
 				stlPayOrdersList.addAll(entity.getStlPayOrdersList());
 			}
-			TrdCommDto trdCommDto = new TrdCommDto();
-			trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
-			trdCommDto.setStlFinProductAcctList(stlFinProductAcctList);
-			trdCommDto.setStlPayOrdersList(stlPayOrdersList);
-			trdCommDto.setTrdProductDeal(trdProductDeal);
-			trdCommDto.setTrdProductDealAdd(trdProductDealAdd);
-			trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_ADD);
-
-			trdCommDto.setHeader(BussinessJixuConstant.消息头_外汇远期开仓交易);
-			trdCommDto.setPtlTradeList(ptlTradeList);
-			if (StringUtil.equals(DictCodeList.交易方向_到期.getValue(), trdProductDeal.getPs())) {
-				trdCommDto.setHeader(BussinessJixuConstant.消息头_远期换汇轧差交割);
-			}
-			if (((StringUtil.equals(DictCodeList.交易方向_到期.getValue(), trdProductDeal.getPs()))
-					&& (StringUtil.equals(trdProductDeal.getDeliveryType(), DictCodeListExt2.结算方式_差额清算.getValue())))
-					|| (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), trdProductDeal.getPs()))) {
-				valuationInterfService.runValInvest2Jixu(trdCommDto);
-			}
-			// jixu接口 end
+//			TrdCommDto trdCommDto = new TrdCommDto();
+//			trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
+//			trdCommDto.setStlFinProductAcctList(stlFinProductAcctList);
+//			trdCommDto.setStlPayOrdersList(stlPayOrdersList);
+//			trdCommDto.setTrdProductDeal(trdProductDeal);
+//			trdCommDto.setTrdProductDealAdd(trdProductDealAdd);
+//			trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_ADD);
+//
+//			trdCommDto.setHeader(BussinessJixuConstant.消息头_外汇远期开仓交易);
+//			trdCommDto.setPtlTradeList(ptlTradeList);
+//			if (StringUtil.equals(DictCodeList.交易方向_到期.getValue(), trdProductDeal.getPs())) {
+//				trdCommDto.setHeader(BussinessJixuConstant.消息头_远期换汇轧差交割);
+//			}
+//			if (((StringUtil.equals(DictCodeList.交易方向_到期.getValue(), trdProductDeal.getPs()))
+//					&& (StringUtil.equals(trdProductDeal.getDeliveryType(), DictCodeListExt2.结算方式_差额清算.getValue())))
+//					|| (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), trdProductDeal.getPs()))) {
+//				valuationInterfService.runValInvest2Jixu(trdCommDto);
+//			}
+//			// jixu接口 end
 			// 调用投管接口 add by wqd 20190212 start
 			if (entity != null) {
 				InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
@@ -592,31 +592,31 @@ public class TrdForwexInvestTrade002Service extends BaseService<TrdForwexInvestT
 					paTrdProductDealMapper.insertSelective(paTrdProductDeal);
 				}
 
-				// jixu 接口 add by qmh start
+//				// jixu 接口 add by qmh start
 				List<StlPayOrders> stlPayOrdersList = new ArrayList<StlPayOrders>();
 				if (entity.getStlPayOrdersList() != null) {
 					stlPayOrdersList.addAll(entity.getStlPayOrdersList());
 				}
-				TrdCommDto trdCommDto = new TrdCommDto();
-				trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
-				// trdCommDto.setStlFinProductAcctList(stlFinProductAcctList);
-				trdCommDto.setStlPayOrdersList(stlPayOrdersList);
-				trdCommDto.setTrdProductDeal(baseDto.getTrdProductDeal());
-				trdCommDto.setPtlTradeList(baseDto.getPtlTrade());
-				trdCommDto.setTrdProductDealAdd(baseDto.getTrdProductDealAdd());
-				trdCommDto.setHeader(BussinessJixuConstant.消息头_外汇远期开仓交易);
-				if (StringUtil.equals(DictCodeList.交易方向_到期.getValue(), baseDto.getTrdProductDeal().getPs())) {
-					trdCommDto.setHeader(BussinessJixuConstant.消息头_远期换汇轧差交割);
-				}
-				trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_DELETE);
-				// valuationInterfService.runValInvest2Jixu(trdCommDto);
-				if (((StringUtil.equals(DictCodeList.交易方向_到期.getValue(), baseDto.getTrdProductDeal().getPs()))
-						&& (StringUtil.equals(baseDto.getTrdProductDeal().getDeliveryType(),
-								DictCodeListExt2.结算方式_差额清算.getValue())))
-						|| (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), baseDto.getTrdProductDeal().getPs()))) {
-					valuationInterfService.runValInvest2Jixu(trdCommDto);
-				}
-				// jixu 接口 add by qmh end
+//				TrdCommDto trdCommDto = new TrdCommDto();
+//				trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
+//				// trdCommDto.setStlFinProductAcctList(stlFinProductAcctList);
+//				trdCommDto.setStlPayOrdersList(stlPayOrdersList);
+//				trdCommDto.setTrdProductDeal(baseDto.getTrdProductDeal());
+//				trdCommDto.setPtlTradeList(baseDto.getPtlTrade());
+//				trdCommDto.setTrdProductDealAdd(baseDto.getTrdProductDealAdd());
+//				trdCommDto.setHeader(BussinessJixuConstant.消息头_外汇远期开仓交易);
+//				if (StringUtil.equals(DictCodeList.交易方向_到期.getValue(), baseDto.getTrdProductDeal().getPs())) {
+//					trdCommDto.setHeader(BussinessJixuConstant.消息头_远期换汇轧差交割);
+//				}
+//				trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_DELETE);
+//				// valuationInterfService.runValInvest2Jixu(trdCommDto);
+//				if (((StringUtil.equals(DictCodeList.交易方向_到期.getValue(), baseDto.getTrdProductDeal().getPs()))
+//						&& (StringUtil.equals(baseDto.getTrdProductDeal().getDeliveryType(),
+//								DictCodeListExt2.结算方式_差额清算.getValue())))
+//						|| (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), baseDto.getTrdProductDeal().getPs()))) {
+//					valuationInterfService.runValInvest2Jixu(trdCommDto);
+//				}
+//				//jixu 接口 add by qmh end
 				// 调用投管接口 add by wqd 20190212 start
 				if (entity != null) {
 					InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();

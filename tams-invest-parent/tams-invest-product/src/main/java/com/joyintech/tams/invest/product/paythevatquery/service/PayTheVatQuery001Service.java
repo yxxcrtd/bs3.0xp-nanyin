@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -209,8 +211,11 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
             DataSourceType.MASERT);
     }
     
-    public List<SuggestDto> getBooksetId(Map<String, Object> param) {
-    	 return restTemplate.postForList(com.joyintech.tams.valuation.common.constants.ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBook001/getBooksetId", param, SuggestDto.class);     
+    public Page<SelectOptionDto> getBooksetId(Map<String, Object> param) {
+//    	 return restTemplate.postForList(com.joyintech.tams.valuation.common.constants.ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBook001/getBooksetId", param, SuggestDto.class);
+		param.put("booksetType", DictCodeList.账套类别_理财账套.getValue());
+		param.put("userId", LoginUserUtil.getUserName());
+		return super.queryForPageForSelectReturn(() -> payTheVatQuery001Mapper.getBooksetIdForSelect(param));
     }
     
     public Page<SelectOptionDto> selectPortfolioId(Map<String, Object> param){

@@ -26,6 +26,11 @@ public enum DataIndexSequenceType {
      * 工作流用序列
      */
     工作流("wfl_sequence", "C0"),
+
+    /**
+     * 交易编码
+     */
+    交易编号("trade_id_sequence", "PD"),
     /**
      * 基础数据用序列
      */

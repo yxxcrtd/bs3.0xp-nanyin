@@ -5,7 +5,6 @@
 
 package com.joyintech.tams.invest.asset.stock.service;
 
-import com.jixu.common.type.ResultContainer;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -34,13 +33,13 @@ import com.joyintech.tams.invest.asset.stock.dto.FinStockInfoDto;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessJixuConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.common.TrdCommDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.util.MapParseUtil;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
-import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -281,7 +280,7 @@ public class FinStockInfoService extends CommonExportService<FinStockInfoDto> im
                 trdCommDto.setFinProduct(finProduct);
                 trdCommDto.setFinProductAdd(entity.getBaseFinProductBaseInfoList().get(0).getFinProductAdd());
                 trdCommDto.setHeader(BussinessJixuConstant.消息头_股票标的信息);
-                ResultContainer resultContainer = valuationInterfService.runValInvest2Jixu(trdCommDto);
+//                ResultContainer resultContainer = valuationInterfService.runValInvest2Jixu(trdCommDto);
             } 
 //            System.out.println(resultContainer);
         }

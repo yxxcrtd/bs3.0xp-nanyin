@@ -15,6 +15,7 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.constant.BussinessJixuConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,6 @@ import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.invest.trade.irs.dto.IRSFeeInfoDto;
 import com.joyintech.tams.invest.trade.irs.dto.TrdIRSTradeDto;
-import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -418,61 +418,61 @@ public class TrdIRSTrade002Service extends BaseService<TrdIRSTradeDto> implement
         investInterfCommService.doInvestInterf(investInterfCommDto);
         // 调用投管接口 add by wm 20190211 end
         
-        // jixu接口 start        
-        TrdCommDto trdCommDto = new TrdCommDto();
-        if (OperationType.DELETE == operationType) {
-            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_DELETE);;
-        }
-        else if (OperationType.NEW == operationType) {
-            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_ADD);
-        }
-        else {
-            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_UPDATE);
-        }
-        trdCommDto.setHeader(BussinessJixuConstant.消息头_利率互换开仓交易);
-        trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
-        trdCommDto.setTrdProductDeal(entity.getTrdProductDeal());
-        trdCommDto.setPtlTradeList(ptlTradeList);
-        trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
-        if(StringUtil.isNotEmpty(entity.getTrdProductDealAdd())) {
-            trdCommDto.setTrdProductDealAdd(entity.getTrdProductDealAdd());
-        }
-        trdCommDto.setTradeFeeDetaillist(entity.getTrdTradeFeeDetailList());
-        if(operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)){
-            trdCommDto.setFinCashInfoList(finCashInfoList);
-        }
-        if (dto != null) {
-            // List<现金流信息Entity>
-            trdCommDto.setFinCashInfoList(dto.getFinCashInfoList());
-            // List<现金流支付规则表Entity>
-            trdCommDto.setFinCashPayRuleList(dto.getFinCashPayRuleList());
-            // List<现金流计算规则表Entity> 只存固定端
-            trdCommDto.setFinCashCalcRuleList(dto.getFinCashCalcRuleList());
-            // List<现金流利率信息表Entity>
-            trdCommDto.setFinRateInfoList(dto.getFinRateInfoList());
-            // List<现金流计划表Entity>
-            trdCommDto.setFinCashPlanList(dto.getFinCashPlanList());
-            // List<利率重置计划表Entity>
-            trdCommDto.setFinCashResetPlanList(dto.getFinCashResetPlanList());
-        }
-        valuationInterfService.runValInvest2Jixu(trdCommDto);
-        if (dto != null) {
-            TrdCommDto trdCommDto1 = new TrdCommDto();
-            BeanUtil.copyPropertiesIgnoreNull(trdCommDto1, trdCommDto);
-            trdCommDto1.setPtlTradeList(null);
-            trdCommDto1.setHeader(BussinessJixuConstant.消息头_利率互换现金流);
-            // 固定端
-            String cashIdFix = dto.getFinCashInfoList().get(0).getCashId();
-            setTrdCommDto(dto, trdCommDto1, cashIdFix, true);
-            valuationInterfService.runValInvest2Jixu(trdCommDto1);
-            // 浮动端
-            TrdCommDto trdCommDto2 = new TrdCommDto();
-            BeanUtil.copyPropertiesIgnoreNull(trdCommDto2, trdCommDto1);
-            trdCommDto2.setPtlTradeList(null);
-            setTrdCommDto(dto, trdCommDto2, cashIdFix, false);
-            valuationInterfService.runValInvest2Jixu(trdCommDto2);
-        }
-        // jixu接口 end
+//        // jixu接口 start
+//        TrdCommDto trdCommDto = new TrdCommDto();
+//        if (OperationType.DELETE == operationType) {
+//            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_DELETE);;
+//        }
+//        else if (OperationType.NEW == operationType) {
+//            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_ADD);
+//        }
+//        else {
+//            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_UPDATE);
+//        }
+//        trdCommDto.setHeader(BussinessJixuConstant.消息头_利率互换开仓交易);
+//        trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
+//        trdCommDto.setTrdProductDeal(entity.getTrdProductDeal());
+//        trdCommDto.setPtlTradeList(ptlTradeList);
+//        trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
+//        if(StringUtil.isNotEmpty(entity.getTrdProductDealAdd())) {
+//            trdCommDto.setTrdProductDealAdd(entity.getTrdProductDealAdd());
+//        }
+//        trdCommDto.setTradeFeeDetaillist(entity.getTrdTradeFeeDetailList());
+//        if(operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)){
+//            trdCommDto.setFinCashInfoList(finCashInfoList);
+//        }
+//        if (dto != null) {
+//            // List<现金流信息Entity>
+//            trdCommDto.setFinCashInfoList(dto.getFinCashInfoList());
+//            // List<现金流支付规则表Entity>
+//            trdCommDto.setFinCashPayRuleList(dto.getFinCashPayRuleList());
+//            // List<现金流计算规则表Entity> 只存固定端
+//            trdCommDto.setFinCashCalcRuleList(dto.getFinCashCalcRuleList());
+//            // List<现金流利率信息表Entity>
+//            trdCommDto.setFinRateInfoList(dto.getFinRateInfoList());
+//            // List<现金流计划表Entity>
+//            trdCommDto.setFinCashPlanList(dto.getFinCashPlanList());
+//            // List<利率重置计划表Entity>
+//            trdCommDto.setFinCashResetPlanList(dto.getFinCashResetPlanList());
+//        }
+//        valuationInterfService.runValInvest2Jixu(trdCommDto);
+//        if (dto != null) {
+//            TrdCommDto trdCommDto1 = new TrdCommDto();
+//            BeanUtil.copyPropertiesIgnoreNull(trdCommDto1, trdCommDto);
+//            trdCommDto1.setPtlTradeList(null);
+//            trdCommDto1.setHeader(BussinessJixuConstant.消息头_利率互换现金流);
+//            // 固定端
+//            String cashIdFix = dto.getFinCashInfoList().get(0).getCashId();
+//            setTrdCommDto(dto, trdCommDto1, cashIdFix, true);
+//            valuationInterfService.runValInvest2Jixu(trdCommDto1);
+//            // 浮动端
+//            TrdCommDto trdCommDto2 = new TrdCommDto();
+//            BeanUtil.copyPropertiesIgnoreNull(trdCommDto2, trdCommDto1);
+//            trdCommDto2.setPtlTradeList(null);
+//            setTrdCommDto(dto, trdCommDto2, cashIdFix, false);
+//            valuationInterfService.runValInvest2Jixu(trdCommDto2);
+//        }
+//        // jixu接口 end
         //        调用接口  add by zhangpuyu 2019/12/6 start
         try {
             List<String> tradeIds = new ArrayList<>();

@@ -79,7 +79,7 @@ public class FundAccountImplService extends BaseService<FundAccountInfoDto> impl
     
     @Override
     public void delete(String portfolioId) {
-        mapperDelegateService.deleteBySpecificKey("PTL_SEC_ACCT", "PORTFOLIO_ID", portfolioId);
+        mapperDelegateService.deleteBySpecificKey("PTL_CAPACCT_INFO", "PORTFOLIO_ID", portfolioId);
     }
 
     @Override

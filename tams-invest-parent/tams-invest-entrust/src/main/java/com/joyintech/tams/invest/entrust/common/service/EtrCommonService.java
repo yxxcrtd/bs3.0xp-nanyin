@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.dao.SysPageDictlistMapper;
@@ -67,7 +69,6 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
-import com.joyintech.tams.valuation.common.service.BaseCommonService;
 
 /**
  * @program: 2.1.0
@@ -76,7 +77,7 @@ import com.joyintech.tams.valuation.common.service.BaseCommonService;
  * @create: 2019-10-15 09:06
  **/
 @Service
-public class EtrCommonService extends BaseCommonService {
+public class EtrCommonService extends BaseService<ITableRow> {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.framework.constant.GlobalConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,7 +151,7 @@ public class RiskTrialDayTimeWriterService extends BaseService{
                 supervisionCalcSvc.deletePointSupervisionValue(dealDto);
                 supervisionCalcSvc.addPointSupervisionValue(dealDto);
             }catch (Exception e){
-                Exception re=new Exception("组合代码："+dealDto.getPortfolioId()+ GlobalConstant.COMMA+"指标代码："+dealDto.getIndId()+GlobalConstant.分号+e.getMessage(),e);
+                Exception re=new Exception("组合代码："+dealDto.getPortfolioId()+ GlobalConstant.COMMA+"指标代码："+dealDto.getIndId()+";"+e.getMessage(),e);
                 throw re;
             }
         }

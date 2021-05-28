@@ -14,18 +14,15 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.prodinfo.BussProdService;
 import com.joyintech.tams.invest.common.prodinfo.dto.IPtlProd;
 import com.joyintech.workflow.engine.constant.OperationType;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
 
 /**
  * 组合创建类

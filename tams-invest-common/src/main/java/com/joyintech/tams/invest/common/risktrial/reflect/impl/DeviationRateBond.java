@@ -1,7 +1,7 @@
 package com.joyintech.tams.invest.common.risktrial.reflect.impl;
 
-import com.csii.dc.client.util.StringUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.risktrial.dto.InvestTradeTrialInput;
 import com.joyintech.tams.invest.common.risktrial.dto.SystemParam;
 import com.joyintech.tams.invest.common.risktrial.reflect.PluginClass;
@@ -33,7 +33,7 @@ public class DeviationRateBond implements PluginClass {
 
     @Override
     public Object getParamterValue() throws Exception {
-        if (StringUtil.isEmpty(investTradeTrialInput.getTrdProductDeal()) || StringUtil.isEmpty(investTradeTrialInput.getTrdProductDeal().getUnitCprice())) {
+        if (!StringUtil.isNotEmpty(investTradeTrialInput.getTrdProductDeal()) || !StringUtil.isNotEmpty(investTradeTrialInput.getTrdProductDeal().getUnitCprice())) {
             return null;
         }
         BigDecimal 上一估值日净价 = pluginClassDao.getRecentNetPrice(sysRefParam.getAssetCode());//取前一日净价

@@ -1,5 +1,7 @@
 package com.joyintech.tams.invest.product.common.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -713,5 +715,24 @@ public class ProductCommonService extends BaseService {
     public Page<SelectOptionDto> queryTrusteeId(Map<String, Object> map) {
         return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/queryTrusteeId", map,
                 SelectOptionDto.class);
+    }
+
+    /**
+     * 编号生成
+     *
+     * @param str:交易方向或者指令类型
+     * @param date:日期
+     * @param flag: A:交易编号 B:指令编号
+     */
+    public String getTradeid(String str, Date date, String flag) {
+        Map<String, Object> map = new HashMap<>();
+        // 日期格式化yyymmdd
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        map.put("str",str);
+        map.put("formatDate",sdf.format(date));
+        map.put("flag",flag);
+
+        return restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getTradeid", map,
+                String.class);
     }
 }

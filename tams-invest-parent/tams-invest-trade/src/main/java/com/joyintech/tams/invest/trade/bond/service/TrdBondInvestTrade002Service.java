@@ -6,6 +6,7 @@
 package com.joyintech.tams.invest.trade.bond.service;
 
 import com.google.common.collect.Lists;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.calculation.CalculatorFactory;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
@@ -1274,7 +1275,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 				        WorkFlowParameter<TrdBondInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
 				        processParameter.setWorkFlowParameter(workFlowParameter);
 				        processParameter.setPageId("TrdBondInvestTrade002");
-				        if (StringUtil.equals(entity.getPageModel(), com.joyintech.tams.valuation.common.constants.GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+				        if (StringUtil.equals(entity.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
 				            processParameter.setOperationType(OperationType.NEW);
 				        }
 				        else {
@@ -1286,9 +1287,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 				        workFlowParameter.setBusinessCode((dto) -> dto.getTotleTradeId());
 				        workFlowParameter.setBusinessType(DictCodeList.共通业务类型_债券类资产交易.getValue());
 				        workFlowParameter.setComment((dto) -> WorkFlowUtil.concatComment(
-				            getMessage("TrdBondInvestTrade002.tradeId") + com.joyintech.tams.valuation.common.constants.GlobalConstant.COLON + dto.getTotleTradeId(),
-				            getMessage("TrdBondInvestTrade002.finprodName") + com.joyintech.tams.valuation.common.constants.GlobalConstant.COLON + dto.getFinprodName(),
-				            getMessage("TrdBondInvestTrade002.tradeDate") + com.joyintech.tams.valuation.common.constants.GlobalConstant.COLON + DateUtil.format(dto.getTradeDate())));
+				            getMessage("TrdBondInvestTrade002.tradeId") + GlobalConstant.COLON + dto.getTotleTradeId(),
+				            getMessage("TrdBondInvestTrade002.finprodName") + GlobalConstant.COLON + dto.getFinprodName(),
+				            getMessage("TrdBondInvestTrade002.tradeDate") + GlobalConstant.COLON + DateUtil.format(dto.getTradeDate())));
 				        this.start(processParameter, dtoList.toArray(new TrdBondInvestTradeDto[]{}));
 					}
 					

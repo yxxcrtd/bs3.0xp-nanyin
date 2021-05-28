@@ -33,7 +33,6 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.trade.transfer.lendtransfer.dto.LendTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.lendtransfer.dto.LendTransfer002Dto;
-import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
@@ -757,7 +756,7 @@ public class LendTransfer001Service extends CommonExportService<LendTransfer001D
         finTradeProduct.setoFinprodId(entity.getTradeId());
         finTradeProduct.setCalendarId(entity.getCalendarId());
         // 名义本金、名义币种、起息日、到期日、期限(天)、计息基础、交易日历、回购/拆借方向 本身就在dto中
-        finTradeProduct.setTermType(ValInterfCommonServiceApi.getRepTermType(
+        finTradeProduct.setTermType(commonBusinessService.getRepTermType(
                 DictCodeList.回购拆借方向_拆出.getValue().equals(
                         trdProductDeal.getPs()) ? DictCodeListExt1.金融产品类型_拆出.getValue() : DictCodeListExt1.金融产品类型_拆入.getValue(),
                 finTradeProduct.getTerm()));

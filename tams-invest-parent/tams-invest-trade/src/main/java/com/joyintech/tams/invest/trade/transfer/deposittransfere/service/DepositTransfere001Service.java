@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.trade.transfer.deposittransfere.service;
 
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -30,7 +31,6 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.trade.transfer.deposittransfere.dto.DepositTransfere001Dto;
 import com.joyintech.tams.invest.trade.transfer.deposittransfere.dto.DepositTransfere002Dto;
 import com.joyintech.tams.invest.trade.transfer.deposittransfere.dto.TrdDepoDuration001Dto;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;

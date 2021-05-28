@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.*;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
+import com.joyintech.tams.invest.common.dto.common.TrdProductDealDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
@@ -36,13 +37,14 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
-import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
+//import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
+//import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.invest.common.valuationinterf.dto.BokTradeBuildInputDto;
-import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
-import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfo;
-import com.joyintech.tams.valuation.common.interf.base.dto.ChannelProdDeal;
-import com.joyintech.tams.valuation.common.interf.howmany.dto.TrdProductDealDto;
+//import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
+//import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfo;
+//import com.joyintech.tams.valuation.common.interf.base.dto.ChannelProdDeal;
+//import com.joyintech.tams.valuation.common.interf.howmany.dto.TrdProductDealDto;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.dao.WorkflowMapper;
 import com.joyintech.workflow.engine.dto.WflStatusDto;
@@ -128,22 +130,22 @@ public class AllTradeCommonUtil {
             autoGenerateReverseDeal(inputDto);
         }
         // 自动生成反向交易 chenzhili end
-//        boolean 子组合调用了接口 = false;
-//        if (inputDto.getTrdProductDealAdd() != null) {
-//            String 原组合代码 = inputDto.getTrdProductDealAdd().getPortfolioId();
-//            if (StringUtil.isNotEmpty(inputDto.getActPortfolioId()) && !inputDto.getActPortfolioId().equals(原组合代码)) {
-//                inputDto.getTrdProductDealAdd().setPortfolioId(inputDto.getActPortfolioId());
-//                inputDto.setProdid(inputDto.getActPortfolioId());
-//                调用估值接口(inputDto); // 子组合调用估值接口
-//                inputDto.getTrdProductDealAdd().setPortfolioId(原组合代码);
-//                inputDto.setProdid(原组合代码);
-//                子组合调用了接口 = true;
-//            }
-//        }
+        boolean 子组合调用了接口 = false;
+        if (inputDto.getTrdProductDealAdd() != null) {
+            String 原组合代码 = inputDto.getTrdProductDealAdd().getPortfolioId();
+            if (StringUtil.isNotEmpty(inputDto.getActPortfolioId()) && !inputDto.getActPortfolioId().equals(原组合代码)) {
+                inputDto.getTrdProductDealAdd().setPortfolioId(inputDto.getActPortfolioId());
+                inputDto.setProdid(inputDto.getActPortfolioId());
+                调用估值接口(inputDto); // 子组合调用估值接口
+                inputDto.getTrdProductDealAdd().setPortfolioId(原组合代码);
+                inputDto.setProdid(原组合代码);
+                子组合调用了接口 = true;
+            }
+        }
         // 子组合交易时，母组合不需要调接口
-//        if (!子组合调用了接口) {
-//            调用估值接口(inputDto);
-//        }
+        if (!子组合调用了接口) {
+            调用估值接口(inputDto);
+        }
         // }
         // catch (Exception e) {
         // logger.error("接口调用失败", e);
@@ -151,7 +153,7 @@ public class AllTradeCommonUtil {
     }
 
     private static void 调用估值接口(AllTradeCommonInputDto inputDto) {
-        // 通道交易 新增 强成西 2019/03/26 start
+         //通道交易 新增 强成西 2019/03/26 start
         if (inputDto.getTrdProductDealAdd() != null) {
             TrdProductDealDto deal = new TrdProductDealDto();
             BeanUtil.copyPropertiesIgnoreNull(deal, inputDto.getTrdProductDeal());
@@ -187,7 +189,7 @@ public class AllTradeCommonUtil {
                 }
             }
             else if (DictCodeListExt1.金融产品类型_投管用_存款.getValue().equals(deal.getFinprodType2())){
-            	//IS_CAL_LOADRATE 01 借款利率  
+            	//IS_CAL_LOADRATE 01 借款利率
             	if(StringUtil.isNotEmpty(CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE)) && CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE).equals("01")){
             		isChlIdTZ = StringUtil.isNotEmpty(inputDto.getTrdProductDeal().getChlId());
             	}else{
@@ -201,162 +203,162 @@ public class AllTradeCommonUtil {
 
             // 通道不为空时，调用通道相关接口
             if (isChlIdTZ) {
-                ValInterfCommonServiceApi valInterfCommonServiceApi = SpringContextUtil.getBean(ValInterfCommonServiceApi.class);
-                FinProductAddMapper finProductMapperAdd = SpringContextUtil.getBean(FinProductAddMapper.class);
-                FinProductAdd payType = finProductMapperAdd.selectByPrimaryKey(inputDto.getTrdProductDeal().getChlId());
-                
-                // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 start
-                // 定义 变量.资金交收指令DTO
-                StlOrders stlOrders = new StlOrders();
-                // IF 输入.接口数据.划款指令 IS NOT NULL
-                if(inputDto.getStlPayOrders() != null){
-                    BeanUtil.copyPropertiesIgnoreNull(stlOrders, inputDto.getStlPayOrders());
-                    // IF 数据字典：划款方式.逐笔划款 eq 变量.通道标的扩展信息Dto.划款方式 
-                    if (DictCodeListExt2.划款方式_逐笔划款.getValue().equals(payType.getPayType())){
-                        // 变量.资金交收指令DTO.本方账户  = 变量.资金交收指令DTO.对方账户
-                        stlOrders.setMyAcctNo(stlOrders.getCounterAcctNo());
-                        // 变量.资金交收指令DTO.对方账户 = null
-                        stlOrders.setCounterAcctNo(null);
-                    }
-                    // 变量.资金交收指令DTO.结算金额 = NULL
-                    stlOrders.setSettleAmt(null);
-                }
-                // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 end
-                    
-                
-                if (DictCodeList.交易方向_付费.getValue().equals(inputDto.getTrdProductDeal().getPs())) {
-                    List<TrdTradeFeeDetail> trdTradeFeeDetailList = genTradeFeeDetails(inputDto.getTrdProductDeal());
-
-                    valInterfCommonServiceApi.prdDealSep(deal, trdTradeFeeDetailList, dealAdd.getPortfolioId(), deal.getChlId(),
-                        DictCodeListExt1.金融产品类型_投资组合.getValue(), deal.getBranch(),
-                        DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType()) ? "01" : "00");
-                }
-                else if (StringUtil.equals(DictCodeList.交易方向_税费缴税.getValue(), inputDto.getTrdProductDeal().getPs())) {
-
-                    valInterfCommonServiceApi.prdDealSep(deal, inputDto.getListTrdTradeFeeDetail(), deal.getFinprodId(),
-                        deal.getChlId(), inputDto.getProdFinprodType(), deal.getBranch(),
-                        DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType()) ? "01" : "00");
-                }
-                else {
-                    // 重新获取金融产品类型
-                    ValItemValueGenUtil.genFinprodType(deal);
-                    // 重新获取业务类型
-                    ValItemValueGenUtil.genBusiType(deal);
-                    if (DictCodeListExt2.划款方式_逐笔划款.getValue().equals(payType.getPayType())
-                            && !DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
-                            && !DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs())
-                            && !DictCodeList.交易方向_认购确认.getValue().equals(deal.getPs())) {
-                        // 调用接口【理财产品借通道投资交易】
-                        // 2.4 产品买卖通道交易，调用接口【理财产品借通道投资交易】
-                        ChannelProdDeal channelProdDeal = do生成ChannelProdDeal(deal, inputDto);
-                        channelProdDeal.setIsSwapTransaction(inputDto.getIsSwapTransaction());
-                        /** add by yanya on 20191205 非货币基金交易为除权登记时，交易金额、交易本金、交易份额置为0,防止生成交易凭证 **/
-                        if ((DictCodeList.业务类型_非货币基金交易_非货基_非类货基资产交易.getValue().equals(deal.getBusiType())
-                             || DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue().equals(deal.getBusiType()))
-                            && DictCodeList.交易方向_除权登记.getValue().equals(deal.getPs())) {
-                            channelProdDeal.setTradeAmt(BigDecimal.ZERO);
-                            channelProdDeal.setPrinAmt(BigDecimal.ZERO);
-                            channelProdDeal.setShareAmt(BigDecimal.ZERO);
-                        }
-
-//                        // 通道指令信息传参的时候，估值使用传过来的指令信息 modify by wujie 20191117 start
-//                        StlOrders stlOrders = null;
-//                        if (inputDto.getStlPayOrders() != null) {
-//                            stlOrders = new StlOrders();
-//                            BeanUtil.copyPropertiesIgnoreNull(stlOrders, inputDto.getStlPayOrders());
-//                            stlOrders.setSettleAmt(null);//modify wujie on 20200119 remark:不使用前提资金交收指令的结算金额
-//                        }
-                        channelProdDeal.setStlOrders(stlOrders);
-                        channelProdDeal.setIsSwapTransaction(inputDto.getIsSwapTransaction());
-                        // 通道指令信息传参的时候，估值使用传过来的指令信息 modify by wujie 20191117 end
-                        // 调用共通设计->【详细设计-投管接口共通方法设计.xlsx】->理财产品借通道投资交易SHEET
-                        valInterfCommonServiceApi.getChannelProdDeal(channelProdDeal);
-                    }
-                    // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 start
-                    // IF 数据字典：是否.是 eq 输入.接口数据.是否转仓交易 AND 数据字典：划款方式.一次性划款 eq 变量.通道标的扩展信息Dto.划款方式
-                    // update by caiqun 20200903 TISHKBS-1038一次性划款的通道，未做通道资金划拨，债券买入交易（通过该通道投资）审批通过后，入账信息表（BOK_DEAL_ACCOUNTING）表无数据
-                 /*   if(DictCodeList.是否_是.getValue().equals(inputDto.getIsSwapTransaction()) &&
-                            DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType())){
-                        // 调用接口【理财产品借通道投资交易】
-                        // 2.4 产品买卖通道交易，调用接口【理财产品借通道投资交易】
-                        ChannelProdDeal channelProdDeal = do生成ChannelProdDeal(deal, inputDto);
-                        // 变量.理财产品借通道投资交易DTO.资金交收指令 = 变量.资金交收指令DTO
-                        channelProdDeal.setStlOrders(stlOrders);
-                        // 变量.理财产品借通道投资交易DTO.是否转仓交易 = 输入.接口数据.是否转仓交易
-//                        inputDto.setIsSwapTransaction(inputDto.getIsSwapTransaction());
-                        channelProdDeal.setIsSwapTransaction(inputDto.getIsSwapTransaction());
-                        // 调用共通设计->【详细设计-投管接口共通方法设计.xlsx】->理财产品借通道投资交易SHEET
-                        valInterfCommonServiceApi.getChannelProdDeal(channelProdDeal);
-                    }*/
-                    // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 end
-                    
-                    // 调用接口【通道投资资产交易拆分】
-                    // TODO:债转股交易的金融产品实物交易信息也要作为参数调用接口
-                    /**
-                     * MODIFY BY WUJIE ON 20191118 START valInterfCommonServiceApi.chlInvestAssetSep(dealAdd.getPortfolioId(), DictCodeListExt1.金融产品类型_投资组合.getValue(),
-                     * deal, dealAdd, inputDto.getTrdTradeFeeDetail(),null,null);
-                     **/
-                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理开始-----------------------");
-                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理交易编号" + deal.getTradeId() + "-----------------------");
-                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理产品代码" + inputDto.getProdid() + "-----------------------");
-                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理产品类型" + inputDto.getProdFinprodType() + "-----------------------");
-                    ChannelProdDeal channelProdDeal = new ChannelProdDeal();
-                    BeanUtil.copyPropertiesIgnoreNull(channelProdDeal, deal);
-                    channelProdDeal.setTrdProductDealAdd(dealAdd);
-                    // modify by renping 基金赎回到账时账务凭证不正确 20200325 start
-                    // 通道费赎回到账时不能出通道费凭证（因为赎回确认时已经出过了）
-                    boolean channelFeeT24Flag = (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(
-                        deal.getFinprodType2()) || DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2()))
-                        && StringUtil.equals(deal.getPs(), DictCodeList.交易方向_赎回到账.getValue()) 
-                        && inputDto.getTrdTradeFeeDetail() != null 
-                        && StringUtil.equals(inputDto.getTrdTradeFeeDetail().getIsPayWithTrade(), DictCodeList.是否_是.getValue());
-                    if (!channelFeeT24Flag) {
-                        channelProdDeal.setTrdTradeFeeDetail(inputDto.getTrdTradeFeeDetail());
-                    }
-                    // modify by renping 基金赎回到账时账务凭证不正确 20200325 end
-                    channelProdDeal.setProdId(inputDto.getProdid());
-                    channelProdDeal.setProductType(inputDto.getProdFinprodType());
-                    channelProdDeal.setPtlTradeList(inputDto.getPtlTradeList());
-                    // 非通道费用List
-                    channelProdDeal.setListTrdTradeFeeDetail(inputDto.getListTrdTradeFeeDetail());
-
-                    // add by renping 基金赎回到账时账务凭证不正确 20200325 start
-                    // 通道费直接加到交易金额上
-                    if (channelFeeT24Flag) {
-                        channelProdDeal.setTradeAmt(ArithmeticUtil.doAdd(deal.getTradeAmt(),
-                            inputDto.getTrdTradeFeeDetail().getFeeAmt()));
-                    }
-                    // add by renping 基金赎回到账时账务凭证不正确 20200325 end
-                    // 金融产品实物交易表
-                    channelProdDeal.setTrdFinProductBarter(barterDeal);
-                    // 资金交收指令
-                    // 通道指令信息传参的时候，估值使用传过来的指令信息 modify by renping 20191117 start
-//                    StlOrders stlOrders = null;
-//                    if (inputDto.getStlPayOrders() != null) {
-//                        stlOrders = new StlOrders();
-//                        BeanUtil.copyPropertiesIgnoreNull(stlOrders, inputDto.getStlPayOrders());
+//                ValInterfCommonServiceApi valInterfCommonServiceApi = SpringContextUtil.getBean(ValInterfCommonServiceApi.class);
+//                FinProductAddMapper finProductMapperAdd = SpringContextUtil.getBean(FinProductAddMapper.class);
+//                FinProductAdd payType = finProductMapperAdd.selectByPrimaryKey(inputDto.getTrdProductDeal().getChlId());
 //
-//                        /** ADD BY WUJIE ON 20191205 START REMARK:通道投资 **/
-//                        if (DictCodeListExt2.划款方式_逐笔划款.getValue().equals(payType.getPayType())) {
-//                            stlOrders.setMyAcctNo(stlOrders.getCounterAcctNo());
-//                            stlOrders.setCounterAcctNo(null);
-//                        }
-//                        /** ADD BY WUJIE ON 20191205 END **/
-//                        stlOrders.setSettleAmt(null);//modify wujie on 20200119 remark:不使用前提资金交收指令的结算金额
-//
+//                // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 start
+//                // 定义 变量.资金交收指令DTO
+//                StlOrders stlOrders = new StlOrders();
+//                // IF 输入.接口数据.划款指令 IS NOT NULL
+//                if(inputDto.getStlPayOrders() != null){
+//                    BeanUtil.copyPropertiesIgnoreNull(stlOrders, inputDto.getStlPayOrders());
+//                    // IF 数据字典：划款方式.逐笔划款 eq 变量.通道标的扩展信息Dto.划款方式
+//                    if (DictCodeListExt2.划款方式_逐笔划款.getValue().equals(payType.getPayType())){
+//                        // 变量.资金交收指令DTO.本方账户  = 变量.资金交收指令DTO.对方账户
+//                        stlOrders.setMyAcctNo(stlOrders.getCounterAcctNo());
+//                        // 变量.资金交收指令DTO.对方账户 = null
+//                        stlOrders.setCounterAcctNo(null);
 //                    }
-                    // IF 数据字典：是否.是 ==输入.接口数据.是否转仓交易
-                    if(DictCodeList.是否_是.getValue().equals(inputDto.getIsSwapTransaction())){
-                        // 变量.资金交收指令DTO = NULL
-                        stlOrders = null;
-                    }
-                    channelProdDeal.setStlOrders(stlOrders);
-                    channelProdDeal.setIsSwapTransaction(inputDto.getIsSwapTransaction());
-                    // 通道指令信息传参的时候，估值使用传过来的指令信息 modify by renping 20191117 end
-                    valInterfCommonServiceApi.chlInvestAssetSep(channelProdDeal);
-                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理结束-----------------------");
-                    /** MODIFY BY WUJIE ON 20191118 END **/
-                }
+//                    // 变量.资金交收指令DTO.结算金额 = NULL
+//                    stlOrders.setSettleAmt(null);
+//                }
+//                // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 end
+//
+//
+//                if (DictCodeList.交易方向_付费.getValue().equals(inputDto.getTrdProductDeal().getPs())) {
+//                    List<TrdTradeFeeDetail> trdTradeFeeDetailList = genTradeFeeDetails(inputDto.getTrdProductDeal());
+//
+//                    valInterfCommonServiceApi.prdDealSep(deal, trdTradeFeeDetailList, dealAdd.getPortfolioId(), deal.getChlId(),
+//                        DictCodeListExt1.金融产品类型_投资组合.getValue(), deal.getBranch(),
+//                        DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType()) ? "01" : "00");
+//                }
+//                else if (StringUtil.equals(DictCodeList.交易方向_税费缴税.getValue(), inputDto.getTrdProductDeal().getPs())) {
+//
+//                    valInterfCommonServiceApi.prdDealSep(deal, inputDto.getListTrdTradeFeeDetail(), deal.getFinprodId(),
+//                        deal.getChlId(), inputDto.getProdFinprodType(), deal.getBranch(),
+//                        DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType()) ? "01" : "00");
+//                }
+//                else {
+//                    // 重新获取金融产品类型
+//                    ValItemValueGenUtil.genFinprodType(deal);
+//                    // 重新获取业务类型
+//                    ValItemValueGenUtil.genBusiType(deal);
+//                    if (DictCodeListExt2.划款方式_逐笔划款.getValue().equals(payType.getPayType())
+//                            && !DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
+//                            && !DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs())
+//                            && !DictCodeList.交易方向_认购确认.getValue().equals(deal.getPs())) {
+//                        // 调用接口【理财产品借通道投资交易】
+//                        // 2.4 产品买卖通道交易，调用接口【理财产品借通道投资交易】
+//                        ChannelProdDeal channelProdDeal = do生成ChannelProdDeal(deal, inputDto);
+//                        channelProdDeal.setIsSwapTransaction(inputDto.getIsSwapTransaction());
+//                        /** add by yanya on 20191205 非货币基金交易为除权登记时，交易金额、交易本金、交易份额置为0,防止生成交易凭证 **/
+//                        if ((DictCodeList.业务类型_非货币基金交易_非货基_非类货基资产交易.getValue().equals(deal.getBusiType())
+//                             || DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue().equals(deal.getBusiType()))
+//                            && DictCodeList.交易方向_除权登记.getValue().equals(deal.getPs())) {
+//                            channelProdDeal.setTradeAmt(BigDecimal.ZERO);
+//                            channelProdDeal.setPrinAmt(BigDecimal.ZERO);
+//                            channelProdDeal.setShareAmt(BigDecimal.ZERO);
+//                        }
+//
+////                        // 通道指令信息传参的时候，估值使用传过来的指令信息 modify by wujie 20191117 start
+////                        StlOrders stlOrders = null;
+////                        if (inputDto.getStlPayOrders() != null) {
+////                            stlOrders = new StlOrders();
+////                            BeanUtil.copyPropertiesIgnoreNull(stlOrders, inputDto.getStlPayOrders());
+////                            stlOrders.setSettleAmt(null);//modify wujie on 20200119 remark:不使用前提资金交收指令的结算金额
+////                        }
+//                        channelProdDeal.setStlOrders(stlOrders);
+//                        channelProdDeal.setIsSwapTransaction(inputDto.getIsSwapTransaction());
+//                        // 通道指令信息传参的时候，估值使用传过来的指令信息 modify by wujie 20191117 end
+//                        // 调用共通设计->【详细设计-投管接口共通方法设计.xlsx】->理财产品借通道投资交易SHEET
+//                        valInterfCommonServiceApi.getChannelProdDeal(channelProdDeal);
+//                    }
+//                    // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 start
+//                    // IF 数据字典：是否.是 eq 输入.接口数据.是否转仓交易 AND 数据字典：划款方式.一次性划款 eq 变量.通道标的扩展信息Dto.划款方式
+//                    // update by caiqun 20200903 TISHKBS-1038一次性划款的通道，未做通道资金划拨，债券买入交易（通过该通道投资）审批通过后，入账信息表（BOK_DEAL_ACCOUNTING）表无数据
+//                 /*   if(DictCodeList.是否_是.getValue().equals(inputDto.getIsSwapTransaction()) &&
+//                            DictCodeListExt2.划款方式_一次性划款.getValue().equals(payType.getPayType())){
+//                        // 调用接口【理财产品借通道投资交易】
+//                        // 2.4 产品买卖通道交易，调用接口【理财产品借通道投资交易】
+//                        ChannelProdDeal channelProdDeal = do生成ChannelProdDeal(deal, inputDto);
+//                        // 变量.理财产品借通道投资交易DTO.资金交收指令 = 变量.资金交收指令DTO
+//                        channelProdDeal.setStlOrders(stlOrders);
+//                        // 变量.理财产品借通道投资交易DTO.是否转仓交易 = 输入.接口数据.是否转仓交易
+////                        inputDto.setIsSwapTransaction(inputDto.getIsSwapTransaction());
+//                        channelProdDeal.setIsSwapTransaction(inputDto.getIsSwapTransaction());
+//                        // 调用共通设计->【详细设计-投管接口共通方法设计.xlsx】->理财产品借通道投资交易SHEET
+//                        valInterfCommonServiceApi.getChannelProdDeal(channelProdDeal);
+//                    }*/
+//                    // 20200204 魏鹏：增加通道(一次性划款)内部转仓交易时通道划款的处理 设计变更 end
+//
+//                    // 调用接口【通道投资资产交易拆分】
+//                    // TODO:债转股交易的金融产品实物交易信息也要作为参数调用接口
+//                    /**
+//                     * MODIFY BY WUJIE ON 20191118 START valInterfCommonServiceApi.chlInvestAssetSep(dealAdd.getPortfolioId(), DictCodeListExt1.金融产品类型_投资组合.getValue(),
+//                     * deal, dealAdd, inputDto.getTrdTradeFeeDetail(),null,null);
+//                     **/
+//                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理开始-----------------------");
+//                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理交易编号" + deal.getTradeId() + "-----------------------");
+//                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理产品代码" + inputDto.getProdid() + "-----------------------");
+//                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理产品类型" + inputDto.getProdFinprodType() + "-----------------------");
+//                    ChannelProdDeal channelProdDeal = new ChannelProdDeal();
+//                    BeanUtil.copyPropertiesIgnoreNull(channelProdDeal, deal);
+//                    channelProdDeal.setTrdProductDealAdd(dealAdd);
+//                    // modify by renping 基金赎回到账时账务凭证不正确 20200325 start
+//                    // 通道费赎回到账时不能出通道费凭证（因为赎回确认时已经出过了）
+//                    boolean channelFeeT24Flag = (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(
+//                        deal.getFinprodType2()) || DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2()))
+//                        && StringUtil.equals(deal.getPs(), DictCodeList.交易方向_赎回到账.getValue())
+//                        && inputDto.getTrdTradeFeeDetail() != null
+//                        && StringUtil.equals(inputDto.getTrdTradeFeeDetail().getIsPayWithTrade(), DictCodeList.是否_是.getValue());
+//                    if (!channelFeeT24Flag) {
+//                        channelProdDeal.setTrdTradeFeeDetail(inputDto.getTrdTradeFeeDetail());
+//                    }
+//                    // modify by renping 基金赎回到账时账务凭证不正确 20200325 end
+//                    channelProdDeal.setProdId(inputDto.getProdid());
+//                    channelProdDeal.setProductType(inputDto.getProdFinprodType());
+//                    channelProdDeal.setPtlTradeList(inputDto.getPtlTradeList());
+//                    // 非通道费用List
+//                    channelProdDeal.setListTrdTradeFeeDetail(inputDto.getListTrdTradeFeeDetail());
+//
+//                    // add by renping 基金赎回到账时账务凭证不正确 20200325 start
+//                    // 通道费直接加到交易金额上
+//                    if (channelFeeT24Flag) {
+//                        channelProdDeal.setTradeAmt(ArithmeticUtil.doAdd(deal.getTradeAmt(),
+//                            inputDto.getTrdTradeFeeDetail().getFeeAmt()));
+//                    }
+//                    // add by renping 基金赎回到账时账务凭证不正确 20200325 end
+//                    // 金融产品实物交易表
+//                    channelProdDeal.setTrdFinProductBarter(barterDeal);
+//                    // 资金交收指令
+//                    // 通道指令信息传参的时候，估值使用传过来的指令信息 modify by renping 20191117 start
+////                    StlOrders stlOrders = null;
+////                    if (inputDto.getStlPayOrders() != null) {
+////                        stlOrders = new StlOrders();
+////                        BeanUtil.copyPropertiesIgnoreNull(stlOrders, inputDto.getStlPayOrders());
+////
+////                        /** ADD BY WUJIE ON 20191205 START REMARK:通道投资 **/
+////                        if (DictCodeListExt2.划款方式_逐笔划款.getValue().equals(payType.getPayType())) {
+////                            stlOrders.setMyAcctNo(stlOrders.getCounterAcctNo());
+////                            stlOrders.setCounterAcctNo(null);
+////                        }
+////                        /** ADD BY WUJIE ON 20191205 END **/
+////                        stlOrders.setSettleAmt(null);//modify wujie on 20200119 remark:不使用前提资金交收指令的结算金额
+////
+////                    }
+//                    // IF 数据字典：是否.是 ==输入.接口数据.是否转仓交易
+//                    if(DictCodeList.是否_是.getValue().equals(inputDto.getIsSwapTransaction())){
+//                        // 变量.资金交收指令DTO = NULL
+//                        stlOrders = null;
+//                    }
+//                    channelProdDeal.setStlOrders(stlOrders);
+//                    channelProdDeal.setIsSwapTransaction(inputDto.getIsSwapTransaction());
+//                    // 通道指令信息传参的时候，估值使用传过来的指令信息 modify by renping 20191117 end
+//                    valInterfCommonServiceApi.chlInvestAssetSep(channelProdDeal);
+//                    logger.info("调用组合对应【通道投资资产交易拆分】接口处理结束-----------------------");
+//                    /** MODIFY BY WUJIE ON 20191118 END **/
+//                }
                 // 和需求确认通道暂时也占授信，后期预留开关 start add by zcw
                 CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
                 if (!(DictCodeListExt1.交易状态_初始.getValue().equals(inputDto.getTrdProductDeal().getTradeStatus())
@@ -389,9 +391,9 @@ public class AllTradeCommonUtil {
      * @since 1.0
      */
     public static void getChannelProdDeal(AllTradeCommonInputDto inputDto) {
-        ValInterfCommonServiceApi valInterfCommonServiceApi = SpringContextUtil.getBean(ValInterfCommonServiceApi.class);
-        ChannelProdDeal channelProdDeal = do生成ChannelProdDeal(inputDto.getTrdProductDeal(), inputDto);
-        valInterfCommonServiceApi.getChannelProdDeal(channelProdDeal);
+//        ValInterfCommonServiceApi valInterfCommonServiceApi = SpringContextUtil.getBean(ValInterfCommonServiceApi.class);
+//        ChannelProdDeal channelProdDeal = do生成ChannelProdDeal(inputDto.getTrdProductDeal(), inputDto);
+//        valInterfCommonServiceApi.getChannelProdDeal(channelProdDeal);
     }
 
     private static List<TrdTradeFeeDetail> genTradeFeeDetails(TrdProductDeal trdProductDeal) {
@@ -404,91 +406,91 @@ public class AllTradeCommonUtil {
         return Arrays.asList(new TrdTradeFeeDetail[] {detail});
     }
 
-    // 通道交易 新增 强成西 2019/03/26 start
-    private static ChannelProdDeal do生成ChannelProdDeal(TrdProductDeal trdProductDeal, AllTradeCommonInputDto inputDto) {
-        ChannelProdDeal channelProdDeal = new ChannelProdDeal();
-        channelProdDeal.setTradeId(trdProductDeal.getTradeId());
-        channelProdDeal.setProdId(inputDto.getProdid());
-        channelProdDeal.setTradeStatus(trdProductDeal.getTradeStatus());
-        channelProdDeal.setChlId(trdProductDeal.getChlId());
-        // 交易方向= （转仓时（买入、卖出）、申购赎回时（申购、赎回））
-        channelProdDeal.setPs(trdProductDeal.getPs());
-        channelProdDeal.setTradeDate(trdProductDeal.getTradeDate());
-        channelProdDeal.setSettleDate(trdProductDeal.getSettleDate());
-        channelProdDeal.setPrinAmt(trdProductDeal.getPrinAmt() == null ? BigDecimal.ZERO : trdProductDeal.getPrinAmt());
-        channelProdDeal.setTradeAmt(trdProductDeal.getTradeAmt() == null ? BigDecimal.ZERO : trdProductDeal.getTradeAmt());
-        channelProdDeal.setShareAmt(trdProductDeal.getTradeAmt() == null ? BigDecimal.ZERO : trdProductDeal.getTradeAmt());
-        channelProdDeal.setTradeMarket(trdProductDeal.getTradeMarket());
-        channelProdDeal.setCcy(trdProductDeal.getCcy());
-        channelProdDeal.setDealSepFlag("00");
-        channelProdDeal.setIsClean(DictCodeList.是否_是.getValue());
-        channelProdDeal.setfTradeId(trdProductDeal.getTradeId());
-        // 有通道是撤销报错，原交易编号是null了 modify by renping 20191025 start
-        String pTradeId = StringUtil.isNotEmpty(
-            trdProductDeal.getpTradeId()) ? trdProductDeal.getpTradeId() : trdProductDeal.getTradeId();
-        channelProdDeal.setpTradeId(pTradeId);
-        // 有通道是撤销报错，原交易编号是null了 modify by renping 20191025 end
-        /** modify by dongjun on 20190527 质押式正回购交易方向特殊处理 start **/
-        channelProdDeal.setFinprodType(trdProductDeal.getFinprodType());
-        /** modify by dongjun on 20190527 质押式正回购交易方向特殊处理 end **/
-
-        /** add by wujie on 20191118 start **/
-        channelProdDeal.setProductType(inputDto.getProdFinprodType());
-        /** add by wujie on 20191118 end **/
-
-        channelProdDeal.setPtlTradeList(inputDto.getPtlTradeList());
-        //传入通道费信息
-        if (inputDto.getTrdTradeFeeDetail() != null
-                // add by renping 基金赎回到账时账务凭证不正确 20200325 start
-                && !((DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(
-                    trdProductDeal.getFinprodType2())
-                      || DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(
-                          trdProductDeal.getFinprodType2()))
-                     && StringUtil.equals(trdProductDeal.getPs(),
-                         DictCodeList.交易方向_赎回到账.getValue()))) {
-                // add by renping 基金赎回到账时账务凭证不正确 20200325 end
-            	ChannelFeeInfo channelFeeInfo = new ChannelFeeInfo();
-            	channelFeeInfo.setFeeAmt(inputDto.getTrdTradeFeeDetail().getFeeAmt());
-            	channelFeeInfo.setFeeType(inputDto.getTrdTradeFeeDetail().getFeeType());
-            	channelFeeInfo.setIsPayWithTrade(inputDto.getTrdTradeFeeDetail().getIsPayWithTrade());
-            	channelFeeInfo.setFeeId(inputDto.getTrdTradeFeeDetail().getFeeId());
-            	channelProdDeal.setChannelFeeInfo(channelFeeInfo);
-            }
-        
-        return channelProdDeal;
-    }
+//    // 通道交易 新增 强成西 2019/03/26 start
+//    private static ChannelProdDeal do生成ChannelProdDeal(TrdProductDeal trdProductDeal, AllTradeCommonInputDto inputDto) {
+//        ChannelProdDeal channelProdDeal = new ChannelProdDeal();
+//        channelProdDeal.setTradeId(trdProductDeal.getTradeId());
+//        channelProdDeal.setProdId(inputDto.getProdid());
+//        channelProdDeal.setTradeStatus(trdProductDeal.getTradeStatus());
+//        channelProdDeal.setChlId(trdProductDeal.getChlId());
+//        // 交易方向= （转仓时（买入、卖出）、申购赎回时（申购、赎回））
+//        channelProdDeal.setPs(trdProductDeal.getPs());
+//        channelProdDeal.setTradeDate(trdProductDeal.getTradeDate());
+//        channelProdDeal.setSettleDate(trdProductDeal.getSettleDate());
+//        channelProdDeal.setPrinAmt(trdProductDeal.getPrinAmt() == null ? BigDecimal.ZERO : trdProductDeal.getPrinAmt());
+//        channelProdDeal.setTradeAmt(trdProductDeal.getTradeAmt() == null ? BigDecimal.ZERO : trdProductDeal.getTradeAmt());
+//        channelProdDeal.setShareAmt(trdProductDeal.getTradeAmt() == null ? BigDecimal.ZERO : trdProductDeal.getTradeAmt());
+//        channelProdDeal.setTradeMarket(trdProductDeal.getTradeMarket());
+//        channelProdDeal.setCcy(trdProductDeal.getCcy());
+//        channelProdDeal.setDealSepFlag("00");
+//        channelProdDeal.setIsClean(DictCodeList.是否_是.getValue());
+//        channelProdDeal.setfTradeId(trdProductDeal.getTradeId());
+//        // 有通道是撤销报错，原交易编号是null了 modify by renping 20191025 start
+//        String pTradeId = StringUtil.isNotEmpty(
+//            trdProductDeal.getpTradeId()) ? trdProductDeal.getpTradeId() : trdProductDeal.getTradeId();
+//        channelProdDeal.setpTradeId(pTradeId);
+//        // 有通道是撤销报错，原交易编号是null了 modify by renping 20191025 end
+//        /** modify by dongjun on 20190527 质押式正回购交易方向特殊处理 start **/
+//        channelProdDeal.setFinprodType(trdProductDeal.getFinprodType());
+//        /** modify by dongjun on 20190527 质押式正回购交易方向特殊处理 end **/
+//
+//        /** add by wujie on 20191118 start **/
+//        channelProdDeal.setProductType(inputDto.getProdFinprodType());
+//        /** add by wujie on 20191118 end **/
+//
+//        channelProdDeal.setPtlTradeList(inputDto.getPtlTradeList());
+//        //传入通道费信息
+//        if (inputDto.getTrdTradeFeeDetail() != null
+//                // add by renping 基金赎回到账时账务凭证不正确 20200325 start
+//                && !((DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(
+//                    trdProductDeal.getFinprodType2())
+//                      || DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(
+//                          trdProductDeal.getFinprodType2()))
+//                     && StringUtil.equals(trdProductDeal.getPs(),
+//                         DictCodeList.交易方向_赎回到账.getValue()))) {
+//                // add by renping 基金赎回到账时账务凭证不正确 20200325 end
+//            	ChannelFeeInfo channelFeeInfo = new ChannelFeeInfo();
+//            	channelFeeInfo.setFeeAmt(inputDto.getTrdTradeFeeDetail().getFeeAmt());
+//            	channelFeeInfo.setFeeType(inputDto.getTrdTradeFeeDetail().getFeeType());
+//            	channelFeeInfo.setIsPayWithTrade(inputDto.getTrdTradeFeeDetail().getIsPayWithTrade());
+//            	channelFeeInfo.setFeeId(inputDto.getTrdTradeFeeDetail().getFeeId());
+//            	channelProdDeal.setChannelFeeInfo(channelFeeInfo);
+//            }
+//
+//        return channelProdDeal;
+//    }
     // 通道交易 新增 强成西 2019/03/26 end
 
     private static void do调用接口生成入账信息(AllTradeCommonInputDto inputDto) {
-        // 调用估值交易入账接口
-        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
-        // 调用授信共通
+//        // 调用估值交易入账接口
+//        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
+         //调用授信共通
         CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
-        if (valuationInterfService != null && ceLinesUpdate != null) {
-            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
-            bokTradeBuildInputDto.setProdid(inputDto.getProdid());
-            bokTradeBuildInputDto.setProdFinprodType(inputDto.getProdFinprodType());
-            bokTradeBuildInputDto.setProdVdate(inputDto.getProdVdate());
-            bokTradeBuildInputDto.setTrdProductDeal(inputDto.getTrdProductDeal());
-            /** ADD BY WUJIE ON 20191119 START **/
-            bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
-            /** ADD BY WUJIE ON 20191119 END **/
-            // add by renping 20191117 start
-            bokTradeBuildInputDto.setStlPayOrders(inputDto.getStlPayOrders());
-            // add by renping 20191117 start
-            // add by jinmaodong 20191214 start
-            bokTradeBuildInputDto.setTrdFinProductBarter(inputDto.getTrdFinProductBarter());
-            // add by jinmaodong 20191214 end
+        if (/*valuationInterfService != null && */ceLinesUpdate != null) {
+//            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
+//            bokTradeBuildInputDto.setProdid(inputDto.getProdid());
+//            bokTradeBuildInputDto.setProdFinprodType(inputDto.getProdFinprodType());
+//            bokTradeBuildInputDto.setProdVdate(inputDto.getProdVdate());
+//            bokTradeBuildInputDto.setTrdProductDeal(inputDto.getTrdProductDeal());
+//            /** ADD BY WUJIE ON 20191119 START **/
+//            bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
+//            /** ADD BY WUJIE ON 20191119 END **/
+//            // add by renping 20191117 start
+//            bokTradeBuildInputDto.setStlPayOrders(inputDto.getStlPayOrders());
+//            // add by renping 20191117 start
+//            // add by jinmaodong 20191214 start
+//            bokTradeBuildInputDto.setTrdFinProductBarter(inputDto.getTrdFinProductBarter());
+             //add by jinmaodong 20191214 end
 
             // 外汇，股票，利率互换，债券借贷 不需要走 交易入账 add by qmh 20190812 start
-            if (!(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue(), inputDto.getTrdProductDeal().getFinprodType())
-                  || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_即期.getValue(), inputDto.getTrdProductDeal().getFinprodType())
-                  || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_远期.getValue(), inputDto.getTrdProductDeal().getFinprodType())
-                  || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_掉期.getValue(), inputDto.getTrdProductDeal().getFinprodType())
-                  || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_利率互换.getValue(),
-                      inputDto.getTrdProductDeal().getFinprodType()))) {
-                valuationInterfService.bokTradeBuild(bokTradeBuildInputDto);
-            }
+//            if (!(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue(), inputDto.getTrdProductDeal().getFinprodType())
+//                  || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_即期.getValue(), inputDto.getTrdProductDeal().getFinprodType())
+//                  || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_远期.getValue(), inputDto.getTrdProductDeal().getFinprodType())
+//                  || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_掉期.getValue(), inputDto.getTrdProductDeal().getFinprodType())
+//                  || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_利率互换.getValue(),
+//                      inputDto.getTrdProductDeal().getFinprodType()))) {
+//                valuationInterfService.bokTradeBuild(bokTradeBuildInputDto);
+//            }
             // add by qmh 20190812 end
 
             if (!(DictCodeListExt1.交易状态_初始.getValue().equals(inputDto.getTrdProductDeal().getTradeStatus())
@@ -512,28 +514,28 @@ public class AllTradeCommonUtil {
      * @since 1.0
      */
     public static void lendMdateAdd(AllTradeCommonInputDto inputDto) {
-        // 调用估值交易入账接口
-        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
+//        // 调用估值交易入账接口
+//        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
         // 调用授信共通
         CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
-        if (valuationInterfService != null && ceLinesUpdate != null) {
-            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
-            bokTradeBuildInputDto.setProdid(inputDto.getProdid());
-            bokTradeBuildInputDto.setProdFinprodType(inputDto.getProdFinprodType());
-            bokTradeBuildInputDto.setProdVdate(inputDto.getProdVdate());
-            bokTradeBuildInputDto.setTrdProductDealList(inputDto.getTrdProductDealList());
-            bokTradeBuildInputDto.setTrdTradeFeeDetail(inputDto.getTrdTradeFeeDetail());
-            /** ADD BY WUJIE ON 20191119 START **/
-            bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
-            /** ADD BY WUJIE ON 20191119 END **/
-            bokTradeBuildInputDto.setStlPayOrders(inputDto.getStlPayOrders());
-
-            /**ADD BY WUJIE ON 20210129 START REMARK:回购交易方向：到期续作、逾期贩售**/
-            bokTradeBuildInputDto.setPsType(inputDto.getPsType());
-            /**ADD BY WUJIE ON 20210129 END**/
-
-            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
-
+        if (/*valuationInterfService != null &&*/ ceLinesUpdate != null) {
+//            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
+//            bokTradeBuildInputDto.setProdid(inputDto.getProdid());
+//            bokTradeBuildInputDto.setProdFinprodType(inputDto.getProdFinprodType());
+//            bokTradeBuildInputDto.setProdVdate(inputDto.getProdVdate());
+//            bokTradeBuildInputDto.setTrdProductDealList(inputDto.getTrdProductDealList());
+//            bokTradeBuildInputDto.setTrdTradeFeeDetail(inputDto.getTrdTradeFeeDetail());
+//            /** ADD BY WUJIE ON 20191119 START **/
+//            bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
+//            /** ADD BY WUJIE ON 20191119 END **/
+//            bokTradeBuildInputDto.setStlPayOrders(inputDto.getStlPayOrders());
+//
+//            /**ADD BY WUJIE ON 20210129 START REMARK:回购交易方向：到期续作、逾期贩售**/
+//            bokTradeBuildInputDto.setPsType(inputDto.getPsType());
+//            /**ADD BY WUJIE ON 20210129 END**/
+//
+//            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
+//
 //            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
 
             // 调用授信共通
@@ -555,28 +557,28 @@ public class AllTradeCommonUtil {
     
     //买断式回购到期 授信部分修改
     public static void buyRepoMdateAdd(AllTradeCommonInputDto inputDto) {
-        // 调用估值交易入账接口
-        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
-        // 调用授信共通
-        CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
-        if (valuationInterfService != null && ceLinesUpdate != null) {
-            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
-            bokTradeBuildInputDto.setProdid(inputDto.getProdid());
-            bokTradeBuildInputDto.setProdFinprodType(inputDto.getProdFinprodType());
-            bokTradeBuildInputDto.setProdVdate(inputDto.getProdVdate());
-            bokTradeBuildInputDto.setTrdProductDealList(inputDto.getTrdProductDealList());
-            bokTradeBuildInputDto.setTrdTradeFeeDetail(inputDto.getTrdTradeFeeDetail());
-            /** ADD BY WUJIE ON 20191119 START **/
-            bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
-            /** ADD BY WUJIE ON 20191119 END **/
-
-            /**ADD BY WUJIE ON 20210129 START REMARK:回购交易方向：到期续作、逾期贩售**/
-            bokTradeBuildInputDto.setPsType(inputDto.getPsType());
-            /**ADD BY WUJIE ON 20210129 END**/
-
-            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
-
-            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
+//        // 调用估值交易入账接口
+//        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
+//        // 调用授信共通
+//        CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
+//        if (valuationInterfService != null && ceLinesUpdate != null) {
+//            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
+//            bokTradeBuildInputDto.setProdid(inputDto.getProdid());
+//            bokTradeBuildInputDto.setProdFinprodType(inputDto.getProdFinprodType());
+//            bokTradeBuildInputDto.setProdVdate(inputDto.getProdVdate());
+//            bokTradeBuildInputDto.setTrdProductDealList(inputDto.getTrdProductDealList());
+//            bokTradeBuildInputDto.setTrdTradeFeeDetail(inputDto.getTrdTradeFeeDetail());
+//            /** ADD BY WUJIE ON 20191119 START **/
+//            bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
+//            /** ADD BY WUJIE ON 20191119 END **/
+//
+//            /**ADD BY WUJIE ON 20210129 START REMARK:回购交易方向：到期续作、逾期贩售**/
+//            bokTradeBuildInputDto.setPsType(inputDto.getPsType());
+//            /**ADD BY WUJIE ON 20210129 END**/
+//
+//            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
+//
+//            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
             // 调用授信共通
 //            for (TrdProductDeal trdProductDeal : inputDto.getTrdProductDealList()) {
 //                AllTradeCommonInputDto input = new AllTradeCommonInputDto();
@@ -594,7 +596,7 @@ public class AllTradeCommonUtil {
 //                    ceLinesUpdate.isNeedOccupyCre(input, true, true, false);
 //                }
 //            }
-        }
+//        }
     }
 
     /**
@@ -606,13 +608,13 @@ public class AllTradeCommonUtil {
      */
     public static void lendMdatDelete(AllTradeCommonInputDto inputDto) {
         // 调用估值交易入账接口
-        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
-        if (valuationInterfService != null) {
-            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
-            bokTradeBuildInputDto.setTotleTradeId(inputDto.getTotleTradeId());
-
-            valuationInterfService.lendMdatDelete(bokTradeBuildInputDto);
-        }
+//        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
+//        if (valuationInterfService != null) {
+//            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
+//            bokTradeBuildInputDto.setTotleTradeId(inputDto.getTotleTradeId());
+//
+//            valuationInterfService.lendMdatDelete(bokTradeBuildInputDto);
+//        }
     }
 
     /**
@@ -624,20 +626,20 @@ public class AllTradeCommonUtil {
      */
     public static void stlOrdersBokTradeBuild(AllTradeCommonInputDto inputDto) {
         // 调用估值交易入账接口
-        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
-        if (valuationInterfService != null) {
-            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
-            bokTradeBuildInputDto.setProdid(inputDto.getProdid());
-            bokTradeBuildInputDto.setProdFinprodType(inputDto.getProdFinprodType());
-            bokTradeBuildInputDto.setProdVdate(inputDto.getProdVdate());
-            bokTradeBuildInputDto.setStlPayOrders(inputDto.getStlPayOrders());
-            bokTradeBuildInputDto.setTrdProductDeal(inputDto.getTrdProductDeal());
-            /** ADD BY WUJIE ON 20191119 START **/
-            bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
-            /** ADD BY WUJIE ON 20191119 ENE **/
-
-            valuationInterfService.stlOrdersBokTradeBuild(bokTradeBuildInputDto);
-        }
+//        ValuationInterfService valuationInterfService = SpringContextUtil.getBean(ValuationInterfService.class);
+//        if (valuationInterfService != null) {
+//            BokTradeBuildInputDto bokTradeBuildInputDto = new BokTradeBuildInputDto();
+//            bokTradeBuildInputDto.setProdid(inputDto.getProdid());
+//            bokTradeBuildInputDto.setProdFinprodType(inputDto.getProdFinprodType());
+//            bokTradeBuildInputDto.setProdVdate(inputDto.getProdVdate());
+//            bokTradeBuildInputDto.setStlPayOrders(inputDto.getStlPayOrders());
+//            bokTradeBuildInputDto.setTrdProductDeal(inputDto.getTrdProductDeal());
+//            /** ADD BY WUJIE ON 20191119 START **/
+//            bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
+//            /** ADD BY WUJIE ON 20191119 ENE **/
+//
+//            valuationInterfService.stlOrdersBokTradeBuild(bokTradeBuildInputDto);
+//        }
     }
 
     public static void handleBeforeTradeComplete(AllTradeCommonInputDto inputDto, Boolean isdeleteflag) {

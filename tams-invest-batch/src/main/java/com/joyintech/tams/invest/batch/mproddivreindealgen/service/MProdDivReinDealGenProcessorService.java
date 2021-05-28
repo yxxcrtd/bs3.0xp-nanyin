@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
 
+import com.joyintech.tams.invest.common.util.MD5Util;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -46,7 +47,6 @@ import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.valuation.common.interf.base.util.MD5Util;
 
 /**
  * processor相关业务处理

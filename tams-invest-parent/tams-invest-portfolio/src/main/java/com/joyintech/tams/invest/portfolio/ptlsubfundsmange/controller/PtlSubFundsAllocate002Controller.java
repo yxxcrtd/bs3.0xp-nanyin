@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +37,6 @@ import com.joyintech.tams.component.business.core.service.MstWorkflowCommonServi
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.portfolio.ptlsubfundsmange.dto.PtlSubFundsAllocate002Dto;
 import com.joyintech.tams.invest.portfolio.ptlsubfundsmange.service.PtlSubFundsAllocate002Service;
-import com.joyintech.tams.valuation.common.service.BaseCommonService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
@@ -53,10 +53,9 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 public class PtlSubFundsAllocate002Controller extends BaseController{
     @Autowired
     private PtlSubFundsAllocate002Service ptlSubFundsAllocate002Service;
-    
+
     @Autowired
-    private BaseCommonService baseCommonService;
-    
+    private IPlatformDate iPlatformDate;
     /**
      * 新建页面画面联动
      * @return Page<FinProductRateQuotationDto>
@@ -142,7 +141,7 @@ public class PtlSubFundsAllocate002Controller extends BaseController{
         }
         model.addAttribute("entity", dto);
         // 调配日期默认为系统平台日
-        model.addAttribute("sysDate",DateUtil.format(baseCommonService.getSysDate(), "yyyy-MM-dd"));
+        model.addAttribute("sysDate",iPlatformDate.getSysDateStr());
         model.addAttribute("settleDate",dto.getSettleDate());
         // 初始化
         return super.init(model);
@@ -196,7 +195,7 @@ public class PtlSubFundsAllocate002Controller extends BaseController{
 
     /**
      * 保存
-     * @param dto dto
+     * @param ptlSubFundsAllocate002Dto
      * @param br br
      * @return 结果
      * @throws Exception 异常

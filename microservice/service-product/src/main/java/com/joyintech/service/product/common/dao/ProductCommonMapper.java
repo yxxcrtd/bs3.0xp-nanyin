@@ -284,4 +284,20 @@ public interface ProductCommonMapper {
 	List<SelectOptionDto> getProdStyle(Map<String, Object> param);
 	
 	List<SelectOptionDto> queryTrusteeId(Map<String, Object> map);
+
+	/**
+	 * <一句话功能简述>
+	 * <功能详细描述>
+	 * @see
+	 * @since 1.0
+	 */
+	public int queryPdSequences();
+
+	/**
+	 * <一句话功能简述>
+	 * <功能详细描述>
+	 * @see
+	 * @since 1.0
+	 */
+	public int queryOrderSequences();
 }

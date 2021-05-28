@@ -14,10 +14,10 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.BokTradeOrder;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.ValDictCodeList;
 import com.joyintech.tams.invest.common.dto.mock.asset.MockAssetInfoDto;
 import com.joyintech.tams.invest.common.dto.mock.asset.MockFinCashPlanDto;
 import com.joyintech.tams.invest.common.dto.mock.assetvaluation.MockCalcAssetValuationResult;
@@ -30,7 +30,6 @@ import com.joyintech.tams.invest.common.dto.mock.portfolio.MockSingleAssetChangi
 import com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto;
 import com.joyintech.tams.invest.common.ptlrealtimevaluation.RealTimeValCommonUtil;
 import com.joyintech.tams.invest.common.ptlrealtimevaluation.dao.RealTimeValCommonMapper;
-import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -179,7 +178,7 @@ public class LendRepoValuationService extends BaseAssetValuationService {
                     mockTrdProductDealDto.getTradeAmt());
         }
         Map<String,Object> paraMap =new HashMap<>();
-        paraMap.put("paramCode",ValDictCodeList.账套配置表参数项_银行间质押式回购费用处理方式.getValue());
+        paraMap.put("paramCode", ValDictCodeList.账套配置表参数项_银行间质押式回购费用处理方式.getValue());
         paraMap.put("booksetId",组合资产估值.getPortfolioId());//组合代码
         RealTimeValCommonMapper realTimeValCommonMapper = SpringContextUtil.getBean(
                 RealTimeValCommonMapper.class);

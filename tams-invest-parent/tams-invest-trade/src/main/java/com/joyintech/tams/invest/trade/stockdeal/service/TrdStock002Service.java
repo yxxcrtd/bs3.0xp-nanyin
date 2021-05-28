@@ -4,8 +4,7 @@
  */
 
 package com.joyintech.tams.invest.trade.stockdeal.service;
-
-import com.jixu.common.type.ResultContainer;
+;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
@@ -734,25 +733,25 @@ public class TrdStock002Service extends BaseService<TrdStockDto> implements Base
             if (stlPayOrders != null) {
                 stlPayOrdersList.addAll(Arrays.asList(stlPayOrders));
             }
-            TrdCommDto trdCommDto = new TrdCommDto();
-            // trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
-            // trdCommDto.setStlFinProductAcctList(stlFinProductAcctList);
-            trdCommDto.setStlPayOrdersList(stlPayOrdersList);
-            trdCommDto.setTrdProductDeal(baseDto.getTrdProductDeal());
-            trdCommDto.setTrdProductDealAdd(baseDto.getTrdProductDealAdd());
-            trdCommDto.setTradeFeeDetaillist(tradeFeeDetaillist);
-            trdCommDto.setPtlTradeList(baseDto.getPtlTrade());
-            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_DELETE);
-            ResultContainer resultContainer = valuationInterfService.runValInvest2Jixu(trdCommDto);
-            // jixu 接口 add by wangpeng end
+//            TrdCommDto trdCommDto = new TrdCommDto();
+//            // trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
+//            // trdCommDto.setStlFinProductAcctList(stlFinProductAcctList);
+//            trdCommDto.setStlPayOrdersList(stlPayOrdersList);
+//            trdCommDto.setTrdProductDeal(baseDto.getTrdProductDeal());
+//            trdCommDto.setTrdProductDealAdd(baseDto.getTrdProductDealAdd());
+//            trdCommDto.setTradeFeeDetaillist(tradeFeeDetaillist);
+//            trdCommDto.setPtlTradeList(baseDto.getPtlTrade());
+//            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_DELETE);
+//            ResultContainer resultContainer = valuationInterfService.runValInvest2Jixu(trdCommDto);
+//            // jixu 接口 add by wangpeng end
 
             // 调用投管接口 add by renping 20190205 start
             InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
             investInterfCommDto.setPageId("TrdStock002");
             investInterfCommDto.setTradeStatus(DictCodeListExt1.画面数据状态_撤销.getValue());
             investInterfCommDto.setPortfolioId(entity.getActPortfolioId());
-            investInterfCommDto.setTrdProductDeal(trdCommDto.getTrdProductDeal());
-            investInterfCommDto.setTrdProductDealAdd(trdCommDto.getTrdProductDealAdd());
+            investInterfCommDto.setTrdProductDeal(baseDto.getTrdProductDeal());
+            investInterfCommDto.setTrdProductDealAdd(baseDto.getTrdProductDealAdd());
             investInterfCommDto.setStlPayOrders(stlPayOrders);
             investInterfCommDto.setTradeFeeDetaillist(tradeFeeDetaillist);
             investInterfCommService.doInvestInterf(investInterfCommDto);
@@ -985,22 +984,22 @@ public class TrdStock002Service extends BaseService<TrdStockDto> implements Base
             AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
             // 一体化对应etliu end
 
-            // 增加jixu接口 start wangpeng
-            List<StlPayOrders> stlPayOrdersList = new ArrayList<StlPayOrders>();
-            if (stlPayOrders != null) {
-                stlPayOrdersList.addAll(Arrays.asList(stlPayOrders));
-            }
-            TrdCommDto trdCommDto = new TrdCommDto();
-            // trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
-            // trdCommDto.setStlFinProductAcctList(stlFinProductAcctList);
-            trdCommDto.setStlPayOrdersList(stlPayOrdersList);
-            trdCommDto.setTrdProductDeal(trdProductDeal);
-            trdCommDto.setTrdProductDealAdd(trdProductDealAdd);
-            trdCommDto.setTradeFeeDetaillist(tradeFeeDetaillist);
-            trdCommDto.setPtlTradeList(entity.getPtlTrade());
-            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_ADD);
-            ResultContainer ResultContainer = valuationInterfService.runValInvest2Jixu(trdCommDto);
-            // 增加jixu接口 end
+//            // 增加jixu接口 start wangpeng
+//            List<StlPayOrders> stlPayOrdersList = new ArrayList<StlPayOrders>();
+//            if (stlPayOrders != null) {
+//                stlPayOrdersList.addAll(Arrays.asList(stlPayOrders));
+//            }
+//            TrdCommDto trdCommDto = new TrdCommDto();
+//            // trdCommDto.setFinTradeProduct(entity.getFinTradeProduct());
+//            // trdCommDto.setStlFinProductAcctList(stlFinProductAcctList);
+//            trdCommDto.setStlPayOrdersList(stlPayOrdersList);
+//            trdCommDto.setTrdProductDeal(trdProductDeal);
+//            trdCommDto.setTrdProductDealAdd(trdProductDealAdd);
+//            trdCommDto.setTradeFeeDetaillist(tradeFeeDetaillist);
+//            trdCommDto.setPtlTradeList(entity.getPtlTrade());
+//            trdCommDto.setOperateType(BussinessConstant.OPERATE_TYPE_ADD);
+//            ResultContainer ResultContainer = valuationInterfService.runValInvest2Jixu(trdCommDto);
+//            // 增加jixu接口 end
 
             if (StringUtil.isNotEmpty(entity.getActPortfolioId())
                 && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {

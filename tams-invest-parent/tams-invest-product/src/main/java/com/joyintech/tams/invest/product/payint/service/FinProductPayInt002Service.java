@@ -32,7 +32,6 @@ import com.joyintech.tams.invest.product.payint.dto.FinProductPayInt001Dto;
 import com.joyintech.tams.invest.product.payint.dto.FinProductPayInt002Dto;
 import com.joyintech.tams.invest.product.payint.dto.FinProductPayInt002IntDetailDto;
 import com.joyintech.tams.invest.product.payint.dto.FinProductPayInt002TradeDto;
-import com.joyintech.tams.valuation.common.service.BooksetCommonService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -129,9 +128,7 @@ public class FinProductPayInt002Service extends BaseService<FinProductPayInt002D
 
     @Autowired
     private TradeProductDealCommService tradeProductDealCommService;
-    
-    @Autowired
-    private BooksetCommonService booksetCommonService;
+
 
     /**
      * 1.6.1产品基本信息
@@ -406,12 +403,12 @@ public class FinProductPayInt002Service extends BaseService<FinProductPayInt002D
 	        	Map<String, Object> orgmap=new HashMap<String, Object>();
 	        	orgmap.put("booksetOrg", booksetOrg);
 	        	orgmap.put("dataType", "FINPROD04");
-	        	String orgName=booksetCommonService.selectAssociationModeOrgName(orgmap);
+	        	String orgName=tradeProductDealCommService.selectAssociationModeOrgName(orgmap);
 	        	repDuration.setRepIssuePartyName(orgName);
 	        	
         	}else{
         	//银行模式
-        	String orgName=booksetCommonService.selectBankModeOrgName();
+        	String orgName=tradeProductDealCommService.selectBankModeOrgName();
         	repDuration.setRepIssuePartyName(orgName);
         	
            }

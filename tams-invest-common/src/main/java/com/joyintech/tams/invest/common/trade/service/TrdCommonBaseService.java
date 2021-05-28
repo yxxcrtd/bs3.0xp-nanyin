@@ -14,17 +14,16 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
-import com.joyintech.tams.invest.common.dto.TrdStaSecInfoDto;
+import com.joyintech.tams.invest.common.dto.*;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonParam;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonWflParam;
 import com.joyintech.tams.invest.common.dto.mock.trade.MockTradeInfoDto;
@@ -32,16 +31,14 @@ import com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTrade;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.valuationusemerge.calc.*;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -1136,4 +1133,48 @@ public class TrdCommonBaseService extends BaseService {
         return wflPrinAmt;
     };
     // add by etliu 20210421 权益类资产相关代码合并 end
+
+
+    /**
+     * 通过组合代码查询金融产品标的
+     * @param portfolioId
+     * @return
+     */
+    public FinProduct queryFinProductByPortfolidId(String portfolioId){
+
+        return trdCommonBaseMapper.queryFinProductByPortfolidId(portfolioId);
+    }
+
+    /**
+     * 百元券面共通查询方法
+     *
+     * @param finprodId 标的代码
+     * @param happenDate 发生日
+     * @return faceValue 处理后的百元券面
+     * @see
+     * @since 1.0
+     */
+    @SuppressWarnings("unchecked")
+    public BigDecimal getFaceValue(String finprodId, Date happenDate) {
+        BigDecimal faceValue = new BigDecimal("100");
+        BigDecimal payedFaceValue = new BigDecimal("0");
+        // 增加查询类型Dto
+        Map<String, Object> paMap = new HashMap<>();
+        paMap.put("finprodId", finprodId);// 标的代码
+        paMap.put("cashType1", DictCodeListExt1.现金流一级类型_本金.getValue());// 现金流一级类型
+        paMap.put("branch", 0L);
+        List<FinCashPlan> listDto = trdCommonBaseMapper.getTargetCashPlanList(paMap);
+
+        if(null!=listDto){
+            for (FinCashPlan plan : listDto) {
+                // 计息结束日 <= 发生日
+                if (DateUtil.compareDate(plan.getMdate(), happenDate) <= 0) {
+                    payedFaceValue = ArithmeticUtil.doAdd(payedFaceValue, plan.getPrinAmt());
+                }
+            }
+        }
+        faceValue = ArithmeticUtil.subtract(faceValue, payedFaceValue);
+        return faceValue;
+    }
+
 }

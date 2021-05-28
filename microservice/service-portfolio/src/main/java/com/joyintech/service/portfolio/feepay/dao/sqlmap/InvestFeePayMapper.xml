@@ -1167,8 +1167,8 @@ AND NOT EXISTS (
 
 	<!-- 科目余额查询 start  -->
 	<!-- 当前最新余额查询 -->
-	<select id="queryCurrentLatestBalance" resultType="com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance"
-			parameterType="com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto">
+	<select id="queryCurrentLatestBalance" resultType="com.joyintech.tams.invest.common.dto.common.SubjectBalance"
+			parameterType="com.joyintech.tams.invest.common.dto.common.SubjectBalanceSearchDto">
 		SELECT
 		TEMP.*,
 		bbd.BOOKSET_DATE AS booksetDate

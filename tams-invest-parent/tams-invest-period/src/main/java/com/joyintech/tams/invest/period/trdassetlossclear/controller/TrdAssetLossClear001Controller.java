@@ -26,6 +26,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -34,8 +36,6 @@ import com.joyintech.tams.invest.period.trdassetlossclear.dto.TrdAssetLossClear0
 import com.joyintech.tams.invest.period.trdassetlossclear.service.TrdAssetLossClear001Service;
 import com.joyintech.tams.invest.period.trdplannetduration.dto.TrdPlanNetDuration001Dto;
 import com.joyintech.tams.invest.period.trdplannetduration.service.TrdPlanNetDuration001Service;
-import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
-import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;

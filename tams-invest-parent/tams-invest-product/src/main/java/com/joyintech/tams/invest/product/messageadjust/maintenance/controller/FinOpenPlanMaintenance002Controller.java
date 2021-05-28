@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.product.messageadjust.maintenance.controller;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,7 +38,6 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.product.messageadjust.maintenance.dto.FinOpenPlanMaintenance002Dto;
 import com.joyintech.tams.invest.product.messageadjust.maintenance.dto.OpenPlanParamDto;
 import com.joyintech.tams.invest.product.messageadjust.maintenance.service.FinOpenPlanMaintenance002Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;

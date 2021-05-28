@@ -22,8 +22,8 @@ import com.joyintech.tams.component.base.core.MstUserAndRoleService;
 import com.joyintech.tams.component.base.core.dto.MstUserAndRoleOutputParameter;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.mock.portfolio.MockPtlPortfolioDto;
-import com.joyintech.tams.valuation.common.interf.common.ResultCode;
-import com.joyintech.tams.valuation.common.interf.common.ResultObject;
+//import com.joyintech.tams.valuation.common.interf.common.ResultCode;
+//import com.joyintech.tams.valuation.common.interf.common.ResultObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,9 +123,10 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody PtlManagementInfoDto dto)
+    public boolean delete(@RequestBody PtlManagementInfoDto dto)
         throws Exception {
-        return ptlManagementInfo001Service.delete(dto);
+        ptlManagementInfo001Service.delete(dto);
+        return true;
     }
     /**
      * 证券账号信息删除
@@ -149,9 +150,11 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public ResultObject insert(@RequestBody PtlManagementInfoDto dto)
+    public boolean insert(@RequestBody PtlManagementInfoDto dto)
         throws Exception {
-        return ptlManagementInfo001Service.insert(dto);
+        ptlManagementInfo001Service.insert(dto);
+//        return ptlManagementInfo001Service.insert(dto);
+        return true;
     }
 
     /**
@@ -163,9 +166,11 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public ResultObject update(@RequestBody PtlManagementInfoDto dto)
+    public boolean update(@RequestBody PtlManagementInfoDto dto)
         throws Exception {
-        return ptlManagementInfo001Service.update(dto);
+        ptlManagementInfo001Service.update(dto);
+//        return ptlManagementInfo001Service.update(dto);
+        return true;
     }
 
     /**
@@ -177,17 +182,19 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     @Transactional
     @DTXTransaction
     @PostMapping("updateInsertPortfolio")
-    public ResultObject updateInsertPortfolio(@RequestBody PtlManagementInfoDto dto)
+    public boolean updateInsertPortfolio(@RequestBody PtlManagementInfoDto dto)
         throws Exception {
-    	ResultObject resultObject = new ResultObject(ResultCode.SUCCESS);
+//    	ResultObject resultObject = new ResultObject(ResultCode.SUCCESS);
         if (!StringUtil.equals(dto.getPortfolioType(), DictCodeListExt1.组合类型_子组合.getValue())) {
             ptlManagementInfo001Service.deleteUserId(dto.getPortfolioId());
             ptlManagementInfo001Service.insertAuthority(dto);
         }
         ptlManagementInfo001Service.insertPtlParam(dto);
-//        ptlManagementInfo001Service.delete(dto);
-        resultObject = ptlManagementInfo001Service.insert(dto);
-        return resultObject;
+        ptlManagementInfo001Service.delete(dto);
+//        resultObject = ptlManagementInfo001Service.insert(dto);
+        ptlManagementInfo001Service.insert(dto);
+//        return resultObject;
+        return true;
     }
     /**
      * 获取资金账号
@@ -608,7 +615,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     /**
      * 模拟试算
      * 查询基准来源为利率时所有的业绩基准
-     * @param map 参数map
+     * @param param 参数map
      * @return 实体类
      * @see
      * @since 1.0

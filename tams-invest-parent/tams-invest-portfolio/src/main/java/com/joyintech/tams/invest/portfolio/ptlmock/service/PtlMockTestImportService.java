@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -26,7 +28,6 @@ import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.portfolio.ptlmock.dto.PtlMockTestTradeDto;
 import com.joyintech.tams.systemtools.util.SysDatadictUtil;
-import com.joyintech.tams.valuation.common.service.BaseCommonService;
 import com.joyintech.tools.collectors.JoyinCollectors;
 
 /**
@@ -38,7 +39,7 @@ import com.joyintech.tools.collectors.JoyinCollectors;
  * @since 1.0
  */
 @Service
-public class PtlMockTestImportService extends BaseCommonService {
+public class PtlMockTestImportService extends BaseService<ITableRow> {
 
     @Autowired
     private PtlMockTest002Service ptlMockTest002Service;
@@ -279,7 +280,7 @@ public class PtlMockTestImportService extends BaseCommonService {
      *
      * @param cellData cellData
      * @param labelName labelName
-     * @param indexId indexId
+     * @param messageList messageList
      * @return 错误信息
      * @see
      * @since 1.0
@@ -297,7 +298,7 @@ public class PtlMockTestImportService extends BaseCommonService {
      *
      * @param cellData cellData
      * @param labelName labelName
-     * @param indexId indexId
+     * @param messageList messageList
      * @return 错误信息
      * @see
      * @since 1.0

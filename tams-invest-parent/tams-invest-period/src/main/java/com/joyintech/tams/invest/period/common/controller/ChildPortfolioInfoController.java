@@ -1,6 +1,5 @@
 package com.joyintech.tams.invest.period.common.controller;
 
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.CacheUtil;
@@ -77,7 +76,7 @@ public class ChildPortfolioInfoController extends BaseController{
         }else{
         	childPortfolioInfo =  commonService.distributeDataByPercent(map);
         }
-        model.addAttribute("childPortfolioInfo", JsonUtil.objToString(childPortfolioInfo));
+        model.addAttribute("childPortfolioInfo", JsonUtils.object2Json(childPortfolioInfo));
         model.addAttribute("portfolioId",map.get("portfolioId"));
         return "invest/period/trdplancurrduration/ChildPortfolioInfo";
     }

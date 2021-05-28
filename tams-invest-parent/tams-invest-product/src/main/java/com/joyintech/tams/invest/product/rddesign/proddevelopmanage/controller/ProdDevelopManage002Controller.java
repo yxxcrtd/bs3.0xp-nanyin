@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.rddesign.proddevelopmanage.controller;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,6 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.product.rddesign.proddevelopmanage.dto.ProdDevelopManageDto;
 import com.joyintech.tams.invest.product.rddesign.proddevelopmanage.service.ProdDevelopManageService;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;

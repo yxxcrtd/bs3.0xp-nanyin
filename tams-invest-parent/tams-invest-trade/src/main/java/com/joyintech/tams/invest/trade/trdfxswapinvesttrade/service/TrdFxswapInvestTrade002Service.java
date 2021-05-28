@@ -735,29 +735,29 @@ public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswa
         }
         baseTradeProductDealCommService.deleteWflData(entity.getWorkflowId());
 
-        // jixu接口 start
-        if (finProductTradeDto.getBaseTradeProductDealDtos() != null) {
-            BaseTradeProductDealDto baseTradeProductDealDto = finProductTradeDto.getBaseTradeProductDealDtos().get(
-                0);
-            trdCommDto.setFinTradeProduct(this.setFinTradeProduct(entity));
-            trdCommDto.setStlPayOrdersList(stlPayOrdersList);
-            trdCommDto.setTrdProductDeal(baseTradeProductDealDto.getTrdProductDeal());
-            if (StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDealAdd())
-                && StringUtil.isNotEmpty(entity.getPortfolioId())
-                && !StringUtil.equals(entity.getPortfolioId(),
-                    baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId())) {
-                baseTradeProductDealDto.getTrdProductDealAdd().setPortfolioId(
-                    entity.getPortfolioId());
-            }
-            trdCommDto.setTrdProductDealAdd(baseTradeProductDealDto.getTrdProductDealAdd());
-            trdCommDto.setPtlTradeList(baseTradeProductDealDto.getPtlTrade());
-            if (baseTradeProductDealDto.getTrdProductDeal() != null
-                && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),
-                    DictCodeList.交易方向_买入.getValue())) {
-                valuationInterfService.runValInvest2Jixu(trdCommDto);
-            }
-        }
-        // jixu接口 end
+//        // jixu接口 start
+//        if (finProductTradeDto.getBaseTradeProductDealDtos() != null) {
+//            BaseTradeProductDealDto baseTradeProductDealDto = finProductTradeDto.getBaseTradeProductDealDtos().get(
+//                0);
+//            trdCommDto.setFinTradeProduct(this.setFinTradeProduct(entity));
+//            trdCommDto.setStlPayOrdersList(stlPayOrdersList);
+//            trdCommDto.setTrdProductDeal(baseTradeProductDealDto.getTrdProductDeal());
+//            if (StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDealAdd())
+//                && StringUtil.isNotEmpty(entity.getPortfolioId())
+//                && !StringUtil.equals(entity.getPortfolioId(),
+//                    baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId())) {
+//                baseTradeProductDealDto.getTrdProductDealAdd().setPortfolioId(
+//                    entity.getPortfolioId());
+//            }
+//            trdCommDto.setTrdProductDealAdd(baseTradeProductDealDto.getTrdProductDealAdd());
+//            trdCommDto.setPtlTradeList(baseTradeProductDealDto.getPtlTrade());
+//            if (baseTradeProductDealDto.getTrdProductDeal() != null
+//                && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),
+//                    DictCodeList.交易方向_买入.getValue())) {
+//                valuationInterfService.runValInvest2Jixu(trdCommDto);
+//            }
+//        }
+//        // jixu接口 end
         // 一体化对应 start
         // 所有交易生效后调用的共通方法
         if (!type.toString().equals("DELETE")) {

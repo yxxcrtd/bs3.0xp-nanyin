@@ -22,6 +22,7 @@ import com.joyintech.tams.invest.common.position.dto.FinTradeProductDto;
 import com.joyintech.tams.invest.common.position.dto.PositionBaseData;
 import com.joyintech.tams.invest.common.position.dto.PostionParameter;
 import com.joyintech.tams.invest.common.position.service.CommonPositionService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -60,7 +61,6 @@ import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
-import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
 
 /**
  *
@@ -94,14 +94,18 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
     @Autowired
     private AutoPeriodCommonService autoPeriodCommonService;
 
-    @Autowired
-    private FinProductCommonBatchService finProductCommonBatchService;
+//    @Autowired
+//    private FinProductCommonBatchService finProductCommonBatchService;
 
     @Autowired
     private CommonPositionService commonPositionService;
 
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
+
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
 
     /**
      * BaseGetBusinessId
@@ -771,7 +775,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             // 数据来源设置
             if (StringUtil.equals(trdTempDto.getPs(), DictCodeListExt3.交易方向_解除质押.getValue())){
                 InfContractDetailfile infContractDetailfile = (InfContractDetailfile)trdTempDto.getData();
-                BigDecimal faceValue = finProductCommonBatchService.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
+                BigDecimal faceValue = trdCommonBaseService.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
                 trdTempDto.setTradeAmt((faceValue == null ? BigDecimal.valueOf(100) : faceValue).multiply(infContractDetailfile.getShareAmt()));
             }
             trdTempDto.setIsFinish(DictCodeList.是否_是.getValue());
@@ -1325,7 +1329,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             // 分支序号
             finDealPledge.setBranch(finTradeProduct.getBranch());
             finDealPledge.setPledgeFinprodId(infContractDetailfile.getFinprodId());
-            BigDecimal faceValue =finProductCommonBatchService.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
+            BigDecimal faceValue = trdCommonBaseService.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
             finDealPledge.setPledgeFaceValue(faceValue);
             finDealPledge.setPledgeNumber(infContractDetailfile.getShareAmt());
             finDealPledge.setPledgeAmt(infContractDetailfile.getTradeAmt());
@@ -1666,7 +1670,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
 
             //如果是中途换券，需要设置换入券
             if(StringUtil.equals(infContractDetailfile.getPs(), DictCodeListExt3.交易方向_中途换券.getValue())) {
-                BigDecimal faceValue =finProductCommonBatchService.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
+                BigDecimal faceValue = trdCommonBaseService.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
                 //如果成交信息中存在折算比例取成交信息中的，如果不存在就计算
                 BigDecimal scale = infContractDetailfile.getScale();
                 if(!StringUtil.isNotEmpty(scale) && infContractDetailfile.getShareAmt()!=null && faceValue!=null && infContractDetailfile.getTradeAmt()!=null){

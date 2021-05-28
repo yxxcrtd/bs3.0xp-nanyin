@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.portfolio.ptlinvportfoliostrategy.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +35,6 @@ import com.joyintech.tams.common.base.entity.PtlIncomeIndexFloat;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.portfolio.ptlinvportfoliostrategy.dto.PtlIncomeIndexDto;
 import com.joyintech.tams.invest.portfolio.ptlinvportfoliostrategy.service.PtlInvPortfolioStrategy001Service;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 
 /**
  * 评价指标编辑

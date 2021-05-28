@@ -18,12 +18,12 @@ import java.util.Map;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.system.base.dao.SysParaMapper;
 import com.joyintech.system.base.entity.SysPara;
+import com.joyintech.system.base.entity.SysParaKey;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.trade.cstp.service.CstpSelect001Service;
-import com.joyintech.tams.valuation.common.interf.val.dao.ValSysParaMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +60,6 @@ import com.joyintech.tams.invest.trade.investtrade.commandreceive.dto.TrdCommand
 @Transactional(rollbackFor=Exception.class)
 public class TrdCommandReceive001Service extends CommonExportService<TrdCommandReceive001Dto> {
 
-    @Autowired
-    private ValSysParaMapper sysParaMapper;
-    
     @Autowired
 	private TradeCommonService tradeCommonService;
     @Autowired
@@ -643,7 +640,7 @@ public class TrdCommandReceive001Service extends CommonExportService<TrdCommandR
 	}
 
 	public boolean isTradeRdCommandReceive(){
-        String is_trade_rdCommandReceive = sysParaMapper.selectParamValue("is_trade_rdCommandReceive");
+        String is_trade_rdCommandReceive = CacheUtil.getSysParam("is_trade_rdCommandReceive");
         if(StringUtils.isNotBlank(is_trade_rdCommandReceive)){
             if(StringUtils.equals(is_trade_rdCommandReceive,DictCodeListExt1.是或否_是.getValue())){
                 return true;

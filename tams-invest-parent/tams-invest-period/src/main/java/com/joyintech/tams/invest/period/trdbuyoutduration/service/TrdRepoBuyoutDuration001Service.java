@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.period.trdbuyoutduration.service;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -15,7 +16,6 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.period.trdbuyoutduration.dto.TrdRepoBuyoutDuration001Dto;
 
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

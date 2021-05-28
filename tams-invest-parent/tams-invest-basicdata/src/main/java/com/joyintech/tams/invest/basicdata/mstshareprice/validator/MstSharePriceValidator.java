@@ -84,7 +84,7 @@ public class MstSharePriceValidator implements BeanValidator{
 
                 Date date = dto.getDealDate();
                 Date platDate = platformDateImpl.getSysDate();
-                if(com.jixu.common.util.DateUtil.compareTime(date,platDate) == -1){
+                if(DateUtil.compareDate(date,platDate) == -1){
                     //如果 估值日期 小于平台日 则提醒。
                     resultList.add(new ValidMessage(getMessage("VAL_COMMON_E_0073")));
                 }

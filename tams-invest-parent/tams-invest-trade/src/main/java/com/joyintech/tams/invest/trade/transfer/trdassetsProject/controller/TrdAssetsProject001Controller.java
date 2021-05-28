@@ -1,7 +1,6 @@
 package com.joyintech.tams.invest.trade.transfer.trdassetsProject.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -238,7 +237,7 @@ public class TrdAssetsProject001Controller extends BaseController {
         }
         BussTrdAvailableCashQuery bussTrdAvailableCashQuery= new BussTrdAvailableCashQuery();
         if(StringUtil.isNotEmpty(param.get("bussTrdAvailableCashQuery"))){
-            bussTrdAvailableCashQuery = JsonUtils.json2Object(JsonUtil.objToString(param.get("bussTrdAvailableCashQuery")),BussTrdAvailableCashQuery.class);//组合dto
+            bussTrdAvailableCashQuery = JsonUtils.json2Object(JsonUtils.object2Json(param.get("bussTrdAvailableCashQuery")),BussTrdAvailableCashQuery.class);//组合dto
         }
         if(StringUtil.isNotEmpty(splitPrinAmt) && StringUtil.isNotEmpty(unSplitPrinAmt) && splitPrinAmt.compareTo(unSplitPrinAmt)>0){
             errorList.add(new ValidMessage("splitPrinAmt","转仓金额不能大于剩余可转仓本金金额！"));

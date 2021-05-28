@@ -31,7 +31,7 @@ import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.hibernate.service.spi.ServiceException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -582,8 +582,7 @@ public class FxSecrepoQuote002Service extends BaseService<FxSecrepoQuote002Dto> 
         return SEC_REPO_QUOTE_ID + DateUtil.format(new Date(),"yyyyMMdd") + fxSecrepoQuoteMapper.getSequence();
     }
 
-    public void edit(FxSecrepoQuote entity,FxSecrepoQuote002Dto dto)
-            throws ServiceException {
+    public void edit(FxSecrepoQuote entity,FxSecrepoQuote002Dto dto) {
         try {
             String pseqno=entity.getPseqno();
             String nid = IDGenerator.generate();
@@ -610,8 +609,7 @@ public class FxSecrepoQuote002Service extends BaseService<FxSecrepoQuote002Dto> 
         }
 
     }
-    public void updateEffectFlag(FxSecrepoQuote entity)
-            throws ServiceException {
+    public void updateEffectFlag(FxSecrepoQuote entity) {
         entity.setEffectflag(FxDictCodeList.有效状态_有效.getItemCode());
         fxSecrepoQuoteMapper.updateByPrimaryKeySelective(entity);
         //"修改历史表记录的生效状态
