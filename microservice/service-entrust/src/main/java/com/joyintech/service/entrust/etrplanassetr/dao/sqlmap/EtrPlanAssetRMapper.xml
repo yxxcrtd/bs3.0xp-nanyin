@@ -28,7 +28,8 @@
 			    T1.MDATE             mdate,
 			    NVL(T5.FINISH_AMT,0)    finishAmt,
 			    round(NVL(T5.FINISH_AMT,0)/NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM),4)*100		transactioncom,
-			    T1.REMARK 			 remark
+			    T1.REMARK 			 remark,
+			    T1.INV_AIM 			invAim
 			FROM
 			    ETR_ENTRUST T1
 			LEFT JOIN
@@ -275,6 +276,7 @@
 		<result column="proAvailableCash"  property="proAvailableCash"/>
 		<result column="accAvailableCash"  property="accAvailableCash"/>
 		<result column="remark"  property="remark"/>
+		<result column="invAim"  property="invAim"/>
 		<association property="etrInvestPersonInfo" javaType="com.joyintech.service.entrust.etrinvestbondinfo.dto.BussEtrInvestPersonInfoDto">
 		<result column="invManagerId"  property="invManagerId"/>
 		<result column="trader"  property="trader"/>
@@ -310,7 +312,8 @@
 				T1.COUNTER_TRADER  	 counterTrader,
 				T1.CONTACT_INFO		 contactInfo,
 				T2.TRADER			 trader,
-				T1.INV_MANAGER_ID	 invManagerId
+				T1.INV_MANAGER_ID	 invManagerId,
+				T1.INV_AIM			 invAim
 			FROM
 			    ETR_ENTRUST T1
 			LEFT JOIN
