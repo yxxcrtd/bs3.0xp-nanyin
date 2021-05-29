@@ -29,4 +29,15 @@
 	</update>
 	<delete id="deleteErrorDataOne" parameterType="java.util.List">
 	</delete>
+
+	<!-- 根据产品代码查找产品登记要素信息-->
+	<select id="selectProDeclardRegData" resultType="com.joyintech.tams.common.base.entity.ChbPrdDeclareSub">
+		select
+			PROD_ID,
+			PROD_NAME,
+			REG_CODE,
+			OPERATE_MODE
+		from CHB_PRD_DECLARE_SUB cds
+		where cds.STATUS != 'D' and cds.PROD_ID = #{prodId,jdbcType=VARCHAR}
+	</select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.chbprd.dao;
 
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
 import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfo001Dto;
 import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
@@ -41,5 +42,12 @@ public interface ChbPrdBaseinfo001Mapper {
     void deleteOne(@Param("prodId")String prodId);
 
     void deleteErrorDataOne(@Param("prodId")String prodId);
+
+    /**
+     * 根据产品代码查找登记要素信息
+     * @param prodId
+     * @return
+     */
+    List<ChbPrdDeclareSub> selectProDeclardRegData(@Param("prodId") String prodId);
 
 }

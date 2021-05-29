@@ -1,7 +1,6 @@
 package com.joyintech.tams.report.system.chbprd.service;
 
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -11,10 +10,11 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
-import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.system.chbprd.dao.ChbPrdBaseinfo001Mapper;
 import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfo001Dto;
@@ -560,6 +560,12 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                     dto.setStatus("D");
                 }
                 dto.setIssuingStatus(issuingStatus);
+                //增加用户、时间
+                dto.setCreateUser(LoginUserUtil.getUserName());
+                dto.setCreateTime(new Date());
+                dto.setUpdateUser(LoginUserUtil.getUserName());
+                dto.setUpdateTime(new Date());
+                dto.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
                 list.add(dto);
                 if(isCheck) {
                     if ("删除".equals(type)) {
@@ -572,6 +578,11 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                     }
                     List<ValidMessage> resultList = new ArrayList<ValidMessage>();
                     resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChbPrdBaseinfo002", null, ValidMessage.class);
+                    //检验产品申报登记
+                    ValidMessage c = this.checkProDeclardReg(dto);
+                    if(c != null) {
+                        resultList.add(c);
+                    }
                     for (ValidMessage msg : resultList) {
                         message.add(msg.getMessage());
                         //errorList.add(new ExcelValidDto(prodId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
@@ -776,5 +787,36 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
 
     public void updateOne(Map<String, Object> mapOld) {
         chbPrdBaseinfo001Mapper.updateOne(mapOld);
+    }
+
+
+    /**
+     * 检验申报登记中是否一致
+     * @param info
+     * @return
+     */
+    public ValidMessage checkProDeclardReg(ChbPrdBaseinfo info) {
+        if(info != null && StringUtil.isNotEmpty(info.getProdId())) {
+            List<ChbPrdDeclareSub> checkList = chbPrdBaseinfo001Mapper.selectProDeclardRegData(info.getProdId());
+            if(!StringUtil.isEmptyList(checkList)) {
+                for(ChbPrdDeclareSub item : checkList) {
+                    //产品申报登记产品运作模式模式为封闭式时，产品维护的开放模式必须为空
+                    if((StringUtil.equals(item.getOperateMode(),  DictCodeListExt2.产品运作模式_封闭式净值型.getValue())
+                        || StringUtil.equals(item.getOperateMode(),  DictCodeListExt2.产品运作模式_封闭式非净值型.getValue()))
+                            && StringUtil.isNotEmpty(info.getOpenMode())
+                    ) {
+                        return new ValidMessage("openMode", "申报登记“产品运作模式”为“封闭式净值型”或“封闭式非净值型”时，开放模式必须为空！");
+                    }
+                    //产品申报登记产品运作模式模式为封闭式时，产品维护的开放模式必须为空
+                    else  if((StringUtil.equals(item.getOperateMode(),  DictCodeListExt2.产品运作模式_开放式净值型.getValue())
+                            || StringUtil.equals(item.getOperateMode(),  DictCodeListExt2.产品运作模式_开放式非净值型.getValue()))
+                            && StringUtil.isEmpty(info.getOpenMode())
+                    ) {
+                        return new ValidMessage("openMode", "申报登记“产品运作模式”为“开放式净值型”或“放式非净值型”时，开放模式必须填写！");
+                    }
+                };
+            }
+        }
+        return null;
     }
 }
