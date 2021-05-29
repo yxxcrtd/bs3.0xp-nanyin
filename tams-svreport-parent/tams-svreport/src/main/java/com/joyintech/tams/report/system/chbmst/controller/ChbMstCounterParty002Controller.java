@@ -41,9 +41,12 @@ public class ChbMstCounterParty002Controller extends BaseController {
         ChbMstCounterParty chbMstCounterParty=new ChbMstCounterParty();
         Map<String,Object> map= RequestUtil.getPageParam();
         String uuid= (String) map.get("uuid");
+        String svrStatus = (String) map.get("svrstatus");
         if(!"add".equals(map.get("operateType"))){
             //UUid为空时,查询交易对手信息，否则查询交易对手错误表信息
-            if("".equals(uuid)){
+//            if("".equals(uuid)){
+            //svrstatus为"D,E"时,查询交易对手信息，否则查询交易对手错误表信息
+            if(!"A".equals(svrStatus)){
                 List<ChbMstCounterParty> ChbMstCounterPartys= chbMstCounterPartyService.selectOneDate(map);
                 if(null!=ChbMstCounterPartys && ChbMstCounterPartys.size()>0){
                     ChbMstCounterParty c=ChbMstCounterPartys.get(0);

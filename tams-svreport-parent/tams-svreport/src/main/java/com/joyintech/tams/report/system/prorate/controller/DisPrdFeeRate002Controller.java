@@ -46,6 +46,7 @@ public class DisPrdFeeRate002Controller extends BaseController {
                 DictCode.数据来源);
         Map<String,Object> map= RequestUtil.getPageParam();
         String datauuid= (String) map.get("datauuid");
+        String svrStatus = (String) map.get("status2");
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
         DisRepCashYield disRepCashYield =new DisRepCashYield();
         if(null!=map.get("startDate")){
@@ -53,7 +54,9 @@ public class DisPrdFeeRate002Controller extends BaseController {
             map.put("startDate",startDate);
         }
         //UUID为空 查询产品费率信息表
-         if("".equals(datauuid) || null==datauuid){
+//         if("".equals(datauuid) || null==datauuid){
+        //svrstatus为"A"时,，查询错误表信息
+        if(!"A".equals(svrStatus)){
              List<DisRepCashYield> disRepCashYieldList =prorateService.selectOneDate(map);
              if(null!=disRepCashYieldList && disRepCashYieldList.size()>0){
                  DisRepCashYield d=disRepCashYieldList.get(0);
