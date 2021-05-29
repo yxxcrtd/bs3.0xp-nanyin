@@ -21,6 +21,8 @@ import java.util.Map;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.entrust.etrconbond.dto.EtrConBondDto;
 import com.joyintech.tams.invest.entrust.etrconbond.service.EtrConBondService;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
@@ -33,6 +35,7 @@ import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.PtlCapacctInfo;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.dao.CommonBusinessMapper;
@@ -46,6 +49,8 @@ import com.joyintech.tams.invest.common.risk.service.RiskNamListCommonValidatorS
 import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
+import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
+import com.joyintech.tams.invest.entrust.etragrereptrade.service.EtrAgreRepTrade001Service;
 import com.joyintech.tams.invest.entrust.etrbondtostock.dto.EtrBondToStockDto;
 import com.joyintech.tams.invest.entrust.etrbondtostock.service.EtrBondToStockService;
 import com.joyintech.tams.invest.entrust.etrboutrepo.dto.EtrBoutRepoDto;
@@ -144,6 +149,43 @@ public interface EtrCommonValidator extends BeanValidator {
                     }
                 }
             }
+            
+            
+            Field tradeMarketField = ReflectionUtils.findField(value.getClass(), "tradeMarket");
+            Field ccyField = ReflectionUtils.findField(value.getClass(), "ccy");
+            if(portfolioIdField != null && tradeMarketField != null && ccyField != null) {
+                ReflectionUtils.makeAccessible(portfolioIdField);
+                Object portfolioId = ReflectionUtils.getField(portfolioIdField, value);
+                
+                ReflectionUtils.makeAccessible(tradeMarketField);
+                Object tradeMarket = ReflectionUtils.getField(tradeMarketField, value);
+                
+                ReflectionUtils.makeAccessible(ccyField);
+                Object ccy = ReflectionUtils.getField(ccyField, value); 
+                //获取组合的资金账户
+                if (StringUtil.isNotEmpty(portfolioId) && StringUtil.isNotEmpty(ccy)) {
+                    String acctType = DictCodeListExt1.资金账户类型_产品托管户.getValue();
+                    if(StringUtil.equals(tradeMarket, DictCodeListExt1.交易场所_上海证券交易所.getValue()) ||
+                        StringUtil.equals(tradeMarket, DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+                        acctType = DictCodeListExt1.资金账户类型_券商资金账户.getValue();
+                    } 
+                    else {
+                        acctType = DictCodeListExt1.资金账户类型_产品托管户.getValue();
+                    }
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("portfolioId", portfolioId);
+                    map.put("ccy", ccy);
+                    map.put("acctType", acctType);
+                    CommonBusinessMapper mapper = SpringContextUtil.getBean(CommonBusinessMapper.class);
+                    List<PtlCapacctInfo> ptlCapacctInfos = mapper.selectPtlCapacctInfo(map);
+                    if(StringUtil.isEmptyList(ptlCapacctInfos)) {
+                        validMessageList.add(new ValidMessage("portfolioId", "组合尚未绑定资金账户，无法下达指令")); 
+                    }
+                }
+            }
+
+            
+            
 
             // check 属性bussTrdTransferOrder
             Field field = ReflectionUtils.findField(value.getClass(), "bussTrdTransferOrder");
@@ -517,7 +559,99 @@ public interface EtrCommonValidator extends BeanValidator {
                     trdProductDeal.setFinprodId(inputDto.getShareFinprodId());
                     finprodId = inputDto.getShareFinprodId();
                 }
+                
+                //场内交易指令 add by yzg 20201214 start
+                else if(value instanceof EtrExchangeTrade001Dto) {
+                	EtrExchangeTrade001Dto inputDto = (EtrExchangeTrade001Dto)value;
+                	// 副总裁/总裁助理授权额度检查相关处理
+                	counterId = inputDto.getCounterId();
+                	prinAmt = inputDto.getEntrustAmt();
+                	if(StringUtil.equals(inputDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                		平安资产类型 = DictCodeList.平安资产类型_债券.getValue();
+                	}
+                	else if(StringUtil.equals(inputDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+                		平安资产类型 = DictCodeList.平安资产类型_基金.getValue();
+                	}
+                	else if(StringUtil.equals(inputDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+                		平安资产类型 = DictCodeListExt2.平安资产类型_股票.getValue();
+                	}else {
+                		平安资产类型 = DictCodeList.平安资产类型_质押式回购.getValue();
+					}
+                	windtypeone = inputDto.getFinprodType2();
+                	tradeMarket = inputDto.getTradeMarket();
+                	trdProductDeal = new TrdProductDeal();
+                    BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, inputDto);
+                    ps = inputDto.getPs();
+                    finprodId = inputDto.getFinprodId();
+                }
+                //场内交易指令 add by yzg 20201214 end
+                //交易所质押式协议回购 add by chendijun 20210311
+                else if (value instanceof EtrAgreRepTradeDto){
+                    EtrAgreRepTradeDto inputDto = (EtrAgreRepTradeDto) value;
+                    counterId = inputDto.getCounterId();
+                    //prinAmt = inputDto.getPrintAmt();
+                  //回购金额和方向判断 add by yzg 20210325 start
+                    EtrAgreRepTrade001Service etrAgreRepTrade001Service = SpringContextUtil.getBean(EtrAgreRepTrade001Service.class);
+                  //逆回购和正回购按正常交易金额和交易方向授权
+                	if(StringUtil.equals(inputDto.getPs(), DictCodeListExt3.交易方向_正回购.getValue())
+                			|| StringUtil.equals(inputDto.getPs(), DictCodeListExt3.交易方向_逆回购.getValue())) {
+                		ps = inputDto.getPs();
+                		prinAmt = inputDto.getTradeAmt();
+                	}
+                	//提前购回、到期购回、中途换券、解除质押根据原始回购的交易方向和回购金额进行授权判断
+                	else if (StringUtil.equals(inputDto.getPs(), DictCodeListExt3.交易方向_提前购回.getValue())
+                				|| StringUtil.equals(inputDto.getPs(), DictCodeListExt3.交易方向_到期购回.getValue())
+                				|| StringUtil.equals(inputDto.getPs(), DictCodeListExt3.交易方向_中途换券.getValue())
+                				|| StringUtil.equals(inputDto.getPs(), DictCodeListExt3.交易方向_解除质押.getValue())) {
+                		//获得初始活够金额和交易方向
+                		Map<String, Object> map = new HashMap<>();
+                		// 上交所、深交所取值来源不一致
+                		map.put("tradeId", (inputDto.getIntiTradeId() == null || inputDto.getIntiTradeId().equals("")) ? inputDto.getTradeId() : inputDto.getIntiTradeId());
+                		EtrAgreRepTradeDto result =  etrAgreRepTrade001Service.getEntrustInfoByTradeId(map);
+                		if(StringUtil.isNotEmpty(result)) {
+                			ps = result.getPs();
+                			prinAmt = result.getTradeAmt();
+                		}
+                	}
+                	//到期续作使用原始的回购金额和续做的回购金额中的较大值进行判断
+                	else if (StringUtil.equals(inputDto.getPs(), DictCodeListExt3.交易方向_到期续做.getValue())){
+                		//获得初始回购金额和交易方向
+                		Map<String, Object> map = new HashMap<>();
+                		map.put("tradeId", (inputDto.getIntiTradeId() == null || inputDto.getIntiTradeId().equals("")) ? inputDto.getTradeId() : inputDto.getIntiTradeId());
+                		EtrAgreRepTradeDto result =  etrAgreRepTrade001Service.getEntrustInfoByTradeId(map);
+                		if(StringUtil.isNotEmpty(result)) {
+                			ps = result.getPs();
+                			prinAmt = result.getTradeAmt();
+                			if(inputDto.getTradeAmt().compareTo(prinAmt)>0) {
+                				prinAmt = inputDto.getTradeAmt();
+                			}
+                		}else {
+                			ps = DictCodeListExt3.交易方向_逆回购.getValue();
+                			prinAmt = inputDto.getTradeAmt();
+                		}
+                	}
+                	//回购金额和方向判断 add by yzg 20210325 end
+                    平安资产类型 = DictCodeList.平安资产类型_质押式回购.getValue();
+                    inputValue1 = DictCodeList.平安资产类型_质押式回购.getValue();
+                    repType = DictCodeList.回购类型_质押式协议回购.getValue();
+                    inputValue2 = repType;
+                    if(StringUtil.equals(inputDto.getRepPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
+                        windtypeone = DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();
+                        inputValue3 = DictCodeListExt3.行内资产三级分类_正回购.getValue();
+                    }
+                    else {
+                        windtypeone = DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();
+                        inputValue3 = DictCodeListExt3.行内资产三级分类_逆回购.getValue();
+                    }
+                    tradeMarket = inputDto.getTradeMarket();
+                    //ps = inputDto.getPs();
+                    //finprodId = inputDto.getFinprodId();
+                    trdProductDeal = new TrdProductDeal();
+                    trdProductDeal.setTradeDate(DateUtil.parse(inputDto.getVdate()));
+                    trdProductDeal.setFinprodId(inputDto.getFinprodId());
+                }
 
+                
                 // delete by renping 2019-08-06 start
 //                if (StringUtil.isEmptyList(validMessageList) && prinAmt != null) {
 //                    CommonBusinessService commonBusinessService = SpringContextUtil.getBean(CommonBusinessService.class);

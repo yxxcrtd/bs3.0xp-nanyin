@@ -50,7 +50,7 @@
                 }
             }
         }
-        if ($('#priceModel').val() == 'PRM02') {//限价指令
+        if ($('#priceModel').val() == 'PRM02'||$('#priceModel').val() == 'PRM01') {//限价指令或指定价格
             if ($('#isRight').val() == 'Y') {//为含权债的时候
                 if (!$('#price').val() && !$('#matureYield').val() && !$('#exerYield').val()) {
                     Joyin.warn("含权债时净价、到期收益率、行权收益率三选一必填");
