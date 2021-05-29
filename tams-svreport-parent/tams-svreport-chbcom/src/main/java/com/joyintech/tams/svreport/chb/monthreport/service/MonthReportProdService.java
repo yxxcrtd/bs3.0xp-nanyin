@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
@@ -240,8 +241,10 @@ public class MonthReportProdService {
         /****update by leipeng 20200606  多法人改造.主表由数据实时生成**/
 
 		Map<String,ChbMonthReport> resultinits = new HashMap<>();
+		//delete by lingxiaoqing on 2021-05-29 for 资产头寸优先生成,此逻辑挪至资产头寸中------->>>>>>
 		//生成主表数据
-		ChbMonthReport chbMonthReport = monthReportServiceUtil.buildNewReport(report, ifTrigger);
+//		ChbMonthReport chbMonthReport = monthReportServiceUtil.buildNewReport(report, ifTrigger);
+		//delete by lingxiaoqing on 2021-05-29 for 资产头寸优先生成,此逻辑挪至资产头寸中-------<<<<<<
 		//主表详情数据
 		Map<String, ChbMonthReportDetail> result = new HashMap<String, ChbMonthReportDetail>();
 		//公用模板
@@ -1397,7 +1400,7 @@ public class MonthReportProdService {
 			// 删除汇总表明细数据多法人不能生成汇总数据
 			for (ChbMonthReportDetail v : result.values()) {
 				//插入主表的uuid
-				v.setReportuuid(chbMonthReport.getReportuuid());
+				v.setReportuuid(report.getReportuuid());
 				chbMonthReportDetailMapper.insert(v);
 			}
 		}
@@ -1500,9 +1503,22 @@ public class MonthReportProdService {
      *将查询出来的头寸进行清洗，筛选出每个产品的期末份额最大的投资者类别数据
      * @param
      */
-    public  Map<String,ChbMonthPrdPosition>  getMaxQtyByType(List<ChbMonthPrdPosition> pos) {
+    public Map<String,ChbMonthPrdPosition>  getMaxQtyByType(List<ChbMonthPrdPosition> pos) {
         Map<String,ChbMonthPrdPosition> resultMap = new HashMap<String, ChbMonthPrdPosition>();
-        //根据产品代码对头寸LIST进行分组
+        //1、筛选出金融同业的产品
+		pos = pos.stream().filter(s -> ProdConstants.SALETARGET_JRTY.equals(s.getSaleTarget())).collect(Collectors.toList());
+
+		//2、份额相同,按照客户类型优先级排序,由于客户类型数据乱序,故先设置升序数字,后调整回来
+		pos.forEach(p -> {
+			if("04".equals(p.getOrdIdentified())){
+				p.setOrdIdentified("14");
+			}
+			if("09".equals(p.getOrdIdentified())){
+				p.setOrdIdentified("19");
+			}
+		});
+
+		//3、根据产品代码对头寸LIST进行分组
         Map<String, List<ChbMonthPrdPosition>> map = pos.stream().collect(JoyinCollectors.groupingBy(ChbMonthPrdPosition::getProdid));
 
         for (Map.Entry<String, List<ChbMonthPrdPosition>> entry: map.entrySet()) {
@@ -1517,8 +1533,9 @@ public class MonthReportProdService {
 					o2.setEndamtsumOth(BigDecimal.ZERO.stripTrailingZeros());
 				}
 				if (o1.getEndamtsumOth().compareTo(o2.getEndamtsumOth()) == 0) {
+					//根据03 银行类金融机构→05 保险业金融机构→06 信托公司→07 证券公司→08 基金公司→04 其他金融机构→09 金融机构资产管理产品优先级取数
 					if(null != o1.getOrdIdentified()){
-						return o1.getOrdIdentified().compareTo(o2.getOrdIdentified());
+						return  o1.getOrdIdentified().compareTo(o2.getOrdIdentified());
 					}else{
 						return -1;
 					}
@@ -1526,10 +1543,20 @@ public class MonthReportProdService {
 					return o2.getEndamtsumOth().compareTo(o1.getEndamtsumOth());
 				}
 			});
+
+			tmp.forEach(p ->{
+				if("14".equals(p.getOrdIdentified())){
+					p.setOrdIdentified("04");
+				}
+				if("19".equals(p.getOrdIdentified())){
+					p.setOrdIdentified("09");
+				}
+			});
 			resultMap.put(tmp.get(0).getProdid(),tmp.get(0));
 		}
         return resultMap;
     }
+
 	/**
 	 * 表内数据保存列表.利用flag字段进行表字段是否保存的逻辑判断
 	 * @param type 表保存类型

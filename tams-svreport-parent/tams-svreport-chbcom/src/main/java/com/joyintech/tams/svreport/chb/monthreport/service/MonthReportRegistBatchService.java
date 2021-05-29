@@ -40,6 +40,7 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
 
     @Autowired
     private SubsidiaMonthReportRegistBatchService subsidiaMonthReportRegistBatchService;
+
     @Transactional(rollbackFor = Exception.class)
 	public void genReport(Date executeDate,List<String> prodids,boolean ifTrigger){
         // 设置批处理bean

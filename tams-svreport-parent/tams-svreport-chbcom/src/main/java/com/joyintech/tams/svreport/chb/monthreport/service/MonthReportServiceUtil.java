@@ -54,8 +54,9 @@ public class MonthReportServiceUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
         ChbMonthReport chbMonthReport = new ChbMonthReport();
         chbMonthReport.setTermid(sdf.format(report.getStartdate()));
+        report.setReportuuid(UUID.randomUUID().toString());
         //报表ID
-        chbMonthReport.setReportuuid(UUID.randomUUID().toString());
+        chbMonthReport.setReportuuid(report.getReportuuid());
         
         //报表类型
         chbMonthReport.setReporttype(ChbMonthReportPrdConstants.REPORT_TYPE_MONTH);

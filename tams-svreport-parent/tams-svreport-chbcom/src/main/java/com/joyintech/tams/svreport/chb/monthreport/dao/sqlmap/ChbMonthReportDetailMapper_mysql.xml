@@ -236,9 +236,9 @@
 		PROPERTYCODE, PRODCOUNTS, PRODAMOUNT,
 		PRODNETAMOUNT, DURATIONPRODCOUNTS, BALANCE,
 		BOTTOMBALANCE, CUSTOMERPROFIT, BANKPROFIT,
-		PRODYIELD,REPORTUUID,PRODPAYAMOUNT,XGDURATIONPRODCOUNTS,XGBALANCE,XGBOTTOMBALANCE)
-		<foreach collection="insertList" item="item" index="index" separator="union all">
-			select
+		PRODYIELD,REPORTUUID,PRODPAYAMOUNT,XGDURATIONPRODCOUNTS,XGBALANCE,XGBOTTOMBALANCE) VALUES
+		<foreach collection="insertList" item="item" index="index" separator=",">
+			(
 			#{item.detailuuid,jdbcType=CHAR},
 			#{item.termid,jdbcType=VARCHAR},
 			#{item.reporttype,jdbcType=VARCHAR},
@@ -257,7 +257,7 @@
 			#{item.xgdurationprodcounts,jdbcType=DECIMAL},
 			#{item.xgbalance,jdbcType=DECIMAL},
 			#{item.xgbottombalance,jdbcType=DECIMAL}
-			from dual
+			)
 		</foreach>
 	</insert>
 	<delete id="deleteByTermId" parameterType="java.lang.String" >
