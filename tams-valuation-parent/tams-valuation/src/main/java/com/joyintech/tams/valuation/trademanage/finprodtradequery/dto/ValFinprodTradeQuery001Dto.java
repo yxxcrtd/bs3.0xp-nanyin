@@ -806,7 +806,7 @@ public class ValFinprodTradeQuery001Dto extends BaseEntity implements ProcessEnt
      * @return 交易方向
      */
     public String getPsFt() {
-        if(DictCodeList.业务类型_指令交易.getValue().equals(busiType)){
+        if(DictCodeList.业务类型_指令交易.getValue().equals(busiTypeCode)){
             return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.收付方向, ps))?
                 SysDataUtil.getNameFromDataDict(DictCode.收付方向, ps):this.ps;
         }

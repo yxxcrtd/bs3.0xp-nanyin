@@ -674,7 +674,14 @@
             AND C.BOOKSET_ID = B.BOOKSET_ID 
             AND C.BUSI_TABLE = B.BUSI_TABLE
         WHERE
-            A .BUSI_TYPE = #{orderBusi}
+        	1=1
+	        <if test="busiTypeArr != null and busiTypeArr.length > 0">
+				AND A .BUSI_TYPE in
+				<foreach collection="busiTypeArr" item="busiType" open="( "
+					close=" )" separator=",">
+					#{busiType}
+				</foreach>
+			</if>
             <if test="settleDateBegin !=null  and settleDateBegin !='' ">
               AND A.SETTLE_DATE <![CDATA[>=]]> to_date(#{settleDateBegin},'yyyy-MM-dd')
             </if>
