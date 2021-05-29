@@ -430,4 +430,17 @@ public class DisRepCashYield extends BaseEntity {
     public void setRate(BigDecimal rate) {
         this.rate = rate;
     }
+
+    /**
+     * 汇率值
+     */
+    private String rateStr;
+
+    public String getRateStr() {
+        return rateStr;
+    }
+
+    public void setRateStr(String rateStr) {
+        this.rateStr = rateStr;
+    }
 }

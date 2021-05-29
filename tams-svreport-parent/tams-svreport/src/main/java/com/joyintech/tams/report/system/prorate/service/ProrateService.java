@@ -93,9 +93,9 @@ public class ProrateService extends BaseService<DisRepCashYield> {
                 DisRepCashYield.class);
     }
 
-    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(String datauuid) {
+    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(Map<String, Object> map) {
         return restTemplate.postForList(
-                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/selectdisPrdFeeRateErrordata",datauuid,
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/selectdisPrdFeeRateErrordata",map,
                 DisPrdFeeRateInfoErrodataWithBLOBs.class);
     }
 
@@ -129,9 +129,20 @@ public class ProrateService extends BaseService<DisRepCashYield> {
                 ExcelValidDto.class);
     }
 
-    public void updateOne(Map<String, Object> mapOld) {
+    public void updateOne(DisRepCashYield dto) {
         restTemplate.postForList(
-                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/updateOne",mapOld,
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/updateOne",dto,
+                DisRepCashYield.class);
+        return;
+    }
+
+    /**
+     * 删除错误表数据
+     * @param dto
+     */
+    public void deleteErrorDataOne(DisRepCashYield dto) {
+        restTemplate.postForList(
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/deleteErrorDataOne",dto,
                 DisRepCashYield.class);
         return;
     }

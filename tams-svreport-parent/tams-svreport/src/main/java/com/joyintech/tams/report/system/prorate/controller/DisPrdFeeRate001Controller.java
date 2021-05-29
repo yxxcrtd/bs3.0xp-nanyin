@@ -193,7 +193,7 @@ public class DisPrdFeeRate001Controller extends BaseController {
             dtoList = this.prorateService.queryReportList(RequestUtil.getPageParam());
         }
         dtoList.forEach(item -> {
-            item.setStartDateStr(DateUtil.format(item.getStartDate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+            //item.setStartDateStr(DateUtil.format(item.getStartDate(), DateUtil.DEFAULT_DATE_FORMAT_EN));
             item.setCashType2(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndName(
                     DictCode.信披费用类型, item.getCashType2()));
             /*item.setBusiId(map.get(item.getBusiId()));*/

@@ -33,14 +33,14 @@ public interface ProRateInfo001Mapper {
 
     List<DisRepCashYield> selectOneDate(Map<String, Object> param);
 
-    List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(@Param("datauuid")String datauuid);
+    List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(Map<String, Object> param);
 
     void insertOne(DisRepCashYield entity);
 
-    void updateOne(Map<String, Object> mapOld);
+    void updateOne(DisRepCashYield dto);
 
     void deleteOne(@Param("busiId")String busiId, @Param("date")Date date, @Param("cashType2")String cashType2);
 
-    void deleteErrorDataOne(@Param("busiId")String busiId, @Param("date")Date date, @Param("cashType2")String cashType2);
+    void deleteErrorDataOne(@Param("busiId")String busiId, @Param("date")String date, @Param("cashType2")String cashType2);
 
 }

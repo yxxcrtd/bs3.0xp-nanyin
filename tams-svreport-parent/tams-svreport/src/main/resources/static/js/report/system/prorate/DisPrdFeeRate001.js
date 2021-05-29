@@ -19,14 +19,14 @@
         cols: [
             { title: "数据状态", field:'statusName',width:'8%', sortField:'statusName'},
             { title: "产品代码", field:'busiId',width:'8%', sortField:'busiId'},
-            { title: "启用日期", field:'startDate',type:'date',width:'12%'},
+            { title: "启用日期", field:'startDateStr',type:'date',width:'12%'},
             { title: "信披费用类型", field:'cashType2Name',width:'10%', sortField:'cashType2'},
             /*{ title: "busiId",  visible:false, field:'busiId'},*/
             { title: "status2",  visible:false, field:'status2'},
             { title: "cashType2",  visible:false, field:'cashType2'},
             { title: "dataSource",  visible:false, field:'dataSource'},
             { title: "datauuid",  visible:false, field:'datauuid'},
-            { title: "费率", field:'rate',width:'6%', sortField:'rate'},
+            { title: "费率", field:'rateStr',width:'6%', sortField:'rate'},
             { title: "创建人", field:'createUser',width:'8%', sortField:'createUser'},
             { title: "创建时间", field:'createTime',type:'date',width:'12%'},
             { title: "更新人", field:'updateUser',width:'8%', sortField:'updateUser'},

@@ -42,4 +42,30 @@ public class DisPrdFeeRateInfoErrodataWithBLOBs extends DisPrdFeeRateErrordata{
     public void setErrMsg(String errMsg) {
         this.errMsg = errMsg == null ? null : errMsg.trim();
     }
+
+    /**
+     * 日期
+     */
+    private String startDateStr;
+
+    /**
+     * 汇率值
+     */
+    private String rateStr;
+
+    public String getStartDateStr() {
+        return startDateStr;
+    }
+
+    public void setStartDateStr(String startDateStr) {
+        this.startDateStr = startDateStr;
+    }
+
+    public String getRateStr() {
+        return rateStr;
+    }
+
+    public void setRateStr(String rateStr) {
+        this.rateStr = rateStr;
+    }
 }
