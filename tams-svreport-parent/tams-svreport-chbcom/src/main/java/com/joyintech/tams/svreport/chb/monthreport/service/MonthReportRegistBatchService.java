@@ -157,12 +157,13 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
         
         /****update by leipeng 20200606  多法人改造.主表由数据实时生成**/
 
-        
-    	//生成产品端月报明细
-    	monthReportProdService.genReport(report,ifTrigger);
+        //由于理财子产品头寸用到了期限涉及到资产头寸的取数，所以先跑资产头寸
 
         //生成资产端月报明细
-    	monthReportAssetService.genReport(report,ifTrigger);
+        monthReportAssetService.genReport(report,ifTrigger);
+
+    	//生成产品端月报明细
+    	monthReportProdService.genReport(report,ifTrigger);
 
     	// add by wanshiwei G06b 银行理财子公司风险资本计算表 20210428 start
         monthReportG06bAssetService.genReport(report,ifTrigger);
