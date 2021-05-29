@@ -40,11 +40,8 @@ public class InvestmentDealInfo002Controller extends BaseController {
         InvestmentDealInfoDto dto=new InvestmentDealInfoDto();
         Map<String,Object> map= RequestUtil.getPageParam();
         String uuid= (String) map.get("uuid");
-        String svrStatus = (String) map.get("status2");
         if(!"add".equals(map.get("operateType"))){
-//            if(StringUtil.isEmpty(uuid)){
-            //svrstatus为"A"时,，查询错误表信息
-            if(!"A".equals(svrStatus)){
+            if(StringUtil.isEmpty(uuid)){
                 dto = investmentDealInfoService.selectOneDate(map);
                 model.addAttribute("entity", dto);
             }else{

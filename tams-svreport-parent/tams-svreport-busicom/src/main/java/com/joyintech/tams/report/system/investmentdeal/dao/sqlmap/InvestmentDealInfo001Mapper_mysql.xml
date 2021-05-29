@@ -81,7 +81,7 @@
 		UPDATE_USER AS updateUser,
 		UPDATE_TIME AS updateTime,
 		'DB' AS dataSource,
-		DATAUUID AS DATAUUID
+		DATAUUID AS uuid
 		FROM
 		chb_invest_trade_errordata i
 		<where>
@@ -433,7 +433,7 @@
 		FROM
 			chb_invest_trade_errordata
 		WHERE
-			DATAUUID =#{datauuid,jdbcType=DATE}
+			DATAUUID =#{datauuid,jdbcType=VARCHAR}
 	</select>
 
 	<select id="getProdId" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">

@@ -19,6 +19,8 @@ import java.util.List;
 public class InvestmentDealInfoDto extends ChbInvestTrade implements ITableRow, ProcessEntity {
 
     private List<InvestmentDealInfoDto> selectedItem;
+
+    private String uuid;
     
     private String statusName;
 
@@ -109,5 +111,13 @@ public class InvestmentDealInfoDto extends ChbInvestTrade implements ITableRow, 
 
     public void setDataSourceName(String dataSourceName) {
         this.dataSourceName = dataSourceName;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }
