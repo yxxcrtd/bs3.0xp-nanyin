@@ -1,6 +1,7 @@
 package com.joyintech.service.trade.manualsettle.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -160,24 +161,35 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
             List<EtrCashPositionFlowDto> etrCashPositionFlows =manualSettleMapper.selectEtrCashPositionFlow(dto.getEntrustNo());
             //查询指令预占头寸数据
             List<EtrSecPositionFlowDto> etrSecPositionFlows = manualSettleMapper.selectEtrSecPositionFlow(dto.getEntrustNo());
+            //update by yzg 20210528 start 头寸只会生成一条
+            EtrSecPositionFlowDto etrSecPositionFlowDto = new EtrSecPositionFlowDto();
+            EtrCashPositionFlowDto etrCashPositionFlowDto = new EtrCashPositionFlowDto();
+            if(!StringUtil.isEmptyList(etrSecPositionFlows)) {
+            	etrSecPositionFlowDto = etrSecPositionFlows.get(0);
+            }
+            if(!StringUtil.isEmptyList(etrCashPositionFlows)) {
+            	etrCashPositionFlowDto = etrCashPositionFlows.get(0);
+            }
+            List<EtrCashPositionFlowDto> etrCashPositionFlowDtos = new ArrayList<EtrCashPositionFlowDto>();
+            List<EtrSecPositionFlowDto> etrSecPositionFlowDtos = new ArrayList<EtrSecPositionFlowDto>();
             if(etrCashPositionFlows!=null&&!etrCashPositionFlows.isEmpty()){
-                etrCashPositionFlows.forEach(item->{
-                    item.setSeqno(IDGenerator.generate());
-                    item.setCdate(DateUtil.platDateFromCache());
-                    item.setOrderId(stlPayTempOrders.getOrderId());
-                    item.setAmount(dto.getSettleAmt());
-                });
+            	etrCashPositionFlowDto.setSeqno(IDGenerator.generate());
+            	etrCashPositionFlowDto.setCdate(DateUtil.platDateFromCache());
+            	etrCashPositionFlowDto.setOrderId(stlPayTempOrders.getOrderId());
+            	etrCashPositionFlowDto.setAmount(dto.getSettleAmt());
+            	etrCashPositionFlowDtos.add(etrCashPositionFlowDto);
             }
             if(etrSecPositionFlows!=null&&!etrSecPositionFlows.isEmpty()){
-                etrSecPositionFlows.forEach(item->{
-                    item.setSeqno(IDGenerator.generate());
-                    item.setCdate(DateUtil.platDateFromCache());
-                    item.setTradeId(dto.getTradeId());
-                    item.setAmount(dto.getSettleNum());
-                });
+            	etrSecPositionFlowDto.setSeqno(IDGenerator.generate());
+            	etrSecPositionFlowDto.setCdate(DateUtil.platDateFromCache());
+            	etrSecPositionFlowDto.setTradeId(dto.getTradeId());
+            	etrSecPositionFlowDto.setAmount(dto.getSettleNum());
+            	etrSecPositionFlowDtos.add(etrSecPositionFlowDto);
             }
-            etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
-            etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+           //update by yzg 20210528 end
+            
+            etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlowDtos);
+            etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlowDtos);
             etrPositionHoldDto.setDealEtr(true);
             EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
         }
