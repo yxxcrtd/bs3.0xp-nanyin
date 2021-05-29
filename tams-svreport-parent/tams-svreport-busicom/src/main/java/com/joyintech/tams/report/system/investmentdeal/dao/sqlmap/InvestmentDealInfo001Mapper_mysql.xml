@@ -152,6 +152,11 @@
 					#{ac,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+			<if test="keys != null and keys.size() > 0">
+				<foreach collection="keys" item="code" open="AND a.TRADE_CODE IN (" close=")" separator=",">
+					#{code,jdbcType=VARCHAR}
+				</foreach>
+			</if>
 			<if test="tradeCode != null and tradeCode.trim !=''">
 				and a.TRADE_CODE like concat(concat('%', #{tradeCode}),'%')
 			</if>
