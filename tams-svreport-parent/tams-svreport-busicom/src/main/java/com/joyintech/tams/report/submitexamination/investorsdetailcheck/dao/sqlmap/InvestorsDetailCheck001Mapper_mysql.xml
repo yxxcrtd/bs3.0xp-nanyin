@@ -63,7 +63,7 @@
                         (
                             SELECT
                                 A.ACCOUNT,
-                                if (#{checkDateStart} is not null ,#{checkDateStart},A.EQUITY_CONF_DATE) as EQUITY_CONF_DATE,
+                                A.EQUITY_CONF_DATE as EQUITY_CONF_DATE,
                                 SUM( IF ( A.BUSI_TYPE IN ( '01' ), IFNULL( AMOUNT_CNY, 0 ), 0 ) ) AS MJ_AMT,
                                 NULL AS SG_QTY,
                                 NULL AS SG_AMT,
@@ -91,12 +91,7 @@
                                 CHB_EQUDET A
                             WHERE
                                 A.BUSI_TYPE IN ( '02', '03', '04', '05', '14', '15', '16' )
-                                <if  test="checkDateStart != null and checkDateStart.trim !=''">
-                                    and A.EQUITY_CONF_DATE >= #{checkDateStart}
-                                </if>
-                                <if  test="checkDateEnd != null and checkDateEnd.trim !=''">
-                                    and A.EQUITY_CONF_DATE &lt;= #{checkDateEnd}
-                                </if>
+
                             GROUP BY
                                 A.ACCOUNT,
                                 A.EQUITY_CONF_DATE
@@ -126,14 +121,6 @@
                         SUM( IFNULL( CPDS.REDEEM_QTY, 0 ) * IFNULL( CPDS.PRD_VALUE, 1 ) ) AS SHAMT
                     FROM
                         CHB_PRD_DEAL_SUB CPDS
-                    <where>
-                        <if  test="checkDateStart != null and checkDateStart.trim !=''">
-                            and CPDS.MDATE >= #{checkDateStart}
-                        </if>
-                        <if  test="checkDateEnd != null and checkDateEnd.trim !=''">
-                            and CPDS.MDATE &lt;= #{checkDateEnd}
-                        </if>
-                    </where>
                     GROUP BY
                         CPDS.PROD_ID
                 ) CX_SUB ON T.ACCOUNT = CX_SUB.PROD_ID
@@ -142,10 +129,10 @@
             ) t
         <where>
             <if  test="checkDateStart != null and checkDateStart.trim !=''">
-                and EQUITY_CONF_DATE >= #{checkDateStart}
+                and date_format(EQUITY_CONF_DATE, '%Y-%m-%d') >= #{checkDateStart}
             </if>
             <if  test="checkDateEnd != null and checkDateEnd.trim !=''">
-                and EQUITY_CONF_DATE &lt;= #{checkDateEnd}
+                and date_format(EQUITY_CONF_DATE, '%Y-%m-%d') &lt;= #{checkDateEnd}
             </if>
             <if test="prod != null and prod.trim !=''">
                 and (ACCOUNT like concat('%', #{prod},'%') or   PROD_NAME like concat('%', #{prod},'%'))
@@ -161,16 +148,16 @@
                 </foreach>
             </if>
             <if  test="vdateStart != null and vdateStart.trim !=''">
-                and VDATE >= #{vdateStart}
+                and date_format(VDATE, '%Y-%m-%d') >= #{vdateStart}
             </if>
             <if  test="vdateEnd != null and vdateEnd.trim !=''">
-                and VDATE &lt;= #{vdateEnd}
+                and date_format(VDATE, '%Y-%m-%d') &lt;= #{vdateEnd}
             </if>
             <if  test="mdateStart != null and mdateStart.trim !=''">
-                and MDATE >= #{mdateStart}
+                and date_format(MDATE, '%Y-%m-%d') >= #{mdateStart}
             </if>
             <if  test="mdateEnd != null and mdateEnd.trim !=''">
-                and MDATE &lt;= #{checkDateEnd}
+                and date_format(MDATE, '%Y-%m-%d') &lt;= #{mdateEnd}
             </if>
 
         </where>
