@@ -13,7 +13,9 @@ package com.joyintech.tams.invest.batch.creditmanager.runner;
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.invest.batch.creditmanager.service.CreditExtendsService;
 import org.slf4j.Logger;
@@ -80,7 +82,9 @@ public class CreditExtendsTask extends BatchBaseService{
             }
         }
         try {
-        	if(null!=batchExecuteInfo&&null!=batchExecuteInfo.getExecuteDate()){
+        	if(null!=batchExecuteInfo&&null!=batchExecuteInfo.getExecuteDate()
+                && !StringUtil.equals(BatchDictCodeList.批处理启动模式_自动.getValue(),
+                    batchExecuteInfo.getStartMode())){
         		supDate=batchExecuteInfo.getExecuteDate();
         	}
         	else{

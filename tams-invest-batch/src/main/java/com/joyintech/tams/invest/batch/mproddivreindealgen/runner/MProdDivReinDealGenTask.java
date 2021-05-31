@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.batch.mproddivreindealgen.runner;
 
 import java.util.*;
 
+import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -120,6 +121,11 @@ public class MProdDivReinDealGenTask extends BatchBaseService{
         if (batchExecuteInfo == null) {
             logger.info("无启动参数，批处理退出。");
             return null;
+        }
+
+        if (StringUtil.equals(BatchDictCodeList.批处理启动模式_自动.getValue(),
+                batchExecuteInfo.getStartMode())) {
+            batchExecuteInfo.setExecuteDate(platformDateService.getSysDate());
         }
 
         //add by mashukai TISHKBS-1640  高频开放货币型产品跑批过滤节假日 start
