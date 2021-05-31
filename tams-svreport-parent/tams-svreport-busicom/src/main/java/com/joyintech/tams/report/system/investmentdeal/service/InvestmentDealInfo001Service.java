@@ -84,6 +84,7 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
     public List<InvestmentDealInfoDto> queryReportList(Map<String, Object> param) {
         param.put("prodId", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("prodId")));
         param.put("assetCode", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("assetCode")));
+        param.put("keys",StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("keys")));
         param.put("selectStatus", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("status")));
         List<InvestmentDealInfoDto> list = investmentDealInfo001Mapper.queryReportList( param);
         dealReportDataList(list);

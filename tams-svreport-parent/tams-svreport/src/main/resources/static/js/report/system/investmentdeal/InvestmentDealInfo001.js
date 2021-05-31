@@ -132,7 +132,7 @@
             if(rows.length > 0) {
                 var keyList = [];
                 $.each(rows, function(i, row) {
-                    keyList.push(row.counterId);
+                    keyList.push(row.tradeCode);
                 });
                 param.keys = keyList.join();
             }

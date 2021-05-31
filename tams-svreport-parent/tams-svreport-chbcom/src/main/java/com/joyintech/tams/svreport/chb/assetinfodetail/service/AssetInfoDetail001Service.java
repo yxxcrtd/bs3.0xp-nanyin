@@ -106,7 +106,7 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 			assetInfo.add(dto);
 			AssetInfoDetailDto assetInfoDetailDto = assetInfoDetailMapper.queryAssetInfo(dto.getAssetCode());
 			if (StringUtil.isNotEmpty(assetInfoDetailDto)){
-				flag = assetInfoDetailMapper.updateBatch(assetInfo);
+				flag = assetInfoDetailMapper.updateBatchAllowNull(assetInfo);
 			}else {
 				flag = assetInfoDetailMapper.insertBatch(assetInfo);
 			}

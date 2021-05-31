@@ -252,7 +252,7 @@
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable">计息基础</label>
                 <div class="layui-input-inline input-inline">
-                    <select id="basic" data-th-initValue="${entity?.basic}" data-th-data-result='${SVR_BASIS}'
+                    <select id="basic" data-th-initValue="${entity?.basic}" data-th-data-result='${SVR_PROD_BASIS}'
                             data-th-data-formatoption=true class="input-select" placeholder="请选择"
                             data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" required="true">
                     </select>
@@ -275,7 +275,7 @@
                 <label class="layui-form-label form-lable">客户类型</label>
                 <div class="layui-input-inline input-inline">
                     <select id="customerType" data-th-initValue="${entity?.customerType}"
-                            data-th-data-result='${SVR_PBC_CUSTTYPE}' data-th-data-formatoption=true
+                            data-th-data-result='${SVR_CUSTOMER_TYPE}' data-th-data-formatoption=true
                             class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
                             allowClear="true" required="true" multiple="true">
                     </select>
@@ -331,7 +331,7 @@
                 <label class="layui-form-label form-lable">发行状态</label>
                 <div class="layui-input-inline input-inline">
                     <select id="issuingStatus" data-th-initValue="${entity?.issuingStatus}"
-                            data-th-data-result='${ISSUE_STATUS}' data-th-data-formatoption=true class="input-select"
+                            data-th-data-result='${SVR_ISSUING_STATUS}' data-th-data-formatoption=true class="input-select"
                             placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true">
                     </select>
                 </div>

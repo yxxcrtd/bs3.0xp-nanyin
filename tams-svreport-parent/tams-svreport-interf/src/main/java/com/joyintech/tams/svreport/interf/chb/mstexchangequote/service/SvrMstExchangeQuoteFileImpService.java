@@ -7,6 +7,7 @@ import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.base.entity.MstExchargeQuote;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.interf.chb.mstexchangequote.dao.ChbMstExchangeQuoteMapper;
@@ -227,6 +228,8 @@ public class SvrMstExchangeQuoteFileImpService extends FileImpService {
             //更新人
             mstExchargeQuote.setUpdateUser(CommonUtil.getUserName());
 
+            /** modify by yanya on 20210528 修改数据来源为外管局：SAFE**/
+            mstExchargeQuote.setDatasourceType(DictCodeListExt3.估值来源_外管局.getValue());
             entities.add(mstExchargeQuote);
         }
         return entities;

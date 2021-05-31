@@ -6,6 +6,12 @@
             $("#busiId").attr("style", "background-color: #EEEEEE;");
         }
     };
+    var judgeIsNumFunc = function(strValue) {
+        if(!isNaN(strValue)){
+            return false;
+        }
+        return true;
+    }
     $(function() {
         init();
         //保存点击事件
@@ -20,13 +26,20 @@
             object.oldCashType2 =$("#oldCashType2").val();
             object.oldStartDateStr =$("#oldStartDateStr").val();
             if(object.busiId==''){
-                alert("产品代码不能为空");
+                Joyin.error("产品代码不能为空");
+                return ;
             }
             if(object.cashType2==''){
-                alert("信披费用类型不能为空");
+                Joyin.error("信披费用类型不能为空");
+                return ;
             }
             if(object.rate==''){
-                alert("费率不能为空");
+                Joyin.error("费率不能为空");
+                return ;
+            }
+            if(judgeIsNumFunc(object.rate)) {
+                Joyin.error("费率必须为数值类型");
+                return ;
             }
             if(object.busiId!='' && object.cashType2!='' && object.rate!=''){
                 Joyin.ajaxJson(basePath + 'svreport/system/prorate/DisPrdFeeRate002/check', object, function(result) {

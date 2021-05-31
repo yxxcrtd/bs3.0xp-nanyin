@@ -126,12 +126,12 @@ public class DisRepCashYieldService extends FileImpService{
         dto.setUpdateUser("interf");
         try {
             if(StringUtil.isNotEmpty(data.get("CREATE_TIME"))){
-                dto.setCreateTime(DateUtil.parseDate(data.get("CREATE_TIME"),new String[] {DateUtil.DEFAULT_DATETIME_FORMAT_ODS,DateUtil.DEFAULT_DATETIME_FORMAT}));
+                dto.setCreateTime(DateUtil.parseDate(data.get("CREATE_TIME")));
             }else{
                 dto.setCreateTime(new Date());
             }
             if(StringUtil.isNotEmpty(data.get("UPDATE_TIME"))){
-                dto.setUpdateTime(DateUtil.parseDate(data.get("UPDATE_TIME"),new String[] {DateUtil.DEFAULT_DATETIME_FORMAT_ODS,DateUtil.DEFAULT_DATETIME_FORMAT}));
+                dto.setUpdateTime(DateUtil.parseDate(data.get("UPDATE_TIME")));
             }else{
                 dto.setUpdateTime(new Date());
             }

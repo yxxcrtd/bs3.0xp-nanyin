@@ -81,7 +81,7 @@
 		UPDATE_USER AS updateUser,
 		UPDATE_TIME AS updateTime,
 		'DB' AS dataSource,
-		DATAUUID AS DATAUUID
+		DATAUUID AS uuid
 		FROM
 		chb_invest_trade_errordata i
 		<where>
@@ -150,6 +150,11 @@
 			<if test="assetCode != null and assetCode.size() > 0">
 				<foreach collection="assetCode" item="ac" open="AND a.ASSET_CODE IN (" close=")" separator=",">
 					#{ac,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="keys != null and keys.size() > 0">
+				<foreach collection="keys" item="code" open="AND a.TRADE_CODE IN (" close=")" separator=",">
+					#{code,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="tradeCode != null and tradeCode.trim !=''">
@@ -227,6 +232,7 @@
 		SELECT
 			STATUS AS status,
 			TRADE_CODE AS tradeCode,
+			TRADE_SEQNO AS tradeSeqno,
 			PROD_ID AS prodId,
 			ASSET_CODE AS assetCode,
 			CCY AS ccy,
@@ -427,7 +433,7 @@
 		FROM
 			chb_invest_trade_errordata
 		WHERE
-			DATAUUID =#{datauuid,jdbcType=DATE}
+			DATAUUID =#{datauuid,jdbcType=VARCHAR}
 	</select>
 
 	<select id="getProdId" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">

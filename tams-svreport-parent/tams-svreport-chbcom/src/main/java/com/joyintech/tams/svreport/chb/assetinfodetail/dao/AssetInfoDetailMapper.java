@@ -16,6 +16,7 @@ import java.util.Map;
 
 @Repository
 public interface AssetInfoDetailMapper {
+	int updateBatchAllowNull(@Param("updateList") List<ChbAssetInfo> updateList);
 	/**
 	 * 功能:批量更新资产要素记录
 	 * @since 1.6.0

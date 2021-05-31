@@ -167,4 +167,14 @@ public class AssetInfoDetail001Controller extends BaseController {
     public List<SelectOptionDto> getRegCode() {
         return assetInfoDetailMService.queryAssetCodeList(RequestUtil.getPageParam());
     }
+
+	/**
+	 * 资产代码下拉框
+	 * @return 产品名称列表
+	 */
+	@RequestMapping("/getAssetCodePage")
+	@ResponseBody
+	public Page<SelectOptionDto> getAssetCodePage() {
+		return assetInfoDetailMService.queryAssetCodePage(RequestUtil.getPageParam());
+	}
 }

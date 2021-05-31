@@ -86,8 +86,14 @@ public class MonthReportAssetService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(report.getEnddate());
 
-        int year = calendar.get(Calendar.YEAR);//获取年份
+
+		int year = calendar.get(Calendar.YEAR);//获取年份
         int month = calendar.get(Calendar.MONTH) + 1;//获取月份
+
+		//add by lingxiaoqing on 2021-05-29 for 资产头寸优先生成,此逻辑挪至资产头寸中------->>>>>>
+		//生成主表数据
+		monthReportServiceUtil.buildNewReport(report, ifTrigger);
+		//add by lingxiaoqing on 2021-05-29 for 资产头寸优先生成,此逻辑挪至资产头寸中-------<<<<<<
         
 //        logger.info("生成月报："+year+"年"+month+"月");
 //        logger.debug("生成资产头寸：");
@@ -540,25 +546,25 @@ public class MonthReportAssetService {
         logger.info("处理剩余现金开始结束：");
 
 		//查询其他负责
-		logger.info("处理其他负责开始：");
-		List<ChbMonthAssetPosition> otherAssetList=chbMonthAssetPositionMapper.selectOtherAssetListEx(lastday,report.getProdids());
-		if(otherAssetList!=null&&!otherAssetList.isEmpty()){
-			for(ChbMonthAssetPosition oal:otherAssetList){
-
-				oal.setPosuuid(IDGenerator.generate(36));
-				oal.setAssettype("99");
-				oal.setAssettype2("2000");
-				//oal.子公司月报资产一级分类(99);
-				//oal.子公司月报资产二级分类(9999);
-				//oal.剩余期限(1);
-				oal.setStartdate(report.getStartdate());
-				oal.setEnddate(report.getEnddate());
-				oal.setBookdate(report.getSubmitTime());
-				oal.setAssetvalueB(oal.getAssetvalueA().add(chbMonthAssetPositionMapper.selectAssetValueB(oal,otherAssetList)));
-				chbMonthAssetPositionMapper.insert(oal);
-			}
-		}
-		logger.info("处理其他负责结束：");
+//		logger.info("处理其他负责开始：");
+//		List<ChbMonthAssetPosition> otherAssetList=chbMonthAssetPositionMapper.selectOtherAssetListEx(lastday,report.getProdids());
+//		if(otherAssetList!=null&&!otherAssetList.isEmpty()){
+//			for(ChbMonthAssetPosition oal:otherAssetList){
+//
+//				oal.setPosuuid(IDGenerator.generate(36));
+//				oal.setAssettype("99");
+//				oal.setAssettype2("2000");
+//				//oal.子公司月报资产一级分类(99);
+//				//oal.子公司月报资产二级分类(9999);
+//				//oal.剩余期限(1);
+//				oal.setStartdate(report.getStartdate());
+//				oal.setEnddate(report.getEnddate());
+//				oal.setBookdate(report.getSubmitTime());
+//				oal.setAssetvalueB(oal.getAssetvalueA().add(chbMonthAssetPositionMapper.selectAssetValueB(oal,otherAssetList)));
+//				chbMonthAssetPositionMapper.insert(oal);
+//			}
+//		}
+//		logger.info("处理其他负责结束：");
 
 
     }
@@ -1080,12 +1086,12 @@ public class MonthReportAssetService {
         	}
         }
 
-		if(!CommonUtil.isBAmodel()) {
-			//汇总数据合计
-       sumDetail(assetMonthReportDetailMap);
-//        //汇总数据入库
-        insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
-		}
+//		if(!CommonUtil.isBAmodel()) {
+//			//汇总数据合计
+//       sumDetail(assetMonthReportDetailMap);
+////        //汇总数据入库
+//        insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
+//		}
         //多级法人改造。不能出汇总数据，会导致分支机构数据删除错误
 		if(!CommonUtil.isBAmodel()){
 			//汇总数据合计

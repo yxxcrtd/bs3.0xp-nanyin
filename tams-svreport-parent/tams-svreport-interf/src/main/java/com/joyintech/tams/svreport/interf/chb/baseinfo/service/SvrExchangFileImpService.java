@@ -1,24 +1,20 @@
 package com.joyintech.tams.svreport.interf.chb.baseinfo.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.common.base.entity.MstExchargeQuote;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstExchangeImpMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -30,22 +26,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfDefine;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.base.entity.MstExchargeQuote;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
-import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
-import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstExchangeImpMapper;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 汇率信息文件接口
@@ -437,6 +425,9 @@ public class SvrExchangFileImpService extends FileImpService {
             t.setCreateDept(CommonUtil.getDeptCode());
             // 更新人
             t.setUpdateUser(CommonUtil.getUserName());
+
+			/** modify by yanya on 20210528 修改数据来源为外管局：SAFE**/
+			t.setDatasourceType(DictCodeListExt3.估值来源_外管局.getValue());
             rs.add(t);
         }
         return rs;

@@ -2,6 +2,7 @@ package com.joyintech.service.svrcom.system.prorate.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
@@ -72,8 +73,8 @@ public class ProrateController {
         return list;
     }
     @PostMapping("selectdisPrdFeeRateErrordata")
-    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(String datauuid) {
-        List<DisPrdFeeRateInfoErrodataWithBLOBs> list = proRateInfo001Service.selectdisPrdFeeRateErrordata(datauuid);
+    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(@RequestBody Map<String, Object> param) {
+        List<DisPrdFeeRateInfoErrodataWithBLOBs> list = proRateInfo001Service.selectdisPrdFeeRateErrordata(param);
         return list;
     }
     @PostMapping("checkConfirmMsgForImportData")
@@ -99,8 +100,19 @@ public class ProrateController {
     }
 
     @PostMapping("updateOne")
-    public void updateOne(@RequestBody Map<String, Object> mapOld) {
-        proRateInfo001Service.updateOne(mapOld);
+    public void updateOne(@RequestBody DisRepCashYield dto) {
+        proRateInfo001Service.updateOne(dto);
         return ;
+    }
+
+    /**
+     * 删除错误表数据
+     * @param dto
+     */
+    @PostMapping("deleteErrorDataOne")
+    public void deleteErrorDataOne(@RequestBody DisRepCashYield dto) {
+        if(StringUtil.isNotEmpty(dto.getBusiId()) && StringUtil.isNotEmpty(dto.getOldStartDateStr()) && StringUtil.isNotEmpty(dto.getOldCashType2())) {
+            proRateInfo001Service.deleteErrorDataOne(dto.getBusiId(), dto.getOldStartDateStr(), dto.getOldCashType2());
+        }
     }
 }

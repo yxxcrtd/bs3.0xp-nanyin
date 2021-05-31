@@ -19,12 +19,14 @@
             <div class="layui-form-item">
 
                 <div class="form-inline-wrap">
-                    <label class="layui-form-label form-lable"
+                    <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepOutInvestAgrInfo.assetName}">委外投资协议名称</label>
                     <div class="layui-input-inline input-inline">
+
                         <input type="text" th:id="|${entityName}_assetName|" th:name="|${entityName}_assetName|"
 							   th:value="${entity?.assetName}"
                                class="layui-input form-input" required/>
+
                     </div>
                 </div>
 

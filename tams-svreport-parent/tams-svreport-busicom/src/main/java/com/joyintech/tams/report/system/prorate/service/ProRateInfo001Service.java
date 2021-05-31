@@ -23,6 +23,7 @@ import com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedI
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -166,8 +167,8 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         return proRateInfo001Mapper.selectOneDate(param);
     }
 
-    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(String datauuid) {
-        return proRateInfo001Mapper.selectdisPrdFeeRateErrordata(datauuid);
+    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(Map<String, Object> param) {
+        return proRateInfo001Mapper.selectdisPrdFeeRateErrordata(param);
     }
 
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) throws ParseException {
@@ -286,13 +287,18 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                     List<DisRepCashYield> disRepCashYields= proRateInfo001Mapper.selectOneDate(map);
                     if("新增".equals(type) || "修改".equals(type)){
                         updateInfo(disRepCashYields, dto);
+                        if(dto.getStartDate() != null) {
+                            deleteErrorDataOne(dto.getBusiId(), DateUtil.format(dto.getStartDate()), dto.getCashType2());
+                        }
                     }
                     /*if("修改".equals(type)){
                         updateInfo(disRepCashYields,busiId, date, cashType2, cashType2Name,bigDecimal,deptCode,userName);
                     }*/
                     else if("删除".equals(type)){
                         proRateInfo001Mapper.deleteOne(dto.getBusiId(), dto.getStartDate(), dto.getCashType2());
-                        proRateInfo001Mapper.deleteErrorDataOne(dto.getBusiId(), dto.getStartDate(), dto.getCashType2());
+                        if(dto.getStartDate() != null) {
+                            deleteErrorDataOne(dto.getBusiId(), DateUtil.format(dto.getStartDate()), dto.getCashType2());
+                        }
                     }else {
                         message.add("操作类型值不在可选范围内");
                     }
@@ -340,25 +346,33 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         if (disRepCashYields.size() > 0) {
             if (!"".equals(disRepCashYields.get(0).getBusiId())) {
                 DisRepCashYield disRepCashYield = disRepCashYields.get(0);
-                mapOld.put("busiId", disRepCashYield.getBusiId());
-                mapOld.put("oldCashType2", disRepCashYield.getOldCashType2());
-                mapOld.put("oldStartDateStr", disRepCashYield.getOldStartDateStr());
-                mapOld.put("cashType2", dto.getCashType2());
-                mapOld.put("startDate", dto.getStartDate());
-                mapOld.put("rate", dto.getRate());
-                mapOld.put("status", "E");
-                mapOld.put("dataSource", "02");
-                mapOld.put("updateUser", LoginUserUtil.getUserName());
-                mapOld.put("updateTime", new Date());
-                proRateInfo001Mapper.updateOne(mapOld);
+//                mapOld.put("busiId", disRepCashYield.getBusiId());
+//                mapOld.put("oldCashType2", disRepCashYield.getOldCashType2());
+//                mapOld.put("oldStartDateStr", disRepCashYield.getOldStartDateStr());
+//                mapOld.put("cashType2", dto.getCashType2());
+//                mapOld.put("startDate", dto.getStartDate());
+//                mapOld.put("rate", dto.getRate());
+//                mapOld.put("status", "E");
+//                mapOld.put("dataSource", "02");
+//                mapOld.put("updateUser", LoginUserUtil.getUserName());
+//                mapOld.put("updateTime", new Date());
+                disRepCashYield.setUpdateTime(new Date());
+                disRepCashYield.setUpdateUser(LoginUserUtil.getUserName());
+                disRepCashYield.setDataSource("02");
+                disRepCashYield.setStatus("E");
+                disRepCashYield.setCashType2(dto.getCashType2());
+                disRepCashYield.setRate(dto.getRate());
+                disRepCashYield.setStartDate(dto.getStartDate());
+                proRateInfo001Mapper.updateOne(disRepCashYield);
             }
         } else {
             addDisRepCashYield(dto);
         }
     }
 
-    public void updateOne(Map<String, Object> mapOld) {
-        proRateInfo001Mapper.updateOne(mapOld);
+    public void updateOne(DisRepCashYield dto) {
+        proRateInfo001Mapper.updateOne(dto);
+
     }
 
 
@@ -462,5 +476,15 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
             }
         }
         return errorList;
+    }
+
+    /**
+     * 根据信息删除错误表数据
+     * @param busiId
+     * @param date
+     * @param cashType2
+     */
+    public void deleteErrorDataOne(String busiId, String date, String cashType2) {
+        proRateInfo001Mapper.deleteErrorDataOne(busiId, date, cashType2);
     }
 }

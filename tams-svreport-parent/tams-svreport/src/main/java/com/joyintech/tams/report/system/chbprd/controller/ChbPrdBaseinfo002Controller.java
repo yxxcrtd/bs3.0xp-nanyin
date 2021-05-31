@@ -45,8 +45,8 @@ public class ChbPrdBaseinfo002Controller extends BaseController {
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         super.setSelectOptionToModel(model,DictCode.管理方式_发行登记, DictCode.是或否,DictCode.开放模式_中债,
-                DictCode.规律开放周期,DictCode.开放期业务,DictCode.产品类型_中债,DictCode.计息基础_中债,
-                DictCode.产品受托职责_中债,DictCode.人行客户类型,DictCode.发行状态);
+                DictCode.规律开放周期,DictCode.开放期业务,DictCode.产品类型_中债,DictCode.计息基础_产品要素维护,
+                DictCode.产品受托职责_中债,DictCode.人行客户类型_SVR,DictCode.报送产品发行状态);
         Map<String,Object> map= RequestUtil.getPageParam();
         String dataUuid= (String) map.get("dataUuid");
         ChbPrdBaseinfo chbPrdBaseinfo =new ChbPrdBaseinfo();

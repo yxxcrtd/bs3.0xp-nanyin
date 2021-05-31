@@ -93,13 +93,13 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
      */
     @ResponseBody
     public Page<EquityBusiInfoRegist001Dto> selectForPage(Map<String, Object> param) {
-        return simpleRestTemplate.postForPage(
+        return restTemplate.postForPage(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/findPage", param,
                 EquityBusiInfoRegist001Dto.class);
     }
     @ResponseBody
     public List<SuggestDto> queryPrdNameList(String param) {
-        return simpleRestTemplate.postForList(
+        return restTemplate.postForList(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/queryPrdNameList", param,
                 SuggestDto.class);
     }
@@ -154,7 +154,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
      */
     @ResponseBody
     public List<ExcelValidDto> sendBeforeCheck(Map<String, Object> param) {
-        return simpleRestTemplate.postForList(
+        return restTemplate.postForList(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/sendBeforeCheck", param,
                 ExcelValidDto.class);
     }
@@ -167,7 +167,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
      */
     @ResponseBody
     public List<ExcelValidDto> submitBeforeCheck(Map<String, Object> param) {
-        return simpleRestTemplate.postForList(
+        return restTemplate.postForList(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/submitBeforeCheck", param,
                 ExcelValidDto.class);
     }
@@ -181,7 +181,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
      * @since 1.0
      */
     public void doSubmit(Map<String, Object> map) {
-        simpleRestTemplate.postForObject(
+        restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/submitChb", map,
                 Integer.class);
     }
@@ -196,7 +196,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
     @ResponseBody
     public AjaxResult doUpdate(@RequestParam Map<String, Object> map) {
 //    	String message=
-//    	simpleRestTemplate.postForObject(
+//    	restTemplate.postForObject(
 // 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/doUpdate", map,
 // 	       	String.class);
 //    	return new AjaxResult(this.getMessage(message));
@@ -209,7 +209,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
             if (map.get("key") != null) {
                 record.setParas(map.get("key").toString());
 //                chbBatchParaMapper.insert(record);
-                simpleRestTemplate.postForList(
+                restTemplate.postForList(
                         SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/insert", record,
                         ChbBatchPara.class);
             }
@@ -224,7 +224,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
                     BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
 //                equityBusiInfoRegist001Service.updateSumStaus(map);
 
-                simpleRestTemplate.postForObject(
+                restTemplate.postForObject(
                         SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStaus",map,
                         boolean.class);
 
@@ -238,22 +238,22 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
     }
     @SuppressWarnings("unchecked")
     public Map<String, Object>selectDeletedAndUnsubmittedData(){
-        return simpleRestTemplate.getForObject(
+        return restTemplate.getForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/selectDeletedAndUnsubmittedData",
                 Map.class);
     }
     public boolean checkIfInBatchByTaskBeanName(String beanname) {
-        return simpleRestTemplate.getForObject(
+        return restTemplate.getForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/checkIfInBatchByTaskBeanName",
                 boolean.class);
     }
     public void updateSumStaus(Map<String, Object> map) {
-        simpleRestTemplate.getForObject(
+        restTemplate.getForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStaus",
                 boolean.class);
     }
     public void updateSumStausAll(Map<String, Object> map) {
-        simpleRestTemplate.getForObject(
+        restTemplate.getForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStausAll",
                 boolean.class);
     }
@@ -272,14 +272,14 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
         // add by liubin
         if (map.get("flag") != null && "01".equals(map.get("flag"))) {
             // 取消手工处理全部数据
-            simpleRestTemplate.postForObject(
+            restTemplate.postForObject(
                     SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/cancelMannulAll",map,
                     boolean.class);
             return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
         }
         else {
             List<ValidMessage> errorList =
-                    simpleRestTemplate.postForList(
+                    restTemplate.postForList(
                             SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/checkIsNotSubmit",map,
                             ValidMessage.class);
 //            		equityBusiInfoRegist001Service.checkIsNotSubmit(map);
@@ -289,7 +289,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
                 webResult.setData(errorList.get(0).getMessage());
                 return webResult;
             }
-            simpleRestTemplate.postForObject(
+            restTemplate.postForObject(
                     SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/cancelMannul",map,
                     boolean.class);
         }
@@ -391,7 +391,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
         log.setUpdateUser(LoginUserUtil.getUserName());
         log.setUpdateTime(new Date());
         // 日志存表
-        simpleRestTemplate.postForObject(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/insert", log,
+        restTemplate.postForObject(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/insert", log,
                 ChbSubinfoBatchLog.class);
         // 启动批处理
         sysBatchStart001Service.executeBatch();
@@ -431,7 +431,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
         log.setUpdateUser(LoginUserUtil.getUserName());
         log.setUpdateTime(new Date());
         // 日志存表
-        simpleRestTemplate.postForObject(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/insert", log,
+        restTemplate.postForObject(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/insert", log,
                 ChbSubinfoBatchLog.class);
         //手工处理相关
         ChbBatchPara record = new ChbBatchPara();
@@ -440,7 +440,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
         if (param.get("key") != null) {
             record.setParas(param.get("key").toString());
 //             chbBatchParaMapper.insert(record);
-            simpleRestTemplate.postForObject(
+            restTemplate.postForObject(
                     SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/insert", record,
                     ChbBatchPara.class);
         }

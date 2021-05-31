@@ -561,6 +561,7 @@
             from CHB_MONTH_ASSET_POSITION
             where ENDDATE = #{enddate,jdbcType=DATE}
             group by PROD_ID
+            having sum(ASSETVALUE_B) > 0
         ) position
         on position.PROD_ID = info.PROD_ID
         left join REP_PROD_INDEX rpi

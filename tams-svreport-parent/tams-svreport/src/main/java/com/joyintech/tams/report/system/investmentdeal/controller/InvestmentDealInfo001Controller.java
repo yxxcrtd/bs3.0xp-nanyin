@@ -62,8 +62,7 @@ public class InvestmentDealInfo001Controller extends BaseController {
     @PostMapping("deleteData")
     public AjaxResult deleteData(@RequestBody @Validated({
             ValidateGroupEdit.class}) InvestmentDealInfoDto dto, BindingResult result) {
-         investmentDealInfoService.delData(dto);
-
+         investmentDealInfoService.delData(dto.getSelectedItem().get(0));
         return new AjaxResult("删除成功", MessageType.提示消息);
     }
 

@@ -6,9 +6,9 @@
 		'导出' as type,
 		a.STATUS as status2,
 		a.BUSI_ID as busiId,
-		a.START_DATE as startDate,
+		DATE_FORMAT(a.START_DATE, '%Y-%m-%d') as startDateStr,
 		a.CASH_TYPE2 as cashType2,
-		a.RATE as rate,
+		cast(a.RATE as char) as rateStr,
 		a.CREATE_USER as createUser,
 		a.CREATE_TIME as createTime,
 		a.UPDATE_USER as updateUser,
@@ -47,9 +47,9 @@
 		'导出' as type,
 		'A' as status2,
 		c.PROD_ID as busiId,
-		c.START_DATE as startDate,
+		c.START_DATE as startDateStr,
 		c.CASH_TYPE_2 as cashType2,
-		c.FEE_RATE as rate,
+		c.FEE_RATE as rateStr,
 		c.CREATE_USER as createUser,
 		c.CREATE_TIME as createTime,
 		c.UPDATE_USER as updateUser,
@@ -72,7 +72,7 @@
 					#{cashType2,jdbcType=VARCHAR}
 				</foreach>
 			</if>
-			<if test='selectStatus != null and !selectStatus.equals("") and !selectStatus.contains("A") '>
+			<if test='selectStatus != null and selectStatus.size() > 0 and !selectStatus.equals("") and !selectStatus.contains("A") '>
 				and 1 = 2
 			</if>
 		</where>
@@ -201,9 +201,9 @@
 		SELECT
 		a.STATUS,
 		a.BUSI_ID,
-		DATE_FORMAT(a.START_DATE, '%Y-%m-%d') as startDate,
+		DATE_FORMAT(a.START_DATE, '%Y-%m-%d') as startDateStr,
 		a.CASH_TYPE2 ,
-		a.RATE,
+		cast(a.RATE as char) as rateStr,
 		a.CREATE_USER,
 		DATE_FORMAT(a.CREATE_TIME, '%Y-%m-%d') as createTime,
 		a.UPDATE_USER,
@@ -226,9 +226,9 @@
 			SELECT
 			c. STATUS,
 			c.PROD_ID,
-			DATE_FORMAT(c.START_DATE, '%Y-%m-%d') AS startDate,
+			DATE_FORMAT(c.START_DATE, '%Y-%m-%d') AS startDateStr,
 			c.CASH_TYPE_2,
-			c.FEE_RATE,
+			c.FEE_RATE as rateStr,
 			c.CREATE_USER,
 			DATE_FORMAT(c.CREATE_TIME, '%Y-%m-%d') AS createTime,
 			c.UPDATE_USER,
@@ -240,7 +240,7 @@
 		FROM
 			REP_CASH_YIELD_ERRORDATA c
 		WHERE
-			c.DATAUUID =#{datauuid,jdbcType=DATE}
+			c.DATAUUID =#{datauuid,jdbcType=VARCHAR}
 	</select>
 	<insert id="insertOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
 		insert into REP_CASH_YIELD
@@ -261,7 +261,7 @@
 			#{updateTime,jdbcType=DATE}
 		)
     </insert>
-	<update id="updateOne" parameterType="java.util.Map">
+	<update id="updateOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
 		update REP_CASH_YIELD set STATUS =#{status,jdbcType=VARCHAR},SVR_DATA_SOURCES=#{dataSource,jdbcType=VARCHAR},
 		RATE= #{rate,jdbcType=DECIMAL},CASH_TYPE2 =#{cashType2,jdbcType=VARCHAR},START_DATE=#{startDate,jdbcType=DATE},
 		UPDATE_USER =#{updateUser,jdbcType=VARCHAR},UPDATE_TIME=#{updateTime,jdbcType=DATE}
@@ -283,7 +283,7 @@
 		delete from REP_CASH_YIELD_ERRORDATA a
 		where
 		PROD_ID= #{busiId,jdbcType=VARCHAR}
-		AND START_DATE = #{date,jdbcType=DATE}
+		AND START_DATE = #{date,jdbcType=VARCHAR}
 		AND CASH_TYPE_2 = #{cashType2,jdbcType=VARCHAR}
 	</delete>
 </mapper>

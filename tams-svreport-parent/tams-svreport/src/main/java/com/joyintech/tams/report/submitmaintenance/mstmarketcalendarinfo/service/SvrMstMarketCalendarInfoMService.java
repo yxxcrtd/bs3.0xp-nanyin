@@ -174,7 +174,13 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
                             && !"05".equals(calendarIdCheck)  && !"06".equals(calendarIdCheck) && !"07".equals(calendarIdCheck) && !"08".equals(calendarIdCheck)
                             && !"09".equals(calendarIdCheck)  && !"10".equals(calendarIdCheck) && !"11".equals(calendarIdCheck) && !"12".equals(calendarIdCheck)) {
                         message.add("无效的市场日历类型");
-                        errorList.add(new ExcelValidDto(calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+//                        errorList.add(new ExcelValidDto(calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
+                } else {
+                    calendarId = dataList.get(i).get(1);
+                    if (StringUtil.isEmpty(calendarId)) {
+                        message.add("市场日历类型不能为空");
+//                        errorList.add(new ExcelValidDto(calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
                     }
                 }
 
@@ -194,16 +200,16 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
                             if (cdate!=null&&cdate.before(sysDate)) {
                                 // 验证导入数据日期是否小于平台日期
                                 message.add("平台日期不能大于导入数据的日期。");
-                                errorList.add(new ExcelValidDto(cdateCheck,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+//                                errorList.add(new ExcelValidDto(cdateCheck,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                             }
                         } catch (ParseException e) {
                             e.printStackTrace();
                             message.add("无效的日期!");
-                            errorList.add(new ExcelValidDto(cdateCheck,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+//                            errorList.add(new ExcelValidDto(cdateCheck,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                         }
                     }else{
                         message.add("无效的日期!");
-                        errorList.add(new ExcelValidDto(cdateCheck,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+//                        errorList.add(new ExcelValidDto(cdateCheck,"第"+(i+2)+"行",StringUtil.joinString(message,"")));
                     }
                 }
                 //节假日标志
@@ -214,17 +220,26 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
                     isHolidayCheck = isHoliday.substring(0,1);
                     if (!"0".equals(isHolidayCheck) && !"1".equals(isHolidayCheck)) {
                         message.add("无效的节假日标志");
-                        errorList.add(new ExcelValidDto(isHoliday, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+//                        errorList.add(new ExcelValidDto(isHoliday, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+                    }
+                } else {
+                    isHoliday = dataList.get(i).get(2);
+                    if (StringUtil.isEmpty(isHoliday)) {
+                        message.add("节假日标志不能为空");
+//                        errorList.add(new ExcelValidDto(isHoliday, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
                     }
                 }
 
                 for (int j = i + 1; j < dataList.size(); j++) {
                     if (StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0)) && StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1))) {
                         message.add("主键（日期与市场日历类型的联合）与" + "第" + (j + 2) + "行主键冲突!");
-                        errorList.add(new ExcelValidDto(cdateCheck + calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
+//                        errorList.add(new ExcelValidDto(cdateCheck + calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message, "")));
                     }
                 }
 
+                if(!StringUtil.isEmptyList(message)){
+                   errorList.add(new ExcelValidDto(cdateCheck + calendarId, "第" + (i + 2) + "行", StringUtil.joinString(message,GlobalConstant.COMMA)));
+                }
             }
         }
         return errorList;
