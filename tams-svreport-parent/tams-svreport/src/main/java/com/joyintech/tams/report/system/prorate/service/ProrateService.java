@@ -152,8 +152,10 @@ public class ProrateService extends BaseService<DisRepCashYield> {
      * @param uuid
      */
     public void deleteErrorDataOneByUuid(String uuid) {
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("uuid", uuid);
         restTemplate.postForList(
-                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/deleteErrorDataOneByUuid",uuid,
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/deleteErrorDataOneByUuid",param,
                 DisRepCashYield.class);
         return;
     }
