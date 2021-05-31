@@ -152,7 +152,8 @@ public class SppiTest002Controller extends BaseController {
             dto.setFinprodName(finprodName);
             dto.setAssetType(assetType);
 
-            if (StringUtils.equals(assetType, DictCodeList.平安资产类型_债券.getValue())) {
+            if (StringUtils.equals(assetType, DictCodeList.平安资产类型_债券.getValue())
+                    ||StringUtils.equals(assetType, DictCodeList.平安资产类型_一级市场债.getValue())) {
                 dto.setSppiTmpType(BussinessConstant.SPPI_TEMPLATE_TYPE_BOND);
                 dto.setSppiTmpNo(CacheUtil.getSysParam(BussinessConstant.BOND_SPPI_USE_TEMPLATE));
             }

@@ -82,7 +82,8 @@
                 and t.type_8 = #{assetType,jdbcType=VARCHAR}
             </when>
             <otherwise>
-                and t.type_8 IN ('F01', 'F06', 'F03')
+                /*add by czj 20210531 增加一级市场债*/
+                and t.type_8 IN ('F01', 'F06', 'F03','F17')
             </otherwise>
         </choose>
         ) t1
@@ -129,7 +130,8 @@
                 and fpt.type_8 = #{assetType,jdbcType=VARCHAR}
             </when>
             <otherwise>
-                and fpt.type_8 IN ('F01', 'F06', 'F03')
+                /*add by czj 20210531 增加一级市场债*/
+                and t.type_8 IN ('F01', 'F06', 'F03','F17')
             </otherwise>
         </choose>
         )
@@ -140,7 +142,8 @@
         select f.finprod_id as id, nvl(f.finprod_abbr, f.finprod_name) as text
         from fin_product f, fin_product_type t
         where f.finprod_id = t.finprod_id
-        and t.type_8 IN ('F01', 'F06', 'F03')
+        /*add by czj 20210531 增加一级市场债*/
+        and t.type_8 IN ('F01', 'F06', 'F03','F17')
         <if test="search != null and search != ''">
             AND (
             f.finprod_id like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
@@ -174,7 +177,9 @@
                        from fin_product f, fin_product_type t
                       where f.finprod_id = t.finprod_id
                         and f.finprod_id = #{finprodId,jdbcType=VARCHAR}
-                        and t.type_8 IN ('F01', 'F06', 'F03')) t1
+                        /*add by czj 20210531 增加一级市场债*/
+                        and t.type_8 IN ('F01', 'F06', 'F03','F17')
+                        ) t1
             on t1.finprod_id = a.finprod_id
           left join sppi_test_qa t2
             on a.sppi_test_id = t2.sppi_test_id
