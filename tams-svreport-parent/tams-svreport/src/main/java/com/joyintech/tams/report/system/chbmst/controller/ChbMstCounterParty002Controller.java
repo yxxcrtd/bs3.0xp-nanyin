@@ -42,29 +42,25 @@ public class ChbMstCounterParty002Controller extends BaseController {
         ChbMstCounterParty chbMstCounterParty=new ChbMstCounterParty();
         Map<String,Object> map= RequestUtil.getPageParam();
         String uuid= (String) map.get("uuid");
-        if(!"add".equals(map.get("operateType"))){
-            //UUid为空时,查询交易对手信息，否则查询交易对手错误表信息
-            if(StringUtil.isEmpty(uuid)){
-                List<ChbMstCounterParty> ChbMstCounterPartys= chbMstCounterPartyService.selectOneDate(map);
-                if(null!=ChbMstCounterPartys && ChbMstCounterPartys.size()>0){
-                    ChbMstCounterParty c=ChbMstCounterPartys.get(0);
-                    c.setType("update");
-                    model.addAttribute("entity", c);
-                }else{
-                    chbMstCounterParty.setType("add");
-                    model.addAttribute("entity", chbMstCounterParty);
-                }
+        //UUid为空时,查询交易对手信息，否则查询交易对手错误表信息
+        if(StringUtil.isEmpty(uuid)){
+            List<ChbMstCounterParty> ChbMstCounterPartys= chbMstCounterPartyService.selectOneDate(map);
+            if(null!=ChbMstCounterPartys && ChbMstCounterPartys.size()>0){
+                ChbMstCounterParty c=ChbMstCounterPartys.get(0);
+                c.setType("update");
+                model.addAttribute("entity", c);
             }else{
-                List<ChbMstCounterPartyErrodataWithBLOBs> chbMsList=chbMstCounterPartyService.selectChbMstCounterPartyErrordata(uuid);
-                if(null!=chbMsList && chbMsList.size()>0){
-                    ErrdataConvertUtil.errdataChbMstCounterPartyInfoConvert(chbMstCounterParty,chbMsList.get(0));
-                }
+                chbMstCounterParty.setType("add");
                 model.addAttribute("entity", chbMstCounterParty);
             }
         }else{
-            chbMstCounterParty.setType("add");
-            model.addAttribute("entity",chbMstCounterParty);
+            List<ChbMstCounterPartyErrodataWithBLOBs> chbMsList=chbMstCounterPartyService.selectChbMstCounterPartyErrordata(uuid);
+            if(null!=chbMsList && chbMsList.size()>0){
+                ErrdataConvertUtil.errdataChbMstCounterPartyInfoConvert(chbMstCounterParty,chbMsList.get(0));
+            }
+            model.addAttribute("entity", chbMstCounterParty);
         }
+
         return super.init(model);
     }
 
