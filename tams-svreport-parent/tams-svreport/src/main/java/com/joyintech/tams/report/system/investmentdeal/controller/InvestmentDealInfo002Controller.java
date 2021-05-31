@@ -40,18 +40,15 @@ public class InvestmentDealInfo002Controller extends BaseController {
         InvestmentDealInfoDto dto=new InvestmentDealInfoDto();
         Map<String,Object> map= RequestUtil.getPageParam();
         String uuid= (String) map.get("uuid");
-        if(!"add".equals(map.get("operateType"))){
-            if(StringUtil.isEmpty(uuid)){
-                dto = investmentDealInfoService.selectOneDate(map);
-                model.addAttribute("entity", dto);
-            }else{
-                ChbInvestTradeErrordataWithBLOBs chbMs=investmentDealInfoService.selectInvestmentDealInfoErrordata(uuid);
-                ErrdataConvertUtil.errdataChbInvestTradeConvert(dto,chbMs);
-                model.addAttribute("entity", dto);
-            }
+        if(StringUtil.isEmpty(uuid)){
+            dto = investmentDealInfoService.selectOneDate(map);
+            model.addAttribute("entity", dto);
         }else{
-            model.addAttribute("entity",dto);
+            ChbInvestTradeErrordataWithBLOBs chbMs=investmentDealInfoService.selectInvestmentDealInfoErrordata(uuid);
+            ErrdataConvertUtil.errdataChbInvestTradeConvert(dto,chbMs);
+            model.addAttribute("entity", dto);
         }
+
         return super.init(model);
     }
 
