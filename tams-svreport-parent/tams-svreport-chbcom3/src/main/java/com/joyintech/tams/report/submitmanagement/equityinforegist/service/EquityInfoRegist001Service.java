@@ -337,7 +337,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
 //    	Page<EquityInfoRegist001Dto> page = null;
         String exportMethodFlg = (String)pageParam.get("export_method_flg");
         if (StringUtil.equals(exportMethodFlg, "export")) {
-            data =  simpleRestTemplate.postForList(
+            data =  restTemplate.postForList(
                     SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryForEquityInfoRegistPage",pageParam,
                     EquityInfoRegist001Dto.class);
         }  else {

@@ -35,7 +35,7 @@ public class SysInstRegBankCodeMService extends BaseService<SysInstRegBankCode00
 	 */
 	@PostMapping("findPage/{page}/{length}")
 	public Page<SysInstRegBankCode001Dto> searchForPage(Map<String, Object> param) {
-		return simpleRestTemplate.postForPage(
+		return restTemplate.postForPage(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/SysInstRegBankCode/findPage", param,
 				SysInstRegBankCode001Dto.class);
 	}
@@ -47,7 +47,7 @@ public class SysInstRegBankCodeMService extends BaseService<SysInstRegBankCode00
 	 * @return 处理结果
 	 */
 	public AjaxResult checkConfirmMsgForImportData(String fileName) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/SysInstRegBankCode/checkConfirmMsgForImportData",
 				ExcelUtil.getDataList(fileName),
 				SvrAjaxResult.class);
@@ -60,7 +60,7 @@ public class SysInstRegBankCodeMService extends BaseService<SysInstRegBankCode00
 	 * @return 导入结果，包含验证内容，如果验证失败，返回message
 	 */
 	public List<ExcelValidDto> importData(String fileName) {
-		return simpleRestTemplate.postForList(
+		return restTemplate.postForList(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/SysInstRegBankCode/importData",
 				ExcelUtil.getDataList(fileName),
 				ExcelValidDto.class);
@@ -72,7 +72,7 @@ public class SysInstRegBankCodeMService extends BaseService<SysInstRegBankCode00
 	 * @return 导出
 	 */
 	public List<SysInstRegBankCode001Dto> queryExportList(Map<String, Object> param) {
-		return simpleRestTemplate.postForList(
+		return restTemplate.postForList(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/SysInstRegBankCode/queryExportList", param,
 				SysInstRegBankCode001Dto.class);
 	}
@@ -86,7 +86,7 @@ public class SysInstRegBankCodeMService extends BaseService<SysInstRegBankCode00
 	 * @return 处理结果
 	 */
 	public void doDelete(String deleteKeys) {
-		simpleRestTemplate.postForObject(
+		restTemplate.postForObject(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/SysInstRegBankCode/doDelete", deleteKeys,
 				Integer.class);
 	}
@@ -98,7 +98,7 @@ public class SysInstRegBankCodeMService extends BaseService<SysInstRegBankCode00
 	 * @return 数据
 	 */
 	public SysInstRegBankCode002Dto getInfoData(Map<String,Object> paramMap) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/SysInstRegBankCode/getInfoData", paramMap,
 				SysInstRegBankCode002Dto.class);
 	}
@@ -112,14 +112,14 @@ public class SysInstRegBankCodeMService extends BaseService<SysInstRegBankCode00
 	 * @since 1.0
 	 */
 	public void saveData(SysInstRegBankCode002Dto inputDto) {
-		simpleRestTemplate.postForObject(
+		restTemplate.postForObject(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/SysInstRegBankCode/saveData", inputDto,
 				SysInstRegBankCode002Dto.class);
 	}
 
 
 	public List<SuggestDto> getInstitutionCode(String param) {
-		return simpleRestTemplate.postForList(
+		return restTemplate.postForList(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/SysInstRegBankCode/getInstitutionCode", param,
 				SuggestDto.class);
 	}

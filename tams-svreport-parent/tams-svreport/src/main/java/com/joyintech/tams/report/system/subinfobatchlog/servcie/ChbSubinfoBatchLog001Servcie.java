@@ -37,12 +37,12 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 	private FileAttachmentProcess fileAttachmentProcess;
 
 	public List<SelectOptionDto> getUserList() {
-		return simpleRestTemplate.getForList(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/selectUserList",
+		return restTemplate.getForList(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/selectUserList",
 				SelectOptionDto.class);
 	}
 
 	public Page<ChbSubinfoBatchLog001Dto> queryBatchResult(Map<String, Object> param) {
-		return simpleRestTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/findPage",
+		return restTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/findPage",
 				param, ChbSubinfoBatchLog001Dto.class);
 	}
 

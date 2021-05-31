@@ -200,77 +200,77 @@ application:
 #      chb3Service: http://127.0.0.1:8114
 #      svrcomService: http://127.0.0.1:8114
 #      pbcService: http://127.0.0.1:8114
-#      channelService: http://127.0.0.1:8114 
+#      channelService: http://127.0.0.1:8114
 #      customerInterfService: http://127.0.0.1:8114
 #      tamsServer: http://127.0.0.1:8114
 #      investInterfService: http://127.0.0.1:8114
 #      adapterService: http://127.0.0.1:8114
 
 #  不使用服务注册中心,tams和tams-service-container整体部署的方式
-  loadbalance: false
-  micorservice:
-    contextPath:
-      single: true
-      commonService: http://127.0.0.1:${server.port}/tams
-      basicDataService: http://127.0.0.1:${server.port}/tams
-      documentService: http://127.0.0.1:${server.port}/tams
-      entrustService: http://127.0.0.1:${server.port}/tams
-      periodService: http://127.0.0.1:${server.port}/tams
-      assetService: http://127.0.0.1:${server.port}/tams
-      portfolioService: http://127.0.0.1:${server.port}/tams
-      productService: http://127.0.0.1:${server.port}/tams
-      quotaService: http://127.0.0.1:${server.port}/tams
-      reportService: http://127.0.0.1:${server.port}/tams
-      riskService: http://127.0.0.1:${server.port}/tams
-      riskRdsService: http://127.0.0.1:${server.port}/tams
-      riskInfService: http://127.0.0.1:${server.port}/tams
-      settleService: http://127.0.0.1:${server.port}/tams
-      tradeService: http://127.0.0.1:${server.port}/tams
-      disclosureService: http://127.0.0.1:${server.port}/tams
-      valuationService: http://127.0.0.1:${server.port}/tams
-      chbService: http://127.0.0.1:${server.port}/tams
-      chbreportService: http://127.0.0.1:${server.port}/tams
-      chb3Service: http://127.0.0.1:${server.port}/tams
-      svrcomService: http://127.0.0.1:${server.port}/tams
-      pbcService: http://127.0.0.1:${server.port}/tams
-      channelService: http://127.0.0.1:${server.port}/tams
-      customerInterfService: http://127.0.0.1:${server.port}/tams
-      tamsServer: http://127.0.0.1:${server.port}/tams
-      investInterfService: http://127.0.0.1:${server.port}/tams
-      adapterService: http://127.0.0.1:${server.port}/tams
-
-# 使用服务注册中心的方式
-#  loadbalance: true
+#  loadbalance: false
 #  micorservice:
 #    contextPath:
 #      single: true
-#      commonService: http://TamsMicroservice
-#      basicDataService: http://TamsMicroservice
-#      documentService: http://TamsMicroservice
-#      entrustService: http://TamsMicroservice
-#      periodService: http://TamsMicroservice
-#      assetService: http://TamsMicroservice
-#      portfolioService: http://TamsMicroservice
-#      productService: http://TamsMicroservice
-#      quotaService: http://TamsMicroservice
-#      reportService: http://TamsMicroservice
-#      riskService: http://TamsMicroservice
-#      riskRdsService: http://TamsMicroservice
-#      riskInfService: http://TamsMicroservice
-#      settleService: http://TamsMicroservice
-#      tradeService: http://TamsMicroservice
-#      disclosureService: http://TamsMicroservice
-#      valuationService: http://TamsMicroservice
-#      chbService: http://TamsMicroservice
-#      chbreportService: http://TamsMicroservice
-#      chb3Service: http://TamsMicroservice
-#      svrcomService: http://TamsMicroservice
-#      pbcService: http://TamsMicroservice
-#      channelService: http://TamsMicroservice
-#      customerInterfService: http://TamsMicroservice
-#      tamsServer: http://TamsMicroservice
-#      investInterfService: http://TamsMicroservice
-#      adapterService: http://TamsMicroservice
+#      commonService: http://127.0.0.1:${server.port}/tams
+#      basicDataService: http://127.0.0.1:${server.port}/tams
+#      documentService: http://127.0.0.1:${server.port}/tams
+#      entrustService: http://127.0.0.1:${server.port}/tams
+#      periodService: http://127.0.0.1:${server.port}/tams
+#      assetService: http://127.0.0.1:${server.port}/tams
+#      portfolioService: http://127.0.0.1:${server.port}/tams
+#      productService: http://127.0.0.1:${server.port}/tams
+#      quotaService: http://127.0.0.1:${server.port}/tams
+#      reportService: http://127.0.0.1:${server.port}/tams
+#      riskService: http://127.0.0.1:${server.port}/tams
+#      riskRdsService: http://127.0.0.1:${server.port}/tams
+#      riskInfService: http://127.0.0.1:${server.port}/tams
+#      settleService: http://127.0.0.1:${server.port}/tams
+#      tradeService: http://127.0.0.1:${server.port}/tams
+#      disclosureService: http://127.0.0.1:${server.port}/tams
+#      valuationService: http://127.0.0.1:${server.port}/tams
+#      chbService: http://127.0.0.1:${server.port}/tams
+#      chbreportService: http://127.0.0.1:${server.port}/tams
+#      chb3Service: http://127.0.0.1:${server.port}/tams
+#      svrcomService: http://127.0.0.1:${server.port}/tams
+#      pbcService: http://127.0.0.1:${server.port}/tams
+#      channelService: http://127.0.0.1:${server.port}/tams
+#      customerInterfService: http://127.0.0.1:${server.port}/tams
+#      tamsServer: http://127.0.0.1:${server.port}/tams
+#      investInterfService: http://127.0.0.1:${server.port}/tams
+#      adapterService: http://127.0.0.1:${server.port}/tams
+
+# 使用服务注册中心的方式
+  loadbalance: true
+  micorservice:
+    contextPath:
+      single: true
+      commonService: http://TamsMicroservice
+      basicDataService: http://TamsMicroservice
+      documentService: http://TamsMicroservice
+      entrustService: http://TamsMicroservice
+      periodService: http://TamsMicroservice
+      assetService: http://TamsMicroservice
+      portfolioService: http://TamsMicroservice
+      productService: http://TamsMicroservice
+      quotaService: http://TamsMicroservice
+      reportService: http://TamsMicroservice
+      riskService: http://TamsMicroservice
+      riskRdsService: http://TamsMicroservice
+      riskInfService: http://TamsMicroservice
+      settleService: http://TamsMicroservice
+      tradeService: http://TamsMicroservice
+      disclosureService: http://TamsMicroservice
+      valuationService: http://TamsMicroservice
+      chbService: http://TamsMicroservice
+      chbreportService: http://TamsMicroservice
+      chb3Service: http://TamsMicroservice
+      svrcomService: http://TamsMicroservice
+      pbcService: http://TamsMicroservice
+      channelService: http://TamsMicroservice
+      customerInterfService: http://TamsMicroservice
+      tamsServer: http://TamsMicroservice
+      investInterfService: http://TamsMicroservice
+      adapterService: http://TamsMicroservice
 
 #交易压力测试性能优化开关
 flag: false
@@ -280,12 +280,12 @@ spring:
   profiles: allinone
   thymeleaf:
     cache: false
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
-    port: 6379
-    timeout: 20000
+#  redis:
+#    database: 1
+#    password: joyin!234
+#    host: 192.168.90.198
+#    port: 6379
+#    timeout: 20000
 #  redis:
 #    cluster:
 #      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
@@ -332,9 +332,15 @@ wind:
 log:
   path: D:/workspace/HuaXia/logs/tams
   level: debug
+#注册中心配置
 eureka:
   client:
-    enabled: false
+    #   是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    enabled: true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:9101/eureka/
+  instance:
+    ip-address: 127.0.0.1
 jixu:
   user:
     type: 2

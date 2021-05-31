@@ -20,7 +20,7 @@ public class BusinessHomeMService extends BaseService<ITableRow>{
         Map<String,Object> param = new HashMap<>();
         param.put("searchDate", searchDate);
         param.put("menulist", menulist);
-        return simpleRestTemplate.postForList(
+        return restTemplate.postForList(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/BusinessHome/selectBusinessHomeInfo",param,
                 VbusinessHomeDto.class);
     }
@@ -33,7 +33,7 @@ public class BusinessHomeMService extends BaseService<ITableRow>{
 
     @SuppressWarnings("unchecked")
     public List<String> selectMenulist() {
-        return simpleRestTemplate.getForObject(
+        return restTemplate.getForObject(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/BusinessHome/selectMenulist",
                 List.class);
     }
@@ -47,7 +47,7 @@ public class BusinessHomeMService extends BaseService<ITableRow>{
         Map<String,Object> param = new HashMap<>();
         param.put("searchDate", searchDate);
         param.put("menulist", menulist);
-        return simpleRestTemplate.postForList(
+        return restTemplate.postForList(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/BusinessHome/selectBusinessHomeInfoAll",param,
                 VbusinessHomeDto.class);
     }

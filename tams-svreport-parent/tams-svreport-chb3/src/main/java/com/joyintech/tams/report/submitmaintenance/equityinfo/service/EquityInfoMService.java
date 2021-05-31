@@ -36,7 +36,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 * @return Page
 	 */
 	public Page<EquityInfo001Dto> searchForPage(Map<String, Object> param) {
-		return simpleRestTemplate.postForPage(
+		return restTemplate.postForPage(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/findPage",param,
 				EquityInfo001Dto.class);
 	}
@@ -51,7 +51,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 * @since 1.0
 	 */
 	public List<EquityInfo001Dto> queryExportSelectList(String expKeys) {
-		return simpleRestTemplate.postForList(
+		return restTemplate.postForList(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/queryExportSelectList", expKeys,
 				EquityInfo001Dto.class);
 	}
@@ -71,7 +71,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 		param.put("orgCode", CommonUtil.getOrgCode());
 //    	param.put("dataList", ExcelUtil.getDataList(fileName));
 //    	param.put("tempList", ExcelUtil.getTempList(fileName));
-		return simpleRestTemplate.postForList(
+		return restTemplate.postForList(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/importData",
 				param,
 				ExcelValidDto.class);
@@ -86,7 +86,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	public AjaxResult checkConfirmMsgForImportData(String fileName) {
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("fileName", fileName);
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/checkConfirmMsgForImportData",
 				param,
 				SvrAjaxResult.class);
@@ -101,7 +101,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 * @since 1.0
 	 */
 	public List<ValidMessage> checkDeleteData(List<EquityInfo001Dto> list){
-		return simpleRestTemplate.postForList(
+		return restTemplate.postForList(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/checkDeleteData", list,
 				ValidMessage.class);
 	}
@@ -115,7 +115,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 * @since 1.0
 	 */
 	public void doDelete(List<EquityInfo001Dto> list) {
-		simpleRestTemplate.postForObject(
+		restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/doDelete", list,
 				Integer.class);
 	}
@@ -136,7 +136,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 //    	param.put("dataList", ExcelUtil.getDataList(fileName));
 //    	param.put("tempList", ExcelUtil.getTempList(fileName));
 //		param.put("dataTypeList", ExcelUtil.getDataList(fileName));
-		return simpleRestTemplate.postForList(
+		return restTemplate.postForList(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/importChbData", param,
 				ExcelValidDto.class);
 	}
@@ -152,7 +152,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("dataList", ExcelUtil.getDataList(fileName));
 		param.put("tempList", ExcelUtil.getTempList(fileName));
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/checkConfirmMsgForChbImportData",
 				param,
 				SvrAjaxResult.class);
@@ -167,7 +167,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 * @since 1.0
 	 */
 	public AjaxResult checkEdit(EquityInfo001Dto dto) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/checkEdit", dto,
 				SvrAjaxResult.class);
 	}
@@ -181,7 +181,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 * @since 1.0
 	 */
 	public EquityInfo001Dto getEntity(Map<String, Object> map) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/getEntity", map,
 				EquityInfo001Dto.class);
 	}
@@ -195,7 +195,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 * @since 1.0
 	 */
 	public String confirmSubmit(EquityInfo001Dto dto) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/confirmSubmit", dto,
 				String.class);
 	}
@@ -221,11 +221,11 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 //	   dto.setOrgCode(null == userInfo ? null : userInfo.getOrgCode());
 		// add by lizhi EEDSZZUAT-4 中债三期-投资者身份信息操作修改动作后，机构代码会被置空 end
 		if(flag){
-			return simpleRestTemplate.postForObject(
+			return restTemplate.postForObject(
 					SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/doSave", dto,
 					SvrAjaxResult.class);
 		}else{
-			return simpleRestTemplate.postForObject(
+			return restTemplate.postForObject(
 					SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/doCheck", dto,
 					SvrAjaxResult.class);
 		}
