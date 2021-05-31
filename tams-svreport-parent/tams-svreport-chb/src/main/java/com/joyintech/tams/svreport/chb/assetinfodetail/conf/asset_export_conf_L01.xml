@@ -7,7 +7,7 @@
 			<Cell order="3" name="*资产/负债类别">assetType2Str</Cell>
 			<Cell order="4" name="*交易流通场所">tradeMarketStr</Cell>
 			<Cell order="5" name="*币种">ccyStr</Cell>
-			<Cell order="6" name="*基金代码">assetCode</Cell>
+			<Cell order="6" name="*基金代码">assetId</Cell>
 			<Cell order="7" name="*基金名称">assetName</Cell>
 			<Cell order="8" name="*行业">industryShares</Cell>
 			<Cell order="9" name="*登记备案机构">registOrg1</Cell>

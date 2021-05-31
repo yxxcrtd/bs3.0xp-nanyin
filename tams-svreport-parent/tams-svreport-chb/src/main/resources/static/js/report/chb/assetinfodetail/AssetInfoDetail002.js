@@ -282,6 +282,13 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
 
             }
+            if (repAssetType=='1201'){
+                $("#svrBussRepAssetAstBillInfoDto_isBzhpj").attr("required",true);
+                $("#svrBussRepAssetAstBillInfoDto_isBzhpj").attr("disabled",false);
+            }else {
+                $("#svrBussRepAssetAstBillInfoDto_isBzhpj").attr("required",false);
+                $("#svrBussRepAssetAstBillInfoDto_isBzhpj").val('').attr("disabled",true).trigger("change");
+            }
         }else if(obj["06"].indexOf(repAssetType)>=0){
             //权益类资产
             if(repAssetType=='1305'||repAssetType=='1302'){

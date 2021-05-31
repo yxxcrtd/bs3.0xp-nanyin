@@ -10,6 +10,7 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
@@ -30,6 +31,7 @@ import com.joyintech.tams.svreport.chb.proddurationreg.dao.ProdDurationReg001Map
 import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -307,6 +309,13 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
 		List<AssetInfoDetailDto> list = new ArrayList<>();
 		List<ExcelValidDto> checkResult = assetInfoDetailUtil.convertToBean(list,data);
+		for (int i = 0; i < list.size(); i++ ) {
+			for (int j = i+1; j < list.size(); j++ ) {
+				if(StringUtils.equals(list.get(i).getAssetCode(), list.get(j).getAssetCode())){
+					webResult.setMessage(this.getMessage("REPORT_ASSET_C_0003"), MessageType.确认消息);
+				}
+			}
+		}
 		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list)){
 			int dataCount = this.assetInfoDetailMapper.selectDataCount(list);
 			if (dataCount > 0) {
