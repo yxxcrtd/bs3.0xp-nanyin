@@ -137,13 +137,13 @@ spring:
     cluster:
       nodes: 192.168.45.20:6379,192.168.45.20:6380,192.168.45.20:6381,192.168.45.20:6382,192.168.45.20:6383,192.168.45.20:6384
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: GDPB
     password: GDPB
     reportSqlldrDatabaseName: 192.168.60.43:3306/hx2jgbs_onlyxiaoqing #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
   sqldiruserName: GDPB
   sqldirpassword: GDPB
   #以下根据实际ip和端口进行修改
@@ -177,13 +177,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: GDPB
     password: GDPB
 #interf数据源配置
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: GDPB
     password: GDPB
 #日志路径配置
@@ -226,13 +226,13 @@ spring:
   #    cluster:
   #      nodes: 192.168.45.20:6379,192.168.45.20:6380,192.168.45.20:6381,192.168.45.20:6382,192.168.45.20:6383,192.168.45.20:6384
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
     reportSqlldrDatabaseName: 192.168.60.43:3306/hx2jgbs_onlyxiaoqing #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
   sqldiruserName: root
   sqldirpassword: joyin123
   loadbalance: false
@@ -293,13 +293,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 #interf数据源配置
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 #日志路径配置
