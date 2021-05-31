@@ -23,7 +23,7 @@ spring:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
     maxTotal: 10
@@ -292,12 +292,12 @@ spring:
 #  redislock:
 #    redissonEnabled: false
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
     #reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  sqldirurl: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
   sqldiruserName: root
   sqldirpassword: joyin123
 shiro:
@@ -311,22 +311,22 @@ shiro:
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 stresstest:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 wind:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 log:

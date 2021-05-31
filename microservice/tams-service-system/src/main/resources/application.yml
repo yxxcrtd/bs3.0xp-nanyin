@@ -193,36 +193,36 @@ spring:
 #    cluster:
 #      nodes: 192.168.70.104:6379,192.168.70.104:6380,192.168.90.3:6381,192.168.90.3:6382,192.168.90.79:6383,192.168.90.79:6384  
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 #应用配置 service-chb3工程有
 application:
-  sqldirurl: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
   sqldiruserName: root
   sqldirpassword: joyin123
 #base数据源配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 #interf数据库配置
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 #wind数据库配置
 wind:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 #压力测试数据源配置
 stresstest:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 #日志路径配置
