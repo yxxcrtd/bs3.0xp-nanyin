@@ -68,9 +68,9 @@
                         end) = pp.portfolio_id
                     left join sys_department sd on nvl(pp.create_dept,deal.create_dept) = sd.dept_code
 					where deal.trade_date =  #{checkDate,jdbcType=DATE}
-
+					and  not exists ( select 1 from TRD_PRODUCT_DEAL deal2 left join fin_product fp2 on deal2.finprod_id = fp2.finprod_id where deal.trade_id = deal2.trade_id and   deal2.finprod_type2 =  'F06'  and deal.ps in ( 'T05','T18')
+					and fp2.profit_type = '03')
 					union
-
 					/*前一天的交易所涉及的资产  仅基金 赎回确认 */
 					select distinct
 					bda.bookset_id,
