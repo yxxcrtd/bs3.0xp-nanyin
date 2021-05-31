@@ -812,7 +812,7 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
                             || StringUtil.equals(item.getOperateMode(),  DictCodeListExt2.产品运作模式_开放式非净值型.getValue()))
                             && StringUtil.isEmpty(info.getOpenMode())
                     ) {
-                        return new ValidMessage("openMode", "申报登记“产品运作模式”为“开放式净值型”或“放式非净值型”时，开放模式必须填写！");
+                        return new ValidMessage("openMode", "申报登记“产品运作模式”为“开放式净值型”或“开放式非净值型”时，开放模式必须填写！");
                     }
                 };
             }
