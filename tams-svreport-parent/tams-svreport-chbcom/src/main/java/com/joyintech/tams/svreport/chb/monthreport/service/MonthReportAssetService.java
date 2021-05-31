@@ -16,6 +16,7 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper;
@@ -388,8 +389,9 @@ public class MonthReportAssetService {
 					String key8 = null;//主键8
 					String key9 = null;//主键9
 					//特殊处理：银行资本补充工具、是否PPN等低流动性债券、是否商业银行优先股、创业投资基金、是否未上市企业-政府出资产业投资基金
-					//银行资本补充工具
-					if(StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())) {
+					//银行资本补充工具 排除05其他银行资本工具
+					if(StringUtil.isNotEmpty(chbAssetInfo.getBankCapital()) &&
+							!DictCodeListExt3.银行资本补充工具_其他银行资本补充工具.getValue().equals(chbAssetInfo.getBankCapital())) {
 						key5 = chbAssetInfo.getBankCapital();
 						key1 = null;
 					}
@@ -1400,8 +1402,8 @@ public class MonthReportAssetService {
 									ChbMonthAssetPosition position, ChbAssetInfo chbAssetInfo, ChbAssetInfo supAssetInfo) {
 		BigDecimal terms = null;
 		// 设置期限字段
-		//公私募基金 05 19  默认为 30
-		if ("05".equals(position.getAssettype()) || "19".equals(position.getAssettype())) {
+		//公私募基金 15 19  默认为 30
+		if ("15".equals(position.getAssettype()) || "19".equals(position.getAssettype())) {
 			terms = new BigDecimal(30);
 		}
 		// 06 权益类资产

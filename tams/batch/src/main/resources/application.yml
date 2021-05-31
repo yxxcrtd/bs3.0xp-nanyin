@@ -239,30 +239,57 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:8080/tams
-      basicDataService: http://127.0.0.1:8080/tams
-      documentService: http://127.0.0.1:8080/tams
-      entrustService: http://127.0.0.1:8080/tams
-      periodService: http://127.0.0.1:8080/tams
-      assetService: http://127.0.0.1:8080/tams
-      portfolioService: http://127.0.0.1:8080/tams
-      productService: http://127.0.0.1:8080/tams
-      quotaService: http://127.0.0.1:8080/tams
-      reportService: http://127.0.0.1:8080/tams
-      riskService: http://127.0.0.1:8080/tams
-      riskRdsService: http://127.0.0.1:8080/tams
-      riskInfService: http://127.0.0.1:8080/tams
-      settleService: http://127.0.0.1:8080/tams
-      tradeService: http://127.0.0.1:8080/tams
-      disclosureService: http://127.0.0.1:8080/tams
-      valuationService: http://127.0.0.1:8080/tams
-      chbService: http://127.0.0.1:8080/tams
-      chbreportService: http://127.0.0.1:8080/tams/service
-      chb3Service: http://127.0.0.1:8080/tams
-      svrcomService: http://127.0.0.1:8080/tams
-      pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080/tams
+#      commonService: http://127.0.0.1:8080/tams
+#      basicDataService: http://127.0.0.1:8080/tams
+#      documentService: http://127.0.0.1:8080/tams
+#      entrustService: http://127.0.0.1:8080/tams
+#      periodService: http://127.0.0.1:8080/tams
+#      assetService: http://127.0.0.1:8080/tams
+#      portfolioService: http://127.0.0.1:8080/tams
+#      productService: http://127.0.0.1:8080/tams
+#      quotaService: http://127.0.0.1:8080/tams
+#      reportService: http://127.0.0.1:8080/tams
+#      riskService: http://127.0.0.1:8080/tams
+#      riskRdsService: http://127.0.0.1:8080/tams
+#      riskInfService: http://127.0.0.1:8080/tams
+#      settleService: http://127.0.0.1:8080/tams
+#      tradeService: http://127.0.0.1:8080/tams
+#      disclosureService: http://127.0.0.1:8080/tams
+#      valuationService: http://127.0.0.1:8080/tams
+#      chbService: http://127.0.0.1:8080/tams
+#      chbreportService: http://127.0.0.1:8080/tams/service
+#      chb3Service: http://127.0.0.1:8080/tams
+#      svrcomService: http://127.0.0.1:8080/tams
+#      pbcService: http://127.0.0.1:8080/tams
+#      investInterfService: http://127.0.0.1:8080/tams
+#      tamsServer: http://127.0.0.1:8080/tams
+      commonService: http://TamsMicroservice
+      basicDataService: http://TamsMicroservice
+      documentService: http://TamsMicroservice
+      entrustService: http://TamsMicroservice
+      periodService: http://TamsMicroservice
+      assetService: http://TamsMicroservice
+      portfolioService: http://TamsMicroservice
+      productService: http://TamsMicroservice
+      quotaService: http://TamsMicroservice
+      reportService: http://TamsMicroservice
+      riskService: http://TamsMicroservice
+      riskRdsService: http://TamsMicroservice
+      riskInfService: http://TamsMicroservice
+      settleService: http://TamsMicroservice
+      tradeService: http://TamsMicroservice
+      disclosureService: http://TamsMicroservice
+      valuationService: http://TamsMicroservice
+      chbService: http://TamsMicroservice
+      chbreportService: http://TamsMicroservice
+      chb3Service: http://TamsMicroservice
+      svrcomService: http://TamsMicroservice
+      pbcService: http://TamsMicroservice
+      channelService: http://TamsMicroservice
+      customerInterfService: http://TamsMicroservice
+      tamsServer: http://TamsMicroservice
+      investInterfService: http://TamsMicroservice
+      adapterService: http://TamsMicroservice
 #base数据库配置
 base:
   datasource:
@@ -349,7 +376,7 @@ wind:
     password: joyin123
 log:
   path: /home/tams/logs/batch-jicheng
-  level: INFO
+  level: debug
 logging:
   path: /home/tams/logs/batch
 #注册中心配置

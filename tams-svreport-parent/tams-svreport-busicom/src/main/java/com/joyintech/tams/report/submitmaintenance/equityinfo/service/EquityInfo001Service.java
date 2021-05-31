@@ -427,7 +427,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         List<EquityInfo001Dto> data = null;
         String exportMethodFlg = (String)pageParam.get("export_method_flg");
         if (StringUtil.equals(exportMethodFlg, "export")) {
-            data =  simpleRestTemplate.postForList(
+            data =  restTemplate.postForList(
                     SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/queryForEquityInfoPage",pageParam,
                     EquityInfo001Dto.class);
         }  else if (StringUtil.equals(exportMethodFlg, "exportSelect")) {
@@ -442,7 +442,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 equityInfo001Dto.setIndentifyMark(key[1]);
                 eList.add(equityInfo001Dto);
             }
-            data =  simpleRestTemplate.postForList(
+            data =  restTemplate.postForList(
                     SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/queryExpSelectEquityInfo",eList,
                     EquityInfo001Dto.class);
         }

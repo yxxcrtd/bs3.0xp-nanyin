@@ -29,7 +29,7 @@ spring:
     enabled: false
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
     maxTotal: 50
     maxIdle: 50
@@ -39,7 +39,7 @@ spring:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000  
+#    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
   cache:
     type: redis
   redis:
@@ -61,12 +61,12 @@ base:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
+#    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
 #interf数据源
 interf:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
     maxTotal: 50
     maxIdle: 50
@@ -76,14 +76,14 @@ interf:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000    
+#    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
     testWhileIdle: true
 
 stresstest:
   datasource:    
     type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    validationQuery: SELECT FUNC_PKG_VALIDATION FROM DUAL  #验证时会将查询无结果的连接关闭，重新从连接池中获取连接，循环操作直到获得有效连接
+    driverClassName: com.mysql.jdbc.Driver
+    validationQuery: SELECT 1 FROM DUAL  #验证时会将查询无结果的连接关闭，重新从连接池中获取连接，循环操作直到获得有效连接
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
@@ -100,7 +100,7 @@ stresstest:
 wind:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
     maxTotal: 50
     maxIdle: 50
@@ -110,7 +110,7 @@ wind:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
+#    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
 
 #注册中心配置
 eureka:
@@ -193,49 +193,49 @@ spring:
 #    cluster:
 #      nodes: 192.168.70.104:6379,192.168.70.104:6380,192.168.90.3:6381,192.168.90.3:6382,192.168.90.79:6383,192.168.90.79:6384  
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 #应用配置 service-chb3工程有
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0810
-  sqldirpassword: zgtams0810
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+  sqldiruserName: root
+  sqldirpassword: joyin123
 #base数据源配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 #interf数据库配置
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 #wind数据库配置
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 #压力测试数据源配置
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: joyin123
 #日志路径配置
 log:
   path: /home/tamsnew/microservice/service
-  level: debug
+  level: info
 #注册中心配置
 eureka:
   client:
 #   是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
     enabled: true
     serviceUrl:
-      defaultZone: http://192.168.90.219:9101/eureka/
+      defaultZone: http://127.0.0.1:9101/eureka/
   instance:
     ip-address: 127.0.0.1
 security:
@@ -247,7 +247,7 @@ tx-lcn:
     loadbalance:
       enabled: true #开启负载均衡
   client:
-    managerAddress: 192.168.90.219:8070 # manager服务地址(rpc端口),可填写多个负载
+    managerAddress: 192.168.90.197:8070 # manager服务地址(rpc端口),可填写多个负载
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
