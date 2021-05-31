@@ -450,7 +450,9 @@
 		DELETE FROM ETR_CASH_POSITION_FLOW
 		WHERE ORDER_ID = #{orderId}
 		AND HODING_TYPE = #{holdingType}
-		AND ACCT_ID = #{acctId}
+		<if test="acctId != null and !acctId.isEmpty()">
+			AND ACCT_ID = #{acctId}
+		</if>
 		AND (OFFSET_FLAG is null OR OFFSET_FLAG = #{offsetFlag})
 	</delete>
 </mapper>
