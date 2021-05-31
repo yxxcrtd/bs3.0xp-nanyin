@@ -41,10 +41,24 @@ $(function() {
           cols:[
               { title:'数据状态', field: 'statusStr',width:100, sortField:'STATUS'},
               { title:'数据日期', field: 'statusDate', type:'datetime', sortField:'STATUS_DATE'},
-              { title:'报送状态', field: 'sendStatusStr',width:100 , type: 'date', sortField:'SEND_STATUS'},
+              { title:'报送状态', field: 'sendStatusStr',width:100 , type: 'date', sortField:'SEND_STATUS',
+                  render:function (value,visible,row,options) {
+                      if(value == "接口报送"){
+                          return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+                      }else{
+                          return value;
+                      }
+                  }},
               { title:'报送日期', field: 'submitTime', type: 'datetime', sortField:'SUBMIT_TIME'},
               { title:'报送截止日', field: 'chbSubmitDeadline', type:'datetime', sortField:'CHB_SUBMIT_DEADLINE'},
-              { title:'反馈状态', field: 'submitFeedbackStatusStr',width:100, sortField:'',sortField:'SUBMIT_FEEDBACK_STATUS'},
+              { title:'反馈状态', field: 'submitFeedbackStatusStr',width:100, sortField:'',sortField:'SUBMIT_FEEDBACK_STATUS',
+                  render:function (value,visible,row,options) {
+                      if(value == "发送中" || value == "发送异常"){
+                          return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+                      }else{
+                          return value;
+                      }
+                  }},
               {title: '从业人员类型',field:'employeeType', width:100, sortField:'EMPLOYEE_TYPE'},
               {title: '姓名', field:'employeeName', width:100, sortField:'EMPLOYEE_NAME'},
               {title: '性别', field:'employeeSex', width:100, sortField:'EMPLOYEE_SEX'},
@@ -76,7 +90,29 @@ $(function() {
               { field: 'sumitSeq',visible:false}
           ]
       });
-     
+
+      //绑定点击跳转反馈文件管理页面
+      table.bind('click', '.feedbackStatusClass', function(data, index) {
+          Joyin.dialog(JoyinUtil.getLabel("中债反馈文件管理"),
+              basePath + "svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001/init",
+              "95%", "96%", {   //pageModel:PAGE_MODEL_REFERENCE,
+                  reportEtrType:SVR_REPORT_CODE,    //报表类型
+                  handleStatus:FILE_HANDLE_STATUS,       //处理状态-未处理
+                  repSeqNo:data.sumitSeq,       //报送流水号
+                  // reportSendDate:'',
+                  // reportAcceptDate:''
+              });
+      });
+      //绑定点击跳转发送状态信息查询页面
+      table.bind('click', '.sendStatusClass', function(data, index) {
+          Joyin.dialog(JoyinUtil.getLabel("发送状态信息查询"),
+              basePath + "svreport/system/reportstatusinfo/ReportStatusInfo001/init",
+              "95%", "96%", {       //pageModel:PAGE_MODEL_REFERENCE,
+                  repType:SVR_REPORT_CODE,    //报表类型
+                  registSeqNo:data.registSeqno,       //报送流水号
+              });
+      });
+
      //查询
      $(function(){
          // 绑定按钮事件

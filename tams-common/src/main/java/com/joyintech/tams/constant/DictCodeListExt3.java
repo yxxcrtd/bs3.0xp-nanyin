@@ -562,7 +562,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_期权投资委托(DictCode.共通业务类型,"ETR21","期权投资委托"),
 
 
-
+    报送文件类别_投资者身份信息登记(DictCode.报送文件类别,"02","投资者身份信息登记"),
+    报送文件类别_投资者持有信息登记(DictCode.报送文件类别,"03","投资者持有信息登记"),
 
     业务类型_债券交易(DictCode.业务类型, "02", "债券交易"),
     //add by tanxuan on 20200101

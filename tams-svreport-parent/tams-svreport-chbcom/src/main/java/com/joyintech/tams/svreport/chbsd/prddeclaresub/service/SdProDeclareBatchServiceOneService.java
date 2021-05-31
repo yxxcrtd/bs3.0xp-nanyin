@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chbsd.prddeclaresub.service;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdDeclareSubDto;
 import com.joyintech.component.svrreport.chb.service.MsgSendService;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
@@ -44,11 +45,11 @@ public class SdProDeclareBatchServiceOneService extends AutoSendCBBaseService {
     */
     public boolean handleDataPerTime(int handleIndex, 
     		                         int dataCountPerTime,List<ChbPrdDeclareSubDto> msgRstList,
-    		                         List<ChbPrdDeclareSubDto> sendResult)  throws Exception{
+    		                         List<ChbPrdDeclareSubDto> sendResult, SendDataCheckType sendDataCheckType)  throws Exception{
         logger.info("【产品申报登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         try {
-            	 msgSend.sendChbPrdDeclareSubMsgs(msgRstList, null);
+            	 msgSend.sendChbPrdDeclareSubMsgs(msgRstList, sendDataCheckType);
             	 sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【产品申报登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

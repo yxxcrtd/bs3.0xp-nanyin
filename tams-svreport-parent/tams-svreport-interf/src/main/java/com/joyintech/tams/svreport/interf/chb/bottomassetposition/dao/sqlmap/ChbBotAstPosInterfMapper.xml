@@ -41,8 +41,10 @@ FROM
     sub.PTL_ID PLAN_ASSET_ID,
     info.FINPROD_MARKET_ID ASSET_CODE,
     info2.REP_CCY CCY,
-    NVL(SUM(sub.SECURITY_QUANTITY),0)*DECODE(fp.FINPROD_TYPE2,'F01',100,1) POS_NUM,
-    NVL(SUM(sub.SMV),0) POS_AMT,
+    /***调整 资产涉及2开头的科目要减，不是全加（科目名称是资产名称，科目代码2开头）**/
+    NVL(SUM(decode(substr(sub.SUB_CODE,0,1),'2',0,sub.SECURITY_QUANTITY)),0)*DECODE(fp.FINPROD_TYPE2,'F01',100,1) POS_NUM,
+    NVL(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV)),0) POS_AMT,
+    /***调整 资产涉及2开头的科目要减，不是全加（科目名称是资产名称，科目代码2开头）**/
     sumsub.TOTAL_NUM TOTAL_NUM,
     max(nvl(sub.CREATE_TIME,sub.UPDATE_TIME)) UPDATE_TIME1,
     sumsub.UPDATE_TIME UPDATE_TIME2
@@ -87,7 +89,7 @@ FROM
 LEFT JOIN RSK_VALTBL_ASSET_SUB sub
 ON sub.VAL_DATE   = asset.POS_DATE
 AND sub.PTL_ID    = asset.PLAN_ASSET_ID
-AND sub.SUB_CODE IN ('10020101','1031','1021')
+AND (sub.SUB_CODE IN ('1002','1031','1021') or  (sub.SUB_CODE like '3003__'))
 GROUP BY asset.POS_DATE,
   asset.PLAN_ASSET_ID,
   asset.ASSET_CODE,

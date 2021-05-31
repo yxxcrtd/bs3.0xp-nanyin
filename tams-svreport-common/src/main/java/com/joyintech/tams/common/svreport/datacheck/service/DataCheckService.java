@@ -652,7 +652,7 @@ public class DataCheckService {
      * @see
      * @since 1.0
      */
-    public List<CheckRule> queryCheckRulesByDataTypeAndColumns(String datatype,List<String>columns) {
+    public List<CheckRule> queryCheckRulesByDataTypeAndColumns(String datatype) {
         
         String baseCheckLib = "com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib";
         Map<String,Method> mapMethod = new HashMap<String,Method>();

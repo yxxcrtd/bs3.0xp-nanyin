@@ -524,7 +524,7 @@
       </if>
 	
 	where 1 =1
-	<!--<if test="prodInfos!=null and prodInfos.size()!=0">
+	<if test="prodInfos!=null and prodInfos.size()!=0">
 		AND trim(baseinfo.PROD_INS_ID) in
 		<foreach collection="prodInfos" item="item" index="index" open="(" separator="," close=")">
 			<if test="(index % 999) == 998">
@@ -532,7 +532,7 @@
 			</if>
 			#{item}
 		</foreach>
-	</if>-->
+	</if>
 	<if test="model_type != null and InstitutionCode != null and InstitutionCode != '' "  >
 			AND COD.ORG_CODE  =#{InstitutionCode,jdbcType=VARCHAR}
 	</if>
@@ -1055,7 +1055,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
     UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG
       )
       select 
     REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
@@ -1071,7 +1071,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, sysdate,
     UPDATE_USER, sysdate, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG
     from CHB_PRD_DECLARE_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">

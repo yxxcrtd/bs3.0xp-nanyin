@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.svreport.chbsd.assetinfosub.service;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbAssetInfoDto;
 import com.joyintech.component.svrreport.chb.service.MsgSendService;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
@@ -50,11 +51,11 @@ public class SdAssetiInfoRegBatchServiceOneService extends AutoSendCBBaseService
     */
     public boolean handleDataPerTime(int handleIndex, 
     		                         int dataCountPerTime,List<ChbAssetInfoDto> msgRstList,
-    		                         List<ChbAssetInfoDto> sendResult) throws Exception {
+    		                         List<ChbAssetInfoDto> sendResult, SendDataCheckType sendDataCheckType) throws Exception {
         logger.info("【资产要素信息登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         boolean hasData = true;
         try {
-        	msgSendServiceImpl.sendChbAssendInfoMsgs(msgRstList, null);
+        	msgSendServiceImpl.sendChbAssendInfoMsgs(msgRstList, sendDataCheckType);
        	    sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【资产要素信息登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

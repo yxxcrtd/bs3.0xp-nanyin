@@ -1,5 +1,24 @@
 package com.joyintech.tams.svreport.chb.employee.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
@@ -8,24 +27,16 @@ import com.joyintech.tams.common.base.entity.ChbEmployeeInfo;
 import com.joyintech.tams.common.base.entity.ChbEmployeeInfoSub;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.svreport.chb.assetinforeg.dao.AssetInfoRegist001Mapper;
+import com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto;
 import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.chb.employee.dao.SvrChbEmployeeDBInterfMapper;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -47,6 +58,12 @@ public class SvrChbEmployeeDBInterf extends BaseService{
 	
 	@Autowired
 	private SvrChbEmployeeDBInterfMapper svrChbEmployeeDBInterfMapper;
+	
+	/**
+     * 数据批量一次查询或者删除条数
+     */
+    @Value("${application.reportSelectOrDeleteCount}")
+    private int reportSelectOrDeleteCount;
 
     /**
      * 入库前校验用Service
@@ -177,18 +194,57 @@ public class SvrChbEmployeeDBInterf extends BaseService{
      * @param insertList
      */
     private void dbData(List<ChbEmployeeInfoSub> deleteList, List<ChbEmployeeInfoSub> insertList) {
-		if(StringUtil.isEmptyList(deleteList)){
-			return ;
+    	
+    	if (StringUtil.isNotEmpty(deleteList)) {
+		    // 插入前先删除未报送的登记数据
+		    logger.debug("从业人员登记删除未报送数据：删除开始----------");
+		    // 数据批量一次删除条数,如果参数设置过大则强制定位50
+            int batchDeleteCount = reportSelectOrDeleteCount;
+            // 每批最后一个的下标
+            int batchDeleteLastIndex = batchDeleteCount;            
+            for(int index = 0; index < deleteList.size();){
+                if(batchDeleteLastIndex > deleteList.size()-1){
+                    batchDeleteLastIndex = deleteList.size();
+                    svrChbEmployeeDBInterfMapper.deleteBatchData(deleteList.subList(index, batchDeleteLastIndex));
+                    break;//数据插入完毕,退出循环
+                }else{
+                	svrChbEmployeeDBInterfMapper.deleteBatchData(deleteList.subList(index, batchDeleteLastIndex));
+                    index = batchDeleteLastIndex;//设置下一批下标
+                    batchDeleteLastIndex = index + batchDeleteCount;                     
+                }
+            }
+            logger.debug("从业人员登记删除未报送数据：删除结束----------");
+            logger.debug("从业人员登记插入数据：插入开始----------");
+	    		
+            int batchinsertLastIndex = batchDeleteCount;        
+    		for(int index = 0; index < insertList.size();){
+                if(batchinsertLastIndex > insertList.size()-1){
+                	batchinsertLastIndex = insertList.size();
+                    svrChbEmployeeDBInterfMapper.insertChbEmployeeSubData(insertList.subList(index, batchinsertLastIndex));
+                    break;//数据插入完毕,退出循环
+                }else{
+                	svrChbEmployeeDBInterfMapper.insertChbEmployeeSubData(insertList.subList(index, batchinsertLastIndex));
+                    index = batchinsertLastIndex;//设置下一批下标
+                    batchinsertLastIndex = index + batchDeleteCount;                     
+                }
+            }
+
+            logger.debug("从业人员登记插入数据：插入结束----------");
 		}
-		//考虑从业人员信息数据很少，无需分批操作
-		//先删除未报送数据 
-		svrChbEmployeeDBInterfMapper.deleteBatchData(deleteList);
-		
-		
-		if(StringUtil.isEmptyList(insertList)){
-			return ;
-		}
-		svrChbEmployeeDBInterfMapper.insertChbEmployeeSubData(insertList);
+    	
+    	
+//		if(StringUtil.isEmptyList(deleteList)){
+//			return ;
+//		}
+//		//考虑从业人员信息数据很少，无需分批操作
+//		//先删除未报送数据 
+//		svrChbEmployeeDBInterfMapper.deleteBatchData(deleteList);
+//		
+//		
+//		if(StringUtil.isEmptyList(insertList)){
+//			return ;
+//		}
+//		svrChbEmployeeDBInterfMapper.insertChbEmployeeSubData(insertList);
 		
 	}
 
