@@ -76,6 +76,7 @@ public class InvestmentDealInfoController {
     @PostMapping("save")
     public void save(@RequestBody InvestmentDealInfoDto dto)  {
         dto.setDataSource(DictCodeListExt2.数据来源_系统新建.getValue());
+        dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
          investmentDealInfo001Service.save(dto);
     }
 

@@ -172,7 +172,8 @@ public class SubsidiaMonthReportAssetBatchService {
                 if ("F0101".equals(pos.getSunassettype2()) || "F0102".equals(pos.getSunassettype2())) {
                     calcMonthReportSubDetail(AMT1_1_a, pos, true, false);
                     // 其中 1.1.a.a PPN等低流动性债券 非公开发行：02 公开发行：01
-                    if ("F0101".equals(pos.getSunassettype2()) && "02".equals(pos.getIssueMode())) {
+                    //if ("F0101".equals(pos.getSunassettype2()) && "02".equals(pos.getIssueMode())) {
+                    if ("F0101".equals(pos.getSunassettype2())) {//不判定是否公开发行
                         calcMonthReportSubDetail(AMT1_1_a_a, pos, true, false);
                     }
                 }

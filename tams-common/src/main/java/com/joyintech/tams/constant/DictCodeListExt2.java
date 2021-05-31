@@ -1161,6 +1161,7 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     预警标示_不预警(DictCode.预警标示, "1", "不预警" ),
     数据来源_系统新建(DictCode.数据来源, "01" , "系统新建" ),
     数据来源_EXCEL导入(DictCode.数据来源, "02" , "EXCEL导入" ),
+    数据来源_手工维护(DictCode.数据来源, "MN" , "手工维护" ),
     数据来源_资管系统(DictCode.数据来源, "11" , "资管系统" ),
     数据来源_销售系统(DictCode.数据来源, "12" , "销售系统" ),
     数据来源_万得系统(DictCode.数据来源, "13" , "万得系统" ),

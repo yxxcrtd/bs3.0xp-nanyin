@@ -1402,17 +1402,21 @@ public class MonthReportAssetService {
 									ChbMonthAssetPosition position, ChbAssetInfo chbAssetInfo, ChbAssetInfo supAssetInfo) {
 		BigDecimal terms = null;
 		// 设置期限字段
+		boolean isCalcFlag = true;//后续判定是否需要再计算
 		//公私募基金 15 19  默认为 30
 		if ("15".equals(position.getAssettype()) || "19".equals(position.getAssettype())) {
 			terms = new BigDecimal(30);
+			isCalcFlag = false;//后续判定是否需要再计算
 		}
 		// 06 权益类资产
 		else if("06".equals(position.getAssettype())) {
 			terms = BigDecimal.ZERO;
+			isCalcFlag = false;//后续判定是否需要再计算
 		}
 		//所有资产mdate != null && mdate<月报最后一天（逾期资产）,该字段默认=0
 		else if(chbAssetInfo.getMdate() != null && DateUtil.getBetweenDayNumber(report.getEnddate(), chbAssetInfo.getMdate()) < 0) {
 			terms = BigDecimal.ZERO;
+			isCalcFlag = false;//后续判定是否需要再计算
 		}
 		else {
 			boolean prdFlag = false;
@@ -1438,6 +1442,7 @@ public class MonthReportAssetService {
 				// 如果之前已经计算过产品期限，则直接取值
 				if (prodTermMap.containsKey(position.getProdId())) {
 					terms = prodTermMap.get(position.getProdId());
+					isCalcFlag = false;//后续判定是否需要再计算
 				}
 				// 否则需要计算产品期限
 				else {
@@ -1445,6 +1450,7 @@ public class MonthReportAssetService {
 					ChbPrdBaseinfo chbPrdBaseinfo = chbMonthAssetPositionMapper.selectChbPrdBaseinfoByProdId(position.getProdId(), report.getEnddate());
 					if(chbPrdBaseinfo == null || chbPrdBaseinfo.getMdate() == null) {
 						terms = BigDecimal.ONE;
+						isCalcFlag = false;//后续判定是否需要再计算
 					}
 					else {
 						terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), chbPrdBaseinfo.getMdate()));
@@ -1454,8 +1460,9 @@ public class MonthReportAssetService {
 			}
 		}
 		// 剩余期限计算结果若小于等于0，则该字段值=1；
-		if (terms == null || terms.compareTo(BigDecimal.ZERO) <= 0) {
+		if (isCalcFlag && (terms == null || terms.compareTo(BigDecimal.ZERO) <= 0)) {
 			terms = BigDecimal.ONE;
+			prodTermMap.put(position.getProdId(), terms);
 		}
 		position.setTerms(terms);
 		return terms;

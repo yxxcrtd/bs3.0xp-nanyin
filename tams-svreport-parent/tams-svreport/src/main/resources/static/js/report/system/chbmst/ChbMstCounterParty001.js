@@ -164,6 +164,8 @@
         //新增点击事件
         $('#ChbMstCounterParty001_btn_add').click(function() {
             var data={"operateType":"add"};
+            data.pageModel = PAGE_MODEL_NEW;
+            data.type="add";
             Joyin.dialog('交易对手接口数据信息新建',basePath+'svreport/system/chbmst/ChbMstCounterParty002/init', '85%', '70%',data,function(){table.reload();});
         });
 

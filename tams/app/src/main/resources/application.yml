@@ -23,7 +23,7 @@ spring:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
     maxTotal: 10
@@ -292,12 +292,12 @@ spring:
 #  redislock:
 #    redissonEnabled: false
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
     #reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
   sqldiruserName: root
   sqldirpassword: joyin123
 shiro:
@@ -311,22 +311,22 @@ shiro:
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 stresstest:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 wind:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_onlyxiaoqing?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 log:
@@ -335,12 +335,12 @@ log:
 #注册中心配置
 eureka:
   client:
-    #   是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
-    enabled: true
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
     serviceUrl:
       defaultZone: http://127.0.0.1:9101/eureka/
   instance:
     ip-address: 127.0.0.1
+    prefer-ip-address: false
 jixu:
   user:
     type: 2
