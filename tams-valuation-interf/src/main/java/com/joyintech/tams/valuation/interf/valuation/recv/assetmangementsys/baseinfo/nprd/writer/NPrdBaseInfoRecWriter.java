@@ -133,7 +133,7 @@ public class NPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
     
     @Autowired
     private ValAcctLayeringInfoBatchMapper valAcctLayeringInfoBatchMapper;
-    
+
     @Autowired
     private ValFinBenchmarkDetailBatchMapper valFinBenchmarkDetailBatchMapper;
 
@@ -804,7 +804,7 @@ public class NPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                 }
                 
             }
-            
+
             // 日志
             List<ValInterflog> valInterflog = result.getValInterflog();
             // 入库
