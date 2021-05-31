@@ -180,7 +180,7 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 				assetInfoDetailMapper.insertBatch(insertList);
 			}
 			if(!StringUtil.isEmptyList(updateList)){
-				assetInfoDetailMapper.updateBatch(updateList);
+				assetInfoDetailMapper.updateBatchNotCheckNull(updateList);
 			}
 			return checkResult;
 		}

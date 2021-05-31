@@ -24,6 +24,8 @@ public interface AssetInfoDetailMapper {
 	 * @author：weiyuqiang 2019年1月29日
 	 */
 	int updateBatch(@Param("updateList") List<ChbAssetInfo> updateList);
+
+	int updateBatchNotCheckNull(@Param("updateList") List<ChbAssetInfo> updateList);
 	int updateBatchPsbc(@Param("updateList") List<ChbAssetInfo> updateList);
 	/**
 	 * 功能:批量插入资产要素记录
