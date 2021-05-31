@@ -63,6 +63,7 @@ public class SppiTest001Controller extends BaseController {
         SelectOptionDto bondSelectDto = new SelectOptionDto();
         SelectOptionDto projectSelectDto = new SelectOptionDto();
         SelectOptionDto planSelectDto = new SelectOptionDto();
+        SelectOptionDto firstBidSelectDto = new SelectOptionDto();
 
         bondSelectDto.setId(DictCodeList.平安资产类型_债券.getValue());
         bondSelectDto.setText(DictCodeList.平安资产类型_债券.getCodeName());
@@ -70,7 +71,9 @@ public class SppiTest001Controller extends BaseController {
         projectSelectDto.setText(DictCodeList.平安资产类型_项目类资产.getCodeName());
         planSelectDto.setId(DictCodeList.平安资产类型_计划类资产_利率型.getValue());
         planSelectDto.setText(DictCodeList.平安资产类型_计划类资产_利率型.getCodeName());
-        List<SelectOptionDto> assetTypeList = Arrays.asList(bondSelectDto, projectSelectDto, planSelectDto);
+        firstBidSelectDto.setId(DictCodeList.平安资产类型_一级市场债.getValue());
+        firstBidSelectDto.setText(DictCodeList.平安资产类型_一级市场债.getCodeName());
+        List<SelectOptionDto> assetTypeList = Arrays.asList(bondSelectDto, projectSelectDto, planSelectDto,firstBidSelectDto);
         model.addAttribute("ASSET_TYPES", JsonUtils.objectArray2Json(assetTypeList.toArray()));
 
         model.addAttribute("SPPI_TESTING", DictCodeListExt3.SPPI测试状态_测试中.getValue());
