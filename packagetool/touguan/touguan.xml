@@ -27,9 +27,9 @@
         <module>../../tams-common</module>
         <module>../../tams-common-customer</module>
 		<module>../../tams-invest-common</module>
-        <module>../../JixuCenter</module>
+        <!--<module>../../JixuCenter</module>
         <module>../../tams-valuation-common</module>
-		<module>../../tams-valuation-api</module>
+		<module>../../tams-valuation-api</module>-->
 
 		<!-- 后台服务 -->
         <module>../../microservice/service-asset</module>
