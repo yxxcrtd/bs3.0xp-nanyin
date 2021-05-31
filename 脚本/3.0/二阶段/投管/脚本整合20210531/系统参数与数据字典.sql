@@ -1,0 +1,261 @@
+-- sppI 测试
+delete from SYS_PARA where SYSTEM_CODE = 'VAL' and PARA_CODE = 'BOND_SPPI_USE_TEMPLATE';
+insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('VAL', 'BOND_SPPI_USE_TEMPLATE', '01', '01', '01,02,03', '债券类资产SPPI测试模板', 'system', null, systimestamp, 'system', systimestamp);
+
+delete from SYS_PARA where SYSTEM_CODE = 'VAL' and PARA_CODE = 'NOT_BOND_SPPI_USE_TEMPLATE';
+insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('VAL', 'NOT_BOND_SPPI_USE_TEMPLATE', '02', '01', '01,02,03', '非标准化债权资产SPPI测试模板', 'system', null, systimestamp, 'system', systimestamp);
+
+
+delete from sys_datadict where DICT_CODE = 'SPPI_TEST_STATUS';
+delete from sys_datadict_list where DICT_CODE = 'SPPI_TEST_STATUS';
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SPPI_TEST_STATUS', 'VAL', 'SPPI测试状态', null, '02', 'system', null, systimestamp, 'system', systimestamp);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SPPI_TEST_STATUS', '0', '未测试', 1, null, 'system', null, systimestamp, 'system', systimestamp);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SPPI_TEST_STATUS', '1', '测试中', 2, null, 'system', null, systimestamp, 'system', systimestamp);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SPPI_TEST_STATUS', '2', '测试通过', 3, null, 'system', null, systimestamp, 'system', systimestamp);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SPPI_TEST_STATUS', '3', '测试不通过', 4, null, 'system', null, systimestamp, 'system', systimestamp);
+
+delete from sys_datadict_list where DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'FINASSET21';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('COMMON_BUSINESS_TYPE', 'FINASSET21', 'SPPI测试', 1021, null, 'system', null, systimestamp, 'system', systimestamp);
+delete from sys_datadict where DICT_CODE = 'YES_NO_NA';
+delete from sys_datadict_list where DICT_CODE = 'YES_NO_NA';
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('YES_NO_NA', 'VAL', '是否不适用', null, '02', 'system', null, systimestamp, 'system', systimestamp);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('YES_NO_NA', 'Y', '是', 1, null, 'system', null, systimestamp, 'system', systimestamp);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('YES_NO_NA', 'N', '否', 2, null, 'system', null, systimestamp, 'system', systimestamp);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('YES_NO_NA', 'NA', '不适用', 3, null, 'system', null, systimestamp, 'system', systimestamp);
+
+
+--计划类资产：增加投资目的
+
+
+update sys_datadict_list set ITEM_VALUE = '以收取该金融资产合同现金流量为目的' where DICT_CODE = 'INV_AIM' and ITEM_CODE = 'AC';
+update sys_datadict_list set ITEM_VALUE = '以收取该合同现金流量及出售金融资产为目的' where DICT_CODE = 'INV_AIM' and ITEM_CODE = 'FVOCI';
+update sys_datadict_list set ITEM_VALUE = '以出售该金融资产为目的' where DICT_CODE = 'INV_AIM' and ITEM_CODE = 'FVTPL';
+
+--项目类资产委托
+delete from sys_page_dictlist where PAGE_ID = 'EtrProject002' and DICT_ID = 'INV_AIM';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrProject002', '999999', 'INV_AIM', 'AC', null, null, 'admin', null, SYSDATE, 'admin', SYSDATE);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrProject002', '999999', 'INV_AIM', 'FVOCI', null, null, 'admin', null, SYSDATE, 'admin', SYSDATE);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrProject002', '999999', 'INV_AIM', 'FVTPL', null, null, 'admin', null, SYSDATE, 'admin', SYSDATE);
+
+
+--计划类利率型委托
+delete from sys_page_dictlist where PAGE_ID = 'EtrPlanAssetR002' and DICT_ID = 'INV_AIM';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrPlanAssetR002', '999999', 'INV_AIM', 'AC', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrPlanAssetR002', '999999', 'INV_AIM', 'FVOCI', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrPlanAssetR002', '999999', 'INV_AIM', 'FVTPL', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+--项目类资产交易
+delete from sys_page_dictlist where PAGE_ID = 'TrdProjectInvestTrade002' and DICT_ID = 'INV_AIM';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdProjectInvestTrade002', '999999', 'INV_AIM', 'AC', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdProjectInvestTrade002', '999999', 'INV_AIM', 'FVOCI', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdProjectInvestTrade002', '999999', 'INV_AIM', 'FVTPL', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+delete from sys_page_dictlist where PAGE_ID = 'TrdProjectInvestTrade003' and DICT_ID = 'INV_AIM';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdProjectInvestTrade003', '999999', 'INV_AIM', 'AC', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdProjectInvestTrade003', '999999', 'INV_AIM', 'FVOCI', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdProjectInvestTrade003', '999999', 'INV_AIM', 'FVTPL', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+--计划类利率型交易
+delete from sys_page_dictlist where PAGE_ID = 'TrdPlanRateInvestTrade002' and DICT_ID = 'INV_AIM';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdPlanRateInvestTrade002', '999999', 'INV_AIM', 'AC', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdPlanRateInvestTrade002', '999999', 'INV_AIM', 'FVOCI', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdPlanRateInvestTrade002', '999999', 'INV_AIM', 'FVTPL', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+delete from sys_page_dictlist where PAGE_ID = 'TrdPlanRateInvestTrade003' and DICT_ID = 'INV_AIM';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdPlanRateInvestTrade003', '999999', 'INV_AIM', 'AC', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdPlanRateInvestTrade003', '999999', 'INV_AIM', 'FVOCI', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdPlanRateInvestTrade003', '999999', 'INV_AIM', 'FVTPL', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+
+--项目类资产存续期
+delete from sys_page_dictlist where PAGE_ID = 'TrdProjectDuration002' and DICT_ID = 'INV_AIM';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdProjectDuration002', '999999', 'INV_AIM', 'AC', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdProjectDuration002', '999999', 'INV_AIM', 'FVOCI', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdProjectDuration002', '999999', 'INV_AIM', 'FVTPL', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+--债券二级交易
+delete from sys_page_dictlist where PAGE_ID = 'TrdBondInvestTrade003' and DICT_ID = 'INV_AIM';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdBondInvestTrade003', '999999', 'INV_AIM', 'AC', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdBondInvestTrade003', '999999', 'INV_AIM', 'FVOCI', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('TrdBondInvestTrade003', '999999', 'INV_AIM', 'FVTPL', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+/**============业务类型：共同业务类型--项目类_计划类利率型行情信息-- add by lby 20201023 start============**/
+delete from sys_datadict_list sdl where sdl.dict_code = 'COMMON_BUSINESS_TYPE' and sdl.item_code = 'FINASSET66';
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('COMMON_BUSINESS_TYPE', 'FINASSET66', '项目类_计划类利率型行情信息', 1222, '0', 'system', null, sysdate, 'system', sysdate);
+/**============业务类型：共同业务类型--项目类_计划类利率型行情信息 add by lby 20201023 end============**/
+
+/** ============= 数据字典值-证券品种：“证券品种”中计划类（收益型）修改为计划类（利率型） add by lby 20201027 start ============= **/
+update sys_datadict_list sdl
+set sdl.item_value = '计划类（利率型）'
+where sdl.dict_code = 'SEC_TYPE'
+and sdl.item_code = '12';
+/** ============= 数据字典值-证券品种：“证券品种”中计划类（收益型）修改为计划类（利率型） add by lby 20201027 end ============= **/
+
+
+
+
+
+--新增数据字典【本位币差额处理方式】
+delete from SYS_DATADICT where dict_code='BCCYADJ_TYPE';
+insert into SYS_DATADICT values ('BCCYADJ_TYPE','VAL','本位币差额处理方式','','02','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+delete from SYS_DATADICT_LIST where dict_code='BCCYADJ_TYPE';
+insert into SYS_DATADICT_LIST values ('BCCYADJ_TYPE','01','利息收入','1','0','system','',to_date('2020/10/21', 'yyyy/mm/dd'), 'system',to_date('2020/10/21', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('BCCYADJ_TYPE','02','减值准备','2','0','system','',to_date('2020/10/21', 'yyyy/mm/dd'), 'system',to_date('2020/10/21', 'yyyy/mm/dd'));
+
+
+delete from SYS_DATADICT_LIST t where t.dict_code = 'BUSI_TYPE' and t.item_code = '35';
+insert into SYS_DATADICT_LIST values ('BUSI_TYPE','35','自定义现金流交易','35','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'));
+delete from SYS_DATADICT_LIST t where t.dict_code = 'CUSTOM_CASHFLOW_TYPE' and t.item_code = '08';
+insert into SYS_DATADICT_LIST values ('CUSTOM_CASHFLOW_TYPE','08','减值资产清理后收回','8','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'));
+
+delete from sys_page_dictlist where PAGE_ID = 'PtlCashFlow002' and DICT_ID = 'CUSTOM_CASHFLOW_TYPE' and DICT_ITEM_VAL = '08';
+delete from sys_page_dictlist where PAGE_ID = 'PtlCashFlow001' and DICT_ID = 'CUSTOM_CASHFLOW_TYPE' and DICT_ITEM_VAL = '08';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('PtlCashFlow001', '999999', 'CUSTOM_CASHFLOW_TYPE', '08', null, null, 'admin', null, sysdate, 'admin', sysdate);
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('PtlCashFlow002', '999999', 'CUSTOM_CASHFLOW_TYPE', '08', null, null, 'admin', null, sysdate, 'admin', sysdate);
+
+
+
+--数据字典：指令类型
+delete FROM SYS_DATADICT_LIST WHERE DICT_CODE='ORDER_TYPE' AND ITEM_CODE IN ('N2798','N2799');
+insert into SYS_DATADICT_LIST values ('ORDER_TYPE','N2798','资金收款-其他收入到账','176','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('ORDER_TYPE','N2799','资金划款-其他支出划款','177','0','system','',to_date('2019/03/05', 'yyyy/mm/dd'), 'system',to_date('2019/03/05', 'yyyy/mm/dd'));
+
+
+
+--新增数据字典
+delete from SYS_DATADICT where DICT_CODE in ('OFFSETIMPT_DATETYPE','OFFSETIMPT_SHELL_TYPE','OFFSETIMPT_SX_TYPE');
+insert into SYS_DATADICT values ('OFFSETIMPT_DATETYPE','VAL','还本收息冲抵减值准备处理日','','02','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT values ('OFFSETIMPT_SHELL_TYPE','VAL','卖出冲抵减值准备处理方式','','02','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT values ('OFFSETIMPT_SX_TYPE','VAL','收息冲抵减值准备处理方式','','02','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+
+delete from SYS_DATADICT_LIST where DICT_CODE in ('OFFSETIMPT_DATETYPE','OFFSETIMPT_SHELL_TYPE','OFFSETIMPT_SX_TYPE');
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_DATETYPE','01','理论日','1','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_DATETYPE','02','资金到账日','2','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SHELL_TYPE','01','数量占比','1','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SHELL_TYPE','02','金额占比','2','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SHELL_TYPE','03','原金额占比','3','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SX_TYPE','01','金额占比','1','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('OFFSETIMPT_SX_TYPE','02','原金额占比','2','0','system','',to_date('2020/10/30', 'yyyy/mm/dd'), 'system',to_date('2020/10/30', 'yyyy/mm/dd'));
+
+delete from SYS_DATADICT_LIST where DICT_CODE = 'BUSI_TYPE' and ITEM_CODE = '39';
+Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('BUSI_TYPE','39','清理核销',39,'0','system',null,sysdate,'system',sysdate);
+
+delete from SYS_DATADICT where DICT_CODE ='LOSS_GEN_TYPE';
+insert into SYS_DATADICT values ('LOSS_GEN_TYPE','VAL','减值生成方式','','02','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/28', 'yyyy/mm/dd'));
+delete from SYS_DATADICT_LIST where DICT_CODE ='LOSS_GEN_TYPE';
+insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','01','计提批处理','1','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','02','交易批处理','2','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','99','其他','99','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+insert into SYS_DATADICT_LIST values ('LOSS_GEN_TYPE','03','减值计提批处理','03','0','system','',to_date('2020/10/15', 'yyyy/mm/dd'), 'system',to_date('2020/10/15', 'yyyy/mm/dd'));
+
+delete from sys_datadict where DICT_CODE = 'LOSS_HADDLE_PATTERN';
+
+insert into sys_datadict 
+(DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, 
+CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values 
+('LOSS_HADDLE_PATTERN', 'VAL', '减值处理方式', null, '02', 'system', null, 
+date'2020-11-18', 'system', date'2020-11-18');
+
+delete from sys_datadict_list where DICT_CODE = 'LOSS_HADDLE_PATTERN';
+
+insert into sys_datadict_list 
+(DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, 
+CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values 
+('LOSS_HADDLE_PATTERN', '01', '减值', 1, '0', 'system', null, date'2020-11-18', 'system', date'2020-11-18');
+insert into sys_datadict_list 
+(DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, 
+CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values 
+('LOSS_HADDLE_PATTERN', '02', '转回', 2, '0', 'system', null, date'2020-11-18', 'system', date'2020-11-18');
+insert into sys_datadict_list 
+(DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, 
+CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values 
+('LOSS_HADDLE_PATTERN', '03', '减值使用', 3, '0', 'system', null, date'2020-11-18', 'system', date'2020-11-18');
+insert into sys_datadict_list 
+(DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, 
+CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values 
+('LOSS_HADDLE_PATTERN', '04', '清理核销', 4, '0', 'system', null, date'2020-11-18', 'system', date'2020-11-18');
+delete from sys_para where PARA_CODE = 'IS_QUERY_ASSETS_LOSS';
+insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('VAL', 'IS_QUERY_ASSETS_LOSS', '01', '  ', null, '是否查询资产减值清理交易（01：是，02：否）', 'system', null, sysdate, 'system', sysdate);
+
+
+/** add by yanya on 20210106 交易方向数据字典增加减值清理**/
+
+delete FROM sys_datadict_list t WHERE t.dict_code = 'PS' and t.item_code  in ('T75','T76','T77');
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('PS', 'T75', '清理核销', 75, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('PS', 'T76', '其他应收款本金-清理核销', 76, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('PS', 'T77', '其他应收款利息-清理核销', 77, '0', 'system', null, sysdate, 'system', sysdate);
+

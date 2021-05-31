@@ -1,0 +1,5 @@
+/** ============= 业务编号规则表-共通业务类型：资产减值管理 add by lby 20201013 start ============= **/
+delete from MST_BUSINESS_ID_RULE mbir where mbir.seq_no = '1000' and mbir.common_business_type = 'TEDLOSS';
+insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('1000', 'TEDLOSS', null, null, null, null, null, null, '04', 'TEDLOSS', null, null, null, 'JYQHZG_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
+/** ============= 业务编号规则表-共通业务类型：资产减值管理 add by lby 20201013 end ============= **/

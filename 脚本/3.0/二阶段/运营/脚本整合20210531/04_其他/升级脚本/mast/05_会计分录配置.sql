@@ -1,0 +1,2 @@
+--会计事件名称调整
+UPDATE BOK_TABLELIST T SET T.TABLE_NAME='资金划款-买断式正回购到期' WHERE T.TABLE_ID='2724';
