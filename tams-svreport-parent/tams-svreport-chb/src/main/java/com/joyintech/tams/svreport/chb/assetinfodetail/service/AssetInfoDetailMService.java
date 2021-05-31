@@ -447,8 +447,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				map.put("repaymentType",SysDataUtil.getZZDictCodeAndName(DictCode.还本方式, assetInfoDetailDto.getRepaymentType()));
 				map.put("periodRepaymentFlag",SysDataUtil.getZZDictCodeAndName(DictCode.分期还本条款标识, assetInfoDetailDto.getPeriodRepaymentFlag()));
 				map.put("financierType1",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按规模划分, assetInfoDetailDto.getFinancierType1()));
-				map.put("financierType2",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按技术领域划分, assetInfoDetailDto.getFinancierType2()));
-				map.put("financierType3",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按经济类型划分, assetInfoDetailDto.getFinancierType3()));
+				map.put("financierType3",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按技术领域划分, assetInfoDetailDto.getFinancierType3()));
+				map.put("financierType2",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按经济类型划分, assetInfoDetailDto.getFinancierType2()));
 				map.put("industry1",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getIndustry1()));
 				map.put("proIndustry",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getProIndustry()));
 				map.put("industryFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIndustryFlag()));
@@ -466,7 +466,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				map.put("deferredInterestInt",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getDeferredInterestInt()));
 				map.put("partRedemFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getPartRedemFlag()));
 				map.put("finArea",SysDataUtil.getZZDictCodeAndName(DictCode.行政区划_市, assetInfoDetailDto.getFinArea()));
-				map.put("privateFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getPrivateFlag()));
+				map.put("privateprdFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getPrivateprdFlag()));
 				map.put("pppflag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getPppflag()));
 				map.put("bondtostockFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getBondtostockFlag()));
 				dtoList_04.add(map);

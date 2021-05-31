@@ -32,12 +32,12 @@
 			<Cell order="28" name="*分期还本条款标识">periodRepaymentFlag</Cell>
 			<Cell order="29" name="基础资产类型">basicAssetType</Cell>
 			<Cell order="30" name="超额收益分配比例（%）">excessProfitRate</Cell>
-			<Cell order="31" name="*融资人">chbFinancierId</Cell>
+			<Cell order="31" name="*融资人">financie</Cell>
 			<Cell order="32" name="*融资人内部信用评级">fcrGradeIn</Cell>
 			<Cell order="33" name="外部评级机构名称及对融资人评级结果">fcrGradeOut</Cell>
 			<Cell order="34" name="*融资人类型（按规模划分）">financierType1</Cell>
-			<Cell order="35" name="*融资人类型（按技术领域划分）">financierType2</Cell>
-			<Cell order="36" name="*融资人类型（按经济类型划分）">financierType3</Cell>
+			<Cell order="35" name="*融资人类型（按技术领域划分）">financierType3</Cell>
+			<Cell order="36" name="*融资人类型（按经济类型划分）">financierType2</Cell>
 			<Cell order="37" name="*融资项目">financeProj</Cell>
 			<Cell order="38" name="*融资人所属行业">industry1</Cell>
 			<Cell order="39" name="*项目是否属于重点监控行业和领域">industryFlag</Cell>
@@ -74,7 +74,7 @@
 			<Cell order="70" name="*融资总费率%">totalFeeRate</Cell>
 			<Cell order="71" name="*融资项目所属行业">proIndustry</Cell>
 			<Cell order="72" name="备注">remark</Cell>
-			<Cell order="73" name="地方政府融资平台">privateFlag</Cell>
+			<Cell order="73" name="地方政府融资平台">privateprdFlag</Cell>
 			<Cell order="74" name="公共PPP">pppflag</Cell>
 			<Cell order="75" name="是否投向市场化债转股相关产品的部分">bondtostockFlag</Cell>
 			<Cell order="76" name="新人行一级分类">pbcAssetType1Str</Cell>
