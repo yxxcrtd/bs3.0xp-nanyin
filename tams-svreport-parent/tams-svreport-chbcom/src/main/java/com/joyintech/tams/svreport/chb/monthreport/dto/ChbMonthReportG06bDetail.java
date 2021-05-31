@@ -168,9 +168,9 @@ public class ChbMonthReportG06bDetail extends BaseEntity implements Serializable
 
     public String getBalanceAFmt() {
         if (Objects.isNull(balanceA) || BigDecimal.ZERO.compareTo(balanceA) == 0) {
-            return "0.00";
+            return "0.000000";
         }
-        return new DecimalFormat("0.00").format(balanceA.divide(new BigDecimal("10000"), 10, RoundingMode.HALF_UP));
+        return new DecimalFormat("0.000000").format(balanceA.divide(new BigDecimal("10000"), 10, RoundingMode.HALF_UP));
     }
 
     public void setBalanceAFmt(String balanceAFmt) {
@@ -179,9 +179,9 @@ public class ChbMonthReportG06bDetail extends BaseEntity implements Serializable
 
     public String getBalanceBFmt() {
         if (Objects.isNull(balanceB) || BigDecimal.ZERO.compareTo(balanceB) == 0) {
-            return "0.00";
+            return "0.000000";
         }
-        return new DecimalFormat("0.00").format(balanceB.divide(new BigDecimal("10000"), 10, RoundingMode.HALF_UP));
+        return new DecimalFormat("0.000000").format(balanceB.divide(new BigDecimal("10000"), 10, RoundingMode.HALF_UP));
     }
 
     public void setBalanceBFmt(String balanceBFmt) {
