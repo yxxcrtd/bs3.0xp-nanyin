@@ -159,7 +159,7 @@ var QueryFunc=function(){
             $("#svrBussFinBondRepInfoDto_repIsFbzb").val('02').trigger("change");
             $("#svrBussFinBondRepInfoDto_bankSecZxzq").val('02').trigger("change");
             if(repAssetType=='1112'){
-                $("#svrBussFinBondRepInfoDto_repSectype").remove();
+                // $("#svrBussFinBondRepInfoDto_repSectype").remove();
             }
         }else if(obj["04"].indexOf(repAssetType)>=0){
             // $("#svrBussRepAssetCreditNonstdInfoDto_repChose").val('无');
