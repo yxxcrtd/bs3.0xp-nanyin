@@ -46,8 +46,8 @@
 			          cdate,
 			          /**CASH_AMOUNT03 as cashBalance,现金余额**/
 			          CASH_AMOUNT03 as CASH_AMOUNT03,
-			          (case when CASH_AMOUNT07 >= 0 then CASH_AMOUNT03 + nvl(CASH_FLOW_AMOUNT99, 0) - CASH_AMOUNT07 
-			          	else CASH_AMOUNT03  + nvl(CASH_FLOW_AMOUNT99, 0) end) as cashBalance,
+			          (case when CASH_FLOW_AMOUNT99 is not null then CASH_AMOUNT03 + CASH_FLOW_AMOUNT99 
+			          	else CASH_AMOUNT03 end) as cashBalance,
 			          /**(CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT08) as  tradeCash,交易可用**/
 			          (case when CASH_FLOW_AMOUNT99 is not null then CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT08 + CASH_FLOW_AMOUNT99 
 			          	else CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT08 end) as tradeCash,/**交易可用需要去掉 CASH_AMOUNT07 add by hh 20201218**/
