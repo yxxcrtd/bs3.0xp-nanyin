@@ -69,10 +69,12 @@
 				    )
 			</if>
 			<if test="counterAcctNo != null and !counterAcctNo.isEmpty()">
-				AND S.COUNTER_ACCT_NO = #{counterAcctNo}
+				<!--AND S.COUNTER_ACCT_NO = #{counterAcctNo}-->
+				and decode(S.PS,'01',S.MY_ACCT_NO,S.COUNTER_ACCT_NO) =  #{counterAcctNo}
 			</if>
 			<if test="myAcctNo != null and !myAcctNo.isEmpty()">
-				AND S.MY_ACCT_NO = #{myAcctNo}
+				<!--AND S.MY_ACCT_NO = #{myAcctNo}-->
+				and decode(S.PS,'01',S.COUNTER_ACCT_NO,S.MY_ACCT_NO) =  #{myAcctNo}
 			</if>
 			<if test="payType != null and !payType.isEmpty()">
 				AND T.PS = #{payType}
