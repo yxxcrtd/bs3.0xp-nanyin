@@ -190,7 +190,7 @@
 		FROM
 			chb_mst_counter_party_errordata c
 		WHERE
-			c.DATAUUID =#{datauuid,jdbcType=VARCHAR}
+			c.DATAUUID = #{datauuid,jdbcType=VARCHAR}
 	</select>
 	<select id="selectChbMstCounterPartyData" resultType="java.lang.Integer" parameterType="java.util.List">
 		SELECT count(1) from (

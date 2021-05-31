@@ -328,7 +328,7 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
     }
 
     public List<ChbMstCounterPartyErrodataWithBLOBs> selectChbMstCounterPartyErrordata(String datauuid) {
-        return chbMstCounterParty001Mapper.selectChbMstCounterPartyErrordata( datauuid);
+        return chbMstCounterParty001Mapper.selectChbMstCounterPartyErrordata(datauuid);
     }
 
     public void updateOne(ChbMstCounterParty chb) {

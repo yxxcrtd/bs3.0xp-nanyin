@@ -219,7 +219,7 @@
 		REP_CASH_YIELD a
 		where
 			BUSI_ID = #{busiId,jdbcType=VARCHAR}
-			AND START_DATE = #{startDate,jdbcType=DATE}
+			AND DATE_FORMAT(START_DATE,'%Y-%m-%d') = #{startDate,jdbcType=VARCHAR}
 			AND CASH_TYPE2 = #{cashType2,jdbcType=VARCHAR}
 	</select>
 	<select id="selectdisPrdFeeRateErrordata" resultType="com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs">

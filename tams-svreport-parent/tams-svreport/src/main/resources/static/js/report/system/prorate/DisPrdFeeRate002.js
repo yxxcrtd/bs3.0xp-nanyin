@@ -1,11 +1,21 @@
 (function() {
     function init(){
         $(".layui-fixbar").hide();
-        if('update'==$("#type").val()){
+        // if('update'==$("#type").val()){
+        //     $("#busiId").attr("disabled", "disabled");
+        //     $("#busiId").attr("style", "background-color: #EEEEEE;");
+        // }
+        if($("#busiId").val() != "") {
             $("#busiId").attr("disabled", "disabled");
             $("#busiId").attr("style", "background-color: #EEEEEE;");
         }
     };
+
+    /**
+     * 判定是否为数值
+     * @param strValue
+     * @returns {boolean}
+     */
     var judgeIsNumFunc = function(strValue) {
         if(!isNaN(strValue)){
             return false;

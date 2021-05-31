@@ -26,7 +26,7 @@
 		UPDATE_USER AS updateUser,
 		UPDATE_TIME AS updateTime,
 		DATA_SOURCE AS dataSource,
-		'' AS DATAUUID
+		'' AS uuid
 		FROM
 		chb_invest_trade a
 		<where>

@@ -63,7 +63,7 @@ public class InvestmentDealInfoController {
         return dto;
     }
     @PostMapping("selectInvestmentDealInfoErrordata")
-    public ChbInvestTradeErrordataWithBLOBs selectInvestmentDealInfoErrordata(String datauuid) {
+    public ChbInvestTradeErrordataWithBLOBs selectInvestmentDealInfoErrordata(@RequestBody String datauuid) {
         return investmentDealInfo001Service.selectInvestmentDealInfoErrordata(datauuid);
     }
 
