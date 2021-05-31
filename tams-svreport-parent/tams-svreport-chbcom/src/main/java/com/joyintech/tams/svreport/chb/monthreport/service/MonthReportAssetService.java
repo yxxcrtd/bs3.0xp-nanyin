@@ -1442,6 +1442,7 @@ public class MonthReportAssetService {
 				// 如果之前已经计算过产品期限，则直接取值
 				if (prodTermMap.containsKey(position.getProdId())) {
 					terms = prodTermMap.get(position.getProdId());
+					isCalcFlag = false;//后续判定是否需要再计算
 				}
 				// 否则需要计算产品期限
 				else {
@@ -1449,6 +1450,7 @@ public class MonthReportAssetService {
 					ChbPrdBaseinfo chbPrdBaseinfo = chbMonthAssetPositionMapper.selectChbPrdBaseinfoByProdId(position.getProdId(), report.getEnddate());
 					if(chbPrdBaseinfo == null || chbPrdBaseinfo.getMdate() == null) {
 						terms = BigDecimal.ONE;
+						isCalcFlag = false;//后续判定是否需要再计算
 					}
 					else {
 						terms = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(report.getEnddate(), chbPrdBaseinfo.getMdate()));
@@ -1460,6 +1462,7 @@ public class MonthReportAssetService {
 		// 剩余期限计算结果若小于等于0，则该字段值=1；
 		if (isCalcFlag && (terms == null || terms.compareTo(BigDecimal.ZERO) <= 0)) {
 			terms = BigDecimal.ONE;
+			prodTermMap.put(position.getProdId(), terms);
 		}
 		position.setTerms(terms);
 		return terms;
