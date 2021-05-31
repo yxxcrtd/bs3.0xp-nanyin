@@ -40,12 +40,12 @@
 	};
 
 	var  isGovernFundChangeType=function(){
-		if(getElementById('isGovernFund').val()=='02'){
-			getElementById('governInvestFund').val('').trigger("change");
-			getElementById('governInvestFund').removeAttr('required');
+		if(getElementById('isGovernFund').val()=='01'){
+			getElementById('governInvestFund').attr('required', true);
 			starBussRep();
 		}else{
-			getElementById('governInvestFund').attr('required', true);
+			getElementById('governInvestFund').val('').trigger("change");
+			getElementById('governInvestFund').removeAttr('required');
 			starBussRep();
 		}
 	};
@@ -56,10 +56,10 @@
 		if(assetTvalueFund=='2607'||assetTvalueFund=='2610'||assetTvalueFund=='2613'||
 			assetTvalueFund=='2611'||assetTvalueFund=='2612'||assetTvalueFund=='2617'){
 			$("#SvrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
-			$("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",false);
+			// $("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",false);
 		}else{
 			$("#SvrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
-			$("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",true);
+			// $("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",true);
 		}
 	}
 	$(function() {
