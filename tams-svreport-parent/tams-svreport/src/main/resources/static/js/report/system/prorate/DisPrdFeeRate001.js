@@ -54,6 +54,9 @@
          * 绑定事件：修改
          */
         table.bind('click', '.edit', function(data, index) {
+            if(data.statusName == "删除"){
+                return Joyin.error("不能操作已被删除的数据");
+            }
             if(data.busiId == null || data.busiId == '' || data.busiId == undefined){
                 Joyin.error("产品代码为空,数据不允许编辑");
                 return;

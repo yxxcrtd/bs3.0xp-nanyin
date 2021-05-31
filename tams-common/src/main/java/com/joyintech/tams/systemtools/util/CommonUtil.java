@@ -948,12 +948,12 @@ public class CommonUtil {
 		databaseType = StringUtil.defaultString(databaseType, "Mysql");
 		param.put("databaseType", databaseType);
 		param.put("sequenceName", sequenceType.getSequenceName());
-		Long result = baseMapper.getSequenceIndexByParam(param);
+		Long resultOri = baseMapper.getSequenceIndexByParam(param);
 		Long incr = baseMapper.getSequenceIncrByParam(param);//序列增长
 		// 加在採番后结果的前缀，以保证各个sequence的採番结果不会出现重复的情况
 		String shortName = sequenceType.getShortName();
 		for(int i = 0;i<size;i++) {
-			result = result + (i * incr);
+			Long result = resultOri + (i * incr);//序列计算错误修正
 			String sequenceResult = String.format("%018d", result);
 			sequenceResult = shortName + sequenceResult;
 			list.add(sequenceResult);
