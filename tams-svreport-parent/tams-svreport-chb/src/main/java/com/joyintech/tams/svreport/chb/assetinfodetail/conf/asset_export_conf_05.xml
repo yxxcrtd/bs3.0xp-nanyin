@@ -34,7 +34,7 @@
 			<Cell order="30" name="委外投资协议名称">assetName_16</Cell>
 			<Cell order="31" name="委外投资协议编号">assetCode_16</Cell>
 			<Cell order="32" name="受托人">trustee_16</Cell>
-			<Cell order="33" name="实际管理人">chbManagerId_16</Cell>
+			<Cell order="33" name="实际管理人">managerId_16</Cell>
 			<Cell order="34" name="托管人">trusteeId_16</Cell>
 			<Cell order="35" name="委托投资金额">amt_16</Cell>
 			<Cell order="36" name="资金实际投向">truActType_16</Cell>
@@ -44,8 +44,8 @@
 			<Cell order="40" name="投资运作终止日期">planEdate_16</Cell>
 			<Cell order="41" name="委外投资属性">proProperty_16</Cell>
 			<Cell order="42" name="是否有预期收益率">rateFlag_16</Cell>
-			<Cell order="43" name="预期最高收益率">maxYield_16</Cell>
-			<Cell order="44" name="预期最低收益率">minYield_16</Cell>
+			<Cell order="43" name="预期最高收益率">maxRate_16</Cell>
+			<Cell order="44" name="预期最低收益率">minRate_16</Cell>
 			<Cell order="45" name="管理费率%">mgrFeeRate_16</Cell>
 			<Cell order="46" name="托管费率%">truFeeRate_16</Cell>
 			<Cell order="47" name="交易相关合计费率%">tradeFeeRate_16</Cell>
