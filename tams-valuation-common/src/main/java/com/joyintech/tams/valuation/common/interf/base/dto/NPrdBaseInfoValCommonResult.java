@@ -10,32 +10,14 @@
 
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdInfoN;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.tams.common.base.entity.BokAcctLayeringInfo;
-import com.joyintech.tams.common.base.entity.BokAcctSubjectInfo;
-import com.joyintech.tams.common.base.entity.BokBooksetPlan;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.FinBaseRuleInfo;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinClawbackCalcRule;
-import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
-import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
-import com.joyintech.tams.common.base.entity.FinFloatCalcRuleDetail;
-import com.joyintech.tams.common.base.entity.FinFloatCountingRule;
-import com.joyintech.tams.common.base.entity.FinOpenPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdInfoN;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -157,7 +139,6 @@ public class NPrdBaseInfoValCommonResult extends BaseEntity {
      * 业绩回补计算规则
      */
     private List<FinClawbackCalcRule> listFinCawlbackCalcRule = new ArrayList<FinClawbackCalcRule>();
-    
     /**
      * 获取 listValFinProduct
      * 

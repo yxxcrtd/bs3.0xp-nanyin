@@ -37,8 +37,12 @@ public class InterfSendCommonReader extends InterfBaseReader<SendReaderEntity> {
     public List<SendReaderEntity> createList() {
         List<SendReaderEntity> list = new ArrayList<>();
         SendReaderEntity entity = new SendReaderEntity();
-        String bookIds = (String)getParams().get(InterfCommonConstant.接口_运行接口账套ID);
-        entity.setBooksetList(Arrays.asList(bookIds.split(",")));
+        // modify by tanxuan on 20210408 从vas3.0.1合并
+        /*String bookIds = (String)getParams().get(InterfCommonConstant.接口_运行接口账套ID);
+        entity.setBooksetList(Arrays.asList(bookIds.split(",")));*/
+        List<String> bookIds = (List)getParams().get(InterfCommonConstant.接口_运行接口账套ID);
+        entity.setBooksetList(bookIds);
+
         InterfExecuteInfo execInfo = (InterfExecuteInfo)getParams().get("executeInfo");
         entity.setExeDate(execInfo.getInterfDate());
         list.add(entity);

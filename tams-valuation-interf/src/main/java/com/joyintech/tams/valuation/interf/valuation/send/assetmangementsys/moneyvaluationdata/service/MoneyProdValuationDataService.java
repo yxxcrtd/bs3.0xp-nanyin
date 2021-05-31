@@ -10,24 +10,22 @@
  
 package com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.moneyvaluationdata.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.vatflow.dto.ValAddTaxFlowprocessorResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BokBookset;
 import com.joyintech.tams.common.base.entity.BokStatBokPosition;
 import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.moneyvaluationdata.dao.MoneyProdValuationDataMapper;
 import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.moneyvaluationdata.dto.MoneyProdValuationDataDto;
-import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.moneyvaluationdata.dto.MoneyProdValuationDataResult;
 import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.dto.NetBokStatBokPositionDto;
 import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.service.NetProdAccountingCommonService;
+import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.vatflow.dto.ValAddTaxFlowprocessorResult;
 import com.joyintech.tams.valuation.interf.valuation.send.common.entity.SendReaderEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 货币型产品估值数据Service
@@ -62,6 +60,50 @@ public class MoneyProdValuationDataService {
 		//当前年化收益率
 		List<MoneyProdValuationDataDto> list=moneyProdValuationDataMapper.queryMoneyValueData(item);
 		for(MoneyProdValuationDataDto dto:list){
+			/*add by tanxuan on 20210514 兼容db2数据库，在代码中进行字符串处理 start*/
+			if (dto.getProdAllAmt() == null && StringUtil.isNotEmpty(dto.getProdAllAmtStr())) {
+				String prodAllAmtStr = dto.getProdAllAmtStr().replaceAll("[^0-9|.]", "");
+				if (StringUtil.isNotEmpty(prodAllAmtStr)) {
+					dto.setProdAllAmt(new BigDecimal(prodAllAmtStr));
+				}
+			}
+			if (dto.getNowDayRate() == null && StringUtil.isNotEmpty(dto.getNowDayRateStr())) {
+				String nowDayRateStr = dto.getNowDayRateStr().replaceAll("[^0-9|.]", "");
+				if (StringUtil.isNotEmpty(nowDayRateStr)) {
+					dto.setNowDayRate(new BigDecimal(nowDayRateStr));
+				}
+			}
+			if (dto.getTotalRate() == null && StringUtil.isNotEmpty(dto.getTotalRateStr())) {
+				String totalRateStr = dto.getTotalRateStr().replaceAll("[^0-9|.]", "");
+				if (StringUtil.isNotEmpty(totalRateStr)) {
+					dto.setTotalRate(new BigDecimal(totalRateStr));
+				}
+			}
+			if (dto.getNowDayProfitValue() == null && StringUtil.isNotEmpty(dto.getNowDayProfitValueStr())) {
+				String nowDayProfitValueStr = dto.getNowDayProfitValueStr().replaceAll("[^0-9|.]", "");
+				if (StringUtil.isNotEmpty(nowDayProfitValueStr)) {
+					dto.setNowDayProfitValue(new BigDecimal(nowDayProfitValueStr));
+				}
+			}
+			if (dto.getSevenDayRate() == null && StringUtil.isNotEmpty(dto.getSevenDayRateStr())) {
+				String sevenDayRateStr = dto.getSevenDayRateStr().replaceAll("[^0-9|.]", "");
+				if (StringUtil.isNotEmpty(sevenDayRateStr)) {
+					dto.setSevenDayRate(new BigDecimal(sevenDayRateStr));
+				}
+			}
+			if (dto.getDailyAssetAllValue() == null && StringUtil.isNotEmpty(dto.getDailyAssetAllValueStr())) {
+				String dailyAssetAllValueStr = dto.getDailyAssetAllValueStr().replaceAll("[^0-9|.]", "");
+				if (StringUtil.isNotEmpty(dailyAssetAllValueStr)) {
+					dto.setDailyAssetAllValue(new BigDecimal(dailyAssetAllValueStr));
+				}
+			}
+			if (dto.getDailyAllDebt() == null && StringUtil.isNotEmpty(dto.getDailyAllDebtStr())) {
+				String dailyAllDebtStr = dto.getDailyAllDebtStr().replaceAll("[^0-9|.]", "");
+				if (StringUtil.isNotEmpty(dailyAllDebtStr)) {
+					dto.setDailyAllDebt(new BigDecimal(dailyAllDebtStr));
+				}
+			}
+			/*add by tanxuan on 20210514 兼容db2数据库，在代码中进行字符串处理 end*/
 			NetBokStatBokPositionDto position=new NetBokStatBokPositionDto();
 			position.setSdateStart(item.getExeDate());
 			position.setSdateEnd(item.getExeDate());
