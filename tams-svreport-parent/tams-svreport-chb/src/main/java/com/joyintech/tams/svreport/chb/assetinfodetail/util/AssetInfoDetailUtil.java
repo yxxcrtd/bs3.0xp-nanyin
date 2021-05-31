@@ -3,7 +3,6 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.util;
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -36,6 +35,8 @@ public class AssetInfoDetailUtil {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     static Map<String,Set<String>> map = null;
+
+    static Map<String,String> dict = new HashMap<>();
 
     @Autowired
     private AssetInfoDetailMapper assetInfoDetailMapper;
@@ -104,11 +105,16 @@ public class AssetInfoDetailUtil {
             entity.setIssuePartyId(list.get(1));
             entity.setAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.资产_负债二级类别, list.get(2)));
             Map<String,Object> params = new HashMap<>();
-            Map<String,String> dict = new HashMap<>();
             params.put("linkDictCode", DictCode.资产_负债类别.getValue());
             List<SysDatadictListLink> listLink = assetInfoDetailMapper.getDataListLinkData(params);
+            dict = new HashMap<>();
             listLink.forEach(sysDatadictListLink -> {
                 dict.put(sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
+            });
+            params.put("linkDictCode", DictCode.机构所属行业一级分类.getValue());
+            List<SysDatadictListLink> industryListLink = assetInfoDetailMapper.getDataListLinkData(params);
+            industryListLink.forEach(sysDatadictListLink -> {
+                dict.put("industry" + sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
             });
             entity.setAssetType(dict.get(entity.getAssetType2()));
             entity.setTradeMarket(SysDataUtil.getZZDictCodeFromName(DictCode.交易流通场所_中债, list.get(3)));
@@ -246,7 +252,7 @@ public class AssetInfoDetailUtil {
             }
             List<String> message = new ArrayList<>();
             List<ValidMessage> messages = chbDataCheckCommonUtil.chbCheckCommon(resultList, entity, "AssetInfoRegist002", entity.getAssetType2(), ValidMessage.class);
-            if (!StringUtil.isEmptyList(resultList)){
+            if (!StringUtil.isEmptyList(messages)){
                 messages.forEach(validMessage -> {
                     message.add(validMessage.getMessage());
                 });
@@ -338,7 +344,8 @@ public class AssetInfoDetailUtil {
         }
         dto.setTruActType(SysDataUtil.getZZDictCodeFromName(DictCode.资金实际投向, list.get(35)));
         dto.setInvestType(list.get(36));
-        dto.setCapUseIndu(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(37)));
+        dto.setCapUseInduLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(37)));
+        dto.setCapUseIndu(dict.get("industry"+dto.getCapUseInduLevel2()));
         if (StringUtil.isNotEmpty(list.get(38))) {
             dto.setPlanSdate(DateUtil.parse(list.get(38)));
         }
@@ -384,7 +391,8 @@ public class AssetInfoDetailUtil {
         SvrBussRepFundInfoDto dto = new SvrBussRepFundInfoDto();
         dto.setAssetId(list.get(5));
         dto.setAssetName(list.get(6));
-        dto.setIndustryShares(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(7)));
+        dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(7)));
+        dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
         dto.setRegistOrg1(SysDataUtil.getZZDictCodeFromName(DictCode.登记备案机构, list.get(8)));
         dto.setIsGovernFund(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(9)));
         dto.setGovernInvestFund(SysDataUtil.getZZDictCodeFromName(DictCode.政府投资基金投向, list.get(10)));
@@ -439,8 +447,10 @@ public class AssetInfoDetailUtil {
         dto.setFinancierType2(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按经济类型划分, list.get(19)));
         dto.setFinancierType3(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按技术领域划分, list.get(20)));
         dto.setFinanceProj(list.get(21));
-        dto.setIndustry1(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(22)));
-        dto.setProIndustry(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(23)));
+        dto.setIndustryLevel2Type(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(22)));
+        dto.setIndustry1(dict.get("industry"+dto.getIndustryLevel2Type()));
+        dto.setProIndustryLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(23)));
+        dto.setProIndustry(dict.get("industry"+dto.getProIndustryLevel2()));
         dto.setIndustryFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(24)));
         dto.setMonitType(SysDataUtil.getZZDictCodeFromName(DictCode.重点监控行业和领域类别, list.get(25)));
         dto.setMonTypeComm(list.get(26));
@@ -504,7 +514,8 @@ public class AssetInfoDetailUtil {
         }
         dto.setTruActType(SysDataUtil.getZZDictCodeFromName(DictCode.资金实际投向, list.get(12)));
         dto.setInvestType(list.get(13));
-        dto.setCapUseIndu(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(14)));
+        dto.setCapUseInduLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(14)));
+        dto.setCapUseIndu(dict.get("industry"+dto.getCapUseInduLevel2()));
         if (StringUtil.isNotEmpty(list.get(15))) {
             dto.setPlanSdate(DateUtil.parse(list.get(15)));
         }
@@ -606,7 +617,8 @@ public class AssetInfoDetailUtil {
         dto.setAssetId(list.get(26));
         dto.setAssetName(list.get(27));
         dto.setIssuePartyName(list.get(28));
-        dto.setIndustryShares(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(25)));
+        dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(25)));
+        dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
         dto.setRemark(list.get(47));
         dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(48)));
         dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(49)));
@@ -652,7 +664,8 @@ public class AssetInfoDetailUtil {
         dto.setAssetName(list.get(6));
         dto.setAssetId(list.get(7));
         dto.setIssuePartyName(list.get(8));
-        dto.setIndustry(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(9)));
+        dto.setIndustryLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(9)));
+        dto.setIndustry(dict.get("industry"+dto.getIndustryLevel2()));
         if (StringUtil.isNotEmpty(list.get(10))) {
             dto.setVdate(DateUtil.parse(list.get(10)));
         }
@@ -712,7 +725,8 @@ public class AssetInfoDetailUtil {
         dto.setAssetId(list.get(5));
         dto.setAssetName(list.get(6));
         dto.setSharesType(SysDataUtil.getZZDictCodeFromName(DictCode.股票类型, list.get(7)));
-        dto.setIndustryShares(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(8)));
+        dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(8)));
+        dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
         dto.setInvestStage(SysDataUtil.getZZDictCodeFromName(DictCode.投资阶段, list.get(9)));
         if (StringUtil.isNotEmpty(list.get(10))) {
             dto.setEquityQuit(DateUtil.parse(list.get(10)));
@@ -766,7 +780,8 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(14))) {
             dto.setRepMdate(DateUtil.parse(list.get(14)));
         }
-        dto.setIndustryShares(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(15)));
+        dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(15)));
+        dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
         if (StringUtil.isNotEmpty(list.get(16))) {
             dto.setAssetYield(new BigDecimal(list.get(16)));
         }
@@ -787,7 +802,7 @@ public class AssetInfoDetailUtil {
         SvrBussRepAssetCreditNonstdInfoDto dto = new SvrBussRepAssetCreditNonstdInfoDto();
         dto.setRepProfitType(SysDataUtil.getZZDictCodeFromName(DictCode.收受益权类型, list.get(5)));
         dto.setRepIsResale(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(6)));
-        dto.setAssetName(list.get(7));
+        dto.setRepAssetName(list.get(7));
         if (StringUtil.isNotEmpty(list.get(8))) {
             dto.setAmt(new BigDecimal(list.get(8)));
         }
@@ -837,7 +852,8 @@ public class AssetInfoDetailUtil {
         dto.setRepFinancierType3(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按经济类型划分, list.get(34)));
         dto.setRepFinancierType2(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按技术领域划分, list.get(35)));
         dto.setRepFinanceProj(list.get(36));
-        dto.setRepIndustry1(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(37)));
+        dto.setRepIndustryLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(37)));
+        dto.setRepIndustry1(dict.get("industry"+dto.getRepIndustryLevel2()));
         dto.setRepIndustryFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(38)));
         dto.setRepMonitType(SysDataUtil.getZZDictCodeFromName(DictCode.重点监控行业和领域类别, list.get(39)));
         dto.setRepMonTypeComm(list.get(40));
@@ -888,14 +904,15 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(69))) {
             dto.setTotalFeeRate(new BigDecimal(list.get(69)));
         }
-        dto.setRepProIndustry(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(70)));
+        dto.setRepProIndustryLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(70)));
+        dto.setRepProIndustry(dict.get("industry"+dto.getRepProIndustryLevel2()));
         dto.setRepRemark(list.get(71));
         dto.setRepPrivateprdFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(72)));
         dto.setRepPppflag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(73)));
         dto.setRepBondtostockFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(74)));
-        dto.setRepPbcAssetType1(list.get(75));
-        dto.setRepPbcAssetType2(list.get(76));
-        dto.setRepPbcAssetType3(list.get(77));
+        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(75)));
+        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(76)));
+        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(77)));
         return dto;
     }
 
@@ -924,9 +941,9 @@ public class AssetInfoDetailUtil {
         dto.setRepTargetType(SysDataUtil.getZZDictCodeFromName(DictCode.标的类别, list.get(12)));
         dto.setRepTarget(list.get(13));
         dto.setRepRemark(list.get(14));
-        dto.setRepPbcAssetType1(list.get(15));
-        dto.setRepPbcAssetType2(list.get(16));
-        dto.setRepPbcAssetType3(list.get(17));
+        dto.setRepPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(15)));
+        dto.setRepPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(16)));
+        dto.setRepPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(17)));
         return dto;
     }
 
@@ -977,7 +994,8 @@ public class AssetInfoDetailUtil {
         dto.setRepPartyType1(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按规模划分, list.get(10)));
         dto.setRepPartyType3(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按技术领域划分, list.get(11)));
         dto.setRepPartyType2(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按经济类型划分, list.get(12)));
-        dto.setRepIndustry(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业一级分类, list.get(13)));
+        dto.setRepIndustryLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(13)));
+        dto.setRepIndustry(dict.get("industry"+dto.getRepIndustryLevel2()));
         dto.setRepRegistOrg(SysDataUtil.getZZDictCodeFromName(DictCode.登记托管机构_中债, list.get(14)));
         dto.setRepRegistorgComment(SysDataUtil.getZZDictCodeFromName(DictCode.登记托管机构_监管报送, list.get(15)));
         dto.setRepRemark(list.get(16));

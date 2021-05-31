@@ -37,23 +37,23 @@ function change(value) {
             object.counterType1 = $("#counterType1").val();
             object.counterType2 = $("#counterType2").val();
             object.type =$("#type").val();
-            if(object.counterId==''){
-                Joyin.error("交易对手代码不能为空");
-                return;
-            }
-            if(object.counterName==''){
-                Joyin.error("交易对手名称不能为空");
-                return;
-            }
-            if(object.counterType1==''){
-                Joyin.error("交易对手一级类型不能为空");
-                return;
-            }
-            if(object.counterType2==''){
-                Joyin.error("交易对手二级类型不能为空");
-                return;
-            }
-            if(object.counterId!='' && object.counterName!='' && object.counterType1!=''&& object.counterType2!=''){
+            // if(object.counterId==''){
+            //     Joyin.error("交易对手代码不能为空");
+            //     return;
+            // }
+            // if(object.counterName==''){
+            //     Joyin.error("交易对手名称不能为空");
+            //     return;
+            // }
+            // if(object.counterType1==''){
+            //     Joyin.error("交易对手一级类型不能为空");
+            //     return;
+            // }
+            // if(object.counterType2==''){
+            //     Joyin.error("交易对手二级类型不能为空");
+            //     return;
+            // }
+            // if(object.counterId!='' && object.counterName!='' && object.counterType1!=''&& object.counterType2!=''){
                 Joyin.ajaxJson(basePath + 'svreport/system/chbmst/ChbMstCounterParty002/check', object, function(result) {
                     if(result){
                         Joyin.ajaxJson(basePath + 'svreport/system/chbmst/ChbMstCounterParty002/save',object,function(result){
@@ -62,7 +62,7 @@ function change(value) {
                         });
                     }
                 });
-            }
+            // }
         });
 
     });
