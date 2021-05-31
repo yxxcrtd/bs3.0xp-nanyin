@@ -167,4 +167,11 @@ public interface PtlFundAllocationMapper {
      * @see
      */
     List<PtlFundAllocation001Dto> getDetailInfo(Map<String, Object> map);
+
+    /**
+     * 根据业务编号、持仓类型、账户删除撤销发起时指令可用持仓的数据
+     * @return
+     * @see
+     */
+    int deleteEtrFlowByOrderId(Map<String, Object> map);
 }
