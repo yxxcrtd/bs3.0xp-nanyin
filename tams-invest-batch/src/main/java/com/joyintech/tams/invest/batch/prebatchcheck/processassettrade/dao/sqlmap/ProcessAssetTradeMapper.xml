@@ -224,8 +224,10 @@
 			union all
 		SELECT
 		T.create_user launchUser,
-		replace(replace(to_char(REGEXP_SUBSTR(sdpm.business_data,'"portfolioId":"[^"]+"',1,1)),'"portfolioId":"',''),'"','') portfolioId,
-		replace(replace(to_char(REGEXP_SUBSTR(sdpm.business_data,'"portfolioName":"[^"]+"',1,1)),'"portfolioName":"',''),'"','') portfolioName,
+		decode(t.page_id,'PtlFundAllocation003','',
+		replace(replace(to_char(REGEXP_SUBSTR(sdpm.business_data,'"portfolioId":"[^"]+"',1,1)),'"portfolioId":"',''),'"','') ) portfolioId,
+		decode(t.page_id,'PtlFundAllocation003','',
+		replace(replace(to_char(REGEXP_SUBSTR(sdpm.business_data,'"portfolioName":"[^"]+"',1,1)),'"portfolioName":"',''),'"','') ) portfolioName,
 		'' finprodId,
 		'' finprodName,
 		t.trade_id tradeId,
