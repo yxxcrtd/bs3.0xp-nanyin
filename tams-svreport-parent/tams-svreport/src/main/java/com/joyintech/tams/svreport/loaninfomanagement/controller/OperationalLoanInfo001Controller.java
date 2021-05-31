@@ -1,30 +1,26 @@
 package com.joyintech.tams.svreport.loaninfomanagement.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BaseInformationDto;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.infomanagement.service.OperationalInfoMService;
 import com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto;
 import com.joyintech.tams.svreport.loaninfomanagement.service.OperationalLoanInfoMService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 贷款明细信息维护 Controller
@@ -73,12 +69,12 @@ public class OperationalLoanInfo001Controller extends BaseController{
     public String queryData() {
 		Map<String, Object> param = RequestUtil.getPageParam();
          String map =operationalLoanInfoMService.queryData(param);
-         return map;
+         return StringUtil.trimHtmlTag(map);
     }
 	
 	/**
 	 * 根据主键删除数据
-	 * @param dto
+	 * @param param
 	 * @return
 	 */
 	@ResponseBody

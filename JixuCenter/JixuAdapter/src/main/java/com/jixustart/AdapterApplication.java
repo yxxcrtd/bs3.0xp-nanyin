@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.framework.config.JasyptConfiguration;
 
+import java.util.Locale;
+
 @Import({JasyptConfiguration.class})
 @SpringBootApplication(exclude=SecurityAutoConfiguration.class)
 @EnableAspectJAutoProxy(proxyTargetClass = true)
@@ -26,6 +28,8 @@ import com.joyintech.framework.config.JasyptConfiguration;
 public class AdapterApplication extends SpringBootServletInitializer{
 	
 	public static void main(String[] args) throws Exception{
+		Locale local = new Locale("zh", "CN");
+		Locale.setDefault(local);
 		SpringApplication.run(AdapterApplication.class, args);
 	}
 }

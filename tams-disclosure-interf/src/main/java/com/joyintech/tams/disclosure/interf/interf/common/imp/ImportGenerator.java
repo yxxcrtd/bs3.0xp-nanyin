@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
@@ -230,10 +231,10 @@ public final class ImportGenerator {
                                      List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName)
         throws Exception {
         if (!path.endsWith("/")) {
-            path = path + "/";
+            path = path + File.separator;
         }
         String absoultPath = path + dataFileName;
-        File tmpFile = new File(absoultPath);
+        File tmpFile = new SafelyFile(absoultPath);
         FileUtils.writeLines(tmpFile, "UTF-8", content);
 
         // 系统是否使用的db2数据库
@@ -259,7 +260,7 @@ public final class ImportGenerator {
 
             String importFullPath = REP_DB2_SERVER_FTP_FILEPATH;
             if (!StringUtil.endsWith(importFullPath, "/")) {
-                importFullPath = importFullPath + "/";
+                importFullPath = importFullPath + File.separator;;
             }
             importFullPath = importFullPath + dataFileName;
 
@@ -315,7 +316,6 @@ public final class ImportGenerator {
      *
      * @param table 导入表配置
      * @param path 路径
-     * @param dataFileName 数据文件名
      * @param content 导入数据内容
      * @throws Exception 异常
      * @return 导入是否成功

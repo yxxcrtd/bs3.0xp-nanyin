@@ -107,20 +107,20 @@ public class RiskTrialCommCallable {
 					if (DictCodeListExt1.指标参数实现类型_SQL.getValue().equals(indicatorParam.getParaDisplayType())) {
 						String sql = indicatorParam.getContent();
 						Object paramValue = supervisionCalcSvc.getIndicatorParamValue(sql, sysParam, rskTaskDto.getIndType(),rskTaskDto.getFoulCond(),"01");// 获取每个参数实际值
-						if (paramValue == null) {
+						if (paramValue == null && params != null) {
 							if(rskTaskDto.getIndType().indexOf(RiskUtil.LIMIT)!=-1){
 								params.put(paramName,new BigDecimal(0));
 							}
 							else{
-								//logFlag = false;
 								params=null;
 							}
 							logger.warn("组合(包)代码:" + objectCode + "指标名称:" + rskTaskDto.getIndName() + "参数:" + paramName
 									+ "值为null\n");
-							
 						}
 						else{
-							params.put(paramName,paramValue);
+							if(params != null){
+								params.put(paramName,paramValue);	
+							}
 						}
 						
 					}
@@ -131,7 +131,7 @@ public class RiskTrialCommCallable {
 								(PluginClassDao) SpringContextUtil.getBean(RiskUtil.COMMON_PLUGIN_REFLECT),inputDto);
 						Object paramValue = plugclass.getParamterValue();// 获取每个参数实际值
 						if (paramValue == null) {
-							if(rskTaskDto.getIndType().indexOf(RiskUtil.LIMIT)!=-1){
+							if(rskTaskDto.getIndType().indexOf(RiskUtil.LIMIT)!=-1 && params != null){
 								params.put(paramName,new BigDecimal(0));
 							}
 							else{
@@ -142,10 +142,12 @@ public class RiskTrialCommCallable {
 									+ "值为null\n");
 						}
 						else{
-							params.put(paramName,paramValue);
+							if (params != null){
+								params.put(paramName,paramValue);
+							}
 						}
 					}
-					if (DictCodeListExt1.指标参数实现类型_固定值.getValue().equals(indicatorParam.getParaDisplayType())) {
+					if (params != null && DictCodeListExt1.指标参数实现类型_固定值.getValue().equals(indicatorParam.getParaDisplayType())) {
 						params.put(paramName, indicatorParam.getContent());
 					}
 					//-----add by jjpei 20190815---是否参与画面计算跟资产类型或投资性质比较---start------
@@ -198,11 +200,13 @@ public class RiskTrialCommCallable {
 						            tempTradeAmount = inputDto.getTradeAmount().negate();
 						        }
 
-						        params.put(paramName,ArithmeticUtil.doAdd(new BigDecimal(params.get(paramName).toString()), tempTradeAmount));
+								if(params.get(paramName) != null && params.get(paramName) != null){
+									params.put(paramName,ArithmeticUtil.doAdd(new BigDecimal(params.get(paramName).toString()), tempTradeAmount));
+								} 
 						    }
 						}
                         // etliu特殊处理: SONGSLLCCPTZ((分子)固定收益类理财产品投资于存款、债券等债权类资产的比例不低于80%) 拆出和逆回购 应该是加
-                        else if (StringUtil.equals("SONGSLLCCPTZ", paramName)) {
+                        else if (StringUtil.equals("SONGSLLCCPTZ", paramName) && params != null && params.get(paramName) != null) {
                             if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_拆出.getValue(), inputDto.getAssetType())
                                 || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(), inputDto.getAssetType())
 									|| StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue(), inputDto.getAssetType())) {
@@ -213,7 +217,7 @@ public class RiskTrialCommCallable {
                             }
                         }
 						// etliu特殊处理: NHGZJYE(逆回购资金余额) 应该是加
-						else if (StringUtil.equals("NHGZJYE", paramName)) {
+						else if (StringUtil.equals("NHGZJYE", paramName) && params != null && params.get(paramName) != null) {
 						    params.put(paramName,ArithmeticUtil.doAdd(new BigDecimal(params.get(paramName).toString()),inputDto.getTradeAmount().abs()));
 						}
 						// etliu 美元债的指标，页面上最好能处理下，非美元债时，值不加到该指标上。
@@ -229,14 +233,14 @@ public class RiskTrialCommCallable {
                                 }
 						    }
 						    
-						    if (needPlusFlg) {
+						    if (needPlusFlg && params.get(paramName) != null) {
 						        params.put(paramName,ArithmeticUtil.doAdd(new BigDecimal(params.get(paramName).toString()),inputDto.getTradeAmount()));
 						    }
 						    else {
 						        // 非美元债 do nothing
 						    }
 							//所有产品投资同一资产的资金总规模不超过300亿的特殊处理
-                        }else if(StringUtil.equals("DCPTZTYZCZJGM", paramName)){
+                        }else if(params != null && StringUtil.equals("DCPTZTYZCZJGM", paramName) && params.get(paramName) != null){
 							if(StringUtil.isBlank(inputDto.getAssetCode())
 									&& (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_拆出.getValue(), inputDto.getAssetType())
 										||StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(), inputDto.getAssetType())||
@@ -248,7 +252,9 @@ public class RiskTrialCommCallable {
 						}
 						// 正常场景
 						else {
-						    params.put(paramName,ArithmeticUtil.doAdd(new BigDecimal(params.get(paramName).toString()),inputDto.getTradeAmount()));
+							if (params != null && params.get(paramName) != null){
+								params.put(paramName,ArithmeticUtil.doAdd(new BigDecimal(params.get(paramName).toString()),inputDto.getTradeAmount()));
+							}
 						}
 					}
 				}

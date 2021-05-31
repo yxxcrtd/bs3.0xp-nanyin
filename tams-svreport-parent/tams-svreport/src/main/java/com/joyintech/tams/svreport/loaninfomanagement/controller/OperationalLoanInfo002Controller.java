@@ -85,7 +85,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	@ResponseBody
     @RequestMapping("queryPbcAssetType")
     public String queryAssetType() {
-        return operationalLoanInfo001Service.queryPbcAssetType(RequestUtil.getPageParam());
+        return StringUtil.trimHtmlTag(operationalLoanInfo001Service.queryPbcAssetType(RequestUtil.getPageParam()));
     }
 	
 	

@@ -1,5 +1,6 @@
 package com.joyintech.tams.valuation.interf.valuation.sztinterf.utils;
 
+import java.io.InputStream;
 import java.util.Properties;
 
 public class ApplicationConfig {
@@ -8,18 +9,24 @@ public class ApplicationConfig {
 		SztConnector  connector= new SztConnector();
 				
 		Properties prop = new Properties();
-        prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("sztInterfClientMsg.properties"));
-        
-    	connector.setAppId(prop.getProperty("fromAppId"));
-    	connector.setUserId(prop.getProperty("fromUserId"));
-    	connector.setAppPwd(prop.getProperty("appPwd"));
-    	connector.setMrIp(prop.getProperty("mrIp"));
-    	connector.setMrPort(Short.valueOf(prop.getProperty("mrPort")));
-    	connector.setMrIpBak(prop.getProperty("mrIpBak"));
-    	connector.setMrPortBak(Short.valueOf(prop.getProperty("mrPortBak")));
-    	connector.setBizTypeBySend(Byte.decode(prop.getProperty("bizType")));
-    	
-		return connector;
+		InputStream is = null;
+		try{
+			is =Thread.currentThread().getContextClassLoader().getResourceAsStream("sztInterfClientMsg.properties");
+			prop.load(is);
+			connector.setAppId(prop.getProperty("fromAppId"));
+			connector.setUserId(prop.getProperty("fromUserId"));
+			connector.setAppPwd(prop.getProperty("appPwd"));
+			connector.setMrIp(prop.getProperty("mrIp"));
+			connector.setMrPort(Short.valueOf(prop.getProperty("mrPort")));
+			connector.setMrIpBak(prop.getProperty("mrIpBak"));
+			connector.setMrPortBak(Short.valueOf(prop.getProperty("mrPortBak")));
+			connector.setBizTypeBySend(Byte.decode(prop.getProperty("bizType")));
+			return connector;
+		}finally {
+			if(is != null){
+				is.close();
+			}
+		}
 	}
 	
 	public static SztMessage msgInit() throws Exception{

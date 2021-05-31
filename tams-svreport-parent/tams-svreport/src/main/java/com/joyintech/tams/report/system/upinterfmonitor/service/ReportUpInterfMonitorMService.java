@@ -87,21 +87,22 @@ public class ReportUpInterfMonitorMService extends BaseService<ReportUpInterfMon
 					uploadFile=fileAttachmentProcess.fetch(listSeqNo.get(i));
 					sourceFiles.add(uploadFile.getTargetFile());
 				}
-				String fileName=uploadFile.getFileName();
-				String zipFileName = fileName.substring(0,fileName.indexOf(".")) + GlobalConstant.UNDER_LINE + DateUtil.getCurrentDateTime() + ".zip";
-				zipFileName = zipFileName.replaceAll(GlobalConstant.COLON,GlobalConstant.SPLIT);
-				
-				String filePath=uploadFile.getTargetFile().getAbsolutePath();
-				
-				String exportFilePath = filePath.substring(0,filePath.lastIndexOf("/"));
-				File outFile = new File(exportFilePath + File.separator + zipFileName);
+				if (uploadFile != null){
+					String fileName=uploadFile.getFileName();
+					String zipFileName = fileName.substring(0,fileName.indexOf(".")) + GlobalConstant.UNDER_LINE + DateUtil.getCurrentDateTime() + ".zip";
+					zipFileName = zipFileName.replaceAll(GlobalConstant.COLON,GlobalConstant.SPLIT);
 
-				try {
-					ZipFileUtil.compressZip(outFile,false,sourceFiles.toArray(new File[]{}));
-				} catch(Exception e) {
-					e.printStackTrace();
+					String filePath=uploadFile.getTargetFile().getAbsolutePath();
+
+					String exportFilePath = filePath.substring(0,filePath.lastIndexOf("/"));
+					File outFile = new File(exportFilePath + File.separator + zipFileName);
+					try {
+						ZipFileUtil.compressZip(outFile,false,sourceFiles.toArray(new File[]{}));
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+					responseEntity = ExportUtil.export(outFile.getName(),outFile,true);
 				}
-				responseEntity = ExportUtil.export(outFile.getName(),outFile,true);
 			}
 		}
 		return responseEntity;

@@ -201,6 +201,6 @@ public class MstCoinFundQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getIplatDate")
     public String getIplatDate(){
-        return mstCoinFundQuotationInfo001Service.getIplatDate();
+        return StringUtil.trimHtmlTag(mstCoinFundQuotationInfo001Service.getIplatDate());
     }
 }

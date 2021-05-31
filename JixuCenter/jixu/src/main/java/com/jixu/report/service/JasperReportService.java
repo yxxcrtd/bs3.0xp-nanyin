@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,16 +80,17 @@ public class JasperReportService {
 		String exportReportFolder = initReport.getReportExportFolder();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream(sourceJaspFile);
 		if (stream!=null) {
+			Connection conn = null;
 			try {
 				String exportfile = genFileName(exportReportFolder,sourceJaspFile,portnum,startDate,endDate);
 				
-				File file = new File(exportfile);  
+				File file = new SafelyFile(exportfile);  
 				File fileParent = file.getParentFile();  
 				if(!fileParent.exists()){  
 					fileParent.mkdirs();  
 				}  
 				
-				Connection conn = jdbcTemplate.getDataSource().getConnection();
+				conn = jdbcTemplate.getDataSource().getConnection();
 				JasperHelper.exportStream(0, stream, exportfile, request, response, params, conn);
 
 				showHtml(exportfile+".html", response);
@@ -97,21 +99,43 @@ public class JasperReportService {
 				logger.error("Error", sqle);
 			} catch (IOException ie) {
 				logger.error("Error", ie);
+			}finally {
+				try{
+					if(conn != null){
+						conn.close();
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+				if(stream!=null){
+					try {
+						stream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 	}
 
 	private void showHtml(String reportfile, HttpServletResponse response) throws IOException {
-		File tempFile = new File(reportfile);
-		String filename = tempFile.getName().substring(0,tempFile.getName().indexOf("."));
-		InputStream ins = new BufferedInputStream(new FileInputStream(reportfile));
-		//response.setContentType("application/" + resolveContentType(filename));
-		response.setContentType("application/pdf");
-		response.setHeader("filename", filename);
-		//HashMap<String, Object> result = new HashMap<String, Object>();
-		//result.put("filepath", reportfile);
-		//JsonUtil.writeObjToResponse(response, result);
-		FileCopyUtils.copy(ins, response.getOutputStream());
+		File tempFile = new SafelyFile(reportfile);
+//		String filename = tempFile.getName().substring(0,tempFile.getName().indexOf("."));
+		InputStream ins = null;
+		try {
+			ins = new BufferedInputStream(new FileInputStream(new SafelyFile(reportfile)));
+			//response.setContentType("application/" + resolveContentType(filename));
+			response.setContentType("application/pdf");
+			response.setHeader("filename", tempFile.getName().substring(0,tempFile.getName().indexOf(".")));
+			//HashMap<String, Object> result = new HashMap<String, Object>();
+			//result.put("filepath", reportfile);
+			//JsonUtil.writeObjToResponse(response, result);
+			FileCopyUtils.copy(ins, response.getOutputStream());
+		}finally {
+			if (ins != null){
+				ins.close();
+			}
+		}
 	}
 
 	private static String resolveContentType(String fileName) {
@@ -126,10 +150,10 @@ public class JasperReportService {
 	public void showHtml(HttpServletResponse response, int reportID, String portnum, Date startDate, Date endDate){
 		String sourceJaspFile = initReport.getReportSourceHM().get(reportID);
 		String exportReportFolder = initReport.getReportExportFolder();
-		File sourceFile = new File(sourceJaspFile);
+		File sourceFile = new SafelyFile(sourceJaspFile);
 		if (sourceFile.exists()) {
 			String htmlFile=genFileName(exportReportFolder,sourceJaspFile,portnum,startDate,endDate)+".html";
-			File reportFile=new File(htmlFile);
+			File reportFile=new SafelyFile(htmlFile);
 			if(reportFile.exists()){
 				try{
 					showHtml(htmlFile, response);
@@ -143,10 +167,10 @@ public class JasperReportService {
 	public boolean checkReportExist(int reportID, String portnum, Date startDate, Date endDate){
 		String sourceJaspFile = initReport.getReportSourceHM().get(reportID);
 		String exportReportFolder = initReport.getReportExportFolder();
-		File sourceFile = new File(sourceJaspFile);
+		File sourceFile = new SafelyFile(sourceJaspFile);
 		if (sourceFile.exists()) {
 			String htmlFile=genFileName(exportReportFolder,sourceJaspFile,portnum,startDate,endDate)+".html";
-			File reportFile=new File(htmlFile);
+			File reportFile=new SafelyFile(htmlFile);
 			if(reportFile.exists()){
 				return true;
 			}
@@ -175,14 +199,21 @@ public class JasperReportService {
 			}
 			
 			String exportFile=genFileName(exportReportFolder,sourceJaspFile,portnum,startDate,endDate)+appendType;
-			File file=new File(exportFile);
-			String filename=file.getName();
-			InputStream ins = new BufferedInputStream(new FileInputStream(exportFile));
-			response.setContentType("application/" + resolveContentType(filename));
-			response.setHeader("filename", URLEncoder.encode(filename, "UTF-8"));
-			response.setHeader("filename", filename);
-			FileCopyUtils.copy(ins, response.getOutputStream());
-			ins.close();
+			File file=new SafelyFile(exportFile);
+//			String filename=file.getName();
+			InputStream ins = null;
+			try {
+				ins = new BufferedInputStream(new FileInputStream(exportFile));
+				response.setContentType("application/" + resolveContentType(file.getName()));
+				response.setHeader("filename", URLEncoder.encode(file.getName(), "UTF-8"));
+				response.setHeader("filename", file.getName());
+				FileCopyUtils.copy(ins, response.getOutputStream());
+			}finally {
+				if(ins != null){
+					ins.close();
+				}
+			}
+
 		}
 		return false;
 	}

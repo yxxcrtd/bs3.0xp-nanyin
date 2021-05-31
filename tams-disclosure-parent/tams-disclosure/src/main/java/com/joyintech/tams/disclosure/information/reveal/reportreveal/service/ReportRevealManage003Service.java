@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +83,8 @@ public class ReportRevealManage003Service extends CommonExportService<BokFileTra
 		// 文件名称
 		String fileName = FileNameUtil.formatFileName(filePath);
 		
-		File file = new File(filePath);
-		boolean rec = file.renameTo(new File(fileName));
+		File file = new SafelyFile(filePath);
+		boolean rec = file.renameTo(new SafelyFile(fileName));
 		if(rec){
 			logger.info("处理成功");
 		}		
@@ -209,8 +210,8 @@ public class ReportRevealManage003Service extends CommonExportService<BokFileTra
         
         // 文件名称
         String fileName = dto.getFileName();
-        File file = new File(filePath);
-        boolean rec = file.renameTo(new File(fileName));
+        File file = new SafelyFile(filePath);
+        boolean rec = file.renameTo(new SafelyFile(fileName));
         if(rec){
         	logger.info("处理成功");
         }

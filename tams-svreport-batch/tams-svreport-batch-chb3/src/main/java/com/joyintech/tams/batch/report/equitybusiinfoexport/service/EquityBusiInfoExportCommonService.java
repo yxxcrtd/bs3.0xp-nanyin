@@ -8,6 +8,7 @@ import com.joyintech.framework.export.handler.JoyinBookConfig;
 import com.joyintech.framework.export.handler.JoyinCellConfig;
 import com.joyintech.framework.export.handler.JoyinSheetConfig;
 import com.joyintech.framework.export.handler.ReportCfgHandler;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
@@ -126,12 +127,12 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         service.shutdown();
 
 
-        File tmpPath = new File(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_TMP_PATH));
+        File tmpPath = new SafelyFile(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_TMP_PATH));
         File[] files = tmpPath.listFiles();
 
         String filePath = CacheUtil.getSysParam("access_exportfilepath") +
                 CHB_EQUDET_SUB_NAME + GlobalConstant.UNDER_LINE  + DateUtil.getDateTimestamp() + ".zip";
-        File outFile = new File(filePath);
+        File outFile = new SafelyFile(filePath);
         try {
             ZipFileUtil.compressZip(outFile,true,files);
         } catch (IOException e) {
@@ -228,10 +229,10 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         } else {
             String exportFilePath = CacheUtil.getSysParam("access_exportfilepath");
             String zipFileName = FileNameUtil.createFileName("zip");
-            targetFile = new File(exportFilePath + File.separator + zipFileName);
+            targetFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
 
             try {
-                ZipFileUtil.compressZip(targetFile, true, (File[])fileList.toArray(new File[0]));
+                ZipFileUtil.compressZip(targetFile, true, (File[])fileList.toArray(new SafelyFile[0]));
             } catch (Exception var23) {
                 Iterator var12 = fileList.iterator();
 
@@ -268,27 +269,30 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         }
 
         String tempFilePath = fileName + fileType;
-        File templeteFile = new File(this.buildTempleteFilePath(tempFilePath));
+        File templeteFile = new SafelyFile(this.buildTempleteFilePath(tempFilePath));
         reportConfig.setTempleteFile(fileName + fileType);
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
-        } else {
-            stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
-        }
-
-        if (StringUtil.equals(fileType, ".xls")) {
-            wb = new HSSFWorkbook((InputStream)stream);
-        } else {
-            if (!StringUtil.equals(fileType, ".xlsx")) {
-                ((InputStream)stream).close();
-                throw new BusinessException("不是一个有效的Excel文件");
+        try {
+            if (templeteFile.exists()) {
+                stream = new FileInputStream(templeteFile);
+            } else {
+                stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
             }
-
-            wb = new XSSFWorkbook((InputStream)stream);
+            if (StringUtil.equals(fileType, ".xls")) {
+                wb = new HSSFWorkbook((InputStream)stream);
+            } else {
+                if (!StringUtil.equals(fileType, ".xlsx")) {
+                    ((InputStream)stream).close();
+                    throw new BusinessException("不是一个有效的Excel文件");
+                }
+                wb = new XSSFWorkbook((InputStream)stream);
+            }
+            return (Workbook)wb;
+        }finally {
+            if(stream != null){
+                stream.close();
+            }
         }
-
-        return (Workbook)wb;
     }
 
     private File makeSingleFile(Workbook wb, JoyinBookConfig reportConfig, String pageId, String fileType, List<?> contents, LongAdder current, long total, int sheetMaxRowCount) throws IOException {
@@ -373,13 +377,20 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
 
         String outFileName = CHB_EQUDET_SUB_NAME + GlobalConstant.UNDER_LINE  + DateUtil.getDateTimestamp() + fileType;
         String tmpPath = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_TMP_PATH);
-        File file = new File(tmpPath + File.separator + outFileName);
+        File file = new SafelyFile(tmpPath + File.separator + outFileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-
-        swb.write(new FileOutputStream(file));
-        return file;
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            swb.write(fileOutputStream);
+            return file;
+        }finally {
+            if(fileOutputStream != null){
+                fileOutputStream.close();
+            }
+        }
     }
 
     private void dealDataList(List<EquityBusiInfoRegist001Dto> list) {

@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,7 +51,7 @@ public class ReadTxtFile extends ReadFileBasic {
 				logger.info(source.getSourceName() + "		读取文件: " + filepath);
 				
 				int readLineNum = 0;
-				buf = new BufferedReader(new InputStreamReader(new FileInputStream(filepath), FileEncodeType.optionHM.get(source.getEnCodeType())));
+				buf = new BufferedReader(new InputStreamReader(new FileInputStream(new SafelyFile(filepath)), FileEncodeType.optionHM.get(source.getEnCodeType())));
 				String line = null;
 				int readstartLine=0;
 				int readEndLine=0;
@@ -94,7 +96,7 @@ public class ReadTxtFile extends ReadFileBasic {
 						}else{
 							String splitChar=source.getTableSpilitChar();
 							splitChar=getSplitWrite(splitChar);
-							String[] fields=line.split(splitChar);
+							String[] fields=line.split(Pattern.quote(splitChar));
 							for(String field:fields){
 								fieldsList.add(field);
 							}

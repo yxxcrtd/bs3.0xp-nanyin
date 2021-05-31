@@ -76,11 +76,13 @@ public class AdapterMsg extends MsgExecuteService{
 			msgcontainer.setEntityObj(adapter);
 			msgcontainer.setErrorMsg("id:"+adapter.getId()+" 保存成功");
 		}else{
-			BeanUtils.copyProperties(adapter, oldAdapter, "id");
-			adapterDao.updateEntityBean(oldAdapter);
-			msgcontainer.setObjID(oldAdapter.getId());
-			msgcontainer.setEntityObj(oldAdapter);
-			msgcontainer.setErrorMsg("id:"+oldAdapter.getId()+" 修改成功");
+			if (oldAdapter != null){
+				BeanUtils.copyProperties(adapter, oldAdapter, "id");
+				adapterDao.updateEntityBean(oldAdapter);
+				msgcontainer.setObjID(oldAdapter.getId());
+				msgcontainer.setEntityObj(oldAdapter);
+				msgcontainer.setErrorMsg("id:"+oldAdapter.getId()+" 修改成功");
+			}
 		}
 	}
 

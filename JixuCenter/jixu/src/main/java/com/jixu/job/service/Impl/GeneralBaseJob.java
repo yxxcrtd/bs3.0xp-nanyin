@@ -313,7 +313,7 @@ public abstract class GeneralBaseJob extends JNLJob {
 				if (i<seccashList.size()-1) {
 					continue;
 				}
-			} else if (cusip == cashObj.getCusip()) {
+			} else if (newSecCashList != null && cusip == cashObj.getCusip()) {
 				newSecCashList.add(cashObj);
 				if (i<seccashList.size()-1) {
 					continue;
@@ -322,8 +322,10 @@ public abstract class GeneralBaseJob extends JNLJob {
 			
 			gainAmounts = calcuateValutionENG(newSecCashList, asofdayFxrate, priordayFxrate);
 			cusip = cashObj.getCusip();
-			newSecCashList.clear();
-			newSecCashList.add(cashObj);
+			if (newSecCashList != null){
+				newSecCashList.clear();
+				newSecCashList.add(cashObj);
+			}
 			generalCooa = new GeneralCooa();
 			if (gainAmounts[0] * gainAmounts[1] < 0) { //说明今天和冲销符号相反
 				jobCom.saveGL(generalCooa, 

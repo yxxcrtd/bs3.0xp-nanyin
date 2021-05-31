@@ -110,125 +110,125 @@ public class OneKeyMakeAccount001Services {
         if (StringUtil.isNotEmpty(YJZZ)) {
             yjzuArr = YJZZ.split(",");
         }
-        for (String item : yjzuArr) {
+        if (yjzuArr != null){
+            for (String item : yjzuArr) {
+                TreeNode node = new TreeNode();
+                switch (item) {
+                    case "1":
+                        node.setId("001");
+                        node.setName("公共数据导入");
+                        node.setpId(null);
+                        treeList.add(node);
+                        params.put("taskGrpType", "InterfData");
+                        List<ValAccountHandle001Dto> list1 = valAccountHandle001Mapper.findAllTask(
+                                params);
+                        for (ValAccountHandle001Dto dto : list1) {
+                            node = new TreeNode();
+                            node.setId(dto.getTaskGrpId());
+                            node.setName(dto.getTaskGrpName());
+                            if (dto.getpTaskGrpId() == null || "".equals(dto.getpTaskGrpId())) {
+                                node.setpId("001");
+                            }
+                            else {
+                                node.setpId(dto.getpTaskGrpId());
+                            }
+                            treeList.add(node);
+                        }
+                        break;
+                    case "2":
+                        node.setId("002");
+                        node.setName("交易数据导入");
+                        node.setpId(null);
+                        treeList.add(node);
+                        params.put("taskGrpType", "InterfDeal");
+                        List<ValAccountHandle001Dto> list2 = valAccountHandle001Mapper.findAllTask(
+                                params);
+                        for (ValAccountHandle001Dto dto : list2) {
+                            node = new TreeNode();
+                            node.setId(dto.getTaskGrpId());
+                            node.setName(dto.getTaskGrpName());
+                            if (dto.getpTaskGrpId() == null || "".equals(dto.getpTaskGrpId())) {
+                                node.setpId("002");
+                            }
+                            else {
+                                node.setpId(dto.getpTaskGrpId());
+                            }
+                            treeList.add(node);
+                        }
+                        break;
+                    case "3":
+                        node.setId("003");
+                        node.setName("登账批处理");
+                        node.setpId(null);
+                        treeList.add(node);
+                        params.put("taskGrpType", "task");
+                        List<ValAccountHandle001Dto> list3 = valAccountHandle001Mapper.findAllTask(
+                                params);
+                        for (ValAccountHandle001Dto dto : list3) {
+                            node = new TreeNode();
+                            node.setId(dto.getTaskGrpId());
+                            node.setName(dto.getTaskGrpName());
+                            if (dto.getpTaskGrpId() == null || "".equals(dto.getpTaskGrpId())) {
+                                node.setpId("003");
+                            }
+                            else {
+                                node.setpId(dto.getpTaskGrpId());
+                            }
+                            treeList.add(node);
+                        }
+                        break;
+                    case "4":
+                        node.setId("004");
+                        node.setName("估值表核对（管理人）");
+                        node.setpId(null);
+                        treeList.add(node);
+                        break;
+                    case "5":
+                        node.setId("005");
+                        node.setName("估值表核对（托管人）");
+                        node.setpId(null);
+                        treeList.add(node);
+                        break;
+                    case "6":
+                        node.setId("006");
+                        node.setName("余额表核对");
+                        node.setpId(null);
+                        treeList.add(node);
+                        break;
+                    case "7":
+                        node.setId("007");
+                        node.setName("净值确认下发");
+                        node.setpId(null);
+                        treeList.add(node);
+                        break;
+                    case "8":
+                        node.setId("008");
+                        node.setName("数据回传");
+                        node.setpId(null);
+                        treeList.add(node);
+                        params.put("taskGrpType", "DataBack");
+                        List<ValAccountHandle001Dto> list8 = valAccountHandle001Mapper.findAllTask(
+                                params);
+                        for (ValAccountHandle001Dto dto : list8) {
+                            node = new TreeNode();
+                            node.setId(dto.getTaskGrpId());
+                            node.setName(dto.getTaskGrpName());
+                            if (dto.getpTaskGrpId() == null || "".equals(dto.getpTaskGrpId())) {
+                                node.setpId("008");
+                            }
+                            else {
+                                node.setpId(dto.getpTaskGrpId());
+                            }
+                            treeList.add(node);
+                        }
+                        break;
+                    default:
+                        break;
 
-            TreeNode node = new TreeNode();
-            switch (item) {
-                case "1":
-                    node.setId("001");
-                    node.setName("公共数据导入");
-                    node.setpId(null);
-                    treeList.add(node);
-                    params.put("taskGrpType", "InterfData");
-                    List<ValAccountHandle001Dto> list1 = valAccountHandle001Mapper.findAllTask(
-                        params);
-                    for (ValAccountHandle001Dto dto : list1) {
-                        node = new TreeNode();
-                        node.setId(dto.getTaskGrpId());
-                        node.setName(dto.getTaskGrpName());
-                        if (dto.getpTaskGrpId() == null || "".equals(dto.getpTaskGrpId())) {
-                            node.setpId("001");
-                        }
-                        else {
-                            node.setpId(dto.getpTaskGrpId());
-                        }
-                        treeList.add(node);
-                    }
-                    break;
-                case "2":
-                    node.setId("002");
-                    node.setName("交易数据导入");
-                    node.setpId(null);
-                    treeList.add(node);
-                    params.put("taskGrpType", "InterfDeal");
-                    List<ValAccountHandle001Dto> list2 = valAccountHandle001Mapper.findAllTask(
-                        params);
-                    for (ValAccountHandle001Dto dto : list2) {
-                        node = new TreeNode();
-                        node.setId(dto.getTaskGrpId());
-                        node.setName(dto.getTaskGrpName());
-                        if (dto.getpTaskGrpId() == null || "".equals(dto.getpTaskGrpId())) {
-                            node.setpId("002");
-                        }
-                        else {
-                            node.setpId(dto.getpTaskGrpId());
-                        }
-                        treeList.add(node);
-                    }
-                    break;
-                case "3":
-                    node.setId("003");
-                    node.setName("登账批处理");
-                    node.setpId(null);
-                    treeList.add(node);
-                    params.put("taskGrpType", "task");
-                    List<ValAccountHandle001Dto> list3 = valAccountHandle001Mapper.findAllTask(
-                        params);
-                    for (ValAccountHandle001Dto dto : list3) {
-                        node = new TreeNode();
-                        node.setId(dto.getTaskGrpId());
-                        node.setName(dto.getTaskGrpName());
-                        if (dto.getpTaskGrpId() == null || "".equals(dto.getpTaskGrpId())) {
-                            node.setpId("003");
-                        }
-                        else {
-                            node.setpId(dto.getpTaskGrpId());
-                        }
-                        treeList.add(node);
-                    }
-                    break;
-                case "4":
-                    node.setId("004");
-                    node.setName("估值表核对（管理人）");
-                    node.setpId(null);
-                    treeList.add(node);
-                    break;
-                case "5":
-                    node.setId("005");
-                    node.setName("估值表核对（托管人）");
-                    node.setpId(null);
-                    treeList.add(node);
-                    break;
-                case "6":
-                    node.setId("006");
-                    node.setName("余额表核对");
-                    node.setpId(null);
-                    treeList.add(node);
-                    break;
-                case "7":
-                    node.setId("007");
-                    node.setName("净值确认下发");
-                    node.setpId(null);
-                    treeList.add(node);
-                    break;
-                case "8":
-                    node.setId("008");
-                    node.setName("数据回传");
-                    node.setpId(null);
-                    treeList.add(node);
-                    params.put("taskGrpType", "DataBack");
-                    List<ValAccountHandle001Dto> list8 = valAccountHandle001Mapper.findAllTask(
-                        params);
-                    for (ValAccountHandle001Dto dto : list8) {
-                        node = new TreeNode();
-                        node.setId(dto.getTaskGrpId());
-                        node.setName(dto.getTaskGrpName());
-                        if (dto.getpTaskGrpId() == null || "".equals(dto.getpTaskGrpId())) {
-                            node.setpId("008");
-                        }
-                        else {
-                            node.setpId(dto.getpTaskGrpId());
-                        }
-                        treeList.add(node);
-                    }
-                    break;
-                default:
-                    break;
+                }
 
             }
-
         }
-
         return treeList;
     }
 
@@ -358,111 +358,112 @@ public class OneKeyMakeAccount001Services {
         String execTaskId7 = IDGenerator.generate();
         String execTaskId8 = IDGenerator.generate();
         int i = 1;
-        for (String item : yjzuArr) {
-            SysUnaccountantInfoDetail dysUnaccountantInfoDetail = new SysUnaccountantInfoDetail();
+        if (yjzuArr != null){
+            for (String item : yjzuArr) {
+                SysUnaccountantInfoDetail dysUnaccountantInfoDetail = new SysUnaccountantInfoDetail();
 
-            switch (item) {
-                case "1":
-                    dysUnaccountantInfoDetail.setSeqNo(seqNo);
-                    dysUnaccountantInfoDetail.setExectaskId(execTaskIdData);
-                    dysUnaccountantInfoDetail.setModelCode("1");
-                    dysUnaccountantInfoDetail.setOrderNo((long)i);
-                    dysUnaccountantInfoDetail.setStatus("0");
-                    dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
-                    dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
-                    sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
-                    json.addProperty("execTaskIdData", execTaskIdData);
-                    i++ ;
-                    break;
-                case "2":
-                    dysUnaccountantInfoDetail.setSeqNo(seqNo);
-                    dysUnaccountantInfoDetail.setExectaskId(execTaskIdDeal);
-                    dysUnaccountantInfoDetail.setModelCode("2");
-                    dysUnaccountantInfoDetail.setOrderNo((long)i);
-                    dysUnaccountantInfoDetail.setStatus("0");
-                    dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
-                    dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
-                    sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
-                    json.addProperty("execTaskIdDeal", execTaskIdDeal);
-                    i++ ;
-                    break;
-                case "3":
-                    dysUnaccountantInfoDetail.setSeqNo(seqNo);
-                    dysUnaccountantInfoDetail.setExectaskId(execTaskIdBatch);
-                    dysUnaccountantInfoDetail.setModelCode("3");
-                    dysUnaccountantInfoDetail.setOrderNo((long)i);
-                    dysUnaccountantInfoDetail.setStatus("0");
-                    dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
-                    dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
-                    sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
-                    json.addProperty("execTaskIdBatch", execTaskIdBatch);
-                    i++ ;
-                    break;
-                case "4":
-                    dysUnaccountantInfoDetail.setSeqNo(seqNo);
-                    dysUnaccountantInfoDetail.setExectaskId(execTaskId4);
-                    dysUnaccountantInfoDetail.setModelCode("4");
-                    dysUnaccountantInfoDetail.setOrderNo((long)i);
-                    dysUnaccountantInfoDetail.setStatus("0");
-                    dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
-                    dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
-                    sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
-                    json.addProperty("execTaskId4", execTaskId4);
-                    i++ ;
-                    break;
-                case "5":
-                    dysUnaccountantInfoDetail.setSeqNo(seqNo);
-                    dysUnaccountantInfoDetail.setExectaskId(execTaskId5);
-                    dysUnaccountantInfoDetail.setModelCode("5");
-                    dysUnaccountantInfoDetail.setOrderNo((long)i);
-                    dysUnaccountantInfoDetail.setStatus("0");
-                    dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
-                    dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
-                    sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
-                    json.addProperty("execTaskId5", execTaskId5);
-                    i++ ;
-                    break;
-                case "6":
-                    dysUnaccountantInfoDetail.setSeqNo(seqNo);
-                    dysUnaccountantInfoDetail.setExectaskId(execTaskId6);
-                    dysUnaccountantInfoDetail.setModelCode("6");
-                    dysUnaccountantInfoDetail.setOrderNo((long)i);
-                    dysUnaccountantInfoDetail.setStatus("0");
-                    dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
-                    dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
-                    sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
-                    json.addProperty("execTaskId6", execTaskId6);
-                    i++ ;
-                    break;
-                case "7":
-                    dysUnaccountantInfoDetail.setSeqNo(seqNo);
-                    dysUnaccountantInfoDetail.setExectaskId(execTaskId7);
-                    dysUnaccountantInfoDetail.setModelCode("7");
-                    dysUnaccountantInfoDetail.setOrderNo((long)i);
-                    dysUnaccountantInfoDetail.setStatus("0");
-                    dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
-                    dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
-                    sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
-                    json.addProperty("execTaskId7", execTaskId7);
-                    i++ ;
-                    break;
-                case "8":
-                    dysUnaccountantInfoDetail.setSeqNo(seqNo);
-                    dysUnaccountantInfoDetail.setExectaskId(execTaskId8);
-                    dysUnaccountantInfoDetail.setModelCode("8");
-                    dysUnaccountantInfoDetail.setOrderNo((long)i);
-                    dysUnaccountantInfoDetail.setStatus("0");
-                    dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
-                    dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
-                    sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
-                    json.addProperty("execTaskId8", execTaskId8);
-                    i++ ;
-                    break;
-                default:
-                    break;
+                switch (item) {
+                    case "1":
+                        dysUnaccountantInfoDetail.setSeqNo(seqNo);
+                        dysUnaccountantInfoDetail.setExectaskId(execTaskIdData);
+                        dysUnaccountantInfoDetail.setModelCode("1");
+                        dysUnaccountantInfoDetail.setOrderNo((long)i);
+                        dysUnaccountantInfoDetail.setStatus("0");
+                        dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
+                        dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
+                        sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
+                        json.addProperty("execTaskIdData", execTaskIdData);
+                        i++ ;
+                        break;
+                    case "2":
+                        dysUnaccountantInfoDetail.setSeqNo(seqNo);
+                        dysUnaccountantInfoDetail.setExectaskId(execTaskIdDeal);
+                        dysUnaccountantInfoDetail.setModelCode("2");
+                        dysUnaccountantInfoDetail.setOrderNo((long)i);
+                        dysUnaccountantInfoDetail.setStatus("0");
+                        dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
+                        dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
+                        sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
+                        json.addProperty("execTaskIdDeal", execTaskIdDeal);
+                        i++ ;
+                        break;
+                    case "3":
+                        dysUnaccountantInfoDetail.setSeqNo(seqNo);
+                        dysUnaccountantInfoDetail.setExectaskId(execTaskIdBatch);
+                        dysUnaccountantInfoDetail.setModelCode("3");
+                        dysUnaccountantInfoDetail.setOrderNo((long)i);
+                        dysUnaccountantInfoDetail.setStatus("0");
+                        dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
+                        dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
+                        sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
+                        json.addProperty("execTaskIdBatch", execTaskIdBatch);
+                        i++ ;
+                        break;
+                    case "4":
+                        dysUnaccountantInfoDetail.setSeqNo(seqNo);
+                        dysUnaccountantInfoDetail.setExectaskId(execTaskId4);
+                        dysUnaccountantInfoDetail.setModelCode("4");
+                        dysUnaccountantInfoDetail.setOrderNo((long)i);
+                        dysUnaccountantInfoDetail.setStatus("0");
+                        dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
+                        dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
+                        sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
+                        json.addProperty("execTaskId4", execTaskId4);
+                        i++ ;
+                        break;
+                    case "5":
+                        dysUnaccountantInfoDetail.setSeqNo(seqNo);
+                        dysUnaccountantInfoDetail.setExectaskId(execTaskId5);
+                        dysUnaccountantInfoDetail.setModelCode("5");
+                        dysUnaccountantInfoDetail.setOrderNo((long)i);
+                        dysUnaccountantInfoDetail.setStatus("0");
+                        dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
+                        dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
+                        sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
+                        json.addProperty("execTaskId5", execTaskId5);
+                        i++ ;
+                        break;
+                    case "6":
+                        dysUnaccountantInfoDetail.setSeqNo(seqNo);
+                        dysUnaccountantInfoDetail.setExectaskId(execTaskId6);
+                        dysUnaccountantInfoDetail.setModelCode("6");
+                        dysUnaccountantInfoDetail.setOrderNo((long)i);
+                        dysUnaccountantInfoDetail.setStatus("0");
+                        dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
+                        dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
+                        sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
+                        json.addProperty("execTaskId6", execTaskId6);
+                        i++ ;
+                        break;
+                    case "7":
+                        dysUnaccountantInfoDetail.setSeqNo(seqNo);
+                        dysUnaccountantInfoDetail.setExectaskId(execTaskId7);
+                        dysUnaccountantInfoDetail.setModelCode("7");
+                        dysUnaccountantInfoDetail.setOrderNo((long)i);
+                        dysUnaccountantInfoDetail.setStatus("0");
+                        dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
+                        dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
+                        sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
+                        json.addProperty("execTaskId7", execTaskId7);
+                        i++ ;
+                        break;
+                    case "8":
+                        dysUnaccountantInfoDetail.setSeqNo(seqNo);
+                        dysUnaccountantInfoDetail.setExectaskId(execTaskId8);
+                        dysUnaccountantInfoDetail.setModelCode("8");
+                        dysUnaccountantInfoDetail.setOrderNo((long)i);
+                        dysUnaccountantInfoDetail.setStatus("0");
+                        dysUnaccountantInfoDetail.setStartTime(DateUtil.now());
+                        dysUnaccountantInfoDetail.setBusiDate(DateUtil.parse(startDate));
+                        sysUnaccountantInfoDetailMapper.insertSelective(dysUnaccountantInfoDetail);
+                        json.addProperty("execTaskId8", execTaskId8);
+                        i++ ;
+                        break;
+                    default:
+                        break;
 
+                }
             }
-
         }
         json.addProperty("excuteDate", DateUtil.parse(startDate).getTime());
         json.addProperty("check", check);

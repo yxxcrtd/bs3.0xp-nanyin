@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -220,7 +221,7 @@ public class ExcelUtil {
 			}
 			if (inputStream == null) {
 			    if (null == file) {
-			        file = new File(fileName);
+			        file = new SafelyFile(fileName);
 			    }
 			    if (StringUtil.isEmpty(fileName)) {
 			        fileName = file.getName();

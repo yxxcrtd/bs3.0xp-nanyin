@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,7 @@ public class Sqlldr implements ImpExcutor {
         // 控制文件路径
         String control = args.getControl();
         // 创建控制文件
-        File file = new File(control);
+        File file = new SafelyFile(control);
         if (!file.exists()) {
             // 如果控制文件不存在，则创建
             file.createNewFile();
@@ -95,10 +96,10 @@ public class Sqlldr implements ImpExcutor {
 			//add by liubin start 将sqlldr执行日志输出到文件
 			String sqlldrLogFilePath = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, InterfConstant.SQLLDR_LOG_FILEPATH);
 			LOGGER.info("sqlldr输出日志路径："+sqlldrLogFilePath);
-			File file = new File(sqlldrLogFilePath+File.separator+"sqlldr_log.txt");
+			File file = new SafelyFile(sqlldrLogFilePath+File.separator+"sqlldr_log.txt");
 //    	//判断sqlldr输出日志路径下是否存在日志文件，若存在则加上时间戳
 			if(file.exists()){
-				file = new File(sqlldrLogFilePath+File.separator+"sqlldr_log_"+System.currentTimeMillis()+".txt");
+				file = new SafelyFile(sqlldrLogFilePath+File.separator+"sqlldr_log_"+System.currentTimeMillis()+".txt");
 			}
 			//声明输出流相关控件
 			fout = new FileOutputStream(file);
@@ -170,7 +171,7 @@ public class Sqlldr implements ImpExcutor {
      * @param logFile 日志文件
      */
     private void printLog(String logFile) {
-        File log = new File(logFile);
+        File log = new SafelyFile(logFile);
         if (log.exists()) {
             try {
                 LOGGER.info(FileUtils.readFileToString(log));
@@ -210,7 +211,7 @@ public class Sqlldr implements ImpExcutor {
      */
     private void delete(String filePath) {
         if (filePath != null && filePath.length() > 0) {
-            File file = new File(filePath);
+            File file = new SafelyFile(filePath);
             if (file.exists()) {
                 file.delete();
             }

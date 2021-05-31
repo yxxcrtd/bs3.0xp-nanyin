@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.atomic.LongAdder;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
 import org.apache.commons.lang3.StringUtils;
@@ -360,13 +361,13 @@ public class PbcPrdAccountEndSubService001 extends CommonExportService<PbcPrdAcc
                     GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 //                String zipFileName = FileNameUtil.createFileName("zip");
                 String zipFileName = "PbocAssetPoolEnd("+DateUtil.format(new Date())+").zip";
-                outFile = new File(exportFilePath + File.separator + zipFileName);
+                outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
                 // 导出路径不存在则重新生成
                 if (!outFile.getParentFile().exists()) {
                     outFile.getParentFile().mkdirs();
                 }
                 try {
-                    ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+                    ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new SafelyFile[] {}));
                 }
                 catch (Exception e) {
                     // 压缩文件失败后，删除所有临时文件
@@ -465,9 +466,9 @@ public class PbcPrdAccountEndSubService001 extends CommonExportService<PbcPrdAcc
             String exportFilePath = CacheUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String zipFileName = FileNameUtil.createFileName("zip");
-            targetFile = new File(exportFilePath + File.separator + zipFileName);
+            targetFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             try {
-                ZipFileUtil.compressZip(targetFile, true, fileList.toArray(new File[] {}));
+                ZipFileUtil.compressZip(targetFile, true, fileList.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件

@@ -146,6 +146,7 @@ application:
     msg-end-time: 2200
     reportCbFeedBackHandleCountOneTime: 10000
     isExceptionWhenSendTimeout: 01
+    base64Key: HF*ts303
   cache:
     file: classpath:ehcache_app.xml
   remindPage: invest/remindMain  

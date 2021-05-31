@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joyintech.framework.JoyinApplication;
 import com.joyintech.framework.config.Application;
 
+import java.util.Locale;
+
 /**
  * 微服务系统容器启动入口
  * @author Zim
@@ -26,6 +28,8 @@ import com.joyintech.framework.config.Application;
 public class TamsServiceSystemApplication extends Application {
 	
 	public static void main(String[] args) {
+        Locale local = new Locale("zh", "CN");
+        Locale.setDefault(local);
         JoyinApplication.run(TamsServiceSystemApplication.class, args);
     }
 	

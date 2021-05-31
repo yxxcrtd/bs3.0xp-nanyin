@@ -3,6 +3,7 @@ package com.joyintech.tams.systemtools.listener;
 import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.listener.FileAttachmentProcess;
@@ -61,7 +62,7 @@ public class JoyinFSListener implements FileUploadListener, FileAttachmentProces
         SysUploadFileInfo file = null;
         file = joyinFSMapper.selectByPrimaryKey(fileNo);
         if (file != null) {
-            UploadFile uploadFile = new UploadFile(null, fileNo, new File(file.getPath()));
+            UploadFile uploadFile = new UploadFile(null, fileNo, new SafelyFile(file.getPath()));
             uploadFile.setFileName(file.getFileName());
             joyinDFSTemplate.fetch(file);
             return uploadFile;
@@ -128,7 +129,7 @@ public class JoyinFSListener implements FileUploadListener, FileAttachmentProces
         List<SysUploadFileInfo> files = joyinFSMapper.getUploadInfo(businessCode);
         List<UploadFile> uploadFiles = new ArrayList<>(files.size());
         files.forEach(file -> {
-            UploadFile f = new UploadFile(null, file.getSeqNo(), new File(file.getPath()));
+            UploadFile f = new UploadFile(null, file.getSeqNo(), new SafelyFile(file.getPath()));
             f.setFileName(file.getFileName());
             joyinDFSTemplate.fetch(file);
             uploadFiles.add(f);

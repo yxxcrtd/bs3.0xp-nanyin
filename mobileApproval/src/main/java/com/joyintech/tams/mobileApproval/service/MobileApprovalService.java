@@ -2,12 +2,14 @@ package com.joyintech.tams.mobileApproval.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.PasswordHelper;
 import com.joyintech.framework.security.SecurityUtil;
@@ -1019,7 +1021,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
             ProcessMark businessEntity = getBusinessObjectForUpdate(flowEntity, businessService);
             try{
                 Object a = JsonUtils.OBJECT_MAPPER.readValue(
-                    businessEntity.getBusinessData(), GenericsUtils.getSuperClassGenricType(
+                        JsonSanitizer.sanitize(businessEntity.getBusinessData()), GenericsUtils.getSuperClassGenricType(
                         ProxyUtil.getTargetClass(businessService.getClass())));
                 WorkflowEntity entity = (WorkflowEntity)a;
                 //未获取到工作流id
@@ -1037,7 +1039,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
                 }
 //                if (!flag) {
                     ProcessMark processMark = WorkflowContext.getBusinessEntity(flowEntity);
-                    Object oldObject = JsonUtils.OBJECT_MAPPER.readValue(processMark.getBusinessData(),
+                    Object oldObject = JsonUtils.OBJECT_MAPPER.readValue(JsonSanitizer.sanitize(processMark.getBusinessData()),
                         GenericsUtils.getSuperClassGenricType(
                             ProxyUtil.getTargetClass(businessService.getClass())));
                     WorkflowEntity entityOld = (WorkflowEntity)oldObject;
@@ -1094,7 +1096,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
                     // request参数转为业务对象
     	ProcessMark make =  WorkflowContext.getProcessMarkService().getBusinessInfo(flowEntity.getWorkflowId());
                     WorkflowEntity newEntity = (WorkflowEntity)JsonUtils.OBJECT_MAPPER.readValue(
-                    make.getBusinessData(), businessEntityClass);
+                            JsonSanitizer.sanitize(make.getBusinessData()), businessEntityClass);
                     if(extendProp) {
                         BeanUtil.setProperty(newEntity, GlobalConstant.STATUS,
                         		make.getStatus());
@@ -1157,7 +1159,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
         List<File> fileList = new ArrayList<>();
         SysUploadFileInfo fileInfo = mobileApprovalMapper.queryFileInfo(param.get("fileNo").toString());
         if (fileInfo != null) {
-            File file = new File(fileInfo.getPath());
+            File file = new SafelyFile(fileInfo.getPath());
             //下载附件
             if (!file.exists()) {
 //                throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");
@@ -1177,7 +1179,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
         List<File> fileList = new ArrayList<>();
         SysUploadFileInfo fileInfo = mobileApprovalMapper.queryFileInfo(param.get("fileNo").toString());
         if (fileInfo != null) {
-            File file = new File(fileInfo.getPath());
+            File file = new SafelyFile(fileInfo.getPath());
             //下载附件
             if (!file.exists()) {
 //                throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");
@@ -1193,7 +1195,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     public Object getFileUrl(Map<String, Object> param) throws IOException {
         SysUploadFileInfo fileInfo = mobileApprovalMapper.queryFileInfo(param.get("fileNo").toString());
         if (fileInfo != null) {
-            File file = new File(fileInfo.getPath());
+            File file = new SafelyFile(fileInfo.getPath());
             //下载附件
             if (!file.exists()) {
                 throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");

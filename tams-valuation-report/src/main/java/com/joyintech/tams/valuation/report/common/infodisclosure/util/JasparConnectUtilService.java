@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +59,7 @@ public class JasparConnectUtilService {
 
             String path = FileNameUtil.createUploadFilePath("");
 
-            localFile = new File(path + File.separator + fileName);
+            localFile = new SafelyFile(path + File.separator + fileName);
             File dir = localFile.getParentFile();
             if (!dir.exists()) {
                 dir.mkdirs();

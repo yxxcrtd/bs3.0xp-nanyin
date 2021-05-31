@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,6 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.dto.PtlPerformanceAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.dto.PtlPerformanceLineDto;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.service.PtlPerformanceAnalysis001Service;
-import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.service.PtlPositionAnalysis001Service;
 
 @Controller
@@ -152,7 +152,7 @@ public class PtlPerformanceAnalysis001Controller extends BaseController  {
     public String getTableCols()
             throws Exception {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
-      return ptlPerformanceAnalysis001Service.getDataTableCols(map);
+      return StringUtil.trimHtmlTag(ptlPerformanceAnalysis001Service.getDataTableCols(map));
     }
     
     @ResponseBody
@@ -160,6 +160,6 @@ public class PtlPerformanceAnalysis001Controller extends BaseController  {
     public String getShowDataTableCols()
             throws Exception {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
-      return ptlPerformanceAnalysis001Service.getShowDataTableCols(map);
+      return StringUtil.trimHtmlTag(ptlPerformanceAnalysis001Service.getShowDataTableCols(map));
     } 
 }

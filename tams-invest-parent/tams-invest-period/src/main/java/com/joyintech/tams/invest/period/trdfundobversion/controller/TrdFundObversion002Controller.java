@@ -125,8 +125,10 @@ public class TrdFundObversion002Controller extends BaseController {
                 dto.setFinAssetIntInfoList(trdFundDuration001Service.findAssetIntInfo(pageParam));
             }
 //            处理类型及交易员
-            type=dto==null?null:dto.getType();
-            trader = dto.getTrader();
+            if (dto != null){
+                type=dto==null?null:dto.getType();
+                trader = dto.getTrader();
+            }
         }
 //        有效及撤销处理
         else if(StringUtil.isNotEmpty(statusValid)){
@@ -150,7 +152,9 @@ public class TrdFundObversion002Controller extends BaseController {
             dto = new TrdFundObversionDto();
         }
         model.addAttribute("type",type);
-        model.addAttribute("busiCode", dto.getTotleTradeId());
+        if (dto != null){
+            model.addAttribute("busiCode", dto.getTotleTradeId());    
+        }
         model.addAttribute("trader",trader);
 //      画面的业务类型，用于判断画面处于何种模式
         model.addAttribute(GlobalConstant.ENTITY,dto);

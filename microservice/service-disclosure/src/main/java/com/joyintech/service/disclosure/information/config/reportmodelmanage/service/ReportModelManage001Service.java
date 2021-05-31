@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             String exportFilePath = CacheUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String zipFileName = FileNameUtil.createFileName("zip");
-            File zipFile = new File(exportFilePath + File.separator + zipFileName);
+            File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             FileOutputStream stream = null;
             ZipOutputStream  zipOut =null;
             try{
@@ -211,7 +212,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             String fileType = list.get(0).getFileType();
             String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String mergeExportFileName = FileNameUtil.createFileName(fileType);
-            File exportFile = new File(exportFilePath + File.separator + mergeExportFileName);
+            File exportFile = new SafelyFile(exportFilePath + File.separator + mergeExportFileName);
             if("docx".equals(fileType)){
                 OfficeMergeUtil.mergeWord(exportFilePath + File.separator + mergeExportFileName, srcFileList);
             }else if("xls".equals(fileType) || "xlsx".equals(fileType)){
@@ -245,7 +246,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             }
             
             //获取已经下载到本地的文件
-            File exportFile = new File(reportModelManage001Dto.getTemLoad());
+            File exportFile = new SafelyFile(reportModelManage001Dto.getTemLoad());
             
             return ExportUtil.export(fileName, exportFile, true);
         }

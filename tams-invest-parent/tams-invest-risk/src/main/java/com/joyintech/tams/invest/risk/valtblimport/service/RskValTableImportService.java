@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -544,7 +545,6 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * 底层向上汇总--共通
     * <功能详细描述>
     * @param valList
-    * @param vtaccountMap
     * @param vtcountSubList
     * @param level 03(三级) 02(二级) 01(一级)
     * @return
@@ -965,10 +965,10 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            subjCode = list.get(subjCodeColIdx);
        }
        if(StringUtil.isEmpty(subjCode)){return null;}else{
-           subjCode.replaceAll(" ", "");
+           subjCode.replaceAll(Pattern.quote(" "), "");
            //add by 张年  2019/07/30
            //科目代码统一去点、去横杠
-           subjCode = subjCode.replaceAll(" ", "").replace(".","").replace("-","");}
+           subjCode = subjCode.replaceAll(Pattern.quote(" "), "").replace(".","").replace("-","");}
           //add by 张年  2019/07/30
        //根据科目代码列 判断是资产科目还是汇总科目
        if(subjCode.length() >= 4) {
@@ -1052,7 +1052,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                Double cellNum = null;
                if(StringUtil.isNotEmpty(subjName)){
                    subjName = subjName.replaceAll(",", "");
-                   if(ValDataType.STRING == sumNameCodeEntry.getNextColType()){
+                   if(sumNameCodeEntry != null && ValDataType.STRING == sumNameCodeEntry.getNextColType()){
                        cellNum = null;
                    }else{
                        if(subjName.contains("%")){
@@ -1065,7 +1065,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                }else{
                    cellNum = null;
                }
-               if(cellNum != null) {
+               if(cellNum != null && sumNameCodeEntry != null) {
                    if(ValDataType.PERCENT == sumNameCodeEntry.getNextColType()) {
                        cellNum = (BigDecimal.valueOf(cellNum/100)).setScale(6,   BigDecimal.ROUND_HALF_UP).doubleValue();
                    }

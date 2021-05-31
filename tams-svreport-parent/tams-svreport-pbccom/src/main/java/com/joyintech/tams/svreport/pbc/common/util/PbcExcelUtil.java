@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import com.joyintech.framework.constant.GlobalConstant;
@@ -43,7 +44,7 @@ public class PbcExcelUtil {
 			// 传放地址
 			String depositfilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-			depositfile = new File(depositfilePath + File.separator + flieName);
+			depositfile = new SafelyFile(depositfilePath + File.separator + flieName);
 			if (!depositfile.getParentFile().exists()) {
 				depositfile.getParentFile().mkdirs();
 			}
@@ -52,9 +53,9 @@ public class PbcExcelUtil {
 			byte[] buffer = new byte[1024];
 			String temp = depositfilePath + "ptl.xls";
 			// 原文件
-			File srcFile = new File(template);
+			File srcFile = new SafelyFile(template);
 			// 目标文件
-			File destFile = new File(temp);
+			File destFile = new SafelyFile(temp);
 			if (srcFile.exists()) {
 				fis = new FileInputStream(srcFile);
 			} else {
@@ -150,10 +151,16 @@ public class PbcExcelUtil {
      * @throws Exception 
      */ 
     public static void fileWrite(File targetFile,HSSFWorkbook wb) throws Exception{
-        FileOutputStream fileOut = new FileOutputStream(targetFile); 
-        wb.write(fileOut); 
-        fileOut.flush(); 
-        fileOut.close(); 
+        FileOutputStream fileOut =null;
+        try{
+			fileOut = new FileOutputStream(targetFile);
+			wb.write(fileOut);
+		} finally {
+        	if(fileOut != null){
+				fileOut.flush();
+				fileOut.close();
+			}
+		}
     }
     
     /**
