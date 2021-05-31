@@ -286,4 +286,10 @@
 		AND START_DATE = #{date,jdbcType=VARCHAR}
 		AND CASH_TYPE_2 = #{cashType2,jdbcType=VARCHAR}
 	</delete>
+
+	<delete id="deleteErrorDataOneByUuid" parameterType="java.lang.String">
+		delete from REP_CASH_YIELD_ERRORDATA a
+		where
+			DATAUUID = #{datauuid,jdbcType=VARCHAR}
+	</delete>
 </mapper>
