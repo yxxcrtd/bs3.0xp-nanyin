@@ -77,7 +77,7 @@ public class ChbMstCounterPartyController {
         return list;
     }
     @PostMapping("selectChbMstCounterPartyErrordata")
-    public List<ChbMstCounterPartyErrodataWithBLOBs> selectChbMstCounterPartyErrordata(String datauuid) {
+    public List<ChbMstCounterPartyErrodataWithBLOBs> selectChbMstCounterPartyErrordata(@RequestBody String datauuid) {
         List<ChbMstCounterPartyErrodataWithBLOBs> list = chbMstCounterParty001Service.selectChbMstCounterPartyErrordata(datauuid);
         return list;
     }
