@@ -936,10 +936,72 @@ $(function() {
 		});
 
 		/**
-		 * 九大附件批量上传
+		 * 九大附件批量上传（杭州版本）
 		 */
 		$('#SvrPerProDeclareReg001_btn_fileUpload').click(function() {
 			nineFileUpload();
+		});
+		
+		/**
+		 * 九大附件批量上传-批量上传（徽商合并）
+		 */
+		$('#SvrPerProDeclareReg001_btn_batchFileUpload').click(function() {
+			var uploadArr = table.getAllCheckedRows();
+			var uploadArrStr=JSON.stringify(uploadArr);
+			var dataArr=[];
+			var dataArrStr;
+			if(!uploadArr || uploadArr.length == 0){
+				Joyin.error("请选择要上传的数据！");
+				return;
+			}else{
+				for(var i = 0; i < uploadArr.length; i++){
+					if(uploadArr[i].sendStatus != '01'){
+						Joyin.error("只有未报送的数据才能进行上传！");
+						return;
+					}
+					var data={
+							fileNo:uploadArr[i].fileNo,
+							prodId:uploadArr[i].prodId,
+							registSeqno:uploadArr[i].registSeqno
+					}
+					dataArr[i]=data;
+					
+				}
+				dataArrStr=JSON.stringify(dataArr);
+				Joyin.confirm("请确认是否要导入数据？", function() {
+					var flag=false;
+					for(var i = 0; i < uploadArr.length; i++){
+						if(uploadArr[i].fileNo && uploadArr[i].fileNo != null){
+							flag=true;
+						}
+					}
+					if(flag){
+						Joyin.confirm('所选产品已存在附件，是否覆盖？',
+								function(){
+							Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+				                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
+				                    "60%", {
+				                        pageModel : PAGE_MODEL_NEW,
+				                        businessId : uploadArr.prodId,
+				                        dataArrStr : dataArrStr
+				                    },function(){
+				                    	table.reload();
+				                    });
+						})
+					}else{
+						Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+			                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
+			                    "60%", {
+			                        pageModel : PAGE_MODEL_NEW,
+			                        businessId : uploadArr.prodId,
+			                        dataArrStr : dataArrStr
+			                    },function(){
+			                    	table.reload();
+			                    });
+					}
+		        });
+//				nineFileUpload();
+			}
 		});
 	});
 
