@@ -43,4 +43,6 @@ public interface ProRateInfo001Mapper {
 
     void deleteErrorDataOne(@Param("busiId")String busiId, @Param("date")String date, @Param("cashType2")String cashType2);
 
+    void deleteErrorDataOneByUuid(@Param("datauuid")String datauuid);
+
 }

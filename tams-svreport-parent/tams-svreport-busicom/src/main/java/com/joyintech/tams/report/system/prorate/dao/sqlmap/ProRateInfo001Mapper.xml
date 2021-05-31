@@ -29,4 +29,9 @@
 	</update>
 	<delete id="deleteErrorDataOne" parameterType="java.util.List">
 	</delete>
+	<delete id="deleteErrorDataOneByUuid" parameterType="java.lang.String">
+		delete from REP_CASH_YIELD_ERRORDATA a
+		where
+			DATAUUID = #{datauuid,jdbcType=VARCHAR}
+	</delete>
 </mapper>

@@ -487,4 +487,11 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
     public void deleteErrorDataOne(String busiId, String date, String cashType2) {
         proRateInfo001Mapper.deleteErrorDataOne(busiId, date, cashType2);
     }
+
+    /**
+     * 根据uuid删除错误表数据
+     */
+    public void deleteErrorDataOneByUuid(String datauuid) {
+        proRateInfo001Mapper.deleteErrorDataOneByUuid(datauuid);
+    }
 }

@@ -146,4 +146,15 @@ public class ProrateService extends BaseService<DisRepCashYield> {
                 DisRepCashYield.class);
         return;
     }
+
+    /**
+     * 根据uuid删除错误表数据
+     * @param uuid
+     */
+    public void deleteErrorDataOneByUuid(String uuid) {
+        restTemplate.postForList(
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/deleteErrorDataOneByUuid",uuid,
+                DisRepCashYield.class);
+        return;
+    }
 }

@@ -115,4 +115,15 @@ public class ProrateController {
             proRateInfo001Service.deleteErrorDataOne(dto.getBusiId(), dto.getOldStartDateStr(), dto.getOldCashType2());
         }
     }
+
+    /**
+     * 根据uuid删除错误表数据
+     * @param uuid
+     */
+    @PostMapping("deleteErrorDataOneByUuid")
+    public void deleteErrorDataOneByUuid(@RequestBody String uuid) {
+        if(StringUtil.isNotEmpty(uuid)) {
+            proRateInfo001Service.deleteErrorDataOneByUuid(uuid);
+        }
+    }
 }
