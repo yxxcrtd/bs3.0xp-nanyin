@@ -134,12 +134,12 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
                     }
                     return checkResult;
                 }
-//                else {
-//                    List<ExcelValidDto> checkResult = new ArrayList<>();
-//                    checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
-//                        "导入文件为空"));
-//                    return checkResult;
-//                }
+                else {
+                    List<ExcelValidDto> checkResult = new ArrayList<>();
+                    checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                        "导入文件为空"));
+                    return checkResult;
+                }
             }
             else {
                 List<ExcelValidDto> checkResult = new ArrayList<>();
