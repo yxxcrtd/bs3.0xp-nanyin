@@ -908,8 +908,8 @@ public class AssetInfoDetailUtil {
         dto.setRepProIndustry(dict.get("industry"+dto.getRepProIndustryLevel2()));
         dto.setRepRemark(list.get(71));
         dto.setRepPrivateprdFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(72)));
-        dto.setRepPppflag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(73)));
-        dto.setRepBondtostockFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(74)));
+        dto.setPppflag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(73)));
+        dto.setBondtostockFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(74)));
         dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(75)));
         dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(76)));
         dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(77)));
