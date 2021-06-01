@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.submitexamination.investorsdetailcheck.controller;
 
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.submitexamination.investorsdetailcheck.dto.InvestorsDetailCheck001Dto;
 import com.joyintech.tams.report.submitexamination.investorsdetailcheck.service.InvestorsDetailCheckMService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,8 @@ public class InvestorsDetailCheck001Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        super.setSelectOptionToModel(model,DictCode.产品运作模式,DictCode.检查结果);
+        super.setSelectOptionToModel(model,DictCode.产品运作模式,DictCode.投资者明细核查检查结果);
+        model.addAttribute("checkResult", DictCodeListExt3.投资者明细核查检查结果_不一致.getValue());
         return super.init(model);
     }
     /**

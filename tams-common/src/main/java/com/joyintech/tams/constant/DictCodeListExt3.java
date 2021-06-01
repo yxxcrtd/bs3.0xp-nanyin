@@ -999,6 +999,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     中债定期报告类型_下半年报(DictCode.中债定期报告类型,"06","下半年度"),
     中债定期报告类型_年报(DictCode.中债定期报告类型,"07","年度"),
 
+    // add by baojunjie 20210601 start
+    投资者明细核查检查结果_一致(DictCode.投资者明细核查检查结果,"01","一致"),
+    投资者明细核查检查结果_不一致(DictCode.投资者明细核查检查结果,"02","不一致"),
+    // add by baojunjie 20210601 end
+
     /** modify by yanya on 20210528 增加外管局估值来源字典值**/
     估值来源_外管局(DictCode.估值来源, "SAFE", "外管局"),
     ;

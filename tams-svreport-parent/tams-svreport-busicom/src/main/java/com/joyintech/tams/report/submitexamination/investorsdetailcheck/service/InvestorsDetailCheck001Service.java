@@ -52,12 +52,12 @@ public class InvestorsDetailCheck001Service extends BaseService<InvestorsDetailC
                 queryForPage(page,legth,()->investorsDetailCheck001Mapper.searchTable(pageParam));
 
         pageList.getRoot().forEach(dto -> {
-            dto.setCheckTotalStr(SysDataUtil.getNameFromDataDict(DictCode.检查结果, dto.getCheckTotal()));
-            dto.setCheckShamtStr(SysDataUtil.getNameFromDataDict(DictCode.检查结果, dto.getCheckShamt()));
-            dto.setCheckShqtyStr(SysDataUtil.getNameFromDataDict(DictCode.检查结果, dto.getCheckShqty()));
-            dto.setCheckSgqtyStr(SysDataUtil.getNameFromDataDict(DictCode.检查结果, dto.getCheckSgqty()));
-            dto.setCheckSgamtStr(SysDataUtil.getNameFromDataDict(DictCode.检查结果, dto.getCheckSgamt()));
-            dto.setCheckMjStr(SysDataUtil.getNameFromDataDict(DictCode.检查结果, dto.getCheckMj()));
+            dto.setCheckTotalStr(SysDataUtil.getNameFromDataDict(DictCode.投资者明细核查检查结果, dto.getCheckTotal()));
+            dto.setCheckShamtStr(SysDataUtil.getNameFromDataDict(DictCode.投资者明细核查检查结果, dto.getCheckShamt()));
+            dto.setCheckShqtyStr(SysDataUtil.getNameFromDataDict(DictCode.投资者明细核查检查结果, dto.getCheckShqty()));
+            dto.setCheckSgqtyStr(SysDataUtil.getNameFromDataDict(DictCode.投资者明细核查检查结果, dto.getCheckSgqty()));
+            dto.setCheckSgamtStr(SysDataUtil.getNameFromDataDict(DictCode.投资者明细核查检查结果, dto.getCheckSgamt()));
+            dto.setCheckMjStr(SysDataUtil.getNameFromDataDict(DictCode.投资者明细核查检查结果, dto.getCheckMj()));
             dto.setIsConsignStr(SysDataUtil.getNameFromDataDict(DictCode.是否_中债, dto.getIsConsign()));
             dto.setOperateModeStr(SysDataUtil.getNameFromDataDict(DictCode.产品运作模式, dto.getOperateMode()));
         });
