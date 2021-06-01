@@ -3305,7 +3305,7 @@
   select ifnull(checkwarn.warnnum,0) warningnum /*预警*/
   ,ifnull(checkfail1.failnum,0)+ifnull(checkfail2.failnum,0) failnum /*不通过*/
   ,ifnull(checkwarn.warnnum,0)+ifnull(checkfail1.failnum,0)+ifnull(checkfail2.failnum,0) as submitChecknum /*报送检查*/
-  ,ifnull(checkwarn.rep_code,checkfail1.rep_code) reporttype /*报表类型*/
+  ,ifnull(checkwarn.rep_code,ifnull(checkfail1.rep_code,checkfail2.rep_code)) reporttype /*报表类型*/
   from (select count(check_result) warnnum,rep_code
 	from chb_report_check where
 	check_result='03'
