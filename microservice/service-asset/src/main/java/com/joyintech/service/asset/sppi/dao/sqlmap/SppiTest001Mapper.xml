@@ -131,7 +131,7 @@
             </when>
             <otherwise>
                 /*add by czj 20210531 增加一级市场债*/
-                and t.type_8 IN ('F01', 'F06', 'F03','F17')
+                and fpt.type_8 IN ('F01', 'F06', 'F03','F17')
             </otherwise>
         </choose>
         )
