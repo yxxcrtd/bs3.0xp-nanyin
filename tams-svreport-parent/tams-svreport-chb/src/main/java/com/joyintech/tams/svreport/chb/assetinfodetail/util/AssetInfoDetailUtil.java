@@ -254,7 +254,9 @@ public class AssetInfoDetailUtil {
             List<ValidMessage> messages = chbDataCheckCommonUtil.chbCheckCommon(resultList, entity, "AssetInfoRegist002", entity.getAssetType2(), ValidMessage.class);
             if (!StringUtil.isEmptyList(messages)){
                 messages.forEach(validMessage -> {
-                    message.add(validMessage.getMessage());
+                    if (StringUtil.isNotEmpty(validMessage.getMessage())){
+                        message.add(validMessage.getMessage());
+                    }
                 });
             }
             getDtoByPageMessgae(entity);
