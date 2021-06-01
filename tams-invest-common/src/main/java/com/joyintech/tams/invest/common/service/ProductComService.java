@@ -41,7 +41,6 @@ import java.util.Map;
  * @see ProductCommonService
  * @since 1.0
  */
-@Primary
 @Service
 public class ProductComService extends BaseService<Product> implements ProductService {
 
