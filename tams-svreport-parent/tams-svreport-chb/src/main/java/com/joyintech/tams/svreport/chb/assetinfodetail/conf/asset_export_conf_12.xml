@@ -21,8 +21,8 @@
 			<Cell order="17" name="*资管计划终止日期">planEdate</Cell>
 			<Cell order="18" name="*资管计划属性">proProperty</Cell>
 			<Cell order="19" name="*是否有预期收益率">rateFlag</Cell>
-			<Cell order="20" name="预期最高收益率%">maxYield</Cell>
-			<Cell order="21" name="预期最低收益率%">minYield</Cell>
+			<Cell order="20" name="预期最高收益率%">maxRate</Cell>
+			<Cell order="21" name="预期最低收益率%">minRate</Cell>
 			<Cell order="22" name="*购买结构">buyStruct</Cell>
 			<Cell order="23" name="*管理方式">manageType</Cell>
 			<Cell order="24" name="*管理费率%">mgrFeeRate</Cell>
