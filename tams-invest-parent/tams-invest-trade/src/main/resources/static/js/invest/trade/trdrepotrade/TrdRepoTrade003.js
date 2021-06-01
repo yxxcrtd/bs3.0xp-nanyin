@@ -2033,7 +2033,6 @@
             settleSpeedChangeAction();
         });
         $('#ps').on("change", function () {
-            debugger;
             // 交易场所、回购类型、交易方向改变时
             // tradeMarketRepoTypePsOnChange();
             // 交易方向改变时
@@ -2185,10 +2184,16 @@
              // 设置添加质押券共通参数
              setBussRepoSecInput();
          });*/
-        // 本金金额、回购利率、回购期限、计息基础改变时，刷新回购利息
-        $('#prinAmt, #rebackPrice,  #basis').on("change", function () {
+        // 本金金额、回购期限、计息基础改变时，刷新回购利息
+        $('#prinAmt,  #basis').on("change", function () {
             refreshRebackIntAmt();
             setBussRepoSecInput();
+        });
+        // 回购利率改变时，刷新回购利息
+        $('#rebackPrice').on("change", function () {
+            refreshRebackIntAmt();
+            setBussRepoSecInput();
+            window.BussRepoSecPtl["bussRepoSecPtl"].rebackPriceChange();
         });
 
        /* $('#secAcctId').on("change", function () {

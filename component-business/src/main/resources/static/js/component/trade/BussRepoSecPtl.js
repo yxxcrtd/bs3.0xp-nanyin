@@ -88,6 +88,17 @@
         entrustSurAmt =number;
     }
 
+    /**
+     * 回购利率%变动时,组合列表中购利率%、回购利息、到期结算金额联动变动
+     */
+    function rebackPriceChange() {
+        var rebackPrice = $('#rebackPrice').val();
+        for (var i = 0; i < pledgeBondTotalTbl.getAllRows().length; i++) {
+            pledgeBondTotalTbl.renderRow(i, {"rebackPrice":rebackPrice});
+        }
+        extractedCpriceAmt();
+    }
+
     //按照比例计算到期结算金额和交易金额
     function extractedCpriceAmt() {
         var tradeAmtAll = $('#prinAmt').val();
@@ -862,7 +873,6 @@
      * 保存按钮按下，添加子画面传回的质押券信息
      */
     var addPledgeBond = function (pledgeRows) {
-        debugger;
         // 列表中未勾选
         if (!pledgeRows || pledgeRows.length == 0) {
             Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
@@ -1125,7 +1135,6 @@
     
     //质押券中的质押金额分配
     function repVal(data,i){
-        debugger;
         var entrustId = $("#entrustId").val();
         var ps = $("#ps").val();
         if(entrustId&&ps=='03'){
@@ -1176,7 +1185,6 @@
     }
     
     function distribution2(data,distriData){
-        debugger;
         var object = $.serializeToObject('#submitForm', true);
         var secTotalPrin = object.prinAmt-0;
         for(var i=0;i < data.length;i++){
@@ -1277,7 +1285,6 @@
     }
     
     function extractedJiSuan3() {
-        debugger;
         var zero="0";
         var object = $.serializeToObject('#submitForm', true);
         var tradeAmt = object.prinAmt==""?zero:object.prinAmt;
@@ -1465,6 +1472,7 @@
         extractedTime:extractedTime,
         calFee:calFee,
         isIntVal2:isIntVal2,
-        pleBondTotalVal:pleBondTotalVal
+        pleBondTotalVal:pleBondTotalVal,
+        rebackPriceChange:rebackPriceChange
     };
 }());
