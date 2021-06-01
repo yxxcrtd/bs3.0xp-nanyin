@@ -10,11 +10,11 @@
 			<Cell order="6" name="*所属国家或地区">countryArea_08</Cell>
 			<Cell order="7" name="*债券名称">assetName_08</Cell>
 			<Cell order="8" name="*债券代码">assetCode_08</Cell>
-			<Cell order="9" name="*发行机构">issuePartyId_08</Cell>
+			<Cell order="9" name="*发行机构">issuePartyName_08</Cell>
 			<Cell order="10" name="*发行机构所属行业">industry_08</Cell>
 			<Cell order="11" name="*起息日">vdate_08</Cell>
 			<Cell order="12" name="*到期日">mdate_08</Cell>
-			<Cell order="13" name="*期限（月）">termDate_08</Cell>
+			<Cell order="13" name="*期限（月）">termMonth_08</Cell>
 			<Cell order="14" name="*发行机构主体信用评级">partyGrade_08</Cell>
 			<Cell order="15" name="*债券信用评级">secCreditGradeType_08</Cell>
 			<Cell order="16" name="*票面利率%">assetYield_08</Cell>
