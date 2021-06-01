@@ -3411,9 +3411,9 @@ var table;
                               }
                           }
                           // 本金金额
-			               ,{field:'cpriceAmt',width:100,  title: 'TrdInvestFenPeiInfo.cpriceAmt',sortable:false,type:'number', digit:2}
-			               ,{field:'intAmt',width:100, title: 'TrdInvestFenPeiInfo.intAmt',sortable:false,type:'number', digit:2}
-			               ,{field:'fpriceAmt',width:100, title: 'TrdInvestFenPeiInfo.fpriceAmt',sortable:false,type:'number', digit:2}
+			               ,{field:'cpriceAmt',width:100,  title: 'TrdInvestFenPeiInfo.cpriceAmt',sortable:false,type:'number',edit:true, digit:2}
+			               ,{field:'intAmt',width:100, title: 'TrdInvestFenPeiInfo.intAmt',sortable:false,type:'number',edit:true, digit:2}
+			               ,{field:'fpriceAmt',width:100, title: 'TrdInvestFenPeiInfo.fpriceAmt',sortable:false,type:'number',edit:true, digit:2}
                            ,{field:'procedureAmt',width:100, title: 'TrdInvestFenPeiInfo.procedureAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'settleServiceAmt',width:100, title: 'TrdInvestFenPeiInfo.settleServiceAmt',sortable:false,type:'number', edit:true,digit:2}
                            ,{field:'commissionAmt',width:100, title: 'TrdInvestFenPeiInfo.commissionAmt',sortable:false,type:'number',edit:true, digit:2}
@@ -3437,6 +3437,9 @@ var table;
 			               });
 			           },
                         beforeEditCell:function(value, field, data){
+                            if (field == 'fpriceAmt' || field == 'intAmt' || field == 'cpriceAmt') {
+                                return false;
+                            }
                             var entrustId = $("#entrustId").val();
 			              if(field=='portfolioId'&&entrustId){
                                 return false;
@@ -3469,6 +3472,11 @@ var table;
 			           editCell: function(value, data, field, cell, column){
 
 			              var returnVal = {};
+                           returnVal.isPayWithTrade = $("#isPayWithTrade").val();//佣金是否随交易支付
+                           returnVal.stampDutyIsPayWithTrade = $("#stampDutyIsPayWithTrade").val();//印花是否随交易支付
+                           returnVal.settleIsPayWithTrade = $("#settleIsPayWithTrade").val();//结算费是否随交易支付
+                           returnVal.exchangeIsPayWithTrade = $("#exchangeIsPayWithTrade").val();//经手费是否随交易支付
+
 			        	   var params={};
 //        				   table.renderRow(data.LAY_TABLE_INDEX,  {"investaim": $("#invAim").val()});
         				   //买入
