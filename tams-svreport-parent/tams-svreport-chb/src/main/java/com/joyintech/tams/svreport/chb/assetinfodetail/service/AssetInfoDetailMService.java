@@ -586,6 +586,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				map.put("sharesType1",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按规模划分, assetInfoDetailDto.getSharesType1()));
 				map.put("sharesType3",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按技术领域划分, assetInfoDetailDto.getSharesType3()));
 				map.put("sharesType2",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按经济类型划分, assetInfoDetailDto.getSharesType2()));
+				map.put("privatefundFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getPrivatefundFlag()));
 				dtoList_L01.add(map);
 			}
 		});
