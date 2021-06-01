@@ -187,6 +187,8 @@ var etrAmt = '';
 	                    });
 	                }
               },null,function (result) {
+                    var disabledFlag = $('#invAim').attr('disabled');
+                    if(disabledFlag) return;
                     var msg = result.errorList;
                     var message ="";
                     for(var i=0;i<msg.length;i++){
