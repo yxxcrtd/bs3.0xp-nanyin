@@ -89,6 +89,26 @@
     }
 
     /**
+     * 校验组合分配中组合和质押券汇总信息中组合是否符合,去除质押券汇总信息中不存在于组合分配中的组合
+     */
+    function pledgeBondTotalTblPortfolioId() {
+        var row = pledgeBondTotalTblDetailed.getAllRows();
+        for (var j = 0; j < row.length; j++) {
+            var flag = false;//存在组合标识
+            for (var i = 0; i < pledgeBondTotalTbl.getAllRows().length; i++) {
+                // 组合分配中存在组合与质押券汇总信息中组合相同
+                if (pledgeBondTotalTbl.getAllRows()[i].portfolioId === row[j].portfolioId) {
+                    flag = true;
+                }
+            }
+            // 不存在相同组合时,移除质押券汇总信息中的数据
+            if (!flag) {
+                pledgeBondTotalTblDetailed.removeRow(row[j]);
+            }
+        }
+    }
+
+    /**
      * 回购利率%变动时,组合列表中购利率%、回购利息、到期结算金额联动变动
      */
     function rebackPriceChange() {
@@ -534,6 +554,8 @@
                 //ADD BY XR 账户和组合变更时也触发重新计算，否则在账户变更时，费用未重新计算导致提交不了
                 extractedCpriceAmt();
                 extractedJiSuan3();
+                // add by jiangpeng on 20210601 TISHKBS-2234
+                pledgeBondTotalTblPortfolioId();
             }
 
             if("prinAmt"==field){
@@ -798,6 +820,23 @@
             }
             return true;
         },
+        editCell: function (value, data, field, cell, column) {
+            if (field === "pledgePrin") {
+                var tempRows = pledgeBondTotalTblDetailed.getAllRows();
+                var tempTotalPrinAmt = Number(0);
+                for (var i in tempRows) {
+                    if (tempRows[i].portfolioId == data.portfolioId) {
+                        tempTotalPrinAmt = tempTotalPrinAmt + Number(tempRows[i].pledgePrin);
+                    }
+                }
+                for (var j = 0; j < pledgeBondTotalTbl.getAllRows().length; j++) {
+                    if (pledgeBondTotalTbl.getAllRows()[j].portfolioId == data.portfolioId) {
+                        pledgeBondTotalTbl.renderRow(j, {totalPrinAmt: tempTotalPrinAmt});
+                    }
+                }
+                createAuto();
+            }
+        },
         checkbox:false
     });
     
@@ -956,21 +995,21 @@
                 if(pbt[i].totalPrinAmt!=null&&pbt[i].totalPrinAmt!=""&&pbt[i].totalPrinAmt!="0"){
                     if(i!=(pbt.length-1)){
                         var nu=Number(pbt[i].totalPrinAmt)/totalPrinAmtTotal;
-                        var prinAmt2=Number(TotlPrinAmt)*nu;
-                        var rebackIntAmt2=Number(rebackIntAmt)*nu;
-                        var mdateSettleAmt2=Number(mdateSettleAmt)*nu;
-                        var tradeAmtAndFee2=Number(tradeAmtAndFee)*nu;
-                        var procedureAmt2=Number(procedureAmt)*nu;
-                        var settleAmt2=Number(settleAmt)*nu;
-                        var commissionAmt2=Number(commissionAmt)*nu;
+                        var prinAmt2 = JoyinMath.doMul(Number(TotlPrinAmt), nu, 2);
+                        var rebackIntAmt2 = JoyinMath.doMul(Number(rebackIntAmt), nu, 2);
+                        var mdateSettleAmt2 = JoyinMath.doMul(Number(mdateSettleAmt), nu, 2);
+                        var tradeAmtAndFee2 = JoyinMath.doMul(Number(tradeAmtAndFee), nu, 2);
+                        var procedureAmt2 = JoyinMath.doMul(Number(procedureAmt), nu, 2);
+                        var settleAmt2 = JoyinMath.doMul(Number(settleAmt), nu, 2);
+                        var commissionAmt2 = JoyinMath.doMul(Number(commissionAmt), nu, 2);
 
-                        TotlPrinAmt3=TotlPrinAmt-prinAmt2;
-                        rebackIntAmt3=rebackIntAmt-rebackIntAmt2;
-                        mdateSettleAmt3=mdateSettleAmt-mdateSettleAmt2;
-                        tradeAmtAndFee3=tradeAmtAndFee-tradeAmtAndFee2;
-                        procedureAmt3=procedureAmt-procedureAmt2;
-                        settleAmt3=settleAmt-settleAmt2;
-                        commissionAmt3=commissionAmt-commissionAmt2;
+                        TotlPrinAmt3 = JoyinMath.doMinus(TotlPrinAmt, prinAmt2, 2);
+                        rebackIntAmt3 = JoyinMath.doMinus(rebackIntAmt, rebackIntAmt2, 2);
+                        mdateSettleAmt3 = JoyinMath.doMinus(mdateSettleAmt, mdateSettleAmt2, 2);
+                        tradeAmtAndFee3 = JoyinMath.doMinus(tradeAmtAndFee, tradeAmtAndFee2, 2);
+                        procedureAmt3 = JoyinMath.doMinus(procedureAmt, procedureAmt2, 2);
+                        settleAmt3 = JoyinMath.doMinus(settleAmt, settleAmt2, 2);
+                        commissionAmt3 = JoyinMath.doMinus(commissionAmt, commissionAmt2, 2);
                         pledgeBondTotalTbl.renderRow(i, {prinAmt:prinAmt2});
                         pledgeBondTotalTbl.renderRow(i, {rebackPrice:rebackPrice});
                         pledgeBondTotalTbl.renderRow(i, {rebackIntAmt:rebackIntAmt2});
@@ -1473,6 +1512,7 @@
         calFee:calFee,
         isIntVal2:isIntVal2,
         pleBondTotalVal:pleBondTotalVal,
-        rebackPriceChange:rebackPriceChange
+        rebackPriceChange:rebackPriceChange,
+        createAuto:createAuto
     };
 }());
