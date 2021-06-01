@@ -1763,7 +1763,7 @@
     null as countType,
    	'08' as reporttype /*月度统计报表*/
    	FROM
-   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_MONTH_REPORT  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT} 
+   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_MONTH_REPORT  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SEND_STATUS=#{NO_SUBMIT}
    	<if test="createDeptList != null and createDeptList.size>0">
 		<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
 		#{item,jdbcType=VARCHAR}
@@ -1780,7 +1780,7 @@
               </foreach>
           </if>
    	) delayData ,
-	(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_MONTH_REPORT  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+	(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_MONTH_REPORT  ciis2 WHERE DATE_FORMAT(ciis2.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and DATE_FORMAT(ciis2.SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and ciis2.SEND_STATUS=#{NO_SUBMIT}
 	<if test="createDeptList != null and createDeptList.size>0">
 		<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
 		#{item,jdbcType=VARCHAR}
@@ -3305,7 +3305,7 @@
   select ifnull(checkwarn.warnnum,0) warningnum /*预警*/
   ,ifnull(checkfail1.failnum,0)+ifnull(checkfail2.failnum,0) failnum /*不通过*/
   ,ifnull(checkwarn.warnnum,0)+ifnull(checkfail1.failnum,0)+ifnull(checkfail2.failnum,0) as submitChecknum /*报送检查*/
-  ,ifnull(checkwarn.rep_code,ifnull(checkfail1.rep_code,checkfail2.rep_code)) reporttype /*报表类型*/
+  ,ifnull(checkwarn.rep_code,checkfail1.rep_code) reporttype /*报表类型*/
   from (select count(check_result) warnnum,rep_code
 	from chb_report_check where
 	check_result='03'
