@@ -635,13 +635,13 @@ public class ChbPeriodicService {
                 } else {
                     chbPeriodicBonus.setRegDate(DateUtil.format(deal.getRegDate()));
                 }
-                if (isNullOrZero(deal.getTradeAmt())) {
+                if (isNullOrZero(deal.getTradeAmt()) || isNullOrZero(deal.getRegTradeQty())) {
                     chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.横线);
                 } else {
                     chbPeriodicBonus.setTradeBonus(ChbInvestReportConstant.df1.format(
                             deal.getTradeAmt().divide(deal.getRegTradeQty(), 20, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10000))));
                 }
-                if (isNullOrZero(deal.getIntAmt())) {
+                if (isNullOrZero(deal.getIntAmt()) || isNullOrZero(deal.getRegTradeQty())) {
                     chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.横线);
                 } else {
                     chbPeriodicBonus.setIntBonus(ChbInvestReportConstant.df1.format(
@@ -1048,7 +1048,7 @@ public class ChbPeriodicService {
 
         // 期末估值日期
         if (Objects.isNull(qmDto.getValueDate())) {
-            value.setValueDate(ChbInvestReportConstant.横线);
+            value.setValueDate(DateUtil.format((Date) params.get("dqReportDate")));
         } else {
             value.setValueDate(DateUtil.format(qmDto.getValueDate()));
         }
