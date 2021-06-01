@@ -18,7 +18,7 @@
 			<Cell order="14" name="*起息日">vdate_05</Cell>
 			<Cell order="15" name="*到期日">mdate_05</Cell>
 			<Cell order="16" name="*行业">industryShares_05</Cell>
-			<Cell order="17" name="*贴现利率（%）">discountYield_05</Cell>
+			<Cell order="17" name="*贴现利率（%）">assetYield_05</Cell>
 			<Cell order="18" name="是否标准化票据">isBzhpj_05</Cell>
 			<Cell order="19" name="*所属国家或地区">countryArea_13</Cell>
 			<Cell order="20" name="*名称">assetName_13</Cell>
