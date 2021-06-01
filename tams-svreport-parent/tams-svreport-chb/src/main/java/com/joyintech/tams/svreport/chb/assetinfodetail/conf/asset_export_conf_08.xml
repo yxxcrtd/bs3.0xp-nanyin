@@ -30,7 +30,7 @@
 			<Cell order="26" name="*所属国家或地区">countryArea_10</Cell>
 			<Cell order="27" name="*股票/基金代码">assetCode_10</Cell>
 			<Cell order="28" name="*股票/基金名称">assetName_10</Cell>
-			<Cell order="29" name="*发行机构">issuePartyId_10</Cell>
+			<Cell order="29" name="*发行机构">issuePartyName_10</Cell>
 			<Cell order="30" name="*行业">industryShares_10</Cell>
 			<Cell order="31" name="*所属国家或地区">countryArea_11</Cell>
 			<Cell order="32" name="*合约名称">contractName_11</Cell>

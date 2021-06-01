@@ -435,7 +435,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				map.put("partyType1",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按规模划分, assetInfoDetailDto.getPartyType1()));
 				map.put("partyType3",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按技术领域划分, assetInfoDetailDto.getPartyType3()));
 				map.put("partyType2",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按经济类型划分, assetInfoDetailDto.getPartyType2()));
-				map.put("industry",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getIndustry()));
+				map.put("industry",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryLevel2()));
 				map.put("registOrg",SysDataUtil.getZZDictCodeAndName(DictCode.登记托管机构_中债, assetInfoDetailDto.getRegistOrg()));
 				map.put("registorgComment",SysDataUtil.getZZDictCodeAndName(DictCode.登记托管机构_监管报送, assetInfoDetailDto.getRegistorgComment()));
 				map.put("bankSecZxzq",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getBankSecZxzq()));
@@ -458,8 +458,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				map.put("financierType1",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按规模划分, assetInfoDetailDto.getFinancierType1()));
 				map.put("financierType3",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按技术领域划分, assetInfoDetailDto.getFinancierType3()));
 				map.put("financierType2",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按经济类型划分, assetInfoDetailDto.getFinancierType2()));
-				map.put("industry1",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getIndustry1()));
-				map.put("proIndustry",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getProIndustry()));
+				map.put("industry1",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryLevel2Type()));
+				map.put("proIndustry",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getProIndustryLevel2()));
 				map.put("industryFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIndustryFlag()));
 				map.put("monitType",SysDataUtil.getZZDictCodeAndName(DictCode.重点监控行业和领域类别, assetInfoDetailDto.getMonitType()));
 				map.put("guaType",SysDataUtil.getZZDictCodeAndName(DictCode.担保方式, assetInfoDetailDto.getGuaType()));
@@ -488,7 +488,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 					map.put("isRight_05",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIsRight()));
 					map.put("isResale_05",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIsResale()));
 					map.put("notstandSecType_05",SysDataUtil.getZZDictCodeAndName(DictCode.票据类信用证类资产类型, assetInfoDetailDto.getNotstandSecType()));
-					map.put("industryShares_05",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getIndustryShares()));
+					map.put("industryShares_05",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryShares2()));
 					map.put("isBzhpj_05",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIsBzhpj()));
 				}
 				if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_商品类资产.getValue())){
@@ -499,7 +499,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				}
 				if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue())){
 					map.put("truActType_16",SysDataUtil.getZZDictCodeAndName(DictCode.资金实际投向, assetInfoDetailDto.getTruActType()));
-					map.put("capUseIndu_16",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getCapUseIndu()));
+					map.put("capUseIndu_16",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getCapUseInduLevel2()));
 					map.put("proProperty_16",SysDataUtil.getZZDictCodeAndName(DictCode.管理方式_发行登记, assetInfoDetailDto.getProProperty()));
 					map.put("rateFlag_16",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getRateFlag()));
 				}
@@ -510,7 +510,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				dtoList_05.add(map);
 			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_权益类资产.getValue())){
 				map.put("sharesType",SysDataUtil.getZZDictCodeAndName(DictCode.股票类型, assetInfoDetailDto.getSharesType()));
-				map.put("industryShares",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getIndustryShares()));
+				map.put("industryShares",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryShares2()));
 				map.put("investStage",SysDataUtil.getZZDictCodeAndName(DictCode.投资阶段, assetInfoDetailDto.getInvestStage()));
 				map.put("sharesType1",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按规模划分, assetInfoDetailDto.getSharesType1()));
 				map.put("sharesType3",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按技术领域划分, assetInfoDetailDto.getSharesType3()));
@@ -531,7 +531,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 					StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_QDII结构性票据.getValue())){
 				if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_QDII债券资产.getValue())){
 					map.put("countryArea_08",SysDataUtil.getZZDictCodeAndName(DictCode.所属国家或地区, assetInfoDetailDto.getCountryArea()));
-					map.put("industry_08",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getIndustry()));
+					map.put("industry_08",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryLevel2()));
 				}
 				if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_QDII拆出_逆回购资产.getValue())){
 					map.put("countryArea_09",SysDataUtil.getZZDictCodeAndName(DictCode.所属国家或地区, assetInfoDetailDto.getCountryArea()));
@@ -539,7 +539,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				}
 				if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_QDII股票_基金类资产.getValue())){
 					map.put("countryArea_10",SysDataUtil.getZZDictCodeAndName(DictCode.所属国家或地区, assetInfoDetailDto.getCountryArea()));
-					map.put("industryShares_10",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getIndustry()));
+					map.put("industryShares_10",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryShares2()));
 				}
 				if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_QDII结构性票据.getValue())){
 					map.put("countryArea_11",SysDataUtil.getZZDictCodeAndName(DictCode.所属国家或地区, assetInfoDetailDto.getCountryArea()));
@@ -549,7 +549,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			}else if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_资产管理产品.getValue())){
 				map.put("financialComissue",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getFinancialComissue()));
 				map.put("truActType",SysDataUtil.getZZDictCodeAndName(DictCode.资金实际投向, assetInfoDetailDto.getTruActType()));
-				map.put("capUseIndu",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getCapUseIndu()));
+				map.put("capUseIndu",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getCapUseInduLevel2()));
 				map.put("proProperty",SysDataUtil.getZZDictCodeAndName(DictCode.资管计划属性, assetInfoDetailDto.getProProperty()));
 				map.put("rateFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getRateFlag()));
 				map.put("buyStruct",SysDataUtil.getZZDictCodeAndName(DictCode.购买结构, assetInfoDetailDto.getBuyStruct()));
@@ -563,8 +563,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				map.put("financierType1",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按规模划分, assetInfoDetailDto.getFinancierType1()));
 				map.put("financierType2",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按经济类型划分, assetInfoDetailDto.getFinancierType2()));
 				map.put("financierType3",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按技术领域划分, assetInfoDetailDto.getFinancierType3()));
-				map.put("industry1",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getIndustry1()));
-				map.put("proIndustry",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getProIndustry()));
+				map.put("industry1",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryLevel2Type()));
+				map.put("proIndustry",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getProIndustryLevel2()));
 				map.put("industryFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIndustryFlag()));
 				map.put("monitType",SysDataUtil.getZZDictCodeAndName(DictCode.重点监控行业和领域类别, assetInfoDetailDto.getMonitType()));
 				map.put("outGrade",SysDataUtil.getZZDictCodeAndName(DictCode.资产评级, assetInfoDetailDto.getOutGrade()));
@@ -578,7 +578,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 					|| StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_公募基金.getValue()) ||
 					StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_私募基金.getValue())){
 				map.put("financialComissue",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getFinancialComissue()));
-				map.put("industryShares",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业一级分类, assetInfoDetailDto.getIndustryShares()));
+				map.put("industryShares",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryShares2()));
 				map.put("registOrg1",SysDataUtil.getZZDictCodeAndName(DictCode.登记备案机构, assetInfoDetailDto.getRegistOrg1()));
 				map.put("isGovernFund",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIsGovernFund()));
 				map.put("governInvestFund",SysDataUtil.getZZDictCodeAndName(DictCode.政府投资基金投向, assetInfoDetailDto.getGovernInvestFund()));
