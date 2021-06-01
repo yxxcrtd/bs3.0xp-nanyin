@@ -10,19 +10,6 @@
 
 package com.joyintech.tams.invest.trade.trdrepotrade.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import com.joyintech.tools.collectors.JoyinCollectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -33,10 +20,21 @@ import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.trade.common.validator.TradeCommonValidator;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade003Dto;
 import com.joyintech.tams.invest.trade.trdrepotrade.service.TrdRepoTrade002Service;
+import com.joyintech.tools.collectors.JoyinCollectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 回购资产交易新建画面：TrdRepoTrade003DtoValidator
@@ -94,6 +92,15 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
                 errorList.add(validMessage);
             }
         }*/
+        if (inputDto != null && StringUtil.equals(inputDto.getPs(),
+                DictCodeList.回购拆借方向_正回购.getValue())) {
+            for (PledgeBondInfoDto dto : inputDto.getBussRepoSecPtl().getPledgeBondList()) {
+                if (dto.getTotalPrinAmt() == null || BigDecimal.ZERO.compareTo(dto.getTotalPrinAmt()) == 0) {
+                    ValidMessage validMessage  = new ValidMessage("组合分配中,组合:"+dto.getPortfolioId()+"的质押券汇总券面总额不能为0!");
+                    errorList.add(validMessage);
+                }
+            }
+        }
 
         // 起息日不能大于到期日
         if (inputDto != null
