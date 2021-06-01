@@ -43,7 +43,8 @@ public class SppiUtils {
     public static String selectPageId(String assetType, String bondSysParam, String notBondSysParam) {
         String result = "";
 
-        if (StringUtils.equals(assetType, DictCodeList.平安资产类型_债券.getValue())) {
+        if (StringUtils.equals(assetType, DictCodeList.平安资产类型_债券.getValue())
+                ||StringUtils.equals(assetType, DictCodeList.平安资产类型_一级市场债.getValue())) {
             switch (bondSysParam) {
                 case BussinessConstant.SPPI_TEMPLATE_PWC:
                     result = "SppiTemplateBondPwc";
