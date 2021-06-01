@@ -39,9 +39,15 @@
                 //类型默认05置灰不可修改
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('05').trigger("change");
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",true);
-            }else if(assetTvalueBill=='1201'){
+            }
+            if (assetTvalueBill=='1201'){
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
+                $("#svrBussRepAssetAstBillInfoDto_isBzhpj").attr("required",true);
+                $("#svrBussRepAssetAstBillInfoDto_isBzhpj").attr("disabled",false);
+            }else {
+                $("#svrBussRepAssetAstBillInfoDto_isBzhpj").attr("required",false);
+                $("#svrBussRepAssetAstBillInfoDto_isBzhpj").val('').attr("disabled",true).trigger("change");
             }
         }
         starFinaciall();
