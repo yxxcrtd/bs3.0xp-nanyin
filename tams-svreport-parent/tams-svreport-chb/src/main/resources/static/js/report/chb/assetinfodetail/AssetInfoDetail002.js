@@ -369,15 +369,23 @@ var QueryFunc=function(){
         object.svrBussRepDepositInfoDto.repTargetType = object.svrBussRepDepositInfoDto.repTargetType?object.svrBussRepDepositInfoDto.repTargetType.join(","):'';
         if (object.svrBussRepAssetAstBillInfoDto.pppflag && object.svrBussRepAssetAstBillInfoDto.pppflag=='N'){
             object.svrBussRepAssetAstBillInfoDto.pppflag = '02';
+        }else {
+            object.svrBussRepAssetAstBillInfoDto.pppflag = '01';
         }
         if (object.svrBussRepAssetAstBillInfoDto.bondtostockFlag && object.svrBussRepAssetAstBillInfoDto.bondtostockFlag=='N'){
             object.svrBussRepAssetAstBillInfoDto.bondtostockFlag = '02';
+        }else {
+            object.svrBussRepAssetAstBillInfoDto.bondtostockFlag = '01';
         }
         if (object.svrBussRepAssetCreditNonstdInfoDto.pppflag && object.svrBussRepAssetCreditNonstdInfoDto.pppflag=='N'){
             object.svrBussRepAssetCreditNonstdInfoDto.pppflag = '02';
+        }else {
+            object.svrBussRepAssetCreditNonstdInfoDto.pppflag = '01';
         }
         if (object.svrBussRepAssetCreditNonstdInfoDto.bondtostockFlag && object.svrBussRepAssetCreditNonstdInfoDto.bondtostockFlag=='N'){
             object.svrBussRepAssetCreditNonstdInfoDto.bondtostockFlag = '02';
+        }else {
+            object.svrBussRepAssetCreditNonstdInfoDto.bondtostockFlag = '01';
         }
         object.pageModel = pageModel;
 
