@@ -240,18 +240,20 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
             if (StringUtil.isNotEmpty(mapData.get("priceModel"))) {
                 if (StringUtil.equals("信用债债券偏离度", en.getValue().getIndName())) {
                     Map<String, IIndicatorResult> resMap = en.getValue().getIndicatorResult();
-                    resMap.entrySet().forEach(item -> {
-                        if (StringUtil.equals((String) mapData.get("priceModel"), DictCodeListExt2.价格模式_市价指令.getValue())) {
-                            item.getValue().setIndicatorOldVal(0);
-                            item.getValue().setIndicatorVal(0);
-                            item.getValue().setIndStatus(BussinessDictCodeListRds.指标状态_通过.getValue());
-                        } else {
-                            item.getValue().setIndicatorOldVal((Double) item.getValue().getIndicatorOldVal() > 0
-                                    ? (Double) item.getValue().getIndicatorOldVal() : (Double) item.getValue().getIndicatorOldVal() * -1);
-                            item.getValue().setIndicatorVal((Double) item.getValue().getIndicatorVal() > 0
-                                    ? (Double) item.getValue().getIndicatorVal() : (Double) item.getValue().getIndicatorVal() * -1);
-                        }
-                    });
+                    if (resMap != null && !resMap.isEmpty() && resMap.size() > 0) {
+                        resMap.entrySet().forEach(item -> {
+                            if (StringUtil.equals((String) mapData.get("priceModel"), DictCodeListExt2.价格模式_市价指令.getValue())) {
+                                item.getValue().setIndicatorOldVal(0);
+                                item.getValue().setIndicatorVal(0);
+                                item.getValue().setIndStatus(BussinessDictCodeListRds.指标状态_通过.getValue());
+                            } else {
+                                item.getValue().setIndicatorOldVal((Double) item.getValue().getIndicatorOldVal() > 0
+                                        ? (Double) item.getValue().getIndicatorOldVal() : (Double) item.getValue().getIndicatorOldVal() * -1);
+                                item.getValue().setIndicatorVal((Double) item.getValue().getIndicatorVal() > 0
+                                        ? (Double) item.getValue().getIndicatorVal() : (Double) item.getValue().getIndicatorVal() * -1);
+                            }
+                        });
+                    }
                 }
             }
             checkIndTrend(en.getValue());
