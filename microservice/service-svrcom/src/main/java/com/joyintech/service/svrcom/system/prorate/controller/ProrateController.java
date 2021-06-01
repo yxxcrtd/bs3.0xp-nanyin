@@ -121,7 +121,8 @@ public class ProrateController {
      * @param uuid
      */
     @PostMapping("deleteErrorDataOneByUuid")
-    public void deleteErrorDataOneByUuid(@RequestBody String uuid) {
+    public void deleteErrorDataOneByUuid(@RequestBody Map<String, Object> param) {
+        String uuid=param.get("uuid")==null?null:param.get("uuid").toString();
         if(StringUtil.isNotEmpty(uuid)) {
             proRateInfo001Service.deleteErrorDataOneByUuid(uuid);
         }
