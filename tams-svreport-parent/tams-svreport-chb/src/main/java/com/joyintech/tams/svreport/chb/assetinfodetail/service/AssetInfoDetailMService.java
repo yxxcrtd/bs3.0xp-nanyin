@@ -458,7 +458,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				map.put("financierType1",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按规模划分, assetInfoDetailDto.getFinancierType1()));
 				map.put("financierType3",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按技术领域划分, assetInfoDetailDto.getFinancierType3()));
 				map.put("financierType2",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按经济类型划分, assetInfoDetailDto.getFinancierType2()));
-				map.put("industry1",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryLevel2Type()));
+				map.put("industry1",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryLevel2()));
 				map.put("proIndustry",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getProIndustryLevel2()));
 				map.put("industryFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIndustryFlag()));
 				map.put("monitType",SysDataUtil.getZZDictCodeAndName(DictCode.重点监控行业和领域类别, assetInfoDetailDto.getMonitType()));
@@ -563,7 +563,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				map.put("financierType1",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按规模划分, assetInfoDetailDto.getFinancierType1()));
 				map.put("financierType2",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按经济类型划分, assetInfoDetailDto.getFinancierType2()));
 				map.put("financierType3",SysDataUtil.getZZDictCodeAndName(DictCode.发行机构类型_按技术领域划分, assetInfoDetailDto.getFinancierType3()));
-				map.put("industry1",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryLevel2Type()));
+				map.put("industry1",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryLevel2()));
 				map.put("proIndustry",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getProIndustryLevel2()));
 				map.put("industryFlag",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIndustryFlag()));
 				map.put("monitType",SysDataUtil.getZZDictCodeAndName(DictCode.重点监控行业和领域类别, assetInfoDetailDto.getMonitType()));

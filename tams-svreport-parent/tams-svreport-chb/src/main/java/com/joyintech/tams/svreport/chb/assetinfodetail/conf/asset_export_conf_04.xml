@@ -48,7 +48,7 @@
 			<Cell order="44" name="抵质押物价值（元）">pledgeValue</Cell>
 			<Cell order="45" name="担保性质">natureGuarantee</Cell>
 			<Cell order="46" name="担保人与融资人关系">relationFinan</Cell>
-			<Cell order="47" name="担保情况说明">guaranteeCmt</Cell>
+			<Cell order="47" name="担保情况说明">repGuaTypeRemark</Cell>
 			<Cell order="48" name="*融资人主体评级">financierGrade</Cell>
 			<Cell order="49" name="*资产内部评级">inGrade</Cell>
 			<Cell order="50" name="*资产外部评级">outGrade</Cell>
