@@ -1669,11 +1669,14 @@ public class FinProductCommonBatchService {
         // 赋值市场代码
         String finprodMarketId = targetFinProduct.getFinprodMarketId();
 
-        // 基金  货币基金 并且 场外基金  另外查询 行情数据 moneyFundDealCountingDrawingTask
-        if(StringUtil.equals(targetFinProduct.getProfitType(),"03") && StringUtil.equals(targetFinProduct.getTradeMarket(),"09")){
+        // 基金  货币基金 并且   另外查询 行情数据 moneyFundDealCountingDrawingTask
+        if(StringUtil.equals(targetFinProduct.getProfitType(),"03")){
+
+            // 货币基金 节假日 直接跳过
+            String isHoliday = commonMapper.getIsHoliday(happenDate, targetFinProduct.getCalendarId());
 
             List<FinProductValuation> finProductValuationList = queryValDataListByMoneyFund(targetFinProduct, calenderId, happenDate);
-            if(!StringUtil.isEmptyList(finProductValuationList)){
+            if(!StringUtil.equals(isHoliday,"0") || !StringUtil.isEmptyList(finProductValuationList)){
                 marketPriceDto.setPreCheckFlag(true);
             }
             return marketPriceDto;
