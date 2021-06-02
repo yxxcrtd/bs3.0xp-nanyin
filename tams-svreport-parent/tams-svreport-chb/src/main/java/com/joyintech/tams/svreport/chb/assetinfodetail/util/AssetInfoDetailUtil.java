@@ -293,7 +293,7 @@ public class AssetInfoDetailUtil {
             entity.setAssetUuid(IDGenerator.generate(36));
             entity.setStatus(DictCodeListExt2.数据状态_有效.getValue());
             if (CollectionUtils.isNotEmpty(message)) {
-                resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                resultList.add(new ExcelValidDto(entity.getAssetCode(), String.valueOf(i+1),
                         StringUtil.joinString(message, "<br>")));
             }
             else {
