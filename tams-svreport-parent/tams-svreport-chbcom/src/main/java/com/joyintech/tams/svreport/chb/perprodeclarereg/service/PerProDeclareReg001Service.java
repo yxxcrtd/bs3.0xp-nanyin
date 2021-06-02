@@ -880,7 +880,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 	 */
 	public AjaxResult nineFileUploadCheck(Map<String, Object> map) throws IOException {
 		String fileNo=(String) map.get("param[0][fileNo]");
-		String targetFileSTR=(String) map.get("param[0][targetFile]");
+		String targetFileSTR=(String) map.get("param[0][targetFile][absoluteFile]");
 		File file=new SafelyFile(targetFileSTR);
 		// 记录错误信息
 		StringBuffer fileCheckMsg = new StringBuffer();
