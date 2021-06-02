@@ -3310,7 +3310,6 @@
 		sum( warnnum ) + sum( failnum ) AS submitChecknum /*报送检查*/
 			,
 		rep_code AS reporttype /*报表类型*/
-
 	FROM
 		(
 			SELECT
@@ -3340,18 +3339,7 @@
 					#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
 
 			GROUP BY
-				rep_code UNION ALL
-			SELECT
-				0 AS warnnum,
-				rep_code,
-				count( check_result ) failnum,
-				0 AS warningnum
-			FROM
-				chb_report_check
-			WHERE
-				check_result = '02'
-			  AND DATE_FORMAT( DATA_TIME, '%Y-%m-%d' ) = DATE_FORMAT( #{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
-			GROUP BY rep_code ) b
+				rep_code) b
 	GROUP BY
 		rep_code
 </select>
