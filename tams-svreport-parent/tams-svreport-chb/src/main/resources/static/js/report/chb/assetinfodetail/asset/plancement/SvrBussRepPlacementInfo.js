@@ -146,11 +146,11 @@
                 $("#issueAmt").attr("disabled",true);
                 $("#issueAmt").val('');
             }
-            if (assetTvalue=='1902'){
-                $("#svrBussRepPlacementInfoDto_checkCode").attr("required",true);
-            }else {
-                $("#svrBussRepPlacementInfoDto_checkCode").attr("required",false);
-            }
+            // if (assetTvalue=='1902'){
+            //     $("#svrBussRepPlacementInfoDto_checkCode").attr("required",true);
+            // }else {
+            //     $("#svrBussRepPlacementInfoDto_checkCode").attr("required",false);
+            // }
         }
         initplace();
         starplace();
