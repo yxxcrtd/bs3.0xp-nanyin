@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-    namespace="com.joyintech.tams.psbc.bankvoucherquery.dao.BankValVoucherQuery001Mapper">
+    namespace="com.joyintech.tams.valuation.psbc.bankvoucherquery.dao.BankValVoucherQuery001Mapper">
     
     <select id="getBooksetId" resultType="com.joyintech.framework.select.SelectOptionDto" >
         SELECT DISTINCT BOOKSET_ID id, BOOKSET_NAME text
@@ -19,8 +19,8 @@
         order by BOK_BANK_SCE_CONFIG.TABLE_ID
     </select>
      
-    <select id="queryPageList" resultType="com.joyintech.tams.psbc.bankvoucherquery.dto.BankValVoucherQuery001Dto" 
-        parameterType="com.joyintech.tams.psbc.bankvoucherquery.dto.BankValVoucherQuery001SearchDto">
+    <select id="queryPageList" resultType="com.joyintech.tams.valuation.psbc.bankvoucherquery.dto.BankValVoucherQuery001Dto"
+        parameterType="com.joyintech.tams.valuation.psbc.bankvoucherquery.dto.BankValVoucherQuery001SearchDto">
 	    <!-- 不展示分录时 -->
         <if test="isShowfl != 'yes'">
             SELECT 
