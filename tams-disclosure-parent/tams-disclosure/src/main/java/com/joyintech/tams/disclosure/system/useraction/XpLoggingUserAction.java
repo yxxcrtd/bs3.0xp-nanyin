@@ -522,7 +522,7 @@ public class XpLoggingUserAction extends LoggingUserAction {
 
 
             // 审批不记录入力值
-            if (HANDLE.equals(flowEntity.getCurNodeName())) {
+            if (flowEntity != null && HANDLE.equals(flowEntity.getCurNodeName())) {
                 StringBuilder logDetailInfo = new StringBuilder();
                 // 业务数据的JSON字符串
                 String businessInfo = StringUtil.defaultString((String)para.get("businessInfo"));

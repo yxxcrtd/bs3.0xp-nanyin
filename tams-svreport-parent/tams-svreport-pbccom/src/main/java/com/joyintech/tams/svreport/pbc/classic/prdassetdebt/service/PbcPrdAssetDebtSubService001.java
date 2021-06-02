@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.svreport.pbc.assetdebt.dao.PbcReportAssetDebtDetailMapper;
 import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcLoanDetailInfoSubReportVo;
 import org.apache.commons.collections4.CollectionUtils;
@@ -572,8 +573,8 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
 		}
 		 // 如果没有未报送的记录，生成空模板
 		if (sourceFiles.isEmpty()){
-			data.put("dataList", new ArrayList<PbcLoanDetailInfoSubReportVo>());
-	    	data.put("data2List", new ArrayList<PbcLoanDetailInfoSubReportVo>());
+//			data.put("dataList", new ArrayList<PbcLoanDetailInfoSubReportVo>());
+//	    	data.put("data2List", new ArrayList<PbcLoanDetailInfoSubReportVo>());
 			String fileName = "资产负债信息"+DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
 			File depositfile = TisUtil.createFile(data, "pbc/" +"PbcReport_OneprdAssetDebt_export", fileName);
 			sourceFiles.add(depositfile);
@@ -586,13 +587,13 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 //            String zipFileName = FileNameUtil.createFileName("zip");
 			String zipFileName = "PbocAssetDebt("+DateUtil.format(new Date(), "yyyy-MM-dd")+").zip";
-            outFile = new File(exportFilePath + File.separator + zipFileName);
+            outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
             try {
-                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件

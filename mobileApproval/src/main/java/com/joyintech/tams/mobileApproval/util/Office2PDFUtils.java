@@ -1,5 +1,6 @@
 package com.joyintech.tams.mobileApproval.util;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.lang3.StringUtils;
 import org.artofsolving.jodconverter.OfficeDocumentConverter;
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
@@ -120,7 +121,7 @@ public class Office2PDFUtils {
 	 */
 	private static synchronized File convertFile(File inputFile, String outputFilePath,
 			OfficeManager officeManager) throws OfficeException {
-		File outputFile = new File(outputFilePath);
+		File outputFile = new SafelyFile(outputFilePath);
 		// 假如目标路径不存在,则新建该路径
 		if (!outputFile.getParentFile().exists()) {
 			outputFile.getParentFile().mkdirs();
@@ -151,7 +152,7 @@ public class Office2PDFUtils {
 			if (StringUtils.isEmpty(inputFilePath)) {
 				return false;
 			}
-			File inputFile = new File(inputFilePath);
+			File inputFile = new SafelyFile(inputFilePath);
 			if (!inputFile.exists()) {
 				return false;
 			}
@@ -179,8 +180,8 @@ public class Office2PDFUtils {
 			if (StringUtils.isEmpty(inputFilePath)) {
 				return null;
 			}
-			File inputFile = new File(inputFilePath);
-			File file = new File(outputFilePath);
+			File inputFile = new SafelyFile(inputFilePath);
+			File file = new SafelyFile(outputFilePath);
 			if (file.exists()) {
 				return file;
 			}
@@ -220,8 +221,8 @@ public class Office2PDFUtils {
 	 * @return
 	 */
 	private static String getOutputFilePath(String inputFilePath) {
-		String outputFilePath = inputFilePath.replaceAll("."
-				+ getPostfix(inputFilePath), ".pdf");
+		String outputFilePath = inputFilePath.replaceAll(Pattern.quote("."
+				+ getPostfix(inputFilePath)), ".pdf");
 		return outputFilePath;
 	}
 }

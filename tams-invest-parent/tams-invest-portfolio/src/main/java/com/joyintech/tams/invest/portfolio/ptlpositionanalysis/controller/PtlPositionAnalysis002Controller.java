@@ -8,6 +8,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.TargetDetail;
 import com.joyintech.tams.constant.DictCode;
@@ -104,7 +105,7 @@ public class PtlPositionAnalysis002Controller extends BaseController {
     public String getTableCols()
             throws Exception {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
-      return ptlPositionAnalysis002Service.getDataTableCols(map);
+      return StringUtil.trimHtmlTag(ptlPositionAnalysis002Service.getDataTableCols(map));
 
     }
     /**

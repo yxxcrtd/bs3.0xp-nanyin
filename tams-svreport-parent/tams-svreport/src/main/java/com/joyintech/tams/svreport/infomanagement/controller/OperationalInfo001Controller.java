@@ -10,20 +10,6 @@
 
 package com.joyintech.tams.svreport.infomanagement.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -34,7 +20,20 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BaseInformationDto;
 import com.joyintech.tams.common.base.entity.FilterInformationDto;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.infomanagement.service.OperationalInfoMService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -118,7 +117,7 @@ public class OperationalInfo001Controller extends BaseController {
 	@ResponseBody
     @RequestMapping("queryColumnByTableId")
 	public String queryColumnByTableId(String tableId) {
-		return operationalInfoMService.queryColumnByTableId(tableId);
+		return StringUtil.trimHtmlTag(operationalInfoMService.queryColumnByTableId(tableId));
 	}
 	
 	/**
@@ -129,7 +128,7 @@ public class OperationalInfo001Controller extends BaseController {
 	@ResponseBody
     @RequestMapping("queryColumnTypeByTableId")
 	public String queryColumnTypeByTableId(String tableId) {
-		return operationalInfoMService.queryColumnTypeByTableId(tableId);
+		return StringUtil.trimHtmlTag(operationalInfoMService.queryColumnTypeByTableId(tableId));
 	}
 	
 	/**
@@ -141,7 +140,7 @@ public class OperationalInfo001Controller extends BaseController {
     public String queryData() {
 		Map<String, Object> param = RequestUtil.getPageParam();
          String map =operationalInfoMService.queryData(param);
-         return map;
+         return StringUtil.trimHtmlTag(map);
     }
 	
 	/**
@@ -163,7 +162,7 @@ public class OperationalInfo001Controller extends BaseController {
     @RequestMapping("queryColmnInfo")
 	public String queryColmnInfo() {
 		Map<String, Object> param = RequestUtil.getPageParam();
-		return operationalInfoMService.queryColmnInfo(param);
+		return StringUtil.trimHtmlTag(operationalInfoMService.queryColmnInfo(param));
 	}
 	
 	/**
@@ -207,7 +206,7 @@ public class OperationalInfo001Controller extends BaseController {
     @RequestMapping("queryPlanByfilterId")
 	public String queryPlanByfilterId() {
 		Map<String, Object> param = RequestUtil.getPageParam();
-		return operationalInfoMService.queryPlanByfilterId(param);
+		return StringUtil.trimHtmlTag(operationalInfoMService.queryPlanByfilterId(param));
 	}
 	
 	/**
@@ -218,7 +217,7 @@ public class OperationalInfo001Controller extends BaseController {
     @RequestMapping("queryDateColumnList")
 	public String queryDateColumnList() {
 		Map<String, Object> param = RequestUtil.getPageParam();
-		return operationalInfoMService.queryDateColumnList(param);
+		return StringUtil.trimHtmlTag(operationalInfoMService.queryDateColumnList(param));
 	}
 	
 	/**
@@ -229,7 +228,7 @@ public class OperationalInfo001Controller extends BaseController {
     @RequestMapping("queryTimeColumnList")
 	public String queryTimeColumnList() {
 		Map<String, Object> param = RequestUtil.getPageParam();
-		return operationalInfoMService.queryTimeColumnList(param);
+		return StringUtil.trimHtmlTag(operationalInfoMService.queryTimeColumnList(param));
 	}
 	
 	/**
@@ -325,7 +324,7 @@ public class OperationalInfo001Controller extends BaseController {
 	@RequestMapping("deleteFilter")
 	public String deleteFilter() {
 		Map<String, Object> param = RequestUtil.getPageParam();
-    	return operationalInfoMService.deleteFilter(param);
+    	return StringUtil.trimHtmlTag(operationalInfoMService.deleteFilter(param));
 	}
     
     /**
@@ -336,7 +335,7 @@ public class OperationalInfo001Controller extends BaseController {
    	@RequestMapping("queryColumnTypeByCondition")
    	public String queryColumnTypeByCondition() {
    		Map<String, Object> param = RequestUtil.getPageParam();
-       	return operationalInfoMService.queryColumnTypeByCondition(param);
+       	return StringUtil.trimHtmlTag(operationalInfoMService.queryColumnTypeByCondition(param));
    	}
     
     /**
@@ -347,6 +346,6 @@ public class OperationalInfo001Controller extends BaseController {
    	@RequestMapping("queryColumnNameByCondition")
    	public String queryColumnNameByCondition() {
    		Map<String, Object> param = RequestUtil.getPageParam();
-       	return operationalInfoMService.queryColumnNameByCondition(param);
+       	return StringUtil.trimHtmlTag(operationalInfoMService.queryColumnNameByCondition(param));
    	}
 }

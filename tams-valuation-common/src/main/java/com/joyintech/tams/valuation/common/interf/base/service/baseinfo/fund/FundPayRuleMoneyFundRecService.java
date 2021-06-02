@@ -158,6 +158,10 @@ public class FundPayRuleMoneyFundRecService {
         result.setPayCycle(dto.getPayCycle());
         // 营业日准则 = B.营业日准则
 //        result.setTdayRule(dto.getTdayRule());
+        /**add by wujie on 20210219 start**/
+        //支付日营业日准则 = B.营业日准则
+        result.setPayTdayRule(dto.getTdayRule());
+        /**add by wujie on 20210219 end**/
         //
         // result.setCalcRule(dto.getCalcRule());
         // 现金流单位 = 02：总额
@@ -170,6 +174,10 @@ public class FundPayRuleMoneyFundRecService {
         result.setPayType(dto.getPayType());
         //分支序号
         result.setBranch(InterfCommonConstant.分支序号_默认);
+        result.setEndTdayRule(dto.getTdayRule());
+        /*add by sunshuaishuai 20210428 start*/
+        result.setCalcRule(DictCodeList.推算方式_起息日向后.getValue());
+        /*add by sunshuaishuai 20210428 end*/
         return result;
     }
 }

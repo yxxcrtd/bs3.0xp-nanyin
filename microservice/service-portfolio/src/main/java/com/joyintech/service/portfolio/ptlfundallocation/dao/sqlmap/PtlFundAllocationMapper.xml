@@ -69,10 +69,12 @@
 				    )
 			</if>
 			<if test="counterAcctNo != null and !counterAcctNo.isEmpty()">
-				AND S.COUNTER_ACCT_NO = #{counterAcctNo}
+				<!--AND S.COUNTER_ACCT_NO = #{counterAcctNo}-->
+				and decode(S.PS,'01',S.MY_ACCT_NO,S.COUNTER_ACCT_NO) =  #{counterAcctNo}
 			</if>
 			<if test="myAcctNo != null and !myAcctNo.isEmpty()">
-				AND S.MY_ACCT_NO = #{myAcctNo}
+				<!--AND S.MY_ACCT_NO = #{myAcctNo}-->
+				and decode(S.PS,'01',S.COUNTER_ACCT_NO,S.MY_ACCT_NO) =  #{myAcctNo}
 			</if>
 			<if test="payType != null and !payType.isEmpty()">
 				AND T.PS = #{payType}
@@ -280,6 +282,7 @@
 
     <select id="getPtlSecTrdAcctNo" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
+			C.SEQ_NO  seqNo,
             B.TRD_ACCT_ID id,
             C.ACCT_NAME text
         FROM 
@@ -443,4 +446,14 @@
 				 PTL_CAPACCT_INFO.ACCT_NO,
 				 STL_CAPACCT_INFO.ACCT_NAME
 	</select>
+
+	<delete id="deleteEtrFlowByOrderId">
+		DELETE FROM ETR_CASH_POSITION_FLOW
+		WHERE ORDER_ID = #{orderId}
+		AND HODING_TYPE = #{holdingType}
+		<if test="acctId != null and !acctId.isEmpty()">
+			AND ACCT_ID = #{acctId}
+		</if>
+		AND (OFFSET_FLAG is null OR OFFSET_FLAG = #{offsetFlag})
+	</delete>
 </mapper>

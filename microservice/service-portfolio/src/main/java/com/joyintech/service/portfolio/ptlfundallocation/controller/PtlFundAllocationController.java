@@ -243,4 +243,11 @@ public class PtlFundAllocationController {
     public List<PtlFundAllocation001Dto> getDetailInfo(@RequestBody Map<String,Object> map){
         return ptlFundAllocationService.getDetailInfo(map);
     }
+
+    @RequestMapping("/doDeleteNew")
+    @Transactional
+    @DTXTransaction
+    public int doDeleteNew(@RequestBody PtlFundAllocationDto ptlFundAllocationDto) {
+        return ptlFundAllocationService.doDeleteNew(ptlFundAllocationDto);
+    }
 }

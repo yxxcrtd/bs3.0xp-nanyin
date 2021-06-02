@@ -956,60 +956,65 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 		try{
 			for(MultipartFile mpf:mpfList){
 				Workbook workbook=null;
-				if(mpf.getOriginalFilename().endsWith(".xls")){
-					workbook=new HSSFWorkbook(mpf.getInputStream());
-				}else if(mpf.getOriginalFilename().endsWith(".xlsx")){
-					workbook=new XSSFWorkbook(mpf.getInputStream());
-				}else{
-					container.setCorrectFlag(false);
-					container.setErrorMsg(excelFormatError);
-					return null;
-				}
-				Sheet sheet = workbook.getSheetAt(0);
-				for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-					Row row=sheet.getRow(i);
-							
-					List<String> fieldsList = new ArrayList<String>();
-					
-					String acctnum=getXLSCellValue(row.getCell(0));
-					if(acctnum==null || acctnum.equals("")){
-						continue;
-					}
-					
-					String acctname=getXLSCellValue(row.getCell(1));
-					double localBal=Double.valueOf(getXLSCellValue(row.getCell(2)));
-					double funcBal=Double.valueOf(getXLSCellValue(row.getCell(3)));
-					String comments="";
-					
-					fieldsList.add("coa"+i);
-					fieldsList.add(acctnum);
-					fieldsList.add(acctname);
-					fieldsList.add(DataConvert.convertCash2US(localBal));
-					fieldsList.add(DataConvert.convertCash2US(funcBal));
-					
-					if(acctHM.containsKey(acctnum)){
-						fieldsList.add(acctnum+"|"+acctHM.get(acctnum));
-						if(!acctHM.get(acctnum).equals(acctname)){
-							comments=ReturnResult.getResultHM().get(ReturnResult.newfund_coaname_notmatch);
-						}
-					}else if(acctNameHM.containsKey(acctname)){
-						fieldsList.add(acctNameHM.get(acctname)+"|"+acctname);
-						if(!acctNameHM.get(acctname).equals(acctnum)){
-							comments=ReturnResult.getResultHM().get(ReturnResult.newfund_coanum_notmatch);
-						}
+				try{
+					if(mpf.getOriginalFilename().endsWith(".xls")){
+						workbook=new HSSFWorkbook(mpf.getInputStream());
+					}else if(mpf.getOriginalFilename().endsWith(".xlsx")){
+						workbook=new XSSFWorkbook(mpf.getInputStream());
 					}else{
-						fieldsList.add("");
-						comments=ReturnResult.getResultHM().get(ReturnResult.coa_notexist);
+						container.setCorrectFlag(false);
+						container.setErrorMsg(excelFormatError);
+						return null;
 					}
-					fieldsList.add(comments);
+					Sheet sheet = workbook.getSheetAt(0);
+					for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+						Row row=sheet.getRow(i);
 
-					fieldsContainer.add(fieldsList);
+						List<String> fieldsList = new ArrayList<String>();
+
+						String acctnum=getXLSCellValue(row.getCell(0));
+						if(acctnum==null || acctnum.equals("")){
+							continue;
+						}
+
+						String acctname=getXLSCellValue(row.getCell(1));
+						double localBal=Double.valueOf(getXLSCellValue(row.getCell(2)));
+						double funcBal=Double.valueOf(getXLSCellValue(row.getCell(3)));
+						String comments="";
+
+						fieldsList.add("coa"+i);
+						fieldsList.add(acctnum);
+						fieldsList.add(acctname);
+						fieldsList.add(DataConvert.convertCash2US(localBal));
+						fieldsList.add(DataConvert.convertCash2US(funcBal));
+
+						if(acctHM.containsKey(acctnum)){
+							fieldsList.add(acctnum+"|"+acctHM.get(acctnum));
+							if(!acctHM.get(acctnum).equals(acctname)){
+								comments=ReturnResult.getResultHM().get(ReturnResult.newfund_coaname_notmatch);
+							}
+						}else if(acctNameHM.containsKey(acctname)){
+							fieldsList.add(acctNameHM.get(acctname)+"|"+acctname);
+							if(!acctNameHM.get(acctname).equals(acctnum)){
+								comments=ReturnResult.getResultHM().get(ReturnResult.newfund_coanum_notmatch);
+							}
+						}else{
+							fieldsList.add("");
+							comments=ReturnResult.getResultHM().get(ReturnResult.coa_notexist);
+						}
+						fieldsList.add(comments);
+
+						fieldsContainer.add(fieldsList);
+					}
+				}finally {
+					if(workbook != null){
+						workbook.close();
+					}
 				}
-				workbook.close();
 			}
 		}catch(Exception e){
 			container.setCorrectFlag(false);
-			container.setErrorMsg(e.toString());
+			container.setErrorMsg("loadCustomCoa异常");//e.toString());
 			logger.error("Error"+": PortNum: " + portnum, e);
 			return null;
 		}
@@ -1023,56 +1028,57 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 		
 		try{
 			for(MultipartFile mpf:mpfList){
-				Workbook workbook=null;
-				if(mpf.getOriginalFilename().endsWith(".xls")){
-					workbook=new HSSFWorkbook(mpf.getInputStream());
-				}else if(mpf.getOriginalFilename().endsWith(".xlsx")){
-					workbook=new XSSFWorkbook(mpf.getInputStream());
-				}else{
-					container.setCorrectFlag(false);
-					container.setErrorMsg(excelFormatError);
-					return null;
-				}
-				Sheet sheet = workbook.getSheetAt(0);
-				for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-					Row row=sheet.getRow(i);
-					List<String> fieldsList = new ArrayList<String>();
-					String preDate=getXLSCellValue(row.getCell(0));
-					if(preDate==null || preDate.equals("")){
-						continue;
+				Workbook workbook = null;
+				try {
+					if (mpf.getOriginalFilename().endsWith(".xls")) {
+						workbook = new HSSFWorkbook(mpf.getInputStream());
+					} else if (mpf.getOriginalFilename().endsWith(".xlsx")) {
+						workbook = new XSSFWorkbook(mpf.getInputStream());
+					} else {
+						container.setCorrectFlag(false);
+						container.setErrorMsg(excelFormatError);
+						return null;
 					}
-					
-					Date setDate=DateUtil.convertStr2Date(preDate);
-					String desc=getXLSCellValue(row.getCell(1));
-					String cur=getXLSCellValue(row.getCell(2));
-					double localAmount=Double.valueOf(getXLSCellValue(row.getCell(3)));
-					double funcAmount=Double.valueOf(getXLSCellValue(row.getCell(4)));
-					int rcpytype=Integer.valueOf(getXLSCellValue(row.getCell(5)));
-					
-					List<BkCashAcct> cashacctList=bkCashAcctDao.loadCashAcctByPortnumCur(portnum, cur);
-					int cashacctnum=0;
-					if(cashacctList.size()>0){
-						cashacctnum=cashacctList.get(0).getId();
+					Sheet sheet = workbook.getSheetAt(0);
+					for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+						Row row = sheet.getRow(i);
+						List<String> fieldsList = new ArrayList<String>();
+						String preDate = getXLSCellValue(row.getCell(0));
+						if (preDate == null || preDate.equals("")) {
+							continue;
+						}
+						Date setDate = DateUtil.convertStr2Date(preDate);
+						String desc = getXLSCellValue(row.getCell(1));
+						String cur = getXLSCellValue(row.getCell(2));
+						double localAmount = Double.valueOf(getXLSCellValue(row.getCell(3)));
+						double funcAmount = Double.valueOf(getXLSCellValue(row.getCell(4)));
+						int rcpytype = Integer.valueOf(getXLSCellValue(row.getCell(5)));
+
+						List<BkCashAcct> cashacctList = bkCashAcctDao.loadCashAcctByPortnumCur(portnum, cur);
+						int cashacctnum = 0;
+						if (cashacctList.size() > 0) {
+							cashacctnum = cashacctList.get(0).getId();
+						}
+						fieldsList.add(String.valueOf(i));
+						fieldsList.add(DateUtil.convertD2YYYY_MM_DD(setDate));
+						fieldsList.add(String.valueOf(rcpytype));
+						fieldsList.add(desc);
+						fieldsList.add(cur);
+						fieldsList.add(String.valueOf(localAmount));
+						fieldsList.add(String.valueOf(funcAmount));
+						fieldsList.add("");
+						fieldsList.add(String.valueOf(cashacctnum));
+						fieldsContainer.add(fieldsList);
 					}
-					
-							
-					fieldsList.add(String.valueOf(i));
-					fieldsList.add(DateUtil.convertD2YYYY_MM_DD(setDate));
-					fieldsList.add(String.valueOf(rcpytype));
-					fieldsList.add(desc);
-					fieldsList.add(cur);
-					fieldsList.add(String.valueOf(localAmount));
-					fieldsList.add(String.valueOf(funcAmount));
-					fieldsList.add("");
-					fieldsList.add(String.valueOf(cashacctnum));
-					
-					fieldsContainer.add(fieldsList);
+				} finally {
+					if(workbook != null){
+						workbook.close();
+					}
 				}
-				workbook.close();
 			}
 		}catch(Exception e){
 			container.setCorrectFlag(false);
-			container.setErrorMsg(e.getMessage());
+			container.setErrorMsg(null);//e.getMessage());
 			logger.error("Error", e);
 			return null;
 		}
@@ -1090,86 +1096,91 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 		try{
 			for(MultipartFile mpf:mpfList){
 				Workbook workbook=null;
-				if(mpf.getOriginalFilename().endsWith(".xls")){
-					workbook=new HSSFWorkbook(mpf.getInputStream());
-				}else if(mpf.getOriginalFilename().endsWith(".xlsx")){
-					workbook=new XSSFWorkbook(mpf.getInputStream());
-				}else{
-					container.setCorrectFlag(false);
-					container.setErrorMsg(excelFormatError);
-					return null;
-				}
-				Sheet sheet = workbook.getSheetAt(0);
-				for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-					Row row=sheet.getRow(i);
-					List<String> fieldsList = new ArrayList<String>();
-					String secid=getXLSCellValue(row.getCell(0));
-					if(secid==null || secid.equals("")){
-						continue;
-					}
-					
-					
-					String secname=getXLSCellValue(row.getCell(1));
-					String expDateStr=getXLSCellValue(row.getCell(2));
-					if(expDateStr.equals("")){
-						expDateStr="20000101";
-					}
-					Date exeDate=DateUtil.convertStr2Date(expDateStr);
-					double amount=Double.valueOf(getXLSCellValue(row.getCell(3)));
-					String currency=getXLSCellValue(row.getCell(4));
-					double costlocal=Double.valueOf(getXLSCellValue(row.getCell(5)));
-					double costfunc=Double.valueOf(getXLSCellValue(row.getCell(6)));
-					double intlocal=Double.valueOf(getXLSCellValue(row.getCell(7)));
-					double intfunc=Double.valueOf(getXLSCellValue(row.getCell(8)));
-					String secacctCode=getXLSCellValue(row.getCell(9));
-					double alrate=Double.valueOf(getXLSCellValue(row.getCell(10)));
-					SecAcct secacct=secAcctDao.loadSecAcctByAcctCode(secacctCode.trim());
-					int valMethod=Integer.valueOf(getXLSCellValue(row.getCell(11)));
-					String secacctno="0";
-					if(secacct!=null){
-						secacctno=secacct.getAcctID();
-					}
-					
-					fieldsList.add("position"+i);
-					fieldsList.add(secid);
-					fieldsList.add(secname);
-					fieldsList.add(DateUtil.convertD2YYYY_MM_DD(exeDate));
-					fieldsList.add(format.format(amount));
-					fieldsList.add(currency);
-					fieldsList.add(format.format(costlocal));
-					fieldsList.add(format.format(costfunc));
-					fieldsList.add(format.format(intlocal));
-					fieldsList.add(format.format(intfunc));
-					fieldsList.add(format.format(alrate));
-					fieldsList.add(format.format(valMethod));
-					
-					IssueInfo sec=issueInfoDao.loadSecurity(secid);
-					
-					String comments="";
-					if(sec==null){
-						fieldsList.add("");
-						comments=ReturnResult.getResultHM().get(ReturnResult.newfund_sec_notexist);
+				try{
+					if(mpf.getOriginalFilename().endsWith(".xls")){
+						workbook=new HSSFWorkbook(mpf.getInputStream());
+					}else if(mpf.getOriginalFilename().endsWith(".xlsx")){
+						workbook=new XSSFWorkbook(mpf.getInputStream());
 					}else{
-						if(sec.getSecurityname()==null || sec.getSecurityname().equals("")){
-							fieldsList.add(sec.getSecurityid());
-						}else{
-							fieldsList.add(sec.getSecurityid()+"|"+sec.getSecurityname());
-						}
-							
-						if(!sec.getSecurityname().equals(secname)){
-							comments=ReturnResult.getResultHM().get(ReturnResult.newfund_secname_notmatch);
-						}
+						container.setCorrectFlag(false);
+						container.setErrorMsg(excelFormatError);
+						return null;
 					}
-					
-					fieldsList.add(String.valueOf(secacctno));
-					fieldsList.add(comments);
-					
-					fieldsContainer.add(fieldsList);
+					Sheet sheet = workbook.getSheetAt(0);
+					for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+						Row row=sheet.getRow(i);
+						List<String> fieldsList = new ArrayList<String>();
+						String secid=getXLSCellValue(row.getCell(0));
+						if(secid==null || secid.equals("")){
+							continue;
+						}
+
+						String secname=getXLSCellValue(row.getCell(1));
+						String expDateStr=getXLSCellValue(row.getCell(2));
+						if(expDateStr.equals("")){
+							expDateStr="20000101";
+						}
+						Date exeDate=DateUtil.convertStr2Date(expDateStr);
+						double amount=Double.valueOf(getXLSCellValue(row.getCell(3)));
+						String currency=getXLSCellValue(row.getCell(4));
+						double costlocal=Double.valueOf(getXLSCellValue(row.getCell(5)));
+						double costfunc=Double.valueOf(getXLSCellValue(row.getCell(6)));
+						double intlocal=Double.valueOf(getXLSCellValue(row.getCell(7)));
+						double intfunc=Double.valueOf(getXLSCellValue(row.getCell(8)));
+						String secacctCode=getXLSCellValue(row.getCell(9));
+						double alrate=Double.valueOf(getXLSCellValue(row.getCell(10)));
+						SecAcct secacct=secAcctDao.loadSecAcctByAcctCode(secacctCode.trim());
+						int valMethod=Integer.valueOf(getXLSCellValue(row.getCell(11)));
+						String secacctno="0";
+						if(secacct!=null){
+							secacctno=secacct.getAcctID();
+						}
+
+						fieldsList.add("position"+i);
+						fieldsList.add(secid);
+						fieldsList.add(secname);
+						fieldsList.add(DateUtil.convertD2YYYY_MM_DD(exeDate));
+						fieldsList.add(format.format(amount));
+						fieldsList.add(currency);
+						fieldsList.add(format.format(costlocal));
+						fieldsList.add(format.format(costfunc));
+						fieldsList.add(format.format(intlocal));
+						fieldsList.add(format.format(intfunc));
+						fieldsList.add(format.format(alrate));
+						fieldsList.add(format.format(valMethod));
+
+						IssueInfo sec=issueInfoDao.loadSecurity(secid);
+
+						String comments="";
+						if(sec==null){
+							fieldsList.add("");
+							comments=ReturnResult.getResultHM().get(ReturnResult.newfund_sec_notexist);
+						}else{
+							if(sec.getSecurityname()==null || sec.getSecurityname().equals("")){
+								fieldsList.add(sec.getSecurityid());
+							}else{
+								fieldsList.add(sec.getSecurityid()+"|"+sec.getSecurityname());
+							}
+
+							if(!sec.getSecurityname().equals(secname)){
+								comments=ReturnResult.getResultHM().get(ReturnResult.newfund_secname_notmatch);
+							}
+						}
+
+						fieldsList.add(String.valueOf(secacctno));
+						fieldsList.add(comments);
+
+						fieldsContainer.add(fieldsList);
+					}
+				}finally {
+					if(workbook != null){
+						workbook.close();
+					}
 				}
 			}
 		}catch(Exception e){
 			container.setCorrectFlag(false);
-			container.setErrorMsg(e.getMessage());
+			container.setErrorMsg("loadCustomSecPosition异常");//e.getMessage());
 			logger.error("Error", e);
 			return null;
 		}

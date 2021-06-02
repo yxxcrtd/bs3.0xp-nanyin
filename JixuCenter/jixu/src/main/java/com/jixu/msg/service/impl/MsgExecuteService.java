@@ -274,16 +274,16 @@ public abstract class MsgExecuteService<T extends BaseMsgDto> implements MsgServ
 							executeMsg(msgcontainer);
 					} catch (NumberFormatException ne) {
 						msgcontainer.setCorrectFlag(false);
-						msgcontainer.setErrorMsg(MsgError.error4 + ": " + header + ": " + ne);
+						msgcontainer.setErrorMsg(MsgError.error4);
 						return;
 					} catch (MsgFieldLackException me) {
 						msgcontainer.setCorrectFlag(false);
-						msgcontainer.setErrorMsg(MsgError.error6 + ": " + header + ": " + me.getMessage());
+						msgcontainer.setErrorMsg(MsgError.error6);
 						return;
 					}
 				}else{
 					msgcontainer.setCorrectFlag(false);
-					msgcontainer.setErrorMsg(MsgError.error3 + ": " + header + ": "	+ fields.size() + "/" + sizeNum);
+					msgcontainer.setErrorMsg(MsgError.error3);
 					return;
 				}
 			}
@@ -562,11 +562,11 @@ public abstract class MsgExecuteService<T extends BaseMsgDto> implements MsgServ
 						executeMsg(msgcontainer);
 				} catch (NumberFormatException ne) {
 					msgcontainer.setCorrectFlag(false);
-					msgcontainer.setErrorMsg(MsgError.error4 + ": " + header + ": " + ne);
+					msgcontainer.setErrorMsg(MsgError.error4);
 					return;
 				} catch (MsgFieldLackException me) {
 					msgcontainer.setCorrectFlag(false);
-					msgcontainer.setErrorMsg(MsgError.error6 + ": " + header + ": " + me.getMessage());
+					msgcontainer.setErrorMsg(MsgError.error6);
 					return;
 				}
 				MsgLog msglog=msgLogDao.loadEntity(MsgLog.class,msglogid);
@@ -635,11 +635,11 @@ public abstract class MsgExecuteService<T extends BaseMsgDto> implements MsgServ
 								executeMsg(msgcontainer);
 							} catch (NumberFormatException ne) {
 								msgcontainer.setCorrectFlag(false);
-								msgcontainer.setErrorMsg(MsgError.error4 + ": " + header + ": " + ne);
+								msgcontainer.setErrorMsg(MsgError.error4);
 								return;
 							} catch (MsgFieldLackException me) {
 								msgcontainer.setCorrectFlag(false);
-								msgcontainer.setErrorMsg(MsgError.error6 + ": " + header + ": " + me.getMessage());
+								msgcontainer.setErrorMsg(MsgError.error6);
 								return;
 							}
 						}
@@ -666,11 +666,11 @@ public abstract class MsgExecuteService<T extends BaseMsgDto> implements MsgServ
 							executeMsg(msgcontainer);
 				    } catch (NumberFormatException ne) {
  				    	msgcontainer.setCorrectFlag(false);
-				    	msgcontainer.setErrorMsg(MsgError.error4 + ": " + header + ": " + ne);
+				    	msgcontainer.setErrorMsg(MsgError.error4);
 				    	return;
 				    } catch (MsgFieldLackException me) {
 				    	msgcontainer.setCorrectFlag(false);
-				    	msgcontainer.setErrorMsg(MsgError.error6 + ": " + header + ": " + me.getMessage());
+				    	msgcontainer.setErrorMsg(MsgError.error6);
 				    	return;
 				    }
 				}

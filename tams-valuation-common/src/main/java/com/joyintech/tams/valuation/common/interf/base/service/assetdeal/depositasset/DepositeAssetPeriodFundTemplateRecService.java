@@ -172,8 +172,10 @@ public class DepositeAssetPeriodFundTemplateRecService {
         		continue;
         	}
             dto.setCreateTime(acctEntity.getResovleDate());
-            TargetFinProduct targetFinProduct = interfCommonService.getTargetFinProduct(dto.getAssetId());
-            if(DictCodeList.交易方向_还本.getValue().equals(dto.getDealType()) 
+			/*modify by sunshuaishuai 20210427 start*/
+			TargetFinProduct targetFinProduct = interfCommonService.getTargetFinProduct(dto.getProdId());
+			/*modify by sunshuaishuai 20210427 end*/
+			if(DictCodeList.交易方向_还本.getValue().equals(dto.getDealType())
                     || DictCodeList.交易方向_到期.getValue().equals(dto.getDealType())
         			){
             	 //生成还本到账交易

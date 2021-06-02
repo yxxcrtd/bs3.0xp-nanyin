@@ -1,6 +1,7 @@
 package com.joyintech.interf.bankname.cfetsup.job.service;
 
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.interf.bankname.cfetsup.exception.FTPDirectoryAccessException;
 import com.joyintech.interf.bankname.cfetsup.exception.FTPDownloadException;
 
@@ -81,7 +82,7 @@ public class ImixCounterDealerXmlReaderService {
 
 	private String ftpusername;
 
-	private String ftppassword;
+	private String ftpword;
 
 	public void doBusiness() throws Exception {
 		log.info("开始导入本币交易成员信息批处理任务");
@@ -94,7 +95,7 @@ public class ImixCounterDealerXmlReaderService {
 			ftpusername = rdiFileInfo.containsKey("FtpRdiName") ? rdiFileInfo
 					.get("FtpRdiName")
 					: null;
-			ftppassword = rdiFileInfo.containsKey("FtpRdiPassword") ? rdiFileInfo
+			ftpword = rdiFileInfo.containsKey("FtpRdiPassword") ? rdiFileInfo
 					.get("FtpRdiPassword")
 					: null;
 		}
@@ -197,6 +198,13 @@ public class ImixCounterDealerXmlReaderService {
 			List<FxImixBondinfoDto> data = new ArrayList<FxImixBondinfoDto>();
 			// 解析文件
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			//------start---------2020-11-25 周敏 添加 
+			//禁用DTDs (doctypes),几乎可以防御所有xml实体攻击
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true); //首选
+	        //如果不能禁用DTDs,可以使用下两项，必须两项同时存在
+			factory.setFeature("http://xml.org/sax/features/external-general-entities", false);        //防止外部实体POC 
+			factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);   //防止参数实体POC
+			//------end---------
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = null;
 			document = builder.parse(bondFile);
@@ -282,6 +290,13 @@ public class ImixCounterDealerXmlReaderService {
 			List<FxJgzcgxDto> data = new ArrayList<FxJgzcgxDto>();
 			// 解析文件
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			//------start---------2020-11-25 周敏 添加 
+			//禁用DTDs (doctypes),几乎可以防御所有xml实体攻击
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true); //首选
+	        //如果不能禁用DTDs,可以使用下两项，必须两项同时存在
+			factory.setFeature("http://xml.org/sax/features/external-general-entities", false);        //防止外部实体POC 
+			factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);   //防止参数实体POC
+			//------end---------
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(jgzcFile);
 			Element element = document.getDocumentElement();
@@ -389,8 +404,14 @@ public class ImixCounterDealerXmlReaderService {
 			long t1 = new Date().getTime();
 			List<FxImixErrorInfoDto> data = new ArrayList<FxImixErrorInfoDto>();
 			// 解析文件
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			//------start---------2020-11-25 周敏 添加 
+			//禁用DTDs (doctypes),几乎可以防御所有xml实体攻击
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true); //首选
+	        //如果不能禁用DTDs,可以使用下两项，必须两项同时存在
+			factory.setFeature("http://xml.org/sax/features/external-general-entities", false);        //防止外部实体POC 
+			factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);   //防止参数实体POC
+			//------end---------
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(membersFile);
 			Element element = document.getDocumentElement();
@@ -484,8 +505,14 @@ public class ImixCounterDealerXmlReaderService {
 			long t1 = new Date().getTime();
 			List<FxImixMemMailInfoDto> data = new ArrayList<FxImixMemMailInfoDto>();
 			// 解析文件
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			//------start---------2020-11-25 周敏 添加 
+			//禁用DTDs (doctypes),几乎可以防御所有xml实体攻击
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true); //首选
+	        //如果不能禁用DTDs,可以使用下两项，必须两项同时存在
+			factory.setFeature("http://xml.org/sax/features/external-general-entities", false);        //防止外部实体POC 
+			factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);   //防止参数实体POC
+			//------end---------
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(membersFile);
 			Element element = document.getDocumentElement();
@@ -642,8 +669,14 @@ public class ImixCounterDealerXmlReaderService {
 			long t1 = new Date().getTime();
 			List<FxImixMemInfoDto> data = new ArrayList<FxImixMemInfoDto>();
 			// 解析文件
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			//------start---------2020-11-25 周敏 添加 
+			//禁用DTDs (doctypes),几乎可以防御所有xml实体攻击
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true); //首选
+	        //如果不能禁用DTDs,可以使用下两项，必须两项同时存在
+			factory.setFeature("http://xml.org/sax/features/external-general-entities", false);        //防止外部实体POC 
+			factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);   //防止参数实体POC
+			//------end---------
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(membersFile);
 			Element element = document.getDocumentElement();
@@ -752,7 +785,7 @@ public class ImixCounterDealerXmlReaderService {
 			}
 
 			Assert.hasText(this.ftpusername, "ftp服务器用户名未配置!");
-			Assert.hasText(this.ftppassword, "ftp服务器密码未配置!");
+			Assert.hasText(this.ftpword, "ftp服务器密码未配置!");
 
 			// 获取文件
 			return getFilesThroughFtp(uri);
@@ -773,7 +806,7 @@ public class ImixCounterDealerXmlReaderService {
 		int indexPort = uri.lastIndexOf(":");
 		String ip = uri.substring(6, indexPort);
 		Integer port = Integer.parseInt(uri.substring(indexPort + 1));
-		helper.connectServer(ftpusername, ftppassword, ip, port);
+		helper.connectServer(ftpusername, ftpword, ip, port);
 		log.info("下载ftp文件!");
 		// 下载文件
 		try {
@@ -809,11 +842,11 @@ public class ImixCounterDealerXmlReaderService {
 	private static File[] getLocalFiles(String filepath) {
 		log.info("从本地文件夹获取文件 filepath = " + filepath);
 		File[] files = new File[downloadFiles.length];
-		File folder = new File(filepath);
+		File folder = new SafelyFile(filepath);
 		if (folder.exists() && folder.isDirectory()) {
 			// find files under folder
 			for (int i = 0; i < downloadFiles.length; i++) {
-				File f = new File(TEMPFOLDER
+				File f = new SafelyFile(TEMPFOLDER
 						+ downloadFiles[i].replaceAll(".zip", ""));
 				if (f.exists()) {
 					files[i] = f;

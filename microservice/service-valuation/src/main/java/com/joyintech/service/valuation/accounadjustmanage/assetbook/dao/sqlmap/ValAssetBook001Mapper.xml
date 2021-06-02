@@ -202,12 +202,9 @@
 		grp.SEQ_NO id,
 		grp.GROUP_NAME text
 		from SYS_BATCH_PRD_GRP grp
-		 <!-- 多级法人改造 add by hxy start 20200616 -->
              <if test="institutionlist != null and !institutionlist.isEmpty() ">
-             inner join  sys_batch_grp_prdlink sbgpl
-              on grp.seq_no=sbgpl.group_seq
               inner join data_auth_notify_inst dani
-	    	  on sbgpl.product_id=dani.business_id  
+	    	  on grp.seq_no=dani.business_id
 	          and dani.data_type='V08'
                    and dani.institution_code
                    <foreach collection="institutionlist" item="item" separator=","
@@ -215,7 +212,6 @@
                     #{item}
                    </foreach>
              </if>
-       <!-- 多级法人改造 add by hxy end 20200616 --> 
 		where 1=1 --system_code = 'SYS'
 		AND IS_HANDWORK = '01'
 		<!-- where system_code = 'VAL' -->

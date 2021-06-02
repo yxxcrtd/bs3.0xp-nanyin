@@ -946,9 +946,11 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             //basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getBusiCode());
             
             if(StringUtil.isNotEmpty(trdProductDeal)){
-            	trdProductDeal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
-                trdProductDeal.setBusiType(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
-                trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());//交易状态
+                if (trdProductDeal != null){
+                    trdProductDeal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
+                    trdProductDeal.setBusiType(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
+                    trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());//交易状态
+                }
                 // 发送Murex接口处理
                 // this.sendMurex(entity, false);
                 // 一体化对应etliu start

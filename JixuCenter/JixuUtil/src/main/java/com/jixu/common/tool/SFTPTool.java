@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -238,18 +239,18 @@ public class SFTPTool {
 		/**
 		 * 本地文件夹
 		 */
-		File temp = new File(localDir);
+		File temp = new SafelyFile(localDir);
 		if (!temp.exists()) {
 			temp.mkdirs();
 		}
-		File file = new File(remoteFile);
+		File file = new SafelyFile(remoteFile);
 		try {
 			sftp.ls(remoteFile);
 		} catch (SftpException e) {
 			logger.error("服务器上没有该目录：" + remoteFile);
 			return;
 		}
-		File localfile = new File(localDir + File.separator + file.getName());
+		File localfile = new SafelyFile(localDir + File.separator + file.getName());
 		String localfileName = localDir + File.separator + file.getName();
 		if (!localfile.exists()) {
 			sftp.get(remoteFile, localfileName);
@@ -296,9 +297,9 @@ public class SFTPTool {
 	 */
 	private void lsBackup(String backupPath, String oldFileName, String backupPathName) {
 
-		File temp = new File(backupPath);
-		File backupName = new File(backupPathName);
-		File oldName = new File(oldFileName);
+		File temp = new SafelyFile(backupPath);
+		File backupName = new SafelyFile(backupPathName);
+		File oldName = new SafelyFile(oldFileName);
 		if (!temp.exists()) {
 			temp.mkdirs();
 		}
@@ -315,8 +316,8 @@ public class SFTPTool {
 	public void downFileOrDir(String remoteFileName, String localDir, String backupPath) throws Exception {
 		try {
 			String curDir = "";
-			File file = new File(remoteFileName);
-			File temp = new File(localDir);
+			File file = new SafelyFile(remoteFileName);
+			File temp = new SafelyFile(localDir);
 			if (!temp.exists()) {
 				temp.mkdirs();
 			}
@@ -339,7 +340,7 @@ public class SFTPTool {
 						downFileOrDir(remoteFileName + '/' + names.get(i), localDir + '/' + names.get(i), backupPath);
 					} else {
 						String localfileName = localDir + File.separator + fileName;
-						File localfile = new File(localfileName);
+						File localfile = new SafelyFile(localfileName);
 						if (!localfile.exists()) {
 							sftp.get(names.get(i), localfileName);
 							downLoadNums++;
@@ -374,7 +375,7 @@ public class SFTPTool {
 					logger.info("服务器没有该目录" + remoteFileName);
 					return;
 				}
-				File localfile = new File(localDir + File.separator + file.getName());
+				File localfile = new SafelyFile(localDir + File.separator + file.getName());
 				String localfileName = localDir + File.separator + file.getName();
 				if (!localfile.exists()) {
 					sftp.get(file.getName(), localfileName);
@@ -520,7 +521,7 @@ public class SFTPTool {
 	 */
 	public File getFileTransfer(String remote, String fileName, String localDir, String prodName) throws IOException {
 		String curDir = "";
-		File temp = new File(localDir);
+		File temp = new SafelyFile(localDir);
 		File localfile = null;
 		FileOutputStream output = null;
 		if (!temp.exists()) {
@@ -538,7 +539,7 @@ public class SFTPTool {
 			curDir = sftp.pwd();
 			sftp.cd(curDir);
 			try {
-				localfile = new File(localDir + File.separator + fileName);
+				localfile = new SafelyFile(localDir + File.separator + fileName);
 				output = new FileOutputStream(localfile);
 				sftp.get(fileName, output);
 			} catch (SftpException e) {

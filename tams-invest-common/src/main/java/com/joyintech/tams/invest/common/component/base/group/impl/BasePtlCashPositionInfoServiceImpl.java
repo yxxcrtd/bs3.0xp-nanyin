@@ -142,7 +142,13 @@ public class BasePtlCashPositionInfoServiceImpl implements BasePtlCashPositionIn
                 // 查询最近的那一天
                 Date maxCdate = basePtlCashPositionInfoMapper.selectCashPositionMaxCdate(positionFlowDto);
                 if (maxCdate == null) {
-                    ptlCashPositionMapper.insert(position);
+                    // modify by etliu 汇总表更新并发问题解决 20210511 start
+                    try {
+                        ptlCashPositionMapper.insert(position);
+                    } catch (Exception e) {
+                        basePtlCashPositionInfoMapper.updateByPrimaryKeySelectiveForFlow(position);
+                    }
+                    // modify by etliu 汇总表更新并发问题解决 20210511 end
                 }
                 else {
                     PtlCashPositionFlowDto tempPositionFlowDto = new PtlCashPositionFlowDto();
@@ -150,12 +156,24 @@ public class BasePtlCashPositionInfoServiceImpl implements BasePtlCashPositionIn
                     tempPositionFlowDto.setCdate(maxCdate);
 
                     BigDecimal tempAmount = basePtlCashPositionInfoMapper.selectCashPosition(tempPositionFlowDto);
+                    // modify by etliu 汇总表更新并发问题解决 20210511 start
+                    BigDecimal flowAmount = position.getAmount();
                     position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), tempAmount));
-                    ptlCashPositionMapper.insert(position);
+                    try {
+                        ptlCashPositionMapper.insert(position);
+                    } catch (Exception e) {
+                        position.setAmount(flowAmount);
+                        basePtlCashPositionInfoMapper.updateByPrimaryKeySelectiveForFlow(position);
+                    }
+                    // modify by etliu 汇总表更新并发问题解决 20210511 end
                 }
             } else {
-                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
-                ptlCashPositionMapper.updateByPrimaryKeySelective(position);
+                // modify by etliu 汇总表更新并发问题解决 20210511 start
+//                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
+//                ptlCashPositionMapper.updateByPrimaryKeySelective(position);
+                basePtlCashPositionInfoMapper.updateByPrimaryKeySelectiveForFlow(position);
+                // modify by etliu 汇总表更新并发问题解决 20210511 end
+
             }
 
             // 2.2.2 检索组合持仓的最大日期

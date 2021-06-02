@@ -71,7 +71,7 @@ public class PurSaleServiceMLImpl implements PurSaleService {
 				} else if(tempCmpStr.equals(trandata.getTanum() + "," + trandata.getCusip())) {
 					//如果是同一个tanum,cusip.放到同一个list
 					
-				} else if (tempCmpStr != null) {//另外一组cusip.
+				} else if (tempCmpStr != null && transWrap != null) {//另外一组cusip.
 					transWrap.setTransFeeList(tranBasicFeeDao.loadTranBasicFee(tanum));
 					
 					if (ratesMap.containsKey(currId)) {
@@ -88,8 +88,10 @@ public class PurSaleServiceMLImpl implements PurSaleService {
 					tempCmpStr = trandata.getTanum() + "," + trandata.getCusip();
 					transWrap = new TransactionWrapObj();
 					//transWrap.getTrandataList().add(trandata);
-				} 
-				transWrap.getTrandataList().add(trandata);
+				}
+				if (transWrap != null){
+					transWrap.getTrandataList().add(trandata);
+				}
 				tanum = trandata.getTanum().getId();
 				currId = trandata.getCusip().getPriCur();
 			}

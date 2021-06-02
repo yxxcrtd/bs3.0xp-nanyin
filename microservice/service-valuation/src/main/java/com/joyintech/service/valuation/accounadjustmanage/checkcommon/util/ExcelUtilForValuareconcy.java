@@ -353,7 +353,9 @@ public class ExcelUtilForValuareconcy {
             }
             finally {
                 try {
-                    fs.close();
+                    if (fs != null){
+                        fs.close();    
+                    }
                 }
                 catch (IOException e) {
                     e.printStackTrace();

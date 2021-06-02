@@ -1269,9 +1269,9 @@ public class FinProductCommonBatchService {
         }
 
         // 2.调用共通查询估值方案
-        Map<String, Object> params = new HashMap<>();
-        params.put("happenDate", happenDate);
-        params.put("booksetId", booksetId);
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("happenDate", happenDate);
+//        params.put("booksetId", booksetId);
         List<SchemeDetailDto> listSchemeDetailDto = this.getSchemeDetail(happenDate, booksetId,
                 DictCodeListExt1.证券品种_债券.getValue(), DictCodeListExt1.配置方案类型_估值方案.getValue(),
                 targetFinProduct.getTradeMarket(), targetFinProduct.getType1(), invAim);
@@ -1669,11 +1669,14 @@ public class FinProductCommonBatchService {
         // 赋值市场代码
         String finprodMarketId = targetFinProduct.getFinprodMarketId();
 
-        // 基金  货币基金 并且 场外基金  另外查询 行情数据 moneyFundDealCountingDrawingTask
-        if(StringUtil.equals(targetFinProduct.getProfitType(),"03") && StringUtil.equals(targetFinProduct.getTradeMarket(),"09")){
+        // 基金  货币基金 并且   另外查询 行情数据 moneyFundDealCountingDrawingTask
+        if(StringUtil.equals(targetFinProduct.getProfitType(),"03")){
+
+            // 货币基金 节假日 直接跳过
+            String isHoliday = commonMapper.getIsHoliday(happenDate, targetFinProduct.getCalendarId());
 
             List<FinProductValuation> finProductValuationList = queryValDataListByMoneyFund(targetFinProduct, calenderId, happenDate);
-            if(StringUtil.isEmptyList(finProductValuationList)){
+            if(!StringUtil.equals(isHoliday,"0") || !StringUtil.isEmptyList(finProductValuationList)){
                 marketPriceDto.setPreCheckFlag(true);
             }
             return marketPriceDto;
@@ -1832,16 +1835,17 @@ public class FinProductCommonBatchService {
 
 
     /**
-     * 市价查询-计划类净值型 仅用于行情数据 批前检查
-     *
+     * 市价查询-计划类净值型  type 10 仅用于行情数据 批前检查
+     *          计划类货币型 type 11 仅用于行情数据 批前检查
      * @param happenDate 发生日
      * @param finProdId 金融产品代码
-     * @return BigDecimal 市价
+     * @return MarketPriceDto 市价
      * @see
      * @since 1.0
      */
-    public MarketPriceDto getPlanAssetPreCheckDto(Date happenDate, String finProdId, String booksetId) {
+    public MarketPriceDto getPlanAssetPreCheckDto(Date happenDate, String finProdId, String booksetId,String type) {
 
+        // type 10:  DictCodeListExt1.证券品种_计划类资产_净值型.getValue()      11: DictCodeListExt1.证券品种_计划类资产_货币型.getValue()
         // 定义变量
         MarketPriceDto marketPriceDto = new MarketPriceDto(); // 变量.市价Dto
         String marketCode = "";// 变量.市场代码
@@ -1868,8 +1872,9 @@ public class FinProductCommonBatchService {
 
         // 调共通方法-【详细设计-标的类共通方法设计】-估值方案查询SHEET
         List<SchemeDetailDto> listSchemeDetailDto = this.getSchemeDetail(happenDate, booksetId,
-                DictCodeListExt1.证券品种_计划类资产_净值型.getValue(), DictCodeListExt1.配置方案类型_估值方案.getValue(),
-                null, null, null);
+                    type, DictCodeListExt1.配置方案类型_估值方案.getValue(),
+                    null, null, null);
+
         if (CollectionUtils.isEmpty(listSchemeDetailDto) || listSchemeDetailDto.get(0) == null) {
             return marketPriceDto;
         }

@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -157,7 +158,7 @@ public class SvrExchangFileImpService extends FileImpService {
 			}
 			// 任务结束，停止线程池的所有线程
 			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/MST_EXCHANGE_QUOTE/"), new String[] { "tmp" }, false);
+			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/MST_EXCHANGE_QUOTE/"), new String[] { "tmp" }, false);
 			List<String> content = new ArrayList<>(listData.size());
 			String result = "";
 			for (File f : files) {

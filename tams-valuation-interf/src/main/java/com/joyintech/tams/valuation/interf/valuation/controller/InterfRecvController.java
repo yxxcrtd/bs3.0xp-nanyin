@@ -86,7 +86,7 @@ public class InterfRecvController {
         if(MultilevelDataAuthorityUtil.isEnabled()){
             String institutionCode = RequestUtil.getParam("INSTITUTION_CODE");
             if(StringUtil.isNotEmpty(institutionCode)){
-                params.put("INSTITUTION_CODE",institutionCode);
+//                params.put("INSTITUTION_CODE",institutionCode);
             }
         }
         //add by liupengfei for 多级法人改造 E

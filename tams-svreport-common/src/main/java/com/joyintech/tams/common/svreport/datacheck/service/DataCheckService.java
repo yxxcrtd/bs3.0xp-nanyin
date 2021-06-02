@@ -531,7 +531,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式错误!["+r.getCheckconditionid()+"]");
                     continue;
@@ -630,7 +630,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"方法的目标格式错误!["+r.getCheckruleid()+"]");
                     continue;
@@ -746,7 +746,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式错误!["+r.getCheckconditionid()+"]");
                     continue;
@@ -847,7 +847,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"方法的目标格式错误!["+r.getCheckruleid()+"]");
                     continue;

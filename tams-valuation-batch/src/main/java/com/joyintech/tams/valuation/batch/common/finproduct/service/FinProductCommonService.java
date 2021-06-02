@@ -1508,14 +1508,16 @@ public class FinProductCommonService {
     	//double amount = 0;
     	//变量.剩余券面
     	double surplusSec = 0;
-    	for(TargetCashPlan listRedinfo : listRedinfoList) {
-    		for(Date queryDate : queryDateList) {
-    			if(listRedinfo.getMdate().compareTo(queryDate)==-1 || listRedinfo.getMdate().compareTo(queryDate)==0) {
-    				surplusSec = resultMap.get(queryDate)-listRedinfo.getPrinAmt().doubleValue();
-    				resultMap.put(queryDate, surplusSec);
-    			}
-    		}
-    	}
+    	if (listRedinfoList != null){
+            for(TargetCashPlan listRedinfo : listRedinfoList) {
+                for(Date queryDate : queryDateList) {
+                    if(listRedinfo.getMdate().compareTo(queryDate)==-1 || listRedinfo.getMdate().compareTo(queryDate)==0) {
+                        surplusSec = resultMap.get(queryDate)-listRedinfo.getPrinAmt().doubleValue();
+                        resultMap.put(queryDate, surplusSec);
+                    }
+                }
+            }
+        }
     	//返回 出参.百元券面结果集
 		return resultMap;
     	

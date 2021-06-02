@@ -211,6 +211,6 @@ public class UpTrInqSec002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getFinprodName")
     public String getFinprodName(String finprodId){
-        return upTrInqSec002Service.getFinprodName(finprodId);
+        return StringUtil.trimHtmlTag(upTrInqSec002Service.getFinprodName(finprodId));
     }
 }

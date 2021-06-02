@@ -371,6 +371,7 @@
             return false;
         }
         window.parent.BussRepoSecPtl[entityName].addPledgeBond(pledgeAllRows);
+        window.parent.BussRepoSecPtl[entityName].createAuto();
         var index = window.parent.layer.getFrameIndex(window.name);
         window.parent.layer.close(index);
     };

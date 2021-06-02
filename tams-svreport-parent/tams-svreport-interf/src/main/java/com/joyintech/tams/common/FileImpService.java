@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import org.apache.commons.collections.CollectionUtils;
@@ -230,7 +231,7 @@ public abstract class FileImpService extends InterfService{
                 	 logger.info("实际取数目录："+finalPath);
                     if(StringUtil.equals(ftpType, "03")){
                 		//本地
-                		File finalDir = new File(finalPath);
+                		File finalDir = new SafelyFile(finalPath);
                         if (finalDir.exists() && finalDir.isDirectory()) {
                             Collection<File> files = FileUtils.listFiles(finalDir,
                                     null, false);
@@ -242,7 +243,7 @@ public abstract class FileImpService extends InterfService{
                                 if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
                                     return fileName.contains((String)name);
                                 })) {
-                                    File lf = new File(localPath + fileName);
+                                    File lf = new SafelyFile(localPath + fileName);
                                     if (!lf.exists()) {
                                         lf.createNewFile();
                                         FileUtils.copyFile(ff, lf);
@@ -276,7 +277,7 @@ public abstract class FileImpService extends InterfService{
                                 if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
                                     return fileName.contains((String)name);
                                 })) {
-                                    File lf = new File(localPath + fileName);
+                                    File lf = new SafelyFile(localPath + fileName);
                                     if (!lf.exists()) {
                                         SftpUtil.downloadSftp(username, url, Integer.parseInt(port), password,finalPath, entry.getFilename(), localPath);
                                     }
@@ -1011,7 +1012,7 @@ public abstract class FileImpService extends InterfService{
         baseinfoList.forEach(item -> lines.add(ImportGenerator.buildTxt(item, columns)));
         try {
             FileUtils.writeLines(
-                new File(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
+                new SafelyFile(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
                 "UTF-8", lines, true);
         }
         catch (IOException e) {

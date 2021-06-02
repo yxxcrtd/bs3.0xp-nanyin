@@ -274,7 +274,7 @@ public class TrdProjectInvestTrade003Controller extends BaseController {
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_项目类资产交易);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
 
     /**

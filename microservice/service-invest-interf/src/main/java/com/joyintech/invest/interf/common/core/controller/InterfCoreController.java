@@ -3,6 +3,7 @@ package com.joyintech.invest.interf.common.core.controller;
 import java.io.File;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -376,7 +377,7 @@ public class InterfCoreController {
      * @return
      */
 	private boolean findFile(String filePath){
-        File file = new File(filePath);
+        File file = new SafelyFile(filePath);
         return file.exists();
     }
 }

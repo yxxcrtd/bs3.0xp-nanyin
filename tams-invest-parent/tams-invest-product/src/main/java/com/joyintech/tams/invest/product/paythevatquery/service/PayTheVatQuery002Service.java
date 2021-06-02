@@ -870,6 +870,28 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
     	pageParam.put("finprodType2_F28", BussinessDictCodeList.金融产品类型_投管用_通道.getValue());
         return payTheVatQuery002Mapper.searchCurrency(pageParam);
     }
+
+
+    /**
+     * 查询通道下的产品已跑批日期小于纳税结束日
+     *
+     * @param params
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<String> searchChlPtlBookSet(Map<String, Object> params){
+        if(StringUtil.isNotEmpty(params.get("portfolioId"))){
+            String portfolioId = (String) params.get("portfolioId");
+            String [] portfolioIdArr = portfolioId.split(",");
+            params.put("portfolioIdArr", portfolioIdArr);
+        }
+        List<String> strList = payTheVatQuery002Mapper.searchChlPtlBookSet(params);
+        if (strList == null) {
+            strList = new ArrayList<>();
+        }
+        return strList;
+    }
 }
 
 

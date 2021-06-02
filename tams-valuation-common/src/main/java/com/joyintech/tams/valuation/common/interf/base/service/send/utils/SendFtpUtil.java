@@ -347,9 +347,11 @@ public class SendFtpUtil {
         catch (SftpException e) {
             logger.error("未找到文件:" + pathname, e);
         }
-        for (LsEntry lsEntry : vector) {
-            if (!".".equals(lsEntry.getFilename()) && !"..".equals(lsEntry.getFilename())) {
-                res.add(lsEntry.getFilename());
+        if (vector != null){
+            for (LsEntry lsEntry : vector) {
+                if (!".".equals(lsEntry.getFilename()) && !"..".equals(lsEntry.getFilename())) {
+                    res.add(lsEntry.getFilename());
+                }
             }
         }
         return res;

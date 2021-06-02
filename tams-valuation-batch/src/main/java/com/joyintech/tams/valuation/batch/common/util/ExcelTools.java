@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -56,6 +57,7 @@ public class ExcelTools {
 
         // 工作表对象
         HSSFWorkbook wb = null;
+        FileOutputStream outputStream = null;
         try {
             // 工作表对象初始化
             if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
@@ -152,15 +154,12 @@ public class ExcelTools {
                 }
             }
 
-            File file = new File(outputFilepath);
+            File file = new SafelyFile(outputFilepath);
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            FileOutputStream outputStream = new FileOutputStream(file);
+            outputStream = new FileOutputStream(file);
             wb.write(outputStream);
-            outputStream.flush();
-            outputStream.close();
-
         }
         catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -169,6 +168,15 @@ public class ExcelTools {
             try {
                 if(wb != null) {
                     wb.close(); 
+                }
+            }
+            catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
+            try {
+                if(outputStream != null) {
+                    outputStream.flush();
+                    outputStream.close();
                 }
             }
             catch (IOException e) {

@@ -256,9 +256,10 @@
                                 <div class="layui-inline layui-col-md4">
                                     <label class="layui-form-label form-lable">托管机构</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select id="truDep" name="truDep" class="layui-input form-input input-select"
-                                            allowClear="true">
-                                        </select>
+                                        <input type="text" id="truDep" name="truDep" class="layui-input form-input"
+                                               data-th-value="${entity?.registOrg}"
+                                               allowClear="true">
+                                        </input>
                                     </div>
                                 </div>
                                 </div>

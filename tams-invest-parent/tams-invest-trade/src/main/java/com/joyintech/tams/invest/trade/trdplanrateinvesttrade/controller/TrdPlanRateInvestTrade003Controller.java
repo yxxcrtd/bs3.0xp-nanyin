@@ -615,7 +615,7 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_存续期);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
     /**
      * 查询资产管理人 <功能详细描述>

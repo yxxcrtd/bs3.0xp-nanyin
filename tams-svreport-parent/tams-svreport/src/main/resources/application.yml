@@ -46,7 +46,8 @@ application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.78:1521/ORCL
   sqldiruserName: report_chb
   sqldirpassword: report_chb
-
+  chb:
+    base64Key: HF*ts303
 eureka:
   instance:
     hostname: report-server

@@ -304,12 +304,14 @@ public class AutoPeriodSeclendCommonService extends BaseService {
 
                         BigDecimal 不带最大持仓的其他金额 = BigDecimal.ZERO;
                         for (WflTrdProductDeal wflTrdProductDeal : trdProductDeals) {
-                            if (!wflTrdProductDeal.getTradeId().equals(最大持仓的交易.getTradeId())) {
+                            if (最大持仓的交易 != null && !wflTrdProductDeal.getTradeId().equals(最大持仓的交易.getTradeId())) {
                                 不带最大持仓的其他金额 = ArithmeticUtil.doAdd(不带最大持仓的其他金额, deal.getFpriceAmt());
                             }
                         }
-                        最大持仓的交易.setFpriceAmt(ArithmeticUtil.subtract(总金额, 不带最大持仓的其他金额));
-                        最大持仓的交易.setTradeAmt(最大持仓的交易.getFpriceAmt());
+                        if (最大持仓的交易 != null){
+                            最大持仓的交易.setFpriceAmt(ArithmeticUtil.subtract(总金额, 不带最大持仓的其他金额));
+                            最大持仓的交易.setTradeAmt(最大持仓的交易.getFpriceAmt());    
+                        }
                     }
                     deals.addAll(trdProductDeals);
                 }

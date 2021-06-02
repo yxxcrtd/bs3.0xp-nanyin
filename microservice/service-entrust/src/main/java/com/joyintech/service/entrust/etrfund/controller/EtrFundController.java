@@ -14,6 +14,7 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrfund.dto.EtrFundDto;
 import com.joyintech.service.entrust.etrfund.service.EtrFundService;
@@ -360,7 +361,7 @@ public class EtrFundController {
     @RequestMapping("selectManeger")
     @ResponseBody
     public String selectManeger(String issuer){
-        return etrFundService.selectManeger(issuer);
+        return StringUtil.trimHtmlTag(etrFundService.selectManeger(issuer));
     }
 
     @PostMapping("/findSameNameCounterId")

@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public abstract class WriteFileBasic implements WriteDataFile {
 		folderPath = parseDateFolder(folderPath);
 		String filename = interfaceSource.getOutFileName();
 		filename = parseOutFileName(filename, interfaceSource.getSourceID());
-		File folder = new File(folderPath);
+		File folder = new SafelyFile(folderPath);
 		if (!folder.isDirectory()) {
 			boolean b = folder.mkdirs();
 			if (!b) {
@@ -64,7 +65,7 @@ public abstract class WriteFileBasic implements WriteDataFile {
 //			throw new Exception("文件夹不存在: " + folder);
 		}
 		String filePath = folder + "/" + filename;
-		File file = new File(filePath);
+		File file = new SafelyFile(filePath);
 		file.createNewFile();
 		dataSet.setWriteFilePath(file.getPath());
 

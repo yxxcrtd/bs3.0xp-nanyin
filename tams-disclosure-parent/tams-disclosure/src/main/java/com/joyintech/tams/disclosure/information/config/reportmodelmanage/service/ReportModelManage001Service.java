@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +91,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             String exportFilePath = CacheUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String zipFileName = FileNameUtil.createFileName("zip");
-            File zipFile = new File(exportFilePath + File.separator + zipFileName);
+            File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             FileOutputStream stream = null;
             ZipOutputStream  zipOut =null;
             try{
@@ -243,7 +244,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             String fileType = list.get(0).getFileType();
             String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String mergeExportFileName = FileNameUtil.createFileName(fileType);
-            File exportFile = new File(exportFilePath + File.separator + mergeExportFileName);
+            File exportFile = new SafelyFile(exportFilePath + File.separator + mergeExportFileName);
             if("docx".equals(fileType)){
                 OfficeMergeUtil.mergeWord(exportFilePath + File.separator + mergeExportFileName, srcFileList);
             }else if("xls".equals(fileType) || "xlsx".equals(fileType)){
@@ -302,18 +303,23 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
         	if(resultMap.entrySet().size()>1){
         		String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
         		fileName = FileNameUtil.createFileName("zip");
-        		exportFile = new File(uploadFilePath+fileName);
-        		zipOut = new ZipOutputStream(new FileOutputStream(exportFile));
-//    			zipOut.setEncoding(ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE);
-    			for (Map.Entry<String, String> val : resultMap.entrySet()) {
-            		reportModelManage001Dto.getParam().put("portnum", val.getKey());
-    				compressFile2(zipOut, new File(val.getValue()),buildFileName(reportModelManage001Dto));
-				}
-    			zipOut.close();
-            	
+        		exportFile = new SafelyFile(uploadFilePath+fileName);
+        		zipOut = null;
+        		try {
+	        		zipOut = new ZipOutputStream(new FileOutputStream(exportFile));
+	//    			zipOut.setEncoding(ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE);
+	    			for (Map.Entry<String, String> val : resultMap.entrySet()) {
+	            		reportModelManage001Dto.getParam().put("portnum", val.getKey());
+	    				compressFile2(zipOut, new SafelyFile(val.getValue()),buildFileName(reportModelManage001Dto));
+					}
+                }finally {
+        		    if(zipOut != null){
+                        zipOut.close();
+                    }
+                }
             }else{
             	fileName = buildFileName(reportModelManage001Dto);
-            	exportFile=new File(reportModelManage001Dto.getTemLoad());///NB/GLJY
+            	exportFile=new SafelyFile(reportModelManage001Dto.getTemLoad());///NB/GLJY
             }
       
             

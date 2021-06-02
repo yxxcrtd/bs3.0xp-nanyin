@@ -12,6 +12,8 @@ import javax.jms.TextMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.SessionAwareMessageListener;
 
@@ -26,7 +28,9 @@ import org.springframework.jms.listener.SessionAwareMessageListener;
 public class ActiveMQListener implements SessionAwareMessageListener<Message>{
 	private static final Logger logger = LoggerFactory.getLogger(ActiveMQListener.class);
 	
-	@Resource(name = "activeMqJmsTemplate")
+//	@Resource(name = "activeMqJmsTemplate")
+	@Autowired(required = false)
+	@Qualifier("activeMqJmsTemplate")
 	private JmsTemplate activeMqJmsTemplate;
 	@Resource(name = "sessionAwareQueue")
 	private Destination sessionAwareQueue;

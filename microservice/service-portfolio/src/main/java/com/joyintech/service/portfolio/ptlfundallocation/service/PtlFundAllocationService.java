@@ -31,6 +31,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
@@ -401,16 +402,34 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
                 BeanUtil.copyPropertiesIgnoreNull(ptlCashPositionFlowDto, ptlCashPositionFlow);
                 if (是否撤销) {
                     basePtlCashPositionInfoService.deleteCashPosition(ptlCashPositionFlowDto);
+                    //根据业务编号、持仓类型、账户删除撤销发起时指令可用持仓的数据
+                    Map<String, Object> paramTemp = new HashMap<String, Object>();
+                    paramTemp.put("orderId",ptlCashPositionFlowDto.getOrderId());
+                    paramTemp.put("holdingType",DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    paramTemp.put("acctId",ptlCashPositionFlowDto.getAcctId());
+                    paramTemp.put("offsetFlag", DictCodeList.冲正标识_冲销交易.getValue());
+                    ptlFundAllocationMapper.deleteEtrFlowByOrderId(paramTemp);
                     ptlCashPositionFlowDto.setOrderId(ptlCashPositionFlowDto.getOrderId() + "R");
                 }
                 ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
 //                增加委托指令流水逻辑
                 basePtlCashPositionInfoService.insertCashPositionFlow(ptlCashPositionFlowDto);
                 ptlCash.add(ptlCashPositionFlowDto);
-                PtlCashPositionFlowDto ptlCashPositionFlowDto2 = new PtlCashPositionFlowDto();
-                BeanUtil.copyPropertiesIgnoreNull(ptlCashPositionFlowDto2, ptlCashPositionFlowDto);
+
                 BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
                 bussinessCodeParameter.setSeqNo("9999");
+                //指令持仓
+                if (是否撤销) {
+                    EtrCashPositionFlowDto etrCashPositionFlowDto = new EtrCashPositionFlowDto();
+                    BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto, ptlCashPositionFlowDto);
+                    etrCashPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    String seqnoEtr = baseGetBussinessId != null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter) : IDGenerator.generate();
+                    etrCashPositionFlowDto.setSeqno(seqnoEtr);
+                    etrCashPositionFlowMapper.insert(etrCashPositionFlowDto);
+                }
+
+                PtlCashPositionFlowDto ptlCashPositionFlowDto2 = new PtlCashPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(ptlCashPositionFlowDto2, ptlCashPositionFlowDto);
                 if (是否撤销) {
                     ptlCashPositionFlowDto2.setAcctId(entity.getMyAcctNo());
                 } else {
@@ -423,7 +442,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
                 basePtlCashPositionInfoService.insertCashPositionFlow(ptlCashPositionFlowDto2);
 //                增加委托指令流水逻辑
                 ptlCash.add(ptlCashPositionFlowDto2);
-                             
+
                 List<PtlCashPositionFlowDto> ptlCash1 = new ArrayList<>();
                 ptlCash1.add(ptlCashPositionFlowDto2);
                 ptlHoldDto1.setPtlCashPositionFlows(ptlCash1);
@@ -432,7 +451,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
         if (是否撤销) {
      //增加委托指令流水逻辑
         if(baseEtrCashPositionCommService!=null){
-            baseEtrCashPositionCommService.portfolioEtrCashPosition(ptlHoldDto, false);
+            baseEtrCashPositionCommService.portfolioEtrCashPosition(ptlHoldDto1, false);
         }
         }else {
         	 //生效时收款账户增加指令流水逻辑
@@ -869,5 +888,48 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
         map.put("acctType07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
         ptlFundAllocation001Dtos = ptlFundAllocationMapper.getDetailInfo(map);
         return ptlFundAllocation001Dtos;
+    }
+
+    /**
+     * 删除现金流水表的流水
+     *
+     * @param ptlFundAllocationDto
+     * @return
+     */
+    public int doDeleteNew(PtlFundAllocationDto ptlFundAllocationDto) {
+        ptlFundAllocationMapper.deleteFlowByOrderId(ptlFundAllocationDto.getOrderId(), DictCodeList.持仓类型_可用.getValue());
+        //删除指令可用现金。撤销发起时会扣除指令可用现金，故流程被退回后再作废应该重新处理指令可用现金
+        //根据业务编号、持仓类型、账户删除撤销发起时指令可用持仓的数据
+        Map<String, Object> paramDelete = new HashMap<String, Object>();
+        paramDelete.put("orderId",ptlFundAllocationDto.getOrderId());
+        paramDelete.put("holdingType",DictCodeListExt1.持仓类型_委托指令可用.getValue());
+        paramDelete.put("acctId",ptlFundAllocationDto.getCounterAcctNo());
+        paramDelete.put("offsetFlag", DictCodeList.冲正标识_冲销交易.getValue());
+        ptlFundAllocationMapper.deleteEtrFlowByOrderId(paramDelete);
+        //更新指令现金余额表
+        /**
+         * 指令现金流水
+         */
+        List<EtrCashPosition> etrCash = new ArrayList<>();
+        EtrCashPosition tempPosition = new EtrCashPosition();
+        tempPosition.setPortfolioId(ptlFundAllocationDto.getPortfolioId());
+        tempPosition.setAcctId(ptlFundAllocationDto.getCounterAcctNo());
+        tempPosition.setCcy(ptlFundAllocationDto.getCcy());
+        tempPosition.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+        tempPosition.setCdate(ptlFundAllocationDto.getSettleDate());
+        EtrCashPositionKey etrCashPositionKey = new EtrCashPosition();
+        BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
+        EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
+        if(EtrCashPositionKey != null){
+            tempPosition.setAmount(ArithmeticUtil.doAdd(ptlFundAllocationDto.getSettleAmt(), EtrCashPositionKey.getAmount()));
+        }else{
+            tempPosition.setAmount(tempPosition.getAmount());
+        }
+        etrCash.add(tempPosition);
+
+        for (EtrCashPosition etrCashPosition : etrCash) {
+            etrCashPositionMapper.updateByPrimaryKeySelective(etrCashPosition);
+        }
+        return 1;
     }
 }

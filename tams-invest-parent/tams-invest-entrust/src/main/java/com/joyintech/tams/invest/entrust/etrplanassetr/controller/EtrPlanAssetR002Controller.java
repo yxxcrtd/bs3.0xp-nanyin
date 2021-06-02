@@ -189,7 +189,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/searchType")
     public String searchType(String finprodId){
-        return etrPlanAssetService.searchType(finprodId);
+        return StringUtil.trimHtmlTag(etrPlanAssetService.searchType(finprodId));
     }
     /**
      * 

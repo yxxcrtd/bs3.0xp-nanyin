@@ -233,15 +233,20 @@ $(function() {
                 if(unitCprice != null && unitCprice != '' && shareAmt){
                 	if(ps == ps_T19){
                 		if(pageModel != PAGE_MODEL_REFERENCE){
-                		$('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+                            var isDisabled = $("#tradeAmt").prop("disabled");
+                            var isDisabled1 = $("#shareAmt").prop("disabled");
+                            if(!isDisabled && isDisabled1){
+                                $('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+                                $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
+                            }
                 		}
                 	}
                 	else{
                 		if(pageModel != PAGE_MODEL_REFERENCE){
                 		$('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
                 		}
+                        $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
                 	}
-                    $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
                     $('#feeAmtRedem').change();
                 }else if(unitCprice != null && unitCprice != '' && unitCprice != 0 && tradeAmt){
                 	if(pageModel != PAGE_MODEL_REFERENCE){
@@ -362,7 +367,8 @@ $(function() {
             if($('#ps').val() == ps_T19 || $('#ps').val() == ps_T24 ){
                 var unitCprice = $('#unitCprice').val();
                 var shareAmt = $('#shareAmt').val();
-                if(unitCprice && shareAmt){
+                var isDisabled = $("#tradeAmt").prop("disabled");
+                if(unitCprice && shareAmt && !isDisabled){
                     $('#tradeAmt').val(unitCprice*shareAmt).trigger('blur');
                 }
             }
