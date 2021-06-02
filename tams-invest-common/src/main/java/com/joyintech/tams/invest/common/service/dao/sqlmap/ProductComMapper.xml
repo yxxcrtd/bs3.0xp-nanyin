@@ -51,7 +51,7 @@
         PORTFOLIO_NAME prodName
         from PTL_PORTFOLIO
         where
-        1 = 1
+        PORTFOLIO_TYPE != #{PORTFOLIO_TYPE_02}
         <if test="notInProductIds != null and notInProductIds.size() > 0">
             AND PORTFOLIO_ID NOT IN
             <foreach collection="notInProductIds" item="item" open="( " close=" )" separator=",">
