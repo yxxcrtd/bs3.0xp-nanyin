@@ -92,7 +92,6 @@
         ) T
         LEFT JOIN (
         SELECT
-        RANK ( ) OVER ( PARTITION BY CPRS.PROD_ID ORDER BY IFNULL( CPRS.CREATE_TIME, CPRS.UPDATE_TIME ) DESC ) MY_RANK,
         CPRS.PROD_ID,
         CPRS.PROD_REGIST_CODE,
         CPRS.IS_CONSIGN,
@@ -100,7 +99,6 @@
         FROM
         CHB_PRD_RAISETOT_SUB CPRS
         ) MJ_SUB ON T.ACCOUNT = MJ_SUB.PROD_ID
-        AND MJ_SUB.MY_RANK = 1
         LEFT JOIN (
         SELECT
         CPDS.PROD_ID,
@@ -112,9 +110,10 @@
         FROM
         CHB_PRD_DEAL_SUB CPDS
         GROUP BY
-        CPDS.PROD_ID
+        CPDS.PROD_ID,
+        CPDS.MDATE
         ) CX_SUB ON T.ACCOUNT = CX_SUB.PROD_ID
-        T.EQUITY_CONF_DATE = CX_SUB.MDATE
+        AND T.EQUITY_CONF_DATE = CX_SUB.MDATE
         LEFT JOIN CHB_PRD_BASEINFO CPB ON T.ACCOUNT = CPB.PROD_ID
         ) t
         <where>
