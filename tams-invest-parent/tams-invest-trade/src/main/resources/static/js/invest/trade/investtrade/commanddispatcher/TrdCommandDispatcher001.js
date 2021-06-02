@@ -173,7 +173,7 @@ $(function(){
             tradeMarket = data.tradeMarket;
             purchModle  = data.purchModle;
             //交易所（上交和深交）的指令(可转债网下申购亦是场内交易)
-            if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04) {
+            if((tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04)&&data.finprodType2 !=PINAN_ASSET_TYPE_F17) {
                 label = 'EtrExchangeTrade001.detail';
                 var entrustType = data.entrustType;
                 if(entrustType == ENTRUST_BUSS_TYPE_22 || entrustType == ENTRUST_BUSS_TYPE_21
