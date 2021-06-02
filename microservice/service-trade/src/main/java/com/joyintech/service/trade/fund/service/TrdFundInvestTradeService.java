@@ -1305,7 +1305,11 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
             carryAmtNew = new BigDecimal(map.get("shuhuishareAmt").toString());
             carryAmtNew = ArithmeticUtil.round(ArithmeticUtil.multiply(carryAmtNew,lastNewWfsy),2, RoundingMode.HALF_UP);
         }
-        carryAmt = carryAmt.add(carryAmtNew);
+        if(carryAmt != null){
+            carryAmt = carryAmt.add(carryAmtNew);
+        }else{
+            carryAmt = BigDecimal.ZERO;
+        }
         //待结转份额若小于0，则按0处理
         if(carryAmt.compareTo(BigDecimal.ZERO) <= 0){
             carryAmt =BigDecimal.ZERO;
