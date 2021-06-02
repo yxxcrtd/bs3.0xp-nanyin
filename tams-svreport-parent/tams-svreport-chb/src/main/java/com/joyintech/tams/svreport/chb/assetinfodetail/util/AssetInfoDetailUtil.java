@@ -478,8 +478,8 @@ public class AssetInfoDetailUtil {
         dto.setFinOrgCode(list.get(16));
         dto.setFcrGradeOut(list.get(17));
         dto.setFinancierType1(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按规模划分, list.get(18)));
-        dto.setFinancierType2(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按经济类型划分, list.get(19)));
-        dto.setFinancierType3(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按技术领域划分, list.get(20)));
+        dto.setFinancierType3(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按技术领域划分, list.get(19)));
+        dto.setFinancierType2(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按经济类型划分, list.get(20)));
         dto.setFinanceProj(list.get(21));
         dto.setIndustryLevel2Type(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(22)));
         dto.setIndustry1(dict.get("industry"+dto.getIndustryLevel2Type()));
