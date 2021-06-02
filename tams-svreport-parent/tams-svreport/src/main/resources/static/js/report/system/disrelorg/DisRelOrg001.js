@@ -50,6 +50,9 @@
          * 绑定事件：修改
          */
         table.bind('click', '.edit', function(data, index) {
+            if(data.svrStatusName == "删除"){
+                return Joyin.error("不能操作已被删除的数据");
+            }
             if(data.relorgId == null || data.relorgId == '' || data.relorgId == undefined){
                 Joyin.error("关联机构代码,数据不允许编辑");
                 return;
