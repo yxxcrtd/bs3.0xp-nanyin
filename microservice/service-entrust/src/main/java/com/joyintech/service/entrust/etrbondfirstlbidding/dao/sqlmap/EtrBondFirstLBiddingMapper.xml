@@ -67,9 +67,14 @@
                     CASE
                       WHEN T10.BID_ID IS NULL THEN
                        '01'<!--待投标，待确认-->
-                    
+					  WHEN T10.TRADE_ID IS NOT NULL THEN
+		              '05' <!--待投标，已完成-->
                       WHEN T10.IS_WIN IS NOT NULL THEN
-                       T10.IS_WIN <!--中标状态-->
+                      <!--修改因为中标结果数据字典不一致的问题 2020-03-19 start-->
+                       DECODE(T10.IS_WIN,#{YES_OR_NO_Y},
+                       '04',
+                       #{YES_OR_NO_N},'03',T10.IS_WIN) <!--中标状态-->
+						<!--修改因为中标结果数据字典不一致的问题 2020-03-19 end -->
                       ELSE
                        '02'<!--已投标、已确认-->
                     END IS_WIN
@@ -77,7 +82,8 @@
                LEFT JOIN BID_ORDER_BID_PRICE T10
                  ON T10.ENTRUST_ID = T9.ENTRUST_ID
                 AND T10.BID_PRICE = T9.BID_PRICE
-              GROUP BY T9.ENTRUST_ID, T10.BID_ID, T10.IS_WIN) T8
+              GROUP BY T9.ENTRUST_ID, T10.BID_ID, T10.IS_WIN,T10.TRADE_ID
+              ) T8
         ON T8.ENTRUST_ID = T1.ENTRUST_ID
         LEFT JOIN ETR_ENTRUST_ADD T7
         ON T1.ENTRUST_ID = T7.ENTRUST_ID
