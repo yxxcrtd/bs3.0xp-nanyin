@@ -50,7 +50,9 @@ import com.joyintech.tams.invest.entrust.etrseclend.dto.EtrSecLendDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -1235,5 +1237,23 @@ public class EtrCommonService extends BaseService<ITableRow> {
             }
         }
         return false;
+    }
+    
+    /**
+     * 请求市场行情数据接口
+     * @param url
+     * @return
+     */
+    public Map<String,Object> getMarketInfo(String url){
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(1000);
+        factory.setReadTimeout(1000);
+        RestTemplate template = new RestTemplate(factory);
+        try {
+            Map<String, Object> quoteMap = template.getForObject(url, Map.class);
+            return quoteMap;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -87,6 +87,10 @@ base:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+#市场行情信息接口
+MarketInfoInterf:
+  exchangeUrl: http://10.1.20.135:8099 #交易所
+  cmdsUrl: http://10.1.20.135:8099  #外汇交易中心
 interf:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
