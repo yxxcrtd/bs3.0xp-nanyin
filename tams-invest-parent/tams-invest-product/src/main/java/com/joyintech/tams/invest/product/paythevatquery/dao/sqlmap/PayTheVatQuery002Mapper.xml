@@ -573,6 +573,26 @@
   	<select id="searchCurrency" resultType="java.lang.String">
   	 	select CCY from FIN_PRODUCT where finprod_market_id = #{finprodMarketId,jdbcType=VARCHAR} and finprod_type2 = #{finprodType2_F28,jdbcType=VARCHAR}
   	</select>
+
+	<select id="searchChlPtlBookSet" resultType="java.lang.String">
+		select fp.FINPROD_NAME||'('||fp.FINPROD_MARKET_ID||')' as STR
+		from (
+			select SUBSTR(bb.BOOKSET_ID, 0, instr(bb.BOOKSET_ID, '_F28_', 1, 1) - 1) FINPROD_ID
+			from FIN_PRODUCT fp1
+			left join FIN_PRODUCT fp2 on fp1.CHL_FINPROD_ID = fp2.FINPROD_ID
+			left join BOK_BOOKSET bb on bb.BOOKSET_ID = fp1.FINPROD_ID
+			where fp2.FINPROD_MARKET_ID = #{channelId}) A
+		left join BOK_BOOKSET_DATE bbd on bbd.BOOKSET_ID = A.FINPROD_ID
+		left join FIN_PRODUCT fp on bbd.BOOKSET_ID = fp.FINPROD_ID
+		where  BBD.BOOKSET_DATE &lt; to_date(#{payment1}, 'yyyy-MM-dd') +1
+		<if test="portfolioIdArr!=null and portfolioIdArr.length>0">
+			and fp.FINPROD_MARKET_ID in
+			<foreach collection="portfolioIdArr" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
 </mapper>
 
 
