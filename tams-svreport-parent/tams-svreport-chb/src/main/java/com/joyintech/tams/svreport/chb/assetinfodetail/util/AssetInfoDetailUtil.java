@@ -95,6 +95,28 @@ public class AssetInfoDetailUtil {
 
     public List<ExcelValidDto> convertToBean(List<AssetInfoDetailDto> entities , List<List<String>> dataList){
         List<ExcelValidDto> resultList = new ArrayList<>();
+        Map<String,Object> params = new HashMap<>();
+        params.put("linkDictCode", DictCode.资产_负债类别.getValue());
+        List<SysDatadictListLink> listLink = assetInfoDetailMapper.getDataListLinkData(params);
+        dict = new HashMap<>();
+        listLink.forEach(sysDatadictListLink -> {
+            dict.put(sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
+        });
+        params.put("linkDictCode", DictCode.机构所属行业一级分类.getValue());
+        List<SysDatadictListLink> industryListLink = assetInfoDetailMapper.getDataListLinkData(params);
+        industryListLink.forEach(sysDatadictListLink -> {
+            dict.put("industry" + sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
+        });
+        params.put("linkDictCode", DictCode.人行资产一级分类.getValue());
+        List<SysDatadictListLink> pbcAssetType1ListLink = assetInfoDetailMapper.getDataListLinkData(params);
+        pbcAssetType1ListLink.forEach(sysDatadictListLink -> {
+            dict.put("pbcAssetType1" + sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
+        });
+        params.put("linkDictCode", DictCode.人行资产二级分类.getValue());
+        List<SysDatadictListLink> pbcAssetType2ListLink = assetInfoDetailMapper.getDataListLinkData(params);
+        pbcAssetType2ListLink.forEach(sysDatadictListLink -> {
+            dict.put("pbcAssetType2" + sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
+        });
         for (int i = 0; i < dataList.size(); i++ ) {
             if ( i < 2 ){
                 continue;
@@ -104,18 +126,6 @@ public class AssetInfoDetailUtil {
             entity.setAssetCode(list.get(0));
             entity.setIssuePartyId(list.get(1));
             entity.setAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.资产_负债二级类别, list.get(2)));
-            Map<String,Object> params = new HashMap<>();
-            params.put("linkDictCode", DictCode.资产_负债类别.getValue());
-            List<SysDatadictListLink> listLink = assetInfoDetailMapper.getDataListLinkData(params);
-            dict = new HashMap<>();
-            listLink.forEach(sysDatadictListLink -> {
-                dict.put(sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
-            });
-            params.put("linkDictCode", DictCode.机构所属行业一级分类.getValue());
-            List<SysDatadictListLink> industryListLink = assetInfoDetailMapper.getDataListLinkData(params);
-            industryListLink.forEach(sysDatadictListLink -> {
-                dict.put("industry" + sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
-            });
             entity.setAssetType(dict.get(entity.getAssetType2()));
             entity.setTradeMarket(SysDataUtil.getZZDictCodeFromName(DictCode.交易流通场所_中债, list.get(3)));
             entity.setCcy(SysDataUtil.getZZDictCodeFromName(DictCode.币种_中债, list.get(4)));
@@ -265,6 +275,16 @@ public class AssetInfoDetailUtil {
                 });
             }
             getDtoByPageMessgae(entity);
+            if (StringUtil.isNotEmpty(entity.getPbcAssetType1()) && StringUtil.isNotEmpty(entity.getPbcAssetType2())){
+                if (!StringUtil.equals(entity.getPbcAssetType1(),dict.get("pbcAssetType1"+entity.getPbcAssetType2()))){
+                    message.add("所选新人行二级分类值不在所选新人行一级分类下");
+                }
+            }
+            if (StringUtil.isNotEmpty(entity.getPbcAssetType2()) && StringUtil.isNotEmpty(entity.getPbcAssetType3())){
+                if (!StringUtil.equals(entity.getPbcAssetType2(),dict.get("pbcAssetType2"+entity.getPbcAssetType3()))){
+                    message.add("所选新人行三级分类值不在所选新人行二级分类下");
+                }
+            }
             entity.setCreateUser(LoginUserUtil.getUserName());
             entity.setCreateTime(new Date());
             entity.setUpdateTime(new Date());
