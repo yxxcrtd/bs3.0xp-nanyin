@@ -29,6 +29,7 @@ import java.util.Date;
  * @see CommonPlatformDateService
  * @since 1.0
  */
+@Primary
 @Service("serviceCommonPlatformDateService")
 public class CommonPlatformDateService implements PlatformDate {
     /**

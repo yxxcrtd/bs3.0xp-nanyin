@@ -69,7 +69,27 @@ public enum DictCodeBankBaseSubjectNatrue implements IDictCode {
     代收代付外包服务费(
             "DSDFWBFWF"
     ),
-    
+
+    应收固定管理费(
+            "YSGDGLF"
+    ),
+
+    固定管理费收入(
+            "GDGLFSR"
+    ),
+
+    应收浮动管理费(
+            "YSFDGLF"
+    ),
+
+    浮动管理费收入(
+            "FDGLFSR"
+    ),
+
+    活期存款(
+            "HQCK"
+    ),
+
     ;
     
     /**
