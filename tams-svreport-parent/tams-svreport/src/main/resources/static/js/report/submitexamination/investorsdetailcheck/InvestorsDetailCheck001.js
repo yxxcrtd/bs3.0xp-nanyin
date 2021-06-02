@@ -25,7 +25,7 @@
         searchOnInit: false, //初始化的时候就请求后台数据
         cols: [
             {title:'检查日期', type:'date', field:'equityConfDate', width:'8%'},
-            {title:'检查结果',field:'checkTotalStr', width:'8%'},
+            {title:'检查结果',field:'checkTotalStr', width:'8%',sortField:'checkTotal'},
             {title:'产品代码',field:'account', sortable:false, width:'8%'},
             {title:'产品登记编码',field:'prodRegistCode', sortable:false, width:'8%'},
             {title:'产品名称',field:'prodName', sortable:false, width:'8%'},
