@@ -52,7 +52,7 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
      * 产品代码
      */
   @PrimaryKey(Field.PK_1)
-  @NotEmpty(fieldName="FinProductBuild002.finprodMarketId",groups = {ValidateGroupEdit.class})
+  @NotEmpty(fieldName="ProRegistCodeManage003.finprodMarketId",groups = {ValidateGroupEdit.class})
     private String prodId;
 
     /**
@@ -68,26 +68,26 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
     /**
      * 产品名称
      */
-   // @NotEmpty(fieldName="FinProductBuild002.finprodName",groups = {ValidateGroupEdit.class})
+   // @NotEmpty(fieldName="ProRegistCodeManage003.finprodName",groups = {ValidateGroupEdit.class})
     private String prodName;
 
     /**
      * 产品登记编码
      */
     @PrimaryKey(Field.PK_2)
-    @NotEmpty(fieldName="FinProductBuild002.prodRegistCode",groups = {ValidateGroupEdit.class}) 
+    @NotEmpty(fieldName="ProRegistCodeManage003.prodRegistCode",groups = {ValidateGroupEdit.class})
     private String regCode;
 
     /**
      * 起息日
      */
-    //@NotEmpty(fieldName="FinProductBuild002.vdate",groups = {ValidateGroupEdit.class})
+    //@NotEmpty(fieldName="ProRegistCodeManage003.vdate",groups = {ValidateGroupEdit.class})
     private Date vdate;
 
     /**
      * 到期日
      */
-    //@NotEmpty(fieldName="FinProductBuild002.mdate",groups = {ValidateGroupEdit.class})
+    //@NotEmpty(fieldName="ProRegistCodeManage003.mdate",groups = {ValidateGroupEdit.class})
     private Date mdate;
 
    /**
@@ -112,7 +112,7 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
      * 产品运作模式
      */
     @DictFormat(DictCode.产品运作模式)
-    //@NotEmpty(fieldName="BussRepFinProductInfo.repOperateMode",groups = {ValidateGroupEdit.class})
+    //@NotEmpty(fieldName="ProRegistCodeManage003.repOperateMode",groups = {ValidateGroupEdit.class})
     private String operateMode;
 
     /**
