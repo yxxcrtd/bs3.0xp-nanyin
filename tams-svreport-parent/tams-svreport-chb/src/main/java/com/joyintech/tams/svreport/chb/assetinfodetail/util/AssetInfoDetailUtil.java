@@ -293,7 +293,7 @@ public class AssetInfoDetailUtil {
             entity.setAssetUuid(IDGenerator.generate(36));
             entity.setStatus(DictCodeListExt2.数据状态_有效.getValue());
             if (CollectionUtils.isNotEmpty(message)) {
-                resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                resultList.add(new ExcelValidDto(entity.getAssetCode(), String.valueOf(i+1),
                         StringUtil.joinString(message, "<br>")));
             }
             else {
@@ -1171,7 +1171,7 @@ public class AssetInfoDetailUtil {
         dto.setRepAssetName(list.get(6));
         dto.setRepSectype(SysDataUtil.getZZDictCodeFromName(DictCode.具体类别, list.get(7)));
         dto.setRepIssueMode(SysDataUtil.getZZDictCodeFromName(DictCode.发行方式, list.get(8)));
-        dto.setRepPartyGrade(SysDataUtil.getZZDictCodeFromName(DictCode.主体评级_中债, list.get(9)));
+        dto.setSecMainGrade(SysDataUtil.getZZDictCodeFromName(DictCode.主体评级_中债, list.get(9)));
         dto.setRepPartyType1(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按规模划分, list.get(10)));
         dto.setRepPartyType3(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按技术领域划分, list.get(11)));
         dto.setRepPartyType2(SysDataUtil.getZZDictCodeFromName(DictCode.发行机构类型_按经济类型划分, list.get(12)));
@@ -1183,9 +1183,9 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(17))) {
             dto.setRepMdate(DateUtil.parse(list.get(17)));
         }
-        dto.setBankSecZxzq(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(10)));
-        dto.setRepIsFbzb(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(10)));
-        dto.setRepBankCapital(list.get(20));
+        dto.setBankSecZxzq(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(18)));
+        dto.setRepIsFbzb(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(19)));
+        dto.setBankCapital(SysDataUtil.getZZDictCodeFromName(DictCode.银行资本补充工具,list.get(20)));
         if (StringUtil.isNotEmpty(list.get(21))){
             dto.setRepPbcAssetType1(list.get(21).substring(0,3));
         }
