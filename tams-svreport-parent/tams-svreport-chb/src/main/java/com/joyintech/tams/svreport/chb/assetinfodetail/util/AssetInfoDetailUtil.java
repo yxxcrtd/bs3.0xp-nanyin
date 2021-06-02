@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.util;
 
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
@@ -819,7 +820,14 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(6))) {
             dto.setNomCapi(new BigDecimal(list.get(6)));
         }
-        dto.setTargetType3(SysDataUtil.getZZDictCodeFromName(DictCode.标的类别, list.get(7)));
+        if (StringUtil.isNotEmpty( list.get(7))){
+            String[] targetType3s = list.get(7).split(GlobalConstant.COMMA);
+            String targetType3 = "";
+            for (int i=0;i<targetType3s.length;i++){
+                targetType3 += SysDataUtil.getZZDictCodeFromName(DictCode.标的类别, targetType3s[i]) + GlobalConstant.COMMA;
+            }
+            dto.setTargetType3(targetType3.substring(0,targetType3.length()-1));
+        }
         dto.setHoldPurpose(SysDataUtil.getZZDictCodeFromName(DictCode.持有目的, list.get(8)));
         dto.setRemark(list.get(9));
         if (StringUtil.isNotEmpty(list.get(10))) {
@@ -1088,7 +1096,14 @@ public class AssetInfoDetailUtil {
         }
         dto.setRepBasis(SysDataUtil.getZZDictCodeFromName(DictCode.计息基础_中债, list.get(10)));
         dto.setRepDepoType(SysDataUtil.getZZDictCodeFromName(DictCode.存款类型, list.get(11)));
-        dto.setRepTargetType(SysDataUtil.getZZDictCodeFromName(DictCode.标的类别, list.get(12)));
+        if (StringUtil.isNotEmpty( list.get(12))){
+            String[] repTargetTypes = list.get(12).split(GlobalConstant.COMMA);
+            String repTargetType = "";
+            for (int i=0;i<repTargetTypes.length;i++){
+                repTargetType += SysDataUtil.getZZDictCodeFromName(DictCode.标的类别, repTargetTypes[i]) + GlobalConstant.COMMA;
+            }
+            dto.setRepTargetType(repTargetType.substring(0,repTargetType.length()-1));
+        }
         dto.setRepTarget(list.get(13));
         dto.setRepRemark(list.get(14));
         if (StringUtil.isNotEmpty(list.get(15))){
