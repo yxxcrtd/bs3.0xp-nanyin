@@ -523,7 +523,7 @@
     </resultMap>
 
     <select id="getTrdBondInvestTradeDto" resultMap="trdBondInvestTradeFullResultMap">
-        SELECT
+        SELECT DISTINCT
             tpd.TOTLE_TRADE_ID, tpd.FINPROD_TYPE2, tpda.ENTRUST_ID, PP.PORTFOLIO_ID,
             tpd.SETTLE_SPEED, tpd.TRADE_DATE, tpd.SETTLE_DATE, tpd.PS,
             tpd.FINPROD_ID, fp.finprod_abbr FINPROD_NAME,fp.CALENDAR_ID, tpd.TRADE_MARKET,
