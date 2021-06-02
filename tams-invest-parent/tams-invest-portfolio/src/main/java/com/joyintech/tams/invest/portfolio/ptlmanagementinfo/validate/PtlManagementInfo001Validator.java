@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.portfolio.ptlmanagementinfo.validate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
@@ -197,15 +198,32 @@ public class PtlManagementInfo001Validator implements BeanValidator{
                 String nextId = nextDto.getAcctNo();
                 set.add(nextId);
             }
+
+            //check 同一账户类型 资金账户重复问题 add by lijie2 20200724 start
+            if(acctTypeSet.size() < dto.getFundAccountInfoDto().size()){//说明同一类型账户存在多个；
+                for(String acctType  : acctTypeSet){
+                    List<FundAccountInfoDto> fundAccountInfoList = dto.getFundAccountInfoDto().stream().filter(a -> (a.getAcctType() + a.getCcy()).equals(acctType)).collect(Collectors.toList());
+                    if(null != fundAccountInfoList && fundAccountInfoList.size() > 1){//筛选同一类型账户
+                        for(FundAccountInfoDto unit : fundAccountInfoList){//判断资金账户是否重复
+                            List<FundAccountInfoDto> ar = fundAccountInfoList.stream().filter(a -> a.getAcctNo().equals(unit.getAcctNo())).collect(Collectors.toList());
+                            if(null != ar && ar.size() > 1){
+                                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006",getMessage("FundAccountInfo.acctNo"),ar.get(0).getAcctNo())));
+                            }
+                        }
+                    }
+                }
+            }
+            //check 同一账户类型 资金账户重复问题 add by lijie2 20200724 end
+
             //判断资金账户类型是否重复 因为产品端新建可以添加多个券商资金账户，所以校验放开 yjm 20190926
             /*if(acctTypeSet.size() < dto.getFundAccountInfoDto().size()){
                 errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006",getMessage("FundAccountInfo.acctType"))));
             }*/
             //账户信息不能重复
             //update by leipeng 现状：产品要素界面挂资金账户，不同的账户类型挂了同一个资金账户，组合审批时，提示资金账户重复                                    期望：如果不同的账户类型挂了同一个资金账户，在建产品要素的时候提示资金账户重复，不要在组合审批的时候提示
-            if(set.size() < dto.getFundAccountInfoDto().size()){
+            /*if(set.size() < dto.getFundAccountInfoDto().size()){
                 errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.funInfo"),getMessage("FundAccountInfo.acctNo"))));
-            }
+            }*/
             //必须存在托管账户
             if(!hasSecManageAcct){
                 errorList.add(new ValidMessage(getMessage("PtlManagementInfo001.selectAcct")));

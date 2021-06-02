@@ -137,7 +137,7 @@ public class EtrBondFirstLBiddingService extends BaseService<EtrBondFirstLBiddin
             pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
         pageParam.put("YES_OR_NO_Y", BussinessDictCodeList.是否_是.getValue());
-
+        pageParam.put("YES_OR_NO_N", BussinessDictCodeList.是否_否.getValue());
         // add by etliu 20210501 银行间场内场外拆分 start
         pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
         // add by etliu 20210501 银行间场内场外拆分 end

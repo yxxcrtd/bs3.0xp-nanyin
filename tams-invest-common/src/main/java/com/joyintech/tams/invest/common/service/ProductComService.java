@@ -68,6 +68,7 @@ public class ProductComService extends BaseService<Product> implements ProductSe
         	map.put("notInProductIds", notInProductIds);
         	map.put("prodName", prodName);
         	map.put("acctSubjectTypeNo", DictCodeListExt1.金融产品类型_通道.getValue());
+        	map.put("PORTFOLIO_TYPE_02", DictCodeListExt1.组合类型_委外组合.getValue());
         	return super.queryForPage(() ->  productComMapper.findProductByName(map));
         	/**modify by wujie on 20190328 end**/
         }
@@ -84,7 +85,8 @@ public class ProductComService extends BaseService<Product> implements ProductSe
     public List<String> findAllEffProductId() {
         Map<String, Object> map = new HashMap<>();
         List<String> portfolioIds = new ArrayList<>();
-        List<Product> productByName = productComMapper.findProductByName(new HashMap<>());
+    	map.put("PORTFOLIO_TYPE_02", DictCodeListExt1.组合类型_委外组合.getValue());
+        List<Product> productByName = productComMapper.findProductByName(map);
         if (productByName != null) {
             for (Product product : productByName) {
                 portfolioIds.add(product.getProdId());
