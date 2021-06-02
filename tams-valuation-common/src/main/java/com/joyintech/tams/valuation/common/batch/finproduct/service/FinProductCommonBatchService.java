@@ -1634,6 +1634,10 @@ public class FinProductCommonBatchService {
      * @return 估值、估值日期
      * @see
      * @since 1.0
+     * 货币基金场外 ：查行情  FIN_PRODUCT_VALUATION
+     * 非货币基金 查行情  MST_FUND_MARKET_INFO
+     * 货币基金场内 查行情  FIN_PRODUCT_VALUATION 并且 MST_FUND_MARKET_INFO
+     *
      */
     public MarketPriceDto getFundMarketPricePreCheckDto(Date happenDate, String booksetId, String finProdId,String calenderId) {
         // 1.定义估值
@@ -1669,17 +1673,28 @@ public class FinProductCommonBatchService {
         // 赋值市场代码
         String finprodMarketId = targetFinProduct.getFinprodMarketId();
 
-        // 基金  货币基金 并且   另外查询 行情数据 moneyFundDealCountingDrawingTask
-        if(StringUtil.equals(targetFinProduct.getProfitType(),"03")){
+        // 基金  货币基金 并且 场外  另外查询 行情数据 moneyFundDealCountingDrawingTask
+        if(StringUtil.equals(targetFinProduct.getProfitType(),"03")  ){
 
-            // 货币基金 节假日 直接跳过
+            // 货币基金 节假日 直接跳过 默认通过  0:工作日
             String isHoliday = commonMapper.getIsHoliday(happenDate, targetFinProduct.getCalendarId());
 
             List<FinProductValuation> finProductValuationList = queryValDataListByMoneyFund(targetFinProduct, calenderId, happenDate);
-            if(!StringUtil.equals(isHoliday,"0") || !StringUtil.isEmptyList(finProductValuationList)){
-                marketPriceDto.setPreCheckFlag(true);
+
+            if(StringUtil.equals(targetFinProduct.getProfitType(),"09")) {
+                if (!StringUtil.equals(isHoliday, "0") || !StringUtil.isEmptyList(finProductValuationList)) {
+                    marketPriceDto.setPreCheckFlag(true);
+                }
+                return marketPriceDto;
+            }else{
+                //如果是场内 查询完基金行情  还需查询每日基金行情
+                //如果是工作日 并且 没有行情数据 则返回失败
+                if(StringUtil.equals(isHoliday, "0") && StringUtil.isEmptyList(finProductValuationList)) {
+                    marketPriceDto.setPreCheckFlag(false);
+                    return marketPriceDto;
+                }
+                // 上面有行情 校验通过 则继续下面的每日行情判断
             }
-            return marketPriceDto;
 
         }
 
