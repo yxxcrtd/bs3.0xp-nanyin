@@ -22,6 +22,7 @@ import com.joyintech.tams.report.system.chbprd.dto.ChbPrdBaseinfoErrodataWithBLO
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -215,7 +216,16 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
         String prodIds = (String)param.get("keyprodIdList");
         List<String> selectprodIds = StringUtil.splitToList(GlobalConstant.COMMA, prodIds);
         param.put("selectprodIds", selectprodIds);
-        return chbPrdBaseinfo001Mapper.queryReportList( param);
+        if (StringUtil.isEmptyList(selectprodIds)) {
+            List<String> statusList = StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("status"));
+            param.put("selectStatus", statusList);
+        }
+//        return chbPrdBaseinfo001Mapper.queryReportList(param);
+        List<ChbPrdBaseinfo001Dto> list = chbPrdBaseinfo001Mapper.queryForPage(param);
+        list.forEach(x ->{
+            x.setType("导出");
+        });
+        return list;
     }
 
     public List<ChbPrdBaseinfo> selectOneDate(Map<String, Object> param) {
