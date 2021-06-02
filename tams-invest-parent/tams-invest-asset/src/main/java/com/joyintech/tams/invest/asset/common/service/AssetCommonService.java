@@ -775,8 +775,8 @@ public class AssetCommonService extends BaseService{
         repAssetAstBill.setRepVdate(finProduct.getVdate());
         //到期日
         repAssetAstBill.setRepMdate(finProduct.getMdate());
-        //金额
-        repAssetAstBill.setRepAmtSum(finProduct.getIssueAmt());         
+//        // 金额
+//        repAssetAstBill.setRepAmtSum(finProduct.getIssueAmt());         
         repAssetAstBillList.add(repAssetAstBill);
         repFinprodIdList.add(finProduct.getFinprodId());
         baseRepAssetAstBillInfoDto.setRepAssetAstBillList(repAssetAstBillList);
