@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.monthreport.service;
 
+import cn.hutool.json.JSONUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
@@ -77,6 +78,8 @@ public class MonthReportG06bAssetService {
         if (!checkRuleIsRight(true)) {
             return null;
         }
+
+        logger.debug("G06b统计原数据：{}", JSONUtil.toJsonStr(assetG06bMonthPositionList));
 
         Map<String, ChbMonthReportG06bDetail> assetMonthReportG06bDetailMap = new HashMap<String, ChbMonthReportG06bDetail>();
 
@@ -199,6 +202,7 @@ public class MonthReportG06bAssetService {
                         assetMonthReportG06bDetailMap.put(singleRule.getPropertyCode(),
                                 buildDetail(report, singleRule.getPropertyCode(), balanceA, balanceB));
                     }
+                    logger.debug("G06b统计数据中：{}", JSONUtil.toJsonStr(assetMonthReportG06bDetailMap));
                 }
             }
         }

@@ -74,6 +74,9 @@
          * 绑定事件：修改
          */
         table.bind('click', '.edit', function(data, index) {
+            if(data.svrStatusName == "删除"){
+                return Joyin.error("不能操作已被删除的数据");
+            }
             if(data.identifyNumber == null || data.identifyNumber == '' || data.identifyNumber == undefined){
                 Joyin.error("身份证号码为空,数据不允许编辑");
                 return;

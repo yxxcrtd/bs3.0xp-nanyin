@@ -3343,7 +3343,7 @@
     </select>
 
     <delete id="deleteError">
-        DELETE CHB_ASSET_INFO_ERRODATA WHERE trim(DATAUUID) = #{assetUUid}
+        DELETE FROM CHB_ASSET_INFO_ERRODATA WHERE trim(DATAUUID) = #{assetUUid}
     </delete>
 
     <update id="updateChbAssetType">
