@@ -251,6 +251,11 @@ public class AssetInfoDetailUtil {
                 return resultList;
             }
             List<String> message = new ArrayList<>();
+            for (int j = i+1; j < dataList.size(); j++){
+                if (list.get(0).equals(dataList.get(j).get(0))){
+                    resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "第"+(i+1)+"行资产代码与第"+(j+1)+"行资产代码重复"));
+                }
+            }
             List<ValidMessage> messages = chbDataCheckCommonUtil.chbCheckCommon(resultList, entity, "AssetInfoRegist002", entity.getAssetType2(), ValidMessage.class);
             if (!StringUtil.isEmptyList(messages)){
                 messages.forEach(validMessage -> {
