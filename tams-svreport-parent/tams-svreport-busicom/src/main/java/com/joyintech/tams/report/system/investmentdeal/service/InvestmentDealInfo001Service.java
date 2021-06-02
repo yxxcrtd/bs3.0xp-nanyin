@@ -295,8 +295,10 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             dto.setTradeSeqno(infoDto.getTradeSeqno());
             dto.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
             investmentDealInfo001Mapper.updateOne(dto);
-        }else {
-            investmentDealInfo001Mapper.deleteErrorDataOne(dto.getTradeCode());
+        }
+        if (StringUtil.isNotEmpty(dto.getUuid())){
+//            investmentDealInfo001Mapper.deleteErrorDataOne(dto.getTradeCode());
+            investmentDealInfo001Mapper.deleteErrorDataOneByUuid(dto);
         }
     }
 

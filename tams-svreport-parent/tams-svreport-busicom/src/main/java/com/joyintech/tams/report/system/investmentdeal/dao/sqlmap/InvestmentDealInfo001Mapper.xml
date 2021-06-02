@@ -13,6 +13,8 @@
 	</update>
 	<delete id="deleteErrorDataOne" parameterType="java.util.List">
 	</delete>
+	<delete id="deleteErrorDataOneByUuid" parameterType="com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto" >
+	</delete>
 	<select id="selectInvestmentDealInfoErrordata" resultType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrordataWithBLOBs">
 	</select>
 	<select id="getProdId" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">
