@@ -758,7 +758,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         TradeBaseDto finDto=(TradeBaseDto)JsonUtils.map2entity(dataMap,TradeBaseDto.class);
         finDto.setTotleTradeId(removeLasStr(finDto.getTotleTradeId()));
         finDto.setTradeId(removeLasStr(finDto.getTradeId()));
-        infRiskRdsDto.setEventId(StringUtil.isNotEmpty(finDto.getTotleTradeId())?finDto.getTotleTradeId():StringUtil.isNotEmpty(finDto.getTradeId())?finDto.getTradeId():finDto.getBusiCode());
+        infRiskRdsDto.setEventId(StringUtil.isNotEmpty(finDto.getTotleTradeId())?finDto.getTotleTradeId():StringUtil.isNotEmpty(finDto.getTradeId())?finDto.getTradeId():StringUtil.isNotEmpty(finDto.getBusiCode())?finDto.getBusiCode():finDto.getZcId() );
         infRiskRdsDto.setEventDate(DateUtil.format(finDto.getTradeDate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
         //设置母组合代码
         infRiskRdsDto.setPortfolioCode(AllTradeCommonUtil.exchangePortfolio(StringUtil.isNotEmpty(finDto.getPortfolioId())?finDto.getPortfolioId():finDto.getActPortfolioId()));
@@ -1438,7 +1438,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     
     /**
      * 查询组合包明细数据
-     * @param parameters
+     * @param bagId
      * @return RskPortfolioPackage003Dto
      * @since 1.0
      */
