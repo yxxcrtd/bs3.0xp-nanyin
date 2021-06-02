@@ -967,7 +967,7 @@ var table;
         var data = $('#finprodId').select2('data')[0].object;
         if($('#finprodId').select2('data')[0].id){
         	if (data && data.finprodId) {// 资产名称文本框根据资产代码选择自动显示对应名称;
-                $("#finprodName").val($('#finprodId').select2('data')[0].id);
+                $("#finprodName").val(data.finprodMarketId);
             // 同时带出资产相关信息，包括起息日，到期日，发行日，交易场所，币种，交易日历，计息基础等;
             $("#vdate").val(data.vdate).trigger('change');
             $("#mdate").val(data.mdate).trigger('change');
@@ -1009,7 +1009,7 @@ var table;
 	        	var autoCoupon = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
                 isautobond = true;
 	            // 资产名称文本框根据资产代码选择自动显示对应名称;
-	            $("#finprodName").val(autoCoupon.finprodAbbr).trigger('change');
+	            $("#finprodName").val(autoCoupon.finprodMarketId).trigger('change');
 	            // 同时带出资产相关信息，包括起息日，到期日，发行日，交易场所，币种，交易日历，计息基础等;
 	            $("#vdate").val(autoCoupon.vdate).trigger('change');
 	            $("#mdate").val(autoCoupon.mdate).trigger('change');
