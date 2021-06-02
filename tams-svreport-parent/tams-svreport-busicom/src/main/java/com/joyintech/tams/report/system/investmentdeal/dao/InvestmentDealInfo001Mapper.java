@@ -24,6 +24,8 @@ public interface InvestmentDealInfo001Mapper {
 
     void deleteErrorDataOne(@Param("tradeCode")String tradeCode);
 
+    void deleteErrorDataOneByUuid(InvestmentDealInfoDto datauuid);
+
     ChbInvestTradeErrordataWithBLOBs selectInvestmentDealInfoErrordata(@Param("datauuid")String datauuid);
 
     List<SelectOptionDto> getProdId(Map<String, Object> param);
