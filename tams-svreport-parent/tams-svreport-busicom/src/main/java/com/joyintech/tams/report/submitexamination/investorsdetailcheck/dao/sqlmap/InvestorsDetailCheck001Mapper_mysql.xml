@@ -81,7 +81,7 @@
         GROUP BY T.ACCOUNT
         ) C
         ON C.ACCOUNT = B.ACCOUNT
-        WHERE B.BUSI_TYPE IN ('02', '03', '04', '05', '14', '15', '16')
+        WHERE B.BUSI_TYPE IN ('01','02', '03', '04', '05', '14', '15', '16')
         AND B.MY_RANK = 1
         <if test="checkDateStart != null and checkDateStart.trim !=''">
             AND DATE_FORMAT(B.EQUITY_CONF_DATE, '%Y-%m-%d') >= #{checkDateStart}

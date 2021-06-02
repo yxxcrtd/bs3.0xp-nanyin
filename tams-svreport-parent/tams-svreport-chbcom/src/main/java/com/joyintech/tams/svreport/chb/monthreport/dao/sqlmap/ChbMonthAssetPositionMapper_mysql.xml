@@ -1273,33 +1273,40 @@
     <select id="selectChlG06bPositionByCommon"
             resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthG06bPosition"
             parameterType="date">
-        SELECT position.PROD_ID        as prodId,
-               position.ASSETTYPE2     as assettype2,
-               T.ASSETVALUE_B          as qcAssetValue,
-               position.ASSETVALUE_B   as qmAssetValue,
-               assinfo.FINANCIER_GRADE as rating,
-               assinfo.GUA_TYPE        as guaType,
-               assinfo.TRADE_MARKET    as tradeMarket,
-               info.IS_CONSTRACTE      as isConstracte,
-               assinfo.IS_FBZB         as isFbzb
-        FROM CHB_MONTH_ASSET_POSITION position
-                 LEFT JOIN (
-            SELECT lastmonth.prod_id,
-                   lastmonth.asset_code,
-                   lastmonth.assetvalue_b
-            FROM CHB_MONTH_ASSET_POSITION lastmonth
-            WHERE ENDDATE = ADDDATE(str_to_date(#{cdate,jdbcType=DATE}, '%Y-%m-%d'), INTERVAL - 1 MONTH)
-        ) T
-                           ON T.PROD_ID = position.PROD_ID
-                               and T.ASSET_CODE = position.ASSET_CODE
-                 LEFT JOIN CHB_ASSET_INFO ASSINFO
-                           ON position.ASSET_CODE = ASSINFO.ASSET_CODE
-                               AND ASSINFO.STATUS IN ('E', 'M')
-                 inner join CHB_PRD_BASEINFO info
-                            on info.PROD_ID = position.PROD_ID
-                                and info.STATUS in ('M', 'E')
-                                and info.PROFIT_TYPE = '03'
-        where position.ENDDATE = #{cdate,jdbcType=DATE}
+        SELECT
+            position.PROD_ID AS prodId,
+            position.ASSETTYPE2 AS assettype2,
+            T.ASSETVALUE_B AS qcAssetValue,
+            position.ASSETVALUE_B AS qmAssetValue,
+            assinfo.FINANCIER_GRADE AS rating,
+            assinfo.GUA_TYPE AS guaType,
+            assinfo.TRADE_MARKET AS tradeMarket,
+            info.IS_CONSTRACTE AS isConstracte,
+            assinfo.IS_FBZB AS isFbzb
+        FROM
+            CHB_MONTH_ASSET_POSITION position
+                LEFT JOIN (
+                SELECT
+                    lastmonth.prod_id,
+                    lastmonth.asset_code,
+                    lastmonth.assetvalue_b,
+                    lastmonth.ENDDATE
+                FROM
+                    CHB_MONTH_ASSET_POSITION lastmonth
+                WHERE
+                        ENDDATE = (
+                        SELECT
+                            date_sub( date_sub( date_format( #{cdate,jdbcType=DATE}, '%y-%m-%d' ), INTERVAL extract( DAY FROM #{cdate,jdbcType=DATE}) DAY ), INTERVAL 0 MONTH ) AS date
+                    )
+            ) T ON T.PROD_ID = position.PROD_ID
+                AND T.ASSET_CODE = position.ASSET_CODE
+                LEFT JOIN CHB_ASSET_INFO ASSINFO ON position.ASSET_CODE = ASSINFO.ASSET_CODE
+                AND ASSINFO.STATUS IN ( 'E', 'M' )
+                INNER JOIN CHB_PRD_BASEINFO info ON info.PROD_ID = position.PROD_ID
+                AND info.STATUS IN ( 'M', 'E' )
+                AND info.PROFIT_TYPE = '03'
+        WHERE
+            position.ENDDATE = #{cdate,jdbcType=DATE}
     </select>
 
 
