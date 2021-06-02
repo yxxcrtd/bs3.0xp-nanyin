@@ -29,15 +29,19 @@ public class ChbEmployeeInfo001Service extends CommonExportService<ChbEmployeeIn
         Page<ChbEmployeeInfoDto> page;
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
-        String employeeType = (String)param.get("employeeType");
-        String status = (String)param.get("status");
+        searchQuery(param);
+        page=  super.queryForPage(pagenum,legth,()->chbEmployeeInfo001Mapper.queryForPage(param));
+        dealDataList(page.getRoot());
+        return page;
+    }
+
+    private void searchQuery(Map<String, Object> param) {
+        String employeeType = (String) param.get("employeeType");
+        String status = (String) param.get("status");
         List<String> selectemployeeType = StringUtil.splitToList(GlobalConstant.COMMA, employeeType);
         List<String> selectStatus = StringUtil.splitToList(GlobalConstant.COMMA, status);
         param.put("selectemployeeType", selectemployeeType);
         param.put("selectStatus", selectStatus);
-        page=  super.queryForPage(pagenum,legth,()->chbEmployeeInfo001Mapper.queryForPage(param));
-        dealDataList(page.getRoot());
-        return page;
     }
 
     /**
@@ -95,19 +99,28 @@ public class ChbEmployeeInfo001Service extends CommonExportService<ChbEmployeeIn
         if (StringUtil.isNotEmpty(keys)) {
             strs = keys.split(" ,");
         }
-        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+//        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
         List<ChbEmployeeInfoDto> dtoList=new ArrayList<>();
-        for(int i=0;i<strs.length;i++){
-            String arr =strs[i];
-            String[] s =arr.split(",");
-            String employeeType=s[0];
-            String identifyNumber=s[1];
-            ChbEmployeeInfoDto ms=new ChbEmployeeInfoDto();
-            ms.setEmployeeType(employeeType);
-            ms.setIdentifyNumber(identifyNumber);
-            dtoList.add(ms);
+        if(StringUtil.isNotEmpty(keys)) {
+            for (int i = 0; i < strs.length; i++) {
+                String arr = strs[i];
+                String[] s = arr.split(",");
+                String employeeType = s[0];
+                String identifyNumber = s[1];
+                ChbEmployeeInfoDto ms = new ChbEmployeeInfoDto();
+                ms.setEmployeeType(employeeType);
+                ms.setIdentifyNumber(identifyNumber);
+                dtoList.add(ms);
+            }
+            return chbEmployeeInfo001Mapper.queryReportList(dtoList);
+        }else{
+            searchQuery(param);
+            List<ChbEmployeeInfoDto> list = chbEmployeeInfo001Mapper.queryForPage(param);
+            list.forEach(x -> {
+                x.setType("导出");
+            });
+            return list;
         }
-        return chbEmployeeInfo001Mapper.queryReportList(dtoList);
     }
 
 
