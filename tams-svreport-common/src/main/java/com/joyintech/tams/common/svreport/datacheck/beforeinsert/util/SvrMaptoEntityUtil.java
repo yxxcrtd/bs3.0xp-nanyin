@@ -194,7 +194,8 @@ public class SvrMaptoEntityUtil {
 				//对于date类型的需要特殊转换一下
 				if ("java.util.Date".equals(type.getTypeName())) {
 					// add by zhangliang 20201104 对于create_time或者update_time需要保留具体的时分秒 start
-					if (StringUtil.equals("CREATE_TIME", str) || StringUtil.equals("UPDATE_TIME", str)){
+					if (StringUtil.equals("CREATE_TIME", str) || StringUtil.equals("UPDATE_TIME", str)
+					    || StringUtil.equals("SUBMIT_DEADLINE",str) || StringUtil.equals("CHB_SUBMIT_DEADLINE",str)){
 						map.put(str, DateUtil.formatDateTime((Date)field.get(clazz)));
 					}else{
 						map.put(str, DateUtil.format((Date)field.get(clazz)));

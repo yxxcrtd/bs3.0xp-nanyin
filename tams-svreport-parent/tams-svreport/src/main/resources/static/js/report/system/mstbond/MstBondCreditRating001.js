@@ -55,6 +55,9 @@
          * 绑定事件：修改
          */
         table.bind('click', '.edit', function(data, index) {
+            if(data.statusName == "删除"){
+                return Joyin.error("不能操作已被删除的数据");
+            }
             if(data.oCode == null || data.oCode == '' || data.oCode == undefined){
                 Joyin.error("债券代码为空,数据不允许编辑");
                 return;
