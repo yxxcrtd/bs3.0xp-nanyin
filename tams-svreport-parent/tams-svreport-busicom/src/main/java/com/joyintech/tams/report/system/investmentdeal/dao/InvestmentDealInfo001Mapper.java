@@ -24,7 +24,7 @@ public interface InvestmentDealInfo001Mapper {
 
     void deleteErrorDataOne(@Param("tradeCode")String tradeCode);
 
-    void deleteErrorDataOneByUuid(InvestmentDealInfoDto datauuid);
+    void deleteErrorDataOneByUuid(InvestmentDealInfoDto dto);
 
     ChbInvestTradeErrordataWithBLOBs selectInvestmentDealInfoErrordata(@Param("datauuid")String datauuid);
 

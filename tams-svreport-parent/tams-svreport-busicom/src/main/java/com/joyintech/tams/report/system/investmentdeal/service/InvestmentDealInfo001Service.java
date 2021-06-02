@@ -268,10 +268,10 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
     }
 
     public void save(InvestmentDealInfoDto dto){
-        AjaxResult webResult = new AjaxResult();
         Map<String, Object> map=new HashMap<>();
         map.put("tradeCode",dto.getTradeCode());
         InvestmentDealInfoDto infoDto= investmentDealInfo001Mapper.selectOneDate(map);
+        infoDto.setUpdateUser(LoginUserUtil.getUserName());
         if (StringUtil.isNotEmpty(infoDto)){
             dto.setTradeSeqno(infoDto.getTradeSeqno());
             investmentDealInfo001Mapper.updateOne(dto);
@@ -279,7 +279,11 @@ public class InvestmentDealInfo001Service extends CommonExportService<Investment
             dto.setTradeSeqno(IDGenerator.generate(36));
             dto.setType("01");
             investmentDealInfo001Mapper.insertOne(dto);
-            investmentDealInfo001Mapper.deleteErrorDataOne(dto.getTradeCode());
+        }
+
+        // 删除error表中数据
+        if (StringUtil.isNotEmpty(dto.getUuid())) {
+            investmentDealInfo001Mapper.deleteErrorDataOneByUuid(dto);
         }
     }
 

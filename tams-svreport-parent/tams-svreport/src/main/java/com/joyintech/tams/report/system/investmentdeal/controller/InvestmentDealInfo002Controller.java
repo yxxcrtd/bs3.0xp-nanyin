@@ -40,14 +40,19 @@ public class InvestmentDealInfo002Controller extends BaseController {
         InvestmentDealInfoDto dto=new InvestmentDealInfoDto();
         Map<String,Object> map= RequestUtil.getPageParam();
         String uuid= (String) map.get("uuid");
+        String type= (String) map.get("type");
+
         if(StringUtil.isEmpty(uuid)){
             dto = investmentDealInfoService.selectOneDate(map);
-            model.addAttribute("entity", dto);
-        }else{
+        } else {
             ChbInvestTradeErrordataWithBLOBs chbMs=investmentDealInfoService.selectInvestmentDealInfoErrordata(uuid);
-            ErrdataConvertUtil.errdataChbInvestTradeConvert(dto,chbMs);
-            model.addAttribute("entity", dto);
+            if(StringUtil.isNotEmpty(chbMs)){
+                ErrdataConvertUtil.errdataChbInvestTradeConvert(dto,chbMs);
+            }
         }
+        dto.setUuid(uuid);
+        dto.setType(type);
+        model.addAttribute("entity", dto);
 
         return super.init(model);
     }
@@ -63,7 +68,7 @@ public class InvestmentDealInfo002Controller extends BaseController {
     @PostMapping("save")
     public AjaxResult save(@RequestBody @Validated({
             ValidateGroupEdit.class}) InvestmentDealInfoDto dto, BindingResult result) {
-           investmentDealInfoService.save(dto);
+        investmentDealInfoService.save(dto);
         return new AjaxResult("保存成功", MessageType.提示消息);
     }
 
