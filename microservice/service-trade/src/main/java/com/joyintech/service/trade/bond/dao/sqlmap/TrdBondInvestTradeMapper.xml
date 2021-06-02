@@ -858,7 +858,7 @@
             </where>
         <if test="isautobond != null and isautobond == 'true'">
         UNION ALL
-          select interf.SECID  id,
+          select 'F01_'||interf.SECID  id,
           interf.secname text,
           fin.FINPROD_ID,
           interf.SECNAME FINPROD_NAME,
