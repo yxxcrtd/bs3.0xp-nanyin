@@ -159,7 +159,7 @@ public class AssetInfoDetailUtil {
                 entity.setSvrBussRepAssetCreditNonstdInfoDto(getSvrBussRepAssetCreditNonstdInfoDto(list));
             }else if (DictCodeListExt2.资产_负债类别_票据类资产_信用证类资产.getValue().equals(entity.getAssetType())){
                 /**维护信息-票据类资产/信用证类资产*/
-                if (dataList.get(1).size() != 58) {
+                if (dataList.get(1).size() != 60) {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
                     return resultList;
                 }
@@ -215,7 +215,7 @@ public class AssetInfoDetailUtil {
                 entity.setSvrBussRepAssetMngProdInfoDto(getSvrBussRepAssetMngProdInfoDto(list));
             }else if (DictCodeListExt2.资产_负债类别_商品类资产.getValue().equals(entity.getAssetType())){
                 /**维护信息-贵金属/商品类资产*/
-                if (dataList.get(1).size() != 58) {
+                if (dataList.get(1).size() != 60) {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
                     return resultList;
                 }
@@ -236,21 +236,21 @@ public class AssetInfoDetailUtil {
                 entity.setSvrBussRepFundInfoDto(getSvrBussRepFundInfoDto(list));
             }else if (DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue().equals(entity.getAssetType())){
                 /**维护信息-委外投资-协议方式*/
-                if (dataList.get(1).size() != 58) {
+                if (dataList.get(1).size() != 60) {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
                     return resultList;
                 }
                 entity.setSvrBussRepOutInvestAgrInfoDto(getSvrBussRepOutInvestAgrInfoDto(list));
             }else if (DictCodeListExt2.资产_负债类别_其他_负债_类资产.getValue().equals(entity.getAssetType())){
                 /**维护信息-其他（负债）类资产*/
-                if (dataList.get(1).size() != 58) {
+                if (dataList.get(1).size() != 60) {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
                     return resultList;
                 }
                 entity.setSvrBussRepOtherInfoDto(getSvrBussRepOtherInfoDto(list));
             }else if (DictCodeListExt2.资产_负债类别_另类资产.getValue().equals(entity.getAssetType())){
                 /**维护信息-另类资产*/
-                if (dataList.get(1).size() != 58) {
+                if (dataList.get(1).size() != 60) {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-票据及其他格式不正确！"));
                     return resultList;
                 }
@@ -309,31 +309,31 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepOthKindInfoDto getSvrBussRepOthKindInfoDto(List<String> list){
         SvrBussRepOthKindInfoDto dto = new SvrBussRepOthKindInfoDto();
-        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(23)));
-        dto.setAssetName(list.get(24));
-        if (StringUtil.isNotEmpty(list.get(25))) {
-            dto.setVdate(DateUtil.parse(list.get(25)));
-        }
-        if (StringUtil.isNotEmpty(list.get(26))) {
-            dto.setMdate(DateUtil.parse(list.get(26)));
-        }
-        if (StringUtil.isNotEmpty(list.get(27))){
-            dto.setAssetValue(new BigDecimal(list.get(27)));
+        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(25)));
+        dto.setAssetName(list.get(26));
+        if (StringUtil.isNotEmpty(list.get(27))) {
+            dto.setVdate(DateUtil.parse(list.get(27)));
         }
         if (StringUtil.isNotEmpty(list.get(28))) {
-            dto.setAssetYield(new BigDecimal(list.get(28)));
+            dto.setMdate(DateUtil.parse(list.get(28)));
         }
-        dto.setRemark(list.get(54));
-        if (StringUtil.isNotEmpty(list.get(55))){
-            dto.setPbcAssetType1(list.get(55).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(29))){
+            dto.setAssetValue(new BigDecimal(list.get(29)));
         }
-
-        if (StringUtil.isNotEmpty(list.get(56))){
-            dto.setPbcAssetType2(list.get(56).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(30))) {
+            dto.setAssetYield(new BigDecimal(list.get(30)));
         }
-
+        dto.setRemark(list.get(56));
         if (StringUtil.isNotEmpty(list.get(57))){
-            dto.setPbcAssetType3(list.get(57).substring(0,3));
+            dto.setPbcAssetType1(list.get(57).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(58))){
+            dto.setPbcAssetType2(list.get(58).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(59))){
+            dto.setPbcAssetType3(list.get(59).substring(0,3));
         }
         return dto;
     }
@@ -345,28 +345,28 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepOtherInfoDto getSvrBussRepOtherInfoDto(List<String> list){
         SvrBussRepOtherInfoDto dto = new SvrBussRepOtherInfoDto();
-        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(49)));
-        dto.setAssetName(list.get(50));
-        if (StringUtil.isNotEmpty(list.get(51))) {
-            dto.setTermDate(new BigDecimal(list.get(51)));
-        }
-        if (StringUtil.isNotEmpty(list.get(52))) {
-            dto.setDebtScale(new BigDecimal(list.get(52)));
-        }
+        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(51)));
+        dto.setAssetName(list.get(52));
         if (StringUtil.isNotEmpty(list.get(53))) {
-            dto.setAssetYield(new BigDecimal(list.get(53)));
+            dto.setTermDate(new BigDecimal(list.get(53)));
         }
-        dto.setRemark(list.get(54));
-        if (StringUtil.isNotEmpty(list.get(55))){
-            dto.setPbcAssetType1(list.get(55).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(54))) {
+            dto.setDebtScale(new BigDecimal(list.get(54)));
         }
-
-        if (StringUtil.isNotEmpty(list.get(56))){
-            dto.setPbcAssetType2(list.get(56).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(55))) {
+            dto.setAssetYield(new BigDecimal(list.get(55)));
         }
-
+        dto.setRemark(list.get(56));
         if (StringUtil.isNotEmpty(list.get(57))){
-            dto.setPbcAssetType3(list.get(57).substring(0,3));
+            dto.setPbcAssetType1(list.get(57).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(58))){
+            dto.setPbcAssetType2(list.get(58).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(59))){
+            dto.setPbcAssetType3(list.get(59).substring(0,3));
         }
         return dto;
     }
@@ -378,57 +378,58 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepOutInvestAgrInfoDto getSvrBussRepOutInvestAgrInfoDto(List<String> list){
         SvrBussRepOutInvestAgrInfoDto dto = new SvrBussRepOutInvestAgrInfoDto();
-        dto.setAssetName(list.get(29));
-        dto.setAssetId(list.get(30));
-        dto.setTrustee(list.get(31));
-        dto.setManagerId(list.get(32));
-        if (StringUtil.isNotEmpty(list.get(34))) {
-            dto.setAmt(new BigDecimal(list.get(34)));
+        dto.setAssetName(list.get(31));
+        dto.setAssetId(list.get(32));
+        dto.setTrustee(list.get(33));
+        dto.setManagerId(list.get(34));
+        dto.setTrusteeId(list.get(35));
+        if (StringUtil.isNotEmpty(list.get(36))) {
+            dto.setAmt(new BigDecimal(list.get(36)));
         }
-        dto.setTruActType(SysDataUtil.getZZDictCodeFromName(DictCode.资金实际投向, list.get(35)));
-        dto.setInvestType(list.get(36));
-        dto.setCapUseInduLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(37)));
+        dto.setTruActType(SysDataUtil.getZZDictCodeFromName(DictCode.资金实际投向, list.get(37)));
+        dto.setInvestType(list.get(37));
+        dto.setCapUseInduLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(39)));
         dto.setCapUseIndu(dict.get("industry"+dto.getCapUseInduLevel2()));
-        if (StringUtil.isNotEmpty(list.get(38))) {
-            dto.setPlanSdate(DateUtil.parse(list.get(38)));
+        if (StringUtil.isNotEmpty(list.get(40))) {
+            dto.setPlanSdate(DateUtil.parse(list.get(40)));
         }
-        if (StringUtil.isNotEmpty(list.get(39))) {
-            dto.setPlanEdate(DateUtil.parse(list.get(39)));
+        if (StringUtil.isNotEmpty(list.get(41))) {
+            dto.setPlanEdate(DateUtil.parse(list.get(41)));
         }
-        dto.setProProperty(SysDataUtil.getZZDictCodeFromName(DictCode.管理方式_发行登记, list.get(40)));
-        dto.setRateFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(41)));
-        if (StringUtil.isNotEmpty(list.get(42))) {
-            dto.setMaxRate(new BigDecimal(list.get(42)));
-        }
-        if (StringUtil.isNotEmpty(list.get(43))) {
-            dto.setMinRate(new BigDecimal(list.get(43)));
-        }
+        dto.setProProperty(SysDataUtil.getZZDictCodeFromName(DictCode.管理方式_发行登记, list.get(42)));
+        dto.setRateFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(43)));
         if (StringUtil.isNotEmpty(list.get(44))) {
-            dto.setMgrFeeRate(new BigDecimal(list.get(44)));
+            dto.setMaxRate(new BigDecimal(list.get(44)));
         }
         if (StringUtil.isNotEmpty(list.get(45))) {
-            dto.setTruFeeRate(new BigDecimal(list.get(45)));
+            dto.setMinRate(new BigDecimal(list.get(45)));
         }
         if (StringUtil.isNotEmpty(list.get(46))) {
-            dto.setTradeFeeRate(new BigDecimal(list.get(46)));
+            dto.setMgrFeeRate(new BigDecimal(list.get(46)));
         }
         if (StringUtil.isNotEmpty(list.get(47))) {
-            dto.setAgencyFeeRate(new BigDecimal(list.get(47)));
+            dto.setTruFeeRate(new BigDecimal(list.get(47)));
         }
         if (StringUtil.isNotEmpty(list.get(48))) {
-            dto.setOtherFeeRate(new BigDecimal(list.get(48)));
+            dto.setTradeFeeRate(new BigDecimal(list.get(48)));
         }
-        dto.setRemark(list.get(54));
-        if (StringUtil.isNotEmpty(list.get(55))){
-            dto.setPbcAssetType1(list.get(55).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(49))) {
+            dto.setAgencyFeeRate(new BigDecimal(list.get(49)));
         }
-
-        if (StringUtil.isNotEmpty(list.get(56))){
-            dto.setPbcAssetType2(list.get(56).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(50))) {
+            dto.setOtherFeeRate(new BigDecimal(list.get(50)));
         }
-
+        dto.setRemark(list.get(56));
         if (StringUtil.isNotEmpty(list.get(57))){
-            dto.setPbcAssetType3(list.get(57).substring(0,3));
+            dto.setPbcAssetType1(list.get(57).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(58))){
+            dto.setPbcAssetType2(list.get(58).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(59))){
+            dto.setPbcAssetType3(list.get(59).substring(0,3));
         }
         return dto;
     }
@@ -545,28 +546,28 @@ public class AssetInfoDetailUtil {
      */
     private SvrBussRepNobleMetalInfoDto getSvrBussRepNobleMetalInfoDto(List<String> list){
         SvrBussRepNobleMetalInfoDto dto = new SvrBussRepNobleMetalInfoDto();
-        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(18)));
-        dto.setAssetName(list.get(19));
-        if (StringUtil.isNotEmpty(list.get(20))) {
-            dto.setTermDate(new BigDecimal(list.get(20)));
-        }
-        if (StringUtil.isNotEmpty(list.get(21))) {
-            dto.setAssetValue(new BigDecimal(list.get(21)));
-        }
+        dto.setCountryArea(SysDataUtil.getZZDictCodeFromName(DictCode.所属国家或地区, list.get(20)));
+        dto.setAssetName(list.get(21));
         if (StringUtil.isNotEmpty(list.get(22))) {
-            dto.setAssetYield(new BigDecimal(list.get(22)));
+            dto.setTermDate(new BigDecimal(list.get(22)));
         }
-        dto.setRemark(list.get(54));
-        if (StringUtil.isNotEmpty(list.get(55))){
-            dto.setPbcAssetType1(list.get(55).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(23))) {
+            dto.setAssetValue(new BigDecimal(list.get(23)));
         }
-
-        if (StringUtil.isNotEmpty(list.get(56))){
-            dto.setPbcAssetType2(list.get(56).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(24))) {
+            dto.setAssetYield(new BigDecimal(list.get(24)));
         }
-
+        dto.setRemark(list.get(56));
         if (StringUtil.isNotEmpty(list.get(57))){
-            dto.setPbcAssetType3(list.get(57).substring(0,3));
+            dto.setPbcAssetType1(list.get(57).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(58))){
+            dto.setPbcAssetType2(list.get(58).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(59))){
+            dto.setPbcAssetType3(list.get(59).substring(0,3));
         }
         return dto;
     }
@@ -906,28 +907,30 @@ public class AssetInfoDetailUtil {
             dto.setMinRemainTerm(new BigDecimal(list.get(12)));
         }
         if (StringUtil.isNotEmpty(list.get(13))) {
-            dto.setRepVdate(DateUtil.parse(list.get(13)));
+            dto.setVdate(DateUtil.parse(list.get(13)));
         }
         if (StringUtil.isNotEmpty(list.get(14))) {
-            dto.setRepMdate(DateUtil.parse(list.get(14)));
+            dto.setMdate(DateUtil.parse(list.get(14)));
         }
         dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(15)));
         dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
         if (StringUtil.isNotEmpty(list.get(16))) {
             dto.setAssetYield(new BigDecimal(list.get(16)));
         }
-        dto.setIsBzhpj(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(17)));
-        dto.setRemark(list.get(54));
-        if (StringUtil.isNotEmpty(list.get(55))){
-            dto.setPbcAssetType1(list.get(55).substring(0,3));
-        }
-
-        if (StringUtil.isNotEmpty(list.get(56))){
-            dto.setPbcAssetType2(list.get(56).substring(0,3));
-        }
-
+        dto.setPppflag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(17)));
+        dto.setBondtostockFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(18)));
+        dto.setIsBzhpj(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(19)));
+        dto.setRemark(list.get(56));
         if (StringUtil.isNotEmpty(list.get(57))){
-            dto.setPbcAssetType3(list.get(57).substring(0,3));
+            dto.setPbcAssetType1(list.get(57).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(58))){
+            dto.setPbcAssetType2(list.get(58).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(59))){
+            dto.setPbcAssetType3(list.get(59).substring(0,3));
         }
         return dto;
     }
@@ -1412,6 +1415,8 @@ public class AssetInfoDetailUtil {
         headList.add("*到期日");
         headList.add("*行业");
         headList.add("*贴现利率（%）");
+        headList.add("*公共PPP");
+        headList.add("*是否投向市场化债转股相关产品的部分");
         headList.add("是否标准化票据");
         headList.add("*所属国家或地区");
         headList.add("*名称");

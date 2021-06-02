@@ -19,47 +19,49 @@
 			<Cell order="15" name="*到期日">mdate_05</Cell>
 			<Cell order="16" name="*行业">industryShares_05</Cell>
 			<Cell order="17" name="*贴现利率（%）">assetYield_05</Cell>
-			<Cell order="18" name="是否标准化票据">isBzhpj_05</Cell>
-			<Cell order="19" name="*所属国家或地区">countryArea_13</Cell>
-			<Cell order="20" name="*名称">assetName_13</Cell>
-			<Cell order="21" name="期限（天）">termDate_13</Cell>
-			<Cell order="22" name="*资产价值">assetValue_13</Cell>
-			<Cell order="23" name=" 资产收益率%">assetYield_13</Cell>
-			<Cell order="24" name="*所属国家或地区">countryArea_18</Cell>
-			<Cell order="25" name="*名称">assetName_18</Cell>
-			<Cell order="26" name="*起息日">vdate_18</Cell>
-			<Cell order="27" name="*到期日">mdate_18</Cell>
-			<Cell order="28" name="*资产价值">assetValue_18</Cell>
-			<Cell order="29" name="资产收益率%">assetYield_18</Cell>
-			<Cell order="30" name="委外投资协议名称">assetName_16</Cell>
-			<Cell order="31" name="委外投资协议编号">assetCode_16</Cell>
-			<Cell order="32" name="受托人">trustee_16</Cell>
-			<Cell order="33" name="实际管理人">managerId_16</Cell>
-			<Cell order="34" name="托管人">trusteeId_16</Cell>
-			<Cell order="35" name="委托投资金额">amt_16</Cell>
-			<Cell order="36" name="资金实际投向">truActType_16</Cell>
-			<Cell order="37" name="资金运用方式">investType_16</Cell>
-			<Cell order="38" name="资金运用行业">capUseIndu_16</Cell>
-			<Cell order="39" name="投资运作起始日期">planSdate_16</Cell>
-			<Cell order="40" name="投资运作终止日期">planEdate_16</Cell>
-			<Cell order="41" name="委外投资属性">proProperty_16</Cell>
-			<Cell order="42" name="是否有预期收益率">rateFlag_16</Cell>
-			<Cell order="43" name="预期最高收益率">maxRate_16</Cell>
-			<Cell order="44" name="预期最低收益率">minRate_16</Cell>
-			<Cell order="45" name="管理费率%">mgrFeeRate_16</Cell>
-			<Cell order="46" name="托管费率%">truFeeRate_16</Cell>
-			<Cell order="47" name="交易相关合计费率%">tradeFeeRate_16</Cell>
-			<Cell order="48" name="中介服务机构合计费率%">agencyFeeRate_16</Cell>
-			<Cell order="49" name="其他合计费率%">otherFeeRate_16</Cell>
-			<Cell order="50" name="*所属国家或地区">countryArea_17</Cell>
-			<Cell order="51" name="*名称">assetName_17</Cell>
-			<Cell order="52" name="期限（天）">termDate_17</Cell>
-			<Cell order="53" name="*负债规模">debtScale_17</Cell>
-			<Cell order="54" name=" 利率%">assetYield_17</Cell>
-			<Cell order="55" name="备注">remark</Cell>
-			<Cell order="56" name="新人行一级分类">pbcAssetType1Str</Cell>
-			<Cell order="57" name="新人行二级分类">pbcAssetType2Str</Cell>
-			<Cell order="58" name="新人行三级分类">pbcAssetType3Str</Cell>
+			<Cell order="18" name="*公共PPP">pppflag_05</Cell>
+			<Cell order="19" name="*是否投向市场化债转股相关产品的部分">bondtostockFlag_05</Cell>
+			<Cell order="20" name="是否标准化票据">isBzhpj_05</Cell>
+			<Cell order="21" name="*所属国家或地区">countryArea_13</Cell>
+			<Cell order="22" name="*名称">assetName_13</Cell>
+			<Cell order="23" name="期限（天）">termDate_13</Cell>
+			<Cell order="24" name="*资产价值">assetValue_13</Cell>
+			<Cell order="25" name=" 资产收益率%">assetYield_13</Cell>
+			<Cell order="26" name="*所属国家或地区">countryArea_18</Cell>
+			<Cell order="27" name="*名称">assetName_18</Cell>
+			<Cell order="28" name="*起息日">vdate_18</Cell>
+			<Cell order="29" name="*到期日">mdate_18</Cell>
+			<Cell order="30" name="*资产价值">assetValue_18</Cell>
+			<Cell order="31" name="资产收益率%">assetYield_18</Cell>
+			<Cell order="32" name="委外投资协议名称">assetName_16</Cell>
+			<Cell order="33" name="委外投资协议编号">assetCode_16</Cell>
+			<Cell order="34" name="受托人">trustee_16</Cell>
+			<Cell order="35" name="实际管理人">managerId_16</Cell>
+			<Cell order="36" name="托管人">trusteeId_16</Cell>
+			<Cell order="37" name="委托投资金额">amt_16</Cell>
+			<Cell order="38" name="资金实际投向">truActType_16</Cell>
+			<Cell order="39" name="资金运用方式">investType_16</Cell>
+			<Cell order="40" name="资金运用行业">capUseIndu_16</Cell>
+			<Cell order="41" name="投资运作起始日期">planSdate_16</Cell>
+			<Cell order="42" name="投资运作终止日期">planEdate_16</Cell>
+			<Cell order="43" name="委外投资属性">proProperty_16</Cell>
+			<Cell order="44" name="是否有预期收益率">rateFlag_16</Cell>
+			<Cell order="45" name="预期最高收益率">maxRate_16</Cell>
+			<Cell order="46" name="预期最低收益率">minRate_16</Cell>
+			<Cell order="47" name="管理费率%">mgrFeeRate_16</Cell>
+			<Cell order="48" name="托管费率%">truFeeRate_16</Cell>
+			<Cell order="49" name="交易相关合计费率%">tradeFeeRate_16</Cell>
+			<Cell order="50" name="中介服务机构合计费率%">agencyFeeRate_16</Cell>
+			<Cell order="51" name="其他合计费率%">otherFeeRate_16</Cell>
+			<Cell order="52" name="*所属国家或地区">countryArea_17</Cell>
+			<Cell order="53" name="*名称">assetName_17</Cell>
+			<Cell order="54" name="期限（天）">termDate_17</Cell>
+			<Cell order="55" name="*负债规模">debtScale_17</Cell>
+			<Cell order="56" name=" 利率%">assetYield_17</Cell>
+			<Cell order="57" name="备注">remark</Cell>
+			<Cell order="58" name="新人行一级分类">pbcAssetType1Str</Cell>
+			<Cell order="59" name="新人行二级分类">pbcAssetType2Str</Cell>
+			<Cell order="60" name="新人行三级分类">pbcAssetType3Str</Cell>
 
 		</Row>
 	</Worksheet>

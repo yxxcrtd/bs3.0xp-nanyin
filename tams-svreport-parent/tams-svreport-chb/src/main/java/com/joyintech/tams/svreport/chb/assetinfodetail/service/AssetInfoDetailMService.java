@@ -487,6 +487,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 					map.put("isResale_05",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIsResale()));
 					map.put("notstandSecType_05",SysDataUtil.getZZDictCodeAndName(DictCode.票据类信用证类资产类型, assetInfoDetailDto.getNotstandSecType()));
 					map.put("industryShares_05",SysDataUtil.getZZDictCodeAndName(DictCode.机构所属行业二级分类, assetInfoDetailDto.getIndustryShares2()));
+					map.put("pppflag_05",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getPppflag()));
+					map.put("bondtostockFlag_05",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getBondtostockFlag()));
 					map.put("isBzhpj_05",SysDataUtil.getZZDictCodeAndName(DictCode.是否_中债, assetInfoDetailDto.getIsBzhpj()));
 				}
 				if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_商品类资产.getValue())){
