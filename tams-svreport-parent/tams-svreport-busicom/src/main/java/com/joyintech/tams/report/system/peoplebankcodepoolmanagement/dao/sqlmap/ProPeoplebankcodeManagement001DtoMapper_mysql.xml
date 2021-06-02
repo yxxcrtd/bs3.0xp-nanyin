@@ -229,7 +229,7 @@
         t1.STATUS=#{statusEffective}
         <if test="search != null and search != ''">
             and
-            t1.INSIDE_PROD_ID LIKE  CONCAT('%', CONCAT_WS(#{search}, '%'))
+            t1.INSIDE_PROD_ID LIKE  CONCAT('%', #{search}, '%')
         </if>
     </select>
     <select id="getProPeopleBankExcelList" resultType="string">
