@@ -33,11 +33,13 @@
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">产品</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" id="prod" name="prod"
-                               data-th-value="${entity?.prod}" class="layui-input form-input"
-                               placeholder="请输入内容">
-                        </select>
-
+                        <input id="prod" name="prod" class="layui-input form-input input-lenovoselect"
+                               data-th-data-parentids="orgCode" data-th-data-code="prdCode" placeholder="请输入"
+                               data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getProd}"
+                               data-idfield="code" data-keyfield="code"
+                               data-showindex = 'false'
+                               data-effectivefieldsalias='{"code":"产品代码","shortName":"产品名称"}'
+                        />
                     </div>
                 </div>
 
