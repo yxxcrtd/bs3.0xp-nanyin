@@ -77,7 +77,7 @@
              <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  begin-->
              'OPTION', (costAmt+floatingpl),
              <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  end-->
-             decode(assetbasis.valueDate,assetbasis.mdate,100,100*costAmt/posAmt)) end unitValNet,
+             decode(assetbasis.valueDate,assetbasis.mdate,100,100*(costAmt+floatingpl)/posAmt)) end unitValNet,
         nvl(price.PRICE,1)
           *
              decode(typex.SRCFIELD1,
