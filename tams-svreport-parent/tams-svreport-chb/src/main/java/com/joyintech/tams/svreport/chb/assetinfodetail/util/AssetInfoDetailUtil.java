@@ -299,9 +299,17 @@ public class AssetInfoDetailUtil {
             dto.setAssetYield(new BigDecimal(list.get(28)));
         }
         dto.setRemark(list.get(54));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(55)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(56)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(57)));
+        if (StringUtil.isNotEmpty(list.get(55))){
+            dto.setPbcAssetType1(list.get(55).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(56))){
+            dto.setPbcAssetType2(list.get(56).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(57))){
+            dto.setPbcAssetType3(list.get(57).substring(0,3));
+        }
         return dto;
     }
 
@@ -324,9 +332,17 @@ public class AssetInfoDetailUtil {
             dto.setAssetYield(new BigDecimal(list.get(53)));
         }
         dto.setRemark(list.get(54));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(55)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(56)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(57)));
+        if (StringUtil.isNotEmpty(list.get(55))){
+            dto.setPbcAssetType1(list.get(55).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(56))){
+            dto.setPbcAssetType2(list.get(56).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(57))){
+            dto.setPbcAssetType3(list.get(57).substring(0,3));
+        }
         return dto;
     }
 
@@ -378,9 +394,17 @@ public class AssetInfoDetailUtil {
             dto.setOtherFeeRate(new BigDecimal(list.get(48)));
         }
         dto.setRemark(list.get(54));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(55)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(56)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(57)));
+        if (StringUtil.isNotEmpty(list.get(55))){
+            dto.setPbcAssetType1(list.get(55).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(56))){
+            dto.setPbcAssetType2(list.get(56).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(57))){
+            dto.setPbcAssetType3(list.get(57).substring(0,3));
+        }
         return dto;
     }
 
@@ -409,9 +433,17 @@ public class AssetInfoDetailUtil {
         dto.setFundInvestAsset(list.get(19));
         dto.setRemark(list.get(20));
         dto.setPrivatefundFlag(list.get(21));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(22)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(23)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(24)));
+        if (StringUtil.isNotEmpty(list.get(22))){
+            dto.setPbcAssetType1(list.get(22).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(23))){
+            dto.setPbcAssetType2(list.get(23).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(24))){
+            dto.setPbcAssetType3(list.get(24).substring(0,3));
+        }
         return dto;
     }
 
@@ -467,9 +499,17 @@ public class AssetInfoDetailUtil {
         dto.setGuaTypeRemark(list.get(33));
         dto.setDeptEquity(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(34)));
         dto.setRemark(list.get(35));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(36)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(37)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(38)));
+        if (StringUtil.isNotEmpty(list.get(36))){
+            dto.setPbcAssetType1(list.get(36).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(37))){
+            dto.setPbcAssetType2(list.get(37).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(38))){
+            dto.setPbcAssetType3(list.get(38).substring(0,3));
+        }
         return dto;
     }
 
@@ -492,9 +532,17 @@ public class AssetInfoDetailUtil {
             dto.setAssetYield(new BigDecimal(list.get(22)));
         }
         dto.setRemark(list.get(54));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(55)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(56)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(57)));
+        if (StringUtil.isNotEmpty(list.get(55))){
+            dto.setPbcAssetType1(list.get(55).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(56))){
+            dto.setPbcAssetType2(list.get(56).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(57))){
+            dto.setPbcAssetType3(list.get(57).substring(0,3));
+        }
         return dto;
     }
 
@@ -551,9 +599,17 @@ public class AssetInfoDetailUtil {
         }
         dto.setRemark(list.get(28));
         dto.setPrivateprdFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(29)));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(30)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(31)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(32)));
+        if (StringUtil.isNotEmpty(list.get(30))){
+            dto.setPbcAssetType1(list.get(30).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(31))){
+            dto.setPbcAssetType2(list.get(31).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(32))){
+            dto.setPbcAssetType3(list.get(32).substring(0,3));
+        }
         return dto;
     }
 
@@ -602,9 +658,17 @@ public class AssetInfoDetailUtil {
         }
         dto.setTradeFee(list.get(46));
         dto.setRemark(list.get(47));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(48)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(49)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(50)));
+        if (StringUtil.isNotEmpty(list.get(48))){
+            dto.setPbcAssetType1(list.get(48).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(49))){
+            dto.setPbcAssetType2(list.get(49).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(50))){
+            dto.setPbcAssetType3(list.get(50).substring(0,3));
+        }
         return dto;
     }
 
@@ -622,9 +686,17 @@ public class AssetInfoDetailUtil {
         dto.setIndustryShares2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(25)));
         dto.setIndustryShares(dict.get("industry"+dto.getIndustryShares2()));
         dto.setRemark(list.get(47));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(48)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(49)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(50)));
+        if (StringUtil.isNotEmpty(list.get(48))){
+            dto.setPbcAssetType1(list.get(48).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(49))){
+            dto.setPbcAssetType2(list.get(49).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(50))){
+            dto.setPbcAssetType3(list.get(50).substring(0,3));
+        }
         return dto;
     }
 
@@ -649,9 +721,17 @@ public class AssetInfoDetailUtil {
         }
         dto.setBasis(SysDataUtil.getZZDictCodeFromName(DictCode.计息基础_中债, list.get(19)));
         dto.setRemark(list.get(47));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(48)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(49)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(50)));
+        if (StringUtil.isNotEmpty(list.get(48))){
+            dto.setPbcAssetType1(list.get(48).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(49))){
+            dto.setPbcAssetType2(list.get(49).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(50))){
+            dto.setPbcAssetType3(list.get(50).substring(0,3));
+        }
         return dto;
     }
 
@@ -688,9 +768,17 @@ public class AssetInfoDetailUtil {
         dto.setGuaranteeCmt(list.get(17));
         dto.setSpecialCmt(list.get(18));
         dto.setRemark(list.get(47));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(48)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(49)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(50)));
+        if (StringUtil.isNotEmpty(list.get(48))){
+            dto.setPbcAssetType1(list.get(48).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(49))){
+            dto.setPbcAssetType2(list.get(49).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(50))){
+            dto.setPbcAssetType3(list.get(50).substring(0,3));
+        }
         return dto;
     }
 
@@ -711,9 +799,17 @@ public class AssetInfoDetailUtil {
         if (StringUtil.isNotEmpty(list.get(10))) {
             dto.setMdate(DateUtil.parse(list.get(10)));
         }
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(11)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(12)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(13)));
+        if (StringUtil.isNotEmpty(list.get(11))){
+            dto.setPbcAssetType1(list.get(11).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(12))){
+            dto.setPbcAssetType2(list.get(12).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(13))){
+            dto.setPbcAssetType3(list.get(13).substring(0,3));
+        }
         return dto;
     }
 
@@ -745,9 +841,17 @@ public class AssetInfoDetailUtil {
         }
         dto.setIsGovernFund(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(19)));
         dto.setIsunlisted(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(20)));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(21)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(22)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(23)));
+        if (StringUtil.isNotEmpty(list.get(21))){
+            dto.setPbcAssetType1(list.get(21).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(22))){
+            dto.setPbcAssetType2(list.get(22).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(23))){
+            dto.setPbcAssetType3(list.get(23).substring(0,3));
+        }
         return dto;
     }
 
@@ -789,9 +893,17 @@ public class AssetInfoDetailUtil {
         }
         dto.setIsBzhpj(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(17)));
         dto.setRemark(list.get(54));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(55)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(56)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(57)));
+        if (StringUtil.isNotEmpty(list.get(55))){
+            dto.setPbcAssetType1(list.get(55).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(56))){
+            dto.setPbcAssetType2(list.get(56).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(57))){
+            dto.setPbcAssetType3(list.get(57).substring(0,3));
+        }
         return dto;
     }
 
@@ -912,9 +1024,17 @@ public class AssetInfoDetailUtil {
         dto.setRepPrivateprdFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(72)));
         dto.setPppflag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(73)));
         dto.setBondtostockFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(74)));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(75)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(76)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(77)));
+        if (StringUtil.isNotEmpty(list.get(75))){
+            dto.setPbcAssetType1(list.get(75).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(76))){
+            dto.setPbcAssetType2(list.get(76).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(77))){
+            dto.setPbcAssetType3(list.get(77).substring(0,3));
+        }
         return dto;
     }
 
@@ -943,9 +1063,17 @@ public class AssetInfoDetailUtil {
         dto.setRepTargetType(SysDataUtil.getZZDictCodeFromName(DictCode.标的类别, list.get(12)));
         dto.setRepTarget(list.get(13));
         dto.setRepRemark(list.get(14));
-        dto.setRepPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(15)));
-        dto.setRepPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(16)));
-        dto.setRepPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(17)));
+        if (StringUtil.isNotEmpty(list.get(15))){
+            dto.setRepPbcAssetType1(list.get(15).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(16))){
+            dto.setRepPbcAssetType2(list.get(16).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(17))){
+            dto.setRepPbcAssetType3(list.get(17).substring(0,3));
+        }
         return dto;
     }
 
@@ -974,9 +1102,17 @@ public class AssetInfoDetailUtil {
         }
         dto.setRemark(list.get(13));
         dto.setCheckCode(list.get(14));
-        dto.setPbcAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产一级分类, list.get(15)));
-        dto.setPbcAssetType2(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产二级分类, list.get(16)));
-        dto.setPbcAssetType3(SysDataUtil.getZZDictCodeFromName(DictCode.人行资产三级分类, list.get(17)));
+        if (StringUtil.isNotEmpty(list.get(15))){
+            dto.setPbcAssetType1(list.get(15).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(16))){
+            dto.setPbcAssetType2(list.get(16).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(17))){
+            dto.setPbcAssetType3(list.get(17).substring(0,3));
+        }
 
         return dto;
     }
@@ -1007,9 +1143,17 @@ public class AssetInfoDetailUtil {
         dto.setBankSecZxzq(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(10)));
         dto.setRepIsFbzb(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(10)));
         dto.setRepBankCapital(list.get(20));
-        dto.setRepPbcAssetType1(list.get(21));
-        dto.setRepPbcAssetType2(list.get(22));
-        dto.setRepPbcAssetType3(list.get(23));
+        if (StringUtil.isNotEmpty(list.get(21))){
+            dto.setRepPbcAssetType1(list.get(21).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(22))){
+            dto.setRepPbcAssetType2(list.get(22).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(23))){
+            dto.setRepPbcAssetType3(list.get(23).substring(0,3));
+        }
         return dto;
     }
 

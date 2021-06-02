@@ -91,7 +91,9 @@
 				options.exts = 'zip|xls|xlsx';
 				Joyin.uploadFile(options,function(fileName) {
 					Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-						Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName});
+						Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName},function () {
+							table.reload();
+						});
 					});
 				},function() {
 					table.reload();

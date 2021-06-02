@@ -409,15 +409,20 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			map.put("assetType2Str", SysDataUtil.getZZDictCodeAndName(DictCode.资产_负债二级类别, assetInfoDetailDto.getAssetType2()));
 			map.put("tradeMarketStr",SysDataUtil.getZZDictCodeAndName(DictCode.交易流通场所_中债, assetInfoDetailDto.getTradeMarket()));
 			map.put("ccyStr",SysDataUtil.getZZDictCodeAndName(DictCode.币种_中债, assetInfoDetailDto.getCcy()));
-			map.put("pbcAssetType1Str",SysDataUtil.getZZDictCodeAndName(DictCode.人行资产一级分类, assetInfoDetailDto.getPbcAssetType1()));
-			map.put("pbcAssetType2Str",SysDataUtil.getZZDictCodeAndName(DictCode.人行资产二级分类, assetInfoDetailDto.getPbcAssetType2()));
-			map.put("pbcAssetType3Str",SysDataUtil.getZZDictCodeAndName(DictCode.人行资产三级分类, assetInfoDetailDto.getPbcAssetType3()));
 			map.put("assetType2Str", SysDataUtil.getZZDictCodeAndName(DictCode.资产_负债二级类别, assetInfoDetailDto.getAssetType2()));
 			map.put("tradeMarketStr",SysDataUtil.getZZDictCodeAndName(DictCode.交易流通场所_中债, assetInfoDetailDto.getTradeMarket()));
 			map.put("ccyStr",SysDataUtil.getZZDictCodeAndName(DictCode.币种_中债, assetInfoDetailDto.getCcy()));
-			map.put("pbcAssetType1Str",SysDataUtil.getZZDictCodeAndName(DictCode.人行资产一级分类, assetInfoDetailDto.getPbcAssetType1()));
-			map.put("pbcAssetType2Str",SysDataUtil.getZZDictCodeAndName(DictCode.人行资产二级分类, assetInfoDetailDto.getPbcAssetType2()));
-			map.put("pbcAssetType3Str",SysDataUtil.getZZDictCodeAndName(DictCode.人行资产三级分类, assetInfoDetailDto.getPbcAssetType3()));
+			if (StringUtil.isNotEmpty(assetInfoDetailDto.getPbcAssetType1())){
+				map.put("pbcAssetType1Str",assetInfoDetailDto.getPbcAssetType1()+SysDataUtil.getNameFromDataDict(DictCode.人行资产一级分类, assetInfoDetailDto.getPbcAssetType1()));
+
+			}
+			if (StringUtil.isNotEmpty(assetInfoDetailDto.getPbcAssetType2())){
+				map.put("pbcAssetType2Str",assetInfoDetailDto.getPbcAssetType2()+SysDataUtil.getNameFromDataDict(DictCode.人行资产二级分类, assetInfoDetailDto.getPbcAssetType2()));
+
+			}
+			if (StringUtil.isNotEmpty(assetInfoDetailDto.getPbcAssetType3())){
+				map.put("pbcAssetType3Str",assetInfoDetailDto.getPbcAssetType3()+SysDataUtil.getNameFromDataDict(DictCode.人行资产三级分类, assetInfoDetailDto.getPbcAssetType3()));
+			}
 			if (StringUtil.equals(assetInfoDetailDto.getAssetType(),DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue())){
 				map.put("basis", SysDataUtil.getZZDictCodeAndName(DictCode.计息基础_中债, assetInfoDetailDto.getBasis()));
 				map.put("depoType", SysDataUtil.getZZDictCodeAndName(DictCode.存款类型, assetInfoDetailDto.getDepoType()));
