@@ -573,8 +573,8 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
 		}
 		 // 如果没有未报送的记录，生成空模板
 		if (sourceFiles.isEmpty()){
-			data.put("dataList", new ArrayList<PbcLoanDetailInfoSubReportVo>());
-	    	data.put("data2List", new ArrayList<PbcLoanDetailInfoSubReportVo>());
+//			data.put("dataList", new ArrayList<PbcLoanDetailInfoSubReportVo>());
+//	    	data.put("data2List", new ArrayList<PbcLoanDetailInfoSubReportVo>());
 			String fileName = "资产负债信息"+DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
 			File depositfile = TisUtil.createFile(data, "pbc/" +"PbcReport_OneprdAssetDebt_export", fileName);
 			sourceFiles.add(depositfile);
