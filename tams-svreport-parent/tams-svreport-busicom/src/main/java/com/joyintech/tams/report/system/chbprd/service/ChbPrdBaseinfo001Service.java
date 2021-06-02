@@ -215,11 +215,12 @@ public class ChbPrdBaseinfo001Service extends CommonExportService<ChbPrdBaseinfo
     public List<ChbPrdBaseinfo001Dto> queryReportList(Map<String, Object> param) {
         String prodIds = (String)param.get("keyprodIdList");
         List<String> selectprodIds = StringUtil.splitToList(GlobalConstant.COMMA, prodIds);
-        param.put("selectprodIds", selectprodIds);
         if (StringUtil.isEmptyList(selectprodIds)) {
+            selectprodIds = StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("prodId"));
             List<String> statusList = StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("status"));
             param.put("selectStatus", statusList);
         }
+        param.put("selectprodId", selectprodIds);
 //        return chbPrdBaseinfo001Mapper.queryReportList(param);
         List<ChbPrdBaseinfo001Dto> list = chbPrdBaseinfo001Mapper.queryForPage(param);
         list.forEach(x ->{
