@@ -71,11 +71,11 @@
         SUM( IF ( B.BUSI_TYPE IN ( '03', '15', '16' ), IFNULL( SHARES, 0 ), 0 ) ) AS SH_QTY,
         SUM( IF ( B.BUSI_TYPE IN ( '03', '04', '05', '15', '16' ), IFNULL( AMOUNT_CNY, 0 ), 0 ) ) AS SH_AMT
         FROM
-        CHB_EQUDET B, (SELECT
+        CHB_EQUDET_SUB B, (SELECT
         A.ACCOUNT,-- A.EQUITY_CONF_DATE AS EQUITY_CONF_DATE,
         SUM( IF ( A.BUSI_TYPE IN ( '01' ), IFNULL( AMOUNT_CNY, 0 ), 0 ) ) AS MJ_AMT
         FROM
-        CHB_EQUDET A
+        CHB_EQUDET_SUB A
         WHERE
         A.BUSI_TYPE = '01'
         GROUP BY
