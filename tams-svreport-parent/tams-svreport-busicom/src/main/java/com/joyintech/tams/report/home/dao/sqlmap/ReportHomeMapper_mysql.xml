@@ -3302,26 +3302,58 @@
 		)
 </select>
 <select id="searchReportCheckNum" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
-  select ifnull(checkwarn.warnnum,0) warningnum /*预警*/
-  ,ifnull(checkfail1.failnum,0)+ifnull(checkfail2.failnum,0) failnum /*不通过*/
-  ,ifnull(checkwarn.warnnum,0)+ifnull(checkfail1.failnum,0)+ifnull(checkfail2.failnum,0) as submitChecknum /*报送检查*/
-  ,ifnull(checkwarn.rep_code,checkfail1.rep_code) reporttype /*报表类型*/
-  from (select count(check_result) warnnum,rep_code
-	from chb_report_check where
-	check_result='03'
-	and DATE_FORMAT(DATA_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
-	group by rep_code
-	) checkwarn
-  left join (select count(check_result) failnum,rep_code
-	from chb_report_check where
-	check_result='02'
-	and DATE_FORMAT(DATA_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
-	group by rep_code) checkfail1 on checkwarn.rep_code = checkfail1.rep_code
-  right join (select count(check_result) failnum,rep_code
-	from chb_report_check where
-	check_result='02'
-	and DATE_FORMAT(DATA_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
-	group by rep_code) checkfail2 on checkwarn.rep_code = checkfail2.rep_code
+	SELECT
+		sum( warnnum ) AS warningnum /*预警*/
+			,
+		sum( failnum ) AS failnum /*不通过*/
+			,
+		sum( warnnum ) + sum( failnum ) AS submitChecknum /*报送检查*/
+			,
+		rep_code AS reporttype /*报表类型*/
+
+	FROM
+		(
+			SELECT
+				count( check_result ) warnnum,
+				rep_code,
+				0 AS failnum,
+				0 AS warningnum
+			FROM
+				chb_report_check
+			WHERE
+				check_result = '03'
+			  AND DATE_FORMAT( DATA_TIME, '%Y-%m-%d' ) = DATE_FORMAT(
+					#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+
+			GROUP BY
+				rep_code UNION ALL
+			SELECT
+				0 AS warnnum,
+				rep_code,
+				count( check_result ) failnum,
+				0 AS warningnum
+			FROM
+				chb_report_check
+			WHERE
+				check_result = '02'
+			  AND DATE_FORMAT( DATA_TIME, '%Y-%m-%d' ) = DATE_FORMAT(
+					#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+
+			GROUP BY
+				rep_code UNION ALL
+			SELECT
+				0 AS warnnum,
+				rep_code,
+				count( check_result ) failnum,
+				0 AS warningnum
+			FROM
+				chb_report_check
+			WHERE
+				check_result = '02'
+			  AND DATE_FORMAT( DATA_TIME, '%Y-%m-%d' ) = DATE_FORMAT( #{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+			GROUP BY rep_code ) b
+	GROUP BY
+		rep_code
 </select>
 
 <select id="selectMenulist" resultType="java.lang.String">
