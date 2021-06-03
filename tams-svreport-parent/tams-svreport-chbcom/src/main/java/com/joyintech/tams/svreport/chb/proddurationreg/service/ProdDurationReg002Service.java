@@ -630,8 +630,11 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        if(sb.length() > 1){
 	        	result.setCcyPurchase(sb.deleteCharAt(sb.length() - 1).toString());
 	        }else{
-	        	result.setCcyPurchase("CNY,0.00,0.00,0.00");
-	        }
+//	        	result.setCcyPurchase("CNY,0.00,0.00,0.00");//delete by lingxiaoqing on 2021-06-03 for 按照交易币种来报送
+				String ccy = (null == result.getValueCcy() ? "CNY" : result.getValueCcy());
+				result.setCcyPurchase(ccy + ",0.00,0.00,0.00");//add by lingxiaoqing on 2021-06-03 for 按照交易币种来报送
+
+			}
 	        
 	        // 报送截止日生成
 	        Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
