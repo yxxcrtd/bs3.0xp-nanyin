@@ -247,6 +247,12 @@
                  OR FINPROD_NAME like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
                  )
           </if>
+          <if test="initValue !=null and initValue !=''">
+                 AND (FINPROD_MARKET_ID like concat(concat('%', #{initValue,jdbcType=VARCHAR}),'%')
+                 OR FINPROD_ABBR like concat(concat('%', #{initValue,jdbcType=VARCHAR}),'%')
+                 OR FINPROD_NAME like concat(concat('%', #{initValue,jdbcType=VARCHAR}),'%')
+                 )
+          </if>
 
          </select>
 
