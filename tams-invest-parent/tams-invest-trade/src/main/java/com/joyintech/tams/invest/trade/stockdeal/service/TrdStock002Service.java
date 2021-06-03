@@ -4,7 +4,7 @@
  */
 
 package com.joyintech.tams.invest.trade.stockdeal.service;
-;
+
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
