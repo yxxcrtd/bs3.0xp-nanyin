@@ -229,9 +229,7 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                 dto.setRate(bigDecimal);
                 errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, dto, "DisPrdFeeRate002", null, ValidMessage.class);
                 //if(errorList.size() == 0){
-                map.put("busiId", busiId);
-                map.put("startDate", date);
-                map.put("cashType2", cashType2);
+                map =  this.getParamMapByDis(dto);
                 List<DisRepCashYield> disRepCashYields = proRateInfo001Mapper.selectOneDate(map);
                 if ("新增".equals(type)) {
                     if (null != disRepCashYields && disRepCashYields.size() > 0) {
@@ -280,31 +278,47 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                 for (int i = 0; i < dataList.size(); i++ ) {
                     List<String> list = dataList.get(i);
                     List<String> message = new ArrayList<>();
+                    List<ValidMessage> resultList = new ArrayList<ValidMessage>();
                     //操作类型
                     String type = list.get(0);
                     ProRateInfo001Dto dto  = this.getProRateInfo001DtoByExcel(list, message);
                     Map<String,Object> map = this.getParamMapByDis(dto);
                     List<DisRepCashYield> disRepCashYields= proRateInfo001Mapper.selectOneDate(map);
-                    if("新增".equals(type) || "修改".equals(type)){
-                        updateInfo(disRepCashYields, dto);
-                        if(dto.getStartDate() != null) {
-                            deleteErrorDataOne(dto.getBusiId(), DateUtil.format(dto.getStartDate()), dto.getCashType2());
+
+                    if ("新增".equals(type)) {
+                        if (null != disRepCashYields && disRepCashYields.size() > 0) {
+                            message.add("第" + (i + 2) + "行已存在重复产品、启用日期、信披费用类型的数据");
                         }
-                    }
-                    /*if("修改".equals(type)){
-                        updateInfo(disRepCashYields,busiId, date, cashType2, cashType2Name,bigDecimal,deptCode,userName);
-                    }*/
-                    else if("删除".equals(type)){
-                        proRateInfo001Mapper.deleteOne(dto.getBusiId(), dto.getStartDate(), dto.getCashType2());
-                        if(dto.getStartDate() != null) {
-                            deleteErrorDataOne(dto.getBusiId(), DateUtil.format(dto.getStartDate()), dto.getCashType2());
+                    }else if ("修改".equals(type) || "删除".equals(type)) {
+                        if (disRepCashYields.size() <= 0) {
+                            message.add("第" + (i + 2) + "行不存在产品、启用日期、信披费用类型的数据,请核查");
                         }
+                    }else if ("导出".equals(type)) {
+                        message.add("不要使用“操作类型”为“导出”的进行导入!");
                     }else {
                         message.add("操作类型值不在可选范围内");
                     }
                     if (!message.isEmpty()) {
-                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                         checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
                                 StringUtil.joinString(message, GlobalConstant.COMMA)));
+                        return checkResult;
+                    }else{
+                        if("删除".equals(type)){
+                            proRateInfo001Mapper.deleteOne(dto.getBusiId(), dto.getStartDate(), dto.getCashType2());
+                            if(dto.getStartDate() != null) {
+                                deleteErrorDataOne(dto.getBusiId(), DateUtil.format(dto.getStartDate()), dto.getCashType2());
+                            }
+                        }else if("新增".equals(type) || "修改".equals(type)){
+                            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "DisPrdFeeRate002", null, ValidMessage.class);
+                            if(!StringUtil.isEmptyList(resultList)) {
+                                checkResult.add(new ExcelValidDto(dto.getBusiId(),"第"+(i+2)+"行",StringUtil.joinString(message,"")));
+                            }else {
+                                updateInfo(disRepCashYields, dto);
+                                if (dto.getStartDate() != null) {
+                                    deleteErrorDataOne(dto.getBusiId(), DateUtil.format(dto.getStartDate()), dto.getCashType2());
+                                }
+                            }
+                        }
                     }
                 }
             }
