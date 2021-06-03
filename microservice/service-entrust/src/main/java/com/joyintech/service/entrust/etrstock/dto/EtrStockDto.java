@@ -112,6 +112,16 @@ public class EtrStockDto extends EtrEntrust {
     private String secAcctId;
 
     /**
+     * 上市板块
+     */
+    private String board;
+
+    /**
+     * 交易模式
+     */
+    private String dealMode;
+
+    /**
      * 获取证券托管户
      * @return
      */
@@ -127,7 +137,21 @@ public class EtrStockDto extends EtrEntrust {
         this.secAcctId = secAcctId;
     }
 
+    public String getBoard() {
+        return board;
+    }
 
+    public void setBoard(String board) {
+        this.board = board;
+    }
+
+    public String getDealMode() {
+        return dealMode;
+    }
+
+    public void setDealMode(String dealMode) {
+        this.dealMode = dealMode;
+    }
 
     /**
      * 获取 finvdate

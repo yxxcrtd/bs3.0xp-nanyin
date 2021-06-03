@@ -88,7 +88,7 @@ public class IbuComponentCommonService extends BaseService {
     /**
      * {@linkplain}
      */
-    @Autowired
+    @Autowired(required = false)
     private IPlatformDate iPlatformDate;
 
     /**
