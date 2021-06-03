@@ -807,6 +807,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         if(StringUtil.equals(DictCodeListExt2.平安资产类型_一级市场债.getValue(),v.getAssetType())){
             if(StringUtil.isNotEmpty(dataMap.get("biddate"))) {
                 infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("biddate").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
+            }else if(StringUtil.isNotEmpty(dataMap.get("bidDate"))) {
+                infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("bidDate").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
             }else if(StringUtil.isNotEmpty(dataMap.get("payDate"))){
                 infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("payDate").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));
             }
