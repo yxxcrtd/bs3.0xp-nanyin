@@ -3207,6 +3207,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	 * @throws
 	 */
 	private String formatDateStr(String dateStr) {
+		if(!StringUtil.isBlank(dateStr) && dateStr.endsWith(".0")){
+			dateStr = dateStr.replace(".0","");
+		}
 		Date date = DateUtil.parse(dateStr);
 		String formatDateStr = null;
 		if (null !=  date) {
