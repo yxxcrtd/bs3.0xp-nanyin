@@ -1282,7 +1282,7 @@
             pos.ASSETVALUE_B AS qmAssetValue,
             NULL AS qcAssetValue,
 
-            assetinfo.FINANCIER_GRADE AS rating,
+            IF(pos.ASSETTYPE2='2101',assetinfo.sec_main_grade,assetinfo.FINANCIER_GRADE ) rating,
             assetinfo.GUA_TYPE AS guaType,
             assetinfo.TRADE_MARKET AS tradeMarket,
             assetinfo.IS_FBZB AS isFbzb,
@@ -1300,7 +1300,7 @@
               where
                   a.ENDDATE = #{cdate,jdbcType=DATE}
             ) pos,
-            ( SELECT a.ASSET_CODE, a.FINANCIER_GRADE, a.GUA_TYPE,a.TRADE_MARKET,a.IS_FBZB FROM CHB_ASSET_INFO a WHERE a.STATUS IN ( 'E', 'M' ) ) assetinfo,
+            ( SELECT a.ASSET_CODE, a.FINANCIER_GRADE, a.sec_main_grade, a.GUA_TYPE,a.TRADE_MARKET,a.IS_FBZB FROM CHB_ASSET_INFO a WHERE a.STATUS IN ( 'E', 'M' ) ) assetinfo,
             ( SELECT * FROM CHB_PRD_BASEINFO b WHERE STATUS IN ( 'M', 'E' ) AND PROFIT_TYPE = '03' ) baseinfo
         WHERE
             pos.prod_id = baseinfo.prod_id
@@ -1316,7 +1316,7 @@
              NULL AS qmAssetValue,
              pos.ASSETVALUE_B AS qcAssetValue,
 
-             assetinfo.FINANCIER_GRADE AS rating,
+             IF(pos.ASSETTYPE2='2101',assetinfo.sec_main_grade,assetinfo.FINANCIER_GRADE ) rating,
              assetinfo.GUA_TYPE AS guaType,
              assetinfo.TRADE_MARKET AS tradeMarket,
              assetinfo.IS_FBZB AS isFbzb,
@@ -1337,7 +1337,7 @@
                            date_sub( date_sub( date_format( #{cdate,jdbcType=DATE}, '%y-%m-%d' ), INTERVAL extract( DAY FROM #{cdate,jdbcType=DATE}) DAY ), INTERVAL 0 MONTH ) AS date
                    )
              ) pos,
-             ( SELECT a.ASSET_CODE, a.FINANCIER_GRADE, a.GUA_TYPE,a.TRADE_MARKET,a.IS_FBZB FROM CHB_ASSET_INFO a WHERE a.STATUS IN ( 'E', 'M' ) ) assetinfo,
+             ( SELECT a.ASSET_CODE, a.FINANCIER_GRADE, a.sec_main_grade, a.GUA_TYPE,a.TRADE_MARKET,a.IS_FBZB FROM CHB_ASSET_INFO a WHERE a.STATUS IN ( 'E', 'M' ) ) assetinfo,
              ( SELECT * FROM CHB_PRD_BASEINFO b WHERE STATUS IN ( 'M', 'E' ) AND PROFIT_TYPE = '03' ) baseinfo
          WHERE
              pos.prod_id = baseinfo.prod_id
