@@ -339,7 +339,7 @@
           var vdateAdd = $('#vdateAdd').val();
           var mdateAdd = $("#mdateAdd").val();
           var day = $('#termDays').val();
-          if(Date.ofDate(vdateAdd).getTime()>Date.ofDate(mdateAdd).getTime()){
+          if(Date.ofDate(vdateAdd).getTime()>Date.ofDate(mdateAdd).getTime()&&mdateAdd){
               Joyin.error("起息日不能大于到期日");
               $("#vdateAdd").val(mdateAdd.format("yyyy-MM-dd"));
               $('#termDays').val(0);
@@ -353,6 +353,9 @@
           //    var day = parseInt(total / (24*60*60));
           //    $('#termDays').val(day);
           // }
+          if(!day){
+        	  return;
+          }
            var d1 = DateUtil.parse(vdateAdd);
            var d2 = new Date(d1.getFullYear(),d1.getMonth(),d1.getDate()+parseInt(day));
            $("#mdateAdd").val(d2.format("yyyy-MM-dd"));
