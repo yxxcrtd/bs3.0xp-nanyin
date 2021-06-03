@@ -665,8 +665,16 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        	for(ProdDurationReg001Dto  sub:lsitsub){
 	        	    // modify by dubaojun 2020-10-26 每万份份额分红和每万份现金分红保留5位小数 start
 	        		//04 现金分红
-	        		if(sub.getTradeType().equals("04") && sub.getCashAmtWan() != null){
-	        			 result.setCashAmtWan(sub.getCashAmtWan().setScale(5, RoundingMode.HALF_UP));
+					if(sub.getTradeType().equals("04") && sub.getCashAmtWan() != null){
+//						result.setCashAmtWan(sub.getCashAmtWan().setScale(5, RoundingMode.HALF_UP));//delete by lingxq on 2021-06-03 for 折算人民币
+						//----add by lingxq on 2021-06-03 for 折算人民币 ---->>>>>
+						BigDecimal cashAmt = sub.getCashAmtWan();
+						if (!StringUtil.equals(sub.getValueCcy(), DictCodeListExt1.币种_中债_人民币.getValue())){
+							cashAmt = ChbCcyConvertUtil.changeCnyMoney(sub.getValueCcy(), sub.getCashAmtWan(),
+									DateUtil.parse(result.getMdate()), rateMap);
+						}
+						result.setCashAmtWan(cashAmt.setScale(5, RoundingMode.HALF_UP));
+						//----add by lingxq on 2021-06-03 for 折算人民币 ----<<<<<
 	        		}
 	        		//05 红利再投
 	        		if(sub.getTradeType().equals("05") && sub.getShareAmtWan() != null){
