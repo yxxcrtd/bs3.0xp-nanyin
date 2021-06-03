@@ -63,6 +63,8 @@ public interface CreditLinesDealsMapper {
 	String getMstName(@Param("creditMstId") String creditMstId);
 	BigDecimal getPrehapamtForPingan(Map<String, Object> map);
 
+	BigDecimal getPierceTradeAmt(Map<String, Object> map);
+
 	List<CreditLines> getCeLinesInfoforVariety(Map<String, Object> map);
 
 	//add 20191019  股票取标的对应的公司名称

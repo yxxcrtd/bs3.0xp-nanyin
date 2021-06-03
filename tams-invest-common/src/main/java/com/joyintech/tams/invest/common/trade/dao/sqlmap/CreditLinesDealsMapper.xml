@@ -545,6 +545,29 @@
 		FROM CREDIT_MST_INFO T
 		WHERE T.SEQNO = #{creditMstId,jdbcType=VARCHAR})
 	</select>
+
+	<select id="getPierceTradeAmt" resultType="java.math.BigDecimal" >
+		SELECT
+			SUM(E.CREDIT_AMT) AS TRADE_AMT
+		FROM CREDIT_LINES_PIERCE E
+		left join CREDIT_LINES A
+			on A.CUSTOMER_ID= E.CUSTOMER_ID
+			AND A.CREDIT_MST_ID= E.CREDIT_MST_ID
+			AND A.INSTITUTION_CODE = E.INSTITUTION_CODE
+			AND E.CDATE BETWEEN A.VDATE AND A.MDATE
+		WHERE E.CDATE = (
+				SELECT  MAX (CDATE)
+				FROM CREDIT_LINES_PIERCE
+				WHERE CDATE <![CDATA[<=]]> #{tradedate,jdbcType=DATE})
+			AND E.CREDIT_FLAG != 'N'
+			AND E.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
+			AND E.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		GROUP BY  E.CUSTOMER_ID
+		,E.CREDIT_MST_ID
+		,E.INSTITUTION_CODE
+		,E.CDATE
+	</select>
+
 	<select id="getPrehapamtForPingan" resultType="java.math.BigDecimal" >
 		SELECT T.CREDIT_AMT FROM CREDIT_LINES_PRE T
 		WHERE T.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
