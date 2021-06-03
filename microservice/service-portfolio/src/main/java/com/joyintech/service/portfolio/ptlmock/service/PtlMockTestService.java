@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.dao.MockTest002Mapper;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.ptlrealtimevaluation.RealTimeValCommonUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;

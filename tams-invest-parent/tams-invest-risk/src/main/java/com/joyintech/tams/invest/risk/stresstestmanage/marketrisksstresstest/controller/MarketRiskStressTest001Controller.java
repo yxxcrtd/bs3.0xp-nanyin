@@ -40,7 +40,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.risk.stresstestmanage.riskfactor.dto.RiskFactor001Dto;
 import com.joyintech.tools.collectors.JoyinCollectors;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.risk.stresstestmanage.marketrisksstresstest.dto.MarketRiskStressTest001Dto;
 import com.joyintech.tams.invest.risk.stresstestmanage.marketrisksstresstest.service.MarketRiskStressTest001Service;
 

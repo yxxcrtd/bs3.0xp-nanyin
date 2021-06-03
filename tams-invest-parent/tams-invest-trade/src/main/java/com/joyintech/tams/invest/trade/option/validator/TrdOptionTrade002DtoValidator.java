@@ -8,7 +8,7 @@ import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.common.validator.TradeCommonValidator;

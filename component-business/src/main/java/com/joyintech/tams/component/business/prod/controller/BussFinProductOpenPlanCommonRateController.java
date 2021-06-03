@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.prod.BussFinProductOpenPlanService;
 import com.joyintech.tams.component.business.prod.dto.BussFinProductOpenPlanDto;

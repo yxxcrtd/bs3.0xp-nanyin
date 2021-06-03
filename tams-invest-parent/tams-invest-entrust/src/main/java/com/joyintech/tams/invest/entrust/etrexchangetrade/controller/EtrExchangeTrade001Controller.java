@@ -54,7 +54,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;

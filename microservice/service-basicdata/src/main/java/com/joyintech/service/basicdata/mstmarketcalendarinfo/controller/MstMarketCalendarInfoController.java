@@ -24,7 +24,7 @@ import com.joyintech.service.basicdata.mstmarketcalendarinfo.dto.MstCalendarInfo
 import com.joyintech.service.basicdata.mstmarketcalendarinfo.dto.MstMarketCalendarInfo001Dto;
 import com.joyintech.service.basicdata.mstmarketcalendarinfo.service.MstMarketCalendarInfoService;
 import com.joyintech.tams.common.base.entity.MstCalendarInfo;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 
 /**

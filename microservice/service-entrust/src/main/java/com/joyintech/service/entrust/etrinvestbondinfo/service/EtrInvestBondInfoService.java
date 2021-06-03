@@ -27,7 +27,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;

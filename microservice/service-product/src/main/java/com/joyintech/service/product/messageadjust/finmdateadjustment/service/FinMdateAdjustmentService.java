@@ -44,7 +44,7 @@ import com.joyintech.service.product.common.dto.FinProductAnapleroticPlanDto;
 import com.joyintech.service.product.common.dto.FinProductCommonInfoDto;
 import com.joyintech.service.product.messageadjust.finmdateadjustment.dao.FinMdateAdjustmentMapper;
 import com.joyintech.service.product.messageadjust.finmdateadjustment.dto.FinMdateAdjustmentDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 /**
  * @author zhangliang

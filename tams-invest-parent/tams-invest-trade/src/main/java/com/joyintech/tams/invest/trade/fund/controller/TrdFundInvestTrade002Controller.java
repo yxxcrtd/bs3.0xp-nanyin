@@ -17,7 +17,7 @@ import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;

@@ -8,7 +8,7 @@ import com.joyintech.service.risk.namelistmanage.assetnamelist.dao.AssetNameMana
 import com.joyintech.service.risk.namelistmanage.assetnamelist.dao.AssetNameManagementMapper;
 import com.joyintech.service.risk.namelistmanage.assetnamelist.dto.RskAccessListDetailDto;
 import com.joyintech.service.risk.namelistmanage.assetnamelist.dto.RskAccessListLogDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

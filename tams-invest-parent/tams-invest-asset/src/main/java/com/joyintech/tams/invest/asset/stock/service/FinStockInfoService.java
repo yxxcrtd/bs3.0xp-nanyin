@@ -30,7 +30,7 @@ import com.joyintech.tams.invest.asset.common.dto.BaseRepAssetEquityInfoDto;
 import com.joyintech.tams.invest.asset.common.service.AssetCommonService;
 import com.joyintech.tams.invest.asset.interfaceDto.S031Dto;
 import com.joyintech.tams.invest.asset.stock.dto.FinStockInfoDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessJixuConstant;

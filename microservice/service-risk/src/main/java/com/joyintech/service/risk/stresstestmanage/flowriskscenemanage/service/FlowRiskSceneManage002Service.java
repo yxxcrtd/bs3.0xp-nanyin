@@ -51,7 +51,7 @@ import com.joyintech.tams.common.base.entity.SttSceneTips;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 /**
  * 流动性风险-情景新建数据服务层-Service

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

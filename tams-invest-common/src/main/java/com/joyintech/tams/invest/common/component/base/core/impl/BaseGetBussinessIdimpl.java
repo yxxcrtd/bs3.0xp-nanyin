@@ -12,7 +12,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.impl.dao.BaseGetBussinessIdMapper;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 

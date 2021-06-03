@@ -23,7 +23,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.component.business.prod.dto.BussFinProductPayPlanDto;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.constant.DictCodeList;

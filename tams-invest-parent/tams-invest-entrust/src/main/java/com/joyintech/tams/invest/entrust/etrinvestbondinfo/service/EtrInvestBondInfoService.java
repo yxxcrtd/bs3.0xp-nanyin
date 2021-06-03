@@ -79,7 +79,7 @@ import com.joyintech.tams.component.business.common.service.BasRiskMathCommServi
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;

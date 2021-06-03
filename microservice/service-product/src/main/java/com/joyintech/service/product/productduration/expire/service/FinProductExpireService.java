@@ -25,7 +25,7 @@ import com.joyintech.service.product.productduration.expire.dto.FinProductExpire
 import com.joyintech.service.product.productduration.expire.dto.FinProductExpireBranchInfoDto;
 import com.joyintech.service.product.productduration.expire.dto.FinProductExpireFeeInfoDto;
 import com.joyintech.service.product.productduration.expire.dto.FinProductExpireMInfoDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.product.addreduce.ReduceInfoDto;
 
 /**

@@ -24,7 +24,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.period.trdlendduration.dto.TrdLendDuration001Dto;
 import com.joyintech.tams.invest.period.trdoptionduration.dto.OptionDurationDetailDto;
 import com.joyintech.tams.invest.period.trdoptionduration.dto.TrdOptionDurationDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdoptionduration.service.TrdOptionDuration001Service;

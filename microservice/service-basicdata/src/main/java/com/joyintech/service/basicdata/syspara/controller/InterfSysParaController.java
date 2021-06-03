@@ -11,7 +11,7 @@
 package com.joyintech.service.basicdata.syspara.controller;
 
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;

@@ -20,7 +20,7 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.product.common.service.ProductCommonService;
 import com.joyintech.tams.invest.product.productduration.expire.dto.FinProductExpire001Dto;

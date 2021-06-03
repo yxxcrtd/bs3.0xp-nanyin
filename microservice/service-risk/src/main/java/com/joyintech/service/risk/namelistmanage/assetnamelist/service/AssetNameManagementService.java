@@ -18,7 +18,7 @@ import com.joyintech.tams.common.base.entity.RskAccessListDetail;
 import com.joyintech.tams.common.base.entity.WflRskAccessListDetail;
 import com.joyintech.tams.common.base.entity.WflRskAccessListLog;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

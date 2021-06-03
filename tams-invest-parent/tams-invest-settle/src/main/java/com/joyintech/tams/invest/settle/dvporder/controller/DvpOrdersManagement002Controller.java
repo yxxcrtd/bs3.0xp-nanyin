@@ -11,7 +11,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.core.service.impl.BaseGetBusinessIdImpl;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.settle.dvporder.dto.DvpOrdersManagement001Dto;
 import com.joyintech.tams.invest.settle.dvporder.dto.DvpOrdersProcessDto;

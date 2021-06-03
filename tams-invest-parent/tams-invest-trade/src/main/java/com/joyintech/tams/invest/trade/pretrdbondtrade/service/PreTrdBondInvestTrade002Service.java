@@ -98,7 +98,7 @@ import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryServ
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;

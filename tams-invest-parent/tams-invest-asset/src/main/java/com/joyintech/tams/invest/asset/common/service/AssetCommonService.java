@@ -53,7 +53,7 @@ import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.calculator.InterestScheduleCalReset;
 import com.joyintech.tams.invest.common.calculator.RepayScheduleCal;
 import com.joyintech.tams.invest.common.calculator.WeightedInterestRateCal;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;

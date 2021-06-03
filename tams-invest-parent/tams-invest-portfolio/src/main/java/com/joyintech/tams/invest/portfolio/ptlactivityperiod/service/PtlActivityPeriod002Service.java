@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,7 +57,6 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.component.base.group.impl.BasePtlCashPositionInfoServiceImpl;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -136,7 +136,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
      * 平台日期获取
      */
     @Autowired(required=false)
-    private PlatformDateImpl platformDateImpl;
+    private IPlatformDate platformDateImpl;
     /**
      * 委托指令流水共通
      */

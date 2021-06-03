@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,6 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.autoperiod.secover.dao.AutoPeriodSecOverCommonMapper;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;

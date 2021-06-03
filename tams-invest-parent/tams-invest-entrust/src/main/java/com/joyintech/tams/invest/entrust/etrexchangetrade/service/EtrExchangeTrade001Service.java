@@ -31,7 +31,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import com.joyintech.workflow.engine.WorkflowContext;

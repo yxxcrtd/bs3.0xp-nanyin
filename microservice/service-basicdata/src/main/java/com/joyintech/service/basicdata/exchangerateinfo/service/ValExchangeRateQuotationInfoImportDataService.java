@@ -24,7 +24,7 @@ import com.joyintech.service.basicdata.exchangerateinfo.dto.MstExchangeQuotation
 import com.joyintech.tams.common.base.dao.MstExchargeQuoteMapper;
 import com.joyintech.tams.common.base.entity.MstExchargeQuote;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 

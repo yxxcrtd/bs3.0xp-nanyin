@@ -11,7 +11,7 @@
 package com.joyintech.tams.invest.common.util;
 
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -26,7 +26,7 @@ import com.joyintech.service.product.productduration.establish.dto.FinProductEst
 import com.joyintech.service.product.productduration.establish.dto.FinProductEstablishDto;
 import com.joyintech.service.product.productduration.establish.dto.FinProductEstablishLayerDto;
 import com.joyintech.service.product.productduration.establish.dto.FinProductEstablishShowDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
 
 /**

@@ -4,7 +4,7 @@ import com.jixu.common.util.DateUtil;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.valuation.basedata.marketdata.externaloptions.dto.ExternalOptions002Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.valfxvaluztioninfo.dto.ValFxValuztionInfo002Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.valfxvaluztioninfo.validator.ValFxValuztionInfo002DtoValidator;

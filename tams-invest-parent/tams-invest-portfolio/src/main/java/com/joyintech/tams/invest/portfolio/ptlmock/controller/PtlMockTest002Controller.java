@@ -35,7 +35,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.invest.common.dto.mock.portfolio.MockPtlPortfolioDto;
 import com.joyintech.tams.invest.portfolio.ptlmock.dto.PtlMockTest002Dto;

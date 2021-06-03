@@ -27,7 +27,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.customerrelationtree.agencydetailsinf.dto.AgencyDetailsInf001Dto;
 import com.joyintech.tams.invest.risk.customerrelationtree.agencydetailsinf.dto.TreeNode;

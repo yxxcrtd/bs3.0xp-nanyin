@@ -8,7 +8,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonResult;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioCashPositionsFlowInputDto;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
@@ -22,6 +21,7 @@ import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMappe
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.*;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +48,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
     /**
      * 平台日期
      */
-    @Autowired
+    @Autowired(required = false)
     private IPlatformDate platformDateImpl;
 
     @Override

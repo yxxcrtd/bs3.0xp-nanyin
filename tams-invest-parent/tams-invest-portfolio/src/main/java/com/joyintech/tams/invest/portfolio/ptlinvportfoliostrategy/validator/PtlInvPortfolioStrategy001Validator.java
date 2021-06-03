@@ -27,7 +27,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.portfolio.ptlinvportfoliostrategy.dto.PtlInvPortfolioStrategy001Dto;
 import com.joyintech.tams.invest.portfolio.ptlinvportfoliostrategy.service.PtlInvPortfolioStrategy001Service;

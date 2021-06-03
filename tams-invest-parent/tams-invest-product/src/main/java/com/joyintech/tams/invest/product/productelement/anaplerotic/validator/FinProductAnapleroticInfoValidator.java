@@ -26,7 +26,7 @@ import com.joyintech.tams.component.business.prod.dto.BussFinProductFeeInfoDto;
 import com.joyintech.tams.component.business.prod.dto.BussFinProductFloatFeeDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticInfoDto;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.service.FinProductAnapleroticInfo002Service;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.dto.FinNetValueProductBuild002Dto;

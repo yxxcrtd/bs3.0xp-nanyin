@@ -6,7 +6,7 @@ import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdrepoduration.dto.TrdRepoDuration001Dto;
 import org.springframework.beans.factory.annotation.Autowired;

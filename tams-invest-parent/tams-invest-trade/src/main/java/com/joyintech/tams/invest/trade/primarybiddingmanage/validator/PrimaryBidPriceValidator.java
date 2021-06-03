@@ -6,7 +6,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.dto.BidOrderBidPriceDto;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.dto.TrdBidPriceDto;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.service.PrimaryBiddingManage003Service;

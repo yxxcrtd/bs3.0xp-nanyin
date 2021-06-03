@@ -7,7 +7,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.product.messageadjust.supplement.dto.FinSupplementPlanChg001Dto;
 import com.joyintech.tams.invest.product.messageadjust.supplement.service.FinSupplementPlanChg001Service;
 import com.joyintech.tams.invest.product.productelement.periodicmanagement.dto.PeriodicManagement001Dto;

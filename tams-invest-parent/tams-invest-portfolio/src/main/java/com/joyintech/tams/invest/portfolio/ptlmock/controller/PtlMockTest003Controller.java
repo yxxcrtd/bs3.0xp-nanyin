@@ -17,7 +17,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.portfolio.ptlmock.dto.PtlMockTest003Dto;
 import com.joyintech.tams.invest.portfolio.ptlmock.service.PtlMockTest003Service;
 

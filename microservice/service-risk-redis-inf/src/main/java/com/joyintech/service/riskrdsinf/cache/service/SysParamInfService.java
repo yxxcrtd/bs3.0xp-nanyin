@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -49,8 +49,8 @@ public class SysParamInfService {
     /**
      * 平台日期组件对象
      */
-    @Autowired
-    private PlatformDateImpl platformDtImpl;
+    @Autowired(required = false)
+    private IPlatformDate platformDtImpl;
 
     /**
      * 加载系统参数

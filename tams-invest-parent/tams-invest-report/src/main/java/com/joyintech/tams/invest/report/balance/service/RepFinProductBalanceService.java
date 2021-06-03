@@ -23,7 +23,7 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.report.balance.dto.RepFinProductBalanceDto;
 

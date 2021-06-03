@@ -39,7 +39,7 @@ import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.constant.SystemGlobalConstant;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.service.PtlPositionAnalysis001Service;

@@ -15,7 +15,7 @@ import java.util.Map;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.position.dao.CommonPtlPositionMapper;
 import com.joyintech.tams.invest.common.position.dto.EtrEntrustAddDto;
 import com.joyintech.tams.invest.common.position.dto.FinTradeProductDto;

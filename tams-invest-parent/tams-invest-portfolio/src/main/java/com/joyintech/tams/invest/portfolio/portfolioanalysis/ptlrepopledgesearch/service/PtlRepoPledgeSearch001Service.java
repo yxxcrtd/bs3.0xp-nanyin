@@ -7,7 +7,7 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.base.entity.FinPledgeDisplaceDetail;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlRepoPledgeSearchDto;
 

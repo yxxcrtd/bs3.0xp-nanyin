@@ -18,7 +18,7 @@ import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.base.entity.TargetDetail;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.dto.PtlPerformanceAnalysis002Dto;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.service.PtlPerformanceAnalysis002Service;
 

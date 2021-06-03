@@ -45,7 +45,7 @@ import com.joyintech.tams.common.base.entity.TrdStasecFlowDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;

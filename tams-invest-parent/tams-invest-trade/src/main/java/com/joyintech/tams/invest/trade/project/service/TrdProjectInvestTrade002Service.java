@@ -46,7 +46,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.BasePtlRecePositionService;
 import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.dto.PtlRecePositionFlowDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.component.base.trade.impl.dao.BaseTradeProductDealMapper;

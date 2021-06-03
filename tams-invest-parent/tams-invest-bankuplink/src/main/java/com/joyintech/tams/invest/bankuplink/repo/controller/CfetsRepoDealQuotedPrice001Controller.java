@@ -64,7 +64,7 @@ import com.joyintech.tams.invest.bankuplink.repo.dto.RepoQuoteInfoDto;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;

@@ -20,7 +20,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.service.riskrdsinf.core.exception.InterfException;
 import com.joyintech.service.riskrdsinf.core.util.InfMapValUtil;
 import com.joyintech.service.riskrdsinf.event.rsk003.entity.Rsk003InEntity;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IProdInfo;
 import com.joyintech.tams.invest.common.riskinfrds.occupy.entity.OccupyRelParam;

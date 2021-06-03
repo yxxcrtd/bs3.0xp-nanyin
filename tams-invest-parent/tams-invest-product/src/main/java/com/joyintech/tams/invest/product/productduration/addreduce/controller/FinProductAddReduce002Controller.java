@@ -29,7 +29,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.component.business.trade.impl.BussTrdAvailableCashQueryImplService;
 import com.joyintech.tams.constant.DictCode;

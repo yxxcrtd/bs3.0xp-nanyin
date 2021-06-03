@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,6 @@ import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.dao.PtlRe
 import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.dto.PtlRecePositionFlowDto;
 import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.dto.PtlRecePositionsFlowInputDto;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.trade.impl.dao.BaseTradeProductDealMapper;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;

@@ -39,7 +39,7 @@ import com.joyintech.tams.invest.common.autoperiod.common.dao.PeriodCommonMapper
 import com.joyintech.tams.invest.common.autoperiod.common.service.InvestPeriodCommonService;
 import com.joyintech.service.period.trddepoduration.dao.TrdDepoDurationMapper;
 import com.joyintech.service.period.trddepoduration.dto.TrdDepoDurationDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;

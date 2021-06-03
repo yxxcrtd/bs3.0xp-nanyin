@@ -18,7 +18,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.interf.dto.TrdInterfDataImport001LogDto;
 import com.joyintech.tams.invest.interf.service.TrdInterfDataImport001Service;
 import org.springframework.beans.factory.annotation.Autowired;

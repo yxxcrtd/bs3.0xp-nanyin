@@ -42,7 +42,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.basicdata.mstcustomernature.dto.MstCustomerNatureDto;
 import com.joyintech.tams.invest.basicdata.mstcustomernature.service.MstCustomerNatureService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;

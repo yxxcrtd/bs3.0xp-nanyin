@@ -23,7 +23,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.portfolio.ptlsingleassetpositionanalysis.dto.PtlSingleAssetPositionAnalysis001Dto;
 

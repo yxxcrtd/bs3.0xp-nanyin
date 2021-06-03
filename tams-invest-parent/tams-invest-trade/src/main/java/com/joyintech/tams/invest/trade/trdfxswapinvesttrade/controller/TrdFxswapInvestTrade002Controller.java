@@ -54,7 +54,7 @@ import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;

@@ -9,7 +9,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.report.poc.portfolio.ptlmockoptionalassets.dao.PtlMockOptionAlassetsMapper;
 import com.joyintech.service.report.poc.portfolio.ptlmockoptionalassets.dto.PtlMockOptionAlassetsDto;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

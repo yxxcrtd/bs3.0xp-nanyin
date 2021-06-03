@@ -13,7 +13,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.trade.trdstandardbond.dto.TrdStandardBond002Dto;

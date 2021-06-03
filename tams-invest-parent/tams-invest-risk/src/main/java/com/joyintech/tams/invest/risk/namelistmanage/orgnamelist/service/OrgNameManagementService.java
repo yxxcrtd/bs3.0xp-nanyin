@@ -11,7 +11,7 @@ import com.joyintech.tams.common.base.entity.WflRskAccessList;
 import com.joyintech.tams.common.base.entity.WflRskAccessListDetail;
 import com.joyintech.tams.common.base.entity.WflRskAccessListLog;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;

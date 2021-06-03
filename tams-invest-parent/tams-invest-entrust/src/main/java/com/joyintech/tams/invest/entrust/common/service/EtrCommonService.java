@@ -24,7 +24,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;

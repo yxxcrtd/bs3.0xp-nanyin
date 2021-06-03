@@ -8,7 +8,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.base.entity.TargetDetail;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.service.PtlPositionAnalysis003Service;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -23,7 +23,7 @@ import com.joyintech.service.product.resultscovering.dto.FinResultsCovering001Dt
 import com.joyintech.service.product.resultscovering.dto.FinResultsCovering002Dto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
 @Service("backFinResultsCoveringService")

@@ -21,7 +21,7 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.component.business.prod.BussBenchMarketInfoService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.dto.PtlPerformanceAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.dto.PtlPerformanceLineDto;
 import com.joyintech.tams.invest.portfolio.ptlperformanceanalysis.service.PtlPerformanceAnalysis001Service;

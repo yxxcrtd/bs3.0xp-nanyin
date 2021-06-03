@@ -32,7 +32,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.valuation.basedata.marketdata.valcoinfundquotationinfo.dao.ValCoinFundQuotationInfoMapper;
 import com.joyintech.service.valuation.basedata.marketdata.valcoinfundquotationinfo.dto.ValCoinFundQuotationInfo001Dto;
-//import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+//import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;

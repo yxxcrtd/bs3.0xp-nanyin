@@ -12,7 +12,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;

@@ -4,7 +4,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.period.common.validator.PeriodCommonValidator;
 import com.joyintech.tams.invest.period.trddepoduration.dto.TrdDepoDuration003Dto;
 import com.joyintech.tams.invest.period.trddepoduration.service.TrdDepoDuration001Service;

@@ -18,7 +18,7 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.invest.basicdata.dataclear.dto.SettleBatchResultDto;
 import com.joyintech.tams.invest.basicdata.dataclear.service.SettleDataClear001Service;
 import com.joyintech.tams.invest.basicdata.dataimport.dto.SettleTransResultDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -15,7 +15,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.product.productduration.addreduce.dto.FinProductAddReduce001Dto;
 
 /**

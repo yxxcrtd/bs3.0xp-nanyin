@@ -15,6 +15,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.systemtools.dao.CommonPlatformDateMapper;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -32,7 +33,7 @@ import java.util.Date;
  */
 @Primary
 @Service("serviceCommonPlatformDateService")
-public class CommonPlatformDateService implements PlatformDate {
+public class CommonPlatformDateService implements IPlatformDate {
     /**
      * 系统日期工具Mapper
      */

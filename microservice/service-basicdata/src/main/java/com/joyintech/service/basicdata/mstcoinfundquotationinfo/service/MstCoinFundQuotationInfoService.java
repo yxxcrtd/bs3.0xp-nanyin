@@ -33,7 +33,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.basicdata.mstcoinfundquotationinfo.dao.MstCoinFundQuotationInfoMapper;
 import com.joyintech.service.basicdata.mstcoinfundquotationinfo.dto.MstCoinFundQuotationInfo001Dto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.util.MapParseUtil;

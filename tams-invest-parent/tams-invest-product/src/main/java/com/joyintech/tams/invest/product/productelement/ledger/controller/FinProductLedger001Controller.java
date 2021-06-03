@@ -33,7 +33,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.product.productelement.ledger.dto.FinProductLedger001Dto;
 import com.joyintech.tams.invest.product.productelement.ledger.service.FinProductLedger001Service;
 

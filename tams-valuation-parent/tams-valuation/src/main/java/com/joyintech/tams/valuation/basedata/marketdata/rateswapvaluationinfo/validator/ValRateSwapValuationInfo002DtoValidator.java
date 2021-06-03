@@ -14,7 +14,7 @@ import java.util.*;
 
 import com.google.common.collect.Maps;
 import com.jixu.common.util.DateUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.valuation.basedata.marketdata.rateswapvaluationinfo.service.ValRateSwapValuationInfo002Service;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.apache.commons.lang3.StringUtils;

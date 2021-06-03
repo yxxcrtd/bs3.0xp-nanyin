@@ -20,7 +20,7 @@ import com.joyintech.tams.component.base.core.dto.WflSpecialValidInputParameter;
 import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;

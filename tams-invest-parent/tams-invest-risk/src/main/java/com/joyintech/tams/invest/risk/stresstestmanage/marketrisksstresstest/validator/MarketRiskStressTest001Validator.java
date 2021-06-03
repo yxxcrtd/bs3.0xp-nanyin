@@ -21,7 +21,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.risk.stresstestmanage.marketrisksstresstest.dto.MarketRiskStressTest001Dto;
 import com.joyintech.tams.invest.risk.stresstestmanage.marketrisksstresstest.service.MarketRiskStressTest001Service;
 

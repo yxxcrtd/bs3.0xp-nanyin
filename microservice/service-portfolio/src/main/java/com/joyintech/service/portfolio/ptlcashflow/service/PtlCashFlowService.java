@@ -25,7 +25,6 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -36,6 +35,7 @@ import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -112,7 +112,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
      * 平台日期
      */
     @Autowired(required=false)
-    private PlatformDateImpl platformDateImpl;
+    private IPlatformDate platformDateImpl;
     /**
      * 委托指令共通
      */

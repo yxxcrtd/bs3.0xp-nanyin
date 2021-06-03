@@ -32,7 +32,7 @@ import com.joyintech.tams.invest.batch.risktrialrds.dto.RiskTrialDayTimeResult;
 import com.joyintech.tams.invest.batch.risktrialrds.service.RiskTrialDayTimeProcessorService;
 import com.joyintech.tams.invest.batch.risktrialrds.service.RiskTrialDayTimeReaderService;
 import com.joyintech.tams.invest.batch.risktrialrds.service.RiskTrialDayTimeWriterService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.risktrialrds.util.Const;
 

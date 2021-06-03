@@ -42,7 +42,7 @@ import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonServic
 import com.joyintech.tams.invest.common.calculator.CalendarUtil;
 import com.joyintech.tams.invest.common.calculator.InstanceOfClass;
 import com.joyintech.tams.invest.common.calculator.InterestSubAmtCal;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.component.base.trade.impl.dao.BaseTradeProductDealMapper;

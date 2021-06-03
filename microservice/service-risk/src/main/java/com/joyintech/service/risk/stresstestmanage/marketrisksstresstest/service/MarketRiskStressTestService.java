@@ -44,7 +44,7 @@ import com.joyintech.tams.common.base.entity.SttStressScene;
 import com.joyintech.tams.common.base.entity.SttStressTest;
 import com.joyintech.tams.common.base.entity.SttTestObj;
 import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 /**
  * 〈一句话功能简述〉

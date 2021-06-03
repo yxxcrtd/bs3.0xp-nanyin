@@ -18,7 +18,7 @@ import com.joyintech.service.period.trdirsduration.dao.TrdIRSDurationMapper;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonDeleteDto;

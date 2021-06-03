@@ -17,7 +17,7 @@ import com.joyintech.tams.invest.batch.common.util.BatchConstant;
 import com.joyintech.tams.invest.batch.riskparamcalc.processor.RskParamReCalcProcessor;
 import com.joyintech.tams.invest.batch.riskparamcalc.reader.RskParamReCalcReader;
 import com.joyintech.tams.invest.batch.riskparamcalc.writer.RskParamReCalcWriter;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
@@ -71,8 +71,8 @@ public class RskParamReCalcTask extends BatchBaseService {
     @Autowired
     private RskParamReCalcWriter step1Writer;
 
-    @Autowired
-    private PlatformDateImpl platDataUtil;
+    @Autowired(required = false)
+    private IPlatformDate platDataUtil;
 
     /**
      * {@inheritDoc}

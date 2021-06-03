@@ -49,7 +49,7 @@ import com.joyintech.redis.common.entity.Value;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.common.base.dao.RskIsupLogMapper;
 import com.joyintech.tams.invest.common.component.base.core.ICond;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
 import com.joyintech.tams.invest.common.redisinit.dao.RskRedisInitMapper;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplAsset;

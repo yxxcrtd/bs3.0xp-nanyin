@@ -24,7 +24,7 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.portfolio.ptlaccountcurrentinterest.dto.PtlAccountCurrentInterest001Dto;
 import com.joyintech.workflow.engine.constant.OperationType;

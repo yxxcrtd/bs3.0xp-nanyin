@@ -17,7 +17,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.invest.bankuplink.repo.dto.RepoQuoteInfoDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 
 @Service

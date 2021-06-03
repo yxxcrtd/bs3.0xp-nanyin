@@ -65,7 +65,7 @@ import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 

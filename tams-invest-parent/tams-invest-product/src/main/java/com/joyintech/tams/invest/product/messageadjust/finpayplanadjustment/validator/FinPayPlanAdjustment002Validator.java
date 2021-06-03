@@ -30,7 +30,7 @@ import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.prod.dto.BussFinProductFeeInfoDto;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.product.messageadjust.finpayplanadjustment.dto.FinPayPlanAdjustment002Dto;
 import com.joyintech.tams.invest.product.messageadjust.finpayplanadjustment.service.FinPayPlanAdjustment002Service;
 

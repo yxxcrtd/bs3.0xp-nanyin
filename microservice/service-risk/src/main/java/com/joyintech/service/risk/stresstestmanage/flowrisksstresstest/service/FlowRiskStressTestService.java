@@ -63,7 +63,7 @@ import com.joyintech.tams.common.base.entity.SttTestObj;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.parse.JoyinUserTaskParseHandler;
 
 /**

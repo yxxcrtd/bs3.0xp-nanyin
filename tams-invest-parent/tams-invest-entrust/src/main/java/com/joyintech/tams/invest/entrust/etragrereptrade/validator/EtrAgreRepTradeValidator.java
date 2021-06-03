@@ -9,7 +9,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
 import com.joyintech.tams.invest.entrust.etragrereptrade.service.EtrAgreRepTrade001Service;

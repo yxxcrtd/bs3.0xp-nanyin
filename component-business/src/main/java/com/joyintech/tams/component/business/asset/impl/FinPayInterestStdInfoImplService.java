@@ -27,7 +27,7 @@ import com.joyintech.tams.invest.common.asset.dto.AssetCommonInfoDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDetailDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.calculator.*;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ import java.util.List;
 @Service
 public class FinPayInterestStdInfoImplService extends BaseService<FinPayInterestStdInfoDto> implements FinPayInterestStdInfoService{
     
-    @Autowired
+    @Autowired(required = false)
     private IPlatformDate iPlatformDate;
     
     @Autowired

@@ -42,7 +42,7 @@ import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
 import com.joyintech.service.entrust.etrrepo.dao.EtrRepoMapper;
 import com.joyintech.service.entrust.etrrepo.dto.EtrRepoDto;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;

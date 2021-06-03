@@ -105,7 +105,7 @@ import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDetailDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.calculator.InterestSubAmtCal;
 import com.joyintech.tams.invest.common.client.ClientData;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.mock.asset.MockAssetInfoDto;

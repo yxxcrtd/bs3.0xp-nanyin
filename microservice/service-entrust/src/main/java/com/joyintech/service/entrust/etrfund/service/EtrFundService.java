@@ -31,7 +31,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
@@ -42,6 +41,7 @@ import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +75,7 @@ public class EtrFundService extends BaseService<EtrFundDto> {
      * 平台日期
      */
     @Autowired(required=false)
-    private PlatformDateImpl platformDateImpl;
+    private IPlatformDate platformDateImpl;
     
     /**
      * 附件信息共通Service

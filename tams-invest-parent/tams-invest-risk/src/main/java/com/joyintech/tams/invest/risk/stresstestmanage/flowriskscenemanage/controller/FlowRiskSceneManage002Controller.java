@@ -39,7 +39,7 @@ import com.joyintech.tams.common.base.entity.SttFactorTips;
 import com.joyintech.tams.common.base.entity.SttSceneFtrtips;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.risk.stresstestmanage.flowriskflowassets.dto.FlowRiskFlowAssets001Dto;

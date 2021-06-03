@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;

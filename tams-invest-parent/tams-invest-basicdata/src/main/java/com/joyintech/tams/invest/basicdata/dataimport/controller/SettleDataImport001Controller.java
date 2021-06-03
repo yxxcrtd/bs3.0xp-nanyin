@@ -26,7 +26,7 @@ import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.invest.basicdata.dataimport.dto.SettleTransResultDto;
 import com.joyintech.tams.invest.basicdata.dataimport.service.SettleDataImport001Service;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 /**
  * @author 王波

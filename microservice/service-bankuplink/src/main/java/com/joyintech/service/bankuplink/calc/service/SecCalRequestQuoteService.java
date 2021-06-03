@@ -24,7 +24,7 @@ import com.joyintech.service.bankuplink.calc.dao.SecCalRequestQuoteMapper;
 import com.joyintech.service.bankuplink.calc.dto.SecCalInfoModel;
 import com.joyintech.service.bankuplink.calc.dto.SecInfoModelDto;
 import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 

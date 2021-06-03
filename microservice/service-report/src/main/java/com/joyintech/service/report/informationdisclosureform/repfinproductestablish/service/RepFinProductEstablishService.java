@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,6 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.report.informationdisclosureform.repfinproductestablish.dao.RepFinProductEstablishMapper;
 import com.joyintech.service.report.informationdisclosureform.repfinproductestablish.dto.RepFinProductEstablishDto;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -49,7 +49,7 @@ public class RepFinProductEstablishService extends BaseService<RepFinProductEsta
      * 平台日期
      */
     @Autowired(required=false)
-    private PlatformDateImpl platformDateImpl;
+    private IPlatformDate platformDateImpl;
     /**
      * 自定义Mapper                                                     
      */

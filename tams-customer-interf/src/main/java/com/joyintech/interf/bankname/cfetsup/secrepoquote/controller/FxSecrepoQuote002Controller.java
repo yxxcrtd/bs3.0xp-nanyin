@@ -18,7 +18,7 @@ import com.joyintech.interf.bankname.cfetsup.secrepoquote.service.FxSecrepoQuote
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;

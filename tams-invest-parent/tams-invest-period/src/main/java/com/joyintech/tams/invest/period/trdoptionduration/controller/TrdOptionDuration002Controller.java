@@ -11,7 +11,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.period.trdoptionduration.dto.OptionDurationDetailDto;
 import com.joyintech.tams.invest.period.trdoptionduration.service.TrdOptionDuration002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;

@@ -35,7 +35,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.risk.conf.DataSourceType;
 import com.joyintech.service.risk.stresstestmanage.marketrisksstresstest.dao.MarketRiskStressTest002Mapper;
 import com.joyintech.service.risk.stresstestmanage.marketrisksstresstest.dto.MarketRiskStressTest002Dto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 /**
  * 〈一句话功能简述〉

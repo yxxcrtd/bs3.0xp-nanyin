@@ -33,7 +33,7 @@ import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.MstCfetsCustomerInfoMapper;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;

@@ -15,7 +15,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.product.rddesign.productsimulationtrial.dto.ProductSimulationTrial001Dto;
 import com.joyintech.tams.invest.product.rddesign.productsimulationtrial.dto.ProductSimulationTrial002Dto;
 import com.joyintech.tams.invest.product.rddesign.productsimulationtrial.service.ProductSimulationTrial001Service;

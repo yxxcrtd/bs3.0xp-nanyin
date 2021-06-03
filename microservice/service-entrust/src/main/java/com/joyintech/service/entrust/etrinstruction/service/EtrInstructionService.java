@@ -30,12 +30,12 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +68,7 @@ public class EtrInstructionService extends BaseService<EtrInstructionDto> {
      * 平台日期
      */
     @Autowired(required=false)
-    private PlatformDateImpl platformDateImpl;
+    private IPlatformDate platformDateImpl;
 
     /**
      * 委托自动分发

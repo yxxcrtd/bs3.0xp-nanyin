@@ -24,7 +24,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.period.trdprojbuyoff.dto.TrdProjectBuyOffInterest001Dto;
 import com.joyintech.tams.invest.period.trdprojbuyoff.service.TrdProjectBuyOffInterest001Service;

@@ -11,7 +11,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.settle.netting.NettingManagementDto;
 import com.joyintech.tams.invest.common.dto.settle.netting.TransferMessageDto;
 import com.joyintech.tams.invest.settle.dvporder.dto.DvpOrdersManagement001Dto;

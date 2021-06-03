@@ -25,7 +25,7 @@ import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.dto.Va
 import com.joyintech.tams.common.base.dao.MstFundMarketInfoMapper;
 import com.joyintech.tams.common.base.entity.MstFundMarketInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 

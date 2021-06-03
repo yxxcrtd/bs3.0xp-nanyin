@@ -27,13 +27,13 @@ import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.dto.*;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,7 +80,7 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
      * 平台日期获取
      */
     @Autowired(required=false)
-    private PlatformDateImpl platformDateImpl;
+    private IPlatformDate platformDateImpl;
     
     /**
      * 组合可用持仓和实际持仓查询更新组件接口

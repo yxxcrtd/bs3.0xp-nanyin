@@ -26,7 +26,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;

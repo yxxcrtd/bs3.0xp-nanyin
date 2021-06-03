@@ -15,7 +15,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.common.dto.FinAssetRateAdjDto;
 import com.joyintech.tams.invest.common.asset.dto.RateAdjDto;
 import com.joyintech.tams.invest.common.asset.service.RateAdjService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;

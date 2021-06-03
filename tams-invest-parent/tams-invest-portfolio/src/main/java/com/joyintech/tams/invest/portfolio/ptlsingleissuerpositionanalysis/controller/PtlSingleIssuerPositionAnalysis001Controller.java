@@ -17,7 +17,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlRepoPledgeSearchDto;
 import com.joyintech.tams.invest.portfolio.ptlsingleassetpositionanalysis.dto.PtlSingleAssetPositionAnalysis001Dto;
 import com.joyintech.tams.invest.portfolio.ptlsingleissuerpositionanalysis.dto.PtlSingleIssuerPositionAnalysis001Dto;

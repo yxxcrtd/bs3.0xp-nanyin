@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +43,6 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tools.collectors.JoyinCollectors;
 
@@ -64,8 +64,8 @@ public class FinProductDurDealService extends BaseService {
     @Autowired
     private FinProductDurDealMapper finProductDurDealMapper;
 
-    @Autowired
-    private PlatformDateImpl platformDateImpl;
+    @Autowired(required = false)
+    private IPlatformDate platformDateImpl;
 
     /**
      * BaseGetBussinessId

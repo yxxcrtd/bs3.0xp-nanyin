@@ -21,7 +21,7 @@ import com.joyintech.tams.component.business.asset.dto.FinPayInterestStdInfoDto;
 import com.joyintech.tams.component.business.common.dto.AssetCommonInvRateAdjustDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.component.business.project.BussParticipantInfoService;
 import com.joyintech.tams.component.business.project.dto.BussParticipantInfoDto;
 import com.joyintech.tams.constant.DictCodeList;

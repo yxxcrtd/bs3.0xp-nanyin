@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.service.SystemToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,6 @@ import com.joyintech.service.product.payint.dto.FinProductPayIntDto;
 import com.joyintech.service.product.payint.dto.FinProductPayIntIntDetailDto;
 import com.joyintech.service.product.payint.dto.FinProductPayIntProdBaseInfoDto;
 import com.joyintech.service.product.payint.dto.FinProductPayIntShowDto;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -63,8 +63,8 @@ public class FinProductPayIntService extends BaseService<FinProductPayIntDto> {
     /**
      * PlatformDateImpl
      */
-    @Autowired
-    private PlatformDateImpl platformDateImpl;
+    @Autowired(required = false)
+    private IPlatformDate platformDateImpl;
 
     @Autowired
     private SystemToolService systemToolService;

@@ -22,7 +22,7 @@ import com.joyintech.interf.bankname.sale.dto.CallClassParamsDto;
 import com.joyintech.interf.bankname.sale.constant.SaleCodeList;
 import com.joyintech.interf.bankname.sale.dao.SaleInterfMapper;
 import com.joyintech.interf.bankname.sale.service.SaleSystemInterfService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 
 /**

@@ -33,7 +33,7 @@ import com.joyintech.service.product.messageadjust.bmquotation.dto.BenchmarkRate
 import com.joyintech.service.product.messageadjust.bmquotation.dto.FinProductBmQuotationDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**

@@ -13,7 +13,7 @@ import com.joyintech.service.bankuplink.common.util.BusinessTypeUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.cstp.dao.CstpCommonMatchMapper;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonMatchService;

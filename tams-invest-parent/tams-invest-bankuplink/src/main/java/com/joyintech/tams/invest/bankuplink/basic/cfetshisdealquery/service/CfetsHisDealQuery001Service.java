@@ -21,7 +21,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.invest.bankuplink.basic.cfetshisdealquery.dto.CfetsHisDealQuery001Dto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.bankuplink.repo.dto.RepoQuoteInfoDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;

@@ -13,7 +13,7 @@
 //import com.joyintech.framework.constant.GlobalConstant;
 //import com.joyintech.framework.util.CacheUtil;
 //import com.joyintech.framework.util.DateUtil;
-//import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+//import com.joyintech.tams.systemtools.interf.IPlatformDate;
 //import com.joyintech.tams.invest.common.component.base.core.impl.dao.PlatformDateImplMapper;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Primary;

@@ -47,7 +47,7 @@ import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.asset.stock.dto.FinStockInfoDto;
 import com.joyintech.tams.invest.asset.stock.service.FinStockInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;

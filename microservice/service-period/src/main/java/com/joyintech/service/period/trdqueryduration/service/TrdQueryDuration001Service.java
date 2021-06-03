@@ -20,7 +20,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.period.trdqueryduration.dao.TrdQueryDuration001Mapper;
 import com.joyintech.service.period.trdqueryduration.dto.TrdQueryDurationDto;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

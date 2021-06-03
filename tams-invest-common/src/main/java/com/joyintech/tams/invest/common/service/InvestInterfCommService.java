@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.common.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;

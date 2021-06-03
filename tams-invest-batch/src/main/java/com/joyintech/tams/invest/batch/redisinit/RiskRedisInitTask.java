@@ -6,11 +6,11 @@ import java.util.Map;
 
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.constantrds.BussinessConstantRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.risktrialrds.dict.LogLvl;
 import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -81,8 +81,8 @@ public class RiskRedisInitTask extends BatchBaseService{
     @Autowired
     private RskParamReCalcWriter step1Writer;
 
-    @Autowired
-    private PlatformDateImpl platDataUtil;
+    @Autowired(required = false)
+    private IPlatformDate platDataUtil;
     
     @Override
     public JobExecution execute() throws BatchException {

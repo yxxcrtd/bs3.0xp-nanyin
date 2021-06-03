@@ -34,7 +34,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.portfolio.ptlactivityperiod.dto.PtlActivityPeriod001Dto;
 import com.joyintech.service.portfolio.ptlactivityperiod.service.PtlActivityPeriod001Service;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 
 /**

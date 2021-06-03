@@ -20,7 +20,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.SysActivereminderInfoMapper;
 import com.joyintech.tams.common.base.entity.SysActivereminderInfo;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;

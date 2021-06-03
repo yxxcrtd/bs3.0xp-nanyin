@@ -20,7 +20,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.component.base.entrust.impl.dao.BusiAutoEtrDispMapper;
 import com.joyintech.tams.component.base.entrust.impl.dto.TrdCommandDispatcher001Dto;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class BusiAutoEtrDispService {
     @Autowired
     private BusiAutoEtrDispMapper busiAutoEtrDispMapper;
 
-    @Autowired
+    @Autowired(required = false)
     private IPlatformDate iPlatformDate;
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;

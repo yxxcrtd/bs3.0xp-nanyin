@@ -21,7 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.asset.service.AutoAssetPriceService;
 import com.joyintech.tams.invest.common.asset.service.PriceinfoService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplParaRds;
 import com.joyintech.tams.invest.common.redisinit.service.RiskRefreshRedisService;

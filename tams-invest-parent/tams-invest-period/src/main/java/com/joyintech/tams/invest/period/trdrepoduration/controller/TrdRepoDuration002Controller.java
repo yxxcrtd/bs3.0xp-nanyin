@@ -14,7 +14,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;

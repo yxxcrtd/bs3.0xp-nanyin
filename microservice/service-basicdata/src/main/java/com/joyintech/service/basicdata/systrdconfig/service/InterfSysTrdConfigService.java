@@ -10,7 +10,7 @@ import com.joyintech.service.basicdata.systrdconfig.dto.TrdTimeConfigDto;
 import com.joyintech.tams.common.base.dao.MstCounterPartyInfoMapper;
 import com.joyintech.tams.common.base.entity.MstCounterPartyInfo;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

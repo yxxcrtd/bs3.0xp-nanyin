@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonParam;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonWflParam;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;

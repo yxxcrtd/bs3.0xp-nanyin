@@ -16,7 +16,7 @@ import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.portfolio.ptlsubfundsmange.dto.PtlSubFundsMange002Dto;
 import com.joyintech.tams.invest.portfolio.ptlsubfundsmange.service.PtlSubFundsMange002Service;

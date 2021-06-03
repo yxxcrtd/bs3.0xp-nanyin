@@ -15,7 +15,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTrade002Dto;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTrade003Dto;

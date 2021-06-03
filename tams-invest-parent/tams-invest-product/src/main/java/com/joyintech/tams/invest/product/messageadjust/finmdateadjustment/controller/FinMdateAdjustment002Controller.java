@@ -36,7 +36,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.product.messageadjust.finmdateadjustment.dto.FinMdateAdjustment001Dto;

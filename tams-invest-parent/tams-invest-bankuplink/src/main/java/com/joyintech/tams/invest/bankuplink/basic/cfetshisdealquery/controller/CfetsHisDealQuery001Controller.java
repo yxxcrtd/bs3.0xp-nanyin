@@ -36,7 +36,7 @@ import com.joyintech.tams.invest.bankuplink.basic.cfetshisdealquery.service.Cfet
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.invest.bankuplink.repo.dto.RepoQuoteInfoDto;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessParameter;

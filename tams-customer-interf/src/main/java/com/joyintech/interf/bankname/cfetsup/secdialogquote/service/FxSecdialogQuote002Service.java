@@ -22,7 +22,7 @@ import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.workflow.engine.constant.OperationType;

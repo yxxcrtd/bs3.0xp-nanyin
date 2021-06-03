@@ -16,7 +16,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.common.dao.BussBlendSecMapper;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;

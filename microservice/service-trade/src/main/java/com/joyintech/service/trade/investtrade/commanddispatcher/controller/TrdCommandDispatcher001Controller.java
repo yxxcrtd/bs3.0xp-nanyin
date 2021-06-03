@@ -36,7 +36,7 @@ import com.joyintech.tams.common.base.entity.PaEtrAutoDispenseTime;
 import com.joyintech.tams.common.base.entity.User;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 /**
  * 指令分发页面

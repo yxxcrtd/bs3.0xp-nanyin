@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;

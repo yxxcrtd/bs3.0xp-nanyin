@@ -34,7 +34,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.product.messageadjust.maintenance.dto.FinOpenPlanMaintenance002Dto;
 import com.joyintech.tams.invest.product.messageadjust.maintenance.dto.OpenPlanParamDto;
 import com.joyintech.tams.invest.product.messageadjust.maintenance.service.FinOpenPlanMaintenance002Service;

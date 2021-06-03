@@ -13,7 +13,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import com.joyintech.tams.invest.product.resultscovering.dto.FinResultsCovering001Dto;

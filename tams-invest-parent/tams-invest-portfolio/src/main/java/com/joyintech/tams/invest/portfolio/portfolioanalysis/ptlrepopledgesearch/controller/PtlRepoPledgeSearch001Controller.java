@@ -8,7 +8,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.FinPledgeDisplaceDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlRepoPledgeSearchDto;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.service.PtlRepoPledgeSearch001Service;

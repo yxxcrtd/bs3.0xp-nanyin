@@ -15,7 +15,7 @@ import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeRevokeDto;
 import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade001Service;
 import com.joyintech.tams.invest.trade.option.dto.TrdOptionTradeRevokeDto;

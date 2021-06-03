@@ -25,7 +25,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.service.ActiveReminderSubPage;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.remind.service.PaActiveRemind001Service;
 
 /**
