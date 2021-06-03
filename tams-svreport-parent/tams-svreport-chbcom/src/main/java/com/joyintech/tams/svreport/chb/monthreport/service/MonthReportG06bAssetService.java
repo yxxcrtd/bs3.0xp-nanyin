@@ -135,7 +135,7 @@ public class MonthReportG06bAssetService {
                                 // 支持反向判断！value1
                                 if (rulevalueList.get(k).startsWith("!")) {
                                     // 只要有一条满足则该条头寸不计入
-                                    if (!rulevalueList.get(k).substring(1)
+                                    if (!rulevalueList.get(k).substring(1,rulevalueList.get(k).length())
                                             .equals(getGetMethod(position, ruleCode))) {
                                         isPattern = true;
                                         break;
@@ -156,18 +156,15 @@ public class MonthReportG06bAssetService {
                             // 支持反向判断！value1
                             if (singleRule.getRuleValueList().get(i).startsWith("!")) {
                                 // 只要有一条满足则该条头寸不计入
-                                if (singleRule.getRuleValueList().get(i).substring(1
-                                )
-                                        .equals(getGetMethod(position,
-                                                singleRule.getRuleCodeList().get(i)))) {
+                                if (singleRule.getRuleValueList().get(i).substring(1, singleRule.getRuleValueList().get(i).length())
+                                        .equals((String)getGetMethod(position, singleRule.getRuleCodeList().get(i)))){
                                     isPattern = false;
                                     break;
                                 }
                             } else {
                                 // 只要有一条不满足则该条头寸不计入
                                 if (!singleRule.getRuleValueList().get(i)
-                                        .equals(getGetMethod(position, singleRule.getRuleCodeList()
-                                                .get(i)))) {
+                                        .equals((String)getGetMethod(position,singleRule.getRuleCodeList().get(i)))){
                                     isPattern = false;
                                     break;
                                 }
