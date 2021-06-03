@@ -443,7 +443,7 @@ create table T_ENTRUSTHISTORY
   username          VARCHAR2(255) not null,
   account_id        VARCHAR2(32) not null,
   finance_account   VARCHAR2(32) not null,
-  account_name      VARCHAR2(32) not null,
+  account_name      VARCHAR2(200) not null,
   asset_type        VARCHAR2(3) not null,
   market            VARCHAR2(8) not null,
   stock_code        VARCHAR2(32) not null,
@@ -713,6 +713,8 @@ create table T_ORDERHISTORY
   update_time       DATE default sysdate,
   order_id          VARCHAR2(32) not null,
   FULL_PRICE    NUMBER(20,4) default 0  null,
+  offset_flag       VARCHAR2(8),
+  hedge_flag        VARCHAR2(8),
   primary key (id)
 );
 
@@ -768,7 +770,7 @@ create table T_TRADEHISTORY
   account_id        VARCHAR2(32) not null,
   trade_id          VARCHAR2(32) not null,
   finance_account   VARCHAR2(32) not null,
-  account_name      VARCHAR2(32) not null,
+  account_name      VARCHAR2(200) not null,
   market            VARCHAR2(8) not null,
   asset_type        VARCHAR2(3) not null,
   stock_code        VARCHAR2(32) not null,
