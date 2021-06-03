@@ -1681,7 +1681,7 @@ public class FinProductCommonBatchService {
 
             List<FinProductValuation> finProductValuationList = queryValDataListByMoneyFund(targetFinProduct, calenderId, happenDate);
 
-            if(StringUtil.equals(targetFinProduct.getProfitType(),"09")) {
+            if(StringUtil.equals(targetFinProduct.getTradeMarket(),"09")) {
                 if (!StringUtil.equals(isHoliday, "0") || !StringUtil.isEmptyList(finProductValuationList)) {
                     marketPriceDto.setPreCheckFlag(true);
                 }
