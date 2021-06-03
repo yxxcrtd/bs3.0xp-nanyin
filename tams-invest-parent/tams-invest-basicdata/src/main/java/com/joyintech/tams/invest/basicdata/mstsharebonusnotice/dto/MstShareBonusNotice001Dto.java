@@ -145,11 +145,19 @@ public class MstShareBonusNotice001Dto extends MstShareBonusNotice implements IT
     public Date getDelDate() {
         return super.getDelDate();
     }
+    
+    public String getDelDateStr() {
+        return DateUtil.format(super.getDelDate());
+    }
 
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     @Override
     public Date getDevidentDate() {
         return super.getDevidentDate();
+    }
+    
+    public String getDevidentDateStr() {
+    	return DateUtil.format(super.getDevidentDate());
     }
 
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
@@ -168,5 +176,9 @@ public class MstShareBonusNotice001Dto extends MstShareBonusNotice implements IT
     @Override
     public Date getRedshareListingDate() {
         return super.getRedshareListingDate();
+    }
+    
+    public String getRedshareListingDateStr() {
+    	return DateUtil.format(super.getRedshareListingDate());
     }
 }
