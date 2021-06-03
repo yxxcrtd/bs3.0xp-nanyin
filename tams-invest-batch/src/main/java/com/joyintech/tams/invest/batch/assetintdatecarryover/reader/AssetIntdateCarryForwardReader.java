@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 /**
- * 资产理论日结转Reader
+ * 交易类标的生成批处理READER
  * @author WUJIE
  *
  */
@@ -17,7 +17,7 @@ import java.util.List;
 public class AssetIntdateCarryForwardReader extends BaseReader <AssetIntdateCarryForwardReaderResult>{
     @Autowired
     private AssetIntdateCarryForwardReaderService readerService;
-    
+
     @Override
     public List<AssetIntdateCarryForwardReaderResult> createList() {
     	List<AssetIntdateCarryForwardReaderResult> result = readerService.execute(this.getParams());

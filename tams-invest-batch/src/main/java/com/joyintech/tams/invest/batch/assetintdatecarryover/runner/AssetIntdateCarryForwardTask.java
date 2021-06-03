@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.batch.assetintdatecarryover.processor.AssetIntd
 import com.joyintech.tams.invest.batch.assetintdatecarryover.reader.AssetIntdateCarryForwardReader;
 import com.joyintech.tams.invest.batch.assetintdatecarryover.writer.AssetIntdateCarryForwardWriter;
 import com.joyintech.tams.invest.batch.common.util.BatchConstant;
+
 /**
  * 交易类标的生成批处理
  * 标的类资产理论付息日、理论还本日生成交易类标的批处理（债券、计划类、存款、项目类）
@@ -41,7 +42,6 @@ public class AssetIntdateCarryForwardTask extends BatchBaseService{
     @Autowired
     private BatchBuilder<BaseReader<NeedOperateEntity>, BaseProcessor<NeedOperateEntity, NeedToWriteEntity>, BaseWriter<NeedToWriteEntity>> batchBuilder;
 
-    /**资产理论日结转 START**/
     @Autowired
     private AssetIntdateCarryForwardReader step1Reader;
 
@@ -50,7 +50,6 @@ public class AssetIntdateCarryForwardTask extends BatchBaseService{
 
     @Autowired
     private AssetIntdateCarryForwardWriter step1Writer;
-    /**资产理论日结转 END**/
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -63,7 +62,6 @@ public class AssetIntdateCarryForwardTask extends BatchBaseService{
 
         Map<String, Object> params = new HashMap<>();
         params.put(BatchConstant.BATCH_INFO, batchExecuteInfo);
-        //把执行日期当作平台日来替换处理
         params.put(BatchConstant.PLATE_DATE, batchExecuteInfo.getExecuteDate());
         params.put("TASK_ID",batchExecuteInfo.getTaskId());
 

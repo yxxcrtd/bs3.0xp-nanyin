@@ -8,13 +8,13 @@ import com.joyintech.tams.invest.batch.assetintdatecarryover.service.AssetIntdat
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 /**
- * 资产理论日结转Processor
+ * 交易类标的生成批处理Processor
  * @author WUJIE
  *
  */
 @Service
 public class AssetIntdateCarryForwardProcessor extends BaseProcessor<AssetIntdateCarryForwardReaderResult, AssetIntdateCarryForwardResult> {
-    
+
 	@Autowired
     private AssetIntdateCarryForwardProcessorService processorService;
 
