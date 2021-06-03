@@ -22,9 +22,9 @@
 
     <modules>
 		<!--  公共 -->
-        <module>../../component-common</module>
-        <module>../../exchange-order</module>
-        <module>../../inter-bank-uplink</module>
+        <module>../../background-component/component-common</module>
+        <module>../../background-component/exchange-order</module>
+        <module>../../background-component/inter-bank-uplink</module>
 		<module>../../component-base</module>
         <module>../../component-business</module>
         <module>../../tams-common</module>
@@ -66,12 +66,7 @@
         <!-- 前台应用 -->
         <module>../../tams-customer-interf</module>
 
-        <module>../../tams-exchange</module>
-        <module>../../tams-exchange-common</module>
-        <module>../../tams-exchange-data-common</module>
         <module>../../tams-exchange-parent</module>
-        <module>../../tams-exchange-quoteterminal</module>
-        <module>../../tams-exchange-terminal</module>
 
         <module>../../tams-invest-interf</module>
         <module>../../tams-invest-parent</module>
