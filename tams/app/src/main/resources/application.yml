@@ -24,8 +24,8 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -149,7 +149,7 @@ application:
     base64Key: HF*ts303
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: invest/remindMain  
+  remindPage: invest/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top
@@ -203,7 +203,7 @@ application:
 #      chb3Service: http://127.0.0.1:8114
 #      svrcomService: http://127.0.0.1:8114
 #      pbcService: http://127.0.0.1:8114
-#      channelService: http://127.0.0.1:8114 
+#      channelService: http://127.0.0.1:8114
 #      customerInterfService: http://127.0.0.1:8114
 #      tamsServer: http://127.0.0.1:8114
 #      investInterfService: http://127.0.0.1:8114
@@ -294,13 +294,13 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0810
-  sqldirpassword: zgtams0810_123
+  sqldiruserName: productLs_20210301_WY
+  sqldirpassword: productLs_20210301_WY
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -313,23 +313,23 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -357,34 +357,34 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  username: zgtams0810
-  password: zgtams0810_123
+  username: productLs_20210301_WY
+  password: productLs_20210301_WY
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: productLs_20210301_WY
+    password: productLs_20210301_WY
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG
