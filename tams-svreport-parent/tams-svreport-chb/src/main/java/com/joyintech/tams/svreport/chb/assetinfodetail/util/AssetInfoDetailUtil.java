@@ -611,33 +611,34 @@ public class AssetInfoDetailUtil {
         }
         dto.setBuyStruct(SysDataUtil.getZZDictCodeFromName(DictCode.购买结构, list.get(21)));
         dto.setManageType(SysDataUtil.getZZDictCodeFromName(DictCode.管理方式, list.get(22)));
-        if (StringUtil.isNotEmpty(list.get(23))) {
-            dto.setMgrFeeRate(new BigDecimal(list.get(23)));
-        }
+        dto.setIsCtrlBottom(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(23)));
         if (StringUtil.isNotEmpty(list.get(24))) {
-            dto.setTruFeeRate(new BigDecimal(list.get(24)));
+            dto.setMgrFeeRate(new BigDecimal(list.get(24)));
         }
         if (StringUtil.isNotEmpty(list.get(25))) {
-            dto.setTradeFeeRate(new BigDecimal(list.get(25)));
+            dto.setTruFeeRate(new BigDecimal(list.get(25)));
         }
         if (StringUtil.isNotEmpty(list.get(26))) {
-            dto.setAgencyFeeRate(new BigDecimal(list.get(26)));
+            dto.setTradeFeeRate(new BigDecimal(list.get(26)));
         }
         if (StringUtil.isNotEmpty(list.get(27))) {
-            dto.setOtherFeeRate(new BigDecimal(list.get(27)));
+            dto.setAgencyFeeRate(new BigDecimal(list.get(27)));
         }
-        dto.setRemark(list.get(28));
-        dto.setPrivateprdFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(29)));
-        if (StringUtil.isNotEmpty(list.get(30))){
-            dto.setPbcAssetType1(list.get(30).substring(0,3));
+        if (StringUtil.isNotEmpty(list.get(28))) {
+            dto.setOtherFeeRate(new BigDecimal(list.get(28)));
         }
-
+        dto.setRemark(list.get(29));
+        dto.setPrivateprdFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(30)));
         if (StringUtil.isNotEmpty(list.get(31))){
-            dto.setPbcAssetType2(list.get(31).substring(0,3));
+            dto.setPbcAssetType1(list.get(31).substring(0,3));
         }
 
         if (StringUtil.isNotEmpty(list.get(32))){
-            dto.setPbcAssetType3(list.get(32).substring(0,3));
+            dto.setPbcAssetType2(list.get(32).substring(0,3));
+        }
+
+        if (StringUtil.isNotEmpty(list.get(33))){
+            dto.setPbcAssetType3(list.get(33).substring(0,3));
         }
         return dto;
     }
