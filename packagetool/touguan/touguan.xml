@@ -61,6 +61,7 @@
 
         <!-- 批处理 -->
         <module>../../tams-invest-batch</module>
+        <module>../../tams-settle-batch</module>
         <module>../../tams-system/touguan/batch</module>
 
         <!-- 前台应用 -->
