@@ -23,8 +23,8 @@
         FROM chb_month_report_g06b_detail detail
         <where>
             detail.reporttype='ASSET'
-            <if test="reportMon != null and reportMon != ''">
-                AND detail.termid = #{reportMon,jdbcType=VARCHAR}
+            <if test="reportDate != null and reportDate != ''">
+                AND detail.termid = #{reportDate,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
