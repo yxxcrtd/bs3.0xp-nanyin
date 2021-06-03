@@ -228,7 +228,9 @@ public class AssetInfoDetailUtil {
                     return resultList;
                 }
                 entity.setSvrBussRepOtherInvestTargetInfoDto(getSvrBussRepOtherInvestTargetInfoDto(list));
-            }else if (DictCodeListExt2.资产_负债类别_公募基金.getValue().equals(entity.getAssetType()) || DictCodeListExt2.资产_负债类别_私募基金.getValue().equals(entity.getAssetType())){
+            }else if (DictCodeListExt2.资产_负债类别_公募基金.getValue().equals(entity.getAssetType())
+                    || DictCodeListExt2.资产_负债类别_私募基金.getValue().equals(entity.getAssetType())
+                    || DictCodeListExt2.资产_负债类别_私募基金_公募基金.getValue().equals(entity.getAssetType())){
                 /**维护信息-公募基金/私募基金*/
                 if (dataList.get(1).size() != 25) {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "资产要素表模板-基金格式不正确！"));
