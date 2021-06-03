@@ -593,7 +593,7 @@ $(function () {
                 	var countFlag = true;
                 	if(ps==ps_T05&&(isInit||initFlag)){
                 		var temp = $('#shareAmt').val();
-                		if(temp!==null||temp!==undefined||temp!=""){
+                		if(temp!==null && temp!==undefined && temp!=""){
                 			countFlag = false;
                 		}
                 	}
