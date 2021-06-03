@@ -50,9 +50,9 @@ public class ComBondMarketInfoValidator implements BeanValidator {
 //                    resultList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
 //                }
                 
-                if(comBondMarketInfo001Service.selectByKey(mst.getSecId(), DateUtil.format(mst.getValueDate()),mst.getValueSource()) == null){
-                    resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0022")));
-                }
+//                if(comBondMarketInfo001Service.selectByKey(mst.getSecId(), DateUtil.format(mst.getValueDate()),mst.getValueSource()) == null){
+//                    resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0022")));
+//                }
             }
 
         }
@@ -77,15 +77,15 @@ public class ComBondMarketInfoValidator implements BeanValidator {
 //                map.put("secId", dto.getSecId());
 //                map.put("valueDate", dto.getValueDate());
                 // 判断新建的数据是否存在
-                if (comBondMarketInfo001Service.selectByKey(dto.getSecId(), DateUtil.format(dto.getValueDate()),dto.getValueSource()) != null) {
-                    StringBuffer sb = new StringBuffer();
-                    sb.append(getMessage("comBondMarketInfo001.secId")).append(GlobalConstant.COLON).append(
-                        dto.getSecId()).append(GlobalConstant.COMMA).append(getMessage("comBondMarketInfo001.valueDate")).append(
-                            GlobalConstant.COLON).append(DateUtil.format(dto.getValueDate())).append(GlobalConstant.COMMA).append(
-                                getMessage("comBondMarketInfo001.valueSource")).append(GlobalConstant.COLON).append(dto.getValueSourceStr());
-                    resultList.add(
-                        new ValidMessage("secId", getMessage("BUSS_COM_E_0006", sb.toString())));
-                }
+//                if (comBondMarketInfo001Service.selectByKey(dto.getSecId(), DateUtil.format(dto.getValueDate()),dto.getValueSource()) != null) {
+//                    StringBuffer sb = new StringBuffer();
+//                    sb.append(getMessage("comBondMarketInfo001.secId")).append(GlobalConstant.COLON).append(
+//                        dto.getSecId()).append(GlobalConstant.COMMA).append(getMessage("comBondMarketInfo001.valueDate")).append(
+//                            GlobalConstant.COLON).append(DateUtil.format(dto.getValueDate())).append(GlobalConstant.COMMA).append(
+//                                getMessage("comBondMarketInfo001.valueSource")).append(GlobalConstant.COLON).append(dto.getValueSourceStr());
+//                    resultList.add(
+//                        new ValidMessage("secId", getMessage("BUSS_COM_E_0006", sb.toString())));
+//                }
 
                 // 判断估值日期是否大于平台日期
 				/* add wangwei1 YUCHUBS-521债券估值行情、基金估值行情、计划类资产估值行情：功能优化

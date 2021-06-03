@@ -53,57 +53,31 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
      * 
      * @param pageParam pageParam
-     * @return Page类 Page
-     * @throws Exception 异常信息
+     * @return
+     * @see
+     * @since 1.0
      */
-    public Page<ComBondMarketInfo001Dto> selectForPage(Map<String, Object> pageParam) {
-        return restTemplate.postForPage(ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/findPage",
-        		pageParam, ComBondMarketInfo001Dto.class);
+    public Page<ComBondMarketInfo001Dto> queryPageList(Map<String, Object> params) throws Exception{
+//        return super.queryForPage(()->valBondMarketInfo001Mapper.queryPageList(dto));
+//        return valBondMarketInfo001Mapper.queryPageList(dto);
+    	Page<ComBondMarketInfo001Dto> page = new Page<ComBondMarketInfo001Dto>();
+    	page= restTemplate.postForPage(ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/findPage",
+    			params, ComBondMarketInfo001Dto.class);
+    	return page;
+    }
+    
+    
+    public List<ComBondMarketInfo001Dto> queryAllList(Map<String, Object> params) throws Exception{
+        
+//        return valBondMarketInfo001Mapper.queryPageList(dto);
+    	return restTemplate.postForList(
+                ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/queryAllList",
+                params, ComBondMarketInfo001Dto.class);
     }
 
-    /**
-     * 资产代码的联想下拉框
-     * 
-     * @param param param
-     * @return List
-     * @throws Exception 异常
-     */
-    public List<SuggestDto> getSecIdOption(String param) {
-        return restTemplate.getForList(ServiceApplication.CommonBasicDataService
-                                       + "/ComBondMarketInfo001/getSecId?secId=" + param,
-            SuggestDto.class);
-    }
-
-    /**
-     * 查询债券简称
-     * 
-     * @return List
-     */
-    public Page<SelectOptionDto> getFinprodAbbrOption(Map<String,Object> param) throws Exception{
-        return restTemplate.postForPage(ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/getFinprodAbbrOption",
-        		param,SelectOptionDto.class);
-    }
-
-    /**
-     * 删除
-     * 
-     * @param pageId 画面ID
-     * @param dto ComBondMarketInfo001Dto
-     * @return 删除结果
-     */
-    public String delete(String pageId, ComBondMarketInfo001Dto dto) {
-        return restTemplate.postForObject(
-            ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/{pageId}/delete",
-            dto, String.class, pageId);
-    }
-
-    /**
-     * 工作流（留痕操作结束的时候执行的方法）
-     */
     @Override
-    public void doComplete(ComBondMarketInfo001Dto entity, OperationType type) {
+    public void doComplete(ComBondMarketInfo001Dto valBondMarketInfo001Dto, OperationType type) {
         String action = StringUtil.EMPTY;
-        // entity.setSystemCode("SYS");
         if (OperationType.DELETE.equals(type)) {
             action = "delete";
         }
@@ -114,94 +88,24 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
             action = "update";
         }
         restTemplate.postForObject(
-            ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/" + action, entity,
-            Integer.class);
+                ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/" + action, valBondMarketInfo001Dto,
+                Integer.class);
     }
 
     /**
-     * 导出
+     * 查询资产代码
      */
-    @Override
-    protected void buildExportParam(ExportParam exportParam) {
-        exportParam.config(
-           "/com/joyintech/tams/common/basicdata/marketdata/bondmarketinfo/conf/export_conf.xml").dataSource(
-                DataSourceType.MASERT);
+    public Page<SelectOptionDto> getFinProductList(Map<String, Object> params) throws Exception{
+        return restTemplate.postForPage(ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/getFinProductList",
+                params, SelectOptionDto.class);
     }
 
     /**
-     * {@inheritDoc}
+     * 点击编辑时查询数据
      */
-    @Override
-    public Page<ComBondMarketInfo001Dto> selectPageData(Map<String, Object> selectParam) {
-        return selectForPage(selectParam);
-    }
-
-    /**
-     * 获取债券简称
-     * 
-     * @param finprodAbbr 债券简称
-     * @return List
-     */
-    public List<SuggestDto> getFinProdAbbr(String finprodAbbr) {
-        return restTemplate.getForList(ServiceApplication.CommonBasicDataService
-                                       + "/ComBondMarketInfo001/getFinProdAbbr?finprodAbbr="
-                                       + finprodAbbr,
-            SuggestDto.class);
-    }
-
-    /**
-     * @param secId secId
-     * @return dto
-     */
-    public ComBondMarketInfo001Dto getBySecId(String secId) {
-        return restTemplate.getForObject(ServiceApplication.CommonBasicDataService
-                                         + "/ComBondMarketInfo001/getBySecId?secId=" + secId,
-            ComBondMarketInfo001Dto.class);
-    }
-
-    /**
-     * @param secId secId
-     * @param valueDate valueDate
-     * @param valueSource valueSource
-     * @return dto
-     */
-    public ComBondMarketInfo001Dto selectByKey(String secId, String valueDate,String valueSource) {
-        return restTemplate.getForObject(ServiceApplication.CommonBasicDataService
-                                         + "/ComBondMarketInfo001/selectByKey?secId="
-                                         + secId + "&valueDate=" + valueDate+ "&valueSource=" + valueSource,
-            ComBondMarketInfo001Dto.class);
-    }
-
-    /**
-     * 新建画面的资产代码查询
-     * 
-     * @param secId 债券代码
-     * @return list
-     * @see
-     * @since 1.0
-     */
-    public List<SuggestDto> getSecIdToNew(String secId) {
-        return restTemplate.getForList(
-            ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/getSecIdToNew?secId="
-                                                           + secId,
-                                                           SuggestDto.class);
-    }
-
-    public List<SelectOptionDto> getAssetCodeList() {
-        return restTemplate.getForList(
-            ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/getFinProdAbbr", 
-            SelectOptionDto.class);
-    }
-
-    /**
-     * 查询符合条件的所有数据
-     * @param pageParam
-     * @return
-     */
-    public List<ComBondMarketInfo001Dto> selectAllList(Map<String, Object> pageParam) {
-        return restTemplate.postForList(
-                ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/selectAllList",
-                pageParam, ComBondMarketInfo001Dto.class);
+    public List<ComBondMarketInfo001Dto> queryDtoByKey(Map<String, Object> params){
+        return restTemplate.postForList(ServiceApplication.CommonBasicDataService + "/ComBondMarketInfo001/queryDtoByKey",
+                params, ComBondMarketInfo001Dto.class);
     }
     
     
@@ -219,7 +123,7 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
         throws Exception {
         // 检查文件名是否为空
         if (StringUtil.isNotEmpty(flieName)) {
-            if (flieName.indexOf("债券估值行情导入") != -1) {
+            if (flieName.indexOf("每日债券行情导入") != -1) {
                 List<List<String>> dataList = dataAnalysis(flieName);
                 if (null != dataList && dataList.size() > 0) {
                     // 将excel表格中的数据转化为dto
@@ -287,7 +191,6 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
                 }
                 if(ComBondMarketInfo001Dto.getSecId() == null
                 		|| ComBondMarketInfo001Dto.getValueDate() == null
-                		|| ComBondMarketInfo001Dto.getValueSource() == null
                 		|| duplicateDataList.contains(i)){
                 	continue;
                 }
@@ -295,15 +198,12 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
                 if (equityList.size() >= 2) {
                     for (int k = i + 1; k < equityList.size(); k++ ) {
                         if(equityList.get(k).getSecId() == null
-                        		|| equityList.get(k).getValueDate() == null
-                        		|| equityList.get(k).getValueSource() == null){
+                        		|| equityList.get(k).getValueDate() == null){
                         	continue;
                         }
                         if (equityList.get(k).getSecId().equals(ComBondMarketInfo001Dto.getSecId())
                             && equityList.get(k).getValueDate().equals(
-                                ComBondMarketInfo001Dto.getValueDate())
-                            && equityList.get(k).getValueSource().equals(
-                                ComBondMarketInfo001Dto.getValueSource())) {
+                                ComBondMarketInfo001Dto.getValueDate())) {
                         	if(!duplicateDataList.contains(k)){
                         		duplicateDataList.add(k);
                         		checkResult.add(new ExcelValidDto(dataList.get(k).get(1),
@@ -338,50 +238,51 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
             List<String> list = dataList.get(i);
             ComBondMarketInfo001Dto = new ComBondMarketInfo001Dto();
             if (StringUtil.isNotEmpty(list.get(0))) {
+                /** modify by yanya on 20210329 去除截取前四位字符的逻辑**/
+                //ComBondMarketInfo001Dto.setSecId(list.get(0).trim().substring(4));
                 ComBondMarketInfo001Dto.setSecId(list.get(0).trim());
             }
             if (StringUtil.isNotEmpty(list.get(1))) {
                 ComBondMarketInfo001Dto.setFinprodAbbr(list.get(1).trim());
             }
             if (StringUtil.isNotEmpty(list.get(2))) {
-                ComBondMarketInfo001Dto.setValueSource(list.get(2).trim().split("：")[0].trim());
+                ComBondMarketInfo001Dto.setValueDate(list.get(2).trim());
             }
             if (StringUtil.isNotEmpty(list.get(3))) {
-                ComBondMarketInfo001Dto.setValueDate(DateUtil.parse(list.get(3).trim()));
+                ComBondMarketInfo001Dto.setCloPrice(new BigDecimal(list.get(3).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(4))) {
-                ComBondMarketInfo001Dto.setLastPeriod(new BigDecimal(list.get(4).trim()));
+                ComBondMarketInfo001Dto.setAvgPrice(new BigDecimal(list.get(4).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(5))) {
-                ComBondMarketInfo001Dto.setPrice(new BigDecimal(list.get(5).trim()));
+                ComBondMarketInfo001Dto.setBuyOnePrice(new BigDecimal(list.get(5).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(6))) {
-                ComBondMarketInfo001Dto.setNetprice(new BigDecimal(list.get(6).trim()));
+                ComBondMarketInfo001Dto.setSellOnePrice(new BigDecimal(list.get(6).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(7))) {
-                ComBondMarketInfo001Dto.setmDuration(new BigDecimal(list.get(7).trim()));
+                ComBondMarketInfo001Dto.setMaxPrice(new BigDecimal(list.get(7).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(8))) {
-                ComBondMarketInfo001Dto.setmConvexity(new BigDecimal(list.get(8).trim()));
+                ComBondMarketInfo001Dto.setMinPrice(new BigDecimal(list.get(8).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(9))) {
-                ComBondMarketInfo001Dto.setBpvalue(new BigDecimal(list.get(9).trim()));
+                ComBondMarketInfo001Dto.setCloPriceFull(new BigDecimal(list.get(9).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(10))) {
-                ComBondMarketInfo001Dto.setSduration(new BigDecimal(list.get(10).trim()));
+                ComBondMarketInfo001Dto.setAvgPriceFull(new BigDecimal(list.get(10).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(11))) {
-                ComBondMarketInfo001Dto.setScnvxty(new BigDecimal(list.get(11).trim()));
+                ComBondMarketInfo001Dto.setBuyOnePriceFull(new BigDecimal(list.get(11).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(12))) {
-                ComBondMarketInfo001Dto.setInterestDuration(new BigDecimal(list.get(12).trim()));
+                ComBondMarketInfo001Dto.setSellOnePriceFull(new BigDecimal(list.get(12).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(13))) {
-                ComBondMarketInfo001Dto.setInterestCnvxty(new BigDecimal(list.get(13).trim()));
+                ComBondMarketInfo001Dto.setMaxPriceFull(new BigDecimal(list.get(13).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(14))) {
-                ComBondMarketInfo001Dto.setBpyield(
-                    new BigDecimal(list.get(14).trim()).divide(new BigDecimal(100)));
+                ComBondMarketInfo001Dto.setMinPriceFull(new BigDecimal(list.get(14).trim()));
             }
             // Date date = new Date();
             ComBondMarketInfo001Dto.setCreateUser(CommonUtil.getUserName());
@@ -415,24 +316,74 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "债券代码为空");
             excelValidDtolist.add(dto);
         }
-        if (StringUtil.isEmpty(list.get(2))) {
+        if (StringUtil.isEmpty(list.get(1))) {
             // 验证导入估值来源是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估值来源为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "债券简称为空");
             excelValidDtolist.add(dto);
         }
-        if (StringUtil.isEmpty(list.get(3))) {
+        if (StringUtil.isEmpty(list.get(2))) {
             // 验证导入估值日期是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估值日期为空");
             excelValidDtolist.add(dto);
         }
+        if (StringUtil.isEmpty(list.get(3))) {
+            // 验证导入收盘价净价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "收盘价净价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(4))) {
+            // 验证导入平均价净价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "平均价净价为空");
+            excelValidDtolist.add(dto);
+        }
         if (StringUtil.isEmpty(list.get(5))) {
-            // 验证导入市价全价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "市价全价为空");
+            // 验证导入买一价净价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "买一价净价为空");
             excelValidDtolist.add(dto);
         }
         if (StringUtil.isEmpty(list.get(6))) {
-            // 验证导入市价净价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "市价净价为空");
+            // 验证导入卖一价净价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "卖一价净价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(7))) {
+            // 验证导入最高价净价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最高价净价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(8))) {
+            // 验证导入最低价净价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最低价净价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(9))) {
+            // 验证导入收盘价全价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "收盘价全价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(10))) {
+            // 验证导入平均价全价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "平均价全价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(11))) {
+            // 验证导入买一价全价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "买一价全价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(12))) {
+            // 验证导入卖一价全价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "卖一价全价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(13))) {
+            // 验证导入最高价全价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最高价全价为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(14))) {
+            // 验证导入最低价全价是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最低价全价为空");
             excelValidDtolist.add(dto);
         }
         return excelValidDtolist;
@@ -465,24 +416,21 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
     	List<ComBondMarketInfo001Dto> equityList = converToBean(dataList,null);
     	List<Integer> duplicateData=new ArrayList<Integer>();
       for (int i = 0; i < dataList.size(); i++ ) {
-      	ComBondMarketInfo001Dto valBondQuotationInfoDto = equityList.get(i);
-      	if(valBondQuotationInfoDto.getSecId() == null
-        		|| valBondQuotationInfoDto.getValueDate() == null
-        		|| valBondQuotationInfoDto.getValueSource() == null
+      	ComBondMarketInfo001Dto ComBondMarketInfo001Dto = equityList.get(i);
+      	if(ComBondMarketInfo001Dto.getSecId() == null
+        		|| ComBondMarketInfo001Dto.getValueDate() == null
         		|| duplicateData.contains(i)){
       		continue;
         }
           // 检查表内数据是否有主键重复
           for (int k = i + 1; k < dataList.size(); k++ ) {
         	  if(equityList.get(k).getSecId() == null
-              		|| equityList.get(k).getValueDate() == null
-              		|| equityList.get(k).getValueSource() == null){
+              		|| equityList.get(k).getValueDate() == null){
         		  continue;
               }
               if (equityList.get(k).getSecId().equals(
-              		valBondQuotationInfoDto.getSecId())
-                      && equityList.get(k).getValueSource().equals(valBondQuotationInfoDto.getValueSource())
-                      && equityList.get(k).getValueDate().equals(valBondQuotationInfoDto.getValueDate())) {
+              		ComBondMarketInfo001Dto.getSecId())
+                      && equityList.get(k).getValueDate().equals(ComBondMarketInfo001Dto.getValueDate())) {
               	if(!duplicateData.contains(k)){
               		duplicateData.add(k);
               	}
@@ -494,5 +442,4 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
       }
       return duplicateData;
     }
-    
 }
