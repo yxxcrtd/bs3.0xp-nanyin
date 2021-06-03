@@ -111,7 +111,7 @@
 		assetbasis.valueDate valDate,
 
 		<!-- modify by zhangliang 20201221 资产/负债类别为 “1107 拆放同业”、“1108 买入返售”、“1901 同业拆入”、“1902 卖出回购”  “单位估值（净价）” 写死为 100-->
-		case when info.ASSET_TYPE2 in ('1107','1108','1901','1902') then 100 else
+        <!-- case when info.ASSET_TYPE2 in ('1107','1108','1901','1902') then 100 else delete by lingxq 此类资产不特殊处理-->
 			(ifnull(price.PRICE,1) *
 			(case typex.SRCFIELD1
 				when 'NOMONEYFOUND' then (costAmt+floatingpl)/posAmt
@@ -122,7 +122,7 @@
 				else
 				  if(assetbasis.valueDate=assetbasis.mdate,100,100*(costAmt+floatingpl)/posAmt)
 				end
-			)) end unitValNet,
+			)) unitValNet,
 		(ifnull(price.PRICE,1) *
 		(case typex.SRCFIELD1
 		   when 'MONEYFOUND' then (costAmt+floatingpl+intincexp)/posAmt
