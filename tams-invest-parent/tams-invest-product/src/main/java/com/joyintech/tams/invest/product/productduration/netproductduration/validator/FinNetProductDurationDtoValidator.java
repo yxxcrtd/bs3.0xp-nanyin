@@ -117,6 +117,9 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
             errorList.add(new ValidMessage("请维护产品及组合的托管账户!"));
             return errorList;
         }
+        if(StringUtil.isEmpty(dto.getPs())){
+            errorList.add(new ValidMessage("请选择交易类型！"));
+        }
         // TISHKBS-1688 add by jiangpeng on 20210429 end
         
         if (WorkFlowUtil.isNotFromToDoList()) {
