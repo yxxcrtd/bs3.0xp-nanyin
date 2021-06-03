@@ -435,7 +435,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 
 	@Override
 	public com.joyintech.framework.grid.Page<InvestorsHoldInfo001Dto> selectPageData(Map<String, Object> pageParam) {
-		List<InvestorsHoldInfo001Dto> data = simpleRestTemplate.postForList(
+		List<InvestorsHoldInfo001Dto> data = restTemplate.postForList(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfo/selectAllData", pageParam,
 				InvestorsHoldInfo001Dto.class);
 		com.joyintech.framework.grid.Page<InvestorsHoldInfo001Dto> page = new com.joyintech.framework.grid.Page<InvestorsHoldInfo001Dto>();

@@ -347,7 +347,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
             Page<EquityInfoRegist001Dto> pageList = super.queryForPage(
                     pagenum,legth,()->equityInfoRegist001Mapper.queryExportListByKeys(eList));
 
-            data =  simpleRestTemplate.postForList(
+            data =  restTemplate.postForList(
                     SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryExportListByKeys",eList,
                     EquityInfoRegist001Dto.class);
         }
