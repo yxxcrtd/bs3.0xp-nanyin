@@ -124,7 +124,7 @@ public class ComYieldCurveInfo001Controller extends BaseController{
         }
         ProcessParameter<ComYieldCurveInfoDto> processParameter = new ProcessParameter<ComYieldCurveInfoDto>();
         WorkFlowParameter<ComYieldCurveInfoDto> params = new WorkFlowParameter<ComYieldCurveInfoDto>();
-        params.setPageId("MstYieldCurveInfo002");
+        params.setPageId("ComYieldCurveInfo002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item->item.getCurveCode());
         params.setBusinessType(DictCodeList.共通业务类型_收益率曲线信息.getValue());
