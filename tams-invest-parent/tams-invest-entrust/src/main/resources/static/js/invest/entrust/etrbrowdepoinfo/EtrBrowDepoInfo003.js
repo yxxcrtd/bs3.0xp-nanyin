@@ -122,6 +122,7 @@
             } else {
                 temp.elementId = 'EtrBrowDepoInfo002_btn_submit';
             }
+            temp.price = temp.price/100
         }
         Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo003/check', objects,
             function (result) {

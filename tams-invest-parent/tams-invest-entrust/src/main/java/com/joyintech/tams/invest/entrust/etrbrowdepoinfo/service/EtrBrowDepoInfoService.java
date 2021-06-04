@@ -573,7 +573,7 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
             //本金金额
             etrBrowDepoInfoDto.setEntrustAmt(new BigDecimal((data.get(7).toString())));
             //借款利率
-            etrBrowDepoInfoDto.setPrice(new BigDecimal((data.get(8).toString())).divide(new BigDecimal(100)));
+            etrBrowDepoInfoDto.setPrice(new BigDecimal((data.get(8).toString())));
             //起息日
             etrBrowDepoInfoDto.setDateStart(DateUtil.parse(data.get(9).toString()));
             //到息日
