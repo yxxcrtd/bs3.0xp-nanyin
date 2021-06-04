@@ -218,7 +218,7 @@ $(function() {
 	 * 导入按钮
 	 */
 	$('#ComFundMarketInfo001_btn_import').click(function() {
-		Joyin.uploadFile({pageId:'ValFundMarketInfo001MTM'},function(fileName) {
+		Joyin.uploadFile({pageId:'ComFundMarketInfo001MTM'},function(fileName) {
 			Joyin.ajax(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/checkImportData', {fileName: fileName}, function(checkResult) {
 				if (checkResult) {
 					setTimeout( function () {

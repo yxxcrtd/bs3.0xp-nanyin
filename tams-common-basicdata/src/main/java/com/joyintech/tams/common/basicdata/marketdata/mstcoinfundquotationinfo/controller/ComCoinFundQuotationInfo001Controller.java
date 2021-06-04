@@ -141,7 +141,7 @@ public class ComCoinFundQuotationInfo001Controller extends BaseController {
             list = comCoinFundQuotationInfo001Service.selectPageInfo(params);
         }
         File outFile = comCoinFundQuotationInfo001Service.makeFile(
-                "/com/joyintech/tams/valuation/basedata/marketdata/valcoinfundquotationinfo/conf/export_conf.xml",
+                "/com/joyintech/tams/common/basicdata/marketdata/mstcoinfundquotationinfo/conf/export_conf.xml",
                 list);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS

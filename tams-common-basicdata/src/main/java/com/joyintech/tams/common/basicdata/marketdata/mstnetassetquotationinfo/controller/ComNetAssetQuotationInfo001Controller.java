@@ -214,7 +214,7 @@ public class ComNetAssetQuotationInfo001Controller extends BaseController{
 //        return valBondQuotationInfoService.export(this.getPageId(),
 //            RequestUtil.getParameters(getRequest()));
         File outFile = mstnetassetquotationinfo001service.makeFile(
-                "/com/joyintech/tams/valuation/basedata/marketdata/valnetassetquotationinfo/conf/export_conf.xml",
+                "/com/joyintech/tams/common/basicdata/marketdata/mstnetassetquotationinfo/conf/export_conf.xml",
                 list);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS

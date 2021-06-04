@@ -12,6 +12,9 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -135,5 +138,27 @@ public class ComRateSwapInformation001Controller extends BaseController{
         String msg = comRateSwapInformationService.start(processParameter,dto);
         return new AjaxResult(msg);
 
+    }
+    /**
+     * 导入
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping("checkImportData")
+    public AjaxResult checkImportData(String fileName) {
+        return comRateSwapInformationService.checkImportData(fileName);
+    }
+
+    /**
+     *
+     * @param param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("importFile")
+    public AjaxResult importFile(@RequestBody Map<String, Object> param) {
+        return comRateSwapInformationService.importFile(param);
     }
 }

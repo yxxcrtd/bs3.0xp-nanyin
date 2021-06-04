@@ -127,7 +127,7 @@ $(function() {
         // add by zwq 20210222  start
         $('#ComInterestRateQuotationInfo001_btn_import').click(function() {
             Joyin.confirm(JoyinUtil.getLabel("请确认是否要导入数据？"), function() {
-                Joyin.uploadFile({pageId:'ValInterestRateQuotationInfo001'},function(fileName) {
+                Joyin.uploadFile({pageId:'ComInterestRateQuotationInfo001'},function(fileName) {
                     Joyin.ajax(basePath +"common/basicdata/marketdata/mstinterestratequotationinfo/ComInterestRateQuotationInfo001/importFile", {
                         fileName : fileName
                     },function(result){

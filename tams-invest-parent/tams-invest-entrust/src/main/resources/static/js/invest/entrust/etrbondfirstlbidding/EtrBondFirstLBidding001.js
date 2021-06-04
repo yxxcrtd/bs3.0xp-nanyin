@@ -140,7 +140,7 @@ $(function() {
         });
 
         // 导入按钮点击事件
-        $('#EtrBondFirstLBidding001_btn_import').click(function () {
+        $('#'+pageId+'_btn_import').click(function () {
             Joyin.uploadFile({pageId: 'EtrBondFirstLBidding003MTM'}, function (fileName) {
                 Joyin.ajax(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/checkImportData', {fileName: fileName}, function (checkResult) {
                             setTimeout(function () {

@@ -136,7 +136,7 @@ public class ComInterestRateQuotationInfo001Controller extends BaseController {
             listdto = JsonUtils.json2List(datas, ComInterestRateQuotationInfoDto.class);
         }
         File outFile = comInterestRateQuotationInfoService.makeFile(
-                "com/joyintech/tams/common/basicdata/marketdata/mstinterestratequotationinfo/conf/export_conf.xml",
+                "/com/joyintech/tams/common/basicdata/marketdata/mstinterestratequotationinfo/conf/export_conf.xml",
                 listdto);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS

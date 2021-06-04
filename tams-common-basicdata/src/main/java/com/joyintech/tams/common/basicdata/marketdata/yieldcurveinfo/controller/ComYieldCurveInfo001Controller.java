@@ -165,7 +165,7 @@ public class ComYieldCurveInfo001Controller extends BaseController{
             valYieldCurveInfoDto.setCurveDateFormatStr( DateUtil.format(valYieldCurveInfoDto.getCurveDate(),"yyyy-MM-dd"));
         }
         File outFile = comYieldCurveInfoService.makeFile(
-                "/com/joyintech/tams/valuation/basedata/marketdata/valyieldcurveinfo/conf/export_conf.xml",
+                "/com/joyintech/tams/common/basicdata/marketdata/yieldcurveinfo/conf/export_conf.xml",
                 listdto);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS

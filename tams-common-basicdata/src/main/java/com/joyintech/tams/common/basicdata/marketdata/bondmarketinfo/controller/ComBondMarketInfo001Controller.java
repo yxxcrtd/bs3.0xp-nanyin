@@ -169,7 +169,7 @@ public class ComBondMarketInfo001Controller extends BaseController {
             listdto = JsonUtils.json2List(datas, ComBondMarketInfo001Dto.class);
         }
         File outFile = comBondMarketInfo001Service.makeFile(
-            "/com/joyintech/tams/valuation/basedata/marketdata/bondmarketinfo/config/export_bondmarket.xml",
+            "/com/joyintech/tams/common/basicdata/marketdata/bondmarketinfo/config/export_conf.xml",
             listdto);
         //修改导出文件名称
         return ExportUtil.export(

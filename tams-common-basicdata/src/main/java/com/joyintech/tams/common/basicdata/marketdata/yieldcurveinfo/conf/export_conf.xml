@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="MstYieldCurveInfo001.xlsx" name="收益率曲线">
+<Workbook filePath="marketdata/valfxvaluztioninfo/ValFxValuztionInfo.xlsx" name="收益率曲线">
 	<Worksheet javaBean="com.joyintech.tams.common.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto">
 		<Row>
 			<Cell order="1" name="曲线日期">curveDateFormatStr</Cell><!-- 曲线日期 -->
