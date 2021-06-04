@@ -106,13 +106,15 @@ public class BussEtrInvestPersonInfoController extends BaseController {
     @RequestMapping("getTrader")
     public Page<SelectOptionDto> getTrader(){
     	Map<String, Object> params = RequestUtil.getPageParam();
-    	if (StringUtil.isNotEmpty(params.get("callPageId"))
-				&& (StringUtil.equals("EtrInvestBondInfo002", params.get("callPageId").toString()) 
-						&& !StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), params.get("ps"))
-						&& StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(), params.get("tradeMarket"))
-						&& !StringUtil.isNotEmpty(params.get("chlId")))) {
-			return bussEtrInvestPersonInfoService.getCfetsTrader(params);
-		}
+    	if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ibuFlag_quote_switch), DictCodeListExt1.是或否_是.getValue())){
+    		if (StringUtil.isNotEmpty(params.get("callPageId"))
+    				&& (StringUtil.equals("EtrInvestBondInfo002", params.get("callPageId").toString()) 
+    						&& !StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), params.get("ps"))
+    						&& StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(), params.get("tradeMarket"))
+    						&& !StringUtil.isNotEmpty(params.get("chlId")))) {
+    			return bussEtrInvestPersonInfoService.getCfetsTrader(params);
+    		}
+    	}
         return bussEtrInvestPersonInfoService.getTrader(RequestUtil.getPageParam());
     }
     
@@ -128,14 +130,16 @@ public class BussEtrInvestPersonInfoController extends BaseController {
     @RequestMapping("getCounterId")
     public Page<SelectOptionDto> getCounterId(){
         Map<String, Object> params = RequestUtil.getPageParam();
-		if (StringUtil.isNotEmpty(params.get("callPageId"))
-				&& (StringUtil.equals("EtrInvestBondInfo002", params.get("callPageId").toString()) 
-						&& !StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), params.get("ps"))
-						&& StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(), params.get("tradeMarket"))
-						&& !StringUtil.isNotEmpty(params.get("chlId")))) {
-			//return bussEtrInvestPersonInfoService.getCfetsCounterId(params);
-			return bussEtrInvestPersonInfoService.getCounterIdCfets(params);
-		}
+        if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ibuFlag_quote_switch), DictCodeListExt1.是或否_是.getValue())){
+        	if (StringUtil.isNotEmpty(params.get("callPageId"))
+    				&& (StringUtil.equals("EtrInvestBondInfo002", params.get("callPageId").toString()) 
+    						&& !StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), params.get("ps"))
+    						&& StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(), params.get("tradeMarket"))
+    						&& !StringUtil.isNotEmpty(params.get("chlId")))) {
+    			//return bussEtrInvestPersonInfoService.getCfetsCounterId(params);
+    			return bussEtrInvestPersonInfoService.getCounterIdCfets(params);
+    		}
+        }
         if (StringUtil.isEmpty((String) params.get("innerTrade")) || "null".equals(params.get("innerTrade"))) {
             params.put("innerTrade", null);
         }

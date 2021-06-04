@@ -408,4 +408,6 @@ public interface BussinessConstant {
     static final String INPUT_TYPE_RADIO = "radio";
 
     static final String INPUT_TYPE_CHECKBOX = "checkbox";
+    
+    String ibuFlag_quote_switch = "ibuFlag_quote_switch";
 }
