@@ -211,7 +211,7 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 */
 	public AjaxResult checkOrSave(EquityInfo001Dto dto,boolean flag){
 		if(StringUtil.isEmpty(dto.getBankCode())){
-			dto.setBankCode(CommonUtil.getUserBankCode());
+			dto.setBankCode(CommonUtil.getUserBankCode(null));
 		}
 		if(StringUtil.isEmpty(dto.getOrgCode())){
 			dto.setOrgCode(CommonUtil.getOrgCode());

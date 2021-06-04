@@ -174,7 +174,7 @@ public class InvestorsHoldInfo001InterfService{
                 List<InvestorsHoldInfo001InterfDto> listA = new ArrayList<>();
 
                 // 数据检查
-                checkDataInfo(dataMapList, false, listE, listA, null, null);
+                checkDataInfo(dataMapList, false, listE, listA, null, null,chbPrdresistCode.getOrgCode());
 
                 // 入库处理
                 this.refreshStatusADataToDb(listE, listA);
@@ -351,8 +351,9 @@ public class InvestorsHoldInfo001InterfService{
      * @since 1.0
      */
     public List<ExcelValidDto> checkDataInfo(List<Map<String, String>> mapList, boolean isExcel,
-            List<InvestorsHoldInfo001InterfDto> listE, List<InvestorsHoldInfo001InterfDto> listA,
-            List<ChbPrdresistCode> prodRegInfoList, InvestorsHoldInfo001InterfFileReadParaDto paraDto) {
+                                             List<InvestorsHoldInfo001InterfDto> listE, List<InvestorsHoldInfo001InterfDto> listA,
+                                            List<ChbPrdresistCode> prodRegInfoList, InvestorsHoldInfo001InterfFileReadParaDto paraDto,
+                                             String orgCode) {
 
         logger.info("checkDataInfo处理开始 " + DateUtil.getCurrentDateTime());
 
@@ -386,7 +387,7 @@ public class InvestorsHoldInfo001InterfService{
 
             String bankCode;
             if (isExcel) {
-                bankCode = CommonUtil.getUserBankCode();
+                bankCode = CommonUtil.getUserBankCode(orgCode);
             } else {
                 bankCode = "";
             }

@@ -605,7 +605,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 // 将excel表格中的数据转化为权益人dto
                 List<Map<String, String>> listType = new ArrayList<Map<String, String>>();
                 List<ExcelValidDto> checkResult = equityInfoValid.checkExcelEquity(dataList,
-                        listType, null,spzMap,objFiledsMap);
+                        listType, null,spzMap,objFiledsMap,orgCode);
                 if (checkResult.isEmpty()) {
                    List<EquityInfo001Dto> equityList = converToBean(dataList,orgCode);
                     EquityInfoDistinctService equityInfoDistinctService =
@@ -2691,7 +2691,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 // 将excel表格中的数据转化为权益人dto
                 List<Map<String, String>> listType = new ArrayList<Map<String, String>>();
                 List<ExcelValidDto> checkResult = equityInfoValid.checkExcelEquity(dataList,
-                        listType,dataTypeList,spzMap,objFiledsMap);
+                        listType,dataTypeList,spzMap,objFiledsMap,orgCode);
                 if (checkResult.isEmpty()) {
                     List<EquityInfo001Dto> equityList = converToBean(dataList,orgCode);
                     EquityInfoDistinctService equityInfoDistinctService =
