@@ -521,6 +521,16 @@
  		    where finprod_id = #{finprodId}
     </select>
 
+	<select id="getPledgeAmt"  resultType="java.math.BigDecimal" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal">
+		select sum(fdp.pledge_number * newfaceValue) pledge_number
+		from FIN_DEAL_PLEDGE fdp
+				 left join (SELECT FINPROD_ID, nvl(100 - sum(nvl(PRIN_AMT, 0)), 100) newfaceValue
+							FROM FIN_CASH_PLAN
+							WHERE #{tradeDate,jdbcType=DATE} >= MDATE
+							GROUP BY FINPROD_ID) fcp on fdp.PLEDGE_FINPROD_ID = fcp.finprod_id
+		where fdp.finprod_id = #{finprodId}
+    </select>
+
 	<select id="getAssetInfoByFinId" resultMap="FinProductCreditMap">
 		SELECT T2.TYPE_6 type6,T2.TYPE_7 type7,T1.FINPROD_ID finprodId,
 		T1.ISSUE_TYPE issueType,T3.IS_SEC_BOND isSecBond,
@@ -634,6 +644,14 @@
 	<select id="selectCreditDealByTradeId" resultType="com.joyintech.tams.common.base.entity.CreditLinesDeal">
 		select SEQNO,TRADE_AMT tradeAmt from CREDIT_LINES_DEAL
 		where trade_id = #{tradeId}
+	</select>
+
+	<select id="selectCreditOriginDealByTradeId" resultType="com.joyintech.tams.common.base.entity.CreditLinesDeal">
+		select
+			cld.SEQNO,cld.TRADE_AMT tradeAmt
+		from CREDIT_LINES_DEAL cld
+			left join TRD_PRODUCT_DEAL fpd on cld.trade_id = fpd.FINPROD_ID
+		where fpd.trade_id = #{tradeId}
 	</select>
 	
 	<select id="selectCeLinesInfoBySeqno" resultType="com.joyintech.tams.common.base.entity.CreditLines">

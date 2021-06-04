@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -422,8 +423,15 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         if(StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())){
             // 买断式回购逆回购买入保存时从质押品取
             if(StringUtil.equals(model.getPs(), DictCodeList.交易方向_买入.getValue()) && isSave){
-                //买断式回购逆回购买入质押式抵押品表中取
-                todocredit_amt=creditLinesMapper.getPledgeNum(model.getFinprodId());
+                //买断式回购逆回购买入质押式抵押品表中取 券面总额*最新面值
+                todocredit_amt = creditLinesMapper.getPledgeAmt(model);
+            }else if(StringUtil.equals(model.getPs(), DictCodeList.交易方向_还本到账.getValue())){//到期时直接释放首期占用的额度
+                List<CreditLinesDeal> creditLinesDeallist = creditLinesMapper.selectCreditOriginDealByTradeId(model.getTradeId());
+                if (null != creditLinesDeallist && creditLinesDeallist.size() != 0){
+                    for (CreditLinesDeal deal : creditLinesDeallist) {
+                        todocredit_amt = todocredit_amt.add(deal.getTradeAmt());
+                    }
+                }
             }
             // 逆回购交易流程中只能从这取到券面
             else{
