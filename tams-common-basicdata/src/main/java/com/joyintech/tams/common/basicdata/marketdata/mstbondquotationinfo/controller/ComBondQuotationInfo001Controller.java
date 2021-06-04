@@ -152,7 +152,7 @@ public class ComBondQuotationInfo001Controller extends BaseController {
         }
         ProcessParameter<ComBondQuotationInfoDto> processParameter = new ProcessParameter<ComBondQuotationInfoDto>();
         WorkFlowParameter<ComBondQuotationInfoDto> params = new WorkFlowParameter<ComBondQuotationInfoDto>();
-        params.setPageId("MstBondQuotationInfo002");
+        params.setPageId("ComBondQuotationInfo002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getSecId());
         params.setBusinessType(DictCodeList.共通业务类型_债券估值行情信息.getValue());
