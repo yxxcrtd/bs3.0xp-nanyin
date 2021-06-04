@@ -281,7 +281,7 @@ public class ComMarketCalendarInfo001Service extends CommonExportService<ComMark
      */
     private ComMarketCalendarInfo001Dto getComMarketCalendarInfo001DtoByKey(ComMarketCalendarInfo001Dto dto) {
         return restTemplate.postForObject(ServiceApplication.CommonBasicDataService
-                                          + "/ComMarketCalendarInfo/getComMarketCalendarInfo001DtoByKey",
+                                          + "/ComMarketCalendarInfo/getMstMarketCalendarInfo001DtoByKey",
             dto, ComMarketCalendarInfo001Dto.class);
     }
 
