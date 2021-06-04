@@ -1,2 +1,2 @@
 DELETE FROM SYS_PARA WHERE PARA_CODE = 'IS_NEED_CHECK_RANGE';
-INSERT INTO SYS_PARA VALUES ('SYS','IS_NEED_CHECK_RANGE','02','01','','是否做文件名特殊字符检查','system','',to_date('2021/04/06', 'yyyy/mm/dd'), 'system',to_date('2021/04/06', 'yyyy/mm/dd'), null, '02');
+INSERT INTO SYS_PARA VALUES ('SYS','IS_NEED_CHECK_RANGE','02','01','','是否做文件名特殊字符检查（01:是,02:否）','system','',to_date('2021/04/06', 'yyyy/mm/dd'), 'system',to_date('2021/04/06', 'yyyy/mm/dd'), null, '02');
