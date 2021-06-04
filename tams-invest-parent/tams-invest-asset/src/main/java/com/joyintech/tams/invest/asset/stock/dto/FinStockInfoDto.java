@@ -10,6 +10,11 @@
  
 package com.joyintech.tams.invest.asset.stock.dto;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Length;
@@ -17,8 +22,10 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.RepAssetDept;
+import com.joyintech.tams.common.base.entity.RepAssetEquity;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.asset.dto.FinInterestFactorDto;
 import com.joyintech.tams.component.business.asset.dto.FinPayInterestStdInfoDto;
 import com.joyintech.tams.component.business.core.dto.FileCommonDto;
@@ -34,10 +41,6 @@ import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
-
-import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -139,6 +142,17 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      */
     @Valid
     private BussRepEquityInfoDto bussRepEquityInfoDto;
+    
+    /**
+     * 权益类中债报送
+     */
+    private RepAssetEquity repAssetEquity;
+    
+    /**
+     * 负债信息
+     */
+    private RepAssetDept repAssetDept;
+    
     /**
      * 权益类资产中债报送
      */
@@ -677,5 +691,16 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
 		this.realFinProductId = realFinProductId;
 	}
 
-
+	public RepAssetEquity getRepAssetEquity() {
+		return repAssetEquity;
+	}
+	public void setRepAssetEquity(RepAssetEquity repAssetEquity) {
+		this.repAssetEquity = repAssetEquity;
+	}
+	public RepAssetDept getRepAssetDept() {
+		return repAssetDept;
+	}
+	public void setRepAssetDept(RepAssetDept repAssetDept) {
+		this.repAssetDept = repAssetDept;
+	}
 }
