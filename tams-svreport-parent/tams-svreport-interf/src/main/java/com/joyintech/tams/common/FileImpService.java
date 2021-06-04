@@ -230,7 +230,7 @@ public abstract class FileImpService extends InterfService{
                 	//实际取数目录
                 	String finalPath = remotePath+currentDate;
                 	if (finalPath.contains("null")) {
-                        logger.info("实际取数目录有误："+finalPath);
+                        logger.warn("实际取数目录有误："+finalPath);
                 	    return filesVectorAll;
                     } else {
                         logger.info("实际取数目录："+finalPath);
