@@ -1282,7 +1282,12 @@
             pos.ASSETVALUE_B AS qmAssetValue,
             NULL AS qcAssetValue,
 
-            IF(pos.ASSETTYPE2='2101',assetinfo.sec_main_grade,assetinfo.FINANCIER_GRADE ) rating,
+            CASE pos.ASSETTYPE2
+                WHEN '2101' THEN assetinfo.sec_main_grade
+                WHEN '1299' THEN 'D'
+                ELSE assetinfo.FINANCIER_GRADE
+                END
+                as rating,
             assetinfo.GUA_TYPE AS guaType,
             assetinfo.TRADE_MARKET AS tradeMarket,
             assetinfo.IS_FBZB AS isFbzb,
@@ -1316,7 +1321,12 @@
              NULL AS qmAssetValue,
              pos.ASSETVALUE_B AS qcAssetValue,
 
-             IF(pos.ASSETTYPE2='2101',assetinfo.sec_main_grade,assetinfo.FINANCIER_GRADE ) rating,
+             CASE pos.ASSETTYPE2
+                 WHEN '2101' THEN assetinfo.sec_main_grade
+                 WHEN '1299' THEN 'D'
+                 ELSE assetinfo.FINANCIER_GRADE
+                 END
+                 as rating,
              assetinfo.GUA_TYPE AS guaType,
              assetinfo.TRADE_MARKET AS tradeMarket,
              assetinfo.IS_FBZB AS isFbzb,
