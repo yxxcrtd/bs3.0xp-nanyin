@@ -120,7 +120,7 @@ public class InvestorsHoldInfoValidator implements BeanValidator{
             map.put("INDENTIFY_MARK",dto.getIndentifyMark());
             String registBankCode = dto.getRegistBankCode();
             if (StringUtil.isEmpty(registBankCode)) {
-                registBankCode = CommonUtil.getUserBankCode();
+                registBankCode = CommonUtil.getUserBankCode(dto.getOrgCode());
             }
 //            map.put("REGIST_BANK_CODE",dto.getRegistBankCode());
             map.put("REGIST_BANK_CODE", registBankCode);

@@ -166,7 +166,7 @@ public class EquityBaseInfo001Service extends CommonExportService<EquiteBaseInfo
             if (CollectionUtils.isNotEmpty(dataList)) {
                 List<EquiteBaseInfo001Dto> entities = new ArrayList<>(dataList.size());
                 dataList.get(0).add(deptCode);
-                List<ExcelValidDto> checkResult = convertToEntity(dataList, entities);
+                List<ExcelValidDto> checkResult = convertToEntity(dataList, entities,orgCode);
 
                 if (checkResult.isEmpty()) {
                     try {
@@ -277,7 +277,8 @@ public class EquityBaseInfo001Service extends CommonExportService<EquiteBaseInfo
      * @return 验证信息
      */
     private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,
-                                                List<EquiteBaseInfo001Dto> entities) {
+                                                List<EquiteBaseInfo001Dto> entities,
+                                                String orgCode) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         if (StringUtil.isEmptyList(dataList)) {
             checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
@@ -286,7 +287,7 @@ public class EquityBaseInfo001Service extends CommonExportService<EquiteBaseInfo
         }
 
         try {
-            String bankCode = CommonUtil.getUserBankCode();
+            String bankCode = CommonUtil.getUserBankCode(orgCode);
             String deptCode = dataList.get(0).get(dataList.get(0).size() - 1);
             dataList.get(0).remove(dataList.get(0).size() - 1);
             for (int i = 0; i < dataList.size(); i++ ) {
