@@ -9,6 +9,7 @@
  */
 package com.joyintech.tams.svreport.infomanagement.service;
 
+import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -3056,10 +3057,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					}
 				}
 			}
-			if (flag) {
-				count += baseInformationMapper.deleteData(tableId, itemMap);
-			} else {
-				count += baseInformationMapper.deleteDataWithOutStatus(tableId, itemMap);
+			if (MapUtil.isNotEmpty(itemMap)) {
+				if (flag) {
+					count += baseInformationMapper.deleteData(tableId, itemMap);
+				} else {
+					count += baseInformationMapper.deleteDataWithOutStatus(tableId, itemMap);
+				}
 			}
 		}
 		return count;
