@@ -552,7 +552,7 @@
 		)  EQU_SUB
 		WHERE EQU_SUB.prdSingleTotal != EQU_SUB.investSingleTotal
 		or EQU_SUB.prdLegalTotal != EQU_SUB.investLegalTotal
-		or EQU_SUB.prdUnLegalTotal != EQU_SUB.investUnLegalTotal;
+		or EQU_SUB.prdUnLegalTotal != EQU_SUB.investUnLegalTotal
 	</select>
 
 </mapper>
