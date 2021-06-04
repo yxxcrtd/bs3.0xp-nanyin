@@ -146,6 +146,11 @@ public class MonthReportG06bAssetService {
                                         isPattern = true;
                                         break;
                                     }
+                                    // 支持 null 值判断
+                                    else if (rulevalueList.get(k).equals("null") && Objects.isNull(getGetMethod(position, ruleCode))) {
+                                        isPattern = true;
+                                        break;
+                                    }
                                 }
                             }
                             if (!isPattern) {
@@ -166,6 +171,11 @@ public class MonthReportG06bAssetService {
                                 if (!singleRule.getRuleValueList().get(i)
                                         .equals((String)getGetMethod(position,singleRule.getRuleCodeList().get(i)))){
                                     isPattern = false;
+                                    break;
+                                }
+                                // 支持 null 值判断
+                                else if (singleRule.getRuleValueList().get(i).equals("null") && Objects.isNull(getGetMethod(position, singleRule.getRuleValueList().get(i)))) {
+                                    isPattern = true;
                                     break;
                                 }
                             }
