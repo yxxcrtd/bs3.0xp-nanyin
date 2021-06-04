@@ -529,7 +529,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				default:
 			}
 		}
-		boolean flag = isHaveStatus(tableName);
+//		boolean flag = isHaveStatus(tableName);//delete by lingxq on 2021-06-05 界面删除条件查询不到数据优化
+		boolean flag = false; //add by lingxq on 2021-06-05 界面删除条件查询不到数据优化
 		if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.equals(tableName,"CHB_LOAN_DETAIL_INFO")){
 			list = baseInformationMapper.queryChbLoanDetailInfoByParams(tableName, baseInformationList, flag,assetType);
 		}else{
