@@ -72,7 +72,7 @@ public class DisPrdFeeRate001Controller extends BaseController {
         if(list.size()>0){
             for(DisRepCashYield disRepCashYield:list){
                 if(StringUtil.isNotEmpty(disRepCashYield.getBusiId())
-                        && StringUtil.isNotEmpty(disRepCashYield.getStartDate())
+                        && StringUtil.isNotEmpty(disRepCashYield.getStartDateStr())
                         && StringUtil.isNotEmpty(disRepCashYield.getCashType2())){
                     updateList.add(disRepCashYield);
                 }

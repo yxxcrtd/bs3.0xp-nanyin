@@ -155,7 +155,7 @@
 		where
 		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
 			BUSI_ID = #{item.busiId,jdbcType=VARCHAR}
-			AND START_DATE = #{item.startDate,jdbcType=DATE}
+			AND START_DATE = #{item.startDateStr,jdbcType=DATE}
 			AND CASH_TYPE2 = #{item.cashType2,jdbcType=VARCHAR}
 		</foreach>
 	</update>
