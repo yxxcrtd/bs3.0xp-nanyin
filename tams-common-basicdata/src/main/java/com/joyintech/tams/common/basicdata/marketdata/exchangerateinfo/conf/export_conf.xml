@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="MstExchangeQuotationInfo001.xlsx" name="汇率行情">
+<Workbook filePath="marketdata/exchangerateinfo/ComExchangeRateInfo001.xlsx" name="汇率行情">
 	<Worksheet javaBean="com.joyintech.tams.common.basicdata.marketdata.exchangerateinfo.dto.ComExchangeQuotationInfoDto">
 		<Row>
 			<Cell order="1" name="货币对">exchargeCode</Cell><!-- 货币对-->

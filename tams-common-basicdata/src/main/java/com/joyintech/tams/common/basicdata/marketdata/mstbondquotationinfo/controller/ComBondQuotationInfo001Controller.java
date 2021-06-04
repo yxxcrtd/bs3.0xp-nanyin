@@ -195,7 +195,7 @@ public class ComBondQuotationInfo001Controller extends BaseController {
 //        return comBondQuotationInfoService.export(this.getPageId(),
 //            RequestUtil.getParameters(getRequest()));
         File outFile = comBondQuotationInfoService.makeFile(
-                "com/joyintech/tams/common/basicdata/marketdata/mstbondquotationinfo/conf/export_conf.xml",
+                "/com/joyintech/tams/common/basicdata/marketdata/mstbondquotationinfo/conf/export_conf.xml",
                 list);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS

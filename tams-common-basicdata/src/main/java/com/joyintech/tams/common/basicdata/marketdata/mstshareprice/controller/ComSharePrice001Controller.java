@@ -178,7 +178,7 @@ public class ComSharePrice001Controller extends BaseController{
 //        return comSharePriceService.export(this.getPageId(),
 //            RequestUtil.getParameters(getRequest()));
         File outFile = comSharePriceService.makeFile(
-                "/com/joyintech/tams/valuation/basedata/marketdata/valshareprice/conf/export_conf.xml",
+                "/com/joyintech/tams/common/basicdata/marketdata/mstshareprice/conf/export_conf.xml",
                 list);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS

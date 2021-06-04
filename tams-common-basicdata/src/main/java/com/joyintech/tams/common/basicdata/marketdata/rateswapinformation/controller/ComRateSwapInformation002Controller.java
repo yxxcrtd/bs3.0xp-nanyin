@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -161,6 +162,17 @@ public class ComRateSwapInformation002Controller extends BaseController{
     @RequestMapping("getCurveType")
     public Page<SelectOptionDto> getCurveType() {
     	Page<SelectOptionDto> temp = comRateSwapInformationService.getCurveType(RequestUtil.getPageParam());
+    	for(SelectOptionDto t: temp.getRoot()) {
+    		String curveType = (String)((LinkedHashMap<String, String>) t.getObject()).get("curveType");
+    		String curveIntType = (String)((LinkedHashMap<String, String>) t.getObject()).get("curveIntType");
+    		String baseIntCode = (String) ((LinkedHashMap<String, String>) t.getObject()).get("baseIntCode");
+    		String priceType = (String)((LinkedHashMap<String, String>) t.getObject()).get("priceType");
+    		String curveTypeName = SysDataUtil.getNameFromDataDict(DictCode.曲线类别, curveType).replace("曲线", "");
+    		String curveIntTypeName = SysDataUtil.getNameFromDataDict(DictCode.利率互换曲线, curveIntType);
+    		String priceTypeName = SysDataUtil.getNameFromDataDict(DictCode.价格类型, priceType);
+    		
+    		t.setText(curveTypeName+"-"+curveIntTypeName+"-"+baseIntCode+"-"+priceTypeName);
+    	}
     	return temp;
     }
 }

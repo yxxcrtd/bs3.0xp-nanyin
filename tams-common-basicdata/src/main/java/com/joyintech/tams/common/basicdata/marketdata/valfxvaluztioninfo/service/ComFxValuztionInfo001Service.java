@@ -89,7 +89,7 @@ public class ComFxValuztionInfo001Service extends CommonExportService<ComFxValuz
         throws Exception {
         // 检查文件名是否为空
         if (StringUtil.isNotEmpty(flieName)) {
-            if (flieName.indexOf("外汇估值信息导入") != -1) {
+            if (flieName.indexOf("外汇估值信息") != -1) {
                 List<List<String>> dataList = dataAnalysis(flieName);
                 if (null != dataList && dataList.size() > 0) {
                     // 将excel表格中的数据转化为dto

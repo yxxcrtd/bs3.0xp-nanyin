@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="basedata/marketdata/rateswapvaluationinfo/ValRateSwapValuationInfo.xlsx" name="利率互换估值信息">
+<Workbook filePath="marketdata/rateswapvaluationinfo/ValRateSwapValuationInfo.xlsx" name="利率互换估值信息">
 	<Worksheet javaBean="com.joyintech.service.valuation.basedata.marketdata.rateswapvaluationinfo.dto.ValRateSwapValuationInfo001Dto">
 		<Row>                                                                              
 			<Cell order="1" name="交易编号">finprodId2</Cell>

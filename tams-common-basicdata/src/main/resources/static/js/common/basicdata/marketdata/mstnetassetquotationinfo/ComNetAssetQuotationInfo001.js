@@ -99,8 +99,8 @@ $(function() {
     /**
      * 导入按钮
      */
-    $('#ValNetAssetQuotationInfo001_btn_import').click(function() {
-        Joyin.uploadFile({pageId:'ValNetAssetQuotationInfo001MTM'},function(fileName) {
+    $('#ComNetAssetQuotationInfo001_btn_import').click(function() {
+        Joyin.uploadFile({pageId:'ComNetAssetQuotationInfo001MTM'},function(fileName) {
             Joyin.ajax(basePath + 'common/basicdata/marketdata/mstnetassetquotationinfo/ComNetAssetQuotationInfo001/checkImportData', {fileName: fileName}, function(checkResult) {
                 if (checkResult) {
                     setTimeout( function () {
