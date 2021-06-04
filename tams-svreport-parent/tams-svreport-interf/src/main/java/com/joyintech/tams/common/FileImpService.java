@@ -204,6 +204,7 @@ public abstract class FileImpService extends InterfService{
         String password = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, ReportGlobalConstant.SYS_PARA_SALES_FTP_PASSWORD); 
         //临时文件存放目录
         String localPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+        localPath = checkPath(localPath);
         //清理本地临时文件目录
         logger.info("文件列表：{},是否需要ok:{}",StringUtil.joinString(containsFile, GlobalConstant.COMMA),ifneedOk);
         logger.info("清理本地临时文件目录：{}",localPath);
@@ -224,10 +225,16 @@ public abstract class FileImpService extends InterfService{
 //        				containsFile.add(iter.next());
 //        			}
                 	//参数对应目录
-                	String remotePath = this.getParaVauleByparaCode(type); 
+                	String remotePath = this.getParaVauleByparaCode(type);
+                	remotePath = checkPath(remotePath);
                 	//实际取数目录
                 	String finalPath = remotePath+currentDate;
-                	 logger.info("实际取数目录："+finalPath);
+                	if (finalPath.contains("null")) {
+                        logger.info("实际取数目录有误："+finalPath);
+                	    return filesVectorAll;
+                    } else {
+                        logger.info("实际取数目录："+finalPath);
+                    }
                     if(StringUtil.equals(ftpType, "03")){
                 		//本地
                 		File finalDir = new File(finalPath);
@@ -351,6 +358,17 @@ public abstract class FileImpService extends InterfService{
             }
         }
         return filesVectorAll;
+    }
+
+    /**
+     * 检查文件路径
+     * @param path
+     */
+    private String checkPath(String path) {
+        if (!StringUtil.endsWith(path,"/")) {
+            path = path + "/";
+        }
+        return path;
     }
     
     
