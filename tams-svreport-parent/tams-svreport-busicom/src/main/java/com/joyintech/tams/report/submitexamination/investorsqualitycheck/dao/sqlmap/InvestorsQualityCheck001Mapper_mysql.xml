@@ -232,7 +232,6 @@
 
 	<!-- 产品状态合格率 -->
 	<select id="searchCPZTErr" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
-		<include refid="cpztComm"/>
 		SELECT
 		CPC.REG_CODE PRD_REGIST_CODE,
 		COUNT(INVESTHOLD_SUB.INDENTIFY_MARK) holdCount,
@@ -240,9 +239,49 @@
 		END_SUB.MDATE prdAclMDate,
 		CP.ISSUING_STATUS prdIssueSts
 		FROM
-		INVESTHOLD_SUB
+		(
+		SELECT
+		PRODID,
+		INDENTIFY_MARK,
+		HOLD_DATE
+		FROM
+		(
+		SELECT
+		PRODID,
+		INDENTIFY_MARK,
+		HOLD_DATE,
+		STATUS,
+		ROW_NUMBER() over( partition BY PRODID, INDENTIFY_MARK,HOLD_DATE ORDER BY UPDATE_TIME DESC) AS rowno
+		FROM
+		CHB_INVESTHOLD_INFO_SUB
+		WHERE
+		STR_TO_DATE(DATE_FORMAT(HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		<if test="orgCodeList != null and orgCodeList.size() > 0">
+			<foreach collection="orgCodeList" item="orgCode" open=" AND ORG_CODE IN (" close=")" separator=",">
+				#{orgCode,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		) temp1
+		WHERE
+		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+		) as INVESTHOLD_SUB
 		LEFT JOIN
-		END_SUB
+		(
+		SELECT
+		PROD_ID,
+		MDATE
+		FROM
+		(
+		SELECT
+		CHB_PRD_END_SUB.PROD_ID,
+		CHB_PRD_END_SUB.MDATE,
+		CHB_PRD_END_SUB.STATUS,
+		ROW_NUMBER() over( partition BY CHB_PRD_END_SUB.PROD_ID ORDER BY CHB_PRD_END_SUB.UPDATE_TIME DESC) AS rowno
+		FROM
+		CHB_PRD_END_SUB) temp2
+		WHERE
+		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+		)  END_SUB
 		ON
 		INVESTHOLD_SUB.PRODID = END_SUB.PROD_ID
 		LEFT JOIN
@@ -265,15 +304,54 @@
 
 	<!-- 产品状态合格率 -->
 	<select id="searchCPZTErrCalc" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
-		<include refid="cpztComm"/>
 		SELECT
 		INVESTHOLD_SUB.PRODID,
 		INVESTHOLD_SUB.INDENTIFY_MARK,
 		INVESTHOLD_SUB.HOLD_DATE
 		FROM
-		INVESTHOLD_SUB
+		(
+		SELECT
+		PRODID,
+		INDENTIFY_MARK,
+		HOLD_DATE
+		FROM
+		(
+		SELECT
+		PRODID,
+		INDENTIFY_MARK,
+		HOLD_DATE,
+		STATUS,
+		ROW_NUMBER() over( partition BY PRODID, INDENTIFY_MARK,HOLD_DATE ORDER BY UPDATE_TIME DESC) AS rowno
+		FROM
+		CHB_INVESTHOLD_INFO_SUB
+		WHERE
+		STR_TO_DATE(DATE_FORMAT(HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		<if test="orgCodeList != null and orgCodeList.size() > 0">
+			<foreach collection="orgCodeList" item="orgCode" open=" AND ORG_CODE IN (" close=")" separator=",">
+				#{orgCode,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		) temp1
+		WHERE
+		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+		) as INVESTHOLD_SUB
 		LEFT JOIN
-		END_SUB
+		(
+		SELECT
+		PROD_ID,
+		MDATE
+		FROM
+		(
+		SELECT
+		CHB_PRD_END_SUB.PROD_ID,
+		CHB_PRD_END_SUB.MDATE,
+		CHB_PRD_END_SUB.STATUS,
+		ROW_NUMBER() over( partition BY CHB_PRD_END_SUB.PROD_ID ORDER BY CHB_PRD_END_SUB.UPDATE_TIME DESC) AS rowno
+		FROM
+		CHB_PRD_END_SUB) temp2
+		WHERE
+		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+		)  END_SUB
 		ON
 		INVESTHOLD_SUB.PRODID = END_SUB.PROD_ID
 		LEFT JOIN
@@ -287,13 +365,37 @@
 
 	<!-- 产品状态合格率 -->
 	<select id="searchCPZTAll" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
-		<include refid="cpztComm"/>
 		SELECT
 		INVESTHOLD_SUB.PRODID,
 		INVESTHOLD_SUB.INDENTIFY_MARK,
 		INVESTHOLD_SUB.HOLD_DATE
 		FROM
-		INVESTHOLD_SUB
+		(
+		SELECT
+		PRODID,
+		INDENTIFY_MARK,
+		HOLD_DATE
+		FROM
+		(
+		SELECT
+		PRODID,
+		INDENTIFY_MARK,
+		HOLD_DATE,
+		STATUS,
+		ROW_NUMBER() over( partition BY PRODID, INDENTIFY_MARK,HOLD_DATE ORDER BY UPDATE_TIME DESC) AS rowno
+		FROM
+		CHB_INVESTHOLD_INFO_SUB
+		WHERE
+		STR_TO_DATE(DATE_FORMAT(HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		<if test="orgCodeList != null and orgCodeList.size() > 0">
+			<foreach collection="orgCodeList" item="orgCode" open=" AND ORG_CODE IN (" close=")" separator=",">
+				#{orgCode,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		) temp1
+		WHERE
+		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+		) as INVESTHOLD_SUB
 	</select>
 
 	<sql id="slppComm">
@@ -321,12 +423,10 @@
 		(@PROD_REGIST_CODE = A.PROD_REGIST_CODE, @rank :=@rank + 1, @rank :=1 ) AS rowno,
 		@PROD_REGIST_CODE := A.PROD_REGIST_CODE
 		FROM
-		 (SELECT * FROM CHB_PRD_RAISETOT_SUB ORDER BY PROD_REGIST_CODE, UPDATE_TIME ) A,
-		 (SELECT @rownum :=0, @PROD_REGIST_CODE := NULL, @rank := 0) tmp
-		LEFT JOIN
-		CHB_PRD_BASEINFO B
-		ON
-		A.PROD_REGIST_CODE = B.REG_CODE
+		( SELECT * FROM CHB_PRD_RAISETOT_SUB ORDER BY PROD_REGIST_CODE, UPDATE_TIME ) A
+
+		LEFT JOIN CHB_PRD_BASEINFO B ON A.PROD_REGIST_CODE = B.REG_CODE
+		left join 	( SELECT @rownum := 0, @PROD_REGIST_CODE := NULL, @rank := 0 ) tmp on 1=1
 		WHERE
 		STR_TO_DATE(DATE_FORMAT(B.VDATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
 		<if test="orgCodeList != null and orgCodeList.size() > 0">
@@ -348,7 +448,7 @@
 		LEGAL_TOTAL prdLegalTotal,
 		UNLEGAL_TOTAL prdUnLegalTotal,
 		VDATE prdVDate
-		FROM (<include refid="slppComm"/>)
+		FROM (<include refid="slppComm"/>) a
 	</select>
 
 	<!-- 投资者数量匹配合格率 -->
@@ -390,7 +490,7 @@
 		INVESTHOLD_SUB.INDENTIFY_MARK,
 		INVESTHOLD_SUB.HOLD_DATE,
 		CHB_EQU_SUB.STATUS,
-		CHB_EQU_SUB.HOLDER_TYPE,
+		CHB_EQU_SUB.HOLDER_TYPE,IF
 		((@PROD_REGIST_CODE = INVESTHOLD_SUB.PROD_REGIST_CODE AND @INDENTIFY_MARK = CHB_EQU_SUB.INDENTIFY_MARK),
 		@rank :=@rank + 1, @rank :=1 ) AS rowno2,
 		@PROD_REGIST_CODE := INVESTHOLD_SUB.PROD_REGIST_CODE,
@@ -415,29 +515,31 @@
 		B.INDENTIFY_MARK,
 		B.HOLD_DATE,
 		B.STATUS,
-		((@PROD_REGIST_CODE = A.PROD_REGIST_CODE AND @PRD_REGIST_CODE = B.PRD_REGIST_CODE AND @INDENTIFY_MARK = B.INDENTIFY_MARK AND @HOLD_DATE =  B.HOLD_DATE),
+		IF((@PROD_REGIST_CODE = A.PROD_REGIST_CODE AND @PRD_REGIST_CODE = B.PRD_REGIST_CODE AND @INDENTIFY_MARK = B.INDENTIFY_MARK AND @HOLD_DATE =  B.HOLD_DATE),
 		@rank :=@rank + 1, @rank :=1 ) AS rowno1,
 		@PROD_REGIST_CODE := A.PROD_REGIST_CODE,
 		@PRD_REGIST_CODE := B.PRD_REGIST_CODE,
 		@INDENTIFY_MARK := B.INDENTIFY_MARK,
 		@HOLD_DATE := B.HOLD_DATE
 		FROM
-		(SELECT * FROM (<include refid="slppComm"/>) CC ORDER BY PROD_REGIST_CODE,PRD_REGIST_CODE,INDENTIFY_MARK,HOLD_DATE, UPDATE_TIME ) A,
-		(SELECT @rownum :=0, @PROD_REGIST_CODE := NULL,@PRD_REGIST_CODE :=NULL,@INDENTIFY_MARK :=NULL,@HOLD_DATE :=NULL @rank := 0) tmp1
+		(SELECT * FROM (<include refid="slppComm"/>) CC ORDER BY PROD_REGIST_CODE ) A
 		INNER JOIN
 		CHB_INVESTHOLD_INFO_SUB B
 		ON
 		A.PROD_REGIST_CODE = B.PRD_REGIST_CODE
 		AND STR_TO_DATE(DATE_FORMAT(B.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		left join
+		(SELECT @rownum :=0, @PROD_REGIST_CODE := NULL,@PRD_REGIST_CODE :=NULL,@INDENTIFY_MARK :=NULL,@HOLD_DATE :=NULL ,@rank := 0) tmp1 on 1=1
 		)  temp2
 		WHERE
 		rowno1 = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
-		) zz ORDER BY PROD_REGIST_CODE,INDENTIFY_MARK, UPDATE_TIME ) INVESTHOLD_SUB,
-		(SELECT @rownum :=0, @PROD_REGIST_CODE := NULL,@INDENTIFY_MARK :=NULL, @rank := 0) tmp2
+		) zz ORDER BY PROD_REGIST_CODE,INDENTIFY_MARK ) INVESTHOLD_SUB
 		INNER JOIN
 		CHB_EQU_SUB
 		ON
 		INVESTHOLD_SUB.INDENTIFY_MARK = CHB_EQU_SUB.INDENTIFY_MARK
+		    left join
+		(SELECT @rownum :=0, @PROD_REGIST_CODE := NULL,@INDENTIFY_MARK :=NULL, @rank := 0) tmp2 on 1=1
 		) temp3
 		WHERE
 		rowno2 = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
