@@ -789,10 +789,10 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
             params.put("listFinprodId", listProdId);
             params.put("finprodType", prodType);
             params.put("finprodType_F16", DictCodeListExt1.金融产品类型_理财产品.getValue());
-            params.put("queryDate", queryDate);
+            params.put("queryDate", DateUtil.parse(queryDate));
             //OPEX-650【产品缴纳】缴纳查询界面，选择纳税日期查询条件进行查询，报数据接口异常 guyunfei 20191227 start
-            params.put("queryDateBegin", queryDateBegin);
-            params.put("queryDateEnd", queryDateEnd);
+            params.put("queryDateBegin", DateUtil.parse(queryDateBegin));
+            params.put("queryDateEnd", DateUtil.parse(queryDateEnd));
             //OPEX-650【产品缴纳】缴纳查询界面，选择纳税日期查询条件进行查询，报数据接口异常 guyunfei 20191227 end
             params.put("schemeType", DictCodeListExt1.配置方案类型_税务方案.getValue());
             return payTheVatQuery002Mapper.getAddTaxType(params);
