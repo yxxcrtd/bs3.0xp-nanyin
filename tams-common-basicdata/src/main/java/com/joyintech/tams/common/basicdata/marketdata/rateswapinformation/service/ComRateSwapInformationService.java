@@ -1,5 +1,16 @@
 package com.joyintech.tams.common.basicdata.marketdata.rateswapinformation.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONArray;
 //import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
@@ -12,22 +23,11 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
 import com.joyintech.tams.common.basicdata.marketdata.rateswapinformation.dto.ComRateSwapInformationDto;
-import com.joyintech.tams.systemtools.util.ExcelUtil;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.common.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-
-
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class ComRateSwapInformationService extends CommonExportService<ComRateSwapInformationDto> implements BaseProcessService<ComRateSwapInformationDto> {
@@ -285,12 +285,12 @@ public class ComRateSwapInformationService extends CommonExportService<ComRateSw
         //报卖% 02
         List<ComRateSwapInformationDto> comRateSwapInformationDtoList02 = new ArrayList<>();
         dto.setSelectedItem(comRateSwapInformationDtoList);
-        List<String> objects = JsonUtils.json2Object(tempList,List.class);
+        JSONArray objects = JSONArray.parseArray(tempList);
 
         //报买% 01
         for (int i = 0; i < objects.size(); i++) {
-//            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            List<String> rowData= JsonUtils.json2Object(objects.get(i),List.class);
+            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
+//            List<String> rowData= JsonUtils.json2Object(objects.get(i),List.class);
             //报买% 01【4】 收益率%
             if (StringUtil.isNotEmpty(rowData.get(4))){
                 ComRateSwapInformationDto valFundMarketInfo001dto01 = new ComRateSwapInformationDto();

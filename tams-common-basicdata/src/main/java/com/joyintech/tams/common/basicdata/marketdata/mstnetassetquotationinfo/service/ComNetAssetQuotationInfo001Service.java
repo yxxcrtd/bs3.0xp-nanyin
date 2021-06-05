@@ -26,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -289,9 +290,9 @@ public class ComNetAssetQuotationInfo001Service extends CommonExportService<ComN
                         errorMsg.append("万份收益/净值 必填！");
                     }
                     //管理人 必填
-                    if (!StringUtil.isNotEmpty(rowData.get(4))){
-                        errorMsg.append("管理人 必填！");
-                    }
+//                    if (!StringUtil.isNotEmpty(rowData.get(4))){
+//                        errorMsg.append("管理人 必填！");
+//                    }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
                         returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
@@ -347,11 +348,11 @@ public class ComNetAssetQuotationInfo001Service extends CommonExportService<ComN
         // 行情信息列表
         List<ComNetAssetQuotationInfo001Dto> valNetAssetQuotationInfoList = new ArrayList<>();
         dto.setSelectedItem(valNetAssetQuotationInfoList);
-        List<String> objects = JsonUtils.json2List(tempList,String.class);
+        JSONArray objects = JSONArray.parseArray(tempList);
 
         for (int i = 0; i < objects.size(); i++) {
-//            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-        	List<String> rowData = JsonUtils.json2List(objects.get(i),String.class);
+            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
+//        	List<String> rowData = JsonUtils.json2List(objects.get(i),String.class);
             ComNetAssetQuotationInfo001Dto valNetAssetQuotationInfo001Dto = new ComNetAssetQuotationInfo001Dto();
             // 资产代码【0】
             if (StringUtil.isNotEmpty(rowData.get(0))) {

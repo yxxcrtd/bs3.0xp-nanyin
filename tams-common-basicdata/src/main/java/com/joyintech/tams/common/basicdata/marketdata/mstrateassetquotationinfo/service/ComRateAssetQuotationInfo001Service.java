@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
+
 /*
  * 文件名：MstNetAssetQuotationInfo001Service.java
  * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
@@ -246,50 +248,44 @@ public class ComRateAssetQuotationInfo001Service extends CommonExportService<Com
         // 行情信息列表
         List<ComRateAssetQuotationInfo001Dto> valNetAssetQuotationInfoList = new ArrayList<>();
         dto.setSelectedItem(valNetAssetQuotationInfoList);
-        List<Object> objects;
-		try {
-			objects = JsonUtils.json2List(tempList, Object.class);
-	        for (int i = 0; i < objects.size(); i++) {
-	            List<String> rowData = JsonUtils.json2List(JsonUtils.object2Json(objects.get(i)), String.class);  
-	            ComRateAssetQuotationInfo001Dto mstRateAssetQuotationInfo001Dto = new ComRateAssetQuotationInfo001Dto();
-	
-	            // 资产代码【0】
-	            if (StringUtil.isNotEmpty(rowData.get(0))) {
-	                mstRateAssetQuotationInfo001Dto.setFinprodId(rowData.get(0).toString());
-	            }
-	            // 资产简称【1】
-	            if (StringUtil.isNotEmpty(rowData.get(1))) {
-	                mstRateAssetQuotationInfo001Dto.setFinProdName(rowData.get(1).toString());
-	            }
-	            // 估值日期【2】
-	            if (StringUtil.isNotEmpty(rowData.get(2))) {
-	                mstRateAssetQuotationInfo001Dto.setValDate(DateUtil.parse(rowData.get(2).toString()));
-	            }
-	            // 估值【3】
-	            if (StringUtil.isNotEmpty(rowData.get(3))) {
-	                mstRateAssetQuotationInfo001Dto.setValuation(new BigDecimal(rowData.get(3).toString()));
-	            }
-	            // 导入日【4】
-	            if (StringUtil.isNotEmpty(rowData.get(4))) {
-	                mstRateAssetQuotationInfo001Dto.setPublishDate(DateUtil.parse(rowData.get(4).toString()));
-	            }
-	            // 备注【5】
-	            if (StringUtil.isNotEmpty(rowData.get(5))) {
-	                mstRateAssetQuotationInfo001Dto.setRemark(rowData.get(5).toString());
-	            }
-	            Map<String, Object> paramMap = new HashMap<>();
-	            paramMap.put("finProdMarketId", mstRateAssetQuotationInfo001Dto.getFinprodId());
-	            paramMap.put("profitType", DictCodeList.收益类型_收益型.getValue());
-	            ComRateAssetQuotationInfo001Dto tmpDto = getFinProdNameAndFinprodId(paramMap);
-	            if (StringUtil.isNotEmpty(tmpDto)){
-	                mstRateAssetQuotationInfo001Dto.setFinprodType2(tmpDto.getFinprodType2());
-	                mstRateAssetQuotationInfo001Dto.setFinprodType(tmpDto.getFinprodType());
-	            }
-	            valNetAssetQuotationInfoList.add(mstRateAssetQuotationInfo001Dto);
-	        }
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+        JSONArray objects  =JSONArray.parseArray(tempList);
+		for (int i = 0; i < objects.size(); i++) {
+			JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
+		    ComRateAssetQuotationInfo001Dto mstRateAssetQuotationInfo001Dto = new ComRateAssetQuotationInfo001Dto();
+
+		    // 资产代码【0】
+		    if (StringUtil.isNotEmpty(rowData.get(0))) {
+		        mstRateAssetQuotationInfo001Dto.setFinprodId(rowData.get(0).toString());
+		    }
+		    // 资产简称【1】
+		    if (StringUtil.isNotEmpty(rowData.get(1))) {
+		        mstRateAssetQuotationInfo001Dto.setFinProdName(rowData.get(1).toString());
+		    }
+		    // 估值日期【2】
+		    if (StringUtil.isNotEmpty(rowData.get(2))) {
+		        mstRateAssetQuotationInfo001Dto.setValDate(DateUtil.parse(rowData.get(2).toString()));
+		    }
+		    // 估值【3】
+		    if (StringUtil.isNotEmpty(rowData.get(3))) {
+		        mstRateAssetQuotationInfo001Dto.setValuation(new BigDecimal(rowData.get(3).toString()));
+		    }
+		    // 导入日【4】
+		    if (StringUtil.isNotEmpty(rowData.get(4))) {
+		        mstRateAssetQuotationInfo001Dto.setPublishDate(DateUtil.parse(rowData.get(4).toString()));
+		    }
+		    // 备注【5】
+		    if (StringUtil.isNotEmpty(rowData.get(5))) {
+		        mstRateAssetQuotationInfo001Dto.setRemark(rowData.get(5).toString());
+		    }
+		    Map<String, Object> paramMap = new HashMap<>();
+		    paramMap.put("finProdMarketId", mstRateAssetQuotationInfo001Dto.getFinprodId());
+		    paramMap.put("profitType", DictCodeList.收益类型_收益型.getValue());
+		    ComRateAssetQuotationInfo001Dto tmpDto = getFinProdNameAndFinprodId(paramMap);
+		    if (StringUtil.isNotEmpty(tmpDto)){
+		        mstRateAssetQuotationInfo001Dto.setFinprodType2(tmpDto.getFinprodType2());
+		        mstRateAssetQuotationInfo001Dto.setFinprodType(tmpDto.getFinprodType());
+		    }
+		    valNetAssetQuotationInfoList.add(mstRateAssetQuotationInfo001Dto);
 		}
         dto.setSelectedItem(valNetAssetQuotationInfoList);
         return dto;

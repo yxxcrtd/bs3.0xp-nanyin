@@ -18,28 +18,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
-import com.joyintech.tams.common.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto;
-import com.joyintech.tams.common.basicdata.util.ComBasicDataExcelUtil;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
+import com.joyintech.tams.common.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -324,16 +320,16 @@ public class ComCoinFundQuotationInfo001Service extends CommonExportService<ComC
      * @return
      * @throws IOException 
      */
-    public ComCoinFundQuotationInfo001Dto getValNetAssetQuotationInfoListData(String tempList) throws IOException {
+    public ComCoinFundQuotationInfo001Dto getValNetAssetQuotationInfoListData(String tempList) {
         ComCoinFundQuotationInfo001Dto dto = new ComCoinFundQuotationInfo001Dto();
         // 行情信息列表
         List<ComCoinFundQuotationInfo001Dto> valNetAssetQuotationInfoList = new ArrayList<>();
         dto.setSelectedItem(valNetAssetQuotationInfoList);
-        List<String> objects = JsonUtils.json2List(tempList,String.class);
+        JSONArray objects = JSONArray.parseArray(tempList);
 
         for (int i = 0; i < objects.size(); i++) {
-//            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-            List<String> rowData = JsonUtils.json2List( objects.get(i), String.class);
+            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
+//            List<String> rowData = JsonUtils.json2List( objects.get(i), String.class);
             ComCoinFundQuotationInfo001Dto valCoinFundQuotationInfo001Dto = new ComCoinFundQuotationInfo001Dto();
             // 基金代码【0】
             if (StringUtil.isNotEmpty(rowData.get(0))) {
@@ -383,7 +379,7 @@ public class ComCoinFundQuotationInfo001Service extends CommonExportService<ComC
         return str.split(" ")[0];
     }
 
-    public AjaxResult importFile(Map<String, Object> param) throws IOException {
+    public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
         String tempList = (String) param.get("tempList");
         ComCoinFundQuotationInfo001Dto dto = getValNetAssetQuotationInfoListData(tempList);

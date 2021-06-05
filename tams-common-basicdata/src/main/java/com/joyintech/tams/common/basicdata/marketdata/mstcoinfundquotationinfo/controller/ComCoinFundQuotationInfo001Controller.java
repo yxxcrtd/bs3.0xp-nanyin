@@ -264,7 +264,7 @@ public class ComCoinFundQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param) throws IOException {
+    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
         return comCoinFundQuotationInfo001Service.importFile(param);
     }
 }

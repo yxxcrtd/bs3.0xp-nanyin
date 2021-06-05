@@ -193,7 +193,7 @@ public class ComExternalOptions001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("importFile")
-    public AjaxResult importFile(@RequestBody Map<String, Object> param) throws IOException {
+    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
         return comExternalOptions001Service.importFile(param);
     }
 

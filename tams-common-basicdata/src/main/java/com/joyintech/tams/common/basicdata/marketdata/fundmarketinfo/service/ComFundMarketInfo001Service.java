@@ -7,14 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
-import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto;
-import com.joyintech.tams.common.basicdata.util.ComBasicDataExcelUtil;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -22,7 +18,8 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
+import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -238,11 +235,11 @@ public class ComFundMarketInfo001Service extends CommonExportService<ComFundMark
 		// 行情信息列表
 		List<ComFundMarketInfo001dto> valFundMarketInfo001dtoList = new ArrayList<>();
 		dto.setSelectedItem(valFundMarketInfo001dtoList);
-		List<String> objects = JsonUtils.json2List(tempList, String.class);
+		JSONArray objects = JSONArray.parseArray(tempList);
 
 		for (int i = 0; i < objects.size(); i++) {
-//			JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
-			List<String> rowData = JsonUtils.json2List(objects.get(i), String.class);
+			JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
+//			List<String> rowData = JsonUtils.json2List(objects.get(i), String.class);
 			ComFundMarketInfo001dto valFundMarketInfo001dto = new ComFundMarketInfo001dto();
 			// 基金代码【0】
 			if (StringUtil.isNotEmpty(rowData.get(0))) {
