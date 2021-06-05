@@ -12,7 +12,7 @@ package com.joyintech.tams.invest.asset.project.validator;
 
 import java.util.*;
 
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.component.business.bond.dto.BusiFinBondRatingInfoDto;
 import com.joyintech.tams.invest.asset.project.service.FinProjectTargetAssetService;
@@ -51,8 +51,8 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
     @Autowired
     private FinProjectTargetAssetService finProjectTargetAssetService;
 
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     /**
      * {@inheritDoc}
@@ -209,9 +209,9 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
             }
         }
 
-//        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-//            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
-//        }
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
+        }
         
         //校验融资人
         //@NotEmpty(fieldName = "FinProjectTargetAsset002.financier",groups={ValidateGroupEdit.class})

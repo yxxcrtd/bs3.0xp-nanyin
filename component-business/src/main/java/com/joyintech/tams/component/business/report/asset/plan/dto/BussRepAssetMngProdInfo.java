@@ -206,6 +206,17 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal repAmt ;
+    
+    /**
+     * 管理人
+     */
+    private String repManagerId;
+    
+    /**
+     * 托管人
+     */
+    private String repTrusteeId;
+    
     /**
      * 备注
      */
@@ -748,4 +759,20 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
     public void setRepBondtostockFlag(String repBondtostockFlag) {
         this.repBondtostockFlag = repBondtostockFlag;
     }
+    
+    public String getRepManagerId() {
+		return repManagerId;
+	}
+
+	public void setRepManagerId(String repManagerId) {
+		this.repManagerId = repManagerId;
+	}
+    
+	public String getRepTrusteeId() {
+		return repTrusteeId;
+	}
+
+	public void setRepTrusteeId(String repTrusteeId) {
+		this.repTrusteeId = repTrusteeId;
+	}
 }

@@ -10,14 +10,17 @@
 
 package com.joyintech.tams.invest.product.productelement.netvalueproduct.validator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -33,7 +36,6 @@ import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 //import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.prod.dto.BussBenchMarkInfoDto;
 import com.joyintech.tams.component.business.prod.dto.BussBenchMarkLayeredInfoDto;
@@ -44,6 +46,7 @@ import com.joyintech.tams.component.business.prod.dto.BussFinProductLayeredInfoD
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticInfoDto;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.dto.FinNetValueProductBuild002Dto;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.service.FinNetValueProductBuild001Service;
@@ -87,8 +90,8 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     /**
      * {@linkplain}
@@ -1410,7 +1413,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
 
-        // validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null, ValidMessage.class);
+         validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null, ValidMessage.class);
 
         return validList;
     }
