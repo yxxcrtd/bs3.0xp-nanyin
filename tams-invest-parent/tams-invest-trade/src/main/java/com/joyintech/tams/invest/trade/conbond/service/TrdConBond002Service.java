@@ -841,11 +841,11 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 
                 List<EtrFinishStatusDto> baseEtrInvestInfoDtos = new ArrayList<>();
                 EtrFinishStatusDto etrInvestInfoDto = new EtrFinishStatusDto();
-                etrInvestInfoDto.setEntrustId(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
-                etrInvestInfoDto.setTradeId(baseTradeProductDealDto.getTrdProductDealAdd().getTradeId());
-                etrInvestInfoDto.setFinishDate(baseTradeProductDealDto.getTrdProductDeal().getTradeDate());
-                etrInvestInfoDto.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
-                etrInvestInfoDto.setTrader(baseTradeProductDealDto.getTrdProductDeal().getTrader());
+                etrInvestInfoDto.setEntrustId(entity.getEntrustId());
+                etrInvestInfoDto.setTradeId(trdFinProductDealTotal.getTotleTradeId());
+                etrInvestInfoDto.setFinishDate(trdFinProductDealTotal.getTradeDate());
+                etrInvestInfoDto.setFinishAmt(trdFinProductDealTotal.getShareAmt());
+                etrInvestInfoDto.setTrader(trdFinProductDealTotal.getTrader());
                 baseEtrInvestInfoDtos.add(etrInvestInfoDto);
 
                 etrInvestInfoServiceImpl.completeDelegate(baseEtrInvestInfoDtos);
@@ -1016,8 +1016,9 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             //        委托代码不为空处理委托代码
             if(StringUtil.isNotEmpty(entity.getEntrustId())){
                 baseTradeProductDealDto.setEntrustId(entity.getEntrustId());
-                etrInvestInfoServiceImpl.updateDelegateStatus(entity.getEntrustId(),
-                        DictCodeList.委托状态_已接收.getValue());
+//                etrInvestInfoServiceImpl.updateDelegateStatus(entity.getEntrustId(),
+//                        DictCodeList.委托状态_已接收.getValue());
+                etrInvestInfoServiceImpl.cancelCompleteDelegate(entity.getEntrustId(),entity.getBusiCode());
             }
             finProductTradeDto.setNeedSum(true);
             finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
