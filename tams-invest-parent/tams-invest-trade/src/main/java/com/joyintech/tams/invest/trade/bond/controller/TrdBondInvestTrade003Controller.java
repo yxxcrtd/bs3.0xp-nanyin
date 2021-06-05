@@ -232,7 +232,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         // add by etliu 20210501 银行间场内场外拆分 end
 
         if(workflowId!=null){
-            return "/invest/trade/bond/TrdBondInvestTrade002";
+            return "invest/trade/bond/TrdBondInvestTrade002";
         }else{
             return super.init(model);
         }
