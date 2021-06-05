@@ -83,7 +83,7 @@
 		   GROUP BY A.BOOKSET_ID, A.BUSI_ID,B.BUSI_DETAIL_TYPE,A.BRANCH, A.BASE_SUBJECT_NATURE
 		  )
 		 ,CALC AS (                  
-		     SELECT                   
+		     SELECT    DISTINCT               
 		         R.FINPROD_ID,R.FINPROD_TYPE,                 
 		         DECODE(R.CALC_TYPE,'01','固定利率','02','浮动利率') AS CALC_TYPE,                  
 		         ROUND(R.YIELD*100,4) YIELD,R.BASIS FROM FIN_CASH_CALC_RULE R,(                 
