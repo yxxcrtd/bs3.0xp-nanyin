@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
@@ -35,6 +37,7 @@ import com.joyintech.tams.common.basicdata.marketdata.bondmarketinfo.service.Com
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 债券行情信息新建 进行债券估值行情信息的新建
@@ -57,8 +60,6 @@ public class ComBondMarketInfo002Controller extends BaseController {
     @Autowired
     private ComBondMarketInfo001Service comBondMarketInfo001Service;
 
-    /**
-    /**
     @Override
     public String init(Model model) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
