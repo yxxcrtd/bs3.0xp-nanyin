@@ -291,6 +291,13 @@
 			// 产品申报要素带入数据不可修改 add by yzg 20191113 start
 			FinProductCommon.initDisabledChange(bussRepFinProductInfo, data);
 			// 产品申报要素带入数据不可修改 add by yzg 20191113 end
+			//发行方式 add by wanghai 20210521 start
+			if(data.repOperateMode=='01' || data.repOperateMode=='02'){
+				$('#' + pageId + '_operationType').val('01').trigger('change');
+			}else if(data.repOperateMode=='03' || data.repOperateMode=='04'){
+				$('#' + pageId + '_operationType').val('02').trigger('change');
+			}
+			//发行方式 add by wanghai 20210521 end  徽商代码合并
 			//update zhangweiqi 
             if(data.repCashPrinCcy){
 			 $("#bussFinProductSaleParamDto_repCashPrinCcy").val(data.repCashPrinCcy.split(",")).trigger('change');
@@ -300,17 +307,17 @@
 			}
 			//$("#bussFinProductSaleParamDto_repInvestorType").val(data.repInvestorType.split(",")).trigger('change');
 			//募集金额单位改为元 yzg 20191126 start
-			// 计划募集金额
-			if(data.repRaiseAmtPlan){
-				 $("#bussFinProductSaleParamDto_raiseAmtPlan").val(data.repRaiseAmtPlan);	
-			}
+			// 计划募集金额  不再需要自动带出 add by wanghai 20210521  徽商代码合并
+			//if(data.repRaiseAmtPlan){
+			//	 $("#bussFinProductSaleParamDto_raiseAmtPlan").val(data.repRaiseAmtPlan);	
+			//}
 			//募集金额单位改为元 yzg 20191126 end
 			//产品名称
 			getElementRepById("finprodName").val(data.repFinprodName);
 			//产品收益标识
 			getElementRepById("profitFlag").val(data.repProfitType).trigger('change');
 			//募集方式
-			$("#bussFinProductSaleParamDto_issueType").val(data.repIssueType);
+			$("#bussFinProductSaleParamDto_issueType").val(data.repIssueType).trigger('change');
 			//投资性质
 			if(data.repInvestNature){
 				getElementRepById("investNature").val(data.repInvestNature).trigger('change');
