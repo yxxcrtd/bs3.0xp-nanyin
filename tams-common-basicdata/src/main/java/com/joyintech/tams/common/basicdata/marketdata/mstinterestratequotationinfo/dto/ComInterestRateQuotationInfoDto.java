@@ -193,7 +193,7 @@ public class ComInterestRateQuotationInfoDto extends MstIntRateInfo implements I
      */
     @NotEmpty(fieldName = "MstInterestRateQuotationInfo001.intRate", groups = {
         ValidateGroupEdit.class})
-    @Amount(fieldName = "MstInterestRateQuotationInfo001.intRate", maxIntBit = 30, groups = {
+    @Amount(fieldName = "MstInterestRateQuotationInfo001.intRate", maxIntBit = 30, maxDecBit = 8, canMinus = true, groups = {
         ValidateGroupEdit.class})
     public BigDecimal getIntRate() {
         return super.getIntRate();
