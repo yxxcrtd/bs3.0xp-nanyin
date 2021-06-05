@@ -80,7 +80,7 @@ public class EtrBondFirstLBiddingDtoValidator implements BeanValidator{
             for (EtrBondFirstLBiddingDto entity : listDto) {
                 entity.setOperateType(BussinessDictCodeList.委托操作类型_撤回.getValue());
                 if (StringUtil.isNotEmpty(entity.getWinPriceStr())) {
-                    errorList.add(new ValidMessage("", entity.getWinPriceStr() + "中标结果已存在不能关闭！"));
+                    errorList.add(new ValidMessage("", entity.getWinPriceStr() + "中标结果已存在不能撤回！"));
                     return errorList;
                 }
                 errorList.addAll(service.check(entity));

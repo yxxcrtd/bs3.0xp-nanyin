@@ -552,6 +552,9 @@ public class AutoPeriodPlanInterestCommonService extends BaseService {
         deal.setStatus(交易方向.getValue());
         deal.setBranch(AutoPeriodCommonService.changePsToBranch(entity.getmDate(), deal.getPs()));
         deal.setCashId(cashId);
+        //增加投资目的 add by yzg start
+        deal.setInvAim(finAssetIntInfo.getInvAim());
+        //增加投资目的 add by yzg end
         deal.setBranch(AutoPeriodCommonService.changePsToBranch(entity.getmDate(), 交易方向.getValue()));
         if (DictCodeList.交易方向_收息 == 交易方向) {
             // 一体化对应etliu start
@@ -641,6 +644,9 @@ public class AutoPeriodPlanInterestCommonService extends BaseService {
             param.put("chlId", entity.getChlId());//通道代码
             param.put("finprodId", entity.getFinprodId());//资产代码
             param.put("portfolioId", finAssetIntInfo.getPortfolioId());//组合代码
+            //增加投资目的 add by yzg 20201022 start
+            param.put("INV_AIM", finAssetIntInfo.getInvAim());
+            //增加投资目的 add by yzg 20201022 end
             List<PtlRecePosition> recePositionList = basePtlRecePositionService.getRepayAmtList(param);
             baseTradeInfoList = getPtlReceFlow(entity, recePositionList, finAssetIntInfo, entity.getIsClean(), totleTradeId, parameter);//获取每个组合的还本不带息列表
  //       }
@@ -689,6 +695,9 @@ public class AutoPeriodPlanInterestCommonService extends BaseService {
             trdProductDeal.setPs(DictCodeList.交易方向_应收款项转出.getValue());
             trdProductDeal.setBranch(recePosition.getBranch());//应收款流水BRANCH
             trdProductDeal.setIsClean(isClean);//是否结清
+            //增加投资目的 add by yzg start 
+            trdProductDeal.setInvAim(finAssetIntInfo.getInvAim());
+            //增加投资目的 add by yzg end 
             tradeInfoDto.setTrdProductDeal(trdProductDeal);
 
             TrdProductDealAdd addDto = new TrdProductDealAdd();

@@ -147,14 +147,18 @@ public class TrdConBond001Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupDelete.class}) TrdConBondRevokeDto dto, BindingResult result) {
-        /*//撤销时校验
-         if (StringUtil.equals(dto.getOperateType(), "revoke")
-             // 流程中数据check 修正 add by renping 20191020 start
-             && result.getErrorCount() == 0
-             // 流程中数据check 修正 add by renping 20191020 end
-             ){
-
-         }*/
+    	//校验是否存在待确认的流程 yjm start 20190906
+        WflValidInputParameter parameter = new WflValidInputParameter();
+        parameter.setPageId("TrdConBond003");
+        parameter.setBusinessDataPk2(dto.getBusiCode());
+        if (mstWorkflowCommonService.isInWflProcess(parameter)){
+            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+            errorList.add(new ValidMessage("存在后续交易，请先撤销流程中待确认的数据。"));
+            AjaxResult ar = new AjaxResult();
+            ar.setErrorList(errorList);
+            return ar;
+        }
+        //校验是否存在待确认的流程 yjm end 20190906
         return commonCheck(result, dto.getOperateType());
     }
 
