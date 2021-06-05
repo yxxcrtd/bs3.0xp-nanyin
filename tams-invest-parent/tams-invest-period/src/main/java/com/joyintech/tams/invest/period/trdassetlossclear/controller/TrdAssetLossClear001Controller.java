@@ -230,7 +230,7 @@ public class TrdAssetLossClear001Controller extends BaseController {
 		if (StringUtil.isNotEmpty(dto.getTradeDate())) {
 			ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
 			if (dto.getTradeDate().compareTo(DateUtil.parse(DateUtil.getSysDate())) != 0) {
-				errorList.add(new ValidMessage("lossDate", "当前账套会计日不等于数据账套会计日，请调整！"));
+				errorList.add(new ValidMessage("lossDate", "当前选中数据的清理日期不等于平台日，不允许撤销！"));
 				AjaxResult ar = new AjaxResult();
 				ar.setErrorList(errorList);
 				return ar;
