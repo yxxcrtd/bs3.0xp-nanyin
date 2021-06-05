@@ -120,8 +120,8 @@
                     <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepEquityInfo.repIsPledge}">是否为质押融资</label>
                     <div class="layui-input-inline input-inline">
                         <input type="checkbox" th:id="|${entityName}_repIsPledge|" th:name="|${entityName}.repIsPledge|"
-                               lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
-                               data-th-checked="${YES} ==${entity?.repIsPledge}" required="required">
+                               lay-skin="switch" data-th-value="${NO}" lay-text="是|否"
+                               data-th-checked="${NO} ==${entity?.repIsPledge}" required="required">
                     </div>
                 </div>
                 <div class="form-inline-wrap" id="div03" style="display: none">
