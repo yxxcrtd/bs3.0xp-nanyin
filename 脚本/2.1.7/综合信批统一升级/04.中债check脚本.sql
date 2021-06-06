@@ -2285,5 +2285,3 @@ insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, 
 values ('CCACA7E5-EF00-D005-F060-007F010077FD', 'CHB_ASSET_INFO_SUB', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'compareValueAsNumber', 'PLEDGE_VALUE', '>=', '0', 'Y', '抵质押物价值（元）要素必须大于等于0。', 'E');
 insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
 values ('88CL07E5-EF00-D005-F060-007F010077FD', 'CHB_ASSET_INFO_SUB', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'lessThanCharLength', 'PLEDGE_VALUE', '==', '0', 'Y', '抵质押物价值（元）要素必须为空。', 'E');
-
-commit;
