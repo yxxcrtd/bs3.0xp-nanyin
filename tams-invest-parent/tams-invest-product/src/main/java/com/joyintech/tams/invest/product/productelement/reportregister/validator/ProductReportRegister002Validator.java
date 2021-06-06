@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+
+//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -43,8 +45,8 @@ public class ProductReportRegister002Validator implements BeanValidator {
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
 
-	@Autowired
-	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+//	@Autowired
+//	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
 	@Override
 	public List<ValidMessage> valid(Object value) {
@@ -138,9 +140,10 @@ public class ProductReportRegister002Validator implements BeanValidator {
         		&& !StringUtil.equals("01", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"))) {
             validList.add(new ValidMessage("isFhxgcp", getMessage("请输入新老产品标记")));
         }
-        if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
-            validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
-        }    
+		/****缺少“是否养老理财”字段，与新建输入页面字段不一致   修改方案为将此字段注释 挪到产品新建界面   leipeng 20210430***/
+//        if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
+//            validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
+//        }
 
 		// 产品期次
 		if (StringUtil.isNotEmpty(entity.getRepFinprodStage())) {
@@ -429,7 +432,7 @@ public class ProductReportRegister002Validator implements BeanValidator {
             validList.add(new ValidMessage("请输入是否现金管理类"));
         }
 
-		 validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
+		// validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
 
 		return validList;
 	}
