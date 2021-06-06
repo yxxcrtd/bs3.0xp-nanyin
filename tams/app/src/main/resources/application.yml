@@ -165,9 +165,10 @@ application:
     diDirectAccessFlg: '01' #中债反馈文件下载获取方式(01：DI获取   02：本地获取)
     chbPerNo: '00' #中债一二三期部署方式(01:独立一二期  03：独立三期  00：一起部署)
     download-file-path-movepath: E:/home/wasadmin/sharedata/chb/recive/CB/bak
+    base64Key: HF*ts303HF*ts303
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: invest/remindMain  
+  remindPage: invest/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top
@@ -221,7 +222,7 @@ application:
 #      chb3Service: http://127.0.0.1:8114
 #      svrcomService: http://127.0.0.1:8114
 #      pbcService: http://127.0.0.1:8114
-#      channelService: http://127.0.0.1:8114 
+#      channelService: http://127.0.0.1:8114
 #      customerInterfService: http://127.0.0.1:8114
 #      tamsServer: http://127.0.0.1:8114
 #      investInterfService: http://127.0.0.1:8114

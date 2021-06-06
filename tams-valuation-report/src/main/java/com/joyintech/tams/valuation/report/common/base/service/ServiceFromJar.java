@@ -2,6 +2,7 @@ package com.joyintech.tams.valuation.report.common.base.service;
 
 import java.io.File;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,7 +41,7 @@ public class ServiceFromJar {
     public UploadFile fetch(String fileNo) {
     	SysUploadFileInfo file = daoFromJarMapper.selectByPrimaryKey(fileNo);
         if(null != file) {
-            UploadFile uploadFile = new UploadFile(null, fileNo, new File(file.getPath()));
+            UploadFile uploadFile = new UploadFile(null, fileNo, new SafelyFile(file.getPath()));
             uploadFile.setFileName(file.getFileName());
             return uploadFile;
         }

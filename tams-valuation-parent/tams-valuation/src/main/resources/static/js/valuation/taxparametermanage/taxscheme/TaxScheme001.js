@@ -606,15 +606,20 @@ $(function () {
 	    	   if(isDefault==='Y'){
 	    	        var effDate = data.effDate;
 	    	        // 生效日
-                    if(new Date(platDate).DateDiff('d',effDate)<=0){
-                        Joyin.alert("默认方案下非公共附加税税则生效日小于或等于平台日期时，不允许删除",2);
+                    if(new Date(platDate).DateDiff('d',effDate)<0){
+                        Joyin.alert("默认方案下只能删除生效日为平台日（含）之后的附加税信息",2);
                         return false;
                     }
 	    	   }
 	    	}else{
                 if(isDefault==='Y'){
-                    Joyin.alert("默认税务方案附加税则表中内容不可删除",2);
-                    return false;
+                    //Joyin.alert("默认税务方案附加税则表中内容不可删除",2);
+                    var effDate = data.effDate;
+                    // 生效日
+                    if(new Date(platDate).DateDiff('d',effDate)<0){
+                        Joyin.alert("默认方案下只能删除生效日为平台日（含）之后的附加税信息",2);
+                        return false;
+                    }
                 }
 	    	}
 
@@ -653,14 +658,18 @@ $(function () {
                     var effDate = rowArr[0].effDate;
                     // 生效日
                     if(new Date(platDate).DateDiff('d',effDate)<=0){
-                        Joyin.alert("默认方案下非公共附加税税则生效日小于或等于平台日期时，不允许删除",2);
+                        Joyin.alert("默认方案下只能删除生效日为平台日（含）之后的附加税信息",2);
                         return false;
                     }
                }
             }else{
                 if(rowArr[0].isDefault==='Y'){
-                    Joyin.alert("默认税务方案附加税则表中内容不可删除",2);
-                    return false;
+                    var effDate = rowArr[0].effDate;
+                    // 生效日
+                    if(new Date(platDate).DateDiff('d',effDate)<0){
+                        Joyin.alert("默认方案下只能删除生效日为平台日（含）之后的附加税信息",2);
+                        return false;
+                    }
                 }
             }
 

@@ -858,7 +858,7 @@
             </where>
         <if test="isautobond != null and isautobond == 'true'">
         UNION ALL
-          select interf.SECID  id,
+          select 'F01_'||interf.SECID  id,
           interf.secname text,
           fin.FINPROD_ID,
           interf.SECNAME FINPROD_NAME,
@@ -1006,6 +1006,8 @@
         B.MDATE mdate,
         B.VDATE_UNADJUST vdateUnadjust,
         B.MDATE_UNADJUST mdateUnadjust,
+        B.VDATE_TERM vdateTerm,
+        B.MDATE_TERM mdateTerm,
         B.PRIN_AMT prinAmt,
         B.INT_AMT intAmt,
         B.IS_PAY_INT isPayInt

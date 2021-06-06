@@ -297,7 +297,7 @@ $(function () {
     	}else{
     		investCycle = $('#investCycle2').val();
     	}
-    	if(srartDate && investCycle){
+    	if(srartDate && investCycle && pageModel != PAGE_MODEL_EDIT){
     		//期限结束日 = 期限开始日 + 投资周期
     		var endDate= DateUtil.parse(srartDate).DateAdd('d', investCycle).Format('yyyy-MM-dd');
     		$("#endDate").val(endDate).trigger('change');
@@ -391,7 +391,7 @@ $(function () {
     	}else{
     		investCycle = $('#investCycle2').val();
     	}
-    	if(srartDate && investCycle){
+		if (srartDate && investCycle && pageModel != PAGE_MODEL_EDIT) {
     		//期限结束日 = 期限开始日 + 投资周期
     		var endDate= DateUtil.parse(srartDate).DateAdd('d', investCycle).Format('yyyy-MM-dd');
     		$("#endDate").val(endDate).trigger('change');

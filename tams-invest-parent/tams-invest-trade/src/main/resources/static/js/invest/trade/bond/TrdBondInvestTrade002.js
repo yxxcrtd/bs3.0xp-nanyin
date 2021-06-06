@@ -962,10 +962,11 @@ var table;
             exerYieldDivContrl();
             } else {
 	        	//自动加券 yjm
-	        	var autoCoupon = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
+                var finprodId = $('#finprodId').val();
+	        	var autoCoupon = AutoCoupon.autoBondTradeCoupon(finprodId.substr(finprodId.indexOf("F01_") + 4));
                 isautobond = true;
 	            // 资产名称文本框根据资产代码选择自动显示对应名称;
-	            $("#finprodName").val(autoCoupon.finprodAbbr).trigger('change');
+	            $("#finprodName").val(autoCoupon.finprodId).trigger('change');
 	            // 同时带出资产相关信息，包括起息日，到期日，发行日，交易场所，币种，交易日历，计息基础等;
 	            $("#vdate").val(autoCoupon.vdate).trigger('change');
 	            $("#mdate").val(autoCoupon.mdate).trigger('change');

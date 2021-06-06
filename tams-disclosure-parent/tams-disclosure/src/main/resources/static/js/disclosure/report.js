@@ -85,19 +85,19 @@ function genReportHtml(report_info){
 
 //导出各种形式的报表
 function exportReport(report_info){
-    var username = report_info.username || REPORT_USERNAME;
-    var pwd = report_info.password || REPORT_PASSWORD;
-
-    var url = report_info.url || REPORT_SERVER_URL;
-
-    var paramStr = '?j_username=' + username + '&' + 'j_password=' + pwd;
-    $.each(report_info.params, function(k, v){
-        paramStr = paramStr + '&' + k + '=' + v;
-    });
-    var link = document.createElement('a');
-    link.href = url + '/rest_v2/reports' + REPORT_SERVER_PATH + '/' + report_info.uri + '.' + report_info.formatType + paramStr;
-    link.download = report_info.downloadName + "." + report_info.formatType;
-    link.click();
+    // var username = report_info.username || REPORT_USERNAME;
+    // var pwd = report_info.password || REPORT_PASSWORD;
+    //
+    // var url = report_info.url || REPORT_SERVER_URL;
+    //
+    // var paramStr = '?j_username=' + username + '&' + 'j_password=' + pwd;
+    // $.each(report_info.params, function(k, v){
+    //     paramStr = paramStr + '&' + k + '=' + v;
+    // });
+    // var link = document.createElement('a');
+    // link.href = url + '/rest_v2/reports' + REPORT_SERVER_PATH + '/' + report_info.uri + '.' + report_info.formatType + paramStr;
+    // link.download = report_info.downloadName + "." + report_info.formatType;
+    // link.click();
 }
 
 

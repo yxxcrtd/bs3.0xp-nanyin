@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -422,8 +423,15 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         if(StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())){
             // 买断式回购逆回购买入保存时从质押品取
             if(StringUtil.equals(model.getPs(), DictCodeList.交易方向_买入.getValue()) && isSave){
-                //买断式回购逆回购买入质押式抵押品表中取
-                todocredit_amt=creditLinesMapper.getPledgeNum(model.getFinprodId());
+                //买断式回购逆回购买入质押式抵押品表中取 券面总额*最新面值
+                todocredit_amt = creditLinesMapper.getPledgeAmt(model);
+            }else if(StringUtil.equals(model.getPs(), DictCodeList.交易方向_还本到账.getValue())){//到期时直接释放首期占用的额度
+                List<CreditLinesDeal> creditLinesDeallist = creditLinesMapper.selectCreditOriginDealByTradeId(model.getTradeId());
+                if (null != creditLinesDeallist && creditLinesDeallist.size() != 0){
+                    for (CreditLinesDeal deal : creditLinesDeallist) {
+                        todocredit_amt = todocredit_amt.add(deal.getTradeAmt());
+                    }
+                }
             }
             // 逆回购交易流程中只能从这取到券面
             else{
@@ -514,6 +522,8 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         BigDecimal prehapamt =BigDecimal.ZERO;
         //预占用额度
         BigDecimal pierceAmt =BigDecimal.ZERO;
+        //委托占用额度
+        BigDecimal pierceTradeAmt =BigDecimal.ZERO;
         // 授信足够标识
         Boolean isEnoughCreditflag=true;
         List<String> seqnoList =this.seqnoList();
@@ -529,6 +539,8 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             mapforprehapamt.put("tradedate",model.getTradeDate());
             //预占用额度
             prehapamt = creditLinesMapper.getPrehapamtForPingan(mapforprehapamt);
+            //委托占用额度
+            pierceTradeAmt = creditLinesMapper.getPierceTradeAmt(mapforprehapamt);
             //  hapCreditAmt=creditLines.getHapCreditAmt();
             // 已占用额度
             hapCreditAmt=creditLines.getHapCreditAmt().add(prehapamt==null?BigDecimal.ZERO:prehapamt);
@@ -541,7 +553,9 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             //华商个性化 算上底层资产占用额度 2020年12月15日 end
             //新增只有买入或申购时候额度监控 by nixiukuan 20191009
             //修复【二级法人-机构授信】当交易额度超过机构授信总额度之后，没有占用授信额度BUG by jqq start
-            if(StringUtil.isNotEmpty(creditLines.getPflsh()) && !creditLines.getPflsh().startsWith("空档期授信") && ArithmeticUtil.doAdd(hapCreditAmt,pierceAmt).compareTo(creditLines.getCreditAmt())>0 && flagps1 && !isSave){
+            if (StringUtil.isNotEmpty(creditLines.getPflsh()) && !creditLines.getPflsh().startsWith("空档期授信")
+                    && ArithmeticUtil.doAdd(hapCreditAmt, pierceAmt, pierceTradeAmt).compareTo(creditLines.getCreditAmt()) > 0
+                    && flagps1 && !isSave) {
                 //提示 授信额度不够,并且直接返回提示语，不再进行下次循环
                 isEnoughCreditflag=false;
                 if(Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL"))) {

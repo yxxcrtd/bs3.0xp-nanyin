@@ -259,12 +259,12 @@ public class EtrRepoController {
     @ResponseBody
     @PostMapping("queryPayType")
     public String queryPayType(@RequestBody Map<String, Object> map){
-        return etrRepoService.queryPayType(map);
+        return StringUtil.trimHtmlTag(etrRepoService.queryPayType(map));
     }
 
     /**
      * 查询质押券的到期日
-     * @param finprodId
+     * @param param
      * @return
      */
     @PostMapping("selectRepoMdate")

@@ -19,6 +19,7 @@ import com.joyintech.calculation.bonds.SecIntSchedule;
 import com.joyintech.calculation.bonds.constant.*;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.shell.AccurIntCalculator;
+import com.joyintech.calculation.shell.AccurIntForAbsBookCalculator;
 import com.joyintech.calculation.shell.AccurIntForBookCalculator;
 import com.joyintech.calculation.shell.param.AccurIntCalInParameter;
 import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
@@ -1743,6 +1744,35 @@ public class CalculationCommonService {
             listCashinfo, listPayinfo, varFaceValue, acctEntity);
         // 计算百元面值的债券的利息
         AccurIntCalculator calculator2 = CalculatorFactory.createAccurIntCalculator();
+        AccurIntCalOutParameter output2 = calculator2.calculate(parameter);
+        return output2;
+    }
+
+    /**
+     * 利息计提-计算百元面值的债券的利息-ABS债用
+     *
+     * @param acctEntityEx 计提基础信息DTO
+     * @param rstBaseinfo 标的信息
+     * @param listIntinfo 付息计划列表
+     * @param listCashinfo 报价信息列表
+     * @param listPayinfo 支付规则
+     * @param varFaceValue 百元面值
+     * @return AccurIntCalOutParameter
+     * @see
+     * @since 1.0
+     */
+    public AccurIntCalOutParameter getCalculateForAbs(DrawBaseInfoSelectComDTO acctEntityEx,
+                                                TargetFinProduct rstBaseinfo,
+                                                List<TargetCashPlan> listIntinfo,
+                                                List<TargetCashCalcRule> listCashinfo,
+                                                List<TargetCashPayRule> listPayinfo,
+                                                BigDecimal varFaceValue,
+                                                DrawBaseInfoSelectComResult acctEntity) {
+        // 组装参数
+        AccurIntCalInParameter parameter = getCalInParam(acctEntityEx, rstBaseinfo, listIntinfo,
+                listCashinfo, listPayinfo, varFaceValue, acctEntity);
+        // 计算百元面值的债券的利息
+        AccurIntForAbsBookCalculator calculator2 = CalculatorFactory.createAccurIntForAbsBookCalculator();
         AccurIntCalOutParameter output2 = calculator2.calculate(parameter);
         return output2;
     }

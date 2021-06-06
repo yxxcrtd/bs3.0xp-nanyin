@@ -178,7 +178,7 @@
 		where T1.CUSTOMER_ID = T2.LINK_ID 
 			and T1.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
 		union all select count(*)  count from MST_CUSTOMER_INFO T3,FIN_PRODUCT T4 
-		where T3.CUSTOMER_ID=T4.ISSUER
+		where (T3.CUSTOMER_ID=T4.ISSUER or T3.CUSTOMER_ID=T4.SPONSOR)
 			and T3.CUSTOMER_ID= #{customerId,jdbcType=VARCHAR}
 		union all  select count(*) count from MST_CUSTOMER_INFO T5,FIN_PRODUCT_ADD T6
 		where T5.CUSTOMER_ID = T6.UNDER_WRITER_ID 
@@ -190,7 +190,7 @@
 		select T1.CUSTOMER_ID from MST_CUSTOMER_INFO T1,MST_COUNTER_PARTY T2 
 		where T1.CUSTOMER_ID = T2.LINK_ID 
 		union all select T3.CUSTOMER_ID from MST_CUSTOMER_INFO T3,FIN_PRODUCT T4 
-		where T3.CUSTOMER_ID=T4.ISSUER
+		where (T3.CUSTOMER_ID=T4.ISSUER or T3.CUSTOMER_ID=T4.SPONSOR)
         ) T where T.CUSTOMER_ID in
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
 	    	#{item.customerId,jdbcType=VARCHAR}

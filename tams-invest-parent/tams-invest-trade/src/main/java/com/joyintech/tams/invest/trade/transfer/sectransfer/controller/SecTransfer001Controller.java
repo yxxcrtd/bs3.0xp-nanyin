@@ -13,8 +13,12 @@ import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.trade.transfer.assign.dto.TrdAssetAssignDto;
 import com.joyintech.tams.invest.trade.transfer.assign.service.TrdAssetAssignService;
 import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecResolute001Dto;
@@ -84,6 +88,10 @@ public class SecTransfer001Controller extends BaseController {
     
     @Autowired
     private TrdAssetAssignService trdAssetAssignService;
+
+    @Autowired
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+
 
     /**
      * 重写init方法，加载页面
@@ -397,6 +405,20 @@ public class SecTransfer001Controller extends BaseController {
             wr.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             wr.setMessage("转仓列表信息不能空", MessageType.错误消息);
             return wr;
+        }
+        if (StringUtil.isNotEmpty(dto.getChlId()) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(
+                EtrCommonCashPositionDealService.queryChlType(dto.getChlId()))) {
+            PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+            ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+            ptlCashPositionFlowDto.setCdate(dto.getTradeDate());
+            ptlCashPositionFlowDto.setPortfolioId(dto.getInvestPortfolioId());
+            ptlCashPositionFlowDto.setCcy(dto.getCcy());
+            ptlCashPositionFlowDto.setChlFinprodId(dto.getChlId());
+            BigDecimal chlCashPosition = basePtlCashPositionInfoService.queryUsableCashPosition(ptlCashPositionFlowDto);
+            if (chlCashPosition != null && BigDecimal.ZERO.compareTo(chlCashPosition) != 0) {
+                wr.setMessage("请先进行合作资产回款！", MessageType.错误消息);
+                return wr;
+            }
         }
         //查询债券类资产存续期交易 状态为 01-待处理、03-流程中 的数据  2020-10-22 start
         /*Map<String, Object> params = new HashMap<String,Object>();

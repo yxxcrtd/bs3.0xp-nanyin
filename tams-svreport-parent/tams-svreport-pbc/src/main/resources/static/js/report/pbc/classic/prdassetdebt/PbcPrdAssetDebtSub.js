@@ -364,7 +364,7 @@ $(function(){
                                for (var i = 0; i < result.length; i++) {
                                     mes+=","+result[i].pbcAccountId;
                                }
-                               mes+="没有对应的贷款明细信息和资金信托明细信息，不会导出到Excel文件中，是否确认导出其他资产池的资产负债信息？";
+                               mes+="没有对应的贷款明细信息和资金信托明细信息，不会导出到Excel文件中，是否确认导出其资产池的资产负债信息？？";
                                Joyin.confirm(mes,function() {
                                             Joyin.exportExcel("download", param);
                                 			if (isHaveData){
@@ -428,16 +428,20 @@ $(function(){
                           if(result && result.length>0 ){
                                mes="资产池";
                                for (var i = 0; i < result.length; i++) {
-                                    mes+=","+result[i].pbcAccountId;
-                                   for(var j=expArr.length-1;j>=0;j--){
-                                       if(expArr[j].reportuuid=result[i].reportuuid){
-                                        expArr.splice(j,1);
-                                        break;
-                                       }
-                                    }
+								   if(i == 0){
+									   mes+=result[i].pbcAccountId;
+								   }else{
+									   mes+=","+result[i].pbcAccountId;
+								   }
+                                   // for(var j=expArr.length-1;j>=0;j--){
+                                   //     if(expArr[j].reportuuid=result[i].reportuuid){
+                                   //      expArr.splice(j,1);
+                                   //      break;
+                                   //     }
+                                   //  }
 
                                }
-                               mes+="没有对应的贷款明细信息和资金信托明细信息，不会导出到Excel文件中，是否确认导出其他资产池的资产负债信息？";
+                               mes+="没有对应的贷款明细信息和资金信托明细信息，不会导出到Excel文件中，是否确认导出其资产池的资产负债信息？？";
                                Joyin.confirm(mes,function() {
                                      confirmExport(param, expArr);
                                 });
@@ -459,16 +463,21 @@ $(function(){
                           if(result && result.length>0 ){
                                mes="资产池";
                                for (var i = 0; i < result.length; i++) {
-                                    mes+=","+result[i].pbcAccountId;
-                                   for(var j=expArr.length-1;j>=0;j--){
-                                       if(expArr[j].reportuuid=result[i].reportuuid){
-                                        expArr.splice(j,1);
-                                        break;
-                                       }
-                                    }
+								if(i == 0){
+									mes+=result[i].pbcAccountId;
+								}else{
+									mes+=","+result[i].pbcAccountId;
+								}
+
+                                   // for(var j=expArr.length-1;j>=0;j--){
+                                   //     if(expArr[j].reportuuid=result[i].reportuuid){
+                                   //      expArr.splice(j,1);
+                                   //      break;
+                                   //     }
+                                   //  }
 
                                }
-                               mes+="没有对应的贷款明细信息和资金信托明细信息，不会导出到Excel文件中，是否确认导出其他资产池的资产负债信息？";
+                               mes+="没有对应的贷款明细信息和资金信托明细信息，不会导出到Excel文件中，是否确认导出其资产池的资产负债信息？？";
                                Joyin.confirm(mes,function() {
                                      confirmExport(param, expArr);
                                 });

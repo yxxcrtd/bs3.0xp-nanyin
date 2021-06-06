@@ -65,6 +65,7 @@
 
 	<select id="select"
 		resultType="com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoDto">
+		select * from (
 		SELECT 
 		T1.ENTRUST_STATUS entrustStatus,
 		T1.ENTRUST_ID entrustId,
@@ -313,6 +314,7 @@
 				)
 			</if>
 		</where>
+		) order by vdate desc
 	</select>
 	<select id="selectExportPB"
 		resultType="com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoDto">

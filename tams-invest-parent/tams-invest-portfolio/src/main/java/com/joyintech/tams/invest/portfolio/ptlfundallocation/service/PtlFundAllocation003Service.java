@@ -10,7 +10,10 @@
 
 package com.joyintech.tams.invest.portfolio.ptlfundallocation.service;
 
+import com.google.common.collect.Maps;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.EtrCashPositionFlowMapper;
 import com.joyintech.tams.common.base.dao.PtlCashPositionFlowMapper;
 import com.joyintech.tams.constant.DictCodeList;
@@ -25,16 +28,14 @@ import com.joyintech.tams.component.business.common.service.BussCommonMapperDele
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.service.WorkFlowService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +77,12 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+
+    /**
+     * 业务流程表service
+     */
+    @Autowired(required = false)
+    private WorkFlowService workflowService;
     /**
      * 查询组合
      * @return 组合集合
@@ -122,6 +129,14 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
     @Override
     public void doComplete(PtlFundAllocation002Dto entity, OperationType type) {
         entity.setOperateType(type.toString());
+//        for (int i = 0; i < entity.getPtlFundAllocation001Dtos().size(); i++) {
+//            PtlFundAllocation001Dto detailDto = entity.getPtlFundAllocation001Dtos().get(i);
+//            PtlFundAllocation002Dto dto = new PtlFundAllocation002Dto();
+//            this.setEntityy(detailDto, entity, dto, i);
+//            simpleRestTemplate.postForObject(
+//                    ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doComplete", entity,
+//                    Integer.class);
+//        }
         for(PtlFundAllocation001Dto ptlFundAllocation001Dto :entity.getPtlFundAllocation001Dtos()){
             PtlFundAllocation002Dto ptlFundAllocationDto = new PtlFundAllocation002Dto();
             BeanUtil.copyPropertiesIgnoreNull(ptlFundAllocationDto, entity);
@@ -144,6 +159,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
                 }
             }
             ptlFundAllocationDto.setTradeId(null);
+            ptlFundAllocationDto.setOrderId(ptlFundAllocationDto.getBussTrdTransferOrder().get(0).getOrderId());
             simpleRestTemplate.postForObject(
                     ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doComplete", this.setEntity(ptlFundAllocationDto,type),
                     Integer.class);
@@ -166,6 +182,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             AllTradeCommonUtil.deletePositionByOrderId(bussTrdTransferOrderDto.getOrderId());
             if (!StringUtil.equals("revoke", ptlFundAllocation002Dto.getOperateType())
                     && !StringUtil.equals("delete", ptlFundAllocation002Dto.getOperateType())) {
+                bussTrdTransferOrderDto.setMyAcctNo(bussTrdTransferOrderDto.getPayAcctNo());
                 restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doBack", bussTrdTransferOrderDto,
                         String.class);
             }
@@ -174,38 +191,54 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
 
     @Override
     public void doInsert(PtlFundAllocation002Dto entity, OperationType type) {
+        if ("save".equals(entity.getOperateType())) {
+            return;
+        }
         for (int i = 0; i < entity.getPtlFundAllocation001Dtos().size(); i++) {
             PtlFundAllocation001Dto detailDto = entity.getPtlFundAllocation001Dtos().get(i);
             PtlFundAllocation002Dto dto = new PtlFundAllocation002Dto();
             this.setEntityy(detailDto,entity, dto, i);
-            if (bussCommonMapperDelegateService != null && dto.getPtlCashPositionFlow() != null
-                    && StringUtil.isNotBlank(dto.getPtlCashPositionFlow().getAcctId())) {
-                bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, dto.getPtlCashPositionFlow());
-                dto.getPtlCashPositionFlow().setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-                bussCommonMapperDelegateService.insert(EtrCashPositionFlowMapper.class, dto.getPtlCashPositionFlow());
-                PtlCashPositionFlow flow = dto.getPtlCashPositionFlow();
-                //flow.setAcctId(entity.getCounterAcctNo());
-                if (BussinessDictCodeList.指令类型_银证转账_银转证.getValue().equals(entity.getPayType())) {
-                    flow.setAcctId(entity.getCounterAcctNo());
-                }else if(BussinessDictCodeList.指令类型_银证转账_证转银.getValue().equals(entity.getPayType())) {
-                    flow.setAcctId(entity.getMyAcctNo());
-                }
-                // flow.setAmount(entity.getBussTrdTransferOrder().get(i).getSettleAmt().negate());
-                if(entity.getBussTrdTransferOrder().get(i).getSettleAmt()!=null){
-                    flow.setAmount(dto.getPtlCashPositionFlow().getAmount().negate());
-                }
-                BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-                bussinessCodeParameter.setSeqNo("9999");
-                String seqno = baseGetBussinessId != null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter) : IDGenerator.generate();
-                flow.setSeqno(seqno);
-                flow.setPortfolioId(entity.getBussTrdTransferOrder().get(i).getPortfolioId());
-                bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, flow);
-                bussCommonMapperDelegateService.insert(EtrCashPositionFlowMapper.class, flow);
-            }
+            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doInsertAction", dto,
+                    String.class);
+//            if (bussCommonMapperDelegateService != null && dto.getPtlCashPositionFlow() != null
+//                    && StringUtil.isNotBlank(dto.getPtlCashPositionFlow().getAcctId())) {
+//                bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, dto.getPtlCashPositionFlow());
+//                dto.getPtlCashPositionFlow().setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+//                bussCommonMapperDelegateService.insert(EtrCashPositionFlowMapper.class, dto.getPtlCashPositionFlow());
+//                PtlCashPositionFlow flow = dto.getPtlCashPositionFlow();
+//                //flow.setAcctId(entity.getCounterAcctNo());
+//                if (BussinessDictCodeList.指令类型_银证转账_银转证.getValue().equals(entity.getPayType())) {
+//                    flow.setAcctId(entity.getCounterAcctNo());
+//                }else if(BussinessDictCodeList.指令类型_银证转账_证转银.getValue().equals(entity.getPayType())) {
+//                    flow.setAcctId(entity.getMyAcctNo());
+//                }
+//                // flow.setAmount(entity.getBussTrdTransferOrder().get(i).getSettleAmt().negate());
+//                if(entity.getBussTrdTransferOrder().get(i).getSettleAmt()!=null){
+//                    flow.setAmount(dto.getPtlCashPositionFlow().getAmount().negate());
+//                }
+//                BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+//                bussinessCodeParameter.setSeqNo("9999");
+//                String seqno = baseGetBussinessId != null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter) : IDGenerator.generate();
+//                flow.setSeqno(seqno);
+//                flow.setPortfolioId(entity.getBussTrdTransferOrder().get(i).getPortfolioId());
+//                flow.setHodingType(BussinessDictCodeList.持仓类型_可用.getValue());
+//                bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, flow);
+//                flow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+//                bussCommonMapperDelegateService.insert(EtrCashPositionFlowMapper.class, flow);
+//            }
         }
     }
     @Override
     public void doUpdate(PtlFundAllocation002Dto entity){
+        Map<String, Object> map = Maps.newConcurrentMap();
+        map.put("title", "资金划拨多组合管理,划拨金额:"+entity.getSettleAmt()+",交易日期:("+DateUtil.format(entity.getSettleDate())+")");
+        map.put("workFlowId",entity.getWorkflowId());
+        map.put("updateUser", LoginUserUtil.getUserName());
+        map.put("updateTime",DateUtil.now());
+        workflowService.updateTitle(map);
+        if ("save".equals(entity.getOperateType())) {
+            return;
+        }
         String orderId = null;
         if(StringUtil.isNotEmpty(entity.getOrderId())) {
             orderId = entity.getOrderId();
@@ -231,6 +264,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
             bussinessCodeParameter.setCommonBusinessType1(BussinessDictCodeList.共同业务类型_资金划拨管理);
             result.setTradeId(baseGetBussinessId !=null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter):IDGenerator.generate());
+            dto.setTradeId(result.getTradeId());
         }
         // 先处理付款账户，生成可用持仓流水，生效后处理成实际及收款账户
         /**
@@ -238,15 +272,12 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
          */
         PtlCashPositionFlow ptlCashPositionFlow = new PtlCashPositionFlow();
         ptlCashPositionFlow.setPortfolioId(detail.getPortfolioId());
-        ptlCashPositionFlow.setAcctId(detail.getAcctNo());//付款账户
-//        if("".equals(ptlCashPositionFlow.getAcctId())||ptlCashPositionFlow.getAcctId()==null){
-//            ptlCashPositionFlow.setAcctId(dto.getCounterAcctNo());
-//        }
         if (BussinessDictCodeList.指令类型_银证转账_银转证.getValue().equals(dto.getPayType())) {
-            ptlCashPositionFlow.setAmount(ArithmeticUtil.multiply(detail.getSettleAmt(),new BigDecimal("-1")));
+            ptlCashPositionFlow.setAcctId(detail.getAcctNo());//付款账户
         }else if(BussinessDictCodeList.指令类型_银证转账_证转银.getValue().equals(dto.getPayType())) {
-            ptlCashPositionFlow.setAmount(detail.getSettleAmt());
+            ptlCashPositionFlow.setAcctId(dto.getMyAcctNo());//付款账户
         }
+        ptlCashPositionFlow.setAmount(ArithmeticUtil.multiply(detail.getSettleAmt(),new BigDecimal("-1")));
         ptlCashPositionFlow.setCcy(dto.getCcy());
         ptlCashPositionFlow.setHodingType(BussinessDictCodeList.持仓类型_可用.getValue());
         ptlCashPositionFlow.setCdate(dto.getSettleDate());
@@ -260,19 +291,29 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
         else{
             ptlCashPositionFlow.setSeqno(seqno);
         }
+        result.setOrderId(dto.getBussTrdTransferOrder().get(i).getOrderId());
         result.setPtlCashPositionFlow(ptlCashPositionFlow);
+        dto.setOrderId(dto.getBussTrdTransferOrder().get(i).getOrderId());
+//        dto.setPtlCashPositionFlow(ptlCashPositionFlow);
+
 
         /**
          * 组合现金余额
          */
         PtlCashPosition ptlCashPosition = new PtlCashPosition();
-        ptlCashPosition.setAcctId(detail.getAcctNo());
+        //ptlCashPosition.setAcctId(detail.getAcctNo());
+        if (BussinessDictCodeList.指令类型_银证转账_银转证.getValue().equals(dto.getPayType())) {
+            ptlCashPositionFlow.setAcctId(detail.getAcctNo());//付款账户
+        }else if(BussinessDictCodeList.指令类型_银证转账_证转银.getValue().equals(dto.getPayType())) {
+            ptlCashPositionFlow.setAcctId(dto.getMyAcctNo());//付款账户
+        }
         ptlCashPosition.setAmount(ptlCashPositionFlow.getAmount());
         ptlCashPosition.setCcy(dto.getCcy());
         ptlCashPosition.setPortfolioId(detail.getPortfolioId());
         ptlCashPosition.setHodingType(BussinessDictCodeList.持仓类型_实际.getValue());
         ptlCashPosition.setCdate(dto.getSettleDate());
         result.setPtlCashPosition(ptlCashPosition);
+//        dto.setPtlCashPosition(ptlCashPosition);
 
         /**
          * 组合交易
@@ -288,7 +329,6 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
          */
         TrdProductDeal trdProductDeal = new TrdProductDeal();
         trdProductDeal.setTradeId(dto.getTradeId());
-//        trdProductDeal.setTradeStatus(BussinessDictCodeList.画面数据状态_有效.getValue());
         trdProductDeal.setTradeStatus(BussinessDictCodeList.交易状态_初始.getValue());
         trdProductDeal.setCcy(dto.getCcy());
         if (StringUtil.equals(dto.getPayType(), BussinessDictCodeList.指令类型_银证转账_银转证.getValue())) {

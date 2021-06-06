@@ -3187,12 +3187,12 @@
 	<select id="selectAssetInfoByPageEx"
 		resultType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
 		
-		Select * from
+		select * from (Select * from
 		(
 		
 		
 		/**公共资产数据*/
-		select
+		select distinct
 			   ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
 		       ASSETINFO.ASSET_CODE             ASSETCODE,
 		       ASSETINFO.ASSET_TYPE             ASSETTYPE,
@@ -3396,7 +3396,7 @@
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
 			<!--AND F.TRADE_MARKET IS NOT NULL-->
-			and ASSETINFO.asset_type in ('03','06','15')
+			and ASSETINFO.asset_type in ('03','06','15') and  ASSETINFO.asset_type2 not in ('1301')
 			
 			/**产品投资交易数据筛选产品交易数据*/
 			and EXISTS (
@@ -3416,7 +3416,12 @@
 				</if>
 				<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
 					select 1
-					from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+					from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+					union all
+					select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+					left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+					on cabd.asset_id=cbap.plan_asset_id
+					)cabds　
 					LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
 					where 1=1 and ASSETINFO.ASSET_CODE=cabds.asset_id
 					<if test="orgCode != null and orgCode.size() > 0">
@@ -3748,7 +3753,12 @@
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
-			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+			union all
+			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+			on cabd.asset_id=cbap.plan_asset_id
+			)cabds　
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D  WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
@@ -3761,7 +3771,7 @@
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
 			<!--AND F.TRADE_MARKET IS NULL-->
-			and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null)
+			and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null or ASSETINFO.asset_type2  in ('1301') )
 			<if test="orgCode != null and orgCode.size() > 0">
 				<foreach collection="orgCode" item="code" 
 	         		open=" AND DA.BELONG_INSTITUTION_CODE IN (" close=")" separator=",">
@@ -3871,7 +3881,7 @@
 		
 		
 		)
-		order by STATUSDATE desc
+		order by STATUSDATE desc)
 	</select>
 	
 	<select id="selectExportSelectList" resultMap="BaseResultMap"
@@ -3916,7 +3926,7 @@
 		
 		
 		/**公共资产数据*/
-		select
+		select distinct
 			   ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
 		       ASSETINFO.ASSET_CODE             ASSETCODE,
 		       ASSETINFO.ASSET_TYPE             ASSETTYPE,
@@ -4120,7 +4130,7 @@
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
 		<!--	AND F.TRADE_MARKET IS NOT NULL-->
-			and ASSETINFO.asset_type in ('03','06','15')
+			and ASSETINFO.asset_type in ('03','06','15') and  ASSETINFO.asset_type2 not in ('1301')
 
 			/**产品投资交易数据筛选产品交易数据*/
 			and EXISTS (
@@ -4162,7 +4172,12 @@
 			</if>
 			<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
 				select 1
-				from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+				from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+				union all
+				select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+				left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+				on cabd.asset_id=cbap.plan_asset_id
+				)cabds　
 				LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
 				where 1=1 and ASSETINFO.ASSET_CODE=cabds.asset_id
 				<if test="orgCode != null and orgCode.size() > 0">
@@ -4202,7 +4217,7 @@
 		
 		union all
 		/**私有数据*/
-		select 
+		select
 		   DISTINCT ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
 	       ASSETINFO.ASSET_CODE             ASSETCODE,
 	       ASSETINFO.ASSET_TYPE             ASSETTYPE,
@@ -4414,7 +4429,12 @@
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
-			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+			union all
+			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+			on cabd.asset_id=cbap.plan_asset_id
+			)cabds　
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D  WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
@@ -4428,7 +4448,7 @@
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
 		<!--	AND F.TRADE_MARKET IS NULL-->
-			and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null)
+			and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null or ASSETINFO.asset_type2  in ('1301'))
 
 			<if test="orgCode != null and orgCode.size() > 0">
 				<foreach collection="orgCode" item="code" 
@@ -4561,7 +4581,7 @@
 			) b 
 			on a.ASSET_CODE=b.ASSET_CODE
 		) -->
-		SELECT 
+		SELECT distinct
 		null regist_code,
 		NVL(assetinfo.asset_code_old,assetinfo.asset_code) asset_code,
 		assetinfo.ASSET_TYPE,
@@ -4778,7 +4798,12 @@
 				on assetinfo.ASSET_CODE=cabds.asset_id
 			</if>
 			<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
-				left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+				left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+				union all
+				select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
+				left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+				on cabd.asset_id=cbap.plan_asset_id
+				)cabds　
 				on assetinfo.ASSET_CODE=cabds.asset_id
 			</if>
 			left join DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'

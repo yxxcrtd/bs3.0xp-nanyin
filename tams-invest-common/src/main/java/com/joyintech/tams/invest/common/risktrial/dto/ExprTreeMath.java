@@ -77,7 +77,7 @@ public class ExprTreeMath {
     				params.put(paramKey,"(0-"+(keyValue*-1)+")");
     			}
     		}
-    		expr=expr.replaceAll(paramPrefTrf+paramKey+paramSuffTrf, params.get(paramKey)==null?paramKey:params.get(paramKey).toString());
+    		expr=expr.replaceAll(Pattern.quote(paramPrefTrf+paramKey+paramSuffTrf), params.get(paramKey)==null?paramKey:params.get(paramKey).toString());
     	}
     	return expr;
     }

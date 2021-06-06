@@ -186,7 +186,13 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
                 // 查询最近的那一天
                 Date maxCdate = basePtlSecPositionInfoMapper.selectSecPositionMaxCdate(positionFlowDto);
                 if (maxCdate == null) {
-                    ptlSecPositionMapper.insertSelective(position);
+                    // modify by etliu 汇总表更新并发问题解决 20210511 start
+                    try {
+                        ptlSecPositionMapper.insertSelective(position);
+                    } catch (Exception e) {
+                        basePtlSecPositionInfoMapper.updateByPrimaryKeySelectiveForFlow(position);
+                    }
+                    // modify by etliu 汇总表更新并发问题解决 20210511 end
                 }
                 else {
                     PtlSecPositionFlowDto tempPositionFlowDto = new PtlSecPositionFlowDto();
@@ -194,13 +200,25 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
                     tempPositionFlowDto.setCdate(maxCdate);
 
                     BigDecimal tempAmount = basePtlSecPositionInfoMapper.selectSecPosition(tempPositionFlowDto);
+                    // modify by etliu 汇总表更新并发问题解决 20210511 start
+                    BigDecimal flowAmount = position.getAmount();
                     position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), tempAmount));
-                    ptlSecPositionMapper.insertSelective(position);
+                    try {
+                        ptlSecPositionMapper.insertSelective(position);
+                    } catch (Exception e) {
+                        position.setAmount(flowAmount);
+                        basePtlSecPositionInfoMapper.updateByPrimaryKeySelectiveForFlow(position);
+                    }
+                    // modify by etliu 汇总表更新并发问题解决 20210511 end
                 }
             }
             else {
-                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
-                ptlSecPositionMapper.updateByPrimaryKeySelective(position);
+                // modify by etliu 汇总表更新并发问题解决 20210511 start
+//                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
+//                ptlSecPositionMapper.updateByPrimaryKeySelective(position);
+                basePtlSecPositionInfoMapper.updateByPrimaryKeySelectiveForFlow(position);
+                // modify by etliu 汇总表更新并发问题解决 20210511 end
+
             }
 
             // 2.2.2 检索组合持仓的最大日期

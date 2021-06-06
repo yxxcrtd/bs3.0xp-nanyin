@@ -18,9 +18,13 @@ import com.joyintech.tams.component.business.trade.dto.BussTrdAvailableCashQuery
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.trade.transfer.assetstransfer.dto.AssetsTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.FinDealPledgeDto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.TrdRolloverPledgedRepo001Dto;
@@ -68,6 +72,9 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
      */
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
     @Override
     public String init(Model model){
         Map<String ,Object> param = RequestUtil.getPageParam();
@@ -356,6 +363,19 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
 //                if(dto.getPrinAmt().compareTo(sumPrinAmt)>0){
 //                    confirmMsg = "本金金额大于转仓交易汇总券面总额，是否确认提交？";
 //                }
+            }
+        }
+        if (StringUtil.isNotEmpty(dto.getChlId()) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(
+                EtrCommonCashPositionDealService.queryChlType(dto.getChlId()))) {
+            PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+            ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+            ptlCashPositionFlowDto.setCdate(dto.getTradeDate());
+            ptlCashPositionFlowDto.setPortfolioId(dto.getInvTransPortf());
+            ptlCashPositionFlowDto.setCcy(dto.getCcy());
+            ptlCashPositionFlowDto.setChlFinprodId(dto.getChlId());
+            BigDecimal chlCashPosition = basePtlCashPositionInfoService.queryUsableCashPosition(ptlCashPositionFlowDto);
+            if (chlCashPosition != null && BigDecimal.ZERO.compareTo(chlCashPosition) != 0) {
+                errorList.add(new ValidMessage("请先进行合作资产回款！"));
             }
         }
         if(errorList.size()>0){

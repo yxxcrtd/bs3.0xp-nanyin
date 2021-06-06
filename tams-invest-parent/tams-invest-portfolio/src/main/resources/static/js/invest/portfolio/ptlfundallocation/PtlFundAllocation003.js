@@ -169,7 +169,7 @@
         {field:'acctNo', title: '收/付款账户', edit:false,width:280},
         {field:'acctName', title: '收/付款账户', edit:true,visible:false,width:280},
         {field:'amount', title: '付款账户余额', edit: false, align: 'right',type: 'money', digit: 2,width:280},
-        {field:'settleAmt', title: '划款金额', edit: true, align: 'right',width:280, editOption:{type: 'money', digit: 2,pattern: '#.00'}},
+        {field:'settleAmt', title: '划款金额', edit: true, align: 'right',width:280, type: 'money',digit: 2,editOption:{type: 'money', digit: 2,pattern: '#.00'}},
         {field:'operation', title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['delt'],visible: !$("#isImportFlag").val() || $("#isImportFlag").val() !== '01'}/* 导入后隐藏删除按钮 add by liuwei 20210413 start */
     ]
 
@@ -181,6 +181,23 @@
         page: false,
         sortfont: true,
         rowno: true,
+        beforeEditCell:function(value, field, data){
+             if(field=='portfolioId'){
+                 if(!$("#settleDate").val()){
+                     Joyin.error(JoyinUtil.getMessage("请选择转账日期！"));
+                     return false;
+                 }
+                 if(!$("#ccy").val()){
+                     Joyin.error(JoyinUtil.getMessage("请选择币种！"));
+                     return false;
+                 }
+                 if(!$("#myAcctNo").val() && !$("#counterAcctNo").val()){
+                     Joyin.error(JoyinUtil.getMessage("收/付款账户不能为空"));
+                     return false;
+                 }
+             }
+             return true;
+        },
         editCell: function(value, data, field, cell, column) {
             setTimeout(function() {
                 var settleAmt = Number(0);
@@ -195,18 +212,6 @@
                     $("#settleAmt").val(settleAmt).trigger('blur');
                 }
                 if(field == 'portfolioId'){
-                    if(!$("#settleDate").val()){
-                        Joyin.error(JoyinUtil.getMessage("请选择交易时间！"));
-                        return;
-                    }
-                    if(!$("#ccy").val()){
-                        Joyin.error(JoyinUtil.getMessage("请选择币种！"));
-                        return;
-                    }
-                    if(!$("#myAcctNo").val() && !$("#counterAcctNo").val()){
-                        Joyin.error(JoyinUtil.getMessage("收/付款账户不能同时为空"));
-                        return;
-                    }
                     var object = {portfolioId: data.portfolioId, cdate: $("#settleDate").val(),
                                     ccy: $("#ccy").val(),payType:$("#payType").val(),myAcctNo:$("#myAcctNo").val()};
 

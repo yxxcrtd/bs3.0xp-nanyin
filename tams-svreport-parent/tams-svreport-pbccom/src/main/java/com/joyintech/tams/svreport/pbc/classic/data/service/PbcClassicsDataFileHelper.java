@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -141,7 +142,7 @@ public class PbcClassicsDataFileHelper {
             File file = null;
 
             
-            file = new File(fullPath + "/"+ dataType + ".dat");
+            file = new SafelyFile(fullPath + "/"+ dataType + ".dat");
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
             
             for (LinkedHashMap<String,String> data:datas ) {
@@ -157,7 +158,7 @@ public class PbcClassicsDataFileHelper {
                         result.add(fullPath);
                         createFolder(fullPath,type);
 //                        file = new File(fullPath + "/"+type + ".dat");
-                        file = new File(fullPath + "/"+dataType + ".dat");
+                        file = new SafelyFile(fullPath + "/"+dataType + ".dat");
                         writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
                         // 【dat文件生成留痕】如果创建新的文件，则需要创建新的数据的key集合 
                         dataValueList = new ArrayList<String>();
@@ -206,14 +207,14 @@ public class PbcClassicsDataFileHelper {
     
     public static void createFolder(String folderName,String type){
     	//生成文件夹
-    	File fp = new File(folderName);
+    	File fp = new SafelyFile(folderName);
         if ( !fp.exists())
            fp.mkdirs();
         //生成各类型的空文件
         init();
         DATAMAP.get(type);
         for(String dataType:DATAMAP.get(type)){
-        	File file = new File(folderName + "/"+dataType + ".dat");
+        	File file = new SafelyFile(folderName + "/"+dataType + ".dat");
         	if(!file.exists()){
 				try {
 					file.createNewFile();

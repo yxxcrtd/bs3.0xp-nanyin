@@ -196,8 +196,7 @@
         from SYS_BATCH_PRD_GRP
         <where>
             <if test="groupName != null and groupName !=''">
-                AND (GROUP_NAME like concat(concat('%', #{groupName}),'%')
-                or DETAIL like concat(concat('%', #{groupName}),'%'))
+                AND (GROUP_NAME like concat(concat('%', #{groupName}),'%'))
             </if>
         </where>
     </select>

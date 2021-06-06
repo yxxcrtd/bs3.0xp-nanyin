@@ -118,8 +118,8 @@
 			'02' model_type 
 		FROM
 		    CHB_AST_VAL_SUB CAVS
-			LEFT JOIN FIN_PRODUCT F ON CAVS.ASSET_CODE=F.FINPROD_MARKET_ID
-	        LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  CAVS.ASSET_CODE = PDD.TRADE_ID
+		    left join CHB_ASSET_INFO_SUB ASSETINFO
+		    on CAVS.asset_code=ASSETINFO.ASSET_CODE
 	        LEFT JOIN CHB_ASSET_SUB_STATUS CS ON CAVS.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='02'			
 			<if test="orgCode != null and orgCode.size() > 0">
 				<foreach collection="orgCode" item="code" 
@@ -131,21 +131,22 @@
 			
 				1=1
 				/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
-				AND F.TRADE_MARKET IS NOT NULL
+				<!--AND F.TRADE_MARKET IS NOT NULL-->
+				and ASSETINFO.asset_type in ('03','06','15') and  ASSETINFO.asset_type2 not in ('1301')
 				
 				
 			/**产品投资交易数据筛选产品交易数据*/
 			and EXISTS (
 		          SELECT 1 FROM CHB_INVEST_TRADE T
-		          LEFT JOIN FIN_PRODUCT F ON t.PROD_ID=F.FINPROD_MARKET_ID
-		          LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='FINPROD04'
+		          LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON t.PROD_ID=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
 		          WHERE CAVS.ASSET_CODE=T.ASSET_CODE
 		          <if test="orgCode != null and orgCode.size() > 0">
 						<foreach collection="orgCode" item="code" 
 			         		open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
 			          		#{code,jdbcType=VARCHAR}
 			        	</foreach>
-					</if>  
+					</if>
+
 		    		)
 			
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
@@ -228,21 +229,22 @@
 			    CAVS.STATUS as status,
 			    CS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
 			    cc.regist_bank_code  ISSUEPARTYID,
-				DA.BELONG_INSTITUTION_CODE belongInstitutionCode,
-				DA.model_type 
+				DA.INSTITUTION_CODE belongInstitutionCode,
+		       '02' model_type
 			FROM
 			    CHB_AST_VAL_SUB CAVS
-				LEFT JOIN FIN_PRODUCT F ON CAVS.ASSET_CODE=F.FINPROD_MARKET_ID
-				LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  CAVS.ASSET_CODE = PDD.TRADE_ID
-		        LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON (((DA.BUSINESS_ID = F.FINPROD_ID OR CAVS.ASSET_CODE = DA.BUSINESS_ID ) AND da.data_type != 'PTL01' and da.MODEL_TYPE = '02')
-         		or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID AND DA.DATA_TYPE = 'PTL01' and da.MODEL_TYPE = '02')) 
-		        LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code	
-		        LEFT JOIN CHB_ASSET_SUB_STATUS CS ON CAVS.REGIST_SEQNO=CS.REGIST_SEQNO AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='02'			
+                left join CHB_ASSET_INFO_SUB ASSETINFO
+		        on CAVS.asset_code=ASSETINFO.ASSET_CODE
+		        LEFT JOIN CHB_ASSET_SUB_STATUS DA
+		        on ASSETINFO.REGIST_SEQNO=DA.REGIST_SEQNO AND DA.ASSET_TYPE='01'
+		        LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.INSTITUTION_CODE=cc.org_code
+		        LEFT JOIN CHB_ASSET_SUB_STATUS CS ON CAVS.REGIST_SEQNO=CS.REGIST_SEQNO AND DA.INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='02'
 				<where>
 				
 					1=1
 					/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
-					AND F.TRADE_MARKET IS NULL
+					<!--AND F.TRADE_MARKET IS NULL-->
+					and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null or ASSETINFO.asset_type2  in ('1301'))
 				<if test="orgCode != null and orgCode.size() > 0">
 					<foreach collection="orgCode" item="code" 
 		         		open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
@@ -356,8 +358,9 @@
 		    CS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
 		FROM
 		    CHB_AST_VAL_SUB CAVS
-		    LEFT JOIN FIN_PRODUCT F ON CAVS.ASSET_CODE=F.FINPROD_MARKET_ID
-			LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  CAVS.ASSET_CODE = PDD.TRADE_ID
+		    left join CHB_ASSET_INFO_SUB ASSETINFO
+		    on CAVS.asset_code=ASSETINFO.ASSET_CODE
+
 			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON CAVS.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='02'	
 	        <if test="orgCode != null and orgCode.size() > 0">
 				<foreach collection="orgCode" item="code" 
@@ -371,13 +374,13 @@
 		
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
-			AND F.TRADE_MARKET IS NOT NULL
+			<!--AND F.TRADE_MARKET IS NOT NULL-->
+			and ASSETINFO.asset_type in ('03','06','15') and  ASSETINFO.asset_type2 not in ('1301')
 			
 			/**产品投资交易数据筛选产品交易数据*/
 			and EXISTS (
 		          SELECT 1 FROM CHB_INVEST_TRADE T
-		          LEFT JOIN FIN_PRODUCT F ON t.PROD_ID=F.FINPROD_MARKET_ID
-		          LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='FINPROD04'
+		          LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON t.PROD_ID=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
 		          WHERE CAVS.ASSET_CODE=T.ASSET_CODE
 		          <if test="orgCode != null and orgCode.size() > 0">
 						<foreach collection="orgCode" item="code" 
@@ -432,18 +435,19 @@
 		    CS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
 		FROM
 		    CHB_AST_VAL_SUB CAVS
-			LEFT JOIN FIN_PRODUCT F ON CAVS.ASSET_CODE=F.FINPROD_MARKET_ID
-			LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  CAVS.ASSET_CODE = PDD.TRADE_ID
-			LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON (((DA.BUSINESS_ID = F.FINPROD_ID OR CAVS.ASSET_CODE = DA.BUSINESS_ID ) AND da.data_type != 'PTL01' and da.MODEL_TYPE = '02')
-			or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID AND DA.DATA_TYPE = 'PTL01' and da.MODEL_TYPE = '02')) 
-			LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code	
-			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON CAVS.REGIST_SEQNO=CS.REGIST_SEQNO AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='02'
+		    left join CHB_ASSET_INFO_SUB ASSETINFO
+		    on CAVS.asset_code=ASSETINFO.ASSET_CODE
+		    LEFT JOIN CHB_ASSET_SUB_STATUS DA
+		    on ASSETINFO.REGIST_SEQNO=DA.REGIST_SEQNO AND DA.ASSET_TYPE='01'
+            LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.INSTITUTION_CODE=cc.org_code
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON CAVS.REGIST_SEQNO=CS.REGIST_SEQNO AND DA.INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='02'
 		
 		<where>
 		
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
-			AND F.TRADE_MARKET IS NULL
+			<!--AND F.TRADE_MARKET IS NULL-->
+			and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null or ASSETINFO.asset_type2  in ('1301'))
 		
 		   	<if test="registList!=null and registList.size()!=0">
 			 	<foreach collection="registList" item="regist" open=" and((" close="))" separator=") or (">

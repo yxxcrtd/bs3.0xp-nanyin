@@ -120,6 +120,22 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
         if (StringUtil.isNotEmpty(entity.getFinprodId())){
             finNetValueProductBuild001Service.wflInFlowCheck(entity.getWorkflowId(), entity.getFinprodId(), validList);
         }
+
+        if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
+
+            //报送信息页面托管费率和销售费率必填
+            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepSaleFeeRate())) {
+                validList.add(new ValidMessage("bussRepFinProductInfoDto.repSaleFeeRate", this.getMessage("BUSS_COM_E_0038",
+                        this.getMessage("BussRepFinProductInfo.repSaleFeeRate"))));
+            }
+
+            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepTruFeeRate())) {
+                validList.add(new ValidMessage("bussRepFinProductInfoDto.repTruFeeRate", this.getMessage("BUSS_COM_E_0038",
+                        this.getMessage("BussRepFinProductInfo.repTruFeeRate"))));
+            }
+
+        }
+
         if (StringUtil.isNotEmpty(entity.getFinprodMarketId())) {
             // 规则：代码(1~3位，第1位为大写字母，第2~3位为数字或大写字母)+销售渠道代码(1位大写字母)+品牌代码(1位大写字母)+年份(2位数字)+产品序号(4位数）
 //            Pattern pattern = Pattern.compile("^[A-Za-z]{1}[A-Za-z0-9]{0,2}[A-Za-z]{2}[0-9]{6}$");

@@ -17,6 +17,7 @@ import java.util.Map;
 import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
 import com.joyintech.tams.common.base.entity.PtlCapacctInfo;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -105,4 +106,28 @@ public interface BaseCommonMapper {
      * @since 1.0
      */
     PtlCapacctInfo selectProdAcctData(Map<String, Object> paramMap);
+
+    /**
+     *
+     * 是否节假日
+     * @param cdate 查询日期
+     * @param calendarId 交易日历
+     * @return 是否节假日（0：工作日；其他：节假日）
+     * @see
+     * @since 1.0
+     */
+    String getIsHoliday(@Param("cdate") Date cdate,@Param("calendarId") String calendarId);
+
+    /**
+     *
+     * 查询上一工作日
+     * @param cdate 查询日期
+     * @param isHoliday 是否节假日（0：工作日；其他：节假日）
+     * @param calendarId 交易日历
+     * @return 日期
+     * @see
+     * @since 1.0
+     */
+    Date getLastWorkDate(@Param("cdate") Date cdate,@Param("isHoliday") String isHoliday,@Param("calendarId") String calendarId);
+
 }

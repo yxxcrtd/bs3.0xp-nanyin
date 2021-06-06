@@ -62,7 +62,7 @@
             getElementById('repContainType').val()=='07'){
         //行权价格
             getElementById('repExercisePrice').val('').attr('disabled', true).trigger('change');
-        }else{
+        }else if(getElementById('repContainType').val() != null &&　getElementById('repContainType').val() != ''){
             getElementById('repExercisePrice').attr('disabled', false).trigger('change');
         }
         // if(getElementById('repContainType').val()==''){
@@ -99,7 +99,7 @@
     	if (getElementById('repDeferredInterestType').val() == '01') {
             //递延利息是否计息
             getElementById('repDeferredInterestInt').val('').attr('disabled', true).trigger('change');
-        }else{
+        }else if(getElementById('repDeferredInterestType').val() != null &&　getElementById('repDeferredInterestType').val() != ''){
             getElementById('repDeferredInterestInt').attr('disabled', false).trigger('change');
         }
     }
@@ -186,7 +186,7 @@
           getElementById('spreadRate').val('').trigger("change");
           getElementById('spreadRate').attr("disabled",true);
 
-      }else{
+      }else if(getElementById('floatFactorFlag').val() != null &&　getElementById('floatFactorFlag').val() != ''){
           getElementById('floatFactor').attr("disabled",false);
           getElementById('spreadRate').attr("disabled",false);
 
@@ -197,7 +197,7 @@
         if(getElementById('repPartRedemFlag').val()=='02'){
             getElementById('repPartRedemRate').val('').trigger("change");
             getElementById('repPartRedemRate').attr("disabled",true);
-        }else{
+        }else if(getElementById('repPartRedemFlag').val() != null &&　getElementById('repPartRedemFlag').val() != ''){
             getElementById('repPartRedemRate').attr("disabled",false);
         }
     }

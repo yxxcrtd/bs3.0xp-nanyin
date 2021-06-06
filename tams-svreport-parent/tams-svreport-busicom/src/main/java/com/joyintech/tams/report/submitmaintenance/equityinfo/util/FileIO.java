@@ -173,6 +173,8 @@ public class FileIO {
 		if (!file.exists()) {
 			file.mkdirs();
 		}
+
+		XMLWriter xmlWriter = null;
 		try {
 			if (!f.exists()) {
 				f.createNewFile();
@@ -190,7 +192,7 @@ public class FileIO {
 			/** stringWriter字符串是用来保存XML文档的 */
 			StringWriter stringWriter = new StringWriter();
 			/** xmlWriter是用来把XML文档写入字符串的(工具) */
-			XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(f),outputFormat);
+			xmlWriter = new XMLWriter(new FileOutputStream(f),outputFormat);
 			/** 创建xml文档 */
 			Document document = DocumentHelper.createDocument();
 			Element list = document.addElement(ReportGlobalConstant.XML_LIST);
@@ -206,10 +208,18 @@ public class FileIO {
 				xmlWriter.write(row);
 			}
 			xmlWriter.writeClose(list);
-			xmlWriter.close();
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			if(xmlWriter != null){
+				try {
+					xmlWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	/* 生成反馈文件
@@ -280,14 +290,22 @@ public class FileIO {
         //byte[] buff = sftp.download("/opt", "start.sh");  
         //System.out.println(Arrays.toString(buff));  
         File file = new File(allPath+fileName1);  
-        InputStream is;
+        InputStream is = null;
 		try {
 			is = new FileInputStream(file);
 			sftp.upload(localPath, fileName1, is);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  
+		}finally {
+			if(is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
         sftp.logout();  
     } 
 }

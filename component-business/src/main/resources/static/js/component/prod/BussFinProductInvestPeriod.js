@@ -107,6 +107,14 @@
         });
         INVESTMENT_CLCYE = JSON.stringify(investmentCycleArr);
 	}
+	$('#FinNetValueProductBuild002_period').change(function() {
+		if($('#FinNetValueProductBuild002_period').val() === TERM_TYPE_02) {
+			$('#periodDiv').show();
+		} else{
+			$('#periodDiv').hide();
+		}
+
+	});
 	window.BussFinProductInvestPeriod = {
 			cleanTable : cleanTable,
 			finProductInvestPeriodInitAction : finProductInvestPeriodInitAction

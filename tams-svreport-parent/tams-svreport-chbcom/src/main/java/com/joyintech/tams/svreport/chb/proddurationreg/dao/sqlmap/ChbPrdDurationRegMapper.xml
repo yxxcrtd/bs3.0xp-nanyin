@@ -825,9 +825,24 @@
   </select>
   <select  id="selectWanAmt"   parameterType="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal"  
   resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
-	  select  trade_type  tradeType,DECODE(SUM(NVL(REG_TRADE_QTY,0)),0,NULL,(SUM(NVL(TRADE_QTY,0))*10000/SUM(NVL(REG_TRADE_QTY,0))))  AS  shareAmtWan,
-	DECODE(SUM(NVL(REG_TRADE_QTY,0)),0,NULL,(SUM(NVL(INT_AMT,0))*10000/SUM(NVL(REG_TRADE_QTY,0))))  AS  cashAmtWan
+	  select  trade_type  tradeType,
+	  cpp.ccy as valueCcy,
+	  DECODE(SUM(NVL(REG_TRADE_QTY,0)),0,NULL,(SUM(NVL(TRADE_QTY,0))*10000/SUM(NVL(REG_TRADE_QTY,0))))  AS  shareAmtWan,
+	　DECODE(SUM(NVL(REG_TRADE_QTY,0)),0,NULL,(SUM(NVL(INT_AMT,0))*10000/SUM(NVL(REG_TRADE_QTY,0))))  AS  cashAmtWan
 	from  CHB_PRD_BONUS_DEAL
+	  left join(
+	  select prod_id prodId,ccy,prod_value prodValue
+	  from (
+	  select rank() over (partition by prod_id order by change_date desc) my_rank,
+	  prod_id, ccy, prod_value
+	  from CHB_PRD_PERIODYIELD
+	  where CHANGE_DATE <![CDATA[<=]]>#{payDate,jdbcType=DATE}
+	  and prod_id = #{prodId, jdbcType = VARCHAR}
+	  and CHANG_TYPE='01'
+	  ) aa
+	  where my_rank = 1
+	  )cpp
+	  on CHB_PRD_BONUS_DEAL.PROD_ID = cpp.prodId
 	where   NVL(FPROD_ID,PROD_ID)=#{prodId, jdbcType = VARCHAR}
 	AND  settdate_DATE=#{payDate, jdbcType = DATE}
 	GROUP BY NVL(FPROD_ID,PROD_ID),trade_type

@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -1935,7 +1936,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 // 任务结束，停止线程池的所有线程
                 service.shutdown();
 
-                Collection<File> files = FileUtils.listFiles(new File(tmpPath),
+                Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath),
                     new String[] {"tmp"}, false);
 
                 List<String> content = new ArrayList<>();
@@ -2328,10 +2329,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         } else {
             String exportFilePath = CacheUtil.getSysParam("access_exportfilepath");
             String zipFileName = FileNameUtil.createFileName("zip");
-            targetFile = new File(exportFilePath + File.separator + zipFileName);
+            targetFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
 
             try {
-                ZipFileUtil.compressZip(targetFile, true, (File[])fileList.toArray(new File[0]));
+                ZipFileUtil.compressZip(targetFile, true, (File[])fileList.toArray(new SafelyFile[0]));
             } catch (Exception var23) {
                 Iterator var12 = fileList.iterator();
 
@@ -2368,27 +2369,32 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         }
 
         String tempFilePath = fileName + fileType;
-        File templeteFile = new File(this.buildTempleteFilePath(tempFilePath));
+        File templeteFile = new SafelyFile(this.buildTempleteFilePath(tempFilePath));
         reportConfig.setTempleteFile(fileName + fileType);
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
-        } else {
-            stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
-        }
-
-        if (StringUtil.equals(fileType, ".xls")) {
-            wb = new HSSFWorkbook((InputStream)stream);
-        } else {
-            if (!StringUtil.equals(fileType, ".xlsx")) {
-                ((InputStream)stream).close();
-                throw new BusinessException("不是一个有效的Excel文件");
+        try{
+            if (templeteFile.exists()) {
+                stream = new FileInputStream(templeteFile);
+            } else {
+                stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
             }
 
-            wb = new XSSFWorkbook((InputStream)stream);
-        }
+            if (StringUtil.equals(fileType, ".xls")) {
+                wb = new HSSFWorkbook((InputStream)stream);
+            } else {
+                if (!StringUtil.equals(fileType, ".xlsx")) {
+                    ((InputStream)stream).close();
+                    throw new BusinessException("不是一个有效的Excel文件");
+                }
 
-        return (Workbook)wb;
+                wb = new XSSFWorkbook((InputStream)stream);
+            }
+            return (Workbook)wb;
+        }finally {
+            if(stream != null){
+                stream.close();
+            }
+        }
     }
 
     private File makeSingleFile(Workbook wb, JoyinBookConfig reportConfig, String pageId, String fileType, List<?> contents, LongAdder current, long total, int sheetMaxRowCount) throws IOException {
@@ -2466,13 +2472,20 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         String outFileName = CHB_EQUDET_NAME + GlobalConstant.UNDER_LINE +
                 "error" + GlobalConstant.UNDER_LINE + DateUtil.getCurrentDateTime() +fileType;
         String exportFilePath = FileNameUtil.createUploadFilePath("");
-        File file = new File(exportFilePath + File.separator + outFileName);
+        File file = new SafelyFile(exportFilePath + File.separator + outFileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-
-        wb.write(new FileOutputStream(file));
-        return file;
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            wb.write(fileOutputStream);
+            return file;
+        }finally {
+            if(fileOutputStream != null){
+                fileOutputStream.close();
+            }
+        }
     }
 
     private List<EquiteBusiDetails001Dto> convertMapToEntity(List<Map<String,String>> listData,List<EquiteBusiDetails001Dto> entities){
@@ -3040,7 +3053,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         equityList.forEach(item -> lines.add(ImportGenerator.buildTxt(item, columns)));
         try {
             FileUtils.writeLines(
-                new File(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
+                new SafelyFile(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
                 "UTF-8", lines, true);
         }
         catch (IOException e) {

@@ -10,31 +10,44 @@
 
 package com.joyintech.tams.invest.trade.buyoutrepo.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.client.ClientData;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
+import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTrade002Dto;
+import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTrade004Dto;
+import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTradePtl;
+import com.joyintech.tams.invest.trade.buyoutrepo.service.TrdOutRightRepoTrade002Service;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.service.TrdRepoTrade002Service;
-
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,44 +59,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
-import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
-import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
-import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
-import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTrade002Dto;
-import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTrade004Dto;
-import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTradePtl;
-import com.joyintech.tams.invest.trade.buyoutrepo.service.TrdOutRightRepoTrade002Service;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.*;
 /**
  * 买断式回购多组合新建
  * @author zhanggenglin
@@ -817,7 +795,7 @@ public class TrdOutRightRepoTrade003Controller extends BaseController {
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.业务类型_买断式回购预处理);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
     // add by zhanggenglin 质押式回购多组合 20190813 end
     

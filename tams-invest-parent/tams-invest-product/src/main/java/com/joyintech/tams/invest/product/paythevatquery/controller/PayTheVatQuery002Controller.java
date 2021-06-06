@@ -154,6 +154,27 @@ public class PayTheVatQuery002Controller extends BaseController{
 	        if(DateUtil.compareDate(dto.getPayTaxVDate(), lastSettleDateStr)<0) {
 	            return new AjaxResult("纳税日期必须大于等于"+lastSettleDateStr+"日期",MessageType.错误消息); 
 	        }
+	        // add by jiangpeng on 20210602 start
+			// ZGBSSE-383 查询通道下的产品已跑批日期小于纳税结束日
+			param.put("payment1", dto.getPayment1());
+			if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
+				param.put("portfolioId", dto.getPortfolioId());
+			}
+			String msg2 = "";
+			List<String> finprodStrList = payTheVatQuery002Service.searchChlPtlBookSet(param);
+			if (!CollectionUtils.isEmpty(finprodStrList)) {
+				for (int i = 0; i < finprodStrList.size(); i++) {
+					if (i == 0) {
+						msg2 = finprodStrList.get(i);
+					} else {
+						msg2 += finprodStrList.get(i);
+					}
+				}
+			}
+			if (StringUtils.isNotEmpty(msg2)) {
+				return new AjaxResult("存在账套日-1小于纳税结束日的账套:" + msg2, MessageType.错误消息);
+			}
+			// add by jiangpeng on 20210602 end
 	    }
 
         return new AjaxResult(); 

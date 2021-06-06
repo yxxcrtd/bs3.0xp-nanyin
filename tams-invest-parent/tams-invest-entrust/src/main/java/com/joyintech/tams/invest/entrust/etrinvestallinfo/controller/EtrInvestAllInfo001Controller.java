@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.joyintech.framework.base.BaseDictCodeList;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.invest.common.constant.BussinessDictCode;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -221,7 +219,7 @@ public class EtrInvestAllInfo001Controller extends BaseController {
 				exportMsg+=listData.get(i).getEntrustId()+"，";
 			}
 		}
-    	return exportMsg;
+    	return StringUtil.trimHtmlTag(exportMsg);
     }
     /**
      * PB文件导出 add by caoxue 2019-12-31

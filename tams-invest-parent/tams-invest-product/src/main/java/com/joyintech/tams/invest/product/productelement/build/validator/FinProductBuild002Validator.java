@@ -104,6 +104,22 @@ public class FinProductBuild002Validator implements BeanValidator {
                 validList.add(new ValidMessage("finprodMarketId", "产品代码过长（可能有汉字）"));
             }
         }
+
+        if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
+
+            //报送信息页面托管费率和销售费率必填
+            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepSaleFeeRate())) {
+                validList.add(new ValidMessage("bussRepFinProductInfoDto.repSaleFeeRate", this.getMessage("BUSS_COM_E_0038",
+                        this.getMessage("BussRepFinProductInfo.repSaleFeeRate"))));
+            }
+
+            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepTruFeeRate())) {
+                validList.add(new ValidMessage("bussRepFinProductInfoDto.repTruFeeRate", this.getMessage("BUSS_COM_E_0038",
+                        this.getMessage("BussRepFinProductInfo.repTruFeeRate"))));
+            }
+
+        }
+
         if (!DictCodeList.是否_是.getValue().equals(entity.getIsSus()) && entity.getTermDays() == null) {
             validList.add(new ValidMessage("termDays", this.getMessage("BUSS_COM_E_0038",
                 this.getMessage("FinProductBuild002.termDays"))));

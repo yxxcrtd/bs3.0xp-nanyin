@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Date;
+
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
@@ -142,7 +144,7 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
     private String transferWarnFoul(String value,String indCellType) throws Exception{
 		String wg=StringUtil.EMPTY;
 		ObjectMapper mapper = new ObjectMapper();
-		Map<?, ?>  detailJson= mapper.readValue(value, Map.class);
+		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(value), Map.class);
 
 		Map<?, ?> vThreshold1Map = (Map<?, ?>)detailJson.get("threshold_1");
 		if (StringUtil.isNotEmpty(value)) {

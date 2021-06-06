@@ -176,6 +176,6 @@ public class UpTrQuoTedSec002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("getFinprodName")
     public String getFinprodName(String finprodId){
-        return upTrQuoTedSec002Service.getFinprodName(finprodId);
+        return StringUtil.trimHtmlTag(upTrQuoTedSec002Service.getFinprodName(finprodId));
     }
 }

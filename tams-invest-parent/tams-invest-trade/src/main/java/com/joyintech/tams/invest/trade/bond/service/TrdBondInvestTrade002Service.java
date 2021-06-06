@@ -2593,8 +2593,40 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
             // 交易所债券特殊处理start----------------------------------------------------------------
             AccurIntCalOutParameter out = null;
-            // 如果交易场所为上交所、深交所的情况
-            if (isJiaoYiSuo && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
+            if(DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue().equals(dto.getWindtypeone())){
+                // 付息计划截止日对应的利息
+                Map<String, BigDecimal> intMap = new HashMap<>();
+                if(DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue().equals(dto.getWindtypeone())){
+                    // 理论计息截止日
+                    if(null != intSchList && !intSchList.isEmpty()){
+                        for (FinCashPlanDto intSche : intSchList) {
+                            intMap.put(toLocalDate(intSche.getMdateTerm()).toString(), intSche.getIntAmt());
+                        }
+                    }
+                    // 实际计息截止日
+                    if (null != invScheduleList && !invScheduleList.isEmpty()) {
+                        for (SecIntSchedule intSche : invScheduleList) {
+                            intMap.put(intSche.getActualCutoffDate().toString(), intSche.getAmount());
+                        }
+                    }
+                }
+                if (intMap.containsKey(accurIntCalInParameter.getCalDate().toString())
+                        && !((Variety.贴现.equals(secInfoModel.getBondsType())) || Variety.零息.equals(secInfoModel.getBondsType()))) {
+                    out = new AccurIntCalOutParameter();
+                    out.setInterest(
+                            intMap.get(accurIntCalInParameter.getCalDate().toString()).multiply(new BigDecimal("100")).divide(
+                                    curSecAmt, 12, RoundingMode.HALF_UP));
+                    accurIntCalInParameter.setCalDate(accurIntCalInParameter.getCalDate());
+                    AccurIntForSecheduleCalculator calculator2 = CalculatorFactory.createAccurIntForSecheduleCalculator();
+                    if (accurIntCalInParameter.getPaperIrResetList() != null
+                            && accurIntCalInParameter.getPaperIrResetList().size() > 1) {
+                        accurIntCalInParameter.getSecInfoModel().setIntRateType(IntRateType.浮动利率);
+                    }
+                    out = calculator2.calculate(accurIntCalInParameter);
+                }
+            }
+            // 如果交易场所为上交所、深交所的情况，且
+            if (isJiaoYiSuo && out == null && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
                 // 付息债、贴现债、零息债，交割日+1
                 // if (StringUtil.equals(DictCodeList.息票品种_附息.getValue(), secInfoModelDto.getBondsType())
                 // || StringUtil.equals(DictCodeList.息票品种_贴现.getValue(), secInfoModelDto.getBondsType())
@@ -2634,6 +2666,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 // 计算利息
                 AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
                 accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
+            }
+            if (isJiaoYiSuo) {
+                if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())){
+                    accurInt = BigDecimal.ZERO;
+                }
             }
             // 单位应计利息
             if (dto.getUnitInt() == null) {

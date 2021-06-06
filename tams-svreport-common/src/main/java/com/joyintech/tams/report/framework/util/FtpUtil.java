@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTP;
@@ -125,7 +126,7 @@ public class FtpUtil {
             FTPFile[] fs = ftpClient.listFiles();
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(fileName)) {
-                    File localFile = new File(localPath + separator + ff.getName());
+                    File localFile = new SafelyFile(localPath + separator + ff.getName());
                     is = new FileOutputStream(localFile);
                     ftpClient.retrieveFile(ff.getName(), is);
                     is.close();
@@ -370,7 +371,7 @@ public class FtpUtil {
                         FTPFile[] fs = ftpClient.listFiles();
                         for (FTPFile ff : fs) {
                             if (ff.getName().equals(dataFileName)) {
-                                File localFile = new File(localPath + separator + ff.getName());
+                                File localFile = new SafelyFile(localPath + separator + ff.getName());
                                 is = new FileOutputStream(localFile);
                                 ftpClient.retrieveFile(ff.getName(), is);
                                 is.close();
@@ -444,7 +445,7 @@ public class FtpUtil {
                 if (!ff.isDirectory() && CollectionUtils.exists(containsFile, name -> {
                     return ff.getName().contains((String)name);
                 })) {
-                    File localFile = new File(localPath + separator + ff.getName());
+                    File localFile = new SafelyFile(localPath + separator + ff.getName());
                     if (!localFile.exists()) {
                         localFile.createNewFile();
                         try {

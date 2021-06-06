@@ -166,9 +166,21 @@ public class SftpUtil {
      * @throws Exception 
      */  
     public void upload(String directory, String uploadFile) throws FileNotFoundException, SftpException{  
-        File file = new File(uploadFile);  
-        upload(directory, file.getName(), new FileInputStream(file));  
-    }  
+        File file = new File(uploadFile);
+        FileInputStream is = null;
+        try{
+            is = new FileInputStream(file);
+            upload(directory, file.getName(), is);
+        }finally {
+            if(is != null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     
     /** 
      * 将byte[]上传到sftp，作为文件。注意:从String生成byte[]是，要指定字符集。 
@@ -222,10 +234,22 @@ public class SftpUtil {
         if (directory != null && !"".equals(directory)) {  
             sftp.cd(directory);  
         }  
-        File file = new File(saveFile);  
-        sftp.get(downloadFile, new FileOutputStream(file));  
-        log.info("file:{} is download successful" , downloadFile);  
-    }  
+        File file = new File(saveFile);
+        FileOutputStream fileOutputStream = null;
+        try{
+            fileOutputStream = new FileOutputStream(file);
+            sftp.get(downloadFile, fileOutputStream);
+            log.info("file:{} is download successful" , downloadFile);
+        }finally {
+            if (fileOutputStream != null){
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     /**  
      * 下载文件 
      * @param directory 下载目录 

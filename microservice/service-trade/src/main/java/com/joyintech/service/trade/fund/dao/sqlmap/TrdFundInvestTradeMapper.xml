@@ -1242,12 +1242,12 @@
 	</select>
 
     <select id="getcarryAmtNew" resultType="java.math.BigDecimal">
-        select valuation
+        select sum(valuation)
         from (select fpv.valuation/10000 valuation,
                     rank() over(partition BY fpv.finprod_id ORDER BY fpv.publish_date desc) rank
                 from FIN_PRODUCT_VALUATION fpv
                   where concat(#{finprodType}, fpv.finprod_id) = #{finprodId}
-                  and fpv.publish_date <![CDATA[<=]]> to_date(#{tradeDate},'yyyy-mm-dd')
+                  and fpv.publish_date = to_date(#{tradeDate},'yyyy-mm-dd')
         )where rank = 1
     </select>
 </mapper>
