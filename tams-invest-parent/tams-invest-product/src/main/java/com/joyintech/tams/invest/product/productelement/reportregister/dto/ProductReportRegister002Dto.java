@@ -29,6 +29,7 @@ import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import org.hibernate.validator.constraints.Length;
 
 @PageId("ProductReportRegister002")
 @ValidLogic(targetClass = ProductReportRegister002Validator.class,groups = {ValidateGroupEdit.class})
@@ -78,6 +79,7 @@ public class ProductReportRegister002Dto extends BaseEntity implements ProcessEn
      * 行内标识码
      */
     @NotEmpty(fieldName="ProductReportRegister001.repFinprodInsId",groups = {ValidateGroupEdit.class})
+//    @Length(fieldName="ProductReportRegister001.repFinprodInsId",max = 50,groups = {ValidateGroupEdit.class})
     private String repFinprodInsId;
 
     /**
