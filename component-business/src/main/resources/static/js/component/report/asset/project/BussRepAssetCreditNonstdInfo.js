@@ -158,5 +158,12 @@
         	repPartRedemFlag2();
         });
         
+        //资产负债类别是“小微企业信贷资产流转和收益权转让”的默认为是
+        if(assetType == ASSET_TYPE_2202){
+            getElementById('repSmallcredit').prop('checked', true);
+        }else{
+            getElementById('repSmallcredit').prop('checked', false);
+        }
+        
     });
 }());

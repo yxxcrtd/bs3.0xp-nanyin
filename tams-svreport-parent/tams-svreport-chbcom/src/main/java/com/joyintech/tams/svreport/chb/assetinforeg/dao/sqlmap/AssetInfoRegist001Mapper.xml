@@ -3113,8 +3113,7 @@
             	</foreach>
 		 	</if>
 			<if test="assetCode != null and !assetCode.isEmpty()">
-			<!-- 	AND ASSETINFO.ASSET_CODE like '%'||#{assetCode,jdbcType=VARCHAR}||'%' -->
-					and ASSETINFO.ASSET_CODE like concat(concat('%',#{assetCode,jdbcType=VARCHAR}),'%')
+				AND instr(ASSETINFO.ASSET_CODE,#{assetCode,jdbcType=VARCHAR})>0
 			</if>
 			<if test="sendDateStr != null and !sendDateStr.isEmpty()">
 				AND to_char(ASSETINFO.SUBMIT_TIME, 'yyyy-MM-dd') >= #{sendDateStr,jdbcType=VARCHAR}
@@ -5705,7 +5704,8 @@
         DEPT_EQUITY,
         HOLD_PURPOSE,
         FINANCIAL_COMISSUE,
-        SUMIT_SEQ
+        SUMIT_SEQ,
+		SUBMIT_FEEDBACK_MSG
       )
       select  
         REGIST_SEQNO,
@@ -5812,7 +5812,8 @@
         DEPT_EQUITY,
         HOLD_PURPOSE,
         FINANCIAL_COMISSUE,
-        SUMIT_SEQ
+        SUMIT_SEQ,
+		SUBMIT_FEEDBACK_MSG
       from CHB_ASSET_INFO_SUB
       where 1 =1
       <if test="registList !=null and registList.size()>0">
@@ -5938,7 +5939,8 @@
         DEPT_EQUITY,
         HOLD_PURPOSE,
         FINANCIAL_COMISSUE,
-        SUMIT_SEQ
+        SUMIT_SEQ,
+		SUBMIT_FEEDBACK_MSG
       )
       select HIS_NO,
         ASSET_CODE, ASSET_TYPE,
@@ -6044,7 +6046,8 @@
         DEPT_EQUITY,
         HOLD_PURPOSE,
         FINANCIAL_COMISSUE,
-        SUMIT_SEQ
+        SUMIT_SEQ,
+		SUBMIT_FEEDBACK_MSG
       from (
           select  HIS_NO,
 	        ASSET_CODE, ASSET_TYPE,
@@ -6151,6 +6154,7 @@
 			HOLD_PURPOSE,
 			FINANCIAL_COMISSUE,
 			SUMIT_SEQ,
+			SUBMIT_FEEDBACK_MSG,
             rank() over (partition by ASSET_CODE order by nvl(update_time,create_time) desc) ranknum
          from CHB_ASSET_INFO_SUB_HIS  his
          <where>

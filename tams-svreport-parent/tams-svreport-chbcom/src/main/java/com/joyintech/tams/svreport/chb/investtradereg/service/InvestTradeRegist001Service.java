@@ -771,7 +771,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 		dealDataList(deallist,false);
         List<ExcelValidDto> result = new ArrayList<ExcelValidDto>();
 //        repmap = deallist.stream().collect(Collectors.toMap(InvestTradeRegist001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));
-        repmap = deallist.stream().collect(Collectors.toMap(p->p.getProdId() + GlobalConstant.COMMA + p.getAssetCode(),(p)->p,(key1,key2)->key1));
+        repmap = deallist.stream().collect(Collectors.toMap(p->p.getProdId() + GlobalConstant.COMMA + p.getAssetCode()+GlobalConstant.COMMA+p.getTradeCode()+GlobalConstant.COMMA+p.getCurAssetType(),(p)->p,(key1,key2)->key1));
         // 查询检查表
         List<CheckReport001Dto> resultlist = new ArrayList<CheckReport001Dto>();
         // 检查登记表中小于今天所有未报送的数据
@@ -782,7 +782,9 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
             Map<String,String> showInMap = new HashMap<String,String>();
             checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getUniqueKey,(p)->p,(key1,key2)->key1));
             for(InvestTradeRegist001Dto key : checkKeys){
-                String uniqueKey = key.getProdId()+GlobalConstant.COMMA+key.getAssetCode();
+                String uniqueKey = key.getProdId()+GlobalConstant.COMMA+key.getAssetCode()+GlobalConstant.COMMA+key.getTradeCode()+GlobalConstant.COMMA+key.getCurAssetType();
+                //增加一个uniqueKey，用于匹配预警信息 【预警信息的uniqueKey是：产品代码+行内资产/负债编码】
+                String uniqueKey1 = key.getProdId()+GlobalConstant.COMMA+key.getAssetCode();
                 // 已经有的资产和产品不重复出数据检查
                 if (!showInMap.containsKey(uniqueKey)){
                     showInMap.put(uniqueKey, uniqueKey);
@@ -797,10 +799,21 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
                     exc.setWarnInfo(checkmap.get(uniqueKey).getWarnInfo());
                     exc.setValidKey(checkmap.get(uniqueKey).getValidKey());
                     result.add(exc);
+                }else if(checkmap.get(uniqueKey1)!=null){
+                	ExcelValidDto exc=new ExcelValidDto();
+                    exc.setCheckResult(checkmap.get(uniqueKey1).getCheckResult());
+                    exc.setErrorInfo(checkmap.get(uniqueKey1).getErrorInfo());
+                    exc.setWarnInfo(checkmap.get(uniqueKey1).getWarnInfo());
+                    exc.setValidKey(checkmap.get(uniqueKey1).getValidKey()+(StringUtil.isNotEmpty(key.getTradeCode()) ? (";行内交易编码:"+key.getTradeCode()):"")
+                    									+(StringUtil.isNotEmpty(key.getCurAssetType()) ? (";资金流动类型:"+(key.getCurAssetType())):""));
+                    result.add(exc);
                 }else{
                     ExcelValidDto exc=new ExcelValidDto();
                     exc.setValidKey("产品代码:"+repmap.get(uniqueKey).getProdId()
-						+ (StringUtil.isNotEmpty(repmap.get(uniqueKey).getAssetCode()) ? (";资产代码:"+repmap.get(uniqueKey).getAssetCode()): ""));
+						+ (StringUtil.isNotEmpty(repmap.get(uniqueKey).getAssetCode()) ? (";资产代码:"+repmap.get(uniqueKey).getAssetCode()): "")
+						+(StringUtil.isNotEmpty(repmap.get(uniqueKey).getTradeCode()) ? (";行内交易编码:"+repmap.get(uniqueKey).getTradeCode()):"")
+						+(StringUtil.isNotEmpty(repmap.get(uniqueKey).getCurAssetType()) ? (";资金流动类型:"+repmap.get(uniqueKey).getCurAssetType()):"")
+						);
                     exc.setCheckResult("01");
                     result.add(exc);
                 }

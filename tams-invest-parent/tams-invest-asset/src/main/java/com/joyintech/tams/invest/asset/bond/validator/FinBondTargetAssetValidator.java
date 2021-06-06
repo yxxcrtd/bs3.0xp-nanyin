@@ -14,27 +14,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
-import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.tams.invest.asset.bond.service.FinBondTargetAssetService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
 /**
  * 债券标的信息业务验证
@@ -57,8 +56,8 @@ public class FinBondTargetAssetValidator implements BeanValidator{
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
 
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -92,6 +91,21 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             		resultList.add(new ValidMessage(getMessage("含权债的行权计划不能为空!")));
             	}
             }
+            
+            /****1、需要增加对评级信息的必填项check,评级信息中若没有主体评级的记录则不允许提交且给出提示；***/
+            boolean flag = true;
+            if(null!=dto.getBusiFinBondRatingInfoDto()&&null!=dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
+            	for(MstBondCreditRating dao :dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
+            		if(DictCodeList.评级类型_主体评级.getValue().equals(dao.getoType())){
+            			flag = false;
+            			break;
+            		}
+            	}
+            }
+            if(flag){
+            	resultList.add(new ValidMessage(getMessage("评级信息中必须包含主体评级信息!")));
+            }
+            /****1、需要增加对评级信息的必填项check,评级信息中若没有主体评级的记录则不允许提交且给出提示；***/
         }
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
@@ -250,9 +264,9 @@ public class FinBondTargetAssetValidator implements BeanValidator{
 
         }
 
-//        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-//            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
-//        }
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
+        }
         if((StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT))&&dto.getBussFinBondRepInfoDto().getRepSectype().equals("99")){
             if(StringUtil.isEmpty(dto.getBussFinBondRepInfoDto().getRepRemark())){
                 resultList.add(new ValidMessage("当中债报送信息中具体类别为其他债券时，备注必填。"));

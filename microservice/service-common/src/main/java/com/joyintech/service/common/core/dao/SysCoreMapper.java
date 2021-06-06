@@ -10,18 +10,37 @@
 
 package com.joyintech.service.common.core.dao;
 
-import com.joyintech.service.common.core.dto.AutoCouponDto;
-import com.joyintech.service.common.core.dto.InfChinamutualfunddescriptionDto;
-import com.joyintech.service.common.core.dto.InterfPayhsrcsecinfoDto;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import com.joyintech.service.common.core.dto.AutoCouponDto;
+import com.joyintech.service.common.core.dto.InfChinamutualfunddescriptionDto;
+import com.joyintech.service.common.core.dto.InterfPayhsrcsecinfoDto;
+import com.joyintech.service.common.core.dto.InterfStockInfoDto;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
+import com.joyintech.tams.common.base.entity.InfCmoneymarketfscarryoverm;
+import com.joyintech.tams.common.base.entity.InterfBondMarketInfo;
+import com.joyintech.tams.common.base.entity.InterfCbonddescription;
+import com.joyintech.tams.common.base.entity.InterfCbondindustrywind;
+import com.joyintech.tams.common.base.entity.InterfCbondspecialconditions;
+import com.joyintech.tams.common.base.entity.InterfCmfunddescrip;
+import com.joyintech.tams.common.base.entity.InterfCmfundnav;
+import com.joyintech.tams.common.base.entity.InterfFMarketInfo;
+import com.joyintech.tams.common.base.entity.InterfFloatcouprate;
+import com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt;
+import com.joyintech.tams.common.base.entity.InterfPayhsrcsecoption;
+import com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating;
+import com.joyintech.tams.common.base.entity.InterfPayhsrcsecschedule;
+import com.joyintech.tams.common.base.entity.InterfStdsecConRadio;
+import com.joyintech.tams.common.base.entity.JxsIssueInfo;
+import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
+import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 
 /**
  *
@@ -257,4 +276,10 @@ public interface SysCoreMapper {
 	 * @since 1.0
 	 */
 	int isBondExerciseAsset(String finprodId);
+	
+	InterfStockInfoDto selectWindStockAssetByStockCode(@Param("stockCode") String stockCode);
+
+	List<InterfStockInfoDto> selectWindStockAsset(Map<String, Object> map);
+
+	void insertJxInfo(JxsIssueInfo jxsIssueInfo);
 }

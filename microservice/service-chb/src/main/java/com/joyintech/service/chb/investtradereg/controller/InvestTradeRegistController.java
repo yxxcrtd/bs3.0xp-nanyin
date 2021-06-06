@@ -5,6 +5,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto;
 import com.joyintech.tams.svreport.chb.investtradereg.service.InvestTradeRegist001Service;
@@ -120,6 +122,13 @@ public class InvestTradeRegistController{
         Map<String, Object> param = map;
         if (!param.containsKey("keyList")) {
             keyList = investTradeRegist001Service.getCheckRepList(param);
+            //查询出的资金流动类型不带中文，需特殊处理
+            keyList.forEach(item ->{
+            	if(StringUtil.isNotEmpty(item.getCurAssetType())){
+            		item.setCurAssetTypeName(item.getCurAssetType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资金流动类型,item.getCurAssetType()));
+    				item.setCurAssetType(item.getCurAssetTypeName());
+            	}
+            });
         } else {
             String dataList = map.get("keyList").toString();
             try {

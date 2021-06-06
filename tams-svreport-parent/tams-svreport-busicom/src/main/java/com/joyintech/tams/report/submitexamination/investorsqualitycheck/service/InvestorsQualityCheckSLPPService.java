@@ -78,7 +78,10 @@ public class InvestorsQualityCheckSLPPService extends InvestorsQualityCheckBaseS
         if (!StringUtil.isEmptyList(allList)){
             dto.setRate("100");
             if (!StringUtil.isEmptyList(unQualifiedList)){
-                BigDecimal rate = ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.subtract(new BigDecimal(dto.getTotal()), unQualifiedInt), new BigDecimal(dto.getTotal()), 4), new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal rate = ArithmeticUtil.multiply(ArithmeticUtil.divide(
+                                            ArithmeticUtil.divide(ArithmeticUtil.subtract(new BigDecimal(dto.getTotal()), unQualifiedInt), new BigDecimal(dto.getTotal()), 6, RoundingMode.HALF_UP)
+                                            , new BigDecimal(3), 4, RoundingMode.HALF_UP)
+                                            , new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
                 if (new BigDecimal(rate.intValue()).compareTo(rate) == 0){
                     rate = new BigDecimal(rate.intValue());
                 }

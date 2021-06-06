@@ -18,6 +18,7 @@ import com.joyintech.tams.common.base.entity.BaseInformationDto;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.svreport.infomanagement.dao.OperationalInfo004Mapper;
 import com.joyintech.tams.svreport.loaninfomanagement.dao.OperationalLoanInfo001Mapper;
 import com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto;
 
@@ -26,6 +27,8 @@ public class OperationalLoanInfo001CheckService{
 	@Autowired
 	private OperationalLoanInfo001Mapper operationalLoanInfo001Mapper;
 
+	@Autowired
+	private OperationalInfo004Mapper operationalInfo004Mapper;
 	public List<ExcelValidDto> checkImportData(List<Map<String, String>> dataMapList) {
 		
         List<ExcelValidDto> checkResult = new ArrayList<>();
@@ -327,4 +330,64 @@ public class OperationalLoanInfo001CheckService{
         }
 	}
 */
+
+	/**
+	 *
+	 * @param dataMapList
+	 * @param bisinessPkList
+	 * @return
+	 */
+	/*add by xuyang 底层持仓数据导入，新增资产编码是否存在资产要素校验，不存在，不允许导入 start*/
+	public List<ExcelValidDto> checkImportBotAstPosData(List<Map<String, String>> dataMapList,List<String> bisinessPkList ) {
+		List<ExcelValidDto> checkResult = new ArrayList<>();
+		for(int i=1;i< dataMapList.size();i++){
+			List<String> strList =  new ArrayList<String>();
+			Map<String, String> line=dataMapList.get(i);
+//			根据行内资产编码查询资产要素是否存在
+			ChbAssetInfo info=operationalInfo004Mapper.selectChbAssetInfoByAssetCode(line.get("ASSET_CODE"));
+			if(info==null){
+				bisinessPkList.forEach(column ->{
+					strList.add(line.get(column));
+				});
+				checkResult.add(new ExcelValidDto(StringUtil.joinString(strList,GlobalConstant.VERTICAL_LINE), String.valueOf(i+1), "新增底层资产持仓数据不存在资产要素！"));
+			}
+		}
+
+		return checkResult;
+	}
+	/*add by xuyang 底层持仓数据导入，新增资产编码是否存在资产要素校验，不存在，不允许导入 end*/
+
+	
+	/**
+	 *
+	 * @param dataMapList
+	 * @param bisinessPkList
+	 * @return
+	 */
+	/*add by leipeng 导入到TMP表，产品发行登记、产品募集总量登记、产品存续期登记、产品终止登记、交易信息登记导入时，增加代码检查，判断产品登记编码是否存在 start*/
+	public List<ExcelValidDto> checkImportPrdData(List<Map<String, String>> dataMapList,List<String> bisinessPkList,String tableName) {
+		List<ExcelValidDto> checkResult = new ArrayList<>();
+		for(int i=0;i< dataMapList.size();i++){
+			List<String> strList =  new ArrayList<String>();
+			Map<String, String> line=dataMapList.get(i);
+//			根据行内资产编码查询资产要素是否存在
+			String prodId=operationalInfo004Mapper.queryPrdRegisCode(line.get("PROD_REGIST_CODE"));
+			if(!StringUtil.isNotEmpty(prodId)){
+				bisinessPkList.forEach(column ->{
+					strList.add(line.get(column));
+				});
+				checkResult.add(new ExcelValidDto(StringUtil.joinString(strList,GlobalConstant.VERTICAL_LINE), String.valueOf(i+2), "产品登记编码不存在！"));
+			}else{
+				//产品发行登记导入的时候，产品登记编码若存在，则继续检查对应的产品代码是否一样，不一样则提示：理财产品代码与行内标识码不一致。
+				if(!prodId.equals(line.get("PROD_ID"))&&"CHB_PRD_ISSUE_SUB_TMP".equals(tableName)){
+					checkResult.add(new ExcelValidDto(StringUtil.joinString(strList,GlobalConstant.VERTICAL_LINE), String.valueOf(i+2), "理财产品代码与行内标识码不一致"));
+
+				}
+			}
+		}
+
+		return checkResult;
+	}
+	/*add by leipeng 导入到TMP表，产品发行登记、产品募集总量登记、产品存续期登记、产品终止登记、交易信息登记导入时，增加代码检查，判断产品登记编码是否存在  end*/
+	
 }

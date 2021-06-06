@@ -12,10 +12,14 @@ package com.joyintech.tams.component.business.common.dto;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.joyintech.tams.common.base.entity.FinStdsecConverseRadio;
 import com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfo;
 import com.joyintech.tams.common.base.entity.MstBondMarketInfo;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
+import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
+import com.joyintech.tams.component.business.report.asset.project.dto.BussRepEquityInfoDto;
 
 /**
  *  万德债券资产DTO
@@ -59,11 +63,24 @@ public class InterfPayhsrcsecinfoDto extends InterfPayhsrcsecinfo{
     
     private List<String> secidList;
 
+    /**
+     * 中债报送DTO
+     */
+    @Valid
+    private BussFinBondRepInfoDto bussFinBondRepInfoDto;
     
+    /**
+     * 业务组件--权益类中债报送
+     */
+    @Valid
+    private BussRepEquityInfoDto bussRepEquityInfoDto;
     
-
+    /**
+     *存放中债校验不通过的债券信息
+     */
+    private List<String> errorBondList;
     
-    
+        
     /**
      * 获取 secidList
      * @return secidList.
@@ -165,6 +182,12 @@ public class InterfPayhsrcsecinfoDto extends InterfPayhsrcsecinfo{
 		this.finStdsecConverseRadioList = finStdsecConverseRadioList;
 	}
     
-    
+	public List<String> getErrorBondList() {
+		return errorBondList;
+	}
+
+	public void setErrorBondList(List<String> errorBondList) {
+		this.errorBondList = errorBondList;
+	}
 
 }
