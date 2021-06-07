@@ -521,7 +521,7 @@
                     <!-- （月末最近公布累计净值-月末次近公布累计净值）/月末次近公布累计净值*计息基础/区间天数*100%；区间天数=两个净值日的差 -->
                     then (ifnull(val.UNIT_VALUE_TOTAL, 1) - ifnull(val2.UNIT_VALUE_TOTAL, 1)) * if(info.BASIC='A/360', 360, if(info.BASIC='A/365', 365, 1)) / ifnull(val2.UNIT_VALUE_TOTAL, 1) / TIMESTAMPDIFF(DAY,val2.CHANGE_DATE,val.CHANGE_DATE) * 100
                     when val.CHANGE_DATE >= #{startdate, jdbcType=DATE}
-                    then (ifnull(val.UNIT_VALUE_TOTAL, 1) - 1) * if(info.BASIC='A/360', 360, if(info.BASIC='A/365', 365, 1)) / TIMESTAMPDIFF(DAY,info.RAISE_PENDDATE,val.CHANGE_DATE) * 100
+                    then (ifnull(val.UNIT_VALUE_TOTAL, 1) - 1) * if(info.BASIC='A/360', 360, if(info.BASIC='A/365', 365, 1)) / TIMESTAMPDIFF(DAY,info.RAISE_ENDDATE,val.CHANGE_DATE) * 100
                 else
                  rpi.RATE_BENCHMARK
                 end
