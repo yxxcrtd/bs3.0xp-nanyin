@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -331,6 +332,7 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
                 }
             }
         }
+
         /**
          * 处理交易头寸信息
          */
@@ -424,10 +426,57 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
             result.setSubmitDeadline(dateList.get(1));
         }
 
+        //-----add by lingxq on 2021-06-07 for 费用计算后保留两位小数------>>>>>
+        setFeeScale(result);
+        //-----add by lingxq on 2021-06-07 for 费用计算后保留两位小数------<<<<<
+
         // add by zhangliang 20201109 数据流向处理 ===================================start
         result.setStatus(arg0.getStatus());
         // add by zhangliang 20201109 数据流向处理 ===================================end
         return result;
+    }
+
+    /**
+     * 费用保留两位小数
+     * @param result
+     */
+    private void setFeeScale(ProdTerminationRegist001Dto result) {
+        if(null != result.getProfit()) {
+            result.setProfit(result.getProfit().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCustFeeIn()) {
+            result.setCustFeeIn(result.getCustFeeIn().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getManFeeIn()) {
+            result.setManFeeIn(result.getManFeeIn().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCouFeeIn()) {
+            result.setCouFeeIn(result.getCouFeeIn().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getOtherFeeIn()) {
+            result.setOtherFeeIn(result.getOtherFeeIn().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCustFeeOut()) {
+            result.setCustFeeOut(result.getCustFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getManFeeOut()) {
+            result.setManFeeOut(result.getManFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCouFeeOut()) {
+            result.setCouFeeOut(result.getCouFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getAdvFeeOut()) {
+            result.setAdvFeeOut(result.getAdvFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getOtherFeeOut()) {
+            result.setOtherFeeOut(result.getOtherFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCustomAmt()) {
+            result.setCustomAmt(result.getCustomAmt().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCustomProfit()) {
+            result.setCustomProfit(result.getCustomProfit().setScale(2, RoundingMode.HALF_UP));
+        }
     }
 
 
