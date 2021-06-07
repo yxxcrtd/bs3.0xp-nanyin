@@ -283,8 +283,10 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
             if(StringUtil.equals(entrustCommonDto.getEtrEntrustAdd().getPurchModle(), DictCodeListExt2.申购方式_线下申购)) {
             	etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum().multiply(债券面值), etrFinish));//update by huanghao 指令金额采用指令数额*100算出
             }
-            else {
+            else if(StringUtil.isNotEmpty(etrEntrust.getPrice())){
             	etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum().multiply(etrEntrust.getPrice()), etrFinish));//update by huanghao 指令金额采用指令数额*100算出
+            }else{
+            	etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustNum().multiply(债券面值), etrFinish));
             }
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
         }
