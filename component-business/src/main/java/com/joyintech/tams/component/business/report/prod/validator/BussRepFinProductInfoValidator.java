@@ -191,7 +191,8 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
                     this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
             }else if(dto.getRepInvTypeRat().contains("（") || dto.getRepInvTypeRat().contains("）") ||
-            		dto.getRepInvTypeRat().contains("：") || dto.getRepInvTypeRat().contains("；")) {
+            		dto.getRepInvTypeRat().contains("：") || dto.getRepInvTypeRat().contains("；")
+                    || !dto.getRepInvTypeRat().contains(":")  || !dto.getRepInvTypeRat().contains("%")) {
             	resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
                         this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
             }
