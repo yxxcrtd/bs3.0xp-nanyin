@@ -1913,6 +1913,11 @@ public class AllTradeCommonUtil {
     }
 
     @Autowired(required = false)
+    public void setWorkflowMapper(WorkflowMapper workflowMapper) {
+        AllTradeCommonUtil.workflowMapper = workflowMapper;
+    }
+
+    @Autowired(required = false)
     public void setBasePtlSecPositionInfoService(BasePtlSecPositionInfoService basePtlSecPositionInfoServiceImpl) {
         AllTradeCommonUtil.basePtlSecPositionInfoServiceImpl = basePtlSecPositionInfoServiceImpl;
     }
