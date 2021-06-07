@@ -1,7 +1,7 @@
 $(function() {
     //跳转的页码
       var pageCount = 1;
-      /**导出成功，是否自动标识未报送数据的报送状态为“手工处理”
+      /**
        * 获取查询参数
        */
       var getSearchParams = function() {
