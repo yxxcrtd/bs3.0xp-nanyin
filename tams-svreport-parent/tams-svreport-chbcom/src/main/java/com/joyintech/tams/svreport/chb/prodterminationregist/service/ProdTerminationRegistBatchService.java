@@ -15,6 +15,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
+import com.joyintech.tams.report.interf.cnbond.dto.BaseInfoEntity;
 import com.joyintech.tams.svreport.chb.common.SvrDataStatusUtil;
 import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.chb.prodterminationregist.dao.ProdTerminationRegist001Mapper;
@@ -24,6 +25,7 @@ import com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition;
 import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import groovy.swing.factory.BindGroupFactory;
 import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -477,6 +479,55 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
         if(null != result.getCustomProfit()) {
             result.setCustomProfit(result.getCustomProfit().setScale(2, RoundingMode.HALF_UP));
         }
+
+        //-------费用因四舍五入差一分导致check不过进行倒减处理------->>>>>>>
+        BigDecimal bankInt = null == result.getProfit() ? BigDecimal.ZERO :  result.getProfit();
+        BigDecimal manFeeIn = null == result.getManFeeIn() ? BigDecimal.ZERO :  result.getManFeeIn();
+        BigDecimal custFeeIn = null == result.getCustFeeIn() ? BigDecimal.ZERO :  result.getCustFeeIn();
+        BigDecimal otherFeeIn = null == result.getOtherFeeIn() ? BigDecimal.ZERO :  result.getOtherFeeIn();
+        BigDecimal couFeeIn = null == result.getCouFeeIn() ? BigDecimal.ZERO :  result.getCouFeeIn();
+        BigDecimal diff = bankInt.subtract(manFeeIn.add(custFeeIn.add(otherFeeIn).add(couFeeIn)));
+        if(diff.compareTo(BigDecimal.ZERO) !=0 ){
+            List<BigDecimal> tmpList = new ArrayList<>();
+            tmpList.add(manFeeIn);
+            tmpList.add(custFeeIn);
+            tmpList.add(otherFeeIn);
+            tmpList.add(couFeeIn);
+            Collections.sort(tmpList);
+
+            BigDecimal bigData = tmpList.get(tmpList.size() - 1);
+            if(manFeeIn.equals(bigData)){
+                result.setManFeeIn(result.getManFeeIn().add(diff));
+            }else if(custFeeIn.equals(bigData)){
+                result.setCustFeeIn(result.getCustFeeIn().add(diff));
+            }else if(otherFeeIn.equals(bigData)){
+                result.setOtherFeeIn(result.getOtherFeeIn().add(diff));
+            }else if(couFeeIn.equals(bigData)){
+                result.setCouFeeIn(result.getCouFeeIn().add(diff));
+            }else{
+                //nothing to do
+            }
+
+        }
+        //-------费用因四舍五入差一分导致check不过进行倒减处理-------<<<<<<<
+    }
+
+    public static void main(String[] args) {
+        BigDecimal A = new BigDecimal("90");
+        BigDecimal B = new BigDecimal("20");
+        BigDecimal C = new BigDecimal("140");
+        BigDecimal D = new BigDecimal("240");
+        BigDecimal E = new BigDecimal("50");
+        List<BigDecimal> tmpList = new ArrayList<>();
+        tmpList.add(A);
+        tmpList.add(B);
+        tmpList.add(C);
+        tmpList.add(D);
+        tmpList.add(E);
+        Collections.sort(tmpList);
+        tmpList.forEach(x-> {
+            System.out.println(x);
+        });
     }
 
 
