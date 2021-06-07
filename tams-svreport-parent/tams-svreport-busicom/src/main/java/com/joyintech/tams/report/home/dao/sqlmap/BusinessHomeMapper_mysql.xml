@@ -65,7 +65,7 @@
         #{item,jdbcType=VARCHAR}
         </foreach>
     </if>
-	) temp,0) as datanum
+	) ,0) as datanum
 	from (select '01' reportcode,'CHB_EQU_HOLD' htmlindex from dual
 	union all select '02' reportcode,'CHB_INVESTHOLD_INFO' htmlindex from dual
 	union all select '03' reportcode,'MST_EXCHANGE_QUOTE' htmlindex from dual
