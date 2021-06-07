@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,6 +161,7 @@ public class ChbCcyConvertUtil {
         }
         // 将汇率封装成map
         for (ChbMstExchangeInfo chbExchangerateDto : list) {
+            stripTrailingZeros(chbExchangerateDto);
         	if(!DateUtil.format(date).equals(DateUtil.format(chbExchangerateDto.getPublishDate()))){
         		logger.warn("未取到当日汇率");
         	}
@@ -180,4 +182,29 @@ public class ChbCcyConvertUtil {
                     chbExchangerateDto.getMidPrice());
         }
     }
+
+    //add by lingxq on 2021-05-07 for mysql小数点后自动按照定义的长度补充0，先去0再校验------>>>>>>
+    private static void stripTrailingZeros(ChbMstExchangeInfo chbExchangerateDto) {
+	    //汇率(收盘价)
+	    if(null != chbExchangerateDto.getClosePrice()) {
+            chbExchangerateDto.setClosePrice(chbExchangerateDto.getClosePrice().stripTrailingZeros());
+        }
+	    //汇率(开盘价)
+        if(null != chbExchangerateDto.getOpenPrice()) {
+            chbExchangerateDto.setOpenPrice(chbExchangerateDto.getOpenPrice().stripTrailingZeros());
+        }
+        //汇率(最高价)
+        if(null != chbExchangerateDto.getHighPrice()) {
+            chbExchangerateDto.setHighPrice(chbExchangerateDto.getHighPrice().stripTrailingZeros());
+        }
+        //汇率(最低价)
+        if(null != chbExchangerateDto.getLowPrice()) {
+            chbExchangerateDto.setLowPrice(chbExchangerateDto.getLowPrice().stripTrailingZeros());
+        }
+        //汇率(中间价)
+        if(null != chbExchangerateDto.getMidPrice()) {
+            chbExchangerateDto.setMidPrice(chbExchangerateDto.getMidPrice().stripTrailingZeros());
+        }
+    }
+    //add by lingxq on 2021-05-07 for mysql小数点后自动按照定义的长度补充0，先去0再校验------<<<<<<<
 }
