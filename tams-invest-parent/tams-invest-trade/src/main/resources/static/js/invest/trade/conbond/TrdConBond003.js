@@ -239,6 +239,21 @@ var table;
             $("#refundDate").val($("#settleDate").val());
         }
     });
+    
+    $('#ps').on('change', function () {
+    	if($("#ps").val()&&$("#ps").val()==PS_T58 &&single==1){
+        	$("#actTradeDate_div").show();
+        	 $('#actTradeDate').attr('disabled',false);
+             $('#actTradeDate').attr('data-ignore',true);
+             $('#TrdConBond003_btn_save').attr('data-ignore',true).removeClass("layui-btn-disabled");;
+             $('#TrdConBond003_btn_submit').attr('data-ignore',true).removeClass("layui-btn-disabled");;
+             $('#TrdConBond003_btn_risk').attr('data-ignore',true).removeClass("layui-btn-disabled");;
+//             $('#actTradeDate').trigger('change')
+             if($("#actTradeDate").val()!=$("#refundDate").val()&&window.BussTrdTransferOrder){
+            	 window.BussTrdTransferOrder['bussTrdTransferOrder'].generateClick();
+             }
+        }
+    })
 
 
 
@@ -331,21 +346,23 @@ var table;
             	$("#actTradeDate_div").show();
             }
             
+//            if($("#ps").val()&&$("#ps").val()==PS_T58 &&single==1){
+//            	$("#actTradeDate_div").show();
+//            	 $('#actTradeDate').attr('disabled',false);
+//                 $('#actTradeDate').attr('data-ignore',true);
+//                 $('#TrdConBond003_btn_save').attr('data-ignore',true).removeClass("layui-btn-disabled");;
+//                 $('#TrdConBond003_btn_submit').attr('data-ignore',true).removeClass("layui-btn-disabled");;
+//                 $('#TrdConBond003_btn_risk').attr('data-ignore',true).removeClass("layui-btn-disabled");;
+////                 $('#actTradeDate').trigger('change')
+//                 if($("#actTradeDate").val()!=$("#refundDate").val()){
+//                	 window.BussTrdTransferOrder['bussTrdTransferOrder'].generateClick();
+//                 }
+//            }
             if($("#ps").val()&&$("#ps").val()==PS_T58 &&single==1){
-            	$("#actTradeDate_div").show();
-            	 $('#actTradeDate').attr('disabled',false);
-                 $('#actTradeDate').attr('data-ignore',true);
-                 $('#TrdConBond003_btn_save').attr('data-ignore',true).removeClass("layui-btn-disabled");;
-                 $('#TrdConBond003_btn_submit').attr('data-ignore',true).removeClass("layui-btn-disabled");;
-                 $('#TrdConBond003_btn_risk').attr('data-ignore',true).removeClass("layui-btn-disabled");;
-//                 $('#actTradeDate').trigger('change')
-                 if($("#actTradeDate").val()!=$("#refundDate").val()){
+                 if($("#actTradeDate").val()!=$("#refundDate").val()&&window.BussTrdTransferOrder){
                 	 window.BussTrdTransferOrder['bussTrdTransferOrder'].generateClick();
                  }
-            }
-            
-            
-            
+            }            
         }
     };
     
