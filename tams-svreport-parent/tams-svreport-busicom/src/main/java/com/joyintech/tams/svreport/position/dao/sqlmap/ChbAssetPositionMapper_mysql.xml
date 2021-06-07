@@ -634,6 +634,7 @@
 		ON ASSETINFO.ASSET_CODE = ASSETBASIS.ASSET_ID
 		WHERE 1 =1 
 		AND ASSETBASIS.STATUS != 'D'/*删除状态数据不统计*/
+        AND ASSETINFO.STATUS != 'D'
         AND DATE_FORMAT(ASSETBASIS.VALUE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         <if test="prodids !=null and prodids.size()!=0">
             and ASSETBASIS.PROD_ID in
