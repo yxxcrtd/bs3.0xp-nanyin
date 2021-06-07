@@ -84,7 +84,7 @@ public class TrdPlanCurrDuration002Controller extends BaseController{
         String type = (String)param.get("type");
 
         //用于判断是否来自来账分拣
-        String isFromCheck = (String)param.get("isFromCheck");
+        String isFromCheck = (String)param.get("isFromCheck");  
         model.addAttribute("isFromCheck",isFromCheck);
 
 //      交易人
