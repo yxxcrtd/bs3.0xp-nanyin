@@ -111,7 +111,7 @@
         </dependency>
 		<dependency>
 			<groupId>com.joyintech.component</groupId>
-			<artifactId>msg-generate-1.0.0</artifactId>
+			<artifactId>msg-generate-1.0.1</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
