@@ -1,7 +1,7 @@
 $(function() {
     //跳转的页码
       var pageCount = 1;
-      /**
+      /**导出成功，是否自动标识未报送数据的报送状态为“手工处理”
        * 获取查询参数
        */
       var getSearchParams = function() {
@@ -271,13 +271,25 @@ $(function() {
        */
       var confirmExport = function(param, expArr) {
            Joyin.exportExcel('export', param);
-           Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
-               layui.layer.open({type:3});
-               Joyin.ajaxJson('doManual', {keyList : JSON.stringify(expArr)}, function() {
-                   table.load();
-                   layui.layer.closeAll();
+ 　　		//判断所选导出的数据是否已经报送送成功，若报送成功，则无需"手工处理"，只对报送失败的数据进行处理
+           var isNotSendData = false;
+            for(var j=expArr.length-1;j>=0;j--){
+                if(expArr[j].sendStatus=="01" || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回'))) {
+                         isNotSendData = true;//有未报送成功的数据
+                   }
+                   if(!(expArr[j].sendStatus == '01' || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回')))){
+                          expArr.splice(j,1);
+                   }
+               }
+            if (isNotSendData){
+               Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+                   layui.layer.open({type:3});
+                   Joyin.ajaxJson('doManual', {keyList : JSON.stringify(expArr)}, function() {
+                       table.load();
+                       layui.layer.closeAll();
+                   });
                });
-           });
+            }
       };
 
     /**start   中债一二期直连新加  add  by wangzehui  20201012  */
