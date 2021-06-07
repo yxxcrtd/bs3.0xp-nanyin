@@ -529,11 +529,13 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				default:
 			}
 		}
-//		boolean flag = isHaveStatus(tableName);//delete by lingxq on 2021-06-05 界面删除条件查询不到数据优化
-		boolean flag = false; //add by lingxq on 2021-06-05 界面删除条件查询不到数据优化
+		boolean flag = isHaveStatus(tableName);
 		if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.equals(tableName,"CHB_LOAN_DETAIL_INFO")){
 			list = baseInformationMapper.queryChbLoanDetailInfoByParams(tableName, baseInformationList, flag,assetType);
 		}else{
+			if(StringUtil.equals(tableName,"CHB_LOAN_DETAIL_INFO")){
+				flag = false;//删除数据查询无数据
+			}
 			list = baseInformationMapper.queryBaseInfoByParams(tableName, baseInformationList, flag,assetType);
 		}
 		return list;

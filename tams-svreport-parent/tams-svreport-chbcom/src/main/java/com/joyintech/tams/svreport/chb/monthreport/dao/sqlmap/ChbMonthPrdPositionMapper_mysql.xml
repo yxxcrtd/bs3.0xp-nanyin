@@ -880,7 +880,16 @@
         ,prod.IS_NOTICE
         ,prod.YIELD_E
         ,prod.TERMDAY
-        ,prod.TERMTYPE2
+        ,case when prod.operate_mode in ('01','02') then
+                case
+                    when prod.closetermday &lt;= 92 then '04'
+                    when prod.closetermday &lt;= 184 then '05'
+                    when prod.closetermday &lt;= 366 then '06'
+                    when prod.closetermday &lt;= 1096 then '08'
+                else '99'
+                end
+         else prod.TERMTYPE2
+         end TERMTYPE2
         <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 end -->
         from  pi prod
 
