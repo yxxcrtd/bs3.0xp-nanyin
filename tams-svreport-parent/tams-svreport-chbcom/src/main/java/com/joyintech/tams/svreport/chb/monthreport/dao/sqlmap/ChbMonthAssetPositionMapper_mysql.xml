@@ -1282,9 +1282,11 @@
             pos.ASSETVALUE_B AS qmAssetValue,
             NULL AS qcAssetValue,
 
-            CASE pos.ASSETTYPE2
-                WHEN '2101' THEN assetinfo.sec_main_grade
-                WHEN '1299' THEN '31'
+            CASE
+                WHEN (FINANCIER_GRADE IS NULL
+                    AND sec_main_grade IS NULL) THEN '31'
+                WHEN pos.ASSETTYPE2 = '2101' THEN assetinfo.sec_main_grade
+                WHEN pos.ASSETTYPE2 = '1299' THEN '31'
                 ELSE assetinfo.FINANCIER_GRADE
                 END
                 as rating,
@@ -1312,6 +1314,24 @@
           and
             pos.asset_code = assetinfo.asset_code
         UNION ALL
+        (SELECT DISTINCT
+            pos.PROD_ID AS prodId,
+            pos.asset_code AS assetCode,
+            pos.ASSETTYPE2 AS assettype2,
+            pos.ENDDATE AS enddate,
+            pos.ASSETVALUE_B AS qmAssetValue,
+            NULL AS qcAssetValue,
+            NULL AS rating,
+            NULL AS guaType,
+            NULL AS tradeMarket,
+            NULL AS isFbzb,
+            NULL AS isConstracte
+        FROM
+            CHB_MONTH_ASSET_POSITION pos
+        WHERE
+            pos.ENDDATE = #{cdate,jdbcType=DATE}
+          AND pos.ASSETTYPE2 = '1001')
+        UNION ALL
         (select
              DISTINCT
              pos.PROD_ID AS prodId,
@@ -1321,9 +1341,11 @@
              NULL AS qmAssetValue,
              pos.ASSETVALUE_B AS qcAssetValue,
 
-             CASE pos.ASSETTYPE2
-                 WHEN '2101' THEN assetinfo.sec_main_grade
-                 WHEN '1299' THEN '31'
+             CASE
+                 WHEN (FINANCIER_GRADE IS NULL
+                     AND sec_main_grade IS NULL) THEN '31'
+                 WHEN pos.ASSETTYPE2 = '2101' THEN assetinfo.sec_main_grade
+                 WHEN pos.ASSETTYPE2 = '1299' THEN '31'
                  ELSE assetinfo.FINANCIER_GRADE
                  END
                  as rating,
@@ -1353,6 +1375,27 @@
              pos.prod_id = baseinfo.prod_id
            and
              pos.asset_code = assetinfo.asset_code)
+        UNION ALL
+        (SELECT DISTINCT
+            pos.PROD_ID AS prodId,
+            pos.asset_code AS assetCode,
+            pos.ASSETTYPE2 AS assettype2,
+            pos.ENDDATE AS enddate,
+            NULL AS qmAssetValue,
+            pos.ASSETVALUE_B AS qcAssetValue,
+            NULL AS rating,
+            NULL AS guaType,
+            NULL AS tradeMarket,
+            NULL AS isFbzb,
+            NULL AS isConstracte
+        FROM
+            CHB_MONTH_ASSET_POSITION pos
+        WHERE
+            pos.ENDDATE = (
+                 SELECT
+                     date_sub( date_sub( date_format( #{cdate,jdbcType=DATE}, '%y-%m-%d' ), INTERVAL extract( DAY FROM #{cdate,jdbcType=DATE}) DAY ), INTERVAL 0 MONTH ) AS date
+             )
+          AND pos.ASSETTYPE2 = '1001')
     </select>
 
 
