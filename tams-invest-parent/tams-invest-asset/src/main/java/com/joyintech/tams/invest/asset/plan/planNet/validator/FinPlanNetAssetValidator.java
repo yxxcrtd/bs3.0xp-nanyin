@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 public class FinPlanNetAssetValidator implements BeanValidator {
@@ -135,6 +136,13 @@ public class FinPlanNetAssetValidator implements BeanValidator {
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
             errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getRepAssetType(), ValidMessage.class);
+        }
+        Pattern speePpattern = Pattern.compile("[0-9]*");
+        if (!speePpattern.matcher(dto.getPurSpeed()).matches()) {
+            errorList.add(new ValidMessage("申购确认速度不规范!"));
+        }
+        if (!speePpattern.matcher(dto.getRedSpeed()).matches()) {
+            errorList.add(new ValidMessage("赎回确认速度不规范!"));
         }
 
         return errorList;
