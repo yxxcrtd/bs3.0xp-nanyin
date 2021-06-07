@@ -111,7 +111,6 @@
         repYieldFlagChang();
         
         getElementById('repAssetType').change(function(){
-             debugger;
 //       	    $("#bussRepAssetMngProdInfo_repFinancialComissue").attr("disabled",false);
 //       	    $("#bussRepAssetMngProdInfo_repFinancialComissue").prop("required",false);
 

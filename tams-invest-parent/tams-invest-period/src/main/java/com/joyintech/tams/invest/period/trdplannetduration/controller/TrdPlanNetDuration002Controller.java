@@ -75,6 +75,11 @@ public class TrdPlanNetDuration002Controller extends BaseController {
         // 获取业务类型
         String type = (String)param.get("type");
         String workflowId = (String)param.get(GlobalConstant.WORKFLOW_ID);
+
+        //用于判断是否来自来账分拣
+        String isFromCheck = (String)param.get("isFromCheck");
+        model.addAttribute("isFromCheck",isFromCheck);
+
         // 交易人
         String trader = SecurityUtil.getLoginUser().getUserName();
         setSelectOptionToModel(model, DictCode.分红方式, DictCode.是否, DictCode.平安划款类型, DictCode.币种, DictCode.是否);
