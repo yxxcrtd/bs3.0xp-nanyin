@@ -1,4 +1,4 @@
-/*drop table SYS_USER_ADD cascade constraints;*/
+drop table SYS_USER_ADD cascade constraints;
 
 /*==============================================================*/
 /* Table: SYS_USER_ADD                                      */
