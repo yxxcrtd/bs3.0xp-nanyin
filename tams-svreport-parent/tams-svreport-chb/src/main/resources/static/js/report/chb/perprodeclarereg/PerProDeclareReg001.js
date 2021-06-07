@@ -29,11 +29,11 @@ $(function() {
 			// 募集起始日期
 			raise_startdateStart : $('#raise_startdate').startDate(),
 			raise_startdateEnd : $('#raise_startdate').endDate(),
-			
-			//行内标识码 
+
+			//行内标识码
 			prodInsId : $('#prod_ins_id').val() == null ? null : $('#prod_ins_id').val()
 					.join(","),
-			
+
 			// 数据日期
 			statusDateStart : $('#statusDate').startDate(),
 			statusDateEnd : $('#statusDate').endDate(),
@@ -43,7 +43,7 @@ $(function() {
 		}
 	};
 
-	
+
 	/**
 	 * 定义数据表格
 	 */
@@ -62,7 +62,7 @@ $(function() {
 								{
 									title : '数据状态',
 									field : 'statusSTR',
-									width : 100, 
+									width : 100,
 									sortField:'status'
 								},
 								{ field: 'sendStatus',visible:false},
@@ -71,37 +71,37 @@ $(function() {
 									title : '数据日期',
 									field : 'statusDate',
 									type : 'date',
-									type : 'datetime', 
+									type : 'datetime',
 									sortField:'statusDate'
 								},
 								{
 									title : '报送状态',
 									field : 'sendStatusSTR',
-									width : 100, 
+									width : 100,
 									sortField:'sendStatus'
 								},
 								{
 									title : '报送日期',
 									field : 'submitTime',
-									type : 'datetime', 
+									type : 'datetime',
 									sortField:'submitTime'
 								},
 								{
 									title : '报送截止日',
 									field : 'chbSubmitDeadline',
 									type : 'date',
-									type : 'datetime', 
+									type : 'datetime',
 									sortField:'chbSubmitDeadline'
 								},
 								{
 									title : '反馈状态',
 									field : 'submitFeedbackStatus',
-									width : 100, 
+									width : 100,
 									sortField:'submitFeedbackStatus'
 								},
 								{
 									field : 'registSeqno',
-									width : 200, 
+									width : 200,
 									sortable:false,
 									visible : false
 								},
@@ -114,109 +114,109 @@ $(function() {
 								{
 									title : '产品代码',
 									field : 'prodId',
-									width : 200, 
+									width : 200,
 									sortField:'prodId'
 								},
 								{
 									title : '产品名称',
 									field : 'prodName',
-									width : 200, 
+									width : 200,
 									sortField:'prodName'
 								},
 								{
 									title : '行内标识码',
 									field : 'prodInsId',
-									width : 200, 
+									width : 200,
 									sortField:'prodInsId'
 								},
 								{
 									title : '产品品牌',
 									field : 'prodBrand',
-									width : 200, 
+									width : 200,
 									sortField:'prodBrand'
 								},
 								{
 									title : '产品期次',
 									field : 'prodStage',
-									width : 200, 
+									width : 200,
 									sortField:'prodStage'
 								},
 								{
 									title : '发行机构代码',
 									field : 'issuePartyId',
-									width : 200, 
+									width : 200,
 									sortField:'issuePartyId'
 								},
 								{
 									title : '产品审批人身份证号',
 									field : 'approverId',
-									width : 200, 
+									width : 200,
 									sortField:'approverId'
 								},
 								{
 									title : '产品审批人姓名',
 									field : 'approverName',
-									width : 200, 
+									width : 200,
 									sortField:'approverName'
 								},
 								{
 									title : '产品设计人身份证号',
 									field : 'designerId',
-									width : 200, 
+									width : 200,
 									sortField:'designerId'
 								},
 								{
 									title : '产品设计人姓名',
 									field : 'designerName',
-									width : 200, 
+									width : 200,
 									sortField:'designerName'
 								},
 								{
 									title : '投资经理身份证号',
 									field : 'managerId',
-									width : 200, 
+									width : 200,
 									sortField:'managerId'
 								},
 								{
 									title : '投资经理姓名',
 									field : 'managerName',
-									width : 200, 
+									width : 200,
 									sortField:'managerName'
 								},
 								{
 									title : '业务联络人姓名',
 									field : 'liaisonName',
-									width : 200, 
+									width : 200,
 									sortField:'liaisonName'
 								},
 								{
 									title : '业务联络人座机',
 									field : 'liaisonTel',
-									width : 200, 
+									width : 200,
 									sortField:'liaisonTel'
 								},
 								{
 									title : '业务联络人手机',
 									field : 'liaisonMobile',
-									width : 200, 
+									width : 200,
 									sortField:'liaisonMobile'
 								},
 								{
 									title : '业务联络人邮箱',
 									field : 'liaisonEmail',
-									width : 200, 
+									width : 200,
 									sortField:'liaisonEmail'
 								},
 								{
 									title : '产品募集方式',
 									field : 'raiseType',
-									width : 200, 
+									width : 200,
 									sortField:'raiseType'
 								},
 								{
 									title : '产品收益类型',
 									field : 'profitType',
-									width : 200, 
+									width : 200,
 									sortField:'profitType'
 								},
 								{
@@ -228,79 +228,79 @@ $(function() {
 								{
 									title : '产品期限',
 									field : 'termtype',
-									width : 200, 
+									width : 200,
 									sortField:'termtype'
 								},
 								{
 									title : '是否金融同业专属',
 									field : 'excFinSector',
-									width : 200, 
+									width : 200,
 									sortField:'excFinSector'
 								},
 								{
 									title : '资金投向地区',
 									field : 'investArae',
-									width : 200, 
+									width : 200,
 									sortField:'investArae'
 								},
 								{
 									title : '产品投资国家或地区',
 									field : 'investCountry',
-									width : 200, 
+									width : 200,
 									sortField:'investCountry'
 								},
 								{
 									title : '理财业务服务模式',
 									field : 'finanSerModel',
-									width : 200, 
+									width : 200,
 									sortField:'finanSerModel'
 								},
 								{
 									title : '产品运作模式',
 									field : 'operateMode',
-									width : 200, 
+									width : 200,
 									sortField:'operateMode'
 								},
 								{
 									title : '是否设置最短持有期限',
 									field : 'isShortTerm',
-									width : 200, 
+									width : 200,
 									sortField:'isShortTerm'
 								},
 								{
 									title : '最短持有期限（天）',
 									field : 'shortTerm',
-									width : 200, 
+									width : 200,
 									sortField:'shortTerm'
 								},
 								{
 									title : '最短持有期后是否自由赎回',
 									field : 'isFreeRedem',
-									width : 200, 
+									width : 200,
 									sortField:'isFreeRedem'
 								},
-								{ 
+								{
 									title : '是否现金管理类',
 									field : 'cashManaCate',
-									width : 200, 
+									width : 200,
 									sortField:'cashManaCate'
 								},
 								{
 									title : '产品资产配置方式',
 									field : 'cmmode',
-									width : 200, 
+									width : 200,
 									sortField:'cmmode'
 								},
 								{
 									title : '产品管理模式',
 									field : 'pmmode',
-									width : 200, 
+									width : 200,
 									sortField:'pmmode'
 								},
 								{
 									title : '实际管理人员名称',
 									field : 'mname',
-									width : 200, 
+									width : 200,
 									sortField:'mname'
 								},
 								{
@@ -311,7 +311,7 @@ $(function() {
 								{
 									title : '产品投资性质',
 									field : 'ivstorientation',
-									width : 200, 
+									width : 200,
 									sortField:'ivstorientation'
 								},
 								{
@@ -334,158 +334,158 @@ $(function() {
 									field : 'yield',
 									width : 200, sortField:'yield'
 								},
-								
-								
+
+
 								{
 									title : '投资者风险偏好',
 									field : 'riskType',
-									width : 200, 
+									width : 200,
 									sortField:'riskType'
 								},
 								{
 									title : '产品销售区域',
 									field : 'saleArea',
-									width : 200, 
+									width : 200,
 									sortField:'saleArea'
 								},
 								{
 									title : '募集币种',
 									field : 'raiseCcy',
-									width : 200, 
+									width : 200,
 									sortField:'raiseCcy'
 								},
 								{
 									title : '兑付本金币种',
 									field : 'cashPrinCcy',
-									width : 200, 
+									width : 200,
 									sortField:'cashPrinCcy'
 								},
 								{
 									title : '兑付收益币种',
 									field : 'cashProfCcy',
-									width : 200, 
+									width : 200,
 									sortField:'cashProfCcy'
 								},
 								{
 									title : '起点销售金额',
 									field : 'saleAmtStr',
-									width : 200, 
+									width : 200,
 									sortField:'saleAmtStr'
 								},
 								{
 									title : '计划募集金额',
 									field : 'raiseAmtPlan',
-									width : 200, 
+									width : 200,
 									sortField:'raiseAmtPlan'
 								},
 								{
 									title : '募集起始日期（从）',
 									field : 'raisePstrdate',
 									type : 'date',
-									width : 200, 
+									width : 200,
 									sortField:'raisePstrdate'
 								},
 								{
 									title : '募集起始日期（到）',
 									field : 'raisePenddate',
 									type : 'date',
-									width : 200, 
+									width : 200,
 									sortField:'raisePenddate'
 								},
 								{
 									title : '投资本金到账日',
 									field : 'investPrinDate',
-									width : 200, 
+									width : 200,
 									sortField:'investPrinDate'
 								},
 								{
 									title : '投资收益到账日',
 									field : 'investProfDate',
-									width : 200, 
+									width : 200,
 									sortField:'investProfDate'
 								},
 								{
 									title : '销售手续费%',
 									field : 'saleFeeRate',
-									width : 200, 
+									width : 200,
 									sortField:'saleFeeRate'
 								},
 								{
 									title : '投资管理费率%',
 									field : 'investFeeRate',
-									width : 200, 
+									width : 200,
 									sortField:'investFeeRate'
 								},
 								{
 									title : '境内托管机构名称',
 									field : 'inDepName',
-									width : 200, 
+									width : 200,
 									sortField:'inDepName'
 								},
 								{
 									title : '境内托管机构代码',
 									field : 'inDepCode',
-									width : 200, 
+									width : 200,
 									sortField:'inDepCode'
 								},
 								{
 									title : '境外托管机构国别',
 									field : 'outDepCtry',
-									width : 200, 
+									width : 200,
 									sortField:'outDepCtry'
 								},
 								{
 									title : '境外托管机构名称',
 									field : 'outDepName',
-									width : 200, 
+									width : 200,
 									sortField:'outDepName'
 								},
 								{
 									title : '托管费率%',
 									field : 'truFeeRate',
-									width : 200, 
+									width : 200,
 									sortField:'truFeeRate'
 								},
 								{
 									title : '产品风险等级',
 									field : 'riskLevel',
-									width : 200, 
+									width : 200,
 									sortField:'riskLevel'
 								},
 								{
 									title : '发型机构提前终止权标识',
 									field : 'termRightFlag',
-									width : 200, 
+									width : 200,
 									sortField:'termRightFlag'
 								},
 								{
 									title : '客户赎回权标识',
 									field : 'cusRedeemFlag',
-									width : 200, 
+									width : 200,
 									sortField:'cusRedeemFlag'
 								},
 								{
 									title : '产品增信标识',
 									field : 'creditFlag',
-									width : 200, 
+									width : 200,
 									sortField:'creditFlag'
 								},
 								{
 									title : '产品增信机构类型',
 									field : 'creditType',
-									width : 200, 
+									width : 200,
 									sortField:'creditType'
 								},
 								{
 									title : '产品增信形式',
 									field : 'creditMode',
-									width : 200, 
+									width : 200,
 									sortField:'creditMode'
 								},
 								{
 									title : '备注',
 									field : 'remark',
-									width : 200, 
+									width : 200,
 									sortField:'remark'
 								},
 								{
@@ -507,7 +507,7 @@ $(function() {
 								{
 									title : '附件个数',
 									field : 'fileNum',
-									width : 100, 
+									width : 100,
 									sortField:'fileNum'
 								},
 								{
@@ -533,13 +533,13 @@ $(function() {
 										text : '&#xe615;',
 										clas : 'fileView',
 										title : '查看'
-									} ] 
+									} ]
 								}
 
 						]
 					});
 
-	
+
 
 	// 导出中债Excel
 	$('#SvrPerProDeclareReg001_btn_chbexport').click(function() {
@@ -566,7 +566,7 @@ $(function() {
              	   return;
                 }
             })
-            
+
 			Joyin.exportExcel("export", param);
 			if (isHaveData){
 				Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
@@ -626,13 +626,25 @@ $(function() {
 	 */
 	var confirmExport = function(param, expArr) {
 		Joyin.exportExcel('export', param);
-		Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
-        	layui.layer.open({type:3});
-            Joyin.ajaxJson('doManual', {keyList : JSON.stringify(expArr)}, function() {
-                table.load();
-                layui.layer.closeAll();
+		//判断所选导出的数据是否已经报送送成功，若报送成功，则无需"手工处理"，只对报送失败的数据进行处理
+        var isNotSendData = false;
+		for(var j=expArr.length-1;j>=0;j--){
+		    if(expArr[j].sendStatus=="01" || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回'))) {
+                  isNotSendData = true;//有未报送成功的数据
+            }
+            if(!(expArr[j].sendStatus == '01' || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回')))){
+                   expArr.splice(j,1);
+            }
+        }
+		if (isNotSendData){
+            Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+        	    layui.layer.open({type:3});
+                Joyin.ajaxJson('doManual', {keyList : JSON.stringify(expArr)}, function() {
+                    table.load();
+                    layui.layer.closeAll();
+                });
             });
-        });
+		}
 	};
 	/**start   中债一二期直连新加  add  by dongxiangyang  20201009  */
 	// 数据检查
@@ -660,7 +672,7 @@ $(function() {
 		chbCommonCheck(table, paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
 	});
 	/**end   中债一二期直连新加  add  by dongxiangyang  20201009  */
-	
+
     /**
 	 * 手工处理
 	 */
@@ -770,7 +782,7 @@ $(function() {
 
 	var uploadTheFile = function(data,index){
 		Joyin.uploadFile(
-				{	
+				{
 					exts : 'zip',
 			        hideTpl : true
 		       } ,
@@ -785,23 +797,23 @@ $(function() {
 				table.reload();
 				//layui.layer.closeAll();
 			});
-		    
+
 		}
 		       );
-		
+
 	}
-	
+
 	table.bind('click', '.upload', function(data, index) {
           var p='';
 		if (data.sendStatus != '01') {
 			Joyin.error("只有未报送的记录可以上传！");
 			return;
 		}
-		
+
 		if (!data.fileNo || data.fileNo == null) {
 			uploadTheFile(data,index);
 		}else {
-			Joyin.confirm("本产品已存在附件，是否覆盖？", 
+			Joyin.confirm("本产品已存在附件，是否覆盖？",
 					function() {
 //				layui.layer.open({
 //					type : 3
@@ -809,11 +821,11 @@ $(function() {
 				uploadTheFile(data,index);
 			})
 		}
-		
-		
+
+
 	});
-	
-	
+
+
 
 
 //		$('#SvrPerProDeclareReg001_btn_upload').click(function() {
@@ -826,9 +838,9 @@ $(function() {
 //			});
 //		});
 //	});
-		
-		
-		
+
+
+
 
 	table.bind('click', '.download', function(data, index) {
 		if (!data.fileNo || data.fileNo == null) {
@@ -845,12 +857,12 @@ $(function() {
 		}
 		);
 	});
-	
-	
-	
-	
+
+
+
+
 	table.bind('click', '.fileView', function(data, index) {
-		
+
 		$.post('getFileList', {fileNo:data.fileNo}, function(str){
 			  layer.open({
 			    type: 0,
@@ -860,8 +872,8 @@ $(function() {
 			    offset: 'rb'
 			  });
 			});
-		
-  
+
+
 
 	});
 
@@ -875,17 +887,17 @@ $(function() {
 			return;
 		} else {
 			Joyin.confirm("请确认是否要删除已存在的附件？", function() {
-				
+
 				Joyin.ajax('deltFile', {
 					registSeqno : data.registSeqno,
 					fileNo:data.fileNo
 				}, function() {
 					table.reload();
 				})
-				
-				
 
-				
+
+
+
 
 			});
 		}
@@ -902,7 +914,7 @@ $(function() {
 				table.load();
 			}, 500);
 		}
-		
+
 	}
 	;
 	init();

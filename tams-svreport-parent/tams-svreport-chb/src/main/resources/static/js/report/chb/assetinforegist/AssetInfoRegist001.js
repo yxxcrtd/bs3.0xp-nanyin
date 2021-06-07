@@ -228,9 +228,9 @@ $(function() {
                 { title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
                 { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
                 { title: "法定到期日",width:100,sortField:'fmdate', field: 'fmdate', type: 'date'},
-                //delete by wm 删除中债不报送字段 start 20201031 
+                //delete by wm 删除中债不报送字段 start 20201031
 //                { title: "项目期限(天）",width:150,sortField:'termDate', field: 'termDate',digit:0},
-                //delete by wm 删除中债不报送字段 end 20201031 
+                //delete by wm 删除中债不报送字段 end 20201031
                 { title: "是否有预期收益率",width:150,sortField:'rateFlag', field: 'rateFlag'},
                 { title: "项目收益率（利率）(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number' ,digit:5},
                 { title: "计息类型",width:150,sortField:'couponSpecies', field: 'couponSpecies'},
@@ -264,17 +264,17 @@ $(function() {
                 { title: "重点监控行业和领域类别说明",width:150,sortField:'monTypeComm', field: 'monTypeComm'},
                 { title: "担保方式",width:150,sortField:'guaType', field: 'guaType'},
                 { title: "担保情况说明",width:150,sortField:'guaTypeRemark', field: 'guaTypeRemark'},
-                
+
                 { title: "抵质押物类型",width:150,sortField:'pledgeType', field: 'pledgeType'},
                 { title: "抵质押物价值（元）",width:150,sortField:'pledgeValue', field: 'pledgeValue',type: 'number' ,digit:2},
                 { title: "担保性质",width:150,sortField:'natureGuarantee', field: 'natureGuarantee'},
                 { title: "担保人与融资人关系",width:150,sortField:'relationFinan', field: 'relationFinan'},
-                
-                
+
+
                 { title: "融资人主体评级",width:150,sortField:'financierGrade', field: 'financierGrade'},
                 { title: "资产内部评级",width:150,sortField:'inGrade', field: 'inGrade'},
                 { title: "资产外部评级",width:150,sortField:'outGrade', field: 'outGrade'},
-                
+
                 { title: "含权类型",width:150,sortField:'containType', field: 'containType'},
                 { title: "行权方式",width:150,sortField:'exerciseType', field: 'exerciseType'},
                 { title: "固定行权日",width:150,sortField:'exerciseDate', field: 'exerciseDate',type: 'date'},
@@ -288,13 +288,13 @@ $(function() {
                 { title: "重定价周期",width:150,sortField:'reprceCycle', field: 'reprceCycle',type: 'number'},
                 { title: "部分赎回标识",width:150,sortField:'partRedemFlag', field: 'partRedemFlag'},
                 { title: "部分赎回比例(%)",width:200,sortField:'partRedemRate', field: 'partRedemRate',type: 'number' ,digit:5},
-                
+
                 { title: "选择权",width:150,sortField:'chose', field: 'chose'},
                 { title: "行权条件说明",width:150,sortField:'conditionCmm', field: 'conditionCmm'},
-                
+
                 { title: "增信机构代码",width:150,sortField:'creditOrgCode', field: 'creditOrgCode'},
                 { title: "增信机构名称",width:150,sortField:'creditOrgName', field: 'creditOrgName'},
-                
+
                 { title: "融资人所属地区",width:150,sortField:'finArea', field: 'finArea'},
                 { title: "融资总费率(%)",width:150,sortField:'totalFeeRate', field: 'totalFeeRate',type: 'number' ,digit:5},
                 { title: "融资人组织机构（社会信用）代码",width:150,sortField:'finOrgCode', field: 'finOrgCode'},
@@ -379,16 +379,16 @@ $(function() {
                 { title: "行业分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
                 //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 end
                 { title: "投资阶段",width:150,sortField:'investStage', field: 'investStage'},
-                
+
                 { title: "股权退出安排",width:150,sortField:'equityQuit', field: 'equityQuit',type: 'date'},
-                
+
                 { title: "投资企业类型（按规模划分）",width:200,sortField:'sharesType1', field: 'sharesType1'},
 			    { title: "投资企业类型（按技术领域划分）",width:200,sortField:'sharesType3', field: 'sharesType3'},
 			    { title: "投资企业类型（按经济类型划分）",width:200,sortField:'sharesType2', field: 'sharesType2'},
                 { title: "是否为质押融资",width:150,sortField:'isPledge', field: 'isPledge'},
-                
+
                 { title: "是否为债转股",width:150,sortField:'deptEquity', field: 'deptEquity'},
-                
+
                 { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -423,7 +423,7 @@ $(function() {
 				{ title: "标的类别",width:150,sortField:'targetType3', field: 'targetType3'},
 
 				{ title: "持有目的",width:150,sortField:'holdPurpose', field: 'holdPurpose'},
-				
+
 				{ title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -618,7 +618,7 @@ $(function() {
                 { title: "资管计划名称",width:150,sortField:'assetName', field: 'assetName'},
 
                 { title: "是否由金融资产投资公司发行",width:250,sortField:'financialComissue', field: 'financialComissue'},
-                
+
                 { title: "资管计划发起人机构编码",width:100,sortField:'partyCode', field: 'partyCode'},
                 { title: "资管计划登记编码",width:100,sortField:'checkCode', field: 'checkCode'},
                 { title: "管理人",width:150,sortField:'managerId', field: 'managerId'},
@@ -741,7 +741,7 @@ $(function() {
 				{ title: "币种",width:100 , field: 'ccy',sortField:'ccy'},
 			    { title: "基金代码",width:100,sortField:'assetId', field: 'assetId'},
 			    { title: "基金名称",width:100,sortField:'assetName', field: 'assetName'},
-			    
+
 			    { title: "是否由金融资产投资公司发行",width:200,sortField:'financialComissue', field: 'financialComissue'},
 			    //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 start
                 //{ title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
@@ -895,7 +895,7 @@ $(function() {
                 { title: "重点监控行业和领域类别",width:150,sortField:'monitType', field: 'monitType'},
                 { title: "重点监控行业和领域类别说明",width:150,sortField:'monTypeComm', field: 'monTypeComm'},
                 { title: "对应资产外部评级",width:150,sortField:'outGrade', field: 'outGrade'},
-                
+
                 { title: "担保方式",width:150,sortField:'guaType', field: 'guaType'},
                 { title: "担保情况说明",width:150,sortField:'guaTypeRemark', field: 'guaTypeRemark'},
                 { title: "抵质押物类型",width:150,sortField:'pledgeType', field: 'pledgeType'},
@@ -903,7 +903,7 @@ $(function() {
                 { title: "担保性质",width:150,sortField:'natureGuarantee', field: 'natureGuarantee'},
                 { title: "担保人与融资人关系",width:150,sortField:'relationFinan', field: 'relationFinan'},
                 { title: "是否为债转股",width:150,sortField:'deptEquity', field: 'deptEquity'},
-                
+
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -1006,7 +1006,7 @@ $(function() {
 		}
 
 	};
-	
+
 	/**
 	 * 确认导出之后的操作
 	 */
@@ -1014,13 +1014,25 @@ $(function() {
 		var assetTypes = $('#assetType').val();
 		var table = getTable(assetTypes);
 		Joyin.exportExcel("export", param);
-        Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
-        	layui.layer.open({type:3});
-            Joyin.ajaxJson('manual', {keyList : JSON.stringify(expArr)}, function() {
-                table.load();
-                layui.layer.closeAll();
+		//判断所选导出的数据是否已经报送送成功，若报送成功，则无需"手工处理"，只对报送失败的数据进行处理
+        var isNotSendData = false;
+		for(var j=expArr.length-1;j>=0;j--){
+		    if(expArr[j].sendStatus=="01" || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回'))) {
+                  isNotSendData = true;//有未报送成功的数据
+            }
+            if(!(expArr[j].sendStatus == '01' || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回')))){
+                   expArr.splice(j,1);
+            }
+        }
+		if (isNotSendData){
+            Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+            	layui.layer.open({type:3});
+                Joyin.ajaxJson('manual', {keyList : JSON.stringify(expArr)}, function() {
+                    table.load();
+                    layui.layer.closeAll();
+                });
             });
-        });
+		}
 	};
 
     //导出删除模板
@@ -1045,7 +1057,7 @@ $(function() {
             }
         })
 //        if (!isHaveData){
-//      	  return; 
+//      	  return;
 //        }
         // 选中的导出数据
         var expArr=table.getAllCheckedRows();
@@ -1055,7 +1067,7 @@ $(function() {
         	// 不勾选不能导出
         	if (!isHaveData){
         		Joyin.error("没有可导出的数据，请重新选择导出条件！");
-            	 return; 
+            	 return;
               }
         }
         else{
@@ -1084,7 +1096,7 @@ $(function() {
                         "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:param.pageId,expKeys:param.expKeys},function(){
                             //防止出现查询转圈圈
                             setTimeout(function(){table.reload();},100);
-            	}); 
+            	});
         	});
         } else {
         	 // 打开删除信息页面
@@ -1093,9 +1105,9 @@ $(function() {
                     "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:param.pageId,expKeys:param.expKeys},function(){
                         //防止出现查询转圈圈
                         setTimeout(function(){table.reload();},100);
-        	}); 
+        	});
         }
-       
+
     });
 
 	/**start   中债一二期直连新加  add  by wangzehui  20201012  */
@@ -1224,7 +1236,7 @@ $(function() {
 			};
 
 	        active.tabDelete($(this).attr("id"));
-		}); 
+		});
 	};
 	init();
 	// 防止死循环,资产负债类别下拉框联动tab页
@@ -1297,8 +1309,8 @@ $(function() {
 			table.reload();
 		});
 	});
-	
-    //手工处理 
+
+    //手工处理
     $('#AssetInfoRegist001_btn_manual').click(function() {
 		var assetTypes = $('#assetType').val();
 		var table = getTable(assetTypes);
@@ -1344,9 +1356,9 @@ $(function() {
 	        });
         }
     });
-    
+
     /**
-     * 取消手工处理 
+     * 取消手工处理
      */
    $('#AssetInfoRegist001_btn_cancelManual').click(function() {
 		var assetTypes = $('#assetType').val();
@@ -1376,7 +1388,7 @@ $(function() {
     	   for(var i=0;i<manArr.length;i++){
                if(manArr[i].sendStatus !="03"){
                    Joyin.error("只能选择手工处理的数据，请重新选择！");
-                   return;               
+                   return;
                }
            };
             Joyin.confirm("请确认是否要取消手工处理选中记录？", function() {
@@ -1387,7 +1399,7 @@ $(function() {
                 });
            });
        }
-        
+
    });
-   
+
 });
