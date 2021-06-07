@@ -1158,7 +1158,7 @@
         a.FREQUENCY AS frequency,/**年付息次数**/
         a.FINPROD_ID AS finprodId,/**金融产品代码**/
         a.FINPROD_TYPE AS finprodType,/**金融产品类型**/
-        a.PAY_TYPE AS payType, /**支付方式**/,
+        a.PAY_TYPE AS payType, /**支付方式**/
         a.INT_PRIN_AMT intPrinAmt /**计息本金**/
         FROM
         FIN_CASH_PLAN a
