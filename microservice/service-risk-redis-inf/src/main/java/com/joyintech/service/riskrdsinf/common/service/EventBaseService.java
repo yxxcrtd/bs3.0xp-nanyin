@@ -787,7 +787,7 @@ public abstract class EventBaseService<V> extends InfBaseService<V> {
                 if (entity.keySet().size() > 1) {
                     Object value = entity.get(RiskUtil.redisVal);
                     if(dbParamMap.get(key).isEnumType()&&StringUtil.isNotEmpty(value)){
-                        value=value.toString()+(StringUtil.isNotEmpty(entity.get(RiskUtil.redisVal))?"||"+entity.get(RiskUtil.redisKey).toString():StringUtil.EMPTY);
+                        value=value.toString()+(StringUtil.isNotEmpty(entity.get(RiskUtil.redisKey))?"||"+entity.get(RiskUtil.redisKey).toString():StringUtil.EMPTY);
                     }
                     map.put(key, value);
                 } else {
