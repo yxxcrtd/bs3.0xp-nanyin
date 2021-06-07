@@ -50,7 +50,7 @@ $(function() {
         data.pageModel = PAGE_MODEL_EDIT;
         Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstnetassetquotationinfo/ComNetAssetQuotationInfo002/check', data, function(result) {
             Joyin.confirm("请确认是否修改?", function(){
-                Joyin.dialog(JoyinUtil.getLabel("ValNetAssetQuotationInfo002.edit"),
+                Joyin.dialog(JoyinUtil.getLabel("ComNetAssetQuotationInfo002.edit"),
                     basePath + "common/basicdata/marketdata/mstnetassetquotationinfo/ComNetAssetQuotationInfo002/init",
                     "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
                         finprodId:data.finprodId,
