@@ -187,10 +187,14 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         if (StringUtil.isNotEmpty(bondFirstSign)){
             // 当"缴款方式"不为空时，表示为从，债券中标结果中进来的
             dto.setPayType(payType);
-            dto.setTradeAmt(BigDecimal.valueOf(Double.valueOf(winPrinAmt == null ? "0" : winPrinAmt)));
+            BigDecimal winPrinAmtBig = BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(winPrinAmt)){
+            	winPrinAmtBig = ArithmeticUtil.divide(new BigDecimal(winPrinAmt), new BigDecimal(10000), 2);
+            }
+            dto.setTradeAmt(winPrinAmtBig);
             dto.setYield(BigDecimal.valueOf(Double.valueOf(yield == null ? "0" : yield)));
             model.addAttribute("bondFirstSign",bondFirstSign);
-            model.addAttribute("winPrinAmt",BigDecimal.valueOf(Double.valueOf(winPrinAmt == null ? "0" : winPrinAmt)));
+            model.addAttribute("winPrinAmt",winPrinAmtBig);
             model.addAttribute("yield",yield);
         }
         // 从"债券中标结果查询"进来，准备进行缴款 add by gejiaao 2019/07/26 End
