@@ -1024,7 +1024,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         WHEN DEAL.BUSI_TYPE = '03' THEN DECODE(DEAL.PS,'T01','03','T02','04','T12','03','T22','09','T23',DECODE(TOTALDEAL.PS,'T08','04','T07','04'),'T38','04')
         WHEN DEAL.BUSI_TYPE = '37' THEN '09' ELSE NULL END AS CUR_ASSET_TYPE,
 
-    DECODE(DEAL.BUSI_TYPE,'01',DECODE(DEAL.PS,'T22',DECODE(DEAL.FINPROD_TYPE2,'F08','付息','收息'),'T23','到期'),DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','收息','T09','收息','T07','收息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期'))) CUR_ASSETDET_TYPE,
+    DECODE(DEAL.BUSI_TYPE,'01',DECODE(DEAL.PS,'T22',DECODE(DEAL.FINPROD_TYPE2,'F08','付息','F25','付息','收息'),'T23','到期'),DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','收息','T09','收息','T07','收息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期'))) CUR_ASSETDET_TYPE,
     DEAL.SETTLE_DATE DEALDATE,
 
     <!-- modify by zhangliang 20201215 修改存款类资产同业借款取值逻辑 DEAL.BUSI_TYPE = '01' and DEAL.FINPROD_TYPE2 = 'F07'-->
@@ -1898,7 +1898,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     null UNIT_PRICE_NET,
     null END_RATE,
     deal.TRADE_ID CONTRACT_CODE,
-    deal.REMARK REMARK,
+    NVL(deal.REMARK,'无') REMARK,
     null CHL_CPCT_ID,
     '04' TRADE_TYPE,/*其他交易*/
     NULL CHL_AGRT_NAME,
@@ -3096,7 +3096,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
 	)
 	/*可转债交易编号拼接特殊处理 end*/
     /***添加项目类及债权类筛选..过滤估值生成交易在基础查询时已经过滤**/
-    OR investdeal.INVEST_VARIETY IN ('27', '28', '29', '30','31','15','03','04','05')
+    /**add by xuyang 投资品种添加 22 增值税出交易登记 投资品种为21 自定义现金流出交易登记*/
+    OR investdeal.INVEST_VARIETY IN ('21','22', '27', '28', '29', '30','31','15','03','04','05')
     OR (investdeal.INVEST_VARIETY IN ('01','06') and DEALTOtAL.TG_BUSI_TYPE='141')
     )
    /* 去除估值核算自动生成交易 */

@@ -504,7 +504,9 @@ public abstract class FileImpService extends InterfService{
         deletAllErroData(listMap, interfType);
         /**end 新增删除逻辑  add  by  dongxiangyang 20201017    */
         List<Map<String, String>> listDupError = DataCheckService.checkDuplicatedData(infoList, checkEuplicatedKeys);
-        List<CheckRule> listRules = dataCheckService.queryCheckRules(dataType);
+        // add by zhangliang 20210418 TMP调用SUB校验配置 start
+        List<CheckRule> listRules = dataCheckService.queryCheckRules(ChbCheckTableInfo.genDataType(dataType));
+        // add by zhangliang 20210418 TMP调用SUB校验配置 end
         List<Map<String, String>> listError = DataCheckService.checkDataList(infoList,listRules, deleteFlag);
         // 将重复项入库
         if (deleteFlag && CollectionUtils.isNotEmpty(listError)){

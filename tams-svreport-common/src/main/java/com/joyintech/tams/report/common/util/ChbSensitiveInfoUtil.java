@@ -15,6 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -117,6 +118,30 @@ public class ChbSensitiveInfoUtil {
         
         return source;
     }
+    
+    // 匹配中文字符串
+	 public static boolean hasChineseByReg(String str) {
+	        if (str == null) {
+	            return false;
+	        }
+	        Pattern pattern = Pattern.compile("[\\u4E00-\\u9FBF]+");
+	        return pattern.matcher(str).find();
+	    }
+	 
+	 //匹配空格（半角，全角）都可以匹配
+	 public static boolean containBlank(String str) {
+	        if (str == null) {
+	            return false;
+	        }
+	        Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+	        return  p.matcher(str).find();
+	    }
+	 
+	 //替换空格
+	 public static String replaceBlank(String str) {
+	        str = str.replace((char)12288, ' ');
+	        return str.replaceAll(" ", "");
+	    }
     
     public static void main(String[] args) {
         String str = "鿕";

@@ -103,6 +103,21 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
                             getMessage("COMMON_E_0057", getMessage("FinProjectTargetAsset002.projInvestIndustry2"))));
                     }
                 }
+
+                /****1、需要增加对评级信息的必填项check,评级信息中若没有主体评级的记录则不允许提交且给出提示；***/
+                boolean flag = true;
+                if(null!=dto.getBusiFinBondRatingInfoDto()&&null!=dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
+                    for(MstBondCreditRating dao :dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
+                        if(!DictCodeList.评级类型_主体评级.getValue().equals(dao.getoType())){
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+                if(flag){
+                    resultList.add(new ValidMessage(getMessage("评级信息中必须包含主体评级信息!")));
+                }
+                /****1、需要增加对评级信息的必填项check,评级信息中若没有主体评级的记录则不允许提交且给出提示；***/
             }
             
             //编辑前检查

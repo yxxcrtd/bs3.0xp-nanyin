@@ -94,17 +94,13 @@
  
  <select id="genChbInvestTradeSubTmpList"  resultMap="BaseResultMap">
   select  
-	PROD_ID, TRADE_CODE, REGIST_BANK_CODE, ASSET_CODE, CCY, CNY_AMT, 
-	AMT, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
-	UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, CONTRACT_CODE, REMARK, 
-	DEAL_REGIST_DATE, NUM, ASSET_METHOD, RIVAL_PARTY_TYPE, PROD_REGIST_CODE, 
-	ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-	UPDATE_TIME, ROW_DATE, DATA_SOURCE,STATUS
-  from  CHB_INVEST_TRADE_SUB_TMP
+	pc.PRODID PROD_ID,rs.*  
+  from  CHB_INVEST_TRADE_SUB_TMP rs
+  INNER JOIN CHB_PRDRESIST_CODE pc on rs.PROD_REGIST_CODE = pc.REG_CODE
   where  1=1
   and   to_char(ROW_DATE,'yyyy-MM-dd') = #{batchdate,jdbcType = VARCHAR}
 <if test="prodIdList != null and prodIdList.size() > 0">
-	AND PROD_ID IN
+	AND pc.PRODID IN
 	<trim suffixOverrides=" OR PROD_ID IN ()">
 		<foreach collection='prodIdList' open='(' close=')' index='index'
 			item='item'>

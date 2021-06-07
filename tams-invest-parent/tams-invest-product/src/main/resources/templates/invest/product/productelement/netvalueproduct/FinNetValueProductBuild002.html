@@ -881,6 +881,36 @@
 										</div>
 									</div>
 									<!--业绩回补合版本相关 end wangcheng 20191025  -->
+									<!--理财子新增 是否母行划转字段 start
+									<div class="form-inline-wrap">
+										<label class="layui-form-label form-label-wrap"
+											   data-th-text="#{FinProductBuild002.isTransfer}">是否母行划转</label>
+										<div class="layui-input-inline input-inline">
+											<select name="isTransfer"
+													id="FinNetValueProductBuild002_isTransfer"
+													class="layui-input form-input input-select"
+													data-th-initValue= '${entity?.isTransfer}'
+													data-th-placeholder="#{SysCommon.placeholder}"
+													data-th-data-result="${YES_OR_NO}" required>
+											</select>
+										</div>
+									</div>
+									理财子新增 是否母行划转字段 end-->
+									<!--产品要素添加"是否养老理财"字段 start-->
+									<div class="form-inline-wrap">
+										<label class="layui-form-label form-label-wrap"
+											   data-th-text="#{FinProductBuild002.isYllccp}">是否养老理财</label>
+										<div class="layui-input-inline input-inline">
+											<select th:name="isYllccp"
+													th:id="isYllccp"
+													class="layui-input form-input input-select"
+													data-th-initValue= "${entity?.isYllccp}"
+													data-th-placeholder="#{SysCommon.placeholder}"
+													data-th-data-result="${SVR_YES_OR_NO}" required>
+											</select>
+										</div>
+									</div>
+									<!--产品要素添加"是否养老理财"字段 end-->
 								</div>
 
 							</div>

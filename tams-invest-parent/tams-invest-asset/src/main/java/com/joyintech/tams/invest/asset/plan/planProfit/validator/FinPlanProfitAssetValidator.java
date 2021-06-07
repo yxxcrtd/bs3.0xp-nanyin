@@ -2,8 +2,7 @@ package com.joyintech.tams.invest.asset.plan.planProfit.validator;
 
 import java.util.ArrayList;
 import java.util.List;
-
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.invest.asset.plan.planProfit.dto.FinPlanProfitAssetDto;
 import com.joyintech.tams.invest.asset.plan.planProfit.service.FinPlanProfitAssetService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 @Component
@@ -39,8 +36,8 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 	@Autowired
 	private FinProductMapper finProductMapper;
 
-//	@Autowired
-//	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+	@Autowired
+	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -151,9 +148,9 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 		}
 		}
 
-//		if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-//			errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getRepAssetType(), ValidMessage.class);
-//		}
+		if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+			errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getRepAssetType(), ValidMessage.class);
+		}
 
 		return errorList;
 	}

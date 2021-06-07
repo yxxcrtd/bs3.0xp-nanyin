@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * 生成报送业务数据前共通检查
  * 
@@ -23,14 +24,13 @@ import java.util.Map;
  * @since 2020-10-13
  */
 @Service
-public class ChbCommonCheckService extends FileImpService{
+public class ChbCommonCheckService  extends FileImpService {
 
     /**
      * 校验类
      */
     @Autowired
     private CommonCodeCheckBatchService commonCodeCheckBatchService;
-
     /**
      * 中债基础数据mapper
      */
@@ -59,7 +59,7 @@ public class ChbCommonCheckService extends FileImpService{
                 tableInfo.getTableName(), tableInfo.getBussinessKey(), tableInfo.getCheckEuplicatedKeys());
         // 2.3调用CommonCodeCheckBatchService.codeCheckCommon方法
         if(tableInfo.isNeedCodeCheck()) {
-            commonCodeCheckBatchService.codeCheckCommon(listMap, tableInfo, null);
+            commonCodeCheckBatchService.codeCheckCommonOnly(listMap, tableInfo);
         }
         // 2.4对[2]清理掉错误数据的List，调用以下共通，进行数据类型转化处理。将检查后的listMap 转为List<业务表登记表Dto>
         //获得运行期的泛型类型

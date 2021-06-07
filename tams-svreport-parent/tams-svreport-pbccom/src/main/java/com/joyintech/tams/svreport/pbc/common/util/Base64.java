@@ -1,13 +1,11 @@
 package com.joyintech.tams.svreport.pbc.common.util;
 
 import java.io.*;
-import java.security.SecureRandom;
-
 import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
+
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import com.thoughtworks.xstream.core.util.Base64Encoder;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,18 +28,6 @@ public class Base64 {
     public void setEndkey(){
         this.KEY = base64Key;
     }
-//	private static String KEY = "HF*ts303";
-//	public static void main(String[] args) {
-//		String s = "HF*ts303";
-//		String enc1;
-//		String dec1;
-//		//加密
-//		enc1 = encryptData(s);
-//		System.out.println(enc1);
-//		//解密
-//		dec1 = decryptData(enc1);
-//		System.out.println(dec1);
-//	}
 
 	public Base64() {
 	}
@@ -53,20 +39,24 @@ public class Base64 {
 	 */
 	public static String encryptData(String input) {
 		try {
-			SecureRandom sr = new SecureRandom();
-			byte rawKeyData[] = KEY.getBytes();
-			DESKeySpec dks = new DESKeySpec(rawKeyData);
-
-			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-			SecretKey key = keyFactory.generateSecret(dks);
-
-			Cipher c = Cipher.getInstance("DES");
-			c.init(Cipher.ENCRYPT_MODE, key, sr);
-			byte[] cipherByte = c.doFinal(input.getBytes());
-			String dec = new Base64Encoder().encode(cipherByte);
-			return dec;
-
+			if (KEY == null) {
+				System.out.print("Key为空null");
+				return null;
+			}
+			// 判断Key是否为16位
+			if (KEY.length() != 16) {
+				System.out.print("Key长度不是16位");
+				return null;
+			}
+			byte[] raw = KEY.getBytes("utf-8");
+			SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");//"算法/模式/补码方式"
+			IvParameterSpec iv = new IvParameterSpec(KEY.getBytes());//使用CBC模式，需要一个向量iv，可增加加密算法的强度
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+			byte[] encrypted = cipher.doFinal(input.getBytes());
+			return new Base64Encoder().encode(encrypted);//此处使用BASE64做转码功能，同时能起到2次加密的作用。
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -78,21 +68,32 @@ public class Base64 {
 	 */
 	public static String decryptData(String input) {
 		try {
-			byte[] dec = new Base64Encoder().decode(input);
-
-			SecureRandom sr = new SecureRandom();
-			byte rawKeyData[] = KEY.getBytes();
-
-			DESKeySpec dks = new DESKeySpec(rawKeyData);
-			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-			SecretKey key = keyFactory.generateSecret(dks);
-
-			Cipher c = Cipher.getInstance("DES");
-			c.init(Cipher.DECRYPT_MODE, key, sr);
-			byte[] clearByte = c.doFinal(dec);
-
-			return new String(clearByte);
+			// 判断Key是否正确
+			if (KEY == null) {
+				System.out.print("Key为空null");
+				return null;
+			}
+			// 判断Key是否为16位
+			if (KEY.length() != 16) {
+				System.out.print("Key长度不是16位");
+				return null;
+			}
+			byte[] raw = KEY.getBytes("utf-8");
+			SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			IvParameterSpec iv = new IvParameterSpec(KEY.getBytes());
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+			byte[] encrypted1 = new Base64Encoder().decode(input);;//先用base64解密
+			try {
+				byte[] original = cipher.doFinal(encrypted1);
+				String originalString = new String(original);
+				return originalString;
+			} catch (Exception e) {
+				System.out.println(e.toString());
+				return null;
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return input;
 	}

@@ -43,6 +43,7 @@ import com.joyintech.tams.common.base.entity.RskValtblSubject;
 import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
 import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
+import com.joyintech.tams.component.business.common.dto.InterfStockInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonAutoCouponService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -107,14 +108,24 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     @Autowired
     private RskValtblPrtBotassetService rskValtblPrtBotassetService;
     
-    public void insert(RskValtblAssetSubDto dto) throws ParseException {
+    public List<String> insert(RskValtblAssetSubDto dto) throws ParseException {
+    	
+    	//存放加券过程中，中债要素check不通过的资产信息--徽商代码移植0602
+    	List<String> errorInfoList=new ArrayList<String>();
+    	
         RskValtblPrtBotassetMapDto rskValtblPrtBotassetMapDto = new RskValtblPrtBotassetMapDto();
         InterfPayhsrcsecinfoDto interfPayhsrcsecinfoDto = new InterfPayhsrcsecinfoDto();
-        InfChinamutualfunddescriptionDto infChinamutualfunddescriptionDto = new InfChinamutualfunddescriptionDto();
+        InfChinamutualfunddescriptionDto infChinamutualfunddescriptionDto = new InfChinamutualfunddescriptionDto();        
+        //股票--徽商代码移植0602
+        InterfStockInfoDto interfStockInfoDto=new InterfStockInfoDto();
+        
         //是否自动加券
         boolean isAutoCoupon = false;
         List<String> isAutoCouponBondSecidList = new ArrayList<String>();
-        List<String> isAutoCouponFundfInfoWindcodeList = new ArrayList<String>();
+        List<String> isAutoCouponFundfInfoWindcodeList = new ArrayList<String>();        
+        //要加券的股票--徽商代码移植0602
+        List<String> isAutoCouponStockfInfoWindcodeList = new ArrayList<String>();
+                
         //查找底层资产映射表
         List<RskValtblPrtBotassetMapDto> botAssetMapList = rskValtblPrtBotassetService.selectBotAssetMapByPtlId(dto.getPtlId());
         //查找标的金融产品信息
@@ -132,6 +143,9 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         List<InterfPayhsrcsecinfoDto>  interfPayhsrcsecinfoList  = commonAutoCouponService.selectWindBondAsset(paramMap);
         //查找wind基金信息
         List<InfChinamutualfunddescriptionDto> infChinamutualfunddescriptionList = commonAutoCouponService.selectWindFundAsset(paramMap);
+        //查找wind股票信息--徽商代码移植0602
+        List<InterfStockInfoDto> interfStockInfoList=commonAutoCouponService.selectWindStockAsset(paramMap);
+        
 
         Map<String,String> paraMap =new HashMap<String,String>();
         for(RskValtblAssetSubDto rskValtblAssetSubDtoTemp: dto.getSelectedItem()){
@@ -285,13 +299,31 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                                     isAutoCoupon = true;
                                     isAutoCouponFundfInfoWindcodeList.add(entityinfChinamutualfunddescription.getfInfoWindcode());
                                     entity.setAssetSource(DictCodeListExt1.估值资产来源_WIND基金.getValue());
-                                    entity.setFinprodId(entityinfChinamutualfunddescription.getObjectId());
+                                    //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  start
+                                    entity.setFinprodId(entityinfChinamutualfunddescription.getFinprodId());
+                                    //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  end
                                     entity.setFinprodMarketId(entityinfChinamutualfunddescription.getfInfoWindcode());
                                     break;
                                 }
                             }
                         }
+                      //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  start
+                    }else if(StringUtil.equals(entity.getSubCode().substring(0, 4),"1102")){
+                    	if(null!=interfStockInfoList&&!interfStockInfoList.isEmpty()){
+                            for(InterfStockInfoDto entityInterfStockInfoDto:interfStockInfoList){
+                                if(StringUtil.equals(entity.getSubName(), entityInterfStockInfoDto.getAssetname())){
+                                	flag = false;
+                                    isAutoCoupon = true;
+                                    isAutoCouponStockfInfoWindcodeList.add(entityInterfStockInfoDto.getAssetcode());
+                                    entity.setAssetSource(DictCodeListExt1.估值资产来源_WIND股票.getValue());
+                                    entity.setFinprodId(entityInterfStockInfoDto.getFinprodId());
+                                    entity.setFinprodMarketId(entityInterfStockInfoDto.getAssetcode());
+                                    break;
+                                }
+                            }
+                        }
                     }
+                   //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  end
                 }
             }
             
@@ -300,14 +332,31 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         
         isAutoCouponBondSecidList = isAutoCouponBondSecidList.stream().distinct().collect(Collectors.toList());
         isAutoCouponFundfInfoWindcodeList = isAutoCouponFundfInfoWindcodeList.stream().distinct().collect(Collectors.toList());
+        isAutoCouponStockfInfoWindcodeList = isAutoCouponStockfInfoWindcodeList.stream().distinct().collect(Collectors.toList());
         
         interfPayhsrcsecinfoDto.setSecidList(isAutoCouponBondSecidList);
         infChinamutualfunddescriptionDto.setfInfoWindcodeList(isAutoCouponFundfInfoWindcodeList);
+        interfStockInfoDto.setStockCodeList(isAutoCouponStockfInfoWindcodeList);
         
         //自动加券
         if(isAutoCoupon){
+        	 //调用债券自动加券方法
             interfPayhsrcsecinfoDto = commonAutoCouponService.autoBondCoupon(interfPayhsrcsecinfoDto);
+            if(null != interfPayhsrcsecinfoDto  && null != interfPayhsrcsecinfoDto.getErrorBondList()) {
+            	errorInfoList.addAll(interfPayhsrcsecinfoDto.getErrorBondList());
+            }
+            
+            //调用基金自动加券方法
             infChinamutualfunddescriptionDto = commonAutoCouponService.autoFundCoupon(infChinamutualfunddescriptionDto);
+            if(null != infChinamutualfunddescriptionDto  && null != infChinamutualfunddescriptionDto.getErrorFundList()) {
+            	errorInfoList.addAll(infChinamutualfunddescriptionDto.getErrorFundList());
+            }
+            
+            //调用股票自动加券方法
+            interfStockInfoDto=commonAutoCouponService.autoStockCoupon(interfStockInfoDto);
+            if(null != interfStockInfoDto  && null != interfStockInfoDto.getErrorStockList()) {
+            	errorInfoList.addAll(interfStockInfoDto.getErrorStockList());
+            }
         }
         for(RskValtblAssetSubDto entity2:dto.getSelectedItem()){
             //导入方式
@@ -355,6 +404,18 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                                 }
                             }
                         }
+                        if(StringUtil.equals(entity2.getAssetSource(), DictCodeListExt1.估值资产来源_WIND股票.getValue())){                     	
+                        	if(null!=interfStockInfoDto.getBaseFinProductBaseInfoList()
+                               &&!interfStockInfoDto.getBaseFinProductBaseInfoList().isEmpty()){
+                        		for(BaseFinProductBaseInfoDto baseFinProductBaseInfoDto:interfStockInfoDto.getBaseFinProductBaseInfoList()){
+                                    if(StringUtil.equals(entity2.getFinprodMarketId(), baseFinProductBaseInfoDto.getFinProduct().getFinprodMarketId())){
+		                        		rskValtblPrtBotassetMapDto2.setFinprodId(baseFinProductBaseInfoDto.getFinProduct().getFinprodId());
+		                                entity2.setFinprodId(baseFinProductBaseInfoDto.getFinProduct().getFinprodId());
+		                                entity2.setAssetSource(DictCodeListExt1.估值资产来源_系统内.getValue());
+                                    }
+                        		}
+                        	}
+                        }
                         rskValtblPrtBotassetMapDto2.setSubCode(entity2.getSubCode());
                         rskValtblPrtBotassetMapDto2.setSubName(entity2.getSubName());
                         rskValtblPrtBotassetMapDto2.setPtlId(dto.getPtlId());
@@ -374,6 +435,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         writebotAssetMap(rskValtblPrtBotassetMapDto);
         //保存估值表
         saveValTbl(dto);
+        
+        return errorInfoList;
     }
     
     /**

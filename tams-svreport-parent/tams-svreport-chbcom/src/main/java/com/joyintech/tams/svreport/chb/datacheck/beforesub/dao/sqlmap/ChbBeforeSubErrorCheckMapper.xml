@@ -117,13 +117,14 @@
 
 	<select id="isInEmpoyeeSub" resultType="java.lang.Integer">
 		select
-		count(*)
-		from
-		CHB_EMPLOYEE_INFO_SUB
-		where IDENTIFY_NUMBER = #{id,jdbcType=VARCHAR}
-		and SEND_STATUS in ('02','03')
+	    count(*)
+	    from
+	    CHB_EMPLOYEE_INFO_SUB S
+	    where S.IDENTIFY_NUMBER = #{id,jdbcType=VARCHAR}
+	    and S.SEND_STATUS in ('02','03')
+	    AND S.SUBMIT_FEEDBACK_STATUS = '03'
 		<if test="employeeType != null and employeeType != ''">
-			and EMPLOYEE_TYPE = #{employeeType}
+			and S.EMPLOYEE_TYPE = #{employeeType}
 		</if>
 	</select>
 
@@ -131,40 +132,46 @@
 		select
 		count(*)
 		from
-		CHB_ASSET_INFO_SUB
-		where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
-		  and SEND_STATUS IN ('02','03')
+		CHB_ASSET_INFO_SUB S
+		where s.ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
+		  and s.SEND_STATUS IN ('02','03')
+		  AND S.SUBMIT_FEEDBACK_STATUS = '03'
+		  
 	</select>
 
 	<select id="isInRaisetotSub" resultType="java.lang.Integer">
 		select
 		count(*)
-		from CHB_PRD_RAISETOT_SUB
-		where PROD_ID = #{prodId,jdbcType=VARCHAR}
-		  and SEND_STATUS IN ('02','03')
+		from CHB_PRD_RAISETOT_SUB S
+		where S.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  and S.SEND_STATUS IN ('02','03')
+		   AND S.SUBMIT_FEEDBACK_STATUS = '03'
 	</select>
 
 	<select id="isInPrdEndSub" resultType="java.lang.Integer">
 		select
 		count(*)
-		from CHB_PRD_END_SUB
-		where PROD_ID = #{prodId,jdbcType=VARCHAR}
-		  and SEND_STATUS IN ('02','03')
+		from CHB_PRD_END_SUB S
+		where S.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  and S.SEND_STATUS IN ('02','03')
+		   AND S.SUBMIT_FEEDBACK_STATUS = '03'
 	</select>
 	<select id="isInPrdIssueSub" resultType="java.lang.Integer">
 		select
 		count(*)
-		from CHB_PRD_ISSUE_SUB
-		where PROD_ID = #{prodId,jdbcType=VARCHAR}
-		  and SEND_STATUS IN ('02','03')
+		from CHB_PRD_ISSUE_SUB S
+		where S.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  and S.SEND_STATUS IN ('02','03')
+		  AND S.SUBMIT_FEEDBACK_STATUS = '03'
 	</select>
 
 	<select id="isInProDeclareReg" resultType="java.lang.Integer">
 		select
 		count(*)
-		from CHB_PRD_DECLARE_SUB
-		where PROD_ID = #{prodId,jdbcType=VARCHAR}
-		  and SEND_STATUS IN ('02','03')
+		from CHB_PRD_DECLARE_SUB S
+		where S.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  and S.SEND_STATUS IN ('02','03')
+		  AND S.SUBMIT_FEEDBACK_STATUS = '03'
 	</select>
 
 	<select id="selectProdRaiseTotalSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >

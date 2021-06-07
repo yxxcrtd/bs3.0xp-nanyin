@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chbsd.prdendsub.service;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdEndSubDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -89,14 +90,14 @@ public class SdProdTerminationBatchService {
 			dataList.add(target);
 		}
 
-		this.sendBatchCommon(dataList);
+		this.sendBatchCommon(dataList, SendDataCheckType.报送);
 	}
 
 	/**
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbPrdEndSubDto> dataList) throws Exception{
+	public void sendBatchCommon(List<ChbPrdEndSubDto> dataList, SendDataCheckType sendDataCheckType) throws Exception{
 		//3、调用【产品终止信息登记】报送组件
 		logger.debug("产品终止信息登记报文报送开始------" + df.format(new Date()));
 		//获取单批次发送条目数
@@ -112,14 +113,14 @@ public class SdProdTerminationBatchService {
 		//分批处理数据报送
 		if (dataCount <= dataCountPerTime) {
 			sdProdTerminationBatchServiceOneService
-					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult);
+					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult, sendDataCheckType);
 		}else{
 			// 分批次数
 			int part = dataCount / dataCountPerTime;
 			for (int i = 0; i < part; i++ ) {
 				sdProdTerminationBatchServiceOneService
 						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList.subList(0, dataCountPerTime),
-								sendResult);
+								sendResult, sendDataCheckType);
 				newDataList.subList(0, dataCountPerTime).clear();
 				handleIndex ++;
 
@@ -127,7 +128,7 @@ public class SdProdTerminationBatchService {
 			// 最后剩下的数据
 			if (!StringUtil.isEmptyList(newDataList)) {
 				sdProdTerminationBatchServiceOneService
-						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult);
+						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult, sendDataCheckType);
 			}
 		}
 		//ChbMsgReturnInfoDto returnMsg = msgSend.sendChbPrdEndSubMsgs(dataList);

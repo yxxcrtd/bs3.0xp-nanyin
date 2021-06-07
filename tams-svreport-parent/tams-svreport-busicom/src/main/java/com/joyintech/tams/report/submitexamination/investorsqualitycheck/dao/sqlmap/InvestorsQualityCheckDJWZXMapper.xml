@@ -58,7 +58,7 @@
 			FROM  objRec A
 				LEFT JOIN CHB_PRDRESIST_CODE B
 					ON A.PROD_ID = B.PRODID	
-				LEFT JOIN CHB_INVESTHOLD_INFO_SUB C
+				LEFT JOIN CHB_INVESTHOLD_INFO_SUB_SUM C
 					ON (A.PROD_ID = C.PRODID				
 						AND A.holdDate  = TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd')
 					   )
@@ -88,27 +88,22 @@
 						tmp1.prdMDate,
 						tmp1.holdDate,
 						tmp1.prdRegistCode,
-						CASE WHEN tmp1.STATUS = '03' THEN 0 
-				        ELSE 1 END lateNums 
+						1 lateNums 
 					FROM (
 						SELECT  
 							A.PROD_ID as prodId,				
 							A.VDATE as prdVDate,
 							A.MDATE as prdMDate,
 							A.holdDate,
-							B.REG_CODE as prdRegistCode,
-							C.STATUS,
-							ROW_NUMBER() over( partition by A.PROD_ID, C.INDENTIFY_MARK ORDER BY C.UPDATE_TIME DESC)  AS investStsNo	
+							B.REG_CODE as prdRegistCode
 						FROM  objRec A
 							LEFT JOIN CHB_PRDRESIST_CODE B
 								ON A.PROD_ID = B.PRODID	
-							INNER JOIN CHB_INVESTHOLD_INFO_SUB C
+							INNER JOIN CHB_INVESTHOLD_INFO_SUB_SUM C
 								ON (A.PROD_ID = C.PRODID				
 									AND A.holdDate  = TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd')
 								   )					
 						) tmp1
-					WHERE
-						investStsNo = 1
 					) tmp2	
 				GROUP BY
 					tmp2.prodId,				

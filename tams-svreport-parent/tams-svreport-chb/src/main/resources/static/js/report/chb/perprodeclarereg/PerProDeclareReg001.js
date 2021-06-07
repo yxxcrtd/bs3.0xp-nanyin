@@ -78,7 +78,14 @@ $(function() {
 									title : '报送状态',
 									field : 'sendStatusSTR',
 									width : 100, 
-									sortField:'sendStatus'
+									sortField:'sendStatus',
+									render:function (value,visible,row,options) {
+										if(value == "接口报送"){
+											return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+										}else{
+											return value;
+										}
+									}
 								},
 								{
 									title : '报送日期',
@@ -97,7 +104,14 @@ $(function() {
 									title : '反馈状态',
 									field : 'submitFeedbackStatus',
 									width : 100, 
-									sortField:'submitFeedbackStatus'
+									sortField:'submitFeedbackStatus',
+									render:function (value,visible,row,options) {
+										if(value == "发送中" || value == "发送异常"){
+											return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+										}else{
+											return value;
+										}
+									}
 								},
 								{
 									field : 'registSeqno',
@@ -533,13 +547,36 @@ $(function() {
 										text : '&#xe615;',
 										clas : 'fileView',
 										title : '查看'
-									} ] 
+									},{
+										field: 'sumitSeq',
+										visible:false
+									} ]
 								}
 
 						]
 					});
 
-	
+	//绑定点击跳转反馈文件管理页面
+	table.bind('click', '.feedbackStatusClass', function(data, index) {
+		Joyin.dialog(JoyinUtil.getLabel("中债反馈文件管理"),
+			basePath + "svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001/init",
+			"95%", "96%", {		//pageModel:PAGE_MODEL_REFERENCE,
+				reportEtrType:SVR_REPORT_CODE,    //报表类型
+				handleStatus:FILE_HANDLE_STATUS,       //处理状态-未处理
+				repSeqNo:data.sumitSeq,       //报送流水号
+				// reportSendDate:'',
+				// reportAcceptDate:''
+			});
+	});
+	//绑定点击跳转发送状态信息查询页面
+	table.bind('click', '.sendStatusClass', function(data, index) {
+		Joyin.dialog(JoyinUtil.getLabel("发送状态信息查询"),
+			basePath + "svreport/system/reportstatusinfo/ReportStatusInfo001/init",
+			"95%", "96%", {       //pageModel:PAGE_MODEL_REFERENCE,
+				repType:SVR_REPORT_CODE,    //报表类型
+				registSeqNo:data.registSeqno,       //报送流水号
+			});
+	});
 
 	// 导出中债Excel
 	$('#SvrPerProDeclareReg001_btn_chbexport').click(function() {
@@ -948,10 +985,72 @@ $(function() {
 		});
 
 		/**
-		 * 九大附件批量上传
+		 * 九大附件批量上传（杭州版本）
 		 */
 		$('#SvrPerProDeclareReg001_btn_fileUpload').click(function() {
 			nineFileUpload();
+		});
+		
+		/**
+		 * 九大附件批量上传-批量上传（徽商合并）
+		 */
+		$('#SvrPerProDeclareReg001_btn_batchFileUpload').click(function() {
+			var uploadArr = table.getAllCheckedRows();
+			var uploadArrStr=JSON.stringify(uploadArr);
+			var dataArr=[];
+			var dataArrStr;
+			if(!uploadArr || uploadArr.length == 0){
+				Joyin.error("请选择要上传的数据！");
+				return;
+			}else{
+				for(var i = 0; i < uploadArr.length; i++){
+					if(uploadArr[i].sendStatus != '01'){
+						Joyin.error("只有未报送的数据才能进行上传！");
+						return;
+					}
+					var data={
+							fileNo:uploadArr[i].fileNo,
+							prodId:uploadArr[i].prodId,
+							registSeqno:uploadArr[i].registSeqno
+					}
+					dataArr[i]=data;
+					
+				}
+				dataArrStr=JSON.stringify(dataArr);
+				Joyin.confirm("请确认是否要导入数据？", function() {
+					var flag=false;
+					for(var i = 0; i < uploadArr.length; i++){
+						if(uploadArr[i].fileNo && uploadArr[i].fileNo != null){
+							flag=true;
+						}
+					}
+					if(flag){
+						Joyin.confirm('所选产品已存在附件，是否覆盖？',
+								function(){
+							Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+				                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
+				                    "60%", {
+				                        pageModel : PAGE_MODEL_NEW,
+				                        businessId : uploadArr.prodId,
+				                        dataArrStr : dataArrStr
+				                    },function(){
+				                    	table.reload();
+				                    });
+						})
+					}else{
+						Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+			                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
+			                    "60%", {
+			                        pageModel : PAGE_MODEL_NEW,
+			                        businessId : uploadArr.prodId,
+			                        dataArrStr : dataArrStr
+			                    },function(){
+			                    	table.reload();
+			                    });
+					}
+		        });
+//				nineFileUpload();
+			}
 		});
 	});
 

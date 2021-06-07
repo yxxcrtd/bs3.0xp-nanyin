@@ -50,6 +50,10 @@
             }
         }
     })*/
+    
+    /**【股票标的】是否为质押融资check错误 设置界面不可选且默认为02***/
+    $("#"+initentity+"_repIsPledge").attr("disabled",true);
+    
     getElementById('repPartyType1').change(function(){
         if(getElementById('finprodType2').val() == FINPROD_TYPE_TG_F18
         ||getElementById('finprodType2').val() == FINPROD_TYPE_TG_F01){

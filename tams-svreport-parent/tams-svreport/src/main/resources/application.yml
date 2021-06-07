@@ -47,7 +47,7 @@ application:
   sqldiruserName: report_chb
   sqldirpassword: report_chb
   chb:
-    base64Key: HF*ts303
+    base64Key: HF*ts303HF*ts303
 eureka:
   instance:
     hostname: report-server

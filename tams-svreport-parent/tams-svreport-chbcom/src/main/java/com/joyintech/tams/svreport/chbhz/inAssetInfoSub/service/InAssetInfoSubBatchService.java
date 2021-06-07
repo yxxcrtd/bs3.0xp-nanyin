@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -378,7 +379,7 @@ public class InAssetInfoSubBatchService extends FileImpService {
 		if (assetInfoCompare == null || assetInfoToCompare == null) {
 			return false;
 		} else {
-			return JSON.toJSONString(assetInfoCompare).equals(JSON.toJSONString(assetInfoToCompare));
+			return JSON.toJSONString(assetInfoCompare,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(assetInfoToCompare,SerializerFeature.WriteNullStringAsEmpty));
 		}
 	}
 

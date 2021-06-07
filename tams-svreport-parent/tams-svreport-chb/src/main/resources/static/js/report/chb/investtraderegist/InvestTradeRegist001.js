@@ -55,10 +55,25 @@ $(function() {
               { title: "数据状态", field: 'statusName',width:100,sortField:'status'},
               { title: "数据日期", field: 'statusDate', type: 'datetime',sortField:'statusDate'},
               { field: 'sendStatus',visible:false},
-              { title: "报送状态", field: 'sendStatusName',width:100 ,sortField:'sendStatus'},
+              {field:'sumitSeq', visible:false},
+              { title: "报送状态", field: 'sendStatusName',width:100 ,sortField:'sendStatus',
+                  render:function (value,visible,row,options) {
+                      if(value == "接口报送"){
+                          return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+                      }else{
+                          return value;
+                      }
+                  }},
               { title: "报送日期", field: 'submitTime', type: 'datetime',sortField:'submitTime'},
               { title: "报送截止日", field: 'chbSubmitDeadline', type: 'datetime',sortField:'chbSubmitDeadline'},
-              { title: "反馈状态", field: 'submitFeedbackStatus',width:100 ,sortField:'submitFeedbackStatus'},
+              { title: "反馈状态", field: 'submitFeedbackStatus',width:100 ,sortField:'submitFeedbackStatus',
+                  render:function (value,visible,row,options) {
+                      if(value == "发送中" || value == "发送异常"){
+                          return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+                      }else{
+                          return value;
+                      }
+                  }},
               { title: "产品代码", field: 'prodId',width:100 ,sortField:'prodId'},
               { title: "产品名称", field: 'prodName',width:100 ,sortField:'prodName'},
               // modify by dubaojun 2020-10-30 产品登记编码导出为空，字段设置有误问题修复 start
@@ -84,7 +99,28 @@ $(function() {
               {title: '备注',field:'remark', width:200,sortField:'remark'}
           ]
       });
-      
+
+      //绑定点击跳转反馈文件管理页面
+      table.bind('click', '.feedbackStatusClass', function(data, index) {
+          Joyin.dialog(JoyinUtil.getLabel("中债反馈文件管理"),
+              basePath + "svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001/init",
+              "95%", "96%", {       //pageModel:PAGE_MODEL_REFERENCE,
+                  reportEtrType:SVR_REPORT_CODE,    //报表类型
+                  handleStatus:FILE_HANDLE_STATUS,       //处理状态-未处理
+                  repSeqNo:data.sumitSeq,       //报送流水号
+                  // reportSendDate:'',
+                  // reportAcceptDate:''
+              });
+      });
+    //绑定点击跳转发送状态信息查询页面
+    table.bind('click', '.sendStatusClass', function(data, index) {
+        Joyin.dialog(JoyinUtil.getLabel("发送状态信息查询"),
+            basePath + "svreport/system/reportstatusinfo/ReportStatusInfo001/init",
+            "95%", "96%", {       //pageModel:PAGE_MODEL_REFERENCE,
+                repType:SVR_REPORT_CODE,    //报表类型
+                registSeqNo:data.registSeqno,       //报送流水号
+            });
+    });
       
       //导出中债Excel
       $('#InvestTradeRegist001_btn_chbexport').click(function() {

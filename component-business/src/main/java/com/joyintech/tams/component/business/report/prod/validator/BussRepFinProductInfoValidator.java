@@ -165,13 +165,14 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                     this.getMessage("BussRepFinProductInfo.repMname"))));
             }
         }
-        // 收益率分档情况说明
-        if (StringUtil.isNotEmpty(dto.getRepYieldComment())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepYieldComment(), 400)) {
-                resultList.add(new ValidMessage("repYieldComment", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repYieldComment"))));
-            }
-        }
+        /***HYXXDJZL-1  报送信息中“业绩比较基准说明”字段check提示信息错误，应该是“业绩比较基准说明：格式不正确”  现在多一条 收益率分档情况说明:不能为空**/
+//        // 收益率分档情况说明
+//        if (StringUtil.isNotEmpty(dto.getRepYieldComment())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepYieldComment(), 400)) {
+//                resultList.add(new ValidMessage("repYieldComment", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repYieldComment"))));
+//            }
+//        }
         // 境内托管机构名称
         if (StringUtil.isNotEmpty(dto.getRepInDepName())
             && RepCheckUtil.checkByteLength(dto.getRepInDepName(), 120)) {

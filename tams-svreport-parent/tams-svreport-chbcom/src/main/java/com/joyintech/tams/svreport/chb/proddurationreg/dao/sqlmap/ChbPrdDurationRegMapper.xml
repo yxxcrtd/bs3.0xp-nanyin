@@ -428,7 +428,7 @@
 		  SUM(NVL(AMT,0)) amt,
 		  PAY_DATE payDate
 		FROM CHB_PRD_FEE_DEAL INFO
-		WHERE INFO.STATUS !='D'
+		WHERE <!--  INFO.STATUS !='D'-->1=1
 		AND INFO.FEE_TYPE = '01'
 		<foreach collection="list" item="prdDealSub" open="and ( (" close=" ) )" separator=") or (">
 			nvl(info.fprod_id,info.prod_id) = #{prdDealSub.prodId,jdbcType = VARCHAR}

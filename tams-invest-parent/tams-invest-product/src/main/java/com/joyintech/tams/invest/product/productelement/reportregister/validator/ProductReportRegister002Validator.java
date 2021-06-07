@@ -140,9 +140,10 @@ public class ProductReportRegister002Validator implements BeanValidator {
         		&& !StringUtil.equals("01", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"))) {
             validList.add(new ValidMessage("isFhxgcp", getMessage("请输入新老产品标记")));
         }
-        if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
-            validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
-        }    
+		/****缺少“是否养老理财”字段，与新建输入页面字段不一致   修改方案为将此字段注释 挪到产品新建界面   leipeng 20210430***/
+//        if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
+//            validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
+//        }
 
 		// 产品期次
 		if (StringUtil.isNotEmpty(entity.getRepFinprodStage())) {

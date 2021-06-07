@@ -88,7 +88,8 @@ $(function () {
             checkOnClickRow(data);
         },
         page : false,
-        loadonce : true,
+        loadonce : false,
+        searchOnInit:false,
         checkbox : false,
         rowno: false, // 显示行号
         cols: [
@@ -380,9 +381,17 @@ $(function () {
         }*/
     };
 
+    var openDialog = function(){
+        Joyin.dialog(JoyinUtil.getLabel("持有信息汇总"),
+            JoyinUtil.getRealPath("/svreport/submitexamination/investorsqualitycheck/InvestorsQualityCheck002/init"),
+            "60%", "60%", {},
+            function(){});
+    }
+
     $(function() {
     	init();
         // 查询按钮点击事件
         $('#InvestorsQualityCheck001_btn_search').bind("click",searchData);
+        $('#SvrInvestorsQualityCheck001_btn_summary').bind("click",openDialog);
     });
 }())
