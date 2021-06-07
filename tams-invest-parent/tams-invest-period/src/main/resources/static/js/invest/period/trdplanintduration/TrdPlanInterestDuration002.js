@@ -205,7 +205,7 @@
                         table.renderRow(row.LAY_TABLE_INDEX, row);
                     }
 
-                } else {
+                } else if (column.field == 'recAcctNo')  {
                     if (typeof value == "undefined" || value == null || value == "") {
                         row.recAcctName = "";
                     }
