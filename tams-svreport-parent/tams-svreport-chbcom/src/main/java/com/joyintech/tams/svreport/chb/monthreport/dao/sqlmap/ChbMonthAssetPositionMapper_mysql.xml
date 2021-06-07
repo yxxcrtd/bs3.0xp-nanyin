@@ -1284,7 +1284,7 @@
 
             CASE pos.ASSETTYPE2
                 WHEN '2101' THEN assetinfo.sec_main_grade
-                WHEN '1299' THEN 'D'
+                WHEN '1299' THEN '31'
                 ELSE assetinfo.FINANCIER_GRADE
                 END
                 as rating,
@@ -1323,7 +1323,7 @@
 
              CASE pos.ASSETTYPE2
                  WHEN '2101' THEN assetinfo.sec_main_grade
-                 WHEN '1299' THEN 'D'
+                 WHEN '1299' THEN '31'
                  ELSE assetinfo.FINANCIER_GRADE
                  END
                  as rating,
