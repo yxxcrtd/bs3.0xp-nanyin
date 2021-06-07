@@ -5,8 +5,9 @@
 		<mirror>
 			<id>nexus</id>
 			<name>nexus maven</name>
-			<url>http://192.168.45.38:8081/nexus/content/repositories/thirdparty/
-			</url>
+<!--			<url>http://192.168.45.38:8081/nexus/content/repositories/thirdparty/-->
+<!--			</url>-->
+			<url>http://192.168.90.83:8082/nexus/content/repositories/thirdparty/</url>
 			<mirrorOf>central</mirrorOf>
 		</mirror>
 	</mirrors>
