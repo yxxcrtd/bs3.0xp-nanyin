@@ -82,6 +82,11 @@ public class TrdPlanCurrDuration002Controller extends BaseController{
         Map<String,Object> param = RequestUtil.getPageParam();
 //        获取业务类型
         String type = (String)param.get("type");
+
+        //用于判断是否来自来账分拣
+        String isFromCheck = (String)param.get("isFromCheck");
+        model.addAttribute("isFromCheck",isFromCheck);
+
 //      交易人
         String trader = SecurityUtil.getLoginUser().getUserName();
         String workflowId = (String)param.get(GlobalConstant.WORKFLOW_ID);
