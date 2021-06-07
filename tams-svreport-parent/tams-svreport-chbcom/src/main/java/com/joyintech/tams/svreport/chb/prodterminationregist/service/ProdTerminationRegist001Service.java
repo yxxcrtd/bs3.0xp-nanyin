@@ -291,15 +291,16 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
         List<ProdTerminationRegist001Dto> data = restTemplate.postForList(
                     SvrServiceApplication.CHB_SERVICE_NAME + "/ProdTerminationRegist/selectAllData",pageParam,
                     ProdTerminationRegist001Dto.class);
+        //delete by lingxiaoqing on 2021-06-07 for HXTICM-820 导出多乘100 库里数据已经是乘以100的数据
         //update by leipeng BS-1722 【 产品终止登记】未选中导出，客户实际年化收益率、产品实际年化收益率与列表不一致，多除100
-        data.forEach(item ->{
-        	if(item.getCusYearYield() != null) {
-				item.setCusYearYield(item.getCusYearYield().multiply(new BigDecimal(100)));
-			}
-			if(item.getPrdYearYield() != null) {
-				item.setPrdYearYield(item.getPrdYearYield().multiply(new BigDecimal(100)));
-			}
-        });
+//        data.forEach(item ->{
+//        	if(item.getCusYearYield() != null) {
+//				item.setCusYearYield(item.getCusYearYield().multiply(new BigDecimal(100)));
+//			}
+//			if(item.getPrdYearYield() != null) {
+//				item.setPrdYearYield(item.getPrdYearYield().multiply(new BigDecimal(100)));
+//			}
+//        });
         
         com.joyintech.framework.grid.Page<ProdTerminationRegist001Dto> page = new com.joyintech.framework.grid.Page<ProdTerminationRegist001Dto>();
         page.setRoot(data);
