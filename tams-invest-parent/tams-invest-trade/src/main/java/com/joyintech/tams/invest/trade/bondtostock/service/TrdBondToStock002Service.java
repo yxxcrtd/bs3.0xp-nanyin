@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.bondtostock.dao.TrdBondToStockMapper;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.entity.FlowEntity;
@@ -159,6 +160,10 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
     
     @Autowired
     private PtlPortfolioMapper ptlPortfolioMapper;
+    
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
+    
     /**
      * 获取业务编号
      * @return 业务编号
@@ -1015,6 +1020,8 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
         total.setIsCancel(DictCodeListExt1.是否_否.getValue());
         total.setTgBusiType(DictCodeListExt3.平安业务类型_债转股.getValue());
         total.setPortfolioId(dto.getActPortfolioId());
+     // 单位面值
+        total.setParValue(trdBondInvestTrade002Service.getUnitPrice(dto.getFinprodId(), dto.getSettleDate()));
         if(dto.getTrdInvestPersonInfo()!=null){
             total.setTrader(dto.getTrdInvestPersonInfo().getTrader());
             total.setCounterId(dto.getTrdInvestPersonInfo().getCounterId());
