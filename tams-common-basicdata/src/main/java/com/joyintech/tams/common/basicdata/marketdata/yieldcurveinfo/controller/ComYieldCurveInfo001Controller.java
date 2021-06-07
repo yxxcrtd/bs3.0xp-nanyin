@@ -130,9 +130,8 @@ public class ComYieldCurveInfo001Controller extends BaseController{
         params.setBusinessType(DictCodeList.共通业务类型_收益率曲线信息.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
-            entity ->"曲线名称"+"("+ SysDataUtil.getNameFromDataDict(DictCode.收益率曲线,
-                entity.getCurveCode()) +")"+"-"+"曲线日期" + "(" + DateUtil.format(entity.getCurveDate()) + ")"
-                +"-"+"区线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.收益率曲线类型,
+            entity ->"曲线名称"+"("+ entity.getCurveCode() +")"+"-"+"曲线日期" + "(" + DateUtil.format(entity.getCurveDate()) + ")"
+                +"-"+"区线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.曲线利率类型,
                     entity.getCurveType())+")");
         processParameter.setWorkFlowParameter(params);
         String msg = comYieldCurveInfoService.start(processParameter,
