@@ -583,11 +583,15 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                     resultList.add(new ValidMessage("repRiskType", getMessage("BUSS_COM_E_0038",
                         getMessage("BussRepFinProductInfo.repRiskType"))));
                 }
-                // 产品风险等级
-                if (!StringUtil.isNotEmpty(dto.getRepRiskLevel())) {
-                    resultList.add(new ValidMessage("repRiskLevel", getMessage("BUSS_COM_E_0038",
-                        getMessage("BussRepFinProductInfo.repRiskLevel"))));
-                }
+
+                //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  start
+//                 产品风险等级
+//                if (!StringUtil.isNotEmpty(dto.getRepRiskLevel())) {
+//                    resultList.add(new ValidMessage("repRiskLevel", getMessage("BUSS_COM_E_0038",
+//                        getMessage("BussRepFinProductInfo.repRiskLevel"))));
+//                }
+                //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  end
+
                 // 发行机构提前终止权标识
                 if (!StringUtil.isNotEmpty(dto.getRepTermRightFlag())) {
                     resultList.add(new ValidMessage("repTermRightFlag", getMessage("BUSS_COM_E_0038",
