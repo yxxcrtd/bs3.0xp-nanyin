@@ -85,7 +85,7 @@ public class ComRateSwapInformationValidator implements BeanValidator {
 
             // 保存时数据列表为空验证
             if (comRateSwapInformationDtoList == null || comRateSwapInformationDtoList.size() == 0){
-                errorList.add(new ValidMessage(this.getMessage("COM_RateSwapInfo_0001")));
+                errorList.add(new ValidMessage("数据列表为空!"));
             }else {
                 //验证期限品种的每一项不能为空 -> 改为只验证收益率	王贵奇	2019/9/27
                 comRateSwapInformationDtoList.forEach(dtoItem ->{

@@ -17,15 +17,15 @@ $(function() {
         object.pageModel = pageModel;
         object.validExist = validExist
         object.disabled = disabled
-        object.rateSwapInformationDtoList = data
+        object.comRateSwapInformationDtoList = data
         if($('#curveCode').select2('data')[0].object != undefined){
 	        var curveCode = $('#curveCode').val();
 	        var curveType = $('#curveCode').select2('data')[0].object.curveType;
 	    	object.curveType = curveType;
-	        for(var index in object.rateSwapInformationDtoList){
-	        	object.rateSwapInformationDtoList[index].curveCode = curveCode;
-	        	object.rateSwapInformationDtoList[index].curveType = curveType;
-	        	object.rateSwapInformationDtoList[index].curveDate = object.curveDate;
+	        for(var index in object.comRateSwapInformationDtoList){
+	        	object.comRateSwapInformationDtoList[index].curveCode = curveCode;
+	        	object.comRateSwapInformationDtoList[index].curveType = curveType;
+	        	object.comRateSwapInformationDtoList[index].curveDate = object.curveDate;
 			}
         }
 

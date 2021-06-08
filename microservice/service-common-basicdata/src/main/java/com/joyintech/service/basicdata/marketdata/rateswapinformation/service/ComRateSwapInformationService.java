@@ -4,6 +4,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.basicdata.marketdata.rateswapinformation.dao.ComRateSwapInformationMapper;
 import com.joyintech.service.basicdata.marketdata.rateswapinformation.dto.ComRateSwapInformationDto;
 import com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dao.ComYieldCurveInfo001Mapper;
@@ -48,6 +49,9 @@ public class ComRateSwapInformationService extends BaseService<ComRateSwapInform
     public List<ComYieldCurveInfoDto> check(ComRateSwapInformationDto dto) {
         Map<String,Object> param = new HashMap<String,Object>();
         //区分页面展示的曲线品种和真正要入库的曲线代码，dto.curveCode 中存的是三个字段连接的品种代码 
+        if(StringUtil.isEmptyList(dto.getComRateSwapInformationDtoList())){
+        	return new ArrayList<>();
+        }
         param.put("curveCode", dto.getComRateSwapInformationDtoList().get(0).getCurveCode());
         param.put("curveType", dto.getCurveType());
         param.put("curveDate", new SimpleDateFormat("yyyy-MM-dd").format(dto.getCurveDate()));
