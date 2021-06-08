@@ -464,7 +464,7 @@ public class IBDDataCheckUtil {
             Object value = resultObjMap.get(key);
             if (value != null
                     && value instanceof Date) {
-                resultStrMap.put(key, DateUtil.format((Date) value, DateUtil.DEFAULT_OTHER_FORMAT));
+                resultStrMap.put(key, DateUtil.format((Date) value, DateUtil.DEFAULT_DATE_FORMAT_EN));
             }
             else if (value != null) {
                 resultStrMap.put(key, value.toString());

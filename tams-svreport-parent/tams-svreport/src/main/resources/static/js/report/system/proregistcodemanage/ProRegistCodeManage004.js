@@ -21,6 +21,7 @@
                             var fileType="pdf";
                             var fileName=str.substring(0,index);
                             str=str.substring(index+1,str.length);
+                            obj.targetFile = null;
                             if(fileType!=str){
                                 errorMessage+=fileName+"请上传.pdf格式文件！";
                             }
