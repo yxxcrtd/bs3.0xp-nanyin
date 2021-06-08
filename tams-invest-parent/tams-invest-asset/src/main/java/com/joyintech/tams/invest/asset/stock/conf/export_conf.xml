@@ -7,7 +7,7 @@
             <Cell order="3" name="交易场所">tradeMarketAbbr</Cell>
             <Cell order="4" name="上市板">boardName</Cell>
             <Cell order="5" name="公司名称">customerName</Cell>
-            <Cell order="6" name="上市时间">vdate</Cell>
+            <Cell order="6" name="上市时间">vdateStr</Cell>
             <Cell order="7" name="总股本">sShares</Cell>
             <Cell order="8" name="流通股本">cShares</Cell>
             <Cell order="9" name="是否沪港通或深港通">shOrZhName</Cell>
