@@ -170,7 +170,7 @@ public class ComFundMarketInfo001Controller extends BaseController {
         }
         ProcessParameter<ComFundMarketInfo001dto> processParameter = new ProcessParameter<ComFundMarketInfo001dto>();
         WorkFlowParameter<ComFundMarketInfo001dto> params = new WorkFlowParameter<ComFundMarketInfo001dto>();
-        params.setPageId("ValFundMarketInfo002");
+        params.setPageId("ComFundMarketInfo002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getFinprodId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_每日基金行情信息.getValue());
