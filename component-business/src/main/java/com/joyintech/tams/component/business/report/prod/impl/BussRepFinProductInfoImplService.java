@@ -196,11 +196,11 @@ public class BussRepFinProductInfoImplService extends BaseService<BussRepFinProd
             termType = DictCodeListExt2.产品期限_7天_1个月_含.getValue();
         }
         else if (termNum > 31
-                 && termNum <= 92) {
+                 && termNum <= 90) {
             // 产品期限(天) > 31 && 产品期限(天) <= 92 的场合, 期限品种 = “3个月以内”
             termType = DictCodeListExt2.产品期限_1_3个月_含.getValue();
         }
-        else if (termNum > 92
+        else if (termNum > 90
                  && termNum <= 184) {
             // 产品期限(天) > 92 && 产品期限(天) <= 184 的场合, 期限品种 = “6个月以内”
             termType = DictCodeListExt2.产品期限_3_6个月_含.getValue();
