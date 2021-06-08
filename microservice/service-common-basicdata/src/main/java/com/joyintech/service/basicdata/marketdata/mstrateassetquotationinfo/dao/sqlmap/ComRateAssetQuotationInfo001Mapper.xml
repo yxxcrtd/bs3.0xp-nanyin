@@ -123,8 +123,10 @@
                FINPROD_ID=#{finprodId}
                /** modify by yanya on 20210329 使用估值侧类型进行过滤**/
                <!--AND FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}-->
-                AND FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
                AND to_char(VAL_DATE,'yyyy-MM-dd') = #{valDate}
+               <if test="finprodType!= null and finprodType!='' ">
+               	AND FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+               </if>
     </select>
     <select id="selectMstRateAsset" resultType="com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto">
         SELECT
