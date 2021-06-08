@@ -787,6 +787,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 	            if(!StringUtil.isBlank(submitStatus)){
 	            	List<String> submitStatusList = StringUtil.splitToList(GlobalConstant.COMMA, submitStatus);
 	                param.put("submitStatusList", submitStatusList);
+	                if(submitStatusList.contains(DictCodeListExt2.报送状态_未报送.getValue())){
+						param.put("notSubmitStatus", DictCodeListExt2.报送状态_未报送.getValue());
+					}
 	            }
 	            if(!StringUtil.isBlank(submitFeedbackStatus)){
 	            	List<String> submitFeedbackStatusList = StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus);
@@ -1188,6 +1191,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		// 所有未登记的数据
         Map<String, Object> querymap = new HashMap<>();
         querymap.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, DictCodeListExt2.报送状态_未报送.getValue()));
+        querymap.put("notSubmitStatus", DictCodeListExt2.报送状态_未报送.getValue());
         querymap.put("orgCode", CommonUtil.getTreeInstCode());
 		//通道投资资产管理产品是否穿透报送
 		String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
@@ -1272,6 +1276,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		// 所有未登记的数据
         Map<String, Object> querymap = new HashMap<>();
         querymap.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, DictCodeListExt2.报送状态_未报送.getValue()));
+		querymap.put("notSubmitStatus", DictCodeListExt2.报送状态_未报送.getValue());
         List<AssetInfoRegist001Dto> assetInfoNotRegList = assetInfoRegist001Mapper.selectAssetInfoByPage(querymap);
         Map<String,String> assetInfoNotRegMap = assetInfoNotRegList.stream().collect(Collectors.toMap(AssetInfoRegist001Dto::getAssetCode,
                 AssetInfoRegist001Dto::getAssetCode,(key1,key2)->key2));
