@@ -143,7 +143,7 @@ public class ComRateAssetQuotationInfo001Service extends BaseService<ComRateAsse
 
     public List<ComRateAssetQuotationInfo001Dto> selectForExport(Map<String, Object> param) {
         param.put("PROFITTYPE_VALUE_02", DictCodeListExt2.收益类型_预期收益.getValue());
-        param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        param.put("TYPE_GUZHI_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         param.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
         return mstRateAssetQuotationInfo001Mapper.selectForPage(param);
     }
