@@ -238,13 +238,14 @@ public class TrdPlanNetInvestTradeValidator implements TradeCommonValidator {
                         errorList.add(new ValidMessage("settleSpreed", this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.settleSpreed"))));
                     }
                 }
-                if (StringUtil.isNotEmpty(entrustId) && tradeAmt != null && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())) {
+                if (StringUtil.isNotEmpty(entrustId) && (tradeAmt != null || shareAmt != null) && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())) {
                     Map<String, Object> param = new HashMap<>();
                     param.put("entrustId", entrustId);
                     param.put("tradeId", tradeId);
                     Map<String, Object> resultMap = trdPlanNetInvestTrade002Service.selectEntrustAmt(param);
                     if (resultMap != null) {
                         BigDecimal entrustAmt = new BigDecimal((String) resultMap.get("ENTRUST_AMT"));
+                        BigDecimal entrustNum = new BigDecimal((String) resultMap.get("ENTRUST_NUM"));
                         BigDecimal finishAmt = new BigDecimal((String) resultMap.get("FINISH_AMT"));
                         BigDecimal prinAmt = new BigDecimal((String) resultMap.get("PRIN_AMT"));
                         if (finishAmt != null) {
@@ -253,8 +254,10 @@ public class TrdPlanNetInvestTradeValidator implements TradeCommonValidator {
                         if (prinAmt != null) {
                             entrustAmt = entrustAmt.subtract(prinAmt);
                         }
-                        if (tradeAmt.compareTo(entrustAmt) == 1) {
+                        if (tradeAmt != null && tradeAmt.compareTo(entrustAmt) == 1) {
                             errorList.add(new ValidMessage("tradeAmt", this.getMessage("TRD_X_0004") + entrustAmt));
+                        }else if(shareAmt != null && shareAmt.compareTo(entrustNum) == 1){
+                            errorList.add(new ValidMessage("shareAmt", this.getMessage("TRD_X_0009") + entrustNum));
                         }
                     }
                 }
