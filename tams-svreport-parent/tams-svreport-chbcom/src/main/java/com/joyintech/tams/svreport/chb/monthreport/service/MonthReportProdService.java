@@ -437,6 +437,7 @@ public class MonthReportProdService {
 					if(!yieldmap.containsKey(pos.getProdid())){
 						pos.setEndamtsumOth(pos.getEndamtsumOth().multiply(exchangeRate));
 					}
+					pos.setPayamtsum(pos.getPayamtsum().multiply(exchangeRate));
 					pos.setCustomeramt(pos.getCustomeramt().multiply(exchangeRate));
 				}
 
