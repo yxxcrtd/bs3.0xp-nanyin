@@ -70,7 +70,7 @@
 	                function(result) {
 	                    //交易方向为卖/买,交易货币金额大于交易货币可用持仓时,进行提醒,但仍可以提交
 	                    if(tradePs == tradePsValue && JoyinMath.doMinus(tradeAmt,tradeCcyAvailablePosition) > 0){
-	                        Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_E_0101'),function() {
+	                        Joyin.confirm("交易方向为卖/买,交易货币金额大于交易货币可用持仓,请确认是否提交?",function() {
 	                            if (operateType === 'save') {
 	                                WorkFlow.doSaveList(basePath+'invest/entrust/etrwtfxswap/EtrWtFxswap002/save',object,"EtrWtFxswap002_btn_save");
 	                            } else {
