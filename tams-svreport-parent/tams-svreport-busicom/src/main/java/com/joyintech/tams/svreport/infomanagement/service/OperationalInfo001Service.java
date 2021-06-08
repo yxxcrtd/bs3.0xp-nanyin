@@ -548,6 +548,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.equals(tableName,"CHB_LOAN_DETAIL_INFO")){
 			list = baseInformationMapper.queryChbLoanDetailInfoByParams(tableName, baseInformationList, flag,assetType);
 		}else{
+			if(StringUtil.equals(tableName,"CHB_LOAN_DETAIL_INFO")){
+				flag = false;//删除数据查询无数据
+			}
 			list = baseInformationMapper.queryBaseInfoByParams(tableName, baseInformationList, flag,assetType);
 		}
 		return list;
