@@ -155,7 +155,7 @@ $(function() {
 		        var object = {selectedItem: selArr, operateType:"delete"};
 		        Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstshareprice/ComSharePrice001/check', object, function(result) {
 		             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-		                 WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/mstshareprice/ComSharePrice001/delete', object, "ComSharePrice001_btn_delete", "ValSharePrice002",function() {
+		                 WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/mstshareprice/ComSharePrice001/delete', object, "ComSharePrice001_btn_delete", "ComSharePrice002",function() {
 		                 	table.reload();
 		                 });
 		             });

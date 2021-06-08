@@ -111,7 +111,7 @@ $(function () {
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/check', object, function (result) {
                 Joyin.confirm("请确认是否删除?", function () {
                     WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/externaloptions/ComExternalOptions001/delete', object,
-                        "ComExternalOptions001_btn_delete", "ExternalOptions002");
+                        "ComExternalOptions001_btn_delete", "ComExternalOptions002");
                 });
             });
         });
