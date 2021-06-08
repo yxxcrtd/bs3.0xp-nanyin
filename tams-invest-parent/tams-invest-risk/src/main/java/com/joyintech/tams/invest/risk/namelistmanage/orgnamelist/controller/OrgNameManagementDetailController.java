@@ -93,7 +93,7 @@ public class OrgNameManagementDetailController extends BaseController {
         Map<String, Object>  params=RequestUtil.getParameters(getRequest());
         //分别下载明细列表与履历列表
         if(StringUtil.isNotEmpty(params.get("type")) && params.get("type").equals("record")){
-            return orgNameManagementRecordService.export("名单更新履历.xlsx",
+            return orgNameManagementRecordService.export("名单更新履历",
                 RequestUtil.getParameters(getRequest()));
         }else{
             return orgNameManagementDetailService.export(this.getPageId(),
