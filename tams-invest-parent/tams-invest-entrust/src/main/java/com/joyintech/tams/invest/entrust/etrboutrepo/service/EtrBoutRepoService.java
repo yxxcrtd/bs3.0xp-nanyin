@@ -904,7 +904,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                         || (StringUtil.isNotBlank(rowData.get(18).toString())
                             && StringUtil.isNotBlank(rowData.get(19).toString()))) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                            getMessage("ETR_E_0020", getMessage("EtrFund003.chlId"),
+                            getMessage("ETR_E_0020", getMessage("invest.channelId"),
                                 getMessage("EtrStock002.secAcctId"), lineNo));
                     }
                     // 证券账户存在
