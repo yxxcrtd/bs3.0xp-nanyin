@@ -845,7 +845,7 @@
 	  on CHB_PRD_BONUS_DEAL.PROD_ID = cpp.prodId
 	where   NVL(FPROD_ID,PROD_ID)=#{prodId, jdbcType = VARCHAR}
 	AND  settdate_DATE=#{payDate, jdbcType = DATE}
-	GROUP BY NVL(FPROD_ID,PROD_ID),trade_type
+	GROUP BY NVL(FPROD_ID,PROD_ID),trade_type,cpp.ccy
   </select>
   
 </mapper>
