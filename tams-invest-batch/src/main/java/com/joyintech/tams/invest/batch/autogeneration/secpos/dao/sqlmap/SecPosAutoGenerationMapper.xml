@@ -1237,7 +1237,7 @@
          temp.branch,
          '999999' as inv_aim,
          #{POSITION_TYPE_03} as hoding_type,
-         trunc(sysdate) cdate,
+         #{batchDate,jdbcType=DATE} as cdate,
          sum(temp.amount) amount,
          'CNY' ccy,
          null p_finprod_id,
