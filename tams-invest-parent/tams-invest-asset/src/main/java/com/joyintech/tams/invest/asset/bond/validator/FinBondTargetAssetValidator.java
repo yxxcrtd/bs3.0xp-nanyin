@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -58,8 +58,8 @@ public class FinBondTargetAssetValidator implements BeanValidator{
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
 
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -266,9 +266,9 @@ public class FinBondTargetAssetValidator implements BeanValidator{
 
         }
 
-//        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-//            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
-//        }
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
+        }
         if((StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT))&&dto.getBussFinBondRepInfoDto().getRepSectype().equals("99")){
             if(StringUtil.isEmpty(dto.getBussFinBondRepInfoDto().getRepRemark())){
                 resultList.add(new ValidMessage("当中债报送信息中具体类别为其他债券时，备注必填。"));
