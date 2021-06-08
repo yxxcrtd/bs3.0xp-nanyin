@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
 
-package com.joyintech.tams.common.svreport.datacheck.service;
+package com.joyintech.tams.invest.common;
 
 import com.joyintech.component.svrreport.chb.chbcommoncheck.dto.CheckElement;
 import com.joyintech.framework.base.intf.DataDict;
@@ -24,7 +24,12 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
