@@ -199,7 +199,7 @@ public class ComBondMarketInfo001Controller extends BaseController {
         }
         ProcessParameter<ComBondMarketInfo001Dto> processParameter = new ProcessParameter<ComBondMarketInfo001Dto>();
         WorkFlowParameter<ComBondMarketInfo001Dto> params = new WorkFlowParameter<ComBondMarketInfo001Dto>();
-        params.setPageId("ValBondMarketInfo002");
+        params.setPageId("ComBondMarketInfo002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getSecId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_每日债券行情信息.getValue());
