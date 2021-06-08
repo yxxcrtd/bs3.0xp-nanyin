@@ -65,9 +65,9 @@
 			from TRD_FEE_CONFIG where FEE_TYPE  IN('B01','B02','B03','B04','B05','B06','B07') GROUP BY BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE
 			) t3 on m.BATCH_SEQ=t3.BATCH_SEQ
 			
-		<where>
+		where  m.TRADE_MARKET in (#{TRADE_PLACE_03},#{TRADE_PLACE_04})
 			<if test="feeType != null and feeType != ''">
-		     	m.FEE_TYPE=#{feeType,jdbcType=VARCHAR}
+		     	and m.FEE_TYPE=#{feeType,jdbcType=VARCHAR}
 			</if>
 			<if test="tradeMarket != null and tradeMarket != ''">
 				and m.TRADE_MARKET = #{tradeMarket}
@@ -82,7 +82,6 @@
 			<if test="effDate != null and effDate != ''">
 				and m.EFF_DATE = to_date(#{effDate},'yyyy-MM-dd')
 			</if>
-		</where>
 			order by m.BATCH_SEQ,m.EFF_DATE desc
 	</select>
 	

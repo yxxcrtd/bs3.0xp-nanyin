@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.joyintech.tams.common.base.dao.TrdFeeConfigDetailMapper;
 import com.joyintech.tams.common.base.dao.TrdFeeConfigMapper;
 import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
@@ -52,6 +54,8 @@ public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
     public Page<MstCommissionSetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
         throws Exception {
 //    	pageParam.put("feeType", BussinessDictCodeList.费用类型_佣金.getValue());
+    	pageParam.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+    	pageParam.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
     	Page<MstCommissionSetDto> resutList= super.queryForPage(page, length, () -> mstCommissionSetMapper.selectForPage(pageParam));
     /*	List<MstCommissionSetDto> reList=new ArrayList<MstCommissionSetDto>();
     	for(MstCommissionSetDto dto:resutList.getRoot()){
