@@ -85,9 +85,7 @@ $(function() {
               {title: '单位估值（净价）',field:'unitValNet', width:150,type:'number', digit:4,sortField:'unitValNet'},
               {title: '单位估值（全价）',field:'unitValTotal', width:150,type:'number', digit:4,sortField:'unitValTotal'},
               {title: '备注',field:'remark', width:150,sortField:''},
-              {field:'sendStatus', visible:false},
               {field:'sumitSeq', visible:false},
-              {field:'status', visible:false},
               {field:'registSeqno', visible:false}
           ]
       });
