@@ -162,7 +162,7 @@ $(function() {
 		};
 		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/check', object, function(result) {
 			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/delete', object, "ComFundMarketInfo001_btn_delete", "ValFundMarketInfo002",function(){
+				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/delete', object, "ComFundMarketInfo001_btn_delete", "ComFundMarketInfo002",function(){
 					table.reload();
 				});
 			});
@@ -201,7 +201,7 @@ $(function() {
 		var object = {selectedItem: selArr, operateType:"delete"};
 		Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/check', object, function(result) {
 			Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/delete', object, "ComFundMarketInfo001_btn_delete", "ValFundMarketInfo002",function () {
+				WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/fundmarketinfo/ComFundMarketInfo001/delete', object, "ComFundMarketInfo001_btn_delete", "ComFundMarketInfo002",function () {
 					table.reload();
 				});
 			});
