@@ -223,6 +223,9 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 			// 将报送状态当做多选下拉框处理
 			if (StringUtil.isNotBlank(sendStatus)) {
 				pageParam.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, sendStatus));
+				if(StringUtil.splitToList(GlobalConstant.COMMA, sendStatus).contains(DictCodeListExt2.报送状态_未报送.getValue())){
+					pageParam.put("notSubmitStatus", DictCodeListExt2.报送状态_未报送.getValue());
+				}
 			}
 			// 将反馈状态当做多选下拉框处理
 			if (StringUtil.isNotBlank(submitFeedbackStatus)) {
