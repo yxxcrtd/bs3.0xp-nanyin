@@ -100,11 +100,11 @@ public class AssetNameManagementDetailController extends BaseController {
         if(StringUtil.isNotEmpty(params.get("type")) && params.get("type").equals("record")){
             String EXPORT_EXCEL_TYPE = CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_TYPE);
             // 模板文件后缀名
-            String fileType = GlobalConstant.FILE_POSTFIX_XLSX; 
-            if(StringUtil.equals(EXPORT_EXCEL_TYPE, "02")){
-                fileType = GlobalConstant.FILE_POSTFIX_XLS;
-            }
-            return assetNameManagementRecordService.export("名单更新履历"+fileType,
+//            String fileType = GlobalConstant.FILE_POSTFIX_XLSX;
+//            if(StringUtil.equals(EXPORT_EXCEL_TYPE, "02")){
+//                fileType = GlobalConstant.FILE_POSTFIX_XLS;
+//            }
+            return assetNameManagementRecordService.export("名单更新履历",
                 RequestUtil.getParameters(getRequest()));
         }else{
             return assetNameManagementDeatilService.export(this.getPageId(),
