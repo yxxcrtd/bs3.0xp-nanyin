@@ -125,16 +125,16 @@ public class ComFxValuztionInfo001Controller extends BaseController {
         }
         ProcessParameter<ComFxValuztionInfo002Dto> processParameter = new ProcessParameter<ComFxValuztionInfo002Dto>();
         WorkFlowParameter<ComFxValuztionInfo002Dto> params = new WorkFlowParameter<ComFxValuztionInfo002Dto>();
-        params.setPageId("ValFxValuztionInfo002");
+        params.setPageId("ComFxValuztionInfo002");
         params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
         params.setBusinessCode(item -> item.getFinprodId2());
         params.setBusinessType(DictCodeList.共通业务类型_外汇估值信息.getValue());
      // 设置流程业务说明, entity即传入的dto
         // 业务说明：债券代码 + "(" + 债券代码 + ")" + "-" + "估值日" + "-" + "估值日"
-        params.setComment(entity -> SpringContextUtil.getTextValue("ValFxValuztionInfo002.finprodId2") + "(" + entity.getFinprodId2() + ")" + "-"
-            + SpringContextUtil.getTextValue("ValFxValuztionInfo002.datasourceType") + "("
-            + entity.getDatasourceType() + ")"+ this.getMessage("ValFxValuztionInfo002.valDate") + "("
-            + entity.getValDate() + ")"+ this.getMessage("ValFxValuztionInfo002.ccy") + "("
+        params.setComment(entity -> "交易编号" + "(" + entity.getFinprodId2() + ")" + "-"
+            + "数据来源" + "("
+            + entity.getDatasourceType() + ")"+ "估值日期" + "("
+            + entity.getValDate() + ")"+ "币种" + "("
             + entity.getCcy() + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = comFxValuztionInfo002Service.start(processParameter,
