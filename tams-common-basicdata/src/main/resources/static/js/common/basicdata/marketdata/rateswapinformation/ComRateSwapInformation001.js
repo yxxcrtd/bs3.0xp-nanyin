@@ -197,7 +197,7 @@ $(function() {
                 return;
             }
             var object = {};
-            object.rateSwapInformationDtoList = selArr
+            object.comRateSwapInformationDtoList = selArr
             object.operateType = "delete"
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/rateswapinformation/ComRateSwapInformation001/check', object, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
@@ -221,7 +221,7 @@ $(function() {
             var object = {};
             object.curveCode = curveCodeVal;
             object.curveDate = curveDateVal;
-            object.rateSwapInformationDtoList = selArr;
+            object.comRateSwapInformationDtoList = selArr;
             object.operateType = "edit";
             object.pageModel = PAGE_MODEL_EDIT;
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/rateswapinformation/ComRateSwapInformation001/check', object, function (result) {
