@@ -66,7 +66,17 @@ public class ChbMgrTableInfo implements ITableRow{
 	private String createDept;
 	
 	private String headerNum;
-	
+
+	private String dictMode;
+
+	public String getDictMode() {
+		return dictMode;
+	}
+
+	public void setDictMode(String dictMode) {
+		this.dictMode = dictMode;
+	}
+
 	public String getMgrTableId() {
 		return mgrTableId;
 	}
