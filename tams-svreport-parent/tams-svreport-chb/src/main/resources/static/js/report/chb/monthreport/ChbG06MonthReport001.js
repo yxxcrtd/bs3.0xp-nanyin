@@ -83,26 +83,26 @@ $(function() {
               {title: '统计年月',field:'termname',width : 100,sortField:'termid'},
               { title: "机构名称",  width : 130,field: 'orgName',sortField:'orgCode'},
               {title: '报表名称',field:'g06Reportname',sortField:'termid'},
-              {
-              title : '操作',
-              field : 'operation',
-              type : 'action',
-              buttons : [ 
-              {
-                  text : '&#xe615;',
-                  clas : 'batch',
-                  title : '预览'
-              } ]
-              /*render: function (data, type, row, meta) {
-			       
-		            if(purviewElements.indexOf('_batch')!=-1){
-		                return '<i class="btn layui-icon batch" title="预览">&#xe615;</i>';
-		            }
-		        }*/
-              },
               {field:'sendStatus', visible:false},
               {field:'status', visible:false},
-              {field:'reportuuid', visible:false}
+              {field:'reportuuid', visible:false},
+              {
+                  title : '操作',
+                  field : 'operation',
+                  type : 'action',
+                  buttons : [
+                      {
+                          text : '&#xe615;',
+                          clas : 'batch',
+                          title : '预览'
+                      } ]
+                  /*render: function (data, type, row, meta) {
+
+                        if(purviewElements.indexOf('_batch')!=-1){
+                            return '<i class="btn layui-icon batch" title="预览">&#xe615;</i>';
+                        }
+                    }*/
+              }
           ]
       });
       
