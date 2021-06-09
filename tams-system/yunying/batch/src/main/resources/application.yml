@@ -357,7 +357,8 @@ spring:
   #本地启动建议删除redis配置start
   redis:
     database: 5
-    host: 127.0.0.1
+    password: 123456
+    host: 192.168.60.40
     port: 6379
     timeout: 20000
   datasource:
