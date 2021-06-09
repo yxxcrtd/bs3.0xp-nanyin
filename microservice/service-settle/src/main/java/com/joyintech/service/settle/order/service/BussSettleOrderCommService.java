@@ -2009,7 +2009,12 @@ public class BussSettleOrderCommService {
      * @since 1.0
      */
     public StlCapacctInfo queryStlCapacctInfoByBusiAcctNo(String ccy, String busiAcctNo){
-        return bussSettleOrderCommMapper.queryStlCapacctInfoByBusiAcctNo(ccy, busiAcctNo);
+        StlCapacctInfo rsultDto = bussSettleOrderCommMapper.queryStlCapacctInfoByBusiAcctNo(ccy, busiAcctNo);
+        if (rsultDto == null) {
+            rsultDto = bussSettleOrderCommMapper.queryStlCapacctInfoByBusiAcctNo(ccy, ":" + busiAcctNo);
+        }
+
+        return rsultDto;
     }
 
     /**
