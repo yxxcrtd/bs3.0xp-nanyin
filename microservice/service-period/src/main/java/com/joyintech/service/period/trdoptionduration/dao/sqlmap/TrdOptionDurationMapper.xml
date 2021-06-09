@@ -336,7 +336,7 @@
 						</if>
 						#{item}
 					</foreach>)
-					OR pp.PARENT_PORTFOLIO_ID IN
+					OR (pp.PARENT_PORTFOLIO_ID IN
 					<foreach collection="portfolioId" index= "index"  item="item" open="(" close=")" separator=",">
 						<if test="(index % 998) == 0">
 							null) or pp.PARENT_PORTFOLIO_ID in (
