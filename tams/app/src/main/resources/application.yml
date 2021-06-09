@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active:    allinone #CESHI
+    active:    CESHI #allinone
   application:
     name: tams-server
     dfstype: 2
@@ -119,6 +119,7 @@ tx-lcn:
 jixu:
   user:
     type: 2
+#安全配置
 shiro:
   sessionId: JSESSIONID
   casClientName: tams
@@ -146,7 +147,7 @@ application:
     msg-end-time: 2200
     reportCbFeedBackHandleCountOneTime: 10000
     isExceptionWhenSendTimeout: 01
-    dangbanFlag: '01'
+    dangbanFlag: '02'
   cache:
     file: classpath:ehcache_app.xml
   remindPage: invest/remindMain  
@@ -354,74 +355,79 @@ tx-lcn:
 ---
 spring:
   profiles: CESHI
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
-    port: 6379
-    timeout: 20000
+  thymeleaf:
+    cache: false
+  #  redis:
+  #    database: 1
+  #    password: joyin!234
+  #    host: 192.168.90.198
+  #    port: 6379
+  #    timeout: 20000
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
+  #  redislock:
+  #    redissonEnabled: false
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
-  url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
-  username: root
-  password: joyin123
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+  sqldiruserName: root
+  sqldirpassword: joyin123
+shiro:
+  ssoEnable: false
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
-    username: root
-    password: joyin123
-stresstest:
-  datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: joyin123
+stresstest:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 wind:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
 log:
-  path: ${user.home}/tams/logs/tams
-  level: DEBUG
+  path: D:/workspace/HuaXia/logs/tams
+  level: debug
+#注册中心配置
 eureka:
   client:
-    enabled: false
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
     serviceUrl:
-      defaultZone: http://192.168.90.219:9101/eureka/
+      defaultZone: http://127.0.0.1:9101/eureka/
   instance:
     ip-address: 127.0.0.1
     prefer-ip-address: false
+jixu:
+  user:
+    type: 2
 xinping:
   properties:
     urlIP: 127.0.0.1
     urlPort: 9191
-#场内交易使用配置
-exchangesystem:
-  properties:
-    urlIP: joyin.gaoyusoft.com
-    urlPort: 8989
-    urlAppend: /exchange/hello
-    
 tx-lcn:
   client:
     managerAddress: 192.168.90.197:8070
-
-
-# 温州 APP 消息推送接口配置，默认 false
-workflow:
-  isSentMessage: false
-  serviceName: messageService
-
 
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:

@@ -8,7 +8,7 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   profiles:
-    active: dtx1 #CESHI
+    active: CESHI #dtx1
   thymeleaf:
     cache: false
   #数据源配置
@@ -73,6 +73,17 @@ jixu:
     type: 3
 #应用配置
 application:
+  chb:
+    #由于一二期直连调用组件包，组件包不能访问缓存，故在此配置同三期一致的路径
+    filepath: /home/tams/svr_nb_prod/sharedata/chb/send/CB/
+    #由于一二期直连调用组件包，组件包不能访问缓存，故在此配置同三期一致的路径
+    download-file-path: /home/tams/svr_nb_prod/sharedata/chb/recive/CB/
+    maxSqlNum: 1000
+    msg-start-time: 0600
+    msg-end-time: 2200
+    reportCbFeedBackHandleCountOneTime: 10000
+    isExceptionWhenSendTimeout: 01
+    dangbanFlag: '02'
   cache:
     file: classpath:ehcache_batch.xml
   sysCode: TAMS
@@ -338,53 +349,121 @@ trade:
 ---
 spring:
   profiles: CESHI
+  #rabbitmq:
+  #  addresses: 192.168.45.20:5672
+  #  username: rbmq
+  #  password: rbmq
+  #  publisher-confirms: true
+  #  publisher-returns: true
+  #  listener:
+  #    simple:
+  #      max-concurrency: 20
+  #      concurrency: 1
+  #      acknowledge-mode: manual
+  #      retry:
+  #        enabled: true
+  #  template:
+  #    retry:
+  #      enabled: false
+  #    mandatory: true
+  #本地启动建议删除redis配置start
   redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
+    database: 2
+    host: 192.168.70.240
     port: 6379
     timeout: 20000
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.45.20:6379,192.168.45.20:6380,192.168.45.20:6381,192.168.45.20:6382,192.168.45.20:6383,192.168.45.20:6384
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+    reportSqlldrDatabaseName: 192.168.60.43:3306/hx2jgbs_0511_01 #sqlldr用数据库连接，必须保持这种格式
+#应用配置
 application:
-  url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
-  username: root
-  password: joyin123
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+  sqldiruserName: root
+  sqldirpassword: joyin123
+  loadbalance: false
+  micorservice:
+    contextPath:
+      single: true
+      #      commonService: http://127.0.0.1:8080/tams
+      #      basicDataService: http://127.0.0.1:8080/tams
+      #      documentService: http://127.0.0.1:8080/tams
+      #      entrustService: http://127.0.0.1:8080/tams
+      #      periodService: http://127.0.0.1:8080/tams
+      #      assetService: http://127.0.0.1:8080/tams
+      #      portfolioService: http://127.0.0.1:8080/tams
+      #      productService: http://127.0.0.1:8080/tams
+      #      quotaService: http://127.0.0.1:8080/tams
+      #      reportService: http://127.0.0.1:8080/tams
+      #      riskService: http://127.0.0.1:8080/tams
+      #      riskRdsService: http://127.0.0.1:8080/tams
+      #      riskInfService: http://127.0.0.1:8080/tams
+      #      settleService: http://127.0.0.1:8080/tams
+      #      tradeService: http://127.0.0.1:8080/tams
+      #      disclosureService: http://127.0.0.1:8080/tams
+      #      valuationService: http://127.0.0.1:8080/tams
+      #      chbService: http://127.0.0.1:8080/tams
+      #      chbreportService: http://127.0.0.1:8080/tams/service
+      #      chb3Service: http://127.0.0.1:8080/tams
+      #      svrcomService: http://127.0.0.1:8080/tams
+      #      pbcService: http://127.0.0.1:8080/tams
+      #      investInterfService: http://127.0.0.1:8080/tams
+      #      tamsServer: http://127.0.0.1:8080/tams
+      commonService: http://TamsMicroservice
+      basicDataService: http://TamsMicroservice
+      documentService: http://TamsMicroservice
+      entrustService: http://TamsMicroservice
+      periodService: http://TamsMicroservice
+      assetService: http://TamsMicroservice
+      portfolioService: http://TamsMicroservice
+      productService: http://TamsMicroservice
+      quotaService: http://TamsMicroservice
+      reportService: http://TamsMicroservice
+      riskService: http://TamsMicroservice
+      riskRdsService: http://TamsMicroservice
+      riskInfService: http://TamsMicroservice
+      settleService: http://TamsMicroservice
+      tradeService: http://TamsMicroservice
+      disclosureService: http://TamsMicroservice
+      valuationService: http://TamsMicroservice
+      chbService: http://TamsMicroservice
+      chbreportService: http://TamsMicroservice
+      chb3Service: http://TamsMicroservice
+      svrcomService: http://TamsMicroservice
+      pbcService: http://TamsMicroservice
+      channelService: http://TamsMicroservice
+      customerInterfService: http://TamsMicroservice
+      tamsServer: http://TamsMicroservice
+      investInterfService: http://TamsMicroservice
+      adapterService: http://TamsMicroservice
+#base数据库配置
 base:
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
-stresstest:
-  datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
-    username: root
-    password: joyin123
+#interf数据源配置
 interf:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
     username: root
     password: joyin123
-wind:
-  datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_0511_01?serverTimezone=UTC&characterEncoding=utf-8&allowMultiQueries=true
-    username: root
-    password: joyin123
+#日志路径配置
 log:
-  path: /home/tams/logs/batch-jicheng
+  path: /logs/hxjgbs/batch
   level: debug
 logging:
-  path: /home/tams/logs/batch
+  path:/logs/hxjgbs/batch
 #注册中心配置
 eureka:
   client:
-    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    enabled: true #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
     serviceUrl:
-      defaultZone: http://127.0.0.1:9100/eureka/
+      defaultZone: http://127.0.0.1:9101/eureka/
   instance:
     ip-address: 127.0.0.1
     prefer-ip-address: false
@@ -398,9 +477,11 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-b45:
-  properties:
-    urlIP: 10.1.20.87
-    urlPort: 8088
-    urlMid: /dev.0/am4-banktransfer-manage/1.0
-    localFilePath: //home//uap//testNfs//
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+      threadSize: 8
