@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.grid.GridRowDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
@@ -351,6 +352,10 @@ public class PtlSubFundsMange001Dto extends BaseEntity implements GridRowDto {
 
 	public void setOtherPortfolioId(String otherPortfolioId) {
 		this.otherPortfolioId = otherPortfolioId;
+	}
+	
+	public String getSettleDateStr() {
+		return DateUtil.format(this.getSettleDate());
 	}
 
 }

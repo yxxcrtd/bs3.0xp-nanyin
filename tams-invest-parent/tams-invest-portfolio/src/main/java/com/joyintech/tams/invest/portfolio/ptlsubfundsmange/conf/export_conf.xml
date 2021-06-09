@@ -4,7 +4,7 @@
         <Row>
         	<Cell order="1" name="有效状态">workStatus</Cell>
             <Cell order="2" name="交易编号">tradeId</Cell>
-            <Cell order="3" name="交易日">settleDate</Cell>
+            <Cell order="3" name="交易日">settleDateStr</Cell>
             <Cell order="4" name="产品代码">prodId</Cell>
             <Cell order="5" name="产品名称">prodName</Cell>
             <Cell order="6" name="交易金额">tradeAmt</Cell>
