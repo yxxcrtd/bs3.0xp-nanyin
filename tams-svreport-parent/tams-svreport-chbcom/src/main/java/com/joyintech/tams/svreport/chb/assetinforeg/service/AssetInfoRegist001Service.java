@@ -1156,7 +1156,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 }
             }
         }
-		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), assetInfoRegList, false,true);
+		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), assetInfoRegList, false,false);
 	}
 	
 	
@@ -1211,6 +1211,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		// 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
         List<ChbAssetSubStatus> registSeqList = new ArrayList<ChbAssetSubStatus>();
 //        List<String> assetList = new ArrayList<>();
+		List<String> registSeqstatusList = new ArrayList<String>();
 		for(AssetInfoRegist001Dto m : assetInfoList){
 			ChbAssetSubStatus status = new ChbAssetSubStatus();
 			status.setAssetType("01");
@@ -1218,6 +1219,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 			status.setInstitutionCode(null!=map.get("belongOrgCode")?map.get("belongOrgCode").toString():"");
 			
 			registSeqList.add(status);
+			registSeqstatusList.add(m.getRegistSeqno());
 //            assetList.add(m.getAssetCode());
             // 如果没有该产品的数据则插入如果有则判断是否同时存在未报送和已报送
             // 只要有未报送的登记数据就不允许取消手工处理
@@ -1238,23 +1240,27 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
             	
                 assetInfoRegist001Mapper.deleteSubStausEx(registSeqList );
 //                // 删除履历表中移除数据
-//                assetInfoRegist001Mapper.deleteLastSubmitHis(assetInfoList);
-//            	assetInfoRegist001Mapper.updateAssetInfoRegist(registSeqList);
+            	assetInfoRegist001Mapper.updateAssetInfoRegist(registSeqstatusList);
             }
             else {
                 List<ChbAssetSubStatus> newDataList = new ArrayList<ChbAssetSubStatus>();
                 newDataList.addAll(registSeqList);
+				List<String> newDataStatusList = new ArrayList<String>();
+				newDataStatusList.addAll(registSeqstatusList);
 
                 // 分批处理
                 int part = dataCount / maxDataCountOneTime; // 分批数
                 for (int i = 0; i < part; i++ ) {
                     assetInfoRegist001Mapper.deleteSubStausEx(registSeqList.subList(0, maxDataCountOneTime));
+					assetInfoRegist001Mapper.updateAssetInfoRegist(newDataStatusList.subList(0, maxDataCountOneTime));
                     newDataList.subList(0, maxDataCountOneTime).clear();
+					newDataStatusList.subList(0, maxDataCountOneTime).clear();
                     assetInfoList.subList(0, maxDataCountOneTime).clear();
                 }
                 // 最后剩下的数据
                 if (CollectionUtils.isNotEmpty(newDataList)) {
                     assetInfoRegist001Mapper.deleteSubStausEx(registSeqList);
+					assetInfoRegist001Mapper.updateAssetInfoRegist(newDataStatusList);
 
                 }
             }
