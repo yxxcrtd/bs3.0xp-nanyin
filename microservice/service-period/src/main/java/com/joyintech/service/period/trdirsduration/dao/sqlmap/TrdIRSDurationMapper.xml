@@ -755,7 +755,8 @@
             ON T10.CASH_ID = T9.CASH_ID
                 AND T10.MDATE = T3.MDATE
             <!-- 查询理论付息日 end -->
-            LEFT JOIN PTL_TRADE PT ON NVL(NVL(T2.P_TRADE_ID, T2.TRADE_ID), NVL(T3.P_TRADE_ID, T3.TRADE_ID)) = PT.BUSI_NO
+            <!--LEFT JOIN PTL_TRADE PT ON NVL(NVL(T2.P_TRADE_ID, T2.TRADE_ID), NVL(T3.P_TRADE_ID, T3.TRADE_ID)) = PT.BUSI_NO -->
+            LEFT JOIN PTL_TRADE PT ON ( NVL(T2.P_TRADE_ID, T2.TRADE_ID) = PT.BUSI_NO or NVL(T3.P_TRADE_ID, T3.TRADE_ID) = PT.BUSI_NO )
             LEFT JOIN 
                 PTL_PORTFOLIO PTL
             ON
