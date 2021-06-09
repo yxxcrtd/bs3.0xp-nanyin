@@ -1156,7 +1156,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 }
             }
         }
-//		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), assetInfoRegList, false,true);
+		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), assetInfoRegList, false,true);
 	}
 	
 	
