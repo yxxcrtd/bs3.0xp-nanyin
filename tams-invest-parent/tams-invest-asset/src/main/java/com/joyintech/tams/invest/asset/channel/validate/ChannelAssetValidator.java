@@ -91,7 +91,7 @@ public class ChannelAssetValidator implements BeanValidator{
                 	//update by yantianyuan 20200721 格式化字符串缺少参数 start
                       //update by yujiaping 20200223 ZGBSS-634 合作资产维护界面，选择已被使用的资金账户,提示改为“资金账户不能重复”
                 	 resultList.add(new ValidMessage("busiAcctNo",
-                             getMessage("资金账户不能重复。")));
+                             getMessage("资金账户已经被其他通道或者产品使用，不允许重复。")));
                     //update by yantianyuan 20200721 格式化字符串缺少参数 end 
 //                    resultList.add(new ValidMessage("busiAcctNo",
 //                            getMessage("BUSS_COM_E_0006", getMessage("ChannelAsset002.busiAcctNo"))));
