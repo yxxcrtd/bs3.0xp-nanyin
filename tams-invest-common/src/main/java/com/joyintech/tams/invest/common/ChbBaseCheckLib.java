@@ -109,6 +109,34 @@ public class ChbBaseCheckLib {
     }
 
     /**
+     * 根据指定的规则，判断数据字符长度是否超过指定的长度 ，默认UTF-8编码
+     * @param data 被检查的数据
+     * @param rule 检查规则实体
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean lessThanCharLengthUTF8(Map<String, String> data, CheckElement rule){
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtil.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        //add by wm condition表中无nullable字段，并且当字段比较为0时，返回true start
+        if(StringUtil.isEmpty(srcValue)  && StringUtil.isEmpty(rule.getNullable()) && StringUtil.equals("0", rule.getObjvalue()) )
+            return true;
+        //add by wm condition表中无nullable字段，并且当字段比较为0时，返回true end
+        if ( StringUtil.isEmpty(srcValue) )
+            return false;
+        int length = Integer.parseInt(rule.getObjvalue());
+        try {
+            byte[] b_gbk = srcValue.getBytes("utf-8");
+            return (b_gbk.length < length);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * 根据指定的规则，判断数据指定的值与目标值大小 
      * @param data 被检查的数据
      * @param rule 检查规则实体
