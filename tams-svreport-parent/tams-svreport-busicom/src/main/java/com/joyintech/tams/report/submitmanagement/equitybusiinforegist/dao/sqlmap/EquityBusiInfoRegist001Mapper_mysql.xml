@@ -1242,8 +1242,7 @@
         from
         (
         select
-        ciis.SUMIT_SEQ SUMIT_SEQ,
-        ROWNUM
+        ciis.SUMIT_SEQ SUMIT_SEQ
         from CHB_EQUDET_SUB ciis
         where
         ciis.SUBMIT_STATUS = '01'
@@ -1275,7 +1274,7 @@
             AND sck.CCY=ciis.CCY
             )
         </if>
-        and ROWNUM &lt;= #{dataCountPerTime,jdbcType=DECIMAL}
+        limit #{dataCountPerTime,jdbcType=DECIMAL}
         ) targetTable
     </insert>
     <select id="selectAllUnregistCheckOkData" parameterType="map"
