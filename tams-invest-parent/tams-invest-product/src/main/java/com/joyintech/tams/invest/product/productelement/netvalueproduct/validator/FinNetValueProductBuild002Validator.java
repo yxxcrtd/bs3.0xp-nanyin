@@ -1392,11 +1392,12 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
 	    	}
         }
     	//产品设计系列不为空  yzg 20191211 end
-    	//产品运作模式不为空
-    	if(entity.getBussRepFinProductInfoDto()!=null && StringUtil.isEmpty(entity.getBussRepFinProductInfoDto().getRepOperateMode())) {
-    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOperateMode",getMessage("BUSS_COM_E_0038",
-	                getMessage("BussRepFinProductInfo.repOperateMode"))));
-    	}
+        //modify by mashukai 2210609 产品运作模式在中债报送校验处已经进行了校验，这里注释掉重复的校验
+//    	//产品运作模式不为空
+//    	if(entity.getBussRepFinProductInfoDto()!=null && StringUtil.isEmpty(entity.getBussRepFinProductInfoDto().getRepOperateMode())) {
+//    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOperateMode",getMessage("BUSS_COM_E_0038",
+//	                getMessage("BussRepFinProductInfo.repOperateMode"))));
+//    	}
     	//开放模式01有规律开放时规律开放周期必填
     	if("01".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) && 
     			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOpenCircle())) {
