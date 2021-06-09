@@ -537,6 +537,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             resultDtozt.setAmount(ArithmeticUtil.multiply(com.joyintech.framework.util.StringUtil.isNotEmpty(
                     deal.getShareAmt()) ? deal.getShareAmt() : deal.getPrinAmt(), new BigDecimal(-1)));
 //            resultDtozt.setHodingType(DictCodeList.持仓类型_在途.getValue());
+            if (DictCodeList.持仓类型_实际.getValue().equals(resultDto.getHodingType())) {
+            	resultDtozt.setHodingType(DictCodeList.持仓类型_在途.getValue());
+            	resultDtozt.setAmount(ArithmeticUtil.multiply(resultDtozt.getAmount(), new BigDecimal(-1)));
+            }
             result.add(resultDtozt);
             return result;
         }
