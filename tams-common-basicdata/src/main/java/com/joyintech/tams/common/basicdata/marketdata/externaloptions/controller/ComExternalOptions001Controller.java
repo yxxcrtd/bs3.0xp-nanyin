@@ -118,15 +118,16 @@ public class ComExternalOptions001Controller extends BaseController {
         WorkFlowParameter<ComExternalOptions002Dto> workFlowParameter = new WorkFlowParameter<>();
 
         try {
-            Map<String, Object> map = Maps.newHashMap();
-            map.put("finprodId2", dto.getFinprodId2());
-            map.put("valDate", dto.getValDate());
-           // map.put("valmodelId", dto.getValmodelId());
-            dto = comExternalOptions002Service.findByPrimaryKey(map);// dto 为回显值
+//            Map<String, Object> map = Maps.newHashMap();
+//            map.put("finprodId2", dto.getFinprodId2());
+//            map.put("valDate", dto.getValDate());
+//           // map.put("valmodelId", dto.getValmodelId());
+//            dto = comExternalOptions002Service.findByPrimaryKey(map);// dto 为回显值
 
             workFlowParameter.setPageId("ComExternalOptions002"); // 页面id
             workFlowParameter.setElementId(this.getParam("elementId")); // 元素id
-            workFlowParameter.setBusinessCode(dto.getFinprodId2());// 业务代码编号
+//            workFlowParameter.setBusinessCode(dto.getFinprodId2());// 业务代码编号
+            workFlowParameter.setBusinessCode(item -> item.getFinprodId2());
             workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_场外期权.getValue());// 业务类型
             workFlowParameter.setComment(entity -> WorkFlowUtil.concatComment(
                     "场外期权" , entity.getFinprodId2()));// 当前工作流备注

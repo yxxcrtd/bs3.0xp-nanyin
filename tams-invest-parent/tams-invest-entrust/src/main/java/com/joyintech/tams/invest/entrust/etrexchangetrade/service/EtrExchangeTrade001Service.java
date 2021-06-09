@@ -1773,7 +1773,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 					if (StringUtil.isNotEmpty(rowData.get(2))) {
 						if (ptlSecAcctList.stream().noneMatch(m -> m.getId().equals(rowData.get(2)))) {
 							confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-									getMessage("ETR_E_0017", "EtrExchangeTrade001.acctNo", lineNo));
+									getMessage("ETR_E_0017", getMessage("EtrExchangeTrade001.acctNo"), lineNo));
 						}
 					}
 				} else {

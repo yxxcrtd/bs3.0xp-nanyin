@@ -279,11 +279,11 @@ $(function() {
             exportExcel();
         });
 
-        $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
+        $('.condition-area-substitution_1 #PtlRepoPledgeSearch001_btn_search').click(function() {
             substitutionDataTable.load();
         });
         
-        $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
+        $('.condition-area-substitution_2 #PtlRepoPledgeSearch001_btn_search').click(function() {
             if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
                 Joyin.error('请选择组合代码!');
                 return;

@@ -10,10 +10,13 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlPldgeSummaryDto;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlSubstitutionRepoPledgeDto;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.service.PtlRepoPledgeSearch004Service;
 import com.joyintech.tams.invest.portfolio.ptlaccountcurrentinterest.dto.PtlAccountCurrentInterest001Dto;
+import com.joyintech.tams.invest.portfolio.trdpbrelation.dto.TrdPbRelation001Dto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -92,9 +95,9 @@ public class PtlRepoPledgeSearch004Controller extends BaseController {
 
     @RequestMapping("exportCheck")
     @ResponseBody
-    public AjaxResult exportCheck()
+    public AjaxResult exportCheck(@RequestBody Map<String,Object> map)
             throws Exception {
-        Page<PtlPldgeSummaryDto> result = ptlRepoPledgeSearch004Service.selectForPage(RequestUtil.getPageParam());
+        Page<PtlPldgeSummaryDto> result = ptlRepoPledgeSearch004Service.selectForPage(map);
 //        if (result.getRoot().isEmpty()) {
 //            return new AjaxResult(getMessage("PTL_COM_E_0012"), MessageType.错误消息);
 //        }

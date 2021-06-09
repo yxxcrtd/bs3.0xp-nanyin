@@ -127,7 +127,7 @@ public class ComRateSwapInformation002Controller extends BaseController{
 //            String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param): IDGenerator.generate();
 //            dto.setBusinessId(code);
 //        }
-        String code = DictCodeListExt2.fromDictCodeList(DictCodeListExt2.共通业务类型_利率互换行情信息) + "-" +dto.getCurveCode()+"-"+DateUtil.format(dto.getCurveDate());
+        String code = DictCodeListExt2.共通业务类型_利率互换行情信息.getValue()+ "-" +dto.getCurveCode()+"-"+DateUtil.format(dto.getCurveDate());
         dto.setBusinessId(code);
 //modify jinmaodong 20210416 end
         ProcessParameter<ComRateSwapInformationDto> processParameter = new ProcessParameter<ComRateSwapInformationDto>();

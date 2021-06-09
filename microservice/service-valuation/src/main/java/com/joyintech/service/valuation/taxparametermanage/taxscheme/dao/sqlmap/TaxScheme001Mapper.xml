@@ -55,7 +55,7 @@
 		       TO_CHAR(t.eff_date, 'yyyy-MM-dd') as effDate/* 生效日 */
 		from TAX_VAT_SCHEDULE t
 		left join BOK_SCHEME_INFO b
-		   on t.SCH_ID=b.SCH_ID
+		   on t.SCH_ID=b.SCH_ID and b.SCHEME_TYPE='02'
 		<where>
 		  <if test="seqNo != null and seqNo != ''">
                 AND t.seq_no in

@@ -33,7 +33,7 @@
 				AND ((T2.PORTFOLIO_ID IN
 				<foreach collection="portfolioIdList" item="prot" index="index" open="(" close=")" separator=",">
 					<if test="(index % 998) == 0">
-					null) OR T2.PORTFOLIO_ID IN in (
+					null) OR T2.PORTFOLIO_ID IN (
 				   </if>
 					#{prot}
 				</foreach>)

@@ -221,7 +221,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     发行机构类型_按规模划分_中小微企业(DictCode.发行机构类型_按规模划分,"01","中小微企业"),
 
     //add by wangxiaoyong 2019-11-29 end
-    共通业务类型_交易费用管理(DictCode.共通业务类型,"TRD68","交易费用管理"),
+    共通业务类型_交易费用管理(DictCode.共通业务类型,"TRD84","交易费用管理"),
 
     //行内资产一级分类
     行内资产一级分类_同业融资类(DictCode.人行资产一级分类,"01","同业融资类"),

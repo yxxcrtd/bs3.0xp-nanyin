@@ -8,7 +8,7 @@ FINPROD_ID as id,
 FINPROD_ABBR as text
 from FIN_PRODUCT where
 P_FINPROD_ID is null
-AND FINPROD_TYPE2='F16')
+AND FINPROD_TYPE='F16')
 <where>
 	<if test="search!=null and search!=''" >
 		id like concat(concat('%',#{search}),'%')

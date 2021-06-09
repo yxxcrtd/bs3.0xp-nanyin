@@ -457,5 +457,3 @@ update SYS_DATADICT_LIST sdl set sdl.item_value = '期权交易-买入方期权�
 where sdl.dict_code = 'TABLE_ID'  and sdl.item_code = '3111';
 update SYS_DATADICT_LIST sdl set sdl.item_value = '期权交易-卖出方期权到期' 
 where sdl.dict_code = 'TABLE_ID'  and sdl.item_code = '3112';
-
-/** 记账凭证查询--业务类别 add by lby on 20200107  end**/

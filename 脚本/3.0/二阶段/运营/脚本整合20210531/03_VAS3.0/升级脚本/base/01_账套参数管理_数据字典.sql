@@ -131,4 +131,3 @@ values
 ('BOOKSET_PARAM_TYPE', '13', '增值税', 
 13, '0', 'system', 
 null, sysdate, 'system', sysdate);
--------------------新增字段：参数类型 end---------------------------

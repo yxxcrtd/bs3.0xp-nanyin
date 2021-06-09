@@ -89,5 +89,3 @@ delete from sys_page sp where sp.page_id = 'ComRateAssetQuotationInfo002';
 INSERT INTO SYS_PAGE
 (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES('ComRateAssetQuotationInfo002', 'MST', '/common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002', 'common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo002', NULL, NULL, NULL, '02', '01', '项目类/计划类利率型估值行情', 'system', NULL, sysdate, 'system', sysdate);
-/**============画面：基础数据管理-行情管理-项目类/计划类利率型估值行情--新建 add by lby 20201022 end============**/
-

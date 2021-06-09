@@ -189,4 +189,3 @@ comment on column sys_prebatch_task_add.update_time
 -- Create/Recreate indexes
 alter table sys_prebatch_task_add
   add constraint pk_sys_prebatch_task_add primary key (group_id, task_id);
-----

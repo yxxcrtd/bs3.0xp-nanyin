@@ -95,8 +95,8 @@ $(function () {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(
                         basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/delete',object,
-                        "ValFxValuztionInfo001_btn_delete",
-                        "ValFxValuztionInfo002",
+                        "ComFxValuztionInfo001_btn_delete",
+                        "ComFxValuztionInfo002",
                         function() {
                             table.reload();
                         }
@@ -118,8 +118,8 @@ $(function () {
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/valfxvaluztioninfo/ComFxValuztionInfo001/delete', object,
-                        "ValFxValuztionInfo001_btn_delete",
-                        "ValFxValuztionInfo002",
+                        "ComFxValuztionInfo001_btn_delete",
+                        "ComFxValuztionInfo002",
                         function() {
                     	table.reload();
                     });

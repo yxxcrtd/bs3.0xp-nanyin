@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.asset.stock.dto;
 
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -363,6 +364,10 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
         return super.getVdate();
     }
 
+    public String getVdateStr() {
+        return DateUtil.format(super.getVdate());
+    }
+    
     /**
      * 取得 交易日历
      * @return 交易日历

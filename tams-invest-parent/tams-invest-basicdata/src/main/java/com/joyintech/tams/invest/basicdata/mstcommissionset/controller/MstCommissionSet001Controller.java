@@ -19,6 +19,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.invest.basicdata.mstcommissionset.dto.MstCommissionSetDto;
 import com.joyintech.tams.invest.basicdata.mstcommissionset.service.MstCommissionSetService;
@@ -106,18 +107,24 @@ public class MstCommissionSet001Controller extends BaseController {
         params.setBusinessCode(item -> item.getBatchSeq());
         params.setBusinessType(BussinessDictCodeList.共同业务类型_佣金设置.getValue());
      // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> {
-            return WorkFlowUtil.concatComment(getMessage("MstCommissionSet002.batchSeq"),
-                GlobalConstant.OPEN_PARENTHESIS, dto.getBatchSeq(), GlobalConstant.CLOSE_PARENTHESIS,
-                getMessage("MstCommissionSet002.secAcct"), GlobalConstant.OPEN_PARENTHESIS,
-                entity.getSecAcctId(), GlobalConstant.CLOSE_PARENTHESIS);
-        });
+        params.setComment(entity -> (getComment(entity)));
         processParameter.setWorkFlowParameter(params);
         String msg = mstCommissionSetService.start(processParameter,
             dto.getSelectedItem().toArray(
                 new MstCommissionSetDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
         
+    }
+    
+    private String getComment(MstCommissionSetDto entity){
+    	if( StringUtil.isNotEmpty(entity.getSecAcctName())){
+    		return WorkFlowUtil.concatComment(getMessage("MstCommissionSet002.batchSeq"),
+                    GlobalConstant.OPEN_PARENTHESIS, entity.getBatchSeq(), GlobalConstant.CLOSE_PARENTHESIS,
+                    getMessage("MstCommissionSet002.secAcct"), GlobalConstant.OPEN_PARENTHESIS,
+                           entity.getSecAcctName(), GlobalConstant.CLOSE_PARENTHESIS);
+    	}
+    	return WorkFlowUtil.concatComment(getMessage("MstCommissionSet002.batchSeq"),
+                GlobalConstant.OPEN_PARENTHESIS, entity.getBatchSeq(), GlobalConstant.CLOSE_PARENTHESIS);
     }
 
     /**

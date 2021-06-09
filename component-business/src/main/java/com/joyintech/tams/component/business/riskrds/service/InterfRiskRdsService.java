@@ -955,7 +955,15 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             	infRiskRdsDto.setCalendarCode(calendars.get(0));
             }
             if(StringUtil.isNotEmpty(dataMap.get("mdate"))) {
-            	infRiskRdsDto.setMdate((Date)dataMap.get("mdate"));
+                if (dataMap.get("mdate") instanceof Long) {
+                    infRiskRdsDto.setMdate(new Date((long)dataMap.get("mdate")));
+                }
+                else if (dataMap.get("mdate") instanceof Date) {
+                    infRiskRdsDto.setMdate((Date)dataMap.get("mdate"));
+                }
+                else {
+                    infRiskRdsDto.setMdate(DateUtil.parse(dataMap.get("mdate").toString()));
+                }
             }
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())||

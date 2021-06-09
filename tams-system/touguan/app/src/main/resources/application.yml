@@ -308,9 +308,9 @@ spring:
   thymeleaf:
     cache: false
   redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
+    database: 4
+    password: 123456
+    host: 192.168.60.40
     port: 6379
     timeout: 20000
 #  redis:
