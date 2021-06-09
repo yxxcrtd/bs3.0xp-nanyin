@@ -19,9 +19,9 @@
 		select * from ${tableName} partition(${partitionName})
     </insert>
 
-	<!-- 删除表分区 -->
+	<!-- 删除表分区数据 -->
 	<insert id="deleteTablePartition">
-    	alter table ${tableName} drop partition  ${partitionName}
+		delete from ${tableName} partition(${partitionName})
     </insert>
 
 	<!-- 创建归档表 -->
