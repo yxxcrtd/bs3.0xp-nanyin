@@ -271,10 +271,18 @@ public class FinMdateAdjustment002Controller extends BaseController {
                     errorList.add(new ValidMessage("mdate", this.getMessage("FIN_PROD_E_0001",
                         this.getMessage("提前终止日"))));
                 }
+                // 调整后清盘日应该大于等于提前终止日
+                if (DateUtil.compareDate(finMdateAdjustment001Dto.getLdate(), finMdateAdjustment001Dto.getMdate()) == -1) {
+                    errorList.add(new ValidMessage("调整后清盘日应该大于等于提前终止日!"));
+                }
         	}else if(finMdateAdjustment001Dto.getAdjustType().equals(DictCodeListExt2.调整类型_产品展期.getValue())){
         		if (!StringUtil.isNotEmpty(finMdateAdjustment001Dto.getMdate())) {
                     errorList.add(new ValidMessage("mdate", this.getMessage("FIN_PROD_E_0001",
                         this.getMessage("展期日"))));
+                }
+                // 调整后清盘日应该大于等于提前终止日
+                if (DateUtil.compareDate(finMdateAdjustment001Dto.getLdate(), finMdateAdjustment001Dto.getMdate()) == -1) {
+                    errorList.add(new ValidMessage("调整后清盘日应该大于等于展期日!"));
                 }
         	}else{
         		if (!StringUtil.isNotEmpty(finMdateAdjustment001Dto.getMdate())) {
