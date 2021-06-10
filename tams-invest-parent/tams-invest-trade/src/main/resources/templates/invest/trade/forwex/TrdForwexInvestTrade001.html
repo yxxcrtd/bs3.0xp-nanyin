@@ -21,7 +21,7 @@
                                 class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-url="@{/invest/trade/forwex/TrdForwexInvestTrade001/getEntrustIdByType}" data-idfield="code"
-                                data-keyfield="name"
+                                data-keyfield="name" data-th-data-effectivefields="code"
                                 data-th-data-effectivefieldsalias='|{"code":"#{TrdForwexInvestTrade.entrustId}","shortName":"#{TrdForwexInvestTrade.entrustId}"}|'
                                 data-th-value="${entity?.entrustId}" maxlength="50">
                         </div>
