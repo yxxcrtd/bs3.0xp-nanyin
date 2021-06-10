@@ -48,6 +48,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -254,6 +255,68 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
         return trdForwexInvestTrade002Service.getProAvailableCash(param);
     }
 
+    /**
+     * 生成指令check
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("orderCheck")
+    public AjaxResult orderCheck() {
+    	Map<String, Object> map = RequestUtil.getPageParam();
+        TrdForwexInvestTradeDto dto = BeanUtil.mapToObject(map,
+        		TrdForwexInvestTradeDto.class);
+        TrdInvestPersonInfo002Dto trdInvestPersonInfo002Dto = new TrdInvestPersonInfo002Dto();
+        dto.setTrdInvestPersonInfo(trdInvestPersonInfo002Dto);
+        dto.getTrdInvestPersonInfo().setContactInfo(
+            map.get("trdInvestPersonInfo[contactInfo]")==null?"":map.get("trdInvestPersonInfo[contactInfo]").toString());
+        dto.getTrdInvestPersonInfo().setCounterId(
+            map.get("trdInvestPersonInfo[counterId]")==null?"":map.get("trdInvestPersonInfo[counterId]").toString());
+        dto.getTrdInvestPersonInfo().setCounterTrader(
+            map.get("trdInvestPersonInfo[counterTrader]")==null?"":map.get("trdInvestPersonInfo[counterTrader]").toString());
+        dto.getTrdInvestPersonInfo().setIsOutTrade(
+            map.get("trdInvestPersonInfo[isOutTrade]")==null?"":map.get("trdInvestPersonInfo[isOutTrade]").toString());
+        dto.getTrdInvestPersonInfo().setTrader(
+            map.get("trdInvestPersonInfo[trader]")==null?"":map.get("trdInvestPersonInfo[trader]").toString());
+        AjaxResult ar = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        if(dto.getSettleDate() == null) {
+        	ValidMessage validMessage = new ValidMessage(
+                   "settleDate",getMessage("TRD_COMMON_ORDER_001", getMessage("TrdForwexInvestTrade.settleDate")));
+        	errorList.add(validMessage);
+        }
+        if(dto.getPrinAmt() == null) {
+        	ValidMessage validMessage = new ValidMessage(
+                    "prinAmt",getMessage("TRD_COMMON_ORDER_001", getMessage("TrdForwexInvestTrade.prinAmt")));
+         	errorList.add(validMessage);
+        }
+        if(dto.getFpriceAmt() == null) {
+        	ValidMessage validMessage = new ValidMessage(
+                    "fpriceAmt",getMessage("TRD_COMMON_ORDER_001", getMessage("TrdForwexInvestTrade.fpriceAmt")));
+         	errorList.add(validMessage);
+        }
+        if(StringUtil.isEmpty(dto.getPs())) {
+        	ValidMessage validMessage = new ValidMessage(
+                    "ps",getMessage("TRD_COMMON_ORDER_001", getMessage("TrdForwexInvestTrade.excPs")));
+         	errorList.add(validMessage);
+        }
+        if(StringUtil.isEmpty(dto.getCcy())) {
+        	ValidMessage validMessage = new ValidMessage(
+                    "ccy",getMessage("TRD_COMMON_ORDER_001", getMessage("TrdForwexInvestTrade.ccy")));
+         	errorList.add(validMessage);
+        }
+        if(StringUtil.isEmpty(dto.getCorCcy())) {
+        	ValidMessage validMessage = new ValidMessage(
+                    "corCcy",getMessage("TRD_COMMON_ORDER_001", getMessage("TrdForwexInvestTrade.corCcy")));
+         	errorList.add(validMessage);
+        }
+        if(StringUtil.isEmpty(dto.getTrdInvestPersonInfo().getCounterId())) {
+        	ValidMessage validMessage = new ValidMessage(
+                    "trdInvestPersonInfo_counterId",getMessage("TRD_COMMON_ORDER_001", getMessage("EtrInvestPersonInfo002.counterId")));
+         	errorList.add(validMessage);
+        }
+        ar.setErrorList(errorList);
+        return ar;
+    }
     /**
      * 画面点击保存按钮时check
      *

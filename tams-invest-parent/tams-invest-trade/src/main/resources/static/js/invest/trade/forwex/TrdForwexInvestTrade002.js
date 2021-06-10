@@ -399,8 +399,10 @@
 
     function tableInitData() {
         var object = $.serializeToObject('#submitForm');
-        Joyin.ajaxSync(basePath + 'invest/trade/forwex/TrdForwexInvestTrade002/getEntity', object, function(result){
-            entity = result;
+        Joyin.ajaxSync(basePath + 'invest/trade/forwex/TrdForwexInvestTrade002/orderCheck', object, function(result){
+	        Joyin.ajaxSync(basePath + 'invest/trade/forwex/TrdForwexInvestTrade002/getEntity', object, function(result){
+	            entity = result;
+	        }, true);
         }, true);
         if(entity){
             entity.forEach(function(value){
