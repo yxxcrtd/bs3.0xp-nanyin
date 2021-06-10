@@ -218,7 +218,7 @@
 	      AND (td.IS_CANCEL is null or td.IS_CANCEL = 'N')
           AND td.TRADE_STATUS = '01'
           AND ptpd.PA_BUSS_TYPE IN ('19', '20')
-          AND fpt.TYPE_6 = 'H01'         
+          AND fpt.TYPE_6 in ('H01','H04')
 	      <if test="userName != null and userName != ''">
            AND (p.PORTFOLIO_ID IN
                (SELECT PORTFOLIO_ID
@@ -320,7 +320,7 @@
 	       AND (td.IS_CANCEL is null or td.IS_CANCEL = 'N')
            AND td.TRADE_STATUS = '01'
            AND ptpd.PA_BUSS_TYPE IN ('19', '20')
-           AND fpt.TYPE_6 = 'H01'         
+           AND fpt.TYPE_6 in ('H01','H04')
            
 	      <if test="userName != null and userName != ''">
            AND (p.PORTFOLIO_ID IN
