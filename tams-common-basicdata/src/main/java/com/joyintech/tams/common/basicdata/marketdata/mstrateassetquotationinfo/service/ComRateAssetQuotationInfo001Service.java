@@ -185,7 +185,18 @@ public class ComRateAssetQuotationInfo001Service extends CommonExportService<Com
                     //资产代码 必填
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
                         errorMsg.append("资产代码 必填！");
-                    }
+                    }else {
+                    	Map<String,Object> map = new HashMap<>();
+                        map.put("initValue", rowData.get(0));
+                        map.put("PROFITTYPE_VALUE_02", DictCodeList.收益类型_收益型.getValue());
+                        map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+                        map.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+                        map.put("TYPE_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
+                        List<SelectOptionDto> list = getAssetCodeList(map);
+                        if(StringUtil.isEmptyList(list) || list.size() > 1 || !StringUtil.equals(list.get(0).getId(), rowData.get(0))) {
+                        	errorMsg.append("资产代码错误！");
+                        }
+					}
                     //估值日期 必填
                     if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("估值日期 必填！");
