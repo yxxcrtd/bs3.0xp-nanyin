@@ -103,7 +103,7 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
 //            	boolean isDB2DataBase = CommonUtil.isDB2DataBase();
             	if(CollectionUtils.isNotEmpty(backupDate)){
             		//chb_info_report
-                	doDataBackupDB2(dataBackupDate, year, month, 0 ,backupDate);
+//                	doDataBackupDB2(dataBackupDate, year, month, 0 ,backupDate);
                 	//chb_submit_status
                 	doDataBackupDB2(dataBackupDate, year, month, 1 ,backupDate);
                 	//chb_investhold_info

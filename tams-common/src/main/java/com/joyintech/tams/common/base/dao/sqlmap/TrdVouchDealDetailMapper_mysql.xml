@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdVouchDealDetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdVouchDealDetail" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="DETAIL_SUBJECT_NO_TAIL" property="detailSubjectNoTail" jdbcType="VARCHAR" />
+        <result column="DETAIL_SUBNAME_TAIL" property="detailSubnameTail" jdbcType="VARCHAR" />
+        <result column="O_HAPPEN_AMT" property="oHappenAmt" jdbcType="DECIMAL" />
+        <result column="CD_FLAG" property="cdFlag" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="HAPPEN_NUMBER" property="happenNumber" jdbcType="DECIMAL" />
+        <result column="BOK_DETAIL_ID" property="bokDetailId" jdbcType="VARCHAR" />
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="BUSI_DETAIL_TYPE" property="busiDetailType" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="SEC_MANAGE_ACCT_ID" property="secManageAcctId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, TRADE_ID TRADE_ID, BOOKSET_ID BOOKSET_ID, BRANCH BRANCH, SUBJECT_NO SUBJECT_NO, 
+        SUBJECT_NAME SUBJECT_NAME, DETAIL_SUBJECT_NO_TAIL DETAIL_SUBJECT_NO_TAIL, DETAIL_SUBNAME_TAIL DETAIL_SUBNAME_TAIL, 
+        O_HAPPEN_AMT O_HAPPEN_AMT, CD_FLAG CD_FLAG, CCY CCY, HAPPEN_NUMBER HAPPEN_NUMBER, 
+        BOK_DETAIL_ID BOK_DETAIL_ID, BUSI_ID BUSI_ID, BUSI_DETAIL_TYPE BUSI_DETAIL_TYPE, 
+        INV_AIM INV_AIM, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdVouchDealDetailMapper.Base_Column_List" />
+        from TRD_VOUCH_DEAL_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdVouchDealDetailMapper.Base_Column_List" />
+        from TRD_VOUCH_DEAL_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdVouchDealDetailMapper.Base_Column_List" />
+        from TRD_VOUCH_DEAL_DETAIL
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TRD_VOUCH_DEAL_DETAIL
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDealDetail" >
+        insert into TRD_VOUCH_DEAL_DETAIL (SEQ_NO, TRADE_ID, BOOKSET_ID, 
+            BRANCH, SUBJECT_NO, SUBJECT_NAME, 
+            DETAIL_SUBJECT_NO_TAIL, DETAIL_SUBNAME_TAIL, 
+            O_HAPPEN_AMT, CD_FLAG, CCY, 
+            HAPPEN_NUMBER, BOK_DETAIL_ID, BUSI_ID, 
+            BUSI_DETAIL_TYPE, INV_AIM, SEC_MANAGE_ACCT_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME,B_HAPPEN_AMT,B_CCY)
+        values (#{seqNo,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, 
+            #{branch,jdbcType=DECIMAL}, #{subjectNo,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, 
+            #{detailSubjectNoTail,jdbcType=VARCHAR}, #{detailSubnameTail,jdbcType=VARCHAR}, 
+            #{oHappenAmt,jdbcType=DECIMAL}, #{cdFlag,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
+            #{happenNumber,jdbcType=DECIMAL}, #{bokDetailId,jdbcType=VARCHAR}, #{busiId,jdbcType=VARCHAR}, 
+            #{busiDetailType,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{bHappenAmt,jdbcType=DECIMAL},#{bCcy,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDealDetail" >
+        insert into TRD_VOUCH_DEAL_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO,
+            </if>
+            <if test="subjectName != null" >
+                SUBJECT_NAME,
+            </if>
+            <if test="detailSubjectNoTail != null" >
+                DETAIL_SUBJECT_NO_TAIL,
+            </if>
+            <if test="detailSubnameTail != null" >
+                DETAIL_SUBNAME_TAIL,
+            </if>
+            <if test="oHappenAmt != null" >
+                O_HAPPEN_AMT,
+            </if>
+            <if test="cdFlag != null" >
+                CD_FLAG,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="happenNumber != null" >
+                HAPPEN_NUMBER,
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID,
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="busiDetailType != null" >
+                BUSI_DETAIL_TYPE,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="secManageAcctId != null" >
+                SEC_MANAGE_ACCT_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="subjectNo != null" >
+                #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectName != null" >
+                #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectNoTail != null" >
+                #{detailSubjectNoTail,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubnameTail != null" >
+                #{detailSubnameTail,jdbcType=VARCHAR},
+            </if>
+            <if test="oHappenAmt != null" >
+                #{oHappenAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="cdFlag != null" >
+                #{cdFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="happenNumber != null" >
+                #{happenNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="bokDetailId != null" >
+                #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiDetailType != null" >
+                #{busiDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="secManageAcctId != null" >
+                #{secManageAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDealDetail" >
+        insert into TRD_VOUCH_DEAL_DETAIL(SEQ_NO, TRADE_ID, BOOKSET_ID, BRANCH, SUBJECT_NO, 
+        SUBJECT_NAME, DETAIL_SUBJECT_NO_TAIL, DETAIL_SUBNAME_TAIL, O_HAPPEN_AMT, CD_FLAG, 
+        CCY, HAPPEN_NUMBER, BOK_DETAIL_ID, BUSI_ID, BUSI_DETAIL_TYPE, INV_AIM, SEC_MANAGE_ACCT_ID, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, TRADE_ID, BOOKSET_ID, BRANCH, SUBJECT_NO, 
+            SUBJECT_NAME, DETAIL_SUBJECT_NO_TAIL, DETAIL_SUBNAME_TAIL, O_HAPPEN_AMT, CD_FLAG, 
+            CCY, HAPPEN_NUMBER, BOK_DETAIL_ID, BUSI_ID, BUSI_DETAIL_TYPE, INV_AIM, SEC_MANAGE_ACCT_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from TRD_VOUCH_DEAL_DETAIL
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDealDetail" >
+        update TRD_VOUCH_DEAL_DETAIL
+        <set >
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectName != null" >
+                SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubjectNoTail != null" >
+                DETAIL_SUBJECT_NO_TAIL = #{detailSubjectNoTail,jdbcType=VARCHAR},
+            </if>
+            <if test="detailSubnameTail != null" >
+                DETAIL_SUBNAME_TAIL = #{detailSubnameTail,jdbcType=VARCHAR},
+            </if>
+            <if test="oHappenAmt != null" >
+                O_HAPPEN_AMT = #{oHappenAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="cdFlag != null" >
+                CD_FLAG = #{cdFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="happenNumber != null" >
+                HAPPEN_NUMBER = #{happenNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiDetailType != null" >
+                BUSI_DETAIL_TYPE = #{busiDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="secManageAcctId != null" >
+                SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TrdVouchDealDetail" >
+        update TRD_VOUCH_DEAL_DETAIL
+        set TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            DETAIL_SUBJECT_NO_TAIL = #{detailSubjectNoTail,jdbcType=VARCHAR},
+            DETAIL_SUBNAME_TAIL = #{detailSubnameTail,jdbcType=VARCHAR},
+            O_HAPPEN_AMT = #{oHappenAmt,jdbcType=DECIMAL},
+            CD_FLAG = #{cdFlag,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            HAPPEN_NUMBER = #{happenNumber,jdbcType=DECIMAL},
+            BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR},
+            BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            BUSI_DETAIL_TYPE = #{busiDetailType,jdbcType=VARCHAR},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -43,6 +43,7 @@ import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInf
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dao.InvestorsHoldInfoRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.validate.InvestorsHoldInfoRegist001Validate;
+import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegist001Service;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
@@ -78,18 +79,21 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
      */
     @Autowired
     private CheckReport001Mapper chbReportCheckMapper;
-    
+
     @Autowired
     private InvestorsHoldInfoRegist001Mapper investorsHoldInfoRegist001Mapper;
-    
+
     @Autowired
     private EquityInfoRegist001Mapper equityInfoRegist001Mapper;
-    
+
     @Autowired
     private EquityInfoDistinctService equityInfoDistinctService;
     @Autowired
     private InvestorsHoldInfoDistinctService investorsHoldInfoDistinctService;
-    
+
+    @Autowired
+    private AssetInfoRegist001Service assetInfoRegist001Service;
+
 
     /**
      * 自动检查报送
@@ -97,7 +101,7 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
      * @see
      * @since 1.0
      */
-    public void autoSendCB() {
+    public void autoSendCB(Date executeDate) {
 
         setBatchBeanName(BatchBeanName.投资者报送前检查);
 
@@ -149,7 +153,7 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
             // 删除检查表数据
             chbReportCheckMapper.delReportAllCheckDatas(DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
 
-           //投资者持有信息分批处理
+            //投资者持有信息分批处理
             Integer investTotal = investRegistData.size();
             if(investTotal!=0){
                 if(investTotal < singleTime){
@@ -170,11 +174,16 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
             /** 报送前检查增加 持有信息三要素重复检查处理 add by yuluan begin**/
             investorsHoldInfoDistinctService.checkBeforeSubmit();
             /** 报送前检查增加 持有信息三要素重复检查处理 add by yuluan end**/
+
+            /** 报送前检查增加 资产要素信息登记检查 资产到期日当天ACCUQTY值是否为0 add by shaohuchen begin**/
+            assetInfoRegist001Service.checkBeforeSubmit(executeDate);
+            /** 报送前检查增加 资产要素信息登记检查 资产到期日当天ACCUQTY值是否为0 add by shaohuchen end**/
+
             logInfoBatchEnd();
         }
         catch (Exception e) {
             logInfo(e.getMessage());
-			logger.error("报送前检查自动检查Error",e);
+            logger.error("报送前检查自动检查Error",e);
             insertResultLogException(batchStartTime);
             throw e;
         }
@@ -188,11 +197,11 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
      * @since 1.0
      */
     public void equityLogicDeal(List<EquityInfoRegist001Dto> equityRegistData){
-      //检查结果集
+        //检查结果集
         List<CheckReport001Dto> resultList = new ArrayList<>();
-      //投资者身份信息数据检查结果
+        //投资者身份信息数据检查结果
 //        EquityInfoRegistCommonUtil.format(equityRegistData, StringUtil.SPACE);
-    	EquityInfoRegistCommonUtil.formatByType(equityRegistData,true);
+        EquityInfoRegistCommonUtil.formatByType(equityRegistData,true);
         List<ExcelValidDto> equityInfoRegistRstList = equityInfoValid.checkDataEquity(equityRegistData,"2",null,null);      //数据重组
         //投资者身份信息
         List<EquityInfoRegist001Dto> equityInfoRegistUpdateList = new ArrayList<>();
@@ -205,9 +214,9 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
                 chbReportCheck.setRepCode(DictCodeListExt2.报表名称_投资者身份信息登记.getValue());
                 chbReportCheck.setRepName(DictCodeListExt2.报表名称_投资者身份信息登记.getCodeName());
                 chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
-                    DictCode.检查结果, item.getCheckResult()));
+                        DictCode.检查结果, item.getCheckResult()));
                 if(!chbReportCheck.getCheckResult().equals(DictCodeListExt2.检查结果_检查通过.getValue())){
-                	resultList.add(chbReportCheck);
+                    resultList.add(chbReportCheck);
                 }
 
                 //更新检查序列号对应的数据
@@ -215,7 +224,7 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
                 dto.setIndentifyMark(item.getValidKey());
                 dto.setCheckSeqno(chbReportCheck.getCheckSeqno());
                 if(!chbReportCheck.getCheckResult().equals(DictCodeListExt2.检查结果_检查通过.getValue())){
-                	equityInfoRegistUpdateList.add(dto);
+                    equityInfoRegistUpdateList.add(dto);
                 }
             });
         }
@@ -225,7 +234,7 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
             chbReportCheckMapper.batchInsert(resultList);
             //批量更新投资者身份信息检查序列号
             if(CollectionUtils.isNotEmpty(equityInfoRegistUpdateList)){
-            	equityInfoRegist001Mapper.updateEquityRegistCheckSeqno(equityInfoRegistUpdateList);
+                equityInfoRegist001Mapper.updateEquityRegistCheckSeqno(equityInfoRegistUpdateList);
             }
         }
 
@@ -256,9 +265,9 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
                 chbReportCheck.setRepCode(DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
                 chbReportCheck.setRepName(DictCodeListExt2.报表名称_投资者持有信息登记.getCodeName());
                 chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
-                    DictCode.检查结果, item.getCheckResult()));
+                        DictCode.检查结果, item.getCheckResult()));
                 if(!chbReportCheck.getCheckResult().equals(DictCodeListExt2.检查结果_检查通过.getValue())){
-                	resultList.add(chbReportCheck);
+                    resultList.add(chbReportCheck);
                 }
 
                 //更新检查序列号对应的数据
@@ -271,7 +280,7 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
                 dto.setRegistBankCode(keyList.get(4).substring(6).trim());
                 dto.setCheckSeqno(chbReportCheck.getCheckSeqno().trim());
                 if(!chbReportCheck.getCheckResult().equals(DictCodeListExt2.检查结果_检查通过.getValue())){
-                	investRegistUpdateList.add(dto);
+                    investRegistUpdateList.add(dto);
                 }
             });
         }
@@ -283,7 +292,7 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
 
             //批量更新投资者持有信息检查序列号
             if(CollectionUtils.isNotEmpty(investRegistUpdateList)){
-            	investorsHoldInfoRegist001Mapper.updateInvestRegistCheckSeqno(investRegistUpdateList);
+                investorsHoldInfoRegist001Mapper.updateInvestRegistCheckSeqno(investRegistUpdateList);
             }
         }
     }

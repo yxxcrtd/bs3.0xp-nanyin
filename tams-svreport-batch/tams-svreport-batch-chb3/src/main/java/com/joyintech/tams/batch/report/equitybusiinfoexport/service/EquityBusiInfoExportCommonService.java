@@ -8,7 +8,6 @@ import com.joyintech.framework.export.handler.JoyinBookConfig;
 import com.joyintech.framework.export.handler.JoyinCellConfig;
 import com.joyintech.framework.export.handler.JoyinSheetConfig;
 import com.joyintech.framework.export.handler.ReportCfgHandler;
-import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
@@ -31,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
@@ -72,6 +72,7 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
      * 日志
      */
     private static Logger logger = LoggerFactory.getLogger(EquityBusiInfoExportCommonService.class);
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public String export(long count, Map<String,Object> param, ChbSubinfoBatchLog batchLog){
         Timestamp startTime = new Timestamp(System.currentTimeMillis());
         int size = StringUtil.integerValueOf(CacheUtil.getSysParam("export_excel_row_count"), 50000);
@@ -86,10 +87,12 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
             for (int i = 0; i < fileCount; i++) {
                 start = end;
                 end = Math.min(count,size * (i + 1));
+                int index = i+1;
                 Map<String,Object> newParam = new HashMap<>();
                 param.put("start",start);
                 param.put("end",end);
-                 newParam.putAll(param);
+                param.put("index", index);
+                newParam.putAll(param);
                 tasks.add(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
@@ -127,12 +130,12 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         service.shutdown();
 
 
-        File tmpPath = new SafelyFile(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_TMP_PATH));
+        File tmpPath = new File(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_TMP_PATH));
         File[] files = tmpPath.listFiles();
 
         String filePath = CacheUtil.getSysParam("access_exportfilepath") +
-                CHB_EQUDET_SUB_NAME + GlobalConstant.UNDER_LINE  + DateUtil.getDateTimestamp() + ".zip";
-        File outFile = new SafelyFile(filePath);
+                CHB_EQUDET_SUB_NAME + GlobalConstant.UNDER_LINE  + DateUtil.getDateTimestamp().replaceAll(":", "") + ".zip";
+        File outFile = new File(filePath);
         try {
             ZipFileUtil.compressZip(outFile,true,files);
         } catch (IOException e) {
@@ -180,13 +183,14 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         List<EquityBusiInfoRegist001Dto> listDto =  equityBusiInfoExportMapper.selectAllDataByPage(param);
         dealDataList(listDto);
         dealBigDecmailData(listDto);
+        int index = (int) param.get("index");
         logger.info("分线程导出开始"+DateUtil.getDateTimestamp());
-        batchMakeFile("/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf_batch.xml",listDto);
+        batchMakeFile("/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf_batch.xml",listDto,index);
         logger.info("分线程导出结束"+DateUtil.getDateTimestamp());
         return true;
     }
 
-    private File batchMakeFile(String configFile,List<EquityBusiInfoRegist001Dto> contents){
+    private File batchMakeFile(String configFile,List<EquityBusiInfoRegist001Dto> contents, int index){
         if (null == contents) {
             contents = Collections.emptyList();
         }
@@ -203,14 +207,16 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         File targetFile = null;
         List<File> fileList = new ArrayList(contents.size() / count + 1);
 
+        int sum = 1;
         try {
             while(contents.size() > count) {
                 List<?> subList = contents.subList(0, count);
                 contents = contents.subList(count, contents.size());
-                fileList.add(this.makeSingleFile(wb, reportConfig, (String)null, fileType, subList, new LongAdder(), 0L, count));
+                fileList.add(this.makeSingleFile(wb, reportConfig, (String)null, fileType, subList, new LongAdder(), 0L, count, index, sum));
+                sum++;
             }
 
-            fileList.add(this.makeSingleFile(wb, reportConfig, (String)null, fileType, contents, new LongAdder(), 0L, count));
+            fileList.add(this.makeSingleFile(wb, reportConfig, (String)null, fileType, contents, new LongAdder(), 0L, count, index, sum));
         } catch (Exception var24) {
             var24.printStackTrace();
 //            this.logger.error(var24.getMessage());
@@ -229,10 +235,10 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         } else {
             String exportFilePath = CacheUtil.getSysParam("access_exportfilepath");
             String zipFileName = FileNameUtil.createFileName("zip");
-            targetFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
+            targetFile = new File(exportFilePath + File.separator + zipFileName);
 
             try {
-                ZipFileUtil.compressZip(targetFile, true, (File[])fileList.toArray(new SafelyFile[0]));
+                ZipFileUtil.compressZip(targetFile, true, (File[])fileList.toArray(new File[0]));
             } catch (Exception var23) {
                 Iterator var12 = fileList.iterator();
 
@@ -269,33 +275,30 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         }
 
         String tempFilePath = fileName + fileType;
-        File templeteFile = new SafelyFile(this.buildTempleteFilePath(tempFilePath));
+        File templeteFile = new File(this.buildTempleteFilePath(tempFilePath));
         reportConfig.setTempleteFile(fileName + fileType);
         InputStream stream = null;
-        try {
-            if (templeteFile.exists()) {
-                stream = new FileInputStream(templeteFile);
-            } else {
-                stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
-            }
-            if (StringUtil.equals(fileType, ".xls")) {
-                wb = new HSSFWorkbook((InputStream)stream);
-            } else {
-                if (!StringUtil.equals(fileType, ".xlsx")) {
-                    ((InputStream)stream).close();
-                    throw new BusinessException("不是一个有效的Excel文件");
-                }
-                wb = new XSSFWorkbook((InputStream)stream);
-            }
-            return (Workbook)wb;
-        }finally {
-            if(stream != null){
-                stream.close();
-            }
+        if (templeteFile.exists()) {
+            stream = new FileInputStream(templeteFile);
+        } else {
+            stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
         }
+
+        if (StringUtil.equals(fileType, ".xls")) {
+            wb = new HSSFWorkbook((InputStream)stream);
+        } else {
+            if (!StringUtil.equals(fileType, ".xlsx")) {
+                ((InputStream)stream).close();
+                throw new BusinessException("不是一个有效的Excel文件");
+            }
+
+            wb = new XSSFWorkbook((InputStream)stream);
+        }
+
+        return (Workbook)wb;
     }
 
-    private File makeSingleFile(Workbook wb, JoyinBookConfig reportConfig, String pageId, String fileType, List<?> contents, LongAdder current, long total, int sheetMaxRowCount) throws IOException {
+    private File makeSingleFile(Workbook wb, JoyinBookConfig reportConfig, String pageId, String fileType, List<?> contents, LongAdder current, long total, int sheetMaxRowCount, int fileNameIndex, int sum) throws IOException {
 //        ReportCfgHandler handler = new ReportCfgHandler();
         wb.close();
         wb = this.getWorkbook(reportConfig);
@@ -304,7 +307,7 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         sheet1.removeRow(sheet1.getRow(sheet1.getLastRowNum()));
         // add by zhangmingming删除模板中sheet1的最后一行,要不然SXXSFWorkbook无法create_row 20200122 end
         SXSSFWorkbook swb = new SXSSFWorkbook((XSSFWorkbook)wb,1000);
-        
+
         List<JoyinSheetConfig> sheetList = reportConfig.getSheetConfList();
 
         for(int i = 0; i < sheetList.size(); ++i) {
@@ -341,33 +344,38 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
 
                         Object value = map.get(propName);
                         if (StringUtil.isNotEmpty(value)) {
-                            if (value instanceof Date) {
-                                cell.setCellValue(DateUtil.formatDateTime((Date)value));
-                            } else if (value instanceof String) {
-                                if (StringUtil.isNotEmpty(value)) {
-                                    value = StringUtil.getLimitLengthString(value.toString(), 16383, "");
-                                }
-
-                                cell.setCellValue((String)value);
-                            } else if (value instanceof Boolean) {
-                                cell.setCellValue((Boolean)value);
-                            } else if (value instanceof Calendar) {
-                                cell.setCellValue((Calendar)value);
-                            } else if (value instanceof RichTextString) {
-                                cell.setCellValue((RichTextString)value);
-                            } else if (value instanceof Double) {
-                                cell.setCellValue((Double)value);
-                            } else if (value instanceof BigDecimal) {
-                                BigDecimal cellValue = (BigDecimal)value;
-                                cell.setCellValue(cellValue.doubleValue());
-                            } else if (value instanceof Long) {
-                                Long cellValue = (Long)value;
-                                cell.setCellValue(cellValue.doubleValue());
-                            } else if (value instanceof Integer) {
-                                Integer cellValue = (Integer)value;
-                                cell.setCellValue(cellValue.doubleValue());
-                            }
-
+                            //----add by lingxiaoqing on 2020-06-10 for 投资者明细导出格式按照文本格式，否则中债客户端导入失败----->>>>
+                            value = StringUtil.getLimitLengthString(value.toString(), 16383, "");
+                            cell.setCellValue((String)value);
+                            //----add by lingxiaoqing on 2020-06-10 for 投资者明细导出格式按照文本格式，否则中债客户端导入失败-----<<<<
+                            //----del by lingxiaoqing on 2020-06-10 for 投资者明细导出格式按照文本格式，否则中债客户端导入失败----->>>>
+//                            if (value instanceof Date) {
+//                                cell.setCellValue(DateUtil.formatDateTime((Date)value));
+//                            } else if (value instanceof String) {
+//                                if (StringUtil.isNotEmpty(value)) {
+//                                    value = StringUtil.getLimitLengthString(value.toString(), 16383, "");
+//                                }
+//
+//                                cell.setCellValue((String)value);
+//                            } else if (value instanceof Boolean) {
+//                                cell.setCellValue((Boolean)value);
+//                            } else if (value instanceof Calendar) {
+//                                cell.setCellValue((Calendar)value);
+//                            } else if (value instanceof RichTextString) {
+//                                cell.setCellValue((RichTextString)value);
+//                            } else if (value instanceof Double) {
+//                                cell.setCellValue((Double)value);
+//                            } else if (value instanceof BigDecimal) {
+//                                BigDecimal cellValue = (BigDecimal)value;
+//                                cell.setCellValue(cellValue.doubleValue());
+//                            } else if (value instanceof Long) {
+//                                Long cellValue = (Long)value;
+//                                cell.setCellValue(cellValue.doubleValue());
+//                            } else if (value instanceof Integer) {
+//                                Integer cellValue = (Integer)value;
+//                                cell.setCellValue(cellValue.doubleValue());
+//                            }
+                            //----del by lingxiaoqing on 2020-06-10 for 投资者明细导出格式按照文本格式，否则中债客户端导入失败-----<<<<
                             this.setCellValue(beanName, cell, propName, value);
                         }
                     }
@@ -375,22 +383,29 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
             }
         }
 
-        String outFileName = CHB_EQUDET_SUB_NAME + GlobalConstant.UNDER_LINE  + DateUtil.getDateTimestamp() + fileType;
+        String outFileName = CHB_EQUDET_SUB_NAME + GlobalConstant.UNDER_LINE  + System.currentTimeMillis() + fileNameIndex + sum + fileType;
         String tmpPath = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_TMP_PATH);
-        File file = new SafelyFile(tmpPath + File.separator + outFileName);
+        File file = new File(tmpPath + File.separator + outFileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        FileOutputStream fileOutputStream = null;
+
+        FileOutputStream fos = null;
         try {
-            fileOutputStream = new FileOutputStream(file);
-            swb.write(fileOutputStream);
-            return file;
-        }finally {
-            if(fileOutputStream != null){
-                fileOutputStream.close();
+            fos = new FileOutputStream(file);
+            swb.write(fos);
+        } catch (IOException e) {
+            throw e;
+        }
+        finally{
+            if(null != fos){
+                fos.close();
+            }
+            if(null != swb){
+                swb.close();
             }
         }
+        return file;
     }
 
     private void dealDataList(List<EquityBusiInfoRegist001Dto> list) {

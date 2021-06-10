@@ -86,7 +86,7 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      	Map<String,Object> param = new HashMap<String,Object>();
     	param.put("dataList", ExcelUtil.getDataList(fileName));
     	param.put("tempList", ExcelUtil.getTempList(fileName));
-    	param.put("bankCode", CommonUtil.getUserBankCode());
+    	param.put("bankCode", CommonUtil.getUserBankCode(null));
     	param.put("deptCode", CommonUtil.getDeptCode());
     	param.put("orgCode", CommonUtil.getOrgCode());
     	return restTemplate.postForList(
@@ -102,7 +102,7 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      */
 	public AjaxResult checkConfirmMsgForImportData(String fileName){
     	Map<String,Object> param = new HashMap<String,Object>();
-    	param.put("bankCode", CommonUtil.getUserBankCode());
+    	param.put("bankCode", CommonUtil.getUserBankCode(null));
     	param.put("deptCode", CommonUtil.getDeptCode());
     	param.put("orgCode", CommonUtil.getOrgCode());
     	param.put("dataList", ExcelUtil.getDataList(fileName));
@@ -124,7 +124,7 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      	Map<String,Object> param = new HashMap<String,Object>();
     	param.put("dataList", ExcelUtil.getDataList(fileName));
     	param.put("tempList", ExcelUtil.getTempList(fileName));
-    	param.put("bankCode", CommonUtil.getUserBankCode());
+    	param.put("bankCode", CommonUtil.getUserBankCode(null));
     	param.put("deptCode", CommonUtil.getDeptCode());
     	param.put("orgCode", CommonUtil.getOrgCode());
     	return restTemplate.postForList(
@@ -144,7 +144,7 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      	Map<String,Object> param = new HashMap<String,Object>();
     	param.put("dataList", ExcelUtil.getDataList(fileName));
     	param.put("tempList", ExcelUtil.getTempList(fileName));
-    	param.put("bankCode", CommonUtil.getUserBankCode());
+    	param.put("bankCode", CommonUtil.getUserBankCode(null));
     	param.put("deptCode", CommonUtil.getDeptCode());
     	param.put("orgCode", CommonUtil.getOrgCode());
     	return restTemplate.postForObject(
@@ -165,7 +165,7 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      */
     public void doSaveOrUpdate(InvestorsHoldInfo001Dto dto) {
     	 if(StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
-    		 dto.setRegistBankCode(CommonUtil.getUserBankCode());
+    		 dto.setRegistBankCode(CommonUtil.getUserBankCode(null));
     		 dto.setOrgCode(CommonUtil.getOrgCode());
     		 dto.setDeptCode(CommonUtil.getDeptCode());
     		 dto.setCreateDept(dto.getDeptCode()!=null?dto.getDeptCode():dto.getOrgCode());

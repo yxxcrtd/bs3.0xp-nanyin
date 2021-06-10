@@ -334,26 +334,26 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
 
     @Override
     public com.joyintech.framework.grid.Page<EquityInfoRegist001Dto> selectPageData(Map<String, Object> pageParam) {
-//        List<EquityInfoRegist001Dto> data = null;
-    	Page<EquityInfoRegist001Dto> page = null;
+        List<EquityInfoRegist001Dto> data = null;
+//    	Page<EquityInfoRegist001Dto> page = null;
         String exportMethodFlg = (String)pageParam.get("export_method_flg");
         if (StringUtil.equals(exportMethodFlg, "export")) {
-//            data =  restTemplate.postForList(
-//                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryForEquityInfoRegistPage",pageParam,
-//                    EquityInfoRegist001Dto.class);
+            data =  restTemplate.postForList(
+                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryForEquityInfoRegistPage",pageParam,
+                    EquityInfoRegist001Dto.class);
         }  else {
             List<EquityInfoRegist001Dto> eList = (List<EquityInfoRegist001Dto>) pageParam.get("listParm");
             int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
     	    int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
             Page<EquityInfoRegist001Dto> pageList = super.queryForPage(
             		pagenum,legth,()->equityInfoRegist001Mapper.queryExportListByKeys(eList));
-//            
-//            data =  restTemplate.postForList(
-//                        SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryExportListByKeys",eList,
-//                        EquityInfoRegist001Dto.class);
+
+            data =  restTemplate.postForList(
+                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryExportListByKeys",eList,
+                    EquityInfoRegist001Dto.class);
         }
-//        com.joyintech.framework.grid.Page<EquityInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<EquityInfoRegist001Dto>();
-//        page.setRoot(data);
+        com.joyintech.framework.grid.Page<EquityInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<EquityInfoRegist001Dto>();
+        page.setRoot(data);
 //        page.setTotal(data.size());
         return  page;
     }

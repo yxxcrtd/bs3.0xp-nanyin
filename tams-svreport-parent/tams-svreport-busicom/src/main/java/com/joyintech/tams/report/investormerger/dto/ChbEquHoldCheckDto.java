@@ -899,4 +899,7 @@ public class ChbEquHoldCheckDto implements ITableRow {
     public String getInterfCheckResultStr(){
     	return getInterfCheckResult()==null?"":(getInterfCheckResult()+" "+SysDataUtil.getNameFromDataDict(DictCode.检查结果,getInterfCheckResult()));
     }
+    public String getChooseMergerStr(){
+        return getIndentifyMark()==getMergerindentifymark()?"OFF":"ON";
+    }
 }

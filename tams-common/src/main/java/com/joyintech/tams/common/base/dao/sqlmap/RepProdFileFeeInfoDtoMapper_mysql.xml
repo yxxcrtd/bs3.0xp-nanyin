@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepProdFileFeeInfoDtoMapper_mysql" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdFileFeeInfoDto" >
+    <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <id column="FEE_ID" property="feeId" jdbcType="VARCHAR" />
+    <result column="FEERATE" property="feerate" jdbcType="DECIMAL" />
+    <result column="BASICBILL" property="basicbill" jdbcType="VARCHAR" />
+    <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PROD_ID, FEE_ID, FEERATE, BASICBILL, BASIS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RepProdFileFeeInfoDtoKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from REP_PROD_FILE_FEEINFO
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+      and FEE_ID = #{feeId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdFileFeeInfoDtoKey" >
+    delete from REP_PROD_FILE_FEEINFO
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+      and FEE_ID = #{feeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdFileFeeInfoDto" >
+    insert into REP_PROD_FILE_FEEINFO (PROD_ID, FEE_ID, FEERATE, 
+      BASICBILL, BASIS)
+    values (#{prodId,jdbcType=VARCHAR}, #{feeId,jdbcType=VARCHAR}, #{feerate,jdbcType=DECIMAL}, 
+      #{basicbill,jdbcType=VARCHAR}, #{basis,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdFileFeeInfoDto" >
+    insert into REP_PROD_FILE_FEEINFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prodId != null" >
+        PROD_ID,
+      </if>
+      <if test="feeId != null" >
+        FEE_ID,
+      </if>
+      <if test="feerate != null" >
+        FEERATE,
+      </if>
+      <if test="basicbill != null" >
+        BASICBILL,
+      </if>
+      <if test="basis != null" >
+        BASIS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prodId != null" >
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="feeId != null" >
+        #{feeId,jdbcType=VARCHAR},
+      </if>
+      <if test="feerate != null" >
+        #{feerate,jdbcType=DECIMAL},
+      </if>
+      <if test="basicbill != null" >
+        #{basicbill,jdbcType=VARCHAR},
+      </if>
+      <if test="basis != null" >
+        #{basis,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepProdFileFeeInfoDto" >
+    update REP_PROD_FILE_FEEINFO
+    <set >
+      <if test="feerate != null" >
+        FEERATE = #{feerate,jdbcType=DECIMAL},
+      </if>
+      <if test="basicbill != null" >
+        BASICBILL = #{basicbill,jdbcType=VARCHAR},
+      </if>
+      <if test="basis != null" >
+        BASIS = #{basis,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+      and FEE_ID = #{feeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdFileFeeInfoDto" >
+    update REP_PROD_FILE_FEEINFO
+    set FEERATE = #{feerate,jdbcType=DECIMAL},
+      BASICBILL = #{basicbill,jdbcType=VARCHAR},
+      BASIS = #{basis,jdbcType=VARCHAR}
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+      and FEE_ID = #{feeId,jdbcType=VARCHAR}
+  </update>
+</mapper>

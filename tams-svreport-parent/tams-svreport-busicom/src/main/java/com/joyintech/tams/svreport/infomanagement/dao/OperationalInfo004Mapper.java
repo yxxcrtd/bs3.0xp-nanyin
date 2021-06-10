@@ -14,10 +14,10 @@ public interface OperationalInfo004Mapper {
 
     List<String> getBaseInfoIds(String tableName);
 
-    /*add by  xuyang 徽商 20201202根据产品代码查询资产要素*/
+    /*add by  xuyang 寰藉晢 20201202鏍规嵁浜у搧浠ｇ爜鏌ヨ璧勪骇瑕佺礌*/
     ChbAssetInfo selectChbAssetInfoByAssetCode(String assetCode);
     
-    /*add by  leipeng 查询产品登记编码数据*/
+    /*add by  leipeng 鏌ヨ浜у搧鐧昏缂栫爜鏁版嵁*/
     String queryPrdRegisCode(String regCode);
 
 }

@@ -1,15 +1,200 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.common.base.dao.PbcCapitalTrustDetailSubMapper_mysql">
-	<delete id="deleteByModel" parameterType="java.util.Map">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PbcCapitalTrustDetailSubMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PbcCapitalTrustDetailSub" >
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PBC_ACCOUNT_ID" property="pbcAccountId" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="STOCK_TYPE" property="stockType" jdbcType="VARCHAR" />
+        <result column="CAPITAL_TRUST_ORG_CODE" property="capitalTrustOrgCode" jdbcType="VARCHAR" />
+        <result column="POBCASSETID" property="pobcassetid" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="CHAR" />
+        <result column="CAPITAL_TRUST_AMOUNT" property="capitalTrustAmount" jdbcType="DECIMAL" />
+        <result column="CAPITAL_TRUST_AMOUNT_CNY" property="capitalTrustAmountCny" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REGIST_SEQNO REGIST_SEQNO, REPORTUUID REPORTUUID, PROD_ID PROD_ID, PBC_ACCOUNT_ID PBC_ACCOUNT_ID, 
+        ASSET_CODE ASSET_CODE, STOCK_TYPE STOCK_TYPE, CAPITAL_TRUST_ORG_CODE CAPITAL_TRUST_ORG_CODE, 
+        POBCASSETID POBCASSETID, CCY CCY, CAPITAL_TRUST_AMOUNT CAPITAL_TRUST_AMOUNT, CAPITAL_TRUST_AMOUNT_CNY CAPITAL_TRUST_AMOUNT_CNY
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcCapitalTrustDetailSubMapper.Base_Column_List" />
+        from PBC_CAPITAL_TRUST_DETAIL_SUB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcCapitalTrustDetailSubMapper.Base_Column_List" />
+        from PBC_CAPITAL_TRUST_DETAIL_SUB
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcCapitalTrustDetailSubMapper.Base_Column_List" />
+        from PBC_CAPITAL_TRUST_DETAIL_SUB
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PBC_CAPITAL_TRUST_DETAIL_SUB
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PbcCapitalTrustDetailSub" >
+        insert into PBC_CAPITAL_TRUST_DETAIL_SUB (REGIST_SEQNO, REPORTUUID, PROD_ID, 
+            PBC_ACCOUNT_ID, ASSET_CODE, STOCK_TYPE, 
+            CAPITAL_TRUST_ORG_CODE, POBCASSETID, CCY, 
+            CAPITAL_TRUST_AMOUNT, CAPITAL_TRUST_AMOUNT_CNY
+            )
+        values (#{registSeqno,jdbcType=CHAR}, #{reportuuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, 
+            #{pbcAccountId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{stockType,jdbcType=VARCHAR}, 
+            #{capitalTrustOrgCode,jdbcType=VARCHAR}, #{pobcassetid,jdbcType=VARCHAR}, #{ccy,jdbcType=CHAR}, 
+            #{capitalTrustAmount,jdbcType=DECIMAL}, #{capitalTrustAmountCny,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcCapitalTrustDetailSub" >
+        insert into PBC_CAPITAL_TRUST_DETAIL_SUB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                REGIST_SEQNO,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="pbcAccountId != null" >
+                PBC_ACCOUNT_ID,
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE,
+            </if>
+            <if test="stockType != null" >
+                STOCK_TYPE,
+            </if>
+            <if test="capitalTrustOrgCode != null" >
+                CAPITAL_TRUST_ORG_CODE,
+            </if>
+            <if test="pobcassetid != null" >
+                POBCASSETID,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="capitalTrustAmount != null" >
+                CAPITAL_TRUST_AMOUNT,
+            </if>
+            <if test="capitalTrustAmountCny != null" >
+                CAPITAL_TRUST_AMOUNT_CNY,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                #{registSeqno,jdbcType=CHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAccountId != null" >
+                #{pbcAccountId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="stockType != null" >
+                #{stockType,jdbcType=VARCHAR},
+            </if>
+            <if test="capitalTrustOrgCode != null" >
+                #{capitalTrustOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="pobcassetid != null" >
+                #{pobcassetid,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=CHAR},
+            </if>
+            <if test="capitalTrustAmount != null" >
+                #{capitalTrustAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="capitalTrustAmountCny != null" >
+                #{capitalTrustAmountCny,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PbcCapitalTrustDetailSub" >
+        insert into PBC_CAPITAL_TRUST_DETAIL_SUB(REGIST_SEQNO, REPORTUUID, PROD_ID, PBC_ACCOUNT_ID, 
+        ASSET_CODE, STOCK_TYPE, CAPITAL_TRUST_ORG_CODE, POBCASSETID, CCY, CAPITAL_TRUST_AMOUNT, 
+        CAPITAL_TRUST_AMOUNT_CNY)
+        select REGIST_SEQNO, REPORTUUID, PROD_ID, PBC_ACCOUNT_ID, 
+            ASSET_CODE, STOCK_TYPE, CAPITAL_TRUST_ORG_CODE, POBCASSETID, CCY, CAPITAL_TRUST_AMOUNT, 
+            CAPITAL_TRUST_AMOUNT_CNY
+             from PBC_CAPITAL_TRUST_DETAIL_SUB
+             where 1 = 1 and REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PbcCapitalTrustDetailSub" >
+        update PBC_CAPITAL_TRUST_DETAIL_SUB
+        <set >
+            <if test="reportuuid != null" >
+                REPORTUUID = #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAccountId != null" >
+                PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="stockType != null" >
+                STOCK_TYPE = #{stockType,jdbcType=VARCHAR},
+            </if>
+            <if test="capitalTrustOrgCode != null" >
+                CAPITAL_TRUST_ORG_CODE = #{capitalTrustOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="pobcassetid != null" >
+                POBCASSETID = #{pobcassetid,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=CHAR},
+            </if>
+            <if test="capitalTrustAmount != null" >
+                CAPITAL_TRUST_AMOUNT = #{capitalTrustAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="capitalTrustAmountCny != null" >
+                CAPITAL_TRUST_AMOUNT_CNY = #{capitalTrustAmountCny,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PbcCapitalTrustDetailSub" >
+        update PBC_CAPITAL_TRUST_DETAIL_SUB
+        set REPORTUUID = #{reportuuid,jdbcType=CHAR},
+            PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR},
+            ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            STOCK_TYPE = #{stockType,jdbcType=VARCHAR},
+            CAPITAL_TRUST_ORG_CODE = #{capitalTrustOrgCode,jdbcType=VARCHAR},
+            POBCASSETID = #{pobcassetid,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=CHAR},
+            CAPITAL_TRUST_AMOUNT = #{capitalTrustAmount,jdbcType=DECIMAL},
+            CAPITAL_TRUST_AMOUNT_CNY = #{capitalTrustAmountCny,jdbcType=DECIMAL}
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </update>
+    
+    
+     <delete id="deleteByModel" parameterType="java.util.Map">
     	DELETE FROM PBC_CAPITAL_TRUST_DETAIL_SUB WHERE REPORTUUID IN (
     	 SELECT REPORTUUID from PBC_REPORT
 	   where 1=1
 	   <if test="startdate!=null">
-	   	and DATE_FORMAT(startdate,'%Y-%m-%d') >= DATE_FORMAT(#{startdate,jdbcType=DATE},'%Y-%m-%d')
+	   	and date_format(startdate,'%Y-%m-%d') >= date_format(#{startdate,jdbcType=DATE},'%Y-%m-%d')
 	   </if>
 	   <if test="enddate!=null">
-	   	and DATE_FORMAT(enddate,'%Y-%m-%d') >= DATE_FORMAT(#{enddate,jdbcType=DATE},'%Y-%m-%d')
+	   	and date_format(enddate,'%Y-%m-%d') >= date_format(#{enddate,jdbcType=DATE},'%Y-%m-%d')
 	   </if>
 	   <if test="reporttype!=null">
 	   	and REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
@@ -23,7 +208,7 @@
        <if test="pbcAccountId == null" >
          and PBC_ACCOUNT_ID is null
        </if> 
-        and send_status = '01'
+        and send_status = '01'/*只删除未报送数据*/
     	
     	)
     	

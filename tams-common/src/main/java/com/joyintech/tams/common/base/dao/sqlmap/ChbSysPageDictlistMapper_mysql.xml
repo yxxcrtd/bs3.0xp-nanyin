@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysPageDictlistMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysPageDictlist" >
+        <id column="C_S_P_D_PAGE_ID" property="pageId" jdbcType="VARCHAR" />
+        <id column="C_S_P_D_DICT_ID" property="dictId" jdbcType="VARCHAR" />
+        <id column="C_S_P_D_DICT_ITEM_VAL" property="dictItemVal" jdbcType="VARCHAR" />
+        <result column="C_S_P_D_STATUS" property="status" jdbcType="CHAR" />
+        <result column="C_S_P_D_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_S_P_D_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_S_P_D_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_S_P_D_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PAGE_ID as C_S_P_D_PAGE_ID, DICT_ID as C_S_P_D_DICT_ID, DICT_ITEM_VAL as C_S_P_D_DICT_ITEM_VAL,
+        STATUS as C_S_P_D_STATUS, CREATE_USER as C_S_P_D_CREATE_USER, CREATE_TIME as C_S_P_D_CREATE_TIME,
+        UPDATE_USER as C_S_P_D_UPDATE_USER, UPDATE_TIME as C_S_P_D_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysPageDictlistMapper.Base_Column_List" />
+        from CHB_SYS_PAGE_DICTLIST
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysPageDictlistMapper.Base_Column_List" />
+        from CHB_SYS_PAGE_DICTLIST
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlistKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysPageDictlistMapper.Base_Column_List" />
+        from CHB_SYS_PAGE_DICTLIST
+        where PAGE_ID = #{pageId,jdbcType=VARCHAR}
+        and DICT_ID = #{dictId,jdbcType=VARCHAR}
+        and DICT_ITEM_VAL = #{dictItemVal,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlistKey" >
+        delete from CHB_SYS_PAGE_DICTLIST
+        where PAGE_ID = #{pageId,jdbcType=VARCHAR}
+          and DICT_ID = #{dictId,jdbcType=VARCHAR}
+          and DICT_ITEM_VAL = #{dictItemVal,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SYS_PAGE_DICTLIST
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlist" >
+        insert into CHB_SYS_PAGE_DICTLIST (PAGE_ID, DICT_ID, DICT_ITEM_VAL,
+            STATUS, CREATE_USER, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{pageId,jdbcType=VARCHAR}, #{dictId,jdbcType=VARCHAR}, #{dictItemVal,jdbcType=VARCHAR},
+            #{status,jdbcType=CHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlist" >
+        insert into CHB_SYS_PAGE_DICTLIST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="pageId != null" >
+                PAGE_ID,
+            </if>
+            <if test="dictId != null" >
+                DICT_ID,
+            </if>
+            <if test="dictItemVal != null" >
+                DICT_ITEM_VAL,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="pageId != null" >
+                #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="dictId != null" >
+                #{dictId,jdbcType=VARCHAR},
+            </if>
+            <if test="dictItemVal != null" >
+                #{dictItemVal,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlist" >
+        insert into CHB_SYS_PAGE_DICTLIST(PAGE_ID, DICT_ID, DICT_ITEM_VAL, STATUS, CREATE_USER,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select PAGE_ID, DICT_ID, DICT_ITEM_VAL, #{status,jdbcType=VARCHAR} as STATUS, CREATE_USER,
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_PAGE_DICTLIST
+             where STATUS = 'E' and PAGE_ID = #{pageId,jdbcType=VARCHAR} and DICT_ID = #{dictId,jdbcType=VARCHAR} and DICT_ITEM_VAL = #{dictItemVal,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlist" >
+        update CHB_SYS_PAGE_DICTLIST
+        <set >
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PAGE_ID = #{pageId,jdbcType=VARCHAR}
+        and DICT_ID = #{dictId,jdbcType=VARCHAR}
+        and DICT_ITEM_VAL = #{dictItemVal,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlist" >
+        update CHB_SYS_PAGE_DICTLIST
+        <set >
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="dictId != null" >
+                DICT_ID = #{dictId,jdbcType=VARCHAR},
+            </if>
+            <if test="dictItemVal != null" >
+                DICT_ITEM_VAL = #{dictItemVal,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlist" >
+        update CHB_SYS_PAGE_DICTLIST
+        set
+        PAGE_ID = #{pageId,jdbcType=VARCHAR},
+        DICT_ID = #{dictId,jdbcType=VARCHAR},
+        DICT_ITEM_VAL = #{dictItemVal,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=CHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlist" >
+        update CHB_SYS_PAGE_DICTLIST
+        set STATUS = #{status,jdbcType=CHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PAGE_ID = #{pageId,jdbcType=VARCHAR}
+          and DICT_ID = #{dictId,jdbcType=VARCHAR}
+          and DICT_ITEM_VAL = #{dictItemVal,jdbcType=VARCHAR}
+    </update>
+</mapper>
