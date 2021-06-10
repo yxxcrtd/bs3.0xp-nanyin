@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -28,6 +29,7 @@ import com.joyintech.tams.constant.DictCode;
  * @see ValuationMethodScheme001Dto
  * @since 1.0
  */
+@PageId("ValuationMethodScheme001")
 public class ValuationMethodScheme001Dto extends BokValScheme {
 
     /**
