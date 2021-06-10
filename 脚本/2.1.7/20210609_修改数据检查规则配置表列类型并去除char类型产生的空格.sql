@@ -1,9 +1,9 @@
---ÐÞ¸ÄÁÐÀàÐÍ½« char ¸ÄÎª varchar
+--ä¿®æ”¹åˆ—ç±»åž‹å°† char æ”¹ä¸º varchar
 alter table CHB_DATACHECK_CONDITION_INV modify (CHECKCONDITIONID varchar(36));
 alter table CHB_DATACHECK_CONDITION_INV modify (CHECKRULEID varchar(64));                   
 alter table CHB_DATACHECK_RULE_INV modify (CHECKRULEID varchar(64));
 
---È¥³ýchar ÀàÐÍ×Ô¶¯²¹È«µÄ¿Õ¸ñ
+--åŽ»é™¤char ç±»åž‹è‡ªåŠ¨è¡¥å…¨çš„ç©ºæ ¼
 update CHB_DATACHECK_CONDITION_INV set CHECKCONDITIONID = trim(CHECKCONDITIONID) where 1=1;
 update CHB_DATACHECK_CONDITION_INV set CHECKRULEID = trim(CHECKRULEID) where 1=1;
 update CHB_DATACHECK_RULE_INV set CHECKRULEID = trim(CHECKRULEID) where 1=1;
