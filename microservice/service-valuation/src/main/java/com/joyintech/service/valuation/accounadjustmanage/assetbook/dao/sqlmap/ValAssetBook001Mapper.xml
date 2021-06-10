@@ -17,24 +17,11 @@
     </select>
 	<!-- 下拉查询所属账套（可选账套类型，模糊查询） -->
     <select id="getBooksetId2" resultType="com.joyintech.framework.select.SuggestDto">
-        SELECT BOOKSET_ID code,BOOKSET_NAME name,BOOKSET_NAME shortName,BOOKSET_ID hidCode FROM BOK_BOOKSET
-        where 1=1 and BOOKSET_TYPE in ('02','03')
+        SELECT BOOKSET_ID code,BOOKSET_NAME name,BOOKSET_NAME shortName,BOOKSET_ID hidCode,BOOKSET_TYPE FROM BOK_BOOKSET
+        where 1=1
         	<if test="booksetType !=null and booksetType != ''">
         		AND	BOOKSET_TYPE = #{booksetType}
         	</if>
-        	<if test="param !=null and param != ''">
-        	AND	(BOOKSET_ID like concat('%',concat(#{param},'%'))
-        		OR BOOKSET_NAME like concat('%',concat(#{param},'%')))
-        	</if>
-        order by bookset_type,BOOKSET_ID
-    </select>
-    
-    <select id="getBooksetIdAll" resultType="com.joyintech.framework.select.SuggestDto">
-        SELECT BOOKSET_ID code,BOOKSET_NAME name,BOOKSET_NAME shortName,BOOKSET_ID hidCode FROM BOK_BOOKSET
-        where 1=1
-        	
-        	AND	BOOKSET_TYPE in ('02','03')
-
         	<if test="param !=null and param != ''">
         	AND	(BOOKSET_ID like concat('%',concat(#{param},'%'))
         		OR BOOKSET_NAME like concat('%',concat(#{param},'%')))
@@ -69,7 +56,7 @@
     <!-- 下拉查询所属账套（可选账套类型，模糊查询） -->
     <select id="findBooksetId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT BOOKSET_ID id,BOOKSET_NAME text FROM BOK_BOOKSET
-        where 1=1 and BOOKSET_TYPE in ('02','03')
+        where 1=1
         	<if test="noBooksetType !=null and noBooksetType != ''">
         		AND	BOOKSET_TYPE != #{noBooksetType}
         	</if>
@@ -81,41 +68,6 @@
         		OR BOOKSET_NAME like concat('%',concat(#{search},'%')))
         	</if>
         order by bookset_type,BOOKSET_ID
-    </select>
-    
-    <!-- 下拉查询所属账套（根据账套类别查询） -->
-    <select id="findBooksetIdByType" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT * FROM (
-        SELECT BOOKSET_ID id,BOOKSET_NAME text,BOOKSET_TYPE FROM BOK_BOOKSET
-        <if test="userId != null and userId != ''">
-		 INNER JOIN PTL_PORTFOLIO_AUTHORITY
-	             ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = REPLACE(BOK_BOOKSET.BOOKSET_ID,'F16_','')
-		        AND USER_ID = #{userId}
-		</if>
-          where 1=1        	 
-                AND ACCT_SUBJECT_TYPE != 'F26'  
-        		AND	BOOKSET_TYPE != '01'
-        	<if test="booksetIdTmpl !=null and booksetIdTmpl != ''">
-        		AND	BOOKSET_ID_TMPL = #{booksetIdTmpl}
-        	</if>
-        	<if test="search !=null and search != ''">
-        	AND	(BOOKSET_ID like concat('%',concat(#{search},'%'))
-        		OR BOOKSET_NAME like concat('%',concat(#{search},'%')))
-        	</if>
-        UNION ALL
-        SELECT BOOKSET_ID id,BOOKSET_NAME text,BOOKSET_TYPE FROM BOK_BOOKSET 
-          where 1=1     
-                AND ACCT_SUBJECT_TYPE = 'F26'    	
-        		AND	BOOKSET_TYPE != '01'
-        	<if test="booksetIdTmpl !=null and booksetIdTmpl != ''">
-        		AND	BOOKSET_ID_TMPL = #{booksetIdTmpl}
-        	</if>
-        	<if test="search !=null and search != ''">
-        	AND	(BOOKSET_ID like concat('%',concat(#{search},'%'))
-        		OR BOOKSET_NAME like concat('%',concat(#{search},'%')))
-        	</if> 
-        )		
-        order by bookset_type,id
     </select>
     
 	<select id="getBookSet02" resultType="com.joyintech.service.valuation.accounadjustmanage.assetbook.dto.ValAssetbook001Dto">
@@ -138,8 +90,7 @@
 		    bok_ACCT_STANDARD B
 		    ON B.ACCT_STANDARD_ID=A.ACCT_STANDARD
 		WHERE
-		    ACCT_SUBJECT_TYPE NOT IN ('F16','F18')   
-		    AND  BOOKSET_TYPE=#{booksetType} and BOOKSET_TYPE in ('02','03')
+		    BOOKSET_TYPE=#{booksetType}
             <if test="booksetName!=null and booksetName != ''">
 <!-- 		      AND BOOKSET_Id=#{booksetName} -->
         	AND  BOOKSET_Id in
@@ -147,40 +98,6 @@
          		#{item}
          	</foreach>
 			</if>
-		 union all
-		 SELECT
-		    A.BOOKSET_ID AS booksetId,
-		    A.BOOKSET_NAME AS booksetName,
-		    A.BOOKSET_TYPE AS booksetType,
-		    A.BOOKSET_TYPE AS booksetTypeCode,
-		    A.ACCT_SUBJECT_ID AS acctSubjectId,
-		    A.STANDARD_CCY AS standardCcy,
-		    A.STANDARD_CCY AS standardCcyCode,
-		    A.ACCT_SUBJECT_TYPE AS acctSubjectType,
-		    A.BOOKSET_ID_TMPL AS booksetIdTmpl,
-		    B.ACCT_STANDARD_NAME AS acctStandard,
-		    A.START_DATE AS startDate,
-		    A.END_DATE AS endDate
-		FROM
-		    BOK_BOOKSET A
-	    LEFT JOIN
-		    bok_ACCT_STANDARD B
-		    ON B.ACCT_STANDARD_ID=A.ACCT_STANDARD
-		<if test="userId != null and userId != ''">
-		 INNER JOIN PTL_PORTFOLIO_AUTHORITY
-	             ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = REPLACE(A.BOOKSET_ID,'F16_','')
-		        AND USER_ID = #{userId}
-		</if>    
-		WHERE
-		    ACCT_SUBJECT_TYPE IN ('F16','F18')    
-		    AND BOOKSET_TYPE=#{booksetType} and BOOKSET_TYPE in ('02','03')
-            <if test="booksetName!=null and booksetName != ''">
-<!-- 		      AND BOOKSET_Id=#{booksetName} -->
-        	AND  BOOKSET_Id in
-         	<foreach collection="booksetName.split(',')" item="item" open="(" separator="," close=")">
-         		#{item}
-         	</foreach>
-			</if>	
 	</select>
 	<select id="getBookSetName"
 		resultType="com.joyintech.service.valuation.accounadjustmanage.assetbook.dto.ValAssetbook001Dto">
@@ -198,29 +115,23 @@
 
 
 	<select id="selectBatchGroup" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select distinct
-		grp.SEQ_NO id,
-		grp.GROUP_NAME text
-		from SYS_BATCH_PRD_GRP grp
-		 <!-- 多级法人改造 add by hxy start 20200616 -->
-             <if test="institutionlist != null and !institutionlist.isEmpty() ">
-             inner join  sys_batch_grp_prdlink sbgpl
-              on grp.seq_no=sbgpl.group_seq
-              inner join data_auth_notify_inst dani
-	    	  on sbgpl.product_id=dani.business_id  
-	          and dani.data_type='V08'
-                   and dani.institution_code
-                   <foreach collection="institutionlist" item="item" separator=","
-                      open="in ("  close=")">
-                    #{item}
-                   </foreach>
-             </if>
-       <!-- 多级法人改造 add by hxy end 20200616 --> 
-		where 1=1 --system_code = 'SYS'
-		AND IS_HANDWORK = '01'
+		select
+		SEQ_NO id,
+		GROUP_NAME text
+		from SYS_BATCH_PRD_GRP
+		<!-- modify by yanya on 20210113 过滤系统跑批生成的账套组 start -->
+		<!--where 1=1 --><!--system_code = 'SYS'-->
+		WHERE
+			NOT EXISTS (
+				select 1 from dual where GROUP_NAME LIKE '%创建于%' AND DETAIL LIKE '%创建于%;启动批处理时创建。%'
+			)
 		<!-- where system_code = 'VAL' -->
+		<!-- modify by yanya on 20210113 过滤系统跑批生成的账套组 end -->
 		<if test="search != null and !''.equals(search)">
-			AND grp.GROUP_NAME like '%' || #{search} || '%'
+			AND GROUP_NAME like '%' || #{search} || '%'
+		</if>
+		<if test="booksetGroup != null and !''.equals(booksetGroup)">
+			AND SEQ_NO like '%' || #{booksetGroup} || '%'
 		</if>
 	</select>
 
@@ -241,29 +152,9 @@
 
 	<!-- 下拉查询所属账套（可选账套类型，模糊查询） -->
 	<select id="getBooksetIdForSelect" resultType="com.joyintech.framework.select.SelectOptionDto" >
-		SELECT * FROM (
-		SELECT BOOKSET_ID id,BOOKSET_NAME text,BOOKSET_TYPE
+		SELECT BOOKSET_ID id,BOOKSET_NAME text
 		FROM BOK_BOOKSET
 		<where>
-		        AND ACCT_SUBJECT_TYPE NOT IN ('F16','F18')  
-			<if test="booksetType !=null and booksetType != ''">
-				AND	BOOKSET_TYPE = #{booksetType}
-			</if>
-			<if test="search !=null and search != ''">
-				AND	(BOOKSET_ID like concat('%',concat(#{search},'%'))
-				OR BOOKSET_NAME like concat('%',concat(#{search},'%')))
-			</if>
-		</where> 
-		UNION ALL
-		SELECT BOOKSET_ID id,BOOKSET_NAME text,BOOKSET_TYPE
-		FROM BOK_BOOKSET
-		<if test="userId != null and userId != ''">
-		 INNER JOIN PTL_PORTFOLIO_AUTHORITY
-	             ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = REPLACE(BOK_BOOKSET.BOOKSET_ID,'F16_','')
-		        AND USER_ID = #{userId}
-		</if>
-		<where>
-		        AND ACCT_SUBJECT_TYPE IN ('F16','F18')
 			<if test="booksetType !=null and booksetType != ''">
 				AND	BOOKSET_TYPE = #{booksetType}
 			</if>
@@ -272,83 +163,21 @@
 				OR BOOKSET_NAME like concat('%',concat(#{search},'%')))
 			</if>
 		</where>
-		)
-		order by bookset_type,id 
+		order by bookset_type,BOOKSET_ID
 	</select>
-	<!-- 下拉查询所属账套（仅仅查询账套模板，模糊查询） -->
-    <select id="getBooksetId1" resultType="com.joyintech.framework.select.SuggestDto">
-        SELECT BOOKSET_ID code,BOOKSET_NAME name,BOOKSET_NAME shortName,BOOKSET_ID hidCode FROM BOK_BOOKSET
-        where 1=1 and BOOKSET_TYPE ='01'
-        	<if test="booksetType !=null and booksetType != ''">
-        		AND	BOOKSET_TYPE = #{booksetType}
-        	</if>
-        	<if test="param !=null and param != ''">
-        	AND	(BOOKSET_ID like concat('%',concat(#{param},'%'))
-        		OR BOOKSET_NAME like concat('%',concat(#{param},'%')))
-        	</if>
-        order by bookset_type,BOOKSET_ID
-    </select>
-    	<!-- 下拉查询所属账套（仅仅查询账套模板，模糊查询） -->
-    	<select id="getBookSet01" resultType="com.joyintech.service.valuation.accounadjustmanage.assetbook.dto.ValAssetbook001Dto">
-		SELECT
-		    A.BOOKSET_ID AS booksetId,
-		    A.BOOKSET_NAME AS booksetName,
-		    A.BOOKSET_TYPE AS booksetType,
-		    A.BOOKSET_TYPE AS booksetTypeCode,
-		    A.ACCT_SUBJECT_ID AS acctSubjectId,
-		    A.STANDARD_CCY AS standardCcy,
-		    A.STANDARD_CCY AS standardCcyCode,
-		    A.ACCT_SUBJECT_TYPE AS acctSubjectType,
-		    A.BOOKSET_ID_TMPL AS booksetIdTmpl,
-		    B.ACCT_STANDARD_NAME AS acctStandard,
-		    A.START_DATE AS startDate,
-		    A.END_DATE AS endDate
-		FROM
-		    BOK_BOOKSET A
-	    LEFT JOIN
-		    bok_ACCT_STANDARD B
-		    ON B.ACCT_STANDARD_ID=A.ACCT_STANDARD
-		WHERE
-		    BOOKSET_TYPE=#{booksetType} and BOOKSET_TYPE ='01'
-            <if test="booksetName!=null and booksetName != ''">
-<!-- 		      AND BOOKSET_Id=#{booksetName} -->
-        	AND  BOOKSET_Id in
-         	<foreach collection="booksetName.split(',')" item="item" open="(" separator="," close=")">
-         		#{item}
-         	</foreach>
-			</if>
-	</select>
-	 <!-- 下拉查询所属账套（仅仅查询账套模板，模糊查询） -->
-    <select id="findBooksetId1" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT BOOKSET_ID id,BOOKSET_NAME text FROM BOK_BOOKSET
-        where 1=1 and BOOKSET_TYPE ='01'
-        	<if test="noBooksetType !=null and noBooksetType != ''">
-        		AND	BOOKSET_TYPE != #{noBooksetType}
-        	</if>
-        	<if test="booksetType !=null and booksetType != ''">
-        		AND	BOOKSET_TYPE = #{booksetType}
-        	</if>
-        	<if test="search !=null and search != ''">
-        	AND	(BOOKSET_ID like concat('%',concat(#{search},'%'))
-        		OR BOOKSET_NAME like concat('%',concat(#{search},'%')))
-        	</if>
-        order by bookset_type,BOOKSET_ID
-    </select>
-
-	<select id="findProductGrp" resultType="com.joyintech.framework.select.SuggestDto">
-		SELECT PRODUCT_ID code,
-		PRODUCT_NAME name,
-		PRODUCT_NAME shortName,
-		PRODUCT_ID hidCode
-		FROM SYS_BATCH_GRP_PRDLINK
-		<where>
-			GROUP_SEQ in
-			<foreach collection="booksetGroup.split(',')" item="item" index= "index" open="(" close=")" separator="," >
-				<if test="(index % 998) == 0">
-					null) or GROUP_SEQ in (
-				</if>
+	<select id="getBooksetIdsByGroups"
+			resultType="com.joyintech.framework.select.SuggestDto">
+		select
+		p.product_id  as code
+		from  sys_batch_prd_grp g
+		left join sys_batch_grp_prdlink p
+		on g.seq_no  =  p.group_seq
+		where  system_code = 'SYS'
+		<if test="booksetId != null and booksetId!=''">
+			and g.seq_no in
+			<foreach item="item" collection="booksetId.split(',')" open="(" separator="," close=")">
 				#{item}
 			</foreach>
-		</where>
+		</if>
 	</select>
 </mapper>

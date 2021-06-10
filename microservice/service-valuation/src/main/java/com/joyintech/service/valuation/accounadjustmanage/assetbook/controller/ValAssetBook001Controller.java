@@ -89,26 +89,26 @@ public class ValAssetBook001Controller extends BaseController {
 //        model.addAttribute("defaultType", DictCodeList.账套类别_账套模板.getValue());
 //        return super.init(model);
 //    }
-    
+
     /**
      * 检索账套代码
-     * 
+     *
      * @return 账套代码联想框内容
      * @throws Exception
      * @see
      * @since 1.0
      */
 
-    @PostMapping("/getBooksetId")
-    public Page<SelectOptionDto> getBooksetId(@RequestBody Map<String, Object> param)
-        throws Exception {
+    @PostMapping("/getBooksetId/{page}/{length}")
+    public Page<SelectOptionDto> getBooksetId(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+            throws Exception {
         String params = (String) param.get("param");
-        return valAssetBook001Service.getBooksetId(param);
+        return valAssetBook001Service.getBooksetId(page, length, param);
     }
-    
+
     /**
      * 检索账套代码(只取理财账套)
-     * 
+     *
      * @return 账套代码联想框内容
      * @throws Exception
      * @see
@@ -116,29 +116,14 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @PostMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2(@RequestBody Map<String, Object> params)
-        throws Exception {
-        String param =(String) params.get("param");
+            throws Exception {
+        String param = (String) params.get("param");
         return valAssetBook001Service.getBooksetId2(param);
     }
-    
-    /**
-     * 检索账套代码(只取理财账套)
-     * 
-     * @return 账套代码联想框内容
-     * @throws Exception
-     * @see
-     * @since 1.0
-     */
-    @PostMapping("/getBooksetIdAll")
-    public List<SuggestDto> getBooksetIdAll(@RequestBody Map<String, Object> params)
-        throws Exception {
-        String param =(String) params.get("param");
-        return valAssetBook001Service.getBooksetIdAll(param);
-    }
-    
+
     /**
      * 根据账套组中账套ID查询账套 add by yanya 20190929
-     * 
+     *
      * @return 账套代码联想框内容
      * @throws Exception
      * @see
@@ -146,29 +131,30 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @PostMapping("/getBooksetId3")
     public List<SuggestDto> getBooksetId3(@RequestBody Map<String, Object> params)
-        throws Exception {
+            throws Exception {
         return valAssetBook001Service.getBooksetId3(params);
     }
+
     /**
      * 根据套帐名称 套帐类型查询数据 <功能详细描述>
-     * 
+     *
      * @return List<ValAssetbook001SearchDto>
-     * @throws Exception 
+     * @throws Exception
      * @see
      * @since 1.0
      */
     @PostMapping("/getAllAssetbookPage/{page}/{length}")
-    public Page<ValAssetbook001Dto> getAllAssetbookPage(@RequestBody Map<String,Object> params,
+    public Page<ValAssetbook001Dto> getAllAssetbookPage(@RequestBody Map<String, Object> params,
                                                         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
-        String name = (String)params.get("name");
-        String type = (String)params.get("type");
-        return valAssetBook001Service.getAllAssetbookPage(page,length,type, name);
+        String name = (String) params.get("name");
+        String type = (String) params.get("type");
+        return valAssetBook001Service.getAllAssetbookPage(page, length, type, name);
     }
-    
+
 
     /**
      * 根据套帐类型与套帐名称获取数据
-     * 
+     *
      * @param type 套帐类型
      * @param name 套帐名称
      * @return List<ValAssetbook001SearchDto>
@@ -176,15 +162,15 @@ public class ValAssetBook001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/getAllAssetbook")
-    public List<ValAssetbook001Dto> getAllAssetbook(@RequestBody Map<String,Object> params) {
-        String name = (String)params.get("name");
-        String type = (String)params.get("type");
+    public List<ValAssetbook001Dto> getAllAssetbook(@RequestBody Map<String, Object> params) {
+        String name = (String) params.get("name");
+        String type = (String) params.get("type");
         return valAssetBook001Service.getAllAssetbook(type, name);
     }
-    
+
     /**
      * 检索账套代码列表
-     * 
+     *
      * @param param 过滤参数
      * @return 上级科目代码列表
      * @see
@@ -197,7 +183,7 @@ public class ValAssetBook001Controller extends BaseController {
 
 //    /**
 //     * 导出数据
-//     * 
+//     *
 //     * @return ResponseEntity<byte[]>
 //     * @throws Exception ExportUtil.export
 //     * @see
@@ -227,39 +213,40 @@ public class ValAssetBook001Controller extends BaseController {
 //                                 + FileNameUtil.getFileExtName(outFile),
 //            outFile, true);
 //    }
-//    
+//
+
     /**
      * 删除check
-     * 
-     * @param dto 行数据
+     *
+     * @param dto    行数据
      * @param result check结果
      * @return WebResult
-     * @throws Exception 
+     * @throws Exception
      * @see
      * @since 1.0
      */
     @PostMapping("/doDeleteCheck")
-    public AjaxResult doDeleteCheck(@RequestBody Map<String,Object> params) throws Exception {
-        ValAssetbook001Dto dto = (ValAssetbook001Dto)params.get("valAssetbook001Dto");
-        BindingResult result = (BindingResult)params.get("bindingResult");
-    	AjaxResult wr = new AjaxResult();
-    	int res = valAssetBook001Service.workflowCheck(dto);
+    public AjaxResult doDeleteCheck(@RequestBody Map<String, Object> params) throws Exception {
+        ValAssetbook001Dto dto = (ValAssetbook001Dto) params.get("valAssetbook001Dto");
+        BindingResult result = (BindingResult) params.get("bindingResult");
+        AjaxResult wr = new AjaxResult();
+        int res = valAssetBook001Service.workflowCheck(dto);
         if (res > 0) {
             return new AjaxResult("存在流程中数据，不能删除！", MessageType.错误消息);
         }
-    	// 该账套已经有记账凭证产生，删除时提示“已有记账凭证产生，是否确认删除”
-    	int voucherCount = valAssetBook001Service.queryVoucherCount(dto.getBooksetId());
-    	if (voucherCount > 0) {
-    		wr.setData("已有记账凭证产生，是否确认删除?");
-    		return wr;
-    	}
-    	wr.setData(this.getMessage("COMMON_C_0001", "删除"));
+        // 该账套已经有记账凭证产生，删除时提示“已有记账凭证产生，是否确认删除”
+        int voucherCount = valAssetBook001Service.queryVoucherCount(dto.getBooksetId());
+        if (voucherCount > 0) {
+            wr.setData("已有记账凭证产生，是否确认删除?");
+            return wr;
+        }
+        wr.setData(this.getMessage("COMMON_C_0001", "删除"));
         return wr;
     }
-    
+
     /**
      * 模板账套删除-不带流程
-     * 
+     *
      * @return boolean
      * @throws IOException 转换
      * @see
@@ -269,7 +256,7 @@ public class ValAssetBook001Controller extends BaseController {
     @DTXTransaction
     @PostMapping("/delete")
     public boolean delete(@RequestBody String datas)
-        throws IOException {
+            throws IOException {
         List<ValAssetbook001Dto> listDto = JsonUtils.json2List(datas, ValAssetbook001Dto.class);
         valAssetBook001Service.delete(listDto);
         return true;
@@ -279,34 +266,23 @@ public class ValAssetBook001Controller extends BaseController {
     public int getDataInWorklow(@RequestBody ProcessMark processMark) {
         return valAssetBook001Service.getDataInWorklow(processMark);
     }
-    
-    
-    
+
+
     /**
      * 检索账套代码列表(分页下拉框)
+     *
      * @param param
      * @return
      */
     @PostMapping("/findBooksetIdByPage/{page}/{length}")
     public Page<SelectOptionDto> findBooksetIdByPage(@RequestBody Map<String, Object> pageParam,
                                                      @PathVariable("page") int page, @PathVariable("length") int length) {
-        return valAssetBook001Service.findBooksetIdByPage(page,length,pageParam);
+        return valAssetBook001Service.findBooksetIdByPage(page, length, pageParam);
     }
-    
-    /**
-     * 检索账套代码列表(分页下拉框)
-     * @param param
-     * @return
-     */
-    @PostMapping("/findBooksetIdByType/{page}/{length}")
-    public Page<SelectOptionDto> findBooksetIdByType(@RequestBody Map<String, Object> pageParam,
-                                                        @PathVariable("page") int page, @PathVariable("length") int length) {
-        return valAssetBook001Service.findBooksetIdByType(page,length,pageParam);
-    }
-    
+
     /**
      * 理财账套删除-带流程
-     * 
+     *
      * @return boolean
      * @throws IOException 转换
      * @see
@@ -318,7 +294,7 @@ public class ValAssetBook001Controller extends BaseController {
 //    	if(br.hasErrors()){
 //            return new AjaxResult(br);
 //        }
-//    	
+//
 //    	ProcessParameter<ValAssetbook001Dto> proParam = new ProcessParameter<>();
 //        WorkFlowParameter<ValAssetbook001Dto> params = new WorkFlowParameter<>();
 //        // 业务代码
@@ -334,7 +310,7 @@ public class ValAssetBook001Controller extends BaseController {
 //            entity.getBooksetId()//账套代码
 //        ));
 //        proParam.setWorkFlowParameter(params);
-//        
+//
 //        String msg = getMessage("COMMON_I_0001");
 //        try {
 //            msg = valAssetBook001Service.start(proParam, dto);
@@ -345,66 +321,68 @@ public class ValAssetBook001Controller extends BaseController {
 //        }
 //        return new AjaxResult(msg);
 //    }
-    
-    
-    
-    
     @GetMapping("queryVoucherCount")
-    public int queryVoucherCount(String booksetId){
-    	return valAssetBook001Service.queryVoucherCount(booksetId);
+    public int queryVoucherCount(String booksetId) {
+        return valAssetBook001Service.queryVoucherCount(booksetId);
     }
-    
+
     @Transactional
     @DTXTransaction
     @GetMapping("doComplete")
-    public int doComplete(String booksetId){
-    	return valAssetBook001Service.doComplete(booksetId);
+    public int doComplete(String booksetId) {
+        return valAssetBook001Service.doComplete(booksetId);
     }
-
 
 
     /**
      * 获取产品组下的账套
+     *
      * @param object
      * @return
      */
     @PostMapping("/findAllProduct")
     public List<SysBatchGrpPrdlink> findAllProduct(@RequestBody Map<String, Object> params) {
-       return valAssetBook001Service.findAllProduct(params);
+        return valAssetBook001Service.findAllProduct(params);
     }
+
     /**
      * 产品组
+     *
      * @param pageParam
      * @return
      */
     @PostMapping("/findBooksetGroup/{page}/{length}")
     public Page<SelectOptionDto> findBooksetGroup(@RequestBody Map<String, Object> pageParam,
-    @PathVariable("page") int page, @PathVariable("length") int length) {
-        return valAssetBook001Service.findBooksetGroup(page,length,pageParam);
+                                                  @PathVariable("page") int page, @PathVariable("length") int length) {
+        return valAssetBook001Service.findBooksetGroup(page, length, pageParam);
     }
+
     /**
      * 账套代码
+     *
      * @param pageParam
      * @return
      */
     @PostMapping("/getBooksetIdNew/{page}/{length}")
     public Page<SelectOptionDto> getBooksetIdNew(@RequestBody Map<String, Object> pageParam,
-    @PathVariable("page") int page, @PathVariable("length") int length) {
-        return valAssetBook001Service.getBooksetIdNew(page,length,pageParam);
+                                                 @PathVariable("page") int page, @PathVariable("length") int length) {
+        return valAssetBook001Service.getBooksetIdNew(page, length, pageParam);
     }
 
     /**
-     * 根据配置产品组查询对应的产品
+     * 获取产品组下的账套
      *
-     * @return 产品代码
-     * @throws Exception
-     * @see
-     * @since 1.0
+     * @param params
+     * @return
      */
-    @PostMapping("/findProductGrp")
-    public List<SuggestDto> findProductGrp(@RequestBody Map<String, Object> params)
-            throws Exception {
-        String param =(String) params.get("param");
-        return valAssetBook001Service.findProductGrp(params);
+    @PostMapping("/getBooksetIdByBooksetType")
+    public List<SuggestDto> getBooksetIdByBooksetType(@RequestBody Map<String, Object> params) {
+        String param = params.get("param") == null ? null : (String) params.get("param");
+        return valAssetBook001Service.getBooksetIdByBooksetType(param);
+    }
+
+    @PostMapping("/getBooksetIdsByGroups")
+    public List<SuggestDto> getBooksetIdsByGroups(@RequestBody Map<String, Object> params) {
+        return valAssetBook001Service.getBooksetIdsByGroups(params);
     }
 }

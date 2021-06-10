@@ -57,8 +57,6 @@ public interface ValAssetBook001Mapper {
      * @since 1.0
      */
     List<SuggestDto> getBooksetId2(@Param("booksetType") String booksetType, @Param("param") String param);
-    
-    List<SuggestDto> getBooksetIdAll(@Param("param") String param);
 
     /**
      * 根据账套组中账套ID查询账套 add by yanya 20190912
@@ -68,13 +66,6 @@ public interface ValAssetBook001Mapper {
      * @since 1.0
      */
     List<SuggestDto> getBooksetId3(Map<String, Object> map);
-    /**
-     * 检索账套代码
-     * @param map
-     * @return
-     */
-    List<SelectOptionDto> findBooksetIdByType(Map<String, Object> map);
-    
     /**
      * 检索账套代码
      * @param map
@@ -91,7 +82,8 @@ public interface ValAssetBook001Mapper {
      * @see
      * @since 1.0
      */
-    List<ValAssetbook001Dto> getBookSet02(Map<String, Object> map);
+    List<ValAssetbook001Dto> getBookSet02(@Param("booksetType") String booksetType,
+                                          @Param("booksetName") String booksetName);
 
     /**
      * 获取账套名称
@@ -133,35 +125,12 @@ public interface ValAssetBook001Mapper {
      */
     List<SysBatchGrpPrdlink> findAllProduct(Map<String, Object> params);
     /**
-     * 检索账套代码(只取理财账套模板)
-     * 
-     * @return 账套代码列表
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param paraMap
+     * @return
      * @see
      * @since 1.0
      */
-    List<SuggestDto> getBooksetId1(@Param("booksetType") String booksetType, @Param("param") String param);
-    /**
-     * 查询数据 <一句话功能简述> <功能详细描述>
-     * 
-     * @param booksetType 账套类别
-     * @param booksetName 账套名称
-     * @return List<ValAssetbook001SearchDto>
-     * @see
-     * @since 1.0
-     */
-    List<ValAssetbook001Dto> getBookSet01(Map<String, Object> map);
-    /**
-     * 检索账套代码，查询账套模板
-     * @param map
-     * @return
-     */
-    List<SelectOptionDto> findBooksetId1(Map<String, Object> map);
-
-    /**
-     * 账套代码
-     * @param pageParam
-     * @return
-     */
-    List<SuggestDto> findProductGrp(Map<String, Object> pageParam);
-    
+    List<SuggestDto> getBooksetIdsByGroups(Map<String, Object> paraMap);
 }

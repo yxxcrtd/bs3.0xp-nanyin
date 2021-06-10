@@ -11,27 +11,20 @@
 package com.joyintech.service.valuation.accounadjustmanage.assetbook.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
- 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.csii.dc.client.util.StringUtil;
-import com.google.common.collect.Lists;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SelectParam;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.valuation.accounadjustmanage.assetbook.dao.ValAssetBook001Mapper;
 import com.joyintech.service.valuation.accounadjustmanage.assetbook.dao.ValAssetBook002Mapper;
@@ -75,10 +68,9 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      * @param pageParam
      * @return
      */
-    public Page<SelectOptionDto> getBooksetId(Map<String, Object> pageParam) {
+    public Page<SelectOptionDto> getBooksetId(int page, int length,Map<String, Object> pageParam) {
         pageParam.put("booksetType", DictCodeList.账套类别_理财账套.getValue());
-        pageParam.put("userId", LoginUserUtil.getUserName());
-        return super.queryForPageForSelectReturn(()->mapper.getBooksetIdForSelect(pageParam));
+        return super.queryForPageForSelectReturn(page,length,()->mapper.getBooksetIdForSelect(pageParam));
     }
     
     
@@ -93,6 +85,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
     public List<SelectOptionDto> getBooksetIdForSelect() {
     	List<SelectOptionDto> listSelectDto=new ArrayList<SelectOptionDto>();
         String booksetType = DictCodeList.账套类别_理财账套.getValue();
+
         List<SuggestDto> listBookset = mapper.getBooksetId2(booksetType,"");
         listBookset.forEach(item -> {
             SelectOptionDto dto=new SelectOptionDto();
@@ -115,36 +108,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
     		param.put("booksetType", DictCodeList.账套类别_理财账套.getValue());
     	}
     	/**modify by wujie on 20190416 end**/
-    	//return super.queryForPageForSelectReturn(page,length,()->mapper.findBooksetId(param));
-    	//多级法人改造  start add by hxy  20200616
-    	if(null!=param.get("booksetType") && !StringUtil.isEmpty(param.get("booksetType"))){
-    		if(DictCodeList.账套类别_账套模板.getValue().equals(param.get("booksetType"))){
-    			 return super.queryForPageForSelectReturn(page,length,()->mapper.findBooksetId1(param));
-    		}else{
-    			return super.queryForPageForSelectReturn(page,length,()->mapper.findBooksetId(param));
-    		}
-    	}else{
-    		 Page<SelectOptionDto> dto=new Page<SelectOptionDto>();
-    		 List<SelectOptionDto> listAll=new ArrayList<SelectOptionDto>();
-    		 listAll.addAll(mapper.findBooksetId1(param));
-    		 listAll.addAll(mapper.findBooksetId(param));
-    		 dto.setRoot(listAll);
-    		 return dto;
-    	}
-    	//add by hxy end 多级法人改造20200617
-    }
-    
-    /**
-     * 下拉查询所属账套（根据账套类别查询）
-     * @param param
-     * @return
-     */
-    public Page<SelectOptionDto> findBooksetIdByType(int page,int length,Map<String, Object> param) {
-    	Page<SelectOptionDto> p = new  Page<SelectOptionDto>();
-    	param.put("userId", LoginUserUtil.getUserName());
-     	List<SelectOptionDto> list = mapper.findBooksetIdByType(param);
-     	p.setRoot(list);
-    	return p;
+        return super.queryForPageForSelectReturn(page,length,()->mapper.findBooksetId(param));
     }
     
     
@@ -158,13 +122,8 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      */
     public List<SelectOptionDto> getBooksetIdForSelectByAll() {
         List<SelectOptionDto> listSelectDto=new ArrayList<SelectOptionDto>();
-        //List<SuggestDto> listBookset = mapper.getBooksetId2("","");
-    	//多级法人改造  start add by hxy  20200616
-        List<SuggestDto> listBookset=new ArrayList<SuggestDto>();
-    	listBookset.addAll(mapper.getBooksetId1("",""));
-    	listBookset.addAll(mapper.getBooksetId2("",""));
-        //add by hxy end 多级法人改造20200617
-        
+
+        List<SuggestDto> listBookset = mapper.getBooksetId2("","");
         listBookset.forEach(item -> {
             SelectOptionDto dto=new SelectOptionDto();
             dto.setId(item.getCode());
@@ -183,19 +142,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      */
     public List<SuggestDto> getBooksetId2(String param) {
         String booksetType = DictCodeList.账套类别_理财账套.getValue();
-        return  mapper.getBooksetId2(booksetType, param);
-    }
-    
-    /**
-     * 检索账套代码列表（只取理财账套）
-     * 
-     * @param param 过滤参数
-     * @return 上级科目代码列表
-     * @see
-     * @since 1.0
-     */
-    public List<SuggestDto> getBooksetIdAll(String param) {
-        return mapper.getBooksetIdAll(param);
+        return mapper.getBooksetId2(booksetType, param);
     }
     
     /**
@@ -220,24 +167,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      * @since 1.0
      */
     public List<ValAssetbook001Dto> getAllAssetbook(String type, String name) {
-    	//add by hxy 多级法人改造 20200616
-        //  return mapper.getBookSet02(type, name);
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("userId", LoginUserUtil.getUserName());
-        param.put("booksetType", type);
-        param.put("booksetName", name);
-    	if(null!=type && !StringUtil.isEmpty(type)){
-    		if(DictCodeList.账套类别_账套模板.getValue().equals(type)){
-    			return mapper.getBookSet01(param);
-    		}else{
-    			return mapper.getBookSet02(param);
-    		}
-    	}else{
-    		 List<ValAssetbook001Dto> listAll=new ArrayList<ValAssetbook001Dto>();
-    		 listAll.addAll(mapper.getBookSet01(param));
-    		 listAll.addAll(mapper.getBookSet02(param));
-    		 return listAll;
-    	}
+        return mapper.getBookSet02(type, name);
     }
     
     
@@ -252,28 +182,8 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      * @since 1.0
      */
     public Page<ValAssetbook001Dto> getAllAssetbookPage(int page,int length,String type, String name) throws Exception {
-    	//add by hxy start 多级法人改造 20200616
-    	//return super.queryForPage(page,length,()-> mapper.getBookSet02(type, name));
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("userId", LoginUserUtil.getUserName());
-        param.put("booksetType", type);
-        param.put("booksetName", name);
-    	if(null!=type && !StringUtil.isEmpty(type)){
-    		if(DictCodeList.账套类别_账套模板.getValue().equals(type)){
-             	return super.queryForPage(page,length,()-> mapper.getBookSet01(param));
-    		}else{
-             	return super.queryForPage(page,length,()-> mapper.getBookSet02(param));
-    		}
-    	}else{
-    		 Page<ValAssetbook001Dto> dto=new Page<ValAssetbook001Dto>();
-    		 List<ValAssetbook001Dto> listAll=new ArrayList<ValAssetbook001Dto>();
-    		 listAll.addAll(mapper.getBookSet01(param));
-    		 listAll.addAll(mapper.getBookSet02(param));
-    		 dto.setRoot(listAll);
-    		 return dto;
-    	}
-    	//add by hxy end 多级法人改造20200617
-     }
+        return super.queryForPage(page,length,()-> mapper.getBookSet02(type, name));
+    }
 
     /**
      * 获取账套的名称
@@ -379,9 +289,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
 //        不能模糊查询，没有复用代码。（方法引用使用不当）
 //        List<SuggestDto> listDto = queryForSuggest(mapper::getBooksetIdByBooksetType, null, param);
         String booksetType = DictCodeList.账套类别_账套模板.getValue();
-         //add by hxy 多级法人改造 20200616
-        //  return mapper.getBooksetId2(booksetType, param);
-        return mapper.getBooksetId1(booksetType, param);
+        return mapper.getBooksetId2(booksetType, param);
     }
 
 
@@ -409,13 +317,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      */
     @DataSource(DataSourceType.OTHER)
     public Page<SelectOptionDto> findBooksetGroup(int page,int length,Map<String, Object> param) {
-    	//多极法人改造  start  add by hxy 20200618
-  	  if(MultilevelDataAuthorityUtil.isEnabled()) {
-       	 //联社模式
-       	  //根据选择的账套组，查询出它们的所属机构
-  		  param.put("institutionlist", LoginUserUtil.getTreeInstCode());
-  	  }
-    	return super.queryForPageForSelectReturn(page,length,()->mapper.selectBatchGroup(param));
+        return super.queryForPageForSelectReturn(page,length,()->mapper.selectBatchGroup(param));
     }
 
     /**
@@ -425,17 +327,10 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      */
     public Page<SelectOptionDto> getBooksetIdNew(int page,int length,Map<String, Object> param) {
         param.put("booksetType", DictCodeList.账套类别_理财账套.getValue());
-        param.put("userId", LoginUserUtil.getUserName());
         return super.queryForPageForSelectReturn(page,length,()->mapper.getBooksetIdForSelect(param));
     }
 
-    /**
-     * 账套代码
-     * @param
-     * @return
-     */
-    public List<SuggestDto> findProductGrp(Map<String, Object> param) {
-        param.put("userId", LoginUserUtil.getUserName());
-        return mapper.findProductGrp(param);
+    public List<SuggestDto> getBooksetIdsByGroups(Map<String, Object> params) {
+        return mapper.getBooksetIdsByGroups(params);
     }
 }
