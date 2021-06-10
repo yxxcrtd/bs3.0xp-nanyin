@@ -42,6 +42,11 @@ public class ComRateSwapInformationValidator implements BeanValidator {
 		 */
         //未输入曲线品种或曲线日期则返回
         if(dto.getCurveType() == null || dto.getCurveDate() == null) {
+        	//流程校验
+        	Boolean wflFlag = comRateSwapInformationService.checkBusinessDataInFlow(dto);
+        	if(wflFlag) {
+        		errorList.add(new ValidMessage("存在流程中数据"));
+        	}
         	return errorList;
         }
 //        //验证是否存在流程中数据
@@ -50,8 +55,18 @@ public class ComRateSwapInformationValidator implements BeanValidator {
         //验证数据库中是否存在与操作数据相同的数据
         boolean flag = comRateSwapInformationService.check(dto);
         if (StringUtil.equals(dto.getOperateType(), "delete")){
+        	//流程校验
+        	Boolean wflFlag = comRateSwapInformationService.checkBusinessDataInFlow(dto);
+        	if(wflFlag) {
+        		errorList.add(new ValidMessage("存在流程中数据"));
+        	}
             return errorList;
         }else if (StringUtil.equals(dto.getOperateType(), "edit")){
+        	//流程校验
+        	Boolean wflFlag = comRateSwapInformationService.checkBusinessDataInFlow(dto);
+        	if(wflFlag) {
+        		errorList.add(new ValidMessage("存在流程中数据"));
+        	}
             //编辑时验证数据库中是否存在对应数据
             if (!flag){
                 errorList.add(new ValidMessage(this.getMessage("COM_RateSwapInfo_0003")));
@@ -65,6 +80,11 @@ public class ComRateSwapInformationValidator implements BeanValidator {
                 errorList.add(new ValidMessage(this.getMessage("MST_RateSwapInfo_0006")));
                 return errorList;
             }
+          //流程校验
+        	Boolean wflFlag = comRateSwapInformationService.checkBusinessDataInFlow(dto);
+        	if(wflFlag) {
+        		errorList.add(new ValidMessage("存在流程中数据"));
+        	}
 //            WflValidInputParameter parameter = new WflValidInputParameter();
 //            parameter.setPageId("RateSwapInformation002");
 //            parameter.setBusinessDataPk1(dto.getCurveCode());
