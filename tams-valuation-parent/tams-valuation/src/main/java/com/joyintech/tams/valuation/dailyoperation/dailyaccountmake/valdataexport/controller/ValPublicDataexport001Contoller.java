@@ -65,11 +65,11 @@ public class ValPublicDataexport001Contoller extends BaseController {
     /**
      * 接口平台组号
      */
-    private static String INTERF_PLACE_GPCODE = "gpcode";
+    private static String INTERF_PLACE_GPCODE = "gpcodehc";
     /**
      * 接口平台触发器编号
      */
-    private static String INTERF_PLACE_TGCODE = "tgcode";
+    private static String INTERF_PLACE_TGCODE = "tgcodehc";
 
     private static String sysDate ;
 
