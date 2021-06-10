@@ -261,10 +261,11 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                             getMessage("BussRepFinProductInfo.repOutDepCtry"))));
                 }
                 else {
-                    if (StringUtil.indexOf(dto.getRepOutDepCtry(),
+                    if (StringUtil.equals(dto.getRepInvestArea(),
+                            DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(dto.getRepOutDepCtry(),
                         DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
                         resultList.add(
-                            new ValidMessage("repOutDepCtry", getMessage("REP_E_0007")));
+                            new ValidMessage("repOutDepCtry", getMessage("REP_E_0008")));
                     }
                 }
                 // 境外托管机构名称
