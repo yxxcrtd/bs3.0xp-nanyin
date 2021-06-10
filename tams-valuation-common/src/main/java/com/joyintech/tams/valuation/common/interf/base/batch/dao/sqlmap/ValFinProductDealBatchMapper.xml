@@ -55,7 +55,7 @@
         <!-- add by wujie on 20190420 start -->
         <result column="PAY_DATE" property="payDate" jdbcType="DATE" />
         <!-- add by wujie on 20190420 end -->
-        
+
         <result column="B_TRADE_ID" property="bTradeId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
@@ -101,6 +101,7 @@
         ,PAY_DATE
         <!-- add by wujie on 20190420 end -->
         ,B_TRADE_ID
+        ,ACCR_NUM
         )
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close=" from dual)">
@@ -127,6 +128,7 @@
             ,#{item.payDate,jdbcType=DATE}
             <!-- add by wujie on 20190420 end -->
             ,#{item.bTradeId,jdbcType=VARCHAR}
+            ,#{item.accrNum,jdbcType=DECIMAL}
         </foreach>
     </insert>
 
