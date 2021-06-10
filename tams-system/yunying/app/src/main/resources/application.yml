@@ -229,6 +229,7 @@ application:
       commonBasicDataService: http://127.0.0.1:${server.port}/tamsyy
       exchangeService: http://127.0.0.1:${server.port}/tamsyy
       quoteService: http://127.0.0.1:${server.port}/tamsyy
+      valuationBasicdataService: http://127.0.0.1:${server.port}/tamsyy
 # 使用服务注册中心的方式
 #  loadbalance: true
 #  micorservice:

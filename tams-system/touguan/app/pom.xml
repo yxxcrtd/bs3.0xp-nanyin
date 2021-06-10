@@ -53,6 +53,10 @@
 					<artifactId>service-valuation</artifactId>
 					<groupId>com.joyintech</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>service-valuation-basicdata</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 

@@ -55,7 +55,7 @@ public class ComExchangeQuotationInfo002Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.货币对,DictCode.估值来源);
+        this.setSelectOptionToModel(model, DictCode.货币对,DictCode.估值来源,DictCode.基准汇率行情类型,DictCode.基准汇率期限);
         String exchargeCode = getParam("exchargeCode");
         String tradeDate = getParam("tradeDate");
         String workflowId = getParam("workflowId");

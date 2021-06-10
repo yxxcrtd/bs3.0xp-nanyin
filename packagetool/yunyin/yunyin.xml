@@ -42,6 +42,7 @@
         <module>../../microservice/service-pbc</module>
         <module>../../microservice/service-svrcom</module>
         <module>../../microservice/service-valuation</module>
+        <module>../../microservice/service-valuation-basicdata</module>
 		<module>../../microservice/service-common-basicdata</module>
 		<module>../../microservice/tams-service-container</module>
 
@@ -56,6 +57,7 @@
         <module>../../tams-svreport-parent</module>
         <module>../../tams-valuation-parent</module>
         <module>../../tams-valuation-report</module>
+        <module>../../tams-valuation-basicdata</module>
         <module>../../tams-system/yunying/app</module>
 
         <!-- 接口 -->

@@ -186,7 +186,18 @@
 					</exclusion>
 		    </exclusions>
         </dependency>
-
+		<!-- 估值资产管理画面端 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>tams-valuation-basicdata</artifactId>
+			<version>3.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<!-- 公共基础数据画面 -->
 		<dependency>
 			<groupId>com.joyintech</groupId>
