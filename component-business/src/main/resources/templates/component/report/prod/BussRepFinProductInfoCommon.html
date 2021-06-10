@@ -224,10 +224,11 @@
 							<label class="layui-form-label form-label-wrap"
 								data-th-text="#{BussRepFinProductInfo.shortTerm}">最短持有期限(天)</label>
 							<div class="layui-input-inline input-inline">
-								<input type="text" th:id="|${entityName}_shortTerm|"
+								<input th:id="|${entityName}_shortTerm|"
 									th:name="|${entityName}.shortTerm|"
-									class="layui-input form-input" maxlength="50"
+									class="layui-input form-input text-number" maxlength="50"
 									data-th-value="${entity?.shortTerm}" placeholder="请输入"
+								    data-textrange = "0"
 									data-th-required="(${pageId} neq 'FinProductModule002') and (${pageId} neq 'FinNetValueProductBuild002') and (${pageId} neq 'FinProductBuild002')" />
 							</div>
 						</div>
