@@ -10,12 +10,14 @@
  
 package com.joyintech.tams.valuation.valuationparametermanage.shadowpricescheme.dto;
 
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+@PageId("ShadowPriceScheme001")
 public class ShadowPriceScheme001Dto extends BaseEntity implements ProcessEntity{
 
 	/**
