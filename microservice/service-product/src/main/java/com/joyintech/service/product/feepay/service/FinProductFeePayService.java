@@ -183,6 +183,7 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
         map.put("profitType02", DictCodeList.收益类型_收益型.getValue());
         map.put("yes", DictCodeList.是否_是.getValue());
         map.put("feeType12", DictCodeList.费用品种类型_浮动管理费.getValue());
+        map.put("feeType99", DictCodeList.费用品种类型_其他费用.getValue());
 
         return finProductFeePayMapper.queryFeeInfoListEx(map);
     }
