@@ -574,12 +574,15 @@
 							<label class="layui-form-label form-label-wrap"
 								data-th-text="#{BussRepFinProductInfo.repInDepName}">境内托管机构名称</label>
 							<div class="layui-input-inline input-inline">
-								<input type="text" th:id="|${entityName}_repInDepName|"
-									th:name="|${entityName}.repInDepName|"
-									data-th-value="${entity?.repInDepName}" maxlength=120
-									class="layui-input form-input input-select" placeholder="请输入"
-									data-th-data-result="${SVR_IN_DEP_NAME}"
-									data-th-disabled="${entity?.repInvestArea} eq '02'">
+								<select th:id="|${entityName}_repInDepName|"
+										th:name="|${entityName}.repInDepName|"
+										data-th-value="${entity?.repInDepName}"
+										maxlength=120
+										class="layui-input form-input input-select"
+										data-th-data-result="${SVR_IN_DEP_NAME}"
+										placeholder="请输入内容"
+										data-th-disabled="${entity?.repInvestArea} eq '02'">
+								</select>
 							</div>
 						</div>
 						<div class="form-inline-wrap">
