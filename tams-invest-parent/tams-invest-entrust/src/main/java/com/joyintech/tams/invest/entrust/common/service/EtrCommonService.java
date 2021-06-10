@@ -337,6 +337,9 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if (StringUtil.isNotBlank(cellData)) {
             Map<String, Object> param = new HashMap<>();
             param.put("initValue", cellData);
+            if(cellData.contains(":")){
+            	param.put("initValue", cellData.split(":")[0]);
+            }
             param.put("page", 1);
             param.put("length", 20);
             Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
