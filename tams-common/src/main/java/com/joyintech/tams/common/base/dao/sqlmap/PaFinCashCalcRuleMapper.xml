@@ -37,7 +37,7 @@
     <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PaFinCashCalcRuleKey" >
         delete from PA_FIN_CASH_CALC_RULE
         where CASH_ID = #{cashId,jdbcType=VARCHAR}
-          /*and EFF_DATE = #{effDate,jdbcType=DATE}*//*工单问题 joyinzgcpsj20210608005*/
+          and EFF_DATE = #{effDate,jdbcType=DATE}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PaFinCashCalcRule" >
         insert into PA_FIN_CASH_CALC_RULE (CASH_ID, EFF_DATE, LOAD_RATE, 
