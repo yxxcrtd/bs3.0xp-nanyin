@@ -34,7 +34,7 @@
 		      </form>
 		    </div> 
 		    <div class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; overflow-y: scroll;" data-checkall="false"
-		    id='typeDatatree'  data-canedit='1' data-roottitle='数据类型'
+		    id='typeDatatree'  data-canedit='1' data-roottitle='接口一览'
 		    data-th-url='|@{/valuation/dailyoperation/dailyaccountmake/valdataexport/ValPublicDataexport001/getInterGroup}'></div>
 	    </div>
 	   	<div class="layui-col-md9" style="width: 78%">
@@ -51,23 +51,23 @@
 		         <div class="layui-inline layui-col-md3">
                     <label class="layui-form-label form-lable">日期</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="valDate" name="valDate" placeholder="请选择、支持区间"
-                                class="layui-input form-input input-dateRangeSelect" allowClear="true">
+                            <input type="text" id="valDate" name="valDate" placeholder="请输入内容"
+                                class="layui-input form-input input-dateSelect" allowClear="true">
                     </div>
                	</div>
                	<div class="layui-inline layui-col-md-offset2">
                                         <button class="layui-btn layui-btn-sm " id="ValPublicDataImport001_btn_doInterBtn"><i class="iconfont icon-execute"></i>执行</button>
-				    <button class="layui-btn layui-btn-sm  btn-default" id="ValPublicDataImport001_btn_stopInterBtn"><i class="iconfont icon-stopit"></i>终止</button>
+				    <!--<button class="layui-btn layui-btn-sm  btn-default" id="ValPublicDataImport001_btn_stopInterBtn"><i class="iconfont icon-stopit"></i>终止</button>-->
 				    <!-- <button class="layui-btn layui-btn-sm  btn-default" id="ValPublicDataImport001_btn_logBtn"><i class="iconfont icon-document"></i>执行日志</button> -->
                	</div>
 		    </div>
 			<div class="layui-tab layui-tab-card" >
 			    	<ul class="layui-tab-title">
 			          <li  id = "log-title" class="layui-this"><i class="iconfont icon-document"style="color:#13a7edd1"></i>日志</li>
-			          <li  id = "success-title"><i class="iconfont icon-circle-correct_fill" style="color:#17c347;"></i>成功</li>
+			          <!--<li  id = "success-title"><i class="iconfont icon-circle-correct_fill" style="color:#17c347;"></i>成功</li>
 		              <li  id = "error-title" ><i class="iconfont icon-circle-wrong_fill" style="color:#ff2236;"></i>失败</li>
 		              <li  id = "warning-title" ><i class="iconfont icon-sigh_fill" style="color:#ebef00d1;"></i>警告</li>
-		              <li  id = "eWarning-title" ><i class="iconfont icon-risk_fill" style="color:#1724c3;"></i>预警信息</li>
+		              <li  id = "eWarning-title" ><i class="iconfont icon-risk_fill" style="color:#1724c3;"></i>预警信息</li>-->
 			        </ul>
 			        <div class="layui-tab-content" >
 				        <div class="layui-tab-item layui-show">

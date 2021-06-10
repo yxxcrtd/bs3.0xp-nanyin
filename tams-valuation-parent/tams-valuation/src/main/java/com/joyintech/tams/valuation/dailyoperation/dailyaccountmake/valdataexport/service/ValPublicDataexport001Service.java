@@ -1,21 +1,12 @@
 package com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataexport.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.common.interf.base.constant.DictCodeInterfList;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
@@ -23,12 +14,22 @@ import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataexpor
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataimport.dto.ValInterflogExt;
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataimport.dto.ValPublicDataImport001Dto;
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataimport.dto.ValPublicDataImport001LogDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ValPublicDataexport001Service extends CommonExportService<ValPublicDataImport001Dto>{
-	
-	
+
+	private static final String INTERF_PLACE_URL = "url_interf_place";
+
 	@Autowired
 	private ValPublicDataexport001Mapper valPublicDataexport001Mapper;
 	
@@ -70,9 +71,27 @@ public class ValPublicDataexport001Service extends CommonExportService<ValPublic
 	 */
 	public List<ValPublicDataImport001LogDto> getInterActionLog(Map<String, Object> params){
 //		return valPublicDataexport001Mapper.getInterActionLog(params);
-		return restTemplate.postForList(
+		/*return restTemplate.postForList(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValPublicDataexport001/findLogPage",
-                params, ValPublicDataImport001LogDto.class);
+                params, ValPublicDataImport001LogDto.class);*/
+		List<ValPublicDataImport001LogDto>  list = new ArrayList<ValPublicDataImport001LogDto>();
+		AjaxResult result = restTemplate.postForObject(getUrl("04"), params, AjaxResult.class);
+		if(StringUtil.isNotEmpty(result)&&StringUtil.isNotEmpty(result.getData())) {
+			List<Map> resultData = (List<Map>)result.getData();
+			resultData.forEach((map)->{
+				ValPublicDataImport001LogDto dto = new ValPublicDataImport001LogDto();
+				dto = BeanUtil.mapToObject(map, ValPublicDataImport001LogDto.class);
+				dto.setTaskCname(map.get("rtname").toString());
+				dto.setStatus(map.get("runmsg").toString());
+				dto.setDetailAction(map.get("errormsg").toString());
+				dto.setBusiDate((String)params.get("queryDate"));
+				dto.setLastTime(ArithmeticUtil.divide(new BigDecimal(map.get("runtime").toString()),new BigDecimal("1000"),3));
+				dto.setStartTime(DateUtil.parse((String)map.get("sttime")));
+				dto.setEndTime(DateUtil.parse((String)map.get("edtime")));
+				list.add(dto);
+			});
+		}
+		return list;
 	}
 	
 	/**
@@ -82,9 +101,10 @@ public class ValPublicDataexport001Service extends CommonExportService<ValPublic
 	 */
 	public int stopInterLog(Map<String, Object> params){
 //		return valPublicDataexport001Mapper.stopInterLog(params);
-		return restTemplate.postForObject(
+		/*return restTemplate.postForObject(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValPublicDataexport001/stopInterLog",
-                params, int.class);
+                params, int.class);*/
+		return 0;
 	}
 	
 	
@@ -95,9 +115,10 @@ public class ValPublicDataexport001Service extends CommonExportService<ValPublic
 	 */
 	public int checkInterLog(Map<String, Object> params){
 //		return valPublicDataexport001Mapper.checkInterLog(params);
-		return restTemplate.postForObject(
+		/*return restTemplate.postForObject(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValPublicDataexport001/runAs",
-                params, int.class);
+                params, int.class);*/
+		return 0;
 	}
 	
 	/**
@@ -193,4 +214,50 @@ public class ValPublicDataexport001Service extends CommonExportService<ValPublic
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValPublicDataexport001/checkExecute",
                 map, int.class);
     }
+
+	public AjaxResult runAs(Map<String, Object> map) {
+
+		AjaxResult result = restTemplate.postForObject(getUrl("02"), map, AjaxResult.class);
+
+		return 	result;
+	}
+
+	private String getUrl(String infType) {
+		String url = CacheUtil.getSysParam(INTERF_PLACE_URL);
+
+//		String url="http://192.168.10.200:1666/bridge/datarouter/http/json";
+		if(StringUtil.equals(infType,"01")) {
+			//查询文件接口
+			url = url+"/listRouterByGroupAndTrigger";
+		}else if(StringUtil.equals(infType,"02")) {
+			//执行接口
+			url = url+"/callTrigger";
+		}else if(StringUtil.equals(infType,"03")) {
+			//日志接口POST
+			url = url+"/getTriggerExecuteInfo";
+		}else if(StringUtil.equals(infType,"04")) {
+			//明细日志接口
+			url = url+"/listTriggerExecuteRouterInfo";
+		}
+		return url;
+	}
+
+	public List<TreeNode> getTreeNodeList2(Map<String,Object> params){
+		AjaxResult result = restTemplate.postForObject(getUrl("01"), params, AjaxResult.class);
+		List<TreeNode> res = new ArrayList<>();
+		if(StringUtil.isNotEmpty(result)&&StringUtil.isNotEmpty(result.getData())) {
+			List<Map> list = (List<Map>) result.getData();
+			list.forEach((en) -> {
+				TreeNode node = new TreeNode();
+				node.setId((String) en.get("id"));
+				node.setpId((String) en.get("pid"));
+				node.setName((String) en.get("name"));
+				if (StringUtil.equals((String) en.get("type"), "1")) {
+					node.setParent(true);
+				}
+				res.add(node);
+			});
+		}
+		return res;
+	}
 }

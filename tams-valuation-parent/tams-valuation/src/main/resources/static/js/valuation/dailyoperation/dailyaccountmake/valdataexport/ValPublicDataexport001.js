@@ -9,15 +9,37 @@ $(function () {
 	var time = 5000;
 	//轮询启动接口ID
 	var interId;
-
+	//每次执行的流水号
+	var preseqno = "";
 	/**
 	 * 获取查询参数
 	 */
 	var getSearchParams = function() {
-		return {exDate : $.trim(excuteDate),
+		var pageParam = {queryDate : $.trim($("#valDate").val()),
 			status : status,
 			execTaskId : $.trim(execTaskId)
 		}
+		var treeObj=$.fn.zTree.getZTreeObj("typeDatatree_tree"),
+			nodes=treeObj.getCheckedNodes(true),
+			datas = "";
+		for(var i=0;i<nodes.length;i++){
+			if(nodes[i].check_Child_State==-1){
+				datas+=nodes[i].id + ",";
+			}
+		}
+		pageParam.datas = datas;
+		if (pageParam.booksetId) {
+			var booksetIdList = pageParam.booksetId,
+				booksetIds="";
+			for(var i=0;i<booksetIdList.length;i++){
+				if(booksetIdList[i].selected){
+					booksetIds+=booksetIdList[i].object + ",";
+				}
+			}
+		}
+		pageParam.booksetId = booksetIds;
+		pageParam.preseqno = preseqno;
+		return pageParam;
 	};
 
 	var getTreeParams = function(){
@@ -31,7 +53,7 @@ $(function () {
 
 	$('#typeDatatree').joyinMixTree({
 		onTreeLoadSuccess: function() {
-			$.fn.zTree.getZTreeObj('typeDatatree_tree').expandAll(false);
+			$.fn.zTree.getZTreeObj('typeDatatree_tree').expandAll(true);
 			$.fn.zTree.getZTreeObj('typeDatatree_tree').checkAllNodes(true);
 		}
 	});
@@ -161,9 +183,10 @@ $(function () {
 
 	//发送启动命令
 	var doInter = function (){
-		var booksetId=$.trim($('#booksetId').val());
-		var startDate = $.trim($('#valDate').startDate());
-		var endDate = $.trim($('#valDate').endDate());
+		preseqno = "";
+		var booksetId=$('#booksetId').val();
+		var startDate = $('#valDate').val();
+		var endDate = $('#valDate').val();
 
 		var treeObj=$.fn.zTree.getZTreeObj("typeDatatree_tree"),
 			nodes=treeObj.getCheckedNodes(true),
@@ -189,10 +212,10 @@ $(function () {
 				if(msg>0){
 					layer.alert('当前正在进行登帐，请稍后再试!!');
 					return;
-				}else if(msg<0){
+				}/*else if(msg<0){
 					layer.alert('请选择账套!!');
 					return;
-				}
+				}*/
 				else{
 					Joyin.ajax('runAs',
 						{
@@ -203,8 +226,10 @@ $(function () {
 
 						},
 						function(data) {
-							var result = JSON.parse(data);
-							if(result.isCheck==1){
+							var result = data.data;
+							preseqno = result.preseqno;
+							$('#log-title').click();
+							/*if(result.isCheck==1){
 								//再次执行启动前停止上一次轮询
 								stopInterval();
 								//成功调用轮询
@@ -222,7 +247,7 @@ $(function () {
 							}else{
 								layui.layer.alert("发送启动请求失败");
 
-							}
+							}*/
 						});
 				}
 			},
@@ -344,12 +369,12 @@ $(function () {
 		var date = $('#valDate').val();
 		var nowDate = new Date(Date.parse(sysDate));
 		var chooseDate = new Date(Date.parse(date));
-		if(nowDate>chooseDate){
+		/*if(nowDate>chooseDate){
 			layui.layer.alert("选择日期小于平台日，请判断是否影响已生成账务信息，若影响需要调整账套会计日期，重新进行登账批处理");
 		}else if(nowDate<chooseDate){
 			layui.layer.alert("选择日期必须小于等于平台日");
 			$('#valDate').val(sysDate);
-		}
+		}*/
 	}
 
 	var clickFlag = true;
@@ -420,6 +445,6 @@ $(function () {
 
 function serachKey(){
 	$('#typeDatatree').reloadTree({
-		TmpCName: $('#TmpCName').val()
+		name: $('#TmpCName').val()
 	});
 }

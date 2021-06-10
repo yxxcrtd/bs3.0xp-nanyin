@@ -9,30 +9,31 @@
 */
 package com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataexport.controller;
 
-import java.io.IOException;
-import java.util.*;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.TreeNode;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
+import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valaccounthandle.service.ValAccountHandle001Service;
+import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataexport.service.ValPublicDataexport001Service;
+import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataimport.dto.ValPublicDataImport001LogDto;
+import com.joyintech.tams.valuation.interf.inertfStartUp.service.ValInertfStartUp001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.JsonObject;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
-import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valaccounthandle.service.ValAccountHandle001Service;
-import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataexport.service.ValPublicDataexport001Service;
-import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valdataimport.dto.ValPublicDataImport001LogDto;
-import com.joyintech.tams.valuation.interf.inertfStartUp.service.ValInertfStartUp001Service;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 模板示例<br>
@@ -58,6 +59,28 @@ public class ValPublicDataexport001Contoller extends BaseController {
 	private ValAccountHandle001Service valAccountHandle001Service;
     @Autowired
     private InterfCommonService interfCommonService;
+
+
+    //add  by zhangnian  20210609 start
+    /**
+     * 接口平台组号
+     */
+    private static String INTERF_PLACE_GPCODE = "gpcode";
+    /**
+     * 接口平台触发器编号
+     */
+    private static String INTERF_PLACE_TGCODE = "tgcode";
+
+    private static String sysDate ;
+
+    private static String gpcode ;
+
+    private static String trigger ;
+
+    @Autowired
+    private IPlatformDate iPlatformDate;
+
+    //add  by zhangnian  20210609 end
 	
     
     /**
@@ -88,6 +111,13 @@ public class ValPublicDataexport001Contoller extends BaseController {
 //            sysDate=DateUtil.format(new Date());
 //        }
 //        model.addAttribute("sysDate", sysDate);
+        gpcode = CacheUtil.getSysParam(INTERF_PLACE_GPCODE);
+        trigger = CacheUtil.getSysParam(INTERF_PLACE_TGCODE);
+        sysDate= iPlatformDate.getSysDateStr();
+        if(sysDate==null||"".equals(sysDate)){
+            sysDate=DateUtil.format(new Date());
+        }
+        model.addAttribute("sysDate", sysDate);
         return super.init(model);
     }
     
@@ -102,11 +132,15 @@ public class ValPublicDataexport001Contoller extends BaseController {
     @RequestMapping("/getInterGroup")
     @ResponseBody
     public List<TreeNode> getInterGroup(){
-    	Map<String,Object> map = RequestUtil.getPageParam();
+    	/*Map<String,Object> map = RequestUtil.getPageParam();
     	map.put("batchName", getParam("TmpCName"));
     	map.put("taskGrpType", InterfFlag);
     	List<TreeNode> treeList = valAccountHandle001Service.getTreeNodeList(map);
-    	return treeList;
+    	return treeList;*/
+        Map<String,Object> map = RequestUtil.getPageParam();
+        map.put("gpcode",gpcode);
+        map.put("trigger",trigger);
+        return valPublicDataexport001Service.getTreeNodeList2(map);
     }
     
     @RequestMapping("/getInterGroupCode")
@@ -122,7 +156,7 @@ public class ValPublicDataexport001Contoller extends BaseController {
     @RequestMapping("/findLogPage")
     @ResponseBody
     public List<ValPublicDataImport001LogDto> findLogPage(){
-    	List<ValPublicDataImport001LogDto>  list = new ArrayList<>();
+    	/*List<ValPublicDataImport001LogDto>  list = new ArrayList<>();
     	Map<String,Object> map = RequestUtil.getPageParam();
     	//map.put("createDate", DateUtil.parse("20180815"));
     	map.put("status", this.getParam("status"));
@@ -131,7 +165,13 @@ public class ValPublicDataexport001Contoller extends BaseController {
         	map.put("createDate", new Date(Long.valueOf(map.get("exDate").toString())));
     		list = valPublicDataexport001Service.getInterActionLog(map);
     	}
-    	return list;
+    	return list;*/
+        List<ValPublicDataImport001LogDto>  list = new ArrayList<>();
+        Map<String,Object> map = RequestUtil.getPageParam();
+        map.put("gpcode",gpcode);
+        map.put("trigger",trigger);
+        map.put("predate",sysDate);
+        return valPublicDataexport001Service.getInterActionLog(map);
     }
     
     
@@ -152,9 +192,9 @@ public class ValPublicDataexport001Contoller extends BaseController {
      */
     @RequestMapping("runAs")
     @ResponseBody
-    public String runAs()
+    public AjaxResult runAs()
         throws IOException {
-        JsonObject json = new JsonObject();
+        /*JsonObject json = new JsonObject();
         int check = 0;
 		Date date = new Date();
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -177,7 +217,30 @@ public class ValPublicDataexport001Contoller extends BaseController {
         json.addProperty("createDate", date.getTime());
         json.addProperty("execTaskId", execTaskId);
         
-        return json.toString();
+        return json.toString();*/
+        Map<String,Object> map = RequestUtil.getPageParam();
+        Map<String,Object> params = new HashMap<>();
+        Map<String,Object> parameter = new HashMap<>();
+        Object prodIdObj = map.get("booksetId");
+        if(StringUtil.isNotEmpty(prodIdObj)) {
+            parameter.put("booksetList",((String)prodIdObj).split(GlobalConstant.COMMA));
+        }else{
+            parameter.put("booksetList",new String []{});
+        }
+        Object dataObj = map.get("datas");
+        if(StringUtil.isNotEmpty(dataObj)) {
+            params.put("routers",((String)dataObj).split(GlobalConstant.COMMA));
+        }else{
+            params.put("routers",new String []{});
+        }
+        parameter.put("queryDate",map.get("startDate"));
+        params.put("parameter",parameter);
+        params.put("async",true);
+        params.put("predate",sysDate);
+        params.put("preseqno", interfCommonService.getUUid());
+        params.put("gpcode",gpcode);
+        params.put("trigger",trigger);
+        return valPublicDataexport001Service.runAs(params);
     }
   
 }

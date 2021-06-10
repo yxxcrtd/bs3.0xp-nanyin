@@ -70,7 +70,7 @@ public class ValPublicDataImport001LogDto extends BaseEntity{
 	}
 	
 	public String getStartTimeFmt(){
-		return DateUtil.format(startTime, "HH:mm:ss SSS");
+		return DateUtil.format(startTime, "HH:mm:ss");
 	}
 	
 	public String getStartDateFmt(){
@@ -86,7 +86,7 @@ public class ValPublicDataImport001LogDto extends BaseEntity{
 	}
 	
 	public String getEndTimeFmt(){
-		return DateUtil.format(endTime, "HH:mm:ss SSS");
+		return DateUtil.format(endTime, "HH:mm:ss");
 	}
 
 	public void setEndTime(Date endTime) {
