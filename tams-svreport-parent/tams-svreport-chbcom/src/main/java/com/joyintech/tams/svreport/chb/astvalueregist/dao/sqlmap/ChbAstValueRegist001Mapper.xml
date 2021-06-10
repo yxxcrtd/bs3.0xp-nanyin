@@ -159,9 +159,14 @@
 				and to_char(CAVS.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="sendStatusList != null and sendStatusList.size()>0">
-				<foreach collection="sendStatusList" item="item" open="and (CS.SEND_STATUS in(" separator="," close=") or cs.send_status is null)">
+				and (
+				<foreach collection="sendStatusList" item="item" open="CS.SEND_STATUS in(" separator="," close=") ">
 				#{item,jdbcType=VARCHAR}
 				</foreach>
+				<if test="notSubmitStatus != null and !notSubmitStatus.isEmpty() and notSubmitStatus.equals('01')">
+					or cs.send_status is null
+				</if>
+				)
 			</if>
 			<if test="statusList != null and statusList.size()>0">
 				<foreach collection="statusList" item="item" open="and CAVS.STATUS in(" separator="," close=")">
@@ -260,9 +265,14 @@
 					and to_char(CAVS.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
 				</if>
 				<if test="sendStatusList != null and sendStatusList.size()>0">
-				<foreach collection="sendStatusList" item="item" open="and (CS.SEND_STATUS in(" separator="," close=") or cs.send_status is null)">
+					and (
+				    <foreach collection="sendStatusList" item="item" open="CS.SEND_STATUS in(" separator="," close=") ">
 					#{item,jdbcType=VARCHAR}
 					</foreach>
+					<if test="notSubmitStatus != null and !notSubmitStatus.isEmpty() and notSubmitStatus.equals('01')">
+						or cs.send_status is null
+					</if>
+					)
 				</if>
 				<if test="statusList != null and statusList.size()>0">
 					<foreach collection="statusList" item="item" open="and CAVS.STATUS in(" separator="," close=")">

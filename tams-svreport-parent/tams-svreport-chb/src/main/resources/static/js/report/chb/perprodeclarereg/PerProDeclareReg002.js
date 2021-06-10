@@ -30,7 +30,7 @@
     				if(ext!='zip'){
     					flag=false;
     				}
-    				obj.targetFile = obj.targetFile.absoluteFile;
+    				obj.targetFile = obj.fileName;
     			});
     			if(!flag){
     				Joyin.error("选择的文件中包含不支持的格式，支持的格式为zip文件！");

@@ -294,6 +294,13 @@ application:
 
 #交易压力测试性能优化开关
 flag: false
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://ip:8084进行批处理缓存更新
+url:
+  batch: http://127.0.0.1:8084/main/about/refreshCache
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
 
 ---
 spring:
@@ -352,9 +359,9 @@ wind:
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: ZHONGZHAI_20210303_WDB
-    password: ZHONGZHAI_20210303_WDB
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810_123
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -414,8 +421,8 @@ wind:
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: ZHONGZHAI_20210303_WDB
-    password: ZHONGZHAI_20210303_WDB
+    username: zgtams0810
+    password: zgtams0810_123
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG
@@ -443,13 +450,4 @@ tx-lcn:
     managerAddress: 192.168.90.197:8070
 
 
-# 温州 APP 消息推送接口配置，默认 false
-workflow:
-  isSentMessage: false
-  serviceName: messageService
-
-
-#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
-url:
-  batch: http://localhost:8084/main/about/refreshCache
 

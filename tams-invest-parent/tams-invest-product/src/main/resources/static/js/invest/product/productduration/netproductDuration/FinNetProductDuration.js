@@ -756,7 +756,7 @@ $(function() {
 		   		 expireLayerProfitSum = JoyinMath.doAdd(expireLayerProfitSum, table[i].expireLayerProfit, 2, JoyinMath.ROUND_HALF_UP);
 		   		 expireLayerCostValueSum = JoyinMath.doAdd(expireLayerCostValueSum, table[i].expireLayerCost, 2, JoyinMath.ROUND_HALF_UP);
 		    	}
-			   	$('#expireDealAmt').val(expireDealLayerAmtSum).trigger("change");
+			   	$('#expireDealAmt').val(expireDealLayerAmtSum).trigger('blur');
 			   	$('#expireDealNum').val(expireDealLayerNumSum);
 //			   	$('#redDealAmt').val(expireLayerProfitSum).trigger("change");
 //			   	$('#redTotalNetValue').val(redTotalNetLayerValueSum);

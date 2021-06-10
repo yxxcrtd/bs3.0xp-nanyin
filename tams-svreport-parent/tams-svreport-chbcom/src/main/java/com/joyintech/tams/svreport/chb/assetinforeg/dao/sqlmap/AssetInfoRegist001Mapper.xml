@@ -3505,7 +3505,10 @@
             		open=" CS.SEND_STATUS IN (" close=")" separator=",">
              		#{submitStatus,jdbcType=VARCHAR}
             	</foreach>
-            	 or CS.SEND_STATUS IS NULL)
+				<if test="notSubmitStatus != null and !notSubmitStatus.isEmpty() and notSubmitStatus.equals('01')">
+					or CS.SEND_STATUS IS NULL
+				</if>
+            	 )
 		 	</if>
 			<!-- edit by wangqidong 20191125   start -->
 <!-- 			<if test="submitFeedbackStatus != null and !submitFeedbackStatus.isEmpty() "> -->
@@ -3840,7 +3843,10 @@
             		open=" CS.SEND_STATUS IN (" close=")" separator=",">
              		#{submitStatus,jdbcType=VARCHAR}
             	</foreach>
-            	 or CS.SEND_STATUS IS NULL)
+				<if test="notSubmitStatus != null and !notSubmitStatus.isEmpty() and notSubmitStatus.equals('01')">
+					or CS.SEND_STATUS IS NULL
+				</if>
+            	 )
 		 	</if>
 			<!-- edit by wangqidong 20191125   start -->
 <!-- 			<if test="submitFeedbackStatus != null and !submitFeedbackStatus.isEmpty() "> -->

@@ -123,6 +123,12 @@ public class MstMarketInstitutionsValidator implements BeanValidator {
                             }
                         }
                     }
+                    //是否集团客户为是，必填所属集团客户名称
+                    if(StringUtil.isNotBlank(dto.getIsGroupCustomer())
+                        && StringUtil.equals(dto.getIsGroupCustomer(),DictCodeList.是否_是.getValue())
+                            && StringUtil.isBlank(dto.getParentCustomerName())){
+                        errorList.add(new ValidMessage("是否集团客户为是,所属集团客户名称不能为空！"));
+                    }
                 }
                 else if (StringUtil.equals(dto.getPageModel(),
                     GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {

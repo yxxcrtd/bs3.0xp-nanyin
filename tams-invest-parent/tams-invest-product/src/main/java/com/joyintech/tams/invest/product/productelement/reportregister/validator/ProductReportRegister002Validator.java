@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -368,8 +369,8 @@ public class ProductReportRegister002Validator implements BeanValidator {
 					validList.add(new ValidMessage("repOutDepCtry",
 							getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repOutDepCtry"))));
 				} else {
-					if (StringUtil.indexOf(entity.getRepOutDepCtry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
-						validList.add(new ValidMessage("repOutDepCtry", getMessage("REP_E_0007")));
+					if (StringUtil.equals(entity.getRepInvestArea(), DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(entity.getRepOutDepCtry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
+						validList.add(new ValidMessage("repOutDepCtry", getMessage("REP_E_0008")));
 					}
 				}
 				// 境外托管机构名称
@@ -431,6 +432,12 @@ public class ProductReportRegister002Validator implements BeanValidator {
         		&& (StringUtil.equals(entity.getRepOperateMode(), "03") || StringUtil.equals(entity.getRepOperateMode(),"04") )) {
             validList.add(new ValidMessage("请输入是否现金管理类"));
         }
+
+		//发行机构代码必须与银行代码相同
+		if (!StringUtil.isNotEmpty(entity.getRepIssuePartyId())
+				&& StringUtil.equals(entity.getRepIssuePartyId(), CommonUtil.selectBankCode())) {
+			validList.add(new ValidMessage("发行机构代码必须与银行代码相同。"));
+		}
 
 		 validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
 

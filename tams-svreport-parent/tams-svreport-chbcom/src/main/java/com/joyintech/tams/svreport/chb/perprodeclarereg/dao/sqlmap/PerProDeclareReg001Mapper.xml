@@ -1023,7 +1023,7 @@
 	sub.YIELD ,
 	sub.INVEST_FEE_RATE,
 	sub.status status,
-	sub.IS_FHXGCP isFhxgcp
+	sub.IS_FHXGCP
 	from CHB_PRD_DECLARE_SUB sub
 	where sub.send_status in ('02','03')
 	<if test="list!=null and list.size()!=0">

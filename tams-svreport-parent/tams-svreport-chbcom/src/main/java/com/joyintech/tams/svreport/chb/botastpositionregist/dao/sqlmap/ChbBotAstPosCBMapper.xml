@@ -119,6 +119,8 @@
 		<if test="InstitutionCode != null and InstitutionCode != '' ">
 			left join chb_asset_info_sub csb on csb.ASSET_CODE=POS.ASSET_CODE
 			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+			left join data_auth_notify_inst dis on (dis.business_id=POS.PLAN_ASSET_ID or dis.business_id='F28_'||POS.PLAN_ASSET_ID)
+			and dis.model_type = '02' AND dis.DATA_TYPE in ('FINASSET12','PTL01')
 		</if>
 		WHERE to_char(POS.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		<if test="ischbbtm != null and ischbbtm == '02'">
@@ -126,6 +128,7 @@
 		</if>
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
 			AND CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+			and dis.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
 		</if>
 		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB 
 			where SUB.POS_DATE = POS.POS_DATE
@@ -164,6 +167,8 @@
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
 			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
 			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+			left join data_auth_notify_inst dis on (dis.business_id=sub.PLAN_ASSET_ID or dis.business_id='F28_'||sub.PLAN_ASSET_ID)
+			and dis.model_type = '02' AND dis.DATA_TYPE in ('FINASSET12','PTL01')
 		</if>
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
@@ -174,6 +179,7 @@
 				or (POS.POS_AMT is not null and SUB.POS_AMT &lt;&gt; POS.POS_AMT))
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
 			AND CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+			and dis.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
 		</if>
 		union all
 		SELECT
@@ -196,11 +202,14 @@
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
 			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
 			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+			left join data_auth_notify_inst dis on (dis.business_id=sub.PLAN_ASSET_ID or dis.business_id='F28_'||sub.PLAN_ASSET_ID)
+			and dis.model_type = '02' AND dis.DATA_TYPE in ('FINASSET12','PTL01')
 		</if>
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
 			AND CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+			and dis.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
 		</if>
 		and not exists  (
 		select 1 from CHB_BOT_AST_POS POS 
@@ -270,7 +279,9 @@
 				and c.regist_seqno in (select  d.regist_seqno from CHB_BOT_AST_POS_SUB d
 				left join chb_asset_info_sub csb on csb.ASSET_CODE=d.ASSET_CODE
 			    LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
-				where CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+				left join data_auth_notify_inst dis on (dis.business_id=d.PLAN_ASSET_ID or dis.business_id='F28_'||d.PLAN_ASSET_ID)
+				and dis.model_type = '02' AND dis.DATA_TYPE in ('FINASSET12','PTL01')
+				where CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and dis.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
 				)
 			</if>
 		</where>

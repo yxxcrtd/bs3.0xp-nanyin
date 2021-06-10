@@ -191,7 +191,8 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
                     this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
             }else if(dto.getRepInvTypeRat().contains("（") || dto.getRepInvTypeRat().contains("）") ||
-            		dto.getRepInvTypeRat().contains("：") || dto.getRepInvTypeRat().contains("；")) {
+            		dto.getRepInvTypeRat().contains("：") || dto.getRepInvTypeRat().contains("；")
+                    || !dto.getRepInvTypeRat().contains(":")  || !dto.getRepInvTypeRat().contains("%")) {
             	resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
                         this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
             }
@@ -260,10 +261,11 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                             getMessage("BussRepFinProductInfo.repOutDepCtry"))));
                 }
                 else {
-                    if (StringUtil.indexOf(dto.getRepOutDepCtry(),
+                    if (StringUtil.equals(dto.getRepInvestArea(),
+                            DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(dto.getRepOutDepCtry(),
                         DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
                         resultList.add(
-                            new ValidMessage("repOutDepCtry", getMessage("REP_E_0007")));
+                            new ValidMessage("repOutDepCtry", getMessage("REP_E_0008")));
                     }
                 }
                 // 境外托管机构名称
@@ -311,18 +313,18 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                         getMessage("BussRepFinProductInfo.repIsYieldBasis"))));
             }
             // 预计客户最高年收益率%
-            if (!StringUtil.isNotEmpty(dto.getRepHighYield())) {
-//                resultList.add(new ValidMessage("repHighYield", getMessage(
-//                    "BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repHighYield"))));
-            }
-            else {
-                if (dto.getRepHighYield().compareTo(BigDecimal.ZERO) < 0) {
-                    resultList.add(
-                        new ValidMessage("repHighYield", getMessage("BUSS_COM_E_0004",
-                            getMessage("BussRepFinProductInfo.repHighYield"), "0")));
-
-                }
-            }
+//            if (!StringUtil.isNotEmpty(dto.getRepHighYield())) {
+////                resultList.add(new ValidMessage("repHighYield", getMessage(
+////                    "BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repHighYield"))));
+//            }
+//            else {
+//                if (dto.getRepHighYield().compareTo(BigDecimal.ZERO) < 0) {
+//                    resultList.add(
+//                        new ValidMessage("repHighYield", getMessage("BUSS_COM_E_0004",
+//                            getMessage("BussRepFinProductInfo.repHighYield"), "0")));
+//
+//                }
+//            }
             // 平均预计客户年收益率
 //            if (!StringUtil.isNotEmpty(dto.getRepExpAvgYield())) {
 //                resultList.add(
@@ -582,11 +584,15 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                     resultList.add(new ValidMessage("repRiskType", getMessage("BUSS_COM_E_0038",
                         getMessage("BussRepFinProductInfo.repRiskType"))));
                 }
-                // 产品风险等级
-                if (!StringUtil.isNotEmpty(dto.getRepRiskLevel())) {
-                    resultList.add(new ValidMessage("repRiskLevel", getMessage("BUSS_COM_E_0038",
-                        getMessage("BussRepFinProductInfo.repRiskLevel"))));
-                }
+
+                //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  start
+//                 产品风险等级
+//                if (!StringUtil.isNotEmpty(dto.getRepRiskLevel())) {
+//                    resultList.add(new ValidMessage("repRiskLevel", getMessage("BUSS_COM_E_0038",
+//                        getMessage("BussRepFinProductInfo.repRiskLevel"))));
+//                }
+                //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  end
+
                 // 发行机构提前终止权标识
                 if (!StringUtil.isNotEmpty(dto.getRepTermRightFlag())) {
                     resultList.add(new ValidMessage("repTermRightFlag", getMessage("BUSS_COM_E_0038",

@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.svreport.chb.common.SvrDataStatusUtil;
@@ -1188,7 +1189,9 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	private ChbPrdDealSub genDto(ChbPrdDealSub dto){
 		ChbPrdDealSub genDto = new ChbPrdDealSub();
 		genDto.setProdId(dto.getProdId());
-		genDto.setIssuePartyId(dto.getIssuePartyId());
+		if(!MultilevelDataAuthorityUtil.isEnabled()){
+			genDto.setIssuePartyId(dto.getIssuePartyId());
+		}
 		genDto.setProdRegistCode(dto.getProdRegistCode());
 		genDto.setVdate(dto.getVdate());
 		genDto.setMdate(dto.getMdate());

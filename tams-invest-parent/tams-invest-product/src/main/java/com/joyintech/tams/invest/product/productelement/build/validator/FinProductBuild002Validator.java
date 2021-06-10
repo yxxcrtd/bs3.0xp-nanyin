@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.productelement.build.validator;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -74,6 +75,9 @@ public class FinProductBuild002Validator implements BeanValidator {
     @Autowired
     private FinProductBuild001Service finProductBuild001Service;
 
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+
     /**
      * {@linkplain}
      */
@@ -105,6 +109,13 @@ public class FinProductBuild002Validator implements BeanValidator {
             }
         }
 
+        //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  start
+        if (!StringUtil.isNotEmpty(entity.getRiskLevel())) {
+            validList.add(new ValidMessage("riskLevel",
+                    getMessage("BUSS_COM_E_0038", getMessage("FinProductBuild002.riskLevel"))));
+        }
+        //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  end
+        
         if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
 
             //报送信息页面托管费率和销售费率必填
@@ -1131,6 +1142,8 @@ public class FinProductBuild002Validator implements BeanValidator {
                  this.getMessage("BussFinProductSaleParam.sameOrg"))));
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
+
+        validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinProductBuild002", null, ValidMessage.class);
         return validList;
     }
 

@@ -11,7 +11,9 @@
         ajax: {
             url: 'findAllRole',
             type: 'POST',
-            data: {repId:$("#repId").val()}
+            data: function() {
+                return getPageParams();
+            }
         },
         cols:[
              {field:'workflowId', visible:false,fixed:true}

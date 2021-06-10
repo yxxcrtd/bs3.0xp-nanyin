@@ -35,7 +35,7 @@ import com.joyintech.system.base.entity.SysRole;
  *
  * @author huwei
  * @version 1.0 2018年11月06日
- * @see ReportMenuPowerConfig001
+ * @see ReportMenuPowerConfig002Controller
  * @since 1.0
  */
 @Controller
@@ -69,7 +69,7 @@ public class ReportMenuPowerConfig002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findAllRole")
     public List<SysRole> findAllRole() {
-        return reportMenuPowerConfig001Service.selectForPage();
+        return reportMenuPowerConfig001Service.selectForPage(RequestUtil.getPageParam());
 
     }
     

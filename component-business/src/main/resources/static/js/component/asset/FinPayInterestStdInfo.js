@@ -24,6 +24,11 @@
      * 是否还本计划生成计划回调付息计划
      */
     var iscallbackPayByRepay = false;
+    /**
+     * 是否修改 付息信息
+     * @type {boolean}
+     */
+    var isEditPayByRepay = false;
     var generationPlanTable = [];
     var getElementById = function(id,type) {
         if(type=="div"){
@@ -468,6 +473,7 @@
             var _row = generationPlanTable.getRow(0);
             row.maxTradeDate = _row ? _row.maxTradeDate : '';
             row.updateFlg = '01';
+            isEditPayByRepay = true;
         },
         beforeEditCell:function(preVal, field, rowData){
             if(rowData.updateFlg=='02'){
@@ -541,7 +547,6 @@
                 if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F07){
                       generationPlan(true);
                 }
-
             }
             if(field == "vdate"){
                 if(data.LAY_TABLE_INDEX-1<0){
@@ -554,9 +559,8 @@
                          generationPlan(true);
                     }
                 }
-                  
             }
-            
+            isEditPayByRepay = true;
         },
         done:function (tables, allData) {
             var obj = $('#generationPlanTable_div').find("td[data-field='operation']");
@@ -619,7 +623,6 @@
      * 明细查看
      */
     generationPlanTable.bind('click', '.config', function(data, index) {
-        //debugger;
         if(data.vdate==''|| data.vdate==null ||typeof data.vdate == 'undefined'||
                 data.mdate==''|| data.mdate==null ||typeof data.mdate == 'undefined'){
             Joyin.error('无法查看！');
@@ -669,6 +672,7 @@
         }
         generationPlanTable.removeRow(data);
         generationPlan(true);
+        isEditPayByRepay = true;
     });
 
     /**
@@ -899,6 +903,11 @@
             }else{
                 if(iscallback||flag){
                     initGenerationPlan(flag,callFinRepayment);
+                }else if(isEditPayByRepay){
+                    Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0098','付息'),function(){
+                        //callFinRepayment 调用还本计划公开接口方法
+                        initGenerationPlan(flag,callFinRepayment);
+                    });
                 }else{
                     Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0047'),function(){
                         //callFinRepayment 调用还本计划公开接口方法
@@ -907,7 +916,8 @@
                 }
             }
         }
-        iscallbackPayByRepay = false; 
+        iscallbackPayByRepay = false;
+        isEditPayByRepay = false;
     }
     /**
      * 生成计划前台check(js)
@@ -1401,7 +1411,6 @@
         //生成计划按钮
         getElementById("btn_generationPlan").click(function(){
             // modify by  20200903
-            generationPlanTable.clear();
 
             if(generationPlanCheck()){
                 Joyin.ajaxJson('/component/asset/FinPayInterestStdInfo/check', getPreviewParams(), function(result) {

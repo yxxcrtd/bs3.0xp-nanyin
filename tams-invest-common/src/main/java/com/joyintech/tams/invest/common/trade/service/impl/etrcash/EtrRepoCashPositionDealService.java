@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static com.joyintech.tams.invest.common.constant.BussinessConstant.XN_STANDARD_BOND_PRODID;
@@ -1087,7 +1088,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                     || StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
                     && StringUtil.equals(type6, DictCodeList.回购类型_质押式竞价回购.getValue())) {
                     etrSecPositionFlowDto.setFinprodId(XN_STANDARD_BOND_PRODID);
-                    etrSecPositionFlowDto.setAmount(etrEntrust.getEntrustAmt().negate());
+                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(), 债券面值, 2).negate());
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                 }else{
                     // 质押品的组合持仓流水
@@ -1151,7 +1152,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                     || StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
                     && StringUtil.equals(type6, DictCodeList.回购类型_质押式竞价回购.getValue())) {
                     etrSecPositionFlowDto.setFinprodId(XN_STANDARD_BOND_PRODID);
-                    etrSecPositionFlowDto.setAmount(etrEntrust.getEntrustAmt());
+                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(), 债券面值, 2));
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                 }else{
                     // 质押品的组合持仓流水

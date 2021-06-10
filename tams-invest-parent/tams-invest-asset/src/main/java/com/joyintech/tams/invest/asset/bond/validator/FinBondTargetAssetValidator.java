@@ -98,7 +98,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             boolean flag = true;
             if(null!=dto.getBusiFinBondRatingInfoDto()&&null!=dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
                 for(MstBondCreditRating dao :dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
-                    if(!DictCodeList.评级类型_主体评级.getValue().equals(dao.getoType())){
+                    if(DictCodeList.评级类型_主体评级.getValue().equals(dao.getoType())){
                         flag = false;
                         break;
                     }

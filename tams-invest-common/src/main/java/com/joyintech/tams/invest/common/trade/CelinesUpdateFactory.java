@@ -541,6 +541,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             prehapamt = creditLinesMapper.getPrehapamtForPingan(mapforprehapamt);
             //委托占用额度
             pierceTradeAmt = creditLinesMapper.getPierceTradeAmt(mapforprehapamt);
+            pierceTradeAmt = pierceTradeAmt == null ? BigDecimal.ZERO : pierceTradeAmt;
             //  hapCreditAmt=creditLines.getHapCreditAmt();
             // 已占用额度
             hapCreditAmt=creditLines.getHapCreditAmt().add(prehapamt==null?BigDecimal.ZERO:prehapamt);

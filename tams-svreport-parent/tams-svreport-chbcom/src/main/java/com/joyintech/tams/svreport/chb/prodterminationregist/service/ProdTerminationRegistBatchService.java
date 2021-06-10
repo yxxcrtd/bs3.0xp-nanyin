@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -60,7 +61,7 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
      */
     @Autowired
     private ChbCommonCheckService chbCommonCheckService;
-	/**
+    /**
      * 日志
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -348,7 +349,7 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
         for (ChbPrdPosition chbPrdDeal : dealList) {
             // 实际终止日
             endDate = chbPrdDeal.getCdate();
-            // 实际募集金额 
+            // 实际募集金额
             raiseAmt = raiseAmt.add(ChbCcyConvertUtil.exchangeMoney(chbPrdDeal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), chbPrdDeal.getCdate(), chbPrdDeal.getRaiseamt(), rateMap, exchangeSource));
             // 兑付客户总份额(份额不折算人民币)
             customQty = customQty.add(chbPrdDeal.getCustqty());
@@ -424,10 +425,106 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
             result.setSubmitDeadline(dateList.get(1));
         }
 
+        //-----add by lingxq on 2021-06-07 for 费用计算后保留两位小数------>>>>>
+        setFeeScale(result);
+        //-----add by lingxq on 2021-06-07 for 费用计算后保留两位小数------<<<<<
+
         // add by zhangliang 20201109 数据流向处理 ===================================start
         result.setStatus(arg0.getStatus());
         // add by zhangliang 20201109 数据流向处理 ===================================end
         return result;
+    }
+
+    /**
+     * 费用保留两位小数
+     * @param result
+     */
+    private void setFeeScale(ProdTerminationRegist001Dto result) {
+        if(null != result.getProfit()) {
+            result.setProfit(result.getProfit().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCustFeeIn()) {
+            result.setCustFeeIn(result.getCustFeeIn().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getManFeeIn()) {
+            result.setManFeeIn(result.getManFeeIn().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCouFeeIn()) {
+            result.setCouFeeIn(result.getCouFeeIn().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getOtherFeeIn()) {
+            result.setOtherFeeIn(result.getOtherFeeIn().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCustFeeOut()) {
+            result.setCustFeeOut(result.getCustFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getManFeeOut()) {
+            result.setManFeeOut(result.getManFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCouFeeOut()) {
+            result.setCouFeeOut(result.getCouFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getAdvFeeOut()) {
+            result.setAdvFeeOut(result.getAdvFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getOtherFeeOut()) {
+            result.setOtherFeeOut(result.getOtherFeeOut().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCustomAmt()) {
+            result.setCustomAmt(result.getCustomAmt().setScale(2, RoundingMode.HALF_UP));
+        }
+        if(null != result.getCustomProfit()) {
+            result.setCustomProfit(result.getCustomProfit().setScale(2, RoundingMode.HALF_UP));
+        }
+
+        //-------费用因四舍五入差一分导致check不过进行倒减处理------->>>>>>>
+        BigDecimal bankInt = null == result.getProfit() ? BigDecimal.ZERO :  result.getProfit();
+        BigDecimal manFeeIn = null == result.getManFeeIn() ? BigDecimal.ZERO :  result.getManFeeIn();
+        BigDecimal custFeeIn = null == result.getCustFeeIn() ? BigDecimal.ZERO :  result.getCustFeeIn();
+        BigDecimal otherFeeIn = null == result.getOtherFeeIn() ? BigDecimal.ZERO :  result.getOtherFeeIn();
+        BigDecimal couFeeIn = null == result.getCouFeeIn() ? BigDecimal.ZERO :  result.getCouFeeIn();
+        BigDecimal diff = bankInt.subtract(manFeeIn.add(custFeeIn.add(otherFeeIn).add(couFeeIn)));
+        if(diff.compareTo(BigDecimal.ZERO) !=0 ){
+            List<BigDecimal> tmpList = new ArrayList<>();
+            tmpList.add(manFeeIn);
+            tmpList.add(custFeeIn);
+            tmpList.add(otherFeeIn);
+            tmpList.add(couFeeIn);
+            Collections.sort(tmpList);
+
+            BigDecimal bigData = tmpList.get(tmpList.size() - 1);
+            if(manFeeIn.equals(bigData)){
+                result.setManFeeIn(result.getManFeeIn().add(diff));
+            }else if(custFeeIn.equals(bigData)){
+                result.setCustFeeIn(result.getCustFeeIn().add(diff));
+            }else if(otherFeeIn.equals(bigData)){
+                result.setOtherFeeIn(result.getOtherFeeIn().add(diff));
+            }else if(couFeeIn.equals(bigData)){
+                result.setCouFeeIn(result.getCouFeeIn().add(diff));
+            }else{
+                //nothing to do
+            }
+
+        }
+        //-------费用因四舍五入差一分导致check不过进行倒减处理-------<<<<<<<
+    }
+
+    public static void main(String[] args) {
+        BigDecimal A = new BigDecimal("90");
+        BigDecimal B = new BigDecimal("20");
+        BigDecimal C = new BigDecimal("140");
+        BigDecimal D = new BigDecimal("240");
+        BigDecimal E = new BigDecimal("50");
+        List<BigDecimal> tmpList = new ArrayList<>();
+        tmpList.add(A);
+        tmpList.add(B);
+        tmpList.add(C);
+        tmpList.add(D);
+        tmpList.add(E);
+        Collections.sort(tmpList);
+        tmpList.forEach(x-> {
+            System.out.println(x);
+        });
     }
 
 
