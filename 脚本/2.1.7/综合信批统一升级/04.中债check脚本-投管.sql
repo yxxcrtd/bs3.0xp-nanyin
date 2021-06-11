@@ -1,3 +1,7 @@
+truncate table CHB_DATACHECK_RULE_INV;
+truncate table CHB_DATACHECK_CONDITION_INV;
+truncate table CHB_DATACHECK_REP_TYPE_INV;
+
 --发行
 delete from CHB_DATACHECK_RULE_INV where page_id = 'FinNetValueProductBuild002';
 insert into CHB_DATACHECK_RULE_INV values ('ys214A49-6813-5A9E-E050-007F22700011','FinNetValueProductBuild002','inDatadict','bussFinProductOpenPlanDto.hdayOpenFlag','==','YES_OR_NO','Y','节假日是否开放不在值域范围内','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');
