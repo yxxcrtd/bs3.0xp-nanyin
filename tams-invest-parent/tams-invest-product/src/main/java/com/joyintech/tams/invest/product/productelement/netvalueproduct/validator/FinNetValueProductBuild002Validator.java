@@ -1399,15 +1399,15 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
 //	                getMessage("BussRepFinProductInfo.repOperateMode"))));
 //    	}
     	//开放模式01有规律开放时规律开放周期必填
-    	if("01".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) && 
-    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOpenCircle())) {
-    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenCircle","开放模式01有规律开放时规律开放周期必填"));
-    	}
+//    	if("01".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) &&
+//    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOpenCircle())) {
+//    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenCircle","开放模式01有规律开放时规律开放周期必填"));
+//    	}
     	//开放模式02无规律开放时无规律开放说明必填
-    	if("02".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) && 
-    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepRuleComment())) {
-    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repRuleComment","开放模式02无规律开放时无规律开放说明必填"));
-    	}
+//    	if("02".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) &&
+//    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepRuleComment())) {
+//    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repRuleComment","开放模式02无规律开放时无规律开放说明必填"));
+//    	}
     	//周期型和普通型业绩基准不能为空
     	if (StringUtil.isNotEmpty(entity.getDealMode())){
     		if(StringUtil.equals(entity.getDealMode(), DictCodeList.处理模式_周期型.getValue()) ||
