@@ -6,7 +6,7 @@
 create table SYS_USER_ADD 
 (
    USER_ID              VARCHAR(32)          not null,
-   LST_LOGIN_TIME       TIMESTAMP            not null,
+   LST_LOGIN_TIME       TIMESTAMP          ,
    CREATE_USER          VARCHAR(20)          not null,
    CREATE_DEPT          VARCHAR(32),
    CREATE_TIME          TIMESTAMP            not null,

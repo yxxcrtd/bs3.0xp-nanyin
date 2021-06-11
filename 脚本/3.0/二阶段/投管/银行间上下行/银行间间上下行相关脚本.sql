@@ -3001,7 +3001,7 @@ end;
 create table SYS_USER_ADD
 (
   user_id        VARCHAR2(32) not null,
-  lst_login_time TIMESTAMP(6) not null,
+  lst_login_time TIMESTAMP(6) ,
   create_user    VARCHAR2(20) not null,
   create_dept    VARCHAR2(32),
   create_time    TIMESTAMP(6) not null,
