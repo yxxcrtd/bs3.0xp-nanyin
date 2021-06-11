@@ -358,7 +358,7 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     资产_负债类别_QDII债券资产(DictCode.资产_负债类别,"08","QDII债券资产"),
     资产_负债类别_QDII拆出_逆回购资产(DictCode.资产_负债类别,"09","QDII拆出/逆回购资产"),
     资产_负债类别_QDII股票_基金类资产(DictCode.资产_负债类别,"10","QDII股票/基金类资产"),
-    资产_负债类别_QDII结构性票据(DictCode.资产_负债类别,"11","QDII结构性票据"),
+    资产_负债类别_QDII结构性票据类资产(DictCode.资产_负债类别,"11","QDII结构性票据"),
     资产_负债类别_资产管理产品(DictCode.资产_负债类别,"12","资产管理产品"),
     资产_负债类别_商品类资产(DictCode.资产_负债类别,"13","商品类资产"),
     资产_负债类别_各类资产的其他项(DictCode.资产_负债类别,"14","各类资产的其他项"),

@@ -1,15 +1,19 @@
 /**修改理财产品转型情况月度统计表的菜单代码*/
 update sys_menu set menu_id='REPORT_001_003_099',order_no='99' where page_id='SvrTransMonthReport001';
 
+update sys_menu set order_no = 9 where MENU_ID = 'REPORT_001_001_009';
+update sys_menu set order_no = 10 where MENU_ID = 'REPORT_001_001_010';
+update sys_menu set order_no = 11 where MENU_ID = 'REPORT_001_001_011';
+
 
 /**业务基本信息*/
-delete  from sys_menu   where menu_id in ('REPORT_001_001_001','REPORT_001_001_006','REPORT_001_001_007','REPORT_001_001_008','REPORT_001_001_009','REPORT_001_001_010');
+delete  from sys_menu   where menu_id in ('REPORT_001_001_001','REPORT_001_001_006','REPORT_001_001_007','REPORT_001_001_008','REPORT_001_001_012','REPORT_001_001_013');
 Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_001','REP',null,'REPORT_001_001','ProRegistCodeManage001',1,'02','产品登记编码管理','system',null,sysdate,'system',sysdate);
 Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_006','REP',null,'REPORT_001_001','EquityInfo001',6,'02','投资者身份信息','system',null,sysdate,'system',sysdate);
 Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_007','REP',null,'REPORT_001_001','InvestorsHoldInfo001',7,'02','投资者持有信息','system',null,sysdate,'system',sysdate);
-Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_008','REP',null,'REPORT_001_001','SvrInvestorMerger001',12,'02','识别标识合并','system',null,sysdate,'system',sysdate);
-Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_009','SVR',null,'REPORT_001_001','SvrEquityBusinessDetails001',8,null,'投资者明细信息','system',null,sysdate,'system',sysdate);
-Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_010','SVR',null,'REPORT_001_001','SvrTransformRule001',10,null,'变形转换规则','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_008','SVR',null,'REPORT_001_001','SvrEquityBusinessDetails001',8,null,'投资者明细信息','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_012','REP',null,'REPORT_001_001','SvrInvestorMerger001',12,'02','识别标识合并','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_013','SVR',null,'REPORT_001_001','SvrTransformRule001',13,null,'变形转换规则','system',null,sysdate,'system',sysdate);
 
 
 /**数据检查*/
@@ -25,10 +29,10 @@ Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,I
 
 
 /**中债报送信息登记*/
-delete from sys_menu   where menu_id in ('REPORT_001_003_011','REPORT_001_003_012','REPORT_001_003_013');
-Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_003_011','REP',null,'REPORT_001_003','EquityInfoRegist001',11,'02','投资者身份信息登记','system',null,sysdate,'system',sysdate);
-Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_003_012','REP',null,'REPORT_001_003','InvestorsHoldInfoRegist001',12,'02','投资者持有信息登记','system',null,sysdate,'system',sysdate);
-Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_003_013','SVR',null,'REPORT_001_003','SvrEquityBusiInfoRegist001',13,null,'投资者明细信息登记','system',null,sysdate,'system',sysdate);
+delete from sys_menu   where menu_id in ('REPORT_001_003_014','REPORT_001_003_012','REPORT_001_003_013');
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_003_012','REP',null,'REPORT_001_003','EquityInfoRegist001',12,'02','投资者身份信息登记','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_003_013','REP',null,'REPORT_001_003','InvestorsHoldInfoRegist001',13,'02','投资者持有信息登记','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_003_014','SVR',null,'REPORT_001_003','SvrEquityBusiInfoRegist001',14,null,'投资者明细信息登记','system',null,sysdate,'system',sysdate);
 
 /**中债报送Excel下载*/
 delete from sys_menu   where menu_id in ('REPORT_001_006','REPORT_001_006_001','REPORT_001_006_002','REPORT_001_006_003','REPORT_001_006_004','REPORT_001_006_009');

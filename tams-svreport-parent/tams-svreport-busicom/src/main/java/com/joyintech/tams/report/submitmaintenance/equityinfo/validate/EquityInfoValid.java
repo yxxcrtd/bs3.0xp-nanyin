@@ -2471,7 +2471,7 @@ public class EquityInfoValid {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         Map<String, String> map = null;
         // List<EquityCheckValue> checkDto = new ArrayList<>();
-        String bankCode = CommonUtil.getUserBankCode();
+        String bankCode = CommonUtil.getUserBankCode(orgCode);
 
         //判断导入的数据是否存在重复的主键
         Map<String, Integer> keyMap = new HashMap<>();

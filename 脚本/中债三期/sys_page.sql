@@ -1,10 +1,7 @@
-/**修改理财产品转型情况月度统计表的菜单代码*/
-update sys_page set menu_id='REPORT_001_003_099' where page_id='SvrTransMonthReport001';
-
 
 /**投资者身份信息*/
 delete  from sys_page where page_id in ('EquityInfoRegist001','EquityInfo001','EquityInfo002');
-Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('EquityInfoRegist001','SVR','/svreport/submitmanagement/equityinforegist/EquityInfoRegist001','report/submitmanagement/equityinforegist/EquityInfoRegist001','REPORT_001_003_011',null,null,'02','02','投资者身份信息登记','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('EquityInfoRegist001','SVR','/svreport/submitmanagement/equityinforegist/EquityInfoRegist001','report/submitmanagement/equityinforegist/EquityInfoRegist001','REPORT_001_003_012',null,null,'02','02','投资者身份信息登记','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('EquityInfo002','REP','/svreport/submitmaintenance/equityinfo/EquityInfo002','report/submitmaintenance/equityinfo/EquityInfo002',null,null,null,'02','02','投资者身份信息新建','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('EquityInfo001','REP','/svreport/submitmaintenance/equityinfo/EquityInfo001','report/submitmaintenance/equityinfo/EquityInfo001','REPORT_001_001_006',null,null,'02','02','投资者身份信息','system',null,sysdate,'system',sysdate);
 
@@ -52,7 +49,7 @@ values ('EquityInfoRegist001', 'EquityInfoRegist001_btn_submit', '01', '02', nul
 /**投资者持有*/
 delete  from sys_page where page_id in ('InvestorsHoldInfo001','InvestorsHoldInfo002','InvestorsHoldInfoRegist001');
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('InvestorsHoldInfo002','REP','/svreport/submitmaintenance/investorsholdinfo/InvestorsHoldInfo002','report/submitmaintenance/investorsholdinfo/InvestorsHoldInfo002',null,null,null,'02','02','投资者持有信息新建','system',null,sysdate,'system',sysdate);
-Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('InvestorsHoldInfoRegist001','SVR','/svreport/submitmanagement/investorsholdinforegist/InvestorsHoldInfoRegist001','report/submitmanagement/investorsholdinforegist/InvestorsHoldInfoRegist001','REPORT_001_003_012',null,null,'02','02','投资者持有信息登记','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('InvestorsHoldInfoRegist001','SVR','/svreport/submitmanagement/investorsholdinforegist/InvestorsHoldInfoRegist001','report/submitmanagement/investorsholdinforegist/InvestorsHoldInfoRegist001','REPORT_001_003_013',null,null,'02','02','投资者持有信息登记','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('InvestorsHoldInfo001','REP','/svreport/submitmaintenance/investorsholdinfo/InvestorsHoldInfo001','report/submitmaintenance/investorsholdinfo/InvestorsHoldInfo001','REPORT_001_001_007',null,null,'02','02','投资者持有信息','system',null,sysdate,'system',sysdate);
 
 delete  from sys_page_element where page_id in ('InvestorsHoldInfo001','InvestorsHoldInfo002','InvestorsHoldInfoRegist001');
@@ -104,8 +101,8 @@ values ('InvestorsHoldInfoRegist001', 'InvestorsHoldInfoRegist001_btn_submit', '
 
 /**投资者明细*/
 delete  from sys_page where page_id in ('SvrEquityBusiInfoRegist001','SvrEquityBusinessDetails001','SvrEquityBusinessDetails002');
-Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrEquityBusiInfoRegist001','SVR','/svreport/submitmanagement/equitybusiinforegist/SvrEquityBusiInfoRegist001','report/submitmanagement/equitybusiinforegist/EquityBusiInfoRegist001','REPORT_001_003_013',null,null,'02','02','投资者明细信息登记','system',null,sysdate,'system',sysdate);
-Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrEquityBusinessDetails001','SVR','/svreport/submitmaintenance/businessdetailed/SvrEquityBusinessDetails001','report/submitmaintenance/businessdetailed/EquityBusinessDetails001','REPORT_001_001_009',null,null,'02','02','投资者明细信息','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrEquityBusiInfoRegist001','SVR','/svreport/submitmanagement/equitybusiinforegist/SvrEquityBusiInfoRegist001','report/submitmanagement/equitybusiinforegist/EquityBusiInfoRegist001','REPORT_001_003_014',null,null,'02','02','投资者明细信息登记','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrEquityBusinessDetails001','SVR','/svreport/submitmaintenance/businessdetailed/SvrEquityBusinessDetails001','report/submitmaintenance/businessdetailed/EquityBusinessDetails001','REPORT_001_001_008',null,null,'02','02','投资者明细信息','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrEquityBusinessDetails002','SVR','/svreport/submitmaintenance/businessdetailed/SvrEquityBusinessDetails002','report/submitmaintenance/businessdetailed/EquityBusinessDetails002',null,null,null,'02','02','投资者明细信息新建','system',null,sysdate,'system',sysdate);
 
 delete  from sys_page_element where page_id in ('SvrEquityBusiInfoRegist001','SvrEquityBusinessDetails001','SvrEquityBusinessDetails002');
@@ -127,12 +124,12 @@ values ('SvrEquityBusinessDetails001', 'SvrEquityBusinessDetails001_btn_search',
 
 /**变形转换*/
 delete from  SYS_PAGE  where page_id in ('SvrTransformRule001','SvrTransformRule002');
-Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrTransformRule001','SVR','/svreport/submitmaintenance/transformrule/SvrTransformRule001','report/submitmaintenance/transformrule/TransformRule001','REPORT_001_001_010',null,null,'02','02','变形转换规则','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrTransformRule001','SVR','/svreport/submitmaintenance/transformrule/SvrTransformRule001','report/submitmaintenance/transformrule/TransformRule001','REPORT_001_001_013',null,null,'02','02','变形转换规则','system',null,sysdate,'system',sysdate);
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrTransformRule002','SVR','/svreport/submitmaintenance/transformrule/SvrTransformRule002','report/submitmaintenance/transformrule/TransformRule002',null,null,null,'02','02','变形转换规则新建','system',null,sysdate,'system',sysdate);
 
 /**识别标识合并*/
 delete  from  SYS_PAGE  where page_id='SvrInvestorMerger001';
-Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrInvestorMerger001','SVR','/svreport/investormerger/InvestorMerger001','report/investormerger/InvestorMerger001','REPORT_001_001_008',null,null,'02','02','识别标识合并','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrInvestorMerger001','SVR','/svreport/investormerger/InvestorMerger001','report/investormerger/InvestorMerger001','REPORT_001_001_012',null,null,'02','02','识别标识合并','system',null,sysdate,'system',sysdate);
 
 /**报送前检查*/
 delete  from SYS_PAGE  where page_id='CheckReport001';

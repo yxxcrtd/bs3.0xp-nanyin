@@ -216,17 +216,19 @@ public class CommonUtil {
 	 * @see
 	 * @since 1.0
 	 */
-	public static String getUserBankCode() {
-		User userInfo = SecurityUtil.getLoginUser();
-		// if(userInfo.isAdmin()){
-		// return null;
-		// }
-		if (StringUtil.isEmpty(userInfo.getOrgCode())) {
-			return null;
+	public static String getUserBankCode(String orgCode) {
+		if(StringUtil.isBlank(orgCode)){
+			User userInfo = SecurityUtil.getLoginUser();
+			if (StringUtil.isEmpty(userInfo.getOrgCode())) {
+				return null;
+			}
+			orgCode = userInfo.getOrgCode();
 		}
-		String bankCode = baseMapper.selectBankCode(userInfo.getOrgCode());
+		String bankCode = baseMapper.selectBankCode(orgCode);
 		return bankCode;
 	}
+
+
 
 
 
