@@ -700,8 +700,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 		&& StringUtil.equals(dto.getRepOpenMode(), DictCodeListExt2.开放模式_中债_有规律开放.getValue())) {
                 	//规律开放周期必须填写
                 	if(StringUtil.isEmpty(dto.getRepOpenCircle())) {
-                		resultList.add(new ValidMessage("repOpenCircle", getMessage("BUSS_COM_E_0038",
-                                getMessage("BussRepFinProductInfo.repOpenCircle"))));
+                        resultList.add(new ValidMessage("repOpenCircle","开放模式01有规律开放时,规律开放周期必填"));
                 	}
                 	//无规律开放说明必为空
                 	if(StringUtil.isNotEmpty(dto.getRepRuleComment())) {
@@ -721,8 +720,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 	}
                 	//无规律开放说明必填写
                 	if(StringUtil.isEmpty(dto.getRepRuleComment())) {
-                		resultList.add(new ValidMessage("repRuleComment", getMessage("BUSS_COM_E_0038",
-                                getMessage("BussRepFinProductInfo.repRuleComment"))));
+                        resultList.add(new ValidMessage("repRuleComment","开放模式02无规律开放时,无规律开放说明必填"));
                 	}
                 }
                 //当“开放模式”选择“02 无规律开放”时 add by yanya 20190827 end
