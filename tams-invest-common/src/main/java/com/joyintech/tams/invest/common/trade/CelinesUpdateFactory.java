@@ -523,7 +523,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         //预占用额度
         BigDecimal pierceAmt =BigDecimal.ZERO;
         //委托占用额度
-        BigDecimal pierceTradeAmt =BigDecimal.ZERO;
+//        BigDecimal pierceTradeAmt =BigDecimal.ZERO;
         // 授信足够标识
         Boolean isEnoughCreditflag=true;
         List<String> seqnoList =this.seqnoList();
@@ -540,8 +540,8 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             //预占用额度
             prehapamt = creditLinesMapper.getPrehapamtForPingan(mapforprehapamt);
             //委托占用额度
-            pierceTradeAmt = creditLinesMapper.getPierceTradeAmt(mapforprehapamt);
-            pierceTradeAmt = pierceTradeAmt == null ? BigDecimal.ZERO : pierceTradeAmt;
+//            pierceTradeAmt = creditLinesMapper.getPierceTradeAmt(mapforprehapamt);
+//            pierceTradeAmt = pierceTradeAmt == null ? BigDecimal.ZERO : pierceTradeAmt;
             //  hapCreditAmt=creditLines.getHapCreditAmt();
             // 已占用额度
             hapCreditAmt=creditLines.getHapCreditAmt().add(prehapamt==null?BigDecimal.ZERO:prehapamt);
@@ -555,7 +555,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             //新增只有买入或申购时候额度监控 by nixiukuan 20191009
             //修复【二级法人-机构授信】当交易额度超过机构授信总额度之后，没有占用授信额度BUG by jqq start
             if (StringUtil.isNotEmpty(creditLines.getPflsh()) && !creditLines.getPflsh().startsWith("空档期授信")
-                    && ArithmeticUtil.doAdd(hapCreditAmt, pierceAmt, pierceTradeAmt).compareTo(creditLines.getCreditAmt()) > 0
+                    && ArithmeticUtil.doAdd(hapCreditAmt, pierceAmt).compareTo(creditLines.getCreditAmt()) > 0
                     && flagps1 && !isSave) {
                 //提示 授信额度不够,并且直接返回提示语，不再进行下次循环
                 isEnoughCreditflag=false;
