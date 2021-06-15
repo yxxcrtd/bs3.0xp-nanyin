@@ -28,8 +28,8 @@
 		T1.TRADE_ID = T3.TRADE_ID
 		<where>
 			T2.PA_BUSS_TYPE = #{repoType}
-			AND T1.VDATE &lt;= str_to_date(#{sysDate},'%Y-%m-%d')
-			AND T1.MDATE &gt;= str_to_date(#{sysDate},'%Y-%m-%d')
+			AND T1.VDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd')
+			AND T1.MDATE &gt;= to_date(#{sysDate},'yyyy-MM-dd')
 			AND T1.SEC_MANAGE_ACCT_ID = #{manageId}
 			AND T3.PORTFOLIO_ID = #{portfolioId}
 		</where>
@@ -50,8 +50,8 @@
 		T1.TRADE_ID = T2.TRADE_ID
 		<where>
 			T2.PA_BUSS_TYPE = #{repoType}
-			AND T1.VDATE &lt;= STR_TO_DATE(#{sysDate},'%Y-%m-%d')
-			AND T1.MDATE &gt;= STR_TO_DATE(#{sysDate},'%Y-%m-%d')
+			AND T1.VDATE &lt;= TO_DATE(#{sysDate},'yyyy-MM-dd')
+			AND T1.MDATE &gt;= TO_DATE(#{sysDate},'yyyy-MM-dd')
 			AND T1.SEC_MANAGE_ACCT_ID = #{manageId}
 			AND T3.PORTFOLIO_ID = #{portfolioId}
 		</where>
@@ -62,7 +62,7 @@
 		T7.PORTFOLIO_ID,T7.SEC_ACCT_ID,SUM(T7.AMT) PRIN_AMT
 		from(
 		select
-		T1.PORTFOLIO_ID,T1.SEC_ACCT_ID,T2.FINPROD_ID,SUM((CASE WHEN T1.PS =#{pin} THEN T2.AMT WHEN #{pout} THEN T2.AMT*-1 END)*IFNULL(T6.SCALE,0)) AMT
+		T1.PORTFOLIO_ID,T1.SEC_ACCT_ID,T2.FINPROD_ID,SUM((CASE WHEN T1.PS =#{pin} THEN T2.AMT WHEN #{pout} THEN T2.AMT*-1 END)*NULLIF(T6.SCALE,0)) AMT
 		from
 		TRD_STASEC_FLOW T1
 		INNER JOIN
