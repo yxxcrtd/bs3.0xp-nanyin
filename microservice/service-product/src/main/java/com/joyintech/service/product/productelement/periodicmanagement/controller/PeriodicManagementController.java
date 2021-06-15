@@ -33,9 +33,10 @@ public class PeriodicManagementController {
 	@Autowired
 	private PeriodicManagementService periodicManagementService;
 	
-	@PostMapping("getFinprodIds")
-	public List<SelectOptionDto> getFinprodIds(@RequestBody Map<String, Object> param){
-		return periodicManagementService.getFinprodIds(param);
+	@PostMapping("getFinprodIds/{page}/{length}")
+	public Page<SelectOptionDto> getFinprodIds(@RequestBody Map<String, Object> param,
+											   @PathVariable("page") int page, @PathVariable("length") int length){
+		return periodicManagementService.getFinprodIds(page, length, param);
 	}
 	
 	/**

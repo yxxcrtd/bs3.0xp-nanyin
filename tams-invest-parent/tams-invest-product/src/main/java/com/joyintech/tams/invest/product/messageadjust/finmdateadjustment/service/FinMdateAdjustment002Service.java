@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
@@ -144,8 +145,8 @@ public class FinMdateAdjustment002Service extends BaseService<FinMdateAdjustment
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryAdjustProdIdList(Map<String, Object> param) {
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinMdateAdjustment/queryAdjustProdIdList",
+    public Page<SelectOptionDto> queryAdjustProdIdList(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinMdateAdjustment/queryAdjustProdIdList",
             param, SelectOptionDto.class);
     }
 

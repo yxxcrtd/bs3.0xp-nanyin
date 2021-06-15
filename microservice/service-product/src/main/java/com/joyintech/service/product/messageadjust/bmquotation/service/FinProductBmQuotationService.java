@@ -63,14 +63,14 @@ public class FinProductBmQuotationService extends BaseService<FinProductBmQuotat
     @Autowired
     private FinBaseRuleInfoMapper finBaseRuleInfoMapper;
     
-    public List<SelectOptionDto> getFinprodMarketIdList(Map<String, Object> param){
+    public Page<SelectOptionDto> getFinprodMarketIdList(int page, int length, Map<String, Object> param){
         if("null".equals(param.get("finprodMarketId"))){
             param.replace("finprodMarketId", null);
         }
         param.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         param.put("PROFIT_TYPE_01", DictCodeList.收益类型_净值型.getValue());
         param.put("PROFIT_TYPE_03", DictCodeList.收益类型_货币型.getValue());
-        return finProductBmQuotationMapper.getFinprodMarketIdList(param);
+        return this.queryForPageForSelectReturn(page, length, () -> finProductBmQuotationMapper.getFinprodMarketIdList(param));
     }
     
     /**
@@ -287,14 +287,14 @@ public class FinProductBmQuotationService extends BaseService<FinProductBmQuotat
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodMarketIdToNew(@RequestBody Map<String, Object> param) {
+    public Page<SelectOptionDto> getFinprodMarketIdToNew(int page, int length, @RequestBody Map<String, Object> param) {
         if("null".equals(param.get("finprodMarketId"))){
             param.replace("finprodMarketId", null);
         }
         param.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         param.put("PROFIT_TYPE_01", DictCodeList.收益类型_净值型.getValue());
         param.put("PROFIT_TYPE_03", DictCodeList.收益类型_货币型.getValue());
-        return finProductBmQuotationMapper.getFinprodMarketIdToNew(param);
+        return this.queryForPageForSelectReturn(page, length, () -> finProductBmQuotationMapper.getFinprodMarketIdToNew(param));
     }
 
     /**

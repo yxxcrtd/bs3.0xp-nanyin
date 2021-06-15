@@ -58,12 +58,12 @@ public class FinProductOpenPlanAdjustService extends CommonExportService<FinProd
      * @see 
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodIds(Map<String, Object> param) {
+    public Page<SelectOptionDto> getFinprodIds(Map<String, Object> param) {
         User user = SecurityUtil.getLoginUser();
         param.put("userId", user.getUserName());
         param.put("openPlanType03", DictCodeList.申赎开放类型_申赎开放.getValue());
         param.put("openPlanType01", DictCodeList.申赎开放类型_申购开放.getValue());
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
             + "/FinProductOpenPlanAdjust/getFinprodId",param,SelectOptionDto.class);
     }
     

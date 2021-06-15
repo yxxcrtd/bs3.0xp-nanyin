@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -127,7 +128,7 @@ public class FinProductBmQuotationController002 extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIdToNew")
-    public List<SelectOptionDto> getFinprodMarketIdToNew()
+    public Page<SelectOptionDto> getFinprodMarketIdToNew()
         throws Exception {
         return finProductBmQuotationService.getFinprodMarketIdToNew(RequestUtil.getPageParam());
     }

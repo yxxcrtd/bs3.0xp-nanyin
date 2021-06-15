@@ -79,7 +79,7 @@ public class FinProductQuotation001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdIdInfoIssueSuc")
-    public List<SelectOptionDto> queryProdIdInfoIssueSuc() {
+    public Page<SelectOptionDto> queryProdIdInfoIssueSuc() {
         return finProductQuotation001Service.queryProdIdInfoIssueSuc(RequestUtil.getPageParam());
     }
 
