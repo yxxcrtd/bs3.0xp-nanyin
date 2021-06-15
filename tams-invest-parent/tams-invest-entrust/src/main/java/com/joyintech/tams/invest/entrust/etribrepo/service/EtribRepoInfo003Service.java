@@ -84,7 +84,7 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
     /**
      * b45接口
      */
-    @Autowired
+//    @Autowired
 //    private SendService sendService;
 //
 //    @Autowired
@@ -137,10 +137,10 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
         dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         Map<String, Object> result = new HashMap<>();
         dto.setAcctType(acctTypeList);
-        if (StringUtil.isBlank(dto.getPortfolioId())) {
-            result.put("parentPortfolioId",etrCommonService.selectParentPortfolioIdByPortfolioId(
-                    dto.getPortfolioId()));
-        }
+//        if (StringUtil.isBlank(dto.getPortfolioId())) {
+//            result.put("parentPortfolioId",etrCommonService.selectParentPortfolioIdByPortfolioId(
+//                    dto.getPortfolioId()));
+//        }
 
         if (baseEtrCashPositionCommService != null) {
             // 组合T日可用现金

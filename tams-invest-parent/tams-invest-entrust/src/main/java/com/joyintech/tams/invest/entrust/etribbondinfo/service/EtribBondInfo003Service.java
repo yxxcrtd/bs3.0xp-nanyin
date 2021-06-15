@@ -158,61 +158,61 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
         Map<String, Object> result = new HashMap<>();
 
         // 可用现金
-        if (baseEtrCashPositionCommService != null) {
-            EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
-            dto.setPortfolioId((String)param.get("portfolioId"));
-            if (StringUtil.isBlank(dto.getPortfolioId())) {
-                result.put("parentPortfolioId",etrCommonService.selectParentPortfolioIdByPortfolioId(
-                        dto.getPortfolioId()));
-            }
-            dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-            dto.setCdate(tradeDate);
-            dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
-            //组合T日可用现金
-            BigDecimal proAvailableCash = baseEtrCashPositionCommService.queryOtherCashPosition(dto);
-            //调整现金
-            PtlCashPositionFlowDto positionQueryDtoParam = new PtlCashPositionFlowDto();
-            positionQueryDtoParam.setPortfolioId((String)param.get("portfolioId"));
-            positionQueryDtoParam.setHodingType(DictCodeListExt1.持仓类型_人工调整.getValue());
-            positionQueryDtoParam.setCdate(tradeDate);
-            positionQueryDtoParam.setCcy(DictCodeList.币种_人民币_CNY.getValue());
-            BigDecimal tiaozhengT = basePtlCashPositionInfoService.queryOtherCashPositionDangri(positionQueryDtoParam);
-            result.put("proAvailableCash", ArithmeticUtil.doAdd(proAvailableCash, tiaozhengT));
-            //组合T+1日可用现金
-            dto.setCdate(tradeDateNext);
-            BigDecimal proAvailableCashT1 = baseEtrCashPositionCommService.queryOtherCashPosition(dto);
-            positionQueryDtoParam.setCdate(tradeDateNext);
-            BigDecimal tiaozhengT1 = basePtlCashPositionInfoService.queryOtherCashPositionDangri(positionQueryDtoParam);
-            result.put("proAvailableCashT1", ArithmeticUtil.doAdd(proAvailableCashT1, tiaozhengT1));
-            //托管户T日可用现金
-            dto.setCdate(tradeDate);
-            List<String> acctTypeList = new ArrayList<>();
-            acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
-            dto.setAcctType(acctTypeList);
-            BigDecimal secManageAvailablePosition = baseEtrCashPositionCommService.queryOtherCashPosition(dto);
-            positionQueryDtoParam.setCdate(tradeDate);
-            positionQueryDtoParam.setAcctType(acctTypeList);
-            BigDecimal tiaozhengMT = basePtlCashPositionInfoService.queryOtherCashPositionDangri(positionQueryDtoParam);
-            result.put("secManageAvailablePosition", ArithmeticUtil.doAdd(secManageAvailablePosition, tiaozhengMT));
-            //托管户T+1日可用现金
-            dto.setCdate(tradeDateNext);
-            BigDecimal secManageAvailablePositionT1 = baseEtrCashPositionCommService.queryOtherCashPosition(dto);
-            positionQueryDtoParam.setCdate(tradeDateNext);
-            BigDecimal tiaozhengMT1 = basePtlCashPositionInfoService.queryOtherCashPositionDangri(positionQueryDtoParam);
-            result.put("secManageAvailablePositionT1", ArithmeticUtil.doAdd(secManageAvailablePositionT1, tiaozhengMT1));
-
-            // 通道不为空
-            if (StringUtil.isNotEmpty(param.get("chlId"))) {
-                //通道T日可用现金
-                dto.setCdate(tradeDate);
-                dto.setAcctType(null);
-                dto.setChlFinprodId((String) param.get("chlId"));
-                result.put("channelAvailable", baseEtrCashPositionCommService.queryOtherCashPosition(dto));
-                //通道T+1日可用现金
-                dto.setCdate(tradeDateNext);
-                result.put("channelAvailableT1", baseEtrCashPositionCommService.queryOtherCashPosition(dto));
-            }
-        }
+//        if (baseEtrCashPositionCommService != null) {
+//            EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
+//            dto.setPortfolioId((String)param.get("portfolioId"));
+//            if (StringUtil.isBlank(dto.getPortfolioId())) {
+//                result.put("parentPortfolioId",etrCommonService.selectParentPortfolioIdByPortfolioId(
+//                        dto.getPortfolioId()));
+//            }
+//            dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+//            dto.setCdate(tradeDate);
+//            dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+//            //组合T日可用现金
+//            BigDecimal proAvailableCash = baseEtrCashPositionCommService.queryOtherCashPosition(dto);
+//            //调整现金
+//            PtlCashPositionFlowDto positionQueryDtoParam = new PtlCashPositionFlowDto();
+//            positionQueryDtoParam.setPortfolioId((String)param.get("portfolioId"));
+//            positionQueryDtoParam.setHodingType(DictCodeListExt1.持仓类型_人工调整.getValue());
+//            positionQueryDtoParam.setCdate(tradeDate);
+//            positionQueryDtoParam.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+//            BigDecimal tiaozhengT = basePtlCashPositionInfoService.queryOtherCashPositionDangri(positionQueryDtoParam);
+//            result.put("proAvailableCash", ArithmeticUtil.doAdd(proAvailableCash, tiaozhengT));
+//            //组合T+1日可用现金
+//            dto.setCdate(tradeDateNext);
+//            BigDecimal proAvailableCashT1 = baseEtrCashPositionCommService.queryOtherCashPosition(dto);
+//            positionQueryDtoParam.setCdate(tradeDateNext);
+//            BigDecimal tiaozhengT1 = basePtlCashPositionInfoService.queryOtherCashPositionDangri(positionQueryDtoParam);
+//            result.put("proAvailableCashT1", ArithmeticUtil.doAdd(proAvailableCashT1, tiaozhengT1));
+//            //托管户T日可用现金
+//            dto.setCdate(tradeDate);
+//            List<String> acctTypeList = new ArrayList<>();
+//            acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
+//            dto.setAcctType(acctTypeList);
+//            BigDecimal secManageAvailablePosition = baseEtrCashPositionCommService.queryOtherCashPosition(dto);
+//            positionQueryDtoParam.setCdate(tradeDate);
+//            positionQueryDtoParam.setAcctType(acctTypeList);
+//            BigDecimal tiaozhengMT = basePtlCashPositionInfoService.queryOtherCashPositionDangri(positionQueryDtoParam);
+//            result.put("secManageAvailablePosition", ArithmeticUtil.doAdd(secManageAvailablePosition, tiaozhengMT));
+//            //托管户T+1日可用现金
+//            dto.setCdate(tradeDateNext);
+//            BigDecimal secManageAvailablePositionT1 = baseEtrCashPositionCommService.queryOtherCashPosition(dto);
+//            positionQueryDtoParam.setCdate(tradeDateNext);
+//            BigDecimal tiaozhengMT1 = basePtlCashPositionInfoService.queryOtherCashPositionDangri(positionQueryDtoParam);
+//            result.put("secManageAvailablePositionT1", ArithmeticUtil.doAdd(secManageAvailablePositionT1, tiaozhengMT1));
+//
+//            // 通道不为空
+//            if (StringUtil.isNotEmpty(param.get("chlId"))) {
+//                //通道T日可用现金
+//                dto.setCdate(tradeDate);
+//                dto.setAcctType(null);
+//                dto.setChlFinprodId((String) param.get("chlId"));
+//                result.put("channelAvailable", baseEtrCashPositionCommService.queryOtherCashPosition(dto));
+//                //通道T+1日可用现金
+//                dto.setCdate(tradeDateNext);
+//                result.put("channelAvailableT1", baseEtrCashPositionCommService.queryOtherCashPosition(dto));
+//            }
+//        }
 
         if (StringUtil.isNotEmpty((String)param.get("finprodId"))) {
             // 资产可用券面总额
@@ -229,10 +229,10 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
             PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
             ptlSecPositionFlowDto.setCdate(tradeDate);
             ptlSecPositionFlowDto.setPortfolioId((String)param.get("portfolioId"));
-            if (StringUtil.isBlank(ptlSecPositionFlowDto.getPortfolioId())) {
-                result.put("parentPortfolioId",etrCommonService.selectParentPortfolioIdByPortfolioId(
-                        ptlSecPositionFlowDto.getPortfolioId()));
-            }
+//            if (StringUtil.isBlank(ptlSecPositionFlowDto.getPortfolioId())) {
+//                result.put("parentPortfolioId",etrCommonService.selectParentPortfolioIdByPortfolioId(
+//                        ptlSecPositionFlowDto.getPortfolioId()));
+//            }
             ptlSecPositionFlowDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
             ptlSecPositionFlowDto.setFinprodId((String)param.get("finprodId"));
