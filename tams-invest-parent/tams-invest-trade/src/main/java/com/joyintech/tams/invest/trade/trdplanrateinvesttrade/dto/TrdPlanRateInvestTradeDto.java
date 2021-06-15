@@ -186,8 +186,8 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
     /**
      * 金融产品名称
      */
-    @NotEmpty(fieldName="TrdPlanRateInvestTrade001.portfolioName",groups = {ValidateGroupEdit.class})
-    @Length(fieldName="TrdPlanRateInvestTrade001.portfolioName",max=200,groups = {ValidateGroupEdit.class,
+    @NotEmpty(fieldName="TrdPlanRateInvestTrade001.finprodName",groups = {ValidateGroupEdit.class})
+    @Length(fieldName="TrdPlanRateInvestTrade001.finprodName",max=200,groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
     private String finprodName;
     /**
