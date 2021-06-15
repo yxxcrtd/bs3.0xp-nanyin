@@ -341,8 +341,9 @@ $(function() {
 		    $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').attr('disabled',true).trigger('change');
 		    $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').val('N').trigger('change'); 
 		    $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').val('N').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').attr('disabled',true).trigger('change');
+		    /***ZGBSSE-598  【中债直连check】新建项目类资产，当资产负债类别为1299 、2299时，“是否有预期收益率”字段无法编辑***/
+		    // $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').val('N').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').attr('disabled',true).trigger('change');
         }else if(repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"||repAssetType=="1205"||repAssetType=="2202"
             ||repAssetType=="1206"||repAssetType=="1207"||repAssetType=="1208"||repAssetType=="1209"||repAssetType=="2201"){
             $('#bussRepAssetCreditNonstdInfoDto_div').show();  
