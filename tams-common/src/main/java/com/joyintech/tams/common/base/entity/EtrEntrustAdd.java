@@ -458,11 +458,6 @@ public class EtrEntrustAdd extends BaseEntity {
     private String redoType;
 
     /**
-     * 报价方式
-     */
-    private String quoteType;
-
-    /**
      * 衍生品买卖方向
      */
     private String derivativeBsDir;
@@ -471,6 +466,16 @@ public class EtrEntrustAdd extends BaseEntity {
      * 衍生品开平仓标志
      */
     private String derivativeOcFlag;
+
+    /**
+     * 报价方式
+     */
+    private String quoteType;
+
+    /**
+     * 质押券库代码
+     */
+    private String pledgeStockId;
 
     /**
      * 取得 委托代码
@@ -1828,22 +1833,6 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 报价方式
-     * @return 报价方式
-     */
-    public String getQuoteType() {
-        return quoteType;
-    }
-
-    /**
-     * 设置 报价方式
-     * @param quoteType 报价方式
-     */
-    public void setQuoteType(String quoteType) {
-        this.quoteType = quoteType == null ? null : quoteType.trim();
-    }
-
-    /**
      * 取得 衍生品买卖方向
      * @return 衍生品买卖方向
      */
@@ -1873,5 +1862,37 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     public void setDerivativeOcFlag(String derivativeOcFlag) {
         this.derivativeOcFlag = derivativeOcFlag == null ? null : derivativeOcFlag.trim();
+    }
+
+    /**
+     * 取得 报价方式
+     * @return 报价方式
+     */
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    /**
+     * 设置 报价方式
+     * @param quoteType 报价方式
+     */
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType == null ? null : quoteType.trim();
+    }
+
+    /**
+     * 取得 质押券库代码
+     * @return 质押券库代码
+     */
+    public String getPledgeStockId() {
+        return pledgeStockId;
+    }
+
+    /**
+     * 设置 质押券库代码
+     * @param pledgeStockId 质押券库代码
+     */
+    public void setPledgeStockId(String pledgeStockId) {
+        this.pledgeStockId = pledgeStockId == null ? null : pledgeStockId.trim();
     }
 }

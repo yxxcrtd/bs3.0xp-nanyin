@@ -9,8 +9,8 @@ import java.util.Map;
 
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.invest.interf.b45.service.Send006Service;
-import com.joyintech.tams.invest.interf.b45.service.SendService;
+//import com.joyintech.tams.invest.interf.b45.service.Send006Service;
+//import com.joyintech.tams.invest.interf.b45.service.SendService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.workflow.engine.WorkflowContext;
@@ -31,11 +31,11 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepoinfo002Dto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -64,11 +64,11 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
     /**
      * b45接口
      */
-    @Autowired
-    private SendService sendService;
-
-    @Autowired
-    private Send006Service send006Service;
+//    @Autowired
+//    private SendService sendService;
+//
+//    @Autowired
+//    private Send006Service send006Service;
 
     /**
      * 获取组合代码的联想文本框 <功能详细描述>
@@ -190,7 +190,7 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
         //向b45发送信息
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("entrustId", dto.getEntrustId());
-        sendService.sendToB45(param,send006Service);
+//        sendService.sendToB45(param,send006Service);
     }
     private void doInsertFlow(EtrIbRepoinfo002Dto dto) {
         try {

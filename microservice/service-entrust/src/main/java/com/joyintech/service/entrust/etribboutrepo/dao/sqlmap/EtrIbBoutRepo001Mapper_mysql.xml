@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.entrust.etribboutrepo.dao.EtrIbBoutRepo001Mapper_mysql">
+
+    <!-- 指令管理查询 -->
+    <select id="findZlglPage" parameterType="Map"
+            resultType="com.joyintech.service.entrust.etribboutrepo.dto.EtrIbBoutRepo001Dto">
+select aaa.* from (
+    select
+        T1.ENTRUST_ID entrustId,
+        T1.ENTRUST_STATUS entrustStatus,
+        T8.REAL_NAME invManagerId,
+        T1.PORTFOLIO_ID portfolioId,
+        T2.PORTFOLIO_NAME portfolioName,
+        T1.FINPROD_ID,
+        T3.FINPROD_MARKET_ID finprodMarketId,
+        T3.FINPROD_ABBR finprodAbbr,
+        T7.TERM_TYPE termType,
+        T7.TERM_DAYS repoTerm,
+        T1.PS ps,
+        T1.ENTRUST_NUM/100   entrustAmt,
+        T1.PRICE_MODEL priceModel,
+        T1.PRICE*100 price,
+        T7.SETTLE_SPREED settleSpreed,
+		T1.VDATE vdate,
+		T1.MDATE mdate,
+        IFNULL(T5.FINISH_AMT,0)*100    finishAmt,
+        round(IFNULL(T5.FINISH_AMT,0)/ IFNULL(T1.ENTRUST_NUM, T1.ENTRUST_AMT),4)*100		transactioncom,
+		T1.REMARK
+        ,T7.FIRST_UNIT_CPRICE firstprice
+        ,T7.FIRST_UNIT_CPRICE2 firstprice2
+        ,IFNULL(T2.PARENT_PORTFOLIO_ID, T1.PORTFOLIO_ID) parentPortfolioId
+    from
+		ETR_ENTRUST T1
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY PPA
+        ON
+        T1.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
+		INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+		LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+		LEFT JOIN
+            (
+                SELECT
+                    ENTRUST_ID,
+                    SUM(FINISH_AMT) as FINISH_AMT
+                FROM
+                    ETR_FINISH_STATUS
+                GROUP BY
+                    ENTRUST_ID) T5
+			ON T1.ENTRUST_ID = T5.ENTRUST_ID
+		LEFT JOIN ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
+        LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
+    where
+        T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            AND T1.portfolio_id in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="termType !=null and !termType.equals('')">
+            AND T7.TERM_TYPE = #{termType}
+        </if>
+        <if test="ps != null and !ps.equals('')">
+            AND T1.PS=#{ps}
+        </if>
+        <if test="startDate != null and !startDate.equals('')">
+            AND T1.VDATE &gt;=str_to_date(#{startDate},'%Y-%m-%d')
+        </if>
+        <if test="endDate != null and !endDate.equals('')">
+            AND T1.MDATE &lt;=str_to_date(#{endDate},'%Y-%m-%d')
+        </if>
+        <if test="priceModel != null and priceModel != ''">
+            AND T1.PRICE_MODEL = #{priceModel}
+        </if>
+        <if test="entrustStatus != null and entrustStatus != ''">
+            AND T1.ENTRUST_STATUS = #{entrustStatus}
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND T1.ENTRUST_ID = #{entrustId}
+        </if>
+        UNION ALL
+        select
+        T1.ENTRUST_ID entrustId,
+        T1.ENTRUST_STATUS entrustStatus,
+        T8.REAL_NAME invManagerId,
+        T1.PORTFOLIO_ID portfolioId,
+        T2.PORTFOLIO_NAME portfolioName,
+        T1.FINPROD_ID,
+        T3.FINPROD_MARKET_ID finprodMarketId,
+        T3.FINPROD_ABBR finprodAbbr,
+        T7.TERM_TYPE termType,
+        T7.TERM_DAYS repoTerm,
+        T1.PS ps,
+        T1.ENTRUST_NUM/100   entrustAmt,
+        T1.PRICE_MODEL priceModel,
+        T1.PRICE*100 price,
+        T7.SETTLE_SPREED,
+        T1.VDATE vdate,
+        T1.MDATE mdate,
+        IFNULL(T5.FINISH_AMT,0)*100    finishAmt,
+        round(IFNULL(T5.FINISH_AMT,0)/ IFNULL(T1.ENTRUST_NUM, T1.ENTRUST_AMT),4)*100		transactioncom,
+        T1.REMARK
+        ,T7.FIRST_UNIT_CPRICE firstprice
+        ,T7.FIRST_UNIT_CPRICE2 firstprice2
+        ,IFNULL(T2.PARENT_PORTFOLIO_ID, T1.PORTFOLIO_ID) parentPortfolioId
+        from
+        WFL_ETR_ENTRUST T1
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY PPA
+        ON
+        T1.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
+        INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+        LEFT JOIN
+        (
+        SELECT
+        ENTRUST_ID,
+        SUM(FINISH_AMT) as FINISH_AMT
+        FROM
+        ETR_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T5
+        ON T1.ENTRUST_ID = T5.ENTRUST_ID
+        LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
+        LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
+        where
+        T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            AND T1.portfolio_id in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="termType !=null and !termType.equals('')">
+            AND T7.TERM_TYPE = #{termType}
+        </if>
+        <if test="ps != null and !ps.equals('')">
+            AND T1.PS=#{ps}
+        </if>
+        <if test="startDate != null and !startDate.equals('')">
+            AND T1.VDATE &gt;=str_to_date(#{startDate},'%Y-%m-%d')
+        </if>
+        <if test="endDate != null and !endDate.equals('')">
+            AND T1.MDATE &lt;=str_to_date(#{endDate},'%Y-%m-%d')
+        </if>
+        <if test="priceModel != null and priceModel != ''">
+            AND T1.PRICE_MODEL = #{priceModel}
+        </if>
+        <if test="entrustStatus != null and entrustStatus != ''">
+            AND T1.ENTRUST_STATUS = #{entrustStatus}
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND T1.ENTRUST_ID = #{entrustId}
+        </if>)aaa order by aaa.entrustId DESC
+    </select>
+
+</mapper>

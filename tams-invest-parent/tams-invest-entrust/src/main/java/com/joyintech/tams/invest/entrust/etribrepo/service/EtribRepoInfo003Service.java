@@ -16,9 +16,8 @@ import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.interf.b45.service.Send006Service;
-import com.joyintech.tams.invest.interf.b45.service.SendService;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+//import com.joyintech.tams.invest.interf.b45.service.Send006Service;
+//import com.joyintech.tams.invest.interf.b45.service.SendService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -29,6 +28,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtribRepoInfo003Dto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -85,10 +85,10 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
      * b45接口
      */
     @Autowired
-    private SendService sendService;
-
-    @Autowired
-    private Send006Service send006Service;
+//    private SendService sendService;
+//
+//    @Autowired
+//    private Send006Service send006Service;
 
 //    /**
 //     * 判断是否含权债
@@ -371,7 +371,7 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
         //向b45发送信息
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("entrustId", entity.getEntrustId());
-        sendService.sendToB45(param,send006Service);
+//        sendService.sendToB45(param,send006Service);
     }
 
     @Override
