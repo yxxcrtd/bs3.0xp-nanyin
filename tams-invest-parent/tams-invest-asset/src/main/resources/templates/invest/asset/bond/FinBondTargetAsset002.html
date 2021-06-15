@@ -46,7 +46,7 @@
                                            data-th-text="#{FinBondTargetAsset002.finprodId}">资产代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="finprodMarketId"
-                                               name="finprodMarketId" maxlength="18"
+                                               name="finprodMarketId" maxlength="15"
                                                data-th-value="${entity?.finprodMarketId}"
                                                class="layui-input form-input" placeholder="请输入内容"
                                                style="width: 85%!important; display: inline-block;"
@@ -64,7 +64,7 @@
                                         <input type="text" name="finprodName"
                                                data-th-value="${entity?.finprodName}"
                                                class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}">
+                                               data-th-placeholder="#{SysCommon.placeholder}" required>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
