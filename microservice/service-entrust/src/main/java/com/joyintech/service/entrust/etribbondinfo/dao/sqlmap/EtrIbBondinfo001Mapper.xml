@@ -11,11 +11,11 @@
         FP.FINPROD_MARKET_ID finprodMarketId,
         FP.FINPROD_ABBR finprodAbbr,
         T4.TYPE_9 secType1,
-        ifnull(TEMP.AMOUNT, 0) / 100 shareAmt,
-        ifnull(TEMP.AMOUNT04, 0) / 100 avaPledgePrin,
-        ifnull(t7.amount, 0) / 100 avaShareAmt,
+        NULLIF(TEMP.AMOUNT, 0) / 100 shareAmt,
+        NULLIF(TEMP.AMOUNT04, 0) / 100 avaPledgePrin,
+        NULLIF(t7.amount, 0) / 100 avaShareAmt,
         MBVI.NETPRICE price,
-        ifnull(MBVI.NETPRICE, 0) * ifnull(TEMP.AMOUNT, 0) positionsPrice,
+        NULLIF(MBVI.NETPRICE, 0) * NULLIF(TEMP.AMOUNT, 0) positionsPrice,
         atd.COST_POSITION,
         atd.COST_POSITION_NUM
         ,tchl.SEC_ACCT_ID
@@ -24,10 +24,10 @@
         SELECT
         PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
         PSP.FINPROD_ID   AS FINPROD_ID,
-        SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN IFNULL(PSP.AMOUNT,0)
-        WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_06}) THEN -1* IFNULL(PSP.AMOUNT,0)
+        SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NULLIF(PSP.AMOUNT,0)
+        WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_06}) THEN -1* NULLIF(PSP.AMOUNT,0)
         END) AS AMOUNT,
-        SUM(ifnull(if(PSP.HODING_TYPE = #{POSITION_TYPE_04}, AMOUNT, 0), 0)) AS AMOUNT04
+        SUM(NULLIF(if(PSP.HODING_TYPE = #{POSITION_TYPE_04}, AMOUNT, 0), 0)) AS AMOUNT04
         FROM
         PTL_SEC_POSITION PSP
         INNER JOIN
@@ -44,7 +44,7 @@
         WHERE
         PSP.BRANCH =0
         AND PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_04}, #{POSITION_TYPE_05}, #{POSITION_TYPE_06})
-        AND PSP.CDATE = str_to_date(#{sysDate},'%Y-%m-%d')
+        AND PSP.CDATE = to_date(#{sysDate},'yyyy-MM-dd')
         GROUP BY
         PSP.PORTFOLIO_ID ,
         PSP.FINPROD_ID
@@ -65,7 +65,7 @@
                     #{item}
                 </foreach>
             </if>
-            and cdate = str_to_date(#{sysDate},'%Y-%m-%d')
+            and cdate = to_date(#{sysDate},'yyyy-MM-dd')
             and hoding_type = 'E01'
             group by portfolio_id,finprod_id
         ) t7 on t7.portfolio_id = TEMP.portfolio_id and t7.finprod_id = TEMP.finprod_id
@@ -73,7 +73,7 @@
             MST_BOND_VALUATION_INFO MBVI
         ON
             FP.FINPROD_MARKET_ID = MBVI.SEC_ID
-            AND MBVI.VALUE_DATE <![CDATA[<=]]> str_to_date(#{sysDate},'%Y-%m-%d')
+            AND MBVI.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
             AND MBVI.VALUE_DATE = (
                 SELECT
                 MAX(MBVI2.VALUE_DATE)
@@ -82,12 +82,12 @@
                 WHERE
                 MBVI.SEC_ID = MBVI2.SEC_ID
                 AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
-                AND MBVI2.VALUE_DATE <![CDATA[<=]]> str_to_date(#{sysDate},'%Y-%m-%d')
+                AND MBVI2.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
             )
         left join COST_POSITION_DB atd
             on atd.portfolio_id = TEMP.portfolio_id and
             atd.finprod_id = TEMP.finprod_id and
-            atd.CDATE = str_to_date(#{sysDate},'%Y-%m-%d') - 1
+            atd.CDATE = to_date(#{sysDate},'yyyy-MM-dd') - 1
         left join (
         select
         min(esp.SEC_ACCT_ID) SEC_ACCT_ID,
@@ -103,7 +103,7 @@
                 #{item}
             </foreach>
         </if>
-        and esp.cdate = str_to_date(#{sysDate},'%Y-%m-%d')
+        and esp.cdate = to_date(#{sysDate},'yyyy-MM-dd')
         and esp.hoding_type = 'E01'
         group by esp.FINPROD_ID,esp.PORTFOLIO_ID
         ) tchl on tchl.portfolio_id = TEMP.portfolio_id and tchl.finprod_id = TEMP.finprod_id
@@ -141,7 +141,7 @@
         T3.FINPROD_ABBR finprodAbbr,
         T4.TYPE_9 secType1,
         T1.PS,
-        ifnull(T1.ENTRUST_NUM,0) / 100 shareNum,
+        NULLIF(T1.ENTRUST_NUM,0) / 100 shareNum,
         T1.PRICE_MODEL priceModel,
         T1.PRICE unitPrice,
         T7.FULL_PRICE allPrice,
@@ -150,11 +150,11 @@
         T7.SETTLE_SPREED,
         T1.VDATE,
         T1.MDATE,
-        ifnull(T5.FINISH_AMT,0)/100 finishAmt,
-        round(ifnull(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
+        NULLIF(T5.FINISH_AMT,0)/100 finishAmt,
+        round(NULLIF(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
         T1.REMARK
         ,T1.COUNTER_ID counterId
-        ,ifnull(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        ,NULLIF(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
         from
         ETR_ENTRUST T1
         INNER JOIN
@@ -206,10 +206,10 @@
             AND T1.PS=#{ps}
         </if>
         <if test="startDate != null and !startDate.equals('')">
-            AND T1.VDATE &gt;=str_to_date(#{startDate},'%Y-%m-%d')
+            AND T1.VDATE &gt;= to_date(#{startDate},'yyyy-MM-dd')
         </if>
         <if test="endDate != null and !endDate.equals('')">
-            AND T1.MDATE &lt;=str_to_date(#{endDate},'%Y-%m-%d')
+            AND T1.MDATE &lt;= to_date(#{endDate},'yyyy-MM-dd')
         </if>
         <if test="priceModel != null and priceModel != ''">
             AND T1.PRICE_MODEL = #{priceModel}
@@ -232,7 +232,7 @@
         T3.FINPROD_ABBR finprodAbbr,
         T4.TYPE_9 secType1,
         T1.PS,
-        ifnull(T1.ENTRUST_NUM,0) / 100 shareNum,
+        NULLIF(T1.ENTRUST_NUM,0) / 100 shareNum,
         T1.PRICE_MODEL priceModel,
         T1.PRICE unitPrice,
         T7.FULL_PRICE allPrice,
@@ -241,11 +241,11 @@
         T7.SETTLE_SPREED,
         T1.VDATE,
         T1.MDATE,
-        ifnull(T5.FINISH_AMT,0)/100 finishAmt,
-        round(ifnull(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
+        NULLIF(T5.FINISH_AMT,0)/100 finishAmt,
+        round(NULLIF(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
         T1.REMARK
         ,T1.COUNTER_ID counterId
-        ,ifnull(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        ,NULLIF(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
         from
         WFL_ETR_ENTRUST T1
         INNER JOIN
@@ -291,10 +291,10 @@
             AND T1.PS=#{ps}
         </if>
         <if test="startDate != null and !startDate.equals('')">
-            AND T1.VDATE &gt;=str_to_date(#{startDate},'%Y-%m-%d')
+            AND T1.VDATE &gt;= to_date(#{startDate},'yyyy-MM-dd')
         </if>
         <if test="endDate != null and !endDate.equals('')">
-            AND T1.MDATE &lt;=str_to_date(#{endDate},'%Y-%m-%d')
+            AND T1.MDATE &lt;= to_date(#{endDate},'yyyy-MM-dd')
         </if>
         <if test="priceModel != null and priceModel != ''">
             AND T1.PRICE_MODEL = #{priceModel}
@@ -330,7 +330,7 @@
                 #{item}
             </foreach>
         </if>
-        and str_to_date(#{sysDate},'%Y-%m-%d')=t.SETTLE_DATE
+        and to_date(#{sysDate},'yyyy-MM-dd')=t.SETTLE_DATE
         and fpt.type_8='F01'
         and t.trade_status='01'
         and t.is_cancel='N'
@@ -347,12 +347,12 @@ select
     t3.CUSTOMER_NAME issuerName,
     DATE_FORMAT(t1.VDATE,'%Y-%m-%d') vdate,
     DATE_FORMAT(t1.MDATE,'%Y-%m-%d') mdate,
-    DATEDIFF(t1.MDATE, str_to_date(#{sysDate},'%Y-%m-%d')) lastqx,
+    DATEDIFF(t1.MDATE, to_date(#{sysDate},'yyyy-MM-dd')) lastqx,
     DATE_FORMAT(t4.PAY_DATE,'%Y-%m-%d') lastPaydate
     ,t6.INT_TYPE AS rateType
-	,ifnull(t8.YIELD, t6.RATE)*100 rate
+	,NULLIF(t8.YIELD, t6.RATE)*100 rate
 	,DATE_FORMAT(B.EXERCISE_DATE,'%Y-%m-%d') xqdate
-    ,ifnull(MBVI.BPYIELD, 0)*100 gzRate
+    ,NULLIF(MBVI.BPYIELD, 0)*100 gzRate
     ,MBVI.NETVALUATION_EXERCISE priceXq
     ,MBVI.NETVALUATION_RECOMMENDED priceTj
 from
@@ -369,7 +369,7 @@ from
             inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
             where
             f2.CASH_TYPE_2 = 'C02' and
-            f1.MDATE &gt;= str_to_date(#{sysDate},'%Y-%m-%d') and
+            f1.MDATE &gt;= to_date(#{sysDate},'yyyy-MM-dd') and
             f3.FINPROD_TYPE2 = 'F01'
             <if test="finprodId != null and finprodId != ''">
                 AND f3.FINPROD_ID = #{finprodId}
@@ -405,7 +405,7 @@ from
         MST_BOND_VALUATION_INFO MBVI
     ON
         t1.FINPROD_MARKET_ID = MBVI.SEC_ID
-    AND MBVI.VALUE_DATE <![CDATA[<=]]> str_to_date(#{sysDate},'%Y-%m-%d')
+    AND MBVI.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
     AND MBVI.VALUE_DATE = (
     SELECT
     MAX(MBVI2.VALUE_DATE)
@@ -414,7 +414,7 @@ from
     WHERE
     MBVI.SEC_ID = MBVI2.SEC_ID
     AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
-    AND MBVI2.VALUE_DATE <![CDATA[<=]]> str_to_date(#{sysDate},'%Y-%m-%d')
+    AND MBVI2.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
     )
     where
     1=1
