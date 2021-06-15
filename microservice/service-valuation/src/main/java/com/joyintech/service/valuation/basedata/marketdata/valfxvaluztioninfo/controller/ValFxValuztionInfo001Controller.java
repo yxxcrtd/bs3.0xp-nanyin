@@ -17,7 +17,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.basedata.marketdata.valfxvaluztioninfo.dto.ValFxValuztionInfo001Dto;
 import com.joyintech.service.valuation.basedata.marketdata.valfxvaluztioninfo.service.ValFxValuztionInfo001Service;
 import com.joyintech.service.valuation.basedata.marketdata.valfxvaluztioninfo.service.ValFxValuztionQuotationInfoImportDataService;
-import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 
 /**
  * 外汇估值信息

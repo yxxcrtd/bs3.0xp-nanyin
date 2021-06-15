@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
