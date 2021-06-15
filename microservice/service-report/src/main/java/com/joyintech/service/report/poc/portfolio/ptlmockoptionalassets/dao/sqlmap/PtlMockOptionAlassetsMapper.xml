@@ -123,7 +123,8 @@
 				group by DD.FINPROD_ID
 			)	EE
 				on AA.finprodId = EE.finprodId
-	where 1=1 
+	where 1=1
+		and (fin_product_type.TYPE_8 = #{F01,jdbcType=VARCHAR} or (fin_product_type.TYPE_8 = #{F06,jdbcType=VARCHAR} and fin_product_type.TYPE_9 = #{type9,jdbcType=VARCHAR}))
 		<if test='type8 != null and type8 != ""'>
 			and fin_product_type.TYPE_8 = #{type8,jdbcType=VARCHAR}
 		</if>
@@ -149,24 +150,28 @@
 	
 	<select id="getFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT
-		FINPROD_ID id,
-		FINPROD_ABBR text,
-		FINPROD_NAME,
-		FINPROD_MARKET_ID
-		FROM FIN_PRODUCT
+		fp.FINPROD_ID id,
+		fp.FINPROD_ABBR text,
+		fp.FINPROD_NAME,
+		fp.FINPROD_MARKET_ID
+		FROM FIN_PRODUCT fp
+			LEFT JOIN FIN_PRODUCT_TYPE fpt ON fp.FINPROD_ID = fpt.FINPROD_ID
 		<where>
 			<if test="search != null and search != ''">
-				and (FINPROD_ID like concat(concat('%',#{search}),'%')
-		    			or FINPROD_NAME like concat(concat('%',#{search}),'%'))
+				and (fp.FINPROD_ID like concat(concat('%',#{search}),'%')
+		    			or fp.FINPROD_NAME like concat(concat('%',#{search}),'%'))
 			</if>
 			<if test="finprodType2 != null and finprodType2.size() > 0">
-					AND FINPROD_TYPE2 in 
+					AND fpt.TYPE_8 in
 					<foreach collection="finprodType2" item="item" open="(" close=")" separator=",">
 						#{item}
 					</foreach>
 			</if>
 			<if test="initValue != null and initValue != ''">
-				AND FINPROD_ID = #{initValue}
+				AND fp.FINPROD_ID = #{initValue}
+			</if>
+			<if test="type9 != null and type8 != null ">
+				OR (fpt.TYPE_9 =#{type9,jdbcType=VARCHAR} and fpt.TYPE_8 = #{type8,jdbcType=VARCHAR})
 			</if>
 		</where>
 	</select>
