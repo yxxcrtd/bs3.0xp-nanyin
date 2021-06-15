@@ -186,17 +186,17 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
             }
         }
         // 投资资产种类及比例
-        if (StringUtil.isNotEmpty(dto.getRepInvTypeRat())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepInvTypeRat(), 300)) {
-                resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
-            }else if(dto.getRepInvTypeRat().contains("（") || dto.getRepInvTypeRat().contains("）") ||
-            		dto.getRepInvTypeRat().contains("：") || dto.getRepInvTypeRat().contains("；")
-                    || !dto.getRepInvTypeRat().contains(":")  || !dto.getRepInvTypeRat().contains("%")) {
-            	resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
-                        this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepInvTypeRat())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepInvTypeRat(), 300)) {
+//                resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
+//            }else if(dto.getRepInvTypeRat().contains("（") || dto.getRepInvTypeRat().contains("）") ||
+//            		dto.getRepInvTypeRat().contains("：") || dto.getRepInvTypeRat().contains("；")
+//                    || !dto.getRepInvTypeRat().contains(":")  || !dto.getRepInvTypeRat().contains("%")) {
+//            	resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
+//                        this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
+//            }
+//        }
         if (StringUtil.isNotEmpty(dto.getRepRuleComment())) {
             if (RepCheckUtil.checkByteLength(dto.getRepRuleComment(), 256)) {
                 resultList.add(new ValidMessage("repRuleComment", this.getMessage("FW_E_0002",
