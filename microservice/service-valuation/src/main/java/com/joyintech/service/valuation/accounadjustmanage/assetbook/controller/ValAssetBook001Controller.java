@@ -407,4 +407,9 @@ public class ValAssetBook001Controller extends BaseController {
         String param =(String) params.get("param");
         return valAssetBook001Service.findProductGrp(params);
     }
+    
+    @PostMapping("/getBooksetIdsByGroups")
+    public List<SuggestDto> getBooksetIdsByGroups(@RequestBody Map<String, Object> params) {
+        return valAssetBook001Service.getBooksetIdsByGroups(params);
+    }
 }

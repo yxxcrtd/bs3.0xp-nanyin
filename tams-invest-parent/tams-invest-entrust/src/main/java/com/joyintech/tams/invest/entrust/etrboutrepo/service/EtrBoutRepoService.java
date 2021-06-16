@@ -630,6 +630,9 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
             }
             // 交易日历名称
             dto.setCalendarId(data.get(17).toString());
+            if(dto.getCalendarId().contains(":")){
+            	dto.setCalendarId( dto.getCalendarId().split(":")[0]);
+            }
             Map<String, Object> param = new HashMap<>();
             param.put("initValue", dto.getCalendarId());
             param.put("page", 1);

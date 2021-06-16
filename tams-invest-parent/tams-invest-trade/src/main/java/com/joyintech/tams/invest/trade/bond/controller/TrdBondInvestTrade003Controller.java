@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.bond.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -123,6 +124,9 @@ public class TrdBondInvestTrade003Controller extends BaseController {
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdBondInvestTrade002Service.getBussinessEntityByWorkflowId(
                 workflowId);
+            if (dto.getTotalFaceValue() != null) {
+                dto.setTradeAmt(dto.getTotalFaceValue());
+            }
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             model.addAttribute("workflowId",workflowId);
         }
@@ -225,6 +229,16 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
 
+        if (dto.getTradeAmt() != null){
+            dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            if(StringUtil.isNotEmpty(dto.getOwnTradeAmt())){
+            	dto.setOwnTradeAmt(dto.getOwnTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(StringUtil.isNotEmpty(dto.getIntegrateTradeAmt())){
+            	dto.setIntegrateTradeAmt(dto.getIntegrateTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+        }
+        
         // add by etliu 20210501 银行间场内场外拆分 start
         model.addAttribute("parentPageId", this.getParam("parentPageId"));
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));

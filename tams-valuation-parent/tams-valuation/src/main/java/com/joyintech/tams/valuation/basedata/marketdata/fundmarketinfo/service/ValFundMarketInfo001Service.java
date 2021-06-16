@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.ExcelUtil;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.tams.invest.common.dto.InvAjaxResult;
-import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
-import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.valuation.basedata.marketdata.fundmarketinfo.dto.ValFundMarketInfo001dto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
@@ -71,13 +71,13 @@ public class ValFundMarketInfo001Service extends CommonExportService<ValFundMark
      */
     public AjaxResult checkConfirmMsgForImportData(String fileName)  {
         Map<String,Object> param = new HashMap<String,Object>();
-        param.put("dataList", ExcelUtil.getDataList1(fileName));
+        param.put("dataList", ExcelUtil.getDataList(fileName));
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());
         return restTemplate.postForObject(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValFundMarketInfo001/checkConfirmMsgForImportData",
                 param,
-                InvAjaxResult.class);
+                CommonAjaxResult.class);
     }
 
 
@@ -90,8 +90,8 @@ public class ValFundMarketInfo001Service extends CommonExportService<ValFundMark
      */
     public List<ExcelValidDto> importData(String fileName) {
         Map<String,Object> param = new HashMap<String,Object>();
-        param.put("dataList", ExcelUtil.getDataList1(fileName));
-        param.put("tempList", ExcelUtil.getTempList1(fileName));
+        param.put("dataList", ExcelUtil.getDataList(fileName));
+        param.put("tempList", ExcelUtil.getTempList(fileName));
         param.put("userName", CommonUtil.getUserName());
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());

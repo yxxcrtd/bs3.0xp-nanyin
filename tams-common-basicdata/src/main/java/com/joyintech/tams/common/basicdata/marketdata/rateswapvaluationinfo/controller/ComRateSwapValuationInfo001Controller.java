@@ -2,6 +2,8 @@ package com.joyintech.tams.common.basicdata.marketdata.rateswapvaluationinfo.con
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeList;
@@ -99,6 +102,19 @@ public class ComRateSwapValuationInfo001Controller extends BaseController {
             throws Exception {
         String msg = StringUtils.EMPTY;
         String operateType = dto.getOperateType();
+        AjaxResult ar = new AjaxResult();
+        ArrayList<ValidMessage> errorList = new ArrayList<>();
+        for(ComRateSwapValuationInfo002Dto comRateSwapValuationInfo002Dto : dto.getSelectedItem()) {
+        	Boolean flag = comRateSwapValuationInfo002Service.checkBusinessDataInFlow(comRateSwapValuationInfo002Dto);
+        	if(flag) {
+	        	errorList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识",
+	                  StringUtil.join(Arrays.asList(comRateSwapValuationInfo002Dto.getFinprodId2(), comRateSwapValuationInfo002Dto.getDatasourceType(), comRateSwapValuationInfo002Dto.getValDate()), ","))));
+        	}
+        }
+        if(!StringUtil.isEmptyList(errorList)) {
+        	ar.setErrorList(errorList);
+        	return ar;
+        }
 
         return commonCheck(bindingResult, operateType);
     }
@@ -114,28 +130,28 @@ public class ComRateSwapValuationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "delete", method = RequestMethod.POST)
-    public AjaxResult deleteConfig(@RequestBody @Validated({ValidateGroupDelete.class}) ComRateSwapValuationInfo002Dto dto) {
+    public AjaxResult deleteConfig(@RequestBody @Validated({ValidateGroupDelete.class}) ComRateSwapValuationInfo002Dto dto1) {
         String msg = StringUtils.EMPTY;
 
         ProcessParameter<ComRateSwapValuationInfo002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<ComRateSwapValuationInfo002Dto> workFlowParameter = new WorkFlowParameter<>();
-
         try {
-            Map<String, Object> map = Maps.newHashMap();
-            map.put("finprodId2", dto.getFinprodId2());
-            map.put("datasourceType", dto.getDatasourceType());
-            map.put("valDate", dto.getValDate());
-            dto = comRateSwapValuationInfo002Service.findByPrimaryKey(map);// dto 为回显值
-
-            workFlowParameter.setPageId("ComRateSwapValuationInfo002"); // 页面id
-            workFlowParameter.setElementId(this.getParam("elementId")); // 元素id
-            workFlowParameter.setBusinessCode(dto.getFinprodId2());// 业务代码编号
-            workFlowParameter.setBusinessType(DictCodeList.共通业务类型_利率互换估值信息.getValue());// 业务类型
-            workFlowParameter.setComment(entity -> WorkFlowUtil.concatComment(
-                    "利率互换估值信息" , entity.getFinprodId2()));// 当前工作流备注
-            processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
-
-            msg = comRateSwapValuationInfo002Service.start(processParameter, dto);
+        	for(ComRateSwapValuationInfo002Dto dto : dto1.getSelectedItem()) {
+	            Map<String, Object> map = Maps.newHashMap();
+	            map.put("finprodId2", dto.getFinprodId2());
+	            map.put("datasourceType", dto.getDatasourceType());
+	            map.put("valDate", dto.getValDate());
+	            dto = comRateSwapValuationInfo002Service.findByPrimaryKey(map);// dto 为回显值
+	            workFlowParameter.setPageId("ComRateSwapValuationInfo002"); // 页面id
+	            workFlowParameter.setElementId(this.getParam("elementId")); // 元素id
+	            workFlowParameter.setBusinessCode(dto.getFinprodId2());// 业务代码编号
+	            workFlowParameter.setBusinessType(DictCodeList.共通业务类型_利率互换估值信息.getValue());// 业务类型
+	            workFlowParameter.setComment(entity -> WorkFlowUtil.concatComment(
+	                    "利率互换估值信息" , entity.getFinprodId2()));// 当前工作流备注
+	            processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
+	
+	            msg = comRateSwapValuationInfo002Service.start(processParameter, dto);
+        	}
         } catch (Exception e) {
             this.getLogger().error("启动利率互换估值信息流程失败：", e);
             msg = e.getMessage();

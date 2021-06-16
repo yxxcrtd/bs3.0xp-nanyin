@@ -12,6 +12,7 @@ package com.joyintech.tams.valuation.valuationparametermanage.shadowpricescheme.
 
 import java.math.BigDecimal;
 
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -23,6 +24,7 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+@PageId("ShadowPriceScheme002")
 public class ShadowPriceScheme002Dto  extends BaseEntity implements ProcessEntity{
 
 	/**

@@ -197,6 +197,8 @@ $(function() {
                 return;
             }
             var object = {};
+            object.curveCode = curveCodeVal;
+            object.curveDate = curveDateVal;
             object.comRateSwapInformationDtoList = selArr
             object.operateType = "delete"
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/rateswapinformation/ComRateSwapInformation001/check', object, function (result) {

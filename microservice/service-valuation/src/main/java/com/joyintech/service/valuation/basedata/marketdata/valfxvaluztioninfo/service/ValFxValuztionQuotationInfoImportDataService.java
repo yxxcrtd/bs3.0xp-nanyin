@@ -25,8 +25,8 @@ import com.joyintech.tams.common.base.dao.MstValFxMapper;
 import com.joyintech.tams.common.base.entity.MstValFx;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
-import com.joyintech.tams.invest.common.util.ExcelUtil;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.ExcelUtil;
 
 /**外汇行情信息导入
  * @auther: 曹锦

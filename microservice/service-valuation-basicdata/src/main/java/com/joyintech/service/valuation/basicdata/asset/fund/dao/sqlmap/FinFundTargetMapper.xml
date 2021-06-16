@@ -279,6 +279,7 @@ FinFundTargetDto selectByFinprodId(String finprodId);
 		LEFT JOIN FIN_CASH_PAY_RULE d
 		ON a.FINPROD_ID = d.FINPROD_ID
 		WHERE a.FINPROD_TYPE = #{FINPROD_TYPE_TG_F06,jdbcType=VARCHAR}
+		AND NOT EXISTS (SELECT 1 FROM FIN_CASH_PAY_RULE e WHERE d.FINPROD_ID=e.FINPROD_ID AND e.EFF_DATE>d.EFF_DATE)
 		<if test="finprodId != null and finprodId != ''">
 			and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
 		</if>

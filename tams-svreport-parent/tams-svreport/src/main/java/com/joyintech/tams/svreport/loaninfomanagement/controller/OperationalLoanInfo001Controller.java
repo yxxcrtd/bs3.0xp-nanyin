@@ -21,6 +21,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BaseInformationDto;
 import com.joyintech.tams.svreport.infomanagement.service.OperationalInfoMService;
 import com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto;
@@ -98,6 +99,9 @@ public class OperationalLoanInfo001Controller extends BaseController{
 	@RequestMapping("export")
     public ResponseEntity<byte[]> export() {
     	Map<String, Object> param = RequestUtil.getPageParam();
+    	if(StringUtil.isNotEmpty(param.get("exportTableId"))){
+    		param.put("tableId", param.get("exportTableId"));
+    	}
     	return operationalInfoMService.export(param);
     }
     

@@ -457,6 +457,7 @@
 			var columnIds = getColumnParams();
 			var param = {};
 			param.tableId = tableId;
+			param.exportTableId = tableId;
 			param.columnIds = columnIds;
 			param.jasonData = jasonData;
 			param.tableName = tableName;

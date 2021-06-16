@@ -658,7 +658,7 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
                 if (rowData.get(12).toString().contains(DictCodeListExt1.交易场所_银行间.getValue())) {
                     if (StringUtil.isNotEmpty(rowData.get(7).toString())
                         && !rowData.get(7).toString().contains(
-                            DictCodeList.回购类型_质押式协议回购.getValue())) {
+                            DictCodeList.回购类型_质押式回购.getValue())) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                             getMessage("ETR_E_0022", lineNo));
                     }

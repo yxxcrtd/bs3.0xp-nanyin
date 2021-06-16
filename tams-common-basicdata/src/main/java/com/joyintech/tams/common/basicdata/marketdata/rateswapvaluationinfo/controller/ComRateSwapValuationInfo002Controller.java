@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.common.basicdata.marketdata.rateswapvaluationinfo.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -148,6 +149,12 @@ public class ComRateSwapValuationInfo002Controller extends BaseController {
                 if (entity != null) {
                     return new AjaxResult("已存在交易编号_估值来源_估值日期相同的数据，请确保数据唯一性。", MessageType.错误消息);
                 }
+            }
+            //流程校验
+            Boolean flag = comRateSwapValuationInfo002Service.checkBusinessDataInFlow(dto);
+            if(flag) {
+            	return new AjaxResult(getMessage("COMMON_E_0021", "标识",
+  	                  StringUtil.join(Arrays.asList(dto.getFinprodId2(), dto.getDatasourceType(), dto.getValDate()), ",")), MessageType.错误消息);
             }
         }
 

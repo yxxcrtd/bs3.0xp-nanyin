@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -39,7 +40,6 @@ import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.servic
 import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.service.ValFundMarketQuotationInfoImportDataService;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉

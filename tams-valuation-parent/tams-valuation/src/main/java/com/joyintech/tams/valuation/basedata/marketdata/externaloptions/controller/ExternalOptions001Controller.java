@@ -12,7 +12,7 @@ import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.valuation.basedata.marketdata.externaloptions.dto.ExternalOptions001Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.externaloptions.dto.ExternalOptions002Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.externaloptions.service.ExternalOptions001Service;

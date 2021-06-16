@@ -41,7 +41,7 @@ import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValSeclendAs
 
 /**
  * 债券借贷标的劵存续期交易 模板处理Service(VAL_SECLEND_ASSET_PERIOD_DEAL)
- * 
+ *
  * @author dongxiangyang
  * @version 1.0 2018年10月29日
  * @see SecblTranDealTemplateRecService
@@ -55,7 +55,7 @@ public class SecPeriodDealTemplateRecService {
      */
     @Autowired
     private TemplateAnalysisForXMLService templateAnalysisForXMLService;
-    
+
     /**
      * 接口共通Service
      */
@@ -63,7 +63,7 @@ public class SecPeriodDealTemplateRecService {
     private InterfCommonService interfCommonService;
     /**
      * 债券借贷标的劵存续期交易 接口模板处理
-     * 
+     *
      * @param templateSourceFlgDTO 文件来源和类型
      * @param acctEntity 计提基础信息DTO
      * @return 债券买卖交易 接口模板处理返回共通结果
@@ -78,10 +78,10 @@ public class SecPeriodDealTemplateRecService {
         List<ValSeclendAssetPeriodDeal> listValSeclendAssetPeriodDeal=new ArrayList<ValSeclendAssetPeriodDeal>();
         TemplateCheckReturnResult returnResult = new TemplateCheckReturnResult();
         Map<String,Object> params = acctEntity.getParams();
-        
+
         // 1、文件读取解析
         returnResult = templateAnalysisForXMLService.execute(acctEntity);
-        
+
         listValSeclendAssetPeriodDeal=returnResult.getT(ValSeclendAssetPeriodDeal.class);
         //获取数据数量
         result.setDataNum(listValSeclendAssetPeriodDeal.size());
@@ -118,13 +118,13 @@ public class SecPeriodDealTemplateRecService {
         result.setListValOrdersExt(valOrdersExtList);
         return result;
     }
-    
-    
+
+
     /**
      * 02-债券借贷标的劵存续期交易
-     * 
-     * @param listValSeclendAssetPeriodDeal 
-     * @return 金融产品交易List + 估值核算交易扩展表List + 入账信息表List + 账务明细表List 
+     *
+     * @param listValSeclendAssetPeriodDeal
+     * @return 金融产品交易List + 估值核算交易扩展表List + 入账信息表List + 账务明细表List
      * @see
      * @since 1.0
      */
@@ -153,15 +153,15 @@ public class SecPeriodDealTemplateRecService {
          		continue;
          	}
    	    	 dto.setCreateTime(resovleDate);
-   	         /**add by chendijun 20190412 start**/   	    	 
+   	         /**add by chendijun 20190412 start**/
    	    	 //定义 变量.债券基本信息Dto
    	    	 //调用共通设计->【详细设计-接口共通方法设计.xlsx】->标的类金融产品信息查询SHEET
    	    	 TargetFinProduct valTargetFinProduct = interfCommonService.getTargetFinProduct(dto.getSecId());
              /**add by chendijun 20190412 end**/
    	    	 TrdProductDeal valFinProductDeal = null;
-   	    	 
+
              /**modify by chendijun 20190412 start**/
-   	    	 if(DictCodeList.交易方向_融入债券还本.getValue().equals(dto.getPs()) 
+   	    	 if(DictCodeList.交易方向_融入债券还本.getValue().equals(dto.getPs())
             		|| DictCodeList.交易方向_本金返还.getValue().equals(dto.getPs())
             		|| DictCodeList.交易方向_融入债券派本到账.getValue().equals(dto.getPs())){
    	    	     //金融产品交易
@@ -169,18 +169,18 @@ public class SecPeriodDealTemplateRecService {
                  /**add by wujie on 20190418 start**/
                  valFinProductDeal.setTradeMarket(valTargetFinProduct.getTradeMarket());
                  /**add by wujie on 20190418 end**/
-                 
+
 
    	    		//还本到期，拆交易
    	    		if(dto.getActInt()!=null && BigDecimal.ZERO.compareTo(dto.getActInt())<0){
-                    
+
    	    			String bookType = "";
    	    			if(DictCodeList.交易方向_融入债券还本.getValue().equals(dto.getPs())){
    	    				bookType = DictCodeList.交易方向_融入债券收息.getValue();
    	    			}
    	    			else if(DictCodeList.交易方向_本金返还.getValue().equals(dto.getPs())){
    	    				bookType = DictCodeList.交易方向_利息返还.getValue();
-   	    			} 
+   	    			}
    	    			else if(DictCodeList.交易方向_融入债券派本到账.getValue().equals(dto.getPs())){
    	    			    bookType = DictCodeList.交易方向_融入债券派息到账.getValue();
    	    			}
@@ -201,12 +201,12 @@ public class SecPeriodDealTemplateRecService {
 	   	   	    	InterfProductDealBookCommonDto dealAccounting = interfCommonService.dealAccounting(valFinProductDeal_X, dto.getProdId());
 	   	   	    	listValDealAccounting.add(dealAccounting.getBokDealAccounting());
 	   	   	    	listValDealAccountingDetail.add(dealAccounting.getBokDealAccountingDetail());
-	   	   	    	
+
 	   	   	    	BokDetailId valBokDetailId = dealAccounting.getBokDetailId();
 	   	   	    	valBokDetailId.setDetailSubjectNoTail(valTargetFinProduct.getFinprodId());
 	   	   	    	valBokDetailId.setDetailSubnameTail(valTargetFinProduct.getFinprodAbbr());
 	   	   	    	listValBokDetailId.add(valBokDetailId);
-   	   	         
+
 	   	   	    	//结算指令
 	   	   	    	/**modify by wujie on 20190118 start
 	   	   	    	BokDealAccounting valDealAccounting = dealAccounting.getBokDealAccounting();
@@ -218,7 +218,7 @@ public class SecPeriodDealTemplateRecService {
 	   	   	    		listValOrdersExt.addAll((List<StlOrdersExt>)map.get("ORDERS_EXT"));
 	   	   	    	}
 	   	   	    	**/
-			   	   	  Map<String, Object> map = interfCommonService.instructionGenerate(valFinProductDeal_X, 
+			   	   	  Map<String, Object> map = interfCommonService.instructionGenerate(valFinProductDeal_X,
 		              		dto.getProdId(), dealAccounting.getAcctSubjectType(),null);
 		              if(map.get("ORDERS")!=null){
 		              	listValOrders.addAll((List<StlOrders>)map.get("ORDERS"));
@@ -236,36 +236,36 @@ public class SecPeriodDealTemplateRecService {
 		              	listValBokDetailId.addAll((List<BokDetailId>)map.get("BOK_DETAIL_ID"));
 		              }
 		              /**modify by wujie on 20190118 end**/
-	   	   	    	
+
    	    			/**收息 END**/
-   	    			
+
    	    		}
    	    	}else{
    	    	    valFinProductDeal = getValFinProductDeal(dto,dto.getPs());
-   	    	    
+
    	    	    /**add by wujie on 20190418 start**/
    	    	    valFinProductDeal.setTradeMarket(valTargetFinProduct.getTradeMarket());
                 /**add by wujie on 20190418 end**/
    	    	}
-   	    	 
+
    	    	 listValFinProductDeal.add(valFinProductDeal);
-   	    	 
+
              // 估值核算交易扩展表
    	    	 TrdProductDealAdd TrdProductDealExt=getProductDealExt(dto,valFinProductDeal);
    	    	 listValFinProductDealExt.add(TrdProductDealExt);
-   	    	 
+
    	    	 // 入账信息表   账务明细表、账务明细代码表调用共通
    	         InterfProductDealBookCommonDto dealAccounting = interfCommonService.dealAccounting(valFinProductDeal, dto.getProdId());
    	         listValDealAccounting.add(dealAccounting.getBokDealAccounting());
    	         listValDealAccountingDetail.add(dealAccounting.getBokDealAccountingDetail());
-   	           
+
    	         BokDetailId valBokDetailId = dealAccounting.getBokDetailId();
-   	         
+
              valBokDetailId.setDetailSubjectNoTail(valTargetFinProduct.getFinprodId());
              valBokDetailId.setDetailSubnameTail(valTargetFinProduct.getFinprodAbbr());
-          
+
    	         listValBokDetailId.add(valBokDetailId);
-   	         
+
    	          //结算指令
    	         /** modify by wujie on 20190118 start
 	   	      BokDealAccounting valDealAccounting = dealAccounting.getBokDealAccounting();
@@ -278,7 +278,7 @@ public class SecPeriodDealTemplateRecService {
 	   	      }
 	   	      **/
 	   	      StlOrders stlOrders = this.getStlOrders(dto,valFinProductDeal);
-	          Map<String, Object> map = interfCommonService.instructionGenerate_Interf(valFinProductDeal,stlOrders, 
+	          Map<String, Object> map = interfCommonService.instructionGenerate_Interf(valFinProductDeal,stlOrders,
 	          		dto.getProdId(), dealAccounting.getAcctSubjectType(),null);
 	          if(map.get("ORDERS")!=null){
 	          	listValOrders.addAll((List<StlOrders>)map.get("ORDERS"));
@@ -296,32 +296,32 @@ public class SecPeriodDealTemplateRecService {
 	          	listValBokDetailId.addAll((List<BokDetailId>)map.get("BOK_DETAIL_ID"));
 	          }
 	          /**modify by wujie on 20190118 end**/
-	          
+
 	          /**add by wujie on 20190322 start reamrk:通道投资费用交易生成**/
 	            ChannelFeeInfoDeal channelFeeInfoDeal = this.getChannelFeeInfoDeal(dto, dealAccounting.getAcctSubjectType());
 	            if(channelFeeInfoDeal != null){
 	                Map<String,Object> feedealMap = interfCommonService.assetChlFeeLend(valFinProductDeal, channelFeeInfoDeal);
-	                
+
 	                if(feedealMap.get("TrdProductDeal")!=null){
 	                    listValFinProductDeal.add((TrdProductDeal)feedealMap.get("TrdProductDeal"));
 	                }
-	                
+
 	                if(feedealMap.get("TrdProductDealExt")!=null){
 	                    listValFinProductDealExt.add((TrdProductDealAdd)feedealMap.get("TrdProductDealExt"));
 	                }
-	                
+
 	                if(feedealMap.get("BokDealAccounting_List")!=null){
 	                    listValDealAccounting.addAll((List<BokDealAccounting>)feedealMap.get("BokDealAccounting_List"));
 	                }
-	                
+
 	                if(feedealMap.get("BokDealAccountingDetail_List")!=null){
 	                    listValDealAccountingDetail.addAll(( List<BokDealAccountingDetail>)feedealMap.get("BokDealAccountingDetail_List"));
 	                }
-	                
+
 	                if(feedealMap.get("BokDetailId_list")!=null){
 	                    listValBokDetailId.addAll((List<BokDetailId>)feedealMap.get("BokDetailId_list"));
 	                }
-	                
+
 	                if(feedealMap.get("StlOrders_List")!=null){
 	                    listValOrders.addAll((List<StlOrders>)feedealMap.get("StlOrders_List"));
 	                }
@@ -338,13 +338,13 @@ public class SecPeriodDealTemplateRecService {
       resultMap.put("listValBokDetailId", listValBokDetailId);
       resultMap.put("listValOrders", listValOrders);
       resultMap.put("listValOrdersExt", listValOrdersExt);
-      
+
       valInterflogList = interfCommonService.filterValInterflogList(valInterflog, bookSetIds, valModel);
   	  resultMap.put("valInterflogList", valInterflogList);
-      
+
       return  resultMap;
     }
-    
+
     /**
      * 接收 结算指令信息
      * @param dto
@@ -363,7 +363,7 @@ public class SecPeriodDealTemplateRecService {
     	result.setSettleAmt(valFinProductDeal.getTradeAmt());
     	return result;
     }
-    
+
     /**
      * 通道投资资产交易拆分_通道费用
      * add by wujie on 20190322 start
@@ -386,14 +386,14 @@ public class SecPeriodDealTemplateRecService {
         deal.setChannelId(dto.getChannelId());
         //产品代码 = 接口.产品代码
         deal.setProdId(dto.getProdId());
-        
+
         deal.setAcctSubjectId(dto.getProdId() + FinalString.LAYERING_SPLIT + dto.getChannelId());
-        
+
         deal.setAcctSubjectType(acctSubjectType);
-        
+
         return deal;
     }
-    
+
     private  TrdProductDeal getValFinProductDeal(ValSeclendAssetPeriodDeal dto,String bookType){
     	TrdProductDeal trdProductDeal=new TrdProductDeal();
     	//交易编号=调用共通
@@ -430,11 +430,13 @@ public class SecPeriodDealTemplateRecService {
         //交易市场  = 流通市场.二级市场
         trdProductDeal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
 
-    	
-    	if(DictCodeList.交易方向_融入债券还本.getValue().equals(bookType) 
-        		|| DictCodeList.交易方向_本金返还.getValue().equals(bookType)
-        		|| DictCodeList.交易方向_融入债券派本到账.getValue().equals(bookType)
-        		|| DictCodeList.交易方向_卖空债券还本.getValue().equals(bookType)){
+
+    	if(DictCodeList.交易方向_融入债券还本.getValue().equals(bookType)//T31
+        		|| DictCodeList.交易方向_本金返还.getValue().equals(bookType)//T32
+        		|| DictCodeList.交易方向_融入债券派本到账.getValue().equals(bookType)//T44
+        		|| DictCodeList.交易方向_卖空债券还本.getValue().equals(bookType)//T33
+				|| DictCodeList.交易方向_还本到账.getValue().equals(bookType)//T23
+		){
     		//交易本金=B.实收本金
         	trdProductDeal.setPrinAmt(dto.getActCapi());
         	//交易金额=B.实收本金
@@ -443,7 +445,7 @@ public class SecPeriodDealTemplateRecService {
             trdProductDeal.setBranch(interfCommonService.getBranch(dto.getMdate(),DictCodeList.分支类型_应收本金.getValue()));
 //        	//利息总额=B.实收利息
 //        	trdProductDeal.setIntAmt(BigDecimal.ZERO);
-        	
+
     	}else{
     		//交易本金=B.实收利息
 //        	trdProductDeal.setPrinAmt(dto.getActInt());
@@ -455,21 +457,21 @@ public class SecPeriodDealTemplateRecService {
         	trdProductDeal.setBranch(interfCommonService.getBranch(dto.getMdate(),DictCodeList.分支类型_应收利息.getValue()));
     	}
 
-    	
+
         //原交易编号
         if(trdProductDeal.getTradeStatus().equals(DictCodeListExt1.交易状态_撤销.getValue())){
             trdProductDeal.setpTradeId(interfCommonService.getFTradeId(trdProductDeal));
         }
-        
+
         //通道代码 = a.通道代码
         trdProductDeal.setChlId(dto.getChannelId());
     	return  trdProductDeal;
     }
-    
-    
+
+
 //    /**
 //     * T1:金融产品交易表 接收
-//     * 
+//     *
 //     * @param dto 01-借贷交易
 //     * @return 金融产品交易表
 //     * @see
@@ -513,9 +515,9 @@ public class SecPeriodDealTemplateRecService {
 //    	trdProductDeal.setIsClean(dto.getIsClean2());
 //    	//关联系统交易编号=B.成交编号
 //    	trdProductDeal.setfTradeId(dto.getTradeId());
-//    	
+//
 //    	trdProductDeal.setCreateTime(dto.getCreateTime());
-//    	
+//
 //        //原交易编号
 //        if(trdProductDeal.getTradeStatus().equals(DictCodeListExt1.交易状态_撤销.getValue())){
 //            trdProductDeal.setpTradeId(interfCommonService.getFTradeId(trdProductDeal));
@@ -524,7 +526,7 @@ public class SecPeriodDealTemplateRecService {
 //    }
     /**
      * T2:估值核算交易扩展表 接收
-     * 
+     *
      * @param dto 01-债券借贷交易
      * @return 估值核算交易扩展表
      * @see
@@ -552,12 +554,12 @@ public class SecPeriodDealTemplateRecService {
 //    	trdProductDealExt.setHasOrder(dto.getIsClean());
     	//生成方式=固定值：接口接入
     	trdProductDealExt.setGenType(DictCodeListExt1.生成方式_接口接入.getValue());
-    	
+
     	trdProductDealExt.setMpFinprodId(dto.getFinprodId());
     	trdProductDealExt.setMpBranch(new Long(0));
     	return trdProductDealExt;
     }
-    
+
 //    /**
 //     * 结算指令的生成
 //     * @param valFinProductDeal
@@ -568,7 +570,7 @@ public class SecPeriodDealTemplateRecService {
 //    	 Map<String, Object> map = new HashMap<String,Object>();
 //    	 List<StlOrders> listValOrders = new ArrayList<StlOrders>();
 //         List<StlOrdersExt> listValOrdersExt = new ArrayList<StlOrdersExt>();
-//    	
+//
 //    	 ProductDealDto productDealDto=new ProductDealDto();
 //    	 productDealDto.setTradeStatus(valFinProductDeal.getTradeStatus());  //* 交易状态
 //         productDealDto.setTradeId(valFinProductDeal.getTradeId());    // * 交易编号
@@ -593,39 +595,39 @@ public class SecPeriodDealTemplateRecService {
 //         String insType = "";
 //         if(valFinProductDeal.getPs().equals(DictCodeList.交易方向_融入债券收息.getValue())){
 //    		 insType=DictCodeListExt1.指令类型_债券借贷_融入期间标的债券收息.getValue();
-//    		 map = interfCommonService.settlementInstructionGeneration(productDealDto, 
-//        			 insType,DictCodeList.是否_是.getValue()); 
+//    		 map = interfCommonService.settlementInstructionGeneration(productDealDto,
+//        			 insType,DictCodeList.是否_是.getValue());
 //    	 }
 //         else if(valFinProductDeal.getPs().equals(DictCodeList.交易方向_融入债券利息返还.getValue())){
 //    		 insType=DictCodeListExt1.指令类型_债券借贷_融入期间标的债券付息.getValue();
-//    		 map = interfCommonService.settlementInstructionGeneration(productDealDto, 
-//        			 insType,DictCodeList.是否_是.getValue()); 
+//    		 map = interfCommonService.settlementInstructionGeneration(productDealDto,
+//        			 insType,DictCodeList.是否_是.getValue());
 //    	 }
 ////    	 else if(valFinProductDeal.getPs().equals(DictCodeList.交易方向_卖空债券结息.getValue())){
 ////    		 insType=DictCodeListExt1.指令类型_债券借贷_融入债券卖出后收息.getValue();
-////    		 map = interfCommonService.settlementInstructionGeneration(productDealDto, 
-////        			 insType,DictCodeList.是否_是.getValue()); 
+////    		 map = interfCommonService.settlementInstructionGeneration(productDealDto,
+////        			 insType,DictCodeList.是否_是.getValue());
 ////    	 }
 //    	 else if(valFinProductDeal.getPs().equals(DictCodeList.交易方向_融入债券还本.getValue())){
 //    		 insType=DictCodeListExt1.指令类型_债券借贷_融入期间标的债券还本.getValue();
-//    		 map = interfCommonService.settlementInstructionGeneration(productDealDto, 
-//        			 insType,DictCodeList.是否_是.getValue()); 
+//    		 map = interfCommonService.settlementInstructionGeneration(productDealDto,
+//        			 insType,DictCodeList.是否_是.getValue());
 //    	 }
 ////    	 else if(valFinProductDeal.getPs().equals(DictCodeList.交易方向_卖空债券还本.getValue())){
 ////    		 insType=DictCodeListExt1.指令类型_债券借贷_融入债券卖出后还本.getValue();
-////    		 map = interfCommonService.settlementInstructionGeneration(productDealDto, 
-////        			 insType,DictCodeList.是否_是.getValue()); 
+////    		 map = interfCommonService.settlementInstructionGeneration(productDealDto,
+////        			 insType,DictCodeList.是否_是.getValue());
 ////    	 }
 //    	 else if(valFinProductDeal.getPs().equals(DictCodeList.交易方向_融入债券本金返还.getValue())){
 //    		 insType=DictCodeListExt1.指令类型_债券借贷_融入期间标的券本金支付.getValue();
-//    		 map = interfCommonService.settlementInstructionGeneration(productDealDto, 
-//        			 insType,DictCodeList.是否_是.getValue()); 
+//    		 map = interfCommonService.settlementInstructionGeneration(productDealDto,
+//        			 insType,DictCodeList.是否_是.getValue());
 //    	 }
 //         StlOrders ValOrders=(StlOrders)map.get("ORDERS");
 //         StlOrdersExt ValOrdersExt=(StlOrdersExt)map.get("ORDERS_EXT");
 //         listValOrders.add(ValOrders);
 //         listValOrdersExt.add(ValOrdersExt);
-//         
+//
 //         map.put("ORDERS", listValOrders);
 //         map.put("ORDERS_EXT", listValOrdersExt);
 //         return map;

@@ -163,5 +163,14 @@ public interface ValAssetBook001Mapper {
      * @return
      */
     List<SuggestDto> findProductGrp(Map<String, Object> pageParam);
+    /**
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param paraMap
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SuggestDto> getBooksetIdsByGroups(Map<String, Object> paraMap);
     
 }

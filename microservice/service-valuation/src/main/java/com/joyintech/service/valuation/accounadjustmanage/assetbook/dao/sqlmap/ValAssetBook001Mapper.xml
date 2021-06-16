@@ -351,4 +351,19 @@
 			</foreach>
 		</where>
 	</select>
+	<select id="getBooksetIdsByGroups"
+			resultType="com.joyintech.framework.select.SuggestDto">
+		select
+		p.product_id  as code
+		from  sys_batch_prd_grp g
+		left join sys_batch_grp_prdlink p
+		on g.seq_no  =  p.group_seq
+		where  system_code = 'SYS'
+		<if test="booksetId != null and booksetId!=''">
+			and g.seq_no in
+			<foreach item="item" collection="booksetId.split(',')" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
 </mapper>

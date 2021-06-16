@@ -6,10 +6,10 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.dto.InvAjaxResult;
-import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
-import com.joyintech.tams.invest.common.util.ExcelUtil;
+import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tams.valuation.basedata.marketdata.externaloptions.dto.ExternalOptions001Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.valfxvaluztioninfo.dto.ValFxValuztionInfo001Dto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
@@ -78,13 +78,13 @@ public class ExternalOptions001Service extends CommonExportService<ExternalOptio
      */
     public AjaxResult checkConfirmMsgForImportData(String fileName)  {
         Map<String,Object> param = new HashMap<String,Object>();
-        param.put("dataList", ExcelUtil.getDataList1(fileName));
+        param.put("dataList", ExcelUtil.getDataList(fileName));
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());
         return restTemplate.postForObject(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ExternalOptions/checkConfirmMsgForImportData",
                 param,
-                InvAjaxResult.class);
+                CommonAjaxResult.class);
     }
 
 
@@ -97,8 +97,8 @@ public class ExternalOptions001Service extends CommonExportService<ExternalOptio
      */
     public List<ExcelValidDto> importData(String fileName) {
         Map<String,Object> param = new HashMap<String,Object>();
-        param.put("dataList", ExcelUtil.getDataList1(fileName));
-        param.put("tempList", ExcelUtil.getTempList1(fileName));
+        param.put("dataList", ExcelUtil.getDataList(fileName));
+        param.put("tempList", ExcelUtil.getTempList(fileName));
         param.put("userName", CommonUtil.getUserName());
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());

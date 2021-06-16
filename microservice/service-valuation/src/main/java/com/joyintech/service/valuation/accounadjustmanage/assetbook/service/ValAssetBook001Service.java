@@ -438,4 +438,9 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
         param.put("userId", LoginUserUtil.getUserName());
         return mapper.findProductGrp(param);
     }
+
+
+    public List<SuggestDto> getBooksetIdsByGroups(Map<String, Object> params) {
+        return mapper.getBooksetIdsByGroups(params);
+    }
 }
