@@ -185,7 +185,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
         //add by yujiaping 2021-1-6 解决ZGBS-139 计划类净值型卖出交易提交后（流程中），没有占用资产可用持仓 start
         else if ((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                 && (DictCodeList.收益类型_净值型.getValue().equals(profitType)))             
-              && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
+              && (DictCodeList.交易方向_卖出.getValue().equals(deal.getPs()) || DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))) {
          resultDto.setCdate(deal.getTradeDate());
          resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
          result.add(resultDto);
