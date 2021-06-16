@@ -221,8 +221,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
             Pattern pattern = Pattern.compile("^[C]{1}[0-9]{5}$");
             Matcher matcher = pattern.matcher(dto.getRepInDepCode());
             if (!matcher.matches()) {
-                resultList.add(new ValidMessage("repInDepCode", getMessage("FW_E_0002",
-                    getMessage("BussRepFinProductInfo.repInDepCode"))));
+                resultList.add(new ValidMessage("repInDepCode", getMessage("FW_E_ZZ_0002")));
             }
         }
         if (StringUtil.isNotEmpty(dto.getRepAvgOpenCount())) {
