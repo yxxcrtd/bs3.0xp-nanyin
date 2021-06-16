@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
+import com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -307,6 +308,11 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
         com.joyintech.framework.grid.Page<ProdTerminationRegist001Dto> page = new com.joyintech.framework.grid.Page<ProdTerminationRegist001Dto>();
         page.setRoot(data);
         //page.setTotal(data.size());
+		if(!CollectionUtils.isEmpty(page.getRoot())){
+			for(ProdTerminationRegist001Dto dto : page.getRoot()){
+				dto.setBelongInstitutionCode(null);
+			}
+		}
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
 		if(data!=null && data.size()>0){

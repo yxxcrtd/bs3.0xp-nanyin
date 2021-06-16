@@ -33,6 +33,7 @@ import com.joyintech.tams.svreport.chb.perprodeclarereg.dao.ChbPrdDeclareSubHisM
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dao.PerProDeclareReg001Mapper;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.ChbPrdDeclareRegFileCode;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
+import com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -429,6 +430,11 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
         com.joyintech.framework.grid.Page<PerProDeclareRegDto> page = new com.joyintech.framework.grid.Page<PerProDeclareRegDto>();
         page.setRoot(data);
         //page.setTotal(data.size());
+		if(!CollectionUtils.isEmpty(page.getRoot())){
+			for(PerProDeclareRegDto dto : page.getRoot()){
+				dto.setBelongInstitutionCode(null);
+			}
+		}
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
 		if(data!=null){

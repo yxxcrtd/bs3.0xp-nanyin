@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,6 +175,11 @@ public class EmployeeInfoReg001Controller extends BaseController {
 	   			dtoList = page.getRoot();
 	   		}
 	   	}
+	   if(!CollectionUtils.isEmpty(dtoList)){
+		   for(EmployeeInfoReg001Dto dto : dtoList){
+			   dto.setBelongInstitutionCode(null);
+		   }
+	   }
 	   	//根据从业人员类型导出不同模板
 	   	createFile(sourceFiles,dtoList);
 	    // 导出路径不存在则重新生成
