@@ -106,6 +106,11 @@ public class PtlMockTestService extends BaseService<PtlMockTestDto> {
         map.put("PTL_ISSUE_MODE_GPKF", DictCodeListExt3.组合开放类型_高频开放.getValue());
         map.put("PORTFOLIO_TYPE_CPZH", DictCodeListExt1.组合类型_投资类组合.getValue());
         map.put("PORTFOLIO_TYPE_XNZH", DictCodeListExt3.组合类型_虚拟组合.getValue());
+        map.put("cashType1", DictCodeListExt1.现金流一级类型_本金.getValue());
+        map.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
+        map.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
+        map.put("OPEN_MODE_DQKF", BussinessDictCodeList.开放模式_定期开放.getValue());
+        map.put("OPEN_TYPE_KFS", BussinessDictCodeList.开放类型_开放式.getValue());
 
         return testMapper.getPtlInfo(map);
     }
