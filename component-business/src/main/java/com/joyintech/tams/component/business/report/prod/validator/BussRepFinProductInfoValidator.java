@@ -250,7 +250,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                     		&& StringUtil.indexOf(dto.getRepInvestCountry(),
                         DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
                         resultList.add(
-                            new ValidMessage("repInvestCountry", getMessage("REP_E_0006")));
+                            new ValidMessage("repInvestCountry", getMessage("REP_E_00011")));
                     }
                 }
                 // 境外托管机构国别
