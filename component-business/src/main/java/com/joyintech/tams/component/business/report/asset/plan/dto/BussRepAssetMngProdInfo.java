@@ -463,7 +463,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      *
      * @return repMaxRate
      */
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repMaxRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
+    @Amount(fieldName = "BussRepAssetMngProdInfo.repMaxRate", maxDecBit = 8,groups={ValidateGroupEdit.class})
     public BigDecimal getRepMaxRate() {
         return repMaxRate;
     }
@@ -482,7 +482,7 @@ public class BussRepAssetMngProdInfo extends BaseEntity {
      *
      * @return repMinRate
      */
-    @Amount(fieldName = "BussRepAssetMngProdInfo.repMinRate", maxIntBit = 3, maxDecBit = 8,groups={ValidateGroupEdit.class})
+    @Amount(fieldName = "BussRepAssetMngProdInfo.repMinRate",maxDecBit = 8,groups={ValidateGroupEdit.class})
     public BigDecimal getRepMinRate() {
         return repMinRate;
     }
