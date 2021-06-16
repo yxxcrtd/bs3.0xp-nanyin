@@ -165,6 +165,11 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 validList.add(new ValidMessage("finprodMarketId", getMessage("BUSS_COM_I_0017",
                     getMessage("FinProductBuild002.finprodMarketId"))));
             }
+            // 产品代码不能与组合代码重复
+            if (finProductScheduling002Service.chekPortfolExist(entity.getFinprodMarketId()) > 0) {
+                validList.add(new ValidMessage("finprodMarketId", getMessage("BUSS_COM_I_0017",
+                        "组合代码")));
+            }
 
             // 流程中的市场代码(排期和产品新建)
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();

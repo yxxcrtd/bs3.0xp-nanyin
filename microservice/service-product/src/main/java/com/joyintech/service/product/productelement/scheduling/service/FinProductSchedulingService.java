@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.StringUtil;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -325,5 +326,14 @@ public class FinProductSchedulingService extends BaseService<PaPrdIssueSchedule>
         //OPEX-598 产品代码输入类似字符￥%￥%￥，系统提示产品代码已存在，提示有误 guyunfei end
         return finProductSchedulingMapper.checkProdInfoExist(finprodMarketId, finprodAbbr,
             finprodName, finprodId, DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+    }
+
+    /**
+     * 查询是否是否存在组合代码与产品代码相同的组合
+     * @param finprodMarketId 产品代码
+     * @return
+     */
+    public int chekPortfolExist(String finprodMarketId,String pageId){
+        return finProductSchedulingMapper.chekPortfolExist(finprodMarketId,pageId);
     }
 }
