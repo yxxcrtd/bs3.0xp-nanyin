@@ -76,15 +76,15 @@ public class BussRepFundInfoValidator implements BeanValidator{
                             getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repFundInvestAsset"))));
                 }else{
                     // 不为空的情况下 校验 规则
-                    if (RepCheckUtil.checkByteLength(dto.getRepFundInvestAsset(), 300)) {
-                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
-                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
-                    }else if(dto.getRepFundInvestAsset().contains("（") || dto.getRepFundInvestAsset().contains("）") ||
-                            dto.getRepFundInvestAsset().contains("：") || dto.getRepFundInvestAsset().contains("；")
-                            || !dto.getRepFundInvestAsset().contains(":")  || !dto.getRepFundInvestAsset().contains("%")) {
-                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
-                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
-                    }
+//                    if (RepCheckUtil.checkByteLength(dto.getRepFundInvestAsset(), 300)) {
+//                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
+//                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
+//                    }else if(dto.getRepFundInvestAsset().contains("（") || dto.getRepFundInvestAsset().contains("）") ||
+//                            dto.getRepFundInvestAsset().contains("：") || dto.getRepFundInvestAsset().contains("；")
+//                            || !dto.getRepFundInvestAsset().contains(":")  || !dto.getRepFundInvestAsset().contains("%")) {
+//                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
+//                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
+//                    }
 
                 }
 

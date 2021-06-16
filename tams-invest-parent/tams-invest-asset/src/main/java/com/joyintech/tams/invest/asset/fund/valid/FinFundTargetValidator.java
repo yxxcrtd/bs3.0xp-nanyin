@@ -248,13 +248,6 @@ public class FinFundTargetValidator implements BeanValidator {
             }
        }
         //add by yjp 20210507 TISHKBS-2101 到期日<发行日/起息日，可正常提交，没有校验 end
-        Pattern speePpattern = Pattern.compile("[0-9]*");
-        if (!speePpattern.matcher(dto.getPurSpeed()).matches()) {
-            resultList.add(new ValidMessage("申购确认速度不规范!"));
-        }
-        if (!speePpattern.matcher(dto.getRedSpeed()).matches()) {
-            resultList.add(new ValidMessage("赎回确认速度不规范!"));
-        }
         return resultList;
     }
 
