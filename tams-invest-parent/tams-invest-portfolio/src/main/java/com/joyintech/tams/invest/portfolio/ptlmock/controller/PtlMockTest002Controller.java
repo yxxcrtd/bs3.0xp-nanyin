@@ -316,7 +316,7 @@ public class PtlMockTest002Controller extends BaseController {
             Map<String,BigDecimal> 已经统计数量map = new HashMap<>();
             for (int i = 0; i < list.size(); i++) {
                 PtlMockTestTradeDto tradeDto = list.get(i);
-                if (StringUtil.isNotEmpty(tradeDto.getPortfolioId())
+                if (StringUtil.isNotEmpty(tradeDto.getPortfolioId()) && StringUtil.isNotEmpty(tradeDto.getFinprodId())//虚拟资产没有持仓无法校验
                         && StringUtil.isNotEmpty(tradeDto.getAmount()) && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), tradeDto.getPs())) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("tradeDate", iPlatformDate.getSysDateStr());
