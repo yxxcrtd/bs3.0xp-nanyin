@@ -164,7 +164,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 null, null, entity.getFinprodId()) > 0) {
                 validList.add(new ValidMessage("finprodMarketId", getMessage("BUSS_COM_I_0017",
                     getMessage("FinProductBuild002.finprodMarketId"))));
-            }
+            }else
             // 产品代码不能与组合代码重复
             if (finProductScheduling002Service.chekPortfolExist(entity.getFinprodMarketId()) > 0) {
                 validList.add(new ValidMessage("finprodMarketId", getMessage("BUSS_COM_I_0017",
