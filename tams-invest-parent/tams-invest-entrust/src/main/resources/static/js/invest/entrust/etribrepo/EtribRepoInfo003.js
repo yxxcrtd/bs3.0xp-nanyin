@@ -91,11 +91,11 @@
                 multiple: false,
                 showField: 'text',
                 searchable: true,
-                url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectParentPortfolioId')
+                url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true')
             }
         },
-        {
-            /* 组合代码 */
+        /*{
+             组合代码 
             field: 'portfolioId', width: 100, title: '子组合代码', edit: true, sortable: false,
             editOption: {
                 type: 'select',
@@ -108,7 +108,7 @@
                 url: JoyinUtil.getRealPath('/business/common/CommonSelect/qryPortfolioIdChildByRequestParam')
             }
         }
-        ,
+        ,*/
         {
             /* 质押券库代码 */
             field: 'zyqk', width: 100, title: 'EtrIbRepo001.zyqk',

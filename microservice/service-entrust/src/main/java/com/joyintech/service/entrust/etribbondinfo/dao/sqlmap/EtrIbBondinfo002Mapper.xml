@@ -84,7 +84,7 @@ SELECT interf.SECCODE id,
 	</select>
 
 	<sql id="getfinprodIdForAddWhere">
-		<where>
+	<where>
 			 	T1.FINPROD_TYPE2 = #{assestType}
 			 	AND T1.TRADE_MARKET in(#{TRADE_PLACE_01},#{TRADE_PLACE_05},#{TRADE_PLACE_09},#{TRADE_PLACE_10})
 			<if test="initValue != null and !initValue.equals('')">
@@ -94,9 +94,9 @@ SELECT interf.SECCODE id,
 				and T1.TRADE_MARKET = #{tradeMarket}
 			</if>
 			<if test="search != null and !search.equals('')">
-				and (T1.FINPROD_MARKET_ID like '%' || #{search} || '%'
-				or T1.FINPROD_NAME like '%' || #{search} || '%'
-				or T1.FINPROD_ABBR like '%' || #{search} || '%'
+				and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+				or T1.FINPROD_NAME like concat('%',concat(#{search},'%'))
+				or T1.FINPROD_ABBR like concat('%',concat(#{search},'%')))
 			</if>
 		</where>
 	</sql>

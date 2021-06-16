@@ -39,14 +39,14 @@
                                         class="layui-input form-input input-select"
                                         placeholder="请输入内容"
                                         th:placeholder="#{SysCommon.placeholder}"
-                                        th:data-url="@{/business/common/CommonSelect/selectParentPortfolioId}"
+                                        th:data-url="@{/business/common/CommonSelect/selectPortfolioId?act=true}"
                                         allowClear="true"
                                         formatoption="true"
                                         th:initValue="${entity?.parentPortfolioId}"
                                 ></select>
                             </div>
                         </div>
-                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                        <!-- <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.portfolioIdChild}">子组合名称</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                                 <select
@@ -64,10 +64,8 @@
                                     th:initValue="${entity?.portfolioId}"
                                 ></select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="layui-form-item" style="padding:0px;">
-                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                        </div> -->
+                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.finprodName}">资产简称</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                                 <select
@@ -85,6 +83,9 @@
                                 ></select>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-form-item" style="padding:0px;">
+                       
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.ps}">交易方向</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
@@ -103,9 +104,7 @@
                                 ></select>
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-form-item" style="padding:0px;">
-                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.entrustAmt}">券面总额</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                                 <input
@@ -122,6 +121,9 @@
                                 <span class="input-right-show">万元</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-form-item" style="padding:0px;">
+                       
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.settleSpreed}">清算速度</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
@@ -140,9 +142,7 @@
                                 ></select>
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-form-item" style="padding:0px;">
-                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.priceModel}">价格模式</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                                 <select
@@ -159,6 +159,9 @@
                                 ></select>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-form-item" style="padding:0px;">
+                       
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.price}">净价</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
@@ -176,9 +179,7 @@
                                 <span class="input-right-show">元</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-form-item" style="padding:0px;">
-                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.fpriceAmt}">全价</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                                 <input
@@ -195,6 +196,9 @@
                                 <span class="input-right-show">元</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-form-item" style="padding:0px;">
+                       
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.matureYield}">到期收益率(%)</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
@@ -212,9 +216,7 @@
                                 <span class="input-right-show">%</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-form-item" style="padding:0px;">
-                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="exerYieldDiv">
+                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="exerYieldDiv">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.exerYield}">行权收益率(%)</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                                 <input
@@ -231,6 +233,9 @@
                                 <span class="input-right-show">%</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-form-item" style="padding:0px;">
+                       
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.counterId}">交易对手</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
@@ -246,9 +251,7 @@
                                 ></select>
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-form-item" style="padding:0px;">
-                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{invest.channelId}">通道</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                                 <select
@@ -264,6 +267,9 @@
                                 ></select>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-form-item" style="padding:0px;">
+                       
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.vdate}">指令开始日</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
@@ -278,9 +284,7 @@
                                 />
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-form-item" style="padding:0px;">
-                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.mdate}">指令终止日</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                                 <input
@@ -294,6 +298,9 @@
                                 />
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-form-item" style="padding:0px;">
+                       
                         <div class="form-inline-wrap" style="width: 100%;padding:0px;" >
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.remark}">备注</label>
                             <div class="layui-input-inline" style="width: 80%; margin: 0px; margin-left: auto;">

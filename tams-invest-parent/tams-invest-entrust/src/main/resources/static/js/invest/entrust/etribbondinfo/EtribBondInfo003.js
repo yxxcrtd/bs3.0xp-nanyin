@@ -100,11 +100,11 @@
                 multiple: false,
                 showField: 'text',
                 searchable: true,
-                url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectParentPortfolioId')
+                url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true')
             }
         }
-        ,{
-            /* 组合代码 */
+       /* ,{
+             组合代码 
             field: 'portfolioId', width: 100, title: 'EtribBondInfo003.portfolioIdChild', edit: true, sortable: false,
             editOption: {
                 type: 'select',
@@ -115,7 +115,7 @@
                 searchable: true,
                 url: JoyinUtil.getRealPath('/business/common/CommonSelect/qryPortfolioIdChildByRequestParam')
             }
-        }
+        }*/
         , {
         /*劵面总额*/
             field: 'entrustNum',
@@ -305,6 +305,8 @@
     });
 
     var init = function () {
+    	table.reload();
+    	
         if (pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
             $('#EtribBondInfo003_btn_reset').css('display', 'none');
         }
