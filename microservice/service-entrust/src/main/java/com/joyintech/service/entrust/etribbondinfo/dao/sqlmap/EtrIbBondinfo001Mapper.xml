@@ -336,13 +336,13 @@ select
     t2.TYPE_9 secType,
     t1.issuer issuer,
     t3.CUSTOMER_NAME issuerName,
-    to_char(t1.VDATE,'yyyy-MM-dd') vdate,
-    to_char(t1.MDATE,'yyyy-MM-dd') mdate,
-    ROUND(t1.MDATE-to_date(#{sysDate},'yyyy-MM-dd'),0) lastqx,
-    to_char(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate
+    TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,
+    TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,
+    TO_NUMBER(t1.MDATE - to_date(#{sysDate},'yyyy-MM-dd')) lastqx,
+    TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate
     ,t6.INT_TYPE AS rateType
 	,NULLIF(t8.YIELD, t6.RATE)*100 rate
-	,to_char(B.EXERCISE_DATE,'yyyy-MM-dd') xqdate
+	,TO_CHAR(B.EXERCISE_DATE,'yyyy-MM-dd') xqdate
     ,NULLIF(MBVI.BPYIELD, 0)*100 gzRate
     ,MBVI.NETVALUATION_EXERCISE priceXq
     ,MBVI.NETVALUATION_RECOMMENDED priceTj
@@ -392,24 +392,13 @@ from
         </if>
         group by A.FINPROD_ID
     ) B on t1.FINPROD_ID = B.FINPROD_ID
-    LEFT JOIN
-        MST_BOND_VALUATION_INFO MBVI
-    ON
-        t1.FINPROD_MARKET_ID = MBVI.SEC_ID
-    AND MBVI.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
+    LEFT JOIN (
+        select * from (
+            select ROW_NUMBER() OVER(PARTITION BY SEC_ID ORDER BY VALUE_DATE DESC) rn, MST_BOND_VALUATION_INFO.*
+            from MST_BOND_VALUATION_INFO WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
+        ) where rn = 1
+    ) MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID
     where
-    1=1
-    and t1.FINPROD_TYPE2 = 'F01'
-       AND MBVI.VALUE_DATE = (
-    SELECT
-    MAX(MBVI2.VALUE_DATE)
-    FROM
-    MST_BOND_VALUATION_INFO MBVI2
-    WHERE
-    MBVI.SEC_ID = MBVI2.SEC_ID
-    AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
-    AND MBVI2.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
-    )
     <if test="finprodId != null and finprodId != ''">
         AND t1.FINPROD_ID = #{finprodId}
     </if>
