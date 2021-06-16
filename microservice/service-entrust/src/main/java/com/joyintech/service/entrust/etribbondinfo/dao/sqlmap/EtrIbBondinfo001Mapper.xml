@@ -27,7 +27,7 @@
         SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NULLIF(PSP.AMOUNT,0)
         WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_06}) THEN -1* NULLIF(PSP.AMOUNT,0)
         END) AS AMOUNT,
-        SUM(NULLIF(if(PSP.HODING_TYPE = #{POSITION_TYPE_04}, AMOUNT, 0), 0)) AS AMOUNT04
+        SUM(NULLIF(case when PSP.HODING_TYPE=#{POSITION_TYPE_04} then AMOUNT else 0 end, 0)) AS AMOUNT04
         FROM
         PTL_SEC_POSITION PSP
         INNER JOIN
@@ -69,21 +69,12 @@
             and hoding_type = 'E01'
             group by portfolio_id,finprod_id
         ) t7 on t7.portfolio_id = TEMP.portfolio_id and t7.finprod_id = TEMP.finprod_id
-        LEFT JOIN
-            MST_BOND_VALUATION_INFO MBVI
-        ON
-            FP.FINPROD_MARKET_ID = MBVI.SEC_ID
-            AND MBVI.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
-            AND MBVI.VALUE_DATE = (
-                SELECT
-                MAX(MBVI2.VALUE_DATE)
-                FROM
-                MST_BOND_VALUATION_INFO MBVI2
-                WHERE
-                MBVI.SEC_ID = MBVI2.SEC_ID
-                AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
-                AND MBVI2.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
-            )
+        LEFT JOIN (
+            select SEC_ID, NETPRICE, LAST_PERIOD from (
+                select ROW_NUMBER() OVER(PARTITION BY SEC_ID ORDER BY VALUE_DATE DESC) rn, SEC_ID, NETPRICE, LAST_PERIOD
+                from MST_BOND_VALUATION_INFO WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
+            ) where rn = 1
+        ) MBVI ON FP.FINPROD_MARKET_ID = MBVI.SEC_ID
         left join COST_POSITION_DB atd
             on atd.portfolio_id = TEMP.portfolio_id and
             atd.finprod_id = TEMP.finprod_id and

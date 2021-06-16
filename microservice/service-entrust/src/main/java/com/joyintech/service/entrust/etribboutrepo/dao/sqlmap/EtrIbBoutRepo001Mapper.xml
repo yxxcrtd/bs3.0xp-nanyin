@@ -187,9 +187,9 @@
         SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NULLIF(PSP.AMOUNT,0)
         ELSE -1* NULLIF(PSP.AMOUNT,0)
         END) AS AMOUNT,
-        SUM(NULLIF(if(PSP.HODING_TYPE = #{POSITION_TYPE_04}, AMOUNT, 0), 0)) AS AMOUNT04
-        ,SUM(NULLIF(if(PSP.HODING_TYPE = #{POSITION_TYPE_05}, AMOUNT, 0), 0)) AS AMOUNT05
-        ,SUM(NULLIF(if(PSP.HODING_TYPE = #{POSITION_TYPE_06}, AMOUNT, 0), 0)) AS AMOUNT06
+        SUM(NULLIF(CASE WHEN PSP.HODING_TYPE = #{POSITION_TYPE_04} THEN AMOUNT ELSE 0 END , 0)) AS AMOUNT04 ,
+        SUM(NULLIF(CASE WHEN PSP.HODING_TYPE = #{POSITION_TYPE_05} THEN AMOUNT ELSE 0 END , 0)) AS AMOUNT05 ,
+        SUM(NULLIF(CASE WHEN PSP.HODING_TYPE = #{POSITION_TYPE_06} THEN AMOUNT ELSE 0 END , 0)) AS AMOUNT06
         FROM
         PTL_SEC_POSITION PSP
         INNER JOIN
@@ -231,21 +231,12 @@
         and hoding_type = 'E01'
         group by portfolio_id,finprod_id
         ) t7 on t7.portfolio_id = TEMP.portfolio_id and t7.finprod_id = TEMP.finprod_id
-        LEFT JOIN
-        MST_BOND_VALUATION_INFO MBVI
-        ON
-        FP.FINPROD_MARKET_ID = MBVI.SEC_ID
-        AND MBVI.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
-        AND MBVI.VALUE_DATE = (
-        SELECT
-        MAX(MBVI2.VALUE_DATE)
-        FROM
-        MST_BOND_VALUATION_INFO MBVI2
-        WHERE
-        MBVI.SEC_ID = MBVI2.SEC_ID
-        AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
-        AND MBVI2.VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
-        )
+        LEFT JOIN (
+            select SEC_ID, NETPRICE, LAST_PERIOD from (
+                select ROW_NUMBER() OVER(PARTITION BY SEC_ID ORDER BY VALUE_DATE DESC) rn, SEC_ID, NETPRICE, LAST_PERIOD
+                from MST_BOND_VALUATION_INFO WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
+            ) where rn = 1
+        ) MBVI ON FP.FINPROD_MARKET_ID = MBVI.SEC_ID
         left join (
         select
         min(esp.SEC_ACCT_ID) SEC_ACCT_ID,
@@ -269,14 +260,14 @@
         O_CODE,
         GRADE_RESULT
         FROM MST_BOND_CREDIT_RATING
-        WHERE GRADE_DATE &lt;= to_date(#{sysDate},'yyyy-MM-dd') and GRADE_ORG_ID!='22') MBCR
+        WHERE GRADE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd') and GRADE_ORG_ID!='22') MBCR
         ON MBCR.O_CODE = FP.FINPROD_MARKET_ID
         AND MBCR.NUM = 1
         LEFT JOIN (SELECT RANK() OVER(PARTITION BY O_CODE ORDER BY GRADE_DATE DESC, grade_result DESC, O_TYPE) NUM,
         O_CODE,
         GRADE_RESULT
         FROM MST_BOND_CREDIT_RATING
-        WHERE GRADE_DATE &lt;= to_date(#{sysDate},'yyyy-MM-dd') and GRADE_ORG_ID!='22') MBCR2
+        WHERE GRADE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd') and GRADE_ORG_ID!='22') MBCR2
         ON MBCR2.O_CODE = FP.ISSUER
         AND MBCR2.NUM = 1
         where
