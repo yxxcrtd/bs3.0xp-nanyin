@@ -92,11 +92,11 @@
     var cols = [
         {
             /* 组合代码 */
-            field: 'parentPortfolioId', width: 100, title: 'EtribBondInfo003.parentPortfolioId', edit: true, sortable: false,
+            field: 'portfolioId', width: 100, title: 'EtribBondInfo003.portfolioId', edit: true, sortable: false,
             editOption: {
                 type: 'select',
-                id: 'parentPortfolioId',
-                childrenIds : 'portfolioId',
+                id: 'portfolioId',
+                /*childrenIds : 'portfolioId',*/
                 multiple: false,
                 showField: 'text',
                 searchable: true,

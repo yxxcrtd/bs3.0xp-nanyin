@@ -268,9 +268,6 @@
             if (param.entrustStatus) {
                 $("#entrustStatus").val(param.entrustStatus).trigger("change");//委托状态
             }
-            if (param.parentPortfolioId) {
-                $("#parentPortfolioId").textSelect('setValue',param.parentPortfolioId);//组合代码
-            }
             if (param.portfolioId) {
                 $("#portfolioId").textSelect('setValue',param.portfolioId);//组合代码
             }
@@ -327,7 +324,6 @@
      */
     var doReset = function () {
     	
-        $("#parentPortfolioId").val("").trigger("change");
         $("#portfolioId").val("").trigger("change");
         $("#ps").val("").trigger("change");
         $("#entrustAmt").val("").trigger("change");

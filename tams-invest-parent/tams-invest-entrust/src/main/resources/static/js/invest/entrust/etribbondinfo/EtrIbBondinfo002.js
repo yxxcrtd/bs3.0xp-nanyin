@@ -362,9 +362,6 @@
             if (param.entrustStatus) {
                 $("#entrustStatus").val(param.entrustStatus).trigger("change");//委托状态
             }
-            if (param.parentPortfolioId) {
-                $("#parentPortfolioId").textSelect('setValue',param.parentPortfolioId);//组合代码
-            }
             if (param.portfolioId) {
                 $("#portfolioId").textSelect('setValue',param.portfolioId);//组合代码
             }
@@ -449,7 +446,6 @@
      * 取消,清空指令数据
      */
     var doReset = function () {
-        $("#parentPortfolioId").val("").trigger("change");
         $("#portfolioId").val("").trigger("change");
         $("#finprodId").val("").trigger("change");
         $("#ps").val("").trigger("change");

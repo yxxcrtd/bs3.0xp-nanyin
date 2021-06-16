@@ -63,7 +63,7 @@
         , {field: 'vdateText', title: 'EtrInvestBondInfo004.vdate', width: 120, sortable: false}
         , {field: 'mdateText', title: 'EtrInvestBondInfo004.mdate', width: 120, sortable: false}
         , {field: 'portfolioId', title: 'EtrInvestBondInfo004.portfolioId', width: 120, sortable: false}
-        , {field: 'parentPortfolioId', title: 'EtrInvestBondInfo004.portfolioIdChild', width: 120, sortable: false}
+/*        , {field: 'parentPortfolioId', title: 'EtrInvestBondInfo004.portfolioIdChild', width: 120, sortable: false}*/
         , {field: 'finprodAbbr', title: 'EtrInvestBondInfo004.finprodId', width: 120, sortable: false}
 //        , {field: 'assetType1Name', title: 'EtrInvestBondInfo002.bondType', width: 150, sortable: false}
         , {field: 'assetType1Name', title: 'EtrInvestBondInfo001.type9', width: 150, sortable: false, visible: false}

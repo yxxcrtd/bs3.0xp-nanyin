@@ -97,7 +97,7 @@
             ,{field:'entrustStatus', visible:false}
             ,{field:'entrustStatusName', title: 'EtrIbBondinfo001.entrustStatus', sortField:'entrustStatus',width : 100}//有效状态
             ,{field:'invManagerId', title: 'EtrInvestBondInfo001.invManagerId', sortField:"invManagerId", width : 100}
-            ,{field:'parentPortfolioId', title: 'EtrInvestBondInfo001.portfolioId', width: 100, sortField:"parentPortfolioId",visible:false}
+            /*,{field:'parentPortfolioId', title: 'EtrInvestBondInfo001.portfolioId', width: 100, sortField:"parentPortfolioId",visible:false}*/
             ,{field:'portfolioId', title: 'EtrInvestBondInfo001.portfolioId', width: 100,
                 render : function(data, type, row, meta) {
                     return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
