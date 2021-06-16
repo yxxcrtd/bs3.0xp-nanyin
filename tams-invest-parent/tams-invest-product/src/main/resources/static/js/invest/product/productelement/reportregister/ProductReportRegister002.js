@@ -295,15 +295,5 @@
 		$('#repInvTypeRat_showRule').click(function(){
 			Joyin.alert(JoyinUtil.getLabel("BussRepFinProductInfo.repInvTypeRat.showRule"));
 		});
-
-		// 添加画面提示信息
-        $('#repInvTypeRat').mouseenter(function() {
-            if($("#repInvTypeRat").val()){
-                layer.tips($("#repInvTypeRat").val(), this, {
-                  tips: [1, '#3595CC'],
-                  time: 1500
-                });
-            }
-        });
 	});
 }());
