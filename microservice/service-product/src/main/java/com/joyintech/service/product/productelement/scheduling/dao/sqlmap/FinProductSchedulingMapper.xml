@@ -102,4 +102,27 @@
     		</if>
 	    	)
     </select>
+
+	<select id="chekPortfolExist" resultType="java.lang.Integer" >
+		select count(1) count from (
+			select PORTFOLIO_ID from PTL_PORTFOLIO
+			<if test="finprodMarketId != null and finprodMarketId != ''">
+				<where>
+					PORTFOLIO_ID = #{finprodMarketId}
+				</where>
+			</if>
+			union all
+			select BUSINESS_DATA_PK1 PORTFOLIO_ID
+			from (
+				select sdpm.*, ROW_NUMBER() over (partition by WORKFLOW_ID order by sdpm.his_no desc ) num
+				from SYS_DATA_PROCESS_MARK sdpm
+				where sdpm.PAGE_ID = #{pageId}
+			) temp
+			where temp.num = 1
+				and STATUS in ('A', 'U', 'P')
+				<if test="finprodMarketId != null and finprodMarketId != ''">
+					and BUSINESS_DATA_PK1 = #{finprodMarketId}
+				</if>
+			)
+	</select>
 </mapper>

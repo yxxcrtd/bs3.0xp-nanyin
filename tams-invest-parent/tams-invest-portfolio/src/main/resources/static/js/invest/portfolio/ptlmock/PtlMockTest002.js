@@ -174,6 +174,9 @@
             if($('#portfolioId').val() != null && $('#portfolioId').val() != ''){
                 row.portfolioId = $('#portfolioId').val();    
             }
+            if($('#portfolioName').val() != null && $('#portfolioName').val() != ''){
+                row.portfolioName = $('#portfolioName').val();
+            }
         },
         beforeEditCell: function (preVal, field, rowData) {
             // 资产类型不允许编辑
