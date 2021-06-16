@@ -546,7 +546,7 @@
   
     <select id="selectPlanDeal" resultMap="PlanResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
 		select PLAN_ASSET_ID
-		,sum(TOTAL_NUM) over(partition by PLAN_ASSET_ID,POS_DATE) TOTAL_NUM
+		,sum(POS_NUM) over(partition by PLAN_ASSET_ID,POS_DATE) TOTAL_NUM
 		,ISSUE_AMT
 		,asset_code
 		,POS_NUM
