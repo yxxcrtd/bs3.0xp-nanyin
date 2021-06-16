@@ -339,8 +339,10 @@ $(function() {
 		    $('#bussRepOtherInvestTargetInfoDto_repProIndustry').attr('disabled',true).trigger('change');
 		    $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').val('').trigger('change'); 
 		    $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').val('N').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').attr('disabled',true).trigger('change');
+
+            /***ZGBSSE-601 【中债直连check】新建项目类资产，资产负债类别为1299，2299时，“项目是否属于重点监控行业和领域”字段无法编辑***/
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').val('N').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').attr('disabled',true).trigger('change');
 		    /***ZGBSSE-598  【中债直连check】新建项目类资产，当资产负债类别为1299 、2299时，“是否有预期收益率”字段无法编辑***/
 		    // $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').val('N').trigger('change');
 		    // $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').attr('disabled',true).trigger('change');
