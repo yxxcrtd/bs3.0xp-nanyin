@@ -121,13 +121,6 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
             finNetValueProductBuild001Service.wflInFlowCheck(entity.getWorkflowId(), entity.getFinprodId(), validList);
         }
 
-        //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  start
-        if (!StringUtil.isNotEmpty(entity.getRiskLevel())) {
-            validList.add(new ValidMessage("riskLevel", getMessage("BUSS_COM_E_0038",
-                    getMessage("FinProductBuild002.riskLevel"))));
-        }
-        //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  end
-
         if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
 
             //报送信息页面托管费率和销售费率必填

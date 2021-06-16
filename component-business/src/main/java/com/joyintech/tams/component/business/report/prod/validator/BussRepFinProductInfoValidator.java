@@ -221,8 +221,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
             Pattern pattern = Pattern.compile("^[C]{1}[0-9]{5}$");
             Matcher matcher = pattern.matcher(dto.getRepInDepCode());
             if (!matcher.matches()) {
-                resultList.add(new ValidMessage("repInDepCode", getMessage("FW_E_0002",
-                    getMessage("BussRepFinProductInfo.repInDepCode"))));
+                resultList.add(new ValidMessage("repInDepCode", getMessage("FW_E_ZZ_0002")));
             }
         }
         if (StringUtil.isNotEmpty(dto.getRepAvgOpenCount())) {
@@ -251,7 +250,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                     		&& StringUtil.indexOf(dto.getRepInvestCountry(),
                         DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
                         resultList.add(
-                            new ValidMessage("repInvestCountry", getMessage("REP_E_0006")));
+                            new ValidMessage("repInvestCountry", getMessage("REP_E_00011")));
                     }
                 }
                 // 境外托管机构国别
