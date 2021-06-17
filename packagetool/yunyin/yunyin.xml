@@ -25,7 +25,6 @@
 		<module>../../JixuCenter</module>
         <module>../../tams-common</module>
         <module>../../tams-common-customer</module>
-        <module>../../tams-invest-common</module>
         <module>../../tams-disclosure-busicommon</module>
         <module>../../tams-disclosure-common</module>
         <module>../../tams-disclosure-interf</module>
