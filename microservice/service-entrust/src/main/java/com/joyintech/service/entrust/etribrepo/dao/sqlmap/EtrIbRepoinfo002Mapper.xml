@@ -4,11 +4,11 @@
 		namespace="com.joyintech.service.entrust.etribrepo.dao.EtrIbRepoinfo002Mapper">
 
 	<select id="getAvailableNum" resultType="java.math.BigDecimal">
-		select 100-sum(ifnull(PRIN_AMT,0))
+		select 100-sum(NULLIF(PRIN_AMT,0))
 		from FIN_CASH_PLAN
 		where
 			FINPROD_ID = #{finprodId}
-		  and MDATE &lt;= str_to_date(#{sysdate},'%Y-%m-%d')
+		  and MDATE &lt;= to_date(#{sysdate},'yyyy-MM-dd')
 		group by FINPROD_ID
 	</select>
 
@@ -20,7 +20,7 @@
 			 WHERE
 				 SEC_ID = #{finprodMarketId}
 			   AND
-				 VALUE_DATE &lt;= STR_TO_DATE(#{sysdate},'%Y-%m-%d')
+				 VALUE_DATE &lt;= TO_DATE(#{sysdate},'yyyy-MM-dd')
 			 ORDER BY VALUE_DATE DESC)TEMP
 		LIMIT 1
 	</select>
@@ -86,7 +86,7 @@
 		FROM FIN_EXERCISE_PLAN
 		WHERE
 		EXERCISE_DATE = (
-		SELECT MIN(EXERCISE_DATE) FROM FIN_EXERCISE_PLAN WHERE FINPROD_ID = #{finprodId}  AND EXERCISE_DATE &gt;= STR_TO_DATE(#{sysdate},'%Y-%m-%d')
+		SELECT MIN(EXERCISE_DATE) FROM FIN_EXERCISE_PLAN WHERE FINPROD_ID = #{finprodId}  AND EXERCISE_DATE &gt;= TO_DATE(#{sysdate},'yyyy-MM-dd')
 		)
 		AND FINPROD_ID = #{finprodId}
 		<if test="ps == 'T03'">AND EXERCISE_TYPE = '02'</if>

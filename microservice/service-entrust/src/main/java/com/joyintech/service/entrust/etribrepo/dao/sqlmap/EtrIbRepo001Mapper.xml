@@ -11,7 +11,7 @@
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,
         T1.PORTFOLIO_ID portfolioId,
-        IFNULL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+        NULLIF(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
         T2.PORTFOLIO_NAME portfolioName,
         T7.TERM_TYPE termType,
         T7.TERM_DAYS repoTerm,
@@ -22,8 +22,8 @@
         T7.SETTLE_SPREED settleSpreed,
         T1.VDATE vdate,
         T1.MDATE mdate,
-        ifnull(T5.FINISH_AMT,0) finishAmt,
-        round(ifnull(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
+        NULLIF(T5.FINISH_AMT,0) finishAmt,
+        round(NULLIF(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
         T1.REMARK
         from
         ETR_ENTRUST T1
@@ -68,10 +68,10 @@
             AND T1.PS=#{ps}
         </if>
         <if test="startDate != null and !startDate.equals('')">
-            AND T1.VDATE &gt;=str_to_date(#{startDate},'%Y-%m-%d')
+            AND T1.VDATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
         </if>
         <if test="endDate != null and !endDate.equals('')">
-            AND T1.MDATE &lt;=str_to_date(#{endDate},'%Y-%m-%d')
+            AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
         </if>
         <if test="priceModel != null and priceModel != ''">
             AND T1.PRICE_MODEL = #{priceModel}
@@ -88,7 +88,7 @@
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,
         T1.PORTFOLIO_ID portfolioId,
-        IFNULL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+        NULLIF(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
         T2.PORTFOLIO_NAME portfolioName,
         T7.TERM_TYPE termType,
         T7.TERM_DAYS repoTerm,
@@ -99,8 +99,8 @@
         T7.SETTLE_SPREED settleSpreed,
         T1.VDATE vdate,
         T1.MDATE mdate,
-        ifnull(T5.FINISH_AMT,0) finishAmt,
-        round(ifnull(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
+        NULLIF(T5.FINISH_AMT,0) finishAmt,
+        round(NULLIF(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
         T1.REMARK
         from
         WFL_ETR_ENTRUST T1
@@ -144,10 +144,10 @@
             AND T1.PS=#{ps}
         </if>
         <if test="startDate != null and !startDate.equals('')">
-            AND T1.VDATE &gt;=str_to_date(#{startDate},'%Y-%m-%d')
+            AND T1.VDATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
         </if>
         <if test="endDate != null and !endDate.equals('')">
-            AND T1.MDATE &lt;=str_to_date(#{endDate},'%Y-%m-%d')
+            AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
         </if>
         <if test="priceModel != null and priceModel != ''">
             AND T1.PRICE_MODEL = #{priceModel}
@@ -168,14 +168,14 @@
         TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
         TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
         TABLE01.BRANCH     				branch,/*分支序号*/
-        IFNULL(TABLE02.AMOUNT,0) / 100	    posStrdPrinAmt,/*持仓券面总额*/
-        IFNULL(TABLE01.AMOUNT,0) / 100		pledStrdPrinAmt,/*可质押券面总额*/
+        NULLIF(TABLE02.AMOUNT,0) / 100	    posStrdPrinAmt,/*持仓券面总额*/
+        NULLIF(TABLE01.AMOUNT,0) / 100		pledStrdPrinAmt,/*可质押券面总额*/
         ETR_ENTRUST_PLEDGE.SCALE		scale,	/*折算比例*/
         ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID pledgeStockId,/*质押库代码*/
         FIN_PRODUCT.MDATE   			mdate,/*到期日*/
         MBCR.GRADE_RESULT 				gradeResult,/*债项评级*/
         FIN_PRODUCT.REGIST_ORG 			registOrg,/*登记托管机构*/
-        IFNULL(FIN_PRODUCT.FINPROD_ABBR,FIN_PRODUCT.FINPROD_NAME) finProdName,/*金融产品名称*/
+        NULLIF(FIN_PRODUCT.FINPROD_ABBR,FIN_PRODUCT.FINPROD_NAME) finProdName,/*金融产品名称*/
         MST_BOND_VALUATION_INFO.LAST_PERIOD lastPeriod,/*剩余期限*/
         FIN_PRODUCT.FINPROD_MARKET_ID 	finprodMarketId,/*市场代码*/
         CASE WHEN FIN_PRODUCT2.IS_CHL = 'Y'
@@ -195,7 +195,7 @@
         SUM(TEMP.AMOUNT) AMOUNT /*可质押券面总额*/
         FROM (
         SELECT
-        IFNULL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+        NULLIF(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
         PTL_SEC_POSITION.PORTFOLIO_ID,
         T2.PORTFOLIO_NAME,
         PTL_SEC_POSITION.SEC_ACCT_ID,
@@ -209,7 +209,7 @@
         FROM PTL_SEC_POSITION
         INNER JOIN PTL_PORTFOLIO T2 ON PTL_SEC_POSITION.PORTFOLIO_ID = T2.PORTFOLIO_ID
         WHERE 1=1
-        AND PTL_SEC_POSITION.CDATE = str_to_date(#{sysDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+        AND PTL_SEC_POSITION.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
         /*持仓类型包含：03实际，04质押，05融入，06融出，08预占用,11卖空*/
         AND PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_04},#{POSITION_TYPE_05},
         #{POSITION_TYPE_06},#{POSITION_TYPE_08},#{POSITION_TYPE_11})
@@ -219,7 +219,7 @@
 
         UNION ALL
         SELECT
-        IFNULL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+        NULLIF(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
         PTL_SEC_POSITION_FLOW.PORTFOLIO_ID,
         T2.PORTFOLIO_NAME,
         PTL_SEC_POSITION_FLOW.SEC_ACCT_ID,
@@ -233,7 +233,7 @@
         FROM PTL_SEC_POSITION_FLOW
         INNER JOIN PTL_PORTFOLIO T2 ON PTL_SEC_POSITION_FLOW.PORTFOLIO_ID = T2.PORTFOLIO_ID
         WHERE 1=1
-        AND PTL_SEC_POSITION_FLOW.CDATE = str_to_date(#{sysDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+        AND PTL_SEC_POSITION_FLOW.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
         /*持仓类型包含：01可用，12卖空可用*/
         AND PTL_SEC_POSITION_FLOW.HODING_TYPE IN (#{POSITION_TYPE_01}, #{POSITION_TYPE_12})
         ) TEMP
@@ -270,7 +270,7 @@
         END) as AMOUNT
         FROM PTL_SEC_POSITION
         WHERE 1=1
-        AND PTL_SEC_POSITION.CDATE = str_to_date(#{sysDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+        AND PTL_SEC_POSITION.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
         /*持仓类型包含：03实际，05融入，06融出,11卖空*/
         AND PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03},#{POSITION_TYPE_05},
         #{POSITION_TYPE_06},#{POSITION_TYPE_11})
@@ -305,7 +305,7 @@
         LEFT JOIN FIN_PRODUCT tmp2
         ON tmp1.sec_id = tmp2.finprod_market_id
         WHERE 1 = 1
-        AND tmp1.value_date &lt;= str_to_date(#{sysDate},'%Y-%m-%d')/*估值行情.日期 小于等于 平台日*/
+        AND tmp1.value_date &lt;= to_date(#{sysDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
         AND tmp1.value_source =
         (CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN
         'CSD'
@@ -325,7 +325,7 @@
         O_CODE,
         GRADE_RESULT
         FROM MST_BOND_CREDIT_RATING
-        WHERE GRADE_DATE &lt;= str_to_date(#{sysDate},'%Y-%m-%d')
+        WHERE GRADE_DATE &lt;= to_date(#{sysDate},'yyyy-MM-dd')
         and GRADE_ORG_ID !='22') MBCR
         ON MBCR.O_CODE = FIN_PRODUCT.FINPROD_MARKET_ID
         AND MBCR.NUM = 1
@@ -513,19 +513,19 @@
     	SELECT
 		TABLE01.PORTFOLIO_ID 			portfolioId,/*组合代码*/
 		TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
-		-- 			IFNULL(FIN_PRODUCT.FINPROD_NAME,STL_SEC_ACCT_INFO.SEC_ACCT_NAME)	 			secAcctStr,/*证券账户/通道代码*/
+		-- 			NULLIF(FIN_PRODUCT.FINPROD_NAME,STL_SEC_ACCT_INFO.SEC_ACCT_NAME)	 			secAcctStr,/*证券账户/通道代码*/
 		TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
 		FIN_PRODUCT.FINPROD_ABBR     	finProdAbbr,/*金融产品简称*/
 		FIN_PRODUCT.FINPROD_MARKET_ID   finprodMarketId,/*金融产品市场代码*/ 
 		TABLE01.BRANCH     				branch,/*分支序号*/
-		IFNULL(TABLE01.AMOUNT,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
-		IFNULL(TABLE02.AMOUNT,0) * 100		posStrdPrinAmt,/*持仓券面总额*/
+        NULLIF(TABLE01.AMOUNT,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
+        NULLIF(TABLE02.AMOUNT,0) * 100		posStrdPrinAmt,/*持仓券面总额*/
 		FIN_PRODUCT.TRADE_MARKET 		tradePlace,/*交易场所*/
 		FIN_PRODUCT.MDATE   			mdate,/*到期日*/
 		MST_BOND_VALUATION_INFO.LAST_PERIOD lastPeriod,/*剩余期限*/
 		MBCR.GRADE_RESULT 				gradeResult,/*债项评级*/
 		FIN_PRODUCT.REGIST_ORG 			registOrg,/*登记托管机构*/
-		IFNULL(fscr.SCALE, 1)*100 			scale,	/*折算比例*/
+        NULLIF(fscr.SCALE, 1)*100 			scale,	/*折算比例*/
 		FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,/*市场代码*/
 		FIN_PRODUCT.ISSUER  issuer, /*发行人*/
 		CASE WHEN FIN_PRODUCT2.IS_CHL = 'Y'
@@ -552,7 +552,7 @@
 		END as AMOUNT
 		FROM PTL_SEC_POSITION
 		WHERE 1=1
-		AND PTL_SEC_POSITION.CDATE = str_to_date(#{sysDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+		AND PTL_SEC_POSITION.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
 		/*持仓类型包含：03实际，04质押，05融入，06融出，08预占用,11卖空*/
 		AND PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_04},#{POSITION_TYPE_05},
 		#{POSITION_TYPE_06},#{POSITION_TYPE_08},#{POSITION_TYPE_11})
@@ -570,7 +570,7 @@
 		END as AMOUNT
 		FROM PTL_SEC_POSITION_FLOW
 		WHERE 1=1
-		AND PTL_SEC_POSITION_FLOW.CDATE = str_to_date(#{sysDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+		AND PTL_SEC_POSITION_FLOW.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
 		/*持仓类型包含：01可用，12卖空可用*/
 		AND PTL_SEC_POSITION_FLOW.HODING_TYPE IN (#{POSITION_TYPE_01}, #{POSITION_TYPE_12})
 		) TEMP
@@ -600,7 +600,7 @@
 		-1 * PTL_SEC_POSITION.AMOUNT
 		END) as AMOUNT
 		FROM PTL_SEC_POSITION	       	WHERE 1=1
-		AND PTL_SEC_POSITION.CDATE = str_to_date(#{sysDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+		AND PTL_SEC_POSITION.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
 		/*持仓类型包含：03实际，05融入，06融出,11卖空*/
 		AND PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03},#{POSITION_TYPE_05},
 		#{POSITION_TYPE_06},#{POSITION_TYPE_11})
@@ -630,7 +630,7 @@
 		LEFT JOIN FIN_PRODUCT tmp2
 		ON tmp1.sec_id = tmp2.finprod_market_id
 		WHERE 1 = 1
-		AND tmp1.value_date &lt;= str_to_date(#{sysDate},'%Y-%m-%d')/*估值行情.日期 小于等于 平台日*/
+		AND tmp1.value_date &lt;= to_date(#{sysDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
 		AND tmp1.value_source =
 		(CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN
 		'CSD'
@@ -648,7 +648,7 @@
 		LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr
 		ON  fscr.FINPROD_ID = TABLE01.FINPROD_ID
 		AND fscr.BRANCH = TABLE01.BRANCH
-		AND fscr.VDATE &lt;= str_to_date(#{sysDate}, '%Y-%m-%d')
+		AND fscr.VDATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')
 		AND NOT EXISTS (
 		SELECT
 		*
@@ -657,14 +657,14 @@
 		WHERE
 		fscrInner.FINPROD_ID = fscr.FINPROD_ID
 		AND fscrInner.BRANCH = fscr.BRANCH
-		AND fscrInner.VDATE &lt;= str_to_date(#{sysDate}, '%Y-%m-%d')
+		AND fscrInner.VDATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')
 		AND fscrInner.VDATE > fscr.VDATE
 		)
 		LEFT JOIN (SELECT RANK() OVER(PARTITION BY O_CODE ORDER BY  GRADE_DATE DESC,CAST(GRADE_RESULT AS DECIMAL) DESC) NUM,
 		O_CODE,
 		GRADE_RESULT
 		FROM MST_BOND_CREDIT_RATING
-		WHERE GRADE_DATE &lt;= str_to_date(#{sysDate},'%Y-%m-%d')
+		WHERE GRADE_DATE &lt;= to_date(#{sysDate},'yyyy-MM-dd')
 		and GRADE_ORG_ID !='22'
 		) MBCR
 		ON MBCR.O_CODE = FIN_PRODUCT.FINPROD_MARKET_ID
