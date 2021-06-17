@@ -355,6 +355,14 @@ $(function() {
             	$('#bussRepAssetCreditNonstdInfoDto_repIsResale').val('N').trigger('change'); 
             	$('#bussRepAssetCreditNonstdInfoDto_repIsResale').attr('disabled',true).trigger('change');
             }*/
+
+            /****ZGBSSE-676  【中债直连check】新建项目类资产，当资产负债类别为[2201][2202]时，“分期还本条款标识”字段应不可填写且为空**/
+            if(repAssetType=="2201"||repAssetType=="2202"){
+                $('#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag').val('').trigger('change');
+                $('#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag').attr('disabled',true).trigger('change');
+            }
+
+
             // 中债新增 20200408 信贷资产流转项目，法定到期日置灰不可填 start
             $('#bussRepAssetCreditNonstdInfoDto_repFmdate').attr('disabled',false).trigger('change');
             //含权类型 选填
