@@ -209,7 +209,7 @@ $(function () {
 		if(booksetId){
 			booksetIds="";
 			for(var i=0;i<$('#booksetId').select2('data').length;i++){
-				if($('#booksetId').select2('data')[i].selected){
+				if($('#booksetId').select2('data')[i]){
 					booksetIds+=$('#booksetId').select2('data')[i].id + ",";
 				}
 			}
