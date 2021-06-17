@@ -88,7 +88,7 @@
                         <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetAstBillInfo.repDiscRate}">贴现利率</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" th:id="|${entityName}_repDiscRate|" th:name="|${entityName}.repDiscRate|"  th:value="${entity?.repDiscRate}"  
-                                   class="layui-input form-input text-number" required="required"/>
+                                   class="layui-input form-input text-number" data-textrange="5" required="required"/>
                             <span class="input-right-show">%</span>
                         </div>
                     </div>
