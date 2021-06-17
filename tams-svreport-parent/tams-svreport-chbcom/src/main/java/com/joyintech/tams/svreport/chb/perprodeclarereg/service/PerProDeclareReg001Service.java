@@ -597,7 +597,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
  		String srcName=(String) map.get("param[0][srcName]");
 		String fileNo=(String) map.get("param[0][fileNo]");
 		String fileProdId=srcName.substring(0, srcName.lastIndexOf("."));
-		String targetFileSTR=(String) map.get("param[0][targetFile]");
+		String targetFileSTR=(String) map.get("param[0][targetFile][absoluteFile]");
 		String registSeqno=(String) map.get("registSeqno");
 		String prodId=(String) map.get("prodId");
 		File file=new SafelyFile(targetFileSTR);

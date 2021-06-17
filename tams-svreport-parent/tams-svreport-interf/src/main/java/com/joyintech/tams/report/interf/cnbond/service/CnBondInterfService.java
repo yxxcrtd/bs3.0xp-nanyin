@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.constant.DictCodeList;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -434,6 +436,13 @@ public class CnBondInterfService extends InterfService {
     @Autowired
     private InvestorsHoldInfo001InterfService investorsHoldInfo001InterfService;
     /**
+     * 添加中债挡板直连标识
+     * 02直连，01标识挡板
+     */
+    @Value("${application.chb.dangbanFlag:02}")
+    private String dangbanFlag;
+
+    /**
      * 中债报送
      *
      * @param paras 报送参数list
@@ -713,7 +722,13 @@ public class CnBondInterfService extends InterfService {
         logger.info("CnBondInterfService 报送中债处理开始：" + DateUtil.getCurrentDateTime());
         AsynReportEntity asynReportEntity = markDangBan();
 //        	CnBondUtil.recurrence(WMRS + fileType + STRING_001_01,cbFilepath + fileZip);
-            
+        /** 根据挡板标识来确认是否打开 start**/
+        if(StrUtil.equals(dangbanFlag, DictCodeList.是否_中债_是.getValue())) {
+            asynReportEntity = markDangBan();
+        }else {
+            asynReportEntity = CnBondUtil.recurrence(WMRS + fileType + STRING_001_01, cbFilepath + fileZip);
+        }
+        /** 根据挡板标识来确认是否打开 end**/
         logger.info("CnBondInterfService 报送中债处理结束：" + DateUtil.getCurrentDateTime());
         File a = new SafelyFile("./AppCfg/DC/cfg");
         if (asynReportEntity == null) {
