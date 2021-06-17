@@ -191,9 +191,12 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
                     }
                     //中债新增 20200410 start
                     //计息类别
-                    if(StringUtil.isEmpty(dto.getRepCouponSpecies())){
-                    	resultList.add(new ValidMessage("repCouponSpecies",
-                    			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repCouponSpecies"))));
+                    if(!StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_信贷资产流转项目.getValue())
+                        && !StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_小微企业信贷资产流转和收益权转让.getValue())){
+                        if(StringUtil.isEmpty(dto.getRepCouponSpecies())){
+                            resultList.add(new ValidMessage("repCouponSpecies",
+                                    getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repCouponSpecies"))));
+                        }
                     }
                     //利息分布方式
                     if(StringUtil.isEmpty(dto.getRepIntpayRule())){
