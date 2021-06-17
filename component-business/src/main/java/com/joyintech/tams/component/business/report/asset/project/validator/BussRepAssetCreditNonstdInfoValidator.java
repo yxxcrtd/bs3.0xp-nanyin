@@ -211,10 +211,11 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
                     			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repRepaymentType"))));
                     }*/
                     //分期还款标识
-                    if(StringUtil.isEmpty(dto.getRepPeriodRepaymentFlag())){
-                    	resultList.add(new ValidMessage("repPeriodRepaymentFlag",
-                    			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repPeriodRepaymentFlag"))));
-                    }
+                    /****ZGBSSE-676  【中债直连check】新建项目类资产，当资产负债类别为[2201][2202]时，“分期还本条款标识”字段应不可填写且为空**/
+//                    if(StringUtil.isEmpty(dto.getRepPeriodRepaymentFlag())){
+//                    	resultList.add(new ValidMessage("repPeriodRepaymentFlag",
+//                    			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repPeriodRepaymentFlag"))));
+//                    }
                     //含权类别
                     if(!StringUtil.isEmpty(dto.getRepContainType())){
                     	//行权方式

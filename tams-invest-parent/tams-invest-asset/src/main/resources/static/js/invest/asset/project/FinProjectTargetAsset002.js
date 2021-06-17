@@ -359,7 +359,7 @@ $(function() {
             /****ZGBSSE-676  【中债直连check】新建项目类资产，当资产负债类别为[2201][2202]时，“分期还本条款标识”字段应不可填写且为空**/
             if(repAssetType=="2201"||repAssetType=="2202"){
                 $('#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag').val('').trigger('change');
-                $('#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag').attr('disabled',true).trigger('change');
+                $('#bussRepAssetCreditNonstdInfoDto_repRepaymentType').val('').trigger('change');
             }
 
 
@@ -827,19 +827,22 @@ $(function() {
     //【还本方式】、【分期还本条款标识】默认规则 20200409
     var byPayCycle = function(){
         //【还本方式】、【分期还本条款标识】默认规则 20200409
-        if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_16){
-            $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_01).attr('disabled',true).trigger('change');
-            $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_99).attr('disabled',true).trigger('change');
-        }else if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_07){
-            $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
-            $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_02).attr('disabled',true).trigger('change');
-        }else if($("#bussFinRepaymentDto_payCycle").val()!=""){
-            $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
-            $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_01).attr('disabled',true).trigger('change');
-        }else{
-            $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
-            $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val('').attr('disabled',true).trigger('change');
+        /****ZGBSSE-676  【中债直连check】新建项目类资产，当资产负债类别为[2201][2202]时，“分期还本条款标识”字段应不可填写且为空**/
+        if($('#repAssetType').val()!=2201&&$('#repAssetType').val()!=2202){
+            if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_16){
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_01).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_99).attr('disabled',true).trigger('change');
+            }else if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_07){
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_02).attr('disabled',true).trigger('change');
+            }else if($("#bussFinRepaymentDto_payCycle").val()!=""){
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_01).attr('disabled',true).trigger('change');
+            }else{
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val('').attr('disabled',true).trigger('change');
 
+            }
         }
     }
     //【利息分布方式】默认规则 20200409
