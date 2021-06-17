@@ -388,6 +388,10 @@ $(function() {
 		    	$('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').val('').trigger('change'); 
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').attr('disabled',true).trigger('change');
 		    }
+		    //计息类型
+		    $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',false).trigger('change');
+		    //担保方式
+            $('#bussRepAssetCreditNonstdInfoDto_repGuaType').attr('disabled',false).trigger('change');
 		    //[资产/负债类别]为“收/受益权[1205]”以外时,收/受益权类型不可填
 		    if(repAssetType != "1205"){
 		    	$('#bussRepAssetCreditNonstdInfoDto_repProfitType').val('').trigger('change'); 
@@ -432,6 +436,9 @@ $(function() {
 			    //计息类型 置灰不可填
 			     $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').val('').trigger('change');
                  $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',true).trigger('change');
+                 //担保方式不可填写
+                 $('#bussRepAssetCreditNonstdInfoDto_repGuaType').val('').trigger('change');
+                 $('#bussRepAssetCreditNonstdInfoDto_repGuaType').attr('disabled',true).trigger('change');
             }
             //新增可投资资产时，部分赎回比例%不可填
             if(type9=="08"){
