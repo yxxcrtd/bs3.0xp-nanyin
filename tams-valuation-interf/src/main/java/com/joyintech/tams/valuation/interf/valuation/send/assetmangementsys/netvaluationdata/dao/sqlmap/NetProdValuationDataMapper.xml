@@ -36,9 +36,9 @@
           			#{item, jdbcType=VARCHAR}
         		</foreach>
         		AND VAL_DATE = #{exeDate, jdbcType=TIMESTAMP}
-        AND DETAIL_DIST IN ('02','05','06','07','10','17') ) PIVOT ( MAX(MARKET_VALUE)
+        AND DETAIL_DIST IN ('02','05','06','07','10','27') ) PIVOT ( MAX(MARKET_VALUE)
         FOR DETAIL_DIST IN ( '02' AS prodAllAmt,
-        					 '17' AS totalValue,
+        					 '27' AS totalValue,
                              '05' AS dailyAssetAllValue,
                              '06' AS dailyAllDebt,
                              '10' AS unitValue) )
