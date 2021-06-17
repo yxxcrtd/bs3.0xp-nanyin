@@ -1022,7 +1022,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         }
         // 交易提交
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
-            if (StringUtil.isEmpty(entrustId)) { // 无委托
+//            if (StringUtil.isEmpty(entrustId)) { // modify by jiangpeng on 20210617 TISHKBS-2296 委托指令生效后不更新标准券持仓,交易录单提交时再更新
                 // 标准券
                 EtrSecPositionFlowDto etrSecPositionFlowDtoTemp = new EtrSecPositionFlowDto();
                 BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDtoTemp, etrSecPositionFlowDto);
@@ -1031,7 +1031,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 etrSecPositionFlowDtoTemp.setFinprodId(XN_STANDARD_BOND_PRODID);
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoTemp);
                 // 添加持仓流水到目标dto
-            }
+//            }
         }
     }
 
@@ -1126,9 +1126,10 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 if ((StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_上海证券交易所.getValue())
                     || StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
                     && StringUtil.equals(type6, DictCodeList.回购类型_质押式竞价回购.getValue())) {
-                    etrSecPositionFlowDto.setFinprodId(XN_STANDARD_BOND_PRODID);
-                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(), 债券面值, 2).negate());
-                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    //modify by jiangpeng on 20210617 TISHKBS-2296 委托指令生效后不更新标准券持仓,交易录单提交时再更新
+//                    etrSecPositionFlowDto.setFinprodId(XN_STANDARD_BOND_PRODID);
+//                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(), 债券面值, 2).negate());
+//                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                 }else{
                     // 质押品的组合持仓流水
                     etrPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlowLogic(entrustCommonDto,true)) ;
@@ -1190,9 +1191,10 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 if ((StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_上海证券交易所.getValue())
                     || StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
                     && StringUtil.equals(type6, DictCodeList.回购类型_质押式竞价回购.getValue())) {
-                    etrSecPositionFlowDto.setFinprodId(XN_STANDARD_BOND_PRODID);
-                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(), 债券面值, 2));
-                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    // modify by jiangpeng on 20210617 TISHKBS-2296 委托指令生效后不更新标准券持仓,交易录单提交时再更新,故关闭委托时不用冲销
+//                    etrSecPositionFlowDto.setFinprodId(XN_STANDARD_BOND_PRODID);
+//                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(), 债券面值, 2));
+//                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                 }else{
                     // 质押品的组合持仓流水
                     etrPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlowLogic(entrustCommonDto,false)) ;
