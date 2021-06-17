@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +80,9 @@ public class EtrIbBondinfo001Service extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
+        
+        addCondionTradeMarket(pageParam); // 交易场所，仅限银行间指令
+        
         Page<EtrIbBondinfo001Dto> result = super.queryForPage(page, length, () -> etrIbBondinfo001Mapper.findPositionsPage(pageParam));
 
         //根据资产代码查询相关所有的交易信息
@@ -123,6 +127,19 @@ public class EtrIbBondinfo001Service extends BaseService{
         }
         return result;
 
+    }
+
+    /**
+     * 只包含交易场所：01 银行间 05 机构间私募系统 09 OTC场外 10 境外交易场所
+     * @param pageParam 查询参数
+     */
+    private void addCondionTradeMarket(Map<String, Object> pageParam) {
+        List<String> tradeMarketList = new ArrayList<>();
+        tradeMarketList.add(DictCodeListExt1.交易场所_银行间.getValue());
+        tradeMarketList.add(DictCodeListExt1.交易场所_机构间私募系统.getValue());
+        tradeMarketList.add(DictCodeListExt1.交易场所_OTC场外.getValue());
+        tradeMarketList.add(DictCodeListExt1.交易场所_境外交易场所.getValue());
+        pageParam.put("tradeMarketList", tradeMarketList);
     }
 
     /**
