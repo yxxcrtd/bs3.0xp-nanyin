@@ -825,7 +825,7 @@ FROM(
     nvl(info.ISSUING_STATUS,info1.ISSUING_STATUS) ISSUING_STATUS,
     deal.status
 	from CHB_PRD_BASEINFO info
-	left join CHB_PRD_DEAL deal
+	inner join CHB_PRD_DEAL deal
 	on info.prod_id = deal.prod_id
 	and info.status in ('E','M')
 	and deal.TRADE_TYPE='01'

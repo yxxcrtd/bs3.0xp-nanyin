@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -416,13 +417,18 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
         acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
         acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
         dto.setAcctType(acctTypeList);
-        dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+        //dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+        dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
         if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
             dto.setChannel(true);
         }
-        return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrFund/getAssetAvailablePosition",dto,
-            BigDecimal.class);
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrFund/getAssetAvailablePosition",dto,
+//            BigDecimal.class);
+        EtrSecPositionDto dto1= new EtrSecPositionDto();
+        BeanUtil.copyPropertiesIgnoreNull(dto1, dto);
+        BigDecimal position = etrCommonService.getAssetAvailablePosition(dto1);
+        return position;
     }
 
     /**

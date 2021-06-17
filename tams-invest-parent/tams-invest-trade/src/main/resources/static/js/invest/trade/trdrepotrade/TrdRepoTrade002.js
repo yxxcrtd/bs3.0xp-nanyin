@@ -1039,7 +1039,15 @@
                 }else if(settleSpeed === SETTLESPEED_2){
                     num = 2;
                 }
-                $('#vdate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
+                //
+               Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getNextWorkDay', {
+                     'calendarId': $("#calendarId").val(),
+                      'tradeDate': tradeDate,
+                      'settleSpeed': num
+                }, function (date) {
+                      $("#vdate").val(date).trigger('change');;
+                 });
+               // $('#vdate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
                 vmdateOnChangeCalcDate($('#vdate').val(),$('#vpayDate'));
             }
         }

@@ -108,4 +108,12 @@ public interface FinProductSchedulingMapper {
                            @Param("finprodName") String finprodName,
                            @Param("finprodId") String finprodId,
                            @Param("finprodType2") String finprodType2);
+
+    /**
+     * 查询是否是否存在组合代码与产品代码相同的组合
+     * @param finprodMarketId 产品代码
+     * @return
+     */
+    int chekPortfolExist(@Param("finprodMarketId") String finprodMarketId,
+                         @Param("pageId") String pageId);
 }

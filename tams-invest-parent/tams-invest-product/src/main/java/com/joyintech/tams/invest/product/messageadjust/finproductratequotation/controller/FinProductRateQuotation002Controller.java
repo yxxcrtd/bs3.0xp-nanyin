@@ -119,7 +119,7 @@ public class FinProductRateQuotation002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("getSelectFinprodId")
-    public List<SelectOptionDto> getSelectFinprodId(){
+    public Page<SelectOptionDto> getSelectFinprodId(){
         return finProductRateQuotationService.getSelectFinprodId(RequestUtil.getPageParam()); 
     }
     

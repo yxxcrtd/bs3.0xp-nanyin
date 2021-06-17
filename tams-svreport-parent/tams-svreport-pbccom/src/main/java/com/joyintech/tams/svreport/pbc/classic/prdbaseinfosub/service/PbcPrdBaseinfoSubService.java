@@ -320,8 +320,14 @@ public class PbcPrdBaseinfoSubService extends PbcClassicsSubService<PbcPrdBasein
     	gendto.setBusiModel(dto.getBusiModel());
     	gendto.setIncomeGuaranIdent(dto.getIncomeGuaranIdent());
     	gendto.setPrinGuaranIdent(dto.getPrinGuaranIdent());
-    	gendto.setHighYieldIssue(dto.getHighYieldIssue());
-    	gendto.setLowYieldIssue(dto.getLowYieldIssue());
+    	//gendto.setHighYieldIssue(dto.getHighYieldIssue());
+    	//gendto.setLowYieldIssue(dto.getLowYieldIssue());
+		if(dto.getHighYieldIssue()!=null && StringUtil.isNotEmpty(dto.getHighYieldIssue())){
+			gendto.setHighYieldIssue(dto.getHighYieldIssue().setScale(5,BigDecimal.ROUND_HALF_UP));
+		}
+		if(dto.getLowYieldIssue()!=null && StringUtil.isNotEmpty(dto.getLowYieldIssue())){
+			gendto.setLowYieldIssue(dto.getLowYieldIssue().setScale(5,BigDecimal.ROUND_HALF_UP));
+		}
     	gendto.setRaiseVdate(dto.getRaiseVdate());
     	gendto.setRaiseEnddate(dto.getRaiseEnddate());
     	gendto.setTermRightFlag(dto.getTermRightFlag());

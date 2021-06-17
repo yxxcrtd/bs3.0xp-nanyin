@@ -45,10 +45,10 @@ public class PeriodicManagement001Service extends CommonExportService<PeriodicMa
      * @param param String
      * @return List<SelectOptionDto>
      */
-    public List<SelectOptionDto> getFinprodIds(Map<String, Object> param) {
+    public Page<SelectOptionDto> getFinprodIds(Map<String, Object> param) {
     	param.put("dealMode10", BussinessDictCodeList.处理模式_周期型.getValue());
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
                 + "/PeriodicManagement/getFinprodIds",param,SelectOptionDto.class);      
     }
 

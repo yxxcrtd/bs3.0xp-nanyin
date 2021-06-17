@@ -435,7 +435,7 @@
 												   data-th-text="#{FinPlanAssetC002.purSpeed1}">申购确认速度 T+</label>
 											<div class="layui-input-inline input-inline delaytime-inline-wrap">
 												<input type="text" id="purSpeed" name="purSpeed"  th:value="${entity?.purSpeed}" class="layui-input form-input" required="required"
-													   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
+													   onkeyup="(this.v=function(){this.value=this.value.replace(/[^\d]/g,'');}).call(this)"
 													   style="float: left;display: inline-block; width: 90%;"/>
 											</div>
 										</div>
@@ -444,7 +444,7 @@
 												   data-th-text="#{FinPlanAssetC002.redSpeed1}">赎回确认速度 T+</label>
 											<div class="layui-input-inline input-inline delaytime-inline-wrap">
 												<input type="text" id="redSpeed" name="redSpeed"  th:value="${entity?.redSpeed}" class="layui-input form-input" required="required"
-													   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
+													   onkeyup="(this.v=function(){this.value=this.value.replace(/[^\d]/g,'');}).call(this)"
 													   style="float: left;display: inline-block; width: 90%;"/>
 											</div>
 										</div>

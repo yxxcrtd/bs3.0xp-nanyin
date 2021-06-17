@@ -50,8 +50,8 @@ public class PeriodicManagementService extends BaseService<PeriodicManagement001
     @Autowired(required = false)
     private IPlatformDate platformDate;
     
-	public List<SelectOptionDto> getFinprodIds(Map<String, Object> param) {
-		return periodicManagementMapper.getFinprodIds(param);
+	public Page<SelectOptionDto> getFinprodIds(int page, int length, Map<String, Object> param) {
+		return this.queryForPageForSelectReturn(page, length, () -> periodicManagementMapper.getFinprodIds(param));
 	}
 	
 	public Page<PeriodicManagement001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {

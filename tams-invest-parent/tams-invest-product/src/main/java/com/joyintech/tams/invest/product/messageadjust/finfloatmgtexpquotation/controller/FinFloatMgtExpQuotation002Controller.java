@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
@@ -201,7 +202,7 @@ public class FinFloatMgtExpQuotation002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getFinprodId")
-    public List<SelectOptionDto> getFinprodid(){
+    public Page<SelectOptionDto> getFinprodid(){
         return finFloatMgtExpQuotation001Service.getFinprodIdsByDate(RequestUtil.getPageParam());
     }
     /**

@@ -62,6 +62,24 @@ public class FinIntPayDateAdjustmentService extends CommonExportService<FinIntPa
         return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
             + "/FinIntPayDateAdjustment/getCashId",param,SelectOptionDto.class);
     }
+
+    /**
+     *
+     * 产品代码下拉框
+     * <功能详细描述>
+     * @param param Map<String, Object>
+     * @return List<SelectOptionDto>
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getCashIdForPage(Map<String, Object> param){
+        if(!StringUtil.isNotEmpty(param.get("initValue"))){
+            User user = SecurityUtil.getLoginUser();
+            param.put("userId", user.getUserName());
+        }
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
+                + "/FinIntPayDateAdjustment/getCashIdForPage",param,SelectOptionDto.class);
+    }
     
     /**
      * 

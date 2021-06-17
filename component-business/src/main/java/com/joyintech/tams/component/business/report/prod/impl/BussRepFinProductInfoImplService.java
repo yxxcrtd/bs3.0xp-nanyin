@@ -113,7 +113,7 @@ public class BussRepFinProductInfoImplService extends BaseService<BussRepFinProd
                 // 4.1.2 [发行方式] = "封闭式" 的场合，期限品种由[产品期限(天)]项目值算出
                 int termNum = (int)DateUtil.getBetweenDayNumber(inputDto.getProdVdate(), inputDto.getProdMdate());
                 // 根据 产品期限（天） 设定 [期限品种]项目值
-                termType = this.getTermTypeByTermNum(termNum);
+                termType = this.getTermTypeByTermNumFBS(termNum);
             }
         }
         // 4.1.3 [发行方式] = "开放式" 的场合，期限品种由[开放申购周期]、[开放申购周期单位]、[开放模式] 项目值算出
@@ -196,17 +196,67 @@ public class BussRepFinProductInfoImplService extends BaseService<BussRepFinProd
             termType = DictCodeListExt2.产品期限_7天_1个月_含.getValue();
         }
         else if (termNum > 31
-                 && termNum <= 90) {
+                 && termNum <= 92) {
             // 产品期限(天) > 31 && 产品期限(天) <= 92 的场合, 期限品种 = “3个月以内”
             termType = DictCodeListExt2.产品期限_1_3个月_含.getValue();
         }
-        else if (termNum > 90
+        else if (termNum > 92
                  && termNum <= 184) {
             // 产品期限(天) > 92 && 产品期限(天) <= 184 的场合, 期限品种 = “6个月以内”
             termType = DictCodeListExt2.产品期限_3_6个月_含.getValue();
         }
         else if (termNum > 184
                  && termNum <= 366) {
+            // 产品期限(天) > 184 && 产品期限(天) <= 366 的场合, 期限品种 = “1年以内”
+            termType = DictCodeListExt2.产品期限_6_12个月_含.getValue();
+        }
+        else if (termNum > 366 && termNum <= 1096) {
+            // 产品期限(天) > 366时, 期限品种 = “1年以上”
+            termType = DictCodeListExt2.产品期限_1_3年_含.getValue();
+        }
+        else if (termNum > 1096) {
+            // 产品期限(天) > 1096时, 期限品种 = “3年以上”
+            termType = DictCodeListExt2.产品期限_3年以上.getValue();
+        }
+        return termType;
+    }
+
+    /**
+     * 根据 产品期限（天） 设定 [期限品种]项目值
+     * (封闭式产品使用，封闭式产品与开放式产品对于3个月的取值不一样,后期若升级成一样，此方法可以删除)
+     * @param termNum 产品期限（天）
+     * @return [期限品种]项目值
+     * @see
+     * @since 1.0
+     */
+    private String getTermTypeByTermNumFBS(Integer termNum) {
+        if (termNum == null) {
+            return null;
+        }
+
+        String termType = StringUtil.EMPTY;
+
+        if (termNum >= 0 && termNum <= 7) {
+            // 产品期限(天) >= 0 && 产品期限(天) <= 7 的场合, 期限品种 = “7天以内”
+            termType = DictCodeListExt2.产品期限_7天_含_以内.getValue();
+        }
+        else if (termNum > 7
+                && termNum <= 31) {
+            // 产品期限(天) > 7 && 产品期限(天) <= 31 的场合, 期限品种 = “1个月以内”
+            termType = DictCodeListExt2.产品期限_7天_1个月_含.getValue();
+        }
+        else if (termNum > 31
+                && termNum <= 90) {
+            // 产品期限(天) > 31 && 产品期限(天) <= 92 的场合, 期限品种 = “3个月以内”
+            termType = DictCodeListExt2.产品期限_1_3个月_含.getValue();
+        }
+        else if (termNum > 90
+                && termNum <= 184) {
+            // 产品期限(天) > 92 && 产品期限(天) <= 184 的场合, 期限品种 = “6个月以内”
+            termType = DictCodeListExt2.产品期限_3_6个月_含.getValue();
+        }
+        else if (termNum > 184
+                && termNum <= 366) {
             // 产品期限(天) > 184 && 产品期限(天) <= 366 的场合, 期限品种 = “1年以内”
             termType = DictCodeListExt2.产品期限_6_12个月_含.getValue();
         }

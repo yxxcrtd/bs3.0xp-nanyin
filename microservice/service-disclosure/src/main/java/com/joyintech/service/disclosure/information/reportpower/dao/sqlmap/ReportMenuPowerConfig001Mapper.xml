@@ -26,6 +26,18 @@
 			ROLE_ID as roleId,
 			ROLE_NAME as roleName
 		from SYS_ROLE
+		<if  test="repId != null and repId != ''">
+            <where>
+                ROLE_ID not in (
+                    select
+                        ID
+                    from
+                        rep_power
+                    where
+                        REPORT_ID=#{repId}
+                )
+            </where>
+        </if>
 	</select>
 	<select id="findUserRole" resultType="com.joyintech.system.base.entity.SysRole">
 		select 

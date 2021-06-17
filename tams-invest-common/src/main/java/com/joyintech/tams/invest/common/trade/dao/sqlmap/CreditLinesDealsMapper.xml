@@ -744,7 +744,7 @@
 				   CCY,
 				   CREDIT_AMT,
 				   INSTITUTION_CODE,
-				   row_number() over (PARTITION BY c.CUSTOMER_ID,c.CREDIT_MST_ID ORDER BY c.CDATE ASC) as newResult
+				   row_number() over (PARTITION BY c.CUSTOMER_ID,c.CREDIT_MST_ID ORDER BY c.CDATE DESC) as newResult
 				FROM CREDIT_LINES_PIERCE c
 				where to_date(#{tradeDate},'yyyy-MM-dd') >= c.CDATE
 				  and c.CREDIT_MST_ID is not null

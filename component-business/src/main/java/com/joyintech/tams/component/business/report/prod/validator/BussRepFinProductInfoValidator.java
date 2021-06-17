@@ -261,10 +261,11 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                             getMessage("BussRepFinProductInfo.repOutDepCtry"))));
                 }
                 else {
-                    if (StringUtil.indexOf(dto.getRepOutDepCtry(),
+                    if (StringUtil.equals(dto.getRepInvestArea(),
+                            DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(dto.getRepOutDepCtry(),
                         DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
                         resultList.add(
-                            new ValidMessage("repOutDepCtry", getMessage("REP_E_0007")));
+                            new ValidMessage("repOutDepCtry", getMessage("REP_E_0008")));
                     }
                 }
                 // 境外托管机构名称
@@ -312,18 +313,18 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                         getMessage("BussRepFinProductInfo.repIsYieldBasis"))));
             }
             // 预计客户最高年收益率%
-            if (!StringUtil.isNotEmpty(dto.getRepHighYield())) {
-//                resultList.add(new ValidMessage("repHighYield", getMessage(
-//                    "BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repHighYield"))));
-            }
-            else {
-                if (dto.getRepHighYield().compareTo(BigDecimal.ZERO) < 0) {
-                    resultList.add(
-                        new ValidMessage("repHighYield", getMessage("BUSS_COM_E_0004",
-                            getMessage("BussRepFinProductInfo.repHighYield"), "0")));
-
-                }
-            }
+//            if (!StringUtil.isNotEmpty(dto.getRepHighYield())) {
+////                resultList.add(new ValidMessage("repHighYield", getMessage(
+////                    "BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repHighYield"))));
+//            }
+//            else {
+//                if (dto.getRepHighYield().compareTo(BigDecimal.ZERO) < 0) {
+//                    resultList.add(
+//                        new ValidMessage("repHighYield", getMessage("BUSS_COM_E_0004",
+//                            getMessage("BussRepFinProductInfo.repHighYield"), "0")));
+//
+//                }
+//            }
             // 平均预计客户年收益率
 //            if (!StringUtil.isNotEmpty(dto.getRepExpAvgYield())) {
 //                resultList.add(

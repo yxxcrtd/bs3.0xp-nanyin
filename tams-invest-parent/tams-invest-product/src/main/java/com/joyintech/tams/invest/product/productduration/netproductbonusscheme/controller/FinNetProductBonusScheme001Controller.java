@@ -84,7 +84,7 @@ public class FinNetProductBonusScheme001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketId")
-    public List<SelectOptionDto> getFinprodMarketId(){
+    public Page<SelectOptionDto> getFinprodMarketId(){
         Map<String,Object> map = RequestUtil.getPageParam();
         return finNetProductBonusSchemeService.getFinprodMarketId(map);
     }
@@ -98,7 +98,7 @@ public class FinNetProductBonusScheme001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIdList")
-    public List<SelectOptionDto> getFinprodMarketIdList(){
+    public Page<SelectOptionDto> getFinprodMarketIdList(){
         Map<String,Object> map = RequestUtil.getPageParam();
         return finNetProductBonusSchemeService.getFinprodMarketIdList(map);
     }

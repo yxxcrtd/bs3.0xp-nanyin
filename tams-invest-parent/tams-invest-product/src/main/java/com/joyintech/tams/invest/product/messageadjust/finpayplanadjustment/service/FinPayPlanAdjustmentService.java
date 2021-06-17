@@ -56,12 +56,12 @@ public class FinPayPlanAdjustmentService extends CommonExportService<FinPayPlanA
      * @see 
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodIds(Map<String,Object> param) {
+    public Page<SelectOptionDto> getFinprodIds(Map<String,Object> param) {
         if(!StringUtil.isNotEmpty(param.get("initValue"))){
             User user = SecurityUtil.getLoginUser();
             param.put("userId", user.getUserName());
         }
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
             + "/FinPayPlanAdjustment/getFinprodId",param,SelectOptionDto.class);
     }
     

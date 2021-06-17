@@ -40,7 +40,7 @@
 							data-th-text="#{FinProductBuild002.finprodName}">产品名称</label>
 						<div class="layui-input-inline input-inline">
 							<input type="text" name="repFinprodName" id="repFinprodName"
-								class="layui-input form-input" maxlength=60
+								class="layui-input form-input" maxlength=200
 								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-value='${entity?.repFinprodName}' required>
 						</div>
@@ -414,7 +414,7 @@
 							<select th:id="repRaiseCcy" th:name="repRaiseCcy"
 								class="layui-input form-input input-select"
 								data-th-placeholder="#{SysCommon.placeholder}"
-								data-th-initValue='${entiy?.repRaiseCcy}?:${repRaiseCcyCNY}' data-th-data-result="${CCY}" required>
+								data-th-initValue='${entity?.repRaiseCcy}?:${repRaiseCcyCNY}' data-th-data-result="${CCY}" required>
 							</select>
 						</div>
 					</div>
@@ -426,7 +426,7 @@
 								th:name="repCashPrinCcy"
 								class="layui-input form-input input-select"
 								data-th-data-result="${CCY}" placeholder="请输入内容"
-								data-th-initValue="${entiy?.repCashPrinCcy}?:${repRaiseCcyCNY}"
+								data-th-initValue="${entity?.repCashPrinCcy}?:${repRaiseCcyCNY}"
 								data-th-placeholder="#{SysCommon.placeholder}" required>
 							</select>
 						</div>
@@ -678,11 +678,19 @@
 						<label class="layui-form-label form-label-wrap"
 							data-th-text="#{BussRepFinProductInfo.repInvTypeRat}">投资资产种类及比例</label>
 						<div class="layui-input-inline input-inline">
-							<input type="text" th:id="repInvTypeRat" th:name="repInvTypeRat"
-								data-th-value="${entity?.repInvTypeRat}" maxlength=300 class="layui-input form-input"
-								data-th-required="true" placeholder="请输入">
-								<a th:id="repInvTypeRat_showRule" class="layui-btn layui-btn-sm form-input-text">规则</a>
+								<textarea th:id="repInvTypeRat"
+									th:name="repInvTypeRat" maxlength=300
+									data-th-text="${entity?.repInvTypeRat}"
+									class="layui-input form-input layui-textarea" placeholder="请输入"></textarea>
+							<a th:id="repInvTypeRat_showRule"
+							   class="layui-btn layui-btn-sm form-input-text">规则</a>
 						</div>
+<!--						<div class="layui-input-inline input-inline">-->
+<!--							<input type="text" th:id="repInvTypeRat" th:name="repInvTypeRat"-->
+<!--								data-th-value="${entity?.repInvTypeRat}" maxlength=300 class="layui-input form-input"-->
+<!--								data-th-required="true" placeholder="请输入">-->
+<!--								<a th:id="repInvTypeRat_showRule" class="layui-btn layui-btn-sm form-input-text">规则</a>-->
+<!--						</div>-->
 					</div>
 				</div>
 					<div class="layui-form-item">					

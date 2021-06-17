@@ -2066,6 +2066,10 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
         param.setPortfolioId(trdProductDealAdd.getPortfolioId());
         TrdProductDeal trdProductDeal = new TrdProductDeal();
         BeanUtil.copyPropertiesIgnoreNull(trdProductDeal,dto);
+// add by zoujiamin  ZGBSSE-256 转仓时划款指令表交易金额取了券面总额，因为dto中交易金额应该是getTradeRepAmt，但复制的时候传入了trade_mount
+        trdProductDeal.setTradeAmt(dto.getTradeRepAmt());
+// add by zoujiamin  ZGBSSE-256 转仓时划款指令表交易金额取了券面总额，因为dto中交易金额应该是getTradeRepAmt，但复制的时候传入了trade_mount
+
         param.setDeal(trdProductDeal);
         BussTrdTransferOrderDto ret = bussTrdTransferOrderService.generateOrder(param);
         List<BussTrdTransferOrderDto> bussTrdTransferOrderDtos = new ArrayList<>();

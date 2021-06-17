@@ -73,7 +73,7 @@ public class PtlMockTest001Controller extends BaseController {
      */
     @RequestMapping("/getPtlInfo")
     @ResponseBody
-    public List<SelectOptionDto> getPtlInfo(@RequestParam Map<String, Object> param) {
+    public Page<SelectOptionDto> getPtlInfo(@RequestParam Map<String, Object> param) {
         // 查询组合添加权限限制
         param.put("loginUserName", LoginUserUtil.getUserName());
         return ptlMockTest001Service.getPtlInfo(param);

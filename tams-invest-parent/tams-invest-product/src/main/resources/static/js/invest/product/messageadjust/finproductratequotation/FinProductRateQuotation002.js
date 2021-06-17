@@ -41,7 +41,7 @@ $(function() {
     				return;
     			}
     		}else{
-    			Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+    			Joyin.error(JoyinUtil.getMessage("FIN_PROD_E_0225","费率"));
 	            return;
     		}
 		}

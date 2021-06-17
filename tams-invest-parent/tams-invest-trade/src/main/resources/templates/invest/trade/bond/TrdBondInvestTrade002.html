@@ -312,7 +312,7 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{TrdBondInvestTrade002.secManageAcctId}">证券托管户</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="secManageAcctId" name="secManageAcctId" parentIds="portfolioId,zhilingtype,tradeMarket"
+                                        <select type="text" id="secManageAcctId" name="secManageAcctId" parentIds="portfolioId,zhilingtype,tradeMarket,finprodId"
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}"  th:data-url="@{/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId}"
                                                 allowClear="true" th:initValue="${entity?.secManageAcctId}"></select>
