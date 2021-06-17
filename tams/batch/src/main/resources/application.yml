@@ -100,7 +100,7 @@ application:
     diDirectAccessFlg: '01' #中债反馈文件下载获取方式(01：DI获取   02：本地获取)
     chbPerNo: '00' #中债一二三期部署方式(01:独立一二期  03：独立三期  00：一起部署)
     download-file-path-movepath: /home/wasadmin/sharedata/chb/recive/CB/bak
-    dangbanFlag: '01'	#01标识挡板  02直连
+    dangbanFlag: '01'#01标识挡板  02直连
   cache:
     file: classpath:ehcache_batch.xml
   sysCode: TAMS
