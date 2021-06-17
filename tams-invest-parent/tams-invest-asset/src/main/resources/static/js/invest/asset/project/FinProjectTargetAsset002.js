@@ -717,6 +717,15 @@ $(function() {
             repCouponSpecies();
 	        getPayInterestStdInfoElementById('payCycle').change(function(){
 	            repCouponSpecies();
+	            console.log('是多少',$("#finPayInterestStdInfoDto_payCycle").val())
+	            if($("#finPayInterestStdInfoDto_payCycle").val() == '08'){
+                    $("#finPayInterestStdInfoDto_remark").attr("required", true);
+                    star();
+                    console.log('进来了')
+                    } else {
+                        $("#finPayInterestStdInfoDto_remark").attr("required", false);
+                        star();
+                    }
 	        });
 	        $("#bussFinRepaymentDto_payCycle").change(function(){
 	            repCouponSpecies();
