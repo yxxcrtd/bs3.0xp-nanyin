@@ -151,13 +151,13 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                     this.getMessage("BussRepFinProductInfo.repLiaisonEmail"))));
             }
         }
-        // 境外托管机构名称
-        if (StringUtil.isNotEmpty(dto.getRepOutDepName())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepOutDepName(), 200)) {
-                resultList.add(new ValidMessage("repOutDepName", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repOutDepName"))));
-            }
-        }
+//        // 境外托管机构名称
+//        if (StringUtil.isNotEmpty(dto.getRepOutDepName())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepOutDepName(), 200)) {
+//                resultList.add(new ValidMessage("repOutDepName", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repOutDepName"))));
+//            }
+//        }
         // 实际管理人名称
         if (StringUtil.isNotEmpty(dto.getRepMname())) {
             if (RepCheckUtil.checkByteLength(dto.getRepMname(), 120)) {
