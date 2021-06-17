@@ -130,11 +130,11 @@ public class BussRepFundInfoValidator implements BeanValidator{
                                 getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repGovInvestFor"))));
                     }
                 }
-                if(dto.getRepRemark() == null || StringUtil.equals("", dto.getRepRemark())
-                        && StringUtil.equals(dto.getRepTradeMarket(),DictCodeList.交易流通场所_其他交易流通场所.getValue())){
-                    resultList.add(new ValidMessage("repRemark",
-                            getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repRemark"))));
-                }
+//                if(dto.getRepRemark() == null || StringUtil.equals("", dto.getRepRemark())
+//                        && StringUtil.equals(dto.getRepTradeMarket(),DictCodeList.交易流通场所_其他交易流通场所.getValue())){
+//                    resultList.add(new ValidMessage("repRemark",
+//                            getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repRemark"))));
+//                }
             }
         }
         if(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())

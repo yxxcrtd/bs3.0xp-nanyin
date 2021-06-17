@@ -388,6 +388,13 @@ $(function() {
 		    	$('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').val('').trigger('change'); 
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').attr('disabled',true).trigger('change');
 		    }
+		    //计息类型
+		    $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',false).trigger('change');
+		    //担保方式
+            $('#bussRepAssetCreditNonstdInfoDto_repGuaType').attr('disabled',false).trigger('change');
+            //递延利息是否计息
+            $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').attr('disabled',false).trigger('change');
+
 		    //[资产/负债类别]为“收/受益权[1205]”以外时,收/受益权类型不可填
 		    if(repAssetType != "1205"){
 		    	$('#bussRepAssetCreditNonstdInfoDto_repProfitType').val('').trigger('change'); 
@@ -432,6 +439,12 @@ $(function() {
 			    //计息类型 置灰不可填
 			     $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').val('').trigger('change');
                  $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',true).trigger('change');
+                 //担保方式不可填写
+                 $('#bussRepAssetCreditNonstdInfoDto_repGuaType').val('').trigger('change');
+                 $('#bussRepAssetCreditNonstdInfoDto_repGuaType').attr('disabled',true).trigger('change');
+                 //递延利息是否计息
+                 $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').val('').trigger('change');
+                 $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').attr('disabled',true).trigger('change');
             }
             //新增可投资资产时，部分赎回比例%不可填
             if(type9=="08"){
@@ -439,6 +452,11 @@ $(function() {
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').attr('disabled',true).trigger('change');
 	            $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').val('').trigger('change'); 
 			    $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').attr('disabled',true).trigger('change');
+            }
+            if(repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"||repAssetType=="1205"
+                           ||repAssetType=="1206"||repAssetType=="1207"||repAssetType=="1208"||repAssetType=="1209"){
+               $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').attr('disabled',false).trigger('change');
+               $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').val('').trigger('change');
             }
             // 中债新增 20200408 end
         }else if(repAssetType=="1201"||repAssetType=="1210"){

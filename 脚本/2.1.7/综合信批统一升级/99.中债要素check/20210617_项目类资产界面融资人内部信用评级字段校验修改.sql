@@ -1,0 +1,1 @@
+update chb_datacheck_rule_inv set status='D' where checkruleid='B690A5B9-FE60-4725-E053-045AA8C093EE' and page_id='FinProjectTargetAsset002';
