@@ -45,7 +45,7 @@
                         <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetAstBillInfo.repRemainTerm}">加权剩余期限（天）</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" th:id="|${entityName}_repRemainTerm|" th:name="|${entityName}.repRemainTerm|"
-                                th:value="${entity?.repRemainTerm}" data-textrange="0" required="required" maxlength="5"
+                                th:value="${entity?.repRemainTerm}" data-textrange="2" required="required" maxlength="5"
                                 class="layui-input form-input text-number" />
                         </div>
                     </div>
