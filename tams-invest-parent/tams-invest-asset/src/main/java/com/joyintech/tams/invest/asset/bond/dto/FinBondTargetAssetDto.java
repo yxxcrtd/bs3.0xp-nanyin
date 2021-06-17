@@ -155,8 +155,8 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     private String industry;
 
     private String industry2;
-
-    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
+    //ZGBSSE-648   【中债直连】债券标的新建页面，资产负债类别check重复
+//    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
     public String getRepAssetType() {
         return repAssetType;
     }
