@@ -1,0 +1,2 @@
+--20210617_修改产品信息维护表CHB_PRD_BASEINFO的INVEST_COUNTRY字段长度
+alter table CHB_PRD_BASEINFO modify (INVEST_COUNTRY varchar(600));

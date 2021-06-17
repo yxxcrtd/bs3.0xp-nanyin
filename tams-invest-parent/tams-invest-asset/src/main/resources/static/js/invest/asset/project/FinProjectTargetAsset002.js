@@ -429,7 +429,9 @@ $(function() {
 			    //部分赎回比例% 置灰不可填
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').val('').trigger('change'); 
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').attr('disabled',true).trigger('change');
-			    
+			    //计息类型 置灰不可填
+			     $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').val('').trigger('change');
+                 $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',true).trigger('change');
             }
             //新增可投资资产时，部分赎回比例%不可填
             if(type9=="08"){
@@ -821,6 +823,12 @@ $(function() {
         	$("#bussRepAssetCreditNonstdInfoDto_repCouponSpecies").val(SVR_COUPON_SPECIES_05).attr('disabled',true).trigger('change');
         }else{
         	$("#bussRepAssetCreditNonstdInfoDto_repCouponSpecies").val('').attr('disabled',true).trigger('change');
+        }
+        var repAssetType = $('#repAssetType').val();
+        if(repAssetType!=null && (repAssetType=="2201" || repAssetType=="2202")){
+             //计息类型 置灰不可填
+          	 $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').val('').trigger('change');
+             $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',true).trigger('change');
         }
     }
 
