@@ -328,8 +328,7 @@ public class ProductReportRegister002Validator implements BeanValidator {
 				validList.add(new ValidMessage("repInvTypeRat",
 						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
 			}else if(entity.getRepInvTypeRat().contains("（") || entity.getRepInvTypeRat().contains("）") ||
-					entity.getRepInvTypeRat().contains("：") || entity.getRepInvTypeRat().contains("；")
-					|| !entity.getRepInvTypeRat().contains(":")  || !entity.getRepInvTypeRat().contains("%")) {
+					entity.getRepInvTypeRat().contains("：") || entity.getRepInvTypeRat().contains("；")) {
 				validList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
                         this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
             }
