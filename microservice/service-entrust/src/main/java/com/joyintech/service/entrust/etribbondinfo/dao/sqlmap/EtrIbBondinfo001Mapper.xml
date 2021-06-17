@@ -398,7 +398,7 @@ from
             from MST_BOND_VALUATION_INFO WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
         ) where rn = 1
     ) MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID
-    where 1=1 AND t1.FINPROD_TYPE2 = 'F01' 
+    where 1=1 
     <if test="finprodId != null and finprodId != ''">
         AND t1.FINPROD_ID = #{finprodId}
     </if>
