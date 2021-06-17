@@ -130,15 +130,12 @@ public class EtrIbBondinfo001Service extends BaseService{
     }
 
     /**
-     * 只包含交易场所：01 银行间 05 机构间私募系统 09 OTC场外 10 境外交易场所
+     * 只包含交易场所：01 银行间 
      * @param pageParam 查询参数
      */
     private void addCondionTradeMarket(Map<String, Object> pageParam) {
         List<String> tradeMarketList = new ArrayList<>();
         tradeMarketList.add(DictCodeListExt1.交易场所_银行间.getValue());
-        tradeMarketList.add(DictCodeListExt1.交易场所_机构间私募系统.getValue());
-        tradeMarketList.add(DictCodeListExt1.交易场所_OTC场外.getValue());
-        tradeMarketList.add(DictCodeListExt1.交易场所_境外交易场所.getValue());
         pageParam.put("tradeMarketList", tradeMarketList);
     }
 
