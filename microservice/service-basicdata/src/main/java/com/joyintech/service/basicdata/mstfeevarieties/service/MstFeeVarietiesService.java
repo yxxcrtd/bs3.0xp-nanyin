@@ -274,6 +274,15 @@ public class MstFeeVarietiesService extends BaseService<MstFeeVarietiesDto>{
         dto12.setBasicBill(DictCodeList.计费基数_费用品种_资产规模.getValue());
         dto12.setBasis(DictCodeList.计息基础_A_365.getValue());
         dto12.setOrgType2(DictCodeListExt2.费用二级类型_本机构管理费.getValue());
+        MstFeeVarietiesDto dto13 = new MstFeeVarietiesDto();
+        dto13.setFeeName("浮动管理费");
+        dto13.setFeeType(DictCodeList.费用品种类型_浮动管理费.getValue());
+        dto13.setApplyType(DictCodeList.关联范围_产品.getValue());
+        dto13.setChargeType(DictCodeList.收费类型_计提式费用.getValue());
+        dto13.setBasicBill(DictCodeList.计费基数_费用品种_资产规模.getValue());
+        dto13.setBasis(DictCodeList.计息基础_A_365.getValue());
+        dto13.setOrgType2(DictCodeListExt2.费用二级类型_本机构管理费.getValue());
+        defendDtoList.add(dto13);
         defendDtoList.add(dto12);
         defendDtoList.add(dto11);
         defendDtoList.add(dto10);
