@@ -1229,11 +1229,11 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 entity.getBussRepFinProductInfoDto().getRepOperateMode())
                  || DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(
                      entity.getBussRepFinProductInfoDto().getRepOperateMode()))) {
-                if (!StringUtil.isNotEmpty(
-                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
-                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
-                        this.getMessage("FIN_PROD_E_0133")));
-                }
+//                if (!StringUtil.isNotEmpty(
+//                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
+//                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
+//                        this.getMessage("FIN_PROD_E_0133")));
+//                }
             }
             else{
                 // 选择封闭式净值型和“封闭式非净值型”时，开放模式必须为空

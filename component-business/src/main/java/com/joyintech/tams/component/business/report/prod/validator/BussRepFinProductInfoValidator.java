@@ -664,8 +664,8 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 		&& (StringUtil.equals(dto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式净值型.getValue())
                 				|| StringUtil.equals(dto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue()))
                 		&& StringUtil.isEmpty(dto.getRepOpenMode())) {
-                		resultList.add(new ValidMessage("repOpenMode", getMessage("BUSS_COM_E_0038",
-                                getMessage("BussRepFinProductInfo.repOpenMode"))));
+                    resultList.add(new ValidMessage("repOpenMode",
+                            this.getMessage("FIN_PROD_E_0133")));
                 } 
                 if (StringUtil.isNotEmpty(dto.getRepOperateMode()) 
                 		&& (StringUtil.equals(dto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())
