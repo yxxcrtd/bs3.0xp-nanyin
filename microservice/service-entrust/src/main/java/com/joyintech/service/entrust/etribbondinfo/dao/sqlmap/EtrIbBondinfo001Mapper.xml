@@ -11,11 +11,11 @@
         FP.FINPROD_MARKET_ID finprodMarketId,
         FP.FINPROD_ABBR finprodAbbr,
         T4.TYPE_9 secType1,
-        NULLIF(TEMP.AMOUNT, 0) / 100 shareAmt,
-        NULLIF(TEMP.AMOUNT04, 0) / 100 avaPledgePrin,
-        NULLIF(t7.amount, 0) / 100 avaShareAmt,
+        NVL(TEMP.AMOUNT, 0) / 100 shareAmt,
+        NVL(TEMP.AMOUNT04, 0) / 100 avaPledgePrin,
+        NVL(t7.amount, 0) / 100 avaShareAmt,
         MBVI.NETPRICE price,
-        NULLIF(MBVI.NETPRICE, 0) * NULLIF(TEMP.AMOUNT, 0) positionsPrice,
+        NVL(MBVI.NETPRICE, 0) * NVL(TEMP.AMOUNT, 0) positionsPrice,
         atd.COST_POSITION,
         atd.COST_POSITION_NUM
         ,tchl.SEC_ACCT_ID
@@ -24,10 +24,10 @@
         SELECT
         PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
         PSP.FINPROD_ID   AS FINPROD_ID,
-        SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NULLIF(PSP.AMOUNT,0)
-        WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_06}) THEN -1* NULLIF(PSP.AMOUNT,0)
+        SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NVL(PSP.AMOUNT,0)
+        WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_06}) THEN -1* NVL(PSP.AMOUNT,0)
         END) AS AMOUNT,
-        SUM(NULLIF(case when PSP.HODING_TYPE=#{POSITION_TYPE_04} then AMOUNT else 0 end, 0)) AS AMOUNT04
+        SUM(NVL(case when PSP.HODING_TYPE=#{POSITION_TYPE_04} then AMOUNT else 0 end, 0)) AS AMOUNT04
         FROM
         PTL_SEC_POSITION PSP
         INNER JOIN
@@ -138,7 +138,7 @@
         T3.FINPROD_ABBR finprodAbbr,
         T4.TYPE_9 secType1,
         T1.PS,
-        NULLIF(T1.ENTRUST_NUM,0) / 100 shareNum,
+        NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
         T1.PRICE_MODEL priceModel,
         T1.PRICE unitPrice,
         T7.FULL_PRICE allPrice,
@@ -147,11 +147,11 @@
         T7.SETTLE_SPREED,
         T1.VDATE,
         T1.MDATE,
-        NULLIF(T5.FINISH_AMT,0)/100 finishAmt,
-        round(NULLIF(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
+        NVL(T5.FINISH_AMT,0)/100 finishAmt,
+        round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
         T1.REMARK
         ,T1.COUNTER_ID counterId
-        ,NULLIF(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
         from
         ETR_ENTRUST T1
         INNER JOIN
@@ -229,7 +229,7 @@
         T3.FINPROD_ABBR finprodAbbr,
         T4.TYPE_9 secType1,
         T1.PS,
-        NULLIF(T1.ENTRUST_NUM,0) / 100 shareNum,
+        NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
         T1.PRICE_MODEL priceModel,
         T1.PRICE unitPrice,
         T7.FULL_PRICE allPrice,
@@ -238,11 +238,11 @@
         T7.SETTLE_SPREED,
         T1.VDATE,
         T1.MDATE,
-        NULLIF(T5.FINISH_AMT,0)/100 finishAmt,
-        round(NULLIF(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
+        NVL(T5.FINISH_AMT,0)/100 finishAmt,
+        round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
         T1.REMARK
         ,T1.COUNTER_ID counterId
-        ,NULLIF(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
         from
         WFL_ETR_ENTRUST T1
         INNER JOIN
@@ -347,9 +347,9 @@ select
     TO_NUMBER(t1.MDATE - to_date(#{sysDate},'yyyy-MM-dd')) lastqx,
     TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate
     ,t6.INT_TYPE AS rateType
-	,NULLIF(t8.YIELD, t6.RATE)*100 rate
+	,NVL(t8.YIELD, t6.RATE)*100 rate
 	,TO_CHAR(B.EXERCISE_DATE,'yyyy-MM-dd') xqdate
-    ,NULLIF(MBVI.BPYIELD, 0)*100 gzRate
+    ,NVL(MBVI.BPYIELD, 0)*100 gzRate
     ,MBVI.NETVALUATION_EXERCISE priceXq
     ,MBVI.NETVALUATION_RECOMMENDED priceTj
 from
