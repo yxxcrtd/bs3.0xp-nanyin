@@ -310,7 +310,7 @@ public class BussRepFinProductInfoDto extends RepProdDeclare {
         this.repFirstOpenDay = repFirstOpenDay;
     }
 
-    @Amount(fieldName = "BussRepFinProductInfo.repAvgOpenCount", maxIntBit = 3)
+//    @Amount(fieldName = "BussRepFinProductInfo.repAvgOpenCount", maxIntBit = 3)
     public BigDecimal getRepAvgOpenCount() {
         return repAvgOpenCount;
     }
