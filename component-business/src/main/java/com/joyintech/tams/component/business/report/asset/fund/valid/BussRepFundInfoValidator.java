@@ -120,10 +120,10 @@ public class BussRepFundInfoValidator implements BeanValidator{
                 resultList.add(new ValidMessage("repPartyType2",
                     getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repPartyType2"))));
             }*/
-                if(StringUtil.isEmpty(dto.getRepTradeMarket())){
-                    resultList.add(new ValidMessage("repTradeMarket",
-                            getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repTradeMarket"))));
-                }
+//                if(StringUtil.isEmpty(dto.getRepTradeMarket())){
+//                    resultList.add(new ValidMessage("repTradeMarket",
+//                            getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repTradeMarket"))));
+//                }
                 if(dto.isGovInvest()){
                     if( "".equals(dto.getRepGovInvestFor()) || null == dto.getRepGovInvestFor()){
                         resultList.add(new ValidMessage("repGovInvestFor",
