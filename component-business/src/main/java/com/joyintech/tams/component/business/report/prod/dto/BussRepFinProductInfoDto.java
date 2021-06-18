@@ -392,7 +392,7 @@ public class BussRepFinProductInfoDto extends RepProdDeclare {
      * {@inheritDoc}
      */
     @Override
-    @Rate(fieldName = "BussRepFinProductInfo.repHighYield", maxDecBit = 5)
+//    @Rate(fieldName = "BussRepFinProductInfo.repHighYield", maxDecBit = 5)
     public BigDecimal getRepHighYield() {
         return super.getRepHighYield();
     }
@@ -401,7 +401,7 @@ public class BussRepFinProductInfoDto extends RepProdDeclare {
      * {@inheritDoc}
      */
     @Override
-    @Rate(fieldName = "BussRepFinProductInfo.repLowYield", maxDecBit = 5)
+//    @Rate(fieldName = "BussRepFinProductInfo.repLowYield", maxDecBit = 5)
     public BigDecimal getRepLowYield() {
         return super.getRepLowYield();
     }
