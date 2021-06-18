@@ -417,8 +417,8 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
 
     @Override
 //    @NotEmpty(fieldName = "FinStockInfo002.finprodAbbr", groups = {ValidateGroupEdit.class})
-    @Length(fieldName = "FinStockInfo002.finprodAbbr", max = 100, groups = {
-        ValidateGroupEdit.class})
+//    @Length(fieldName = "FinStockInfo002.finprodAbbr", max = 100, groups = {
+//        ValidateGroupEdit.class})
     public String getFinprodAbbr() {
         return super.getFinprodAbbr();
     }
