@@ -692,7 +692,7 @@ public class SecAbsCalBookService {
                                 acctEntityEx, rstBaseinfo, listIntinfo, listCashinfo, listPayinfo,
                                 varFaceValue, acctEntity);
                     }else{
-                        calculationCommonService.getCalculate(
+                        accurIntCalOutParameter = calculationCommonService.getCalculate(
                                 acctEntityEx, rstBaseinfo, listIntinfo, listCashinfo, listPayinfo,
                                 varFaceValue, acctEntity);
                     }
