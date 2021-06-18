@@ -11,7 +11,7 @@
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,
         T1.PORTFOLIO_ID portfolioId,
-        NULLIF(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+        NVL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
         T2.PORTFOLIO_NAME portfolioName,
         T7.TERM_TYPE termType,
         T7.TERM_DAYS repoTerm,
@@ -22,8 +22,8 @@
         T7.SETTLE_SPREED settleSpreed,
         T1.VDATE vdate,
         T1.MDATE mdate,
-        NULLIF(T5.FINISH_AMT,0) finishAmt,
-        round(NULLIF(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
+        NVL(T5.FINISH_AMT,0) finishAmt,
+        round(NVL(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
         T1.REMARK
         from
         ETR_ENTRUST T1
@@ -88,7 +88,7 @@
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,
         T1.PORTFOLIO_ID portfolioId,
-        NULLIF(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+        NVL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
         T2.PORTFOLIO_NAME portfolioName,
         T7.TERM_TYPE termType,
         T7.TERM_DAYS repoTerm,
@@ -99,8 +99,8 @@
         T7.SETTLE_SPREED settleSpreed,
         T1.VDATE vdate,
         T1.MDATE mdate,
-        NULLIF(T5.FINISH_AMT,0) finishAmt,
-        round(NULLIF(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
+        NVL(T5.FINISH_AMT,0) finishAmt,
+        round(NVL(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
         T1.REMARK
         from
         WFL_ETR_ENTRUST T1
@@ -168,14 +168,14 @@
         TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
         TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
         TABLE01.BRANCH     				branch,/*分支序号*/
-        NULLIF(TABLE02.AMOUNT,0) / 100	    posStrdPrinAmt,/*持仓券面总额*/
-        NULLIF(TABLE01.AMOUNT,0) / 100		pledStrdPrinAmt,/*可质押券面总额*/
+        NVL(TABLE02.AMOUNT,0) / 100	    posStrdPrinAmt,/*持仓券面总额*/
+        NVL(TABLE01.AMOUNT,0) / 100		pledStrdPrinAmt,/*可质押券面总额*/
         ETR_ENTRUST_PLEDGE.SCALE		scale,	/*折算比例*/
         ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID pledgeStockId,/*质押库代码*/
         FIN_PRODUCT.MDATE   			mdate,/*到期日*/
         MBCR.GRADE_RESULT 				gradeResult,/*债项评级*/
         FIN_PRODUCT.REGIST_ORG 			registOrg,/*登记托管机构*/
-        NULLIF(FIN_PRODUCT.FINPROD_ABBR,FIN_PRODUCT.FINPROD_NAME) finProdName,/*金融产品名称*/
+        NVL(FIN_PRODUCT.FINPROD_ABBR,FIN_PRODUCT.FINPROD_NAME) finProdName,/*金融产品名称*/
         MST_BOND_VALUATION_INFO.LAST_PERIOD lastPeriod,/*剩余期限*/
         FIN_PRODUCT.FINPROD_MARKET_ID 	finprodMarketId,/*市场代码*/
         CASE WHEN FIN_PRODUCT2.IS_CHL = 'Y'
@@ -195,7 +195,7 @@
         SUM(TEMP.AMOUNT) AMOUNT /*可质押券面总额*/
         FROM (
         SELECT
-        NULLIF(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+        NVL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
         PTL_SEC_POSITION.PORTFOLIO_ID,
         T2.PORTFOLIO_NAME,
         PTL_SEC_POSITION.SEC_ACCT_ID,
@@ -219,7 +219,7 @@
 
         UNION ALL
         SELECT
-        NULLIF(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+        NVL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
         PTL_SEC_POSITION_FLOW.PORTFOLIO_ID,
         T2.PORTFOLIO_NAME,
         PTL_SEC_POSITION_FLOW.SEC_ACCT_ID,
@@ -513,19 +513,19 @@
     	SELECT
 		TABLE01.PORTFOLIO_ID 			portfolioId,/*组合代码*/
 		TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
-		-- 			NULLIF(FIN_PRODUCT.FINPROD_NAME,STL_SEC_ACCT_INFO.SEC_ACCT_NAME)	 			secAcctStr,/*证券账户/通道代码*/
+		-- 			NVL(FIN_PRODUCT.FINPROD_NAME,STL_SEC_ACCT_INFO.SEC_ACCT_NAME)	 			secAcctStr,/*证券账户/通道代码*/
 		TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
 		FIN_PRODUCT.FINPROD_ABBR     	finProdAbbr,/*金融产品简称*/
 		FIN_PRODUCT.FINPROD_MARKET_ID   finprodMarketId,/*金融产品市场代码*/ 
 		TABLE01.BRANCH     				branch,/*分支序号*/
-        NULLIF(TABLE01.AMOUNT,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
-        NULLIF(TABLE02.AMOUNT,0) * 100		posStrdPrinAmt,/*持仓券面总额*/
+        NVL(TABLE01.AMOUNT,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
+        NVL(TABLE02.AMOUNT,0) * 100		posStrdPrinAmt,/*持仓券面总额*/
 		FIN_PRODUCT.TRADE_MARKET 		tradePlace,/*交易场所*/
 		FIN_PRODUCT.MDATE   			mdate,/*到期日*/
 		MST_BOND_VALUATION_INFO.LAST_PERIOD lastPeriod,/*剩余期限*/
 		MBCR.GRADE_RESULT 				gradeResult,/*债项评级*/
 		FIN_PRODUCT.REGIST_ORG 			registOrg,/*登记托管机构*/
-        NULLIF(fscr.SCALE, 1)*100 			scale,	/*折算比例*/
+        NVL(fscr.SCALE, 1)*100 			scale,	/*折算比例*/
 		FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,/*市场代码*/
 		FIN_PRODUCT.ISSUER  issuer, /*发行人*/
 		CASE WHEN FIN_PRODUCT2.IS_CHL = 'Y'

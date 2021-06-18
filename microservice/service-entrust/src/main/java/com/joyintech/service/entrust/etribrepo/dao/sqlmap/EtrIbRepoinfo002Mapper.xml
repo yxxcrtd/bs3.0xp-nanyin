@@ -4,7 +4,7 @@
 		namespace="com.joyintech.service.entrust.etribrepo.dao.EtrIbRepoinfo002Mapper">
 
 	<select id="getAvailableNum" resultType="java.math.BigDecimal">
-		select 100-sum(NULLIF(PRIN_AMT,0))
+		select 100-sum(NVL(PRIN_AMT,0))
 		from FIN_CASH_PLAN
 		where
 			FINPROD_ID = #{finprodId}
