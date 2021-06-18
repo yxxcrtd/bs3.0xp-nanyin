@@ -394,6 +394,8 @@ $(function() {
             $('#bussRepAssetCreditNonstdInfoDto_repGuaType').attr('disabled',false).trigger('change');
             //递延利息是否计息
             $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').attr('disabled',false).trigger('change');
+            //行权价格
+            $('#bussRepAssetCreditNonstdInfoDto_repExercisePrice').attr('disabled',false).trigger('change');
 
 		    //[资产/负债类别]为“收/受益权[1205]”以外时,收/受益权类型不可填
 		    if(repAssetType != "1205"){
@@ -445,6 +447,9 @@ $(function() {
                  //递延利息是否计息
                  $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').val('').trigger('change');
                  $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').attr('disabled',true).trigger('change');
+                 //行权价格
+                 $('#bussRepAssetCreditNonstdInfoDto_repExercisePrice').val('').trigger('change');
+                 $('#bussRepAssetCreditNonstdInfoDto_repExercisePrice').attr('disabled',true).trigger('change');
             }
             //新增可投资资产时，部分赎回比例%不可填
             if(type9=="08"){
