@@ -44,7 +44,7 @@
 		END as AMOUNT
 		FROM PTL_SEC_POSITION
 		WHERE 1=1
-		AND PTL_SEC_POSITION.CDATE = str_to_date(#{plateDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+		AND PTL_SEC_POSITION.CDATE = to_date(#{plateDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
 		/*持仓类型包含：03实际，04质押，05融入，06融出，08预占用,11卖空*/
 		AND PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_04},#{POSITION_TYPE_05},
 		#{POSITION_TYPE_06},#{POSITION_TYPE_08},#{POSITION_TYPE_11})
@@ -62,7 +62,7 @@
 		END as AMOUNT
 		FROM PTL_SEC_POSITION_FLOW
 		WHERE 1=1
-		AND PTL_SEC_POSITION_FLOW.CDATE = str_to_date(#{plateDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+		AND PTL_SEC_POSITION_FLOW.CDATE = to_date(#{plateDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
 		/*持仓类型包含：01可用，12卖空可用*/
 		AND PTL_SEC_POSITION_FLOW.HODING_TYPE IN (#{POSITION_TYPE_01}, #{POSITION_TYPE_12})
 		) TEMP
@@ -92,7 +92,7 @@
 		-1 * PTL_SEC_POSITION.AMOUNT
 		END) as AMOUNT
 		FROM PTL_SEC_POSITION	       	WHERE 1=1
-		AND PTL_SEC_POSITION.CDATE = str_to_date(#{plateDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+		AND PTL_SEC_POSITION.CDATE = to_date(#{plateDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
 		/*持仓类型包含：03实际，05融入，06融出,11卖空*/
 		AND PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03},#{POSITION_TYPE_05},
 		#{POSITION_TYPE_06},#{POSITION_TYPE_11})
@@ -122,7 +122,7 @@
 		LEFT JOIN FIN_PRODUCT tmp2
 		ON tmp1.sec_id = tmp2.finprod_market_id
 		WHERE 1 = 1
-		AND tmp1.value_date &lt;= str_to_date(#{plateDate},'%Y-%m-%d')/*估值行情.日期 小于等于 平台日*/
+		AND tmp1.value_date &lt;= to_date(#{plateDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
 		AND tmp1.value_source =
 		(CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN
 		'CSD'
@@ -140,7 +140,7 @@
 		LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr
 		ON  fscr.FINPROD_ID = TABLE01.FINPROD_ID
 		AND fscr.BRANCH = TABLE01.BRANCH
-		AND fscr.VDATE &lt;= str_to_date(#{plateDate}, '%Y-%m-%d')
+		AND fscr.VDATE &lt;= to_date(#{plateDate}, 'yyyy-MM-dd')
 		AND NOT EXISTS (
 		SELECT
 		*
@@ -149,14 +149,14 @@
 		WHERE
 		fscrInner.FINPROD_ID = fscr.FINPROD_ID
 		AND fscrInner.BRANCH = fscr.BRANCH
-		AND fscrInner.VDATE &lt;= str_to_date(#{plateDate}, '%Y-%m-%d')
+		AND fscrInner.VDATE &lt;= to_date(#{plateDate}, 'yyyy-MM-dd')
 		AND fscrInner.VDATE > fscr.VDATE
 		)
 		LEFT JOIN (SELECT RANK() OVER(PARTITION BY O_CODE ORDER BY  GRADE_DATE DESC,CAST(GRADE_RESULT AS DECIMAL) DESC) NUM,
 		O_CODE,
 		GRADE_RESULT
 		FROM MST_BOND_CREDIT_RATING
-		WHERE GRADE_DATE &lt;= str_to_date(#{plateDate},'%Y-%m-%d')
+		WHERE GRADE_DATE &lt;= to_date(#{plateDate},'yyyy-MM-dd')
 		and GRADE_ORG_ID !='22'
 		) MBCR
 		ON MBCR.O_CODE = FIN_PRODUCT.FINPROD_MARKET_ID
@@ -170,7 +170,7 @@
 		WHERE 1=1
 		AND FIN_PRODUCT.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
 		/*只获取交易场所为：01银行间，03上海证券交易所,04深圳证券交易所*/
-		AND FIN_PRODUCT.TRADE_MARKET IN (#{TRADEPLACE01},#{TRADEPLACE03},#{TRADEPLACE04})
+		AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01} 
 		<if test="portfolioId != null and !portfolioId.isEmpty()">
 			AND (TABLE01.PORTFOLIO_ID in
 			<foreach collection="portfolioId" item="item" index= "index" open="(" close=")" separator="," >
@@ -180,12 +180,6 @@
 				#{item}
 			</foreach>
 			)
-		</if>
-		<if test="tradePlace != null and !tradePlace.isEmpty()">
-			AND FIN_PRODUCT.TRADE_MARKET in
-			<foreach collection="tradePlace" item="item" open="(" close=")" separator=",">
-				#{item}
-			</foreach>
 		</if>
 		<if test="secAcctId != null and !secAcctId.isEmpty()">
 			AND (TABLE01.SEC_ACCT_ID in
@@ -238,7 +232,7 @@
 		END as AMOUNT
 		FROM PTL_SEC_POSITION
 		WHERE 1=1
-		AND PTL_SEC_POSITION.CDATE = str_to_date(#{plateDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+		AND PTL_SEC_POSITION.CDATE = to_date(#{plateDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
 		/*持仓类型包含：03实际，04质押，05融入，06融出，08预占用,11卖空*/
 		AND PTL_SEC_POSITION.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_04},#{POSITION_TYPE_05},
 		#{POSITION_TYPE_06},#{POSITION_TYPE_08},#{POSITION_TYPE_11})
@@ -256,7 +250,7 @@
 		END as AMOUNT
 		FROM PTL_SEC_POSITION_FLOW
 		WHERE 1=1
-		AND PTL_SEC_POSITION_FLOW.CDATE = str_to_date(#{plateDate},'%Y-%m-%d')/*组合持仓.日期 = 平台日*/
+		AND PTL_SEC_POSITION_FLOW.CDATE = to_date(#{plateDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
 		/*持仓类型包含：01可用，12卖空可用*/
 		AND PTL_SEC_POSITION_FLOW.HODING_TYPE IN (#{POSITION_TYPE_01}, #{POSITION_TYPE_12})
 		) TEMP
@@ -282,7 +276,7 @@
 		WHERE 1=1
 		AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
 		/*只获取交易场所为：01银行间，03上海证券交易所,04深圳证券交易所*/
-		AND FIN_PRODUCT.TRADE_MARKET IN (#{TRADEPLACE01},#{TRADEPLACE03},#{TRADEPLACE04})
+		AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01} 
 		<if test="portfolioId != null and !portfolioId.isEmpty()">
 			AND (TABLE01.PORTFOLIO_ID in
 			<foreach collection="portfolioId" item="item" index= "index" open="(" close=")" separator="," >
@@ -292,12 +286,6 @@
 				#{item}
 			</foreach>
 			)
-		</if>
-		<if test="tradePlace != null and !tradePlace.isEmpty()">
-			AND FIN_PRODUCT.TRADE_MARKET in
-			<foreach collection="tradePlace" item="item" open="(" close=")" separator=",">
-				#{item}
-			</foreach>
 		</if>
 		<if test="secAcctId != null and !secAcctId.isEmpty()">
 			AND (TABLE01.SEC_ACCT_ID in
