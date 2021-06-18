@@ -27,8 +27,9 @@
          * 定义表头
          */
         cols: [
-            {field: 'parentPortfolioId', width: 150, title: 'EtrStandardBond002.avaColModel.portfolioId'}
-            ,{field: 'portfolioId', width: 150, title: 'EtrStandardBond002.avaColModel.portfolioIdChild'}
+            {field: 'portfolioId', width: 150, title: 'EtrStandardBond002.avaColModel.portfolioId'}
+            /*,
+            {field: 'portfolioId', width: 150, title: 'EtrStandardBond002.avaColModel.portfolioIdChild'}*/
             // 债券代码
             ,{field: 'finprodMarketId', width: 150, title: 'EtrStandardBond002.avaColModel.finProdId'}
             //债券简称
@@ -106,8 +107,9 @@
         loadonce: true,
         height:200,
         cols: [
-            {field: 'parentPortfolioId', width: 150, title: 'EtrStandardBond002.pledgeColModel.portfolioId'}
-            ,{field: 'portfolioId', width: 150, title: 'EtrStandardBond002.pledgeColModel.portfolioIdChild'}
+            /*{field: 'parentPortfolioId', width: 150, title: 'EtrStandardBond002.pledgeColModel.portfolioId'}
+            ,*/
+            {field: 'portfolioId', width: 150, title: 'EtrStandardBond002.pledgeColModel.portfolioId'}
             // 债券代码
             ,{field: 'finprodMarketId', width: 150, title: 'EtrStandardBond002.pledgeColModel.finProdId', sortable: false}
             //债券简称
