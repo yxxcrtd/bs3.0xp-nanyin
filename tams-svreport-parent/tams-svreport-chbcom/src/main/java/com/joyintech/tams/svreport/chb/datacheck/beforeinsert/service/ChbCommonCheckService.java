@@ -59,7 +59,7 @@ public class ChbCommonCheckService  extends FileImpService {
                 tableInfo.getTableName(), tableInfo.getBussinessKey(), tableInfo.getCheckEuplicatedKeys());
         // 2.3调用CommonCodeCheckBatchService.codeCheckCommon方法
         if(tableInfo.isNeedCodeCheck()) {
-            commonCodeCheckBatchService.codeCheckCommonOnly(listMap, tableInfo);
+            commonCodeCheckBatchService.codeCheckCommon(listMap, tableInfo,null);
         }
         // 2.4对[2]清理掉错误数据的List，调用以下共通，进行数据类型转化处理。将检查后的listMap 转为List<业务表登记表Dto>
         //获得运行期的泛型类型
