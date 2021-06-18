@@ -35,11 +35,14 @@
     }
 
     /**根据市场代码，查询行情信息，展示出来*/
-    var querySecinfo = function(finprodId,portfolioId,chlFinprodId) {
+    var querySecinfo = function(finprodId,portfolioId,chlFinprodId,ccy,sysDateT1,calId) {
         var param = {
             finprodId : finprodId,
             portfolioId : portfolioId,
-            chlFinprodId : chlFinprodId
+            chlFinprodId : chlFinprodId,
+            ccy:ccy, 
+    		sysDateT1:sysDateT1,
+    		calId:calId
         };
         if (portfolioId != null && portfolioId != '') {
             document.getElementById('zhkyxj_t').innerHTML = '0.00元';

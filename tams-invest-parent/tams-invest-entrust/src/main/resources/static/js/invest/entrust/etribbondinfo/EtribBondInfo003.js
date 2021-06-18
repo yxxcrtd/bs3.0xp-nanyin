@@ -456,7 +456,10 @@
         var chlFinprodId = $("#chlFinprodId").val();
         var finprodIdhid = $("#finprodIdhid").val();
         var portfolioId = $("#portfolioId").val();
-        parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId);
+        var ccy = $('#ccy').val();
+        var sysDateT1 = $('#vdate').val();
+		var calId = $('#calendarId').val();
+        parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
     });
 
 
@@ -1034,8 +1037,11 @@
         //左下行情信息联动
         var chlFinprodId = $("#chlFinprodId").val();
         var finprodIdhid = $("#finprodIdhid").val();
+        var ccy = $('#ccy').val();
+        var sysDateT1 = $('#vdate').val();
+		var calId = $('#calendarId').val();
         if (parent.EtrIbBondinfoHq) {
-            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId);
+            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
         }
         // 画星星
         star();

@@ -118,9 +118,9 @@ public class EtrIbBondinfo001Controller extends BaseController{
     public ResponseEntity<byte[]> export()
             throws Exception {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
-        String fileName = "银行间债券指令（持仓）" + "(" + DateUtil.getCurrentDate() + ").xls";
+        String fileName = "银行间债券指令（指令管理）" + "(" + DateUtil.getCurrentDate() + ").xls";
         if (searchParams.get("isDvp") != null && Boolean.parseBoolean((String)searchParams.get("isDvp"))) {
-            fileName = "银行间债券指令（指令管理）" + "(" + DateUtil.getCurrentDate() + ").xls";
+            fileName = "银行间债券指令（持仓）" + "(" + DateUtil.getCurrentDate() + ").xls";
         }
         return etrIbBondinfo001Service.export(fileName, RequestUtil.getParameters(getRequest()));
     }

@@ -437,8 +437,11 @@
         var chlFinprodId = $("#chlFinprodId").val();
         var finprodIdhid = $("#finprodIdhid").val();
         var portfolioId = $("#portfolioId").val();
+        var ccy = $('#ccy').val();
+        var sysDateT1 = $('#vdate').val();
+		var calId = $('#calendarId').val();
         if (todoList == false) {
-            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId);
+            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
         }
     }
 
