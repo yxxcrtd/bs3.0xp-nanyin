@@ -380,6 +380,11 @@ public class TrdBondInvestTradeService extends BaseService {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 //        List<SelectOptionDto> resultList = trdBondInvestTradeMapper.getFinprodId(param);
         param.put("isautobond", CacheUtil.getSysParam("IS_AUTOBOND"));
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("parentPageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return this.queryForPage(page, length,
                 () -> trdBondInvestTradeMapper.getFinprodId(param));
 
