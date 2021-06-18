@@ -179,12 +179,14 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
                         resultList.add(new ValidMessage("repProIndustryLevel2",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repProIndustryLevel2"))));
                     }
-                    if(StringUtil.equals(dto.getRepTradeMarket(), DictCodeList.交易流通场所_其他交易流通场所.getValue())){
+                   /* 修改为配置来进行判断
+                   if(StringUtil.equals(dto.getRepTradeMarket(), DictCodeList.交易流通场所_其他交易流通场所.getValue())){
                         if(StringUtil.isEmpty(dto.getRepRemark())){
                             resultList.add(new ValidMessage("repRemark",
                                     getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repRemark"))));
                         }
-                    }
+                    }*/
+
                     if(StringUtil.isEmpty(dto.getRepRepayCmt())){
                         resultList.add(new ValidMessage("repRepayCmt",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repRepayCmt"))));
