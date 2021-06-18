@@ -1238,6 +1238,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
             else{
                 // 选择封闭式净值型和“封闭式非净值型”时，开放模式必须为空
                 if (StringUtil.isNotEmpty(
+                        entity.getBussRepFinProductInfoDto().getRepOperateMode()) && StringUtil.isNotEmpty(
                     entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
                     validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
                         this.getMessage("FIN_PROD_E_0134")));
