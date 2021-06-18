@@ -165,7 +165,7 @@
 			getElementById('repHolidayOnFlag').removeAttr('required');
 		}else{
 			getElementById('repOpenCircle').prop('disabled',false);
-			getElementById('repOpenCircleDays').prop('disabled',false);
+			// getElementById('repOpenCircleDays').prop('disabled',false);
 			getElementById('repRuleComment').prop('disabled',false);
 			getElementById('repFirstOpenDay').prop('disabled',false);
 			getElementById('repAvgOpenCount').prop('disabled',false);
