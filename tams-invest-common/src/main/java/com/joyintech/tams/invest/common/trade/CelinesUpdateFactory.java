@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -618,9 +617,11 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     }
                     hapCreditAmt = creditLines.getHapCreditAmt();
                     // 超额释放时避免已使用金额为负值
-                    if (BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) > 0) {
-                        todocredit_amt = hapCreditAmt.negate();
-                    }
+//                    if (BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) > 0) {
+//                        todocredit_amt = hapCreditAmt.negate();
+//                    }
+                    // 实际占用额度
+                    BigDecimal realCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
                     //已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
                     hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt) : BigDecimal.ZERO;
                     //1.更新额度管理中 已占用额度
@@ -637,6 +638,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                         //占用类型（实际占用、预占用）
                         creditLinesDeal.setCreditOccureType("01");
                         creditLinesDeal.setTradeAmt(todocredit_amt);
+                        creditLinesDeal.setRealCreditAmt(realCreditAmt);
                         creditLinesDeal.setTradeDate(model.getTradeDate());
                         creditLinesDeal.setCreateDept(model.getCreateDept());
                         creditLinesDeal.setCreateTime(model.getCreateTime());
@@ -680,9 +682,11 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     }
                     hapCreditAmt = creditLines.getHapCreditAmt();
                     // 超额释放时避免已使用金额为负值
-                    if (BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) > 0) {
-                        todocredit_amt = hapCreditAmt.negate();
-                    }
+//                    if (BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) > 0) {
+//                        todocredit_amt = hapCreditAmt.negate();
+//                    }
+                    // 实际占用额度
+                    BigDecimal realCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
                     //已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
                     hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt) : BigDecimal.ZERO;
                     //1.更新额度管理中 已占用额度
@@ -699,6 +703,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                         //占用类型（实际占用、预占用）
                         creditLinesDeal.setCreditOccureType("01");
                         creditLinesDeal.setTradeAmt(todocredit_amt);
+                        creditLinesDeal.setRealCreditAmt(realCreditAmt);
                         creditLinesDeal.setTradeDate(model.getTradeDate());
                         creditLinesDeal.setCreateDept(model.getCreateDept());
                         creditLinesDeal.setCreateTime(model.getCreateTime());
@@ -784,7 +789,12 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
                 }
                 creditLines.setInstitutionCode(institutionCode);
-                creditLines.setHapCreditAmt(todocredit_amt.add(extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(), institutionCode)));
+                hapCreditAmt = extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(), institutionCode);
+                // 实际占用额度
+                BigDecimal realCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
+                //已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
+                hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt) : BigDecimal.ZERO;
+                creditLines.setHapCreditAmt(hapCreditAmt);
                 creditMapper.insert(creditLines);
                 if(isNotBottomflag){
                     //2.0 存额度占用明细表
@@ -793,6 +803,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     //占用类型（实际占用、预占用）
                     creditLinesDeal.setCreditOccureType("01");
                     creditLinesDeal.setTradeAmt(todocredit_amt);
+                    creditLinesDeal.setRealCreditAmt(realCreditAmt);
                     creditLinesDeal.setTradeDate(model.getTradeDate());
                     creditLinesDeal.setCreateDept(model.getCreateDept());
                     creditLinesDeal.setCreateTime(model.getCreateTime());
