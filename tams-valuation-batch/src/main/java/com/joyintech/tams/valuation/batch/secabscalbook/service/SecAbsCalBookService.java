@@ -696,9 +696,6 @@ public class SecAbsCalBookService {
                                 acctEntityEx, rstBaseinfo, listIntinfo, listCashinfo, listPayinfo,
                                 varFaceValue, acctEntity);
                     }
-                    if (accurIntCalOutParameter == null) {
-                        accurIntCalOutParameter = new AccurIntCalOutParameter();
-                    }
                     // update by caiqun 2021-02-05 修复ABS债付息计划调整时取因年度付息天数取值错误，导致计提应收利息不对问题  start
                     // 返回值.应计利息做小数位处理
                     BigDecimal interest = accurIntCalOutParameter == null ? BigDecimal.ZERO : accurIntCalOutParameter.getInterest();
