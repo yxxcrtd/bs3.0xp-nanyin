@@ -701,8 +701,7 @@ public class SecAbsCalBookService {
                     }
                     // update by caiqun 2021-02-05 修复ABS债付息计划调整时取因年度付息天数取值错误，导致计提应收利息不对问题  start
                     // 返回值.应计利息做小数位处理
-                    BigDecimal interest = accurIntCalOutParameter.getInterest();
-                    interest = interest == null ? BigDecimal.ZERO : interest;
+                    BigDecimal interest = accurIntCalOutParameter == null ? BigDecimal.ZERO : accurIntCalOutParameter.getInterest();
                     //MODIFY JINMAODONG 20190517 START
                     //增加了一个开关SEC_INT_SCALE用于控制应计利息的舍位方式，是先做舍位还是先做计算再做舍位；参数为空或者为"Y"的时候则先做舍位再做计算
                     // 返回值.应计利息做小数位处理
