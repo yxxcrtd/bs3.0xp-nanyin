@@ -9,17 +9,15 @@
  */
 package com.joyintech.service.product.productelement.scheduling.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.joyintech.service.product.productelement.scheduling.dao.FinProductSchedulingMapper;
+import com.joyintech.service.product.productelement.scheduling.dto.BussRepFinProductInfoDto;
+import com.joyintech.service.product.productelement.scheduling.dto.PrdIssueScheduleDto;
 import com.joyintech.tams.common.base.dao.PaPrdIssueScheduleMapper;
 import com.joyintech.tams.common.base.dao.RepProdDeclareMapper;
 import com.joyintech.tams.common.base.dao.RepProdIssueMapper;
@@ -29,20 +27,15 @@ import com.joyintech.tams.common.base.entity.RepProdIssue;
 import com.joyintech.tams.component.base.report.dto.BaseRepFinProductDto;
 import com.joyintech.tams.component.base.report.dto.BaseRepFinProductInfoDto;
 import com.joyintech.tams.component.base.report.prod.BaseRepFinProductInfoService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.service.product.productelement.scheduling.dao.FinProductSchedulingMapper;
-import com.joyintech.service.product.productelement.scheduling.dto.BussRepFinProductInfoDto;
-import com.joyintech.service.product.productelement.scheduling.dto.PrdIssueScheduleDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 理财产品排期信息管理
@@ -326,14 +319,5 @@ public class FinProductSchedulingService extends BaseService<PaPrdIssueSchedule>
         //OPEX-598 产品代码输入类似字符￥%￥%￥，系统提示产品代码已存在，提示有误 guyunfei end
         return finProductSchedulingMapper.checkProdInfoExist(finprodMarketId, finprodAbbr,
             finprodName, finprodId, DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
-    }
-
-    /**
-     * 查询是否是否存在组合代码与产品代码相同的组合
-     * @param finprodMarketId 产品代码
-     * @return
-     */
-    public int chekPortfolExist(String finprodMarketId,String pageId){
-        return finProductSchedulingMapper.chekPortfolExist(finprodMarketId,pageId);
     }
 }
