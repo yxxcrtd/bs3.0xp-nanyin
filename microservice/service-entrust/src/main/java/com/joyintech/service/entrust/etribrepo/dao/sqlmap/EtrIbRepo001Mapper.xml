@@ -330,8 +330,8 @@
         ON MBCR.O_CODE = FIN_PRODUCT.FINPROD_MARKET_ID
         AND MBCR.NUM = 1
         WHERE 1=1
-        /*只获取交易场所为：01银行间，03上海证券交易所,04深圳证券交易所*/
-        AND FIN_PRODUCT.TRADE_MARKET IN (#{TRADEPLACE01})
+        /*只获取交易场所为：01银行间*/
+        AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01} 
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND ETR_ENTRUST_PLEDGE.PORTFOLIO_ID in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
@@ -675,7 +675,7 @@
 		WHERE 1=1
 		AND FIN_PRODUCT.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
 		/*只获取交易场所为：01银行间，03上海证券交易所,04深圳证券交易所*/
-		AND FIN_PRODUCT.TRADE_MARKET IN (#{TRADEPLACE01},#{TRADEPLACE03},#{TRADEPLACE04})
+		AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01} 
 		<if test="portfolioId != null and !portfolioId.isEmpty()">
 			AND (TABLE01.PORTFOLIO_ID in
 			<foreach collection="portfolioId" item="item" index= "index" open="(" close=")" separator="," >
