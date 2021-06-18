@@ -6,24 +6,24 @@
 		SELECT DISTINCT
 		TABLE01.PORTFOLIO_ID 			portfolioId,/*组合代码*/
 		TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
-		-- 			IFNULL(FIN_PRODUCT.FINPROD_NAME,STL_SEC_ACCT_INFO.SEC_ACCT_NAME)	 			secAcctStr,/*证券账户/通道代码*/
+		-- 			NVL(FIN_PRODUCT.FINPROD_NAME,STL_SEC_ACCT_INFO.SEC_ACCT_NAME)	 			secAcctStr,/*证券账户/通道代码*/
 		TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
 		FIN_PRODUCT.FINPROD_ABBR     	finProdAbbr,/*金融产品简称*/
 		TABLE01.BRANCH     				branch,/*分支序号*/
-		IFNULL(TABLE01.AMOUNT,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
-		IFNULL(TABLE02.AMOUNT,0) * 100		posStrdPrinAmt,/*持仓券面总额*/
+		NVL(TABLE01.AMOUNT,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
+		NVL(TABLE02.AMOUNT,0) * 100		posStrdPrinAmt,/*持仓券面总额*/
 		FIN_PRODUCT.TRADE_MARKET 		tradePlace,/*交易场所*/
 		FIN_PRODUCT.MDATE   			mdate,/*到期日*/
 		MST_BOND_VALUATION_INFO.LAST_PERIOD lastPeriod,/*剩余期限*/
 		MBCR.GRADE_RESULT 				gradeResult,/*债项评级*/
 		FIN_PRODUCT.REGIST_ORG 			registOrg,/*登记托管机构*/
-		IFNULL(fscr.SCALE, 1)*100 			scale,	/*折算比例*/
+		NVL(fscr.SCALE, 1)*100 			scale,	/*折算比例*/
 		FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,/*市场代码*/
 		CASE WHEN FIN_PRODUCT2.IS_CHL = 'Y'
 		THEN FIN_PRODUCT2.FINPROD_NAME
 		ELSE STL_SEC_ACCT_INFO.SEC_ACCT_NAME
 		END AS secAcctStr
-		,IFNULL(PP.PARENT_PORTFOLIO_ID, PP.PORTFOLIO_ID) parentPortfolioId
+		,NVL(PP.PARENT_PORTFOLIO_ID, PP.PORTFOLIO_ID) parentPortfolioId
 		FROM (
 		SELECT
 		TEMP.PORTFOLIO_ID,/*组合代码*/
@@ -210,7 +210,7 @@
 		TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
 		FIN_PRODUCT.FINPROD_ABBR     	finProdAbbr,/*金融产品简称*/
 		TABLE01.BRANCH     				branch,/*分支序号*/
-		IFNULL(TABLE01.AMOUNT,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
+		NVL(TABLE01.AMOUNT,0) * 100		pledStrdPrinAmt,/*可质押券面总额*/
 		FIN_PRODUCT.TRADE_MARKET 		tradePlace,/*交易场所*/
 		ETR_ENTRUST_PLEDGE.SCALE		scale	/*折算比例*/
 		 ,ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID pledgeStockId /*质押库代码*/ 
