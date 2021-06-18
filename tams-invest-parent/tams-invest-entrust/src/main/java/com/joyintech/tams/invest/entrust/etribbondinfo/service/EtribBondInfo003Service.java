@@ -30,6 +30,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
@@ -89,6 +90,9 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
      */
     @Autowired
     private DateCalService dateCalService;
+    
+    @Autowired
+    private FinProductMapper finProductMapper;
 
     @Autowired
     private PtlPortfolioMapper ptlPortfolioMapper;
@@ -150,7 +154,20 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
         Date tradeDate = DateUtil.platDateFromCache();
         // 交易日历
         String calId = (String) param.get("calId");
-        Date tradeDateNext = DateUtil.addDay(tradeDate, 1);
+        if (StringUtil.isNotEmpty(param.get("finprodId"))){
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)param.get("finprodId"));
+            List<String> holidayList = dateCalService.getDealCalendarHoliday(tradeDate,DateUtil.addDay(tradeDate, 15),finProduct.getCalendarId());
+            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(tradeDate).toString()), 1, holidayList, "1");
+            param.put("sysDateT1", DateUtil.format(tradeDay));
+        }else {
+            Date vdate = DateUtil.parse((String)param.get("vdate"));
+            if(StringUtil.isNotEmpty(calId)&&vdate!=null){
+                List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
+                Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
+                param.put("sysDateT1",DateUtil.format(tradeDay));
+            }
+        }
+        Date tradeDateNext = DateUtil.parse((String)param.get("sysDateT1"));
         if (StringUtil.isNotEmpty(calId)) {
             List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(tradeDate)), DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15), calId);
             tradeDateNext = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(tradeDate)), 1, holidayList, "1");
@@ -158,6 +175,32 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
         Map<String, Object> result = new HashMap<>();
 
         // 可用现金
+        Map<String, Object> cash = etrCommonService.getProAvailableCash(param);
+        //组合T日可用现金
+        result.put("proAvailableCash",cash.get("cashT"));
+        //组合T+1日可用现金
+        result.put("proAvailableCashT1", cash.get("cashT1"));
+        //托管户T日可用现金
+        result.put("secManageAvailablePosition",cash.get("cashT3"));
+        //托管户T+1日可用现金
+        PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
+        dto.setCdate(tradeDateNext);
+        dto.setPortfolioId((String)param.get("portfolioId"));
+        dto.setCcy((String)param.get("ccy"));
+        List<String> acctTypeList = new ArrayList<>();
+        acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
+        dto.setAcctType(acctTypeList);
+        result.put("secManageAvailablePositionT1", baseEtrCashPositionCommService.qryCommandAvailableCash(dto));
+        //通道可用现金
+        if (StringUtil.isNotEmpty(param.get("chlId"))) {
+        	//通道T日可用现金
+        	result.put("channelAvailable", cash.get("cashT2"));
+        	//通道T+1日可用现金
+        	dto.setAcctType(null);
+            dto.setChlFinprodId((String)param.get("chlFinprodId"));
+            dto.setCdate(tradeDateNext);
+            result.put("channelAvailableT1", baseEtrCashPositionCommService.qryCommandAvailableCash(dto));
+        }
 //        if (baseEtrCashPositionCommService != null) {
 //            EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
 //            dto.setPortfolioId((String)param.get("portfolioId"));

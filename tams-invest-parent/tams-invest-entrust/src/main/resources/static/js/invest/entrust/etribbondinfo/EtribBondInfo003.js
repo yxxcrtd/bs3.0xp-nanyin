@@ -215,13 +215,20 @@
                 rowData.entrustNum = data.entrustNum;
                 table.renderRow(data.LAY_TABLE_INDEX, rowData);
                 if (value != null && value != '') {
-                    var datas = {
+                    /*var datas = {
                         portfolioId: data.portfolioId,
                         sysDateT1: $('#vdate').val(),
                         calId: $('#calendarId').val(),
                         chlFinprodId: $("#chlFinprodId").val(),
                         finprodId: $("#finprodIdhid").val()
-                    };
+                    };*/
+                    
+                    var datas = {
+                    		portfolioId:data.portfolioId, 
+                    		ccy:$('#ccy').val(), 
+                    		sysDateT1:$('#vdate').val(), 
+                    		calId:$('#calendarId').val(),
+                    		chlFinprodId: $("#chlFinprodId").val()};
                     Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', datas, function (result) {
                         if (result) {
                             if ($('#ps').val() == PS_T01) {

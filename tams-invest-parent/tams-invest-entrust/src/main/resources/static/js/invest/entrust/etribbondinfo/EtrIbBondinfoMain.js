@@ -106,7 +106,7 @@ $(
                     param.push(item.data);
                 }
             }
-            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + "riskrds/interf/batchRiskTrialRds/0/F01", param, checkParam, riskMathRedisCallback003);
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + "riskrds/interf/doInfBatchData/0/RSK002/F01", object, checkParam, riskMathRedisCallback003);
         }
         /**
          * 风险试算的回调函数
