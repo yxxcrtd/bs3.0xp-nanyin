@@ -89,7 +89,7 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 				logger.info("请求用户【{}】", "userId = " + userId);
 				param.put("userId", SecurityUtil.getLoginUser().getUserName());
 				return restTemplate.postForPage(
-						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBoutRepo001/findZlglPage", param,
+						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/findZlglPage", param,
 						EtrIbRepo001Dto.class);
 			}
 		} catch (Exception ex) {
@@ -114,7 +114,7 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 				logger.info("请求用户【{}】", "userId = " + userId);
 				param.put("userId", SecurityUtil.getLoginUser().getUserName());
 				return restTemplate.postForPage(
-						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBoutRepo001/findZlglPositionPage", param,
+						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/findZlglPositionPage", param,
 						EtrIbRepo001Dto.class);
 			}
 		} catch (Exception ex) {

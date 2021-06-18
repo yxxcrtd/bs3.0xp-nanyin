@@ -17,17 +17,16 @@
                             <label class="layui-form-label form-lable"
                                    th:utext="#{EtrStandardBond002.portfolioId}">组合代码</label>
                             <div class="layui-input-inline input-inline">
-                                <select type="text" id="parentPortfolioId" name="parentPortfolioId"
-                                        childrenIds="portfolioId"
+                                <select type="text" id="portfolioId" name="portfolioId"
                                         class="layui-input form-input input-select"
                                         placeholder="请输入内容"
                                         th:placeholder="#{SysCommon.placeholder}"
-                                        th:data-url="@{/business/common/CommonSelect/selectParentPortfolioId}"
-                                        th:initValue="${entity?.parentPortfolioId}">
+                                        th:data-url="@{/business/common/CommonSelect/selectPortfolioId?act=true}"
+                                        th:initValue="${entity?.portfolioId}">
                                 </select>
                             </div>
                         </div>
-                        <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <!--  <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
                             <label class="layui-form-label form-lable"
                                    th:utext="#{EtrStandardBond002.portfolioIdChild}">子组合代码</label>
                             <div class="layui-input-inline input-inline">
@@ -41,7 +40,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+                         -->
                         <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4" style="display: none">
                             <label class="layui-form-label form-lable"
                                    th:utext="#{EtrStandardBond002.tradePlace}">交易场所</label>
