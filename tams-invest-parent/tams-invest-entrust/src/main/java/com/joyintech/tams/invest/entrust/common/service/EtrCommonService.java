@@ -201,12 +201,17 @@ public class EtrCommonService extends BaseService<ITableRow> {
                     }
                     dto2.setAcctType(null);
                     //组合T日可用现金不加通道可用现金
-                    /*dto2.setChlFinprodId((String)param.get("chlFinprodId"));
+                    dto2.setChlFinprodId((String)param.get("chlFinprodId"));
                     BigDecimal cashT2 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);
                     result.put("cashT21", cashT2 == null ? BigDecimal.ZERO : cashT2);// 通道T+1可用
-                    cashT1 = ArithmeticUtil.doAdd(cashT1, cashT2);*/
                 }
                 result.put("cashT1", cashT1 == null ? result.get("cashT") : cashT1);// 组合T+1日可用
+                
+                acctTypeList.clear();
+                acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                BigDecimal cashTT1 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);//组合托管户T+1可用
+                result.put("cashTT1", cashTT1 == null ? BigDecimal.ZERO : cashTT1);// 组合托管户T+1可用
+                
             }
         }
         return result;
