@@ -18,7 +18,7 @@ spring:
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
-    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    timeBetweenEvictionRunsMillis: 600000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
@@ -71,7 +71,7 @@ chbsend:
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
-    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    timeBetweenEvictionRunsMillis: 600000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
