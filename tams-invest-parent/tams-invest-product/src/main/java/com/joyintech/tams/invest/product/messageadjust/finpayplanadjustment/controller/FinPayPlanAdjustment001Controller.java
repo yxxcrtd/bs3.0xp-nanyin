@@ -84,7 +84,7 @@ public class FinPayPlanAdjustment001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("getFinprodId")
-    public List<SelectOptionDto> getProdId() {
+    public Page<SelectOptionDto> getProdId() {
         return finPayPlanAdjustmentService.getFinprodIds(RequestUtil.getPageParam());
     }
     

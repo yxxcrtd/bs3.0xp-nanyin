@@ -238,7 +238,7 @@ public class Rsk002Service extends EventBaseService<Rsk002InEntity> {
         });
         indMap.entrySet().forEach(en -> {
             if (StringUtil.isNotEmpty(mapData.get("priceModel"))) {
-                if (StringUtil.equals("信用债债券偏离度", en.getValue().getIndName())) {
+                if (StringUtil.equals("信用债债券偏离度", en.getValue().getIndName()) || StringUtil.equals("利率债债券偏离度", en.getValue().getIndName())) {
                     Map<String, IIndicatorResult> resMap = en.getValue().getIndicatorResult();
                     if (resMap != null && !resMap.isEmpty() && resMap.size() > 0) {
                         resMap.entrySet().forEach(item -> {

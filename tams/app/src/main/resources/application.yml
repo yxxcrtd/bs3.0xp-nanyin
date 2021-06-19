@@ -23,18 +23,21 @@ spring:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
-    maxTotal: 10
-    maxIdle: 10
-    minIdle: 5
-    timeBetweenEvictionRunsMillis: 60000
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    logAbandoned: false
   activemq:
     active: false
     systemId: tams
@@ -56,50 +59,75 @@ base:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
-    maxTotal: 10
-    maxIdle: 10
-    minIdle: 5
-    timeBetweenEvictionRunsMillis: 60000
+    validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    logAbandoned: false
 interf:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
-    maxTotal: 10
-    maxIdle: 10
-    minIdle: 5
-    timeBetweenEvictionRunsMillis: 60000
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-    testWhileIdle: true
+    logAbandoned: false
 stresstest:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
-    validationQuery: select 1 from dual
-    maxTotal: 10
-    maxIdle: 10
-    minIdle: 5
-    timeBetweenEvictionRunsMillis: 60000
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-    testWhileIdle: true
+    logAbandoned: false
 #wind数据库配置
 wind:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
@@ -107,13 +135,20 @@ wind:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
+    logAbandoned: false
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
@@ -121,10 +156,7 @@ chbsend:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-    testWhileIdle: true
-    type: org.apache.commons.dbcp2.BasicDataSource
+    logAbandoned: false
 tx-lcn:
   springcloud:
     loadbalance:

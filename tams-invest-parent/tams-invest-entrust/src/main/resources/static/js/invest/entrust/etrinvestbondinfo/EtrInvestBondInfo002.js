@@ -312,6 +312,17 @@
         $('#tradeMarket').change();
         $('#tradeMarketMode').change();
 
+        //交易对手选择内部投资组合时：清算速度为T+0不可改
+        $('#etrInvestPersonInfo_counterId').on("change",function(){
+            if ($("#etrInvestPersonInfo_counterId").val()
+                    && $("#etrInvestPersonInfo_counterId").select2('data')[0].object=='N'){
+                $('#settleSpreed').val('0').attr('disabled', true);
+                if ($('#price').val()) {
+                    calData('price');
+                }
+             }
+        });
+
         initFlag = false;
         // 画星星
         star();
@@ -777,7 +788,15 @@
                 	$('#settleSpreed').val('0').attr('disabled', true);
                 }
             }else{
-            	$('#settleSpreed').attr('disabled', false);
+                if ($("#etrInvestPersonInfo_counterId").val()
+                       && $("#etrInvestPersonInfo_counterId").select2('data')[0].object=='N'){
+                    $('#settleSpreed').val('0').attr('disabled', true);
+                    if ($('#price').val()) {
+                        calData('price');
+                    }
+                }else{
+                    $('#settleSpreed').attr('disabled', false);
+                }
             }
         });
         // by 赵东东 20200227 end

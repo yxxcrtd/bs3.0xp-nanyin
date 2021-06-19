@@ -14,7 +14,7 @@
         t8.qty * 100 qty,
         to_char(t8.PAY_DATE, 'yyyy-MM-dd') PAY_DATE,
         ROUND(SUM(t8.fpriceAmt), 2) tradeAmt
-        ,'债券存续期-账户/通道'||SAI.SEC_ACCT_NAME|| fp.FINPROD_NAME remark
+        ,'债券存续期-'||SAI.SEC_ACCT_NAME|| fp.FINPROD_NAME remark
         from (
         select T6.FINPROD_ID,
         SUM(T6.AMOUNT) QTY,
@@ -362,7 +362,7 @@
         t8.qty remainPrinAmt,
         SUM(t8.fpriceAmt)  tradeAmt,
         t8.PAY_DATE payDate
-        , '存款存续期_'||nvl( TC4.FINPROD_NAME ,'直投') remark
+        , '存款存续期-'||nvl( TC4.FINPROD_NAME ,'直投') remark
         from (select T7.FINPROD_ID,
         t7.CASH_TYPE,
         t7.CASH_ID,
@@ -711,7 +711,7 @@
         ROUND(SUM(T8.QTY), 4) qty,
         to_char(t8.PAY_DATE, 'yyyy-MM-dd') payDay,
         ROUND(SUM(T8.fpriceAmt), 4) tradeAmt
-        ,'项目类存续期'||NVL(T5.FINPROD_ABBR, '直投') remark
+        ,'项目类存续期-'||NVL(T5.FINPROD_ABBR, '直投') remark
         from (select T7.FINPROD_ID,
         T7.AMOUNT QTY,
         SUM(decode(T7.dqprinamt,

@@ -184,8 +184,8 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodId(Map<String,Object> pageParam){
-        return finFloatMgtExpQuotationMapper.getFinprodId(pageParam);
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String,Object> pageParam){
+        return this.queryForPageForSelectReturn(page, length, () -> finFloatMgtExpQuotationMapper.getFinprodId(pageParam));
     }
 
     /**

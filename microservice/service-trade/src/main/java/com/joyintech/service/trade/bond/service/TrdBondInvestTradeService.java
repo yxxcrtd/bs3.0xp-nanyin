@@ -265,6 +265,25 @@ public class TrdBondInvestTradeService extends BaseService {
      * @since 1.0
      */
     public List<SuggestDto> getSecManageAcctId(Map<String, Object> param) {
+        Object finprodIdTemp = param.get("finprodId");
+        String finProdType = DictCodeListExt1.金融产品类型_投管用_债券.getValue();
+        //部分页面没有finprodId特殊处理
+        if(finprodIdTemp == null){
+            //债券二级指令页面
+            if(param.get("finprodName") != null){
+                String finprodName = param.get("finprodName").toString();
+                finprodName = finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodName);
+                param.put("finprodId",finprodName);
+            }
+            // 可转债申购指令
+            if(param.get("finprodMarketId") != null){
+                String finprodMarketId = param.get("finprodMarketId").toString();
+                finprodMarketId = finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodMarketId);
+                param.put("finprodId",finprodMarketId);
+            }
+        }else if(StringUtil.isNotEmpty(finprodIdTemp) && !StringUtil.equals(finprodIdTemp.toString().substring(0, 3), "F01")){
+            param.put("finprodId",finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodIdTemp.toString()));
+        }
         return this.queryForSuggest(() -> trdBondInvestTradeMapper.getSecManageAcctId(param),
             null);
     }

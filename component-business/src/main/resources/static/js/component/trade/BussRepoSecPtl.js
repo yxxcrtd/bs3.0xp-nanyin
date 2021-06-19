@@ -953,6 +953,13 @@
     };
 
     /**
+     * 清除数据
+     */
+    var clearRepoList = function () {
+        pledgeBondTotalTblDetailed.clear();
+    };
+
+    /**
      * 显示质押券信息
      */
     var showRepo = function () {
@@ -984,17 +991,21 @@
         
         var pbt=pledgeBondTotalTbl.getAllRows();
         var distribution=$("#bussRepoSecPtl_distribution").val();
-        if(entrustId!=null&&entrustId!=""&&!data&&$('#ps').val()=='03'){//正回购
-            var totalPrinAmtTotal=Number(0);
-            for(var i in pbt){
-                if(pbt[i].totalPrinAmt!=null&&pbt[i].totalPrinAmt!=""){
-                    totalPrinAmtTotal=totalPrinAmtTotal+Number(pbt[i].totalPrinAmt);
+        if (entrustId != null && entrustId != "" && !data && $('#ps').val() == '03') {//正回购
+            // var totalPrinAmtTotal=Number(0);
+            var prinAmtTotal = Number(0);//本金金额汇总
+            for (var i in pbt) {
+                // if(pbt[i].totalPrinAmt!=null&&pbt[i].totalPrinAmt!=""){
+                //     totalPrinAmtTotal=totalPrinAmtTotal+Number(pbt[i].totalPrinAmt);
+                // }
+                if (pbt[i].prinAmt != null && pbt[i].prinAmt != "") {
+                    prinAmtTotal = prinAmtTotal + Number(pbt[i].prinAmt);
                 }
             }
             for(var i in pbt){
-                if(pbt[i].totalPrinAmt!=null&&pbt[i].totalPrinAmt!=""&&pbt[i].totalPrinAmt!="0"){
+                if(pbt[i].prinAmt!=null&&pbt[i].prinAmt!=""&&pbt[i].prinAmt!="0"){
                     if(i!=(pbt.length-1)){
-                        var nu=Number(pbt[i].totalPrinAmt)/totalPrinAmtTotal;
+                        var nu = Number(pbt[i].prinAmt) / prinAmtTotal;
                         var prinAmt2 = JoyinMath.doMul(Number(TotlPrinAmt), nu, 2);
                         var rebackIntAmt2 = JoyinMath.doMul(Number(rebackIntAmt), nu, 2);
                         var mdateSettleAmt2 = JoyinMath.doMul(Number(mdateSettleAmt), nu, 2);
@@ -1003,42 +1014,41 @@
                         var settleAmt2 = JoyinMath.doMul(Number(settleAmt), nu, 2);
                         var commissionAmt2 = JoyinMath.doMul(Number(commissionAmt), nu, 2);
 
-                        TotlPrinAmt3 = JoyinMath.doMinus(TotlPrinAmt, prinAmt2, 2);
-                        rebackIntAmt3 = JoyinMath.doMinus(rebackIntAmt, rebackIntAmt2, 2);
-                        mdateSettleAmt3 = JoyinMath.doMinus(mdateSettleAmt, mdateSettleAmt2, 2);
-                        tradeAmtAndFee3 = JoyinMath.doMinus(tradeAmtAndFee, tradeAmtAndFee2, 2);
-                        procedureAmt3 = JoyinMath.doMinus(procedureAmt, procedureAmt2, 2);
-                        settleAmt3 = JoyinMath.doMinus(settleAmt, settleAmt2, 2);
-                        commissionAmt3 = JoyinMath.doMinus(commissionAmt, commissionAmt2, 2);
-                        pledgeBondTotalTbl.renderRow(i, {prinAmt:prinAmt2});
-                        pledgeBondTotalTbl.renderRow(i, {rebackPrice:rebackPrice});
-                        pledgeBondTotalTbl.renderRow(i, {rebackIntAmt:rebackIntAmt2});
-                        pledgeBondTotalTbl.renderRow(i, {mdateSettleAmt:mdateSettleAmt2});
-                        pledgeBondTotalTbl.renderRow(i, {tradeAmt:tradeAmtAndFee2});
-                        pledgeBondTotalTbl.renderRow(i, {tranFeeAmt:procedureAmt2});
-                        pledgeBondTotalTbl.renderRow(i, {settlementFee:settleAmt2});
-                        pledgeBondTotalTbl.renderRow(i, {commission:commissionAmt2});
-                    }else{
-                        pledgeBondTotalTbl.renderRow(i, {prinAmt:TotlPrinAmt3});
-                        pledgeBondTotalTbl.renderRow(i, {rebackPrice:rebackPrice});
-                        pledgeBondTotalTbl.renderRow(i, {rebackIntAmt:rebackIntAmt3});
-                        pledgeBondTotalTbl.renderRow(i, {mdateSettleAmt:mdateSettleAmt3});
-                        pledgeBondTotalTbl.renderRow(i, {tradeAmt:tradeAmtAndFee3});
-                        pledgeBondTotalTbl.renderRow(i, {tranFeeAmt:procedureAmt3});
-                        pledgeBondTotalTbl.renderRow(i, {settlementFee:settleAmt3});
-                        pledgeBondTotalTbl.renderRow(i, {commission:commissionAmt3});
+                        TotlPrinAmt3 = JoyinMath.doMinus(TotlPrinAmt, prinAmt2, 2);// 本金金额
+                        rebackIntAmt3 = JoyinMath.doMinus(rebackIntAmt, rebackIntAmt2, 2);// 回购利息
+                        mdateSettleAmt3 = JoyinMath.doMinus(mdateSettleAmt, mdateSettleAmt2, 2);// 到期结算金额
+                        tradeAmtAndFee3 = JoyinMath.doMinus(tradeAmtAndFee, tradeAmtAndFee2, 2);// 交易金额
+                        procedureAmt3 = JoyinMath.doMinus(procedureAmt, procedureAmt2, 2);// 交易手续费
+                        settleAmt3 = JoyinMath.doMinus(settleAmt, settleAmt2, 2);// 结算费
+                        commissionAmt3 = JoyinMath.doMinus(commissionAmt, commissionAmt2, 2);// 佣金
+                        pledgeBondTotalTbl.renderRow(i, {prinAmt: prinAmt2});// 本金金额
+                        pledgeBondTotalTbl.renderRow(i, {rebackPrice: rebackPrice});// 回购利率%
+                        pledgeBondTotalTbl.renderRow(i, {rebackIntAmt: rebackIntAmt2});// 回购利息
+                        pledgeBondTotalTbl.renderRow(i, {mdateSettleAmt: mdateSettleAmt2});// 到期结算金额
+                        pledgeBondTotalTbl.renderRow(i, {tradeAmt: tradeAmtAndFee2});// 交易金额
+                        pledgeBondTotalTbl.renderRow(i, {tranFeeAmt: procedureAmt2});// 交易手续费
+                        pledgeBondTotalTbl.renderRow(i, {settlementFee: settleAmt2});// 结算费
+                        pledgeBondTotalTbl.renderRow(i, {commission: commissionAmt2});// 佣金
+                    } else {
+                        pledgeBondTotalTbl.renderRow(i, {prinAmt: TotlPrinAmt3});
+                        pledgeBondTotalTbl.renderRow(i, {rebackPrice: rebackPrice});
+                        pledgeBondTotalTbl.renderRow(i, {rebackIntAmt: rebackIntAmt3});
+                        pledgeBondTotalTbl.renderRow(i, {mdateSettleAmt: mdateSettleAmt3});
+                        pledgeBondTotalTbl.renderRow(i, {tradeAmt: tradeAmtAndFee3});
+                        pledgeBondTotalTbl.renderRow(i, {tranFeeAmt: procedureAmt3});
+                        pledgeBondTotalTbl.renderRow(i, {settlementFee: settleAmt3});
+                        pledgeBondTotalTbl.renderRow(i, {commission: commissionAmt3});
                     }
-                }
-                else{
-                    var zero="0";
-                    pledgeBondTotalTbl.renderRow(i, {prinAmt:zero});
-                    pledgeBondTotalTbl.renderRow(i, {rebackPrice:zero});
-                    pledgeBondTotalTbl.renderRow(i, {rebackIntAmt:zero});
-                    pledgeBondTotalTbl.renderRow(i, {mdateSettleAmt:zero});
-                    pledgeBondTotalTbl.renderRow(i, {tradeAmt:zero});
-                    pledgeBondTotalTbl.renderRow(i, {tranFeeAmt:zero});
-                    pledgeBondTotalTbl.renderRow(i, {settlementFee:zero});
-                    pledgeBondTotalTbl.renderRow(i, {commission:zero});
+                } else {
+                    var zero = "0";
+                    pledgeBondTotalTbl.renderRow(i, {prinAmt: zero});
+                    pledgeBondTotalTbl.renderRow(i, {rebackPrice: zero});
+                    pledgeBondTotalTbl.renderRow(i, {rebackIntAmt: zero});
+                    pledgeBondTotalTbl.renderRow(i, {mdateSettleAmt: zero});
+                    pledgeBondTotalTbl.renderRow(i, {tradeAmt: zero});
+                    pledgeBondTotalTbl.renderRow(i, {tranFeeAmt: zero});
+                    pledgeBondTotalTbl.renderRow(i, {settlementFee: zero});
+                    pledgeBondTotalTbl.renderRow(i, {commission: zero});
                 }
             }
         }else{
@@ -1513,6 +1523,7 @@
         isIntVal2:isIntVal2,
         pleBondTotalVal:pleBondTotalVal,
         rebackPriceChange:rebackPriceChange,
-        createAuto:createAuto
+        createAuto:createAuto,
+        clearRepoList:clearRepoList
     };
 }());

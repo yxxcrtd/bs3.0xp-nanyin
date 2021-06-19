@@ -841,23 +841,54 @@ $(function() {
 	}
 	
 	table.bind('click', '.upload', function(data, index) {
-          var p='';
+		var dataArr=[];
+		var dataArrStr;   
 		if (data.sendStatus != '01') {
 			Joyin.error("只有未报送的记录可以上传！");
 			return;
+		}else{
+			for(var i = 0; i < 1; i++){
+				var dataSrc={
+						fileNo:data.fileNo,
+						prodId:data.prodId,
+						registSeqno:data.registSeqno
+				}
+				dataArr[i]=dataSrc;
+			}
 		}
-		
-		if (!data.fileNo || data.fileNo == null) {
-			uploadTheFile(data,index);
-		}else {
-			Joyin.confirm("本产品已存在附件，是否覆盖？", 
-					function() {
-//				layui.layer.open({
-//					type : 3
-//				});
-				uploadTheFile(data,index);
-			})
-		}
+
+		dataArrStr=JSON.stringify(dataArr);
+		Joyin.confirm("请确认是否要导入数据？", function() {
+
+			var flag=false;
+			if(data.fileNo && data.fileNo != null){
+				flag=true;
+			}
+			if(flag){
+				Joyin.confirm('所选产品已存在附件，是否覆盖？',
+						function(){
+					Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+		                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
+		                    "60%", {
+		                        pageModel : PAGE_MODEL_NEW,
+		                        businessId : data.prodId,
+		                        dataArrStr : dataArrStr
+		                    },function(){
+		                    	table.reload();
+		                    });
+				})
+			}else{
+				Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+	                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
+	                    "60%", {
+	                        pageModel : PAGE_MODEL_NEW,
+	                        businessId : data.prodId,
+	                        dataArrStr : dataArrStr
+	                    },function(){
+	                    	table.reload();
+	                    });
+			}
+        });	
 		
 		
 	});

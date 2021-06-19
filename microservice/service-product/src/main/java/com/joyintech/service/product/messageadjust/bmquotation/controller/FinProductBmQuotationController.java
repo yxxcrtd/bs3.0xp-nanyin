@@ -46,9 +46,11 @@ public class FinProductBmQuotationController {
      * @param param
      * @return
      */
-    @PostMapping("/getFinprodMarketIdList")
-    public List<SelectOptionDto> getFinprodMarketIdList(@RequestBody Map<String, Object> param) {
-        return finProductBmQuotationService.getFinprodMarketIdList(param);
+    @PostMapping("/getFinprodMarketIdList/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketIdList(@RequestBody Map<String, Object> param,
+                                                        @PathVariable("page") int page,
+                                                        @PathVariable("length") int length) {
+        return finProductBmQuotationService.getFinprodMarketIdList(page, length, param);
     }
     
     /**
@@ -56,9 +58,11 @@ public class FinProductBmQuotationController {
      * @param param
      * @return
      */
-    @PostMapping("/getFinprodMarketIdToNew")
-    public List<SelectOptionDto> getFinprodMarketIdToNew(@RequestBody Map<String, Object> param) {
-        return finProductBmQuotationService.getFinprodMarketIdToNew(param);
+    @PostMapping("/getFinprodMarketIdToNew/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketIdToNew(@RequestBody Map<String, Object> param,
+                                                         @PathVariable("page") int page,
+                                                         @PathVariable("length") int length) {
+        return finProductBmQuotationService.getFinprodMarketIdToNew(page, length, param);
     }
     /**
      * 画面查询方法

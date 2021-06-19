@@ -160,7 +160,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
          */
         if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
             && DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()) && 卖出_行权_到期.contains(deal.getPs())) {
-            resultDto.setCdate(StringUtil.isNotEmpty(deal.getPayDate()) ? deal.getPayDate() : deal.getSettleDate());// modify by jiangpeng on 20210524 ZGBSSE-226
+            resultDto.setCdate(StringUtil.isNotEmpty(deal.getPayDate()) ? deal.getPayDate() : deal.getTradeDate());// modify by jiangpeng on 20210524 ZGBSSE-226
             resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
 
             if (DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())
@@ -185,11 +185,12 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
         //add by yujiaping 2021-1-6 解决ZGBS-139 计划类净值型卖出交易提交后（流程中），没有占用资产可用持仓 start
         else if ((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                 && (DictCodeList.收益类型_净值型.getValue().equals(profitType)))             
-              && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
-         resultDto.setCdate(deal.getTradeDate());
-         resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
-         result.add(resultDto);
-     }
+              && (DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())
+                || DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))) {
+                 resultDto.setCdate(deal.getTradeDate());
+                 resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+                 result.add(resultDto);
+        }
         //add by yujiaping  2021-1-6 解决ZGBS-139 计划类净值型卖出交易提交后（流程中），没有占用资产可用持仓 end
         /*
          * 1 输入金融产品交易Entity.金融产品类型（投管分类）= 数据字典缓存.金融产品类型（投管分类).债券 and 金融产品交易Entity.交易场所 ！= 数据字典缓存.交易场所.银行间 and 金融产品交易Entity.交易方向 in （“卖出”,“行权”,“到期”））
@@ -400,7 +401,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
 //                resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
 //                result.add(resultDto);
 //            }
-            if (inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue()) && DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs())) {
+            if (!(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+                        && DictCodeList.收益类型_净值型.getValue().equals(profitType))
+                    && inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue())
+                    && DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs())) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("finprodId",deal.getbTradeId());
                 params.put("holdingType",DictCodeList.持仓类型_在途.getValue());
@@ -710,10 +714,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             else if (/*(DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
                       && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))
 
-                     ||*/ (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+                     || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                          && DictCodeList.收益类型_净值型.getValue().equals(profitType)
                          && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))
-                     || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+                     ||*/ (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                          && DictCodeList.收益类型_货币型.getValue().equals(profitType)
                          && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))) {
                 PtlSecPositionFlowDto resultDtozt = new PtlSecPositionFlowDto();

@@ -919,10 +919,10 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodMarketId(Map<String, Object> map) {
+    public Page<SelectOptionDto> getFinprodMarketId(Map<String, Object> map) {
         User user = SecurityUtil.getLoginUser();
         map.put("userName", user.getUserName());
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductBonusScheme/getFinprodMarketId",
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductBonusScheme/getFinprodMarketId",
             map, SelectOptionDto.class);
     }
 
@@ -1009,10 +1009,10 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodMarketIdList(Map<String, Object> map) {
+    public Page<SelectOptionDto> getFinprodMarketIdList(Map<String, Object> map) {
         User user = SecurityUtil.getLoginUser();
         map.put("userName", user.getUserName());
-        return restTemplate.postForList(
+        return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductBonusScheme/getFinprodMarketIdList", map,
             SelectOptionDto.class);
     }

@@ -740,7 +740,7 @@
 			FIN_PRODUCT t
 		INNER JOIN fin_product_type t1 on t1.finprod_id = t.finprod_id
 		WHERE
-			1=1 AND t.FINPROD_TYPE2 IN('F01','F02','F11')
+			1=1 AND t.FINPROD_TYPE2 IN('F01','F06','F11')
 			<if test="type8 != null and type8 != ''">
 				and t1.type_8 = #{type8,jdbcType = VARCHAR}
 			</if>
@@ -769,7 +769,7 @@
 			</if>
 			<!-- 多级法人改造 add by jingqiongqiong 20200615 -->
 			WHERE
-			1=1 AND t.FINPROD_TYPE2 NOT IN('F01','F02','F11')
+			1=1 AND t.FINPROD_TYPE2 NOT IN('F01','F06','F11')
 			<if test="institutionCode != null and institutionCode != ''">
 				and (dani.BUSINESS_ID is not null or  dani1.BUSINESS_ID is not null)
 			</if>

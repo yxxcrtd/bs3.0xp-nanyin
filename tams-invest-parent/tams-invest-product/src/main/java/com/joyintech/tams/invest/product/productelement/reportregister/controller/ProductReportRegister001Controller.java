@@ -101,7 +101,7 @@ public class ProductReportRegister001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdIdInfo")
-    public List<SelectOptionDto> queryProdIdInfo() {
+    public Page<SelectOptionDto> queryProdIdInfo() {
         return productReportRegister001Service.queryProdIdInfo(RequestUtil.getPageParam());
     }
     

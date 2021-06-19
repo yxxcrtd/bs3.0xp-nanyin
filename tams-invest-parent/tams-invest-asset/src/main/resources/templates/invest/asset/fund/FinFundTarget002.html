@@ -254,8 +254,7 @@
 									<div class="layui-input-inline input-inline delaytime-inline-wrap">
 										<label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
 										<input type="text" id="purSpeed" name="purSpeed"  th:value="${entity?.purSpeed}"
-											   data-pattern="" data-textrange="0" data-fixtype="2"
-											   class="layui-input form-input text-number"
+											   class="layui-input form-input" onkeyup="(this.v=function(){this.value=this.value.replace(/[^\d]/g,'');}).call(this)"
 											   style="float: left;display: inline-block; width: 89%;"/>
 									</div>
 								</div>
@@ -265,8 +264,7 @@
 									<div class="layui-input-inline input-inline delaytime-inline-wrap">
 										<label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
 										<input type="text" id="redSpeed" name="redSpeed"  th:value="${entity?.redSpeed}"
-											   data-pattern="" data-textrange="0" data-fixtype="2"
-											   class="layui-input form-input text-number"
+											   class="layui-input form-input" onkeyup="(this.v=function(){this.value=this.value.replace(/[^\d]/g,'');}).call(this)"
 											   style="float: left;display: inline-block; width: 89%;"/>
 									</div>
 								</div>

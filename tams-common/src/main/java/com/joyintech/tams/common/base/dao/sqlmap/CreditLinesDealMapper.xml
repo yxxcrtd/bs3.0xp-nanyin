@@ -12,11 +12,12 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="REAL_CREDIT_AMT" property="realCreditAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, TRADE_ID TRADE_ID, CREDIT_OCCURE_TYPE CREDIT_OCCURE_TYPE, TRADE_AMT TRADE_AMT, 
         TRADE_DATE TRADE_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
-        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, REAL_CREDIT_AMT REAL_CREDIT_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -44,11 +45,11 @@
         insert into CREDIT_LINES_DEAL (SEQNO, TRADE_ID, CREDIT_OCCURE_TYPE, 
             TRADE_AMT, TRADE_DATE, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME)
+            UPDATE_TIME, REAL_CREDIT_AMT)
         values (#{seqno,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{creditOccureType,jdbcType=VARCHAR}, 
             #{tradeAmt,jdbcType=DECIMAL}, #{tradeDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP})
+            #{updateTime,jdbcType=TIMESTAMP}, #{realCreditAmt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditLinesDeal" >
         insert into CREDIT_LINES_DEAL
@@ -83,6 +84,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="realCreditAmt != null" >
+                REAL_CREDIT_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -115,13 +119,16 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="realCreditAmt != null" >
+                #{realCreditAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CreditLinesDeal" >
         insert into CREDIT_LINES_DEAL(SEQNO, TRADE_ID, CREDIT_OCCURE_TYPE, TRADE_AMT, TRADE_DATE, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REAL_CREDIT_AMT)
         select SEQNO, TRADE_ID, CREDIT_OCCURE_TYPE, TRADE_AMT, TRADE_DATE, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REAL_CREDIT_AMT
              from CREDIT_LINES_DEAL
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR} and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </insert>
@@ -143,6 +150,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="realCreditAmt != null" >
+                REAL_CREDIT_AMT = #{realCreditAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
           and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
@@ -153,7 +163,8 @@
             TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
             TRADE_DATE = #{tradeDate,jdbcType=DATE},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            REAL_CREDIT_AMT = #{realCreditAmt,jdbcType=DECIMAL}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
           and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>

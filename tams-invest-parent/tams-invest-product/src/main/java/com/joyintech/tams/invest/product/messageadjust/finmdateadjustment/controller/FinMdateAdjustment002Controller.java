@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.product.messageadjust.finmdateadjustment.contr
 
 import java.util.*;
 import javax.validation.Valid;
+
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -122,7 +124,7 @@ public class FinMdateAdjustment002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryAdjustProdIdList")
-    public List<SelectOptionDto> queryAdjustProdIdList() {
+    public Page<SelectOptionDto> queryAdjustProdIdList() {
     	Map<String, Object> param = RequestUtil.getPageParam();
     	//新建页面下拉框设置到期日>平台日的校验，只查询大于平台日的产品
     	if(param.get("isCreate") != null&& StringUtil.equals(param.get("isCreate"), "Y")) {
@@ -186,7 +188,7 @@ public class FinMdateAdjustment002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryAdjustProdIdListDetail")
-    public List<SelectOptionDto> queryAdjustProdIdListDetail() {
+    public Page<SelectOptionDto> queryAdjustProdIdListDetail() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("platDate", platformDate.getSysDateStr());// 新建下拉框筛选产品到期日>平台时间
         return finMdateAdjustment002Service.queryAdjustProdIdList(param);

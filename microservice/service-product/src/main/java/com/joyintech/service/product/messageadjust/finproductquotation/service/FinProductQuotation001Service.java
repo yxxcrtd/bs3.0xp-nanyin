@@ -163,10 +163,10 @@ public class FinProductQuotation001Service extends BaseService<FinProductQuotati
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfoIssueSuc(Map<String, Object> param) {
+    public Page<SelectOptionDto> queryProdIdInfoIssueSuc(int page, int length,Map<String, Object> param) {
         param.put("finprodTypeProd", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         param.put("profitType", DictCodeList.收益类型_收益型.getValue());
-        return finProductQuotation001Mapper.queryProdIdInfoIssueSuc(param);
+        return this.queryForPageForSelectReturn(page, length, () -> finProductQuotation001Mapper.queryProdIdInfoIssueSuc(param));
     }
 
     /**
