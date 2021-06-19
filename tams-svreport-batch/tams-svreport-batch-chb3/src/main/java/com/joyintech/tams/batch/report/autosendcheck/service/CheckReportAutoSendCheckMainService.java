@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegist001Service;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,6 @@ import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInf
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dao.InvestorsHoldInfoRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.validate.InvestorsHoldInfoRegist001Validate;
-import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegist001Service;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 

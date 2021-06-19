@@ -170,7 +170,7 @@ Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDT
 
 /**投资者质量核查*/
 delete  from  SYS_PAGE  where page_id='SvrInvestorsQualityCheck001';
-Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrInvestorsQualityCheck001','SVR','/svreport/submitexamination/investorsqualitycheck/SvrInvestorsQualityCheck001','report/submitexamination/investorsqualitycheck/InvestorsQualityCheck001','REPORT_001_002_006',null,null,'02','02','投资者质量核查','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrInvestorsQualityCheck001','SVR','/svreport/submitexamination/investorsqualitycheck/InvestorsQualityCheck001','report/submitexamination/investorsqualitycheck/InvestorsQualityCheck001','REPORT_001_002_006',null,null,'02','02','投资者质量核查','system',null,sysdate,'system',sysdate);
 
 delete  from  sys_page_element  where page_id='SvrInvestorsQualityCheck001';
 insert into sys_page_element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
