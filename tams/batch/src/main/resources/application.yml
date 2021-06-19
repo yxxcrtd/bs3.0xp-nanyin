@@ -12,8 +12,15 @@ spring:
     cache: false
   #数据源配置
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
     initialSize: 10
     maxTotal: 50
     maxIdle: 50
@@ -22,7 +29,7 @@ spring:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
+    logAbandoned: false
   activemq:
     active: false
     systemId: valuation_batch
@@ -37,8 +44,16 @@ spring:
 #base数据源配置  
 base:
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
@@ -46,13 +61,21 @@ base:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
+    logAbandoned: false
   casEnable: false        
 #interf数据源配置
 interf:
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
@@ -60,14 +83,20 @@ interf:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    testWhileIdle: true
-    type: org.apache.commons.dbcp2.BasicDataSource
+    logAbandoned: false
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
@@ -75,9 +104,7 @@ chbsend:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    testWhileIdle: true
-    type: org.apache.commons.dbcp2.BasicDataSource
+    logAbandoned: false
 #用户系统
 #1 jixu用户系统
 #2 joyin用户系统

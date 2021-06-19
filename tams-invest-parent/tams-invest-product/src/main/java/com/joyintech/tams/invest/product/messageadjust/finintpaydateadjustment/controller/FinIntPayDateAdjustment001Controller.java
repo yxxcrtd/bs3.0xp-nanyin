@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -112,8 +113,8 @@ public class FinIntPayDateAdjustment001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getCashId")
-    public List<SelectOptionDto> getCashId(){
-        return finIntPayDateAdjustmentService.getCashId(RequestUtil.getPageParam());
+    public Page<SelectOptionDto> getCashId(){
+        return finIntPayDateAdjustmentService.getCashIdForPage(RequestUtil.getPageParam());
     }
     
     /**

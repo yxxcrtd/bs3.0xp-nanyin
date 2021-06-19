@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -91,7 +92,14 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             			|| dto.getBusiFinExercisePlanDto().getFinExercisePlanList() == null
             			|| dto.getBusiFinExercisePlanDto().getFinExercisePlanList().size() == 0) {
             		resultList.add(new ValidMessage(getMessage("含权债的行权计划不能为空!")));
-            	}
+            	}else{
+            	    for(FinExercisePlan finExercisePlan : dto.getBusiFinExercisePlanDto().getFinExercisePlanList()){
+                        if (finExercisePlan.getExercisePrice() == null) {
+                            resultList.add(new ValidMessage(getMessage("行权计划中的行权价（净价）不能为空!")));
+                            continue;
+                        }
+                    }
+                }
             }
 
             /****1、需要增加对评级信息的必填项check,评级信息中若没有主体评级的记录则不允许提交且给出提示；***/

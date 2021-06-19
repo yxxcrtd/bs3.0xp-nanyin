@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -3417,6 +3418,19 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
         return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductDuration/getFinprodMarketIdList",
             map, SelectOptionDto.class);
     }
+
+	/**
+	 * <一句话功能简述> <功能详细描述>
+	 *
+	 * @param map
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public Page<SelectOptionDto> getFinprodMarketIdListForPgae(Map<String, Object> map) {
+		return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductDuration/getFinprodMarketIdListForPgae",
+				map, SelectOptionDto.class);
+	}
 
     /**
      * <一句话功能简述> <功能详细描述>

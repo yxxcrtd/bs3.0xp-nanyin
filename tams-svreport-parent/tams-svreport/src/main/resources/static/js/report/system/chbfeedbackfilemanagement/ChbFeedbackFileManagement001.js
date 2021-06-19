@@ -31,8 +31,8 @@ var ChbFeedbackFileManagement001 = function() {
             cols: [
                 { title: "报文编码", field: 'rtnRepMesNo',sortField:'RTN_REP_MES_NO',width:150},
                 { title: "报文编码", field: 'sendRepMesNo', visible:false},
-                { title: "报送发送时间", field: 'reportSendDate',type: 'datetime',sortField:'REPORT_SEND_DATE',width:90},
-                { title: "报送接收时间", field: 'reportAcceptDate',type: 'datetime',sortField:'REPORT_ACCEPT_DATE',width:90},
+                { title: "报文发送时间", field: 'reportSendDate',type: 'datetime',sortField:'REPORT_SEND_DATE',width:90},
+                { title: "报文接收时间", field: 'reportAcceptDate',type: 'datetime',sortField:'REPORT_ACCEPT_DATE',width:90},
                 { title: "业务组类型", visible:false, field: 'businessGroupTypeName',sortField:'BUSINESS_GROUP_TYPE',width:110},
                 { title: "报送类型", field: 'reportEtrType', visible:false},
                 { title: "报送类型", field: 'reportEtrTypeName',sortField:'REPORT_ETR_TYPE',width:130},

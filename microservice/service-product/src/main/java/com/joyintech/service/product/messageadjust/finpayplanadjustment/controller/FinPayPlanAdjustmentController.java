@@ -64,9 +64,11 @@ public class FinPayPlanAdjustmentController {
      * @see
      * @since 1.0
      */
-    @PostMapping("/getFinprodId")
-    public List<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param){
-        return finPayPlanAdjustmentService.getFinprodId(param);
+    @PostMapping("/getFinprodId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page,
+                                              @PathVariable("length") int length){
+        return finPayPlanAdjustmentService.getFinprodId(page, length, param);
     }
     
     /**

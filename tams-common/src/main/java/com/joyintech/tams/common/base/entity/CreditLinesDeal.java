@@ -25,6 +25,12 @@ public class CreditLinesDeal extends CreditLinesDealKey {
     private Date tradeDate;
 
     /**
+     * 实际占用额度
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal realCreditAmt;
+
+    /**
      * 取得 占用类型（实际占用、预占用）
      * @return 占用类型（实际占用、预占用）
      */
@@ -71,5 +77,21 @@ public class CreditLinesDeal extends CreditLinesDealKey {
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setTradeDate(Date tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    /**
+     * 取得 实际占用额度
+     * @return 实际占用额度
+     */
+    public BigDecimal getRealCreditAmt() {
+        return realCreditAmt;
+    }
+
+    /**
+     * 设置 实际占用额度
+     * @param realCreditAmt 实际占用额度
+     */
+    public void setRealCreditAmt(BigDecimal realCreditAmt) {
+        this.realCreditAmt = realCreditAmt;
     }
 }

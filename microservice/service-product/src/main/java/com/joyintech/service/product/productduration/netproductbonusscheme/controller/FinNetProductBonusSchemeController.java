@@ -70,9 +70,10 @@ public class FinNetProductBonusSchemeController {
      * @see
      * @since 1.0
      */
-    @PostMapping("getFinprodMarketId")
-    public List<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String,Object> map){
-        return finNetProductBonusSchemeService.getFinprodMarketId(map);
+    @PostMapping("getFinprodMarketId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> map,
+                                                    @PathVariable("page") int page, @PathVariable("length") int length) {
+        return finNetProductBonusSchemeService.getFinprodMarketId(page, length, map);
     }
 
     /**
@@ -112,9 +113,11 @@ public class FinNetProductBonusSchemeController {
      * @see
      * @since 1.0
      */
-    @PostMapping("getFinprodMarketIdList")
-    public List<SelectOptionDto> getFinprodMarketIdList(@RequestBody Map<String,Object> map){
-        return finNetProductBonusSchemeService.getFinprodMarketIdList(map);
+    @PostMapping("getFinprodMarketIdList/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketIdList(@RequestBody Map<String,Object> map,
+                                                        @PathVariable("page") int page,
+                                                        @PathVariable("length") int length){
+        return finNetProductBonusSchemeService.getFinprodMarketIdList(page, length, map);
     }
 
     /**

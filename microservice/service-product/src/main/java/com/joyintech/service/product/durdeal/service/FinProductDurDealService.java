@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.joyintech.framework.base.BaseService;
@@ -79,9 +80,12 @@ public class FinProductDurDealService extends BaseService {
      * @return 下拉框列表
      * @throws Exception
      */
-    public List<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> paramMap) {
+    public Page<SelectOptionDto> queryProdIdInfo(@PathVariable("page") int page,
+                                                 @PathVariable("length") int length,
+                                                 @RequestBody Map<String, Object> paramMap) {
         paramMap.put("FINPROD_TYPE", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
-        return finProductDurDealMapper.queryProdIdInfo(paramMap);
+        return queryForPageForSelectReturn(page, length,
+                () -> finProductDurDealMapper.queryProdIdInfo(paramMap));
     }
 
     /**

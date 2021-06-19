@@ -2039,6 +2039,8 @@
             //psOnChange();
             // 组合代码、证券托管户、交易日、到期日改变时，刷新可使用标准券额度
             //refreshAvaStandardStockPosition();
+            //交易方向改变时,清空质押券信息
+            window.BussRepoSecPtl["bussRepoSecPtl"].clearRepoList();
             // 设置添加质押券共通参数
             setBussRepoSecInput();
             // add by wangguoxian 费用设置 20190807 start

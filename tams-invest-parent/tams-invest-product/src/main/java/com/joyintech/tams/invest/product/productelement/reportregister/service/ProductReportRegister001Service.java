@@ -62,8 +62,8 @@ public class ProductReportRegister001Service extends CommonExportService<Product
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
-        return restTemplate.postForList(
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
+        return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/productReportRegister/queryProdIdInfo", map,
             SelectOptionDto.class);
     }

@@ -65,7 +65,7 @@ public class FinProductOpenPlanAdjust001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("getFinprodId")
-    public List<SelectOptionDto> getProdId() {
+    public Page<SelectOptionDto> getProdId() {
         return finProductOpenPlanAdjustService.getFinprodIds(RequestUtil.getPageParam());
     }
     

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.joyintech.calculation.CalculationException;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,10 +129,10 @@ public class PtlMockTest002Controller extends BaseController {
      */
     @RequestMapping("getPtlInfo")
     @ResponseBody
-    public List<SelectOptionDto> getPtlInfo(@RequestParam Map<String, Object> param) {
+    public Page<SelectOptionDto> getPtlInfo(@RequestParam Map<String, Object> param) {
         // 查询组合添加权限限制
         param.put("loginUserName", LoginUserUtil.getUserName());
-        return ptlMockTest002Service.getPtlInfo(param);
+        return ptlMockTest002Service.getPtlInfoForPage(param);
     }
     
     /**
@@ -315,7 +316,7 @@ public class PtlMockTest002Controller extends BaseController {
             Map<String,BigDecimal> 已经统计数量map = new HashMap<>();
             for (int i = 0; i < list.size(); i++) {
                 PtlMockTestTradeDto tradeDto = list.get(i);
-                if (StringUtil.isNotEmpty(tradeDto.getPortfolioId())
+                if (StringUtil.isNotEmpty(tradeDto.getPortfolioId()) && StringUtil.isNotEmpty(tradeDto.getFinprodId())//虚拟资产没有持仓无法校验
                         && StringUtil.isNotEmpty(tradeDto.getAmount()) && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), tradeDto.getPs())) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("tradeDate", iPlatformDate.getSysDateStr());

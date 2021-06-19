@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.joyintech.calculation.shell.PriceByYieldCalculator;
 import com.joyintech.calculation.shell.param.PriceYieldOutParameter;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.FinBaseRuleInfo;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinCashInfo;
@@ -173,6 +174,17 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
         return restTemplate.postForList(
             ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlMockTest/getPtlInfo", param,
             SelectOptionDto.class);
+    }
+    /**
+     * 根据组合代码获取组合信息
+     *
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> getPtlInfoForPage(Map<String, Object> param) {
+        return restTemplate.postForPage(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlMockTest/getPtlInfoForPage", param,
+                SelectOptionDto.class);
     }
 
     /**
