@@ -529,13 +529,24 @@
                     newRowData.mdate = rowData.mdate;
                     newRowData.yield = rowData.yield;
                     newRowData.exerYield = rowData.exerYield;
-	                 newRowData.ccy = rowData.assetCcy;
-	                 if (!newRowData.ccy) {
-	                     // 币种：默认人民币
-	                     newRowData.ccy = CCY_CNY;
-	                 }
-
-                    mockTradeTable.addRow(newRowData);
+                    newRowData.ccy = rowData.assetCcy;
+                    if (!newRowData.ccy) {
+                        // 币种：默认人民币
+                        newRowData.ccy = CCY_CNY;
+                    }
+                    var tempTable = mockTradeTable.getAllRows();
+                    for (i = 0; i < tempTable.length; i++) {
+                        if (tempTable[i].portfolioId === newRowData.portfolioId
+                            && tempTable[i].finprodId === newRowData.finprodId
+                            && tempTable[i].invAim === newRowData.invAim) {
+                            // 已经存在的不重复添加
+                        }else{
+                            mockTradeTable.addRow(newRowData);
+                        }
+                    }
+                    if(tempTable.length === 0){
+                        mockTradeTable.addRow(newRowData);
+                    }
                 });
             }
         });
