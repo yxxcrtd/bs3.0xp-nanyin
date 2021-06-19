@@ -126,7 +126,7 @@ batch:
     maxJobPoolSize: 5 #job线程池
     maxExeUser: 2 #最大并发用户数
     maxThreadPerUser: 5 #任务并发数
-    sleeptime: 1000 #轮询时间
+    sleeptime: 3000 #轮询时间
     maxSqlNum: 50 #批量提交数
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -366,7 +366,7 @@ chbsend:
 #日志路径配置
 log:
   path: /home/tams/logs/batch
-  level: DEBUG
+  level: INFO
 logging:
   path: /home/tams/logs/batch
 #注册中心配置
