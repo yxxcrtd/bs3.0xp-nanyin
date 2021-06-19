@@ -175,11 +175,12 @@ public class BussRepOtherInvestTargetInfoValidator implements BeanValidator{
                                 getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repBankAssetType"))));
                     }
 //                }
-                if(StringUtil.isNotEmpty(dto.getRepBankAssetType())
-                    && dto.getRepBankAssetType().equals(DictCodeListExt2.行内资产类别_其他.getValue())&&StringUtil.isEmpty(dto.getRepBankAssetTyprExplain())){
-                    resultList.add(new ValidMessage("repBankAssetTyprExplain",
-                            getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repBankAssetTyprExplain"))));
-                }
+                /***ZGBSSE-592  【中债直连check】新建项目类资产，报送信息页面“行内资产类别说明”check未满足报送规范***/
+//                if(StringUtil.isNotEmpty(dto.getRepBankAssetType())
+//                    && dto.getRepBankAssetType().equals(DictCodeListExt2.行内资产类别_其他.getValue())&&StringUtil.isEmpty(dto.getRepBankAssetTyprExplain())){
+//                    resultList.add(new ValidMessage("repBankAssetTyprExplain",
+//                            getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repBankAssetTyprExplain"))));
+//                }
             }
 
     }

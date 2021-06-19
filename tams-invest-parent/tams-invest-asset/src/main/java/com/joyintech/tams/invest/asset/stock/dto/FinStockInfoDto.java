@@ -408,19 +408,21 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      * 资产名称非空校验
      * @return
      */
+    /*** ZGBSSE-561  【中债直连check】新建股票资产，未输入资产名称，点击提交时系统提示信息重复  leipeng 20210611*/
     @Override
-   @NotEmpty(fieldName = "FinStockInfo002.finprodAbbr",groups={ValidateGroupEdit.class})//非空校验
+//   @NotEmpty(fieldName = "FinStockInfo002.finprodAbbr",groups={ValidateGroupEdit.class})//非空校验
     public String getFinprodName() {
         return super.getFinprodName();
     }
 
     @Override
-    @NotEmpty(fieldName = "FinStockInfo002.finprodAbbr", groups = {ValidateGroupEdit.class})
-    @Length(fieldName = "FinStockInfo002.finprodAbbr", max = 100, groups = {
-        ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "FinStockInfo002.finprodAbbr", groups = {ValidateGroupEdit.class})
+//    @Length(fieldName = "FinStockInfo002.finprodAbbr", max = 100, groups = {
+//        ValidateGroupEdit.class})
     public String getFinprodAbbr() {
         return super.getFinprodAbbr();
     }
+    /*** ZGBSSE-561  【中债直连check】新建股票资产，未输入资产名称，点击提交时系统提示信息重复  leipeng 20210611*/
 
     /**
      * 公司名称非空校验

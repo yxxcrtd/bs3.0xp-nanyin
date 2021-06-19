@@ -30,6 +30,7 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
+import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -939,7 +940,11 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
         com.joyintech.framework.grid.Page<AssetInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<AssetInfoRegist001Dto>();
         page.setRoot(data);
 //        page.setTotal(data.size());
-
+		if(!CollectionUtils.isEmpty(page.getRoot())){
+			for(AssetInfoRegist001Dto dto : page.getRoot()){
+				dto.setBelongInstitutionCode(null);
+			}
+		}
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
 		if(data!=null){

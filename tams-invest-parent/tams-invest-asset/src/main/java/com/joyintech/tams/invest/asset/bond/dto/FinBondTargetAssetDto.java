@@ -155,8 +155,8 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     private String industry;
 
     private String industry2;
-
-    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
+    //ZGBSSE-648   【中债直连】债券标的新建页面，资产负债类别check重复
+//    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
     public String getRepAssetType() {
         return repAssetType;
     }
@@ -1027,8 +1027,9 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      * 资产名称
      * {@inheritDoc}
      */
+    //ZGBSSE-571 【中债直连】债券标的新建页面，资产名称文本框可输入长度控制不正确
     @Override
-    @Length(fieldName = "FinBondTargetAsset002.finprodName", max = 100, groups = {ValidateGroupEdit.class})
+//    @Length(fieldName = "FinBondTargetAsset002.finprodName", max = 100, groups = {ValidateGroupEdit.class})
   //  @NotEmpty(fieldName = "FinBondTargetAsset002.finprodName", groups = {ValidateGroupEdit.class})
     public String getFinprodName(){
         return super.getFinprodName();

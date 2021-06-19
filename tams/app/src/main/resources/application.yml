@@ -198,6 +198,7 @@ application:
     chbPerNo: '00' #中债一二三期部署方式(01:独立一二期  03：独立三期  00：一起部署)
     download-file-path-movepath: E:/home/wasadmin/sharedata/chb/recive/CB/bak
     base64Key: HF*ts303HF*ts303
+    dangbanFlag: '01'#01标识挡板  02直连
   cache:
     file: classpath:ehcache_app.xml
   remindPage: invest/remindMain

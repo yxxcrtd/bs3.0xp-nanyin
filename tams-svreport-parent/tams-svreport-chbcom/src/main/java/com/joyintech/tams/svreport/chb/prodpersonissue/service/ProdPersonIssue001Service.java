@@ -285,6 +285,11 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
             data =  restTemplate.postForList(
                     SvrServiceApplication.CHB_SERVICE_NAME + "/ProdPersonIssue/queryForProdPersonIssuePage",pageParam,
                     ProdPersonIssue001Dto.class);
+			if(!CollectionUtils.isEmpty(data)){
+				for(ProdPersonIssue001Dto dto : data){
+					dto.setBelongInstitutionCode(null);
+				}
+			}
         }  else {
          String exportKeys =(String) pageParam.get("expKeys");
          // 处理画面参数

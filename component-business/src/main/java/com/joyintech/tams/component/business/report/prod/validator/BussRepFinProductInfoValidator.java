@@ -151,13 +151,13 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                     this.getMessage("BussRepFinProductInfo.repLiaisonEmail"))));
             }
         }
-        // 境外托管机构名称
-        if (StringUtil.isNotEmpty(dto.getRepOutDepName())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepOutDepName(), 200)) {
-                resultList.add(new ValidMessage("repOutDepName", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repOutDepName"))));
-            }
-        }
+//        // 境外托管机构名称
+//        if (StringUtil.isNotEmpty(dto.getRepOutDepName())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepOutDepName(), 200)) {
+//                resultList.add(new ValidMessage("repOutDepName", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repOutDepName"))));
+//            }
+//        }
         // 实际管理人名称
         if (StringUtil.isNotEmpty(dto.getRepMname())) {
             if (RepCheckUtil.checkByteLength(dto.getRepMname(), 120)) {
@@ -186,17 +186,17 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
             }
         }
         // 投资资产种类及比例
-        if (StringUtil.isNotEmpty(dto.getRepInvTypeRat())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepInvTypeRat(), 300)) {
-                resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
-            }else if(dto.getRepInvTypeRat().contains("（") || dto.getRepInvTypeRat().contains("）") ||
-            		dto.getRepInvTypeRat().contains("：") || dto.getRepInvTypeRat().contains("；")
-                    || !dto.getRepInvTypeRat().contains(":")  || !dto.getRepInvTypeRat().contains("%")) {
-            	resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
-                        this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepInvTypeRat())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepInvTypeRat(), 300)) {
+//                resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
+//            }else if(dto.getRepInvTypeRat().contains("（") || dto.getRepInvTypeRat().contains("）") ||
+//            		dto.getRepInvTypeRat().contains("：") || dto.getRepInvTypeRat().contains("；")
+//                    || !dto.getRepInvTypeRat().contains(":")  || !dto.getRepInvTypeRat().contains("%")) {
+//            	resultList.add(new ValidMessage("repInvTypeRat", this.getMessage("FW_E_0002",
+//                        this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
+//            }
+//        }
         if (StringUtil.isNotEmpty(dto.getRepRuleComment())) {
             if (RepCheckUtil.checkByteLength(dto.getRepRuleComment(), 256)) {
                 resultList.add(new ValidMessage("repRuleComment", this.getMessage("FW_E_0002",
@@ -221,8 +221,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
             Pattern pattern = Pattern.compile("^[C]{1}[0-9]{5}$");
             Matcher matcher = pattern.matcher(dto.getRepInDepCode());
             if (!matcher.matches()) {
-                resultList.add(new ValidMessage("repInDepCode", getMessage("FW_E_0002",
-                    getMessage("BussRepFinProductInfo.repInDepCode"))));
+                resultList.add(new ValidMessage("repInDepCode", getMessage("FW_E_ZZ_0002")));
             }
         }
         if (StringUtil.isNotEmpty(dto.getRepAvgOpenCount())) {
@@ -251,7 +250,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                     		&& StringUtil.indexOf(dto.getRepInvestCountry(),
                         DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
                         resultList.add(
-                            new ValidMessage("repInvestCountry", getMessage("REP_E_0006")));
+                            new ValidMessage("repInvestCountry", getMessage("REP_E_00011")));
                     }
                 }
                 // 境外托管机构国别
@@ -665,8 +664,8 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 		&& (StringUtil.equals(dto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式净值型.getValue())
                 				|| StringUtil.equals(dto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue()))
                 		&& StringUtil.isEmpty(dto.getRepOpenMode())) {
-                		resultList.add(new ValidMessage("repOpenMode", getMessage("BUSS_COM_E_0038",
-                                getMessage("BussRepFinProductInfo.repOpenMode"))));
+                    resultList.add(new ValidMessage("repOpenMode",
+                            this.getMessage("FIN_PROD_E_0133")));
                 } 
                 if (StringUtil.isNotEmpty(dto.getRepOperateMode()) 
                 		&& (StringUtil.equals(dto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())
@@ -700,8 +699,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 		&& StringUtil.equals(dto.getRepOpenMode(), DictCodeListExt2.开放模式_中债_有规律开放.getValue())) {
                 	//规律开放周期必须填写
                 	if(StringUtil.isEmpty(dto.getRepOpenCircle())) {
-                		resultList.add(new ValidMessage("repOpenCircle", getMessage("BUSS_COM_E_0038",
-                                getMessage("BussRepFinProductInfo.repOpenCircle"))));
+                        resultList.add(new ValidMessage("repOpenCircle","开放模式01有规律开放时,规律开放周期必填"));
                 	}
                 	//无规律开放说明必为空
                 	if(StringUtil.isNotEmpty(dto.getRepRuleComment())) {
@@ -721,8 +719,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 	}
                 	//无规律开放说明必填写
                 	if(StringUtil.isEmpty(dto.getRepRuleComment())) {
-                		resultList.add(new ValidMessage("repRuleComment", getMessage("BUSS_COM_E_0038",
-                                getMessage("BussRepFinProductInfo.repRuleComment"))));
+                        resultList.add(new ValidMessage("repRuleComment","开放模式02无规律开放时,无规律开放说明必填"));
                 	}
                 }
                 //当“开放模式”选择“02 无规律开放”时 add by yanya 20190827 end

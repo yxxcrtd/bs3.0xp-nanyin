@@ -405,12 +405,12 @@ public class ProductReportRegister002Validator implements BeanValidator {
 		}
 
 		// 起点销售金额
-		if (StringUtil.isNotEmpty(entity.getRepSaleAmtStr())) {
-			if (entity.getRepSaleAmtStr().compareTo(BigDecimal.ZERO) < 0) {
-				validList.add(new ValidMessage("repSaleAmtStr",
-						getMessage("BUSS_COM_E_0004", getMessage("BussRepFinProductInfo.repSaleAmtStr"), "0")));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepSaleAmtStr())) {
+//			if (entity.getRepSaleAmtStr().compareTo(BigDecimal.ZERO) < 0) {
+//				validList.add(new ValidMessage("repSaleAmtStr",
+//						getMessage("BUSS_COM_E_0004", getMessage("BussRepFinProductInfo.repSaleAmtStr"), "0")));
+//			}
+//		}
 		// 合作模式
 		if (StringUtil.isNotEmpty(entity.getRepContMode())) {
 			// 合作机构名称

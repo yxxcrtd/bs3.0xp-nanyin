@@ -252,36 +252,39 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             }
 
             BussFinBondRepInfoDto bussFinBondRepInfoDto = dto.getBussFinBondRepInfoDto();
+
+            //ZGBSSE-558   【中债直连】债券标的新建提交时，必填项校验不正确 leipeng 20210611 改提示已经改动到CHB_DATACHECK_RULE_INV中
             //ZGBSS-1388 wyn 20210406 债券标的-权益类资产，新建、修改时不该提示“登记托管机构为99的时候,登记托管机构说明不能为空”
-            if (BussinessDictCodeList.行内资产二级分类_同业存单.getValue().equals(dto.getType9())
-                    || BussinessDictCodeList.行内资产二级分类_债券.getValue().equals(dto.getType9())) {
-                if (StringUtil.equals("99", dto.getRegistOrg())) {
-                    // 如果为99  则必须不能为空
-                    if (bussFinBondRepInfoDto != null) {
-                        if (StringUtil.isEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())) {
-                            resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0101")));
-                        }
-                    }
-                } else {
-                    // 如果不为99  说明则必须为空
-                    if (bussFinBondRepInfoDto != null) {
-                        if (StringUtil.isNotEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())) {
-                            resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0102")));
-                        }
-                    }
-                }
-            }
+//            if (BussinessDictCodeList.行内资产二级分类_同业存单.getValue().equals(dto.getType9())
+//                    || BussinessDictCodeList.行内资产二级分类_债券.getValue().equals(dto.getType9())) {
+//                if (StringUtil.equals("99", dto.getRegistOrg())) {
+//                    // 如果为99  则必须不能为空
+//                    if (bussFinBondRepInfoDto != null) {
+//                        if (StringUtil.isEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())) {
+//                            resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0101")));
+//                        }
+//                    }
+//                } else {
+//                    // 如果不为99  说明则必须为空
+//                    if (bussFinBondRepInfoDto != null) {
+//                        if (StringUtil.isNotEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())) {
+//                            resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0102")));
+//                        }
+//                    }
+//                }
+//            }
 
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
             resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
         }
-        if((StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT))&&dto.getBussFinBondRepInfoDto().getRepSectype().equals("99")){
-            if(StringUtil.isEmpty(dto.getBussFinBondRepInfoDto().getRepRemark())){
-                resultList.add(new ValidMessage("当中债报送信息中具体类别为其他债券时，备注必填。"));
-            }
-        }
+        //ZGBSSE-588  【中债直连】债券标的新建提交时，具体类别选择99其他债券，备注check重复
+//        if((StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT))&&dto.getBussFinBondRepInfoDto().getRepSectype().equals("99")){
+//            if(StringUtil.isEmpty(dto.getBussFinBondRepInfoDto().getRepRemark())){
+//                resultList.add(new ValidMessage("当中债报送信息中具体类别为其他债券时，备注必填。"));
+//            }
+//        }
         return resultList;
     }
 }

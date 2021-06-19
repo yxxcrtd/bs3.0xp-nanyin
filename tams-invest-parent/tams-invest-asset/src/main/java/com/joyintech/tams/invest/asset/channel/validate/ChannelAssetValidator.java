@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.math.BigDecimal;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,9 @@ public class ChannelAssetValidator implements BeanValidator{
     
     @Autowired
     private ChannelAssetService channelAssetService;
+
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
     
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -161,7 +165,10 @@ public class ChannelAssetValidator implements BeanValidator{
                 resultList.add(new ValidMessage("vatTaxRate",
                         this.getMessage("BUSS_COM_E_0004", this.getMessage("ChannelAsset002.vatTaxRate"),"0")));
         }
-        
+
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "ChannelAsset002", null, ValidMessage.class);
+        }
         return resultList;
     }
     

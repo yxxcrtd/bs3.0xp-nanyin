@@ -1,0 +1,19 @@
+--计划类净值型资产根据五级分类调整下拉框联动
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '105' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '106' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '107' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '108' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '109' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '110' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '111' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '112' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '113' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '114' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '115' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '116' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '117' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '118' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '119' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '120' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '121' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
+delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '122' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';

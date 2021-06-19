@@ -546,7 +546,7 @@
   
     <select id="selectPlanDeal" resultMap="PlanResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
 		select PLAN_ASSET_ID
-		,TOTAL_NUM
+        ,TOTAL_NUM
 		,ISSUE_AMT
 		,asset_code
 		,POS_NUM

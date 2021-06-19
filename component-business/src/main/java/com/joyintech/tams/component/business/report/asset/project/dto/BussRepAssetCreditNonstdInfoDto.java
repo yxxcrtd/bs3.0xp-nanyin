@@ -214,6 +214,9 @@ public class BussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
     * 担保人与融资人关系  中债新增 20200403 end
     */
     private String repRelationFinan;
+    //付息频率
+    private Short repIntpayCycle;
+
     
     /**
      * 获取 repAssetType
@@ -821,4 +824,14 @@ public class BussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
 	public void setRepBasicAssetType(String repBasicAssetType) {
 		this.repBasicAssetType = repBasicAssetType;
 	}
+
+    @Override
+    public Short getRepIntpayCycle() {
+        return repIntpayCycle;
+    }
+
+    @Override
+    public void setRepIntpayCycle(Short repIntpayCycle) {
+        this.repIntpayCycle = repIntpayCycle;
+    }
 }

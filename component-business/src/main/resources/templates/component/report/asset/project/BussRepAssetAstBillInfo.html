@@ -45,7 +45,7 @@
                         <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetAstBillInfo.repRemainTerm}">加权剩余期限（天）</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" th:id="|${entityName}_repRemainTerm|" th:name="|${entityName}.repRemainTerm|"
-                                th:value="${entity?.repRemainTerm}" data-textrange="0" required="required" maxlength="5"
+                                th:value="${entity?.repRemainTerm}" data-textrange="2" required="required" maxlength="5"
                                 class="layui-input form-input text-number" />
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                         <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetAstBillInfo.repDiscRate}">贴现利率</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" th:id="|${entityName}_repDiscRate|" th:name="|${entityName}.repDiscRate|"  th:value="${entity?.repDiscRate}"  
-                                   class="layui-input form-input text-number" required="required"/>
+                                   class="layui-input form-input text-number" data-textrange="5" required="required"/>
                             <span class="input-right-show">%</span>
                         </div>
                     </div>
@@ -168,7 +168,7 @@
                        <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetAstBillInfo.repAmtSum}">合计金额</label>
                        <div class="layui-input-inline input-inline">
                            <input type="text" th:id="|${entityName}_repAmtSum|" th:name="|${entityName}.repAmtSum|" required="required"
-                               th:value="${entity?.repAmtSum}" data-textrange="0"
+                               th:value="${entity?.repAmtSum}" data-textrange="2"
                                class="layui-input form-input text-number" />
                        </div>
                    </div>
