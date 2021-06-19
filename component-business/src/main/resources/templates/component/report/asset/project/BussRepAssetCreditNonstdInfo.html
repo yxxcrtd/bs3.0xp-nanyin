@@ -690,6 +690,28 @@
                         </div>
                      </div>
                 </div>
+                <div class="layui-form-item">
+                    <div class="form-inline-wrap">
+                        <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetCreditNonstdInfo.repTotalFeeRate}" style="line-height: normal!important;">融资总费率%</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" th:id="|${entityName}_repTotalFeeRate|" th:name="|${entityName}.repTotalFeeRate|"
+                                   placeholder="请输入内容" data-th-data-fixtype="2"
+                                   class="layui-input form-input text-number"
+                                   th:value="${entity?.repTotalFeeRate}"
+                                   data-th-data-textrange="5" required>
+                        </div>
+                    </div>
+                    <div class="form-inline-wrap">
+                        <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetCreditNonstdInfo.repBasisType}">基准利率种类</label>
+                        <div class="layui-input-inline input-inline">
+                            <select th:id="|${entityName}_repBasisType|" th:name="|${entityName}.repBasisType|"
+                                    th:initValue='${entity?.repBasisType}' class="layui-input form-input input-select"
+                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                    data-th-data-result="${SVR_BASIS_TYPE}">
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <!-- 中债新增字段 20200403 end-->
                 <div class="layui-form-item">
                     <div class="form-inline-wrap" style="width:100%;">
