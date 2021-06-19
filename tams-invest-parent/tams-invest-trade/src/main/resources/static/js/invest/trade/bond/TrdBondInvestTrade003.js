@@ -2014,7 +2014,7 @@ var table;
             		return null;
             	}
             	if (isTrue && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined')){
-               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['组合分配证券账户或者通道']));
+               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['组合分配证券账户或者合作资产']));
                		return null;
                	}
                 var list;
