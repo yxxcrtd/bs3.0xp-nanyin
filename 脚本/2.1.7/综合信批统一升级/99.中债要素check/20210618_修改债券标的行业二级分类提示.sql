@@ -1,2 +1,2 @@
---修改债券标的行业二级分类提示
-update CHB_DATACHECK_RULE_INV set remark = '行业二级分类不可为空' where  CHECKRULEID = 'B4D4ACB1-4DA7-14B5-E053-045AA8C0F0EF';
+--淇敼鍊哄埜鏍囩殑琛屼笟浜岀骇鍒嗙被鎻愮ず
+update CHB_DATACHECK_RULE_INV set remark = '琛屼笟浜岀骇鍒嗙被涓嶅彲涓虹┖' where  CHECKRULEID = 'B4D4ACB1-4DA7-14B5-E053-045AA8C0F0EF';
