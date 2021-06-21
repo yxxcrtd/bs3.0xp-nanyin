@@ -125,10 +125,10 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
 //                        resultList.add(new ValidMessage("repGuaType",
 //                                getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repGuaType"))));
 //                    }
-                    if(StringUtil.isEmpty(dto.getRepGuaTypeRemark())){
+                  /*  if(StringUtil.isEmpty(dto.getRepGuaTypeRemark())){
                         resultList.add(new ValidMessage("repGuaTypeRemark",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repGuaTypeRemark"))));
-                    }
+                    }*/
                     if(StringUtil.isEmpty(dto.getRepFinancierGrade())){
                         resultList.add(new ValidMessage("repFinancierGrade",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repFinancierGrade"))));
