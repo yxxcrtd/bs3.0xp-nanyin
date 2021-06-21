@@ -1,0 +1,9 @@
+update CHB_DATACHECK_RULE_INV set remark ='行业二级分类要素不可为空'  where checkruleid in ('443E4A22-6823-5A9E-F153-007F01007S30','443E4A22-3454-5A9E-F153-007F01007Y30');
+
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID='LZ481234-DF35-D920-E050-234F01001091';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('LZ481234-DF35-D920-E050-234F01001091', 'FinProjectTargetAsset002', 'isNotEmpty', 'bussRepAssetAstBillInfoDto.repIndustry', null, '0', 'N', '行业一级分类要素不可为空', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
+
+delete from chb_datacheck_condition_inv where CHECKRULEID='LZ481234-DF35-D920-E050-234F01001091';
+insert into chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
+values ('LZ481234-DF35-D920-E050-234F01001092', 'LZ481234-DF35-D920-E050-234F01001091', 'inArray', 'repAssetType', '==', '1201,1210', null, 'E');
