@@ -389,20 +389,20 @@ var getColumnParams = function() {
 	return colunmList;
 };
 
-var table = $("#dataTable").joyintable({
-	ajax : {
-		url : 'findPage',
-		type : 'POST',
-		traditional : true,
-		data : function() {
-			return getSearchParams();
-		},
-	},
-	cols : [ colList ],
-//		toolbar: true,
-//		defaultToolbar: ['filter'],
-	page : true
-});
+// var table = $("#dataTable").joyintable({
+// 	ajax : {
+// 		url : 'findPage',
+// 		type : 'POST',
+// 		traditional : true,
+// 		data : function() {
+// 			return getSearchParams();
+// 		},
+// 	},
+// 	cols : [ colList ],
+// //		toolbar: true,
+// //		defaultToolbar: ['filter'],
+// 	page : true
+// });
 
 // 已选择字段列表
 var selectedColumns = [];
