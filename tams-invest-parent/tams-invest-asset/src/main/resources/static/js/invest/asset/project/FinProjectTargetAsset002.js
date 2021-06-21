@@ -389,7 +389,7 @@ $(function() {
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').attr('disabled',true).trigger('change');
 		    }
 		    //计息类型
-		    $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',false).trigger('change');
+		   // $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',false).trigger('change');
 		    //担保方式
             $('#bussRepAssetCreditNonstdInfoDto_repGuaType').attr('disabled',false).trigger('change');
             //递延利息是否计息

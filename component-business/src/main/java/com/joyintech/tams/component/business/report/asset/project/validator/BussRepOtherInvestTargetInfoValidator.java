@@ -59,12 +59,13 @@ public class BussRepOtherInvestTargetInfoValidator implements BeanValidator{
                     resultList.add(new ValidMessage("repIntpayCycle",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repIntpayCycle"))));
                 }
-                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
-                if(StringUtil.isEmpty(dto.getRepFinancier())){
-                    resultList.add(new ValidMessage("repFinancier",
-                            getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancier"))));
-                }
-                }
+                /***ZGBSSE-595 【中债直连check】新建项目类资产，报送信息页面“融资人”check未满足报送规范**/
+//                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
+//                if(StringUtil.isEmpty(dto.getRepFinancier())){
+//                    resultList.add(new ValidMessage("repFinancier",
+//                            getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancier"))));
+//                }
+//                }
                 if(StringUtil.isEmpty(dto.getRepFinancierOrgCode())){
                     resultList.add(new ValidMessage("repFinancierOrgCode",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancierOrgCode"))));
