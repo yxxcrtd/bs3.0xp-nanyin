@@ -360,8 +360,9 @@ public class ProductReportRegister002Validator implements BeanValidator {
 					validList.add(new ValidMessage("repInvestCountry",
 							getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repInvestCountry"))));
 				} else {
-					if (StringUtil.indexOf(entity.getRepInvestCountry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
-						validList.add(new ValidMessage("repInvestCountry", getMessage("REP_E_0006")));
+					if (StringUtil.equals(entity.getRepInvestArea(),
+							DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(entity.getRepInvestCountry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
+						validList.add(new ValidMessage("repInvestCountry", getMessage("REP_E_00011")));
 					}
 				}
 				// 境外托管机构国别
