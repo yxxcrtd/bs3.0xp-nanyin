@@ -188,7 +188,9 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
               && (DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())
                 || DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))) {
                  resultDto.setCdate(deal.getTradeDate());
-                 resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+                 // ZGBS-11 计划类净值型赎回交易 交易金额/交易份额 二者只用填一项,当只填交易金额时,amount值为空报错
+                 resultDto.setAmount(
+                         ArithmeticUtil.multiply(StringUtil.isNotEmpty(deal.getShareAmt()) ? deal.getShareAmt() : deal.getTradeAmt(), new BigDecimal(-1)));
                  result.add(resultDto);
         }
         //add by yujiaping  2021-1-6 解决ZGBS-139 计划类净值型卖出交易提交后（流程中），没有占用资产可用持仓 end

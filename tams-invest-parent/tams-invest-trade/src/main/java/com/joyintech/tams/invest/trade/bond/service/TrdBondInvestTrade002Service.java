@@ -285,6 +285,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+    // 交易份额小数保留位数
+    private int decimalPlaces_4 = 4;
 
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。 {@inheritDoc}
@@ -370,7 +372,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             // 交易本金 = 画面.净价总额
             deal本方.setPrinAmt(ArithmeticUtil.subtract(dto.getOwnFpriceAmt(), dto.getOwnIntAmt()));
             // 交易份额 = 画面.券面总额/100
-            deal本方.setShareAmt(ArithmeticUtil.divide(dto.getOwnTradeAmt(), new BigDecimal(100), 2, RoundingMode.HALF_UP));
+            deal本方.setShareAmt(ArithmeticUtil.divide(dto.getOwnTradeAmt(), new BigDecimal(100), decimalPlaces_4, RoundingMode.HALF_UP));
             deal本方.setIntAmt(dto.getOwnIntAmt());
             deal本方.setFpriceAmt(dto.getOwnFpriceAmt());
             //占比 = 本方券面总额/(本方券面总额+融入券总额)
@@ -414,7 +416,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             // 交易本金 = 画面.净价总额
             deal融入.setPrinAmt(ArithmeticUtil.subtract(dto.getIntegrateFpriceAmt(), dto.getIntegrateIntAmt()));
             // 交易份额 = 画面.券面总额/100
-            deal融入.setShareAmt(ArithmeticUtil.divide(dto.getIntegrateTradeAmt(), new BigDecimal(100), 2, RoundingMode.HALF_UP));
+            deal融入.setShareAmt(ArithmeticUtil.divide(dto.getIntegrateTradeAmt(), new BigDecimal(100), decimalPlaces_4, RoundingMode.HALF_UP));
             deal融入.setIntAmt(dto.getIntegrateIntAmt());
             deal融入.setFpriceAmt(dto.getIntegrateFpriceAmt());
             deal融入.setFeeAmt(ArithmeticUtil.subtract(dto.getFeeAmt(), deal本方 == null ? null : deal本方.getFeeAmt()));
@@ -486,7 +488,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         // 交易本金 = 画面.净价总额
         dto.setPrinAmt(dto.getCpriceAmt());
         // 交易份额 = 画面.券面总额/100
-        dto.setShareAmt(ArithmeticUtil.divide(dto.getTotalFaceValue(), new BigDecimal(100), 4, RoundingMode.HALF_UP));
+        dto.setShareAmt(ArithmeticUtil.divide(dto.getTotalFaceValue(), new BigDecimal(100), decimalPlaces_4, RoundingMode.HALF_UP));
         // modified by wangguoxian 费用设置 20190801 start
         // 交易金额 = 画面.交易金额
         dto.setTradeAmt(dto.getTradeAmtAndFee());
