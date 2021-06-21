@@ -356,7 +356,7 @@ public class ProductReportRegister002Dto extends BaseEntity implements ProcessEn
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     @NotEmpty(fieldName="BussRepFinProductInfo.repSaleFeeRate",groups = {ValidateGroupEdit.class})
-    @Rate(fieldName = "BussRepFinProductInfo.repSaleFeeRate", maxDecBit = 5,groups = {ValidateGroupEdit.class})
+//    @Rate(fieldName = "BussRepFinProductInfo.repSaleFeeRate", maxDecBit = 5,groups = {ValidateGroupEdit.class})
     private BigDecimal repSaleFeeRate;
 
     /**
@@ -384,7 +384,7 @@ public class ProductReportRegister002Dto extends BaseEntity implements ProcessEn
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     @NotEmpty(fieldName="BussRepFinProductInfo.repTruFeeRate",groups = {ValidateGroupEdit.class})
-    @Rate(fieldName = "BussRepFinProductInfo.repTruFeeRate", maxDecBit = 5,groups = {ValidateGroupEdit.class})
+//    @Rate(fieldName = "BussRepFinProductInfo.repTruFeeRate", maxDecBit = 5,groups = {ValidateGroupEdit.class})
     private BigDecimal repTruFeeRate;
 
     /**
