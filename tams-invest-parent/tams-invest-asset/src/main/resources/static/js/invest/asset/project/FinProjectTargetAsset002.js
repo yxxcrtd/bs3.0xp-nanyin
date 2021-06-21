@@ -318,27 +318,30 @@ $(function() {
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetType_div').show();
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetTyprExplain_div').show();
             $('#bussRepOtherInvestTargetInfoDto_isUnlisted_div').hide();
-            $('#bussRepOtherInvestTargetInfoDto_div').show();   
-            $('#bussRepOtherInvestTargetInfoDto_repFinancier').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancier').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustry1').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustry1').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repProIndustry').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repProIndustry').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').attr('disabled',true).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_div').show();
+
+
+            /****ZGBSSE-595  【中债直连check】新建项目类资产，报送信息页面“融资人”check未满足报送规范***/
+            // $('#bussRepOtherInvestTargetInfoDto_repFinancier').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancier').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustry1').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustry1').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repProIndustry').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repProIndustry').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').attr('disabled',true).trigger('change');
 
             /***ZGBSSE-601 【中债直连check】新建项目类资产，资产负债类别为1299，2299时，“项目是否属于重点监控行业和领域”字段无法编辑***/
 		    // $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').val('N').trigger('change');
