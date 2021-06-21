@@ -84,7 +84,7 @@ public class CreditExtendsTask extends BatchBaseService{
         		supDate=batchExecuteInfo.getExecuteDate();
         	}
         	else{
-        		supDate = platformDateService.getSysDate();
+        		supDate = platformDateService.getSysDate(batchExecuteInfo.getCreateUser());
         	}
             if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true")) {
                 creditExtendsService.run(supDate);

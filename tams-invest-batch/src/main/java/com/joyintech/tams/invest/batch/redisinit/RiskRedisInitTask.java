@@ -105,7 +105,7 @@ public class RiskRedisInitTask extends BatchBaseService{
                 implCond.setPlateDate(batchExecuteInfo.getExecuteDate());
             }
             else{
-                implCond.setPlateDate(platformDateService.getSysDate());
+                implCond.setPlateDate(platformDateService.getSysDate(batchExecuteInfo.getCreateUser()));
             }
             //默认不执行删除
             implCond.setDel(false);
@@ -126,7 +126,7 @@ public class RiskRedisInitTask extends BatchBaseService{
                 logger.info("批处理-指标参数重新更新redis开始");
                 Map<String, Object> paramsTwo = new HashMap<>();
                 paramsTwo.put(BatchConstant.KEY_PRODID_LIST, this.getProductIdList());
-                paramsTwo.put("sysDate", platDataUtil.getSysDate());
+                paramsTwo.put("sysDate", platDataUtil.getSysDate(batchExecuteInfo.getCreateUser()));
                 step1Reader.setParams(paramsTwo);
                 step1Processor.setParams(paramsTwo);
                 step1Writer.setParams(paramsTwo);

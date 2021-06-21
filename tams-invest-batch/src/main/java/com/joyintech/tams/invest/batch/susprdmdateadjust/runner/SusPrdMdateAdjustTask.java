@@ -82,7 +82,7 @@ public class SusPrdMdateAdjustTask extends BatchBaseService{
         Map<String, Object> params = new HashMap<>();
 
         params.put(BatchConstant.BATCH_INFO, batchExecuteInfo);
-        params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate());
+        params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate(batchExecuteInfo.getCreateUser()));
 
         // 各步骤设置参数
         stepReader.setParams(params);

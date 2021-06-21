@@ -110,8 +110,8 @@ public class BusiAutoAddSecInfoService {
     @Autowired
     private PtlTradeMapper ptlTradeMapper;
     
-    @Autowired
-    private IPlatformDate iPlatformDate;
+//    @Autowired
+//    private IPlatformDate iPlatformDate;
     
     @Autowired
     private RiskRedisInitService<ImplCond> redisRriter;
@@ -127,7 +127,7 @@ public class BusiAutoAddSecInfoService {
      * @since 1.0
      */
     @Transactional(rollbackFor=Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void autoGeneration(Date batchDate) {
+    public void autoGeneration(Date batchDate,Date sysdate) {
         //1、获取未上市债券信息
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("FINPRODTYPE2F01",DictCodeListExt1.金融产品类型_投管用_债券.getValue());
@@ -438,10 +438,10 @@ public class BusiAutoAddSecInfoService {
             this.insert(baseFinProductBaseInfolist);
             //加券后资产信息载入redis
             if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
-            	if(redisRriter!=null&&iPlatformDate!=null) {
+            	if(redisRriter!=null) {
                     ImplCond cond = new ImplCond();
                     cond.setDel(false);
-                    cond.setPlateDate(iPlatformDate.getSysDate());
+                    cond.setPlateDate(sysdate);
                     for (BusiAutoAddFinProductBaseInfoDto dto : baseFinProductBaseInfolist) {
                     	if(dto.getFinProduct()!=null&&StringUtil.isNotEmpty(dto.getFinProduct().getFinprodId())) {
                     		cond.setAssetIdArray(dto.getFinProduct().getFinprodId());

@@ -113,7 +113,7 @@ public class ValCronJob implements Job {
         List<Date> dates = new ArrayList<>();
         //当前日期
         ValBatchCronJobMapper valBatchCronJobMapper = SpringContextUtil.getBean(ValBatchCronJobMapper.class);
-        Date nowDate = valBatchCronJobMapper.getSysDate();
+        Date nowDate = valBatchCronJobMapper.getCommonSysDate();
         // 跑当日批
         dates.add(nowDate);
         dates.forEach(x->{

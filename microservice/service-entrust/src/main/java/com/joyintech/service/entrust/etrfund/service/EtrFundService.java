@@ -589,7 +589,7 @@ public class EtrFundService extends BaseService<EtrFundDto> {
     /**
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto PtlCashPositionFlowDto
+     * @param param PtlCashPositionFlowDto
      * @return BigDecimal
      * @see
      * @since 1.0
@@ -681,6 +681,8 @@ public class EtrFundService extends BaseService<EtrFundDto> {
     public BigDecimal getTongDaoCash(Map<String, Object> map){
         map.put("POSITION_TYPE_01", DictCodeList.持仓类型_可用.getValue());
         map.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
+
+        map.put("platDate",platformDateImpl.getSysDate());
     	return etrFundMapper.getTongDaoCash(map);
     }
 
