@@ -12405,7 +12405,7 @@
             CII.GOVERN_INVEST_FUND = TEMP.GOVERN_INVEST_FUND,
             CII.FUND_ENPE_NAME = TEMP.FUND_ENPE_NAME,
             CII.TRUSTEE = TEMP.TRUSTEE,
-            CII.STATUS = decode(TEMP.STATUS,'E','M','D'),
+            CII.STATUS = decode(TEMP.STATUS,'N','M','E','M','D'),
             CII.CREATE_USER = TEMP.CREATE_USER,
             /*CII.CREATE_TIME = TEMP.CREATE_TIME,*/
             CII.UPDATE_USER = TEMP.UPDATE_USER,
