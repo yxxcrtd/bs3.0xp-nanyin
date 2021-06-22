@@ -220,7 +220,7 @@
         <if test="priceModel != null and priceModel != ''">
             AND T1.PRICE_MODEL = #{priceModel}
         </if>
-        <if test="entrustStatus != null and entrustStatus != ''">
+        <if test="entrustStatus != null and entrustStatus != '' and entrustStatus != '00' "> <!-- 00表示查询全部状态 -->
             AND T1.ENTRUST_STATUS = #{entrustStatus}
         </if>
         <if test="entrustId != null and entrustId != ''">
@@ -317,7 +317,7 @@
         <if test="priceModel != null and priceModel != ''">
             AND T1.PRICE_MODEL = #{priceModel}
         </if>
-        <if test="entrustStatus != null and entrustStatus != ''">
+        <if test="entrustStatus != null and entrustStatus != '' and entrustStatus != '00'"> <!-- 00表示查询全部状态 -->
             AND T1.ENTRUST_STATUS = #{entrustStatus}
         </if>
         <if test="entrustId != null and entrustId != ''">
