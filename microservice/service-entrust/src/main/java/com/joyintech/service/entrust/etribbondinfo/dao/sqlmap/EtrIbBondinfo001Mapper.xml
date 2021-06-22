@@ -229,6 +229,9 @@
         <if test="entrustDate != null and entrustDate != ''">
             AND T1.ENTRUST_DATE = to_date(#{entrustDate},'yyyy-MM-dd')
         </if>
+        <if test="isFlowIng != null and isFlowIng != ''"> <!-- 只查流程中的数据 -->
+            AND 1=2
+        </if>
         UNION ALL
         select
         T1.ENTRUST_ID entrustId,

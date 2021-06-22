@@ -126,7 +126,8 @@
 									<input type="radio" name="entrustStatus" value="07" title="已撤回">
 								</label>
 								<label class="form-label-wrap-checkbox">
-									<input type="radio" name="isFlowIng" value="01" title="流程中">
+									<span style="display:none"><input type="checkbox" name="isFlowIng" value="00" title="否"></span>
+									<input type="checkbox" name="isFlowIng" value="01" title="流程中">
 								</label>
 							</div>
 						</div>
@@ -197,7 +198,7 @@
 </div>
 <div layout:fragment="script">
 	<script
-			data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfo001.js}"
+			data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfo001.js?new}"
 			type="text/javascript"></script>
 	<script th:inline="javascript" type="text/javascript">
 		var FINPROD_TYPE_TG_F01 = /*[[${FINPROD_TYPE_TG_F01}]]*/'';

@@ -33,13 +33,10 @@
 
     // 指令管理tab-获取查询条件
     function getZqzyPositionParams() {
-        // var data = $.serializeToObject('#searchForm_zqzy');
-        // data.portfolioId = data.portfolioId_zqzy ? data.portfolioId_zqzy.join(','):'';
-        // data.finprodId = data.finprodId_zqzy ? data.finprodId_zqzy.join(','):'';
-        // data.isDvp = false;
         var data = $.serializeToObject('#searchForm_zqzy');
-        queryData.vagueQuery = data.vagueQuery;
-        queryData.entrustStatus=data.entrustStatus;
+        queryData.vagueQuery = data.vagueQuery; // 关键字模糊查询
+        queryData.entrustStatus=data.entrustStatus; // 指令状态
+        queryData.isFlowIng=data.isFlowIng; // 是否流程中
         return queryData;
     }
 

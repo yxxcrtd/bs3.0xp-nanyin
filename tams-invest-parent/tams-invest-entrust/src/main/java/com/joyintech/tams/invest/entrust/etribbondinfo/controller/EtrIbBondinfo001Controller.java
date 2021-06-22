@@ -185,7 +185,7 @@ public class EtrIbBondinfo001Controller extends BaseController{
     public String queryDialog(Model model){
         Map<String, Object> p = RequestUtil.getPageParam();
         this.setSelectOptionToModel(model, DictCode.清算速度);
-        this.setSelectOptionToModel(model, DictCode.回购拆借方向);
+        this.setSelectOptionToModel(model, DictCode.交易方向);
         model.addAttribute("ACCOUNT_SPEED_01", DictCodeList.清算速度_T_0.getValue()); // 清算速度默认t0
         model.addAttribute("repManager", SecurityUtil.getLoginUser().getUserName());  //投资经理id
         return "invest/entrust/etribbondinfo/EtrIbBondinfo001QueryDialog";
