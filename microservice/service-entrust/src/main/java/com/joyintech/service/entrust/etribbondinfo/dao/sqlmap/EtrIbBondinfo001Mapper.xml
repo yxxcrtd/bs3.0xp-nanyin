@@ -193,6 +193,15 @@
         <if test="secType1 != null and secType1 != ''">
             AND T4.TYPE_9 = #{secType1,jdbcType=VARCHAR}
         </if>
+        <if test="finprodAbbr != null and finprodAbbr != ''"> <!-- 资产简称，实际传入资产编号 例LCZR202012260061需查询F18_LCZR202012260061的FINPROD_ID-->
+            AND T3.FINPROD_ID = T3.FINPROD_TYPE2 || '_' || #{finprodAbbr,jdbcType=VARCHAR} 
+        </if>
+        <if test="settleSpeed != null and settleSpeed != ''">
+            AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
+        </if>
+        <if test="repManager != null and repManager != ''">
+            AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
+        </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND T3.FINPROD_MARKET_ID in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
@@ -216,6 +225,9 @@
         </if>
         <if test="entrustId != null and entrustId != ''">
             AND T1.ENTRUST_ID = #{entrustId}
+        </if>
+        <if test="entrustDate != null and entrustDate != ''">
+            AND T1.ENTRUST_DATE = to_date(#{entrustDate},'yyyy-MM-dd')
         </if>
         UNION ALL
         select
@@ -278,6 +290,15 @@
         <if test="secType1 != null and secType1 != ''">
             AND T4.TYPE_9 = #{secType1,jdbcType=VARCHAR}
         </if>
+        <if test="finprodAbbr != null and finprodAbbr != ''"> <!-- 资产简称，实际传入资产编号 例LCZR202012260061需查询F18_LCZR202012260061的FINPROD_ID-->
+            AND T3.FINPROD_ID = T3.FINPROD_TYPE2 || '_' || #{finprodAbbr,jdbcType=VARCHAR}
+        </if>
+        <if test="settleSpeed != null and settleSpeed != ''">
+            AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
+        </if>
+        <if test="repManager != null and repManager != ''">
+            AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
+        </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND T3.FINPROD_MARKET_ID in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
@@ -301,6 +322,9 @@
         </if>
         <if test="entrustId != null and entrustId != ''">
             AND T1.ENTRUST_ID = #{entrustId}
+        </if>
+        <if test="entrustDate != null and entrustDate != ''">
+            AND T1.ENTRUST_DATE = to_date(#{entrustDate},'yyyy-MM-dd')
         </if>)aaa order by aaa.entrustId DESC
     </select>
 
