@@ -691,17 +691,21 @@ public class ValInterfCommonServiceApi {
         			qtMap.put("SHOW_BEFORE_DEC_DIGITS", mapBooksetParam.get(key));
         			qtMap.put("SHOW_AFTER_DEC_DIGITS", mapBooksetParam.get(key));
                     qtMap.put("SHOW_TOTBOUNS_DEC_DIGITS", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else if("VAL_DEC_TYPE".equals(key)){
         			qtMap.put("SHOW_BEFORE_DEC_TYPE", mapBooksetParam.get(key));
         			qtMap.put("SHOW_AFTER_DEC_TYPE", mapBooksetParam.get(key));
                     qtMap.put("SHOW_TOTBOUNS_DEC_TYPE", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else if("YEILD_DEC_DIGITS".equals(key)){
         			qtMap.put("TDY_YEILD_DEC_DIGITS", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else if("YEILD_DEC_TYPE".equals(key)){
         			qtMap.put("DAY7_YEILD_DEC_TYPE", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else{
         			qtMap.put(key, mapBooksetParam.get(key));
