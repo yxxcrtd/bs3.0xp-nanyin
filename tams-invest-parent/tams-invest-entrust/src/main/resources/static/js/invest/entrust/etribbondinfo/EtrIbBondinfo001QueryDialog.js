@@ -1,6 +1,6 @@
 (function(){
     
-    // 确认按钮触发
+    // 确认按钮
     $('#EtrIbBondinfo001_queryDialog_btn_submit').click(function() {
         var obj = $.serializeToObject('#EtrIbBondinfo001_queryDialog_searchForm_zqzy');
         parent.EtrIbBondinfo001.executeQuery(obj);

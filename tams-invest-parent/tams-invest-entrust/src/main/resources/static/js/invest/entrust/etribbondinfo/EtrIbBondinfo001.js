@@ -3,9 +3,12 @@
  */
 (function(){
     var queryData={}; // 指令管理tab查询弹出框接受查询数据
-
+    var isConfirm = false; // 是否弹出框点击确认，只有确认才触发查询
+    
     var executeQuery = function (obj) {
         queryData = obj;
+        queryData.portfolioId = obj.portfolioId != null ? obj.portfolioId.join(",") : queryData.portfolioId;
+        isConfirm = true;
     }
 
     /**
@@ -13,10 +16,10 @@
      * @type {{executeQuery: executeQuery}}
      */
     parent.EtrIbBondinfo001 = {
-        executeQuery:executeQuery
+        executeQuery:executeQuery,
     }
     EtrIbBondinfo001 = {
-        executeQuery:executeQuery
+        executeQuery:executeQuery,
     }
 
     // 持仓
@@ -243,7 +246,10 @@
             Joyin.dialog("查询",
                 basePath +'invest/entrust/etribbondinfo/EtrIbBondinfo001/queryDialog?parentPageId=' + pageId, '90%', '80%',
                 queryData, function (){
-                    positionsTable_zqzy.reload();
+                    if(isConfirm) { // 只有点击确认才会查询，关闭&取消不会查询
+                        positionsTable_zqzy.reload();
+                    }
+                    isConfirm = false;
                 }
             );
         })
