@@ -22,6 +22,7 @@ import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 /*import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;*/
@@ -141,9 +142,10 @@ public class EtrAgreRepTrade003Controller extends BaseController{
         List<ValidMessage> errList = new ArrayList<>();
         List<EtrExchangeTrade003Dto> etrExchangeTrade003Dto = dto.getSelectedItem();
         for (EtrExchangeTrade003Dto item : etrExchangeTrade003Dto) {
-            if (!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_待接收.getValue())){
+            if (!(StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_待接收.getValue())
+            		||StringUtil.equals(item.getEntrustStatus(), DictCodeListExt3.委托状态_待分发.getValue()))){
 //                errList.add(new ValidMessage(item.getEntrustStatusString() + "的指令不允许撤回!"));
-                errList.add(new ValidMessage("该委托状态不是待接收，无法撤回!"));
+                errList.add(new ValidMessage("该委托状态不是待接收、待分发，无法撤回!"));
             }
         }
         if(null!=errList&&errList.size()>0){

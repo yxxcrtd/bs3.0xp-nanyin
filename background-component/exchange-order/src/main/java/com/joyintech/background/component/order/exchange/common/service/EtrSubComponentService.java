@@ -77,7 +77,9 @@ public abstract class EtrSubComponentService<V extends EtrBaseDto> implements Et
         EntrustComponent etrEntity = new EntrustComponent();
         BeanUtil.copyPropertiesIgnoreNull(etrEntity, dto);
         // 设置指令状态待接收
-        etrEntity.setEntrustStatus(DictCodeList.指令状态_待接收.getValue());
+        if(!StringUtil.equals(DictCodeList.指令状态_待分发.getValue(), etrEntity.getEntrustStatus())){
+        	etrEntity.setEntrustStatus(DictCodeList.指令状态_待接收.getValue());
+        }
         // 设置币种
         if (etrEntity.getCcy() == null || etrEntity.getCcy().isEmpty()) {
             etrEntity.setCcy(DictCodeList.币种_人民币.getValue());

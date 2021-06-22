@@ -24,6 +24,7 @@ import com.joyintech.service.entrust.etrtradesysinterf.dto.EtrTradeSysInterfDto;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.common.base.entity.EtrDistributeKey;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 
@@ -175,17 +176,17 @@ public class EtrTradeSysInterfService extends BaseService<EtrTradeSysInterfDto>{
     		} 
     		//释放的处理逻辑
     		else {
-    			//1.更新指令表的ETR_ENTRUST状态为待接收。
-    			boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_待接收.getValue());
-    			if(status) {
-    				result = 1;
-    			}
+    			
     			
     			//2.查询指令分发的临时表数据  插入  指令分发表，并将状态改为  待接收。
     			List<EtrDistributeInterfTmp> distmpList = etrDistributeInterfTmpInfoMapper.selectList(entrustId);
     			
     			if(!StringUtil.isEmptyList(distmpList)) {
-    				
+    				//1.更新指令表的ETR_ENTRUST状态为待接收。
+        			boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_待接收.getValue());
+        			if(status) {
+        				result = 1;
+        			}
     				List<EtrDistribute> disList = new ArrayList<EtrDistribute>();
     				
     				for(EtrDistributeInterfTmp entity : distmpList) {
@@ -199,6 +200,12 @@ public class EtrTradeSysInterfService extends BaseService<EtrTradeSysInterfDto>{
     				
     				this.etrInvestInfoServiceImpl.distributeDelegate(disList);
     				
+    			}else{
+    				//1.更新指令表的ETR_ENTRUST状态为待接收。
+        			boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeListExt3.委托状态_待分发.getValue());
+        			if(status) {
+        				result = 1;
+        			}
     			}
     			
     		}

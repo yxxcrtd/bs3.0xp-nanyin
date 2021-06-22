@@ -30,6 +30,7 @@ import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
@@ -577,6 +578,7 @@ public class EtrFundService extends BaseService<EtrFundDto> {
     public BigDecimal selectEntrustAmt(String finprodId) {
         List<String> statusList = new ArrayList<String>();
         statusList.add(DictCodeList.委托状态_待接收.getValue());
+        statusList.add(DictCodeListExt3.委托状态_待分发.getValue());
         statusList.add(DictCodeList.委托状态_已接收.getValue());
         statusList.add(DictCodeList.委托状态_已完成.getValue());
         statusList.add(DictCodeList.委托状态_已撤回.getValue());

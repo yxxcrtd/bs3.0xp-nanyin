@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.entrust.dao.EntrustStatusMapper;
 
 import java.util.HashMap;
@@ -47,6 +49,11 @@ public class EntrustStatusService {
             Map<String, String> params = new HashMap<>();
             String sysDate = DateUtil.format(batchExecuteInfo.getExecuteDate());
             params.put("sysDate", sysDate);
+            params.put("ENTRUST_STATUS_01", DictCodeList.委托状态_新建.getValue());
+            params.put("ENTRUST_STATUS_02", DictCodeList.委托状态_待接收.getValue());
+            params.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_待分发.getValue());
+            params.put("ENTRUST_STATUS_03", DictCodeList.委托状态_已接收.getValue());
+            params.put("ENTRUST_STATUS_05", DictCodeList.委托状态_已退回.getValue());
             List<String> entrustIdList = entrustStatusMapper.selectEntrustIds(params);
             entrustIdList.forEach(s -> baseEtrCashPositionCommService.entrustCloseExecute(s));
             entrustStatusMapper.updateDistributeStatus(params);//add by yangwenjun 20201211 更新委托指令分发表中的接收状态
