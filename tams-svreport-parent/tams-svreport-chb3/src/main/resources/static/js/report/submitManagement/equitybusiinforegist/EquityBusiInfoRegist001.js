@@ -843,10 +843,10 @@ $(function() {
     });
 
     function init(){
-        if(!isSend){
-            $('#EquityBusiInfoRegist001_btn_submit').hide();
-            $('#EquityBusiInfoRegist001_btn_submitAgain').hide();
-        }
+        // if(!isSend){
+        //     $('#EquityBusiInfoRegist001_btn_submit').hide();
+        //     $('#EquityBusiInfoRegist001_btn_submitAgain').hide();
+        // }
         if(isMain=='01'){
             $('#holdDate').val('');
             setTimeout(function() {
