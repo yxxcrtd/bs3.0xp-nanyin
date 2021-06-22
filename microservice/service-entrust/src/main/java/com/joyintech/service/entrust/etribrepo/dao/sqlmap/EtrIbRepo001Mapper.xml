@@ -306,12 +306,7 @@
         ON tmp1.sec_id = tmp2.finprod_market_id
         WHERE 1 = 1
         AND tmp1.value_date &lt;= to_date(#{sysDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
-        AND tmp1.value_source =
-        (CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN
-        'CSD'
-        ELSE
-        'CBC'
-        END)
+        AND tmp1.value_source = 'CBC'
         GROUP BY tmp1.sec_id, tmp1.value_source
         ) T1
         LEFT JOIN MST_BOND_VALUATION_INFO T2
@@ -631,12 +626,7 @@
 		ON tmp1.sec_id = tmp2.finprod_market_id
 		WHERE 1 = 1
 		AND tmp1.value_date &lt;= to_date(#{sysDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
-		AND tmp1.value_source =
-		(CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN
-		'CSD'
-		ELSE
-		'CBC'
-		END)
+		AND tmp1.value_source = 'CBC' 
 		GROUP BY tmp1.sec_id, tmp1.value_source
 		) T1
 		LEFT JOIN MST_BOND_VALUATION_INFO T2
