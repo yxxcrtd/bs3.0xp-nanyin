@@ -40,6 +40,12 @@
         return queryData;
     }
 
+    // 放大镜触发事件
+    serachKey = function () {
+        queryData = {}; // 清空弹出框条件
+        positionsTable_zqzy.reload();
+    }
+    
     // 导入按钮点击事件
     $('#EtrIbBondinfo001_btn_import').click(function() {
         window.parent.importEtr();

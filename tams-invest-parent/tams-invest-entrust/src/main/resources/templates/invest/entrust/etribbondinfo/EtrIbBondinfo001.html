@@ -23,7 +23,9 @@
 		.layui-form-radio *{
 			font-size:8px;
 		}
-
+		.input-fuzzy-text{
+			height:32px; /* 关键字搜索框高度设置与搜索图标一致 */
+		}
 		.form-lable {
 			width: 35%;
 			padding: 0px 10px 0px 0px;
@@ -93,13 +95,15 @@
 						<div class="layui-form-item">
 							<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
 								<div class="layui-input-inline input-inline">
-									<select type="text" id="vagueQuery" name="vagueQuery"
-											class="layui-input form-input input-select"
-											placeholder="关键字搜索"
-											data-th-placeholder="关键字搜索"
-											data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId}"
-											data-th-value="${entity?.vagueQuery}" multiple="true">
-									</select>
+<!--									<select type="text" id="vagueQuery" name="vagueQuery"-->
+<!--											class="layui-input form-input input-select"-->
+<!--											placeholder="关键字搜索"-->
+<!--											data-th-placeholder="关键字搜索"-->
+<!--											data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId}"-->
+<!--											data-th-value="${entity?.vagueQuery}" multiple="true">-->
+<!--									</select>-->
+									<input type="text" id="vagueQuery" name="vagueQuery" class="layui-input form-input input-fuzzy-text" 
+										   placeholder="关键字搜索" data-eventfunc="serachKey">
 								</div>
 							</div>
 <!--							<input type="text" id="roleName" name="roleName" class="layui-input form-input input-fuzzy-text"-->
@@ -229,7 +233,7 @@
 </div>
 <div layout:fragment="script">
 	<script
-			data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfo001.js?new}"
+			data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfo001.js?new1}"
 			type="text/javascript"></script>
 	<script th:inline="javascript" type="text/javascript">
 		var FINPROD_TYPE_TG_F01 = /*[[${FINPROD_TYPE_TG_F01}]]*/'';
