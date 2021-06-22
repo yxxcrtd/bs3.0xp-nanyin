@@ -264,10 +264,10 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
                         			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repPledgeType"))));
                         }
                         //抵质押物价值（元）
-                        if(null==dto.getRepPledgeValue()){
+                       /* if(null==dto.getRepPledgeValue()){
                         	resultList.add(new ValidMessage("repPledgeValue",
                         			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repPledgeValue"))));
-                        }
+                        }*/
                     }else if (StringUtil.equals(dto.getRepGuaType(), DictCodeListExt2.担保方式_其他.getValue())) {
                     	//备注
                         if(StringUtil.isEmpty(dto.getRepRemark())){
