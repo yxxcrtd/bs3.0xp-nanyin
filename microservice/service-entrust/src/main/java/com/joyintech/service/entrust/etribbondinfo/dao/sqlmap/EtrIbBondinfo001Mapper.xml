@@ -193,8 +193,8 @@
         <if test="secType1 != null and secType1 != ''">
             AND T4.TYPE_9 = #{secType1,jdbcType=VARCHAR}
         </if>
-        <if test="finprodAbbr != null and finprodAbbr != ''"> <!-- 资产简称，实际传入资产编号 例LCZR202012260061需查询F18_LCZR202012260061的FINPROD_ID-->
-            AND T3.FINPROD_ID = T3.FINPROD_TYPE2 || '_' || #{finprodAbbr,jdbcType=VARCHAR} 
+        <if test="finprodAbbr != null and finprodAbbr != ''">
+            AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
             AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
@@ -290,8 +290,8 @@
         <if test="secType1 != null and secType1 != ''">
             AND T4.TYPE_9 = #{secType1,jdbcType=VARCHAR}
         </if>
-        <if test="finprodAbbr != null and finprodAbbr != ''"> <!-- 资产简称，实际传入资产编号 例LCZR202012260061需查询F18_LCZR202012260061的FINPROD_ID-->
-            AND T3.FINPROD_ID = T3.FINPROD_TYPE2 || '_' || #{finprodAbbr,jdbcType=VARCHAR}
+        <if test="finprodAbbr != null and finprodAbbr != ''">
+            AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
             AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
@@ -325,9 +325,23 @@
         </if>
         <if test="entrustDate != null and entrustDate != ''">
             AND T1.ENTRUST_DATE = to_date(#{entrustDate},'yyyy-MM-dd')
-        </if>)aaa order by aaa.entrustId DESC
+        </if>)aaa
+        <include refid="vagueQueryWhere"></include>
+        order by aaa.entrustId DESC
     </select>
-
+    
+    <sql id="vagueQueryWhere">
+        <if test="vagueQuery != null and vagueQuery != ''">
+            <where>
+                aaa.entrustId || '|' || aaa.entrustStatus || '|' || aaa.invManagerId || '|' || aaa.portfolioId || '|' || aaa.portfolioName
+                || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr || '|' || aaa.secType1 || '|' || aaa.PS || '|' || aaa.shareNum || '|' || priceModel
+                || '|' || aaa.unitPrice || '|' || aaa.allPrice || '|' || aaa.matureYield || '|' || aaa.exerYield || '|' || aaa.SETTLE_SPREED || '|' || aaa.VDATE
+                || '|' || aaa.MDATE || '|' || aaa.finishAmt || '|' || aaa.transactioncom || '|' || aaa.REMARK || '|' || aaa.counterId || '|' || aaa.parentPortfolioId
+                like '%' || #{vagueQuery} || '%'
+            </where>
+        </if>
+    </sql>
+    
     <select id="getTradeListByFinprodId" resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrTrdProductDealDto">
         select t.finprod_id finprodId,t.share_amt shareAmt,t.yield,t.ps,t.UNIT_CPRICE unitCprice,
         pt.PORTFOLIO_ID

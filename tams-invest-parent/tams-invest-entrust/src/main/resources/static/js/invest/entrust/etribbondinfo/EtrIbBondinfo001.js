@@ -295,8 +295,8 @@
                 return;
             }else {
                 for(var index in selArr){
-                    if(selArr[index].entrustStatus == '08'){
-                        Joyin.error("流程中的数据不允许撤回");
+                    if(selArr[index].entrustStatus != '08' || selArr[index].entrustStatus != '02'){
+                        Joyin.error("只有指令状态为待分发、待接收的指令允许撤回");
                         return ;
                     }
                 }
