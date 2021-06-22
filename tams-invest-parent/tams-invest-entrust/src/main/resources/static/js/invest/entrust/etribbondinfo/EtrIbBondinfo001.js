@@ -241,10 +241,9 @@
             positionsTable.load();
         })
         $(".transfer-form #EtrIbBondinfo001_btn_search").click(function () {
-            // positionsTable_zqzy.load();
             // 指令管理tab
             Joyin.dialog("查询",
-                basePath +'invest/entrust/etribbondinfo/EtrIbBondinfo001/queryDialog?parentPageId=' + pageId, '90%', '80%',
+                basePath +'invest/entrust/etribbondinfo/EtrIbBondinfo001/queryDialog?parentPageId=' + pageId, '90%', '90%',
                 queryData, function (){
                     if(isConfirm) { // 只有点击确认才会查询，关闭&取消不会查询
                         positionsTable_zqzy.reload();
