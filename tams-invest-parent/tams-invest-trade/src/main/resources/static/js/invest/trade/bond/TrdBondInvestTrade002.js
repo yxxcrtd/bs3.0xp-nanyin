@@ -962,8 +962,7 @@ var table;
             exerYieldDivContrl();
             } else {
 	        	//自动加券 yjm
-                var finprodId = $('#finprodId').val();
-	        	var autoCoupon = AutoCoupon.autoBondTradeCoupon(finprodId.substr(finprodId.indexOf("F01_") + 4));
+                var autoCoupon = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
                 isautobond = true;
 	            // 资产名称文本框根据资产代码选择自动显示对应名称;
 	            $("#finprodName").val(autoCoupon.finprodId).trigger('change');
