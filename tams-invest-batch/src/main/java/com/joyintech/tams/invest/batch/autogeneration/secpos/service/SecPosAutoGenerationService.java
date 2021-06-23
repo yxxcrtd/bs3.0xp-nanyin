@@ -230,7 +230,9 @@ public class SecPosAutoGenerationService {
             
             for(AssetTargetDbDto item:secPosDataList) {
                 //剩余期限计算
-                item.setLastPeriod(calculationSurplusDays(item.getFinprodId(), DateUtil.format(item.getVdate()), DateUtil.format(item.getMdate()), DateUtil.format(batchDate), item.getBranch()));
+                if(item.getMdate()!=null){
+                    item.setLastPeriod(calculationSurplusDays(item.getFinprodId(), DateUtil.format(item.getVdate()), DateUtil.format(item.getMdate()), DateUtil.format(batchDate), item.getBranch()));
+                }
                 //获取剩余期限、成本收益率、含权信息、下一行权日、剩余行权期限信息、债券评级
                 if (StringUtil.isNotEmpty(item.getPinanAssetType()) && item.getPinanAssetType().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
                     //****债券评级**** begin
