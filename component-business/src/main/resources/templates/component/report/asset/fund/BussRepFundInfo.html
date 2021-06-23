@@ -319,6 +319,16 @@
 								   data-th-checked="${SVR_YES_OR_NO_default} ==${entity?.repFinancialComissue}" required="required">
 						</div>
 					</div>
+					<div class="form-inline-wrap">
+						<label class="layui-form-label form-lable"
+							   data-th-utext="#{BussRepFundInfo.repMngPartyName}">基金管理机构名称</label>
+						<div class="layui-input-inline input-inline">
+							<input type="text" th:id="|${entityName}_repMngPartyName|"
+								   th:name="|${entityName}.repMngPartyName|" required
+								   th:value="${entity?.repMngPartyName}"
+								   data-fixtype="2" class="layui-input form-input" />
+						</div>
+					</div>
 				</div>
 				<div class="layui-form-item">
                         <div class="layui-form-item">
