@@ -9,18 +9,14 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.trade.dto.BussTrdAvailableCashQuery;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
-import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.fund.dto.FundAssetTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.fund.service.FundAssetTransfer001Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
@@ -57,11 +53,6 @@ public class FundAssetTransfer001Controller extends BaseController {
      */
     @Autowired
     private FundAssetTransfer001Service fundAssetTransfer001Service;
-    /**
-     * bussCommonMapperDelegateService
-     */
-    @Autowired
-    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
     /**
      * 主键生成类
@@ -70,7 +61,7 @@ public class FundAssetTransfer001Controller extends BaseController {
     private BaseGetBusinessId baseGetBusinessId;
 
     @Autowired
-    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -257,17 +248,17 @@ public class FundAssetTransfer001Controller extends BaseController {
                 }
             }
         }
-        if (StringUtil.isNotEmpty(dto.getChlId()) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(
-                EtrCommonCashPositionDealService.queryChlType(dto.getChlId()))) {
-            PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
-            ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-            ptlCashPositionFlowDto.setCdate(dto.getTradeDate());
-            ptlCashPositionFlowDto.setPortfolioId(dto.getInvTransPortf());
-            ptlCashPositionFlowDto.setCcy(dto.getCcy());
-            ptlCashPositionFlowDto.setChlFinprodId(dto.getChlId());
-            BigDecimal chlCashPosition = basePtlCashPositionInfoService.queryUsableCashPosition(ptlCashPositionFlowDto);
-            if (chlCashPosition != null && BigDecimal.ZERO.compareTo(chlCashPosition) != 0) {
-                errorList.add(new ValidMessage("请先进行合作资产回款！"));
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (FundAssetTransfer001Dto ptl : dto.getFunAssetTransferDtoList()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    errorList.add(new ValidMessage("交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！"));
+                }
             }
         }
         if(errorList.size()>0){

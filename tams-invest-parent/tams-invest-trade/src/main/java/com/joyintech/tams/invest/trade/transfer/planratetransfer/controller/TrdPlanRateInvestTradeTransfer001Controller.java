@@ -14,13 +14,12 @@ import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDto;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDtos;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.service.TrdPlanRateInvestTradeTransfer001Service;
@@ -75,6 +74,9 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
 //     */
 //    @Autowired
 //    private TrdPlanInterestDuration001Service trdPlanInterestDuration001Service;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     
     @Autowired
     private com.joyintech.tams.invest.trade.transfer.assign.service.TrdAssetAssignService trdAssetAssignService;
@@ -244,17 +246,23 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
 			wr.setMessage("转仓列表信息不能空", MessageType.错误消息);
 			return wr;
 		}
-        if (StringUtil.isNotEmpty(dto.getChlId()) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(
-                EtrCommonCashPositionDealService.queryChlType(dto.getChlId()))) {
-            PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
-            ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-            ptlCashPositionFlowDto.setCdate(dto.getTradeDate());
-            ptlCashPositionFlowDto.setPortfolioId(dto.getTransferPortfolioId());
-            ptlCashPositionFlowDto.setCcy(dto.getCcy());
-            ptlCashPositionFlowDto.setChlFinprodId(dto.getChlId());
-            BigDecimal chlCashPosition = basePtlCashPositionInfoService.queryUsableCashPosition(ptlCashPositionFlowDto);
-            if (chlCashPosition != null && BigDecimal.ZERO.compareTo(chlCashPosition) != 0) {
-                wr.setMessage("请先进行合作资产回款！", MessageType.错误消息);
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (PlanTransferDtos ptl : dto.getPlanTransferDtos()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    if (!StringUtil.equals(str, "")) {
+                        str += "</br>";
+                    }
+                    str += "交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！";
+                }
+            }
+            if(StringUtil.isNotEmpty(str)){
+                wr.setMessage(str, MessageType.错误消息);
                 return wr;
             }
         }
