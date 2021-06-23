@@ -90,12 +90,13 @@
                                 <div class="layui-form-item">
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
-                                            data-th-text="#{ComBondQuotationInfo002.mDuration}">估值久期</label>
+                                               data-th-text="#{ComBondQuotationInfo002.netvaluationExercise}">估值净价(行权)</label>
                                         <div class="layui-input-inline input-inline">
-                                            <input type="text" id="mDuration" name="mDuration"
-                                                class="layui-input form-input text-number" placeholder="请输入内容"
-                                                data-th-placeholder="#{SysCommon.placeholder}"
-                                                data-th-value='${entity?.mDuration}' data-textrange="14" maxlength="30">
+                                            <input type="text" id="netvaluationExercise" name="netvaluationExercise"
+                                                   class="layui-input form-input text-number"
+                                                   data-th-value='${entity?.netvaluationExercise}' placeholder="请输入内容"
+                                                   data-th-placeholder="#{SysCommon.placeholder}" data-textrange="14"
+                                                   maxlength="30">
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap">
@@ -192,13 +193,12 @@
                                 <div class="layui-form-item">
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
-                                               data-th-text="#{ComBondQuotationInfo002.netvaluationExercise}">估值净价(行权)</label>
+                                               data-th-text="#{ComBondQuotationInfo002.mDuration}">估值久期</label>
                                         <div class="layui-input-inline input-inline">
-                                            <input type="text" id="netvaluationExercise" name="netvaluationExercise"
-                                                   class="layui-input form-input text-number"
-                                                   data-th-value='${entity?.netvaluationExercise}' placeholder="请输入内容"
-                                                   data-th-placeholder="#{SysCommon.placeholder}" data-textrange="14"
-                                                   maxlength="30">
+                                            <input type="text" id="mDuration" name="mDuration"
+                                                   class="layui-input form-input text-number" placeholder="请输入内容"
+                                                   data-th-placeholder="#{SysCommon.placeholder}"
+                                                   data-th-value='${entity?.mDuration}' data-textrange="14" maxlength="30">
                                         </div>
                                     </div>
                                 </div>
