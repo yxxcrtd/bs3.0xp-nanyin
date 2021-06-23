@@ -45,11 +45,15 @@ public class EtrInvestBondInfoValidator implements EtrCommonValidator {
      * 获取service
      */
     @Autowired
-    private EtrInvestBondInfoService etrInvestBondInfoService;    /**
+    private EtrInvestBondInfoService etrInvestBondInfoService;
+    // 行权方式check add by renping 20191020 start
+    /**
      * 行权计划共通service
      */
     @Autowired
     private BusiFinExercisePlanService busiFinExercisePlanService;
+    // 行权方式check add by renping 20191020 end
+
 
     /**
      * {@inheritDoc}
@@ -142,6 +146,35 @@ public class EtrInvestBondInfoValidator implements EtrCommonValidator {
             				|| StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs()))) {
                 ValidMessage validMessage = new ValidMessage("非行权债不可做行权交易！");
                     errorList.add(validMessage);
+            } else {
+                if (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
+                        || StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs())) {
+                    Map<String, Object> p = new HashMap<>();
+                    p.put("finprodId", dto.getFinprodId());
+                    p.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
+                    p.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
+                    p.put("execType01", DictCodeList.行权状态_未行权.getValue());
+                    p.put("execType02", DictCodeList.行权状态_已行权.getValue());
+                    List<FinExercisePlan> planList = busiFinExercisePlanService.getfinExercisePlanByProductId(p);
+                    boolean checkFlag = true;
+                    if (!StringUtil.isEmptyList(planList)) {
+                        for (FinExercisePlan planDto : planList) {
+                            if (planDto.getExerciseDate().compareTo(dto.getVdate()) >= 0 && planDto.getExerciseDate().compareTo(dto.getMdate()) <= 0) {
+                                if ((StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
+                                        && StringUtil.equals(DictCodeList.行权方式_回售.getValue(),
+                                        planDto.getExerciseType()))
+                                        || (StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs())
+                                        && StringUtil.equals(DictCodeList.行权方式_赎回.getValue(),
+                                        planDto.getExerciseType()))) {
+                                    checkFlag = false;
+                                }
+                            }
+                        }
+                    }
+                    if (checkFlag) {
+                        errorList.add(new ValidMessage("债券行权计划中没有满足所选交易方向和日期的行权数据！"));
+                    }
+                }
             }
             if (entrustNum != null && StringUtil.isNotEmpty(ps)) {
                 BigDecimal proAvailableCash = dto.getProAvailableCash();
@@ -203,35 +236,6 @@ public class EtrInvestBondInfoValidator implements EtrCommonValidator {
             	}
             }
             errorList.addAll(etrInvestBondInfoService.check(dto));
-
-            if (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
-                    || StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs())) {
-                Map<String, Object> p = new HashMap<>();
-                p.put("finprodId", dto.getFinprodId());
-                p.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
-                p.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
-                p.put("execType01", DictCodeList.行权状态_未行权.getValue());
-                p.put("execType02", DictCodeList.行权状态_已行权.getValue());
-                List<FinExercisePlan> planList = busiFinExercisePlanService.getfinExercisePlanByProductId(p);
-                boolean checkFlag = true;
-                if (!StringUtil.isEmptyList(planList)) {
-                    for (FinExercisePlan planDto : planList) {
-                        if (planDto.getExerciseDate().compareTo(dto.getVdate()) >= 0 && planDto.getExerciseDate().compareTo(dto.getMdate()) <= 0) {
-                            if ((StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
-                                    && StringUtil.equals(DictCodeList.行权方式_回售.getValue(),
-                                    planDto.getExerciseType()))
-                                    || (StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs())
-                                    && StringUtil.equals(DictCodeList.行权方式_赎回.getValue(),
-                                    planDto.getExerciseType()))) {
-                                checkFlag = false;
-                            }
-                        }
-                    }
-                }
-                if (checkFlag) {
-                    errorList.add(new ValidMessage("债券行权计划中没有满足所选交易方向和日期的行权数据！"));
-                }
-            }
         }
         return errorList;
     }
