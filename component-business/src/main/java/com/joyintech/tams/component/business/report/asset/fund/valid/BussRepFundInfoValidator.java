@@ -92,10 +92,10 @@ public class BussRepFundInfoValidator implements BeanValidator{
                 resultList.add(new ValidMessage("repFundCompName",
                     getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repFundCompName"))));
             }*/
-            /*if(StringUtil.isEmpty(dto.getRepMngPartyName())){
+            if(StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他私募股权投资基金.getValue()) && StringUtil.isEmpty(dto.getRepMngPartyName())){
                 resultList.add(new ValidMessage("repMngPartyName",
                     getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repMngPartyName"))));
-            }*/
+            }
                 if(StringUtil.isEmpty(dto.getRepTrustPartyName())){
                     resultList.add(new ValidMessage("repTrustPartyName",
                             getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repTrustPartyName"))));
