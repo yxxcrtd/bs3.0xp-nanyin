@@ -245,7 +245,7 @@ public class ChbEquHoldCheckDto implements ITableRow {
      * @return INDENTIFY_MARK 识别标识
      */
     public String getIndentifyMark() {
-        return indentifyMark;
+        return this.indentifyMark;
     }
 
     /**
@@ -849,7 +849,7 @@ public class ChbEquHoldCheckDto implements ITableRow {
 	}
 
 	public String getMergerindentifymark() {
-		return mergerindentifymark;
+		return this.mergerindentifymark;
 	}
 
 	public void setMergerindentifymark(String mergerindentifymark) {
@@ -899,7 +899,8 @@ public class ChbEquHoldCheckDto implements ITableRow {
     public String getInterfCheckResultStr(){
     	return getInterfCheckResult()==null?"":(getInterfCheckResult()+" "+SysDataUtil.getNameFromDataDict(DictCode.检查结果,getInterfCheckResult()));
     }
+    /****ZGBSSE-842 【中债三期】识别标识合并导出数据数据中合并后识别标识选择值错误***/
     public String getChooseMergerStr(){
-        return getIndentifyMark()==getMergerindentifymark()?"OFF":"ON";
+        return !getIndentifyMark().equals(getMergerindentifymark())?"OFF":"ON";
     }
 }
