@@ -1723,9 +1723,44 @@
                  if(openDateRadio  ){
      //                $("input[name='bussFinProductOpenPlanDto.openDateRadio'][value='"+openDateRadio+"']").attr('checked',true);
                      $("input[name='bussFinProductOpenPlanDto.openDateRadio'][value='"+openDateRadio+"']").prop('checked',true);
+
+                     if(openDateRadio === '0') {
+                        getElementById('dayOfMonth').prop('disabled', false).prop('readonly', false);
+                        getElementById('workdayOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                        getElementById('weekOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                        getElementById('workdayOfWeek').val('').trigger('change').prop('disabled',true).prop('readonly', true);
+                     } else if(openDateRadio === '1') {
+                        getElementById('workdayOfMonth').prop('disabled', false).prop('readonly', false);
+                        getElementById('dayOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                        getElementById('weekOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                        getElementById('workdayOfWeek').val('').trigger('change').prop('disabled',true).prop('readonly', true);
+                     } else {
+                        getElementById('dayOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                        getElementById('workdayOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                        getElementById('weekOfMonth').trigger('change').prop('disabled', false).prop('readonly', false);
+                        getElementById('workdayOfWeek').trigger('change').prop('disabled',false).prop('readonly', false);
+                     }
+
                  }
                  if(openDateRadioRed){
-                     $("input[name='bussFinProductOpenPlanRedDto.openDateRadio'][value='"+openDateRadioRed+"']").prop('checked',true);
+                     $("input[name='bussFinProductOpenPlanRedDto.openDateRadio'][value='"+openDateRadioRed+"']").prop('checked',true).trigger('change');
+                     if(openDateRadioRed === '0') {
+                         getElementByRedId('dayOfMonth').prop('disabled', false).prop('readonly', false);
+                         getElementByRedId('workdayOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                         getElementByRedId('weekOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                         getElementByRedId('workdayOfWeek').val('').trigger('change').prop('disabled',true).prop('readonly', true);
+                      } else if(openDateRadioRed === '1') {
+                         getElementByRedId('workdayOfMonth').prop('disabled', false).prop('readonly', false);
+                         getElementByRedId('dayOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                         getElementByRedId('weekOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                         getElementByRedId('workdayOfWeek').val('').trigger('change').prop('disabled',true).prop('readonly', true);
+                      } else {
+                         getElementByRedId('dayOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                         getElementByRedId('workdayOfMonth').val('').trigger('change').prop('disabled', true).prop('readonly', true);
+                         getElementByRedId('weekOfMonth').trigger('change').prop('disabled', false).prop('readonly', false);
+                         getElementByRedId('workdayOfWeek').trigger('change').prop('disabled',false).prop('readonly', false);
+                      }
+
                  }
                  layui.form.render('radio');
 
