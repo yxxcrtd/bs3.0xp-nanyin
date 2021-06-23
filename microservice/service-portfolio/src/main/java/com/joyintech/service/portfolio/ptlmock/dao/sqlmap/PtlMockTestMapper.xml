@@ -17,8 +17,7 @@
 	<select id="getPtlInfo" resultMap="PtlInfoMap">
 		SELECT DISTINCT
 			A.PORTFOLIO_ID id,
-			A.PORTFOLIO_ID text,
-			A.PORTFOLIO_NAME,              
+		    A.PORTFOLIO_NAME text,
 			DECODE(A.PORTFOLIO_TYPE ,#{PORTFOLIO_TYPE_XNZH},TO_CHAR(A.VDATE, 'yyyy-MM-dd'),
 				DECODE(fin.VDATE,null,TO_CHAR(A.VDATE, 'yyyy-MM-dd'),TO_CHAR(fin.VDATE, 'yyyy-MM-dd'))) AS VDATE,
 			DECODE(A.PORTFOLIO_TYPE ,#{PORTFOLIO_TYPE_XNZH},TO_CHAR(A.MDATE, 'yyyy-MM-dd'),
