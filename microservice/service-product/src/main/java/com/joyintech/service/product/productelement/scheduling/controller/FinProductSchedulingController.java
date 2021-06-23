@@ -187,4 +187,14 @@ public class FinProductSchedulingController {
         return finProductSchedulingService.checkProdInfoExist(finprodMarketId, finprodAbbr,
             finprodName, finprodId);
     }
+
+    /**
+     * 查询是否是否存在组合代码与产品代码相同的组合
+     * @param finprodMarketId 产品代码
+     * @return
+     */
+    @GetMapping("chekPortfolExist")
+    public int chekPortfolExist(String finprodMarketId,String pageId){
+        return finProductSchedulingService.chekPortfolExist(finprodMarketId,pageId);
+    }
 }
