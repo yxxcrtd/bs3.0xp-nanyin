@@ -77,6 +77,52 @@ public class MstBondValuationInfo extends MstBondValuationInfoKey {
     private String inputType;
 
     /**
+     * 估价基点价值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal mbpvalue;
+
+    /**
+     * 风险价值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal var;
+
+    /**
+     * 条件风险价值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal cvar;
+
+    /**
+     * 麦考利久期
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal mduration;
+
+    /**
+     * 市价隐含评级（中债）
+     */
+    private String implicitGrade;
+
+    /**
+     * 市价历史隐含评级（中债）
+     */
+    private String implicitHgrade;
+
+    /**
+     * 估值净价(行权)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal netvaluationExercise;
+
+    /**
+     * 估值净价(推荐)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal netvaluationRecommended;
+
+    /**
      * 取得 剩余期限
      * @return 剩余期限
      */
@@ -266,5 +312,133 @@ public class MstBondValuationInfo extends MstBondValuationInfoKey {
      */
     public void setInputType(String inputType) {
         this.inputType = inputType == null ? null : inputType.trim();
+    }
+
+    /**
+     * 取得 估价基点价值
+     * @return 估价基点价值
+     */
+    public BigDecimal getMbpvalue() {
+        return mbpvalue;
+    }
+
+    /**
+     * 设置 估价基点价值
+     * @param mbpvalue 估价基点价值
+     */
+    public void setMbpvalue(BigDecimal mbpvalue) {
+        this.mbpvalue = mbpvalue;
+    }
+
+    /**
+     * 取得 风险价值
+     * @return 风险价值
+     */
+    public BigDecimal getVar() {
+        return var;
+    }
+
+    /**
+     * 设置 风险价值
+     * @param var 风险价值
+     */
+    public void setVar(BigDecimal var) {
+        this.var = var;
+    }
+
+    /**
+     * 取得 条件风险价值
+     * @return 条件风险价值
+     */
+    public BigDecimal getCvar() {
+        return cvar;
+    }
+
+    /**
+     * 设置 条件风险价值
+     * @param cvar 条件风险价值
+     */
+    public void setCvar(BigDecimal cvar) {
+        this.cvar = cvar;
+    }
+
+    /**
+     * 取得 麦考利久期
+     * @return 麦考利久期
+     */
+    public BigDecimal getMduration() {
+        return mduration;
+    }
+
+    /**
+     * 设置 麦考利久期
+     * @param mduration 麦考利久期
+     */
+    public void setMduration(BigDecimal mduration) {
+        this.mduration = mduration;
+    }
+
+    /**
+     * 取得 市价隐含评级（中债）
+     * @return 市价隐含评级（中债）
+     */
+    public String getImplicitGrade() {
+        return implicitGrade;
+    }
+
+    /**
+     * 设置 市价隐含评级（中债）
+     * @param implicitGrade 市价隐含评级（中债）
+     */
+    public void setImplicitGrade(String implicitGrade) {
+        this.implicitGrade = implicitGrade == null ? null : implicitGrade.trim();
+    }
+
+    /**
+     * 取得 市价历史隐含评级（中债）
+     * @return 市价历史隐含评级（中债）
+     */
+    public String getImplicitHgrade() {
+        return implicitHgrade;
+    }
+
+    /**
+     * 设置 市价历史隐含评级（中债）
+     * @param implicitHgrade 市价历史隐含评级（中债）
+     */
+    public void setImplicitHgrade(String implicitHgrade) {
+        this.implicitHgrade = implicitHgrade == null ? null : implicitHgrade.trim();
+    }
+
+    /**
+     * 取得 估值净价(行权)
+     * @return 估值净价(行权)
+     */
+    public BigDecimal getNetvaluationExercise() {
+        return netvaluationExercise;
+    }
+
+    /**
+     * 设置 估值净价(行权)
+     * @param netvaluationExercise 估值净价(行权)
+     */
+    public void setNetvaluationExercise(BigDecimal netvaluationExercise) {
+        this.netvaluationExercise = netvaluationExercise;
+    }
+
+    /**
+     * 取得 估值净价(推荐)
+     * @return 估值净价(推荐)
+     */
+    public BigDecimal getNetvaluationRecommended() {
+        return netvaluationRecommended;
+    }
+
+    /**
+     * 设置 估值净价(推荐)
+     * @param netvaluationRecommended 估值净价(推荐)
+     */
+    public void setNetvaluationRecommended(BigDecimal netvaluationRecommended) {
+        this.netvaluationRecommended = netvaluationRecommended;
     }
 }
