@@ -84,4 +84,6 @@ public interface PerProDeclareReg001Mapper {
 	 * @return 行内标识码列表
 	 */
 	List<SelectOptionDto> queryProdInsIdList(Map<String,Object> map);
+
+	String selectFileInfo(PerProDeclareRegDto perProDeclareRegDto);
 }

@@ -38,6 +38,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1426,7 +1427,21 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			perProDeclareRegDto.setFileNo(fileNo);
 			perProDeclareRegDto.setFileNum(new BigDecimal(fileNum));
 			perProDeclareRegDto.setNineFile(fileSb.toString());
+
+			// 先查历史数据文件  将 历史文件删除
+			String path = "";
+			if(StringUtils.isNotEmpty(fileProdId)) {
+				path = perProDeclareReg001Mapper.selectFileInfo(perProDeclareRegDto);
+			}
 			perProDeclareReg001Mapper.updateFileNo(perProDeclareRegDto);
+
+			// 如果存在历史文件  将文件删除
+			if(StringUtils.isNotEmpty(fileProdId) && StringUtil.isNotEmpty(path)){
+				File file = new SafelyFile(path);
+				if(file.exists()){
+					file.delete();
+				}
+			}
 		}
 		return new AjaxResult("附件上传成功！");
 	}

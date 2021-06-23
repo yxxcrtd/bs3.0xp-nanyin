@@ -1103,4 +1103,13 @@
 			WHERE PROD_INS_ID LIKE concat(concat('%', #{search}),'%')
 		</if>
 	</select>
+	<select id="selectFileInfo" resultType="java.lang.String">
+		select path from sys_upload_file_info sufi where exists (
+		select 1 from CHB_PRD_DECLARE_SUB cpds where
+		sufi.seq_no = cpds.file_no
+		<if test="prodId != null and prodId != ''">
+			and cpds.PROD_ID = #{prodId}
+		</if>
+		and cpds.send_status = '01') and rownum = 1
+	</select>
 </mapper>
