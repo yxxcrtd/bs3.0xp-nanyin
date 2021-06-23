@@ -21,7 +21,8 @@
 			 OR STL_SEC_ACCT_INFO.SEC_ACCT_NAME LIKE concat('%',concat(#{secAcctId},'%')))
 		</if>                                  
 		<if test="manager!=null and manager!=''">
-			AND STL_SEC_ACCT_INFO.manager = #{manager}
+			AND (STL_SEC_ACCT_INFO.manager = #{manager}
+				OR MST_CUSTOMER_INFO.CUSTOMER_NAME = #{manager})
 		</if>
 	</select>
 	<!--基金账号联想文本  -->
@@ -47,7 +48,7 @@
 	<select id="getSecManager" resultType="com.joyintech.framework.select.SuggestDto">
 		select  
 			CUSTOMER_ID code,
-			CUSTOMER_ID name,
+			NVL(CUSTOMER_ABBR,CUSTOMER_NAME) name,
 			NVL(CUSTOMER_ABBR,CUSTOMER_NAME) shortName,
 			CUSTOMER_ID hidCode
 		FROM MST_CUSTOMER_INFO

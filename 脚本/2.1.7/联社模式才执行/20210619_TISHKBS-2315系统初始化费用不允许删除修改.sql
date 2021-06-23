@@ -1,0 +1,1 @@
+delete from mst_feeinfo a where a.fee_id in ('FYPZ000000000001','FYPZ000000000002');

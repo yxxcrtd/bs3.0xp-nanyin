@@ -1702,7 +1702,7 @@ public class SecDealAccountsService {
         accountAmountMap.putAll(accountAmountBCCYAMTMap);
         //accountAmountMap再次设置如下：
         /** 交易金额_本位币	<-	(印花税支出_本位币 + 经手费支出_本位币 + 证管费支出_本位币 + 结算费支出_本位币 + 佣金支出_本位币 + 交易手续费支出
-         + 结算手续费支出 + 成本金额_本位币 + 利息金额_本位币 + 随交易支付的费用_本位币)
+         + 结算手续费支出 + 成本金额_本位币 + 利息金额_本位币 + 交易费用（不随交易支付）_本位币)
          -（印花税_本位币 + 经手费_本位币 + 证管费_本位币 + 结算费_本位币 + 佣金_本位币 + 交易手续费_本位币
          + 结算手续费_本位币)
          **/
@@ -1715,7 +1715,7 @@ public class SecDealAccountsService {
                 accountAmountBCCYAMTMap.get(BookConstant.SETTLEMENTFEE_OUT + BookConstant.BCCYAMT),//结算手续费支出_本位币
                 accountAmountBCCYAMTMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT),//成本金额_本位币
                 accountAmountBCCYAMTMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT),
-                accountAmountBCCYAMTMap.get(BookConstant.FEE + BookConstant.BCCYAMT));//利息金额_本位币
+                accountAmountBCCYAMTMap.get(BookConstant.FEE + BookConstant.BCCYAMT));//交易费用（不随交易支付）_本位币
 
         BigDecimal 交易金额本位币2 = ArithmeticUtil.doAdd(
                 accountAmountBCCYAMTMap.get(BookConstant.STAMPTAX + BookConstant.BCCYAMT),//印花税_本位币

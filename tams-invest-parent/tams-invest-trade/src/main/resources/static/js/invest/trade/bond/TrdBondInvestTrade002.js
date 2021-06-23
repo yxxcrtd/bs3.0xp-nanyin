@@ -1981,7 +1981,7 @@ var table;
             	}
             	if ((!$("#secManageAcctId").val() || typeof $("#secManageAcctId").val() == 'undefined')
                		 && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined') && !formTodoList){
-               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券托管户或者通道']));
+               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券托管户或者合作资产']));
                		return null;
                	}
                 var list;

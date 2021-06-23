@@ -417,6 +417,7 @@ public class SecPosAutoGenerationService {
         map.put("finprodId",finprodId);
         map.put("effDate",vdate);
         map.put("branch",branch);
+        map.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         FinCashCalcRule finCashCaluRule = secPosAutoGenerationMapper.getBasisByFinprodId
                 (map);
         if(finCashCaluRule!=null )
@@ -465,6 +466,7 @@ public class SecPosAutoGenerationService {
         map.put("finprodId",finprodId);
         map.put("effDate",date);
         map.put("branch",branch);
+        map.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         FinCashCalcRule finCashCalcRule = secPosAutoGenerationMapper.getBasisByFinprodId(
                 map);
         if(finCashCalcRule!=null )
