@@ -542,6 +542,10 @@
                       PTL_SEC_ACCT A
           INNER JOIN STL_SEC_ACCT_INFO B
                   ON  A.ACCT_NO = B.SEC_ACCT_ID
+        <if test="finprodName !=null and finprodName !='' ">
+            LEFT JOIN FIN_PRODUCT FP
+            ON FP.FINPROD_ID =#{finprodName,jdbcType=VARCHAR}
+        </if>
         <where>
             <if test="portfolioId !=null and portfolioId !='' ">
                 PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
@@ -559,6 +563,9 @@
             </if>
             <if test="tradeMarket != null and tradeMarket != ''">
              	AND TRADE_PLACE =#{tradeMarket}
+            </if>
+            <if test="finprodName !=null and finprodName !='' ">
+                AND FP.REGIST_ORG = B.REGIST_ORG
             </if>
         </where>
     </select>
