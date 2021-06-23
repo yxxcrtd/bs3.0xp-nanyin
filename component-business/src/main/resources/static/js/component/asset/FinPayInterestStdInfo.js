@@ -523,6 +523,7 @@
         editCell: function(value, data, field, cell, column){
         	if(value&&column.editOption.type=='date') {
         	    data[field] = value;//lijun modify 修改入库带时分数据
+                isEditPayByRepay = true;
         	}
             if(new Date(value).DateDiff('d',data.maxTradeDate)>0){
                 var rowData = {};
@@ -547,6 +548,7 @@
                 if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F07){
                       generationPlan(true);
                 }
+                isEditPayByRepay = true;
             }
             if(field == "vdate"){
                 if(data.LAY_TABLE_INDEX-1<0){
@@ -558,9 +560,9 @@
                     if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F07){
                          generationPlan(true);
                     }
+                    isEditPayByRepay = true;
                 }
             }
-            isEditPayByRepay = true;
         },
         done:function (tables, allData) {
             var obj = $('#generationPlanTable_div').find("td[data-field='operation']");
@@ -904,20 +906,21 @@
                 if(iscallback||flag){
                     initGenerationPlan(flag,callFinRepayment);
                 }else if(isEditPayByRepay){
-                    Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0098','付息'),function(){
+                    Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0098','付息计划'),function(){
                         //callFinRepayment 调用还本计划公开接口方法
                         initGenerationPlan(flag,callFinRepayment);
+                        isEditPayByRepay = false;
                     });
                 }else{
                     Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0047'),function(){
                         //callFinRepayment 调用还本计划公开接口方法
                         initGenerationPlan(flag,callFinRepayment);
+                        isEditPayByRepay = false;
                     }); 
                 }
             }
         }
         iscallbackPayByRepay = false;
-        isEditPayByRepay = false;
     }
     /**
      * 生成计划前台check(js)
