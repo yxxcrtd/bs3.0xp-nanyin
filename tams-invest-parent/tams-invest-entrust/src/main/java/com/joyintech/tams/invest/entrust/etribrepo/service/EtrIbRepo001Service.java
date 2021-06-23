@@ -18,6 +18,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -231,5 +232,17 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 		String MarketType = (String) pageParam.get("MarketType");
 		String url = MarketInfoInterf_cmdsUrl+"/rest/markinfo/getRepoMarkinfo?termType=" + termType + "&MarketType=" + MarketType;
 		return etrCommonService.getMarketInfo(url);
+	}
+
+   /**
+	* 关闭check
+	* @param pageParam
+	* @return
+	*/
+	public List<ValidMessage> entrustCheckCloseList(Map<String, Object> param) {
+		List<ValidMessage> validMessageList = restTemplate.postForList(
+				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/entrustCheckCloseList", param,
+				ValidMessage.class);
+		return validMessageList;
 	}
 }

@@ -198,7 +198,7 @@
                     }
                 }
                 var object = {selectedItem: selArr, operateType:"close"};
-                Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo001/check', object, function(result) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etribrepo/EtrIbRepo001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
                         Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo001/close', object, function(result) {
                         	zlglTable.reload();
