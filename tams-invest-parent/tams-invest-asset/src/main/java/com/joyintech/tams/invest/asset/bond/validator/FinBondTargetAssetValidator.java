@@ -111,6 +111,14 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                         break;
                     }
                 }
+                //主体评级、并且更新状态是01，则不予保存/提交
+                for(MstBondCreditRating mstBondCreditRating : dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
+                    if(StringUtil.equals(mstBondCreditRating.getoType(),DictCodeList.评级类型_主体评级.getValue())
+                            && StringUtil.equals(mstBondCreditRating.getUpdateFlg(),"01")){
+                        resultList.add(new ValidMessage(getMessage("评级信息主体评级不能手工维护，只能由发行人自动带出！")));
+                        break;
+                    }
+                }
             }
             if(flag){
                 resultList.add(new ValidMessage(getMessage("评级信息中必须包含主体评级信息!")));
