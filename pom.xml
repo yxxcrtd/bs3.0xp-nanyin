@@ -84,6 +84,7 @@
 
         <module>microservice/tams-service-container</module>
         <module>tams/app</module>
+        <module>tams-batch-common</module>
 
     </modules>
 </project>

@@ -10,6 +10,9 @@
 
 package com.joyintech.tams.valuation.batch.common.base.service;
 
+import com.joyintech.batch.constant.BatchConstant;
+import com.joyintech.batch.core.JoyinBatchQuartzSkipConfigInfo;
+import com.joyintech.batch.core.dto.SysBatchQuartzConfigDto;
 import com.joyintech.batch.service.BatchCoreService;
 import com.joyintech.batch.service.ServerDoubleAliveService;
 import com.joyintech.framework.base.entity.SysBatchJob;
@@ -17,10 +20,8 @@ import com.joyintech.framework.base.entity.SysBatchgrpExecInfo;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.tams.valuation.batch.batchdispatch.dao.BatchDispatchMapper;
 import com.joyintech.tams.valuation.batch.batchdispatch.dto.BatchGrpPri;
 import com.joyintech.tams.valuation.batch.batchdispatch.dto.DimensionValue;
@@ -114,6 +115,37 @@ public class ValCronJob implements Job {
         //当前日期
         ValBatchCronJobMapper valBatchCronJobMapper = SpringContextUtil.getBean(ValBatchCronJobMapper.class);
         Date nowDate = valBatchCronJobMapper.getSysDate();
+
+        // etliu 批处理定时任务支持跳过节假日 20200116 modify start
+        // 当配置的系统参数（是否放开支持批处理定时任务跳过节假日功能）的值为01:支持 时
+        if (StringUtil.equals(com.joyintech.framework.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BatchConstant.BATCH_QUARTZ_SKIP_HOLIDAY))) {
+            String batchQuartzConfigId = (String)context.getMergedJobDataMap().get("batchQuartzConfigId");
+            if (StringUtil.isNotBlank(batchQuartzConfigId)) {
+                // 根据定时任务代码，重新查询跳过节假日相关信息
+                SysBatchQuartzConfigDto configAddIndo = batchCoreService.selectSkipHolidayInfo(batchQuartzConfigId);
+                if (configAddIndo != null) {
+//        			String isSkipHoliday = (String)context.getMergedJobDataMap().get("isSkipHoliday");
+//                	String marketCalendarType = (String)context.getMergedJobDataMap().get("marketCalendarType");
+                    String isSkipHoliday = configAddIndo.getIsSkipHoliday();
+                    String marketCalendarType = configAddIndo.getMarketCalendarType();
+                    // 批处理定时任务支持跳过节假日相关接口
+                    JoyinBatchQuartzSkipConfigInfo joyinBatchQuartzSkipConfigInfo = null;
+                    try {
+                        joyinBatchQuartzSkipConfigInfo = SpringContextUtil.getBean(JoyinBatchQuartzSkipConfigInfo.class);
+                    } catch (Exception e) {
+                    }
+                    if (StringUtil.equals(com.joyintech.framework.constant.DictCodeList.是否_是.getValue(), isSkipHoliday)
+                            && joyinBatchQuartzSkipConfigInfo != null
+                            && joyinBatchQuartzSkipConfigInfo.isSkip(marketCalendarType, nowDate)) {
+                        logger.debug("当前定时任务配置的是跳过节假日，当前日期为节假日，本次定时任务跳过");
+                        return;
+                    }
+                }
+            }
+        }
+        // etliu 批处理定时任务支持跳过节假日 20200116 modify end
+
+
         // 跑当日批
         dates.add(nowDate);
         dates.forEach(x->{
