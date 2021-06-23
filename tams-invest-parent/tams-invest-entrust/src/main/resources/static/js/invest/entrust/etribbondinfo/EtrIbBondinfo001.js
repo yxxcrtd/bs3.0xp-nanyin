@@ -239,15 +239,20 @@
         })
         $(".transfer-form #EtrIbBondinfo001_btn_search").click(function () {
             // 指令管理tab
-            Joyin.dialog("查询",
-                basePath +'invest/entrust/etribbondinfo/EtrIbBondinfo001/queryDialog?parentPageId=' + pageId, '90%', '90%',
-                queryData, function (){
-                    if(isConfirm) { // 只有点击确认才会查询，关闭&取消不会查询
-                        positionsTable_zqzy.reload();
+            var isOpen = confirm("是否打开高级查询界面？");
+            if(isOpen){
+                Joyin.dialog("查询",
+                    basePath +'invest/entrust/etribbondinfo/EtrIbBondinfo001/queryDialog?parentPageId=' + pageId, '90%', '90%',
+                    queryData, function (){
+                        if(isConfirm) { // 只有点击确认才会查询，关闭&取消不会查询
+                            positionsTable_zqzy.reload();
+                        }
+                        isConfirm = false;
                     }
-                    isConfirm = false;
-                }
-            );
+                )
+            }else{
+                positionsTable_zqzy.reload();
+            }
         })
         $(".cc-transfer-form #EtrIbBondinfo001_btn_export").click(getPositionsExportExcel)
         $(".transfer-form #EtrIbBondinfo001_btn_export").click(getZqzyPositionExportExcel)
