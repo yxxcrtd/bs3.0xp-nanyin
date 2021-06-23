@@ -163,6 +163,7 @@
 			getElementById('repOpenMode').removeAttr('required');
 			getElementById('repOpenCircle').removeAttr('required');
 			getElementById('repHolidayOnFlag').removeAttr('required');
+			getElementById('isShortTerm').val('').trigger('change').prop('disabled',true);
 		}else{
 			getElementById('repOpenCircle').prop('disabled',false);
 			// getElementById('repOpenCircleDays').prop('disabled',false);
@@ -179,6 +180,7 @@
 			getElementById('repOpenMode').attr('required',true);
 			getElementById('repOpenCircle').attr('required',true);
 			getElementById('repHolidayOnFlag').attr('required',true);
+			getElementById('isShortTerm').attr('disabled',false);
 		}
 		star();
 	}
