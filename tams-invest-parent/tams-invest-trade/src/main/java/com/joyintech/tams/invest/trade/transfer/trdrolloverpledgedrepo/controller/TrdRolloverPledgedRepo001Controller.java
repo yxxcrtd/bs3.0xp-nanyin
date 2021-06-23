@@ -18,13 +18,10 @@ import com.joyintech.tams.component.business.trade.dto.BussTrdAvailableCashQuery
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
-import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
-import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.assetstransfer.dto.AssetsTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.FinDealPledgeDto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.TrdRolloverPledgedRepo001Dto;
@@ -46,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +72,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
     @Autowired
-    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     @Override
     public String init(Model model){
         Map<String ,Object> param = RequestUtil.getPageParam();
@@ -365,17 +363,17 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
 //                }
             }
         }
-        if (StringUtil.isNotEmpty(dto.getChlId()) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(
-                EtrCommonCashPositionDealService.queryChlType(dto.getChlId()))) {
-            PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
-            ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-            ptlCashPositionFlowDto.setCdate(dto.getTradeDate());
-            ptlCashPositionFlowDto.setPortfolioId(dto.getInvTransPortf());
-            ptlCashPositionFlowDto.setCcy(dto.getCcy());
-            ptlCashPositionFlowDto.setChlFinprodId(dto.getChlId());
-            BigDecimal chlCashPosition = basePtlCashPositionInfoService.queryUsableCashPosition(ptlCashPositionFlowDto);
-            if (chlCashPosition != null && BigDecimal.ZERO.compareTo(chlCashPosition) != 0) {
-                errorList.add(new ValidMessage("请先进行合作资产回款！"));
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (TrdRolloverPledgedRepo001Dto ptl : dto.getPledgedRepoInfoList()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    errorList.add(new ValidMessage("交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！"));
+                }
             }
         }
         if(errorList.size()>0){

@@ -10,12 +10,13 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.*;
-import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.buyoutrepo.dto.BuyOutRepoTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.buyoutrepo.dto.BuyOutRepoTransfer002Dto;
 import com.joyintech.tams.invest.trade.transfer.buyoutrepo.service.BuyOutRepoTransfer001Service;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +66,7 @@ public class BuyOutRepoTransfer001Controller extends BaseController {
     private BaseGetBusinessId baseGetBusinessId;
 
     @Autowired
-    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -227,17 +229,23 @@ public class BuyOutRepoTransfer001Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody BuyOutRepoTransfer001Dto dto) {
         AjaxResult wr = new AjaxResult();
-        if (StringUtil.isNotEmpty(dto.getChlId()) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(
-                EtrCommonCashPositionDealService.queryChlType(dto.getChlId()))) {
-            PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
-            ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-            ptlCashPositionFlowDto.setCdate(dto.getTradeDate());
-            ptlCashPositionFlowDto.setPortfolioId(dto.getPortfolioIdOut());
-            ptlCashPositionFlowDto.setCcy(dto.getCcy());
-            ptlCashPositionFlowDto.setChlFinprodId(dto.getChlId());
-            BigDecimal chlCashPosition = basePtlCashPositionInfoService.queryUsableCashPosition(ptlCashPositionFlowDto);
-            if (chlCashPosition != null && BigDecimal.ZERO.compareTo(chlCashPosition) != 0) {
-                wr.setMessage("请先进行合作资产回款！", MessageType.错误消息);
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<String, Object>();
+            for (BuyOutRepoTransfer002Dto ptl : dto.getBuyOutRepoTransfer002DtoList()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    if (!StringUtil.equals(str, "")) {
+                        str += "</br>";
+                    }
+                    str += "交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！";
+                }
+            }
+            if(StringUtil.isNotEmpty(str)){
+                wr.setMessage(str, MessageType.错误消息);
                 return wr;
             }
         }
