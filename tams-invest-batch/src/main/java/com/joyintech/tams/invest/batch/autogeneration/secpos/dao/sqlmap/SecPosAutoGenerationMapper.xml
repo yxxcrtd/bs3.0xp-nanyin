@@ -760,7 +760,7 @@
         and to_date(#{date},'yyyy-MM-dd')=t.TRADE_DATE  and fpt.type_8='F01'and t.trade_status='01'and t.is_cancel='N' and t.ps in('T01','T02') order by t.UPDATE_TIME asc
     </select>
     <select id="getBasisByFinprodId" resultType="com.joyintech.tams.common.base.entity.FinCashCalcRule">
-        select a.basis from    FIN_CASH_CALC_RULE a  inner join FIN_CASH_INFO b on a.cash_id=b.cash_id  where a.eff_date=to_date(#{effDate},'yyyy-MM-dd')  and b.branch=#{branch}   and b.finprod_id=#{finprodId}  and b.cash_type_2 =#{CASH_TYPE_2_C02} group by a.basis
+        select a.basis from    FIN_CASH_CALC_RULE a  inner join FIN_CASH_INFO b on a.cash_id=b.cash_id  where a.eff_date=to_date(#{effDate},'yyyy-MM-dd')  and b.branch=#{branch}   and b.finprod_id=#{finprodId} group by a.basis
     </select>
 
     <select id="getExerciseDate" resultType="com.joyintech.tams.common.base.entity.FinExercisePlan">
