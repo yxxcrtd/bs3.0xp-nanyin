@@ -1,0 +1,2 @@
+--关闭公募基金标的新建时投资阶段非空校验
+update CHB_DATACHECK_RULE_INV set STATUS = 'D' where CHECKRULEID = '984807E5-KF28-D920-E060-007F0100ZQ32';

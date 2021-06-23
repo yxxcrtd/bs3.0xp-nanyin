@@ -1,0 +1,2 @@
+update chb_datacheck_rule_inv set status='D' where checkruleid='B690A5B9-FE64-4725-E053-045AA8C093EE' and page_id='FinProjectTargetAsset002';
+update chb_datacheck_condition_inv set objvalue='1202,1203,1204,1205,1206,1207,1208,1209,2201,2202' where checkconditionid='LZ4827E5-DF35-D920-E050-006F01000971';

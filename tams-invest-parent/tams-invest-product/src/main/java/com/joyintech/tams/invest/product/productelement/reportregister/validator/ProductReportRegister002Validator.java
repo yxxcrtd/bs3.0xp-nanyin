@@ -360,8 +360,9 @@ public class ProductReportRegister002Validator implements BeanValidator {
 					validList.add(new ValidMessage("repInvestCountry",
 							getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repInvestCountry"))));
 				} else {
-					if (StringUtil.indexOf(entity.getRepInvestCountry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
-						validList.add(new ValidMessage("repInvestCountry", getMessage("REP_E_0006")));
+					if (StringUtil.equals(entity.getRepInvestArea(),
+							DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(entity.getRepInvestCountry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
+						validList.add(new ValidMessage("repInvestCountry", getMessage("REP_E_00011")));
 					}
 				}
 				// 境外托管机构国别
@@ -405,12 +406,12 @@ public class ProductReportRegister002Validator implements BeanValidator {
 		}
 
 		// 起点销售金额
-		if (StringUtil.isNotEmpty(entity.getRepSaleAmtStr())) {
-			if (entity.getRepSaleAmtStr().compareTo(BigDecimal.ZERO) < 0) {
-				validList.add(new ValidMessage("repSaleAmtStr",
-						getMessage("BUSS_COM_E_0004", getMessage("BussRepFinProductInfo.repSaleAmtStr"), "0")));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepSaleAmtStr())) {
+//			if (entity.getRepSaleAmtStr().compareTo(BigDecimal.ZERO) < 0) {
+//				validList.add(new ValidMessage("repSaleAmtStr",
+//						getMessage("BUSS_COM_E_0004", getMessage("BussRepFinProductInfo.repSaleAmtStr"), "0")));
+//			}
+//		}
 		// 合作模式
 		if (StringUtil.isNotEmpty(entity.getRepContMode())) {
 			// 合作机构名称

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
+import com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -272,6 +273,11 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
                     InvestTradeRegist001Dto.class);
         com.joyintech.framework.grid.Page<InvestTradeRegist001Dto> page = new com.joyintech.framework.grid.Page<InvestTradeRegist001Dto>();
         page.setRoot(data);
+		if(!CollectionUtils.isEmpty(page.getRoot())){
+			for(InvestTradeRegist001Dto dto : page.getRoot()){
+				dto.setBelongInstitutionCode(null);
+			}
+		}
 //        page.setTotal(data.size());
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 		if(data!=null){

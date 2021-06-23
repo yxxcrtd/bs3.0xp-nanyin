@@ -125,10 +125,10 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
 //                        resultList.add(new ValidMessage("repGuaType",
 //                                getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repGuaType"))));
 //                    }
-                    if(StringUtil.isEmpty(dto.getRepGuaTypeRemark())){
+                  /*  if(StringUtil.isEmpty(dto.getRepGuaTypeRemark())){
                         resultList.add(new ValidMessage("repGuaTypeRemark",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repGuaTypeRemark"))));
-                    }
+                    }*/
                     if(StringUtil.isEmpty(dto.getRepFinancierGrade())){
                         resultList.add(new ValidMessage("repFinancierGrade",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repFinancierGrade"))));
@@ -179,21 +179,26 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
                         resultList.add(new ValidMessage("repProIndustryLevel2",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repProIndustryLevel2"))));
                     }
-                    if(StringUtil.equals(dto.getRepTradeMarket(), DictCodeList.交易流通场所_其他交易流通场所.getValue())){
+                   /* 修改为配置来进行判断
+                   if(StringUtil.equals(dto.getRepTradeMarket(), DictCodeList.交易流通场所_其他交易流通场所.getValue())){
                         if(StringUtil.isEmpty(dto.getRepRemark())){
                             resultList.add(new ValidMessage("repRemark",
                                     getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repRemark"))));
                         }
-                    }
+                    }*/
+
                     if(StringUtil.isEmpty(dto.getRepRepayCmt())){
                         resultList.add(new ValidMessage("repRepayCmt",
                                 getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repRepayCmt"))));
                     }
                     //中债新增 20200410 start
                     //计息类别
-                    if(StringUtil.isEmpty(dto.getRepCouponSpecies())){
-                    	resultList.add(new ValidMessage("repCouponSpecies",
-                    			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repCouponSpecies"))));
+                    if(!StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_信贷资产流转项目.getValue())
+                        && !StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_小微企业信贷资产流转和收益权转让.getValue())){
+                        if(StringUtil.isEmpty(dto.getRepCouponSpecies())){
+                            resultList.add(new ValidMessage("repCouponSpecies",
+                                    getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repCouponSpecies"))));
+                        }
                     }
                     //利息分布方式
                     if(StringUtil.isEmpty(dto.getRepIntpayRule())){
@@ -211,10 +216,11 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
                     			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repRepaymentType"))));
                     }*/
                     //分期还款标识
-                    if(StringUtil.isEmpty(dto.getRepPeriodRepaymentFlag())){
-                    	resultList.add(new ValidMessage("repPeriodRepaymentFlag",
-                    			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repPeriodRepaymentFlag"))));
-                    }
+                    /****ZGBSSE-676  【中债直连check】新建项目类资产，当资产负债类别为[2201][2202]时，“分期还本条款标识”字段应不可填写且为空**/
+//                    if(StringUtil.isEmpty(dto.getRepPeriodRepaymentFlag())){
+//                    	resultList.add(new ValidMessage("repPeriodRepaymentFlag",
+//                    			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repPeriodRepaymentFlag"))));
+//                    }
                     //含权类别
                     if(!StringUtil.isEmpty(dto.getRepContainType())){
                     	//行权方式
@@ -258,10 +264,10 @@ public class BussRepAssetCreditNonstdInfoValidator implements BeanValidator{
                         			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repPledgeType"))));
                         }
                         //抵质押物价值（元）
-                        if(null==dto.getRepPledgeValue()){
+                       /* if(null==dto.getRepPledgeValue()){
                         	resultList.add(new ValidMessage("repPledgeValue",
                         			getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repPledgeValue"))));
-                        }
+                        }*/
                     }else if (StringUtil.equals(dto.getRepGuaType(), DictCodeListExt2.担保方式_其他.getValue())) {
                     	//备注
                         if(StringUtil.isEmpty(dto.getRepRemark())){

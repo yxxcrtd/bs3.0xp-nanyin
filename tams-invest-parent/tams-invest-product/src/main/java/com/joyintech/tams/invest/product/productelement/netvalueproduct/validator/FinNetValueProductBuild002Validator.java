@@ -121,13 +121,6 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
             finNetValueProductBuild001Service.wflInFlowCheck(entity.getWorkflowId(), entity.getFinprodId(), validList);
         }
 
-        //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  start
-        if (!StringUtil.isNotEmpty(entity.getRiskLevel())) {
-            validList.add(new ValidMessage("riskLevel", getMessage("BUSS_COM_E_0038",
-                    getMessage("FinProductBuild002.riskLevel"))));
-        }
-        //modify by mashukai 产品风险等级联动自产品基本信息的产品风险等级，改为在产品基本信息处提示  ZGBSSE-491  end
-
         if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
 
             //报送信息页面托管费率和销售费率必填
@@ -1236,15 +1229,16 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 entity.getBussRepFinProductInfoDto().getRepOperateMode())
                  || DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(
                      entity.getBussRepFinProductInfoDto().getRepOperateMode()))) {
-                if (!StringUtil.isNotEmpty(
-                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
-                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
-                        this.getMessage("FIN_PROD_E_0133")));
-                }
+//                if (!StringUtil.isNotEmpty(
+//                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
+//                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
+//                        this.getMessage("FIN_PROD_E_0133")));
+//                }
             }
             else{
                 // 选择封闭式净值型和“封闭式非净值型”时，开放模式必须为空
                 if (StringUtil.isNotEmpty(
+                        entity.getBussRepFinProductInfoDto().getRepOperateMode()) && StringUtil.isNotEmpty(
                     entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
                     validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
                         this.getMessage("FIN_PROD_E_0134")));
@@ -1399,15 +1393,15 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
 //	                getMessage("BussRepFinProductInfo.repOperateMode"))));
 //    	}
     	//开放模式01有规律开放时规律开放周期必填
-    	if("01".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) && 
-    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOpenCircle())) {
-    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenCircle","开放模式01有规律开放时规律开放周期必填"));
-    	}
+//    	if("01".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) &&
+//    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOpenCircle())) {
+//    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenCircle","开放模式01有规律开放时规律开放周期必填"));
+//    	}
     	//开放模式02无规律开放时无规律开放说明必填
-    	if("02".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) && 
-    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepRuleComment())) {
-    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repRuleComment","开放模式02无规律开放时无规律开放说明必填"));
-    	}
+//    	if("02".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) &&
+//    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepRuleComment())) {
+//    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repRuleComment","开放模式02无规律开放时无规律开放说明必填"));
+//    	}
     	//周期型和普通型业绩基准不能为空
     	if (StringUtil.isNotEmpty(entity.getDealMode())){
     		if(StringUtil.equals(entity.getDealMode(), DictCodeList.处理模式_周期型.getValue()) ||

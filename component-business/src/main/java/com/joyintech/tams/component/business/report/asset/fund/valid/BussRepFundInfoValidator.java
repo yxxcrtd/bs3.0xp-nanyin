@@ -76,15 +76,15 @@ public class BussRepFundInfoValidator implements BeanValidator{
                             getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repFundInvestAsset"))));
                 }else{
                     // 不为空的情况下 校验 规则
-                    if (RepCheckUtil.checkByteLength(dto.getRepFundInvestAsset(), 300)) {
-                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
-                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
-                    }else if(dto.getRepFundInvestAsset().contains("（") || dto.getRepFundInvestAsset().contains("）") ||
-                            dto.getRepFundInvestAsset().contains("：") || dto.getRepFundInvestAsset().contains("；")
-                            || !dto.getRepFundInvestAsset().contains(":")  || !dto.getRepFundInvestAsset().contains("%")) {
-                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
-                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
-                    }
+//                    if (RepCheckUtil.checkByteLength(dto.getRepFundInvestAsset(), 300)) {
+//                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
+//                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
+//                    }else if(dto.getRepFundInvestAsset().contains("（") || dto.getRepFundInvestAsset().contains("）") ||
+//                            dto.getRepFundInvestAsset().contains("：") || dto.getRepFundInvestAsset().contains("；")
+//                            || !dto.getRepFundInvestAsset().contains(":")  || !dto.getRepFundInvestAsset().contains("%")) {
+//                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
+//                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
+//                    }
 
                 }
 
@@ -120,21 +120,21 @@ public class BussRepFundInfoValidator implements BeanValidator{
                 resultList.add(new ValidMessage("repPartyType2",
                     getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repPartyType2"))));
             }*/
-                if(StringUtil.isEmpty(dto.getRepTradeMarket())){
-                    resultList.add(new ValidMessage("repTradeMarket",
-                            getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repTradeMarket"))));
-                }
+//                if(StringUtil.isEmpty(dto.getRepTradeMarket())){
+//                    resultList.add(new ValidMessage("repTradeMarket",
+//                            getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repTradeMarket"))));
+//                }
                 if(dto.isGovInvest()){
                     if( "".equals(dto.getRepGovInvestFor()) || null == dto.getRepGovInvestFor()){
                         resultList.add(new ValidMessage("repGovInvestFor",
                                 getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repGovInvestFor"))));
                     }
                 }
-                if(dto.getRepRemark() == null || StringUtil.equals("", dto.getRepRemark())
-                        && StringUtil.equals(dto.getRepTradeMarket(),DictCodeList.交易流通场所_其他交易流通场所.getValue())){
-                    resultList.add(new ValidMessage("repRemark",
-                            getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repRemark"))));
-                }
+//                if(dto.getRepRemark() == null || StringUtil.equals("", dto.getRepRemark())
+//                        && StringUtil.equals(dto.getRepTradeMarket(),DictCodeList.交易流通场所_其他交易流通场所.getValue())){
+//                    resultList.add(new ValidMessage("repRemark",
+//                            getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repRemark"))));
+//                }
             }
         }
         if(StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())

@@ -472,7 +472,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     public void setDealData(TrdBondInvestTradeDto dto) {
         // 券面总额
         dto.setTotalFaceValue(dto.getTradeAmt());
-
+        // add by jiangpeng on 20210622 自动加券的债券id没有"F01_"的前缀 TISHKBS-2200
+        if (dto.getFinprodId().indexOf("F01_") != 0) {
+            dto.setFinprodId("F01_" + dto.getFinprodId());
+        }
+        // add by jiangpeng on 20210622 自动加券的债券id没有"F01_"的前缀 TISHKBS-2200
         // 金融产品交易Entity 构造开始----------------------------------------------------------
         // 业务类型
         // 自动生成反向交易 chenzhili start

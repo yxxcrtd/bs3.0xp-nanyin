@@ -105,18 +105,19 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
                 }
 
                 /****1、需要增加对评级信息的必填项check,评级信息中若没有主体评级的记录则不允许提交且给出提示；***/
-                boolean flag = true;
-                if(null!=dto.getBusiFinBondRatingInfoDto()&&null!=dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
-                    for(MstBondCreditRating dao :dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
-                        if(!DictCodeList.评级类型_主体评级.getValue().equals(dao.getoType())){
-                            flag = false;
-                            break;
-                        }
-                    }
-                }
-                if(flag){
-                    resultList.add(new ValidMessage(getMessage("评级信息中必须包含主体评级信息!")));
-                }
+                //ZGBSSE-576   【项目类标的】新建项目类标的，发行人已维护评级信息，点击提交时，系统仍提示：评级信息中必须包含主体评级信息! 项目类不再验证
+//                boolean flag = true;
+//                if(null!=dto.getBusiFinBondRatingInfoDto()&&null!=dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
+//                    for(MstBondCreditRating dao :dto.getBusiFinBondRatingInfoDto().getMstBondCreditRatingList()){
+//                        if(!DictCodeList.评级类型_主体评级.getValue().equals(dao.getoType())){
+//                            flag = false;
+//                            break;
+//                        }
+//                    }
+//                }
+//                if(flag){
+//                    resultList.add(new ValidMessage(getMessage("评级信息中必须包含主体评级信息!")));
+//                }
                 /****1、需要增加对评级信息的必填项check,评级信息中若没有主体评级的记录则不允许提交且给出提示；***/
             }
             

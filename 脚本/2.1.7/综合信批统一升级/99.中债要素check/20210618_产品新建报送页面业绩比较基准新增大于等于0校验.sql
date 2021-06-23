@@ -1,0 +1,4 @@
+--产品新建报送页面业绩比较基准新增大于等于0校验
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID in('ys8E4A49-6813-5A9E-8493-007F21706A82','ys8E4A49-6813-5A9E-bE75-007F21706A82') ;
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('ys8E4A49-6813-5A9E-bE75-007F21706A82','FinNetValueProductBuild002','compareValueAsNumber','bussRepFinProductInfoDto.repYield','>=','0','Y','业绩比较基准必须大于等于0。','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('ys8E4A49-6813-5A9E-8493-007F21706A82','FinProductBuild002','compareValueAsNumber','bussRepFinProductInfoDto.repYield','>=','0','Y','业绩比较基准必须大于等于0。','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');

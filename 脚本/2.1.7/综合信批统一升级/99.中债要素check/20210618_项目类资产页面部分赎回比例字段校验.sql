@@ -1,0 +1,14 @@
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID='LZ4827E5-DF35-D920-E050-321F01001091';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('LZ4827E5-DF35-D920-E050-321F01001091', 'FinProjectTargetAsset002', 'compareValueAsNumber', 'bussRepAssetCreditNonstdInfoDto.repPartRedemRate', '>=', '0', 'Y', '部分赎回比例必须大于等于0。', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID='LZ4827E5-DF35-D920-E050-321F01001092';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('LZ4827E5-DF35-D920-E050-321F01001092', 'FinProjectTargetAsset002', 'isNumber2', 'bussRepAssetCreditNonstdInfoDto.repPartRedemRate', '>=', '8,5', 'Y', '部分赎回比例以百分数形式表示时必须为n（8,5）格式。', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
+
+delete from chb_datacheck_condition_inv where CHECKRULEID='LZ4827E5-DF35-D920-E050-321F01001091';
+insert into chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
+values ('LZ4827E5-DF35-D920-E050-321F01001093', 'LZ4827E5-DF35-D920-E050-321F01001091', 'inArray', 'repAssetType', '==', '1202,1203,1204,1205,1206,1207,1208,1209', null, 'E');
+
+delete from chb_datacheck_condition_inv where CHECKRULEID='LZ4827E5-DF35-D920-E050-321F01001092';
+insert into chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
+values ('LZ4827E5-DF35-D920-E050-321F01001094', 'LZ4827E5-DF35-D920-E050-321F01001092', 'inArray', 'repAssetType', '==', '1202,1203,1204,1205,1206,1207,1208,1209', null, 'E');

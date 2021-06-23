@@ -547,6 +547,19 @@ public class ChbInvestTradeInterf  extends BaseService{
 	        prodChlDeal.setContractCode(prodChlDeal.getTradeCode());
 		}
     	prodChlDeal.setAssetCode(chlId);
+		//仅仅针对逐笔划款的通道投资债券，数量字段
+		if(StringUtil.isNotEmpty(prodChlDeal.getInvestVariety()) && prodChlDeal.getInvestVariety().equals(DictCodeListExt2.投资品种_债券.getValue())
+            && StringUtil.isNotEmpty(prodChlDeal.getCurAssetType()) && StringUtil.isNotEmpty(prodChlDeal.getCurAssetdetType())
+				&&(("02".equals(prodChlDeal.getCurAssetType()) && "到期".equals(prodChlDeal.getCurAssetdetType()))
+		           || ("11".equals(prodChlDeal.getCurAssetType()) && "部分到期".equals(prodChlDeal.getCurAssetdetType())))
+		  ){
+			if(prodChlDeal.getCnyAmt()!=null && prodChlDeal.getCnyAmt().compareTo(BigDecimal.ZERO)!=0){
+				prodChlDeal.setNum(prodChlDeal.getCnyAmt());
+			}else if(prodChlDeal.getAmt()!=null && prodChlDeal.getAmt().compareTo(BigDecimal.ZERO)!=0){
+				prodChlDeal.setNum(prodChlDeal.getAmt());
+			}
+		}
+
     	// 投资品种：通道交易
     	prodChlDeal.setInvestVariety(DictCodeListExt2.投资品种_计划类资产_货币型.getValue());
     	// 投资类型：空
