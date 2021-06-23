@@ -48,6 +48,12 @@ public class TrdTradeFeeDetail extends TrdTradeFeeDetailKey {
     private String registOrg;
 
     /**
+     * 前一日港股持仓市值
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal yesterdayPosition;
+
+    /**
      * 取得 是否随交易支付
      * @return 是否随交易支付
      */
@@ -173,5 +179,13 @@ public class TrdTradeFeeDetail extends TrdTradeFeeDetailKey {
      */
     public void setRegistOrg(String registOrg) {
         this.registOrg = registOrg == null ? null : registOrg.trim();
+    }
+
+    public BigDecimal getYesterdayPosition() {
+        return yesterdayPosition;
+    }
+
+    public void setYesterdayPosition(BigDecimal yesterdayPosition) {
+        this.yesterdayPosition = yesterdayPosition;
     }
 }

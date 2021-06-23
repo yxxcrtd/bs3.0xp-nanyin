@@ -226,6 +226,11 @@ public class FinAssetIntInfo extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal regDateAmt;
+    /**
+     * 以股代息股本，2020-04-26港股通新增
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal replaceAmt;
     
     /**
      * 面值，债券单位面值
@@ -582,6 +587,13 @@ public class FinAssetIntInfo extends BaseEntity {
         this.regDateAmt = regDateAmt;
     }
 
+    public BigDecimal getReplaceAmt() {
+        return replaceAmt;
+    }
+
+    public void setReplaceAmt(BigDecimal replaceAmt) {
+        this.replaceAmt = replaceAmt;
+    }
     public BigDecimal getShareAmt() {
         return shareAmt;
     }

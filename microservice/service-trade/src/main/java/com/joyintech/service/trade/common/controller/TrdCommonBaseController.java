@@ -693,4 +693,24 @@ public class TrdCommonBaseController {
         return trdCommonBaseService.queryWflPrinAmtByAssetId(map);
     }
     // add by etliu 20210421 权益类资产相关代码合并 end
+
+
+    /**
+     * 根据portfolioId 查询母组合ID
+     * @param portfolioId
+     * @return
+     */
+    @PostMapping("selectParentPortfolioIdByPortfolioId")
+    public String selectParentPortfolioIdByPortfolioId(@RequestBody String portfolioId) {
+        // 如果传入的组合ID为空，返回null
+        if (StringUtil.isBlank(portfolioId)) {
+            return "";
+        }
+        String parentPortfolioId = trdCommonBaseService.selectParentPortfolioIdByPortfolioId(portfolioId);
+        // 如果查询出来的母组合ID是空的，则返回自己的值
+        if (StringUtil.isBlank(parentPortfolioId)) {
+            return portfolioId;
+        }
+        return parentPortfolioId;
+    }
 }

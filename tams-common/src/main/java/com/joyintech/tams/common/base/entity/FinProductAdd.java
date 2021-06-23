@@ -354,6 +354,12 @@ public class FinProductAdd extends BaseEntity {
     private String dataSource;
 
     /**
+     * 最小买卖单位
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal minSaleUnit;
+
+    /**
      * 取得 金融产品代码
      * @return 金融产品代码
      */
@@ -1442,5 +1448,21 @@ public class FinProductAdd extends BaseEntity {
      */
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource == null ? null : dataSource.trim();
+    }
+
+    /**
+     * 取得 最小买卖单位
+     * @return 最小买卖单位
+     */
+    public BigDecimal getMinSaleUnit() {
+        return minSaleUnit;
+    }
+
+    /**
+     * 设置 最小买卖单位
+     * @param minSaleUnit 最小买卖单位
+     */
+    public void setMinSaleUnit(BigDecimal minSaleUnit) {
+        this.minSaleUnit = minSaleUnit;
     }
 }

@@ -473,6 +473,17 @@ public class EtrEntrustAdd extends BaseEntity {
     private String derivativeOcFlag;
 
     /**
+     * 港股通市场
+     */
+    private String hkMarket;
+
+    /**
+     * 目标币种成交金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal entrustAmtTarget;
+
+    /**
      * 取得 委托代码
      * @return 委托代码
      */
@@ -1873,5 +1884,21 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     public void setDerivativeOcFlag(String derivativeOcFlag) {
         this.derivativeOcFlag = derivativeOcFlag == null ? null : derivativeOcFlag.trim();
+    }
+
+    public String getHkMarket() {
+        return hkMarket;
+    }
+
+    public void setHkMarket(String hkMarket) {
+        this.hkMarket = hkMarket;
+    }
+
+    public BigDecimal getEntrustAmtTarget() {
+        return entrustAmtTarget;
+    }
+
+    public void setEntrustAmtTarget(BigDecimal entrustAmtTarget) {
+        this.entrustAmtTarget = entrustAmtTarget;
     }
 }

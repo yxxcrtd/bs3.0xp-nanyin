@@ -29,6 +29,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tools.util.FileUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -44,6 +45,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SettleDataImport001Service extends BaseService {
+
+    /**
+     * 是否单体服务
+     */
+    @Value("${application.micorservice.contextPath.single:false}")
+    private boolean isSingle;
 
     @Autowired
     private SysBatchStart001Service sysBatchStart001Service;
@@ -184,9 +191,17 @@ public class SettleDataImport001Service extends BaseService {
      * @return 分页日志
      */
     public Page<SettleTransResultDto> getInterActionLog(Map<String, Object> params) {
-        return restTemplate.postForPage(
-                ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataImport001/findLogPage",
-                params, SettleTransResultDto.class);
+        if(isSingle) {
+            return simpleRestTemplate.postForPage(
+                    ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataImport001/findLogPage",
+                    params, SettleTransResultDto.class);
+        }
+        else {
+            return restTemplate.postForPage(
+                    ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataImport001/findLogPage",
+                    params, SettleTransResultDto.class);
+        }
+
     }
 
     /**
@@ -234,9 +249,16 @@ public class SettleDataImport001Service extends BaseService {
                     json.addProperty("checkMsg", "正在进行批处理, 请稍后重试!");
                     return json.toString();
                 }
-                restTemplate.postForObject(
-                        ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataImport001/insertSettleTransParas",
-                        settleTransParas, Integer.class);
+                if(isSingle) {
+                    simpleRestTemplate.postForObject(
+                            ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataImport001/insertSettleTransParas",
+                            settleTransParas, Integer.class);
+                }
+                else {
+                    restTemplate.postForObject(
+                            ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataImport001/insertSettleTransParas",
+                            settleTransParas, Integer.class);
+                }
 
                 executeBatch(importDates);
             } else {
@@ -271,8 +293,16 @@ public class SettleDataImport001Service extends BaseService {
      * @return
      */
     private int checkIsBatchRunning() {
-        return restTemplate.postForObject(
-                ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataImport001/checkIsBatchRunning",
-                null, Integer.class);
+        if(isSingle) {
+            return simpleRestTemplate.postForObject(
+                    ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataImport001/checkIsBatchRunning",
+                    null, Integer.class);
+        }
+        else {
+            return restTemplate.postForObject(
+                    ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataImport001/checkIsBatchRunning",
+                    null, Integer.class);
+        }
+
     }
 }

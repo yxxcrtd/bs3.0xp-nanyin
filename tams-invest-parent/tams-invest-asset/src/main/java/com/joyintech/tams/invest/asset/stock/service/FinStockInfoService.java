@@ -30,7 +30,6 @@ import com.joyintech.tams.invest.asset.common.dto.BaseRepAssetEquityInfoDto;
 import com.joyintech.tams.invest.asset.common.service.AssetCommonService;
 import com.joyintech.tams.invest.asset.interfaceDto.S031Dto;
 import com.joyintech.tams.invest.asset.stock.dto.FinStockInfoDto;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessJixuConstant;
@@ -40,6 +39,7 @@ import com.joyintech.tams.invest.common.dto.common.TrdCommDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.util.MapParseUtil;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,19 +121,12 @@ public class FinStockInfoService extends CommonExportService<FinStockInfoDto> im
             pageParam.put("vdatestart", dateList.get(0));
             pageParam.put("vdateend", dateList.get(2));
         }
-        if(iPlatformDate != null){
-            pageParam.put("sysDate", DateUtil.getSysDate());
-           // pageParam.put("sysDate", DateUtil.format(iPlatformDate.getSysDate(),"yyyy-MM-dd hh24:mi:ss"));
-        }
         return restTemplate.postForPage(
             ServiceApplication.ASSET_SERVICE_NAME + "/FinStockInfo/findPage",
             pageParam, FinStockInfoDto.class);
     }
 
     public FinStockInfoDto getShares(Map<String,Object> map) {
-        if(iPlatformDate != null){
-            map.put("sysDate", DateUtil.getSysDate());
-        }
         return
                 restTemplate.postForObject(
                         ServiceApplication.ASSET_SERVICE_NAME + "/FinStockInfo/getShares"
@@ -351,21 +344,17 @@ public class FinStockInfoService extends CommonExportService<FinStockInfoDto> im
         BeanUtil.copyPropertiesIgnoreNull(finProductType, dto);
         finProductType.setBranch(branch);
 //        DictCode
-        if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_否.getValue())
-        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
-        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_上海股票.getValue());
+        if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
+            finProductType.setType6(DictCodeListExt2.股票核算分类_股票_上海股票.getValue());
         }
-        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_否.getValue())
-        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深圳股票.getValue());
+        else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+            finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深圳股票.getValue());
         }
-        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_沪港通.getValue())
-        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())){
-        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_沪港通.getValue());
+        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_沪港通.getValue())){
+            finProductType.setType6(DictCodeListExt2.股票核算分类_股票_沪港通.getValue());
         }
-        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_深港通.getValue())
-        		&&StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
-        	finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深港通.getValue());
+        else if(StringUtil.equals(dto.getShOrZh(), DictCodeListExt2.是否沪港通或深港通_深港通.getValue())){
+            finProductType.setType6(DictCodeListExt2.股票核算分类_股票_深港通.getValue());
         }
        finProductType.setType8(DictCodeListExt2.平安资产类型_股票.getValue());
         // 金融产品附属表entity

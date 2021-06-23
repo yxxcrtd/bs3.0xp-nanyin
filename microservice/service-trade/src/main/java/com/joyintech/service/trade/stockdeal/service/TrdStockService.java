@@ -171,6 +171,10 @@ public class TrdStockService extends BaseService<TrdStockDto> {
     public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) throws Exception {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
 //        List<SelectOptionDto> resultList = trdBondInvestTradeMapper.getFinprodId(param);
+        List<String> tradeMarketList = new ArrayList<>();
+        tradeMarketList.add(DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        tradeMarketList.add(DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        param.put("tradeMarketList", tradeMarketList);
         Page<SelectOptionDto> resultList = this.queryForPageForSelectReturn(page, length,
                 () -> trdStockMapper.getFinprodId(param));
         return resultList;
@@ -204,6 +208,30 @@ public class TrdStockService extends BaseService<TrdStockDto> {
     	if(fee!=null){
     		trd.setStampDuty(fee.getFeeAmt());
         	trd.setStampDutyIsPayWithTrade(fee.getIsPayWithTrade());
+    	}
+    	key.setFeeType(DictCodeListExt1.一次性费用类型_结算费.getValue());
+    	fee =trdTradeFeeDetailMapper.selectByPrimaryKey(key);
+    	if(fee!=null){
+    		trd.setSettleAmt(fee.getFeeAmt());
+        	trd.setSettleAmtIsPayWithTrade(fee.getIsPayWithTrade());
+    	}
+    	key.setFeeType(DictCodeListExt1.一次性费用类型_经手费.getValue());
+    	fee =trdTradeFeeDetailMapper.selectByPrimaryKey(key);
+    	if(fee!=null){
+    		trd.setHandleAmt(fee.getFeeAmt());
+        	trd.setHandleAmtIsPayWithTrade(fee.getIsPayWithTrade());
+    	}
+    	key.setFeeType(DictCodeListExt1.一次性费用类型_证管费.getValue());
+    	fee =trdTradeFeeDetailMapper.selectByPrimaryKey(key);
+    	if(fee!=null){
+    		trd.setSecManageAmt(fee.getFeeAmt());
+        	trd.setSecManageAmtIsPayWithTrade(fee.getIsPayWithTrade());
+    	}
+    	key.setFeeType(DictCodeListExt1.一次性费用类型_过户费.getValue());
+    	fee =trdTradeFeeDetailMapper.selectByPrimaryKey(key);
+    	if(fee!=null){
+    		trd.setTransferAmt(fee.getFeeAmt());
+        	trd.setTransferAmtIsPayWithTrade(fee.getIsPayWithTrade());
     	}
     	return trd;
     }
@@ -258,7 +286,7 @@ public class TrdStockService extends BaseService<TrdStockDto> {
      *@throws:
      */
     public Map<String, Object> getProAvailableCash(Map<String, Object> param) {
-
+        param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
         if (basePtlCashPositionInfoService != null) {
             PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
             Date vdate = DateUtil.parse((String)param.get("vdate"));

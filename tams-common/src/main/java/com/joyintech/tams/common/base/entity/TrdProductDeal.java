@@ -356,6 +356,7 @@ public class TrdProductDeal extends BaseEntity {
      * 多组合交易使用 最大组合交易金额
      */
     private BigDecimal maxTradeamt;
+
     
     public String getPsPayment() {
         return psPayment;
@@ -375,6 +376,7 @@ public class TrdProductDeal extends BaseEntity {
      */
     private String portfolioId;
 
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -382,6 +384,61 @@ public class TrdProductDeal extends BaseEntity {
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
     }
+    /**
+     * 港股通市场
+     */
+    private String hkMarket;
+    /**
+     * 买入结算汇兑比率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buySettleRate;
+    
+    /**
+     * 卖出结算汇兑比率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal sellSettleRate;
+    /**
+     * 成交金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal dealAmt;
+    /**
+     * 佣金
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal commission;
+    /**
+     * 印花税
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal stampDuty;
+    /**
+     * 交易征费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal transactionLevy;
+    /**
+     * 交易费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal transactionFee;
+    /**
+     * 交易系统使用费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal transactionSystemFee;
+    /**
+     * 股份交收费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal sharePaymentFee;
+    /**
+     * 前一日港股持仓市值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal yesterdayPosition;
 
     /**
      * 取得 交易编号
@@ -1447,6 +1504,92 @@ public class TrdProductDeal extends BaseEntity {
 	public void setSettlemenType(String settlemenType) {
 		this.settlemenType = settlemenType;
 	}
-    
-    
+
+    public BigDecimal getYesterdayPosition() {
+        return yesterdayPosition;
+    }
+
+    public void setYesterdayPosition(BigDecimal yesterdayPosition) {
+        this.yesterdayPosition = yesterdayPosition;
+    }
+
+    public String getHkMarket() {
+        return hkMarket;
+    }
+
+    public void setHkMarket(String hkMarket) {
+        this.hkMarket = hkMarket;
+    }
+
+    public BigDecimal getBuySettleRate() {
+        return buySettleRate;
+    }
+
+    public void setBuySettleRate(BigDecimal buySettleRate) {
+        this.buySettleRate = buySettleRate;
+    }
+
+    public BigDecimal getSellSettleRate() {
+        return sellSettleRate;
+    }
+
+    public void setSellSettleRate(BigDecimal sellSettleRate) {
+        this.sellSettleRate = sellSettleRate;
+    }
+
+    public BigDecimal getDealAmt() {
+        return dealAmt;
+    }
+
+    public void setDealAmt(BigDecimal dealAmt) {
+        this.dealAmt = dealAmt;
+    }
+
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
+    }
+
+    public BigDecimal getStampDuty() {
+        return stampDuty;
+    }
+
+    public void setStampDuty(BigDecimal stampDuty) {
+        this.stampDuty = stampDuty;
+    }
+
+    public BigDecimal getTransactionLevy() {
+        return transactionLevy;
+    }
+
+    public void setTransactionLevy(BigDecimal transactionLevy) {
+        this.transactionLevy = transactionLevy;
+    }
+
+    public BigDecimal getTransactionFee() {
+        return transactionFee;
+    }
+
+    public void setTransactionFee(BigDecimal transactionFee) {
+        this.transactionFee = transactionFee;
+    }
+
+    public BigDecimal getTransactionSystemFee() {
+        return transactionSystemFee;
+    }
+
+    public void setTransactionSystemFee(BigDecimal transactionSystemFee) {
+        this.transactionSystemFee = transactionSystemFee;
+    }
+
+    public BigDecimal getSharePaymentFee() {
+        return sharePaymentFee;
+    }
+
+    public void setSharePaymentFee(BigDecimal sharePaymentFee) {
+        this.sharePaymentFee = sharePaymentFee;
+    }
 }

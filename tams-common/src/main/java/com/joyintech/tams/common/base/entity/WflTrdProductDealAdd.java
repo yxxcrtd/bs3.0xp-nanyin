@@ -212,6 +212,12 @@ public class WflTrdProductDealAdd extends WflTrdProductDealAddKey {
     private String rFinprodId;
 
     /**
+     * 以股代息股本
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal replaceAmt;
+
+    /**
      * 取得 ??????
      * @return ??????
      */
@@ -823,5 +829,13 @@ public class WflTrdProductDealAdd extends WflTrdProductDealAddKey {
      */
     public void setrFinprodId(String rFinprodId) {
         this.rFinprodId = rFinprodId == null ? null : rFinprodId.trim();
+    }
+
+    public BigDecimal getReplaceAmt() {
+        return replaceAmt;
+    }
+
+    public void setReplaceAmt(BigDecimal replaceAmt) {
+        this.replaceAmt = replaceAmt;
     }
 }

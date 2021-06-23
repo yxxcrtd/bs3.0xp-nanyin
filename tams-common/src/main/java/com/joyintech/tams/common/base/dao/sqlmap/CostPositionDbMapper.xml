@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.CostPositionDbMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.CostPositionDb" >
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="COST_POSITION" property="costPosition" jdbcType="DECIMAL" />
+        <result column="COST_POSITION_NUM" property="costPositionNum" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PORTFOLIO_ID PORTFOLIO_ID, FINPROD_ID FINPROD_ID, CDATE CDATE, COST_POSITION COST_POSITION, 
+        COST_POSITION_NUM COST_POSITION_NUM, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CostPositionDbMapper.Base_Column_List" />
+        from COST_POSITION_DB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CostPositionDbMapper.Base_Column_List" />
+        from COST_POSITION_DB
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.CostPositionDbKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CostPositionDbMapper.Base_Column_List" />
+        from COST_POSITION_DB
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CostPositionDbKey" >
+        delete from COST_POSITION_DB
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.CostPositionDb" >
+        insert into COST_POSITION_DB (PORTFOLIO_ID, FINPROD_ID, CDATE, 
+            COST_POSITION, COST_POSITION_NUM, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{portfolioId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, 
+            #{costPosition,jdbcType=DECIMAL}, #{costPositionNum,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CostPositionDb" >
+        insert into COST_POSITION_DB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="costPosition != null" >
+                COST_POSITION,
+            </if>
+            <if test="costPositionNum != null" >
+                COST_POSITION_NUM,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="costPosition != null" >
+                #{costPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="costPositionNum != null" >
+                #{costPositionNum,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CostPositionDb" >
+        insert into COST_POSITION_DB(PORTFOLIO_ID, FINPROD_ID, CDATE, COST_POSITION, COST_POSITION_NUM, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select PORTFOLIO_ID, FINPROD_ID, CDATE, COST_POSITION, COST_POSITION_NUM, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from COST_POSITION_DB
+             where 1 = 1 and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.CostPositionDb" >
+        update COST_POSITION_DB
+        <set >
+            <if test="costPosition != null" >
+                COST_POSITION = #{costPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="costPositionNum != null" >
+                COST_POSITION_NUM = #{costPositionNum,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=DATE},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CostPositionDb" >
+        update COST_POSITION_DB
+        set COST_POSITION = #{costPosition,jdbcType=DECIMAL},
+            COST_POSITION_NUM = #{costPositionNum,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=DATE}
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+</mapper>

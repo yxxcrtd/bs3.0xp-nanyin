@@ -73,7 +73,7 @@
                     </div>
                     <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
                         <label class="layui-form-label form-label-wrap"
-                               data-th-text="#{FinStockInfo001.shOrZh}">是否沪港通或深港通</label>
+                               data-th-text="#{FinStockInfo001.shOrZh}">港股通市场</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="shOrZh" name="shOrZh"
                                     class="layui-input form-input input-select"
@@ -108,7 +108,7 @@
                             <select type="text" id="ccy" name="ccy"
                                     class="layui-input form-input input-select"
                                     data-th-data-result='${CCY}' th:allowClear="true"
-                                    th:initValue="${CCY_default}" allowClear="true"
+                                    allowClear="true"
                                     th:placeholder="请输入内容"
                                     data-th-placeholder="#{SysCommon.placeholder}"
                                     th:formatoption="true">

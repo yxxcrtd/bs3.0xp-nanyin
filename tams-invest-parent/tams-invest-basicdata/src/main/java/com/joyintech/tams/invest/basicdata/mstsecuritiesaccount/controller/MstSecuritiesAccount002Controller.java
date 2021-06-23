@@ -94,7 +94,7 @@ public class MstSecuritiesAccount002Controller extends BaseController{
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         //单选框枚举值设置
-        this.setSelectOptionToModel(model, DictCode.登记托管机构,DictCode.交易场所,DictCode.账户来源);
+        this.setSelectOptionToModel(model, DictCode.登记托管机构,DictCode.交易场所,DictCode.账户来源,DictCode.是否,DictCode.是否开通港股通);
 		List<SelectOptionDto> brokerIds = getMstCustomerInfo();
 		model.addAttribute("brokerIds", JsonUtils.objectArray2Json(brokerIds.toArray()));
         String secAcctId = getParam("secAcctId");

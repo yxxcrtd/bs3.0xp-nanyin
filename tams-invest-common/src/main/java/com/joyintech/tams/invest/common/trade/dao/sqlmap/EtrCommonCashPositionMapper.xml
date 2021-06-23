@@ -927,4 +927,32 @@
 		                 WHERE ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
 		                   AND TRADE_ID != #{entrustId,jdbcType=VARCHAR}))
     </select>
+
+    <select id="getInterfPreClosePrice" resultType="java.math.BigDecimal">
+        select close_price_pre from (
+            select msp.close_price_pre,
+            rownum as rn
+            from INTERF_STOCK_QUOTE msp
+            inner join FIN_PRODUCT fp
+            on msp.STOCK_COOD = fp.FINPROD_MARKET_ID
+            and fp.FINPROD_ID=#{finprodId}
+            and msp.TRADE_DATE<![CDATA[<=]]>#{dealDate}
+            order by msp.TRADE_DATE desc
+        )
+        where rn = 1
+    </select>
+
+    <select id="getPreClosePrice" resultType="java.math.BigDecimal">
+        select pre_close_price from (
+            select msp.pre_close_price,
+            rownum rn
+            from MST_SHARE_PRICE msp
+            inner join FIN_PRODUCT fp
+            on msp.SHARES_ID = fp.FINPROD_MARKET_ID
+            and fp.FINPROD_ID=#{finprodId}
+            and msp.DEAL_DATE<![CDATA[<=]]>#{dealDate}
+            order by msp.DEAL_DATE desc
+        )
+        where rn = 1
+    </select>
 </mapper>

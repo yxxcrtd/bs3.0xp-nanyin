@@ -39,6 +39,7 @@ $(function() {
             ,{field:'sShares',width:200,type:'number', title: 'ComSharePrice001.sShares' , digit:3,sortField:'s_shares'}
             ,{field:'cShares',width:200, title: 'ComSharePrice001.cShares',type:'number',digit:3, sortField:'c_shares'}
             ,{field:'dealDate',width:200, title: 'ComSharePrice001.dealDate',type:'date', sortField:'deal_date'}
+            ,{field:'ccyStr',width:200, title: 'ComSharePrice001.ccy', sortField:'CCY'}
             ,{field:'preClosePrice',width:200, title: 'ComSharePrice001.preClosePrice',type:'number', digit:3, sortField:'pre_close_price'}
             ,{field:'openPrice',width:200, title: 'ComSharePrice001.openPrice',type:'number', digit:3, sortField:'open_price'}
             ,{field:'highPrice',width:200, title: 'ComSharePrice001.highPrice',type:'number', digit:3, sortField:'high_price'}

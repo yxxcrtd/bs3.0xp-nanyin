@@ -66,6 +66,7 @@ var QueryFunc = function () {
         var assetProvider = null;
         if (assetProviderTemp != null)
             assetProvider = assetProviderTemp.join(",");
+        object.minSaleUnit = parseInt($("#minSaleUnit").val(), 10);
         object.assetProvider = assetProvider;
         object.pageModel = pageModel;
         object.operateType = operateType;
@@ -100,6 +101,9 @@ var QueryFunc = function () {
     window.componentLoadCallback = function (isDone, pagePath, params) {
     }
     var init = function () {
+        //港股通改造
+        $('#shOrZh_div').hide();
+        $('#minSaleUnit_div').hide();
         //资产代码拆分
         var finprodMarketId =  $('#finprodMarketId').val();
         if (finprodMarketId){
@@ -127,6 +131,11 @@ var QueryFunc = function () {
         if(isTransInAsset){
         	$("#ccy").attr("disabled",true);
         }
+
+        if($('#tradeMarket').val() == '13'){
+            $('#minSaleUnit_div').show();
+            $('#shOrZh_div').show();
+        }
     }
     var getCalendarId = function(){
             Joyin.ajax(basePath + 'invest/asset/stock/FinStockInfo002/getCalendarId?tradeMarket=' + $('#tradeMarket').val(),'' , function(result){
@@ -151,10 +160,36 @@ var QueryFunc = function () {
         $('#magnifier').click(function() {
             getInterfFundDto();
         });
+
+        $('#minSaleUnit').change(function(){
+            var minSaleUnitTemp = $('#minSaleUnit').val();
+            $('#minSaleUnit').val(parseInt(minSaleUnitTemp, 10));
+        });
+
         $('#tradeMarket').change(function(){
             AssetCommon.setTradeMarketId($('#tradeMarket').val());
+            if ($('#tradeMarket').val() == '13') {//香港联合交易所
+                $('#shOrZh_div').show();
+                $('#minSaleUnit_div').show();
+                $('#isMarginFinprod').attr("disabled", true).trigger('change');
+                $('#ccy').textSelect("setValue",'HKD');
+                $('#tradeMarketId').val('.HK');
+            }else{
+                $('#shOrZh_div').hide();
+                $('#minSaleUnit_div').hide();
+                $('#isMarginFinprod').attr("disabled", false).trigger('change');
+                $('#ccy').textSelect("setValue",'CNY');
+            }
             getCalendarId();
         });
+
+        $('#shOrZh').change(function(){
+            Joyin.ajax(basePath + 'invest/asset/stock/FinStockInfo002/getCalendarId2?tradeMarket=' + $('#shOrZh').val(),'' , function(result){
+                // $('#calendarId').val(result.data[0].code);
+                $('#calendarId').textSelect("setValue",result.data[0].code);
+            });
+        });
+
         //typeSelect();
         if (pageModel != PAGE_MODEL_NEW) {
             $('#type').attr("disabled", true);
