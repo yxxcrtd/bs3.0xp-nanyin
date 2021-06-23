@@ -465,6 +465,10 @@ $(function() {
                            ||repAssetType=="1206"||repAssetType=="1207"||repAssetType=="1208"||repAssetType=="1209"){
                $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').attr('disabled',false).trigger('change');
                $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').val('').trigger('change');
+               if($('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestType').val()!=null &&　$('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestType').val()!='' && $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestType').val()=='01'){
+                   $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').val('').trigger('change');
+                   $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').attr('disabled',true).trigger('change');
+               }
             }
             // 中债新增 20200408 end
         }else if(repAssetType=="1201"||repAssetType=="1210"){
