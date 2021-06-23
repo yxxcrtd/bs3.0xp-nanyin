@@ -159,8 +159,8 @@
 													placeholder="请输入内容"
 													data-th-placeholder="#{SysCommon.placeholder}"
 													data-th-initValue='${entity?.type10}'
-													data-th-childrenIds="${isShowType} eq '01' ? 'type11' : 'repAssetType'"
-												     parentIds="type9">
+													data-th-childrenIds="${isShowType} eq '01' ? 'type11,repAssetType' : 'repAssetType'"
+													parentIds="type9">
 												</select>
 											</div>
 										</div>
@@ -192,7 +192,6 @@
 													data-th-placeholder="#{SysCommon.placeholder}"
 													data-th-initValue='${entity?.type12}'
 													parentIds="type11"
-													data-th-childrenIds="${isShowType} eq '01' ? 'repAssetType' : ''"
 													>
 												</select>
 											</div>

@@ -62,7 +62,7 @@
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{FinProductBuild002.finprodMarketId}">产品代码</label>
 										<div class="layui-input-inline input-inline">
-											<input type="text" name="finprodMarketId" onKeyUp="value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')"
+											<input type="text" name="finprodMarketId" onKeyUp="value=value.replace(/[^\a-\z\A-\Z\uFF10-\uFF19\uFF41-\uFF5A\uFF21-\uFF3A\uFF00-\uFFFF\x00-\xff0-9]/g,'')"
 												id="FinNetValueProductBuild002_finprodMarketId"
 												class="layui-input form-input" maxLength="32"
 												data-th-value='${entity?.finprodMarketId}'
