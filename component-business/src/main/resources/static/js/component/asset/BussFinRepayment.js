@@ -372,14 +372,15 @@
             }else if(isEditRepayTable){
                 Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0098','还本计划'),function(){
                     initGenerationPlan(flag,iscallbackPay,callIntPlan);
+                    isEditRepayTable = false;
                 });
             }else{
                 Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0047'),function(){
                     initGenerationPlan(flag,iscallbackPay,callIntPlan);
+                    isEditRepayTable = false;
                 });
             }
         }
-        isEditRepayTable = false;
     }
     
     /**
