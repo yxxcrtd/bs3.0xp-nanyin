@@ -109,7 +109,7 @@
 		<if test="finprodMarketId != null and finprodMarketId != ''">
 			<where>
 				PORTFOLIO_ID = #{finprodMarketId}
-				and not EXISTS  (select 1 from fin_product where FINPROD_MARKET_ID = #{finprodMarketId})
+				and not EXISTS  (select 1 from fin_product where FINPROD_MARKET_ID = #{finprodMarketId} AND FINPROD_TYPE2 = 'F16')
 			</where>
 		</if>
 		union all
@@ -123,7 +123,7 @@
 		and STATUS in ('A', 'U', 'P')
 		<if test="finprodMarketId != null and finprodMarketId != ''">
 			and BUSINESS_DATA_PK1 = #{finprodMarketId}
-			and not EXISTS (select 1 from fin_product where FINPROD_MARKET_ID = #{finprodMarketId})
+			and not EXISTS (select 1 from fin_product where FINPROD_MARKET_ID = #{finprodMarketId} AND FINPROD_TYPE2 = 'F16')
 		</if>
 		)
 	</select>
