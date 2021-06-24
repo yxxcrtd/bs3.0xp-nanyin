@@ -410,4 +410,6 @@ public interface BussinessConstant {
     static final String INPUT_TYPE_CHECKBOX = "checkbox";
     
     String ibuFlag_quote_switch = "ibuFlag_quote_switch";
+    
+    String ETRLIMIT_SWITCH_IS_TOTAL = "etrlimit_switch_is_total";
 }
