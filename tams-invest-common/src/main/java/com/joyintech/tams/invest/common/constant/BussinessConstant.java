@@ -412,4 +412,7 @@ public interface BussinessConstant {
     String ibuFlag_quote_switch = "ibuFlag_quote_switch";
     
     String ETRLIMIT_SWITCH_IS_TOTAL = "etrlimit_switch_is_total";
+    
+    //是否启用银行间单指令模式
+    static final String SINGLE_ETR_ISSHOW = "single_etr_isshow";
 }
