@@ -77,7 +77,8 @@ insert into chb_datacheck_condition (CHECKCONDITIONID,CHECKRULEID,CHECKMETHOD,SR
 
 
 
-
+delete from CHB_DATACHECK_RULE where CHECKRULEID = 'CHB_PRD_DECLARE-00-0000-000000000003';
+insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE-00-0000-000000000003','CHB_PRD_DECLARE','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','IS_FHXGCP','==','0','新老产品标记要素必须为空','E','Y');
 
 
 delete from chb_datacheck_condition t where t.checkruleid in (select checkruleid from chb_datacheck_rule t where t.datatype = 'CHB_PRD_DECLARE');
