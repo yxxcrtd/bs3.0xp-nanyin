@@ -80,6 +80,7 @@ public class EtrIbBondinfo001Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.交易方向);
         this.setSelectOptionToModel(model, DictCode.委托状态);
         this.setSelectOptionToModel(model, DictCode.价格模式);
+        this.setSelectOptionToModel(model, DictCode.清算速度);
         model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         return super.init(model);
     }
@@ -177,17 +178,4 @@ public class EtrIbBondinfo001Controller extends BaseController{
     	return etrIbBondinfo001Service.findQuotations(RequestUtil.getPageParam());
     }
 
-    /***
-     * 查询条件弹出框
-     * @return
-     */
-    @RequestMapping(value = "/queryDialog")
-    public String queryDialog(Model model){
-        Map<String, Object> p = RequestUtil.getPageParam();
-        this.setSelectOptionToModel(model, DictCode.清算速度);
-        this.setSelectOptionToModel(model, DictCode.交易方向);
-        model.addAttribute("ACCOUNT_SPEED_01", DictCodeList.清算速度_T_0.getValue()); // 清算速度默认t0
-        model.addAttribute("repManager", SecurityUtil.getLoginUser().getUserName());  //投资经理id
-        return "invest/entrust/etribbondinfo/EtrIbBondinfo001QueryDialog";
-    }
 }
