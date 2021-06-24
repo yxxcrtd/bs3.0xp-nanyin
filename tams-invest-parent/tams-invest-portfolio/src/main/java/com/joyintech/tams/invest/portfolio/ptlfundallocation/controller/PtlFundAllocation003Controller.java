@@ -86,6 +86,7 @@ public class PtlFundAllocation003Controller extends BaseController {
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String orderId = getParam("orderId");
         String portfolioId = getParam("portfolioId");
+        model.addAttribute("formTodoList", !WorkFlowUtil.isNotFromToDoList());
         //add by 20190626
         if (!WorkFlowUtil.isNotFromToDoList()&&StringUtil.isNotEmpty(workflowId)) {
             PtlFundAllocation002Dto dto = ptlFundAllocation003Service.getBussinessEntityByWorkflowId(workflowId);

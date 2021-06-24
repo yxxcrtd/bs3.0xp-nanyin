@@ -5,13 +5,17 @@
 (function() {
     //划款指令信息
     window.componentLoadCallback = function(isDone, pagePath, params){
-        if(isDone){
+      if(isDone){
             if(window.BussTrdTransferOrder && window.BussTrdTransferOrder['bussTrdTransferOrder']) {
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     var rows = table.getAllRows();
                     if(!rows || rows.length == 0){
-                        Joyin.error("明细信息不能为空！");
-                        return;
+                        if(!ptlFundAllocation001Dtos ||ptlFundAllocation001Dtos.length == 0){
+                            Joyin.error("明细信息不能为空！");
+                            return;
+                        }else{
+                            rows = ptlFundAllocation001Dtos;
+                        }
                     }
                     var list = new Array();
                     // 付款账户
@@ -74,6 +78,10 @@
                         , 'repPageId': 'PtlFundAllocation002'
                     };
                 });
+
+                if (formTodoList) {
+                    window.BussTrdTransferOrder['bussTrdTransferOrder'].saveCalcCondition();
+                }
             }
         }
     }
