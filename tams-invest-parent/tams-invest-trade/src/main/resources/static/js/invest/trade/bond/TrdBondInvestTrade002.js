@@ -596,6 +596,10 @@ var table;
                 			disabled: false
                 		});
                 	}
+                    if($('#tradeMarket').val() === '05'){
+                        $('#tradePlat').prop("disabled",true);
+                        checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
+                    }
                     break;
             }
         }
@@ -2348,7 +2352,7 @@ var table;
                     // 1)交易平台可自主选择;
                     // 1)交易平台默认为其它，可改
                     checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
-                    if($("#entrustId").val() != ''){
+                    if($("#entrustId").val() != ''||tradeMarket === '05'){
                         $("#tradePlat").attr("disabled", true);
                     }else{
                         $("#tradePlat").attr("disabled", false);
