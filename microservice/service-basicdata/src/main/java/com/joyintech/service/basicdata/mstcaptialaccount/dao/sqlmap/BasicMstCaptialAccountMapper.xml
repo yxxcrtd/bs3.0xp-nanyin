@@ -103,7 +103,8 @@
 	        CREATE_DEPT, 
 	        CREATE_TIME, 
 	        UPDATE_USER, 
-	        UPDATE_TIME
+	        UPDATE_TIME,
+			ACCOUNT_NATURE <!--add by lpf 2021-04-27 增加字段 账户性质-->
         from STL_CAPACCT_INFO where ACCT_NO = #{acctNo,jdbcType=VARCHAR} AND CCY = #{ccy,jdbcType=VARCHAR}
     </select>
    	
