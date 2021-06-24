@@ -1,272 +1,208 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="~{layout/default}">
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="~{layout/default}">
 <head>
-<style type="text/css">
-.layui-tab-title li {
-	display: inline-block;
-	vertical-align: middle;
-	font-size: 12px;
-	position: relative;
-	line-height: 30px;
-	min-width: 55px;
-	text-align: center;
-	cursor: pointer;
-	transition: all 0.2s ease 0s;
-	padding: 0px 10px;
-}
+	<style type="text/css">
+		.layui-tab-title li {
+			display: inline-block;
+			vertical-align: middle;
+			font-size: 12px;
+			position: relative;
+			line-height: 30px;
+			min-width: 55px;
+			text-align: center;
+			cursor: pointer;
+			transition: all 0.2s ease 0s;
+			padding: 0px 10px;
+		}
+		.layui-form-radio>i{
+			margin-right: 1px;
+			font-size: 18px;
+		}
+		.layui-form-radio *{
+			font-size:8px;
+		}
+		.input-fuzzy-text{
+			height:32px; /* 关键字搜索框高度设置与搜索图标一致 */
+		}
+		.form-lable {
+			width: 35%;
+			padding: 0px 10px 0px 0px;
+		}
 
-.form-lable {
-	width: 35%;
-	padding: 0px 10px 0px 0px;
-}
+		.layui-tab-content {
+			padding: 0px !important;
+		}
 
-.layui-tab-content {
-	padding: 0px !important;
-}
+		.select2-container--default .select2-results>.select2-results__options {
+			max-height: 150px;
+			overflow-y: auto;
+		}
 
-.select2-container--default .select2-results>.select2-results__options {
-	max-height: 150px;
-	overflow-y: auto;
-}
+		.layui-form-item .select2-container {
+			max-width: 100% !important
+		}
 
-/* span.select2-selection.select2-selection--single {
-	max-width: 150px;
-} */
+		.position-col-width {
+			width: 30%;
+		}
 
-.layui-form-item .select2-container {
-	max-width: 100% !important
-}
+		.position-col-width-zqzy {
+			width: 22%;
+		}
 
-.position-col-width {
-	width: 30%;
-}
+		.position-col-width-zqzy1 {
+			width: 45%;
+		}
 
-.position-col-width-zqzy {
-	width: 22%;
-}
+		#positionsTable_zqzy_div {
+			margin-top: -38px;
+			margin-left: 40px;
+			margin-bottom: 12px;
+		}
 
-.position-col-width-zqzy1 {
-	width: 45%;
-}
+		.form-lable {
+			width: 25% !important;;
+		}
 
-#positionsTable_zqzy_div {
-	margin-top: -38px;
-	margin-left: 40px;
-	margin-bottom: 12px;
-}
-
-.form-lable {
-	width: 25% !important;;
-}
-
-.grid-demo {
-	background-color: #f5f5f5;
-	border: 1px solid red;
-	border-radius: 3px;
-	padding: 5px;
-}
-</style>
+		.grid-demo {
+			background-color: #f5f5f5;
+			border: 1px solid red;
+			border-radius: 3px;
+			padding: 5px;
+		}
+	</style>
 </head>
 <body>
-	<div layout:fragment="content">
-		<div class="layui-tab" lay-filter="tradePlatform">
-			<ul class="layui-tab-title">
-				<li class="layui-this">指令管理</li>
-				<li>持仓</li>
-			</ul>
-			<div class="layui-tab-content">
-				<div class="layui-tab-item layui-show">
-					<div class="layui-col-md12 form-button-area transfer-form">
-						<!-- <a id="EtrIbBondinfo001_btn_import" class="layui-btn layui-btn-sm btn-import">
-							<i class="iconfont icon-import"></i><span data-th-text="#{EtrInvestBondInfo001.import}"></span></a> -->
-						<a id="EtrIbBondinfo001_btn_close" class="layui-btn layui-btn-sm"><i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></span></a>
-						<a id="EtrIbBondinfo001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke"><i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></span></a>
-					</div>
-					<div class='joyin-form-wrap joyin-filter-form condition-area curr-form transfer-form'>
-						<form class="layui-form" id="searchForm_zqzy">
-							<div class="layui-form-item">
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbBondinfo001.portfolioName}">组合名称</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="portfolioId_zqzy" name="portfolioId_zqzy"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId?ww=false}"
-												data-th-value="${entity?.portfolioId}" multiple="true">
-										</select>
-									</div>
-								</div>
-
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbBondinfo001.entrustId}">指令编号</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" id="TrdCommandDispatcher001_entrustId" name="entrustId" maxlength="50"
-											   class="layui-input form-input input-lenovoselect"
-											   data-th-data-url="@{/invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher001/getEntIds}"
-											   data-idfield="code" data-th-data-effectivefields="code"
-											   data-th-data-effectivefieldsalias='|{"code":"#{TrdCommandDispatcher001.entrustId}"}|'
-											   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-										/>
-									</div>
-								</div>
-
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbBondinfo001.entrustStatus}">有效状态</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="entrustStatus" name="entrustStatus"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${ENTRUST_STATUS}">
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="layui-form-item">
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbBondinfo001.ps}">交易方向</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="ps" name="ps"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${PS}">
-										</select>
-									</div>
-								</div>
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable" data-th-text="#{EtrInvestBondInfo001.vdate}">指令开始日</label>
-									<div class="layui-input-inline input-inline">
-										<input id='startDate' name='startDate'
-											   class="layui-input form-input input-dateSelect" placeholder="请选择时间"
-											   data-th-placeholder="#{SysCommon.placeholder}">
-									</div>
-								</div>
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable" data-th-text="#{EtrInvestBondInfo001.mdate}">指令终止日</label>
-									<div class="layui-input-inline input-inline">
-										<input id='endDate' name='endDate'
-											   class="layui-input form-input input-dateSelect" placeholder="请选择时间"
-											   data-th-placeholder="#{SysCommon.placeholder}">
-									</div>
-								</div>
-							</div>
-							<div class="layui-form-item">
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbBondinfo001.finpordAbbr}">资产简称</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="finprodId_zqzy" name="finprodId_zqzy"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-url="@{/invest/entrust/etribbondinfo/EtrIbBondinfo001/queryAssetCode}"
-												data-th-value="${entity?.finprodId}" multiple="true">
-										</select>
-									</div>
-								</div>
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable" data-th-text="#{EtrInvestBondInfo001.priceModel}">价格模式</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="priceModel" name="priceModel"
-												class="layui-input form-input input-select" data-th-data-result='${PRICE_MODEL}'
-												allowClear="true" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption = "true">
-										</select>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div>
-					<!-- 指令管理 -->
-					<div>
-						<table class="layui-table" id="positionsTable_zqzy"></table>
-					</div>
+<div layout:fragment="content">
+	<div class="layui-tab" lay-filter="tradePlatform">
+		<ul class="layui-tab-title">
+			<li class="layui-this">指令管理</li>
+			<li>持仓</li>
+		</ul>
+		<div class="layui-tab-content">
+			<div class="layui-tab-item layui-show">	<!-- 指令管理tab页 -->
+				<div class="layui-col-md12 form-button-area transfer-form">
+					<!-- <a id="EtrIbBondinfo001_btn_import" class="layui-btn layui-btn-sm btn-import">
+                        <i class="iconfont icon-import"></i><span data-th-text="#{EtrInvestBondInfo001.import}"></span></a> -->
+					<a id="EtrIbBondinfo001_btn_close" class="layui-btn layui-btn-sm"><i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></span></a>
+					<a id="EtrIbBondinfo001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke"><i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></span></a>
 				</div>
-				<!-- 持仓 -->
-				<div class="layui-tab-item">
-					<div class="layui-col-md12 form-button-area cc-transfer-form">
-					</div>
-					<div class='joyin-form-wrap joyin-filter-form condition-area curr-form cc-transfer-form'>
-						<form class="layui-form" id="searchForm_cc">
-							<div class="layui-form-item">
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										data-th-text="#{EtrIbBondinfo001.portfolioName}">组合名称</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="portfolioId" name="portfolioId"
+
+				<div class='joyin-form-wrap joyin-filter-form condition-area curr-form transfer-form'>
+					<form class="layui-form" id="searchForm_zqzy">
+						<div class="layui-form-item">
+							<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+								<div class="layui-input-inline input-inline">
+									<input type="text" id="vagueQuery" name="vagueQuery" class="layui-input form-input input-fuzzy-text" 
+										   placeholder="关键字搜索" data-eventfunc="serachKey">
+								</div>
+							</div>
+							<!-- 单选框 -->
+							<div class="form-inline-wrap-radio">
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="00" title="全部" checked>
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="08" title="待分发">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="02" title="待接收">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="03" title="已接收">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="04" title="已完成">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="05" title="已退回">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="06" title="已关闭">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="07" title="已撤回">
+								</label>
+								<label class="form-label-wrap-checkbox">
+									<span style="display:none"><input type="checkbox" name="isFlowIng" value="00" title="否"></span>
+									<input type="checkbox" name="isFlowIng" value="01" title="流程中">
+								</label>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<!-- 指令管理 -->
+				<div>
+					<table class="layui-table" id="positionsTable_zqzy"></table>
+				</div>
+			</div>
+			<!-- 持仓 -->
+			<div class="layui-tab-item">
+				<div class="layui-col-md12 form-button-area cc-transfer-form">
+				</div>
+				<div class='joyin-form-wrap joyin-filter-form condition-area curr-form cc-transfer-form'>
+					<form class="layui-form" id="searchForm_cc">
+						<div class="layui-form-item">
+							<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+								<label class="layui-form-label form-lable"
+									   data-th-text="#{EtrIbBondinfo001.portfolioName}">组合名称</label>
+								<div class="layui-input-inline input-inline">
+									<select type="text" id="portfolioId" name="portfolioId"
 											class="layui-input form-input input-select"
 											placeholder="请输入内容"
 											data-th-placeholder="#{SysCommon.placeholder}"
 											data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId}"
 											data-th-value="${entity?.portfolioId}" multiple="true">
-										</select>
-									</div>
-								</div>
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										data-th-text="#{EtrIbBondinfo001.secType1}">债券一级分类</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="secType1" name="secType1"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${CUSTOM_ASSET_TYPE_TWO}">
-										</select>
-									</div>
-								</div>
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										data-th-text="#{EtrIbBondinfo001.finpordAbbr}">资产简称</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="finprodId" name="finprodId"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-url="@{/invest/entrust/etribbondinfo/EtrIbBondinfo001/queryAssetCode}"
-												data-th-value="${entity?.finprodId}" multiple="true">
-										</select>
-									</div>
+									</select>
 								</div>
 							</div>
-							<!-- <div class="layui-form-item">
-								<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4" style="visibility: hidden;">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbBondinfo001.secType1}">债券二级分类</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="secType2" name="secType2"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${CUSTOM_ASSET_TYPE_TWO}">
-										</select>
-									</div>
+							<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+								<label class="layui-form-label form-lable"
+									   data-th-text="#{EtrIbBondinfo001.secType1}">债券一级分类</label>
+								<div class="layui-input-inline input-inline">
+									<select type="text" id="secType1" name="secType1"
+											class="layui-input form-input input-select"
+											placeholder="请输入内容"
+											data-th-placeholder="#{SysCommon.placeholder}"
+											data-th-data-result="${CUSTOM_ASSET_TYPE_TWO}">
+									</select>
 								</div>
-							</div> -->
-						</form>
-					</div>
-					<!-- 持仓列表 -->
-					<div>
-						<table class="layui-table" id="positionsTable"></table>
-					</div>
+							</div>
+							<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+								<label class="layui-form-label form-lable"
+									   data-th-text="#{EtrIbBondinfo001.finpordAbbr}">资产简称</label>
+								<div class="layui-input-inline input-inline">
+									<select type="text" id="finprodId" name="finprodId"
+											class="layui-input form-input input-select"
+											placeholder="请输入内容"
+											data-th-placeholder="#{SysCommon.placeholder}"
+											data-th-data-url="@{/invest/entrust/etribbondinfo/EtrIbBondinfo001/queryAssetCode}"
+											data-th-value="${entity?.finprodId}" multiple="true">
+									</select>
+								</div>
+							</div>
+						</div>
+					</form>
 				</div>
-				<!-- 指令管理 -->
+				<!-- 持仓列表 -->
+				<div>
+					<table class="layui-table" id="positionsTable"></table>
+				</div>
 			</div>
+			<!-- 指令管理 -->
 		</div>
 	</div>
-	<div layout:fragment="script">
-		<script
-			data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfo001.js}"
+</div>
+<div layout:fragment="script">
+	<script
+			data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfo001.js?new}"
 			type="text/javascript"></script>
-		<script th:inline="javascript" type="text/javascript">
-			var FINPROD_TYPE_TG_F01 = /*[[${FINPROD_TYPE_TG_F01}]]*/'';
-		</script>
-	</div>
+	<script th:inline="javascript" type="text/javascript">
+		var FINPROD_TYPE_TG_F01 = /*[[${FINPROD_TYPE_TG_F01}]]*/'';
+	</script>
+</div>
 </body>
 </html>

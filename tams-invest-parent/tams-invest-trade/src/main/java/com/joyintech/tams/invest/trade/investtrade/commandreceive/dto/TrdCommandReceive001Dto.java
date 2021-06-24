@@ -25,6 +25,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -247,7 +248,8 @@ public class TrdCommandReceive001Dto extends EtrEntrust{
      * @return otherEntrustStatus.
      */
 	public String getOtherEntrustStatus() {
-	    if(StringUtil.equals(super.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue()) || StringUtil.equals(super.getEntrustStatus(), DictCodeList.委托状态_待接收.getValue())){
+	    if(StringUtil.equals(super.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue()) || StringUtil.equals(super.getEntrustStatus(), DictCodeList.委托状态_待接收.getValue())
+	    		|| StringUtil.equals(super.getEntrustStatus(), DictCodeListExt3.委托状态_待分发.getValue())){
 	        return "未完成";
 	    }else{
 	        return SysDataUtil.getNameFromDataDict(DictCode.委托状态, super.getEntrustStatus());

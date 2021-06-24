@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
-                                            data-th-text="#{ComBondQuotationInfo002.price}">市场全价</label>
+                                            data-th-text="#{ComBondQuotationInfo002.price}">估值全价</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="price" name="price" class="layui-input form-input text-number"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
@@ -78,7 +78,7 @@
                                     </div>
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
-                                            data-th-text="#{ComBondQuotationInfo002.netprice}">市价净价</label>
+                                            data-th-text="#{ComBondQuotationInfo002.netprice}">估值净价</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="netprice" name="netprice"
                                                 class="layui-input form-input text-number" placeholder="请输入内容"
@@ -90,17 +90,18 @@
                                 <div class="layui-form-item">
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
-                                            data-th-text="#{ComBondQuotationInfo002.mDuration}">市价久期</label>
+                                               data-th-text="#{ComBondQuotationInfo002.netvaluationExercise}">估值净价(行权)</label>
                                         <div class="layui-input-inline input-inline">
-                                            <input type="text" id="mDuration" name="mDuration"
-                                                class="layui-input form-input text-number" placeholder="请输入内容"
-                                                data-th-placeholder="#{SysCommon.placeholder}"
-                                                data-th-value='${entity?.mDuration}' data-textrange="14" maxlength="30">
+                                            <input type="text" id="netvaluationExercise" name="netvaluationExercise"
+                                                   class="layui-input form-input text-number"
+                                                   data-th-value='${entity?.netvaluationExercise}' placeholder="请输入内容"
+                                                   data-th-placeholder="#{SysCommon.placeholder}" data-textrange="14"
+                                                   maxlength="30">
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
-                                            data-th-text="#{ComBondQuotationInfo002.mConvexity}">市价凸性</label>
+                                            data-th-text="#{ComBondQuotationInfo002.mConvexity}">估值凸性</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="mConvexity" name="mConvexity"
                                                 class="layui-input form-input text-number" placeholder="请输入内容"
@@ -179,13 +180,25 @@
 									</div>
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
-                                            data-th-text="#{ComBondQuotationInfo002.bpyield}">市价收益率%</label>
+                                            data-th-text="#{ComBondQuotationInfo002.bpyield}">估值收益率%</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="bpyield" name="bpyield"
                                                 class="layui-input form-input text-number"
                                                 data-th-value='${entity?.bpyield}' placeholder="请输入内容"
                                                 data-th-placeholder="#{SysCommon.placeholder}" data-textrange="14"
                                                 maxlength="30"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-lable"
+                                               data-th-text="#{ComBondQuotationInfo002.mDuration}">估值久期</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <input type="text" id="mDuration" name="mDuration"
+                                                   class="layui-input form-input text-number" placeholder="请输入内容"
+                                                   data-th-placeholder="#{SysCommon.placeholder}"
+                                                   data-th-value='${entity?.mDuration}' data-textrange="14" maxlength="30">
                                         </div>
                                     </div>
                                 </div>

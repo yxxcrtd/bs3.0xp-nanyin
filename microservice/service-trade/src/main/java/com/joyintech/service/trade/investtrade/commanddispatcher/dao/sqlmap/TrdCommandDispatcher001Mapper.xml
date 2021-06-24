@@ -79,7 +79,7 @@
 		ON
 			PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID					
 		<where>
-			AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn})
+			AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn})
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (ETR_ENTRUST.FINPROD_TYPE2 IN(
 						<foreach item="item" index="index" collection="finprodType2List" separator=",">
@@ -261,7 +261,7 @@
 
 		<where>
 			AND ETR_ENTRUST.FINPROD_TYPE2 = 'F36'
-			AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn})
+			AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn})
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND ETR_ENTRUST_ADD.ASSET_TYPE IN(
 				<foreach item="item" index="index" collection="finprodType2List" separator=",">
@@ -343,7 +343,7 @@
 			ENTRUST_ID code
 		FROM ETR_ENTRUST 
 		<where>
-			AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustReceive},#{entrustUntread},#{entrustClose})
+			AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose})
 			<if test="entId != null and entId != ''">
 				AND ENTRUST_ID like concat(concat('%',
 				#{entId,jdbcType=VARCHAR}),'%')

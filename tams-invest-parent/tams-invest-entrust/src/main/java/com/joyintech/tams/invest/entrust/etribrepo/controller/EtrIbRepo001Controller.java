@@ -15,11 +15,14 @@ import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -27,6 +30,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrFinProductDto;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepo001Dto;
 import com.joyintech.tams.invest.entrust.etribrepo.service.EtrIbRepo001Service;
+import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
 import com.joyintech.tams.invest.entrust.etrstandardbond.dto.EtrStandardBond001Dto;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +38,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,4 +242,36 @@ public class EtrIbRepo001Controller extends BaseController{
     public Map<String, Object> findQuotations() {
     	return etrIbRepo001Service.findQuotations(RequestUtil.getPageParam());
     }
+    
+    
+    /**
+     * 按钮点击时的check
+     *
+     * @param dto dto
+     * @param result BindingResult
+     * @return check结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody  EtrIbRepo001Dto dto) {
+    	List<EtrIbRepo001Dto> etrIbRepo001DtoList=dto.getSelectedItem();
+    	AjaxResult ajaxResult=new AjaxResult();
+    	if(StringUtil.isNotEmpty(etrIbRepo001DtoList)){
+    		List<String> entrustIds = new ArrayList<>();
+    		for(EtrIbRepo001Dto etrIbRepo001Dto:etrIbRepo001DtoList){
+    			entrustIds.add(etrIbRepo001Dto.getEntrustId());
+    		}
+    		Map<String,Object> param= new HashMap<>();
+    		param.put("entrustIds",entrustIds);
+            ajaxResult.setErrorList(etrIbRepo001Service.entrustCheckCloseList(param));
+            return ajaxResult;
+    	}
+    	ValidMessage  validMessage= new ValidMessage();
+    	validMessage.setMessage("请选择列表中数据");
+    	ajaxResult.setErrorList(Arrays.asList(validMessage));
+    	return ajaxResult;
+    }
+    
 }

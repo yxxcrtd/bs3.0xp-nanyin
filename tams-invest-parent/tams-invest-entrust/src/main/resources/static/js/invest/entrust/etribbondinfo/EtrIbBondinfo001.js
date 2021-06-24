@@ -2,7 +2,27 @@
  * 持仓信息（右上）
  */
 (function(){
-	
+    var queryData={}; // 指令管理tab查询弹出框接受查询数据
+    var isConfirm = false; // 是否弹出框点击确认，只有确认才触发查询
+    
+    var executeQuery = function (obj) {
+        queryData = obj;
+        queryData.portfolioId = obj.portfolioId != null ? obj.portfolioId.join(",") : queryData.portfolioId;
+        isConfirm = true;
+    }
+
+    /**
+     * 对弹出框提供方法赋值
+     * @type {{executeQuery: executeQuery}}
+     */
+    parent.EtrIbBondinfo001 = {
+        executeQuery:executeQuery,
+    }
+    EtrIbBondinfo001 = {
+        executeQuery:executeQuery,
+    }
+
+    // 持仓
     function getPositionsSearchParams(){
         var data = $.serializeToObject('#searchForm_cc');
         data.portfolioId = data.portfolioId ? data.portfolioId.join(','):'';
@@ -10,24 +30,31 @@
         data.isDvp = true;
         return data;
     }
-    
-	function getZqzyPositionParams() {
-		var data = $.serializeToObject('#searchForm_zqzy');
-        data.portfolioId = data.portfolioId_zqzy ? data.portfolioId_zqzy.join(','):'';
-        data.finprodId = data.finprodId_zqzy ? data.finprodId_zqzy.join(','):'';
-        data.isDvp = false;
-		return data;
-	}
 
+    // 指令管理tab-获取查询条件
+    function getZqzyPositionParams() {
+        var data = $.serializeToObject('#searchForm_zqzy');
+        queryData.vagueQuery = data.vagueQuery; // 关键字模糊查询
+        queryData.entrustStatus=data.entrustStatus; // 指令状态
+        queryData.isFlowIng=data.isFlowIng; // 是否流程中
+        return queryData;
+    }
+
+    // 放大镜触发事件
+    serachKey = function () {
+        queryData = {}; // 清空弹出框条件
+        positionsTable_zqzy.reload();
+    }
+    
     // 导入按钮点击事件
     $('#EtrIbBondinfo001_btn_import').click(function() {
-    	window.parent.importEtr();
+        window.parent.importEtr();
     });
 
     /**
-     * 定义数据表格
+     * 持仓定义数据表格
      */
-    var positionsTable = $("#positionsTable").joyintable({ 
+    var positionsTable = $("#positionsTable").joyintable({
         ajax: {
             url: 'findPositionsPage',//请求路径
             type: 'POST',//请求类型
@@ -70,9 +97,9 @@
     });
 
     /**
-     * 定义数据表格
+     * 指令管理定义数据表格
      */
-    var positionsTable_zqzy = $("#positionsTable_zqzy").joyintable({ 
+    var positionsTable_zqzy = $("#positionsTable_zqzy").joyintable({
         ajax: {
             url: 'findZqzyPositionsPage',//请求路径
             type: 'POST',//请求类型
@@ -83,7 +110,7 @@
         dblclick:function(table, data) {
             if(data.entrustStatus === "05" || data.entrustStatus === "07"){
                 parent.EtrIbBondinfo002.dbclickEtr(data);
-            }           
+            }
         },
         page: false,
         /**
@@ -130,7 +157,7 @@
                 }, width:100,sortable:false}
             ,{field:'remark', title: 'EtrInvestBondInfo001.remark', width:180,sortable:false}
             ,{field:'counterId', visible:false}
-            ]
+        ]
     });
 
 
@@ -183,8 +210,8 @@
     });
 
     /**
-	 * 刷新列表
-	 */
+     * 刷新列表
+     */
     var refreshPositionsTable = function(){
         positionsTable.table ? positionsTable.reload() : positionsTable.load();
     }
@@ -204,14 +231,28 @@
     };
 
     /**
-	 * 画面加载完成
-	 */
+     * 画面加载完成
+     */
     $(function() {
         $(".cc-transfer-form #EtrIbBondinfo001_btn_search").click(function () {
             positionsTable.load();
         })
         $(".transfer-form #EtrIbBondinfo001_btn_search").click(function () {
-            positionsTable_zqzy.load();
+            // 指令管理tab
+            var isOpen = confirm("是否打开高级查询界面？");
+            if(isOpen){
+                Joyin.dialog("查询",
+                    basePath +'invest/entrust/etribbondinfo/EtrIbBondinfo001/queryDialog?parentPageId=' + pageId, '90%', '90%',
+                    queryData, function (){
+                        if(isConfirm) { // 只有点击确认才会查询，关闭&取消不会查询
+                            positionsTable_zqzy.reload();
+                        }
+                        isConfirm = false;
+                    }
+                )
+            }else{
+                positionsTable_zqzy.reload();
+            }
         })
         $(".cc-transfer-form #EtrIbBondinfo001_btn_export").click(getPositionsExportExcel)
         $(".transfer-form #EtrIbBondinfo001_btn_export").click(getZqzyPositionExportExcel)
@@ -234,7 +275,7 @@
                     }
                 }
                 var object = {selectedItem: selArr, operateType:"close"};
-                Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo001/check', object, function(result) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etribrepo/EtrIbRepo001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
                         Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo001/close', object, function(result) {
                             positionsTable_zqzy.reload();
@@ -255,8 +296,8 @@
                 return;
             }else {
                 for(var index in selArr){
-                    if(selArr[index].entrustStatus == '08'){
-                        Joyin.error("流程中的数据不允许撤回");
+                    if(selArr[index].entrustStatus != '08' || selArr[index].entrustStatus != '02'){
+                        Joyin.error("只有指令状态为待分发、待接收的指令允许撤回");
                         return ;
                     }
                 }

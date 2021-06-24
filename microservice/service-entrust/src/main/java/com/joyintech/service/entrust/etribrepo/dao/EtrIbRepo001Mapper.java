@@ -15,6 +15,7 @@ import com.joyintech.service.entrust.etribrepo.dto.EtrIbRepo001Dto;
 import com.joyintech.service.entrust.etribrepo.dto.EtrIbRepoRk004Dto;
 import com.joyintech.service.entrust.etribrepo.dto.EtrIbRepoRk005Dto;
 import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
+import com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus;
 import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
 
@@ -108,5 +109,9 @@ public interface EtrIbRepo001Mapper {
     List<EtrIbRepo001Dto> selectF01List(Map<String, Object> params);
     
     int deleteEtrEntrustPledgeByPledgeStockId(@Param("pledgeStockId") String pledgeStockId);
+    
+	List<EtrQuoteFinishStatus> selectEtrQuoteFinishStatusList(Map<String, Object> param);
+	
+	int checkDataStatus(Map<String, Object> param);
     
 }

@@ -13,10 +13,13 @@ package com.joyintech.tams.invest.entrust.etribbondinfo.controller;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade002Service;
@@ -172,5 +175,19 @@ public class EtrIbBondinfo001Controller extends BaseController{
     @ResponseBody
     public Map<String, Object> findQuotations() {
     	return etrIbBondinfo001Service.findQuotations(RequestUtil.getPageParam());
+    }
+
+    /***
+     * 查询条件弹出框
+     * @return
+     */
+    @RequestMapping(value = "/queryDialog")
+    public String queryDialog(Model model){
+        Map<String, Object> p = RequestUtil.getPageParam();
+        this.setSelectOptionToModel(model, DictCode.清算速度);
+        this.setSelectOptionToModel(model, DictCode.交易方向);
+        model.addAttribute("ACCOUNT_SPEED_01", DictCodeList.清算速度_T_0.getValue()); // 清算速度默认t0
+        model.addAttribute("repManager", SecurityUtil.getLoginUser().getUserName());  //投资经理id
+        return "invest/entrust/etribbondinfo/EtrIbBondinfo001QueryDialog";
     }
 }
