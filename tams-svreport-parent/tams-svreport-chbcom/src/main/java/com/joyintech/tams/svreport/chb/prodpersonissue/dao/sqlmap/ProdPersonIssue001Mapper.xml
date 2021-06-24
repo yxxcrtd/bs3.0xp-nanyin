@@ -739,7 +739,6 @@
 		where 1 =1
 		and info.fprod_id is null <!-- 去除子产品 -->
 		and info.RAISE_VDATE is not null
-		and reginfo.REG_CODE is not null
 		<if test="prodInfos!=null and prodInfos.size()!=0">
           AND trim(info.prod_id) in
           <foreach collection="prodInfos" item="item" index="index" open="(" separator="," close=")">
