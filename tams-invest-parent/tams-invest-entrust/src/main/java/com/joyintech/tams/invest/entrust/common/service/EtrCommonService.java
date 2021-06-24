@@ -1261,4 +1261,17 @@ public class EtrCommonService extends BaseService<ITableRow> {
             return null;
         }
     }
+    
+    /**
+ 	* 银行间指令 关闭check
+ 	* @param pageParam
+ 	* @return
+ 	*/
+ 	public List<ValidMessage> entrustCheckCloseList(Map<String, Object> param) {
+ 		List<ValidMessage> validMessageList = restTemplate.postForList(
+ 				ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustBankCommon/entrustCheckCloseList", param,
+ 				ValidMessage.class);
+ 		return validMessageList;
+ 	}
+ 	
 }
