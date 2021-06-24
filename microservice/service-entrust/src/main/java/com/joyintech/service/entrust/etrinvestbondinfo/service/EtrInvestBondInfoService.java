@@ -649,6 +649,15 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
 	}
 
     /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    public BigDecimal getLastPriceByPara(Map<String, Object> param) {
+        return etrInvestBondInfoMapper.getLastPriceByPara(param);
+    }
+
+    /**
      * 查询证券托管户：联想框文本框
      *
      * @param param 画面参数

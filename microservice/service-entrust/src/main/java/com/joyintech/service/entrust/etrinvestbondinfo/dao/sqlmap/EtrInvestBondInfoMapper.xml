@@ -565,6 +565,19 @@ SELECT interf.SECID id,
 		WHERE ROWNUM =1
 	</select>
 
+	<select id="getLastPriceByPara" resultType="java.math.BigDecimal">
+		SELECT NETPRICE
+		FROM
+			(SELECT NETPRICE
+	      	FROM MST_BOND_VALUATION_INFO
+	      	WHERE
+	      		SEC_ID = #{finprodMarketId}
+	      	AND
+	        	VALUE_DATE = TO_DATE(#{sysdate},'yyyy-mm-dd')
+	      	ORDER BY VALUE_DATE DESC)
+		WHERE ROWNUM =1
+	</select>
+
     <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
     	<if test="zhilingtype == null or zhilingtype == '01'">
 	        SELECT distinct

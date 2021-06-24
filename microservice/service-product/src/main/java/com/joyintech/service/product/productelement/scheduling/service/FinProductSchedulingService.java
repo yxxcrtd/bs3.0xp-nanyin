@@ -320,4 +320,13 @@ public class FinProductSchedulingService extends BaseService<PaPrdIssueSchedule>
         return finProductSchedulingMapper.checkProdInfoExist(finprodMarketId, finprodAbbr,
             finprodName, finprodId, DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
     }
+
+    /**
+     * 查询是否是否存在组合代码与产品代码相同的组合
+     * @param finprodMarketId 产品代码
+     * @return
+     */
+    public int chekPortfolExist(String finprodMarketId,String pageId){
+        return finProductSchedulingMapper.chekPortfolExist(finprodMarketId,pageId);
+    }
 }
