@@ -318,7 +318,13 @@ $(function() {
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetType_div').show();
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetTyprExplain_div').show();
             $('#bussRepOtherInvestTargetInfoDto_isUnlisted_div').hide();
+            $('#bussRepOtherInvestTargetInfoDto_project_div1').hide();
+            $('#bussRepOtherInvestTargetInfoDto_project_div2').hide();
             $('#bussRepOtherInvestTargetInfoDto_div').show();
+            if(repAssetType=="1299"){
+            	$('#bussRepOtherInvestTargetInfoDto_project_div1').show();
+            	$('#bussRepOtherInvestTargetInfoDto_project_div2').show();
+            }
 
 
             /****ZGBSSE-595  【中债直连check】新建项目类资产，报送信息页面“融资人”check未满足报送规范***/
