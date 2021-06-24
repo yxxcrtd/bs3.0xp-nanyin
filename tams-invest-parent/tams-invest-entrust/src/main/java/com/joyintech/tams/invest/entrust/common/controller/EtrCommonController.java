@@ -9,6 +9,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
@@ -48,6 +49,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -499,4 +501,36 @@ public class EtrCommonController extends BaseController {
         return wr;
     }
 
+    /**
+     * 银行间指令关闭check
+     *
+     * @param dto dto
+     * @param result BindingResult
+     * @return check结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("entrustCheckCloseList")
+    public AjaxResult entrustCheckCloseList(@RequestBody  Map<String,Object> map) {
+    	List<Map<String,Object>> selectedItem= (List<Map<String, Object>>) map.get("selectedItem");
+    	AjaxResult ajaxResult=new AjaxResult();
+    	if(StringUtil.isNotEmpty(selectedItem)){
+    		List<String> entrustIds = new ArrayList<>();
+    		for(Map<String,Object> Item:selectedItem){
+    			entrustIds.add((String)Item.get("entrustId"));
+    		}
+    		Map<String,Object> param= new HashMap<>();
+    		param.put("entrustIds",entrustIds);
+            ajaxResult.setErrorList(etrCommonService.entrustCheckCloseList(param));
+            return ajaxResult;
+    	}
+    	ValidMessage  validMessage= new ValidMessage();
+    	validMessage.setMessage("请选择列表中数据");
+    	ajaxResult.setErrorList(Arrays.asList(validMessage));
+    	return ajaxResult;
+    }
+    
+    
+    
 }

@@ -23,35 +23,22 @@ import com.joyintech.service.entrust.etribrepo.dao.EtrIbRepoLib001Mapper;
 import com.joyintech.service.entrust.etribrepo.dto.EtrIbRepo001Dto;
 import com.joyintech.service.entrust.etribrepo.dto.EtrIbRepoRk004Dto;
 import com.joyintech.service.entrust.etribrepo.dto.EtrIbRepoRk005Dto;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
 import com.joyintech.tams.common.base.dao.EtrSecStockConfigMapper;
 import com.joyintech.tams.common.base.dao.EtrSecStockMapper;
 import com.joyintech.tams.common.base.dao.PtlSecStockMapper;
-import com.joyintech.tams.common.base.entity.EtrDistribute;
-import com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
-import com.joyintech.tams.common.base.entity.EtrFinishStatus;
-import com.joyintech.tams.common.base.entity.EtrFinishStatusKey;
-import com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus;
 import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.common.base.entity.PtlSecStock;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,14 +67,6 @@ public class EtrIbRepo001Service extends BaseService{
     
 	@Autowired
 	private EtrIbRepoLib001Mapper etrIbRepoLib001Mapper;
-	
-	@Autowired
-	private EtrEntrustMapper etrEntrustMapper;
-	
-	@Autowired
-	private BaseEtrInvestInfoMapper baseEtrInvestInfoMapper;
-	
-	
 
     /**
      * 平台日期
@@ -394,49 +373,6 @@ public class EtrIbRepo001Service extends BaseService{
        pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
        return etrIbRepo001Mapper.findZlglPositionPage(pageParam);
    }
-
-
-   public String entrustCheckCloseList(String entrustId) {
-       if (StringUtil.isEmpty(entrustId)) {
-           return "1";
-       }
-
-       EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
-       if (etrEntrust == null) {
-           return "1";
-       }
-
-       // 已接收、已退回和已撤回
-       if (!(StringUtil.equals(etrEntrust.getEntrustStatus(),BussinessDictCodeList.委托状态_已接收.getValue())
-    		   ||StringUtil.equals(etrEntrust.getEntrustStatus(),BussinessDictCodeList.委托状态_已退回.getValue())
-    		   ||StringUtil.equals(etrEntrust.getEntrustStatus(),BussinessDictCodeList.委托状态_已撤回.getValue()))) {
-           return "1";
-       }
-
-       EtrFinishStatusKey etrFinishStatusKey = new EtrFinishStatusKey();
-       etrFinishStatusKey.setEntrustId(entrustId);
-       List<EtrFinishStatus> etrFinishStatusList = baseEtrInvestInfoMapper.selectEtrFinishStatusByPrimaryKey(
-           etrFinishStatusKey);
-       if (!StringUtil.isEmptyList(etrFinishStatusList)) {
-           return "1";
-       }
-       Map<String,Object> param= new HashMap<>();
-       param.put("entrustId", entrustId);
-       List<EtrQuoteFinishStatus> etrQuoteFinishStatusList =  etrIbRepo001Mapper.selectEtrQuoteFinishStatusList(param);  
-       if (!StringUtil.isEmptyList(etrQuoteFinishStatusList)) {
-           return "1";
-       }
-       //是否存在流程中或者有效且数据状态不为 已拒绝、已撤销、已终止
-       param.put("QUOTE_STUTAS_IBU_08", BussinessDictCodeList.银行间上行报价状态_已终止.getValue());
-       param.put("QUOTE_STUTAS_IBU_14", BussinessDictCodeList.银行间上行报价状态_已拒绝.getValue());
-       param.put("QUOTE_STUTAS_IBU_15", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
-       int i =etrIbRepo001Mapper.checkDataStatus(param);
-       if(i>0){
-       	return "2";
-       }
-       return "3";
-   }
-
 }
 
 

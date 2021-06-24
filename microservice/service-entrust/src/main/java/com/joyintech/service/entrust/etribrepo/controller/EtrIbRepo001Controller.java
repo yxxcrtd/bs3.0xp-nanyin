@@ -13,8 +13,6 @@ package com.joyintech.service.entrust.etribrepo.controller;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtrFinProductDto;
 import com.joyintech.service.entrust.etribrepo.dto.EtrIbRepo001Dto;
 import com.joyintech.service.entrust.etribrepo.dto.EtrIbRepoRk004Dto;
@@ -25,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -114,29 +111,4 @@ public class EtrIbRepo001Controller {
         return etrIbRepo001Service.outSave(dto);
     }
     
-    /**
-     * 委托关闭check
-     * @param param
-     * @return
-     */
-    @Transactional
-    @DTXTransaction
-	@PostMapping("/entrustCheckCloseList")
-	public List<ValidMessage> entrustCheckCloseList(@RequestBody Map<String,Object> param){
-    	List<ValidMessage> errorList=new ArrayList<ValidMessage>();
-    	@SuppressWarnings("unchecked")
-		List<String> entrustIds=(List<String>)param.get("entrustIds");
-    	if(StringUtil.isNotEmpty(entrustIds)){
-    		for(String entrustId : entrustIds){
-    			String flag  = etrIbRepo001Service.entrustCheckCloseList(entrustId);
-    			if(StringUtil.equals("1", flag)){
-        			errorList.add(new ValidMessage("已接收、已退回和已撤回,才能执行关闭操作！"+"指令编号："+entrustId));
-        		}
-    			else if(StringUtil.equals("2", flag)){
-        			errorList.add(new ValidMessage("存在流程中的报价，不可关闭！"+"指令编号："+entrustId));
-        		}
-        	}
-    	}
-		return errorList;
-	}
 }
