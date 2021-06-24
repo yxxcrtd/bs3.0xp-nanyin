@@ -313,6 +313,9 @@
 
     var init = function () {
     	table.reload();
+    	if(calculateField){
+        	$("#calculateField_" + calculateField).attr("checked", true);
+        }
     	
         if (pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
             $('#EtribBondInfo003_btn_reset').css('display', 'none');
@@ -486,6 +489,8 @@
         object.invManagerId = $('#invManagerId').val();
         object.entrustDate = object.vdate > object.finvdate.split(' ')[0] ?
         object.vdate: object.finvdate.split(' ')[0];
+        //提交获取计算方式单选框的值
+        object.calculateField = $("input[name=calculateField]:checked").val();
 
         object.finmdate = $('#finmdate').val();
         object.ccy = $('#ccy').val();
@@ -881,6 +886,12 @@
             if (!$("#finprodId").val()) {
                 return;
             }
+            //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
+            var calculateField =  $("input[name=calculateField]:checked").val();
+            if(calflag != calculateField){
+            	return;
+            }
+            //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 end
             var object = $.serializeToObject("#searchForm");
             object.calflag = calflag;
             object.pageModel = pageModel;

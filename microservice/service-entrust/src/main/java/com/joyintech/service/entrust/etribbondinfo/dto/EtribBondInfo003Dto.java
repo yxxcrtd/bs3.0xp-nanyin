@@ -43,6 +43,11 @@ public class EtribBondInfo003Dto extends EtrEntrust implements ProcessEntity {
      * 市场代码
      */
     private String finprodMarketId;
+    
+    /**
+     * 计算方式
+     */
+    private String calculateField;
 
     /**
      * 多指令导入
@@ -376,4 +381,14 @@ public class EtribBondInfo003Dto extends EtrEntrust implements ProcessEntity {
     public void setParentPortfolioId(String parentPortfolioId) {
         this.parentPortfolioId = parentPortfolioId;
     }
+
+	public String getCalculateField() {
+		return calculateField;
+	}
+
+	public void setCalculateField(String calculateField) {
+		this.calculateField = calculateField;
+	}
+    
+    
 }

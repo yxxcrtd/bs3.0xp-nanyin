@@ -89,6 +89,7 @@ public class EtrIbBondinfo002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.交易方向);
         this.setSelectOptionToModel(model, DictCode.清算速度);
         this.setSelectOptionToModel(model, DictCode.价格模式);
+        this.setSelectOptionToModel(model, DictCode.投资目的);
         model.addAttribute("PRICEMODEL_03", DictCodeListExt2.价格模式_市价指令.getValue());
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
@@ -126,6 +127,7 @@ public class EtrIbBondinfo002Controller extends BaseController {
             todoList = true;
             model.addAttribute("workflowId", workflowId);         
             model.addAttribute("businessId", dto.getEntrustId());
+            model.addAttribute("calculateField",dto.getCalculateField());
         }
         //新建初始化
         else if (WorkFlowUtil.isNotFromToDoList() && !StringUtil.isNotEmpty(entrustId)) {

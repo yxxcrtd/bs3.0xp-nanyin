@@ -60,6 +60,11 @@ public class EtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntity {
      * 资产到期日
      */
     private Date finmdate;
+    
+    /**
+     * 计算方式
+     */
+    private String calculateField;
 
     /**
      * 市场代码
@@ -1013,6 +1018,21 @@ public class EtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntity {
     public String getTradeMarketName() {
         return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
     }
+	
+	@Override
+	@NotEmpty(fieldName = "EtrIbBondinfo002.invAim", groups = {ValidateGroupEdit.class})
+	public String getInvAim() {
+		// TODO Auto-generated method stub
+		return super.getInvAim();
+	}
+
+	public String getCalculateField() {
+		return calculateField;
+	}
+
+	public void setCalculateField(String calculateField) {
+		this.calculateField = calculateField;
+	}
 	
 	
 }

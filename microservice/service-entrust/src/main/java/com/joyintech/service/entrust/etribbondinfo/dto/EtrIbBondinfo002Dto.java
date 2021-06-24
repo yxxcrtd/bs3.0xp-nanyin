@@ -46,6 +46,12 @@ public class EtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntity {
      * 资产起息日
      */
     private Date finvdate;
+    
+    /**
+     * 计算方式
+     */
+    private String calculateField;
+    
     /**
      * 资产到期日
      */
@@ -736,4 +742,14 @@ public class EtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntity {
     public void setParentPortfolioId(String parentPortfolioId) {
         this.parentPortfolioId = parentPortfolioId;
     }
+
+	public String getCalculateField() {
+		return calculateField;
+	}
+
+	public void setCalculateField(String calculateField) {
+		this.calculateField = calculateField;
+	}
+    
+    
 }

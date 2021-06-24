@@ -91,6 +91,8 @@
         object.tradeMarket = $("#tradeMarket").val();
         object.finvdate = $("#finvdate").val();
         object.finmdate = $("#finmdate").val();
+        //提交获取计算方式单选框的值
+        object.calculateField = $("input[name=calculateField]:checked").val();
 
         object.counterType = $('#counterId').select2('data')[0].object;  //交易对手类型，校验时用到
 
@@ -130,7 +132,12 @@
             if (!object.entrustNum) {
                 object.entrustNum = 100;
             }
-
+            //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
+            var calculateField =  $("input[name=calculateField]:checked").val();
+            if(calflag != calculateField){
+            	return;
+            }
+            //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 end
             object.calflag = calflag;
             object.pageModel = pageModel;
             object.entrustId = $("#entrustId").val();
@@ -239,7 +246,9 @@
         }
 
         businessId = $('#businessId').val()
-
+        if(calculateField){
+        	$("#calculateField_" + calculateField).attr("checked", true);
+        }
         $("#ps").change();
         if ($("#finprodId").val() != null && $("#finprodId").val() != "") {
             $("#finprodId").change();

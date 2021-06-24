@@ -111,6 +111,7 @@ public class EtribBondInfo003Controller extends BaseController {
                     workflowId);
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
+            model.addAttribute("calculateField",entity.getCalculateField());
             model.addAttribute("person_entity", JsonUtils.object2Json(entity.getEtrInvestPersonInfo()));
             model.addAttribute("businessId",workflowId);
             model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getBussCombDistribtList()));

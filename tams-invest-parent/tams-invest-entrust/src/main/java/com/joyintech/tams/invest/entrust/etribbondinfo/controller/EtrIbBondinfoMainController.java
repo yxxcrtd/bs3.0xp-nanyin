@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.entrust.etribbondinfo.controller;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,7 @@ public class EtrIbBondinfoMainController extends BaseController{
         model.addAttribute("ENTRUST_STATUS_07", DictCodeList.委托状态_已撤回.getValue());
 
         model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        model.addAttribute("dan_etr_isshow",CacheUtil.getSysParam("dan_etr_isshow"));
 
         return super.init(model);
     }

@@ -18,6 +18,13 @@ $(
     (function () {
         //用于判断当前属于单组合打开还是多组合打开
         changeFlg = "01";
+        
+        //add by yzg 隐藏单组合页面 20210621 start
+        if(dan_etr_isshow == 'N'){
+        	$("#danEtr_div").hide();
+        	$("#danEtr_li").hide();
+        }
+        //add by yzg 隐藏单组合页面 20210621 end
 
         layui.use(["element", "form"], function () {
             // 组合平台TAB切换事件

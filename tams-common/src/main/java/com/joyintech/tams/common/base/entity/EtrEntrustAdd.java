@@ -478,6 +478,11 @@ public class EtrEntrustAdd extends BaseEntity {
     private String pledgeStockId;
 
     /**
+     * 计算方式
+     */
+    private String calculateField;
+
+    /**
      * 取得 委托代码
      * @return 委托代码
      */
@@ -1894,5 +1899,21 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     public void setPledgeStockId(String pledgeStockId) {
         this.pledgeStockId = pledgeStockId == null ? null : pledgeStockId.trim();
+    }
+
+    /**
+     * 取得 计算方式
+     * @return 计算方式
+     */
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    /**
+     * 设置 计算方式
+     * @param calculateField 计算方式
+     */
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField == null ? null : calculateField.trim();
     }
 }
