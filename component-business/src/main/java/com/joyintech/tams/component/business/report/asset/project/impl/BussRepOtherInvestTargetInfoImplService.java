@@ -35,7 +35,7 @@ public class BussRepOtherInvestTargetInfoImplService extends BaseService<BussRep
      */
     @Override
     public IDictCode[] getInitDictCode() {
-        return new DictCode[] {DictCode.资产_负债二级类别,DictCode.交易流通场所,DictCode.投资阶段,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类
+        return new DictCode[] {DictCode.资产_负债二级类别,DictCode.交易流通场所,DictCode.交易流通场所_中债,DictCode.投资阶段,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类
             ,DictCode.发行机构类型_按技术领域划分,DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分,DictCode.行内资产类别
             ,DictCode.股票类型,DictCode.行政区划_市,DictCode.重点监控行业和领域类别,DictCode.主体评级_中债,DictCode.资产评级, DictCode.所属国家或地区,DictCode.人行机构规模,DictCode.受让形式};
     }
