@@ -138,20 +138,20 @@
 								<div id="EtrIbBondinfo001_selectorConditionFilter" style="margin-top: 10px;display:none;border: 1px solid #ccc;position: absolute; top: -50px; right:10%;background: #fff;z-index: 100 ;width:400px;">
 									<div class="sgePortDiv">
 										<label class="layui-form-label form-lable"
-											   data-th-text="#{EtrIbBondinfo001_queryDialog.portfolioName}">组合名称</label>
+											   data-th-text="#{EtrIbBondinfo001.portfolioName}">组合名称</label>
 										<div class="layui-input-inline input-inline">
 											<select type="text" id="entrustOrder_portfolioId" name="portfolioId"
 													class="layui-input form-input input-select"
 													placeholder="请输入内容"
 													data-th-placeholder="#{SysCommon.placeholder}"
 													data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId?ww=false}"
-													data-th-value="${portfolioId}" multiple="true">
+													multiple="true">
 											</select>
 										</div>
 									</div>
 									<div class="sgePortDiv">
 										<label class="layui-form-label form-lable"
-											   data-th-text="#{EtrIbBondinfo001_queryDialog.finprodAbbr}">资产简称</label>
+											   data-th-text="#{EtrIbBondinfo001.finpordAbbr}">资产简称</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" id="finprodAbbr" name="finprodAbbr" class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
 												   data-th-data-url="@{/common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/getAssetName}"
@@ -161,7 +161,7 @@
 									</div>
 									<div class="sgePortDiv">
 										<label class="layui-form-label form-lable"
-											   data-th-text="#{EtrIbBondinfo001_queryDialog.ps}">交易方向</label>
+											   data-th-text="#{EtrIbBondinfo001.ps}">交易方向</label>
 										<div class="layui-input-inline input-inline">
 											<select type="text" id="ps" name="ps" class="layui-input form-input input-select" placeholder="请输入内容"
 													data-th-placeholder="#{SysCommon.placeholder}"
@@ -170,29 +170,27 @@
 										</div>
 									</div>
 									<div class="sgePortDiv">
-										<label class="layui-form-label form-lable" th:text="#{EtrIbBondinfo001_queryDialog.settleSpeed}">清算速度</label>
+										<label class="layui-form-label form-lable" th:text="#{EtribBondInfo003.settleSpeed}">清算速度</label>
 										<div class="layui-input-inline input-inline">
 											<select type="text" id="settleSpeed" name="settleSpeed" class="layui-input form-input input-select"
-													data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result='${ACCOUNT_SPEED}'
-													data-th-initvalue="${settleSpeed}">
+													data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result='${ACCOUNT_SPEED}' >
 											</select>
 										</div>
 									</div>
 									<div class="sgePortDiv">
-										<label class="layui-form-label form-lable" data-th-utext="#{EtrIbBondinfo001_queryDialog.repManager}">投资经理</label>
+										<label class="layui-form-label form-lable" data-th-utext="#{EtrInvestAllInfo001.invManagerId}">投资经理</label>
 										<div class="layui-input-inline input-inline">
 											<select type="text" id="EtrIbBondinfo001_queryDialog_repManager" name="repManager"
 													class="layui-input form-input input-select"
 													allowClear="true" placeholder="请输入内容"
 													data-th-placeholder="#{SysCommon.placeholder}"
-													data-th-data-url="@{/invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher001/getManagers}"
-													data-th-Value="${repManager}">
+													data-th-data-url="@{/invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher001/getManagers}" >
 											</select>
 										</div>
 									</div>
 									<div class="sgePortDiv">
 										<label class="layui-form-label form-lable"
-											   data-th-text="#{EtrIbBondinfo001_queryDialog.entrustId}">指令代码</label>
+											   data-th-text="#{EtrTransactionDetail001.entrustId}">指令代码</label>
 										<div class="layui-input-inline input-inline">
 											<select  type="text" id="entrustId" name="entrustId" class="layui-input form-input input-select" maxlength="60"
 													 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
@@ -200,7 +198,7 @@
 										</div>
 									</div>
 									<div class="sgePortDiv">
-										<label class="layui-form-label form-lable" data-th-text="#{EtrIbBondinfo001_queryDialog.entrustDate}">指令日期</label>
+										<label class="layui-form-label form-lable" data-th-text="#{EtrTransactionDetail001.entrustDate}">指令日期</label>
 										<div class="layui-input-inline input-inline">
 											<input id='entrustDate' name='entrustDate'
 												   class="layui-input form-input input-dateRangeSelect" placeholder="请选择时间区间"

@@ -15,9 +15,11 @@
     // 指令管理tab-获取查询条件
     function getZqzyPositionParams() {
         var data = $.serializeToObject('#searchForm_zqzy');
-        // queryData.vagueQuery = data.vagueQuery; // 关键字模糊查询
-        // queryData.entrustStatus=data.entrustStatus; // 指令状态
         data.portfolioId = data.portfolioId ? data.portfolioId.join(','):'';
+        if(data.entrustDate){
+            data.entrustStartDate=$("#entrustDate").startDate();
+            data.entrustEndDate=$("#entrustDate").endDate();
+        }
         return data;
     }
 
