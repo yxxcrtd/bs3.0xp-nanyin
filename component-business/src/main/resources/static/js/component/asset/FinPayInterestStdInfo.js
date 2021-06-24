@@ -1205,7 +1205,30 @@
              }
             return true;
         }
+    /**
+     * 维护付息计划后，是否点击确认
+     * 可以通过支付日是否为空判断是否重新计算利息
+     */
+    var isSureCheck = function(){
+        var list = getAllRows();var msg;
 
+        if(!list || list.length == 0) {
+            msg = JoyinUtil.getMessage('COMMON_E_0057',"付息计划");
+        }
+
+        if(list){
+            $.each(list,function(index,obj){
+                if(obj.payDate==''||typeof obj.payDate == 'undefined'){
+                    msg = JoyinUtil.getMessage("付息计划已变更,请点击确认,重新计算应计利息!");
+                }
+            })
+        }
+        if(msg) {
+            Joyin.error(msg);
+            return false;
+        }
+        return true;
+    }
 
     /**
      * 确认按钮check(js)
@@ -1360,6 +1383,7 @@
     // 公开接口
     window.FinPayInterestStdInfo = {
         comfirmCheck: comfirmCheck,
+        isSureCheck: isSureCheck,
         getAllRows:getAllRows,
         check:check,
         generationPlan:generationPlan,
