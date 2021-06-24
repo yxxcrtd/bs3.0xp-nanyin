@@ -309,7 +309,7 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
 
         
         if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmpty(inputDto.getSecAcctId())) {
-            errorList.add(new ValidMessage("chlId","通道代码和证券账户不能同时为空。"));
+            errorList.add(new ValidMessage("chlId","合作资产和证券账户不能同时为空。"));
         }
 
         // 1、  交易场所：银行间，必须上传成交单

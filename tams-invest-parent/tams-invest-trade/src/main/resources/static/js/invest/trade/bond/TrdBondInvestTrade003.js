@@ -123,7 +123,7 @@ var table;
 		if($('#chlId').val()){
 			for(var i=0;i<table.getAllRows().length;i++){
 				if(table.getAllRows()[i].secManageAcctIdDuo){
-					Joyin.warn("通道和多组合证券账户不能同时选择！");
+					Joyin.warn("合作资产和多组合证券账户不能同时选择！");
 					return;
 				}
 			}
@@ -131,7 +131,7 @@ var table;
 		if(!$('#chlId').val()){
 			for(var i=0;i<table.getAllRows().length;i++){
 				if(!table.getAllRows()[i].secManageAcctIdDuo){
-					Joyin.warn("通道和多组合证券账户不能同时为空值！");
+					Joyin.warn("合作资产和多组合证券账户不能同时为空值！");
 					return;
 				}
 			}

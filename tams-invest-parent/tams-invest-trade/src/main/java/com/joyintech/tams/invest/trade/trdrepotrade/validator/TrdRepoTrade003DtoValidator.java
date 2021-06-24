@@ -312,7 +312,7 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
         }
         if(StringUtil.isEmpty(inputDto.getChlId())){
         	if(StringUtil.isEmptyList(inputDto.getBussRepoSecPtl().getPledgeBondList())){
-        		errorList.add(new ValidMessage("chlId","通道代码和证券账户不能同时为空！"));
+        		errorList.add(new ValidMessage("chlId","合作资产和证券账户不能同时为空！"));
         	}
         }
         //if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmpty(inputDto.getBussRepoSecPtl().getPledgeBondList().get(0).getSecAcctId())) {
