@@ -196,6 +196,50 @@
             }
         }
     }
+    /**
+     * 11.交易对手选择内部投资组合时：
+     * 若委托开始日和指令结束日均等于平台日期时：
+     * a．若投资目的选择摊余成本类，净价默认带出该债券平台日期前一估值日的摊销净价，可修改；
+     * b. 若投资目的选择公允价值计入其他综合收益或公允价值计入当期损益，净价默认带出该债券平台日期前一估值日的估价净价（取市场行情），可修改
+     */
+    var priceInitByInCpy = function () {
+        // 委托开始日
+        var vdate = $("#vdate").val();
+        // 委托终止日
+        var mdate = $("#mdate").val();
+        // 投资目的
+        var invAim = $("#invAim").val();
+        // 交易对手
+        var counterType;
+        if ($('#etrInvestPersonInfo_counterId').select2('data') && $('#etrInvestPersonInfo_counterId').select2('data')[0]) {
+            counterType = $('#etrInvestPersonInfo_counterId').select2('data')[0].object;
+        }
+        // 委托开始日或指令结束日不等于平台日期时
+        if (new Date(sysDate).DateDiff('d', vdate) !== 0
+            || new Date(sysDate).DateDiff('d', mdate) !== 0) {
+            return;
+        }
+        // 交易对手没有选择内部投资组合
+        if (counterType !== 'N') {
+            return;
+        }
+        var finprodMarketId = $('#finprodId').val();
+        if (finprodMarketId) {
+            var data = {
+                sysdate: sysDate,
+                finprodMarketId: finprodMarketId
+            }
+            //投资目的选择公允价值计入其他综合收益或公允价值计入当期损益
+            if (invAim === 'FVOCI' || invAim === 'FVTPL') {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getLastPriceByPara', data,
+                    function (result) {
+                        if(result.data){
+                            $('#price').val(result.data).trigger('blur').trigger('change');
+                        }
+                    });
+            }
+        }
+    }
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
@@ -664,6 +708,8 @@
             }
             getSecManageAvailableCash();
         });
+        // 交易对手
+        $('#etrInvestPersonInfo_counterId').change(priceInitByInCpy());
 
         /**
          * 证券托管户
@@ -684,6 +730,7 @@
          */
         $("#invAim").on("change", function () {
             getPtlSecPositionInfo();
+            priceInitByInCpy();
         });
         // 一体化对应etliu end
         $.fn.updateChosenArr = function updateChosenArr(obj) {
@@ -720,7 +767,7 @@
             if (ps == T01 && ccy && portfolioId && vdate) {
                 getPtlCashPositionInfo();
             }
-
+            priceInitByInCpy();
             if ($('#price').val()) {
                 calData('price');
             }
@@ -731,6 +778,7 @@
          */
         $('#mdate').change(function () {
             checkFinMdate();
+            priceInitByInCpy();
             if ($('#price').val()) {
                 calData('price');
             }
@@ -779,6 +827,7 @@
             }else{
             	$('#settleSpreed').attr('disabled', false);
             }
+            priceInitByInCpy();
         });
         // by 赵东东 20200227 end
         /**

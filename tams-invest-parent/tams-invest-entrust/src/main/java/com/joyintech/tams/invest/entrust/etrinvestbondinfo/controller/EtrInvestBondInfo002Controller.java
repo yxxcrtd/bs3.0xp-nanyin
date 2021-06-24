@@ -411,4 +411,17 @@ public class EtrInvestBondInfo002Controller extends BaseController {
     public BigDecimal getClosePriceByPara(@RequestBody Map<String, Object> param){
         return etrInvestBondInfoService.getClosePriceByPara(param);
     }
+
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    @ResponseBody
+    @RequestMapping("getLastPriceByPara")
+    public AjaxResult getLastPriceByPara(@RequestBody Map<String, Object> param){
+        AjaxResult result = new AjaxResult();
+        result.setData(etrInvestBondInfoService.getLastPriceByPara(param));
+        return result;
+    }
 }
