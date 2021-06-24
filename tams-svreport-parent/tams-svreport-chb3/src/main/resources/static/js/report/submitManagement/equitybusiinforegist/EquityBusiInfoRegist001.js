@@ -144,10 +144,10 @@ $(function() {
             {title: '业务发生地所属监管',field:'busiFsa', width:150},
             {title: '交易柜员号',field:'tranTellName', width:150},
             {title: '备注',field:'remark', width:150},
-            {field:'submitStatus', visible:false},
+//            {field:'submitStatus', visible:false},
             {field:'checkSeqno', visible:false},
             {field:'sumitSeq', visible:false},
-            {field:'busiType', visible:false}
+//            {field:'busiType', visible:false}
         ]
     });
 
