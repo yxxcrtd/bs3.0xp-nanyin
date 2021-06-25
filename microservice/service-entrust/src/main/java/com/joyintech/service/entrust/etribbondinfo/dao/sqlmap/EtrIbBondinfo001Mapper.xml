@@ -127,212 +127,208 @@
     <select id="findZqzyPositionsPage" parameterType="Map"
             resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto">
         select aaa.* from (
-            select
-            T1.ENTRUST_ID entrustId,
-            T1.ENTRUST_STATUS entrustStatus,
-            T8.REAL_NAME invManagerId,
-            T1.PORTFOLIO_ID portfolioId,
-            T2.PORTFOLIO_NAME portfolioName,
-            T1.FINPROD_ID,
-            T3.FINPROD_MARKET_ID finprodMarketId,
-            T3.FINPROD_ABBR finprodAbbr,
-            T4.TYPE_9 secType1,
-            T1.PS,
-            NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
-            T1.PRICE_MODEL priceModel,
-            T1.PRICE unitPrice,
-            T7.FULL_PRICE allPrice,
-            T7.MATURE_YIELD*100 matureYield,
-            T7.EXER_YIELD*100 exerYield,
-            T7.SETTLE_SPREED,
-            T1.VDATE,
-            T1.MDATE,
-            NVL(T5.FINISH_AMT,0)/100 finishAmt,
-            round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
-            T1.REMARK
-            ,T1.COUNTER_ID counterId
-            ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
-            from
-            WFL_ETR_ENTRUST T1
-            INNER JOIN
-            PTL_PORTFOLIO_AUTHORITY PPA
-            ON
-            T1.PORTFOLIO_ID = PPA.PORTFOLIO_ID
-            <if test="userId != null and userId != ''">
-                AND PPA.USER_ID = #{userId}
-            </if>
-            INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
-            LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
-            LEFT JOIN
-            (
-            SELECT
-            ENTRUST_ID,
-            SUM(FINISH_AMT) as FINISH_AMT
-            FROM
-            ETR_FINISH_STATUS
-            GROUP BY
-            ENTRUST_ID) T5
-            ON T1.ENTRUST_ID = T5.ENTRUST_ID
-            LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
-            LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
-            LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T1.FINPROD_ID
-            where
-            T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-                AND T1.portfolio_id in
-                <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="secType1 != null and secType1 != ''">
-                AND T4.TYPE_9 = #{secType1,jdbcType=VARCHAR}
-            </if>
-            <if test="finprodAbbr != null and finprodAbbr != ''">
-                AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
-            </if>
-            <if test="settleSpeed != null and settleSpeed != ''">
-                AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
-            </if>
-            <if test="repManager != null and repManager != ''">
-                AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
-            </if>
-            <if test="finprodIdList != null and finprodIdList.size() > 0">
-                AND T3.FINPROD_MARKET_ID in
-                <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="ps != null and !ps.equals('')">
-                AND T1.PS=#{ps}
-            </if>
-            <if test="startDate != null and !startDate.equals('')">
-                AND T1.VDATE &gt;= to_date(#{startDate},'yyyy-MM-dd')
-            </if>
-            <if test="endDate != null and !endDate.equals('')">
-                AND T1.MDATE &lt;= to_date(#{endDate},'yyyy-MM-dd')
-            </if>
-            <if test="priceModel != null and priceModel != ''">
-                AND T1.PRICE_MODEL = #{priceModel}
-            </if>
-            <if test="entrustStatus != null and entrustStatus != '' and entrustStatus != '00'"> <!-- 00表示查询全部状态 -->
-                AND T1.ENTRUST_STATUS = #{entrustStatus}
-            </if>
-            <if test="entrustId != null and entrustId != ''">
-                AND T1.ENTRUST_ID = #{entrustId}
-            </if>
-            <if test="entrustDate != null and entrustDate != ''">
-                AND T1.ENTRUST_DATE = to_date(#{entrustDate},'yyyy-MM-dd')
-            </if>
-            <if test="isFlowIng != null and isFlowIng != ''"> <!-- 只查流程中的数据 -->
-                UNION ALL
-                select
-                T1.ENTRUST_ID entrustId,
-                T1.ENTRUST_STATUS entrustStatus,
-                T8.REAL_NAME invManagerId,
-                T1.PORTFOLIO_ID portfolioId,
-                T2.PORTFOLIO_NAME portfolioName,
-                T1.FINPROD_ID,
-                T3.FINPROD_MARKET_ID finprodMarketId,
-                T3.FINPROD_ABBR finprodAbbr,
-                T4.TYPE_9 secType1,
-                T1.PS,
-                NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
-                T1.PRICE_MODEL priceModel,
-                T1.PRICE unitPrice,
-                T7.FULL_PRICE allPrice,
-                T7.MATURE_YIELD*100 matureYield,
-                T7.EXER_YIELD*100 exerYield,
-                T7.SETTLE_SPREED,
-                T1.VDATE,
-                T1.MDATE,
-                NVL(T5.FINISH_AMT,0)/100 finishAmt,
-                round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
-                T1.REMARK
-                ,T1.COUNTER_ID counterId
-                ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
-                from
-                ETR_ENTRUST T1
-                INNER JOIN
-                PTL_PORTFOLIO_AUTHORITY PPA
-                ON
-                T1.PORTFOLIO_ID = PPA.PORTFOLIO_ID
-                <if test="userId != null and userId != ''">
-                    AND PPA.USER_ID = #{userId}
-                </if>INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
-                LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
-                LEFT JOIN
-                (
-                SELECT
-                ENTRUST_ID,
-                SUM(
-                FINISH_AMT) as FINISH_AMT
-                FROM
-                ETR_FINISH_STATUS
-                GROUP BY
-                ENTRUST_ID) T5
-                ON T1.ENTRUST_ID = T5.ENTRUST_ID
-                LEFT
-                JOIN ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
-                LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
-                LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T1.FINPROD_ID
-                where
-                T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-                and T1.TRADE_MARKET = #{TRADE_MARKET_01}
-                <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-                    AND (T1.portfolio_id in
-                    <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                        #{item}
-                    </foreach>
-                    OR T2.PARENT_PORTFOLIO_ID in
-                    <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                        #{item}
-                    </foreach>)
-                </if>
-                <if test="secType1 != null and secType1 != ''">
-                    AND T4.TYPE_9 = #{secType1,jdbcType=VARCHAR}
-                </if>
-                <if test="finprodAbbr != null and finprodAbbr != ''">
-                    AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
-                </if>
-                <if test="settleSpeed != null and settleSpeed != ''">
-                    AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
-                </if>
-                <if test="repManager != null and repManager != ''">
-                    AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
-                </if>
-                <if test="finprodIdList != null and finprodIdList.size() > 0">
-                    AND T3.FINPROD_MARKET_ID in
-                    <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="ps != null and !ps.equals('')">
-                    AND T1.PS=#{ps}
-                </if>
-                <if test="startDate != null and !startDate.equals('')">
-                    AND T1.VDATE &gt;= to_date(#{startDate},'yyyy-MM-dd')
-                </if>
-                <if test="endDate != null and !endDate.equals('')">
-                    AND T1.MDATE &lt;= to_date(#{endDate},'yyyy-MM-dd')
-                </if>
-                <if test="priceModel != null and priceModel != ''">
-                    AND T1.PRICE_MODEL = #{priceModel}
-                </if>
-                <if test="entrustStatus != null and entrustStatus != '' and entrustStatus != '00' "> <!-- 00表示查询全部状态 -->
-                    AND T1.ENTRUST_STATUS = #{entrustStatus}
-                </if>
-                <if test="entrustId != null and entrustId != ''">
-                    AND T1.ENTRUST_ID = #{entrustId}
-                </if>
-                <if test="entrustDate != null and entrustDate != ''">
-                    AND T1.ENTRUST_DATE = to_date(#{entrustDate},'yyyy-MM-dd')
-                </if>
-            </if>
-        )aaa
+            <choose>
+                <when test="entrustStatus == ''"> 
+                    <!-- 查询全部状态 -->
+                    <include refid="onlyEtrEntrust"></include>
+                    UNION ALL
+                    <include refid="onlyWtfEtrEntrust"></include>
+                </when>
+                <when test="entrustStatus == #{ENTRUST_STATUS_08}"> 
+                    <!-- 只查流程中的数据 -->
+                    <include refid="onlyWtfEtrEntrust"></include>
+                </when>
+                <otherwise>
+                    <include refid="onlyEtrEntrust"></include>
+                </otherwise>
+            </choose>
+        ) aaa 
+        left join SYS_DATADICT_LIST sdl on aaa.entrustStatus=sdl.ITEM_CODE and sdl.DICT_CODE='ENTRUST_STATUS'
+        <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
-        order by aaa.entrustId DESC
+        order by sdl.ORDER_NO, aaa.entrustId DESC
     </select>
     
+    <sql id="onlyEtrEntrust">
+        select
+        T1.ENTRUST_ID entrustId,
+        T1.ENTRUST_STATUS entrustStatus,
+        T8.REAL_NAME invManagerId,
+        T1.PORTFOLIO_ID portfolioId,
+        T2.PORTFOLIO_NAME portfolioName,
+        T1.FINPROD_ID,
+        T3.FINPROD_MARKET_ID finprodMarketId,
+        T3.FINPROD_ABBR finprodAbbr,
+        T4.TYPE_9 secType1,
+        T1.PS,
+        NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
+        T1.PRICE_MODEL priceModel,
+        T1.PRICE unitPrice,
+        T7.FULL_PRICE allPrice,
+        T7.MATURE_YIELD*100 matureYield,
+        T7.EXER_YIELD*100 exerYield,
+        T7.SETTLE_SPREED,
+        T1.VDATE,
+        T1.MDATE,
+        NVL(T5.FINISH_AMT,0)/100 finishAmt,
+        round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
+        T1.REMARK
+        ,T1.COUNTER_ID counterId
+        ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        from
+        ETR_ENTRUST T1
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY PPA
+        ON
+        T1.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+        LEFT JOIN
+        (
+        SELECT
+        ENTRUST_ID,
+        SUM(
+        FINISH_AMT) as FINISH_AMT
+        FROM
+        ETR_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T5
+        ON T1.ENTRUST_ID = T5.ENTRUST_ID
+        LEFT
+        JOIN ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
+        LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
+        LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T1.FINPROD_ID
+        where
+        T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        and T1.TRADE_MARKET = #{TRADE_MARKET_01}
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            AND (T1.portfolio_id in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            OR T2.PARENT_PORTFOLIO_ID in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>)
+        </if>
+        <if test="finprodAbbr != null and finprodAbbr != ''">
+            AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="settleSpeed != null and settleSpeed != ''">
+            AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
+        </if>
+        <if test="repManager != null and repManager != ''">
+            AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodIdList != null and finprodIdList.size() > 0">
+            AND T3.FINPROD_MARKET_ID in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="ps != null and !ps.equals('')">
+            AND T1.PS=#{ps}
+        </if>
+        <if test="entrustStatus != null and entrustStatus != '' and entrustStatus != '00' "> <!-- 00表示查询全部状态 -->
+            AND T1.ENTRUST_STATUS = #{entrustStatus}
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND T1.ENTRUST_ID = #{entrustId}
+        </if>
+        <if test="entrustStartDate!=null and entrustStartDate!='' and  entrustEndDate!=null and entrustEndDate!='' ">
+            <![CDATA[ AND to_date(T1.ENTRUST_DATE,'yyyy-mm-dd')  >= to_date(#{entrustStartDate},'yyyy-mm-dd') ]]>
+            <![CDATA[ AND to_date(T1.ENTRUST_DATE,'yyyy-mm-dd') <= to_date(#{entrustEndDate},'yyyy-mm-dd') ]]>
+        </if>
+        <if test="isFlowIng != null and isFlowIng != ''"> <!-- 只查流程中的数据 -->
+            AND 1=2
+        </if>
+    </sql>
+    <sql id="onlyWtfEtrEntrust">
+        select
+        T1.ENTRUST_ID entrustId,
+        T1.ENTRUST_STATUS entrustStatus,
+        T8.REAL_NAME invManagerId,
+        T1.PORTFOLIO_ID portfolioId,
+        T2.PORTFOLIO_NAME portfolioName,
+        T1.FINPROD_ID,
+        T3.FINPROD_MARKET_ID finprodMarketId,
+        T3.FINPROD_ABBR finprodAbbr,
+        T4.TYPE_9 secType1,
+        T1.PS,
+        NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
+        T1.PRICE_MODEL priceModel,
+        T1.PRICE unitPrice,
+        T7.FULL_PRICE allPrice,
+        T7.MATURE_YIELD*100 matureYield,
+        T7.EXER_YIELD*100 exerYield,
+        T7.SETTLE_SPREED,
+        T1.VDATE,
+        T1.MDATE,
+        NVL(T5.FINISH_AMT,0)/100 finishAmt,
+        round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
+        T1.REMARK
+        ,T1.COUNTER_ID counterId
+        ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        from
+        WFL_ETR_ENTRUST T1
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY PPA
+        ON
+        T1.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
+        INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+        LEFT JOIN
+        (
+        SELECT
+        ENTRUST_ID,
+        SUM(FINISH_AMT) as FINISH_AMT
+        FROM
+        ETR_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T5
+        ON T1.ENTRUST_ID = T5.ENTRUST_ID
+        LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
+        LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
+        LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T1.FINPROD_ID
+        where
+        T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            AND T1.portfolio_id in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodAbbr != null and finprodAbbr != ''">
+            AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="settleSpeed != null and settleSpeed != ''">
+            AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
+        </if>
+        <if test="repManager != null and repManager != ''">
+            AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodIdList != null and finprodIdList.size() > 0">
+            AND T3.FINPROD_MARKET_ID in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="ps != null and !ps.equals('')">
+            AND T1.PS=#{ps}
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND T1.ENTRUST_ID = #{entrustId}
+        </if>
+        <if test="entrustStartDate!=null and entrustStartDate!='' and  entrustEndDate!=null and entrustEndDate!='' ">
+            <![CDATA[ AND T1.ENTRUST_DATE >= to_date(#{entrustStartDate},'yyyy-mm-dd') ]]>
+            <![CDATA[ AND T1.ENTRUST_DATE <= to_date(#{entrustEndDate},'yyyy-mm-dd') ]]>
+        </if>
+    </sql>
     <sql id="vagueQueryWhere">
         <if test="vagueQuery != null and vagueQuery != ''">
             <where>

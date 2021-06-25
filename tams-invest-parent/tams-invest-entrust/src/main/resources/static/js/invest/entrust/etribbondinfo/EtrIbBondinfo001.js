@@ -2,25 +2,6 @@
  * 持仓信息（右上）
  */
 (function(){
-    var queryData={}; // 指令管理tab查询弹出框接受查询数据
-    var isConfirm = false; // 是否弹出框点击确认，只有确认才触发查询
-    
-    var executeQuery = function (obj) {
-        queryData = obj;
-        queryData.portfolioId = obj.portfolioId != null ? obj.portfolioId.join(",") : queryData.portfolioId;
-        isConfirm = true;
-    }
-
-    /**
-     * 对弹出框提供方法赋值
-     * @type {{executeQuery: executeQuery}}
-     */
-    parent.EtrIbBondinfo001 = {
-        executeQuery:executeQuery,
-    }
-    EtrIbBondinfo001 = {
-        executeQuery:executeQuery,
-    }
 
     // 持仓
     function getPositionsSearchParams(){
@@ -34,15 +15,16 @@
     // 指令管理tab-获取查询条件
     function getZqzyPositionParams() {
         var data = $.serializeToObject('#searchForm_zqzy');
-        queryData.vagueQuery = data.vagueQuery; // 关键字模糊查询
-        queryData.entrustStatus=data.entrustStatus; // 指令状态
-        queryData.isFlowIng=data.isFlowIng; // 是否流程中
-        return queryData;
+        data.portfolioId = data.portfolioId ? data.portfolioId.join(','):'';
+        if(data.entrustDate){
+            data.entrustStartDate=$("#entrustDate").startDate();
+            data.entrustEndDate=$("#entrustDate").endDate();
+        }
+        return data;
     }
 
     // 放大镜触发事件
     serachKey = function () {
-        queryData = {}; // 清空弹出框条件
         positionsTable_zqzy.reload();
     }
     
@@ -237,23 +219,35 @@
         $(".cc-transfer-form #EtrIbBondinfo001_btn_search").click(function () {
             positionsTable.load();
         })
-        $(".transfer-form #EtrIbBondinfo001_btn_search").click(function () {
-            // 指令管理tab
-            var isOpen = confirm("是否打开高级查询界面？");
-            if(isOpen){
-                Joyin.dialog("查询",
-                    basePath +'invest/entrust/etribbondinfo/EtrIbBondinfo001/queryDialog?parentPageId=' + pageId, '90%', '90%',
-                    queryData, function (){
-                        if(isConfirm) { // 只有点击确认才会查询，关闭&取消不会查询
-                            positionsTable_zqzy.reload();
-                        }
-                        isConfirm = false;
-                    }
-                )
-            }else{
-                positionsTable_zqzy.reload();
+        $(".transfer-form #EtrIbBondinfo001_btn_search").click(function () { 
+            // 指令管理tab-->查询
+            if($("#EtrIbBondinfo001_selectorConditionFilter").css("display")=="none"){
+                $("#EtrIbBondinfo001_selectorConditionFilter").show();
+            }
+            else{
+                $("#EtrIbBondinfo001_selectorConditionFilter").hide();
             }
         })
+
+        // 指令管理tab-->查询dialog 确认
+        $('#EtrIbBondinfo001_queryDialog_btn_realseach').click(function() {
+            positionsTable_zqzy.table ? positionsTable_zqzy.reload() : positionsTable_zqzy.load();
+            $("#EtrIbBondinfo001_selectorConditionFilter").hide();
+        });
+        // 指令管理tab-->查询dialog 取消
+        $('#EtrIbBondinfo001_queryDialog_btn_seachClose').click(function() {
+            $("#EtrIbBondinfo001_selectorConditionFilter").hide();
+        });
+        // 指令管理tab-->查询dialog 重置
+        $('#EtrIbBondinfo001_queryDialog_btn_seachReset').click(function() {
+            $("#entrustOrder_portfolioId").empty(); // 重置组合名称
+            $('#searchForm_zqzy')[0].reset();
+        });
+        // 指令管理tab-->委托单选按钮查询
+        $("input[name=entrustStatus]").click(function(){
+            positionsTable_zqzy.table ? positionsTable_zqzy.reload() : positionsTable_zqzy.load();
+        });
+        
         $(".cc-transfer-form #EtrIbBondinfo001_btn_export").click(getPositionsExportExcel)
         $(".transfer-form #EtrIbBondinfo001_btn_export").click(getZqzyPositionExportExcel)
 
