@@ -238,7 +238,11 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
         List<ValidMessage> errorList = new ArrayList<>();
         errorList.addAll(baseEtrInvestInfoService.checkDelegateOperation(entrustId, delegateOperationType,
                 traderList, delegateCloseWay));
-        if (StringUtil.isNotEmpty(dto.getSettleSpreed()) && StringUtil.isNotEmpty(dto.getVdate()) && StringUtil.isNotEmpty(dto.getFinprodMarketId())) {
+        if (StringUtil.isNotEmpty(dto.getSettleSpreed())
+                && StringUtil.isNotEmpty(dto.getVdate())
+                && StringUtil.isNotEmpty(dto.getFinprodMarketId())
+                //债券二级指令中，若是一级市场可以选择未起息的债券进行提交，若是二级市场提交时加上控制：委托终止日+清算速度<债券起息日 ，不允许提交。
+                && StringUtil.equals(dto.getTradeMarketMode(), DictCodeListExt1.交易市场_二级市场.getValue())) {
             Date vDate = DateUtil.addDay(dto.getVdate(), Integer.parseInt(dto.getSettleSpreed()));//委托开始日+清算速度
             Date bondVDate = this.getBondVDate(dto.getFinprodMarketId());//债券起息日
             if (DateUtil.compareDate(vDate, bondVDate) < 0) {//委托开始日+清算速度<债券起息日，不允许提交
