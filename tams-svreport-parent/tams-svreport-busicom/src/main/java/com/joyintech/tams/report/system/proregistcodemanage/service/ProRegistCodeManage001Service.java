@@ -324,7 +324,8 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             //系统中所有产品代码对应产品登记编码信息
             Map<String,String> prodIdToRegCodeMap = proRegistCodeManage001Mapper.selectProdInfo().stream().collect(JoyinCollectors.toMap(x->x.get("PRODID"),x->x.get("REGCODE")));
             //产品代码            	//update by leipeng 产品登记编码导入完成后，导入模板理财产品代码为cp002 但是导入库是行内标识码
-            String error0 =checkCode2(list.get(4), "产品代码", 30, true);
+            /****ZGBSSE-907  产品登记编码管理画面，导入时，理财产品代码长度为100时，报错【产品代码输入的内容超过最大长度限制，最大长度为30】**/
+            String error0 =checkCode2(list.get(4), "产品代码", 100, true);
             if (StringUtil.isNotEmpty(error0)) {
                 message.add(error0);
             }
