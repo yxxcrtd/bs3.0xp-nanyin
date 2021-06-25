@@ -177,7 +177,7 @@ shiro:
     /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
     /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**, /api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-
+  allowDuplicateLogin: true#是否允许重复登录
 specialsyspara:
   parakey: AUTHORIZE_LIMIT||PRICE_CAL_TYPE||portfolio_handle_userid||settle_acct_name||settle_acct_no||prod_tru_acct_no||prod_tru_acct_name||lending_acct_no||lending_acct_name
 #页面特殊参数取值
@@ -198,7 +198,7 @@ application:
     chbPerNo: '00' #中债一二三期部署方式(01:独立一二期  03：独立三期  00：一起部署)
     download-file-path-movepath: E:/home/wasadmin/sharedata/chb/recive/CB/bak
     base64Key: HF*ts303HF*ts303
-    dangbanFlag: '01'#01标识挡板  02直连
+    dangbanFlag: '01'#01标识挡板  02直联
   cache:
     file: classpath:ehcache_app.xml
   remindPage: invest/remindMain
@@ -226,9 +226,9 @@ application:
   riskTestMaxCorePoolSize: 20
   riskTestmaxSubmitProductSize: 50
   versionInfo:
-     systemVersion: V2.1.6
+     systemVersion: V2.1.7
      lastChromeVersion: 73
-     customerName: 某某银行
+     customerName: 兆尹科技
 #  不使用服务注册中心,tams和tams-service-container分开部署的方式
 #  loadbalance: false
 #  micorservice:
