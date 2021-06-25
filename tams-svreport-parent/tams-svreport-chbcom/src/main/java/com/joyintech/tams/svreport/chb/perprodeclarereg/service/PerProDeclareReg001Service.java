@@ -1413,8 +1413,11 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				fileSb.append(GlobalConstant.COMMA);
 				List<String> fileInfoList = fileExistsMap1.get(key);
 				for (String fileInfo : fileInfoList){
-					fileSb.append(fileInfo);
-					fileSb.append(GlobalConstant.COMMA);
+					/**ZGBSSE-854  【中债直连】：申报登记，9大附件上传入库信息多余逗号导致直连报文有误***/
+					if(StringUtil.isNotEmpty(fileInfo)){
+						fileSb.append(fileInfo);
+						fileSb.append(GlobalConstant.COMMA);
+					}
 				}
 				fileSb = new StringBuffer(fileSb.substring(0, fileSb.length() - GlobalConstant.COMMA.length()));
 				fileSb.append(GlobalConstant.SEMICOLON);
