@@ -23,11 +23,14 @@ import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -82,7 +85,7 @@ public class EtrIbBondinfo001Service extends BaseService{
         }
         
         addCondionTradeMarket(pageParam); // 交易场所，仅限银行间指令
-        
+        pageParam.put("BOND_PRICE", BussinessConstant.BOND_PRICE);
         Page<EtrIbBondinfo001Dto> result = super.queryForPage(page, length, () -> etrIbBondinfo001Mapper.findPositionsPage(pageParam));
 
         //根据资产代码查询相关所有的交易信息
@@ -119,14 +122,49 @@ public class EtrIbBondinfo001Service extends BaseService{
                         }
                     }
                 }
+                //单位持仓成本
+                dto.setUnitCost(yesterDaycostPosition);
+                //取实时行情
+                String secCode = (String) pageParam.get("seccode");
+        		String url = pageParam.get("MarketInfoInterf_cmdsUrl")+"/rest/markinfo/sec/getMarkinfoBySecCode?seccode=" + secCode;
+				Map<String, Object> map = getMarketInfo(url);
+				if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("data"))) {
+					Map<String, Object> data = (Map<String, Object>)map.get("data");
+					if(StringUtil.isNotEmpty(data.get("latestCleanPrice"))) {
+						//最新净价取实时行情净价
+						dto.setPrice(new BigDecimal(data.get("latestCleanPrice").toString()).setScale(4, BigDecimal.ROUND_HALF_UP));
+						//持仓市值=持仓券面总额*最新净价/单位面值
+						dto.setPositionsPrice(dto.getShareAmt().multiply(dto.getPrice()).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+				}
                 //持仓成本=持仓券面总额(万元)*持仓单位成本*100
-                dto.setPositionsAmt(ArithmeticUtil.multiply(dto.getShareAmt(), yesterDaycostPosition, new BigDecimal(100)));
+                //dto.setPositionsAmt(ArithmeticUtil.multiply(dto.getShareAmt(), yesterDaycostPosition, new BigDecimal(100)));
+				//持仓成本=持仓数量*持仓单位成本
+				dto.setPositionsAmt(ArithmeticUtil.multiply(dto.getAmount(), yesterDaycostPosition).divide(new BigDecimal(10000)));
                 //浮动盈亏 = 持仓市值-持仓成本
                 dto.setFloatingPl(ArithmeticUtil.subtract(dto.getPositionsPrice(), dto.getPositionsAmt()));
             }
         }
         return result;
 
+    }
+    
+    /**
+     * 请求市场行情数据接口
+     * @param url
+     * @return
+     */
+    public Map<String,Object> getMarketInfo(String url){
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(1000);
+        factory.setReadTimeout(1000);
+        RestTemplate template = new RestTemplate(factory);
+        try {
+            Map<String, Object> quoteMap = template.getForObject(url, Map.class);
+            return quoteMap;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**

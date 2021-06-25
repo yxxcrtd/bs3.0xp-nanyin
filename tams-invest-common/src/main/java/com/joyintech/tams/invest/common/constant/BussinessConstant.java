@@ -415,4 +415,7 @@ public interface BussinessConstant {
     
     //是否启用银行间单指令模式
     static final String SINGLE_ETR_ISSHOW = "single_etr_isshow";
+    
+    //债券面值，暂定100
+    static final int BOND_PRICE = 100;
 }

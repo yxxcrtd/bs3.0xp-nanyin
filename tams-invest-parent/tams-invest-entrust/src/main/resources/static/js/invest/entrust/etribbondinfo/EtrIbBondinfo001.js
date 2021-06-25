@@ -66,11 +66,13 @@
                 },sortField:"finprodMarketId"
             }
             ,{field:'finprodAbbr', title: 'EtrInvestBondInfo001.finprodAbbr', width:180,sortField:"finprodAbbr"}
+            ,{field:'invAimStr', title: 'EtrIbBondinfo001.invAim', width:180,sortField:"invAim"}//投资目的
             ,{field:'secType1Name', title: 'EtrIbBondinfo001.secType1', sortField:'secType1',width : 100}//资产名称
             ,{field:'shareAmt', title: 'EtrIbBondinfo001.shareAmt',type:'money', width : 150}//持仓券面总额(万元)
             ,{field:'avaPledgePrin', title: 'EtrIbBondinfo001.avaPledgePrin',type:'money', width : 150}//质押券面总额(万元)
             ,{field:'avaShareAmt', title: 'EtrIbBondinfo001.avaShareAmt',type:'money', width : 150}//可用券面总额(万元)
             ,{field:'positionsAmt', title: 'EtrIbBondinfo001.positionsAmt',type:'money', width : 150}//持仓成本
+            ,{field:'unitCost', title: 'EtrIbBondinfo001.unitCost',type:'money', width : 150}//持仓成本价
             ,{field:'price', title: 'EtrIbBondinfo001.price',type:'number', digit:4, width : 100}//最新价
             ,{field:'positionsPrice', title: 'EtrIbBondinfo001.positionsPrice',type:'money', width : 150}//持仓市值（元）
             ,{field:'floatingPl', title: 'EtrIbBondinfo001.floatingPl',type:'money', width : 150}//浮动盈亏

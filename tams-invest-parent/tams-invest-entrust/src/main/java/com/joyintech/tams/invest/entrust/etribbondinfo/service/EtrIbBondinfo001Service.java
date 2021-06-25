@@ -88,6 +88,7 @@ public class EtrIbBondinfo001Service extends CommonExportService<EtrIbBondinfo00
 	public Page<EtrIbBondinfo001Dto> findPositionsPage(Map<String, Object> param) {
 		try {
 			String userId = SecurityUtil.getLoginUser().getUserName();
+			param.put("MarketInfoInterf_cmdsUrl", MarketInfoInterf_cmdsUrl);
 			if (StringUtils.isNotEmpty(userId)) {
 				logger.info("请求用户【{}】", "userId = " + userId);
 				param.put("userId", SecurityUtil.getLoginUser().getUserName());
