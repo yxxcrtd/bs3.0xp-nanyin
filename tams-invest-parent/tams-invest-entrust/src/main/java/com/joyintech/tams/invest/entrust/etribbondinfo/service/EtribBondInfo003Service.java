@@ -57,6 +57,7 @@ import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.SecInfoModelDto;
+import com.joyintech.tams.invest.entrust.etribrepo.dto.EtribRepoInfo003Dto;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -1074,23 +1075,20 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
         CommonBusinessService commonBusinessService = SpringContextUtil.getBean(CommonBusinessService.class);
         if (taskId != null) {
             try {
-                if (dto.isImportFlow()) {
-                    Map<String, Object> param = new HashMap<>();
-                    param.put(BussinessConstant.是否需要上级审批, true);
-                    return param;
-                }
-                BigDecimal amount = dto.getEntrustNum();
-                if (amount == null) {
-                    amount = dto.getEntrustAmt();
-                }
-                Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getEntrustNum(), LoginUserUtil.getUserName(),
-                        BussinessDictCodeList.平安资产类型_债券.getValue(), dto.getAssetType1(), dto.getTradeMarket(), dto.getPs()
-                        , dto.getFinprodId(), entity.getWorkflowId()
-                );
-                // add by zhangrui1 风险审批修改 start
-                params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
-                // add by zhangrui1 风险审批修改 end
-                return commonBusinessService.是否需要上级审批_委托用(params);
+            	if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH_IS_TOTAL), "Y")){
+           		 	return getEtrLimitSwitch(entity.getWorkflowId(), dto, commonBusinessService);
+            	}else{
+//           		BussinessConstant.是否需要上级审批
+	           		List<EtribBondInfo003Dto> etribRepoInfo003DtoList =dto.getEtrInvestBondInfoDtos();
+	           		Map<String, Object> result = new HashMap<>();
+	           		for(EtribBondInfo003Dto etribBondInfo003Dto:etribRepoInfo003DtoList){
+	           			result=getEtrLimitSwitch(entity.getWorkflowId(), etribBondInfo003Dto, commonBusinessService);
+	           			if((boolean)result.get(BussinessConstant.是否需要上级审批)==true){
+	           				return result;
+	           			}
+	           		}
+	           		return result;
+           		}
             }
             catch (WorkFlowException e) {
                 // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
@@ -1101,4 +1099,25 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
             return null;
         }
     }
+    
+    private Map<String, Object> getEtrLimitSwitch(String workflowId, EtribBondInfo003Dto dto,
+			CommonBusinessService commonBusinessService) throws WorkFlowException {
+    	if (dto.isImportFlow()) {
+            Map<String, Object> param = new HashMap<>();
+            param.put(BussinessConstant.是否需要上级审批, true);
+            return param;
+        }
+        BigDecimal amount = dto.getEntrustNum();
+        if (amount == null) {
+            amount = dto.getEntrustAmt();
+        }
+        Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getEntrustNum(), LoginUserUtil.getUserName(),
+                BussinessDictCodeList.平安资产类型_债券.getValue(), dto.getAssetType1(), dto.getTradeMarket(), dto.getPs()
+                , dto.getFinprodId(), workflowId
+        );
+        // add by zhangrui1 风险审批修改 start
+        params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
+        // add by zhangrui1 风险审批修改 end
+        return commonBusinessService.是否需要上级审批_委托用(params);
+	}
 }
