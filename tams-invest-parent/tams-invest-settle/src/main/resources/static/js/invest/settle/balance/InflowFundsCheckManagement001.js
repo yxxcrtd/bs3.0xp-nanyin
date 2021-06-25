@@ -275,7 +275,19 @@ var parenPage = function () {
     }
 
     var sysExportExcel = function () {
-        Joyin.exportExcel('export', getSearchParamsSys());
+
+        if (flowTopTable != null && flowTopTable != '') {
+            var selArr = flowTopTable.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            Joyin.exportExcel('export', getSearchParamsSys());
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
+
     };
 
     var enExportExcel = function () {
