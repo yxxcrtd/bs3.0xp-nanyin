@@ -1832,7 +1832,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     deal.CCY CCY,/*币种*/
     deal.trade_amt AMT,/*发生金额*/
     null CNY_AMT,/*折算人民币*/
-    nvl(deal.SHARE_AMT,0) NUM,/*数量*/
+    nvl(deal.trade_amt,0) NUM,/*数量*/
     DECODE(deal.PS,'T99','12','T98','11' ) CUR_ASSET_TYPE,/*资金流动类型*/
     '无' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
     deal.SETTLE_DATE DEALDATE,/*交易日期*/
@@ -4897,7 +4897,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       deal.CCY CCY,/*币种*/
       deal.trade_amt AMT,/*发生金额*/
       null CNY_AMT,/*折算人民币*/
-      nvl(deal.SHARE_AMT,0) NUM,/*数量*/
+      nvl(deal.trade_amt,0) NUM,/*数量*/
       DECODE(deal.PS,'T99','12','T98','11' ) CUR_ASSET_TYPE,/*资金流动类型*/
       '无' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
       deal.SETTLE_DATE DEALDATE,/*交易日期*/
