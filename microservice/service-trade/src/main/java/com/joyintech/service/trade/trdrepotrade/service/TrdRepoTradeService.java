@@ -290,11 +290,16 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
      */
     public List<SuggestDto> getSecManageAcctId(Map<String, Object> param) {
         Object finprodIdTemp = param.get("finprodId");
+        Object finprodName = param.get("finprodName");
         String finProdType = DictCodeListExt1.金融产品类型_投管用_债券.getValue();
-        if(StringUtil.isNotEmpty(finprodIdTemp) && !StringUtil.equals(finprodIdTemp.toString().substring(0, 3), "F01")){
-            param.put("finprodName",finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodIdTemp.toString()));
+        if(StringUtil.isNotEmpty(finprodName)){
+            param.put("finprodName",finprodName);
         }else{
-            param.put("finprodName",finprodIdTemp);
+            if(StringUtil.isNotEmpty(finprodIdTemp) && !StringUtil.equals(finprodIdTemp.toString().substring(0, 3), "F01")){
+                param.put("finprodName",finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodIdTemp.toString()));
+            }else{
+                param.put("finprodName",finprodIdTemp);
+            }
         }
         return this.queryForSuggest(() -> this.trdRepoTradeMapper.getSecManageAcctId(param),
                 null);

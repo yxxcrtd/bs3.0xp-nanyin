@@ -595,6 +595,48 @@
                     AND FP.REGIST_ORG = B.REGIST_ORG
                 </if>
 	        </where>
+
+            UNION
+
+            SELECT distinct
+            A.ACCT_NO hidCode,
+            A.ACCT_NO code,
+            B.SEC_ACCT_NAME name,
+            B.SEC_ACCT_NAME shortName
+            FROM PTL_SEC_ACCT A
+            INNER JOIN STL_SEC_ACCT_INFO B
+            ON A.ACCT_NO = B.SEC_ACCT_ID
+            <if test="finprodId !=null and finprodId !='' ">
+                LEFT JOIN interf_payhsrcsecinfo FP
+                ON CONCAT('F01_',FP.SECID) =#{finprodId,jdbcType=VARCHAR}
+            </if>
+            <where>
+                <if test="portfolioId !=null and portfolioId !='' ">
+                    PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
+                </if>
+
+                <if test="search != null and search != ''">
+                    AND
+                    (
+                    A.ACCT_NO LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    B.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    )
+                </if>
+                <if test="initValue != null and initValue != ''">
+                    AND (A.ACCT_NO = #{initValue, jdbcType=VARCHAR} OR
+                    (PORTFOLIO_ID || A.ACCT_NO) = #{initValue, jdbcType=VARCHAR}
+                    )
+                </if>
+                <!--根据交易场所筛选 add by lishuping  20190924 start-->
+                <if test="tradeMarket !=null and tradeMarket !='' ">
+                    AND TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
+                </if>
+                <!--根据交易场所筛选 add by lishuping  20190924 end-->
+                <if test="finprodId !=null and finprodId !='' ">
+                    AND FP.INSTITUTION = B.REGIST_ORG
+                </if>
+            </where>
         </if>
          <if test="zhilingtype != null and zhilingtype == '02'">
            	SELECT
