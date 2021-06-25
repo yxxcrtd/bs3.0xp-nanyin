@@ -1,14 +1,16 @@
 DELETE FROM CHB_DATACHECK_RULE WHERE SRCPROPERTY = 'IS_FHXGCP';
 
---/*母公司执行*/
+/***母公司执行**/
 --insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('BASEINFO-6813-5A9E-E050-007F01000156','CHB_PRD_BASEINFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','inDatadict','IS_FHXGCP','==','IS_FHXGCP','新老产品标记不在值域范围内。','E','Y');
 --insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('BASEINFO-6813-5A9E-E050-007F01000157','CHB_PRD_BASEINFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','IS_FHXGCP','','','新老产品标记要素不可为空。','E','N');
 --insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE-00-0000-000000000001','CHB_PRD_DECLARE','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','inDatadict','IS_FHXGCP','==','IS_FHXGCP','新老产品标记不在值域范围内。','E','Y');
 --insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE-00-0000-000000000002','CHB_PRD_DECLARE','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','IS_FHXGCP','','','新老产品标记要素不可为空。','E','N');
 --insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE_SUB_000-000000000001','CHB_PRD_DECLARE_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','inDatadict','IS_FHXGCP','==','IS_FHXGCP','新老产品标记不在值域范围内。','E','Y');
 --insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE_SUB_000-000000000002','CHB_PRD_DECLARE_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','IS_FHXGCP','','','新老产品标记要素不可为空。','E','N');
---insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE_SUB_000-000000000003','CHB_PRD_DECLARE_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','IS_FHXGCP','==','0','新老产品标记要素必须为空。','E','Y');
---/*子公司执行*/
-insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('BASEINFO-6813-5A9E-E050-007F01000157','CHB_PRD_BASEINFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','IS_FHXGCP','==','0','新老产品标记要素必须为空。','E','Y');
-insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE-00-0000-000000000002','CHB_PRD_DECLARE','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','IS_FHXGCP','==','0','新老产品标记要素必须为空。','E','Y');
-insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE_SUB_000-000000000002','CHB_PRD_DECLARE_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','IS_FHXGCP','==','0','新老产品标记要素必须为空。','E','Y');
+
+
+
+/***子公司执行**/
+--insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('BASEINFO-6813-5A9E-E050-007F01000157','CHB_PRD_BASEINFO','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','IS_FHXGCP','!=','0','新老产品标记要素必须为空。','E','Y');
+--insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE-00-0000-000000000002','CHB_PRD_DECLARE','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','IS_FHXGCP','!=','0','新老产品标记要素必须为空。','E','Y');
+--insert into CHB_DATACHECK_RULE (CHECKRULEID,DATATYPE,CHECKCLASS,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,REMARK,STATUS,NULLABLE) values ('CHB_PRD_DECLARE_SUB_000-000000000003','CHB_PRD_DECLARE_SUB','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','IS_FHXGCP','!=','0','新老产品标记要素必须为空。','E','Y');
