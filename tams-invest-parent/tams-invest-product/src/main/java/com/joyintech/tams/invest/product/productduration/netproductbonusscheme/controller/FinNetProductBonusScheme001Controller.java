@@ -183,6 +183,8 @@ public class FinNetProductBonusScheme001Controller extends BaseController {
             throws Exception {
     	Map<String,Object> map = RequestUtil.getParameters(getRequest());
     	map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+        map.put("FINPROD_TYPE_TG_F24", DictCodeListExt1.金融产品类型_投管用_理财产品分层.getValue());
+        map.put("FINPROD_TYPE_TG_F26", DictCodeListExt1.金融产品类型_投管用_理财子产品.getValue());
         map.put("BUSI_TYPE", DictCodeList.业务类型_净值型TA交易.getValue());
         return finNetProductBonusSchemeService.export(this.getPageId(),map);
 

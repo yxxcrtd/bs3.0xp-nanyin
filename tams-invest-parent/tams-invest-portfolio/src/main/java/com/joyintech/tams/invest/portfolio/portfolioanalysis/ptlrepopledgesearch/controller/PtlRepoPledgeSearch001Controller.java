@@ -5,10 +5,8 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil; 
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.common.base.entity.FinPledgeDisplaceDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -29,6 +27,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -173,7 +172,22 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
             throws Exception {
-        return ptlRepoPledgeSearch001Service.export(this.getPageId(),
-                RequestUtil.getParameters(getRequest()));
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            return ptlRepoPledgeSearch001Service.export(this.getPageId(),
+                    RequestUtil.getParameters(getRequest()));
+        }
+
+        List<PtlRepoPledgeSearchDto> param1 = JsonUtils.json2List(datas, PtlRepoPledgeSearchDto.class);
+        File outFile =  ptlRepoPledgeSearch001Service.makeFile(
+                "/com/joyintech/tams/invest/portfolio/portfolioanalysis/ptlrepopledgesearch/conf/export_conf.xml",
+                param1);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 }
