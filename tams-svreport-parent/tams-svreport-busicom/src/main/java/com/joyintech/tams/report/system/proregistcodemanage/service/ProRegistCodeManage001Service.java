@@ -422,7 +422,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 //                message.add(this.getMessage("系统中存在对应数据，更新数据请输入产品登记编码！"));
                 message.add("系统中存在对应数据，更新数据请输入产品登记编码！");
             }
-            String error3 =checkCode2(list.get(5), "产品运作模式", 50, false);
+            /*String error3 =checkCode2(list.get(5), "产品运作模式", 50, false);
             if (StringUtil.isNotEmpty(error3)) {
                 message.add(error3);
             }
@@ -432,7 +432,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
                     String operateMode=list.get(5).substring(0,2);
                     entity.setOperateMode(operateMode);
                 }
-            }
+            }*/
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(entity.getProdid(), String.valueOf(i+1),
                         StringUtil.joinString(message, GlobalConstant.COMMA)));
