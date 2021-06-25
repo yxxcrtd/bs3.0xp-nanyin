@@ -8,7 +8,15 @@
             min-width: 55px;
             padding: 0px 8px;
         }
-
+        .inline-item{
+            margin-left: 10px; margin-top:10px;
+        }
+        .form-label-wrap-checkbox label{
+            display:inline-block;
+            width: 120px;
+            text-align: left;
+            vertical-align: top;
+        }
 
         .layui-tab-title {
             height: 28px;
@@ -224,6 +232,10 @@
                 </div>
                 <div>
                     <h3 style="line-height: 41px;float: left;">债券信息：</h3>
+                    <a id="EtrIbBondinfoHq_checkbox_start" class="layui-btn layui-btn-sm " data-th-text="设置显示列"></a>
+                    <div id="EtrIbBondinfoHq_checkbox_background" 
+                         style="float: left;display:none;border: 1px solid #ccc; position: absolute; left: 40px; top:20px; width: 300px; background: #fff;z-index: 100 ;" >
+                    </div>
                 </div>
                 <div class="price-boundary" style="clear: both;">
                     <div class="typical-price2">
@@ -231,7 +243,7 @@
                         <label id="secName"></label>
                     </div>
                 </div>
-                <div class="price-boundary" style="clear: both;">
+                <div id="EtrIbBondinfoHq_view_contain" class="price-boundary" style="clear: both;">
                     <div class="typical-price">
                         <label>债券分类:</label>
                         <label id="secType"></label>
@@ -309,7 +321,7 @@
     <script th:inline="javascript" type="text/javascript">
     var MarketInfoInterf_BaseUrl = /*[[${MarketInfoInterf_BaseUrl}]]*/'';
     </script>
-    <script data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfoHq.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfoHq.js?new2}" type="text/javascript"></script>
 </div>
 </body>
 </html>

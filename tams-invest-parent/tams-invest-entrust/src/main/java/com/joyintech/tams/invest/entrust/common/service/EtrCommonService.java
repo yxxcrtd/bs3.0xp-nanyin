@@ -1,35 +1,33 @@
 package com.joyintech.tams.invest.entrust.common.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.ParseException;
-import java.util.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.dao.SysPageDictlistMapper;
 import com.joyintech.system.base.entity.SysPageDictlist;
-import com.joyintech.system.dict.service.SysDataDict001Service;
-import com.joyintech.system.page.service.SysPageService;
+import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductConvertible;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
+import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.tams.invest.entrust.etrboutrepo.dto.EtrBoutRepoDto;
@@ -43,10 +41,10 @@ import com.joyintech.tams.invest.entrust.etrplanassetc.dto.EtrPlanAssetCDto;
 import com.joyintech.tams.invest.entrust.etrplanassetn.dto.EtrPlanAssetNDto;
 import com.joyintech.tams.invest.entrust.etrplanassetr.dto.EtrPlanAssetRDto;
 import com.joyintech.tams.invest.entrust.etrproject.dto.EtrProjectDto;
-//import com.joyintech.tams.invest.entrust.etrprojectnet.dto.EtrProjectNetDto;
 import com.joyintech.tams.invest.entrust.etrprojectnet.dto.EtrProjectNetDto;
 import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
 import com.joyintech.tams.invest.entrust.etrseclend.dto.EtrSecLendDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,23 +52,9 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
-import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
-import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 
 /**
  * @program: 2.1.0
@@ -1273,5 +1257,16 @@ public class EtrCommonService extends BaseService<ITableRow> {
  				ValidMessage.class);
  		return validMessageList;
  	}
- 	
+
+    public String selectByDynId(Map<String, Object> param) {
+ 	    String dynId = param.get("dynId") + "";
+        String url = ServiceApplication.COMMON_SERVICE_NAME + "/dynamicConfig/selectByDynId";
+        String str = restTemplate.postForObject(url, dynId, String.class);
+        return str;
+    }
+
+    public Integer updateByParam(Map<String, Object> param) {
+        String url = ServiceApplication.COMMON_SERVICE_NAME + "/dynamicConfig/updateByParam";
+        return restTemplate.postForObject(url, param, Integer.class);
+    }
 }
