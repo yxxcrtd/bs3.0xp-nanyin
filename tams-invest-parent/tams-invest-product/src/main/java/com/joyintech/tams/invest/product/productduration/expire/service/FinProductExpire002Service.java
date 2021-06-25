@@ -15,7 +15,6 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
-import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -126,6 +125,7 @@ public class FinProductExpire002Service extends BaseService<FinProductExpire002D
         entity.setPs(entity.getDealType());
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             // 先删除流程中数据
+            AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getBusiNo());
             this.doDelete(entity.getWorkflowId());
             // 2.0改造
             this.setFinProductExpireBaseTrdDto(entity);
