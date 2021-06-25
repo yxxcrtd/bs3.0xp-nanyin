@@ -741,6 +741,8 @@ public enum DictCodeList implements BaseDictCodeList {
 	委托状态_已退回(DictCode.委托状态,"05","已退回"),
 	委托状态_已关闭(DictCode.委托状态,"06","已关闭"),
 	委托状态_已撤回(DictCode.委托状态,"07","已撤回"),
+	委托状态_流程中(DictCode.委托状态,"08","流程中"),
+	委托状态_待分发(DictCode.委托状态,"09","待分发"),
 	货币对_CNY_HKD(DictCode.货币对,"CNY/HKD","CNY/HKD"),
 	货币对_CNY_USD(DictCode.货币对,"CNY/USD","CNY/USD"),
 	货币对_CNY_EUR(DictCode.货币对,"CNY/EUR","CNY/EUR"),

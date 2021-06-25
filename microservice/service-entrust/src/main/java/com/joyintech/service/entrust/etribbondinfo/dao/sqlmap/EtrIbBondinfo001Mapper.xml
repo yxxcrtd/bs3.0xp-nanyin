@@ -128,18 +128,17 @@
             resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto">
         select aaa.* from (
             <choose>
-                <when test="entrustStatus == '00'"> 
-                    <!-- 00表示查询全部状态 -->
+                <when test="entrustStatus == ''"> 
+                    <!-- 查询全部状态 -->
                     <include refid="onlyEtrEntrust"></include>
                     UNION ALL
                     <include refid="onlyWtfEtrEntrust"></include>
                 </when>
-                <when test="entrustStatus == '08'"> 
+                <when test="entrustStatus == #{ENTRUST_STATUS_08}"> 
                     <!-- 只查流程中的数据 -->
                     <include refid="onlyWtfEtrEntrust"></include>
                 </when>
                 <otherwise>
-                    <!-- 非流程中的数据 01,02,03,04,05,06,07,09-->
                     <include refid="onlyEtrEntrust"></include>
                 </otherwise>
             </choose>
