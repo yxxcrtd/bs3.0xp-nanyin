@@ -403,6 +403,23 @@ public class ChbInvestTradeInterf  extends BaseService{
 	    	if (CollectionUtils.isNotEmpty(chlTrans4TradeInfoList)) {
 	    		for(ChbInvestTrade chbInvestTrade : chlTrans4TradeInfoList) {
 	    			chbInvestTrade.setTradeSeqno(IDGenerator.generate(36));
+
+					ChbOrgRegistBankCode chbOrgRegistBankCode = chbInvestTradeInterfMapper.selectByRegistBankCode(chbInvestTrade.getRegistBankCode());
+					if (null != chbOrgRegistBankCode) {
+						// 是否理财子公司，1 是=13，2 否=07
+						if (StringUtil.equals("1", chbOrgRegistBankCode.getIsFinSubCompany()))
+							chbInvestTrade.setRivalPartyType("13");
+						else
+							chbInvestTrade.setRivalPartyType("07");
+					} else {
+						chbInvestTrade.setRivalPartyType("07");
+					}
+					// 资金流动类型为01~08时，改字段有值，否则该字段为空；通道不穿透报送，自动生成的投资交易，资产计量方式默认为公允价值
+					String[] curAssetTypeArr = {"01", "02", "03", "04", "05", "06", "07", "08"};
+					if (Arrays.asList(curAssetTypeArr).contains(chbInvestTrade.getCurAssetType())) {
+						chbInvestTrade.setAssetMethod(DictCodeListExt3.资产计量方式_公允价值.getValue());
+					}
+
 	    		}
 	    		insertDataList.addAll(chlTrans4TradeInfoList);
 			}
