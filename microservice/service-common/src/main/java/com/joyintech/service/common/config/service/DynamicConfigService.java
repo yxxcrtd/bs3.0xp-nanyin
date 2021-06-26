@@ -40,7 +40,6 @@ public class DynamicConfigService {
      * @return
      */
     public Integer updateByParam(Map<String, Object> param) {
-        System.out.println("====abc123====" + param);
         if (param != null){
             String dynId = param.get("dynId") + "";
             if (StringUtil.isNotEmpty(dynId)){
