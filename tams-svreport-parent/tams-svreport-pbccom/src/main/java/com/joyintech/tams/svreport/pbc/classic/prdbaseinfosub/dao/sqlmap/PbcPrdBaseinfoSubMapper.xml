@@ -1035,6 +1035,13 @@
         <if test="endDate != null and endDate != ''">
            and to_char(VDATE,'yyyy-MM-dd') &lt;= #{endDate}
         </if>
+
+		<if test="allExport != null and allExport !=''">
+			and exists (
+			select 1 from PBC_INIT_PROD_RAISING_SUB pi where pi.Pbc_Prod_Id=T1.PBC_PROD_ID
+			)
+		</if>
+
         <if test="registList!=null and registList.size()!=0">
 			   	<foreach collection="registList" item="items" 
 	            		open=" AND TRIM(REGIST_SEQNO) IN (" close=")" separator=",">

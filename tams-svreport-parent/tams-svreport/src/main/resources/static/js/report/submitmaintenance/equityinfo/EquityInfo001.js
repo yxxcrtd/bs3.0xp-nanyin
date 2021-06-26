@@ -1,17 +1,17 @@
 $(function() {
     var getPageParams = function() {
-    	var orgCode = $('#orgCode').val();
-    	if (orgCode) {
-    		orgCode = orgCode.join();
-    	}
-    	var holderType = $('#holderType').val();
-    	if (holderType) {
-    		holderType = holderType.join();
-    	}
-    	var dataStatus = $('#status').val();
-    	if (dataStatus) {
-    		dataStatus = dataStatus.join();
-    	}
+        var orgCode = $('#orgCode').val();
+        if (orgCode) {
+            orgCode = orgCode.join();
+        }
+        var holderType = $('#holderType').val();
+        if (holderType) {
+            holderType = holderType.join();
+        }
+        var dataStatus = $('#status').val();
+        if (dataStatus) {
+            dataStatus = dataStatus.join();
+        }
         return {
             // 登记银行代码
             bankCode : $('#bankCode').val(),
@@ -56,7 +56,7 @@ $(function() {
             /*{ title: "SPV登记编码", field: 'spvRegistCode', width: 125},*/
             { title: "投资者名称", field: 'holderName', width: 114},
             { title: "性别", field: 'holderSex', width: 70},
-            { title: "风险偏好", field: 'holderRiskPrefer', width: 100, align:'center',
+            { title: "风险偏好", field: 'holderRiskPrefer', width: 100, align:'center'/*界面查询性能优化,
                 render: function (data, type, row, meta) {
                     if(row.holderRiskPrefer=="01"){
                         return "<span class='text-Conervative'>保守型</span>";
@@ -74,7 +74,7 @@ $(function() {
                         return "<span class='text-progress'>进取型</span>";
                     }
                     return row.holderRiskPrefer;
-                }
+                }*/
             },
             { title: "手机号码", field: 'holderCellphone', width: 120},
             { title: "固定电话", field: 'holderTelephone', width: 120},
@@ -109,16 +109,16 @@ $(function() {
             }
         });
     };
-   /**
-    * 页面初始加载 dingzhipeng
-    */
+    /**
+     * 页面初始加载 dingzhipeng
+     */
     function init(){
         if(isFromMain=="01"){
             $('#status').val("A").trigger("change");
             setTimeout(function() {
-            	if($('#searchForm').joyinvalid()) {
-            		table.load();
-            	}
+                if($('#searchForm').joyinvalid()) {
+                    table.load();
+                }
             },100);
             table.load();
         }
@@ -145,12 +145,12 @@ $(function() {
                 });
             });
         });
-        
-      //导入代销数据点击事件
+
+        //导入代销数据点击事件
         $('#EquityInfo001_btn_chbImport').click(function() {
-        	Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function() {
-        		var options = {};
-        		options.pageId = "EquityInfo001_2";
+            Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function() {
+                var options = {};
+                options.pageId = "EquityInfo001_2";
                 Joyin.uploadFile(options, function(fileName) {
                     Joyin.ajax('checkConfirmMsgForChbImportData', {fileName: fileName}, function() {
                         Joyin.ajax('chbImportFile', {fileName: fileName});
@@ -162,41 +162,41 @@ $(function() {
                 });
             });
         });
-        
-      //新建按钮的事件
+
+        //新建按钮的事件
         $('#EquityInfo001_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("EquityInfo002"),
-                    basePath + "svreport/submitmaintenance/equityinfo/EquityInfo002/init",
-                    "90%", "100%", {pageModel:PAGE_MODEL_NEW},function(){
-                        //防止出现查询转圈圈
-                        setTimeout(function(){table.reload();},100);
-                    });
+                basePath + "svreport/submitmaintenance/equityinfo/EquityInfo002/init",
+                "90%", "100%", {pageModel:PAGE_MODEL_NEW},function(){
+                    //防止出现查询转圈圈
+                    setTimeout(function(){table.reload();},100);
+                });
         });
         // 导出按钮点击事件
         $('#EquityInfo001_btn_export').click(function() {
             /*if(!table.isSearched()) {
                 return;
-            }*/  
-          var expArr=table.getAllCheckedRows();
-          if(!expArr || expArr.length ==0){
-              Joyin.exportExcel("export",getPageParams());
-          }
-          else{
-             var keyList = ""; 
-             $.each(expArr, function(i, row) {
-                 keyList = keyList+row.bankCode + '|' + row.indentifyMark +",";
-             });
-             var param={};
-             param.expKeys = keyList.substring(0,keyList.length-1);
-             Joyin.exportExcel("exportSelect",param);           
-          }
+            }*/
+            var expArr=table.getAllCheckedRows();
+            if(!expArr || expArr.length ==0){
+                Joyin.exportExcel("export",getPageParams());
+            }
+            else{
+                var keyList = "";
+                $.each(expArr, function(i, row) {
+                    keyList = keyList+row.bankCode + '|' + row.indentifyMark +",";
+                });
+                var param={};
+                param.expKeys = keyList.substring(0,keyList.length-1);
+                Joyin.exportExcel("exportSelect",param);
+            }
         });
-        
-        
-        
+
+
+
         //删除按钮点击事件
         $('#EquityInfo001_btn_delete').click(function(){
-        	var rows = table.getAllCheckedRows();
+            var rows = table.getAllCheckedRows();
             if(rows.length === 0) {
                 return Joyin.error("请至少选择一条记录");
             }
@@ -215,7 +215,7 @@ $(function() {
                 }
             });
         });
-        
+
         table.bind('click','.edit', function(row,index) {
             if(row.status == "删除"){
                 return Joyin.error("不能操作已被删除的数据");
@@ -223,11 +223,11 @@ $(function() {
             row.pageModel = PAGE_MODEL_EDIT;
 //            data.operateType = "edit";
             Joyin.ajaxJson('checkEdit', row, function(result){
-               Joyin.dialog("投资者身份信息修改",
-                      basePath + "svreport/submitmaintenance/equityinfo/EquityInfo002/init",
-                      "90%", "100%", row,function(){
-                  table.reload();
-              });
+                Joyin.dialog("投资者身份信息修改",
+                    basePath + "svreport/submitmaintenance/equityinfo/EquityInfo002/init",
+                    "90%", "100%", row,function(){
+                        table.reload();
+                    });
             });
         });
         /**
@@ -248,5 +248,5 @@ $(function() {
                 }
             });
         });
-    }); 
+    });
 }());

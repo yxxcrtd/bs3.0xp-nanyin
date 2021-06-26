@@ -120,7 +120,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("pageId", pageId);
 		param.put("dataList", dataList);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
@@ -179,7 +179,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("pageId", pageId);
 		param.put("dataList", dataList);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
@@ -228,7 +228,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		}
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("dataList", dataList);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
@@ -246,7 +246,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 	public AjaxResult checkConfirmMsgForChbImportData(String fileName) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("fileName", fileName);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
@@ -271,7 +271,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		dto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("dto", dto);
-		param.put("bankCode", CommonUtil.getUserBankCode());
+		param.put("bankCode", CommonUtil.getUserBankCode(null));
 		return restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusinessDetails/doSaveOrUpdate", param,
 				SvrAjaxResult.class);

@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinCashPlanMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinCashPlan" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="CASH_NUM" property="cashNum" jdbcType="DECIMAL" />
+        <result column="CASH_TYPE" property="cashType" jdbcType="VARCHAR" />
+        <result column="VDATE_UNADJUST" property="vdateUnadjust" jdbcType="DATE" />
+        <result column="MDATE_UNADJUST" property="mdateUnadjust" jdbcType="DATE" />
+        <result column="PAY_DATE_UNADJUST" property="payDateUnadjust" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="PAY_DATE" property="payDate" jdbcType="DATE" />
+        <result column="TERMDAYS" property="termdays" jdbcType="DECIMAL" />
+        <result column="VDATE_Y" property="vdateY" jdbcType="DATE" />
+        <result column="VDATE_TERM" property="vdateTerm" jdbcType="DATE" />
+        <result column="MDATE_TERM" property="mdateTerm" jdbcType="DATE" />
+        <result column="TERMDAYS_TERM" property="termdaysTerm" jdbcType="DECIMAL" />
+        <result column="PRIN_AMT" property="prinAmt" jdbcType="DECIMAL" />
+        <result column="INT_PRIN_AMT" property="intPrinAmt" jdbcType="DECIMAL" />
+        <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="IS_PAY_INT" property="isPayInt" jdbcType="VARCHAR" />
+        <result column="CASH_AMT" property="cashAmt" jdbcType="DECIMAL" />
+        <result column="CASH_BASEAMT" property="cashBaseamt" jdbcType="DECIMAL" />
+        <result column="CASH_UNIT_TYPE" property="cashUnitType" jdbcType="VARCHAR" />
+        <result column="CALC_FUNCTION" property="calcFunction" jdbcType="VARCHAR" />
+        <result column="FREQUENCY" property="frequency" jdbcType="DECIMAL" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+        <result column="RANGE_YIELD" property="rangeYield" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="REPAY_WITHOUT_INT" property="repayWithoutInt" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, MDATE MDATE, CASH_NUM CASH_NUM, CASH_TYPE CASH_TYPE, VDATE_UNADJUST VDATE_UNADJUST,
+        MDATE_UNADJUST MDATE_UNADJUST, PAY_DATE_UNADJUST PAY_DATE_UNADJUST, VDATE VDATE,
+        PAY_DATE PAY_DATE, TERMDAYS TERMDAYS, VDATE_Y VDATE_Y, VDATE_TERM VDATE_TERM, MDATE_TERM MDATE_TERM,
+        TERMDAYS_TERM TERMDAYS_TERM, PRIN_AMT PRIN_AMT, INT_PRIN_AMT INT_PRIN_AMT, INT_AMT INT_AMT,
+        IS_PAY_INT IS_PAY_INT, CASH_AMT CASH_AMT, CASH_BASEAMT CASH_BASEAMT, CASH_UNIT_TYPE CASH_UNIT_TYPE,
+        CALC_FUNCTION CALC_FUNCTION, FREQUENCY FREQUENCY, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE,
+        FINPROD_TYPE2 FINPROD_TYPE2, BRANCH BRANCH, PAY_TYPE PAY_TYPE, RANGE_YIELD RANGE_YIELD,
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, REPAY_WITHOUT_INT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinCashPlanMapper.Base_Column_List" />
+        from FIN_CASH_PLAN
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinCashPlanMapper.Base_Column_List" />
+        from FIN_CASH_PLAN
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinCashPlanKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinCashPlanMapper.Base_Column_List" />
+        from FIN_CASH_PLAN
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+        and MDATE = #{mdate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinCashPlanKey" >
+        delete from FIN_CASH_PLAN
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and MDATE = #{mdate,jdbcType=DATE}
+    </delete>
+
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinCashPlan" >
+        insert into FIN_CASH_PLAN (CASH_ID, MDATE, CASH_NUM,
+            CASH_TYPE, VDATE_UNADJUST, MDATE_UNADJUST,
+            PAY_DATE_UNADJUST, VDATE, PAY_DATE,
+            TERMDAYS, VDATE_Y, VDATE_TERM,
+            MDATE_TERM, TERMDAYS_TERM, PRIN_AMT,
+            INT_PRIN_AMT, INT_AMT, IS_PAY_INT,
+            CASH_AMT, CASH_BASEAMT, CASH_UNIT_TYPE,
+            CALC_FUNCTION, FREQUENCY, FINPROD_ID,
+            FINPROD_TYPE, FINPROD_TYPE2, BRANCH,
+            PAY_TYPE, RANGE_YIELD, REMARK,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME,REPAY_WITHOUT_INT)
+        values (#{cashId,jdbcType=VARCHAR}, #{mdate,jdbcType=DATE}, #{cashNum,jdbcType=DECIMAL},
+            #{cashType,jdbcType=VARCHAR}, #{vdateUnadjust,jdbcType=DATE}, #{mdateUnadjust,jdbcType=DATE},
+            #{payDateUnadjust,jdbcType=DATE}, #{vdate,jdbcType=DATE}, #{payDate,jdbcType=DATE},
+            #{termdays,jdbcType=DECIMAL}, #{vdateY,jdbcType=DATE}, #{vdateTerm,jdbcType=DATE},
+            #{mdateTerm,jdbcType=DATE}, #{termdaysTerm,jdbcType=DECIMAL}, #{prinAmt,jdbcType=DECIMAL},
+            #{intPrinAmt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{isPayInt,jdbcType=VARCHAR},
+            #{cashAmt,jdbcType=DECIMAL}, #{cashBaseamt,jdbcType=DECIMAL}, #{cashUnitType,jdbcType=VARCHAR},
+            #{calcFunction,jdbcType=VARCHAR}, #{frequency,jdbcType=DECIMAL}, #{finprodId,jdbcType=VARCHAR},
+            #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL},
+            #{payType,jdbcType=VARCHAR}, #{rangeYield,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{repayWithoutInt,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinCashPlan" >
+        insert into FIN_CASH_PLAN
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="cashNum != null" >
+                CASH_NUM,
+            </if>
+            <if test="cashType != null" >
+                CASH_TYPE,
+            </if>
+            <if test="vdateUnadjust != null" >
+                VDATE_UNADJUST,
+            </if>
+            <if test="mdateUnadjust != null" >
+                MDATE_UNADJUST,
+            </if>
+            <if test="payDateUnadjust != null" >
+                PAY_DATE_UNADJUST,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="payDate != null" >
+                PAY_DATE,
+            </if>
+            <if test="termdays != null" >
+                TERMDAYS,
+            </if>
+            <if test="vdateY != null" >
+                VDATE_Y,
+            </if>
+            <if test="vdateTerm != null" >
+                VDATE_TERM,
+            </if>
+            <if test="mdateTerm != null" >
+                MDATE_TERM,
+            </if>
+            <if test="termdaysTerm != null" >
+                TERMDAYS_TERM,
+            </if>
+            <if test="prinAmt != null" >
+                PRIN_AMT,
+            </if>
+            <if test="intPrinAmt != null" >
+                INT_PRIN_AMT,
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT,
+            </if>
+            <if test="isPayInt != null" >
+                IS_PAY_INT,
+            </if>
+            <if test="cashAmt != null" >
+                CASH_AMT,
+            </if>
+            <if test="cashBaseamt != null" >
+                CASH_BASEAMT,
+            </if>
+            <if test="cashUnitType != null" >
+                CASH_UNIT_TYPE,
+            </if>
+            <if test="calcFunction != null" >
+                CALC_FUNCTION,
+            </if>
+            <if test="frequency != null" >
+                FREQUENCY,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE,
+            </if>
+            <if test="rangeYield != null" >
+                RANGE_YIELD,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="repayWithoutInt != null" >
+                REPAY_WITHOUT_INT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="cashNum != null" >
+                #{cashNum,jdbcType=DECIMAL},
+            </if>
+            <if test="cashType != null" >
+                #{cashType,jdbcType=VARCHAR},
+            </if>
+            <if test="vdateUnadjust != null" >
+                #{vdateUnadjust,jdbcType=DATE},
+            </if>
+            <if test="mdateUnadjust != null" >
+                #{mdateUnadjust,jdbcType=DATE},
+            </if>
+            <if test="payDateUnadjust != null" >
+                #{payDateUnadjust,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="payDate != null" >
+                #{payDate,jdbcType=DATE},
+            </if>
+            <if test="termdays != null" >
+                #{termdays,jdbcType=DECIMAL},
+            </if>
+            <if test="vdateY != null" >
+                #{vdateY,jdbcType=DATE},
+            </if>
+            <if test="vdateTerm != null" >
+                #{vdateTerm,jdbcType=DATE},
+            </if>
+            <if test="mdateTerm != null" >
+                #{mdateTerm,jdbcType=DATE},
+            </if>
+            <if test="termdaysTerm != null" >
+                #{termdaysTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="prinAmt != null" >
+                #{prinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intPrinAmt != null" >
+                #{intPrinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="isPayInt != null" >
+                #{isPayInt,jdbcType=VARCHAR},
+            </if>
+            <if test="cashAmt != null" >
+                #{cashAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="cashBaseamt != null" >
+                #{cashBaseamt,jdbcType=DECIMAL},
+            </if>
+            <if test="cashUnitType != null" >
+                #{cashUnitType,jdbcType=VARCHAR},
+            </if>
+            <if test="calcFunction != null" >
+                #{calcFunction,jdbcType=VARCHAR},
+            </if>
+            <if test="frequency != null" >
+                #{frequency,jdbcType=DECIMAL},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="payType != null" >
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="rangeYield != null" >
+                #{rangeYield,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="repayWithoutInt != null" >
+                #{repayWithoutInt,jdbcType=DECIMAL},
+            </if>
+
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinCashPlan" >
+        insert into FIN_CASH_PLAN(CASH_ID, MDATE, CASH_NUM, CASH_TYPE, VDATE_UNADJUST, MDATE_UNADJUST,
+        PAY_DATE_UNADJUST, VDATE, PAY_DATE, TERMDAYS, VDATE_Y, VDATE_TERM, MDATE_TERM, TERMDAYS_TERM,
+        PRIN_AMT, INT_PRIN_AMT, INT_AMT, IS_PAY_INT, CASH_AMT, CASH_BASEAMT, CASH_UNIT_TYPE,
+        CALC_FUNCTION, FREQUENCY, FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, PAY_TYPE,
+        RANGE_YIELD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,REPAY_WITHOUT_INT
+        )
+        select CASH_ID, MDATE, CASH_NUM, CASH_TYPE, VDATE_UNADJUST, MDATE_UNADJUST,
+            PAY_DATE_UNADJUST, VDATE, PAY_DATE, TERMDAYS, VDATE_Y, VDATE_TERM, MDATE_TERM, TERMDAYS_TERM,
+            PRIN_AMT, INT_PRIN_AMT, INT_AMT, IS_PAY_INT, CASH_AMT, CASH_BASEAMT, CASH_UNIT_TYPE,
+            CALC_FUNCTION, FREQUENCY, FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, PAY_TYPE,
+            RANGE_YIELD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, REPAY_WITHOUT_INT,#{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+
+             from FIN_CASH_PLAN
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and MDATE = #{mdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinCashPlan" >
+        update FIN_CASH_PLAN
+        <set >
+            <if test="cashNum != null" >
+                CASH_NUM = #{cashNum,jdbcType=DECIMAL},
+            </if>
+            <if test="cashType != null" >
+                CASH_TYPE = #{cashType,jdbcType=VARCHAR},
+            </if>
+            <if test="vdateUnadjust != null" >
+                VDATE_UNADJUST = #{vdateUnadjust,jdbcType=DATE},
+            </if>
+            <if test="mdateUnadjust != null" >
+                MDATE_UNADJUST = #{mdateUnadjust,jdbcType=DATE},
+            </if>
+            <if test="payDateUnadjust != null" >
+                PAY_DATE_UNADJUST = #{payDateUnadjust,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="payDate != null" >
+                PAY_DATE = #{payDate,jdbcType=DATE},
+            </if>
+            <if test="termdays != null" >
+                TERMDAYS = #{termdays,jdbcType=DECIMAL},
+            </if>
+            <if test="vdateY != null" >
+                VDATE_Y = #{vdateY,jdbcType=DATE},
+            </if>
+            <if test="vdateTerm != null" >
+                VDATE_TERM = #{vdateTerm,jdbcType=DATE},
+            </if>
+            <if test="mdateTerm != null" >
+                MDATE_TERM = #{mdateTerm,jdbcType=DATE},
+            </if>
+            <if test="termdaysTerm != null" >
+                TERMDAYS_TERM = #{termdaysTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="prinAmt != null" >
+                PRIN_AMT = #{prinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intPrinAmt != null" >
+                INT_PRIN_AMT = #{intPrinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="isPayInt != null" >
+                IS_PAY_INT = #{isPayInt,jdbcType=VARCHAR},
+            </if>
+            <if test="cashAmt != null" >
+                CASH_AMT = #{cashAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="cashBaseamt != null" >
+                CASH_BASEAMT = #{cashBaseamt,jdbcType=DECIMAL},
+            </if>
+            <if test="cashUnitType != null" >
+                CASH_UNIT_TYPE = #{cashUnitType,jdbcType=VARCHAR},
+            </if>
+            <if test="calcFunction != null" >
+                CALC_FUNCTION = #{calcFunction,jdbcType=VARCHAR},
+            </if>
+            <if test="frequency != null" >
+                FREQUENCY = #{frequency,jdbcType=DECIMAL},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="rangeYield != null" >
+                RANGE_YIELD = #{rangeYield,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="repayWithoutInt != null" >
+                REPAY_WITHOUT_INT = #{repayWithoutInt,jdbcType=DECIMAL},
+            </if>
+
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+        and MDATE = #{mdate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinCashPlan" >
+        update FIN_CASH_PLAN
+        set CASH_NUM = #{cashNum,jdbcType=DECIMAL},
+            CASH_TYPE = #{cashType,jdbcType=VARCHAR},
+            VDATE_UNADJUST = #{vdateUnadjust,jdbcType=DATE},
+            MDATE_UNADJUST = #{mdateUnadjust,jdbcType=DATE},
+            PAY_DATE_UNADJUST = #{payDateUnadjust,jdbcType=DATE},
+            VDATE = #{vdate,jdbcType=DATE},
+            PAY_DATE = #{payDate,jdbcType=DATE},
+            TERMDAYS = #{termdays,jdbcType=DECIMAL},
+            VDATE_Y = #{vdateY,jdbcType=DATE},
+            VDATE_TERM = #{vdateTerm,jdbcType=DATE},
+            MDATE_TERM = #{mdateTerm,jdbcType=DATE},
+            TERMDAYS_TERM = #{termdaysTerm,jdbcType=DECIMAL},
+            PRIN_AMT = #{prinAmt,jdbcType=DECIMAL},
+            INT_PRIN_AMT = #{intPrinAmt,jdbcType=DECIMAL},
+            INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            IS_PAY_INT = #{isPayInt,jdbcType=VARCHAR},
+            CASH_AMT = #{cashAmt,jdbcType=DECIMAL},
+            CASH_BASEAMT = #{cashBaseamt,jdbcType=DECIMAL},
+            CASH_UNIT_TYPE = #{cashUnitType,jdbcType=VARCHAR},
+            CALC_FUNCTION = #{calcFunction,jdbcType=VARCHAR},
+            FREQUENCY = #{frequency,jdbcType=DECIMAL},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            RANGE_YIELD = #{rangeYield,jdbcType=DECIMAL},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+           REPAY_WITHOUT_INT= #{repayWithoutInt,jdbcType=DECIMAL}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and MDATE = #{mdate,jdbcType=DATE}
+    </update>
+
+    <select id="getPayTrad" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        COUNT(1)
+        FROM
+        FIN_CASH_PLAN
+        WHERE
+        FINPROD_ID=#{finprodId}
+        <if test="payDate != null" >
+            AND PAY_DATE=#{payDate}
+        </if>
+    </select>
+</mapper>

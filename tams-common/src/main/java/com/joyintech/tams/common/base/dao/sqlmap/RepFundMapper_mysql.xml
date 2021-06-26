@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepFundMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepFund" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <result column="REP_INDUSTRY" property="repIndustry" jdbcType="VARCHAR" />
+        <result column="REP_INDUSTRY_LEVEL2" property="repIndustryLevel2" jdbcType="VARCHAR" />
+        <result column="REP_REGIST_ORG" property="repRegistOrg" jdbcType="VARCHAR" />
+        <result column="REP_IS_GOV_INVEST" property="repIsGovInvest" jdbcType="VARCHAR" />
+        <result column="REP_GOV_INVEST_FOR" property="repGovInvestFor" jdbcType="VARCHAR" />
+        <result column="REP_FUND_COMP_NAME" property="repFundCompName" jdbcType="VARCHAR" />
+        <result column="REP_MNG_PARTY_NAME" property="repMngPartyName" jdbcType="VARCHAR" />
+        <result column="REP_TRUST_PARTY_NAME" property="repTrustPartyName" jdbcType="VARCHAR" />
+        <result column="REP_INVEST_STAGE" property="repInvestStage" jdbcType="VARCHAR" />
+        <result column="REP_PARTY_TYPE1" property="repPartyType1" jdbcType="VARCHAR" />
+        <result column="REP_PARTY_TYPE2" property="repPartyType2" jdbcType="VARCHAR" />
+        <result column="REP_PARTY_TYPE3" property="repPartyType3" jdbcType="VARCHAR" />
+        <result column="REP_FUND_INVEST_ASSET" property="repFundInvestAsset" jdbcType="VARCHAR" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        <result column="REP_FINANCIAL_COMISSUE" property="repFinancialComissue" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_INDUSTRY REP_INDUSTRY, REP_INDUSTRY_LEVEL2 REP_INDUSTRY_LEVEL2, 
+        REP_REGIST_ORG REP_REGIST_ORG, REP_IS_GOV_INVEST REP_IS_GOV_INVEST, REP_GOV_INVEST_FOR REP_GOV_INVEST_FOR, 
+        REP_FUND_COMP_NAME REP_FUND_COMP_NAME, REP_MNG_PARTY_NAME REP_MNG_PARTY_NAME, REP_TRUST_PARTY_NAME REP_TRUST_PARTY_NAME, 
+        REP_INVEST_STAGE REP_INVEST_STAGE, REP_PARTY_TYPE1 REP_PARTY_TYPE1, REP_PARTY_TYPE2 REP_PARTY_TYPE2, 
+        REP_PARTY_TYPE3 REP_PARTY_TYPE3, REP_FUND_INVEST_ASSET REP_FUND_INVEST_ASSET, REP_REMARK REP_REMARK, REP_FINANCIAL_COMISSUE REP_FINANCIAL_COMISSUE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepFundMapper.Base_Column_List" />
+        from REP_FUND
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepFundMapper.Base_Column_List" />
+        from REP_FUND
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepFundMapper.Base_Column_List" />
+        from REP_FUND
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_FUND
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepFund" >
+        insert into REP_FUND (REP_FINPROD_ID, REP_INDUSTRY, REP_INDUSTRY_LEVEL2, 
+            REP_REGIST_ORG, REP_IS_GOV_INVEST, REP_GOV_INVEST_FOR, 
+            REP_FUND_COMP_NAME, REP_MNG_PARTY_NAME, REP_TRUST_PARTY_NAME, 
+            REP_INVEST_STAGE, REP_PARTY_TYPE1, REP_PARTY_TYPE2, 
+            REP_PARTY_TYPE3, REP_FUND_INVEST_ASSET, REP_REMARK, REP_FINANCIAL_COMISSUE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repIndustry,jdbcType=VARCHAR}, #{repIndustryLevel2,jdbcType=VARCHAR}, 
+            #{repRegistOrg,jdbcType=VARCHAR}, #{repIsGovInvest,jdbcType=VARCHAR}, #{repGovInvestFor,jdbcType=VARCHAR}, 
+            #{repFundCompName,jdbcType=VARCHAR}, #{repMngPartyName,jdbcType=VARCHAR}, #{repTrustPartyName,jdbcType=VARCHAR}, 
+            #{repInvestStage,jdbcType=VARCHAR}, #{repPartyType1,jdbcType=VARCHAR}, #{repPartyType2,jdbcType=VARCHAR}, 
+            #{repPartyType3,jdbcType=VARCHAR}, #{repFundInvestAsset,jdbcType=VARCHAR}, #{repRemark,jdbcType=VARCHAR},#{repFinancialComissue,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepFund" >
+        insert into REP_FUND
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repIndustry != null" >
+                REP_INDUSTRY,
+            </if>
+            <if test="repIndustryLevel2 != null" >
+                REP_INDUSTRY_LEVEL2,
+            </if>
+            <if test="repRegistOrg != null" >
+                REP_REGIST_ORG,
+            </if>
+            <if test="repIsGovInvest != null" >
+                REP_IS_GOV_INVEST,
+            </if>
+            <if test="repGovInvestFor != null" >
+                REP_GOV_INVEST_FOR,
+            </if>
+            <if test="repFundCompName != null" >
+                REP_FUND_COMP_NAME,
+            </if>
+            <if test="repMngPartyName != null" >
+                REP_MNG_PARTY_NAME,
+            </if>
+            <if test="repTrustPartyName != null" >
+                REP_TRUST_PARTY_NAME,
+            </if>
+            <if test="repInvestStage != null" >
+                REP_INVEST_STAGE,
+            </if>
+            <if test="repPartyType1 != null" >
+                REP_PARTY_TYPE1,
+            </if>
+            <if test="repPartyType2 != null" >
+                REP_PARTY_TYPE2,
+            </if>
+            <if test="repPartyType3 != null" >
+                REP_PARTY_TYPE3,
+            </if>
+            <if test="repFundInvestAsset != null" >
+                REP_FUND_INVEST_ASSET,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            <if test="repFinancialComissue != null" >
+                REP_FINANCIAL_COMISSUE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustry != null" >
+                #{repIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustryLevel2 != null" >
+                #{repIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="repRegistOrg != null" >
+                #{repRegistOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="repIsGovInvest != null" >
+                #{repIsGovInvest,jdbcType=VARCHAR},
+            </if>
+            <if test="repGovInvestFor != null" >
+                #{repGovInvestFor,jdbcType=VARCHAR},
+            </if>
+            <if test="repFundCompName != null" >
+                #{repFundCompName,jdbcType=VARCHAR},
+            </if>
+            <if test="repMngPartyName != null" >
+                #{repMngPartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repTrustPartyName != null" >
+                #{repTrustPartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvestStage != null" >
+                #{repInvestStage,jdbcType=VARCHAR},
+            </if>
+            <if test="repPartyType1 != null" >
+                #{repPartyType1,jdbcType=VARCHAR},
+            </if>
+            <if test="repPartyType2 != null" >
+                #{repPartyType2,jdbcType=VARCHAR},
+            </if>
+            <if test="repPartyType3 != null" >
+                #{repPartyType3,jdbcType=VARCHAR},
+            </if>
+            <if test="repFundInvestAsset != null" >
+                #{repFundInvestAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancialComissue != null" >
+                #{repFinancialComissue,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepFund" >
+        insert into REP_FUND(REP_FINPROD_ID, REP_INDUSTRY, REP_INDUSTRY_LEVEL2, REP_REGIST_ORG, 
+        REP_IS_GOV_INVEST, REP_GOV_INVEST_FOR, REP_FUND_COMP_NAME, REP_MNG_PARTY_NAME, REP_TRUST_PARTY_NAME, 
+        REP_INVEST_STAGE, REP_PARTY_TYPE1, REP_PARTY_TYPE2, REP_PARTY_TYPE3, REP_FUND_INVEST_ASSET, 
+        REP_REMARK, REP_FINANCIAL_COMISSUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REP_FINPROD_ID, REP_INDUSTRY, REP_INDUSTRY_LEVEL2, REP_REGIST_ORG, 
+            REP_IS_GOV_INVEST, REP_GOV_INVEST_FOR, REP_FUND_COMP_NAME, REP_MNG_PARTY_NAME, REP_TRUST_PARTY_NAME, 
+            REP_INVEST_STAGE, REP_PARTY_TYPE1, REP_PARTY_TYPE2, REP_PARTY_TYPE3, REP_FUND_INVEST_ASSET, 
+            REP_REMARK, REP_FINANCIAL_COMISSUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_FUND
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepFund" >
+        update REP_FUND
+        <set >
+            <if test="repIndustry != null" >
+                REP_INDUSTRY = #{repIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="repIndustryLevel2 != null" >
+                REP_INDUSTRY_LEVEL2 = #{repIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="repRegistOrg != null" >
+                REP_REGIST_ORG = #{repRegistOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="repIsGovInvest != null" >
+                REP_IS_GOV_INVEST = #{repIsGovInvest,jdbcType=VARCHAR},
+            </if>
+            <if test="repGovInvestFor != null" >
+                REP_GOV_INVEST_FOR = #{repGovInvestFor,jdbcType=VARCHAR},
+            </if>
+            <if test="repFundCompName != null" >
+                REP_FUND_COMP_NAME = #{repFundCompName,jdbcType=VARCHAR},
+            </if>
+            <if test="repMngPartyName != null" >
+                REP_MNG_PARTY_NAME = #{repMngPartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repTrustPartyName != null" >
+                REP_TRUST_PARTY_NAME = #{repTrustPartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repInvestStage != null" >
+                REP_INVEST_STAGE = #{repInvestStage,jdbcType=VARCHAR},
+            </if>
+            <if test="repPartyType1 != null" >
+                REP_PARTY_TYPE1 = #{repPartyType1,jdbcType=VARCHAR},
+            </if>
+            <if test="repPartyType2 != null" >
+                REP_PARTY_TYPE2 = #{repPartyType2,jdbcType=VARCHAR},
+            </if>
+            <if test="repPartyType3 != null" >
+                REP_PARTY_TYPE3 = #{repPartyType3,jdbcType=VARCHAR},
+            </if>
+            <if test="repFundInvestAsset != null" >
+                REP_FUND_INVEST_ASSET = #{repFundInvestAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancialComissue != null" >
+                REP_FINANCIAL_COMISSUE = #{repFinancialComissue,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepFund" >
+        update REP_FUND
+        set REP_INDUSTRY = #{repIndustry,jdbcType=VARCHAR},
+            REP_INDUSTRY_LEVEL2 = #{repIndustryLevel2,jdbcType=VARCHAR},
+            REP_REGIST_ORG = #{repRegistOrg,jdbcType=VARCHAR},
+            REP_IS_GOV_INVEST = #{repIsGovInvest,jdbcType=VARCHAR},
+            REP_GOV_INVEST_FOR = #{repGovInvestFor,jdbcType=VARCHAR},
+            REP_FUND_COMP_NAME = #{repFundCompName,jdbcType=VARCHAR},
+            REP_MNG_PARTY_NAME = #{repMngPartyName,jdbcType=VARCHAR},
+            REP_TRUST_PARTY_NAME = #{repTrustPartyName,jdbcType=VARCHAR},
+            REP_INVEST_STAGE = #{repInvestStage,jdbcType=VARCHAR},
+            REP_PARTY_TYPE1 = #{repPartyType1,jdbcType=VARCHAR},
+            REP_PARTY_TYPE2 = #{repPartyType2,jdbcType=VARCHAR},
+            REP_PARTY_TYPE3 = #{repPartyType3,jdbcType=VARCHAR},
+            REP_FUND_INVEST_ASSET = #{repFundInvestAsset,jdbcType=VARCHAR},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            REP_FINANCIAL_COMISSUE = #{repFinancialComissue,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

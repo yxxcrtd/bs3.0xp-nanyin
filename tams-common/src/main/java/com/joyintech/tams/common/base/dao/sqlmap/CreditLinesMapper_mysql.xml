@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.CreditLinesMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.CreditLines" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="CREDIT_MST_ID" property="creditMstId" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="TERM" property="term" jdbcType="DECIMAL" />
+        <result column="PFLSH" property="pflsh" jdbcType="VARCHAR" />
+        <result column="CREDIT_AMT" property="creditAmt" jdbcType="DECIMAL" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="INTERNAL_RATING" property="internalRating" jdbcType="VARCHAR" />
+        <result column="SECURITIES_RATING" property="securitiesRating" jdbcType="DECIMAL" />
+        <result column="EXTERNAL_RATING" property="externalRating" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREDIT_FLAG" property="creditFlag" jdbcType="VARCHAR" />
+        <result column="PARENT_CUSTOMER_ID" property="parentCustomerId" jdbcType="VARCHAR" />
+        <result column="HAP_CREDIT_AMT" property="hapCreditAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PFLSH_NAME" property="pflshName" jdbcType="VARCHAR" />
+        <result column="CREDIT_CONDITION" property="creditCondition" jdbcType="VARCHAR" />
+        <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, CREDIT_MST_ID CREDIT_MST_ID, CUSTOMER_ID CUSTOMER_ID, TERM TERM, PFLSH PFLSH,
+        CREDIT_AMT CREDIT_AMT, VDATE VDATE, MDATE MDATE, INTERNAL_RATING INTERNAL_RATING,
+        SECURITIES_RATING SECURITIES_RATING, EXTERNAL_RATING EXTERNAL_RATING, REMARK REMARK,
+        CREDIT_FLAG CREDIT_FLAG, PARENT_CUSTOMER_ID PARENT_CUSTOMER_ID, HAP_CREDIT_AMT HAP_CREDIT_AMT,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME, PFLSH_NAME PFLSH_NAME, CREDIT_CONDITION CREDIT_CONDITION,INSTITUTION_CODE INSTITUTION_CODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.CreditLinesMapper.Base_Column_List" />
+        from CREDIT_LINES
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.CreditLinesMapper.Base_Column_List" />
+        from CREDIT_LINES
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.CreditLinesMapper.Base_Column_List" />
+        from CREDIT_LINES
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CREDIT_LINES
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.CreditLines" >
+        insert into CREDIT_LINES (SEQNO, CREDIT_MST_ID, CUSTOMER_ID,
+            TERM, PFLSH, CREDIT_AMT,
+            VDATE, MDATE, INTERNAL_RATING,
+            SECURITIES_RATING, EXTERNAL_RATING, REMARK,
+            CREDIT_FLAG, PARENT_CUSTOMER_ID, HAP_CREDIT_AMT,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, PFLSH_NAME,
+            CREDIT_CONDITION, INSTITUTION_CODE
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{creditMstId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR},
+            #{term,jdbcType=DECIMAL}, #{pflsh,jdbcType=VARCHAR}, #{creditAmt,jdbcType=DECIMAL},
+            #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{internalRating,jdbcType=VARCHAR},
+            #{securitiesRating,jdbcType=DECIMAL}, #{externalRating,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+            #{creditFlag,jdbcType=VARCHAR}, #{parentCustomerId,jdbcType=VARCHAR}, #{hapCreditAmt,jdbcType=DECIMAL},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{pflshName,jdbcType=VARCHAR},
+            #{creditCondition,jdbcType=VARCHAR}, #{institutionCode,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditLines" >
+        insert into CREDIT_LINES
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="creditMstId != null" >
+                CREDIT_MST_ID,
+            </if>
+            <if test="customerId != null" >
+                CUSTOMER_ID,
+            </if>
+            <if test="term != null" >
+                TERM,
+            </if>
+            <if test="pflsh != null" >
+                PFLSH,
+            </if>
+            <if test="creditAmt != null" >
+                CREDIT_AMT,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="internalRating != null" >
+                INTERNAL_RATING,
+            </if>
+            <if test="securitiesRating != null" >
+                SECURITIES_RATING,
+            </if>
+            <if test="externalRating != null" >
+                EXTERNAL_RATING,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="creditFlag != null" >
+                CREDIT_FLAG,
+            </if>
+            <if test="parentCustomerId != null" >
+                PARENT_CUSTOMER_ID,
+            </if>
+            <if test="hapCreditAmt != null" >
+                HAP_CREDIT_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="pflshName != null" >
+                PFLSH_NAME,
+            </if>
+            <if test="creditCondition != null" >
+                CREDIT_CONDITION,
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="creditMstId != null" >
+                #{creditMstId,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null" >
+                #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                #{term,jdbcType=DECIMAL},
+            </if>
+            <if test="pflsh != null" >
+                #{pflsh,jdbcType=VARCHAR},
+            </if>
+            <if test="creditAmt != null" >
+                #{creditAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="internalRating != null" >
+                #{internalRating,jdbcType=VARCHAR},
+            </if>
+            <if test="securitiesRating != null" >
+                #{securitiesRating,jdbcType=DECIMAL},
+            </if>
+            <if test="externalRating != null" >
+                #{externalRating,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="creditFlag != null" >
+                #{creditFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="parentCustomerId != null" >
+                #{parentCustomerId,jdbcType=VARCHAR},
+            </if>
+            <if test="hapCreditAmt != null" >
+                #{hapCreditAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pflshName != null" >
+                #{pflshName,jdbcType=VARCHAR},
+            </if>
+            <if test="creditCondition != null" >
+                #{creditCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionCode != null" >
+                #{institutionCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CreditLines" >
+        insert into CREDIT_LINES(SEQNO, CREDIT_MST_ID, CUSTOMER_ID, TERM, PFLSH, CREDIT_AMT,
+        VDATE, MDATE, INTERNAL_RATING, SECURITIES_RATING, EXTERNAL_RATING, REMARK, CREDIT_FLAG,
+        PARENT_CUSTOMER_ID, HAP_CREDIT_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, PFLSH_NAME, CREDIT_CONDITION, INSTITUTION_CODE)
+        select SEQNO, CREDIT_MST_ID, CUSTOMER_ID, TERM, PFLSH, CREDIT_AMT,
+            VDATE, MDATE, INTERNAL_RATING, SECURITIES_RATING, EXTERNAL_RATING, REMARK, CREDIT_FLAG,
+            PARENT_CUSTOMER_ID, HAP_CREDIT_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PFLSH_NAME, CREDIT_CONDITION, INSTITUTION_CODE
+             from CREDIT_LINES
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.CreditLines" >
+        update CREDIT_LINES
+        <set >
+            <if test="creditMstId != null" >
+                CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null" >
+                CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                TERM = #{term,jdbcType=DECIMAL},
+            </if>
+            <if test="pflsh != null" >
+                PFLSH = #{pflsh,jdbcType=VARCHAR},
+            </if>
+            <if test="creditAmt != null" >
+                CREDIT_AMT = #{creditAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="internalRating != null" >
+                INTERNAL_RATING = #{internalRating,jdbcType=VARCHAR},
+            </if>
+            <if test="securitiesRating != null" >
+                SECURITIES_RATING = #{securitiesRating,jdbcType=DECIMAL},
+            </if>
+            <if test="externalRating != null" >
+                EXTERNAL_RATING = #{externalRating,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="creditFlag != null" >
+                CREDIT_FLAG = #{creditFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="parentCustomerId != null" >
+                PARENT_CUSTOMER_ID = #{parentCustomerId,jdbcType=VARCHAR},
+            </if>
+            <if test="hapCreditAmt != null" >
+                HAP_CREDIT_AMT = #{hapCreditAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pflshName != null" >
+                PFLSH_NAME = #{pflshName,jdbcType=VARCHAR},
+            </if>
+            <if test="creditCondition != null" >
+                CREDIT_CONDITION = #{creditCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CreditLines" >
+        update CREDIT_LINES
+        set CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR},
+            CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+            TERM = #{term,jdbcType=DECIMAL},
+            PFLSH = #{pflsh,jdbcType=VARCHAR},
+            CREDIT_AMT = #{creditAmt,jdbcType=DECIMAL},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            INTERNAL_RATING = #{internalRating,jdbcType=VARCHAR},
+            SECURITIES_RATING = #{securitiesRating,jdbcType=DECIMAL},
+            EXTERNAL_RATING = #{externalRating,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            CREDIT_FLAG = #{creditFlag,jdbcType=VARCHAR},
+            PARENT_CUSTOMER_ID = #{parentCustomerId,jdbcType=VARCHAR},
+            HAP_CREDIT_AMT = #{hapCreditAmt,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            PFLSH_NAME = #{pflshName,jdbcType=VARCHAR},
+            CREDIT_CONDITION = #{creditCondition,jdbcType=VARCHAR},
+            INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

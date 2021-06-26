@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokAmoConfigMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokAmoConfig" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="RECAL_TYPE" property="recalType" jdbcType="VARCHAR" />
+        <result column="DAILYDSC_YIELD" property="dailydscYield" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, BUSI_ID BUSI_ID, CDATE CDATE, RECAL_TYPE RECAL_TYPE, DAILYDSC_YIELD DAILYDSC_YIELD,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokAmoConfigMapper.Base_Column_List" />
+        from BOK_AMO_CONFIG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokAmoConfigMapper.Base_Column_List" />
+        from BOK_AMO_CONFIG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokAmoConfigKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokAmoConfigMapper.Base_Column_List" />
+        from BOK_AMO_CONFIG
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+        and BUSI_ID = #{busiId,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokAmoConfigKey" >
+        delete from BOK_AMO_CONFIG
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BUSI_ID = #{busiId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokAmoConfig" >
+        insert into BOK_AMO_CONFIG (BOOKSET_ID, BUSI_ID, CDATE,
+            RECAL_TYPE, DAILYDSC_YIELD, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME)
+        values (#{booksetId,jdbcType=VARCHAR}, #{busiId,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE},
+            #{recalType,jdbcType=VARCHAR}, #{dailydscYield,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokAmoConfig" >
+        insert into BOK_AMO_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="recalType != null" >
+                RECAL_TYPE,
+            </if>
+            <if test="dailydscYield != null" >
+                DAILYDSC_YIELD,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="recalType != null" >
+                #{recalType,jdbcType=VARCHAR},
+            </if>
+            <if test="dailydscYield != null" >
+                #{dailydscYield,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokAmoConfig" >
+        insert into BOK_AMO_CONFIG(BOOKSET_ID, BUSI_ID, CDATE, RECAL_TYPE, DAILYDSC_YIELD,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select BOOKSET_ID, BUSI_ID, CDATE, RECAL_TYPE, DAILYDSC_YIELD,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_AMO_CONFIG
+             where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and BUSI_ID = #{busiId,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokAmoConfig" >
+        update BOK_AMO_CONFIG
+        <set >
+            <if test="recalType != null" >
+                RECAL_TYPE = #{recalType,jdbcType=VARCHAR},
+            </if>
+            <if test="dailydscYield != null" >
+                DAILYDSC_YIELD = #{dailydscYield,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+        and BUSI_ID = #{busiId,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokAmoConfig" >
+        update BOK_AMO_CONFIG
+        set RECAL_TYPE = #{recalType,jdbcType=VARCHAR},
+            DAILYDSC_YIELD = #{dailydscYield,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and BUSI_ID = #{busiId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+</mapper>

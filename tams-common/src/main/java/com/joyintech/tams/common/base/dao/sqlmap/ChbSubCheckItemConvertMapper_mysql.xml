@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSubCheckItemConvertMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvert" >
+        <id column="C_S_C_I_C_CLASS_ID" property="classId" jdbcType="VARCHAR" />
+        <id column="C_S_C_I_C_ITEM_CODE_OTHER" property="itemCodeOther" jdbcType="VARCHAR" />
+        <result column="C_S_C_I_C_ITEM_CODE" property="itemCode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CLASS_ID as C_S_C_I_C_CLASS_ID, ITEM_CODE_OTHER as C_S_C_I_C_ITEM_CODE_OTHER, ITEM_CODE as C_S_C_I_C_ITEM_CODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubCheckItemConvertMapper.Base_Column_List" />
+        from CHB_SUB_CHECK_ITEM_CONVERT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubCheckItemConvertMapper.Base_Column_List" />
+        from CHB_SUB_CHECK_ITEM_CONVERT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvertKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSubCheckItemConvertMapper.Base_Column_List" />
+        from CHB_SUB_CHECK_ITEM_CONVERT
+        where CLASS_ID = #{classId,jdbcType=VARCHAR}
+        and ITEM_CODE_OTHER = #{itemCodeOther,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvertKey" >
+        delete from CHB_SUB_CHECK_ITEM_CONVERT
+        where CLASS_ID = #{classId,jdbcType=VARCHAR}
+          and ITEM_CODE_OTHER = #{itemCodeOther,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SUB_CHECK_ITEM_CONVERT
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvert" >
+        insert into CHB_SUB_CHECK_ITEM_CONVERT (CLASS_ID, ITEM_CODE_OTHER, ITEM_CODE
+            )
+        values (#{classId,jdbcType=VARCHAR}, #{itemCodeOther,jdbcType=VARCHAR}, #{itemCode,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvert" >
+        insert into CHB_SUB_CHECK_ITEM_CONVERT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="classId != null" >
+                CLASS_ID,
+            </if>
+            <if test="itemCodeOther != null" >
+                ITEM_CODE_OTHER,
+            </if>
+            <if test="itemCode != null" >
+                ITEM_CODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="classId != null" >
+                #{classId,jdbcType=VARCHAR},
+            </if>
+            <if test="itemCodeOther != null" >
+                #{itemCodeOther,jdbcType=VARCHAR},
+            </if>
+            <if test="itemCode != null" >
+                #{itemCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvert" >
+        insert into CHB_SUB_CHECK_ITEM_CONVERT(CLASS_ID, ITEM_CODE_OTHER, ITEM_CODE)
+        select CLASS_ID, ITEM_CODE_OTHER, ITEM_CODE
+             from CHB_SUB_CHECK_ITEM_CONVERT
+             where STATUS = 'E' and CLASS_ID = #{classId,jdbcType=VARCHAR} and ITEM_CODE_OTHER = #{itemCodeOther,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvert" >
+        update CHB_SUB_CHECK_ITEM_CONVERT
+        <set >
+            <if test="itemCode != null" >
+                ITEM_CODE = #{itemCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CLASS_ID = #{classId,jdbcType=VARCHAR}
+        and ITEM_CODE_OTHER = #{itemCodeOther,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvert" >
+        update CHB_SUB_CHECK_ITEM_CONVERT
+        <set >
+            <if test="classId != null" >
+                CLASS_ID = #{classId,jdbcType=VARCHAR},
+            </if>
+            <if test="itemCodeOther != null" >
+                ITEM_CODE_OTHER = #{itemCodeOther,jdbcType=VARCHAR},
+            </if>
+            <if test="itemCode != null" >
+                ITEM_CODE = #{itemCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvert" >
+        update CHB_SUB_CHECK_ITEM_CONVERT
+        set
+        CLASS_ID = #{classId,jdbcType=VARCHAR},
+        ITEM_CODE_OTHER = #{itemCodeOther,jdbcType=VARCHAR},
+        ITEM_CODE = #{itemCode,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSubCheckItemConvert" >
+        update CHB_SUB_CHECK_ITEM_CONVERT
+        set ITEM_CODE = #{itemCode,jdbcType=VARCHAR}
+        where CLASS_ID = #{classId,jdbcType=VARCHAR}
+          and ITEM_CODE_OTHER = #{itemCodeOther,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskAccessListMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskAccessList" >
+        <id column="LIST_ID" property="listId" jdbcType="VARCHAR" />
+        <result column="LIST_NAME" property="listName" jdbcType="VARCHAR" />
+        <result column="LIST_TYPE" property="listType" jdbcType="VARCHAR" />
+        <result column="LIST_DETAIL_TYPE" property="listDetailType" jdbcType="VARCHAR" />
+        <result column="EFFDATE" property="effdate" jdbcType="DATE" />
+        <result column="DELDATE" property="deldate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="LIST_LEVEL" property="listLevel" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        LIST_ID LIST_ID, LIST_NAME LIST_NAME, LIST_TYPE LIST_TYPE, LIST_DETAIL_TYPE LIST_DETAIL_TYPE, 
+        EFFDATE EFFDATE, DELDATE DELDATE, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAccessListMapper.Base_Column_List" />
+        from RSK_ACCESS_LIST
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAccessListMapper.Base_Column_List" />
+        from RSK_ACCESS_LIST
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAccessListMapper.Base_Column_List" />
+        from RSK_ACCESS_LIST
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from RSK_ACCESS_LIST
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskAccessList" >
+        insert into RSK_ACCESS_LIST (LIST_ID, LIST_NAME, LIST_TYPE, 
+            LIST_DETAIL_TYPE, EFFDATE, DELDATE, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            LIST_LEVEL)
+        values (#{listId,jdbcType=VARCHAR}, #{listName,jdbcType=VARCHAR}, #{listType,jdbcType=VARCHAR}, 
+            #{listDetailType,jdbcType=VARCHAR}, #{effdate,jdbcType=DATE}, #{deldate,jdbcType=DATE}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{listLevel,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskAccessList" >
+        insert into RSK_ACCESS_LIST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="listId != null" >
+                LIST_ID,
+            </if>
+            <if test="listName != null" >
+                LIST_NAME,
+            </if>
+            <if test="listType != null" >
+                LIST_TYPE,
+            </if>
+            <if test="listDetailType != null" >
+                LIST_DETAIL_TYPE,
+            </if>
+            <if test="effdate != null" >
+                EFFDATE,
+            </if>
+            <if test="deldate != null" >
+                DELDATE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="listLevel != null" >
+                LIST_LEVEL,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="listId != null" >
+                #{listId,jdbcType=VARCHAR},
+            </if>
+            <if test="listName != null" >
+                #{listName,jdbcType=VARCHAR},
+            </if>
+            <if test="listType != null" >
+                #{listType,jdbcType=VARCHAR},
+            </if>
+            <if test="listDetailType != null" >
+                #{listDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="effdate != null" >
+                #{effdate,jdbcType=DATE},
+            </if>
+            <if test="deldate != null" >
+                #{deldate,jdbcType=DATE},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="listLevel != null" >
+                #{listLevel,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskAccessList" >
+        insert into RSK_ACCESS_LIST(LIST_ID, LIST_NAME, LIST_TYPE, LIST_DETAIL_TYPE, EFFDATE, 
+        DELDATE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        LIST_LEVEL)
+        select LIST_ID, LIST_NAME, LIST_TYPE, LIST_DETAIL_TYPE, EFFDATE, 
+            DELDATE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            LIST_LEVEL
+             from RSK_ACCESS_LIST
+             where 1 = 1 and LIST_ID = #{listId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskAccessList" >
+        update RSK_ACCESS_LIST
+        <set >
+            <if test="listName != null" >
+                LIST_NAME = #{listName,jdbcType=VARCHAR},
+            </if>
+            <if test="listType != null" >
+                LIST_TYPE = #{listType,jdbcType=VARCHAR},
+            </if>
+            <if test="listDetailType != null" >
+                LIST_DETAIL_TYPE = #{listDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="effdate != null" >
+                EFFDATE = #{effdate,jdbcType=DATE},
+            </if>
+            <if test="deldate != null" >
+                DELDATE = #{deldate,jdbcType=DATE},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="listLevel != null" >
+                LIST_LEVEL = #{listLevel,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskAccessList" >
+        update RSK_ACCESS_LIST
+        set LIST_NAME = #{listName,jdbcType=VARCHAR},
+            LIST_TYPE = #{listType,jdbcType=VARCHAR},
+            LIST_DETAIL_TYPE = #{listDetailType,jdbcType=VARCHAR},
+            EFFDATE = #{effdate,jdbcType=DATE},
+            DELDATE = #{deldate,jdbcType=DATE},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            LIST_LEVEL = #{listLevel,jdbcType=VARCHAR}
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+    </update>
+</mapper>
