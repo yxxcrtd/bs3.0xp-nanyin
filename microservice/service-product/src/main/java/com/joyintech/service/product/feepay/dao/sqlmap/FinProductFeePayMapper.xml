@@ -1405,7 +1405,7 @@
         AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS=#{tradeStatus}
         AND TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL=#{noFlag}
         AND TRD_FIN_PRODUCT_DEAL_TOTAL.BUSI_TYPE=#{businessType}
-
+        and ((TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE is not null and TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE!='142' )  or TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE is  null)
         <!-- 产品费用新建页面条件追加 -->
         <if test="cashId != null and cashId != ''">
             and FIN_CASH_INFO.CASH_ID = #{cashId}
