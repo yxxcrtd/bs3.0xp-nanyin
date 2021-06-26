@@ -1,0 +1,2 @@
+update data_auth_mapper_config set filter_sql='select * from ( %s ) b LEFT JOIN  DATA_AUTH_NOTIFY_INST di  on subStr(di.business_id,5) = b.assetCode and di.model_type = ''02''  where di.institution_code in %s'
+where sql_id='com.joyintech.tams.report.system.systempbccapassetinfo.dao.PbcCapAssetInfo001DtoMapper.queryForPage';
