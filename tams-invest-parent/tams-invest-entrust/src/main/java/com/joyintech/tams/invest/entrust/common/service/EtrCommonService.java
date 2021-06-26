@@ -1248,7 +1248,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
     
     /**
  	* 银行间指令 关闭check
- 	* @param pageParam
+ 	* @param param
  	* @return
  	*/
  	public List<ValidMessage> entrustCheckCloseList(Map<String, Object> param) {

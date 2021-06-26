@@ -40,12 +40,12 @@ public class DynamicConfigService {
      * @return
      */
     public Integer updateByParam(Map<String, Object> param) {
-        if (param != null ){
+        System.out.println("====abc123====" + param);
+        if (param != null){
             String dynId = param.get("dynId") + "";
             if (StringUtil.isNotEmpty(dynId)){
                 String jsonStr = selectByDynId(dynId);
                 if (StringUtil.isNotEmpty(jsonStr)){
-                    System.out.println("jsonStr====" + jsonStr);
                     Map m = JsonUtils.json2Object(jsonStr, HashMap.class);
                     m.put("checked", param.get("checked"));
                     param.put("dynInfo", JsonUtils.object2Json(m));

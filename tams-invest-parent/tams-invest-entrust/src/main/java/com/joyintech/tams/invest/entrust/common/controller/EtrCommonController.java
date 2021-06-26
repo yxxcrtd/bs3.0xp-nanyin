@@ -494,8 +494,6 @@ public class EtrCommonController extends BaseController {
     /**
      * 银行间指令关闭check
      *
-     * @param dto dto
-     * @param result BindingResult
      * @return check结果
      * @see
      * @since 1.0
@@ -533,12 +531,13 @@ public class EtrCommonController extends BaseController {
     }
 
     /**
-     * 修改动态配置信息 {"dynId":"id", "checked":"a,b,c"}
+     * 修改动态配置信息  {"dynId":dynId, "checked":"a,b,c", "userName":"dd"}
      * @return
      */
     @RequestMapping("updateByParam")
     @ResponseBody
     public Integer updateByParam(@RequestBody Map<String,Object> map){
+        map.put("userName",LoginUserUtil.getUserName());
         return etrCommonService.updateByParam(map);
     }
     

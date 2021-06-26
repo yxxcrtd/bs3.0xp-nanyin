@@ -14,13 +14,10 @@
 		update DYN_CONFIG_INFO 
 		<set >
 			<if test="dynInfo != null and dynInfo != ''" >
-				DYN_INFO=#{dynInfo,jdbcType=VARCHAR},
+				DYN_INFO=#{dynInfo,jdbcType=VARCHAR}, UPDATE_TIME=sysdate, 
 			</if>
-			<if test="updateUser != null and updateUser != ''" >
-				UPDATE_USER=#{updateUser,jdbcType=VARCHAR},
-			</if>
-			<if test="updateTime != null" >
-				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			<if test="userName != null and userName != ''" >
+				UPDATE_USER=#{userName,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where DYN_ID=#{dynId,jdbcType=VARCHAR} 
