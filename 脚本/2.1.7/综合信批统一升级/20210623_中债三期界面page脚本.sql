@@ -1,5 +1,5 @@
 delete from sys_menu where PAGE_ID  IN ('ChbFeedbackFileManagement001','ChbSubinfoBatchLog001','ManuallyGeneratingPbcData001','PbcReportFileManage001',
-'RegTimePoints001','ReportStatusInfo001','ReportUpInterfMonitor001','DebtSubmitInfo001');
+'RegTimePoints001','ReportStatusInfo001','ReportUpInterfMonitor001','DebtSubmitInfo001','AutBatchProResultQuery001');
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('REPORT_001_006_001', 'REP', null, 'REPORT_001_006', 'RegTimePoints001', 1, '02', '监管报送时点维护', 'system', null, SYSDATE, 'system', SYSDATE);
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -16,10 +16,13 @@ insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER
 values ('REPORT_001_006_007', 'REP', null, 'REPORT_001_006', 'ChbFeedbackFileManagement001', 7, '02', '中债反馈文件管理','system', null, SYSDATE, 'system', SYSDATE);
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('REPORT_001_006_008', 'REP', null, 'REPORT_001_006', 'ChbSubinfoBatchLog001', 8, '02', '中债三期大数据量报送文件下载','system', null, SYSDATE, 'system', SYSDATE);
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_001_006_009', 'REP', null, 'REPORT_001_006', 'AutBatchProResultQuery001', 9, '02', '自动报送批处理结果查询','system', null, SYSDATE, 'system', SYSDATE);
+
 
 
 delete from SYS_PAGE where PAGE_ID  IN ('ChbFeedbackFileManagement001','ChbSubinfoBatchLog001','ManuallyGeneratingPbcData001','PbcReportFileManage001',
-'RegTimePoints001','ReportStatusInfo001','ReportUpInterfMonitor001','DebtSubmitInfo001');
+'RegTimePoints001','ReportStatusInfo001','ReportUpInterfMonitor001','DebtSubmitInfo001','AutBatchProResultQuery001');
 insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ChbFeedbackFileManagement001', 'REP', '/svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'report/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'REPORT_001_006_007', null, null, '02', '02', '中债反馈文件管理', 'system', null,sysdate, 'system', sysdate);
 insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -36,4 +39,5 @@ insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 values ('ReportUpInterfMonitor001', 'REP', '/svreport/system/upinterfmonitor/ReportUpInterfMonitor001', 'report/system/upinterfmonitor/ReportUpInterfMonitor001', 'REPORT_001_006_004', null, null, '02', '02', '上游接口文件读取处理监控', 'system', null,sysdate, 'system', sysdate);
 insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DebtSubmitInfo001', 'REP', '/svreport/system/debtsubmitinfo/DebtSubmitInfo001', 'report/system/debtsubmitinfo/DebtSubmitInfo001', 'REPORT_001_006_005', null, null, '02', '02', '中债报送信息反馈', 'system', null,sysdate, 'system', sysdate);
-
+insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('AutBatchProResultQuery001', 'REP', '/svreport/system/autbatchproresultquery/AutBatchProResultQuery001', 'report/system/autbatchproresultquery/AutBatchProResultQuery001', 'REPORT_001_006_009', null, null, '02', '02', '自动报送批处理结果查询', 'system', null, SYSDATE, 'system', SYSDATE);
