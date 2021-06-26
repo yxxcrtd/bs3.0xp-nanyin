@@ -552,6 +552,14 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				flag = false;//删除数据查询无数据
 			}
 			list = baseInformationMapper.queryBaseInfoByParams(tableName, baseInformationList, flag,assetType);
+
+			//----------- add by lingxq on 2021-06-25 for 错误数据只允许导出基础数据----->>>>>
+			if("CHB_INTERF_ERRODATA".equals(tableName)) {
+				list = list.stream().filter(x -> (!StringUtil.endsWith((String) ((Map) x).get("INTERF_TYPE"), "SUB"))).collect(Collectors.toList());
+			}
+			//----------- add by lingxq on 2021-06-25 for 错误数据只允许导出基础数据-----<<<<<<
+
+
 		}
 		return list;
 	}
