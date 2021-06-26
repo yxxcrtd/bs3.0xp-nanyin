@@ -424,10 +424,14 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			pageParam.replace("pageIds", pageIds, pageNames);
 		} else {
 			pageParam.replace("pageIds", pageIds, null);
+			/***TISHKBS-2369  CLONE - UAT-投资者持有信息，已删除的数据能做导出，如果已删除数据与现有效数据是同一识别号，同一识别号可导出多条数据**/
+			/***确认只有在不选择导出时候,限制只导出E状态的数据**/
+			pageParam.put("status","E");
 		}
-
 		// 设置参数
 		dealSearchParam(pageParam);
+
+
 		//无查询参数的情况
 		exportParam.config("/com/joyintech/tams/report/submitmaintenance/investorsholdinfo/conf/export_conf.xml")
 				.select(() -> investorsHoldInfo001Mapper.selectAllData(pageParam));
