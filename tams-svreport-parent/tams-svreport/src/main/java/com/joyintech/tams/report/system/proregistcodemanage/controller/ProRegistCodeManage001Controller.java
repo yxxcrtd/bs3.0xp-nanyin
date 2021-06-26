@@ -190,6 +190,11 @@ public class ProRegistCodeManage001Controller extends BaseController {
     public ResponseEntity<byte[]> export() {
         List<ProRegistCodeManage001Dto> dtoList = this.proRegistCodeManageMService.queryReportList(
         		RequestUtil.getPageParam());
+        if(!CollectionUtils.isEmpty(dtoList)){
+            for(ProRegistCodeManage001Dto dto : dtoList){
+                dto.setBelongInstitutionCode(null);
+            }
+        }
         File outFile = proRegistCodeManage001Service.makeFile(
             "/com/joyintech/tams/report/system/proregistcodemanage/conf/export_conf.xml", dtoList);
         return ExportUtil.export(
