@@ -266,10 +266,12 @@ INSERT INTO sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 INSERT INTO sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES('EtribRepoInfo003', 'EtribRepoInfo003_btn_save', 'oneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
 INSERT INTO sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES('EtribRepoInfo003', 'EtribRepoInfo003_btn_submit', 'oneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
 
+--动态配置表，根据配置信息动态展示
 DROP TABLE DYN_CONFIG_INFO;
 CREATE TABLE "DYN_CONFIG_INFO" (
    "DYN_ID" varchar2(100) NOT NULL,
    "DYN_INFO" CLOB,
+   "REMARK"	VARCHAR2(100),
    "CREATE_USER" varchar2(20) NOT NULL,
    "CREATE_TIME" date NOT NULL,
    "UPDATE_USER" varchar2(20) NOT NULL ,
@@ -279,8 +281,11 @@ CREATE TABLE "DYN_CONFIG_INFO" (
 COMMENT ON TABLE "DYN_CONFIG_INFO"  IS '动态配置信息表';
 COMMENT ON COLUMN "DYN_CONFIG_INFO"."DYN_ID" IS '配置主键信息';
 COMMENT ON COLUMN "DYN_CONFIG_INFO"."DYN_INFO" IS '配置信息';
-
+COMMENT ON COLUMN "DYN_CONFIG_INFO"."REMARK" IS '备注';
+--债券二级左下角资产信息动态配置
 INSERT INTO DYN_CONFIG_INFO
-(DYN_ID, DYN_INFO, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES('MST_BOND_VALUATION_INFO_EtrIbBondinfoHq', '{"all":[{"value":"secType","label":"债券分类"},{"value":"issuer","label":"发行人"},{"value":"vdate","label":"起息日"},{"value":"mdate","label":"到期日"},{"value":"lastqx","label":"剩余期限"},{"value":"lastPaydate","label":"下一付息日"},{"value":"rateType","label":"利率类型"},{"value":"rate","label":"票面利率"},{"value":"zxGrade","label":"债项评级"},{"value":"ztGrade","label":"主体评级"},{"value":"xqFlg","label":"含权标识"},{"value":"xqdate","label":"下一行权日"},{"value":"priceXq","label":"估价净价（行权）"},{"value":"newPrice","label":"最新净价"},{"value":"newRate","label":"下一行权日"},{"value":"priceTj","label":"估价净价（推荐）"},{"value":"gzRate","label":"估值收益率"}],"name":"dynInfo","checked":"secType,mdate,lastqx,lastPaydate,rateType,ztGrade,xqFlg"}',
-       'ld', sysdate, 'ld', sysdate);
+(DYN_ID, DYN_INFO, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('EtrIbBondinfoHq_dyn', '{"name":"dynInfo","all":[{"value":"secType","label":"债券分类"},{"value":"issuer","label":"发行人"},{"value":"vdate","label":"起息日"},{"value":"mdate","label":"到期日"},{"value":"lastqx","label":"剩余期限"},{"value":"lastPaydate","label":"下一付息日"},{"value":"rateType","label":"利率类型"},{"value":"rate","label":"票面利率"},{"value":"zxGrade","label":"债项评级"},{"value":"ztGrade","label":"主体评级"},{"value":"xqFlg","label":"含权标识"},{"value":"xqdate","label":"下一行权日"},{"value":"priceXq","label":"估价净价（行权）"},{"value":"newPrice","label":"最新净价"},{"value":"newRate","label":"下一行权日"},{"value":"priceTj","label":"估价净价（推荐）"},{"value":"gzRate","label":"估值收益率"}],"checked":"secType,issuer,vdate,mdate,lastqx,lastPaydate,rateType,zxGrade,xqFlg,priceXq,newRate,gzRate"}',
+       '债券二级左下角资产信息动态配置', 'ld', sysdate, 'ld', sysdate);
+
+

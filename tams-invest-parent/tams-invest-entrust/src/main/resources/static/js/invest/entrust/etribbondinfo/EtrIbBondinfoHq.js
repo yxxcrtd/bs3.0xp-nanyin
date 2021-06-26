@@ -2,7 +2,7 @@
  * 行情（左上）
  */
 (function(){
-
+    
     /**根据市场代码，查询行情信息，展示出来*/
     var queryJJHQXX = function(seccode) {
         $.ajax({
@@ -95,77 +95,81 @@
         }
         if (finprodId != null && finprodId != '') {
             var secId = '';
-            document.getElementById('secName').innerHTML = '';
-            document.getElementById('secType').innerHTML = '';
-            document.getElementById('issuer').innerHTML = '';
-            document.getElementById('vdate').innerHTML = '';
-            document.getElementById('mdate').innerHTML = '';
-            document.getElementById('lastqx').innerHTML = '';
-            document.getElementById('lastPaydate').innerHTML = '';
-            document.getElementById('rateType').innerHTML = '';
-            document.getElementById('rate').innerHTML = '';
-            document.getElementById('xqFlg').innerHTML = '';
-            document.getElementById('xqdate').innerHTML = '';
-            document.getElementById('zxGrade').innerHTML = '';
-            document.getElementById('ztGrade').innerHTML = '';
-            document.getElementById('gzRate').innerHTML = '';
-            document.getElementById('priceXq').innerHTML = '';
-            document.getElementById('priceTj').innerHTML = '';
+            
+            // document.getElementById('secName').innerHTML = '';
+            // document.getElementById('secType').innerHTML = '';
+            // document.getElementById('issuer').innerHTML = '';
+            // document.getElementById('vdate').innerHTML = '';
+            // document.getElementById('mdate').innerHTML = '';
+            // document.getElementById('lastqx').innerHTML = '';
+            // document.getElementById('lastPaydate').innerHTML = '';
+            // document.getElementById('rateType').innerHTML = '';
+            // document.getElementById('rate').innerHTML = '';
+            // document.getElementById('xqFlg').innerHTML = '';
+            // document.getElementById('xqdate').innerHTML = '';
+            // document.getElementById('zxGrade').innerHTML = '';
+            // document.getElementById('ztGrade').innerHTML = '';
+            // document.getElementById('gzRate').innerHTML = '';
+            // document.getElementById('priceXq').innerHTML = '';
+            // document.getElementById('priceTj').innerHTML = '';
             Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findSecinfo', param, function (result) {
                 if (result) {
+                    DynCheckboxView.messageInfo = result; // 全局资产信息保存
                     secId = result.secId;
-                    if (result.secName != null && result.secName != '') {
-                        document.getElementById('secName').innerHTML = result.secName;
-                    }
-                    if (result.secTypeName != null && result.secTypeName != '') {
-                        document.getElementById('secType').innerHTML = result.secTypeName;
-                    }
-                    if (result.issuerName != null && result.issuerName != '') {
-                        document.getElementById('issuer').innerHTML = result.issuerName;
-                    }
-                    if (result.vdate != null && result.vdate != '') {
-                        document.getElementById('vdate').innerHTML = result.vdate;
-                    }
-                    if (result.mdate != null && result.mdate != '') {
-                        document.getElementById('mdate').innerHTML = result.mdate;
-                    }
-                    if (result.lastqx != null && result.lastqx != '') {
-                        if (result.lastqx != 0) {
-                            document.getElementById('lastqx').innerHTML = result.lastqx + '年';
-                        } else {
-                            document.getElementById('lastqx').innerHTML = '--';
-                        }
-                    }
-                    if (result.lastPaydate != null && result.lastPaydate != '') {
-                        document.getElementById('lastPaydate').innerHTML = result.lastPaydate;
-                    }
-                    if (result.rateTypeName != null && result.rateTypeName != '') {
-                        document.getElementById('rateType').innerHTML = result.rateTypeName;
-                    }
-                    if (result.rate != null && result.rate != '') {
-                        document.getElementById('rate').innerHTML = JoyinUtil.formatNumber(result.rate, 4, null, 2) + '%';
-                    }
-                    if (result.xqFlg != null && result.xqFlg != '') {
-                        document.getElementById('xqFlg').innerHTML = result.xqFlg;
-                    }
-                    if (result.xqdate != null && result.xqdate != '') {
-                        document.getElementById('xqdate').innerHTML = result.xqdate;
-                    }
-                    if (result.zxGrade != null && result.zxGrade != '') {
-                        document.getElementById('zxGrade').innerHTML = result.zxGrade;
-                    }
-                    if (result.ztGrade != null && result.ztGrade != '') {
-                        document.getElementById('ztGrade').innerHTML = result.ztGrade;
-                    }
-                    if (result.gzRate != null && result.gzRate != '') {
-                        document.getElementById('gzRate').innerHTML = JoyinUtil.formatNumber(result.gzRate, 4, null, 2) + '%';
-                    }
-                    if (result.priceXq != null && result.priceXq != '') {
-                        document.getElementById('priceXq').innerHTML = JoyinUtil.formatNumber(result.priceXq, 4, null, 2) ;
-                    }
-                    if (result.priceTj != null && result.priceTj != '') {
-                        document.getElementById('priceTj').innerHTML = JoyinUtil.formatNumber(result.priceTj, 4, null, 2) ;
-                    }
+                    resultToView(DynCheckboxView.checkedList, DynCheckboxView.messageInfo);
+                    //
+                    // if (result.secName != null && result.secName != '') {
+                    //     document.getElementById('secName').innerHTML = result.secName;
+                    // }
+                    // if (result.secTypeName != null && result.secTypeName != '') {
+                    //     document.getElementById('secType').innerHTML = result.secTypeName;
+                    // }
+                    // if (result.issuerName != null && result.issuerName != '') {
+                    //     document.getElementById('issuer').innerHTML = result.issuerName;
+                    // }
+                    // if (result.vdate != null && result.vdate != '') {
+                    //     document.getElementById('vdate').innerHTML = result.vdate;
+                    // }
+                    // if (result.mdate != null && result.mdate != '') {
+                    //     document.getElementById('mdate').innerHTML = result.mdate;
+                    // }
+                    // if (result.lastqx != null && result.lastqx != '') {
+                    //     if (result.lastqx != 0) {
+                    //         document.getElementById('lastqx').innerHTML = result.lastqx + '年';
+                    //     } else {
+                    //         document.getElementById('lastqx').innerHTML = '--';
+                    //     }
+                    // }
+                    // if (result.lastPaydate != null && result.lastPaydate != '') {
+                    //     document.getElementById('lastPaydate').innerHTML = result.lastPaydate;
+                    // }
+                    // if (result.rateTypeName != null && result.rateTypeName != '') {
+                    //     document.getElementById('rateType').innerHTML = result.rateTypeName;
+                    // }
+                    // if (result.rate != null && result.rate != '') {
+                    //     document.getElementById('rate').innerHTML = JoyinUtil.formatNumber(result.rate, 4, null, 2) + '%';
+                    // }
+                    // if (result.xqFlg != null && result.xqFlg != '') {
+                    //     document.getElementById('xqFlg').innerHTML = result.xqFlg;
+                    // }
+                    // if (result.xqdate != null && result.xqdate != '') {
+                    //     document.getElementById('xqdate').innerHTML = result.xqdate;
+                    // }
+                    // if (result.zxGrade != null && result.zxGrade != '') {
+                    //     document.getElementById('zxGrade').innerHTML = result.zxGrade;
+                    // }
+                    // if (result.ztGrade != null && result.ztGrade != '') {
+                    //     document.getElementById('ztGrade').innerHTML = result.ztGrade;
+                    // }
+                    // if (result.gzRate != null && result.gzRate != '') {
+                    //     document.getElementById('gzRate').innerHTML = JoyinUtil.formatNumber(result.gzRate, 4, null, 2) + '%';
+                    // }
+                    // if (result.priceXq != null && result.priceXq != '') {
+                    //     document.getElementById('priceXq').innerHTML = JoyinUtil.formatNumber(result.priceXq, 4, null, 2) ;
+                    // }
+                    // if (result.priceTj != null && result.priceTj != '') {
+                    //     document.getElementById('priceTj').innerHTML = JoyinUtil.formatNumber(result.priceTj, 4, null, 2) ;
+                    // }
                 }
             }, false);
 
@@ -186,144 +190,190 @@
      */
     $(function() {
 
-        initDynCheckbox("EtrIbBondinfoHq", "MST_BOND_VALUATION_INFO_EtrIbBondinfoHq","EtrIbBondinfoHq_checkbox_background",
-            function(data){
-            var _this = $("#EtrIbBondinfoHq_view_contain");
-            _this.empty();
-            $.each(data,function(index, value){
-                // alert(index + "-" + value.name + "-" + value.label);
-                var item = $('<div style="float: left;width: 50%;height: 22px;line-height: 22px;"><label>'+ value.label +':</label><label id="'+ value.name +'"></label></div>');
-                item.appendTo(_this);
-            });
+        DynCheckboxView.init("EtrIbBondinfoHq", "EtrIbBondinfoHq_dyn",function(checkedList, messageInfo){
+            resultToView(checkedList, messageInfo); // 展示资产信息
         });
         
     });
 
-    /**
-     * @param pageid EtrIbBondinfoHq
-     * @param dynId MST_BOND_VALUATION_INFO_EtrIbBondinfoHq
-     * @param backgroundId EtrIbBondinfoHq_checkbox_background
-     * @param callback 执行数据页面加载 [{"name":"secName","label":"债券名称"},{...}...]
+    /*
+     * 展示checkbox界面并根据选中项进行回调展示数据
+     * dynId表示数据库表DYN_CONFIG_INFO中DYN_ID配置的值
+     * 设置显示列按钮id以pageId开头    例：<a id="EtrIbBondinfoHq_checkbox_start">
+     * 多选框展示页面id以pageId开头   例：<div id="EtrIbBondinfoHq_checkbox_background">
+     * 行情展示页面id以pageId开头    例：<div id="EtrIbBondinfoHq_view_contain">
      */
-    var initDynCheckbox = function (pageid, dynId, backgroundId, callback) {
-        var _background = $("#"+backgroundId);
-        _background.append('<div style="margin-top:10px;">');
-        _background.append('<form id="'+ pageid +'_checkbox_form" style="margin-top:10px;">');
-        _background.append('<div id="'+ pageid +'_checkbox_contain"></div>');
-        _background.append('<div style="text-align:center"><button id="'+ pageid +'_checkbox_btn_realseach" style="margin-top:5px;margin-bottom:5px;">确认</button><button id="'+ pageid +'_checkbox_btn_seachClose" style="margin-top:5px;margin-bottom:5px;margin-left: 50px;">取消</button></div>');
-        
-        var isclicked=false; // 多选项有变化才会修改后台数据
-        var data=[]; // 展示数据，用来展示页面真实数据，不是多选框
-        
-        if(true){
-            var url = basePath + 'invest/entrust/EtrCommonController/selectByDynId';
-            Joyin.ajaxJson(url, {"dynId":dynId}, function (datajson) {
+    var DynCheckboxView = {
+        checkedList: [],  // 选中项
+        messageInfo: {},  // 行情信息
+        init: function (pageid, dynId, callback) {
+            let _background = $("#"+ pageid +"_checkbox_background");
+            _background.append('<div style="margin-top:10px;"><form id="'+ pageid +'_checkbox_form" style="margin-top:10px;"><div id="'+ pageid +'_checkbox_contain"></div><div style="text-align:center"><button id="'+ pageid +'_checkbox_btn_realseach" style="margin-top:5px;margin-bottom:5px;">确认</button><button id="'+ pageid +'_checkbox_btn_seachClose" style="margin-top:5px;margin-bottom:5px;margin-left: 50px;">取消</button></div></form></div>');
 
-                // 构造多选框
-                var pageContain = $("#"+pageid+"_checkbox_contain");
-                pageContain.empty(); // 显示多选框之前清空前一次的
-                datajson.all=datajson.all.reverse(); // 倒序
-                var m;
-                $.each(datajson.all,function(index, value){
-                    // alert(index + "-" + value.value + "-" + value.label);
-                    if(value && value != ''){
-                        if((index+1) % 2 == 0 && index > 0){
-                            itemfun(pageContain, value, m);
-                            m = null;
-                        }else{
-                            m = value;
+            let isclicked=false; // 多选项有变化才会修改后台数据
+
+            if(true){
+                let url = basePath + 'invest/entrust/EtrCommonController/selectByDynId';
+                Joyin.ajaxJson(url, {"dynId":dynId}, function (datajson) {
+                    // 构造多选框
+                    let pageContain = $("#"+pageid+"_checkbox_contain");
+                    pageContain.empty(); // 显示多选框之前清空前一次的
+                    let m; // 存储奇数序号
+                    $.each(datajson.all,function(index, value){
+                        // alert(index + "-" + value.value + "-" + value.label);
+                        if(value && value != ''){
+                            if((index+1) % 2 == 0 && index > 0){
+                                itemfun(pageContain, m, value);
+                                m = null;
+                            }else{
+                                m = value;
+                            }
                         }
+                    });
+                    if(m != null){
+                        itemfun(pageContain, m);
                     }
+
+                    // 对构造的多选项赋值
+                    let chs = datajson.checked;
+                    if(chs){
+                        let arr = chs.split(",");
+                        DynCheckboxView.checkedList = [];
+                        $.each(arr,function(index, value){
+                            if(value != ''){
+                                $("#"+pageid+"_checkbox_contain input:checkbox[value='"+ value +"']").attr("checked",'checked');
+                                // 初始化页面展示数据
+                                var temp = {}
+                                temp.name=value;
+                                temp.label=$("#"+pageid+"_checkbox_contain input:checkbox[value='"+ value +"']").attr("title");
+                                DynCheckboxView.checkedList[DynCheckboxView.checkedList.length]=temp;
+                            }
+                        });
+                    }
+
+                    // 绑定构造的多选项click事件
+                    $("#"+pageid+"_checkbox_contain input:checkbox").click(function (){
+                        isclicked = true;
+                        let thisCheckbox = $(this);
+                        if(thisCheckbox.attr("checked") == "checked"){
+                            thisCheckbox.removeAttr("checked");
+                        }else{
+                            thisCheckbox.attr("checked", "checked");
+                        }
+                    });
+
+                    DynCheckboxView.defaulView(pageid + "_view_contain", DynCheckboxView.checkedList); // 展示空行情
+                    callback(DynCheckboxView.checkedList, DynCheckboxView.messageInfo);
                 });
-                if(m != null){
-                    itemfun(pageContain, m);
+            }
+
+            var itemfun = function(_this, m, n){ // 构造两列表单
+                if(!n){
+                    let div = $('<div style="margin-left: 40px; margin-top:6px;"><span style="display:inline-block; width: 138px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ m.value +'" title="'+ m.label +'">'+ m.label +'</label></span></div>');
+                    // div.prependTo(_this);
+                    _this.append(div);
+                }else{
+                    let div = $('<div style="margin-left: 40px; margin-top:6px;"><span style="display:inline-block; width: 138px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ m.value +'" title="'+ m.label +'">'+ m.label +'</label></span><span style="display:inline-block; width: 120px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ n.value +'" title="'+ n.label +'">'+ n.label +'</label></span></div>');
+                    // div.prependTo(_this);
+                    _this.append(div);
                 }
+            }
 
-                // 对构造的多选项赋值
-                var arr = datajson.checked.split(",");
-                $.each(arr,function(index, value){
-                    if(value != ''){
-                        $("#"+pageid+"_checkbox_contain input:checkbox[value='"+ value +"']").attr("checked",'checked');
-                        // 初始化页面展示数据
-                        var temp = {}
-                        temp.name=value;
-                        temp.label=$("#"+pageid+"_checkbox_contain input:checkbox[value='"+ value +"']").attr("title");
-                        data[data.length]=temp;
+            // 设置显示列
+            $("#"+pageid+"_checkbox_start").click(function() {
+                if($("#"+pageid+"_checkbox_background").css("display")=="none"){
+                    $("#"+pageid+"_checkbox_background").show();
+                }
+                else{
+                    $("#"+pageid+"_checkbox_background").hide();
+                }
+            });
+
+            // 取消
+            $("#"+pageid+"_checkbox_btn_seachClose").click(function() {
+                $("#"+pageid+"_checkbox_background").hide();
+                return false;
+            });
+
+            // 确认
+            $("#"+pageid+"_checkbox_btn_realseach").click(function() {
+                if(isclicked){
+                    let checkedlist=[];
+                    let index = 0 ;
+                    let arr = $("#"+pageid+"_checkbox_contain input:checkbox");
+                    DynCheckboxView.checkedList = [];
+                    $.each(arr,function(index, value){
+                        let isChecked = $(this).attr("checked");
+                        if (isChecked && isChecked == 'checked'){
+                            let value = $(this).val();
+                            // alert(value + "-" + $(this).attr("checked"));
+                            if(value && value != ''){
+                                checkedlist[checkedlist.length]=value;
+                                let temp = {};
+                                temp.name=value;
+                                temp.label=$(this).attr("title");
+                                DynCheckboxView.checkedList[DynCheckboxView.checkedList.length]=temp;
+                            }
+                        }
+                    });
+                    if (checkedlist.length > 0){
+                        let url = basePath + 'invest/entrust/EtrCommonController/updateByParam';
+                        let params = {"dynId":dynId, "checked":checkedlist.join(",")};
+                        Joyin.ajaxJson(url, params, function (datajson) {
+                            $("#"+pageid+"_checkbox_background").hide();
+                            DynCheckboxView.defaulView(pageid + "_view_contain", DynCheckboxView.checkedList); // 展示空行情
+                            callback(DynCheckboxView.checkedList, DynCheckboxView.messageInfo);
+                        });
                     }
-                });
-
-                // 绑定构造的多选项click事件
-                $("#"+pageid+"_checkbox_contain input:checkbox").click(function (){
-                    isclicked = true;
-                    var _this = $(this);
-                    if(_this.attr("checked") == "checked"){
-                        _this.removeAttr("checked");
-                    }else{
-                        _this.attr("checked", "checked");
-                    }
-                });
-
-                callback(data);
+                    isclicked=false;
+                }
+                return false;
+            });
+        },
+        /**
+         * 空值展示行情
+         * @param id 需要展示的#标识
+         * @param checkedList 选中项
+         */
+        defaulView : function (id, checkedList) {
+            var _this = $("#" + id);
+            _this.empty();
+            $.each(checkedList, function(index, value){
+                // alert(index + "-" + value.name + "-" + value.label);
+                var item = $('<div style="float: left;width: 50%;height: 22px;line-height: 22px;"><label>'+ value.label +':</label><label id="EtrIbBondinfoHq_'+ value.name +'"></label></div>');
+                item.appendTo(_this);
             });
         }
+    } 
+    /*DynCheckboxView--end*/
 
-        var itemfun = function(_this, m, n){ // 构造两列表单
-            if(!n){
-                var div = $('<div style="margin-left: 40px; margin-top:6px;"><span style="display:inline-block; width: 138px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ m.value +'" title="'+ m.label +'">'+ m.label +'</label></span></div>');
-                div.prependTo(_this);
-            }else{
-                var div = $('<div style="margin-left: 40px; margin-top:6px;"><span style="display:inline-block; width: 138px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ m.value +'" title="'+ m.label +'">'+ m.label +'</label></span><span style="display:inline-block; width: 120px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ n.value +'" title="'+ n.label +'">'+ n.label +'</label></span></div>');
-                div.prependTo(_this);
-            }
-        }
-        
-        // 设置显示列
-        $("#"+pageid+"_checkbox_start").click(function() {
-            if($("#"+pageid+"_checkbox_background").css("display")=="none"){
-                $("#"+pageid+"_checkbox_background").show();
-            }
-            else{
-                $("#"+pageid+"_checkbox_background").hide();
-            }
-        });
-
-        // 取消
-        $("#"+pageid+"_checkbox_btn_seachClose").click(function() {
-            $("#"+pageid+"_checkbox_background").hide();
-            return false;
-        });
-
-        // 确认
-        $("#"+pageid+"_checkbox_btn_realseach").click(function() {
-            if(isclicked){
-                var checkedlist=[], data=[];
-                var index = 0 ;
-                var arr = $("#"+pageid+"_checkbox_contain input:checkbox");
-                $.each(arr,function(index, value){
-                    var isChecked = $(this).attr("checked");
-                    if (isChecked && isChecked == 'checked'){
-                        var value = $(this).val();
-                        // alert(value + "-" + $(this).attr("checked"));
-                        if(value && value != ''){
-                            checkedlist[checkedlist.length]=value;
-                            var temp = {};
-                            temp.name=value;
-                            temp.label=$(this).attr("title");
-                            data[data.length]=temp;
+    /**
+     * 根据持仓单击联动到展示资产信息
+     * @param result 资产数据
+     * @param data checkbox选中数据
+     */
+    var resultToView = function(data, result){
+        if(result && data){
+            $("#secName").html('');
+            $("#secName").html(result.secName);
+            $.each(data,function(index, value){
+                let name = value.name;
+                let _labelName = $("#EtrIbBondinfoHq_" + name);
+                if(_labelName){
+                    _labelName.html('');
+                    let resultValue = result[name];
+                    // alert(index + "-" + value.name + "-" + value.label + "===" + str);
+                    if(resultValue && resultValue != ''){
+                        if(name == "lastqx"){
+                            _labelName.html(resultValue + "年");
+                        }else if(name == "rate" || name == "gzRate" || name == "priceXq" || name == "priceTj"){
+                            _labelName.html(JoyinUtil.formatNumber(result.rate, 4, null, 2) + '%');
+                        }else{
+                            _labelName.html(resultValue);
                         }
                     }
-                });
-                if (checkedlist.length > 0){
-                    var url = basePath + 'invest/entrust/EtrCommonController/updateByParam';
-                    var params = {"dynId":dynId, "checked":checkedlist.join(",")};
-                    Joyin.ajaxJson(url, params, function (datajson) {
-                        $("#"+pageid+"_checkbox_background").hide();
-                        callback(data);
-                    });
                 }
-                isclicked=false;
-            }
-            return false;
-        });
+            });
+        }
     }
 }());
