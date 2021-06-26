@@ -522,7 +522,7 @@ $(function() {
             var holdDateStart=$('#holdDate').startDate();
 //            if(sendStatus!='01'){
             if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
-                Joyin.error(JoyinUtil.getMessage("REPORT_EXPORT_0004"));
+                Joyin.error(JoyinUtil.getMessage("REPORT_EXPORT_0004") + ",请在查询条件[报送状态]中选择[未报送]");
                 return;
             }
 //            else if(status && status!='03'){
