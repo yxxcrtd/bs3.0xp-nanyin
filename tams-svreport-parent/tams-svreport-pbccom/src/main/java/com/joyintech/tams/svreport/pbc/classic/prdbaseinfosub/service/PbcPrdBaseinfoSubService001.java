@@ -640,6 +640,9 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 	public List<PbcPrdBaseinfoSub> searchByCondition(Map<String, Object> searchParam) {
 		deaSearchParam(searchParam);
 		//searchParam.put("sendStatus", DictCodeListExt2.报送状态_未报送.getValue());
+		/**TISHKBS-2373  CLONE - UAT-人行产品基本信息,不勾选数据导出，导出全部数据，应该只导出有起始募集的数据***/
+		/**当全选时.直接连接查询起始募集信息.如果没有.则不导出***/
+		searchParam.put("allExport","01");
 		List<PbcPrdBaseinfoSub> reportList = pbcPrdBaseinfoSubMapper.searchPage(searchParam);
 		return reportList;
 		
