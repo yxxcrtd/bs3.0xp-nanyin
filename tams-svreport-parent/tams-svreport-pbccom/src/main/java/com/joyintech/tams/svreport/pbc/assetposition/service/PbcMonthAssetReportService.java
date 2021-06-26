@@ -8730,7 +8730,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         sub.setReporttype(orgDto.getReporttype());
         sub.setGrouptype(orgDto.getGrouptype());
         sub.setPropertycode(orgDto.getGrouptype());
-        sub.setCny(orgDto.getCny());
+        sub.setCny((orgDto.getCny()==null?BigDecimal.ZERO:orgDto.getCny()).setScale(2, BigDecimal.ROUND_HALF_UP));
         sub.setUsdToCny((orgDto.getUsdToCny()==null?BigDecimal.ZERO:orgDto.getUsdToCny()).setScale(2, BigDecimal.ROUND_HALF_UP));
         sub.setEurToCny((orgDto.getEurToCny()==null?BigDecimal.ZERO:orgDto.getEurToCny()).setScale(2, BigDecimal.ROUND_HALF_UP));
         sub.setGbpToCny((orgDto.getGbpToCny()==null?BigDecimal.ZERO:orgDto.getGbpToCny()).setScale(2, BigDecimal.ROUND_HALF_UP));

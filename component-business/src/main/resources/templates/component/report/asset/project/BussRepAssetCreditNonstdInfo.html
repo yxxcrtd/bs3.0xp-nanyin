@@ -18,7 +18,7 @@
                             <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetCreditNonstdInfo.repTradeMarket}" >交易流通场所</label>
                             <div class="layui-input-inline input-inline">
                                 <select th:id="|${entityName}_repTradeMarket|" th:name="|${entityName}.repTradeMarket|" th:initValue="${entity?.repTradeMarket}"  
-                                    class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${TRADE_MARKET}">
+                                    class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_TRADE_MARKET}">
                                 </select>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                     </div>
                     <div class="form-inline-wrap">
                             <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepAssetCreditNonstdInfo.repIntpayCycle}" >付息频率（个月/次）</label>
-                            <div class="layui-input-inline input-inline">　
+                            <div class="layui-input-inline input-inline">
                                 <input type="text" th:id="|${entityName}_repIntpayCycle|" th:name="|${entityName}.repIntpayCycle|"  data-th-value="${entity?.repIntpayCycle}"
                                 class="layui-input form-input text-number" placeholder="请输入内容" maxLength="4" data-textrange="0"
                                 data-th-placeholder="#{SysCommon.placeholder}"  required>

@@ -63,57 +63,7 @@
 						AND A.holdDate  = TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd')
 					   )
 			WHERE
-			 C.PRODID is null	
-			
-			UNION ALL	
-			
-			SELECT
-				tmp3.prodId,				
-				tmp3.prdVDate,
-				tmp3.prdMDate,
-				tmp3.holdDate,
-				tmp3.prdRegistCode
-			FROM (
-				SELECT
-					tmp2.prodId,				
-					tmp2.prdVDate,
-					tmp2.prdMDate,
-					tmp2.holdDate,
-					tmp2.prdRegistCode,
-					SUM(tmp2.lateNums) as validateTol
-				FROM (			
-					SELECT
-						tmp1.prodId,				
-						tmp1.prdVDate,
-						tmp1.prdMDate,
-						tmp1.holdDate,
-						tmp1.prdRegistCode,
-						1 lateNums 
-					FROM (
-						SELECT  
-							A.PROD_ID as prodId,				
-							A.VDATE as prdVDate,
-							A.MDATE as prdMDate,
-							A.holdDate,
-							B.REG_CODE as prdRegistCode
-						FROM  objRec A
-							LEFT JOIN CHB_PRDRESIST_CODE B
-								ON A.PROD_ID = B.PRODID	
-							INNER JOIN CHB_INVESTHOLD_INFO_SUB_SUM C
-								ON (A.PROD_ID = C.PRODID				
-									AND A.holdDate  = TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd')
-								   )					
-						) tmp1
-					) tmp2	
-				GROUP BY
-					tmp2.prodId,				
-					tmp2.prdVDate,
-					tmp2.prdMDate,
-					tmp2.holdDate,
-					tmp2.prdRegistCode
-				) tmp3
-			WHERE 
-				tmp3.validateTol = 0
-							 	   														
+			 C.PRODID is null			
+			 	   														
 	</select>	
 </mapper>

@@ -515,8 +515,8 @@
     ELSE 
        NVL(NVL(DEAL.ACCR_NUM,DEAL.SHARE_AMT),0) * 100
     END NUM,
-    DECODE(DEAL.PS,'T01','01','T02','02','T03','02','T39','02','T22',DECODE(TOTALDEAL.PS,'T08','11','T09','09','T07','09'),'T23',DECODE(TOTALDEAL.PS,'T08','11','T07','02'),'T29','12') CUR_ASSET_TYPE,/*中间还本的利息需统计成11其他收入*/
-    DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','部分到期-收息','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','部分到期','T07','到期'),'T29','融入债券付息还本') CUR_ASSETDET_TYPE,/*针对不同的收息：中间收息：债券收息交易，部分还本收息：债券中间还本交易，到期收息：债券到期利息收入*/
+    DECODE(DEAL.PS,'T01','01','T02','02','T03','02','T39','02','T22',DECODE(TOTALDEAL.PS,'T08','09','T09','09','T07','09'),'T23',DECODE(TOTALDEAL.PS,'T08','11','T07','02'),'T29','12') CUR_ASSET_TYPE,/*中间还本的利息需统计成11其他收入*/
+    DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','债券收息交易','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','债券中间还本交易','T07','到期'),'T29','融入债券付息还本') CUR_ASSETDET_TYPE,/*针对不同的收息：中间收息：债券收息交易，部分还本收息：债券中间还本交易，到期收息：债券到期利息收入*/
     DEAL.SETTLE_DATE DEALDATE,
     DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T29',DEAL.COUNTER_ID,'T39',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T22',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T23',nvl(party2.COUNTER_ID,party3.COUNTER_ID), 'T29', party2.COUNTER_ID, 'T32', party2.COUNTER_ID) TRADE_COUNTER,
     ROUND(DECODE(DEAL.PS,'T01',DEAL.UNIT_FPRICE,'T02',DEAL.UNIT_FPRICE,'T03',DEAL.UNIT_FPRICE,'T39',NVL(DEAL.UNIT_FPRICE, DECODE(DEAL.SHARE_AMT, 0, 0, DEAL.TRADE_AMT/DEAL.SHARE_AMT)),'T23',DECODE(TOTALDEAL.PS,'T08',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0) * -1,DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT*-1)),'T07',DECODE(DEAL.TG_BUSI_TYPE,'144',NVL(PRODUCTASSET.M_PRIN_AMT,0),DECODE(DEAL.SHARE_AMT,0,0,DEAL.TRADE_AMT/DEAL.SHARE_AMT)))),4) UNIT_PRICE_FULL,
@@ -1832,7 +1832,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     deal.CCY CCY,/*币种*/
     deal.trade_amt AMT,/*发生金额*/
     null CNY_AMT,/*折算人民币*/
-    nvl(deal.SHARE_AMT,0) NUM,/*数量*/
+    nvl(deal.trade_amt,0) NUM,/*数量*/
     DECODE(deal.PS,'T99','12','T98','11' ) CUR_ASSET_TYPE,/*资金流动类型*/
     '无' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
     deal.SETTLE_DATE DEALDATE,/*交易日期*/
@@ -3400,9 +3400,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       ELSE
       NVL(NVL(DEAL.ACCR_NUM,DEAL.SHARE_AMT),0) * 100
       END NUM,
-      DECODE(DEAL.PS,'T01','01','T02','02','T03','02','T39','02','T22',DECODE(TOTALDEAL.PS,'T08','11','T09','09','T07','09'),'T23',DECODE(TOTALDEAL.PS,'T08','11','T07','02'),'T29','12')
+      DECODE(DEAL.PS,'T01','01','T02','02','T03','02','T39','02','T22',DECODE(TOTALDEAL.PS,'T08','09','T09','09','T07','09'),'T23',DECODE(TOTALDEAL.PS,'T08','11','T07','02'),'T29','12')
       CUR_ASSET_TYPE,/*中间还本的利息需统计成11其他收入*/
-      DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','部分到期-收息','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','部分到期','T07','到期'),'T29','融入债券付息还本')
+      DECODE(DEAL.PS,'T22',decode(TOTALDEAL.ps,'T08','债券收息交易','T09','收息','T07','收息'),'T23',decode(TOTALDEAL.ps,'T08','债券中间还本交易','T07','到期'),'T29','融入债券付息还本')
       CUR_ASSETDET_TYPE,/*针对不同的收息：中间收息：债券收息交易，部分还本收息：债券中间还本交易，到期收息：债券到期利息收入*/
       DEAL.SETTLE_DATE DEALDATE,
       DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T29',DEAL.COUNTER_ID,'T39',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T22',nvl(party2.COUNTER_ID,party3.COUNTER_ID),'T23',nvl(party2.COUNTER_ID,party3.COUNTER_ID),
@@ -4344,7 +4344,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       NULL CNY_AMT,
       /*折算后人民币在街口中单独处理*/
       DEAL.SHARE_AMT NUM,
-      DECODE(FUNDASSET.PROFIT_TYPE,'01',DECODE(DEAL.PS,'T01','01','T02','02','T05','01','T64','01','T18','01','T19','02','T63','02','T12','01','T11','09'),'03',DECODE(DEAL.PS,'T01','01','T02','02','T05','01','T64','01','T18','01','T19','02','T63','02','T12','01','T11','09','C3','01','C6','02'))
+      DECODE(FUNDASSET.PROFIT_TYPE,'01',DECODE(DEAL.PS,'T01','01','T02','02','T05','01','T64','01','T18','01','T19','02','T63','02','T12','01','T11','09','C3','01','C6','02'),'03',DECODE(DEAL.PS,'T01','01','T02','02','T05','01','T64','01','T18','01','T19','02','T63','02','T12','01','T11','09','C3','01','C6','02'))
       CUR_ASSET_TYPE,
       NULL CUR_ASSETDET_TYPE,
       DEAL.SETTLE_DATE DEALDATE,
@@ -4897,7 +4897,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       deal.CCY CCY,/*币种*/
       deal.trade_amt AMT,/*发生金额*/
       null CNY_AMT,/*折算人民币*/
-      nvl(deal.SHARE_AMT,0) NUM,/*数量*/
+      nvl(deal.trade_amt,0) NUM,/*数量*/
       DECODE(deal.PS,'T99','12','T98','11' ) CUR_ASSET_TYPE,/*资金流动类型*/
       '无' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
       deal.SETTLE_DATE DEALDATE,/*交易日期*/

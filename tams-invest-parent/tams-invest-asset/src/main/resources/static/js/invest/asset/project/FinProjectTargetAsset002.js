@@ -318,7 +318,13 @@ $(function() {
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetType_div').show();
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetTyprExplain_div').show();
             $('#bussRepOtherInvestTargetInfoDto_isUnlisted_div').hide();
+            $('#bussRepOtherInvestTargetInfoDto_project_div1').hide();
+            $('#bussRepOtherInvestTargetInfoDto_project_div2').hide();
             $('#bussRepOtherInvestTargetInfoDto_div').show();
+            if(repAssetType=="1299"){
+            	$('#bussRepOtherInvestTargetInfoDto_project_div1').show();
+            	$('#bussRepOtherInvestTargetInfoDto_project_div2').show();
+            }
 
 
             /****ZGBSSE-595  【中债直连check】新建项目类资产，报送信息页面“融资人”check未满足报送规范***/
@@ -465,6 +471,10 @@ $(function() {
                            ||repAssetType=="1206"||repAssetType=="1207"||repAssetType=="1208"||repAssetType=="1209"){
                $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').attr('disabled',false).trigger('change');
                $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').val('').trigger('change');
+               if($('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestType').val()!=null &&　$('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestType').val()!='' && $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestType').val()=='01'){
+                   $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').val('').trigger('change');
+                   $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').attr('disabled',true).trigger('change');
+               }
             }
             // 中债新增 20200408 end
         }else if(repAssetType=="1201"||repAssetType=="1210"){

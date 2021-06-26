@@ -74,7 +74,7 @@ public class MstCaptialAccount002Controller extends BaseController{
      */
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model,DictCode.币种,DictCode.资产来源);
+        this.setSelectOptionToModel(model,DictCode.币种,DictCode.资产来源,DictCode.账户性质);/*add by lpf 2021-04-27 增加字段 账户性质*/
         //网点号/大额支付系统号
         String acctNo = getParam("acctNo");
         //币种

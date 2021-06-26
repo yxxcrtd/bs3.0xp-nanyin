@@ -18,7 +18,7 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repTradeMarket}" style="line-height: normal!important;">交易流通<br>场所</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repTradeMarket|" th:name="|${entityName}.repTradeMarket|"  data-th-data-result="${TRADE_MARKET}" th:initValue="${entity?.repTradeMarket}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
+                        <select th:id="|${entityName}_repTradeMarket|" th:name="|${entityName}.repTradeMarket|"  data-th-data-result="${SVR_TRADE_MARKET}" th:initValue="${entity?.repTradeMarket}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
 				<div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repMgrFeeRate}" style="line-height: normal!important;">管理费率%</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_repMgrFeeRate|" th:name="|${entityName}.repMgrFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repMgrFeeRate}" data-th-data-textrange="5" required>
+                        <input type="text" maxlength="16" th:id="|${entityName}_repMgrFeeRate|" th:name="|${entityName}.repMgrFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repMgrFeeRate}" data-th-data-textrange="5" required>
                     </div>
                 </div>
             </div>
@@ -147,19 +147,19 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repTruFeeRate}" style="line-height: normal!important;">托管费率%</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_repTruFeeRate|" th:name="|${entityName}.repTruFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repTruFeeRate}" data-th-data-textrange="5" required>
+                        <input type="text" maxlength="16" th:id="|${entityName}_repTruFeeRate|" th:name="|${entityName}.repTruFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repTruFeeRate}" data-th-data-textrange="5" required>
                     </div>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repTradeFeeRate}" style="line-height: normal!important;">交易相关合计<br>费率%</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_repTradeFeeRate|" th:name="|${entityName}.repTradeFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repTradeFeeRate}" data-th-data-textrange="5" required>
+                        <input type="text" maxlength="16" th:id="|${entityName}_repTradeFeeRate|" th:name="|${entityName}.repTradeFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repTradeFeeRate}" data-th-data-textrange="5" required>
                     </div>
                 </div>
 				<div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repAgencyFeeRate}" style="line-height: normal!important;">中介服务机构<br>合计费率%</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_repAgencyFeeRate|" th:name="|${entityName}.repAgencyFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repAgencyFeeRate}" data-th-data-textrange="5" required>
+                        <input type="text" maxlength="16" th:id="|${entityName}_repAgencyFeeRate|" th:name="|${entityName}.repAgencyFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repAgencyFeeRate}" data-th-data-textrange="5" required>
                     </div>
                 </div>
             </div>
@@ -167,7 +167,7 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repOtherFeeRate}" style="line-height: normal!important;">其他合计费率%</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_repOtherFeeRate|" th:name="|${entityName}.repOtherFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repOtherFeeRate}" data-th-data-textrange="5" required>
+                        <input type="text" maxlength="16" th:id="|${entityName}_repOtherFeeRate|" th:name="|${entityName}.repOtherFeeRate|" placeholder="请输入内容" data-th-data-fixtype="2" class="layui-input form-input text-number" th:value="${entity?.repOtherFeeRate}" data-th-data-textrange="5" required>
                     </div>
                 </div>
                 <div class="form-inline-wrap">

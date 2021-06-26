@@ -805,13 +805,13 @@
 			FinProductCommon.openModeSelect();
 		});*/
 		
-		/**add by taoran 20200317*/
-		//产品代码修改事件 不允许中文
-		$('#FinNetValueProductBuild002_finprodMarketId').bind("change", function(){
-			$('#FinNetValueProductBuild002_finprodMarketId').val(
-					$('#FinNetValueProductBuild002_finprodMarketId').val().replace(/[^\a-\z\A-\Z0-9]/g,''));
-		});
-		/**add by taoran 20200317*/
+		// /**add by taoran 20200317*/
+		// //产品代码修改事件 不允许中文
+		// $('#FinNetValueProductBuild002_finprodMarketId').bind("change", function(){
+		// 	$('#FinNetValueProductBuild002_finprodMarketId').val(
+		// 			$('#FinNetValueProductBuild002_finprodMarketId').val().replace(/[^\a-\z\A-\Z0-9]/g,''));
+		// });
+		// /**add by taoran 20200317*/
 		
 		//行内标识码联动
 		

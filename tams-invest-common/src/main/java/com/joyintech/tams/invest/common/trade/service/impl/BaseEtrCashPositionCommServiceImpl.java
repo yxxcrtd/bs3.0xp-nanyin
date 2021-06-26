@@ -451,7 +451,8 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             } else if ((StringUtil.equals(ps, DictCodeList.交易方向_产品赎回.getValue())
                     || StringUtil.equals(ps, DictCodeList.交易方向_产品到期.getValue())
                     || StringUtil.equals(ps, DictCodeList.交易方向_产品现金分红.getValue())
-                    || StringUtil.equals(ps, DictCodeList.交易方向_产品提前赎回.getValue()))
+                    || StringUtil.equals(ps, DictCodeList.交易方向_产品提前赎回.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_提前终止.getValue()))  //交易方向判断增加提前终止的判断
                     && (StringUtil.equals(DictCodeList.持仓类型_可用.getValue(), positionType) || cashInputDto.getNeedNegative())) {//流程中,撤销调用
                 ret.setAmount(stlPayOrdersDto.getSettleAmt().negate());
                 flag = true;

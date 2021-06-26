@@ -227,8 +227,8 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
 		feeDeal.setCreateUser("system");
 		feeDeal.setCreateTime(DateUtil.parse(map.get("CREATE_TIME")));
 		feeDeal.setRemark(map.get("REMARK"));
-		
-		
+		feeDeal.setRivalPartyType(map.get("RIVAL_PARTY_TYPE"));
+		feeDeal.setTradeCounter(map.get("TRADE_COUNTER"));
 		return feeDeal;
 		
 	}

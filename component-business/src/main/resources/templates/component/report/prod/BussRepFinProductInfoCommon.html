@@ -740,25 +740,26 @@
 						</div>
 						<div class="form-inline-wrap">
 							<label class="layui-form-label form-label-wrap"
-								data-th-text="#{BussRepFinProductInfo.repCreditFlag}">产品增信标识</label>
+								   data-th-text="#{ProductReportRegister001.repInvestFeeRate}">投资管理费率</label>
 							<div class="layui-input-inline input-inline">
-								<input type="checkbox" th:id="|${entityName}_repCreditFlag|"
-									th:name="|${entityName}.repCreditFlag|" lay-skin="switch"
-									lay-text="有|无" data-th-value="${HAS}"
-									lay-filter="repCreditFlagFilter"
-									data-th-checked="${HAS} ==${entity?.repCreditFlag}"
-									data-th-required="(${pageId} neq 'FinProductModule002') and (${ischeckMust} eq '1')">
+								<input type="text" th:id="|${entityName}_repInvestFeeRate|"
+									   th:name="|${entityName}.repInvestFeeRate|"
+									   data-th-value="${entity?.repInvestFeeRate}" maxlength=256 data-th-data-textrange="5"
+									   class="layui-input form-input text-number" placeholder="请输入"
+									   required> <span class="input-right-show">%</span>
 							</div>
 						</div>
 						<div class="form-inline-wrap">
 							<label class="layui-form-label form-label-wrap"
-								data-th-text="#{ProductReportRegister001.repInvestFeeRate}">投资管理费率</label>
+								   data-th-text="#{BussRepFinProductInfo.repOpenMode}">开放模式</label>
 							<div class="layui-input-inline input-inline">
-								<input type="text" th:id="|${entityName}_repInvestFeeRate|"
-									th:name="|${entityName}.repInvestFeeRate|"
-									data-th-value="${entity?.repInvestFeeRate}" maxlength=256 data-th-data-textrange="5"
-									class="layui-input form-input text-number" placeholder="请输入"
-									required> <span class="input-right-show">%</span>
+								<select th:id="|${entityName}_repOpenMode|"
+										th:name="|${entityName}.repOpenMode|"
+										class="layui-input form-input input-select"
+										data-th-data-result="${SVR_OPEN_MODE}" placeholder="请输入内容"
+										data-th-initValue="${entity?.repOpenMode}"
+										data-th-placeholder="#{SysCommon.placeholder}">
+								</select>
 							</div>
 						</div>
 					</div>
@@ -897,18 +898,17 @@
 									class="layui-input form-input text-number" placeholder="请输入">
 									<span class="input-right-show">%</span>
 							</div>
-						</div> 
+						</div>
 						<div class="form-inline-wrap">
 							<label class="layui-form-label form-label-wrap"
-								data-th-text="#{BussRepFinProductInfo.repOpenMode}">开放模式</label>
+								   data-th-text="#{BussRepFinProductInfo.repCreditFlag}">产品增信标识</label>
 							<div class="layui-input-inline input-inline">
-								<select th:id="|${entityName}_repOpenMode|"
-									th:name="|${entityName}.repOpenMode|"
-									class="layui-input form-input input-select"
-									data-th-data-result="${SVR_OPEN_MODE}" placeholder="请输入内容"
-									data-th-initValue="${entity?.repOpenMode}"
-									data-th-placeholder="#{SysCommon.placeholder}">
-								</select>
+								<input type="checkbox" th:id="|${entityName}_repCreditFlag|"
+									   th:name="|${entityName}.repCreditFlag|" lay-skin="switch"
+									   lay-text="有|无" data-th-value="${HAS}"
+									   lay-filter="repCreditFlagFilter"
+									   data-th-checked="${HAS} ==${entity?.repCreditFlag}"
+									   data-th-required="(${pageId} neq 'FinProductModule002') and (${ischeckMust} eq '1')">
 							</div>
 						</div>
 						<div class="form-inline-wrap">

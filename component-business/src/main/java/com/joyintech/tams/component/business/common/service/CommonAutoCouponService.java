@@ -840,7 +840,14 @@ public class CommonAutoCouponService extends BaseService{
                 repAssetBond.setRepMainGrade(rating);//主体评级
                 repAssetBond.setRepRegistOrg(interfPayhsrcsecinfo.getInstitution());//登记托管机构
                 repAssetBond.setRepRegistorgComment(interfPayhsrcsecinfo.getInstitutiontext());//登记托管机构说明
-                repAssetBond.setRepRemark(interfPayhsrcsecinfo.getMarket());
+                //[交易流通场所][具体类别]发行机构类型（按规模划分）,发行机构类型（按技术领域划分）发行机构类型（按经济类型划分）选择“99”时,备注不可为空，默认为无
+                if (StringUtil.equals("99",interfPayhsrcsecinfo.getMarket2())||
+                        StringUtil.equals("99",interfPayhsrcsecinfo.getConcreteClass())||
+                        StringUtil.equals("99",interfPayhsrcsecinfo.getIssuerScaleType())||
+                        StringUtil.equals("99",interfPayhsrcsecinfo.getIssuerTechnologyType())||
+                        StringUtil.equals("99",interfPayhsrcsecinfo.getIssuerEconomicType())){
+                    repAssetBond.setRepRemark("无");
+                }
                 repAssetDept.setRepFinprodId(finprodId);//金融产品代码
                 repAssetDept.setFinprodMarketId(secid);//债券代码
                 repAssetDept.setRepFinprodName(interfPayhsrcsecinfo.getSecname());//债券名称
@@ -1328,7 +1335,42 @@ public class CommonAutoCouponService extends BaseService{
                 }
                 repAssetDept.setRepTradeMarket(infChinamutualfunddescription.getMarket2());//交易流通场所
                 repAssetDept.setIsRepTarget(DictCodeList.是否_否.getValue());//默认否
-
+                //[资产/负债类别]为[1106] [1303] [2401] [2402] [2403] [2499] [2601] [2602] [2604] [2605] [2606]
+                // [2607] [2610] [2611] [2612] [2613] [2614] [2616] [2617] [2618] [2619] [2620] [2699] 时,必填
+                if(StringUtil.isNotEmpty(repAssetDept.getRepAssetType()) &&
+                        (StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_债券基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股票基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_货币市场基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_混合基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_基金中基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他公募基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_权益类基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_固收类基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_混合类基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_期货类及其他衍生品类基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他私募证券投资基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_上市公司定增基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_并购基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_房地产基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_基础设施基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_创业投资基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_红酒艺术品等商品基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_私募证券类FOF基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他私募股权投资基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_私募股权投资类FOF基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_创业投资类FOF基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他私募投资类FOF基金.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他私募基金.getValue()))){
+                    repfund.setRepMngPartyName(getCounterName(infChinamutualfunddescription.getfInfoCorpFundmanagementid()));
+                }
+                //[交易流通场所][登记备案机构][投资企业类型（按规模划分）][投资企业类型（按技术领域划分）][投资企业类型（按经济类型划分）]选择99的场合，备注必须填
+                if (StringUtil.equals("99",infChinamutualfunddescription.getMarket2())||
+                        StringUtil.equals("99",infChinamutualfunddescription.getRepregistorg())||
+                        StringUtil.equals("99",infChinamutualfunddescription.getIssuerScaleType())||
+                        StringUtil.equals("99",infChinamutualfunddescription.getIssuerTechnologyType())||
+                        StringUtil.equals("99",infChinamutualfunddescription.getIssuerEconomicType())){
+                    repfund.setRepRemark("无");
+                }
                 repfund.setRepFundCompName(infChinamutualfunddescription.getFundCompanyName()); // 基金公司名称
                 repfund.setRepPartyType1(infChinamutualfunddescription.getIssuerScaleType());//机构类型按规模分
                 repfund.setRepPartyType2(infChinamutualfunddescription.getIssuerEconomicType());//机构类型按经济类型分
@@ -2080,6 +2122,22 @@ public class CommonAutoCouponService extends BaseService{
                 BaseRepAssetEquityInfoDto baseRepAssetEquityInfoDto=new BaseRepAssetEquityInfoDto();
                 List<RepAssetEquity> repAssetEquityList=new ArrayList<RepAssetEquity>();
                 RepAssetEquity repAssetEquity=new RepAssetEquity();
+                //[资产/负债类别]为[1301] [1302] [1305] 时,必填
+                if(StringUtil.isNotEmpty(repAssetDept.getRepAssetType()) &&
+                        (StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股权.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股票_二级市场.getValue())||
+                            StringUtil.equals(repAssetDept.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue()))){
+                    repAssetEquity.setRepDeptEquity("01");
+                }
+                //[交易流通场所][股票类型]企业类型（按规模划分）,企业类型（按技术领域划分）,企业类型（按经济类型划分）选择“99”时，备注必填
+                //投资阶段默认为06,不额外做校验
+                if (StringUtil.equals("99",interfStockInfoDto.getTradeplace())||
+                        StringUtil.equals("99",interfStockInfoDto.getStocktype())||
+                        StringUtil.equals("99",interfStockInfoDto.getEnterprisetype1())||
+                        StringUtil.equals("99",interfStockInfoDto.getEnterprisetype2())||
+                        StringUtil.equals("99",interfStockInfoDto.getEnterprisetype3())){
+                    repAssetEquity.setRepRemark("无");
+                }
                 repAssetEquity.setRepFinprodId(finprodId);
                 repAssetEquity.setRepSharesId(stockCode);
                 repAssetEquity.setRepSharesType(interfStockInfoDto.getStocktype());//股票类型
@@ -2355,4 +2413,14 @@ public class CommonAutoCouponService extends BaseService{
 	            Integer.class);
 		
 	}
+
+    /**
+     * 查询交易对手名称
+     * @return
+     */
+    public String getCounterName(String counterId){
+        return restTemplate.getForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/getCounterName?counterId="+counterId,
+                String.class);
+    }
 }
