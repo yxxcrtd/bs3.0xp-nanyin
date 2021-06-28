@@ -651,7 +651,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     }
                     hapCreditAmt = creditLines.getHapCreditAmt();
                     // 资产授信，系列授信按照原占用逻辑。机构授信按照最小品种额度占用释放
-                    if(creditLines.getCreditMstId()=="0002"||creditLines.getCreditMstId()=="0003" || !flag){
+                    if("0002".equals(creditLines.getCreditMstId())||"0003".equals(creditLines.getCreditMstId()) || !flag){
                         tradeAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
                         //已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
                         hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt) : BigDecimal.ZERO;
