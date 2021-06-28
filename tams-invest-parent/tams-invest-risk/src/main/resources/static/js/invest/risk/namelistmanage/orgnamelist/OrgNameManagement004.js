@@ -124,7 +124,7 @@ CmsFileCommon = function(){
         }
         var fileInfo = getFileName();
         if(typeof fileInfo[0] != 'undefined'){
-           fileName = fileInfo[0].targetFile;
+           fileName = fileInfo[0].targetFile.name;
            var fileNo = fileInfo[0].fileNo;
            var object = $.serializeToObject('#OrgNameManagement004_submitForm', true);
            object.fileName = fileName;
