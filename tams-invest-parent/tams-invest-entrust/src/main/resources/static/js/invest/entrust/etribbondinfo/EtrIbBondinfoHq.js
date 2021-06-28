@@ -114,9 +114,8 @@
             // document.getElementById('priceTj').innerHTML = '';
             Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findSecinfo', param, function (result) {
                 if (result) {
-                    DynCheckboxView.messageInfo = result; // 全局资产信息保存
                     secId = result.secId;
-                    resultToView(DynCheckboxView.checkedList, DynCheckboxView.messageInfo);
+                    DynCheckboxView.resultToView(result);
                     //
                     // if (result.secName != null && result.secName != '') {
                     //     document.getElementById('secName').innerHTML = result.secName;
@@ -190,9 +189,7 @@
      */
     $(function() {
 
-        DynCheckboxView.init("EtrIbBondinfoHq", "EtrIbBondinfoHq_dyn",function(checkedList, messageInfo){
-            resultToView(checkedList, messageInfo); // 展示资产信息
-        });
+        DynCheckboxView.init("EtrIbBondinfoHq", "EtrIbBondinfoHq_dyn");
         
     });
 
@@ -202,11 +199,14 @@
      * 设置显示列按钮id以pageId开头    例：<a id="EtrIbBondinfoHq_checkbox_start">
      * 多选框展示页面id以pageId开头   例：<div id="EtrIbBondinfoHq_checkbox_background">
      * 行情展示页面id以pageId开头    例：<div id="EtrIbBondinfoHq_view_contain">
+     * suffix后缀表示年、%等, value表示字段英文名称，label表示字段中文名称
      */
     var DynCheckboxView = {
+        pageid:{},
         checkedList: [],  // 选中项
         messageInfo: {},  // 行情信息
         init: function (pageid, dynId, callback) {
+            DynCheckboxView.pageid=pageid;
             let _background = $("#"+ pageid +"_checkbox_background");
             _background.append('<div style="margin-top:10px;"><form id="'+ pageid +'_checkbox_form" style="margin-top:10px;"><div id="'+ pageid +'_checkbox_contain"></div><div style="text-align:center"><button id="'+ pageid +'_checkbox_btn_realseach" style="margin-top:5px;margin-bottom:5px;">确认</button><button id="'+ pageid +'_checkbox_btn_seachClose" style="margin-top:5px;margin-bottom:5px;margin-left: 50px;">取消</button></div></form></div>');
 
@@ -216,14 +216,14 @@
                 let url = basePath + 'invest/entrust/EtrCommonController/selectByDynId';
                 Joyin.ajaxJson(url, {"dynId":dynId}, function (datajson) {
                     // 构造多选框
-                    let pageContain = $("#"+pageid+"_checkbox_contain");
-                    pageContain.empty(); // 显示多选框之前清空前一次的
+                    const _pageContain = $("#"+pageid+"_checkbox_contain");
+                    _pageContain.empty(); // 显示多选框之前清空前一次的
                     let m; // 存储奇数序号
                     $.each(datajson.all,function(index, value){
                         // alert(index + "-" + value.value + "-" + value.label);
                         if(value && value != ''){
                             if((index+1) % 2 == 0 && index > 0){
-                                itemfun(pageContain, m, value);
+                                itemfun(_pageContain, m, value);
                                 m = null;
                             }else{
                                 m = value;
@@ -231,7 +231,7 @@
                         }
                     });
                     if(m != null){
-                        itemfun(pageContain, m);
+                        itemfun(_pageContain, m);
                     }
 
                     // 对构造的多选项赋值
@@ -241,12 +241,16 @@
                         DynCheckboxView.checkedList = [];
                         $.each(arr,function(index, value){
                             if(value != ''){
-                                $("#"+pageid+"_checkbox_contain input:checkbox[value='"+ value +"']").attr("checked",'checked');
-                                // 初始化页面展示数据
-                                var temp = {}
-                                temp.name=value;
-                                temp.label=$("#"+pageid+"_checkbox_contain input:checkbox[value='"+ value +"']").attr("title");
-                                DynCheckboxView.checkedList[DynCheckboxView.checkedList.length]=temp;
+                                const _thisChecked = $("#"+pageid+"_checkbox_contain input:checkbox[value='"+ value +"']");
+                                if(_thisChecked){
+                                    // 初始化页面展示数据
+                                    var temp = {}
+                                    temp.name=value;
+                                    temp.label=_thisChecked.attr("title");
+                                    temp.suffix=_thisChecked.attr("suffix");
+                                    _thisChecked.attr("checked",'checked');
+                                    DynCheckboxView.checkedList[DynCheckboxView.checkedList.length]=temp;
+                                }
                             }
                         });
                     }
@@ -262,19 +266,21 @@
                         }
                     });
 
-                    DynCheckboxView.defaulView(pageid + "_view_contain", DynCheckboxView.checkedList); // 展示空行情
-                    callback(DynCheckboxView.checkedList, DynCheckboxView.messageInfo);
+                    if(callback){
+                        callback(DynCheckboxView.checkedList, DynCheckboxView.messageInfo);
+                    }else{
+                        DynCheckboxView.defaulView();   // 初始化展示空行情
+                        DynCheckboxView.resultToView(); // 初始化行情信息
+                    }
                 });
             }
 
             var itemfun = function(_this, m, n){ // 构造两列表单
                 if(!n){
-                    let div = $('<div style="margin-left: 40px; margin-top:6px;"><span style="display:inline-block; width: 138px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ m.value +'" title="'+ m.label +'">'+ m.label +'</label></span></div>');
-                    // div.prependTo(_this);
+                    let div = $('<div style="margin-left: 40px; margin-top:6px;"><span style="display:inline-block; width: 138px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ m.value +'" title="'+ m.label +'" suffix="'+m.suffix+'">'+ m.label +'</label></span></div>');
                     _this.append(div);
                 }else{
-                    let div = $('<div style="margin-left: 40px; margin-top:6px;"><span style="display:inline-block; width: 138px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ m.value +'" title="'+ m.label +'">'+ m.label +'</label></span><span style="display:inline-block; width: 120px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ n.value +'" title="'+ n.label +'">'+ n.label +'</label></span></div>');
-                    // div.prependTo(_this);
+                    let div = $('<div style="margin-left: 40px; margin-top:6px;"><span style="display:inline-block; width: 138px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ m.value +'" title="'+ m.label +'" suffix="'+m.suffix+'">'+ m.label +'</label></span><span style="display:inline-block; width: 120px; text-align: left; vertical-align: top;"><label><input type="checkbox" name="dynInfo" value="'+ n.value +'" title="'+ n.label +'" suffix="'+n.suffix+'">'+ n.label +'</label></span></div>');
                     _this.append(div);
                 }
             }
@@ -312,6 +318,7 @@
                                 let temp = {};
                                 temp.name=value;
                                 temp.label=$(this).attr("title");
+                                temp.suffix=$(this).attr("suffix");
                                 DynCheckboxView.checkedList[DynCheckboxView.checkedList.length]=temp;
                             }
                         }
@@ -321,8 +328,12 @@
                         let params = {"dynId":dynId, "checked":checkedlist.join(",")};
                         Joyin.ajaxJson(url, params, function (datajson) {
                             $("#"+pageid+"_checkbox_background").hide();
-                            DynCheckboxView.defaulView(pageid + "_view_contain", DynCheckboxView.checkedList); // 展示空行情
-                            callback(DynCheckboxView.checkedList, DynCheckboxView.messageInfo);
+                            if(callback){
+                                callback(DynCheckboxView.checkedList, DynCheckboxView.messageInfo);
+                            }else{
+                                DynCheckboxView.defaulView(); // 展示空行情
+                                DynCheckboxView.resultToView();// 展示行情
+                            }
                         });
                     }
                     isclicked=false;
@@ -335,45 +346,58 @@
          * @param id 需要展示的#标识
          * @param checkedList 选中项
          */
-        defaulView : function (id, checkedList) {
-            var _this = $("#" + id);
+        defaulView : function () {
+            var _this = $("#" + DynCheckboxView.pageid + "_view_contain");
+            let checkedList = DynCheckboxView.checkedList;
             _this.empty();
             $.each(checkedList, function(index, value){
-                // alert(index + "-" + value.name + "-" + value.label);
+                // alert(index + "-" + value.name + "-" + value.label + "=" + value.suffix);
                 var item = $('<div style="float: left;width: 50%;height: 22px;line-height: 22px;"><label>'+ value.label +':</label><label id="EtrIbBondinfoHq_'+ value.name +'"></label></div>');
                 item.appendTo(_this);
             });
+        },
+        /**
+         * 根据持仓单击联动到展示资产信息
+         * @param result 资产数据
+         * @param data checkbox选中数据
+         */
+        resultToView : function(result){
+            if(result){
+                DynCheckboxView.messageInfo=result; // 更新行情信息
+            }else{
+                result=DynCheckboxView.messageInfo; // 使用缓存行情信息
+            }
+            let chs = DynCheckboxView.checkedList;  // 使用缓存选择项
+            
+            if(result && chs){
+                $("#secName").html('');
+                $("#secName").html(result.secName);
+                $.each(chs,function(index, value){
+                    let name = value.name;
+                    let _labelName = $("#"+ DynCheckboxView.pageid +"_" + name);
+                    if(_labelName){
+                        _labelName.html('');
+                        let resultValue = result[name];
+                        // alert(index + "-" + value.name + "-" + value.label + "===" + str);
+                        if(resultValue && resultValue != ''){
+                            if(value.suffix && value.suffix != 'undefined' && value.suffix != ''){
+                                if(value.suffix == '%'){
+                                    _labelName.html(JoyinUtil.formatNumber(result.rate, 4, null, 2) + value.suffix);
+                                }else{
+                                    _labelName.html(resultValue + value.suffix);
+                                }
+                            }else{
+                                _labelName.html(resultValue);
+                            }
+                        }
+                    }
+                });
+            }
         }
+        
+        
     } 
     /*DynCheckboxView--end*/
 
-    /**
-     * 根据持仓单击联动到展示资产信息
-     * @param result 资产数据
-     * @param data checkbox选中数据
-     */
-    var resultToView = function(data, result){
-        if(result && data){
-            $("#secName").html('');
-            $("#secName").html(result.secName);
-            $.each(data,function(index, value){
-                let name = value.name;
-                let _labelName = $("#EtrIbBondinfoHq_" + name);
-                if(_labelName){
-                    _labelName.html('');
-                    let resultValue = result[name];
-                    // alert(index + "-" + value.name + "-" + value.label + "===" + str);
-                    if(resultValue && resultValue != ''){
-                        if(name == "lastqx"){
-                            _labelName.html(resultValue + "年");
-                        }else if(name == "rate" || name == "gzRate" || name == "priceXq" || name == "priceTj"){
-                            _labelName.html(JoyinUtil.formatNumber(result.rate, 4, null, 2) + '%');
-                        }else{
-                            _labelName.html(resultValue);
-                        }
-                    }
-                }
-            });
-        }
-    }
+    
 }());
