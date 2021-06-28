@@ -131,4 +131,6 @@ public interface CreditLinesDealsMapper {
 	String getCustomerid(Map<String,Object> model);
 
 	List<CreditLines> getCeLinesInfoforassetPierce(Map<String,Object> model);
+
+    List<CreditMstInfo> selectCreditMstInfo(String seqno);
 }

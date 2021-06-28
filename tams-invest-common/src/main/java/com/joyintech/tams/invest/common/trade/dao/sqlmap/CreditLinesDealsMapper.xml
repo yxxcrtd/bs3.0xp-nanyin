@@ -293,9 +293,6 @@
             <if test="tradeAmt != null" >
                 TRADE_AMT,
             </if>
-            <if test="realCreditAmt != null" >
-                REAL_CREDIT_AMT,
-            </if>
             <if test="tradeDate != null" >
                 TRADE_DATE,
             </if>
@@ -327,9 +324,6 @@
             </if>
             <if test="tradeAmt != null" >
                 #{tradeAmt,jdbcType=DECIMAL},
-            </if>
-            <if test="realCreditAmt != null" >
-                #{realCreditAmt,jdbcType=DECIMAL},
             </if>
             <if test="tradeDate != null" >
                 #{tradeDate,jdbcType=DATE},
@@ -998,4 +992,17 @@
 		AND T.MDATE >=#{tradeDate,jdbcType=DATE}
 		GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CREDIT_CONDITION,T.INSTITUTION_CODE,T.CUSTOMER_ID,T.CREATE_TIME
 	</select>
+
+    <select id="selectCreditMstInfo" resultType="com.joyintech.tams.common.base.entity.CreditMstInfo" parameterType="java.lang.String" >
+        select
+        SEQNO SEQNO, CREDIT_INFO_TYPE CREDIT_INFO_TYPE, CREDIT_QUOTE_TYPE_CODE CREDIT_QUOTE_TYPE_CODE,
+        CREDIT_QUOTE_TYPE_VALUE CREDIT_QUOTE_TYPE_VALUE, CREDIT_QUOTE_RANK CREDIT_QUOTE_RANK,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME
+        from CREDIT_MST_INFO
+        where seqno not in ('0001','0002','0003')
+        <if test="seqno != null and seqno != ''">
+            SEQNO = #{seqno,jdbcType=VARCHAR}
+        </if>
+    </select>
 </mapper>

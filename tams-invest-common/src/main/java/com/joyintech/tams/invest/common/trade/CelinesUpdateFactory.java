@@ -532,6 +532,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         Map<String,List<CreditLinesPierce>> pierceMap = pierceList.stream().collect(
                 JoyinCollectors.groupingBy(item->item.getCreditMstId()+":"+item.getCustomerId()));
         for(CreditLines creditLines:creLineslist){
+            pierceAmt =BigDecimal.ZERO;
             Map<String,Object> mapforprehapamt = new HashMap<>();
             mapforprehapamt.put("creditMstId",creditLines.getCreditMstId());
             mapforprehapamt.put("customerId",creditLines.getCustomerId());
@@ -607,7 +608,40 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         }
         //额度足够的情况
         if(isEnoughCreditflag){
+            List<CreditMstInfo> creditMstInfoList = creditLinesMapper.selectCreditMstInfo(null);
+            Map<String, List<CreditMstInfo>> creditMstInfoMap = creditMstInfoList.stream().collect(JoyinCollectors.groupingBy(CreditMstInfo :: getCreditQuoteRank));
+            // 一级品种
+            List<CreditMstInfo> creditMstInfoList01 = creditMstInfoMap.get("01");
+            Map<String, List<CreditMstInfo>> creditMstInfoList01Map = creditMstInfoList01.stream().collect(JoyinCollectors.groupingBy(CreditMstInfo :: getSeqno));
+            Set<String>creditMstInfoList01MapKey = creditMstInfoList01Map.keySet();
+            // 二级品种
+            List<CreditMstInfo> creditMstInfoList02 = creditMstInfoMap.get(null);
+            Map<String, List<CreditMstInfo>> creditMstInfoList02Map = creditMstInfoList02.stream().collect(JoyinCollectors.groupingBy(CreditMstInfo :: getSeqno));
+            Set<String>creditMstInfoList02MapKey = creditMstInfoList02Map.keySet();
             if(!isKDQ) {
+                // 记录比较实际占用金额
+                BigDecimal realCreditAmt = BigDecimal.ZERO;
+                // 实际占用金额
+                BigDecimal tradeAmt = BigDecimal.ZERO;
+                // 是否已找到最小级别
+                boolean flag = false;
+                // 从最小级别品种开始判断授信占用额度
+                for (CreditLines creditLines : creLineslist) {
+                    if (creditMstInfoList02MapKey.contains(creditLines.getCreditMstId())){
+                        realCreditAmt = BigDecimal.ZERO.compareTo(creditLines.getHapCreditAmt().add(todocredit_amt)) < 0 ? todocredit_amt : creditLines.getHapCreditAmt().negate();
+                        flag = true;
+                        break;
+                    }
+                }
+                if(!flag){
+                    for (CreditLines creditLines : creLineslist) {
+                        if(creditMstInfoList01MapKey.contains(creditLines.getCreditMstId())){
+                            realCreditAmt = BigDecimal.ZERO.compareTo(creditLines.getHapCreditAmt().add(todocredit_amt)) < 0 ? todocredit_amt : creditLines.getHapCreditAmt().negate();
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
                 for (CreditLines creditLines : creLineslist) {
                     if (isSave) {
                         int count = creditLinesMapper.selectCreditDealCount(creditLines.getSeqno(), model.getTradeId());
@@ -616,14 +650,15 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                         }
                     }
                     hapCreditAmt = creditLines.getHapCreditAmt();
-                    // 超额释放时避免已使用金额为负值
-//                    if (BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) > 0) {
-//                        todocredit_amt = hapCreditAmt.negate();
-//                    }
-                    // 实际占用额度
-                    BigDecimal realCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
-                    //已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
-                    hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt) : BigDecimal.ZERO;
+                    // 资产授信，系列授信按照原占用逻辑。机构授信按照最小品种额度占用释放
+                    if(creditLines.getCreditMstId()=="0002"||creditLines.getCreditMstId()=="0003" || !flag){
+                        tradeAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
+                        //已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
+                        hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt) : BigDecimal.ZERO;
+                    }else{
+                        tradeAmt = realCreditAmt;
+                        hapCreditAmt = hapCreditAmt.add(realCreditAmt);
+                    }
                     //1.更新额度管理中 已占用额度
                     creditLines.setHapCreditAmt(hapCreditAmt);
                     creditLines.setUpdateTime(model.getUpdateTime());
@@ -637,8 +672,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                         creditLinesDeal.setTradeId(model.getTradeId());
                         //占用类型（实际占用、预占用）
                         creditLinesDeal.setCreditOccureType("01");
-                        creditLinesDeal.setTradeAmt(todocredit_amt);
-                        creditLinesDeal.setRealCreditAmt(realCreditAmt);
+                        creditLinesDeal.setTradeAmt(tradeAmt);
                         creditLinesDeal.setTradeDate(model.getTradeDate());
                         creditLinesDeal.setCreateDept(model.getCreateDept());
                         creditLinesDeal.setCreateTime(model.getCreateTime());
@@ -665,7 +699,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     } else {
                         //2.1 存授信额度底层持仓关联表
                         CreditLinesDealCommon creditLinesDealCommon = new CreditLinesDealCommon();
-                        creditLinesDeal.setTradeAmt(hapCreditAmt);
+                        creditLinesDeal.setTradeAmt(tradeAmt);
                         creditLinesDeal.setSeqno(creditLines.getSeqno());
                         creditLinesDeal.setCreditOccureType("01");
                         list.add(creditLinesDealCommon);
@@ -686,7 +720,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
 //                        todocredit_amt = hapCreditAmt.negate();
 //                    }
                     // 实际占用额度
-                    BigDecimal realCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
+                    BigDecimal tradeAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
                     //已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
                     hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt) : BigDecimal.ZERO;
                     //1.更新额度管理中 已占用额度
@@ -702,8 +736,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                         creditLinesDeal.setTradeId(model.getTradeId());
                         //占用类型（实际占用、预占用）
                         creditLinesDeal.setCreditOccureType("01");
-                        creditLinesDeal.setTradeAmt(todocredit_amt);
-                        creditLinesDeal.setRealCreditAmt(realCreditAmt);
+                        creditLinesDeal.setTradeAmt(tradeAmt);
                         creditLinesDeal.setTradeDate(model.getTradeDate());
                         creditLinesDeal.setCreateDept(model.getCreateDept());
                         creditLinesDeal.setCreateTime(model.getCreateTime());
@@ -730,7 +763,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     } else {
                         //2.1 存授信额度底层持仓关联表
                         CreditLinesDealCommon creditLinesDealCommon = new CreditLinesDealCommon();
-                        creditLinesDeal.setTradeAmt(hapCreditAmt);
+                        creditLinesDeal.setTradeAmt(tradeAmt);
                         creditLinesDeal.setSeqno(creditLines.getSeqno());
                         creditLinesDeal.setCreditOccureType("01");
                         list.add(creditLinesDealCommon);
@@ -791,7 +824,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 creditLines.setInstitutionCode(institutionCode);
                 hapCreditAmt = extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(), institutionCode);
                 // 实际占用额度
-                BigDecimal realCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
+                BigDecimal tradeAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? todocredit_amt : hapCreditAmt.negate();
                 //已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
                 hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt) : BigDecimal.ZERO;
                 creditLines.setHapCreditAmt(hapCreditAmt);
@@ -802,8 +835,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     creditLinesDeal.setTradeId(model.getTradeId());
                     //占用类型（实际占用、预占用）
                     creditLinesDeal.setCreditOccureType("01");
-                    creditLinesDeal.setTradeAmt(todocredit_amt);
-                    creditLinesDeal.setRealCreditAmt(realCreditAmt);
+                    creditLinesDeal.setTradeAmt(tradeAmt);
                     creditLinesDeal.setTradeDate(model.getTradeDate());
                     creditLinesDeal.setCreateDept(model.getCreateDept());
                     creditLinesDeal.setCreateTime(model.getCreateTime());
@@ -824,7 +856,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 }else{
                     //2.1 存授信额度底层持仓关联表
                     CreditLinesDealCommon creditLinesDealCommon=new CreditLinesDealCommon();
-                    creditLinesDeal.setTradeAmt(hapCreditAmt);
+                    creditLinesDeal.setTradeAmt(tradeAmt);
                     creditLinesDeal.setSeqno(seqNo);
                     creditLinesDeal.setCreditOccureType("01");
                     list.add(creditLinesDealCommon);

@@ -307,9 +307,6 @@
             <if test="tradeAmt != null" >
                 TRADE_AMT,
             </if>
-            <if test="realCreditAmt != null" >
-                REAL_CREDIT_AMT,
-            </if>
             <if test="tradeDate != null" >
                 TRADE_DATE,
             </if>
@@ -341,9 +338,6 @@
             </if>
             <if test="tradeAmt != null" >
                 #{tradeAmt,jdbcType=DECIMAL},
-            </if>
-            <if test="realCreditAmt != null" >
-                #{realCreditAmt,jdbcType=DECIMAL},
             </if>
             <if test="tradeDate != null" >
                 #{tradeDate,jdbcType=DATE},

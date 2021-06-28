@@ -623,7 +623,7 @@ public class RiskCreditListCommonValidatorService {
                 CreditLines creditLinesdto = creditLinesMapper.selectCeLinesInfoBySeqno(creditLinesDeal.getSeqno());
                 //更新额度管理中 已占用额度
                 if (null != creditLinesdto){
-                    creditLinesdto.setHapCreditAmt(creditLinesdto.getHapCreditAmt().subtract(creditLinesDeal.getRealCreditAmt()));
+                    creditLinesdto.setHapCreditAmt(creditLinesdto.getHapCreditAmt().subtract(creditLinesDeal.getTradeAmt()));
                     creditLinesMapper.updateLinesByPrimaryKeySelective(creditLinesdto);
                 }
                 //删除授信额度关联交易
