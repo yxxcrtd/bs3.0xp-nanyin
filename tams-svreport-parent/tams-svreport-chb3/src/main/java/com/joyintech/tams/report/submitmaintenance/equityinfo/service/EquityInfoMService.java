@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -29,6 +30,10 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Service
 public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
+
+
+	@Autowired
+	private EquityInfo001Service equityInfo001Service;
 
 	/**
 	 * 查询列表
@@ -85,11 +90,8 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 	 */
 	public AjaxResult checkConfirmMsgForImportData(String fileName) {
 		Map<String,Object> param = new HashMap<String,Object>();
-		param.put("fileName", fileName);
-		return restTemplate.postForObject(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/checkConfirmMsgForImportData",
-				param,
-				SvrAjaxResult.class);
+		List<List<String>> dataList = (List<List<String>>) ExcelUtil.getDataList(fileName);
+		return equityInfo001Service.checkConfirmMsgForImportData(dataList);
 	}
 
 	/**
@@ -152,10 +154,12 @@ public class EquityInfoMService extends CommonExportService<EquityInfo001Dto> {
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("dataList", ExcelUtil.getDataList(fileName));
 		param.put("tempList", ExcelUtil.getTempList(fileName));
-		return restTemplate.postForObject(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/checkConfirmMsgForChbImportData",
-				param,
-				SvrAjaxResult.class);
+//		return restTemplate.postForObject(
+//				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfo/checkConfirmMsgForChbImportData",
+//				param,
+//				SvrAjaxResult.class);
+
+		return equityInfo001Service.checkConfirmMsgForChbImportData(ExcelUtil.getDataList(fileName),ExcelUtil.getTempList(fileName));
 	}
 
 	/**

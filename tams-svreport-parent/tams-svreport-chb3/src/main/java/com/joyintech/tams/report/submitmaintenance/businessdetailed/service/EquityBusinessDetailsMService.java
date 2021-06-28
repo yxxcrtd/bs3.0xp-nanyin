@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -35,6 +36,9 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Service
 public class EquityBusinessDetailsMService extends CommonExportService<EquiteBusiDetails001Dto> {
+
+	@Autowired
+	private EquityBusiDetails001Service equityBusiDetails001Service;
 	/**
 	 * 产品名称下拉框
 	 * 
@@ -232,9 +236,12 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
-		return restTemplate.postForObject(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusinessDetails/checkConfirmMsgForImportData", param,
-				SvrAjaxResult.class);
+
+//		return restTemplate.postForObject(
+//				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusinessDetails/checkConfirmMsgForImportData", param,
+//				SvrAjaxResult.class);
+
+		return equityBusiDetails001Service.checkConfirmMsgForImportData(param);
 	}
 
 	/**
@@ -250,9 +257,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		param.put("deptCode", CommonUtil.getDeptCode());
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("userName", LoginUserUtil.getUserName());
-		return restTemplate.postForObject(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusinessDetails/checkConfirmMsgForChbImportData", param,
-				SvrAjaxResult.class);
+		return equityBusiDetails001Service.checkConfirmMsgForChbImportData(param);
 	}
 
 	public EquiteBusiDetails001Dto getEntityByKey(Map<String, Object> map) {
