@@ -578,6 +578,19 @@ SELECT interf.SECID id,
 		WHERE ROWNUM =1
 	</select>
 
+	<select id="getLastDSCPriceByPara" resultType="java.math.BigDecimal">
+		select DSC_CLEAN_PRICE_B
+		FROM fin_product fp
+		left join ptl_sec_valution psv on fp.FINPROD_ID = psv.FINPROD_ID
+		where psv.cdate = TO_DATE(#{sysdate},'yyyy-mm-dd')
+		and psv.PORTFOLIO_ID = #{portfolioId}
+		and fp.FINPROD_MARKET_ID = #{finprodMarketId}
+		and psv.INV_AIM = #{invAim}
+		<if test="chlId != null and chlId != ''">
+			AND SEC_ACCT_ID = #{chlId}
+		</if>
+	</select>
+
     <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
     	<if test="zhilingtype == null or zhilingtype == '01'">
 	        SELECT distinct

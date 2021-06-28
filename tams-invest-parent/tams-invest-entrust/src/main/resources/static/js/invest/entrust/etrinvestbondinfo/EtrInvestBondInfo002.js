@@ -203,6 +203,8 @@
      * b. 若投资目的选择公允价值计入其他综合收益或公允价值计入当期损益，净价默认带出该债券平台日期前一估值日的估价净价（取市场行情），可修改
      */
     var priceInitByInCpy = function () {
+        // 清空净价
+        $('#price').val('').trigger('blur').trigger('change');
         // 委托开始日
         var vdate = $("#vdate").val();
         // 委托终止日
@@ -225,19 +227,36 @@
         }
         var finprodMarketId = $('#finprodId').val();
         if (finprodMarketId) {
-            var data = {
-                sysdate: sysDate,
-                finprodMarketId: finprodMarketId
+            var data;
+            // 摊余成本类
+            if (invAim === 'AC') {
+                var portfolioId = $('#portfolioId').val();
+                if (portfolioId) {
+                    data = {
+                        sysdate: sysDate,
+                        finprodMarketId: finprodMarketId,
+                        invAim: invAim,
+                        portfolioId: portfolioId,
+                        chlId: $('#chlFinprodId').val()
+                    }
+                } else {
+                    return;
+                }
+            } else {
+                // 其他综合收益或公允价值计入当期损益
+                data = {
+                    sysdate: sysDate,
+                    finprodMarketId: finprodMarketId,
+                    invAim: invAim
+                }
             }
             //投资目的选择公允价值计入其他综合收益或公允价值计入当期损益
-            if (invAim === 'FVOCI' || invAim === 'FVTPL') {
-                Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getLastPriceByPara', data,
-                    function (result) {
-                        if(result.data){
-                            $('#price').val(result.data).trigger('blur').trigger('change');
-                        }
-                    });
-            }
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getLastPriceByPara', data,
+                function (result) {
+                    if (result.data) {
+                        $('#price').val(result.data).trigger('blur').trigger('change');
+                    }
+                });
         }
     }
 

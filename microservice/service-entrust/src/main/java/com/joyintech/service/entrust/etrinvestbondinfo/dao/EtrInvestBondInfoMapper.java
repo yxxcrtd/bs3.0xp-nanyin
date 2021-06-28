@@ -124,6 +124,13 @@ public interface EtrInvestBondInfoMapper {
     BigDecimal getLastPriceByPara(Map<String, Object> param);
 
     /**
+     * 查询上一日摊销净价
+     *
+     * @author jiangpeng
+     */
+    BigDecimal getLastDSCPriceByPara(Map<String, Object> param);
+
+    /**
      * 查询证券托管户：联想框文本框
      *
      * @param param 画面参数

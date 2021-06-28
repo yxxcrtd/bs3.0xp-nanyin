@@ -658,7 +658,11 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
      * @author jiangpeng
      */
     public BigDecimal getLastPriceByPara(Map<String, Object> param) {
-        return etrInvestBondInfoMapper.getLastPriceByPara(param);
+        if (StringUtil.equals(DictCodeListExt1.投资目的_摊余成本类.getValue(), (String) param.get("invAim"))) {
+            return etrInvestBondInfoMapper.getLastDSCPriceByPara(param);
+        } else {
+            return etrInvestBondInfoMapper.getLastPriceByPara(param);
+        }
     }
 
     /**
