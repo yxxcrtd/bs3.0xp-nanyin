@@ -1893,7 +1893,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     '11' CUR_ASSET_TYPE,/*资金流动类型*/
     '理财账户收息' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
     deal.SETTLE_DATE DEALDATE,/*交易日期*/
-    null TRADE_COUNTER,/*交易对手*/
+    STI.BANK_DEP TRADE_COUNTER,/*交易对手*/
     null UNIT_PRICE_FULL,
     null UNIT_PRICE_NET,
     null END_RATE,
@@ -1924,6 +1924,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     from TRD_PRODUCT_DEAL deal
     LEFT JOIN TRD_PRODUCT_DEAL REVDL
     ON deal.TRADE_ID = REVDL.P_TRADE_ID
+    LEFT JOIN STL_CAPACCT_INFO STI
+    ON deal.FINPROD_ID = STI.ACCT_NO AND deal.CCY = STI.CCY
     where deal.BUSI_TYPE = '15'
     /*AND DEAL.TRADE_STATUS = '01'*/
     and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
@@ -3046,8 +3048,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
                  end
      end as ASSET_METHOD /*资产计量方式*/
     ,case 
-    	when investdeal.INVEST_VARIETY in ('19','22') then '99' /*营改增缴纳、理财托管户收息确认，默认99*/
-    	else decode(investdeal.P_TYPE_TWO,'C0100','01','C0200','02','C0300','03','C0400','04','C0401','05','C0402','06','C0500','07','C0501','08','C0502','09','C0503','10','C0504','11','C0505','12','C0506','13','C0507','14','C0508','15','C0509','16','C0600','17',null) 
+    	when investdeal.INVEST_VARIETY ='22' then '99' /*营改增缴纳，默认99*/
+        when investdeal.INVEST_VARIETY ='19' then case when investdeal.TRADE_COUNTER like '%银行%' then '04' else '06' end
+    	else decode(investdeal.P_TYPE_TWO,'C0100','01','C0200','02','C0300','03','C0400','04','C0401','05','C0402','06','C0500','07','C0501','08','C0502','09','C0503','10','C0504','11','C0505','12','C0506','13','C0507','14','C0508','15','C0509','16','C0600','17',null)
     end as RIVAL_PARTY_TYPE
     FROM INVESTDEAL investdeal
      LEFT JOIN TRD_PRODUCT_DEAL_ADD DEALADD/*交易从属表*/
@@ -4958,7 +4961,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       '11' CUR_ASSET_TYPE,/*资金流动类型*/
       '理财账户收息' CUR_ASSETDET_TYPE,/*资金流动类型说明*/
       deal.SETTLE_DATE DEALDATE,/*交易日期*/
-      null TRADE_COUNTER,/*交易对手*/
+      STI.BANK_DEP TRADE_COUNTER,/*交易对手*/
       null UNIT_PRICE_FULL,
       null UNIT_PRICE_NET,
       null END_RATE,
@@ -4989,6 +4992,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       from TRD_PRODUCT_DEAL deal
       LEFT JOIN TRD_PRODUCT_DEAL REVDL
       ON deal.TRADE_ID = REVDL.P_TRADE_ID
+      LEFT JOIN STL_CAPACCT_INFO STI
+      ON deal.FINPROD_ID = STI.ACCT_NO AND deal.CCY = STI.CCY
       where deal.BUSI_TYPE = '15'
       /*AND DEAL.TRADE_STATUS = '01'*/
       and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
@@ -6172,7 +6177,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       end
       end as ASSET_METHOD /*资产计量方式*/
       ,case
-      when investdeal.INVEST_VARIETY in ('19','22') then '99' /*营改增缴纳、理财托管户收息确认，默认99*/
+      when investdeal.INVEST_VARIETY ='22' then '99' /*营改增缴纳，默认99*/
+      when investdeal.INVEST_VARIETY ='19' then case when investdeal.TRADE_COUNTER like '%银行%' then '04' else '06' end
       else
       decode(investdeal.P_TYPE_TWO,'C0100','01','C0200','02','C0300','03','C0400','04','C0401','05','C0402','06','C0500','07','C0501','08','C0502','09','C0503','10','C0504','11','C0505','12','C0506','13','C0507','14','C0508','15','C0509','16','C0600','17',null)
       end as RIVAL_PARTY_TYPE
