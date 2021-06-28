@@ -138,7 +138,7 @@
                     UNION ALL
                     <include refid="onlyWtfEtrEntrust"></include>
                 </when>
-                <when test="entrustStatus == #{ENTRUST_STATUS_08}"> 
+                <when test="entrustStatus == ENTRUST_STATUS_08"> 
                     <!-- 只查流程中的数据 -->
                     <include refid="onlyWtfEtrEntrust"></include>
                 </when>
@@ -235,7 +235,7 @@
         <if test="ps != null and !ps.equals('')">
             AND T1.PS=#{ps}
         </if>
-        <if test="entrustStatus != null and entrustStatus != '' and entrustStatus != '00' "> <!-- 00表示查询全部状态 -->
+        <if test="entrustStatus != null and entrustStatus != '' ">
             AND T1.ENTRUST_STATUS = #{entrustStatus}
         </if>
         <if test="entrustId != null and entrustId != ''">
@@ -244,9 +244,6 @@
         <if test="entrustStartDate!=null and entrustStartDate!='' and  entrustEndDate!=null and entrustEndDate!='' ">
             <![CDATA[ AND to_date(T1.ENTRUST_DATE,'yyyy-mm-dd')  >= to_date(#{entrustStartDate},'yyyy-mm-dd') ]]>
             <![CDATA[ AND to_date(T1.ENTRUST_DATE,'yyyy-mm-dd') <= to_date(#{entrustEndDate},'yyyy-mm-dd') ]]>
-        </if>
-        <if test="isFlowIng != null and isFlowIng != ''"> <!-- 只查流程中的数据 -->
-            AND 1=2
         </if>
     </sql>
     <sql id="onlyWtfEtrEntrust">
