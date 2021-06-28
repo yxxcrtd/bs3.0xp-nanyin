@@ -258,7 +258,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
                     if (!isAuthorizationSoftcontrol) {
                         ValidMessage validMessage = new ValidMessage(
                             // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 start
-                            getMessage("ETR_E_0014","领导"));
+                            getMessage("TRD_E_0016","领导"));
                             // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 end
                         messages.add(validMessage);
                         AjaxResult errorRs = new AjaxResult();
