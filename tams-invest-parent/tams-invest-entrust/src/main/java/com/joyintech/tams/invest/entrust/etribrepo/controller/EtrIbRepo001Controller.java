@@ -22,6 +22,7 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoService;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrFinProductDto;
@@ -83,6 +84,7 @@ public class EtrIbRepo001Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.委托状态);
         this.setSelectOptionToModel(model, DictCode.回购期限品种);
         this.setSelectOptionToModel(model, DictCode.价格模式);
+        model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         return super.init(model);
     }
     

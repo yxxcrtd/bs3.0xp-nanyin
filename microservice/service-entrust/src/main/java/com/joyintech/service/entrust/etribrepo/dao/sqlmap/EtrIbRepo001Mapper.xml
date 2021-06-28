@@ -3,15 +3,39 @@
 <mapper namespace="com.joyintech.service.entrust.etribrepo.dao.EtrIbRepo001Mapper">
 
     <!-- 指令管理查询 -->
-    <select id="findZlglPage" parameterType="Map"
+    <select id="findZlglPage" 
             resultType="com.joyintech.service.entrust.etribrepo.dto.EtrIbRepo001Dto">
-        select aaa.* from (
-        select
+         select aaa.* from (
+            <choose>
+                <when test="entrustStatusIsAll == YES_OR_NO_Y"> 
+                    <!-- 查询全部状态 -->
+                    <include refid="onlyEtrEntrust"></include>
+                    UNION ALL
+                    <include refid="onlyWtfEtrEntrust"></include>
+                </when>
+                <when test="entrustStatus == ENTRUST_STATUS_08"> 
+                    <!-- 只查流程中的数据 -->
+                    <include refid="onlyWtfEtrEntrust"></include>
+                </when>
+                <otherwise>
+                    <include refid="onlyEtrEntrust"></include>
+                </otherwise>
+            </choose>
+        ) aaa 
+        left join SYS_DATADICT_LIST sdl_es on aaa.entrustStatus=sdl_es.ITEM_CODE and sdl_es.DICT_CODE='ENTRUST_STATUS'
+        left join SYS_DATADICT_LIST sdl_pm on aaa.priceModel=sdl_pm.ITEM_CODE and sdl_pm.DICT_CODE='PRICE_MODEL'
+        left join SYS_DATADICT_LIST sdl_ps on aaa.ps=sdl_ps.ITEM_CODE and sdl_ps.DICT_CODE='BACK_LEND_DIRECTION'
+        <!-- 关键字模糊查询 -->
+        <include refid="keywordsWhere"></include>
+        order by sdl_es.ORDER_NO, aaa.entrustId DESC
+    </select>
+     <sql id="onlyEtrEntrust">
+     	 select
         T1.ENTRUST_ID entrustId,
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,
         T1.PORTFOLIO_ID portfolioId,
-        NVL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+        <!-- NVL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId, -->
         T2.PORTFOLIO_NAME portfolioName,
         T7.TERM_TYPE termType,
         T7.TERM_DAYS repoTerm,
@@ -51,44 +75,18 @@
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
         where
         T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
-        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-            AND (T1.portfolio_id in
-            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-            OR T2.PARENT_PORTFOLIO_ID in
-            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>)
-        </if>
-        <if test="termType !=null and !termType.equals('')">
-            AND T7.TERM_TYPE = #{termType}
-        </if>
-        <if test="ps != null and !ps.equals('')">
-            AND T1.PS=#{ps}
-        </if>
-        <if test="startDate != null and !startDate.equals('')">
-            AND T1.VDATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
-        </if>
-        <if test="endDate != null and !endDate.equals('')">
-            AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
-        </if>
-        <if test="priceModel != null and priceModel != ''">
-            AND T1.PRICE_MODEL = #{priceModel}
-        </if>
-        <if test="entrustStatus != null and entrustStatus != ''">
-            AND T1.ENTRUST_STATUS = #{entrustStatus}
-        </if>
-        <if test="entrustId != null and entrustId != ''">
-            AND T1.ENTRUST_ID = #{entrustId}
-        </if>
-        UNION ALL
-        select
+        and T1.TRADE_MARKET = #{TRADE_PLACE_01}
+         <include refid="commonWhere"></include>
+     </sql>
+    
+    
+     <sql id="onlyWtfEtrEntrust">
+     	select
         T1.ENTRUST_ID entrustId,
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,
         T1.PORTFOLIO_ID portfolioId,
-        NVL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId,
+       <!--  NVL(T2.PARENT_PORTFOLIO_ID, T2.PORTFOLIO_ID) parentPortfolioId, -->
         T2.PORTFOLIO_NAME portfolioName,
         T7.TERM_TYPE termType,
         T7.TERM_DAYS repoTerm,
@@ -127,7 +125,11 @@
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
         where
         T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
-        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+        and T1.TRADE_MARKET = #{TRADE_PLACE_01}
+        <include refid="commonWhere"></include>
+     </sql>
+    <sql id="commonWhere">
+    	<if test="portfolioIdList != null and portfolioIdList.size() > 0"><!-- 组合信息 -->
             AND (T1.portfolio_id in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                 #{item}
@@ -137,28 +139,44 @@
                 #{item}
             </foreach>)
         </if>
-        <if test="termType !=null and !termType.equals('')">
-            AND T7.TERM_TYPE = #{termType}
-        </if>
-        <if test="ps != null and !ps.equals('')">
+        <if test="ps != null and !ps.equals('')"><!-- 交易方向 -->
             AND T1.PS=#{ps}
         </if>
-        <if test="startDate != null and !startDate.equals('')">
+        <if test="settleSpreed != null and settleSpreed != ''"><!-- 清算速度 -->
+            AND T7.SETTLE_SPREED = #{priceModel}
+        </if>
+        <if test="repoTerm !=null and ! repoTerm.equals('')"><!-- 回购期限 -->
+            AND T7.TERM_DAYS = #{repoTerm}
+        </if>
+        <if test="entrustStatus != null and entrustStatus != ''">
+            AND T1.ENTRUST_STATUS = #{entrustStatus}
+        </if>
+        <if test="entrustId != null and entrustId != ''"><!-- 指令编号 -->
+            AND T1.ENTRUST_ID = #{entrustId}
+        </if>
+        <if test="invManagerId != null and invManagerId != ''"><!-- 投资经理 -->
+            AND T1.INV_MANAGER_ID = #{invManagerId}
+        </if>
+         <if test="startDate != null and !startDate.equals('')">
             AND T1.VDATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
         </if>
         <if test="endDate != null and !endDate.equals('')">
             AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
         </if>
-        <if test="priceModel != null and priceModel != ''">
-            AND T1.PRICE_MODEL = #{priceModel}
+    </sql>
+    
+    <sql id="keywordsWhere">
+        <if test="keywords != null and keywords != ''">
+            <where>
+                aaa.entrustId || '|' || aaa.entrustStatus || '|' || aaa.invManagerId || '|' || aaa.portfolioId || '|' || aaa.portfolioName
+                || '|' || aaa.termType || '|' || aaa.repoTerm  || '|' || aaa.ps || '|' || aaa.entrustAmt || '|' || priceModel
+                || '|' || aaa.price  || '|' || aaa.settleSpreed || '|' || aaa.vdate || '|' || aaa.mdate || '|' || aaa.finishAmt 
+                || '|' || aaa.transactioncom || '|' || aaa.REMARK || '|' || sdl_es.item_value || '|' || sdl_pm.item_value 
+                || '|' || sdl_ps.item_value 
+                like '%' || #{keywords} || '%'
+            </where>
         </if>
-        <if test="entrustStatus != null and entrustStatus != ''">
-            AND T1.ENTRUST_STATUS = #{entrustStatus}
-        </if>
-        <if test="entrustId != null and entrustId != ''">
-            AND T1.ENTRUST_ID = #{entrustId}
-        </if>)aaa order by aaa.entrustId DESC
-    </select>
+    </sql>
 
     <!-- 质押券管理查询画面 -->
     <select id="findZlglPositionPage" resultType="com.joyintech.service.entrust.etribrepo.dto.EtrIbRepo001Dto">

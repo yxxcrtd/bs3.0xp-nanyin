@@ -67,6 +67,31 @@
 	border-radius: 3px;
 	padding: 5px;
 }
+
+.sgePortDiv{
+	width:100%;
+	overflow:hidden;
+	clear:both;
+	padding-top: 8px;
+	display: inline-block;
+}
+
+.form-label-wrap-radio {
+	color: #444;
+	padding: 0 10px 0 0;
+	float: left;
+	display: block;
+	font-weight: 400;
+	text-align: right;
+}
+
+.keywords {
+	border-radius: 25px !important;
+	width: 100%;
+}
+.sgePortDiv .layui-input-inline{
+	width:100%;
+}
 </style>
 </head>
 <body>
@@ -86,101 +111,138 @@
 						<a id="EtrIbRepo001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke"><i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></a>
 					</div>
 					<div class='joyin-form-wrap joyin-filter-form condition-area curr-form cc-transfer-form'>
-						<form class="layui-form" id="searchForm_cc">
-							<div class="layui-form-item">
-								<div
-									class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										data-th-text="#{EtrIbBondinfo001.portfolioName}">组合名称</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="portfolioId" name="portfolioId"
-											class="layui-input form-input input-select"
-											placeholder="请输入内容"
-											data-th-placeholder="#{SysCommon.placeholder}"
-											data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId?ww=false}"
-											data-th-value="${entity?.portfolioId}" multiple="true">
-										</select>
+					<form class="layui-form"  id='searchForm_cc'>
+						<div class="layui-form-item">
+							<div class="form-inline-wrap" style="width:30%">
+									<div class="layui-input-inline input-inline keywords-inline">
+										<input type="text" id="keywords-entrustOrder" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input keywords" placeholder="关键字搜索">
+										<a id='EtrIbRepo001_cc_search' class="input-right-show" href='javascript:;' ><i class='iconfont icon-search'></i></a>
 									</div>
 								</div>
-								<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbBondinfo001.entrustId}">指令编号</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" id="TrdCommandDispatcher001_entrustId" name="entrustId" maxlength="50"
-											   class="layui-input form-input input-lenovoselect"
-											   data-th-data-url="@{/invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher001/getEntIds}"
-											   data-idfield="code" data-th-data-effectivefields="code"
-											   data-th-data-effectivefieldsalias='|{"code":"#{TrdCommandDispatcher001.entrustId}"}|'
-											   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-										/>
-									</div>
-								</div>
-								<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbBondinfo001.entrustStatus}">有效状态</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="entrustStatus" name="entrustStatus"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${ENTRUST_STATUS}">
-										</select>
-									</div>
-								</div>
+							<!-- 单选框 -->
+							<div class="form-inline-wrap-radio">
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="00" title="全部" checked>
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="09" title="待分发">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="02" title="待接收">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="03" title="已接收">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="04" title="已完成">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="05" title="已退回">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="06" title="已关闭">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="07" title="已撤回">
+								</label>
+								<label class="form-label-wrap-radio">
+									<input type="radio" name="entrustStatus" value="08" title="流程中">
+								</label>
+<!--								<label class="form-label-wrap-checkbox">-->
+<!--									<span style="display:none"><input type="checkbox" name="isFlowIng" value="00" title="否"></span>-->
+<!--									<input type="checkbox" name="isFlowIng" value="01" title="流程中">-->
+<!--								</label>-->
 							</div>
-							<div class="layui-form-item">
-								<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbBondinfo001.ps}">交易方向</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="ps" name="ps"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${BACK_LEND_DIRECTION}">
-										</select>
+					
+						<div class="form-inline-wrap-btn" style="float: right; width: 10%;">
+									<div id="selectorConditionFilter001" style="margin-top: 10px;display:none;border: 1px solid #ccc;position: absolute; right:100px;background: #fff;z-index: 100 ;width:400px;">
+										<div class="sgePortDiv">
+											 <label class="layui-form-label form-lable" style="width: 80px!important;padding-left:15px;"
+												data-th-text="#{EtrIbBondinfo001.portfolioName}">组合名称</label>
+											<div class="layui-input-inline input-inline" >
+												<select type="text" id="portfolioId" name="portfolioId"
+													class="layui-input form-input input-select"
+													placeholder="请输入内容"
+													data-th-placeholder="#{SysCommon.placeholder}"
+													data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId?ww=false}"
+													data-th-value="${entity?.portfolioId}" multiple="true">
+												</select>
+											</div>
+			                            </div>
+										<div class="sgePortDiv">
+											<label class="layui-form-label form-lable" style="width: 80px!important;padding-left:15px;" data-th-text="#{EtrIbBondinfo001.ps}">交易方向</label>
+											<div class="layui-input-inline input-inline" >
+												<select type="text" id="ps" name="ps"
+														class="layui-input form-input input-select"
+														placeholder="请输入内容"
+														data-th-placeholder="#{SysCommon.placeholder}"
+														data-th-data-result="${BACK_LEND_DIRECTION}">
+												</select>
+				                            </div>
+				                        </div>
+										<div class="sgePortDiv">
+											 <label class="layui-form-label" style="width: 80px!important;padding-left:15px;" data-th-text="#{EtrIbRepoinfo002.settleSpreed}">清算速度</label>
+					                            <div class="layui-input-inline input-inline" >
+					                                <select  type="text" id="settleSpreed" name="settleSpreed"
+					                                         class="layui-input form-input input-select" data-th-data-result="${ACCOUNT_SPEED}"
+					                                        placeholder="请输入内容"  data-th-placeholder="#{SysCommon.placeholder}"
+					                                ></select>
+					                            </div>
+										</div>
+										<div class="sgePortDiv">
+											 <label class="layui-form-label" style="width: 80px!important;padding-left:15px;" data-th-text="#{EtrRepo002.repoTerm}" >回购期限</label>
+					                            <div class="layui-input-inline input-inline" >
+					                                <input type="text" id="repoTerm" name="repoTerm" placeholder="请输入内容"
+					                                        data-pattern="" data-fixtype="2"
+					                                        class="layui-input form-input text-number"  maxlength="10" data-textrange="0"
+					                                        data-th-value="${entity?.repoTerm}"/>
+					                                 <span class="input-right-show">天</span>
+					                            </div>
+										</div>
+										<div class="sgePortDiv">
+											<label class="layui-form-label form-label"
+			                                        th:text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.invManagerId}" style="width: 80px!important;padding-left:15px;">投资经理</label>
+			                                 <div class="layui-input-inline input-inline" >
+			                                     <select type="text" name="invManagerId" id="invManagerId"
+													class="layui-input form-input input-select"
+													allowClear="true" placeholder="请输入内容" multiple="true"
+													data-th-placeholder="#{SysCommon.placeholder}"
+													data-th-data-url="@{/invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher001/getManagers}">
+												</select>
+			                                 </div>
+			                            </div>
+										<div class="sgePortDiv">
+			                                 <label class="layui-form-label form-lable" data-th-text="#{EtrIbBondinfo001.entrustId}" style="width: 80px!important;padding-left:15px;">指令编号</label>
+											<div class="layui-input-inline input-inline" >
+												<input type="text" id="TrdCommandDispatcher001_entrustId" name="entrustId" maxlength="50"
+													   class="layui-input form-input input-lenovoselect" 
+													   data-th-data-url="@{/invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher001/getEntIds}"
+													   data-idfield="code" data-th-data-effectivefields="code"
+													   data-th-data-effectivefieldsalias='|{"code":"#{TrdCommandDispatcher001.entrustId}"}|'
+													   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+												/>
+											</div>
+										</div>
+										<div class="sgePortDiv">
+											<label class="layui-form-label form-lable" style="width: 80px!important;padding-left:15px;">指令日期</label>
+					                        <div class="layui-input-inline input-inline" >
+					                            <input id='entrustDate' name='entrustDate'
+					                                class="layui-input form-input input-dateRangeSelect" placeholder="请选择时间区间"
+					                                data-th-placeholder="#{SysCommon.placeholder}">
+					                        </div>
+		                         		</div>
+										
+										<div class="sgePortDiv" style="text-align: center">
+											<a id="EtrIbRepo001_btn_realseach" style="margin-left:40px" class="layui-btn layui-btn-sm"
+											   data-th-text="确定">确定</a>
+											<a id="EtrIbRepo001_btn_seachClose" style="margin-left:40px" class="layui-btn layui-btn-sm"
+											   data-th-text="取消">取消</a>
+											<a id="EtrIbRepo001_btn_seachReset" style="margin-left:40px" class="layui-btn layui-btn-sm"
+											   data-th-text="重置">重置</a>   
+										</div>
 									</div>
-								</div>
-								<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable" data-th-text="#{EtrInvestBondInfo001.vdate}">指令开始日</label>
-									<div class="layui-input-inline input-inline">
-										<input id='startDate' name='startDate'
-											   class="layui-input form-input input-dateSelect" placeholder="请选择时间"
-											   data-th-placeholder="#{SysCommon.placeholder}">
-									</div>
-								</div>
-								<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable" data-th-text="#{EtrInvestBondInfo001.mdate}">指令终止日</label>
-									<div class="layui-input-inline input-inline">
-										<input id='endDate' name='endDate'
-											   class="layui-input form-input input-dateSelect" placeholder="请选择时间"
-											   data-th-placeholder="#{SysCommon.placeholder}">
-									</div>
-								</div>
 							</div>
-							<div class="layui-form-item">
-								<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable" data-th-text="#{EtrInvestBondInfo001.priceModel}">价格模式</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="priceModel" name="priceModel"
-												class="layui-input form-input input-select" data-th-data-result='${PRICE_MODEL}'
-												allowClear="true" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption = "true">
-										</select>
-									</div>
-								</div>
-								<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{EtrIbRepo001.termType}">期限品种</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="termType" name="termType"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${TERM_TYPE_REBACK}">
-										</select>
-									</div>
-								</div>
-							</div>
+						</div>
 						</form>
 					</div>
 					<!-- 指令列表 -->
@@ -270,6 +332,9 @@
 		</div>
 	</div>
 	<div layout:fragment="script">
+	 <script th:inline="javascript" type="text/javascript">
+          var YES_OR_NO_Y = /*[[${YES_OR_NO_Y}]]*/ ''
+      </script>
 		<script
 			data-th-src="@{/js/invest/entrust/etribrepo/EtrIbRepo001.js}"
 			type="text/javascript"></script>

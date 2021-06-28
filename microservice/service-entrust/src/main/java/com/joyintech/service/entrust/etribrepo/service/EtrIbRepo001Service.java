@@ -33,6 +33,7 @@ import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.common.base.entity.PtlSecStock;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,16 +89,20 @@ public class EtrIbRepo001Service extends BaseService{
                                                        Map<String, Object> pageParam) {
         pageParam.put("FINPROD_TYPE2_Z", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         pageParam.put("FINPROD_TYPE2_N", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
+        pageParam.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         pageParam.put("sysDate", iPlatformDate.getSysDateStr());
-        pageParam.put("startDate", iPlatformDate.getSysDateStr());
-        pageParam.put("endDate", iPlatformDate.getSysDateStr());
+        pageParam.put("TRADE_PLACE_01", DictCodeListExt1.交易场所_银行间.getValue());
+//        pageParam.put("startDate", iPlatformDate.getSysDateStr());
+//        pageParam.put("endDate", iPlatformDate.getSysDateStr());
         String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
             pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
-        //Page<EtrIbRepo001Dto> result = super.queryForPage(page, length, () -> etrIbRepo001Mapper.findZlglPage(pageParam));
-        List<EtrIbRepo001Dto> list = etrIbRepo001Mapper.findZlglPage(pageParam);
-        return new Page<EtrIbRepo001Dto>(list);
+        Page<EtrIbRepo001Dto> result = super.queryForPage(page, length, () -> etrIbRepo001Mapper.findZlglPage(pageParam));
+        return result;
+//        List<EtrIbRepo001Dto> list = etrIbRepo001Mapper.findZlglPage(pageParam);
+//        return new Page<EtrIbRepo001Dto>(list);
     }
 
     /**

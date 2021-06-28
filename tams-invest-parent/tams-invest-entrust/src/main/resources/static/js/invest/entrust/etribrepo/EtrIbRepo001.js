@@ -6,6 +6,14 @@
     function getPositionsSearchParams(){
         var data = $.serializeToObject('#searchForm_cc');
         data.portfolioId = data.portfolioId ? data.portfolioId.join(','):'';
+        if(data.entrustDate){
+        	data.startDate= $("#entrustDate").startDate();
+        	data.endDate= $("#entrustDate").endDate();
+        }
+        if(data.entrustStatus =='00'){
+        	entrustStatusIsAll = YES_OR_NO_Y;
+        	data.entrustStatus = "";
+        }
         data.isDvp = true;
         return data;
     }
@@ -30,7 +38,7 @@
                 return getPositionsSearchParams();//获取请求参数
             }//ajax请求数据
         },
-        page: false,
+        page: true,
         dblclick:function(table, data) {
             if(data.entrustStatus === "05" || data.entrustStatus === "07"){
                 parent.EtrIbRepoinfo002.dbclickEtr(data);
@@ -236,11 +244,57 @@
         });
         
         $(".cc-transfer-form #EtrIbRepo001_btn_search").click(function () {
-            zlglTable.load();
+//            zlglTable.load();
+        	$('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
+            $('#dayOfferSelectorConditionFilter001').hide();
+    		if($("#selectorConditionFilter001").css("display")=="none"){
+				//clearBasicCondition();
+				$("#selectorConditionFilter001").show();
+			}
+			else{
+				//clearBasicCondition();
+				$("#selectorConditionFilter001").hide();
+			}
         })
         $(".transfer-form #EtrIbRepo001_btn_search").click(function () {
             zyqglTable.load();
         })
+        
+        /**
+    	 * 委托指令查询弹出框查询
+    	 */
+    	$('#EtrIbRepo001_btn_realseach').click(function() {
+//    		fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+    		zlglTable.table ? zlglTable.reload() : zlglTable.load();
+    		$("#selectorConditionFilter001").hide();
+        });
+        
+        $('#EtrIbRepo001_cc_search').click(function() {
+//    		fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+    		zlglTable.table ? zlglTable.reload() : zlglTable.load();
+    		$("#selectorConditionFilter001").hide();
+        });
+
+		/**
+    	 * 委托指令查询弹出框重置
+    	 */
+    	$('#EtrIbRepo001_btn_seachReset').click(function() {
+			$("#portfolioId").empty();
+			$("#finprodId").empty();
+			$("#ps").val('').trigger("change");
+			$("#settleSpreed").val('').trigger("change");
+			$("#invManagerId").empty();
+			$("#entrustId").empty();
+			$("#entrustDate").val("");
+        });
+
+    	/**
+    	 * 委托指令查询弹出框关闭
+    	 */
+    	$('#EtrIbRepo001_btn_seachClose').click(function() {
+			$("#selectorConditionFilter001").hide();
+        });
+        
         $(".cc-transfer-form #EtrIbRepo001_btn_export").click(getPositionsExportExcel)
         $(".transfer-form #EtrIbRepo001_btn_export").click(getZqzyPositionExportExcel)
         
