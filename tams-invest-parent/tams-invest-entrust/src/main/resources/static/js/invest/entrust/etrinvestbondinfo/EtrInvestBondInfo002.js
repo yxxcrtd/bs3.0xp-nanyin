@@ -1096,7 +1096,7 @@
                         if (isInit || pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
                             break;
                         }
-                        if ($("#entrustId").val() != '') {
+                        if ($("#entrustId").val() != ''||tradeMarket === '05') {
                             $('#tradePlat').prop("disabled", true);
                         }
                         break;
@@ -1157,6 +1157,10 @@
                             $tradePlat.updateChosenArr({
                                 disabled: false
                             });
+                        }
+                        if($('#tradeMarket').val() === '05'){
+                            $('#tradePlat').val(SHARES_TRADE_PLATFORM_99).trigger('change').trigger('blur');;
+                            $('#tradePlat').prop("disabled",true);
                         }
                         break;
                 }
