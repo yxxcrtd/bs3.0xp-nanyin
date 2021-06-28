@@ -292,7 +292,9 @@
                 return;
             }else {
                 for(var index in selArr){
-                    if(selArr[index].entrustStatus != '08' || selArr[index].entrustStatus != '02'){
+                    if(selArr[index].entrustStatus == '09' || selArr[index].entrustStatus == '02'){
+                        continue;
+                    }else{
                         Joyin.error("只有指令状态为待分发、待接收的指令允许撤回");
                         return ;
                     }
