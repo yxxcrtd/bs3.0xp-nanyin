@@ -19,14 +19,12 @@ import com.joyintech.service.entrust.etribbondinfo.dao.EtrIbBondinfo001Mapper;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtrFinProductDto;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtrTrdProductDealDto;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -191,7 +189,7 @@ public class EtrIbBondinfo001Service extends BaseService{
             Map<String, Object> pageParam) {
         pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
-        pageParam.put("ENTRUST_STATUS_08", DictCodeList.委托状态_流程中.getValue());
+        pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
             pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
