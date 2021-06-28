@@ -1218,7 +1218,7 @@
 
         if(list){
             $.each(list,function(index,obj){
-                if(obj.payDate==''||typeof obj.payDate == 'undefined'){
+                if (obj.payDate == null || obj.payDate == '' || typeof obj.payDate == 'undefined') {
                     msg = JoyinUtil.getMessage("付息计划已变更,请点击确认,重新计算应计利息!");
                 }
             })
