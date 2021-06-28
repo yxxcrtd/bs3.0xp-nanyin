@@ -142,6 +142,7 @@ public class EtrIbRepo001Service extends BaseService{
         pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("sysDate", iPlatformDate.getSysDateStr());
         pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
+        pageParam.put("VALUATION_SOURCE_CBC", DictCodeList.估值来源_中债登_CBC.getValue());
         Page<EtrIbRepo001Dto> result = super.queryForPage(page, length, () -> etrIbRepo001Mapper.findZlglPositionPage(pageParam));
         return result;
     }
@@ -347,6 +348,7 @@ public class EtrIbRepo001Service extends BaseService{
        pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
        pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
        pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+       pageParam.put("VALUATION_SOURCE_CBC", DictCodeList.估值来源_中债登_CBC.getValue());
 	   return etrIbRepo001Mapper.selectF01List(pageParam);
    }
    
