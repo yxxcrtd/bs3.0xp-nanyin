@@ -551,7 +551,7 @@
     <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
     	<if test="zhilingtype == null or zhilingtype == '01'">
 	        SELECT
-	            A.ACCT_NO hidCode,
+                distinct A.ACCT_NO hidCode,
 	            A.ACCT_NO code,
 	            B.SEC_ACCT_NAME name,
 	            B.SEC_ACCT_NAME shortName
