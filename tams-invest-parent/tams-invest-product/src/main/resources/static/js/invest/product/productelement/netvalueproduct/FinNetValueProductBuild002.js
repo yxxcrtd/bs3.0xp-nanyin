@@ -952,50 +952,55 @@
 			var operationType2 =  $('#FinNetValueProductBuild002_operationType').val();
 			var termDays2 =  $('#FinNetValueProductBuild002_termDays').val();	
 			var openMode =  $('#bussFinProductOpenPlanDto_openMode').val();
-			if($('#FinNetValueProductBuild002_dealMode').val() != '10' && $('#bussFinProductOpenPlanDto_openType').val() !='03'){//申赎不同频
-				 if(( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false' ) &&  quickInput == true && operationType2!=ISSUE_MODE_01 && openMode != "02"){
-				    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
-				    		if(!draftoption && operationType2 == "01" && termDays2 <90){
-								Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
-									onSaveOrSubmitAction('submit');
-				                },null);
-							}else{
-								onSaveOrSubmitAction('submit');
-							}
-		                },null);
-				    }
-				    else{	
-					if(!draftoption && operationType2 == "01" && termDays2 <90){
-						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
-							onSaveOrSubmitAction('submit');
-		                },null);
-					}else{
-						onSaveOrSubmitAction('submit');
-					}
-				    }
-			}
-			else{//申赎同频
-		    if($('#isClick').val() == 'false' &&  quickInput == true && operationType2!=ISSUE_MODE_01 && openMode != "02" ){
-		    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
-		    		if(!draftoption && operationType2 == "01" && termDays2 <90){
-						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
-							onSaveOrSubmitAction('submit');
-		                },null);
-					}else{
-						onSaveOrSubmitAction('submit');
-					}
-                },null);
-		    }
-		    else{	
-			if(!draftoption && operationType2 == "01" && termDays2 <90){
-				Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
-					onSaveOrSubmitAction('submit');
-                },null);
+
+			if(draftoption){
+			    onSaveOrSubmitAction('submit');
 			}else{
-				onSaveOrSubmitAction('submit');
-			}
+                if($('#FinNetValueProductBuild002_dealMode').val() != '10' && $('#bussFinProductOpenPlanDto_openType').val() !='03'){//申赎不同频
+                     if(( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false' ) &&  quickInput == true && operationType2!=ISSUE_MODE_01 && openMode != "02"){
+                            Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
+                                if(!draftoption && operationType2 == "01" && termDays2 <90){
+                                    Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+                                        onSaveOrSubmitAction('submit');
+                                    },null);
+                                }else{
+                                    onSaveOrSubmitAction('submit');
+                                }
+                            },null);
+                        }
+                        else{
+                        if(!draftoption && operationType2 == "01" && termDays2 <90){
+                            Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+                                onSaveOrSubmitAction('submit');
+                            },null);
+                        }else{
+                            onSaveOrSubmitAction('submit');
+                        }
+                        }
+                }
+                else{//申赎同频
+                    if($('#isClick').val() == 'false' &&  quickInput == true && operationType2!=ISSUE_MODE_01 && openMode != "02" ){
+                        Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
+                            if(!draftoption && operationType2 == "01" && termDays2 <90){
+                                Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+                                    onSaveOrSubmitAction('submit');
+                                },null);
+                            }else{
+                                onSaveOrSubmitAction('submit');
+                            }
+                        },null);
+                    }
+                    else{
+                        if(!draftoption && operationType2 == "01" && termDays2 <90){
+                            Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+                                onSaveOrSubmitAction('submit');
+                            },null);
+                        }else{
+                            onSaveOrSubmitAction('submit');
+                        }
+                    }
+                }
 		    }
-		}
 			
 		});
 		//update zhangweiqi 增加目标客户类型一级分类和二级分类对于中债的目标客户类型的联动事件  begin
