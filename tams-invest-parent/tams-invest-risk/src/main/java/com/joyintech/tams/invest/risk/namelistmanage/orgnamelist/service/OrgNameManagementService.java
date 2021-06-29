@@ -309,6 +309,9 @@ public class OrgNameManagementService extends CommonExportService<RskAccessListD
      * @since 1.0
      */
     public AssetNameManagement004Dto importData(String fileName,String inputType,String listId) throws Exception {
+        if(fileName != null && fileName.startsWith(CacheUtil.getSysParam("upload_file_path"))){
+            fileName.replace(CacheUtil.getSysParam("upload_file_path"),"");
+        }
         //记录错误信息
         AssetNameManagement004Dto detailDto = new AssetNameManagement004Dto();
         //新增条数
