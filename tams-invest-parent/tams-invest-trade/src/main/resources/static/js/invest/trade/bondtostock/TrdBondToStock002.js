@@ -330,7 +330,7 @@
         //划款信息生成规则见清算路径文件；当零股折算现金为0时，不显示划款指令信息；
         $("#tradeAmt").change(function () {
             var tradeAmt = $("#tradeAmt").val();
-            if(parseInt(tradeAmt|0)==0){
+            if(!tradeAmt ||tradeAmt==0){
                 $("#settleDate").attr("disabled",true);
                 $("#settleDate").val("");
                 $("#bussTrdTransferOrder_div").hide();
