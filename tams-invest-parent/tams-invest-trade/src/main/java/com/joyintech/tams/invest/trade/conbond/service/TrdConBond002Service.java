@@ -842,11 +842,11 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 
                 List<EtrFinishStatusDto> baseEtrInvestInfoDtos = new ArrayList<>();
                 EtrFinishStatusDto etrInvestInfoDto = new EtrFinishStatusDto();
-                etrInvestInfoDto.setEntrustId(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
-                etrInvestInfoDto.setTradeId(baseTradeProductDealDto.getTrdProductDealAdd().getTradeId());
-                etrInvestInfoDto.setFinishDate(baseTradeProductDealDto.getTrdProductDeal().getTradeDate());
-                etrInvestInfoDto.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
-                etrInvestInfoDto.setTrader(baseTradeProductDealDto.getTrdProductDeal().getTrader());
+                etrInvestInfoDto.setEntrustId(entity.getEntrustId());
+                etrInvestInfoDto.setTradeId(entity.getBusiCode());
+                etrInvestInfoDto.setFinishDate(entity.getTradeDate());
+                etrInvestInfoDto.setFinishAmt(ArithmeticUtil.divide(entity.getTradeAmt(), new BigDecimal(100), 2));
+                etrInvestInfoDto.setTrader(entity.getTrader());
                 baseEtrInvestInfoDtos.add(etrInvestInfoDto);
 
                 etrInvestInfoServiceImpl.completeDelegate(baseEtrInvestInfoDtos);
@@ -1074,6 +1074,9 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 
         }
         //        调用接口  add by zhangpuyu 2019/12/6 end
+        if (StringUtil.isNotEmpty(operationType)) {
+            throw new RuntimeException("cs by jp");
+        }
     }
     
     /**
