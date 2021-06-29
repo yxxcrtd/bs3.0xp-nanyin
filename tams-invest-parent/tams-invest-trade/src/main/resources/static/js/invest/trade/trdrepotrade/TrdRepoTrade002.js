@@ -852,7 +852,7 @@
                         if (!$("#prinAmt").val()) {
                             //委托金额大于cstp的劵面总额
                             //委托金额大于cstp的劵面总额
-                            if(etrEntrust.entrustAmt<=repoamt){
+                            if (repoamt == null || etrEntrust.entrustAmt <= repoamt) {
                                 checkAndAssign("#prinAmt", etrEntrust.entrustAmt, true); // 券面总额
                             }else{
                                 checkAndAssign("#prinAmt",repoamt, true); // 券面总额
