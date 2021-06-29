@@ -78,9 +78,11 @@ public class InvestorsQualityCheckSLPPService extends InvestorsQualityCheckBaseS
         if (!StringUtil.isEmptyList(allList)){
             dto.setRate("100");
             if (!StringUtil.isEmptyList(unQualifiedList)){
-                BigDecimal rate = ArithmeticUtil.multiply(ArithmeticUtil.divide(
+                BigDecimal rate = ArithmeticUtil.multiply(
+                                            /***ZGBSSE-944  投资者质量核查画面，页面左侧的投资者数量匹配的合格率值不对****/
+                                            //ArithmeticUtil.divide(
                                             ArithmeticUtil.divide(ArithmeticUtil.subtract(new BigDecimal(dto.getTotal()), unQualifiedInt), new BigDecimal(dto.getTotal()), 6, RoundingMode.HALF_UP)
-                                            , new BigDecimal(3), 4, RoundingMode.HALF_UP)
+                                            //, new BigDecimal(3), 4, RoundingMode.HALF_UP)
                                             , new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
                 if (new BigDecimal(rate.intValue()).compareTo(rate) == 0){
                     rate = new BigDecimal(rate.intValue());
