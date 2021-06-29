@@ -1570,9 +1570,9 @@ public class CommonAutoCouponService extends BaseService{
         List<String> secList = new ArrayList<>();
         secList.add(finprodMarketId);
         dto.setSecidList(secList);
-        autoBondCoupon(dto);
-        List<BaseFinProductBaseInfoDto>  baseInfoDtos = dto.getBaseFinProductBaseInfoList();
-        if (StringUtil.isNotEmpty(baseInfoDtos)) {
+        InterfPayhsrcsecinfoDto newDto =  autoBondCoupon(dto);
+        List<BaseFinProductBaseInfoDto>  baseInfoDtos = newDto.getBaseFinProductBaseInfoList();
+        if (StringUtil.isNotEmpty(baseInfoDtos) && !baseInfoDtos.isEmpty()) {
             finProduct = new AutoCouponDto();
             BeanUtil.copyPropertiesIgnoreNull(finProduct, baseInfoDtos.get(0).getFinProduct());
             FinProductType productType = baseInfoDtos.get(0).getFinProductType();

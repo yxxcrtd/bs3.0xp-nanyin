@@ -10,7 +10,10 @@
  
 package com.joyintech.tams.component.business.common.controller;
 
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.validation.ValidMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,9 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
 import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
 import com.joyintech.tams.component.business.common.service.CommonAutoCouponService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 交易自动加券
@@ -64,8 +70,15 @@ public class CommonAutoCouponController extends BaseController{
      */
     @RequestMapping("autoBondTradeCoupon")
     @ResponseBody
-    public FinProduct autoBondTradeCoupon(@RequestParam("finprodMarketId") String finprodMarketId) {
-        return service.autoBondTradeCoupon(finprodMarketId);
-        
+    public AjaxResult autoBondTradeCoupon(@RequestParam("finprodMarketId") String finprodMarketId) {
+        AjaxResult result = new AjaxResult();
+        FinProduct finProduct = service.autoBondTradeCoupon(finprodMarketId);
+        if(StringUtil.isNotEmpty(finProduct)) {
+            result.setData(finProduct);
+        }else{
+            result.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            result.setMessage("资产未通过中债要素校验,自动加券失败,需在对应页面新建资产信息", MessageType.错误消息);
+        }
+        return result;
     }
 }
