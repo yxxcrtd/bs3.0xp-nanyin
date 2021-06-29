@@ -162,13 +162,17 @@
 		    			or fp.FINPROD_NAME like concat(concat('%',#{search}),'%'))
 			</if>
 			<if test="finprodType2 != null and finprodType2.size() > 0">
-					AND ( fpt.TYPE_8 in
+					AND
+			<if test="type9 != null">
+					(
+			</if>
+			            fpt.TYPE_8 in
 					<foreach collection="finprodType2" item="item" open="(" close=")" separator=",">
 						#{item}
 					</foreach>
 			</if>
 			<if test="initValue != null and initValue != ''">
-				AND ( fp.FINPROD_ID = #{initValue}
+				AND  fp.FINPROD_ID = #{initValue}
 			</if>
 			<if test="type9 != null and type8 != null ">
 				OR (fpt.TYPE_9 =#{type9,jdbcType=VARCHAR} and fpt.TYPE_8 = #{type8,jdbcType=VARCHAR}) )
