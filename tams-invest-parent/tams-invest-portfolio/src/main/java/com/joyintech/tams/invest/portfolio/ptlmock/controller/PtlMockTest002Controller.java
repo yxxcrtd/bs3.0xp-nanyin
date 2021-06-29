@@ -2,6 +2,7 @@
 package com.joyintech.tams.invest.portfolio.ptlmock.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +157,55 @@ public class PtlMockTest002Controller extends BaseController {
         param.put("loginUserName", LoginUserUtil.getUserName());
         return ptlMockTest002Service.getFinProdId(param);
     }
+
+    /**
+     * 根据组合代码、资产代码、交易日、持仓获取交易方向
+     */
+    @RequestMapping("getPs")
+    @ResponseBody
+    public List<SelectOptionDto> getPs(@RequestParam Map<String, Object> param) {
+        String psFlag = (String) param.get("psFlag");
+        String initValue = (String) param.get("initValue");
+
+        List<SelectOptionDto> result =new ArrayList<SelectOptionDto>();
+        SelectOptionDto T01 = new SelectOptionDto();
+        SelectOptionDto T02 = new SelectOptionDto();
+        T01.setId(DictCodeList.交易方向_买入.getValue());
+        T01.setText(DictCodeList.交易方向_买入.getCodeName());
+        T02.setId(DictCodeList.交易方向_卖出.getValue());
+        T02.setText(DictCodeList.交易方向_卖出.getCodeName());
+
+        //有初始化值时展示初始化值
+        if (StringUtil.isNotEmpty(initValue)){
+            if (StringUtil.equals(initValue,DictCodeList.交易方向_卖出.getValue())){
+                result.add(T02);
+                return result;
+            }else if (StringUtil.equals(initValue,DictCodeList.交易方向_买入.getValue())){
+                result.add(T01);
+                return result;
+            }else{
+                return result;
+            }
+        }
+
+        //psFlag为T02时交易方向有买入和卖出，否则只有买入
+        if (StringUtil.isNotEmpty(psFlag)){
+            if (StringUtil.equals(psFlag,DictCodeList.交易方向_卖出.getValue())){
+                result.add(T02);
+                result.add(T01);
+                return result;
+            }else {
+                result.add(T01);
+                return result;
+            }
+        }
+
+        result.add(T01);
+        result.add(T02);
+        return result;
+    }
+
+
 
     /**
      * 根据组合关联的估值方案查询对应资产的投资目的
