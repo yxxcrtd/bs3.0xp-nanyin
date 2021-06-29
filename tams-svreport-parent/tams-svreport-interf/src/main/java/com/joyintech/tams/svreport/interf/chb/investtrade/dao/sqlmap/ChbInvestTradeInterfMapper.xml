@@ -4866,13 +4866,13 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       left join MST_CUSTOMER_INFO custinfo
       on info.manager = custinfo.CUSTOMER_ID
       LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TPD
-      ON TPD.TOTLE_TRADE_ID=deal.TRADE_ID
+      ON TPD.TOTLE_TRADE_ID=deal.TOTLE_TRADE_ID
       left join MST_COUNTER_PARTY party on party.COUNTER_ID=custinfo.CUSTOMER_ID
       left join MST_COUNTER_PARTY party2 on party2.LINK_ID=custinfo.CUSTOMER_ID
       left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=custinfo.CUSTOMER_ID
       LEFT JOIN DATA_AUTH_NOTIFY_INST T22 ON tda.PORTFOLIO_ID = T22.BUSINESS_ID AND T22.DATA_TYPE = 'PTL01' AND
       T22.MODEL_TYPE='02'
-      LEFT JOIN DATA_AUTH_NOTIFY_INST T23 ON nvl(party.counter_id,NVL(party2.counter_id, party3.counter_id)) =
+      LEFT JOIN DATA_AUTH_NOTIFY_INST T23 ON nvl(tda.PORTFOLIO_ID ,NVL(party.counter_id,NVL(party2.counter_id, party3.counter_id))) =
       T23.BUSINESS_ID AND T23.Data_Type in( 'MST15','PTL01')
       AND T23.MODEL_TYPE='02' AND T22.INSTITUTION_CODE=T23.INSTITUTION_CODE
       WHERE 1 =1
@@ -6214,7 +6214,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       SELECT 1
       FROM PTL_TRADE PTLTRADE
       WHERE 1 =1
-      AND PTLTRADE.BUSI_NO = investdeal.TRADE_ID
+      AND (case when investdeal.INVEST_VARIETY = '17'
+            then investdeal.TOTLE_TRADE_ID
+            else investdeal.TRADE_ID end) = PTLTRADE.BUSI_NO
       )
       /*可转债交易编号拼接特殊处理 start*/
       OR EXISTS (

@@ -1139,7 +1139,10 @@ public class AllTradeCommonUtil {
         params.put("fileNo", fileNo);
         params.put("createUser", SecurityUtil.getLoginUser().getUserName());
         params.put("seqNo", IDGenerator.generate());
-        trdCommonBaseMapper.insertSelectFileInfoByFileNo(params);
+        //外部交易对手买入卖出交易不会生成交易编号，也不用插入附件信息
+        if(StringUtil.isNotBlank(新交易编号)){
+            trdCommonBaseMapper.insertSelectFileInfoByFileNo(params);
+        }
     }
 
     private static List<PtlCashPositionFlowDto> getPtlCashPositionFlowDto(TrdProductDeal deal,
