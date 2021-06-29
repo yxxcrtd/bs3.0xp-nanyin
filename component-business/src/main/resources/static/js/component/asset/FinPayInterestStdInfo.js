@@ -29,6 +29,11 @@
      * @type {boolean}
      */
     var isEditPayByRepay = false;
+    /**
+     * 是否 点击确认
+     * @type {boolean}
+     */
+    var isClickSure = false;
     var generationPlanTable = [];
     var getElementById = function(id,type) {
         if(type=="div"){
@@ -474,6 +479,7 @@
             row.maxTradeDate = _row ? _row.maxTradeDate : '';
             row.updateFlg = '01';
             isEditPayByRepay = true;
+            isClickSure = true;
         },
         beforeEditCell:function(preVal, field, rowData){
             if(rowData.updateFlg=='02'){
@@ -524,6 +530,7 @@
         	if(value&&column.editOption.type=='date') {
         	    data[field] = value;//lijun modify 修改入库带时分数据
                 isEditPayByRepay = true;
+                isClickSure = true;
         	}
             if(new Date(value).DateDiff('d',data.maxTradeDate)>0){
                 var rowData = {};
@@ -549,6 +556,7 @@
                       generationPlan(true);
                 }
                 isEditPayByRepay = true;
+                isClickSure = true;
             }
             if(field == "vdate"){
                 if(data.LAY_TABLE_INDEX-1<0){
@@ -561,6 +569,7 @@
                          generationPlan(true);
                     }
                     isEditPayByRepay = true;
+                    isClickSure = true;
                 }
             }
         },
@@ -675,6 +684,7 @@
         generationPlanTable.removeRow(data);
         generationPlan(true);
         isEditPayByRepay = true;
+        isClickSure = true;
     });
 
     /**
@@ -910,12 +920,14 @@
                         //callFinRepayment 调用还本计划公开接口方法
                         initGenerationPlan(flag,callFinRepayment);
                         isEditPayByRepay = false;
+                        isClickSure = false;
                     });
                 }else{
                     Joyin.confirm(JoyinUtil.getMessage('BUSS_COM_C_0047'),function(){
                         //callFinRepayment 调用还本计划公开接口方法
                         initGenerationPlan(flag,callFinRepayment);
                         isEditPayByRepay = false;
+                        isClickSure = false;
                     }); 
                 }
             }
@@ -1208,6 +1220,7 @@
     /**
      * 维护付息计划后，是否点击确认
      * 可以通过支付日是否为空判断是否重新计算利息
+     * 添加标志 isClickSure 当修改付息计划时为true,点击确认后为false
      */
     var isSureCheck = function(){
         var list = getAllRows();var msg;
@@ -1218,7 +1231,7 @@
 
         if(list){
             $.each(list,function(index,obj){
-                if (obj.payDate == null || obj.payDate == '' || typeof obj.payDate == 'undefined') {
+                if (obj.payDate == null || obj.payDate == '' || typeof obj.payDate == 'undefined' || isClickSure) {
                     msg = JoyinUtil.getMessage("付息计划已变更,请点击确认,重新计算应计利息!");
                 }
             })
@@ -1457,11 +1470,13 @@
                         Joyin.ajaxJson('/component/asset/BussFinRepayment/check', getPreviewParams(), function(result) {
                             Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0013'),function(){
                                 generationPlan(true);
+                                isClickSure = false;
                             });
                         });
                     }else{
                         Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0013'),function(){
                             generationPlan(true);
+                            isClickSure = false;
                         });
                     }
                 });
