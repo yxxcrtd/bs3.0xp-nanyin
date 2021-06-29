@@ -201,8 +201,8 @@ $(function() {
                 return Joyin.error("请至少选择一条记录");
             }
             for(var i=0;i<rows.length;i++){
-                if(rows[i].status !="有效"){
-                    return Joyin.error("只能删除有效数据，请重新选择");
+                if(rows[i].status =="删除"){
+                    return Joyin.error("只能删除有效、待处理数据，请重新选择");
                 }
             }
             Joyin.ajaxJson('checkDelete', {deleteList:rows}, function(result){

@@ -398,6 +398,7 @@ public class RepFinProductInfoService {
         repProdDeclare.setRepLowYield(bussRepFinProductInfoDto.getRepLowYield());
         repProdDeclare.setRepIsYieldBasis(bussRepFinProductInfoDto.getRepIsYieldBasis());
         repProdDeclare.setRepFiduciaryDuty(bussRepFinProductInfoDto.getRepFiduciaryDuty());
+        repProdDeclare.setIsYllccp(bussRepFinProductInfoDto.getIsYllccp());
         //repProdDeclareMapper.updateByPrimaryKeySelective(repProdDeclare);
         repProdDeclareMapper.updateByRepFinprodInsId(repProdDeclare);
 
