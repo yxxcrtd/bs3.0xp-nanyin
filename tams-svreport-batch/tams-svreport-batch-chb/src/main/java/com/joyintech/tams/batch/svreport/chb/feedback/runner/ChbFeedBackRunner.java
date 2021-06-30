@@ -134,7 +134,12 @@ public class ChbFeedBackRunner extends BatchBaseService {
                     catch (IOException e) {
                         logger.error("当前中债反馈文件" + chbFeedbackFile.getFileName() + e.getMessage(), e);
                         continue;
-                    }finally {
+                    }catch (Exception e) {
+                        //保证本地文件处理异常的情况下，可以继续走DI机，取得最新的中债处理完成的文件进行处理
+                        logger.error("本地未处理文件处理异常：" + chbFeedbackFile.getFileName() + e.getMessage(), e);
+                        continue;
+                    }
+                    finally {
                         if (lock != null) {
                             try {
                                 lock.release();
