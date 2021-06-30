@@ -73,8 +73,24 @@ public class ChbFeedbackFileMatchDetailDto {
     public void setFileRepType(String fileRepType) {
         this.fileRepType = fileRepType;
     }
+    
+    
+    private String fileRepTypeName;
+    
+    private String fileFeedbackResultName;
 
-    public String getFileRepTypeName() {
+    private String regRepStatusName;
+    
+    private String regFeedbackStatusName;
+    
+    private String regDataStatusName;
+
+    public String getFileFeedbackResultName() {
+    	return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, fileFeedbackResult))?
+                SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, fileFeedbackResult):fileFeedbackResult;
+	}
+
+	public String getFileRepTypeName() {
         return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报表名称, fileRepType))?
                 SysDataUtil.getNameFromDataDict(DictCode.报表名称, fileRepType):fileRepType;
     }
@@ -87,12 +103,11 @@ public class ChbFeedbackFileMatchDetailDto {
         this.fileFeedbackResult = fileFeedbackResult;
     }
 
-    public String getFileFeedbackResultName() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, fileFeedbackResult))?
-                SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, fileFeedbackResult):fileFeedbackResult;
-    }
+    
+    
 
-    public String getRegSeqno() {
+
+	public String getRegSeqno() {
         return regSeqno;
     }
 

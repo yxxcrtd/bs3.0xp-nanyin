@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto;
 
 import java.util.List;
+import com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto;
 
 /**
  * 反馈文件匹配明细信息

@@ -2,6 +2,10 @@ package com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto;
 
 import java.util.Date;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+
 public class ChbFeedbackFileMatchDetailDto {
 
     /**
@@ -132,5 +136,37 @@ public class ChbFeedbackFileMatchDetailDto {
 
     public void setFeedbackMsg(String feedbackMsg) {
         this.feedbackMsg = feedbackMsg;
+    }
+    
+    private String fileRepTypeName;
+    
+    private String fileFeedbackResultName;
+
+    private String regRepStatusName;
+    
+    private String regFeedbackStatusName;
+    
+    private String regDataStatusName;
+    
+    public String getFileRepTypeName() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报表名称, fileRepType))?
+                SysDataUtil.getNameFromDataDict(DictCode.报表名称, fileRepType):fileRepType;
+    }
+    
+    public String getFileFeedbackResultName() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, fileFeedbackResult))?
+                SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, fileFeedbackResult):fileFeedbackResult;
+    }
+    public String getRegRepStatusName() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报送状态, regRepStatus))?
+                SysDataUtil.getNameFromDataDict(DictCode.报送状态, regRepStatus):regRepStatus;
+    }
+    public String getRegFeedbackStatusName() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, regFeedbackStatus))?
+                SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, regFeedbackStatus):regFeedbackStatus;
+    }
+    public String getRegDataStatusName() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, regDataStatus))?
+                SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, regDataStatus):regDataStatus;
     }
 }

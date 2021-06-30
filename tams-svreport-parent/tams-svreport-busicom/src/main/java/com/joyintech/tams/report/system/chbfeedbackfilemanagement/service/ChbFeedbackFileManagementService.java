@@ -12,12 +12,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import org.apache.commons.io.FileUtils;
 import org.n3r.idworker.Sid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.JsonUtils;
 import com.joyintech.component.svrreport.chb.contant.DictCodeList;
@@ -27,6 +30,8 @@ import com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto;
 import com.joyintech.component.svrreport.chb.dto.CommonNodeEntity;
 import com.joyintech.component.svrreport.chb.dto.InformationEntity;
 import com.joyintech.component.svrreport.chb.dto.XbrliDownLoadXml;
+import com.joyintech.component.svrreport.chb.feedbackmsg.dto.ChbFeedbackFile;
+import com.joyintech.component.svrreport.chb.feedbackmsg.service.ChbFeedbackMsgService;
 import com.joyintech.component.svrreport.chb.msgsend.service.CnBondSendService;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.exception.BusinessException;
@@ -34,7 +39,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.ChbFeedbackFile;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.system.chbfeedbackfilemanagement.dao.ChbFeedbackFileManagementMapper;
@@ -64,12 +68,15 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
      */
     @Value("${application.chb.diDirectAccessFlg:01}")
     private String diDirectAccessFlg;
+    
+    @Value("${application.chb.download-file-path-movepath:}")
+    private String downloadFilePathMovePath;
 
     /**
      * {@linkplain}
      */
-//    @Autowired
-//    private ChbFeedbackMsgService chbFeedbackMsgService;
+    @Autowired
+    private ChbFeedbackMsgService chbFeedbackMsgService;
 
     /**
      * {@linkplain}
@@ -328,11 +335,42 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
      * @return
      */
     public String backupFile(ChbFeedbackFileManagementDto dto){
-//        chbFeedbackMsgService.updateChbFeedbackFileByNo(dto.getFilePath(), dto.getFileName(), dto.getSendRepMesNo(), dto.getReportEtrType(), dto.getRtnRepMesNo());
+        ChbFeedbackFile backfile = new ChbFeedbackFile();
+        String filePathBak = getDownloadFilePathMovePath();
+        
+        backfile.setFilePath(dto.getFilePath());
+        backfile.setFileName(dto.getFileName());
+        backfile.setSendRepMesNo(dto.getSendRepMesNo());
+        backfile.setRtnRepMesNo(dto.getRtnRepMesNo());
+        backfile.setReportEtrType(dto.getReportEtrType());
+        backfile.setHandleStatus(DictCodeList.中债一二三期文件处理状态_已处理.getValue());
+        backfile.setUpdateTime(DateUtil.now());
+        backfile.setMoveFlag(DictCodeList.是否_中债_是.getValue());
+        backfile.setMovePath(filePathBak);// 迁移后的放置目录
+        
+        chbFeedbackMsgService.updateChbFeedbackFileByNo(backfile);
+        
+        try {
+            FileUtils.moveFileToDirectory(new File(dto.getFilePath() + dto.getFileName()), new File(filePathBak), true);
+            FileUtils.moveFileToDirectory(new File(dto.getFilePath() + dto.getFileName().replace(".zip",".xml")), new File(filePathBak), true);
+        }catch (Exception e){
+            logger.error("反馈文件处理结束文件迁移异常，异常内容：" + e.getMessage());
+            return "反馈文件处理结束文件迁移异常！";
+        }
+
         return "文件迁移成功！";
     }
 
-
+    /**
+     * 获取下载文件解释后的移植路径
+     * @return 下载文件解释后的移植路径
+     */
+    public String getDownloadFilePathMovePath() {
+        if (StrUtil.isEmpty(downloadFilePathMovePath)) {
+            return  System.getProperty("user.home") + File.separator + "chb" +  File.separator + "download" + File.separator + "bak" + File.separator;
+        }
+        return downloadFilePathMovePath;
+    }
 
     /**
      * 文件处理
@@ -344,8 +382,7 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
             logger.error("ChbFeedbackFileManagementService.fileHandle传入参数有误！");
             return resMsg;
         }
-        List<ChbFeedbackFile> chbFeedbackFileList = null;
-//        List<ChbFeedbackFile> chbFeedbackFileList = chbFeedbackMsgService.queryChbFeedbackFileList(dto.getRtnRepMesNo());
+        List<ChbFeedbackFile> chbFeedbackFileList = chbFeedbackMsgService.queryChbFeedbackFileList(dto.getRtnRepMesNo());
         if(StringUtil.isEmptyList(chbFeedbackFileList)){
             logger.error("ChbFeedbackFileManagementService.fileHandle反馈报文编码" + dto.getRtnRepMesNo() + "不存在！");
             return resMsg;
@@ -358,8 +395,7 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
         FileLock lock = null;
         File lockFile = null;
         try{
-        	String fileLockPath = "";
-//            String fileLockPath = chbFeedbackMsgService.getDownloadFilePath() + "lock" + File.separator;
+            String fileLockPath = chbFeedbackMsgService.getDownloadFilePath() + "lock" + File.separator;
             // 查看锁文件是否存在
             File lockPath = new File(fileLockPath);
             if (!lockPath.exists()) {
@@ -388,8 +424,7 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
             // 获取文件名称
             String fileName = asynReportEntity.getDocument().getFileName();
             // 获取文件路径
-            String filePath;
-//            String filePath = chbFeedbackMsgService.getDownloadFilePath();
+            String filePath = chbFeedbackMsgService.getDownloadFilePath();
 
             // 1、插入CHB_INFO_REPORT表
             ChbInfoReportDto chbInfoReportDto = new ChbInfoReportDto();
@@ -441,10 +476,10 @@ public class ChbFeedbackFileManagementService extends BaseService<ChbFeedbackFil
             }
             chbFeedbackFileManagementMapper.mergeInfoChbSubmitStatusTwo(chbSubmitStatusDtos);
             // 3、更新报送登记信息表
-//            chbFeedbackMsgService.updateSubStatus(filePath, fileName, sendRepMesNo, submitType, false);
+            chbFeedbackMsgService.updateSubStatus(filePath, fileName, sendRepMesNo, submitType, false);
             // 4、移动文件、并更新 反馈文件管理表
             ChbFeedbackFileManagementDto chbFeedbackFileManagementDto = new ChbFeedbackFileManagementDto();
-//            chbFeedbackFileManagementDto.setFilePath(filePath);
+            chbFeedbackFileManagementDto.setFilePath(filePath);
             chbFeedbackFileManagementDto.setFileName(fileName);
             chbFeedbackFileManagementDto.setRtnRepMesNo(chbFeedbackFile.getRtnRepMesNo());
             this.backupFile(chbFeedbackFileManagementDto);
