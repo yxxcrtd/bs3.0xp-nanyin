@@ -23,6 +23,7 @@
 			DECODE(A.PORTFOLIO_TYPE ,#{PORTFOLIO_TYPE_XNZH},TO_CHAR(A.MDATE, 'yyyy-MM-dd'),
 				DECODE(fin.MDATE,null,TO_CHAR(A.MDATE, 'yyyy-MM-dd'),TO_CHAR(fin.MDATE, 'yyyy-MM-dd'))) AS MDATE,
 			A.PORTFOLIO_TYPE,
+			A.PORTFOLIO_NAME,
 			A.PROFIT_TYPE
 		FROM PTL_PORTFOLIO A
 		left join fin_product fin
