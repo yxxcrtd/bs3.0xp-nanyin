@@ -77,8 +77,9 @@ public class InvestorsHoldInfoValidator implements BeanValidator{
                     errorList.add(new ValidMessage("所选数据中存在已删除数据！"));
                     break;
                 }
-                if(!StringUtil.equals(item.getStatusCode(),DictCodeListExt1.维护数据状态_有效.getValue())){
-                    errorList.add(new ValidMessage("只能删除有效数据，请重新选择！"));
+                if(!StringUtil.equals(item.getStatusCode(),DictCodeListExt1.维护数据状态_有效.getValue())
+                    &&!StringUtil.equals(item.getStatusCode(),DictCodeListExt1.维护数据状态_待处理.getValue())){
+                    errorList.add(new ValidMessage("只能删除有效、待处理数据，请重新选择！"));
                     break;
                 }
                 if(!StringUtil.equals(baseStatus, item.getStatusCode())){
