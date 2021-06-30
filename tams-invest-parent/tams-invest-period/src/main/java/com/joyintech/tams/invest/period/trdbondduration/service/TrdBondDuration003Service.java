@@ -15,9 +15,11 @@ import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
 import com.joyintech.calculation.shell.param.SecInfoModel;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
@@ -850,5 +852,18 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         return restTemplate.postForObject(
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/findWorkflowProcessDtos", param,
                 ArrayList.class);
+    }
+
+    /**
+     * 资产代码：下拉框
+     *
+     * @param parameters 画面参数
+     * @return 资产代码：下拉框
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getFinprodId(Map<String, Object> parameters) {
+        return restTemplate.postForPage(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/getFinprodId", parameters,
+                SelectOptionDto.class);
     }
 }
