@@ -1,0 +1,1 @@
+update sys_page_element set admin_flag='S'  where PAGE_ID = 'SystemBatchQuartzConfig001' and ELEMENT_ID = 'SystemBatchQuartzConfig001_btn_add';
