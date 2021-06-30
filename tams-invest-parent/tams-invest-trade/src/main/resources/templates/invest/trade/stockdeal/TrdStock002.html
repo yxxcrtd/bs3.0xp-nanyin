@@ -200,8 +200,8 @@
 										   th:text="#{TrdStock002.saleCode}">配售代码</label>
 									<div required class="layui-input-inline input-inline">
 										<input type="text" id="saleCode" name="saleCode"
-											   class="layui-input form-input text-number" disabled="disabled"
-											   placeholder="请输入内容" data-textrange='0'
+											   class="layui-input form-input" disabled="disabled"
+											   placeholder="请输入内容" onKeyUp="value=value.replace(/[^\0-9]/g,'')"
 											   th:placeholder="#{SysCommon.placeholder}" maxlength="100"
 											   th:value="${entity?.saleCode}">
 									</div>
