@@ -220,4 +220,19 @@ public class TrdBondDurationController {
     public List<String> findWorkflowProcessDtos(@RequestBody Map<String, Object> params) {
         return trdBondDurationService.findWorkflowProcessDtos(params);
     }
+
+    /**
+     * 资产代码：下拉框
+     *
+     * @param param 画面参数
+     * @return 资产代码：下拉框
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getFinprodId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        return trdBondDurationService.getFinprodId(page, length, param);
+    }
 }

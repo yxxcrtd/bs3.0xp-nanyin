@@ -279,6 +279,7 @@
 								INNER JOIN (
 								select tpd.trade_id,
                                           tfpb.finprod_id,
+										  tpd.ps,
                                           tpd.sec_manage_acct_id,
                                           tpd.CHL_ID,
                                           tpd.TOTLE_TRADE_ID,
@@ -290,6 +291,7 @@
                                           union all 
                                           select tpd.trade_id,
                                           tpd.finprod_id,
+										  tpd.ps,
                                           tpd.sec_manage_acct_id,
                                           tpd.CHL_ID,
                                           tpd.TOTLE_TRADE_ID,
@@ -308,7 +310,7 @@
 						        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL
                                     ON  t2.TOTLE_TRADE_ID = TOTAL.TOTLE_TRADE_ID
 						        left join FIN_PRODUCT chnl
-						        	on chnl.finprod_id = DECODE( t2.CHL_ID,NULL,TOTAL.CHL_ID, t2.CHL_ID )
+						        	on chnl.finprod_id = DECODE( t2.CHL_ID,NULL,decode(TOTAL.CHL_ID,null,DECODE(t2.ps,'T41',t2.sec_manage_acct_id)), t2.CHL_ID )
 						        	/** and chnl.finprod_type2 = 'F28' **/
 						        	<if test="finprodType2 != null and finprodType2 !=''">
 						         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
@@ -409,6 +411,7 @@
 								INNER JOIN (
 								select tpd.trade_id,
                                           tfpb.finprod_id,
+                                          tpd.ps,
                                           tpd.sec_manage_acct_id,
                                           tpd.CHL_ID,
                                           tpd.TOTLE_TRADE_ID,
@@ -420,6 +423,7 @@
                                           union all 
                                           select tpd.trade_id,
                                           tpd.finprod_id,
+                                          tpd.ps,
                                           tpd.sec_manage_acct_id,
                                           tpd.CHL_ID,
                                           tpd.TOTLE_TRADE_ID,
@@ -440,7 +444,7 @@
 						        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL
                                     ON  t2.TOTLE_TRADE_ID = TOTAL.TOTLE_TRADE_ID
 						        left join FIN_PRODUCT chnl
-						        	on chnl.finprod_id = DECODE( t2.CHL_ID,NULL,TOTAL.CHL_ID, t2.CHL_ID )
+						        	on chnl.finprod_id = DECODE( t2.CHL_ID,NULL,decode(TOTAL.CHL_ID,null,DECODE(t2.ps,'T41',t2.sec_manage_acct_id)), t2.CHL_ID )
 						        	/** and chnl.finprod_type2 = 'F28' **/
 						        	<if test="finprodType2 != null and finprodType2 !=''">
 						         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
@@ -554,6 +558,7 @@
 								   INNER JOIN (
 								select tpd.trade_id,
                                           tfpb.finprod_id,
+										  tpd.ps,
                                           tpd.sec_manage_acct_id,
                                           tpd.CHL_ID,
                                           tpd.TOTLE_TRADE_ID,
@@ -565,6 +570,7 @@
                                           union all 
                                           select tpd.trade_id,
                                           tpd.finprod_id,
+                                          tpd.ps,
                                           tpd.sec_manage_acct_id,
                                           tpd.CHL_ID,
                                           tpd.TOTLE_TRADE_ID,
@@ -582,7 +588,7 @@
 						        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL
                                     ON  t2.TOTLE_TRADE_ID = TOTAL.TOTLE_TRADE_ID
 						        left join FIN_PRODUCT chnl
-						        	on chnl.finprod_id = DECODE( t2.CHL_ID,NULL,TOTAL.CHL_ID, t2.CHL_ID )
+						        	on chnl.finprod_id = DECODE( t2.CHL_ID,NULL,decode(TOTAL.CHL_ID,null,DECODE(t2.ps,'T41',t2.sec_manage_acct_id)), t2.CHL_ID )
 								   		/** and chnl.finprod_type2 = 'F28' **/
 								    	<if test="finprodType2 != null and finprodType2 !=''">
 							         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
@@ -628,6 +634,7 @@
 								   INNER JOIN (
 								select tpd.trade_id,
                                           tfpb.finprod_id,
+                                          tpd.ps,
                                           tpd.sec_manage_acct_id,
                                           tpd.CHL_ID,
                                           tpd.TOTLE_TRADE_ID,
@@ -639,6 +646,7 @@
                                           union all 
                                           select tpd.trade_id,
                                           tpd.finprod_id,
+                                          tpd.ps,
                                           tpd.sec_manage_acct_id,
                                           tpd.CHL_ID,
                                           tpd.TOTLE_TRADE_ID,
@@ -656,7 +664,7 @@
 						        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TOTAL
                                     ON  t2.TOTLE_TRADE_ID = TOTAL.TOTLE_TRADE_ID
 						        left join FIN_PRODUCT chnl
-						        	on chnl.finprod_id = DECODE( t2.CHL_ID,NULL,TOTAL.CHL_ID, t2.CHL_ID )
+						        	on chnl.finprod_id = DECODE( t2.CHL_ID,NULL,decode(TOTAL.CHL_ID,null,DECODE(t2.ps,'T41',t2.sec_manage_acct_id)), t2.CHL_ID )
 								   		/** and chnl.finprod_type2 = 'F28' **/
 								    	<if test="finprodType2 != null and finprodType2 !=''">
 							         		and chnl.finprod_type2 = #{finprodType2,jdbcType=VARCHAR}
