@@ -122,6 +122,9 @@ public class TrdBondInvestTrade003Controller extends BaseController {
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdBondInvestTrade002Service.getBussinessEntityByWorkflowId(
                 workflowId);
+            if (dto.getTotalFaceValue() != null) {
+                dto.setTradeAmt(dto.getTotalFaceValue());
+            }
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             model.addAttribute("workflowId",workflowId);
         }
