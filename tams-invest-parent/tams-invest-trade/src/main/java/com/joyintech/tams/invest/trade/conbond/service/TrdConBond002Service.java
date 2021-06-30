@@ -1074,9 +1074,6 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 
         }
         //        调用接口  add by zhangpuyu 2019/12/6 end
-        if (StringUtil.isNotEmpty(operationType)) {
-            throw new RuntimeException("cs by jp");
-        }
     }
     
     /**
