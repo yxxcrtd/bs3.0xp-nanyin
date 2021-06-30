@@ -220,7 +220,7 @@
                                     <label class="layui-form-label form-lable" data-th-text="#{EtrStock001.saleCode}">配售代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="saleCode" name="saleCode" placeholder="请输入内容" data-pattern="" required="required"
-                                               class="layui-input form-input" onKeyUp="value=value.replace(/[^\0-9]/g,'')" data-th-value="${entity?.saleCode}"/>
+                                               class="layui-input form-input" onkeyup="(this.v=function(){this.value=this.value.replace(/[^\d]/g,'');}).call(this)" data-th-value="${entity?.saleCode}"/>
                                     </div>
                                 </div>
                             </div>
