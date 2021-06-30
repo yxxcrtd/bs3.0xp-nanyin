@@ -166,6 +166,13 @@ $(function() {
 			if ($('#InvestFeePay002_hidden_operateType').val() === 'new'){
 				secAcctIdFeeTypeChangeAction();
 			}
+			if(feeType == '08'){
+                $("#InvestFeePay002_actPayAmt").val('').trigger('change');
+                $("#InvestFeePay002_actPayAmt").prop("disabled", true);
+			}else{
+			    $("#InvestFeePay002_actPayAmt").val('').trigger('change');
+                $("#InvestFeePay002_actPayAmt").prop("disabled", false);
+			}
 		}else{
 			$('#InvestFeePay002_hidden_feeType').val('');
 		}
