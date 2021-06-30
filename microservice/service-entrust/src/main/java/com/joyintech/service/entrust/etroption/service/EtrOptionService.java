@@ -10,48 +10,41 @@
  
 package com.joyintech.service.entrust.etroption.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.service.entrust.etroption.dao.EtrOptionMapper;
-import com.joyintech.service.entrust.etroption.dto.EtrOptionDto;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
-import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
-import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
-import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
-import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.tams.common.base.entity.EtrDistribute;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
-import com.joyintech.service.entrust.etrlendspecinfo.dao.EtrLendSpecInfoMapper;
-import com.joyintech.service.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
+import com.joyintech.service.entrust.etroption.dao.EtrOptionMapper;
+import com.joyintech.service.entrust.etroption.dto.EtrOptionDto;
+import com.joyintech.tams.common.base.entity.EtrDistribute;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
+import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 期权投资委托微服务service
@@ -377,9 +370,9 @@ public class EtrOptionService extends BaseService<EtrOptionDto> {
             entrustCommonDto.setEtrEntrust(etrEntrust);
             entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
         }
-        if (baseEtrCashPositionCommService != null) {
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if (baseEtrCashPositionCommService != null) {
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
 //    /**
 //     * 组合可用现金查询
@@ -451,17 +444,74 @@ public class EtrOptionService extends BaseService<EtrOptionDto> {
      * 流程启动时为附件绑定工作流代码
      * <功能详细描述>
      * @param dto
-     * @param operateType
      * @see
      * @since 1.0
      */
-    public void doInsert(EtrOptionDto dto, String operateType) {
-      //上传文件修改更新
+    public void doInsert(EtrOptionDto dto) {
+        //上传文件修改更新
         MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
         mstFileInputParameter.setBussinessId(dto.getWorkflowId());
         mstFileInputParameter.setFileList(dto.getFileArray());
         if(mstFileCommonService != null){
             mstFileCommonService.updateBusinessId(mstFileInputParameter);
+        }
+
+        if (baseEtrCashPositionCommService != null && "submit".equals(dto.getOperateType())) {
+            entrustStartExecute(dto);
+        }
+    }
+
+    public void doUpdate(EtrOptionDto dto) {
+        //上传文件修改更新
+        MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
+        mstFileInputParameter.setBussinessId(dto.getWorkflowId());
+        mstFileInputParameter.setFileList(dto.getFileArray());
+        if(mstFileCommonService != null){
+            mstFileCommonService.updateBusinessId(mstFileInputParameter);
+        }
+
+        if (baseEtrCashPositionCommService != null) {
+            if (!StringUtil.equals("revoke", dto.getOperateType()) 
+                    && !StringUtil.equals("delete", dto.getOperateType())) {
+                entrustStartExecute(dto);
+            }
+        }
+    }
+
+    public void doBack(EtrOptionDto dto) {
+        if (baseEtrCashPositionCommService != null) {
+            baseEtrCashPositionCommService.entrustCloseExecute(dto.getEntrustId());
+        }
+    }
+    
+    /**
+     * 持仓相关
+     * @param dto
+     */
+    private void entrustStartExecute(EtrOptionDto dto) {
+        try {
+            // etrEntrust、etrEntrustAdd数据初始化
+            EtrEntrust etrEntrust = new EtrEntrust();
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+            etrEntrust.setFinprodType2(DictCodeListExt3.金融产品类型_期权.getValue());
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            etrEntrustAdd.setBusiPs(dto.getPs());
+            etrEntrustAdd.setVdate(dto.getVdateAdd());
+            etrEntrustAdd.setMdate(dto.getMdateAdd());
+            etrEntrustAdd.setAssetType(DictCodeListExt3.平安资产类型_期权.getValue());
+            try {etrEntrustAdd.setOptFeePayType2((Double.parseDouble(dto.getOptFeePayType2()) / 100) + "");} catch (Exception e) {}
+
+            entrustCommonDto.setEtrEntrust(etrEntrust);
+            entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+            
+            // 持仓相关数据初始化与持久化
+            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("对象转换赋值失败", e);
         }
     }
 }

@@ -249,13 +249,13 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
     */
     @Override
     public void doInsert(EtrOptionDto dto, OperationType type){
-        if ("submit".equals(dto.getOperateType())) {
-            doInsertFlow(dto);
-        }
-        dto.setOperateType(type.toString());
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doInsert",dto,
                 Integer.class);
+        
+        if ("submit".equals(dto.getOperateType())) {
+            doInsertFlow(dto);
+        }
     }
 
     /**
@@ -264,13 +264,21 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
      */
     @Override
     public void doUpdate(EtrOptionDto dto){
-        restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doInsert",dto,
-                Integer.class);
+        boolean flag = restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doUpdate",dto,
+                Boolean.class);
         
-        if (!StringUtil.equals("revoke", dto.getOperateType()) && !StringUtil.equals("delete", dto.getOperateType())) {
+        if (!flag){
+            return;
+        }
+        
+        if (!StringUtil.equals("revoke", dto.getOperateType()) 
+                && !StringUtil.equals("delete", dto.getOperateType())) {
             
-            if(doDeleteFlow(dto.getWorkflowId()) && doInsertFlow(dto)){
+            // 执行通用方法删除并重新插入流程指令数据
+            boolean isSuccess = doDeleteFlow(dto.getWorkflowId()) && doInsertFlow(dto);
+            
+            if(isSuccess){
                 ProcessMark newEntity;
                 try {
                     newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrOptionDto.class, true);
@@ -280,12 +288,18 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
                     // 操作留痕表
                     WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
                 } catch (Exception e){
-                    throw new RuntimeException("流程处理发生异常", e);
+                    throw new RuntimeException("数据留痕失败", e);
                 }
-                
             }
         }
     }
+
+    @Override
+    public void doBack(EtrOptionDto dto) {
+        restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doBack",dto,
+                Boolean.class);
+    }
+
     /**
      *
      * 流程作废时调用
