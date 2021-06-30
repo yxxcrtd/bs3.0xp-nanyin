@@ -234,7 +234,9 @@
 		WHERE
 			TO_DATE(TO_CHAR(CHB_INVESTHOLD_INFO_SUB_SUM.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 			AND ((CP.ISSUING_STATUS != #{issuingSuccess,jdbcType=VARCHAR} OR CP.ISSUING_STATUS IS NULL)
-				OR  (END_SUB.MDATE IS NOT NULL AND END_SUB.MDATE &lt; CHB_INVESTHOLD_INFO_SUB_SUM.HOLD_DATE))
+				OR  (END_SUB.MDATE IS NOT NULL AND END_SUB.MDATE &lt; CHB_INVESTHOLD_INFO_SUB_SUM.HOLD_DATE)
+				OR not exists (select 1 from chb_prd_issue_sub s where s.prod_id=CP.PROD_ID
+				and s.send_status in ('02','03') and s.submit_feedback_status = '03'))
 		GROUP BY
 			CPC.REG_CODE,
 			END_SUB.MDATE,
@@ -261,7 +263,9 @@
 			TO_DATE(TO_CHAR(CHB_INVESTHOLD_INFO_SUB_SUM.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 		<if test="queryErrFlag != null and queryErrFlag == '01'">
 			AND ((CP.ISSUING_STATUS != #{issuingSuccess,jdbcType=VARCHAR} OR CP.ISSUING_STATUS IS NULL)
-				OR  (END_SUB.MDATE IS NOT NULL AND END_SUB.MDATE &lt; CHB_INVESTHOLD_INFO_SUB_SUM.HOLD_DATE))
+				OR  (END_SUB.MDATE IS NOT NULL AND END_SUB.MDATE &lt; CHB_INVESTHOLD_INFO_SUB_SUM.HOLD_DATE)
+				OR not exists (select 1 from chb_prd_issue_sub s where s.prod_id=CP.PROD_ID
+				and s.send_status in ('02','03') and s.submit_feedback_status = '03'))
 		</if>
 	</select>
 
