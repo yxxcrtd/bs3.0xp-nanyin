@@ -446,4 +446,10 @@
 		WHERE FP.FINPROD_ID = #{finprodId}
 		AND FPA.APPEAR_MARKET_ID IS NOT NULL
 	</select>
+
+    <select id = "getInfBondName" resultType="java.lang.String">
+		SELECT SECFULLNAME
+		FROM INTERF_PAYHSRCSECINFO IP
+		WHERE IP.SECID = #{secId}
+	</select>
 </mapper>
