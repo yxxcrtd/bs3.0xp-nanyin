@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +75,12 @@ public class EtrIRSService extends BaseService<EtrIRSDto> {
     @Autowired(required = false)
     private MstFileCommonService mstFileCommonService;
 
+    /**
+     * 投资委托 基础组件
+     */
+    @Autowired
+    private BaseEtrInvestInfoService baseEtrInvestInfoServiceImpl;
+    
     /**
      * 组合可用现金和实际现金查询更新组件
      */
@@ -469,5 +476,59 @@ public class EtrIRSService extends BaseService<EtrIRSDto> {
             mstFileCommonService.updateBusinessId(mstFileInputParameter);
         }
         // 是否需要插入业务流程表
+    }
+
+    /**
+     * 为了查询IsOutTrade，此处引用共通投资方法保存指令流水数据
+     * @param dto
+     */
+    public void newDelegateFlow(EtrIRSDto dto) {
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // EtrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            etrEntrust.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
+            etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+            etrEntrust.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_利率互换.getValue());
+            etrEntrust.setPs(DictCodeList.交易方向_买入.getValue());
+            //设置金额 数量  乘以一万
+            etrEntrust.setEntrustAmt(dto.getEntrustAmt().multiply(new BigDecimal(10000)));
+            etrEntrust.setEntrustNum(dto.getEntrustAmt().multiply(new BigDecimal(10000)));
+            entity.setEtrEntrust(etrEntrust);
+
+            // EtrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            if(StringUtil.isNotEmpty(dto.getDueDate())){
+                List<String> DueDateList = StringUtil.splitToList(" ", dto.getDueDate());
+                etrEntrustAdd.setMdate(DateUtil.parse(DueDateList.get(0)));
+                etrEntrustAdd.setMdate2(DateUtil.parse(DueDateList.get(2)));
+            }else{
+                //置空etrentrustadd mdate属性
+                etrEntrustAdd.setMdate(null);
+            }
+            etrEntrustAdd.setAssetType(DictCodeListExt2.平安资产类型_利率互换.getValue());
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 附件 MstFileInputParameter
+            MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
+            mstFileInputParameter.setFileList(dto.getFileArray());
+            mstFileInputParameter.setBussinessId(dto.getEntrustId());
+            entity.setMstFileInputParameter(mstFileInputParameter);
+
+            // WorkflowId
+            entity.setWorkFlowId(dto.getWorkflowId());
+
+            if(baseEtrInvestInfoServiceImpl != null){
+                baseEtrInvestInfoServiceImpl.newDelegateFlow(entity);
+            }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+
     }
 }

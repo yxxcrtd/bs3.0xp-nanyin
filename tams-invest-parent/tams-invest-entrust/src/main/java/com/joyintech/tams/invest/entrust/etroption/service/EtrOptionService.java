@@ -119,7 +119,6 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
     /**
      * 查询页面组合代码联想文本框 <功能详细描述>
      *
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -147,7 +146,6 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
     /**
      * 新建页面组合代码联想下拉框 <功能详细描述>
      *
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -163,7 +161,6 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
     /**
      * 新建页面组合代码联想下拉框 <功能详细描述>
      *
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -383,7 +380,6 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
      *
      * 查询授权额度
      * <功能详细描述>
-     * @param map
      * @return
      * @see
      * @since 1.0
