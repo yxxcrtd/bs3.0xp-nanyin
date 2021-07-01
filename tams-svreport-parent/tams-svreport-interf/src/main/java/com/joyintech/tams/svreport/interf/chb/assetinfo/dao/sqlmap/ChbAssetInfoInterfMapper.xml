@@ -2555,6 +2555,8 @@
         on nvl(info.ISSUER,info.financier)=customerinfo.CUSTOMER_ID
         left join rep_asset_other assetother
         on assetother.rep_finprod_id=detail.REP_FINPROD_ID
+        left join FIN_PRODUCT_ADD fpd
+        on detail.SEC_ID = fpd.appear_market_id
         <!--获取主体评级 -->
         left join(
         select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
@@ -2570,8 +2572,9 @@
             ${getProductRatingOrderSqlByZt}
         </if>
         )t where t.rk = '1'
-        )bestRatingZt on bestRatingZt.OCODE = NVL(info.ISSUER, info.FINANCIER)
+        )bestRatingZt on (bestRatingZt.OCODE = info.ISSUER or (bestRatingZt.OCODE=info.finprod_market_id and info.finprod_type2='F18'))/*项目类理财直融评价接入不了问题修改 add by zhangweiqi20210512*/
         WHERE 1 =1
+        and fpd.finprod_id is null
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
         /*根据创建时间、更新时间和接口接入时间接入数据*/
@@ -3915,9 +3918,12 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
+        left join FIN_PRODUCT_ADD fpd
+        on detail.rep_shares_id = fpd.appear_market_id
         WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
+        and fpd.finprod_id is null
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -5142,8 +5148,8 @@
         asset.REP_ASSET_TYPE ASSET_TYPE2,
         asset.REP_CCY CCY,
         asset.REP_TRADE_MARKET TRADE_MARKET,
-        null VDATE,
-        null MDATE,
+        DETAIL.REP_SET_DATE VDATE,
+        nvl(DETAIL.REP_END_DATE,date'2099-12-31') MDATE,
         null DISCOUNT_YIELD,
         null ASSET_YIELD,
         null BASIS,
@@ -7795,6 +7801,8 @@
         on info.ISSUER=customerinfo.CUSTOMER_ID
         left join REP_ASSET_OTHER ASSETOTHER
         on ASSETOTHER.REP_FINPROD_ID=info.FINPROD_ID
+        left join FIN_PRODUCT_ADD fpd
+        on detail.SEC_ID = fpd.appear_market_id
         <!--获取主体评级 -->
         left join(
         select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
@@ -7814,6 +7822,7 @@
         WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
+        and fpd.finprod_id is null
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -8810,9 +8819,12 @@
         on info.FINANCIER=customerinfo.CUSTOMER_ID
         left join REP_ASSET_OTHER ASSETOTHER
         on ASSETOTHER.REP_FINPROD_ID=info.FINPROD_ID
+        left join FIN_PRODUCT_ADD fpd
+        on detail.rep_shares_id = fpd.appear_market_id
         WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
+        and fpd.finprod_id is null
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -12393,7 +12405,7 @@
             CII.GOVERN_INVEST_FUND = TEMP.GOVERN_INVEST_FUND,
             CII.FUND_ENPE_NAME = TEMP.FUND_ENPE_NAME,
             CII.TRUSTEE = TEMP.TRUSTEE,
-            CII.STATUS = decode(TEMP.STATUS,'E','M','D'),
+            CII.STATUS = decode(TEMP.STATUS,'N','M','E','M','D'),
             CII.CREATE_USER = TEMP.CREATE_USER,
             /*CII.CREATE_TIME = TEMP.CREATE_TIME,*/
             CII.UPDATE_USER = TEMP.UPDATE_USER,
@@ -14881,7 +14893,8 @@
         decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
         CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
-        NULL IS_FBZB
+        NULL IS_FBZB,
+        DETAIL.REP_FINANCIAL_COMISSUE FINANCIAL_COMISSUE
 
         FROM REP_ASSET_MNG_PLAN DETAIL
         left JOIN REP_ASSET_DEPT ASSET

@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -110,6 +112,12 @@ public class TrdBondDuration003ProcessDto extends TrdBondExerciseProcessDto impl
         return super.getBussTrdTransferOrder();
     }
 
+    /**
+     * 单位面值，债券100或者当前面值，其他资产1
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal parValue;
+
     @Override
     @NotEmpty(fieldName = "金额明细信息", groups = {ValidateGroupEdit.class})
     public List<TrdBondPtlSecExerciseInfo> getTrdBondPtlSecExerciseInfos() {
@@ -132,5 +140,21 @@ public class TrdBondDuration003ProcessDto extends TrdBondExerciseProcessDto impl
      */
     public void setUploadFileList(List<UploadFile> uploadFileList) {
         this.uploadFileList = uploadFileList;
+    }
+
+    /**
+     * 取得 单位面值，债券100或者当前面值，其他资产1
+     * @return 单位面值，债券100或者当前面值，其他资产1
+     */
+    public BigDecimal getParValue() {
+        return parValue;
+    }
+
+    /**
+     * 设置 单位面值，债券100或者当前面值，其他资产1
+     * @param parValue 单位面值，债券100或者当前面值，其他资产1
+     */
+    public void setParValue(BigDecimal parValue) {
+        this.parValue = parValue;
     }
 }

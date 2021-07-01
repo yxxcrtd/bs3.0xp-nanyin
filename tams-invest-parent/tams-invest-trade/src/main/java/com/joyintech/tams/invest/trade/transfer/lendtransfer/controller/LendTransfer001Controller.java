@@ -15,6 +15,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.lendtransfer.dto.LendTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.lendtransfer.dto.LendTransfer002Dto;
 import com.joyintech.tams.invest.trade.transfer.lendtransfer.service.LendTransfer001Service;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +64,8 @@ public class LendTransfer001Controller extends BaseController {
     @Autowired(required=false)
     private BaseGetBusinessId baseGetBusinessId;
 
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -235,7 +239,26 @@ public class LendTransfer001Controller extends BaseController {
 			wr.setMessage("转仓列表信息不能空", MessageType.错误消息);
 			return wr;
 		}
-
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (LendTransfer002Dto ptl : dto.getLendTransfer002DtoList()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    if (!StringUtil.equals(str, "")) {
+                        str += "</br>";
+                    }
+                    str += "交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！";
+                }
+            }
+            if(StringUtil.isNotEmpty(str)){
+                wr.setMessage(str, MessageType.错误消息);
+                return wr;
+            }
+        }
 		StringBuilder tips = new StringBuilder();
 		for (LendTransfer002Dto item : dto.getLendTransfer002DtoList()) {
 			BigDecimal tradeAmt = item.getTradeAmt() == null ? BigDecimal.ZERO : item.getTradeAmt();

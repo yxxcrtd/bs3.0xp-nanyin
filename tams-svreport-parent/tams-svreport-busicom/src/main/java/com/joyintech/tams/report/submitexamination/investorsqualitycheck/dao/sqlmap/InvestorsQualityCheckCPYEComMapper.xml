@@ -81,10 +81,9 @@
 						tmp1.PRD_QTY,
 						tmp1.TOTAL_AMT,
 						tmp1.RAISE_QTY,						
-						CASE WHEN C.STATUS = '03' THEN 0 ELSE C.CNY_AMT END CNY_AMT,						
-						CASE WHEN C.STATUS = '03' THEN 0 ELSE C.QTY END QTY,
-						D.REG_CODE,
-						ROW_NUMBER() over( partition by tmp1.PROD_ID, tmp1.MDATE, C.INDENTIFY_MARK ORDER BY C.UPDATE_TIME DESC )  AS hodeStsNo
+						C.CNY_AMT CNY_AMT,						
+						C.QTY QTY,
+						D.REG_CODE
 					FROM(
 							SELECT
 								PROD_ID,
@@ -110,12 +109,11 @@
 						) tmp1
 						LEFT JOIN CHB_PRDRESIST_CODE D
 							ON tmp1.PROD_ID = D.PRODID
-						LEFT JOIN CHB_INVESTHOLD_INFO_SUB C
+						LEFT JOIN CHB_INVESTHOLD_INFO_SUB_SUM C
 							ON tmp1.PROD_ID = C.PRODID								
 					 WHERE 	
 						TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')	
-				)				
-			WHERE 	hodeStsNo = 1
+				)
 			GROUP BY 
 				PROD_ID,
 				REG_CODE,

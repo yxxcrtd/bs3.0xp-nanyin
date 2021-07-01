@@ -21,6 +21,7 @@
                         <input type="hidden" id="finmdate" name="finmdate" >
                         <input type="hidden" id="isRight" name="isRight" >
                         <input type="hidden" id="profitType" name="profitType" >
+                        <input type="hidden" id="pageId" name="pageId" th:value="${pageId}" />
                         <div class="pro-module-item">
                             <div class="layui-form-item">
                                 <div class="form-inline-wrap">
@@ -72,6 +73,7 @@
                                                 class="layui-input form-input input-select" allowClear="true"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                                 required="required" data-formatoption="true"
+                                                parentIds="pageId,tradeMarketMode"
                                                 data-th-data-url="@{/invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getfinprodIdForAdd}"
                                                 data-th-initvalue="${entity?.finprodMarketId}">
                                         </select>
@@ -334,7 +336,7 @@
                                            data-th-text="#{EtrInvestBondInfo002.fpriceAmt}">全价</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="fpriceAmt" name="fpriceAmt" placeholder="请输入内容"
-                                               data-pattern="" data-fixtype="2" data-textrange='4'
+                                               data-pattern="" data-fixtype="2" data-textrange='8'
                                                class="layui-input form-input text-number" disabled="disabled"
                                                data-th-value="${entity?.unitFprice}">
                                         <span class="input-right-show">元</span>
@@ -397,7 +399,7 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{TrdBondInvestTrade002.secManageAcctId}">证券托管户</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="secManageAcctId" name="secAcctId" parentIds="portfolioId,tradeMarket"
+                                        <select type="text" id="secManageAcctId" name="secAcctId" parentIds="portfolioId,tradeMarket,finprodName"
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId}"
                                                 allowClear="true" th:initValue="${entity?.secAcctId}"></select>

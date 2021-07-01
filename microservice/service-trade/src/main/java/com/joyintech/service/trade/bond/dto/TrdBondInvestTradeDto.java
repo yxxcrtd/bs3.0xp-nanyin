@@ -262,6 +262,11 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
      * 金融产品交易附属业务流程表
      */
     private WflTrdProductDealAdd wflTrdProductDealAdd;
+    
+    /**
+     * 交易所资金账户可用现金
+     */
+    private BigDecimal tradeMarketCash;
 
     public WflTrdProductDealAdd getWflTrdProductDealAdd() {
         return wflTrdProductDealAdd;
@@ -980,4 +985,12 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
     public void setIntegrateCpriceAmt(BigDecimal integrateCpriceAmt) {
         this.integrateCpriceAmt = integrateCpriceAmt;
     }
+
+	public BigDecimal getTradeMarketCash() {
+		return tradeMarketCash;
+	}
+
+	public void setTradeMarketCash(BigDecimal tradeMarketCash) {
+		this.tradeMarketCash = tradeMarketCash;
+	}
 }

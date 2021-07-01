@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResult;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +88,9 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 	public static final String BATCH_UNISTART = "999999";
 
 	public static final String BATCH_UNISTART_WITHOUT_DATECHANGE = "999998";
+
+	public static final String  BATCHGRP_UNISTART = "unistart";
+
 	/**
 	 * 日志
 	 */
@@ -293,8 +297,10 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		if (doBatchDispatch) {
 			dates.add(start);
 		} else {
-			for (Date date = start; !date.after(end); date = DateUtil.addDay(date, 1)) {
-				dates.add(date);
+			if (start != null){
+				for (Date date = start; !date.after(end); date = DateUtil.addDay(date, 1)) {
+					dates.add(date);
+				}
 			}
 		}
 		for (Date exeDate : dates) {
@@ -449,4 +455,53 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		}
 	}
 
+	public String checkPrebatchResult() {
+		String result = "";
+
+		String selectedBatchGroup = RequestUtil.getParam("selectedBatchGroup");
+		String selectedProductGroup = RequestUtil.getParam("selectedProductGroup");
+		String startDate = RequestUtil.getParam("startDate");
+		String endDate = RequestUtil.getParam("endDate");
+		String batchGroupType = RequestUtil.getParam("batchGroupType");
+
+		// 选择 的是 任务组  并且包含 统一批处理 并且没选产品组 没选产品
+		if (GlobalConstant.BATCH_EXECUTE_TYPE_GROUP.equals(batchGroupType) && StringUtil.isEmpty(selectedProductGroup)) {
+
+			//包含 统一批处理
+			if( StringUtil.isNotEmpty(selectedBatchGroup) &&   StringUtil.contains(selectedBatchGroup,BATCHGRP_UNISTART)){
+
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date start = null;
+				Date end = null;
+				try {
+					start = StringUtils.isEmpty(startDate) ? null : format.parse(startDate);
+					end = StringUtils.isEmpty(endDate) ? null : format.parse(endDate);
+				} catch (ParseException e) {
+					logger.error("转换日期异常---", e);
+				}
+				Map<String, Object> param = new HashMap<>();
+				param.put("startDate", start);
+				param.put("endDate", end);
+
+				if(MultilevelDataAuthorityUtil.isEnabled()){
+
+//					List<String> listCodes = MultilevelDataAuthorityUtil.getSelfAndChildrenOrgCode(MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+					List<String> listCodes = new ArrayList<>();
+					String  myinstCode = MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+					if(StringUtil.isNotEmpty(myinstCode)) {
+						listCodes.add(myinstCode);
+					}
+					param.put("instCodes",listCodes);
+
+				}
+				List<SysPrebatchResult>  results = valBatchStart001Mapper.selectErrorPrebatchResults(param);
+				if(!StringUtil.isEmptyList(results)){
+					return "批前检查有卡批项未检查通过,请处理后再执行【批前检查】";
+				}
+
+			}
+
+		}
+		return result;
+	}
 }

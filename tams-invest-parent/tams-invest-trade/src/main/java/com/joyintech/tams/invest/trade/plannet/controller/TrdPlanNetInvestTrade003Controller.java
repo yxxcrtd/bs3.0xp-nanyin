@@ -342,6 +342,7 @@ public class TrdPlanNetInvestTrade003Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
+        model.addAttribute("formTodoList", !WorkFlowUtil.isNotFromToDoList());
         return super.init(model);
     }
 
@@ -383,7 +384,7 @@ public class TrdPlanNetInvestTrade003Controller extends BaseController {
         if (!isAuthorizationSoftcontrol) {
             if (authorizationvalid(dto)){
                 ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                errorList.add(new ValidMessage(getMessage("TRD_E_0016", "副总裁/总裁助理")));
+                errorList.add(new ValidMessage(getMessage("TRD_E_0016", "领导")));
                 ar.setErrorList(errorList);
             }
         }
@@ -417,7 +418,7 @@ public class TrdPlanNetInvestTrade003Controller extends BaseController {
         boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
         if (isAuthorizationSoftcontrol) {
             if (authorizationvalid(dto)){
-                JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
+                JoyinMessage ms = new JoyinMessage("交易本金金额超过领导授权额度，是否确认提交!", MessageType.确认消息);
                 joyinMessages.add(ms);
                 wr.setJoyinMessages(joyinMessages);
             } 

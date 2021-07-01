@@ -6,10 +6,9 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -30,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -207,14 +207,45 @@ public class TrdSecOverdueDuration001Controller  extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
             throws Exception {
-        String pageId = "";
-        Map<String, Object> parameters = RequestUtil.getParameters(getRequest());
-        if(StringUtil.equals(parameters.get("exportType").toString(), DictCodeList.是否_是.getValue())){//已结清
-            pageId = "TrdSecOverdueDuration001";
-        }else{
-            pageId = "TrdSecOverdueDuration010";
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            String pageId = "";
+            Map<String, Object> parameters = RequestUtil.getParameters(getRequest());
+            if (StringUtil.equals(parameters.get("exportType").toString(), DictCodeList.是否_是.getValue())) {//已结清
+                pageId = "TrdSecOverdueDuration001";
+            } else {
+                pageId = "TrdSecOverdueDuration010";
+            }
+            return trdSecOverdueDurationService.export(pageId, parameters);
         }
-        return trdSecOverdueDurationService.export(pageId, parameters);
+
+        if (StringUtil.equals(this.getParam("exportType"), DictCodeList.是否_是.getValue())) {
+            List<TrdSecOverdueDuration001Dto> param1 = JsonUtils.json2List(datas, TrdSecOverdueDuration001Dto.class);
+            File outFile = trdSecOverdueDurationService.makeFile(
+                    "/com/joyintech/tams/invest/period/trdsecoverdueduration/config/export_conf_yes.xml",
+                    param1);
+            return ExportUtil.export(
+                    "已到期资产已结清" + SystemGlobalConstant.OPEN_PARENTHESIS
+                            + DateUtil.format(DateUtil.platDateFromCache())
+                            + SystemGlobalConstant.CLOSE_PARENTHESIS
+                            + SystemGlobalConstant.POINT
+                            + FileNameUtil.getFileExtName(outFile),
+                    outFile, true);
+        }else{
+            List<TrdSecOverdueDuration001Dto> param1 = JsonUtils.json2List(datas, TrdSecOverdueDuration001Dto.class);
+            File outFile = trdSecOverdueDurationService.makeFile(
+                    "/com/joyintech/tams/invest/period/trdsecoverdueduration/config/export_conf_no.xml",
+                    param1);
+            return ExportUtil.export(
+                    "已到期资产未结清" + SystemGlobalConstant.OPEN_PARENTHESIS
+                            + DateUtil.format(DateUtil.platDateFromCache())
+                            + SystemGlobalConstant.CLOSE_PARENTHESIS
+                            + SystemGlobalConstant.POINT
+                            + FileNameUtil.getFileExtName(outFile),
+                    outFile, true);
+
+        }
+
     }
 
     @ResponseBody

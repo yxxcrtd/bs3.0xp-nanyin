@@ -1202,6 +1202,18 @@ public Integer getRepFinprodStageC() {
 	public void setIsYllccp(String isYllccp) {
 		this.isYllccp = isYllccp;
 	}
-    
+    /**
+     * add by jiangpeng on 20210401
+     * 是否是产品编辑 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+     */
+    private boolean isProductEdit = false;
+
+    public boolean isProductEdit() {
+        return isProductEdit;
+    }
+
+    public void setProductEdit(boolean productEdit) {
+        isProductEdit = productEdit;
+    }
 	
 }

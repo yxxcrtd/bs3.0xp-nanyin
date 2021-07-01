@@ -21,13 +21,17 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="IS_PAY_WITH_TRADE" property="isPayWithTrade" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET_MODE" property="tradeMarketMode" jdbcType="VARCHAR" />
+        <result column="WINDTYPEONE" property="windtypeone" jdbcType="VARCHAR" />
+        <result column="WINDTYPETWO" property="windtypetwo" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQ_NO SEQ_NO, TRADE_MARKET TRADE_MARKET, FEE_TYPE FEE_TYPE, REGIST_ORG REGIST_ORG, 
         TRADE_TYPE TRADE_TYPE, PS PS, TERM_TYPE TERM_TYPE, SEC_ACCT_ID SEC_ACCT_ID, CHARGE_TYPE CHARGE_TYPE, 
         CHARGE_BASIS CHARGE_BASIS, IS_GRADE IS_GRADE, EFF_DATE EFF_DATE, BATCH_SEQ BATCH_SEQ, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME, IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE
+        UPDATE_TIME UPDATE_TIME, IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE, TRADE_MARKET_MODE TRADE_MARKET_MODE,
+        WINDTYPEONE WINDTYPEONE, WINDTYPETWO WINDTYPETWO
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -134,6 +138,15 @@
             <if test="isPayWithTrade != null" >
                 IS_PAY_WITH_TRADE,
             </if>
+            <if test="tradeMarketMode != null" >
+                TRADE_MARKET_MODE,
+            </if>
+            <if test="windtypeone != null" >
+                WINDTYPEONE,
+            </if>
+            <if test="windtypetwo != null" >
+                WINDTYPETWO,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqNo != null" >
@@ -193,17 +206,26 @@
             <if test="isPayWithTrade != null" >
                 #{isPayWithTrade,jdbcType=VARCHAR},
             </if>
+            <if test="tradeMarketMode != null" >
+                #{tradeMarketMode,jdbcType=VARCHAR},
+            </if>
+            <if test="windtypeone != null" >
+                #{windtypeone,jdbcType=VARCHAR},
+            </if>
+            <if test="windtypetwo != null" >
+                #{windtypetwo,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfig" >
         insert into TRD_FEE_CONFIG(SEQ_NO, TRADE_MARKET, FEE_TYPE, REGIST_ORG, TRADE_TYPE, 
         PS, TERM_TYPE, SEC_ACCT_ID, CHARGE_TYPE, CHARGE_BASIS, IS_GRADE, EFF_DATE, BATCH_SEQ, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_PAY_WITH_TRADE
-        )
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_PAY_WITH_TRADE,
+        TRADE_MARKET_MODE, WINDTYPEONE, WINDTYPETWO)
         select SEQ_NO, TRADE_MARKET, FEE_TYPE, REGIST_ORG, TRADE_TYPE, 
             PS, TERM_TYPE, SEC_ACCT_ID, CHARGE_TYPE, CHARGE_BASIS, IS_GRADE, EFF_DATE, BATCH_SEQ, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, IS_PAY_WITH_TRADE
-            
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, IS_PAY_WITH_TRADE,
+               TRADE_MARKET_MODE, WINDTYPEONE, WINDTYPETWO
              from TRD_FEE_CONFIG
              where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </insert>
@@ -255,6 +277,15 @@
             <if test="isPayWithTrade != null" >
                 IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR},
             </if>
+            <if test="tradeMarketMode != null" >
+                TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR},
+            </if>
+            <if test="windtypeone != null" >
+                WINDTYPEONE = #{windtypeone,jdbcType=VARCHAR},
+            </if>
+            <if test="windtypetwo != null" >
+                WINDTYPETWO = #{windtypetwo,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </update>
@@ -274,7 +305,10 @@
             BATCH_SEQ = #{batchSeq,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR}
+            IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR},
+            TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR},
+            WINDTYPEONE = #{windtypeone,jdbcType=VARCHAR},
+            WINDTYPETWO = #{windtypetwo,jdbcType=VARCHAR}
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </update>
 </mapper>

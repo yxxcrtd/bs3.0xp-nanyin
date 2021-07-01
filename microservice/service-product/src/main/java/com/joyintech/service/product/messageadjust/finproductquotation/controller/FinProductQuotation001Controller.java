@@ -74,9 +74,9 @@ public class FinProductQuotation001Controller {
      * @throws Exception
      *             异常
      */
-    @PostMapping("queryProdIdInfoIssueSuc")
-    public List<SelectOptionDto> queryProdIdInfoIssueSuc(@RequestBody Map<String, Object> param) {
-        return finProductQuotation001Service.queryProdIdInfoIssueSuc(param);
+    @PostMapping("queryProdIdInfoIssueSuc/{page}/{length}")
+    public Page<SelectOptionDto> queryProdIdInfoIssueSuc(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) {
+        return finProductQuotation001Service.queryProdIdInfoIssueSuc(page, length,param);
     }
 
     /**

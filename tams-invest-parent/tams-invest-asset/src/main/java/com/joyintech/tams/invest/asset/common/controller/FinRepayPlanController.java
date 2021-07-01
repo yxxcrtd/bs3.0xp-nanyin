@@ -122,11 +122,23 @@ public class FinRepayPlanController extends BaseController{
             params.put("stateNew", DictCodeList.流程状态_新建.getValue());
             params.put("tradeId", dto.getFinprodId());
             if (finPayPlanService.isNotIng(params)) {
-                ValidMessage addRst = new ValidMessage("已存在流程中数据，不能重复提交。!");
+                ValidMessage addRst = new ValidMessage("已存在流程中数据，不能重复提交。");
                 List<ValidMessage> errorList = new ArrayList<>();
                 errorList.add(addRst);
                 rst.setErrorList(errorList);
                 return rst;
+            }
+        }
+        if(StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getBussFinRepaymentDto())){
+            List<FinCashPlanDto>  cashPlans=dto.getBussFinRepaymentDto().getFinCashPlanList();
+            for(FinCashPlanDto it:cashPlans){
+                if(null==it.getPrinAmt()){
+                    ValidMessage addRst = new ValidMessage("存在还款金额为空的数据，不能提交。");
+                    List<ValidMessage> errorList = new ArrayList<>();
+                    errorList.add(addRst);
+                    rst.setErrorList(errorList);
+                    return rst;
+                }
             }
         }
         StringBuffer sb = new StringBuffer();

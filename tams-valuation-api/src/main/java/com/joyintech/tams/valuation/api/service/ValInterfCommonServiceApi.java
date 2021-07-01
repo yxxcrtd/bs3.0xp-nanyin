@@ -590,7 +590,9 @@ public class ValInterfCommonServiceApi {
                 // 定义 变量.产品对应账套Dto ValBooksetInfoDto
                 ValBooksetInfoDto dto = new ValBooksetInfoDto();
                 // 变量.产品对应账套Dto.账套代码 = 变量.入库账套DTO.账套代码
-                dto.setBooksetId(bokBookset.getBooksetId());
+                if (bokBookset != null){
+                    dto.setBooksetId(bokBookset.getBooksetId());
+                }
                 // 变量.本次新增产品对应账套List.add（变量.产品对应账套Dto）
                 listValBooksetInfoDto.add(dto);
             }
@@ -689,17 +691,21 @@ public class ValInterfCommonServiceApi {
         			qtMap.put("SHOW_BEFORE_DEC_DIGITS", mapBooksetParam.get(key));
         			qtMap.put("SHOW_AFTER_DEC_DIGITS", mapBooksetParam.get(key));
                     qtMap.put("SHOW_TOTBOUNS_DEC_DIGITS", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else if("VAL_DEC_TYPE".equals(key)){
         			qtMap.put("SHOW_BEFORE_DEC_TYPE", mapBooksetParam.get(key));
         			qtMap.put("SHOW_AFTER_DEC_TYPE", mapBooksetParam.get(key));
                     qtMap.put("SHOW_TOTBOUNS_DEC_TYPE", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else if("YEILD_DEC_DIGITS".equals(key)){
         			qtMap.put("TDY_YEILD_DEC_DIGITS", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else if("YEILD_DEC_TYPE".equals(key)){
         			qtMap.put("DAY7_YEILD_DEC_TYPE", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else{
         			qtMap.put(key, mapBooksetParam.get(key));
@@ -776,7 +782,8 @@ public class ValInterfCommonServiceApi {
             bokBooksetPlanBatchMapper.insertBatch(listBokBooksetPlan);
         }
         // 变量.入库账套清算账户List 账套清算账户表 BOK_BOOKSET_CAPACCT_INFO 以账套代码进行删除，然后再入库
-        if (CollectionUtils.isNotEmpty(listBokBooksetCapacctInfo)) {
+        //modify by jiangpeng on 20210401 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+        if (CollectionUtils.isNotEmpty(listBokBooksetCapacctInfo) && !prodInfoDto.isProductEdit()) {
             valBooksetCapacctInfoBatchMapper.deleteBatch(listBokBooksetCapacctInfo);
             valBooksetCapacctInfoBatchMapper.insertBatch(listBokBooksetCapacctInfo);
         }
@@ -1199,6 +1206,15 @@ public class ValInterfCommonServiceApi {
 	        	dealOrdersBuild = false;
 	        }
         }
+        // add by jiangpeng on 20210426 start
+        // TISHKBS-2046 CLONE - 场内货币基金-存续期-基金份额折算交易审批报错
+        // 基金份额折算不生成指令
+        if (DictCodeListExt1.金融产品类型_基金.getValue().equals(trdProductDeal.getFinprodType())
+                && (DictCodeList.交易方向_份额强增.getValue().equals(trdProductDeal.getPs())
+                    ||DictCodeList.交易方向_份额强减.getValue().equals(trdProductDeal.getPs()))) {
+            dealOrdersBuild = false;
+        }
+        // add by jiangpeng on 20210426 end
         if(dealOrdersBuild){
         	map = interfCommonService.instructionGenerate_Branch(trdProductDeal, prodid,prodFinprodType,branch,ptlTradeList);
         }

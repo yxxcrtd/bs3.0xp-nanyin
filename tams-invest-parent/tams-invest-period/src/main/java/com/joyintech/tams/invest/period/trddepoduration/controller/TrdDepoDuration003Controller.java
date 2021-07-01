@@ -15,6 +15,7 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
 import java.util.Map;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,9 @@ public class TrdDepoDuration003Controller extends BaseController{
     private TrdDepoDuration001Service trdDepoDuration001Service;
     @Autowired
     private PeriodCommonService periodCommonService;
+    //add by jiangpeng on 20210422 TISHKBS-1803
+    @Autowired
+    private CommonBusinessService commonBusinessService;
     /**
      * {@inheritDoc}
      */
@@ -77,6 +81,11 @@ public class TrdDepoDuration003Controller extends BaseController{
             dto = trdDepoDuration001Service.getBussinessEntityByWorkflowId(workflowId);
             model.addAttribute("workflowId",workflowId);
             opType = dto.getOpType();
+            //add by jiangpeng on 20210422 TISHKBS-1803
+            if(dto != null) {
+                model.addAttribute("isTodo", commonBusinessService.isBackCheckNode(dto.getBusiCode()));
+            }
+            //add by jiangpeng on 20210422 TISHKBS-1803
         }
         else if(StringUtil.isNotEmpty(statusValid)){
         	param.put("isFindEnd","true");

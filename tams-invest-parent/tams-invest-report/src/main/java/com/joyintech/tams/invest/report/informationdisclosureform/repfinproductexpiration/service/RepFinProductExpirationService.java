@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -139,11 +140,18 @@ public class RepFinProductExpirationService extends CommonExportService<RepFinPr
                 String fileName = repFinProductExpirationDto.getFinprodMarketId()+strFile+".xlsx";
                 ExcelTools excelTools = new ExcelTools();
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-                File file = new File(sysUploadFileInfoList.get(0).getPath());
-                FileInputStream inputStream = new FileInputStream(file);
-                excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
-                arrFile.add(new File(exportPath+"/"+fileName));
-                i++;
+                File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
+                FileInputStream inputStream = null;
+                try {
+                    inputStream = new FileInputStream(file);
+                    excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
+                    arrFile.add(new SafelyFile(exportPath+"/"+fileName));
+                    i++;
+                }finally {
+                    if (inputStream != null){
+                        inputStream.close();
+                    }
+                }
             }
             //循环List<金融产品成立公告生成信息DTO>，取出文件模板类型为【02：产品成立公告（竖表）】的数据，放入竖版List<金融产品成立公告生成信息DTO> 
             else{
@@ -170,17 +178,32 @@ public class RepFinProductExpirationService extends CommonExportService<RepFinPr
                 String fileName = repFinProductExpirationDto.getFinprodMarketId()+strFile+".xlsx";
                 ExcelTools excelTools = new ExcelTools();
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-                File file = new File(sysUploadFileInfoList.get(0).getPath());
-                FileInputStream inputStream = new FileInputStream(file);
-                excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
-                arrFile.add(new File(exportPath+"/"+fileName));
+                File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
+                FileInputStream inputStream = null;
+                try {
+                    inputStream = new FileInputStream(file);
+                    excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
+                }finally {
+                    if (inputStream != null){
+                        inputStream.close();
+                    }
+                }
+                arrFile.add(new SafelyFile(exportPath+"/"+fileName));
                 i++;
             }
         }
-        ZipFileUtil.compressZip(new File(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"), 
-            false, arrFile.toArray(new File[arrFile.size()]));
-        return ExportUtil.export(strFile+".zip", 
-            new FileInputStream(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"));
+        FileInputStream zipStream = null;
+        try {
+            zipStream = new FileInputStream(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip");
+            ZipFileUtil.compressZip(new SafelyFile(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"),
+                    false, arrFile.toArray(new SafelyFile[arrFile.size()]));
+            return ExportUtil.export(strFile+".zip",
+                    new FileInputStream(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"));
+        }finally {
+            if (zipStream != null){
+                zipStream.close();
+            }
+        }
     }
     
     /**

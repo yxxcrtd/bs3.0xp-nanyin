@@ -498,8 +498,8 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 	        if(StringUtil.isNotEmpty(entity.getEntrustId())){
 	            baseTradeProductDealDto.setEntrustId(entity.getEntrustId());
 	        }
+	        baseTradeProductDealDto.setPurchModle(entity.getPurchModle());
 	        finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
-	        
 	        	
 	        entity.setActPortfolioId(entity.getPortfolioId());
 	        entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
@@ -830,6 +830,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             if (stlPayOrders != null) {
                 baseTradeProductDealDto.setStlPayOrdersList(Arrays.asList(stlPayOrders));
             }
+            baseTradeProductDealDto.setPurchModle(entity.getPurchModle());
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
             //        委托代码不为空处理委托代码
             if(StringUtil.isNotEmpty(entity.getEntrustId())){
@@ -841,11 +842,11 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 
                 List<EtrFinishStatusDto> baseEtrInvestInfoDtos = new ArrayList<>();
                 EtrFinishStatusDto etrInvestInfoDto = new EtrFinishStatusDto();
-                etrInvestInfoDto.setEntrustId(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
-                etrInvestInfoDto.setTradeId(baseTradeProductDealDto.getTrdProductDealAdd().getTradeId());
-                etrInvestInfoDto.setFinishDate(baseTradeProductDealDto.getTrdProductDeal().getTradeDate());
-                etrInvestInfoDto.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
-                etrInvestInfoDto.setTrader(baseTradeProductDealDto.getTrdProductDeal().getTrader());
+                etrInvestInfoDto.setEntrustId(entity.getEntrustId());
+                etrInvestInfoDto.setTradeId(entity.getBusiCode());
+                etrInvestInfoDto.setFinishDate(entity.getTradeDate());
+                etrInvestInfoDto.setFinishAmt(ArithmeticUtil.divide(entity.getTradeAmt(), new BigDecimal(100), 2));
+                etrInvestInfoDto.setTrader(entity.getTrader());
                 baseEtrInvestInfoDtos.add(etrInvestInfoDto);
 
                 etrInvestInfoServiceImpl.completeDelegate(baseEtrInvestInfoDtos);
@@ -945,9 +946,11 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             //basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getBusiCode());
             
             if(StringUtil.isNotEmpty(trdProductDeal)){
-            	trdProductDeal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
-                trdProductDeal.setBusiType(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
-                trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());//交易状态
+                if (trdProductDeal != null){
+                    trdProductDeal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
+                    trdProductDeal.setBusiType(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
+                    trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());//交易状态
+                }
                 // 发送Murex接口处理
                 // this.sendMurex(entity, false);
                 // 一体化对应etliu start
@@ -1012,6 +1015,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             if (stlPayOrders != null) {
                 baseTradeProductDealDto.setStlPayOrdersList(Arrays.asList(stlPayOrders));
             }
+            baseTradeProductDealDto.setPurchModle(entity.getPurchModle());
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
             //        委托代码不为空处理委托代码
             if(StringUtil.isNotEmpty(entity.getEntrustId())){

@@ -155,8 +155,8 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     private String industry;
 
     private String industry2;
-
-    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
+    //ZGBSSE-648   【中债直连】债券标的新建页面，资产负债类别check重复
+//    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
     public String getRepAssetType() {
         return repAssetType;
     }
@@ -347,7 +347,48 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     /**
      * 现金流计算规则dtolist
      */
-    private List<FinCashCalcRule> finCashCalcRuleList;  
+    private List<FinCashCalcRule> finCashCalcRuleList;
+
+    /**
+     * 是否发行标的
+     */
+    public String isIssueAsset;
+
+    /**
+     * 上市代码
+     */
+    public String appearMarketId;
+
+    /**
+     * 获取上市代码
+     */
+    public String getAppearMarketId() {
+        return appearMarketId;
+    }
+
+    /**
+     * 设置上市代码
+     */
+    public void setAppearMarketId(String appearMarketId) {
+        this.appearMarketId = appearMarketId;
+    }
+
+    /**
+     * 获取 isIssueAsset
+     * @return isIssueAsset.
+     */
+    public String getIsIssueAsset() {
+        return isIssueAsset;
+    }
+
+    /**
+     * 设置 isIssueAsset
+     * @param isIssueAsset isIssueAsset
+     */
+    public void setIsIssueAsset(String isIssueAsset) {
+        this.isIssueAsset = isIssueAsset;
+    }
+
     /**
      * 获取 ztGradeResult
      * @return ztGradeResult.
@@ -986,8 +1027,9 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      * 资产名称
      * {@inheritDoc}
      */
+    //ZGBSSE-571 【中债直连】债券标的新建页面，资产名称文本框可输入长度控制不正确
     @Override
-    @Length(fieldName = "FinBondTargetAsset002.finprodName", max = 100, groups = {ValidateGroupEdit.class})
+//    @Length(fieldName = "FinBondTargetAsset002.finprodName", max = 100, groups = {ValidateGroupEdit.class})
   //  @NotEmpty(fieldName = "FinBondTargetAsset002.finprodName", groups = {ValidateGroupEdit.class})
     public String getFinprodName(){
         return super.getFinprodName();
@@ -1784,6 +1826,11 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     public String getIsCityBondStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsCityBond());
     }
+
+    public String getIsIssueAssetStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsIssueAsset());
+    }
+    
     public String getIndustryStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业一级分类, this.getIndustry());
     }

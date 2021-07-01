@@ -51,7 +51,6 @@ import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
 import com.joyintech.tams.common.base.entity.PtlTrade;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
@@ -63,7 +62,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
@@ -246,7 +244,6 @@ public class TrdPlanNetInvestTrade004Controller extends BaseController {
     /**
      * 资产代码联想下拉框 <功能详细描述>
      * 
-     * @param params
      * @return
      * @see
      * @since 1.0
@@ -642,7 +639,7 @@ public class TrdPlanNetInvestTrade004Controller extends BaseController {
     /**
      * 组合可用现金查询 <功能详细描述>
      * 
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -673,7 +670,7 @@ public class TrdPlanNetInvestTrade004Controller extends BaseController {
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_交易);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
     
     /**

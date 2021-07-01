@@ -29,6 +29,7 @@ import com.joyintech.tams.report.common.service.SvrCommonExportService;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
+import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
 import com.joyintech.tams.svreport.chb.botastpositionregist.dao.ChbBotAstPosSubHisMapper;
 import com.joyintech.tams.svreport.chb.botastpositionregist.dao.ChbBotAstPositionRegist001Mapper;
 import com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto;
@@ -297,6 +298,11 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 //                    SvrServiceApplication.CHB_SERVICE_NAME + "/ChbBotAstPositionRegist/searchPageExport",pageParam,
 //                    ChbBotAstPositionRegist001Dto.class);
 		page = searchPage(pageParam);
+		if(!CollectionUtils.isEmpty(page.getRoot())){
+			for(ChbBotAstPositionRegist001Dto dto : page.getRoot()){
+				dto.setBelongInstitutionCode(null);
+			}
+		}
     }  else {
            @SuppressWarnings("unchecked")
            List<ChbBotAstPositionRegist001Dto> dataList =  (List<ChbBotAstPositionRegist001Dto>) pageParam.get("botAstPosList");

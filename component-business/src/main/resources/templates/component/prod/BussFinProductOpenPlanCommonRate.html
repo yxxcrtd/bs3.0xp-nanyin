@@ -6,6 +6,22 @@
 .buss-inline .select2-container{
 width: 90px !important;
 }
+[id$="_radioDiv"] .select2-selection__clear{
+	margin-right:0px !important;
+	margin-left:5px !important;
+}
+[id$="_radioDiv"] .select2-selection__choice{
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    margin-right:0px !important;
+}
+[id$="_radioDiv"]  li.select2-search--inline{
+	width:1px !important;
+}
+[id$="_radioDiv"] li.select2-search--inline input.select2-search__field{
+	width:1px !important;
+}
+
 </style>
 
 
@@ -693,6 +709,9 @@ width: 90px !important;
 		var raiseEndDate1=$('#' + raiseEndDate).val();
 		var OPEN_DAYS_TYPE_01 = /*[[${OPEN_DAYS_TYPE_01}]]*/'';
 		var OPEN_DAYS_TYPE_02 = /*[[${OPEN_DAYS_TYPE_02}]]*/'';
+
+		var openDateRadio=/*[[${entity?.openDateRadio}]]*/'';
+		var openDateRadioRed=/*[[${redentity?.openDateRadio}]]*/'';
 		
 		var openModeRep1=/*[[${redentity?.openMode}]]*/'';
 		var openDaysRep1=/*[[${redentity?.openDays}]]*/'';

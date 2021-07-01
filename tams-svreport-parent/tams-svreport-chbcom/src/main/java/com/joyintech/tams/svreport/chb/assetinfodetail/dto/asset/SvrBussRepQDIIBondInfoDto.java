@@ -82,6 +82,10 @@ public class SvrBussRepQDIIBondInfoDto extends RepAssetBond {
      */
     private String guaranteeCmt;
     /**
+     * 担保情况说明
+     */
+    private String  guaTypeRemark;
+    /**
      * 是否含权等特条款情况说明
      */
     private String specialCmt;
@@ -190,5 +194,13 @@ public class SvrBussRepQDIIBondInfoDto extends RepAssetBond {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getGuaTypeRemark() {
+        return guaTypeRemark;
+    }
+
+    public void setGuaTypeRemark(String guaTypeRemark) {
+        this.guaTypeRemark = guaTypeRemark;
     }
 }

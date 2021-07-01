@@ -11,7 +11,8 @@
 		<repository>
 			<id>Ali-Repository</id>
 			<name>aliyun maven</name>
-			<url>http://192.168.45.38:8081/nexus/content/repositories/thirdparty/</url>
+<!--			<url>http://192.168.45.38:8081/nexus/content/repositories/thirdparty/</url>-->
+			<url>http://192.168.90.83:8082/nexus/content/repositories/thirdparty/</url>
 			<layout>default</layout>
 			<snapshots>
 				<enabled>false</enabled>
@@ -108,7 +109,7 @@
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-core</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.3</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 		<dependency>

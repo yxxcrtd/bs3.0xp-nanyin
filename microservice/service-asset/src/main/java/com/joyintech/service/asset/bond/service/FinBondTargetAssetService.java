@@ -10,13 +10,12 @@
  
 package com.joyintech.service.asset.bond.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.service.asset.common.service.FinPayInterestStdInfoService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.base.report.asset.BaseRepAssetEquityInfoService;
 import com.joyintech.tams.component.base.report.asset.BaseRepOtherInfoService;
 import com.joyintech.tams.component.base.report.dto.BaseRepAssetEquityInfoDto;
@@ -34,7 +33,6 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.asset.bond.dao.FinBondTargetAssetMapper;
 import com.joyintech.service.asset.bond.dto.FinBondTargetAssetDto;
-import com.joyintech.service.asset.common.dto.BusiFinBondRatingInfoDto;
 import com.joyintech.service.asset.common.service.AssetCommonService;
 import com.joyintech.service.asset.common.service.BusiFinBondRatingInfoService;
 import com.joyintech.service.asset.common.service.FinInterestFactorService;
@@ -44,7 +42,6 @@ import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.common.base.entity.PaFinProduct;
 import com.joyintech.tams.common.base.entity.RepAssetDept;
 import com.joyintech.tams.component.base.core.BaseFinProductBaseInfoService;
-import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.base.report.asset.BaseRepAssetDeptInfoService;
 import com.joyintech.tams.component.base.report.asset.BaseRepBondAssetInfoService;
 import com.joyintech.tams.component.base.report.dto.BaseRepAssetDeptInfoDto;
@@ -54,8 +51,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
-import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * 债券标的信息
@@ -128,7 +124,19 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
 
     @Autowired(required = false)
     private BaseRepOtherInfoService baseRepOtherInfoService;
-    
+
+    @Autowired
+    private RepAssetBondMapper repAssetBondMapper;
+    @Autowired
+    private RepAssetDeptMapper repAssetDeptMapper;
+    @Autowired
+    private RepAssetOtherMapper repAssetOtherMapper;
+    @Autowired
+    private RepAssetEquityMapper repAssetEquityMapper;
+
+    @Autowired
+    private FinPayInterestStdInfoService finPayInterestStdInfoService;
+
     /**
      * 分页
      * @param page
@@ -613,8 +621,85 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
      * @see
      * @since 1.0
      */
-    public int selectCountByOFinprodId(String oFinprodId) {
-        return finBondTargetAssetMapper.selectCountByOFinprodId(oFinprodId);
+    public int selectCountByOFinprodId(String oFinprodId,String finprodId) {
+        return finBondTargetAssetMapper.selectCountByOFinprodId(oFinprodId,finprodId);
     }
 
+    /**
+     * 根据资产代码查询是否是上市标的
+     *
+     * @param finprodId
+     * @return 是否是上市标的，大于0则为是
+     * @see
+     * @since 1.0
+     */
+    public int selectIsIssueAsset(String finprodId) {
+        return finBondTargetAssetMapper.selectIsIssueAsset(finprodId);
+    }
+    /**
+     * 查询资产相关计划
+     * <功能详细描述>
+     * @param finprodId
+     * @return 资产相关计划
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("getFinPlanList")
+    public FinBondTargetAssetDto getFinPlanList(String finprodId) {
+        FinBondTargetAssetDto finBondTargetAssetDto =new FinBondTargetAssetDto();
+
+        BaseFinProductBaseInfoDto baseFinProductBaseInfoDto =new BaseFinProductBaseInfoDto();
+
+        List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList =new ArrayList<BaseFinProductBaseInfoDto>();
+        baseFinProductBaseInfoList.add(baseFinProductBaseInfoDto);
+        // 查询标的现金流信息list
+        List<FinCashInfo> finCashInfolist = finBondTargetAssetMapper.selectFinCashInfo(finprodId);
+        // 查询标的现金流计划list
+        List<FinCashPlan> finCashPlanList = finBondTargetAssetMapper.getFinCashPlanList(finprodId);
+        // 查询标的现金流支付规则
+        List<FinCashPayRule> finCashPayRuleList = finBondTargetAssetMapper.getFinCashPayRuleList(finprodId);
+        //查询现金流计算规则
+        List<FinCashCalcRule> finCashCalcRuleList = finBondTargetAssetMapper.getTargetCashCalcRuleList(finprodId);
+        //查询利率信息
+        List<FinRateInfo> finRateInfoList = finBondTargetAssetMapper.getFinRateInfoList(finprodId);
+
+        //债券资产报送信息
+        RepAssetBond repAssetBond = repAssetBondMapper.selectByPrimaryKey(finprodId);
+        //资产负债报送信息
+        RepAssetDept repAssetDept = repAssetDeptMapper.selectByPrimaryKey(finprodId);
+        //中债资产其他要素
+        RepAssetOther repAssetOther = repAssetOtherMapper.selectByPrimaryKey(finprodId);
+        //权益类资产报送信息
+        RepAssetEquity repAssetEquity = repAssetEquityMapper.selectByPrimaryKey(finprodId);
+
+        baseFinProductBaseInfoDto.setFinCashPlanList(finCashPlanList);
+        baseFinProductBaseInfoDto.setFinCashPayRuleList(finCashPayRuleList);
+        baseFinProductBaseInfoDto.setFinCashCalcRuleList(finCashCalcRuleList);
+        baseFinProductBaseInfoDto.setFinCashInfoList(finCashInfolist);
+        baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfoList);
+
+        BaseRepBondAssetInfoDto baseRepBondAssetInfoDto =new BaseRepBondAssetInfoDto();
+        if(repAssetBond!=null){
+            baseRepBondAssetInfoDto.setRepAssetBondList(Arrays.asList(repAssetBond));
+        }
+        finBondTargetAssetDto.setBaseRepBondAssetInfoDto(baseRepBondAssetInfoDto);
+        BaseRepAssetDeptInfoDto baseRepAssetDeptInfoDto =new BaseRepAssetDeptInfoDto();
+        if(repAssetDept!=null){
+            baseRepAssetDeptInfoDto.setRepAssetDeptList(Arrays.asList(repAssetDept));
+        }
+        finBondTargetAssetDto.setBaseRepAssetDeptInfoDto(baseRepAssetDeptInfoDto);
+        BaseRepAssetEquityInfoDto baseRepAssetEquityInfoDto =new BaseRepAssetEquityInfoDto();
+        if(repAssetEquity!=null){
+            baseRepAssetEquityInfoDto.setRepAssetEquityList(Arrays.asList(repAssetEquity));
+        }
+        finBondTargetAssetDto.setBaseRepAssetEquityInfoDto(baseRepAssetEquityInfoDto);
+        BaseRepOtherDto baseRepOtherDto =new BaseRepOtherDto();
+        if(repAssetEquity!=null){
+            baseRepOtherDto.setRepAssetOtherList(Arrays.asList(repAssetOther));
+        }
+        finBondTargetAssetDto.setBaseRepOtherDto(baseRepOtherDto);
+
+        finBondTargetAssetDto.setBaseFinProductBaseInfoList(baseFinProductBaseInfoList);
+        return finBondTargetAssetDto;
+    }
 }

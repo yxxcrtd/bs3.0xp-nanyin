@@ -128,6 +128,7 @@ public class FinPlanAssetCDto extends FinProduct implements ProcessEntity{
      * 获取 purSpeed
      * @return purSpeed.
      */
+    @NotEmpty(fieldName = "FinPlanAssetC002.purSpeed",groups={ValidateGroupEdit.class})
     public String getPurSpeed() {
         return purSpeed;
     }
@@ -142,6 +143,7 @@ public class FinPlanAssetCDto extends FinProduct implements ProcessEntity{
      * 获取 redSpeed
      * @return redSpeed.
      */
+    @NotEmpty(fieldName = "FinPlanAssetC002.redSpeed",groups={ValidateGroupEdit.class})
     public String getRedSpeed() {
         return redSpeed;
     }

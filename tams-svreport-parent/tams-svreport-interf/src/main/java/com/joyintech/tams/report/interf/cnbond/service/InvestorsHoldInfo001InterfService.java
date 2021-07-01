@@ -386,7 +386,7 @@ public class InvestorsHoldInfo001InterfService{
 
             String bankCode;
             if (isExcel) {
-                bankCode = CommonUtil.getUserBankCode();
+                bankCode = CommonUtil.getUserBankCode(null);
             } else {
                 bankCode = "";
             }

@@ -78,6 +78,7 @@
         <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
         <result column="PAY_UNPAIDINT_AMT" property="payUnpaidintAmt" jdbcType="DECIMAL" />
         <result column="ISPAY_UNPAIDINT" property="ispayUnpaidint" jdbcType="VARCHAR" />
+        <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, BUSI_TYPE BUSI_TYPE, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, 
@@ -98,7 +99,7 @@
         PAY_DATE PAY_DATE, REMAIN_PRIN REMAIN_PRIN, TG_BUSI_TYPE TG_BUSI_TYPE, IS_OVERDUE_DEAL IS_OVERDUE_DEAL, 
         SETTLE_SPEED SETTLE_SPEED, CLEAR_TYPE CLEAR_TYPE, EFF_TIME EFF_TIME, DELIVERY_TYPE DELIVERY_TYPE, 
         M_DELIVERY_TYPE M_DELIVERY_TYPE, RATE RATE, REPO_TERM REPO_TERM, TERM_TYPE TERM_TYPE, 
-        PAY_UNPAIDINT_AMT PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT ISPAY_UNPAIDINT
+        PAY_UNPAIDINT_AMT PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT ISPAY_UNPAIDINT, INSTITUTION_CODE INSTITUTION_CODE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -664,7 +665,7 @@
         CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CURRENT_SUB, LAST_AMT, LAST_RED, 
         LAST_AMT_SUB, ACCOUNTING_AMT, RED_PROFIT, RED_COST, DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
         TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, 
-        M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT)
+        M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT,INSTITUTION_CODE)
         select TOTLE_TRADE_ID, BUSI_TYPE, FINPROD_ID, FINPROD_TYPE, 
             FINPROD_TYPE2, BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, CCY, UNIT_CPRICE, UNIT_INT, 
             UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, FEE_AMT_PAY, 
@@ -675,7 +676,7 @@
             CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CURRENT_SUB, LAST_AMT, LAST_RED, 
             LAST_AMT_SUB, ACCOUNTING_AMT, RED_PROFIT, RED_COST, DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
             TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, 
-            M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT
+            M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT,INSTITUTION_CODE
              from TRD_FIN_PRODUCT_DEAL_TOTAL
              where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </insert>
@@ -898,6 +899,9 @@
             <if test="ispayUnpaidint != null" >
                 ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
             </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if>
         </set>
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
@@ -974,7 +978,8 @@
             REPO_TERM = #{repoTerm,jdbcType=DECIMAL},
             TERM_TYPE = #{termType,jdbcType=VARCHAR},
             PAY_UNPAIDINT_AMT = #{payUnpaidintAmt,jdbcType=DECIMAL},
-            ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR}
+            ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
+            INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
     <!--查询债券相应的基本信息-->

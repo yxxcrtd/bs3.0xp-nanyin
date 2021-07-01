@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,6 +84,8 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
         String action = StringUtil.EMPTY;
         //处理付息计划
         entity = encapFinPayPlanDto(entity);
+        //针对还本不付息资产，还本时，计划应付利息应等于区间还本未付利息
+        entity =encapFinCashPlanIntAmt(entity);
         if (OperationType.DELETE.equals(type)) {
             action = "delete";
         }
@@ -139,6 +142,24 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
             scai.setInvRepayList(bussFinRepaymentService.getFinCashPlanByProductId(scai.getFinprodId(), DictCodeListExt1.现金流二级类型_本金.getValue(), DictCodeListExt1.现金流业务类型_金融产品.getValue(),null));
         }else{
             scai.setInvRepayList(entity.getBussFinRepaymentDto().getFinCashPlanList());
+            //对前台传入的还本计划，是否还本不带息，进行重新赋值
+            String isPayIntS =  "";
+            if(!StringUtil.isEmptyList(scai.getInvRepayList()) && scai.getInvRepayList().size()>0){
+                 for(FinCashPlanDto it:scai.getInvRepayList()){
+                     if(StringUtil.isNotEmpty(it.getIsPayInt()) && it.getIsPayInt().equals(DictCodeList.是否_否.getValue())){
+                         isPayIntS=DictCodeList.是否_否.getValue();
+                         break;
+                     }
+                 }
+                 if(StringUtil.isNotEmpty(isPayIntS) && isPayIntS.equals(DictCodeList.是否_否.getValue())){
+                     for(FinCashPlanDto it:scai.getInvRepayList()){
+                         if(StringUtil.isEmpty(it.getIsPayInt())){
+                             it.setIsPayInt(isPayIntS);
+                         }
+                     }
+                 }
+            }
+
         }
         try {
             scai = assetCommonService.againCalCashPlan(scai,finAssetRateAdjList);
@@ -192,7 +213,11 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
                 //项目类资产理论开始日、理论结束日不参与计算逻辑
                 entity2.setVdateTerm(entity2.getVdate());
                 entity2.setMdateTerm(entity2.getMdate());
-                entity2.setIsPayInt(DictCodeList.是否_是.getValue());
+                if(StringUtil.isNotEmpty(entity2.getIsPayInt()) && entity2.getIsPayInt().equals(DictCodeList.是否_否.getValue())){
+                    entity2.setIsPayInt(entity2.getIsPayInt());
+                }else{
+                    entity2.setIsPayInt(DictCodeList.是否_是.getValue());
+                }
                 entity2.setCashBaseamt(scai.getIssueAmt());
                 entity2.setCashUnitType(DictCodeList.现金流单位_总额.getValue());
                 if(DateUtil.compareDate(entity2.getMdate(), scai.getMdate())==0){
@@ -237,6 +262,17 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
         catch (ParseException e) {
             e.printStackTrace();
         }
+        return entity;
+    }
+    private FinPayPlanDto encapFinCashPlanIntAmt(FinPayPlanDto entity){
+        if(!StringUtil.isEmptyList(entity.getFinCashPlanList()) && entity.getFinCashPlanList().size()>0){
+            for(FinCashPlan plan:entity.getFinCashPlanList()){
+                if(StringUtil.isNotEmpty(plan.getIsPayInt()) && StringUtil.equals(DictCodeList.是否_否.getValue(), plan.getIsPayInt())){//业务场景，是还本不带息的
+                    plan.setIntAmt(plan.getRepayWithoutInt());
+                }
+            }
+        }
+
         return entity;
     }
 

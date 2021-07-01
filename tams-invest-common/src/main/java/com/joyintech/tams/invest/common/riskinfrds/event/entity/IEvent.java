@@ -73,7 +73,11 @@ public interface IEvent extends Serializable {
             if(StringUtil.equals(BussinessConstantRds.CUSTOM,epr.getRelItem())){
                 epr.setRelValue(StringUtil.isNotEmpty(epr.getCustomVal())?epr.getCustomVal():BigDecimal.ZERO);
             }else {
-                epr.setRelValue(new BigDecimal(mapData.getOrDefault(epr.getRelItem(), BigDecimal.ZERO).toString()));
+            	Object object = mapData.get(epr.getRelItem());
+            	if(object==null) {
+            		object = BigDecimal.ZERO;
+            	}
+                epr.setRelValue(new BigDecimal(object.toString()));
             }
         });
     }

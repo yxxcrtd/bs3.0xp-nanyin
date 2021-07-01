@@ -197,7 +197,6 @@ public class CeAssetGroupManagement002Dto extends CreditAssetpoolDetail implemen
      * {@inheritDoc}
      */
     @Override
-    @PrimaryKey(value = Field.PK_2)
     public String getFinprodId() {
         return super.getFinprodId();
     }

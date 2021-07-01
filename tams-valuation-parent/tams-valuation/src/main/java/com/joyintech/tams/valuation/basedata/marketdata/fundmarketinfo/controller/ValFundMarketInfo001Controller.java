@@ -103,6 +103,9 @@ public class ValFundMarketInfo001Controller extends BaseController {
         String datas = this.getParam("datas");
         Map<String, Object> params = RequestUtil.getPageParam();
         List<ValFundMarketInfo001dto> listdto;
+        //TISHKBS-2342 每日基金行情导出字段（基金类型）为空 add by wangyaning 20210623 start
+        params.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
+        //TISHKBS-2342 每日基金行情导出字段（基金类型）为空 add by wangyaning 20210623 end
 
         if (datas == null) {
             listdto = valFundMarketInfo001Service.tableLoad(params);

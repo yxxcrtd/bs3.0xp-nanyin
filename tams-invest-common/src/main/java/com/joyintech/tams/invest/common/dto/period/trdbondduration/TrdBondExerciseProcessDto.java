@@ -102,6 +102,16 @@ public class TrdBondExerciseProcessDto extends BaseEntity {
     private Date payDate;
 
     /**
+     * 理论应计利息
+     */
+    private BigDecimal intAmtTheory;
+
+    /**
+     * 实收利息总额
+     */
+    private BigDecimal intAmtReal;
+
+    /**
      * 券面总额
      */
     @JsonSerialize(using = BigDecimalSerializer.class)
@@ -773,5 +783,22 @@ public class TrdBondExerciseProcessDto extends BaseEntity {
      */
     public void setRevokeReason(String revokeReason) {
         this.revokeReason = revokeReason;
+    }
+
+
+    public BigDecimal getIntAmtTheory() {
+        return intAmtTheory;
+    }
+
+    public void setIntAmtTheory(BigDecimal intAmtTheory) {
+        this.intAmtTheory = intAmtTheory;
+    }
+
+    public BigDecimal getIntAmtReal() {
+        return intAmtReal;
+    }
+
+    public void setIntAmtReal(BigDecimal intAmtReal) {
+        this.intAmtReal = intAmtReal;
     }
 }

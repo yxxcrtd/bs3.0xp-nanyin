@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -339,11 +340,11 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 				
 			}catch(Exception e){
 				container.setCorrectFlag(false);
-				String errormsg=e.toString() + " | " + e.getMessage();
-				if(e.getCause()!=null){
-					errormsg=e.getCause().getMessage()+" | "+errormsg;
-				}
-				container.setErrorMsg(errormsg);
+//				String errormsg=e.toString() + " | " + e.getMessage();
+//				if(e.getCause()!=null){
+//					errormsg=e.getCause().getMessage()+" | "+errormsg;
+//				}
+				container.setErrorMsg("系统异常,请联系管理员");
 				logger.error("Error", e);
 			}finally{
 				PreparedStatement ps=dataCounter.getPreparedStatement();
@@ -498,7 +499,7 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 			for(MultipartFile mpf:mpfList){
 				//上传的文件先复制到配置的文件夹下,然后上传
 				String filePath = source.getFilepath() + "/" + mpf.getOriginalFilename();
-				FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(filePath));
+				FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(new SafelyFile(filePath)));
 			
 				if(fileBean==null){
 					container.setCorrectFlag(false);
@@ -526,7 +527,7 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 			container.setEntityObj(msgcontainerList);
 		}catch(Exception e){
 			container.setCorrectFlag(false);
-			container.setErrorMsg(e.toString());
+			container.setErrorMsg("上传并读取接口文件异常");//e.toString());
 			logger.error("Error", e);
 			return container;
 		}

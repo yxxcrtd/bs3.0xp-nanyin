@@ -3,6 +3,10 @@ package com.joyintech.tams.invest.portfolio.ptlmock.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +49,19 @@ public class PtlMockTest003Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.收益类型,
-                DictCode.组合类型, DictCode.平安资产类型);
+                DictCode.组合类型);
+        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.平安资产类型, null);
+        if (selectDto != null && !StringUtil.isEmptyList(selectDto.getOptions())) {
+            List<SelectOptionDto> options = selectDto.getOptions();
+            for (int index = options.size() - 1; index >= 0; index--) {
+                SelectOptionDto option = options.get(index);
+                // 去除不需要的字典类型
+                if (StringUtil.equals(option.getId(), DictCodeList.平安资产类型_计划类资产_利率型.getValue())) {
+                    options.remove(option);
+                }
+            }
+            model.addAttribute("PINAN_ASSET_TYPE", JsonUtils.objectArray2Json(options.toArray()));
+        }
         // 组合到期日区间默认为平台日至10个自然日后
         model.addAttribute("mdatepStr",iPlatformDate.getSysDateStr());
         model.addAttribute("mdatepEnd", DateUtil.addDay(iPlatformDate.getSysDateStr(), 10));

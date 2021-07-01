@@ -13,6 +13,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +97,7 @@ public class InterfFileDownload001Service {
      */
     private  List<String> loadfiles(String localDir){
         List<String> filePathsTem = new ArrayList<String>(); 
-        File inputFile = new File(localDir);  //根据文件路径创建文件  
+        File inputFile = new SafelyFile(localDir);  //根据文件路径创建文件  
         if(inputFile.exists()) { //判断文件是否存在  
             if (inputFile.isDirectory()){//判断是否属于文件，还是文件夹  
                 File[] files = inputFile.listFiles();  
@@ -118,7 +119,7 @@ public class InterfFileDownload001Service {
         String executeDate=String.valueOf(params.get("executeDate"));
         //先清理本地路径文件
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()+ File.separator+ DateUtil.formatDate(executeDate);
-        File localDirFile = new File(localDir);
+        File localDirFile = new SafelyFile(localDir);
         if (localDirFile.exists()) {
             delFolder(localDir);
         }
@@ -151,7 +152,7 @@ public class InterfFileDownload001Service {
         String executeDate=String.valueOf(params.get("executeDate"));
         // 本地路径
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()+ File.separator+ DateUtil.formatDate(executeDate);
-        File localDirFile = new File(localDir);
+        File localDirFile = new SafelyFile(localDir);
         // 远程路径
         String remotePath = entity.getRemotePath() + "/" + DateUtil.formatDate(executeDate);
         // 删除本地路径的原始文件
@@ -197,7 +198,7 @@ public class InterfFileDownload001Service {
         String executeDate=String.valueOf(params.get("executeDate"));
         // 本地路径
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()+ File.separator+ DateUtil.formatDate(executeDate);
-        File localDirFile = new File(localDir);
+        File localDirFile = new SafelyFile(localDir);
         // 远程路径
         String remotePath = entity.getRemotePath() + "/" + DateUtil.formatDate(executeDate);
         // 删除本地路径的原始文件
@@ -236,7 +237,7 @@ public class InterfFileDownload001Service {
     public void localService(ValRecvServerInfoEntity entity,Map<String, Object> params)throws Exception {
         String executeDate=String.valueOf(params.get("executeDate"));
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()+ File.separator+ DateUtil.formatDate(executeDate);
-        File localDirFile = new File(localDir);
+        File localDirFile = new SafelyFile(localDir);
         if (localDirFile.exists()) {
             delFolder(localDir);
         }
@@ -257,7 +258,7 @@ public class InterfFileDownload001Service {
             delAllFile(folderPath); // 删除完里面所有内容
             String filePath = folderPath;
             filePath = filePath.toString();
-            File myFilePath = new File(filePath);
+            File myFilePath = new SafelyFile(filePath);
             boolean rec =myFilePath.delete(); // 删除空文件夹
             if(rec){
                 logger.info(" 删除空文件夹成功");
@@ -272,7 +273,7 @@ public class InterfFileDownload001Service {
     // param path 文件夹完整绝对路径
     private boolean delAllFile(String path) {
         boolean flag = false;
-        File file = new File(path);
+        File file = new SafelyFile(path);
         if (!file.exists()) {
             return flag;
         }
@@ -284,10 +285,10 @@ public class InterfFileDownload001Service {
         if (tempList != null) {
             for (int i = 0; i < tempList.length; i++ ) {
                 if (path.endsWith(File.separator)) {
-                    temp = new File(path + tempList[i]);
+                    temp = new SafelyFile(path + tempList[i]);
                 }
                 else {
-                    temp = new File(path + File.separator + tempList[i]);
+                    temp = new SafelyFile(path + File.separator + tempList[i]);
                 }
                 if (temp.isFile()) {
                    boolean rec =  temp.delete();
@@ -316,7 +317,7 @@ public class InterfFileDownload001Service {
 
         // 如果当前画面的模板不存在，则下载所有模板
         zipFileName =zipFileName+".zip";
-        File zipFile = new File(exportFilePath + File.separator + zipFileName);
+        File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
         if(zipFile.exists()){
             zipFile.delete();
         }
@@ -328,7 +329,7 @@ public class InterfFileDownload001Service {
             stream = new FileOutputStream(zipFile);
             zipOut =new ZipOutputStream(stream);
             for(String filePath : filePaths){  
-                File inputFile = new File(filePath);  //根据文件路径创建文件  
+                File inputFile = new SafelyFile(filePath);  //根据文件路径创建文件  
                 if(inputFile.exists()) { //判断文件是否存在  
                     if (inputFile.isFile()) {  //判断是否属于文件，还是文件夹  
                         //创建输入流读取文件  

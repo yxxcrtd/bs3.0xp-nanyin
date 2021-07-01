@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.basicdata.mstcalendartype.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -209,4 +210,19 @@ public class MstCalendarType001Controller extends BaseController {
         List<SuggestDto> temp = mstCalendarType001001service.getTradeCalendarName(param,isTradeCalendar);
         return temp;
     } 
+    
+  //TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 start
+    @ResponseBody
+    @RequestMapping("/calendarIdIsUsed")
+    public boolean calendarIdIsUsed(@RequestBody MstCalendarType001Dto dto){ 
+    	List<String> calendarIdList = new ArrayList<String>();
+    	for(int i =0;i<dto.getSelectedItem().size();i++) {
+    		calendarIdList.add(dto.getSelectedItem().get(i).getTradeCalendarId());
+    	}
+    	 Map<String,Object> map = new HashMap<>();
+         map.put("calendarIdList", calendarIdList);
+        boolean flag = mstCalendarType001001service.calendarIdIsUsed(map);
+        return flag;
+    }
+    //TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 end
 }

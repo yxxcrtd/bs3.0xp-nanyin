@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -21,12 +22,6 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.trade.trdrepotrade.dto.InterfOpicsTradRepoDto;
 import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeDto;
 import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeReferenceDto;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.InterfTradRepoasst;
-import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
-import com.joyintech.tams.common.base.entity.TrdMatchInfo;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 
 /**
@@ -60,6 +55,17 @@ public interface TrdRepoTradeMapper {
      * @since 1.0
      */
     List<PtlSecPositionFlow> selectPtlSecPositionFlow(Map<String, Object> param);
+
+    /**
+     * 根据交易编号检索指令持仓流水（持仓类型为E01）
+     * ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+     * @author jiangpeng
+     *
+     * @param param param
+     * @return List<EtrSecPositionFlow>
+     * @since 1.0
+     */
+    List<EtrSecPositionFlow> selectEtrSecPositionFlow(Map<String, Object> param);
 
     /**
      * 根据工作流代码，查询交易编号

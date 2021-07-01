@@ -609,6 +609,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             	trdProductDeal.setfTradeId("");
 //            }
 //            	trdProductDeal.setTradeAmt(entity.getTradeAmt());
+            trdProductDeal.setTradeAmt(entity.getTradeRepAmt());
             trdProductDeal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
             trdProductDeal.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());//交易状态
@@ -1052,7 +1053,10 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
         // modified by wangguoxian 费用设置 20190801 end
         // 到期收益率 = 画面.到期收益率/100
         if (dto.getYield() != null) {
-            dto.setYield(dto.getYield());
+            /*modify by jiangpeng on 20210512 ZGBSSE-258*/
+            dto.setYield(ArithmeticUtil.divide(dto.getYield(), new BigDecimal(100)));
+            dto.setExerYield(ArithmeticUtil.divide(dto.getExerYield(), new BigDecimal(100)));
+            /*modify by jiangpeng on 20210512 ZGBSSE-258*/
         }else{
         	dto.setYield(ArithmeticUtil.divide(dto.getExerYield(), new BigDecimal(100)));
         	//add by xuzhihao start
@@ -2062,6 +2066,10 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
         param.setPortfolioId(trdProductDealAdd.getPortfolioId());
         TrdProductDeal trdProductDeal = new TrdProductDeal();
         BeanUtil.copyPropertiesIgnoreNull(trdProductDeal,dto);
+// add by zoujiamin  ZGBSSE-256 转仓时划款指令表交易金额取了券面总额，因为dto中交易金额应该是getTradeRepAmt，但复制的时候传入了trade_mount
+        trdProductDeal.setTradeAmt(dto.getTradeRepAmt());
+// add by zoujiamin  ZGBSSE-256 转仓时划款指令表交易金额取了券面总额，因为dto中交易金额应该是getTradeRepAmt，但复制的时候传入了trade_mount
+
         param.setDeal(trdProductDeal);
         BussTrdTransferOrderDto ret = bussTrdTransferOrderService.generateOrder(param);
         List<BussTrdTransferOrderDto> bussTrdTransferOrderDtos = new ArrayList<>();

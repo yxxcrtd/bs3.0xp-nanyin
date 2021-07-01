@@ -629,6 +629,10 @@ var table;
        				clearInterval(markInterval);
        			}
         };
+        // “对手方账号名称”、“对手方账号开户网点” 字段初始化
+        if ($("#acctRivalId").val !== null && $("#acctRivalId").val !== '') {
+            accountChangeAction($("#acctRivalId"));
+        }
     };
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){

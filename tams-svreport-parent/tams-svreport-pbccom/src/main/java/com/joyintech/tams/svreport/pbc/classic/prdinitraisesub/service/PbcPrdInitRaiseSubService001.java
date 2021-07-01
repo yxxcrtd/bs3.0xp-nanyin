@@ -8,7 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +131,14 @@ public class PbcPrdInitRaiseSubService001 extends CommonExportService<PbcInitPro
 	            "/com/joyintech/tams/svreport/pbc/classic/prdinitraisesub/conf/export_conf.xml")
 	            .dataSource(DataSourceType.MASERT);
 	}
+
+	@Override
+	public void setCellValue(String beanName, Cell cell, String propName, Object value) {
+		if( "vdate".equals(propName) && value != null){
+			cell.setCellValue(DateUtil.format((Date)value));
+		}
+	}
+
 	/**
 	 * 查询要导出的数据
 	 */

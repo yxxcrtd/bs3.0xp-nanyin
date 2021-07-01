@@ -10,19 +10,42 @@
 package com.joyintech.tams.invest.trade.trdstandardbond.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.EtrSecPositionFlowMapper;
+import com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper;
+import com.joyintech.tams.common.base.dao.TrdStasecFlowDetailMapper;
+import com.joyintech.tams.common.base.dao.TrdStasecFlowMapper;
+import com.joyintech.tams.common.base.entity.EtrSecPositionFlow;
+import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.trade.trdstandardbond.dto.TrdStandardBond002Dto;
+import com.joyintech.tams.invest.trade.trdstandardbond.dto.TrdStandardBond003Dto;
+import com.joyintech.tools.collectors.JoyinCollectors;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +54,21 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
 
     @Autowired
     private IPlatformDate platformDateImpl;
+    
+    @Autowired
+    private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
+
+    @Autowired
+    private EtrSecPositionFlowMapper etrSecPositionFlowMapper;
+    
+    @Autowired
+    private TrdStasecFlowDetailMapper trdStasecFlowDetailMapper;
+        
+    @Autowired
+    private BaseGetBussinessId baseGetBussinessId;
+    
+    @Autowired
+    private TrdStasecFlowMapper trdStasecFlowMapper;
 
     /**
      * 工作流doInsert
@@ -41,10 +79,10 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     @Override
     public void doInsert(TrdStandardBond002Dto entity, OperationType operationType) {
         //出库不考虑撤销
-        if (!StringUtil.isEmptyList(entity.getPledgeBondList())) {
-            entity.setIsBack(false);
-            entity.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
-            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSubmit",
+        if (StringUtil.equals(entity.getOperateType(), "submit")&&!StringUtil.isEmptyList(entity.getPledgeBondList())) {
+            entity.setIsComplete(DictCodeListExt1.是否_否.getValue());
+        	entity.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSave",
                     entity, Long.class);
         }
     }
@@ -56,11 +94,15 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
      */
     @Override
     public void doUpdate(TrdStandardBond002Dto input) {
-        //出库不考虑撤销
+    	//1. 生成反向流水，并删除之前的质押信息
+    	processOldFlow(input,false);// modify by jiangpeng on 20210420 ZGBSS-1229
+    	//2. 生成信息交易编号信息
+    	setTradeIdList(input);
+        //3.如果存在质押券信息，则需要重新入库
         if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
-            input.setIsBack(false);
+        	input.setIsComplete(DictCodeListExt1.是否_否.getValue());
             input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
-            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSubmit",
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSave",
                     input, Long.class);
         }
     }
@@ -72,12 +114,26 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
      */
     @Override
     public void doBack(TrdStandardBond002Dto input) {
-        //出库不考虑撤销
-        if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
-            input.setIsBack(true);
-            input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
-            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSubmit",
-                    input, Long.class);
+    	//1. 生成反向流水
+    	processOldFlow(input,true);// modify by jiangpeng on 20210420 ZGBSS-1229
+    	//2. 交易编号信息置空
+    	input.setTradeIdList(null);
+    	//3. 更新留痕表
+        ProcessMark newEntity;
+        try {
+            // 获取新的PK
+        	newEntity = WorkflowContext.getProcessMarkService().getParameterByAnnotation(
+        			input);
+            // 工作流ID
+            newEntity.setWorkflowId(input.getWorkflowId());
+            newEntity.setStatus(input.getStatus());
+            newEntity.setBusinessData(JsonUtils.object2Json(input));
+            // 更新业务表数据
+            // 操作留痕表
+            WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -99,8 +155,14 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
      */
     @Override
     public void doComplete(TrdStandardBond002Dto input, OperationType operationType) {
+    	//1. 生成反向流水
+    	processOldFlow(input,false);// modify by jiangpeng on 20210420 ZGBSS-1229
+    	//2. 重新生成交易编号信息
+    	setTradeIdList(input);
+    	//3. 重新入表
         Long insertCount = 0L;
         if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
+        	input.setIsComplete(DictCodeListExt1.是否_是.getValue());
             input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
             insertCount += restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSave",
                     input, Long.class);
@@ -129,5 +191,89 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
         params.put("searchDate", platformDateImpl.getSysDateStr());
         return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/selectAvaPledgeBondList",
                 params, TrdStandardBond002Dto.class);
+    }
+    
+    /**
+     * 根据保存的交易编号生成反向的交易流水
+     * @param entity
+     */
+    private void processOldFlow(TrdStandardBond002Dto entity,boolean isDoBack) {// modify by jiangpeng on 20210420 ZGBSS-1229
+    	String [] holdingTypes = { DictCodeListExt1.持仓类型_临时.getValue(), DictCodeList.持仓类型_质押.getValue()};
+     	if(entity.getTradeIdList()!=null&&entity.getTradeIdList().size()>0) {
+    		//1. 获取之前所有的流程中流水
+    		List<PtlSecPositionFlow> secFlows = new ArrayList<>();
+            // add by jiangpeng on 20210420 start ZGBSS-1229
+            List<EtrSecPositionFlow> etrSecFlows = new ArrayList<>();
+            // add by jiangpeng on 20210420 end
+    		Map<String,Object> param = new HashMap<>();
+    		for(String tradeId:entity.getTradeIdList()) {
+    			param.put("finprodId", tradeId);
+    			for(String holdingType:holdingTypes) {
+    				param.put("holdingType", holdingType);
+    				secFlows.addAll(ptlSecPositionFlowMapper.selectSecFlow(param));
+    			}
+                // add by jiangpeng on 20210420 start ZGBSS-1229
+                if(isDoBack) {
+                    param.put("holdingType", DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    etrSecFlows.addAll(etrSecPositionFlowMapper.selectEtrSecFlow(param));
+                }
+                // add by jiangpeng on 20210420 end
+    			//删除质押信息
+    			trdStasecFlowMapper.deleteByPrimaryKey(tradeId);
+    			trdStasecFlowDetailMapper.deleteBySeq(tradeId);
+    		}
+    		//2. 流水金额反向
+    		List<PtlSecPositionFlowDto> ptlSecPositionFlowDtos = new ArrayList<>();
+    		for(PtlSecPositionFlow flow:secFlows) {
+    			PtlSecPositionFlowDto dto = new PtlSecPositionFlowDto();
+    			BeanUtils.copyProperties(flow, dto);
+    		    ptlSecPositionFlowDtos.add(dto);
+    		}
+            // add by jiangpeng on 20210420 start ZGBSS-1229
+            List<EtrSecPositionFlowDto> etrSecPositionFlowDtos = new ArrayList<>();
+            for (EtrSecPositionFlow flow : etrSecFlows) {
+                EtrSecPositionFlowDto dto = new EtrSecPositionFlowDto();
+                BeanUtils.copyProperties(flow, dto);
+                dto.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                etrSecPositionFlowDtos.add(dto);
+            }
+            // add by jiangpeng on 20210420 end
+    		//3. 提交处理
+    		if(ptlSecPositionFlowDtos.size()>0) {
+                PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
+                ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlowDtos);
+                restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/common/ptlposition/insertPosition",
+                        ptlPositionHoldDto, Boolean.class);
+    		}
+            // add by jiangpeng on 20210420 start ZGBSS-1229
+            if (isDoBack && !StringUtil.isEmptyList(etrSecPositionFlowDtos)) {
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlowDtos);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            }
+            // add by jiangpeng on 20210420 end
+    	}
+    }
+    
+    /**
+     * 给实体类设置 tradeIdList
+     * @param entity
+     */
+    public void setTradeIdList(TrdStandardBond002Dto entity) {
+    	List<String> tradeIdList = new ArrayList<>();
+    	if (!StringUtil.isEmptyList(entity.getPledgeBondList())) {
+    		//结果中根据"组合代码,产品代码"进行分组设置tradeId
+    		//1. 获取所有分组
+    		Map<String, List<TrdStandardBond002Dto>> dtoMap = entity.getPledgeBondList().stream().collect(JoyinCollectors.groupingBy(x -> x.getPortfolioId() + "," + x.getSecAcctId()));
+    		//2. 根据分组，生成所有的tradeId
+    		for(int i=0;i<dtoMap.keySet().size();i++) {
+                BussinessCodeParameter parameter = new BussinessCodeParameter();
+                parameter.setSeqNo("9999");
+                String seqNo = baseGetBussinessId.buildBussinessCode(parameter);
+                tradeIdList.add(seqNo);
+    		}
+    	}
+		//3. 设置 tradeIdList
+		entity.setTradeIdList(tradeIdList);
     }
 }

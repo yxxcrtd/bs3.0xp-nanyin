@@ -155,7 +155,8 @@ public class BookClawbackService {
         if (!StringUtil.isEmptyList(targetFinClawbackCalcRuleList)) {
             targetFinClawbackCalcRule = targetFinClawbackCalcRuleList.get(targetFinClawbackCalcRuleList.size() - 1);
         }
-
+        // 理论处理flag
+        boolean theoryFlag = true;
         // 6.回补规则判断
         // 获取交易信息
         if (StringUtil.equals(targetFinClawbackCalcRule.getCawlbackType(), DictCodeList.回补方式_手动回补.getValue())) {
@@ -167,7 +168,9 @@ public class BookClawbackService {
             maps.put("ps", DictCodeList.交易方向_回补.getValue());
 
             List<BookClawbackDto> listBookClawbackDto = bookClawbackMapper.getDealInfo(maps);
-
+            if (StringUtil.isEmptyList(listBookClawbackDto) && listBookClawbackDto.size() == 0 ){
+                theoryFlag = false;
+            }
             for (BookClawbackDto dto : listBookClawbackDto) {
                 BigDecimal 回补金额 = BigDecimal.ZERO;
                 if(StringUtil.equals(dto.getFinprodId(), targetFinClawbackCalcRule.getFinprodId())) {
@@ -201,8 +204,6 @@ public class BookClawbackService {
         Date lastAccrualDate = null;// 上次计提日
         Date accrualDate = null;// 本次计提日
 
-        // 理论处理flag
-        boolean theoryFlag = true;
         // update by wangcheng 20191108 计提频率getAccrCycle() 改为 计提类型getAccrType()
         if (StringUtil.equals(targetPerfRewardRule.getAccrType(), DictCodeList.计提类型_高频.getValue())) {
             clawbackDateStart = happenDate;

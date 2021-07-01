@@ -1,14 +1,16 @@
 package com.joyintech.service.period.trdbondduration.service;
 
-import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.dao.PeriodCommonMapper;
 import com.joyintech.tams.invest.common.autoperiod.common.service.InvestPeriodCommonService;
 import com.joyintech.service.period.trdbondduration.dao.TrdBondDurationMapper;
@@ -121,7 +123,7 @@ public class TrdBondDurationService extends BaseService {
         this.setParamForFindAllData(param);
         Page<TrdBondDurationDto> result = null;
         //update by wangcheng SHBS-2192 查询条件输入 资金到账日  ，有效状态选择 待处理  报错
-        if(StringUtil.isNotEmpty((String)param.get("tradeDateStart"))&&((statusValid.size()==1) && statusValid.contains("01"))){
+        if(statusValid != null && StringUtil.isNotEmpty((String)param.get("tradeDateStart"))&&((statusValid.size()==1) && statusValid.contains("01"))){
             result = new Page<TrdBondDurationDto>();
         }else{
             result = queryForPageForSelectReturn(page, length, () -> trdBondDurationMapper.findPage(param));
@@ -235,6 +237,13 @@ public class TrdBondDurationService extends BaseService {
             // 删除其他表
             return Boolean.TRUE.toString();
         }
+        // 债券存续期中间付息、还本的有效数据增加理论支付日
+        if (StringUtil.isNotEmpty(durationDto.getBaseTotalTradeInfoDto())
+                && StringUtil.isNotEmpty(durationDto.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal())
+                && !StringUtil.isNotEmpty(durationDto.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal().getPayDate())){
+            durationDto.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal().setPayDate(DateUtil.parse(durationDto.getPayDate()));
+        }
+         // 债券存续期中间付息、还本的有效数据增加理论支付日
         investPeriodCommonService.doInsertAndDelete(durationDto.getBaseTotalTradeInfoDto(), updateUser, updateTime,
             durationDto.getWorkflowId());
 
@@ -604,5 +613,22 @@ public class TrdBondDurationService extends BaseService {
 
     public List<String> findWorkflowProcessDtos(Map<String, Object> params) {
         return trdBondDurationMapper.findWorkflowProcessDtos(params);
+    }
+
+    /**
+     * 资产代码：下拉框
+     *
+     * @param
+     * @return 资产代码：下拉框
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param){
+        param.put("loginUserName", SecurityUtil.getLoginUser().getUserName());
+        param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("isautobond", CacheUtil.getSysParam("IS_AUTOBOND"));
+
+        return queryForPageForSelectReturn(page, length, () -> trdBondDurationMapper.getFinprodId(param));
     }
 }

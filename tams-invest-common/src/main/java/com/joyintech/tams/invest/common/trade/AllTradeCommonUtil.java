@@ -867,7 +867,12 @@ public class AllTradeCommonUtil {
                                 stl.setPs(DictCodeListExt1.收支方向_支出.getValue().equals(
                                     stl.getPs()) ? DictCodeListExt1.收支方向_收入.getValue() : DictCodeListExt1.收支方向_支出.getValue());
                                 if(!(DictCodeList.共通业务类型_项目类资产交易.getValue().equals(busiType) || DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue().equals(busiType))){
-                                stl.setTradeId(deal.getTradeId());}//项目类和计划类利率型交易存的是汇总交易编号； add by zhouxiuping
+                                stl.setTradeId(deal.getTradeId());} //项目类和计划类利率型交易存的是汇总交易编号； add by zhouxiuping
+                                // add by zoujiamin ZGBSSE-256 start
+                                if(DictCodeList.共通业务类型_债券类资产交易.getValue().equals(busiType)){
+                                    stl.setTradeId(deal.getTotleTradeId());
+                                }
+                                // add by zoujiamin ZGBSSE-256 end  暂时只针对债券调整 
                                 stlPayOrdersMapper.insert(stl);
                                 stlPayOrders.add(stl);
                                 ptlCashPositionFlows.addAll(
@@ -1563,7 +1568,10 @@ public class AllTradeCommonUtil {
                 if (DictCodeList.持仓类型_在途.getValue().equals(ptlSecPositionFlow.getHodingType())
                     || DictCodeList.持仓类型_质押.getValue().equals(ptlSecPositionFlow.getHodingType())
                     || DictCodeList.持仓类型_融入.getValue().equals(ptlSecPositionFlow.getHodingType())
-                    || DictCodeList.持仓类型_融出.getValue().equals(ptlSecPositionFlow.getHodingType())) {
+                    || DictCodeList.持仓类型_融出.getValue().equals(ptlSecPositionFlow.getHodingType())
+                    // add by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                    || DictCodeListExt1.持仓类型_借贷融入.getValue().equals(ptlSecPositionFlow.getHodingType())
+                    || DictCodeListExt1.持仓类型_借贷融出.getValue().equals(ptlSecPositionFlow.getHodingType())) {
                     baseAssetCashPositionCommMapper.updateSecPositionAmt(ptlSecPositionFlow);
                 }
             });
@@ -1620,7 +1628,10 @@ public class AllTradeCommonUtil {
                         if (DictCodeList.持仓类型_在途.getValue().equals(ptlSecPositionFlow.getHodingType())
                                 || DictCodeList.持仓类型_质押.getValue().equals(ptlSecPositionFlow.getHodingType())
                                 || DictCodeList.持仓类型_融入.getValue().equals(ptlSecPositionFlow.getHodingType())
-                                || DictCodeList.持仓类型_融出.getValue().equals(ptlSecPositionFlow.getHodingType())) {
+                                || DictCodeList.持仓类型_融出.getValue().equals(ptlSecPositionFlow.getHodingType())
+                                // add by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                                || DictCodeListExt1.持仓类型_借贷融入.getValue().equals(ptlSecPositionFlow.getHodingType())
+                                || DictCodeListExt1.持仓类型_借贷融出.getValue().equals(ptlSecPositionFlow.getHodingType())) {
                             baseAssetCashPositionCommMapper.updateSecPositionAmt(ptlSecPositionFlow);
                         }
                     });

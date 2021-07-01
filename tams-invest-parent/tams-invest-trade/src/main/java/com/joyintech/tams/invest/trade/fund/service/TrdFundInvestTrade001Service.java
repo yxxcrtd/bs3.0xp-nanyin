@@ -20,11 +20,11 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
+import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -38,9 +38,7 @@ import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDt
 import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
-import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
-import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
@@ -269,7 +267,9 @@ public class TrdFundInvestTrade001Service extends CommonExportService<TrdFundInv
         }
         
         if(StringUtil.equals(entity.getPs(), DictCodeListExt2.交易方向_认购.getValue()) 
-        		|| StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购.getValue())){
+        		|| StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购.getValue())
+                || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_买入.getValue())
+                || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_卖出.getValue())){
             //删除授信占用
             if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
                 riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());

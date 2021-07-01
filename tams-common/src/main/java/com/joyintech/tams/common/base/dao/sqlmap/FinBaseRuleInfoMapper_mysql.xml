@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinBaseRuleInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinBaseRuleInfo" >
+        <id column="BASE_RULE_ID" property="baseRuleId" jdbcType="VARCHAR" />
+        <id column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="RATE_TYPE" property="rateType" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="INDEX_ID" property="indexId" jdbcType="VARCHAR" />
+        <result column="INDEX_SOURCE" property="indexSource" jdbcType="VARCHAR" />
+        <result column="COEFFICIENT" property="coefficient" jdbcType="DECIMAL" />
+        <result column="SPREAD_RATE" property="spreadRate" jdbcType="DECIMAL" />
+        <result column="RESET_TYPE" property="resetType" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="BASE_RULE_TYPE" property="baseRuleType" jdbcType="VARCHAR" />
+        <result column="PUBLISH_TYPE" property="publishType" jdbcType="VARCHAR" />
+        <result column="RATE_LOWER" property="rateLower" jdbcType="DECIMAL" />
+        <result column="RATE_LIMIT" property="rateLimit" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BASE_RULE_ID BASE_RULE_ID, EFF_DATE EFF_DATE, RATE_TYPE RATE_TYPE, RATE RATE, INDEX_ID INDEX_ID,
+        INDEX_SOURCE INDEX_SOURCE, COEFFICIENT COEFFICIENT, SPREAD_RATE SPREAD_RATE, RESET_TYPE RESET_TYPE,
+        FINPROD_ID FINPROD_ID, BRANCH BRANCH, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, BASE_RULE_TYPE BASE_RULE_TYPE,
+        PUBLISH_TYPE PUBLISH_TYPE, RATE_LOWER RATE_LOWER, RATE_LIMIT RATE_LIMIT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinBaseRuleInfoMapper.Base_Column_List" />
+        from FIN_BASE_RULE_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinBaseRuleInfoMapper.Base_Column_List" />
+        from FIN_BASE_RULE_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinBaseRuleInfoKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinBaseRuleInfoMapper.Base_Column_List" />
+        from FIN_BASE_RULE_INFO
+        where BASE_RULE_ID = #{baseRuleId,jdbcType=VARCHAR}
+        and EFF_DATE = #{effDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinBaseRuleInfoKey" >
+        delete from FIN_BASE_RULE_INFO
+        where BASE_RULE_ID = #{baseRuleId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinBaseRuleInfo" >
+        insert into FIN_BASE_RULE_INFO (BASE_RULE_ID, EFF_DATE, RATE_TYPE,
+            RATE, INDEX_ID, INDEX_SOURCE,
+            COEFFICIENT, SPREAD_RATE, RESET_TYPE,
+            FINPROD_ID, BRANCH, REMARK,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, BASE_RULE_TYPE,
+            PUBLISH_TYPE, RATE_LOWER, RATE_LIMIT
+            )
+        values (#{baseRuleId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{rateType,jdbcType=VARCHAR},
+            #{rate,jdbcType=DECIMAL}, #{indexId,jdbcType=VARCHAR}, #{indexSource,jdbcType=VARCHAR},
+            #{coefficient,jdbcType=DECIMAL}, #{spreadRate,jdbcType=DECIMAL}, #{resetType,jdbcType=VARCHAR},
+            #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{baseRuleType,jdbcType=VARCHAR},
+            #{publishType,jdbcType=VARCHAR}, #{rateLower,jdbcType=DECIMAL}, #{rateLimit,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinBaseRuleInfo" >
+        insert into FIN_BASE_RULE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="baseRuleId != null" >
+                BASE_RULE_ID,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="rateType != null" >
+                RATE_TYPE,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="indexId != null" >
+                INDEX_ID,
+            </if>
+            <if test="indexSource != null" >
+                INDEX_SOURCE,
+            </if>
+            <if test="coefficient != null" >
+                COEFFICIENT,
+            </if>
+            <if test="spreadRate != null" >
+                SPREAD_RATE,
+            </if>
+            <if test="resetType != null" >
+                RESET_TYPE,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="baseRuleType != null" >
+                BASE_RULE_TYPE,
+            </if>
+            <if test="publishType != null" >
+                PUBLISH_TYPE,
+            </if>
+            <if test="rateLower != null" >
+                RATE_LOWER,
+            </if>
+            <if test="rateLimit != null" >
+                RATE_LIMIT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="baseRuleId != null" >
+                #{baseRuleId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="rateType != null" >
+                #{rateType,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="indexId != null" >
+                #{indexId,jdbcType=VARCHAR},
+            </if>
+            <if test="indexSource != null" >
+                #{indexSource,jdbcType=VARCHAR},
+            </if>
+            <if test="coefficient != null" >
+                #{coefficient,jdbcType=DECIMAL},
+            </if>
+            <if test="spreadRate != null" >
+                #{spreadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="resetType != null" >
+                #{resetType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="baseRuleType != null" >
+                #{baseRuleType,jdbcType=VARCHAR},
+            </if>
+            <if test="publishType != null" >
+                #{publishType,jdbcType=VARCHAR},
+            </if>
+            <if test="rateLower != null" >
+                #{rateLower,jdbcType=DECIMAL},
+            </if>
+            <if test="rateLimit != null" >
+                #{rateLimit,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinBaseRuleInfo" >
+        insert into FIN_BASE_RULE_INFO(BASE_RULE_ID, EFF_DATE, RATE_TYPE, RATE, INDEX_ID,
+        INDEX_SOURCE, COEFFICIENT, SPREAD_RATE, RESET_TYPE, FINPROD_ID, BRANCH, REMARK, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, BASE_RULE_TYPE, PUBLISH_TYPE,
+        RATE_LOWER, RATE_LIMIT)
+        select BASE_RULE_ID, EFF_DATE, RATE_TYPE, RATE, INDEX_ID,
+            INDEX_SOURCE, COEFFICIENT, SPREAD_RATE, RESET_TYPE, FINPROD_ID, BRANCH, REMARK, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, BASE_RULE_TYPE, PUBLISH_TYPE,
+            RATE_LOWER, RATE_LIMIT
+             from FIN_BASE_RULE_INFO
+             where 1 = 1 and BASE_RULE_ID = #{baseRuleId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinBaseRuleInfo" >
+        update FIN_BASE_RULE_INFO
+        <set >
+            <if test="rateType != null" >
+                RATE_TYPE = #{rateType,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="indexId != null" >
+                INDEX_ID = #{indexId,jdbcType=VARCHAR},
+            </if>
+            <if test="indexSource != null" >
+                INDEX_SOURCE = #{indexSource,jdbcType=VARCHAR},
+            </if>
+            <if test="coefficient != null" >
+                COEFFICIENT = #{coefficient,jdbcType=DECIMAL},
+            </if>
+            <if test="spreadRate != null" >
+                SPREAD_RATE = #{spreadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="resetType != null" >
+                RESET_TYPE = #{resetType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="baseRuleType != null" >
+                BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR},
+            </if>
+            <if test="publishType != null" >
+                PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR},
+            </if>
+            <if test="rateLower != null" >
+                RATE_LOWER = #{rateLower,jdbcType=DECIMAL},
+            </if>
+            <if test="rateLimit != null" >
+                RATE_LIMIT = #{rateLimit,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where BASE_RULE_ID = #{baseRuleId,jdbcType=VARCHAR}
+        and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinBaseRuleInfo" >
+        update FIN_BASE_RULE_INFO
+        set RATE_TYPE = #{rateType,jdbcType=VARCHAR},
+            RATE = #{rate,jdbcType=DECIMAL},
+            INDEX_ID = #{indexId,jdbcType=VARCHAR},
+            INDEX_SOURCE = #{indexSource,jdbcType=VARCHAR},
+            COEFFICIENT = #{coefficient,jdbcType=DECIMAL},
+            SPREAD_RATE = #{spreadRate,jdbcType=DECIMAL},
+            RESET_TYPE = #{resetType,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR},
+            PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR},
+            RATE_LOWER = #{rateLower,jdbcType=DECIMAL},
+            RATE_LIMIT = #{rateLimit,jdbcType=DECIMAL}
+        where BASE_RULE_ID = #{baseRuleId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+</mapper>

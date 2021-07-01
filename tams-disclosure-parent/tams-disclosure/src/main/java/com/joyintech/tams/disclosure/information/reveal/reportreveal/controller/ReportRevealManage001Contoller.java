@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.tams.disclosure.information.config.reportpage.controller.ReportPageManage002Controller;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageParamDto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.service.ReportConfirmManage001Service;
@@ -114,6 +113,8 @@ public class ReportRevealManage001Contoller extends BaseController {
         String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);       
         if(StringUtil.isNotEmpty(workflowId)){
         	 model.addAttribute("workflowId",workflowId);
+        	 ReportConfirmManage001Dto entity = reportRevealManage001Service.getBussinessEntityByWorkflowId(workflowId);
+        	 model.addAttribute("selectedSeqNo",entity.getSeqno());
         }
         model.addAttribute("REPORT_STYLE",JsonUtils.objectArray2Json(ftpPathService.getReportCategory().toArray()));
         this.setSelectOptionToModel(model,DictCode.披露状态);

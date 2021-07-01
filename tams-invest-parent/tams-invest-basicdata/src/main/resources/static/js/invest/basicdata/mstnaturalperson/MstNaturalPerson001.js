@@ -73,9 +73,9 @@
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.ajaxJson(basePath + 'invest/basicdata/mstnaturalperson/MstNaturalPerson001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                Joyin.ajaxJson(basePath +'invest/basicdata/mstnaturalperson/MstNaturalPerson001/delete', object, function(result){
-                    table.reload();
-                });
+                WorkFlow.doDeleteList(basePath + 'invest/basicdata/mstnaturalperson/MstNaturalPerson001/delete', object,"MstNaturalPerson001_btn_delete", "MstNaturalPerson002", function(result) {
+                                        table.reload();
+                                    });
             });
         });
     });

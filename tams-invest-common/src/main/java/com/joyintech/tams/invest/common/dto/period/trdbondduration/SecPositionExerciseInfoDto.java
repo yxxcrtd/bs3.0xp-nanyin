@@ -47,6 +47,19 @@ public class SecPositionExerciseInfoDto extends BaseEntity {
     private BigDecimal settleAmt;
 
     /**
+     * 单位应计利息
+     */
+    private BigDecimal intAmt;
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    /**
      * 获取 portfolioId
      *
      * @return portfolioId

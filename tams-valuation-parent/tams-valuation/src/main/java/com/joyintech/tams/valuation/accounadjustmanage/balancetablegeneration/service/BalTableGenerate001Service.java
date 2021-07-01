@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -384,12 +385,12 @@ public class BalTableGenerate001Service extends CommonExportService<BalTableGene
 				try {
 					String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 					String zipFileName = FileNameUtil.createFileName("zip");
-					File zipFile = new File(exportFilePath + File.separator + zipFileName);
+					File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
 					zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
 					InputStream input = null;
 					for (ExportFileDto item : listFileDto) {
 						try {
-							File file = new File(item.getFilePath());
+							File file = new SafelyFile(item.getFilePath());
 							input = new FileInputStream(file);
 							zipOut.putNextEntry(new ZipEntry(file.getName()));
 							int tmp = 0;
@@ -422,7 +423,7 @@ public class BalTableGenerate001Service extends CommonExportService<BalTableGene
 			}
 			// 一条时单个文件导出
 			else {
-				File file = new File(listFileDto.get(0).getFilePath());
+				File file = new SafelyFile(listFileDto.get(0).getFilePath());
 				return ExportUtil.export(listFileDto.get(0).getFileName(), file, true);
 			}
 		} else {

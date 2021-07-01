@@ -16,6 +16,7 @@ import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.json.JsonSanitizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,7 @@ public class InterfComponentController {
             // 5、写响应报文
             this.writeContent(rsp, rspStr);
             logger.info("==========doEsbData end==========");
-            return rspStr;
+            return JsonSanitizer.sanitize(rspStr);
         }
         catch (Exception e) {
             logger.info("==========doEsbData Exception==========\r\n {}", e.getMessage());
@@ -97,7 +98,7 @@ public class InterfComponentController {
         OutputStream stream = null;
         try {
             stream = response.getOutputStream();
-            stream.write(rspStr.getBytes(UTF_8));
+            stream.write(JsonSanitizer.sanitize(rspStr).getBytes(UTF_8));
         }
         catch (Exception e) {
             logger.error(e.getMessage());

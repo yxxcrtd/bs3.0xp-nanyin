@@ -376,6 +376,7 @@ public class AutoPeriodProjectCommonService extends BaseService {
 //        }//update zhangweiqi 存续期通道费修改  2019-10-15 end
          trdFinProductDealTotal.setFeeAmt(entity.getChannelFee());	
          trdFinProductDealTotal.setFeeAmtUnpay(entity.getChannelFee()==null?BigDecimal.ZERO:entity.getChannelFee());
+         trdFinProductDealTotal.setRemark(entity.getRemark());
         return trdFinProductDealTotal;
     }
 

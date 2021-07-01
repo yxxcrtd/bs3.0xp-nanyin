@@ -20,7 +20,7 @@
 		plan.TERMDAYS_TERM,
 		plan.PRIN_AMT,
 		plan.INT_PRIN_AMT,
-		plan.INT_AMT,
+		decode(plan.is_pay_int,'N',0,plan.INT_AMT) as INT_AMT,
 		plan.IS_PAY_INT,
 		plan.CASH_AMT,
 		plan.CASH_UNIT_TYPE,

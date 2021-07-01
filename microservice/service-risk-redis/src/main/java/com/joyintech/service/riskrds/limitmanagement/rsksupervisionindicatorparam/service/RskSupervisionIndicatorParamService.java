@@ -1363,7 +1363,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
     		}
     		if(StringUtil.equals(map.get("bodyGradeType"), BussinessDictCodeListRds.评级分类_内部评级.getValue())){
     			RskEventItemRule rule = new RskEventItemRule();
-    			//rule.setItemCode(BussinessDictCodeListRds.风险事件特征值类型_.getValue());
+    			rule.setItemCode("bondInsideType1");
     			rule.setMatchType(BussinessDictCodeListRds.运算符_包含.getValue());
     			rule.setItemValue(bodyGrade);
     			list.add(rule);
@@ -1381,14 +1381,14 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
     			rule.setMatchType(BussinessDictCodeListRds.运算符_包含.getValue());
     			rule.setItemValue(bondGrade);
     			list.add(rule);
-    		}/*
+    		}
     		if(StringUtil.equals(map.get("bondGradeType"), BussinessDictCodeListRds.评级分类_内部评级.getValue())){
     			RskEventItemRule rule = new RskEventItemRule();
-    			//rule.setItemCode(BussinessDictCodeListRds.风险事件特征值类型_.getValue());
+    			rule.setItemCode("bondInsideType");
     			rule.setMatchType(BussinessDictCodeListRds.运算符_包含.getValue());
     			rule.setItemValue(bondGrade);
     			list.add(rule);
-    		}*/
+    		}
     	}
     	if(StringUtil.isNotEmpty(map.get("mdateRange"))){
     		if(StringUtil.equals(map.get("mdateRange"), BussinessDictCodeListRds.日期范围类型_一年内.getValue())){

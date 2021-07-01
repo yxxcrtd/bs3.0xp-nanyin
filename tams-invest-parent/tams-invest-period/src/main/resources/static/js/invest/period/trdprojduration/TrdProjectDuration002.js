@@ -19,8 +19,23 @@
             	
             }
             if(intAmtUnpayFlag){
-                $('#repayIntAmt_div').show();
+               // $('#repayIntAmt_div').show();
             }
+            if($("#finAssetInfo_finprodMarketId").val() && $("#cashType").val()&&($("#cashType").val()=='02'||$("#cashType").val()=='03') ){
+                var objectPayInt = {
+                    finprodId: $('#finAssetInfo_finprodMarketId').val(),
+                    mdate: $('#mDate').val()
+                }
+                Joyin.ajaxJson(basePath+ "invest/period/trdprojduration/TrdProjectDuration002/isPayIntDate",objectPayInt,function(result){
+                    if(!result){
+                      //若针对，还本带息，返回 true，针对还本不带息，若有付息日=还本日，返回true
+                      $("#isClean").attr("disabled",true);
+                      $("#isClean").val('N').trigger('change');
+                    }
+
+                });
+            }
+
             $("#fpriceAmt,#channelFee,#isClean").change(function () {
                 var channelFee = $("#channelFee").val();
                 var fpriceAmt = $("#fpriceAmt").val();
@@ -37,7 +52,28 @@
                     resetTableData();}
 
                 //resetTableData();
-            })
+            });
+            //add by jiangpeng on 20210422 start TISHKBS-1803
+            $("#arrivalDate").change(function () {
+                if(isTodo) {
+                    var index = layer.open({
+                        type: 1,
+                        icon : 16,
+                        area: ['200px', '100px'],
+                        content: '数据加载中',closeBtn: 0
+                    });
+                    var orderTabel = table.getAllRows();
+                    for (var i = 0; i < orderTabel.length; i++) {
+                        orderTabel[i].settleDateText = $("#arrivalDate").val();
+                        orderTabel[i].settleDate = $("#arrivalDate").val();
+                    }
+                    table.clear(function () {
+                        layui.layer.close(index);
+                        table.addRow(orderTabel)
+                    });
+                }
+            });
+            //add by jiangpeng on 20210422 end TISHKBS-1803
         }
         
         
@@ -54,8 +90,8 @@
                 , {field: 'vDate', width: "200", title: '计息开始日', sortable:false}
                 , {field: 'mDate', width: "200", title: '计息结束日', sortable:false}
                 , {field: 'yield', width: "200", title: '计提利率(%)', type: 'number', sortable:false}
-                , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
-                , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
+               // , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
+               // , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
                 , {field: 'theoryAmt', width: "200", title: '理论本息总额', type: 'money', sortable:false}
                 , {field: 'fpriceAmt',  width: "200",title: '实收本息总额', type: 'money', sortable:false ,edit: true}
                 , {field: 'channelFee',  width: "200",title: '通道费', type: 'money', sortable:false,visible:CHANNEL}
@@ -115,8 +151,8 @@
                 }),
                 "preMap":JSON.stringify({
                     "returnAmount":data.returnAmount,
-                    "repaymentUnpayInterest":data.repaymentUnpayInterest,
-                    "actrRepaymentUnpayInterest":data.actrRepaymentUnpayInterest,
+                   // "repaymentUnpayInterest":data.repaymentUnpayInterest,
+                  //  "actrRepaymentUnpayInterest":data.actrRepaymentUnpayInterest,
                     "theoryAmt":data.theoryAmt,
                     "fpriceAmt":data.fpriceAmt,
                     "taxAmount":data.taxAmount,
@@ -131,8 +167,8 @@
                     , {field: 'vDate', width: "200", title: '计息开始日', sortable:false}
                     , {field: 'mDate', width: "200", title: '计息结束日', sortable:false}
                     , {field: 'yield', width: "200", title: '计提利率(%)', type: 'money', sortable:false}
-                    , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
-                    , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
+                 //   , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
+                 //   , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
                     , {field: 'theoryAmt', width: "200", title: '理论本息总额', type: 'money', sortable:false}
                     , {field: 'fpriceAmt',  width: "200",title: '实收本息总额', type: 'money', sortable:false}
                     , {field: 'calcRule', visible: false}

@@ -7,6 +7,22 @@ $(function () {
      * 纳税日期
      */
     var payment2="";
+    // add by jiangpeng on 20210512 ZGBSSE-363
+    /**
+     * 纳税结束日 记录上一次点击查询时的纳税结束日,用于提交时判断是否修改了纳税结束日
+     */
+    var payTaxMDateCheck = "";
+    /**
+     * 校验是否修改了纳税结束日
+     */
+    var isPayTaxMDateChange = function (){
+        var payTaxMDate = $("#payTaxMDate").val();
+        if(payTaxMDate===payTaxMDateCheck){
+            return false;
+        }
+        return true;
+    }
+    // add by jiangpeng on 20210512 ZGBSSE-363
     $('#taxidenType').val('C12').trigger("change");
     
     // 生成指令参数保存
@@ -134,6 +150,7 @@ $(function () {
         return obj;
     };
     var loadSubProductTable = function () {
+        var isclear = true;//add by jiangpeng on 20210512 ZGBSSE-362
     	// 校验缴税日期与产品账套日期
         Joyin.ajaxJson(basePath +'invest/product/paythevatquery/PayTheVatQuery002/checkBokDate', queryObj(), function(result) {
         			Joyin.ajax(basePath + 'invest/product/paythevatquery/PayTheVatQuery002/search',
@@ -143,13 +160,18 @@ $(function () {
         	        					     var isShowWaterTrafficTax = rows.root[0].showWaterTrafficTax;
         	        					     table.showColumns([{field:'waterTrafficTax',visible: isShowWaterTrafficTax}]); 
         	        					 }
+                                        isclear=false;//add by jiangpeng on 20210512 ZGBSSE-362
         	        					 
         					        	 table.clear(function () {
         					        		 table.addRow(rows.root);
         					              })
         				            })
-             }); 
-        
+             });
+        //add by jiangpeng on 20210512 ZGBSSE-362
+        if(isclear){
+            table.clear();
+        }
+        //add by jiangpeng on 20210512 ZGBSSE-362
     }
     var tableOption = {
 //    	    ajax: {
@@ -700,9 +722,10 @@ $(function () {
      */
 	
     $(function() {
-    	
+        $("#portfolioId").textSelect("setValue",portfolioIdOld);//add by jiangpeng on 20210512 ZGBSSE-365
         // 绑定按钮事件
-        $('#FinproductPayTheVatQuery002_btn_search').click(function() { 
+        $('#FinproductPayTheVatQuery002_btn_search').click(function() {
+            payTaxMDateCheck = $("#payTaxMDate").val(); // add by jiangpeng on 20210512 ZGBSSE-363
         	var message ="";
             //获取纳税截止日的值，并赋给payment
         	if($("#taxidenType").val()== null || $("#taxidenType").val()== ''){
@@ -729,7 +752,6 @@ $(function () {
                 	 loadSubProductTable();
                 }
         	}
-
         });
         //绑定联动
         linkBind();
@@ -737,16 +759,16 @@ $(function () {
         
         //绑定提交事件
         $('#FinproductPayTheVatQuery002_btn_submit').click(function(){
+            // add by jiangpeng on 20210512 ZGBSSE-363
+            //校验是否修改了纳税结束日
+            if(isPayTaxMDateChange()) {
+                Joyin.error("纳税结束日发生调整，请重新查询!");
+                return;
+            }
+            // add by jiangpeng on 20210512 ZGBSSE-363
         	// 检查生成划款指令参数是否发生变化
             if (isCalcConditionChanged()) {
                 return;
-            }
-            if($("#taxClass").val() == TAX_CLASS_02) {
-                var str = $('#channelId').select2('data')[0].object.split(',');
-                var payType = str[1];//划款方式
-                if(payType == PAY_MODE_02) {
-                    buildRemark(); 
-                }
             }
             
             if (table != null && table != '') {
@@ -755,6 +777,15 @@ $(function () {
                		Joyin.alert("请选中数据进行操作!",2);
                     return; 
                	}
+                // modify by jiangpeng on 20210512 ZGBSSE-364
+                if($("#taxClass").val() == TAX_CLASS_02) {
+                    var str = $('#channelId').select2('data')[0].object.split(',');
+                    var payType = str[1];//划款方式
+                    if(payType == PAY_MODE_02) {
+                        buildRemark();
+                    }
+                }
+                // modify by jiangpeng on 20210512 ZGBSSE-364
                var object = {};
                if(datas[datas.length-1].portfolioName=='合计'){
             	   datas.splice(datas.length-1, 1);

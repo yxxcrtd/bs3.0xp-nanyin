@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,5 +127,18 @@ public class ValAssetsAmortizeSet002Service extends CommonExportService<ValAsset
      */
     public boolean checkBokAmoConfig(ValAssetsAmortizeSet001Dto dto) {
         return ValAssetsAmortizeSet002Mapper.checkBokAmoConfig(dto);
+    }
+
+    /**
+     * 资产代码下拉框获取
+     *
+     * @return 返回的数据
+     * @exception Exception
+     *                异常
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getFinprodId2(int page,int length,Map<String, Object> param) {
+        param.put("finprodType", DictCodeListExt1.金融产品类型_债券.getValue());
+        return super.queryForPageForSelectReturn(page,length,()->ValAssetsAmortizeSet002Mapper.getFinprodId2(param));
     }
 }

@@ -9,21 +9,7 @@
  */
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.cprd;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.tams.common.base.entity.FinBaseRuleInfo;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.CPrdBaseInfoValCommonResult;
@@ -33,6 +19,15 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdBenchmarkDetailC;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 货币型型产品业绩基准信息模板处理 (VAL_PRD_BENCHMARK_DETAIL_C)
@@ -89,6 +84,9 @@ public class CPrdPerformanceBenchmarkInfoTemplateRecService {
         List<FinBaseRuleInfo> valFinBenchmarkDetailList = new ArrayList<FinBaseRuleInfo>();
         for (ValPrdBenchmarkDetailC item : listValPrdBenchmarkDetailC) {
             FinBaseRuleInfo dto = new FinBaseRuleInfo();
+            // 基准代码 自动生成 add by tanxuan on 20210331 接口测试入表报错，主键不能为空
+            dto.setBaseRuleId(InterfHelper.getUUid());
+
             // modify by wangzhiang 错误代码注释 20190920 start
             // 基准代码 自动生成
 //            dto.setBmCode(InterfHelper.getUUid());

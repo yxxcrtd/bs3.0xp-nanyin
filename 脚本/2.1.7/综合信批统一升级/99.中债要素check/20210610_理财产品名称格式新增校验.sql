@@ -1,0 +1,5 @@
+--理财产品名称格式新增校验
+delete from CHB_DATACHECK_RULE_INV where  CHECKRULEID in ('FINPRODUCTBUILD002-ys8E4A49-6813-5A9E-B798-007F21706A73','FINPRODUCTBUILD002-ys8E4A49-6813-5A9E-854C-007F21706A73');
+
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('FINPRODUCTBUILD002-ys8E4A49-6813-5A9E-B798-007F21706A73','FinProductBuild002','isCustomizedStringForWhitelist','finprodName',null,'[\u4e00-\u9fa5 || \d || a-z || A-Z]{0,}','Y','理财产品名称仅可由汉字、阿拉伯数字、英文字母组成。','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('FINPRODUCTBUILD002-ys8E4A49-6813-5A9E-854C-007F21706A73','FinNetValueProductBuild002','isCustomizedStringForWhitelist','finprodName',null,'[\u4e00-\u9fa5 || \d || a-z || A-Z]{0,}','Y','理财产品名称仅可由汉字、阿拉伯数字、英文字母组成。','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');

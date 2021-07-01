@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
@@ -212,5 +213,18 @@ public class TrdProjectDuration002Controller extends BaseController {
         }
         String msg = trdProjectDuration002Service.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+    /**
+     *  资产是否还本带息，若还本带息，还本日是否等于付息日
+     * @param ccy 币种
+     * @param acctNo 网点账号
+     * @return 清算账户表
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("isPayIntDate")
+    public Boolean isPayIntDate(@RequestBody Map<String,Object> map) {
+        return trdProjectDuration002Service.isPayIntDate(map);
     }
 }

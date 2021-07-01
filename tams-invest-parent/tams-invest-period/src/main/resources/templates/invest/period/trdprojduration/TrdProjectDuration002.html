@@ -197,7 +197,8 @@
                                     <label class="layui-form-label form-label-wrap">资金到账日</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="arrivalDate" name="arrivalDate" required data-th-value="${entity?.arrivalDate}"
-                                               class="layui-input form-input input-dateSelect"/>
+                                               class="layui-input form-input input-dateSelect"
+                                               data-th-data-ignore='${isTodo}'/><!--modify by jiangpeng on 20210422 TISHKBS-1803-->
                                     </div>
                                    
                                 </div>
@@ -259,7 +260,8 @@
                                 <input type="hidden" th:id="|bussTrdTransferOrder_recAcctNo|" th:name="selectValue" value="rec">
                                 <a th:id="|bussTrdTransferOrder_btn_generate|" class="layui-btn layui-btn-sm" th:text="#{BussTrdTransferOrder.generate}">生成指令</a>
                             </div>
-                            <table class="layui-table" th:id="|bussTrdTransferOrder_table|" th:name="bussTrdTransferOrder"></table>
+                            <table class="layui-table" th:id="|bussTrdTransferOrder_table|" th:name="bussTrdTransferOrder"
+                                   data-th-data-ignore='${isTodo}'></table><!--modify by jiangpeng on 20210422 TISHKBS-1803-->
                         </div>
                     </div>
                 </div>
@@ -334,6 +336,7 @@
         var COLLECT_TYPE_01=/*[[${COLLECT_TYPE_01}]]*/'';
         var CHANNEL=/*[[${entity?.channel}]]*/'';
         var intAmtUnpayFlag=/*[[${entity?.intAmtUnpayFlag}]]*/'';
+        var isTodo = /*[[${isTodo}]]*/false;//是否是总集节点 add by jiangpeng on 20210422 TISHKBS-1803
     </script>
     <script data-th-src="@{/js/invest/asset/channel/ChannelAssetCommon.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/invest/period/trdprojduration/TrdProjectDuration002.js}" type="text/javascript"></script>

@@ -62,9 +62,9 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("TrdLendInvestTrade002")
 @RequestMapping("/invest/trade/lend/TrdLendInvestTrade002")
 public class TrdLendInvestTrade002Controller extends BaseController {
-	@Autowired
-	private TradeCommonService tradeCommonService;
-	
+    @Autowired
+    private TradeCommonService tradeCommonService;
+
     /**
      * trdLendInvestTrade002Service
      */
@@ -76,7 +76,7 @@ public class TrdLendInvestTrade002Controller extends BaseController {
 
     @Autowired
     private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
-    
+
     @Autowired
     private TrdCommonController trdCommonController;
 
@@ -90,20 +90,18 @@ public class TrdLendInvestTrade002Controller extends BaseController {
         TrdLendInvestTradeDto dto = new TrdLendInvestTradeDto();
 
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
-            || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
+                || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdLendInvestTrade002Service.getBussinessEntityByWorkflowId(
-                workflowId);
-            model.addAttribute("workflowId",workflowId);
+                    workflowId);
+            model.addAttribute("workflowId", workflowId);
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             if (StringUtil.isBlank(dto.getTradeId())) {
                 // 根据工作流代码查询交易编号
                 dto.setTradeId(trdLendInvestTrade002Service.selectTradeIdByWorkflowId(workflowId));
             }
-        }
-        else if (StringUtil.isNotEmpty(tradeId)) {
+        } else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdLendInvestTrade002Service.getTrdLendInvestTradeDto(tradeId);
-        }
-        else {
+        } else {
             String entrustId = this.getParam("entrustId");
             if (StringUtil.isNotEmpty(entrustId)) {
                 dto.setEntrustId(entrustId);
@@ -112,31 +110,29 @@ public class TrdLendInvestTrade002Controller extends BaseController {
 
         if (StringUtil.isNotBlank(tradeId)) {
             model.addAttribute("tradeId", tradeId);
-        }
-        else {
+        } else {
             model.addAttribute("tradeId", dto.getTradeId());
         }
         if (StringUtil.isNotBlank(workflowId)) {
             model.addAttribute("workflowId", workflowId);
-        }
-        else {
+        } else {
             model.addAttribute("workflowId", dto.getWorkflowId());
         }
 
         model.addAttribute("entity", dto);
         model.addAttribute("entity_trdInvestPersonInfo",
-            dto.getTrdInvestPersonInfo() == null ? null : JsonUtils.object2Json(
-                dto.getTrdInvestPersonInfo()));
+                dto.getTrdInvestPersonInfo() == null ? null : JsonUtils.object2Json(
+                        dto.getTrdInvestPersonInfo()));
         // 划款信息
         if (dto != null && !StringUtil.isEmptyList(dto.getBussTrdTransferOrder())) {
             model.addAttribute("entity_bussRepFinProductInfoDto",
-                JsonUtils.object2Json(dto.getBussTrdTransferOrder().get(0)));
+                    JsonUtils.object2Json(dto.getBussTrdTransferOrder().get(0)));
         }
 
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
-        model.addAttribute("PINAN_ASSET_TYPE_F08",DictCodeList.平安资产类型_拆借.getValue());
+        model.addAttribute("PINAN_ASSET_TYPE_F08", DictCodeList.平安资产类型_拆借.getValue());
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
-        model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
+        model.addAttribute("GEN_PAY_ORDERS_AUTO", CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");
@@ -150,7 +146,7 @@ public class TrdLendInvestTrade002Controller extends BaseController {
 
     private void setSelectOptions(Model model) {
         this.setSelectOptionToModel(model, DictCode.回购拆借方向, DictCode.拆借类型,
-            DictCode.有效状态, DictCode.币种, DictCode.计息基础);
+                DictCode.有效状态, DictCode.币种, DictCode.计息基础);
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
@@ -168,11 +164,11 @@ public class TrdLendInvestTrade002Controller extends BaseController {
     @RequestMapping("check")
     @ResponseBody
     public AjaxResult check(@Valid @RequestBody TrdLendInvestTradeDto dto, BindingResult result) {
-        if(StringUtil.isNotEmpty(result) && result.getErrorCount()>0){
-            AjaxResult res= new AjaxResult(result);
+        if (StringUtil.isNotEmpty(result) && result.getErrorCount() > 0) {
+            AjaxResult res = new AjaxResult(result);
             return res;
         }
-    	//huwenbin 指令接收交易录单验证数据已存在流程中
+        //huwenbin 指令接收交易录单验证数据已存在流程中
        /*if(StringUtil.isNotEmpty(dto.getEntrustId()) && WorkFlowUtil.isNotFromToDoList()){
 	   		String str = tradeCommonService.check(dto.getEntrustId(), this.getPageId());
 	   		if(StringUtil.isNotEmpty(str)){
@@ -194,15 +190,26 @@ public class TrdLendInvestTrade002Controller extends BaseController {
               return res;
     	   }
     	}*/
-    	// 到期日如果是节假日 要提醒
+        // 到期日如果是节假日 要提醒
         AjaxResult ajaxResult = trdLendInvestTrade002Service.checkMdate(dto, result);
         if (ajaxResult != null) {
             return ajaxResult;
         }
-        
+
+        // 托管户剩余现金軟校驗
+        if (StringUtil.equals(dto.getBusiPs(), DictCodeList.回购拆借方向_拆出.getValue())
+                && dto.getFinTradeProduct() != null) {
+            if (dto.getSecAcctBalance() == null || (dto.getFinTradeProduct().getPrin() != null &&
+                    dto.getFinTradeProduct().getPrin().compareTo(dto.getSecAcctBalance()) > 0)) {
+                AjaxResult ar = new AjaxResult();
+                ar.setData(this.getMessage("TRD_C_0008"));
+                return ar;
+            }
+        }
+
         // 可用现金软校验
         if (StringUtil.equals(dto.getBusiPs(), DictCodeList.回购拆借方向_拆出.getValue())
-            && dto.getFinTradeProduct() != null) {
+                && dto.getFinTradeProduct() != null) {
             if (dto.getAvalibleCash() == null || (dto.getFinTradeProduct().getPrin() != null &&
                     dto.getFinTradeProduct().getPrin().compareTo(dto.getAvalibleCash()) > 0)) {
                 AjaxResult ar = new AjaxResult();
@@ -210,14 +217,13 @@ public class TrdLendInvestTrade002Controller extends BaseController {
                 return ar;
             }
         }
-        
         return commonCheck(result, dto.getOperateType());
     }
 
     @RequestMapping("save")
     @ResponseBody
     AjaxResult save(@RequestBody TrdLendInvestTradeDto dto)
-        throws Exception {
+            throws Exception {
         if (StringUtil.isBlank(dto.getTradeId())) {
             if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = new BussinessCodeParameter();
@@ -225,30 +231,27 @@ public class TrdLendInvestTrade002Controller extends BaseController {
 //                codeParameter.setType1(
 //                    DictCodeList.from(DictCode.拆借类型, dto.getPaBussType()));
                 if (StringUtil.equals(dto.getBusiPs(),
-                    DictCodeList.回购拆借方向_拆入.getValue())) {
+                        DictCodeList.回购拆借方向_拆入.getValue())) {
                     if (StringUtil.equals(dto.getPaBussType(),
-                        DictCodeList.拆借类型_特殊目的载体.getValue())) {
+                            DictCodeList.拆借类型_特殊目的载体.getValue())) {
                         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_特拆交易);
-                    }
-                    else {
+                    } else {
                         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_拆入交易);
                     }
-                }
-                else {
+                } else {
                     codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_拆出交易);
                 }
                 dto.setTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
-            }
-            else {
+            } else {
                 dto.setTradeId(IDGenerator.generate());
             }
         }
-        
+
         //----------add by jjpei 20200114 核风险版本 start----------
-        if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
-            AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
-                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_拆借.getValue(),
-                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
+        if (dto.getOperateType().equals(BussinessConstant.SUBMIT) && CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+            AjaxResult ar = interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(), DictCodeList.平安资产类型_拆借.getValue(),
+                    (en) -> interfRiskRdsService.sendRiskRdsData(dto, en));
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }
@@ -260,8 +263,7 @@ public class TrdLendInvestTrade002Controller extends BaseController {
         processParameter.setPageId(this.getPageId());
         if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
             processParameter.setOperationType(OperationType.NEW);
-        }
-        else {
+        } else {
             processParameter.setOperationType(OperationType.MODIFY);
         }
         workFlowParameter.setPageId(this.getPageId());
@@ -269,11 +271,11 @@ public class TrdLendInvestTrade002Controller extends BaseController {
         workFlowParameter.setBusinessCode(dto.getTradeId());
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_拆借投资交易.getValue());
         workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
-            getMessage("TrdLendInvestTrade002.tradeId") + GlobalConstant.OPEN_PARENTHESIS + entity.getTradeId() + GlobalConstant.CLOSE_PARENTHESIS,
-            getMessage("TrdLendInvestTrade002.paBussType") + GlobalConstant.OPEN_PARENTHESIS + SysDataUtil.getNameFromDataDict(DictCode.拆借类型, entity.getPaBussType()) + GlobalConstant.CLOSE_PARENTHESIS,
-            getMessage("TrdLendInvestTrade002.tradeDate")+ GlobalConstant.OPEN_PARENTHESIS + DateUtil.format(entity.getTradeDate()) + GlobalConstant.CLOSE_PARENTHESIS));
+                getMessage("TrdLendInvestTrade002.tradeId") + GlobalConstant.OPEN_PARENTHESIS + entity.getTradeId() + GlobalConstant.CLOSE_PARENTHESIS,
+                getMessage("TrdLendInvestTrade002.paBussType") + GlobalConstant.OPEN_PARENTHESIS + SysDataUtil.getNameFromDataDict(DictCode.拆借类型, entity.getPaBussType()) + GlobalConstant.CLOSE_PARENTHESIS,
+                getMessage("TrdLendInvestTrade002.tradeDate") + GlobalConstant.OPEN_PARENTHESIS + DateUtil.format(entity.getTradeDate()) + GlobalConstant.CLOSE_PARENTHESIS));
         String msg = trdLendInvestTrade002Service.start(processParameter, dto);
-        
+
         //授信占用额度
 //        trdCommonController.delLinesDeal(dto.getRiskCreditListCommonDto(),dto.getTradeId());
         return new AjaxResult(msg);

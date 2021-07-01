@@ -193,8 +193,10 @@
                vfp.finprod_abbr as finprodName, /**资产名称**/
                vfp.finprod_id as originalFinprodId /**资产代码**/
           from FIN_PRODUCT vfp
+        left join fin_product_add fpd on vfp.finprod_id = fpd.finprod_id
         WHERE 1=1 
         AND vfp. FINPROD_TYPE = 'F01'
+        and fpd.appear_market_id is null
 
             <!-- select2的模糊查询 -->
             <if test="search!=null and !''.equals(search.trim())">

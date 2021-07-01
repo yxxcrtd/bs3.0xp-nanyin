@@ -405,6 +405,15 @@ public interface PtlManagementInfo001Mapper {
      * @since 1.0
      */
     List<NodeDto> getUserList(Map<String, Object> param);
+    
+    /**
+     * 获取输入机构列表中所有的用户
+     * @param param
+     * @return
+     */
+    List<String> getAllUserList(Map<String, Object> param);
+    
+    String getUserInstitution(String userName);
 
     /**
      * 模拟试算

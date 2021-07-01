@@ -310,7 +310,7 @@
         	}else if(field === 'feeRate'){
 				var rowData = {};
 				if (data.feeRate!=null && data.feeRate!='') {
-					rowData.feeRate = formatMoney(data.feeRate, 6);
+					rowData.feeRate = formatMoney(data.feeRate, 4);
 				} 
 				bussFinProductFeeInfoTable.renderRow(data.LAY_TABLE_INDEX, rowData);
 			}else if(field === 'chargeType'){

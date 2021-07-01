@@ -47,7 +47,7 @@
           	 ,editOption:{type:'select',id:"invAim",formatoption:true,result:INV_AIM} }
         ,{field:'entrustNum', width:100, title: 'EtrInvestBondInfo002.entrustAmt', edit:true, sortable: false, type:'number', digit:2}
         ,{field:'secManageAcctId', width:100,  title: 'EtrInvestBondInfo003.secManageAcctId',edit:true,sortable: false,
-            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
+            editOption:{type:'select', parentIds:'portfolioId,tradeMarket,finprodName', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
                 url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
            }
         }
@@ -70,6 +70,12 @@
         addclick: function(row) {
         	row.invAim = $('#invAim').val();
         },
+        beforeEditCell:function (preVal, field, rowData){
+            if(field=="secManageAcctId"){
+                if($('#chlFinprodId').val())return false;
+            }
+            return true;
+        },
         editCell : function(value, data, field, cell, column){
             if (field == "portfolioId"){
                 var rowData = {};
@@ -90,7 +96,8 @@
                     	}
                 	});
                 }
-                if(value != null && value != '' && ($('#ps').val() == T02 ||$('#ps').val() == T03 ||$('#ps').val() == T39) && $('#ccy').val() != ''){
+                if(value != null && value != '' && ($('#ps').val() == T02 ||$('#ps').val() == T03 ||$('#ps').val() == T39) && $('#ccy').val() != ''
+                   && $('#finprodId').val() != '' && (rowData.secManageAcctId != ''||$('#chlFinprodId').val()) && $('#invAim').val() != ''){
                 	var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(), 
             				finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), invAim: data.invAim,
             				secAcctId: data.secManageAcctId, chlId: $('#chlFinprodId').val()};
@@ -138,7 +145,35 @@
                 	}
                 	break;
             	case T02:
+                    if(data.portfolioId != '' &&  data.secManageAcctId!= '' && $('#finprodId').val() != '' && rowData.secManageAcctId != '' && $('#invAim').val() != ''){
+                        var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(),
+                            finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), invAim: data.invAim,
+                            secAcctId: data.secManageAcctId, chlId: $('#chlFinprodId').val()};
+
+                        Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getAssetAvailablePosition',datas,
+                            function(result) {
+                                if(result){
+                                    rowData.assetAvailablePosition = result.position;
+                                    rowData.assetAvailablePosition1 = result.positionT1;
+                                    table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                                }
+                            });
+                    }
             	case T03:
+                    if(data.portfolioId != '' &&  data.secManageAcctId!= '' && $('#finprodId').val() != ''
+                        && rowData.secManageAcctId != '' && $('#invAim').val() != ''){
+                        var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(),
+                            finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), invAim: data.invAim,
+                            secAcctId: data.secManageAcctId, chlId: $('#chlFinprodId').val()};
+                        Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getAssetAvailablePosition',datas,
+                            function(result) {
+                                if(result){
+                                    rowData.assetAvailablePosition = result.position;
+                                    rowData.assetAvailablePosition1 = result.positionT1;
+                                    table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                                }
+                            });
+                    }
             	case T39:
                 	if (data.secManageAcctId != null && data.secManageAcctId != ''){
                 		var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(), 
@@ -184,6 +219,13 @@
         if ($('#select2-finprodId-container').attr('title')){
             object.finprodName = $('#select2-finprodId-container').attr('title');
         }
+        if(object.settleSpreed=='01'){
+            object.settleSpreed=0;
+        }else if(object.settleSpreed=='02'){
+            object.settleSpreed=1;
+        }else if(object.settleSpreed=='03'){
+            object.settleSpreed=2;
+        }
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.entrustId = $('#entrustId').val();
@@ -209,6 +251,9 @@
         for(var index in object.bussCombDistribtList){
         	var item = object.bussCombDistribtList[index];
         	var temp = JSON.parse(JSON.stringify(object));
+            // if (temp.priceModel){
+            //     temp.priceModel = '';
+            // }
         	// 指令授信 start
             temp.inputValue1 = 'F01';
             temp.finprodType2 = 'F01';
@@ -295,6 +340,15 @@
         var tradeMarketMode = $('#tradeMarketMode').val();
         var $tradePlat = $('#tradePlat');
 
+        if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT && $('#tradeMarketMode').val() == SHARES_TRADE_MARKET_02){
+            if ($('#finprodId').val != null && $('#finprodId').val != ''){
+                var data = $('#finprodId').select2('data')[0].object;
+                if (data && data.isIssueAsset == 'Y' && $("#tradeMarketMode").val() == SHARES_TRADE_MARKET_02){
+                    $('#finprodId').val('').trigger("change");
+                }
+            }
+        }
+        
         if (pageModel != PAGE_MODEL_REFERENCE) {
             var key = tradeMarket + tradeMarketMode;
             switch (key) {
@@ -380,7 +434,7 @@
     /**
      * 组合可用现金和资产可用持仓的联动
      */
-    $('#finprodId,#ps,#ccy').change(function(){
+    $('#finprodId,#ps,#ccy,#chlFinprodId').change(function(){
     	var rowsData = table.getAllRows();
     	if(rowsData.length>0 && $('#ccy').val() != ''){
     		switch($('#ps').val()){

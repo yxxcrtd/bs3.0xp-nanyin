@@ -6,6 +6,8 @@
 package com.joyintech.tams.invest.product.feepay.service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1264,8 +1266,11 @@ public class FinProductFeePay002Service extends BaseService<FinProductFeePay002D
                         // dto.setFeeName(mstFeeinfo.getFeeName());
                         // dto.setFeeType(mstFeeinfo.getFeeType());
                         // }
-                        // dto.setCalcStartDate(finProductFeePay003Dto.getCalcStartDate());
-                        // dto.setCalcEndDate(finProductFeePay003Dto.getCalcEndDate());
+//                         dto.setCalcStartDate(finProductFeePay003Dto.getCalcStartDate());
+                        // modify by jiangpeng on 20210508 start
+                        // TISHKBS-2117 【产品费用支付】-双击查看待确认的费用的计提明细 ，理论费用少计提了一天，错误
+                        dto.setCalcEndDate(finProductFeePay003Dto.getCalcEndDate());
+                        // modify by jiangpeng on 20210508 end
                         // dto.setPayAmt(dto.getActPayAmt());
                         dto.setAdjustAmt(BigDecimal.ZERO);
                         BigDecimal remainAmt = restTemplate.getForObject(
@@ -1281,12 +1286,20 @@ public class FinProductFeePay002Service extends BaseService<FinProductFeePay002D
                         BigDecimal unclearAmt = restTemplate.getForObject(
                             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductFeePay/queryUnCleanFee?ptlId="
                                                                           + map.get("ptlId") + "&feeId=" + map.get("feeId")
-                                                                          + "&payDate=" + map.get("payDate") + "&finprodId="
+                                                                          + "&payDate=" + DateUtil.format(dto.getCalcStartDate()) + "&finprodId="
                                                                           + sFinprodId,
 
                             BigDecimal.class);
                         dto.setUnclearAmt(unclearAmt);
 //                        dto.setCalcStartDate(finProductFeePay003Dto.getCalcStartDate());
+                        if(dto.getCalcStartDate()==null){
+                            SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                dto.setCalcStartDate(sd.parse((String)map.get("calcStartDate")));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
 

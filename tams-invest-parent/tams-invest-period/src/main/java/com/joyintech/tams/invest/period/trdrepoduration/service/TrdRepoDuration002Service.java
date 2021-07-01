@@ -129,7 +129,11 @@ public class TrdRepoDuration002Service extends BaseService<TrdRepoDuration002Dto
             entity.setTrdProductDeal(deal);
         }
 
+        String entrustId = finTradeProductMapper.findEntrustIdByTradeId(entity.getFinprodId());
         tradeDto.getBaseTradeProductDealDtos().forEach(item->{
+            if(StringUtil.isNotEmpty(entrustId)){
+                item.setEntrustId(entrustId);
+            }
             if (OperationType.REVOKE == operationType) {
                 getInterfInputDto(item, DictCodeListExt1.交易流程状态_撤销);
             }
@@ -137,9 +141,9 @@ public class TrdRepoDuration002Service extends BaseService<TrdRepoDuration002Dto
                 getInterfInputDto(item, DictCodeListExt1.交易流程状态_有效);
             }
         });
-
-        if(entity.getPstype()!=null && entity.getPstype().equals(DictCodeList.交易方向_到期续做.getValue())){
-        tradeDto.setIeFlag(entity.getIeFlag());}
+        if (entity.getPstype() != null && entity.getPstype().equals(DictCodeList.交易方向_到期续做.getValue())) {
+            tradeDto.setIeFlag(entity.getIeFlag());
+        }
         baseTradeProductDealCommServiceImpl.execute(tradeDto);
         // 新建交易撤销数据 或 插入Entity到对应的业务DB中, 并删除流程表中的数据
         entity.setIssuePartyId(CacheUtil.getSysParam("issue_party_id"));

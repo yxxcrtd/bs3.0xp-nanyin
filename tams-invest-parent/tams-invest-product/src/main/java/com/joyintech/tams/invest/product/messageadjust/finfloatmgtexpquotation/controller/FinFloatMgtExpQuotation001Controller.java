@@ -121,7 +121,7 @@ public class FinFloatMgtExpQuotation001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getFinprodId")
-	public List<SelectOptionDto> getFinprodid(){
+	public Page<SelectOptionDto> getFinprodid(){
         return finFloatMgtExpQuotation001Service.getFinprodIds(RequestUtil.getPageParam());
     }
     /**

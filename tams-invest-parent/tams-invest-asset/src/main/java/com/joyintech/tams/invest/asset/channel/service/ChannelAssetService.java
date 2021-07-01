@@ -40,6 +40,7 @@ import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinRateInfo;
 import com.joyintech.tams.common.base.entity.RepAssetDept;
 import com.joyintech.tams.common.base.entity.RepAssetMngPlan;
+import com.joyintech.tams.common.base.entity.RepAssetOther;
 import com.joyintech.tams.common.base.entity.StlFinProductAcct;
 import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -273,6 +274,11 @@ implements BaseProcessService<ChannelAssetDto>{
             repAssetMngPlan.setRepTrusteeId(dto.getTrusteeId());
             repAssetMngPlan.setRepSetDate(dto.getVdate());
             repAssetMngPlan.setRepEndDate(dto.getMdate());
+            //中债资产其他要素
+            RepAssetOther repAssetOther = new RepAssetOther();
+            BeanUtil.copyPropertiesIgnoreNull(repAssetOther, dto.getBussRepAssetMngProdInfo());
+            repAssetOther.setRepFinprodId(dto.getFinprodId());
+            
             baseFinProductBaseInfoDto.setFinProduct(finProduct);baseFinProductBaseInfoDto.setFinProductAdd(finProductAdd);
             baseFinProductBaseInfoDto.setFinCashInfoList(finCashInfoList);
             baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfoList);
@@ -283,6 +289,7 @@ implements BaseProcessService<ChannelAssetDto>{
             dto.setStlFinProductAcct(stlFinProductAcct);
             dto.setRepAssetDept(repAssetDept);
             dto.setRepAssetMngPlan(repAssetMngPlan);
+            dto.setRepAssetOther(repAssetOther);
         }
         return dto;
     }

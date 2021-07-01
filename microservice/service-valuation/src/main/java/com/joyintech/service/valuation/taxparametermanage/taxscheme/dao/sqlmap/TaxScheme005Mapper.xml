@@ -205,7 +205,9 @@
 			  from fin_product_type fpt
 			 inner join fin_product fp
 			    on fp.finprod_id = fpt.finprod_id
+             left join fin_product_add fpd on fp.finprod_id = fpd.finprod_id
 			 where fpt.type_3 is not null
+             and fpd.appear_market_id is null
 			
 			union all
 			
@@ -217,7 +219,9 @@
 			  from fin_product_type fpt
 			 inner join fin_trade_product ftp
 			    on ftp.finprod_id = fpt.finprod_id
+             left join fin_product_add fpd on ftp.finprod_id = fpd.finprod_id
 			 where fpt.type_3 is not null  and ftp.branch = '0'
+             and fpd.appear_market_id is null
 		 
 		 )t
          <where>

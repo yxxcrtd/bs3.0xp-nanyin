@@ -10,21 +10,6 @@
  
 package com.joyintech.tams.invest.portfolio.ptlactivityperiod.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -32,17 +17,9 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.component.business.settle.dto.BussSettleOrderParameterDto;
-import com.joyintech.tams.component.business.settle.dto.BussSettleOrderResultDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -55,6 +32,20 @@ import com.joyintech.tams.invest.portfolio.ptlactivityperiod.service.PtlActivity
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 活期结息查询
@@ -180,7 +171,7 @@ public class PtlActivityPeriod002Controller extends BaseController{
     @RequestMapping("getVDate")
     public String getVDate(){
         Map<String,Object> map = RequestUtil.getPageParam();
-        return ptlActivityPeriod002Service.getVDate(map);
+        return StringUtil.trimHtmlTag(ptlActivityPeriod002Service.getVDate(map));
     }
     /**
      * 获取支付日
@@ -191,7 +182,7 @@ public class PtlActivityPeriod002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("getInitDate")
     public String getInitDate(){
-        return ptlActivityPeriod002Service.getInitDate();
+        return StringUtil.trimHtmlTag(ptlActivityPeriod002Service.getInitDate());
     }
    
     @RequestMapping("generateOrder")
@@ -210,7 +201,7 @@ public class PtlActivityPeriod002Controller extends BaseController{
      * 画面点击保存按钮时check
      * 
      * @param dto 实体类
-     * @param result 
+     * @param br
      * @return check结果
      */
     @ResponseBody

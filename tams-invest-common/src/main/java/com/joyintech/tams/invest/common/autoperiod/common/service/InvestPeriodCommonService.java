@@ -700,8 +700,11 @@ public class InvestPeriodCommonService {
             }
 //            通道有值时不为券商资金账户
 //            处理和赎回到账一样，现金分红直接生效，不需要在来账分拣进行处理。
-            else if (!StringUtil.isEmptyList(baseTotalTradeInfoDto.getBaseTradeInfoDtoList())&&
-                    baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders()!=null){
+            else if (!StringUtil.isEmptyList(baseTotalTradeInfoDto.getBaseTradeInfoDtoList())
+                    // add by jiangpeng on 20210524 TISHKBS-2189 逾期债券转仓报空指针
+                    && StringUtil.isNotEmpty(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal())
+                    // add by jiangpeng on 20210524 TISHKBS-2189 逾期债券转仓报空指针
+                    && baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders()!=null){
                 String myAcctNo = baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders().getMyAcctNo();
                 Map<String,Object> paraMap = new HashMap<>();
                 paraMap.put("acctNo",myAcctNo);
@@ -719,6 +722,9 @@ public class InvestPeriodCommonService {
         if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.FUND_DEAL_TYPE),"02")){
             if(baseTotalTradeInfoDto !=null){
                 if (baseTotalTradeInfoDto.getBaseTradeInfoDtoList() != null
+                        // add by jiangpeng on 20210524 TISHKBS-2189 逾期债券转仓报空指针
+                        && StringUtil.isNotEmpty(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal())
+                        // add by jiangpeng on 20210524 TISHKBS-2189 逾期债券转仓报空指针
                         && StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue(),baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getFinprodType2())
                         && StringUtil.equals(DictCodeList.交易方向_现金分红.getValue(),baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getPs())
                         && StringUtil.isNotEmpty(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getSecManageAcctId())

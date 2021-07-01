@@ -12,8 +12,10 @@ package com.joyintech.tams.invest.common.calculator;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinCashPayRule;
 import com.joyintech.tams.common.base.entity.FinRateInfo;
@@ -74,10 +76,18 @@ public class InterestScheduleCal {
             BigDecimal isRepayIntAmt = BigDecimal.ZERO;
             BigDecimal yield = BigDecimal.ZERO;
             BigDecimal intPrinAmt = BigDecimal.ZERO;
+            Date maxMdate=null;
             for (FinCashPlanDetailDto isd : lisd) {
                 InterestSubAmtCal.cal(is, isd, isr, scai);
                 //计息本金
-                intPrinAmt = isd.getIntPrinAmt();
+                    if(null==maxMdate || StringUtil.isEmpty(maxMdate.toString())){
+                        maxMdate=isd.getMdate();
+                        intPrinAmt=isd.getIntPrinAmt();
+                    }else{
+                        if(null!=isd.getMdate() && isd.getMdate().compareTo(maxMdate)>=0){
+                            intPrinAmt=isd.getIntPrinAmt();
+                        }
+                    }
                 //区间利率
                 yield = isd.getYield();
                 isamt = ArithmeticUtil.doAdd(12,null,isamt,isd.getIntAmt());

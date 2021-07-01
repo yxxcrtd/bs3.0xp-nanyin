@@ -722,7 +722,9 @@ public class ExecuteJob implements ExecuteJobService{
 		
 		for(String portnum:portnums){
 			ResultContainer container=new ResultContainer();
-			jnlJob.removeJob(portnum, closeDate, container);
+			if (jnlJob != null){
+				jnlJob.removeJob(portnum, closeDate, container);
+			}
 			if(!container.isCorrectFlag()){
 				mainContainer.setCorrectFlag(false);
 				mainContainer.setErrorCode(container.getErrorCode());

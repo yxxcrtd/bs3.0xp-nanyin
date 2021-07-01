@@ -105,6 +105,8 @@
         $('#finprodId').change();
         $('#entrustAmt').change();
         $('#entrustNum').change();
+
+
     }
     /**
      * 画星星
@@ -217,6 +219,7 @@
                     $('#entrustAmt_div2').hide();
                     $('#entrustNum_div2').hide();
                     $('#etrInvestPersonInfo_counterId').attr('required',false);
+                    $('#carryAmt').val('');
                 }else if(ps == T06){
                     $('#proAvailableCash_div').hide();
                     $('#proAvailableCash1_div').hide();
@@ -232,6 +235,7 @@
                     $('#entrustAmt_div2').hide();
                     $('#entrustNum_div2').hide();
                     $('#etrInvestPersonInfo_counterId').attr('required',false);
+                    $('#carryAmt').val('');
                 }else if(ps == T01){
                 	$('#proAvailableCash_div').show();
                     $('#proAvailableCash1_div').show();
@@ -250,6 +254,8 @@
                     $('#entrustNum_div').show();
                     /*显示买入的委托金额和委托份额 lishuping 2019/8/9 end*/
                     $('#etrInvestPersonInfo_counterId').attr('required',true);
+                    //ZGBSS-1198  货币类计划委托和需求不符
+                    $('#entrustAmt').attr("disabled",true);
                 }else if(ps == T02){
                 	$('#proAvailableCash_div').hide();
                     $('#proAvailableCash1_div').hide();
@@ -265,6 +271,8 @@
                     $('#entrustAmt_div').hide();
                     $('#entrustNum_div').hide();
                     $('#etrInvestPersonInfo_counterId').attr('required',true);
+                    //ZGBSS-1198  货币类计划委托和需求不符
+                    $('#entrustAmt').attr("disabled",true);
                 }
             $('#etrInvestPersonInfo_counterId').val('').trigger("change");
                 if(ps == T04 || ps == T01){
@@ -355,12 +363,31 @@
                 $('#carryAmt').change();
             }
         });
+
+        /**
+         * 委托份额
+         */
+        $('#entrustNum').change(function(){
+            if($('#ps').val()==T02 || $('#ps').val()==T01){
+                var carryAmt = $('#carryAmt').val();
+                var entrustNum = $('#entrustNum').val();
+                if(!carryAmt){
+                    carryAmt = 0;
+                }
+                if(!entrustNum){
+                    entrustNum = 0;
+                }
+                $('#entrustAmt').val(Number(carryAmt)+Number(entrustNum)).trigger('blur');
+            }
+        });
+
         /**
          * 待结转份额
          */
         $('#carryAmt').change(function(){
         	var carryAmt = $('#carryAmt').val();
         	var entrustNum = $('#entrustNum2').val();
+            var entrustNum2 = $('#entrustNum').val();
         	if(!carryAmt){
         		carryAmt = 0;
         	}
@@ -368,6 +395,10 @@
         		entrustNum = 0;
         	}
         	$('#entrustAmt2').val(Number(carryAmt)+Number(entrustNum)).trigger('blur');
+        	//ZGBSS-1198  货币类计划委托和需求不符
+            if($('#ps').val()==T02 || $('#ps').val()==T01) {
+                $('#entrustAmt').val(Number(carryAmt) + Number(entrustNum2)).trigger('blur');
+            }
         });
         /**
          * 资产二级类型

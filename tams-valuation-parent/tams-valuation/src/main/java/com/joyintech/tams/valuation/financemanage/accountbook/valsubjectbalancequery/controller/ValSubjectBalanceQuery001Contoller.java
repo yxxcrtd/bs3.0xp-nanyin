@@ -70,7 +70,7 @@ public class ValSubjectBalanceQuery001Contoller extends BaseController {
     @Autowired
     private BaseCommonService baseCommonService;
     
-    @Value("${application.valuation.maxReportIOnceTime:100000}")
+    @Value("${application.valuation.maxReportIOnceTime:1000000000}")
     private Integer maxReportIOnceTime;
     
     

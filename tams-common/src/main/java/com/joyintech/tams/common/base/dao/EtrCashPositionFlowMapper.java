@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EtrCashPositionFlowMapper {
     int deleteByPrimaryKey(String seqno);
+    
+    int deleteFlowByOrderId(String orderId);
 
     int insert(EtrCashPositionFlow record);
 

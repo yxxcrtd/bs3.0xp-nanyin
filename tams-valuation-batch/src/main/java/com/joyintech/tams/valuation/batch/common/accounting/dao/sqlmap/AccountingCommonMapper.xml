@@ -289,7 +289,16 @@
 		WHERE GROUP_ID = #{groupId}
 		<if test="acctStandardId != null"> AND ACCT_STANDARD_ID = #{acctStandardId} </if>
 	</select>
-    
+	<!-- TISHKBS-1998 【估值核算-估值表】货币型产品估值表中的“本日收益-费后”统计的是当日应付利润发生额，但是并未将手工账的应付利润发生额统计进去 -->
+	<select id="getVouchAmt" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		select sum(detail.O_HAPPEN_AMT)
+		from TRD_VOUCH_DEAL deal
+				 left join TRD_VOUCH_DEAL_DETAIL detail on deal.TRADE_ID = detail.TRADE_ID
+		where deal.BOOKSET_ID = #{booksetId}
+		and detail.CD_FLAG = #{cdFlag}
+		and deal.BOOK_DATE = #{bookDate}
+		group by deal.BOOKSET_ID,deal.BOOK_DATE,detail.CD_FLAG
+	</select>
     <!-- 帐套资产负债查询 -->
     <select id="getValStatBokPosition" resultType="com.joyintech.tams.common.base.entity.BokStatBokPosition" 
     			parameterType="com.joyintech.tams.valuation.batch.common.base.entity.BokStatBokPositionDto">
@@ -1250,4 +1259,26 @@ FROM
               #{item}
             </foreach>
     </select>
+	<!-- 最新账务查询 -->
+	<select id="getBookRePayListInfo" parameterType="java.util.Map" resultType="com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto">
+		SELECT
+		crt.*
+		FROM BOK_BOOKDETAIL_CURRENT crt
+		WHERE 1 =1
+		<if test="booksetId != null and booksetId != ''"> AND crt.bookset_id = #{booksetId}  </if>
+		<if test="tableId != null and tableId != ''"> AND crt.TABLE_ID = #{tableId}  </if>
+		<if test="beginHappenCycDate != null"> AND crt.book_date <![CDATA[>]]> #{beginHappenCycDate} </if>
+		<if test="baseSubjectNature != null and baseSubjectNature != ''">
+			/**科目性质**/
+			AND crt.BASE_SUBJECT_NATURE =#{baseSubjectNature}
+		</if>
+		<if test="bokDetailId != null and bokDetailId != ''">
+			AND crt.BOK_DETAIL_ID = #{bokDetailId}	/**账务明细代码**/
+		</if>
+		<if test="bookDate != null">
+			AND  crt.book_date <![CDATA[<=]]> #{bookDate}
+		</if>
+		ORDER BY crt.HAPPEN_DATE ASC
+	</select>
+
 </mapper>

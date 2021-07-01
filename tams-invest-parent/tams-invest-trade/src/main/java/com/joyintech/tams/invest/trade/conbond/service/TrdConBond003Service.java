@@ -880,13 +880,14 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
             wflStlPayOrdersMapper.insertSelective(wflStlPayOrders);
         }
 
-        if(StringUtil.equals("submit", entity.getOperateType())&&StringUtil.isNotEmpty(entity.getTrdProductDeal())){
+        if(StringUtil.equals("submit", entity.getOperateType())&&StringUtil.isNotEmpty(entity.getTrdProductDealList())){
 	        // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水
 	        FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
 	        finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
 	        BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
 	        baseTradeProductDealDto.setTrdProductDeal(getTrdProductDeal(entity));
-	        baseTradeProductDealDto.setTrdProductDealAdd(entity.getTrdProductDealAdd());
+	        baseTradeProductDealDto.setTrdProductDealAdd(entity.getTrdProductDealAddList().get(0));
+	        baseTradeProductDealDto.setPurchType(entity.getPurchType());
 	        if (!StringUtil.isEmptyList(entity.getBussTrdTransferOrder())) {
 	            baseTradeProductDealDto.setStlPayOrdersList(
 	                    Arrays.asList(entity.getBussTrdTransferOrder().get(0)));
@@ -1741,6 +1742,8 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
         }
         TrdProductDealAdd add = new TrdProductDealAdd();
         add.setPortfolioId(trdConBond003Dto.getPortfolioId());
+        
+        add.setPurchModle(trdConBond003Dto.getPurchModle());
 
         //      申购确认不需要更新委托完成度
 //        if(StringUtil.isNotEmpty(trdConBond003Dto.getEntrustId())){

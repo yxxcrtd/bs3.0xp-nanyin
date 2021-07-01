@@ -805,7 +805,7 @@
 		from
 		CHB_PRD_DEAL DEAL
 		where  trade_type = '01' and status IN ('E','M')
-		group by DEAL.FPROD_ID,DEAL.PROD_ID
+		group by nvl(DEAL.FPROD_ID,DEAL.PROD_ID)
 
 		) DEAL ON INFO.PROD_ID = deal.PROD_ID
 		where to_char(greatest(nvl(NVL(info.UPDATE_TIME, info.CREATE_TIME),
@@ -861,7 +861,7 @@
   <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
   	select 
 	        t1.REGIST_SEQNO registSeqno,
-			nvl(t2.pbc_code,t1.pbc_prod_id) pbcProdId,
+			t1.pbc_prod_id pbcProdId,
 			t1.ISSUE_PARTY_ID issuePartyId,
 	        SI.INSTITUTION_NAME issuePartyName,
 			t1.PBC_PROD_TYPE pbcProdType,
@@ -1035,6 +1035,13 @@
         <if test="endDate != null and endDate != ''">
            and to_char(VDATE,'yyyy-MM-dd') &lt;= #{endDate}
         </if>
+
+		<if test="allExport != null and allExport !=''">
+			and exists (
+			select 1 from PBC_INIT_PROD_RAISING_SUB pi where pi.Pbc_Prod_Id=T1.PBC_PROD_ID
+			)
+		</if>
+
         <if test="registList!=null and registList.size()!=0">
 			   	<foreach collection="registList" item="items" 
 	            		open=" AND TRIM(REGIST_SEQNO) IN (" close=")" separator=",">

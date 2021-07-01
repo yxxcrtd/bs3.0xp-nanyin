@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIndividSpecialStageMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIndividSpecialStage" >
+        <id column="UNITE_ID" property="uniteId" jdbcType="VARCHAR" />
+        <result column="PRT_BAG_ID" property="prtBagId" jdbcType="VARCHAR" />
+        <result column="IND_ID" property="indId" jdbcType="VARCHAR" />
+        <result column="START_DATE" property="startDate" jdbcType="DATE" />
+        <result column="END_DATE" property="endDate" jdbcType="DATE" />
+        <result column="UNITE_TYPE" property="uniteType" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="WARN_COND" property="warnCond" jdbcType="VARCHAR" />
+        <result column="APPROVE_COND" property="approveCond" jdbcType="VARCHAR" />
+        <result column="FOUL_COND" property="foulCond" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        UNITE_ID UNITE_ID, PRT_BAG_ID PRT_BAG_ID, IND_ID IND_ID, START_DATE START_DATE, END_DATE END_DATE, 
+        UNITE_TYPE UNITE_TYPE, FINPROD_ID FINPROD_ID, WARN_COND WARN_COND, APPROVE_COND APPROVE_COND, 
+        FOUL_COND FOUL_COND, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIndividSpecialStageMapper.Base_Column_List" />
+        from RSK_INDIVID_SPECIAL_STAGE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIndividSpecialStageMapper.Base_Column_List" />
+        from RSK_INDIVID_SPECIAL_STAGE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIndividSpecialStageMapper.Base_Column_List" />
+        from RSK_INDIVID_SPECIAL_STAGE
+        where UNITE_ID = #{uniteId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from RSK_INDIVID_SPECIAL_STAGE
+        where UNITE_ID = #{uniteId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIndividSpecialStage" >
+        insert into RSK_INDIVID_SPECIAL_STAGE (UNITE_ID, PRT_BAG_ID, IND_ID, 
+            START_DATE, END_DATE, UNITE_TYPE, 
+            FINPROD_ID, WARN_COND, APPROVE_COND, 
+            FOUL_COND, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{uniteId,jdbcType=VARCHAR}, #{prtBagId,jdbcType=VARCHAR}, #{indId,jdbcType=VARCHAR}, 
+            #{startDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, #{uniteType,jdbcType=VARCHAR}, 
+            #{finprodId,jdbcType=VARCHAR}, #{warnCond,jdbcType=VARCHAR}, #{approveCond,jdbcType=VARCHAR}, 
+            #{foulCond,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIndividSpecialStage" >
+        insert into RSK_INDIVID_SPECIAL_STAGE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="uniteId != null" >
+                UNITE_ID,
+            </if>
+            <if test="prtBagId != null" >
+                PRT_BAG_ID,
+            </if>
+            <if test="indId != null" >
+                IND_ID,
+            </if>
+            <if test="startDate != null" >
+                START_DATE,
+            </if>
+            <if test="endDate != null" >
+                END_DATE,
+            </if>
+            <if test="uniteType != null" >
+                UNITE_TYPE,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="warnCond != null" >
+                WARN_COND,
+            </if>
+            <if test="approveCond != null" >
+                APPROVE_COND,
+            </if>
+            <if test="foulCond != null" >
+                FOUL_COND,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uniteId != null" >
+                #{uniteId,jdbcType=VARCHAR},
+            </if>
+            <if test="prtBagId != null" >
+                #{prtBagId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=DATE},
+            </if>
+            <if test="uniteType != null" >
+                #{uniteType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="warnCond != null" >
+                #{warnCond,jdbcType=VARCHAR},
+            </if>
+            <if test="approveCond != null" >
+                #{approveCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulCond != null" >
+                #{foulCond,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIndividSpecialStage" >
+        insert into RSK_INDIVID_SPECIAL_STAGE(UNITE_ID, PRT_BAG_ID, IND_ID, START_DATE, END_DATE, 
+        UNITE_TYPE, FINPROD_ID, WARN_COND, APPROVE_COND, FOUL_COND, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select UNITE_ID, PRT_BAG_ID, IND_ID, START_DATE, END_DATE, 
+            UNITE_TYPE, FINPROD_ID, WARN_COND, APPROVE_COND, FOUL_COND, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_INDIVID_SPECIAL_STAGE
+             where 1 = 1 and UNITE_ID = #{uniteId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIndividSpecialStage" >
+        update RSK_INDIVID_SPECIAL_STAGE
+        <set >
+            <if test="prtBagId != null" >
+                PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                IND_ID = #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                START_DATE = #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=DATE},
+            </if>
+            <if test="uniteType != null" >
+                UNITE_TYPE = #{uniteType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="warnCond != null" >
+                WARN_COND = #{warnCond,jdbcType=VARCHAR},
+            </if>
+            <if test="approveCond != null" >
+                APPROVE_COND = #{approveCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulCond != null" >
+                FOUL_COND = #{foulCond,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where UNITE_ID = #{uniteId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIndividSpecialStage" >
+        update RSK_INDIVID_SPECIAL_STAGE
+        set PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR},
+            IND_ID = #{indId,jdbcType=VARCHAR},
+            START_DATE = #{startDate,jdbcType=DATE},
+            END_DATE = #{endDate,jdbcType=DATE},
+            UNITE_TYPE = #{uniteType,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            WARN_COND = #{warnCond,jdbcType=VARCHAR},
+            APPROVE_COND = #{approveCond,jdbcType=VARCHAR},
+            FOUL_COND = #{foulCond,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where UNITE_ID = #{uniteId,jdbcType=VARCHAR}
+    </update>
+</mapper>

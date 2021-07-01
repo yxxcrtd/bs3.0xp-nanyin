@@ -10,29 +10,10 @@
 
 package com.joyintech.tams.invest.batch.autodurdealgenerate.repo.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.WflPaTrdFinDealTotal;
-import com.joyintech.tams.common.base.entity.WflStlPayOrders;
-import com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.repo.dto.RepoAutoDurDealGenerateReaderResult;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.repo.dto.RepoAutoDurDealGenerateResult;
@@ -52,6 +33,14 @@ import com.joyintech.tams.invest.common.dto.period.trdrepoduration.RepoInfo;
 import com.joyintech.tams.invest.common.dto.period.trdrepoduration.TrdRepoDurationDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * processor相关业务处理
@@ -155,6 +144,9 @@ public class RepoAutoDurDealGenerateProcessorService extends BaseService {
         // 金融产品交易信息DTO.金融产品交易汇总Entity -> 金融产品交易汇总业务流程表
         WflTrdFinProductDealTotal wflTrdFinProductDealTotal = AutoPeriodRepoCommonService.gen汇总流程表(
             entity, DictCodeList.共通业务类型_质押式回购存续期.getValue());
+        //add by jiangpeng on 20210408 ZGBSS-1408 【质押式回购自动到期】上交所质押式正回购-协议回购，自动到期生成的交易双击打开到期结算金额没有值 start
+        wflTrdFinProductDealTotal.setFpriceAmt(entity.getTheoryAmt());
+        //add by jiangpeng on 20210408 ZGBSS-1408 【质押式回购自动到期】上交所质押式正回购-协议回购，自动到期生成的交易双击打开到期结算金额没有值 end
         baseTrdDurDbInertDto.setWflTrdFinProductDealTotal(wflTrdFinProductDealTotal);
         // 金融产品交易汇总表
         TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
@@ -193,6 +185,7 @@ public class RepoAutoDurDealGenerateProcessorService extends BaseService {
             for (WflTrdProductDeal wflTrdProductDeal : wflTrdProductDeals) {
                 TrdProductDeal trdProductDeal = new TrdProductDeal();
                 BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, wflTrdProductDeal);
+                trdProductDeal.setInputValue2(entity.getType6());
                 trdProductDealList.add(trdProductDeal);
                 TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
                 trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
@@ -256,6 +249,7 @@ public class RepoAutoDurDealGenerateProcessorService extends BaseService {
         BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
         baseTradeProductDealDtos.add(baseTradeProductDealDto);
         TrdProductDeal trdProductDeal = AutoPeriodRepoCommonService.getTrdProductDeal(entity);
+        trdProductDeal.setFpriceAmt(entity.getTheoryAmt());
 
         // 划款指令表Entity
         List<StlPayOrders> stlPayOrdersList = baseTrdDurDbInertDto.getStlPayOrdersList();

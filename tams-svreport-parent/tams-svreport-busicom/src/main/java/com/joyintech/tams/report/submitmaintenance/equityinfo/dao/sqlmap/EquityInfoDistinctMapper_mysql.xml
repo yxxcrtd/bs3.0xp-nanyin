@@ -1,180 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper_mysql">
-<resultMap id="BaseResultMap" type="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto" >
-    <result column="INDENTIFY_MARK" property="indentifyMark" jdbcType="VARCHAR" />
-    <result column="ORG_INDENTIFY_MARK" property="orgIndentifyMark" jdbcType="VARCHAR" />
-    <result column="REGIST_BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
-    <result column="IS_BELONG_BANK" property="isBelongBank" jdbcType="CHAR" />
-    <result column="THE_BANK_NAME" property="theBankName" jdbcType="VARCHAR" />
-    <result column="THE_BANK_CODE" property="theBankCode" jdbcType="VARCHAR" />
-    <result column="HOLDER_MARK" property="holderMark" jdbcType="CHAR" />
-    <result column="HOLDER_REGION" property="holderRegion" jdbcType="VARCHAR" />
-    <result column="HOLDER_TYPE" property="holderType" jdbcType="CHAR" />
-    <result column="PERSONAL_IDENTIFY_TYPE" property="personalIdentifyType" jdbcType="CHAR" />
-    <result column="INSTITUTION_IDENTIFY_TYPE" property="institutionIdentifyType" jdbcType="VARCHAR" />
-    <result column="OTHER_IDENTIFY_NAME" property="otherIdentifyName" jdbcType="VARCHAR" />
-    <result column="IDENTIFY_NUMBER" property="identifyNumber" jdbcType="VARCHAR" />
-    <result column="SPV_CAP_ACC_BANK" property="spvCapAccBank" jdbcType="VARCHAR" />
-    <result column="OTHER_CAP_ACC_BANK" property="otherCapAccBank" jdbcType="VARCHAR" />
-    <result column="SPV_REGIST_CODE" property="spvRegistCode" jdbcType="VARCHAR" />
-    <result column="HOLDER_DATE" property="holderDate" jdbcType="TIMESTAMP" />
-    <result column="HOLDER_NAME" property="holderName" jdbcType="VARCHAR" />
-    <result column="HOLDER_SEX" property="holderSex" jdbcType="CHAR" />
-    <result column="HOLDER_RISK_PREFER" property="holderRiskPrefer" jdbcType="VARCHAR" />
-    <result column="HOLDER_CELLPHONE" property="holderCellphone" jdbcType="VARCHAR" />
-    <result column="HOLDER_TELEPHONE" property="holderTelephone" jdbcType="VARCHAR" />
-    <result column="IS_SUBMIT" property="isSubmit" jdbcType="CHAR" />
-    <result column="HOLDER_EMAIL" property="holderEmail" jdbcType="VARCHAR" />
-    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
-    <result column="STATUS" property="status" jdbcType="VARCHAR" />
-    <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
-    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
-    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="DATA_DATE" property="dataDate" jdbcType="TIMESTAMP" />
-    <result column="DATA_SOURCE" property="dataSource" jdbcType="CHAR" />
-    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
-    <result column="AGENT" property="agent" jdbcType="VARCHAR" />
-    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-    <result column="INTERF_CHECK_RESULT" property="interfCheckResult" jdbcType="VARCHAR" />
-    <result column="MERGER_INDENTIFY_MARK" property="mergerindentifymark" jdbcType="VARCHAR" />
-  </resultMap>
- 
-	
- 
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto" >
+		<result column="INDENTIFY_MARK" property="indentifyMark" jdbcType="VARCHAR" />
+		<result column="ORG_INDENTIFY_MARK" property="orgIndentifyMark" jdbcType="VARCHAR" />
+		<result column="REGIST_BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
+		<result column="IS_BELONG_BANK" property="isBelongBank" jdbcType="CHAR" />
+		<result column="THE_BANK_NAME" property="theBankName" jdbcType="VARCHAR" />
+		<result column="THE_BANK_CODE" property="theBankCode" jdbcType="VARCHAR" />
+		<result column="HOLDER_MARK" property="holderMark" jdbcType="CHAR" />
+		<result column="HOLDER_REGION" property="holderRegion" jdbcType="VARCHAR" />
+		<result column="HOLDER_TYPE" property="holderType" jdbcType="CHAR" />
+		<result column="PERSONAL_IDENTIFY_TYPE" property="personalIdentifyType" jdbcType="CHAR" />
+		<result column="INSTITUTION_IDENTIFY_TYPE" property="institutionIdentifyType" jdbcType="VARCHAR" />
+		<result column="OTHER_IDENTIFY_NAME" property="otherIdentifyName" jdbcType="VARCHAR" />
+		<result column="IDENTIFY_NUMBER" property="identifyNumber" jdbcType="VARCHAR" />
+		<result column="SPV_CAP_ACC_BANK" property="spvCapAccBank" jdbcType="VARCHAR" />
+		<result column="OTHER_CAP_ACC_BANK" property="otherCapAccBank" jdbcType="VARCHAR" />
+		<result column="SPV_REGIST_CODE" property="spvRegistCode" jdbcType="VARCHAR" />
+		<result column="HOLDER_DATE" property="holderDate" jdbcType="TIMESTAMP" />
+		<result column="HOLDER_NAME" property="holderName" jdbcType="VARCHAR" />
+		<result column="HOLDER_SEX" property="holderSex" jdbcType="CHAR" />
+		<result column="HOLDER_RISK_PREFER" property="holderRiskPrefer" jdbcType="VARCHAR" />
+		<result column="HOLDER_CELLPHONE" property="holderCellphone" jdbcType="VARCHAR" />
+		<result column="HOLDER_TELEPHONE" property="holderTelephone" jdbcType="VARCHAR" />
+		<result column="IS_SUBMIT" property="isSubmit" jdbcType="CHAR" />
+		<result column="HOLDER_EMAIL" property="holderEmail" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+		<result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="DATA_DATE" property="dataDate" jdbcType="TIMESTAMP" />
+		<result column="DATA_SOURCE" property="dataSource" jdbcType="CHAR" />
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="AGENT" property="agent" jdbcType="VARCHAR" />
+		<result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+		<result column="INTERF_CHECK_RESULT" property="interfCheckResult" jdbcType="VARCHAR" />
+		<result column="MERGER_INDENTIFY_MARK" property="mergerindentifymark" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+
 	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)-->
-	<select id="queryAllEquityInfoConStrastYbs"  
-	        parameterType="java.util.List"
-	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
-	        resultSetType="FORWARD_ONLY" fetchSize="1000">
-    	  SELECT 		    
-   	        T1.INDENTIFY_MARK  AS indentifyMark,
-			T1.ORG_INDENTIFY_MARK AS orgIndentifyMark,
-			T1.REGIST_BANK_CODE AS bankCode,
-			T1.IS_BELONG_BANK AS isBelongBank,
-			T1.THE_BANK_NAME AS theBankName,
-			T1.THE_BANK_CODE AS theBankCode,
-			T1.HOLDER_MARK AS holderMark,
-			T1.HOLDER_REGION AS holderRegion,
-			T1.HOLDER_TYPE AS holderType,
-			T1.PERSONAL_IDENTIFY_TYPE AS personalIdentifyType,
-			T1.INSTITUTION_IDENTIFY_TYPE AS institutionIdentifyType,
-			T1.OTHER_IDENTIFY_NAME AS otherIdentifyName,
-			T1.IDENTIFY_NUMBER AS identifyNumber,
-			T1.SPV_CAP_ACC_BANK AS spvCapAccBank,
-			T1.OTHER_CAP_ACC_BANK AS otherCapAccBank,
-			T1.SPV_REGIST_CODE AS spvRegistCode,
-			T1.HOLDER_DATE AS holderDate,
-			T1.HOLDER_NAME AS holderName,
-			T1.HOLDER_SEX AS holderSex,
-			T1.HOLDER_RISK_PREFER AS holderRiskPrefer,
-			T1.HOLDER_CELLPHONE AS holderCellphone,
-			T1.HOLDER_TELEPHONE AS holderTelephone,
-			T1.HOLDER_EMAIL AS holderEmail,
-			T1.REMARK AS remark,
-			T1.STATUS AS status,
-			T1.DEPT_CODE AS deptCode,
-			T1.UPDATE_USER AS updateUser,
-			T1.UPDATE_TIME AS updateTime,
-			T1.CREATE_USER AS createUser,
-			T1.ORG_CODE AS orgCode
-       	from chb_equ_sub T1
-   	    inner join chb_equ_hold th
-     	on th.INDENTIFY_MARK=T1.INDENTIFY_MARK
-    	and ifnull(th.ORG_INDENTIFY_MARK,'0')=ifnull(T1.ORG_INDENTIFY_MARK,'0')
-    	left join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
-    	<where>
-    		  (t2.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
-    		 <!-- <if test="keys !=null and keys.size()>0">
-		        AND t1.REGIST_BANK_CODE
-		            ||'_'||t1.IDENTIFY_NUMBER
-		            ||'_'||t1.HOLDER_NAME
-		            ||'_'||t1.PERSONAL_IDENTIFY_TYPE
-		            ||'_'||t1.INSTITUTION_IDENTIFY_TYPE
-		            ||'_'||t1.OTHER_IDENTIFY_NAME IN
-		        <foreach collection="keys" item="key" open="(" separator=","  close=")">
-		            #{key,jdbcType=VARCHAR}
-		        </foreach>
-		    </if> -->
-		    <foreach collection="list" index="index" item="item" open="and (" separator="or" close=")">
-  			   		t1.REGIST_BANK_CODE =  #{item.REGIST_BANK_CODE,jdbcType=VARCHAR} 
-  				and t1.IDENTIFY_NUMBER = #{item.IDENTIFY_NUMBER,jdbcType=VARCHAR}
-  				and t1.HOLDER_NAME = #{item.HOLDER_NAME,jdbcType=VARCHAR}
-  				  <if test="item.PERSONAL_IDENTIFY_TYPE !=null and item.PERSONAL_IDENTIFY_TYPE !=''">
-  			   		and t1.PERSONAL_IDENTIFY_TYPE =  #{item.PERSONAL_IDENTIFY_TYPE,jdbcType=VARCHAR} 
-  			   </if>
-  			     <if test="item.INSTITUTION_IDENTIFY_TYPE !=null and item.INSTITUTION_IDENTIFY_TYPE !=''">
-  			   		and t1.INSTITUTION_IDENTIFY_TYPE =  #{item.INSTITUTION_IDENTIFY_TYPE,jdbcType=VARCHAR} 
-  			   </if>
-  			     <if test="item.OTHER_IDENTIFY_NAME !=null and item.OTHER_IDENTIFY_NAME !=''">
-  			   		and t1.OTHER_IDENTIFY_NAME =  #{item.OTHER_IDENTIFY_NAME,jdbcType=VARCHAR} 
-  			   </if>
-    		</foreach>
-		</where>
-		
-	</select>
-	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)-->
-	<select id="queryAllEquityInfo"  parameterType="java.util.List"
-	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
-	        resultSetType="FORWARD_ONLY" fetchSize="1000">
-    	  SELECT 		    
-   	        T1.INDENTIFY_MARK  AS indentifyMark,
-			T1.ORG_INDENTIFY_MARK AS orgIndentifyMark,
-			T1.REGIST_BANK_CODE AS bankCode,
-			T1.IS_BELONG_BANK AS isBelongBank,
-			T1.THE_BANK_NAME AS theBankName,
-			T1.THE_BANK_CODE AS theBankCode,
-			T1.HOLDER_MARK AS holderMark,
-			T1.HOLDER_REGION AS holderRegion,
-			T1.HOLDER_TYPE AS holderType,
-			T1.PERSONAL_IDENTIFY_TYPE AS personalIdentifyType,
-			T1.INSTITUTION_IDENTIFY_TYPE AS institutionIdentifyType,
-			T1.OTHER_IDENTIFY_NAME AS otherIdentifyName,
-			T1.IDENTIFY_NUMBER AS identifyNumber,
-			T1.SPV_CAP_ACC_BANK AS spvCapAccBank,
-			T1.OTHER_CAP_ACC_BANK AS otherCapAccBank,
-			T1.SPV_REGIST_CODE AS spvRegistCode,
-			T1.HOLDER_DATE AS holderDate,
-			T1.HOLDER_NAME AS holderName,
-			T1.HOLDER_SEX AS holderSex,
-			T1.HOLDER_RISK_PREFER AS holderRiskPrefer,
-			T1.HOLDER_CELLPHONE AS holderCellphone,
-			T1.HOLDER_TELEPHONE AS holderTelephone,
-			T1.HOLDER_EMAIL AS holderEmail,
-			T1.REMARK AS remark,
-			T1.STATUS AS status,
-			T1.DEPT_CODE AS deptCode,
-			T1.UPDATE_USER AS updateUser,
-			T1.UPDATE_TIME AS updateTime,
-			T1.CREATE_USER AS createUser,
-			T1.ORG_CODE AS orgCode
-       	from chb_equ_sub T1
-    	left join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
-    	where
-    		  (t2.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
-			   <if test="list !=null and list.size() == 1">
-			        AND concat_ws ('',T1.REGIST_BANK_CODE
-			            ,'_',T1.IDENTIFY_NUMBER
-			            ,'_',T1.HOLDER_NAME
-			            ,'_',T1.PERSONAL_IDENTIFY_TYPE
-			            ,'_',T1.INSTITUTION_IDENTIFY_TYPE
-			            ,'_',T1.OTHER_IDENTIFY_NAME) IN
-			        <foreach collection="list" item="key" open="(" separator=","  close=")">
-			            #{key,jdbcType=VARCHAR}
-			        </foreach>
-			    </if>
-	</select>
-	<select id="queryAllEquityInfoConStrastYbsSingle"  
-	        parameterType="java.lang.String"
-	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
-    	SELECT * FROM (
-		SELECT ifnull(( SELECT T.INDENTIFY_MARK FROM CHB_EQU_SUB T WHERE T.ORG_INDENTIFY_MARK = T1.INDENTIFY_MARK AND STATUS != '03' LIMIT 1 ),
-		T1.INDENTIFY_MARK ) AS indentifyMark,
+	<select id="queryAllEquityInfoConStrastYbs"
+			parameterType="java.util.List"
+			resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
+			resultSetType="FORWARD_ONLY" fetchSize="1000">
+		SELECT
+		T1.INDENTIFY_MARK  AS indentifyMark,
 		T1.ORG_INDENTIFY_MARK AS orgIndentifyMark,
 		T1.REGIST_BANK_CODE AS bankCode,
 		T1.IS_BELONG_BANK AS isBelongBank,
@@ -198,215 +75,301 @@
 		T1.HOLDER_TELEPHONE AS holderTelephone,
 		T1.HOLDER_EMAIL AS holderEmail,
 		T1.REMARK AS remark,
-		T1.STATUS AS STATUS,
+		T1.STATUS AS status,
+		T1.DEPT_CODE AS deptCode,
+		T1.UPDATE_USER AS updateUser,
+		T1.UPDATE_TIME AS updateTime,
+		T1.CREATE_USER AS createUser,
+		T1.ORG_CODE AS orgCode
+		from chb_equ_sub T1
+		inner join chb_equ_hold th
+		on th.INDENTIFY_MARK=T1.INDENTIFY_MARK
+		and ifnull(th.ORG_INDENTIFY_MARK,'0')=ifnull(T1.ORG_INDENTIFY_MARK,'0')
+		left join CHB_SUBMIT_STATUS t2
+		on  t1.SUMIT_SEQ = t2.SEQNO
+		<where>
+			(t2.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+			
+			<foreach collection="list" index="index" item="item" open="and (" separator="or" close=")">
+				t1.REGIST_BANK_CODE =  #{item.REGIST_BANK_CODE,jdbcType=VARCHAR}
+				and t1.IDENTIFY_NUMBER = #{item.IDENTIFY_NUMBER,jdbcType=VARCHAR}
+				and t1.HOLDER_NAME = #{item.HOLDER_NAME,jdbcType=VARCHAR}
+				<if test="item.PERSONAL_IDENTIFY_TYPE !=null and item.PERSONAL_IDENTIFY_TYPE !=''">
+					and t1.PERSONAL_IDENTIFY_TYPE =  #{item.PERSONAL_IDENTIFY_TYPE,jdbcType=VARCHAR}
+				</if>
+				<if test="item.INSTITUTION_IDENTIFY_TYPE !=null and item.INSTITUTION_IDENTIFY_TYPE !=''">
+					and t1.INSTITUTION_IDENTIFY_TYPE =  #{item.INSTITUTION_IDENTIFY_TYPE,jdbcType=VARCHAR}
+				</if>
+				<if test="item.OTHER_IDENTIFY_NAME !=null and item.OTHER_IDENTIFY_NAME !=''">
+					and t1.OTHER_IDENTIFY_NAME =  #{item.OTHER_IDENTIFY_NAME,jdbcType=VARCHAR}
+				</if>
+			</foreach>
+		</where>
+
+	</select>
+	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)-->
+	<select id="queryAllEquityInfo"  parameterType="java.util.List"
+			resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
+			resultSetType="FORWARD_ONLY" fetchSize="1000">
+		SELECT
+		T1.INDENTIFY_MARK  AS indentifyMark,
+		T1.ORG_INDENTIFY_MARK AS orgIndentifyMark,
+		T1.REGIST_BANK_CODE AS bankCode,
+		T1.IS_BELONG_BANK AS isBelongBank,
+		T1.THE_BANK_NAME AS theBankName,
+		T1.THE_BANK_CODE AS theBankCode,
+		T1.HOLDER_MARK AS holderMark,
+		T1.HOLDER_REGION AS holderRegion,
+		T1.HOLDER_TYPE AS holderType,
+		T1.PERSONAL_IDENTIFY_TYPE AS personalIdentifyType,
+		T1.INSTITUTION_IDENTIFY_TYPE AS institutionIdentifyType,
+		T1.OTHER_IDENTIFY_NAME AS otherIdentifyName,
+		T1.IDENTIFY_NUMBER AS identifyNumber,
+		T1.SPV_CAP_ACC_BANK AS spvCapAccBank,
+		T1.OTHER_CAP_ACC_BANK AS otherCapAccBank,
+		T1.SPV_REGIST_CODE AS spvRegistCode,
+		T1.HOLDER_DATE AS holderDate,
+		T1.HOLDER_NAME AS holderName,
+		T1.HOLDER_SEX AS holderSex,
+		T1.HOLDER_RISK_PREFER AS holderRiskPrefer,
+		T1.HOLDER_CELLPHONE AS holderCellphone,
+		T1.HOLDER_TELEPHONE AS holderTelephone,
+		T1.HOLDER_EMAIL AS holderEmail,
+		T1.REMARK AS remark,
+		T1.STATUS AS status,
+		T1.DEPT_CODE AS deptCode,
+		T1.UPDATE_USER AS updateUser,
+		T1.UPDATE_TIME AS updateTime,
+		T1.CREATE_USER AS createUser,
+		T1.ORG_CODE AS orgCode
+		from chb_equ_sub T1
+		left join CHB_SUBMIT_STATUS t2
+		on  t1.SUMIT_SEQ = t2.SEQNO
+		where
+		(t2.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+		<if test="list !=null and list.size() == 1">
+			AND concat_ws('_',T1.REGIST_BANK_CODE,T1.IDENTIFY_NUMBER,T1.HOLDER_NAME,T1.PERSONAL_IDENTIFY_TYPE,T1.INSTITUTION_IDENTIFY_TYPE,T1.OTHER_IDENTIFY_NAME) IN
+			<foreach collection="list" item="key" open="(" separator=","  close=")">
+				#{key,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+	</select>
+	<select id="queryAllEquityInfoConStrastYbsSingle"
+			parameterType="java.lang.String"
+			resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
+		SELECT * FROM (
+		SELECT
+		ifnull((SELECT T.INDENTIFY_MARK FROM
+		CHB_EQU_SUB T
+		WHERE T.ORG_INDENTIFY_MARK = T1.INDENTIFY_MARK
+		AND STATUS !='03'
+		AND ROWNUM = 1),T1.INDENTIFY_MARK
+		) AS indentifyMark,
+		T1.ORG_INDENTIFY_MARK AS orgIndentifyMark,
+		T1.REGIST_BANK_CODE AS bankCode,
+		T1.IS_BELONG_BANK AS isBelongBank,
+		T1.THE_BANK_NAME AS theBankName,
+		T1.THE_BANK_CODE AS theBankCode,
+		T1.HOLDER_MARK AS holderMark,
+		T1.HOLDER_REGION AS holderRegion,
+		T1.HOLDER_TYPE AS holderType,
+		T1.PERSONAL_IDENTIFY_TYPE AS personalIdentifyType,
+		T1.INSTITUTION_IDENTIFY_TYPE AS institutionIdentifyType,
+		T1.OTHER_IDENTIFY_NAME AS otherIdentifyName,
+		T1.IDENTIFY_NUMBER AS identifyNumber,
+		T1.SPV_CAP_ACC_BANK AS spvCapAccBank,
+		T1.OTHER_CAP_ACC_BANK AS otherCapAccBank,
+		T1.SPV_REGIST_CODE AS spvRegistCode,
+		T1.HOLDER_DATE AS holderDate,
+		T1.HOLDER_NAME AS holderName,
+		T1.HOLDER_SEX AS holderSex,
+		T1.HOLDER_RISK_PREFER AS holderRiskPrefer,
+		T1.HOLDER_CELLPHONE AS holderCellphone,
+		T1.HOLDER_TELEPHONE AS holderTelephone,
+		T1.HOLDER_EMAIL AS holderEmail,
+		T1.REMARK AS remark,
+		T1.STATUS AS status,
 		T1.DEPT_CODE AS deptCode,
 		T1.UPDATE_USER AS updateUser,
 		T1.UPDATE_TIME AS updateTime,
 		T1.CREATE_USER AS createUser,
 		T1.ORG_CODE AS orgCode,
-		IF
-		( ( @group1 = T1.gg ), @rank := @rank + 1, @rank := 1 ) AS rank,
-		@group1 := T1.gg
-		FROM
-		/* 定义临时变量池 */
-		( SELECT @rownum := 0, @group1 := NULL, @rank := 0 ) a,
-		(
-			SELECT
-			tmp.*,
-			concat_ws(
-			'',
-			tmp.REGIST_BANK_CODE,
-			'_',
-			tmp.IDENTIFY_NUMBER,
-			'_',
-			tmp.HOLDER_NAME,
-			'_',
-			tmp.PERSONAL_IDENTIFY_TYPE,
-			'_',
-			tmp.INSTITUTION_IDENTIFY_TYPE,
-			'_',
-			tmp.OTHER_IDENTIFY_NAME
-			) gg
-			FROM
-			chb_view_equ_sub tmp
-			ORDER BY
-			update_time DESC
-		) T1
-		INNER JOIN CHB_SUBMIT_STATUS t2 ON t1.SUMIT_SEQ = t2.SEQNO
-    	<where>
-    		 t2.SUBMIT_FEEDBACK_STATUS = '03'
-			AND concat_ws('',t1.REGIST_BANK_CODE, '_', t1.IDENTIFY_NUMBER, '_', t1.HOLDER_NAME, '_', t1.PERSONAL_IDENTIFY_TYPE,, '_', t1.INSTITUTION_IDENTIFY_TYPE, '_', t1.OTHER_IDENTIFY_NAME) = #{key,jdbcType=VARCHAR}
+		row_number() OVER(partition by concat_ws('_',t1.REGIST_BANK_CODE,t1.IDENTIFY_NUMBER,t1.HOLDER_NAME,t1.PERSONAL_IDENTIFY_TYPE,t1.INSTITUTION_IDENTIFY_TYPE,t1.OTHER_IDENTIFY_NAME) order by t1.update_time desc) rank
+		from chb_view_equ_sub T1
+		inner join CHB_SUBMIT_STATUS t2
+		on  t1.SUMIT_SEQ = t2.SEQNO
+		<where>
+			t2.SUBMIT_FEEDBACK_STATUS = '03'
+			AND concat_ws('_',t1.REGIST_BANK_CODE,t1.IDENTIFY_NUMBER,t1.HOLDER_NAME,t1.PERSONAL_IDENTIFY_TYPE,t1.INSTITUTION_IDENTIFY_TYPE,t1.OTHER_IDENTIFY_NAME = #{key,jdbcType=VARCHAR})
+
 		</where>
-		) 
+		)
 		where rank = 1
 	</select>
-	
+
 	<select id="queryEquityInfoByIndentifymarkAndBankCode" resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
-		parameterType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
-		SELECT
-			@rownum:=@rownum+1 rownum,
-			INDENTIFY_MARK AS indentifyMark,
-			ORG_INDENTIFY_MARK AS orgIndentifyMark,
-			REGIST_BANK_CODE AS bankCode,
-			IS_BELONG_BANK AS isBelongBank,
-			THE_BANK_NAME AS theBankName,
-			THE_BANK_CODE AS theBankCode,
-			HOLDER_MARK AS holderMark,
-			HOLDER_REGION AS holderRegion,
-			HOLDER_TYPE AS holderType,
-			PERSONAL_IDENTIFY_TYPE AS personalIdentifyType,
-			INSTITUTION_IDENTIFY_TYPE AS institutionIdentifyType,
-			IDENTIFY_NUMBER AS identifyNumber,
-			SPV_CAP_ACC_BANK AS spvCapAccBank,
-			OTHER_CAP_ACC_BANK AS otherCapAccBank,
-			SPV_REGIST_CODE AS spvRegistCode,
-			HOLDER_DATE holderDate,
-			HOLDER_NAME holderName,
-			HOLDER_SEX holderSex,
-			HOLDER_RISK_PREFER AS holderRiskPrefer,
-			HOLDER_CELLPHONE AS holderCellphone,
-			HOLDER_TELEPHONE AS holderTelephone,
-			HOLDER_EMAIL AS holderEmail,
-			TYPE AS type,
-			OTHER_IDENTIFY_NAME AS otherIdentifyName,
-			REMARK,
-			SUBMIT_STATUS AS submitStatus,
-			SUBMIT_TIME AS submitTime,
-			CHB_SUBMIT_DEADLINE AS chbSubmitDeadline,
-			SUBMIT_DEADLINE AS submitDeadline,
-			STATUS AS STATUS,
-			t1.UPDATE_TIME AS updateTime,
-			t2.SUBMIT_FEEDBACK_STATUS AS submitFeedbackStatus,
-			IF( @INDENTIFY_MARK = t1.INDENTIFY_MARK, @rank := @rank + 1, @rank := 1 ) AS rank,
-			@INDENTIFY_MARK := t1.INDENTIFY_MARK
-		FROM
-		( SELECT @rownum := 0, @INDENTIFY_MARK := NULL, @rank := 0 )b,
-		( SELECT * FROM chb_view_equ_sub  ORDER BY INDENTIFY_MARK,update_time DESC) t1
-		INNER JOIN CHB_SUBMIT_STATUS t2 ON t1.SUMIT_SEQ = t2.SEQNO
-    	<where>
-    		 t2.SUBMIT_FEEDBACK_STATUS = '03'
-   			and t1.INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
-   			and t1.REGIST_BANK_CODE=#{bankCode,jdbcType=VARCHAR}
+			parameterType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
+		select
+		INDENTIFY_MARK         as indentifyMark,
+		ORG_INDENTIFY_MARK        as orgIndentifyMark,
+		REGIST_BANK_CODE          as bankCode,
+		IS_BELONG_BANK            as isBelongBank,
+		THE_BANK_NAME             as theBankName,
+		THE_BANK_CODE             as theBankCode,
+		HOLDER_MARK               as holderMark,
+		HOLDER_REGION             as holderRegion,
+		HOLDER_TYPE               as holderType,
+		PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
+		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+		IDENTIFY_NUMBER           as identifyNumber,
+		SPV_CAP_ACC_BANK          as spvCapAccBank,
+		OTHER_CAP_ACC_BANK        as otherCapAccBank,
+		SPV_REGIST_CODE           as spvRegistCode,
+		HOLDER_DATE               holderDate,
+		HOLDER_NAME               holderName,
+		HOLDER_SEX                holderSex,
+		HOLDER_RISK_PREFER        as holderRiskPrefer,
+		HOLDER_CELLPHONE          as holderCellphone,
+		HOLDER_TELEPHONE          as holderTelephone,
+		HOLDER_EMAIL              as holderEmail,
+		TYPE                      as type,
+		OTHER_IDENTIFY_NAME       as otherIdentifyName,
+		REMARK,
+		SUBMIT_STATUS             as submitStatus,
+		SUBMIT_TIME               as submitTime,
+		CHB_SUBMIT_DEADLINE       as chbSubmitDeadline,
+		SUBMIT_DEADLINE           as submitDeadline,
+		STATUS                    as status,
+		t1.UPDATE_TIME           as updateTime,
+		t2.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		row_number() OVER(partition by t1.INDENTIFY_MARK order by t1.update_time desc) rank
+		from chb_view_equ_sub t1
+		inner join CHB_SUBMIT_STATUS t2
+		on  t1.SUMIT_SEQ = t2.SEQNO
+		<where>
+			t2.SUBMIT_FEEDBACK_STATUS = '03'
+			and t1.INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
+			and t1.REGIST_BANK_CODE=#{bankCode,jdbcType=VARCHAR}
 		</where>
 	</select>
-	
-	<select id="queryEquityInfoList" parameterType="java.util.List" 
-	        resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto" 
-	        resultSetType="FORWARD_ONLY" fetchSize="1000">
-	        SELECT 
-				INDENTIFY_MARK indentifyMark,
-	            ORG_INDENTIFY_MARK orgIndentifyMark,
-	            REGIST_BANK_CODE bankCode,
-	            IS_BELONG_BANK isBelongBank,
-	            THE_BANK_NAME theBankName,
-	            THE_BANK_CODE theBankCode,
-	            HOLDER_MARK holderMark,
-	            HOLDER_REGION holderRegion,
-	            HOLDER_TYPE holderType,
-	            PERSONAL_IDENTIFY_TYPE personalIdentifyType,
-	            INSTITUTION_IDENTIFY_TYPE institutionIdentifyType,
-	            OTHER_IDENTIFY_NAME otherIdentifyName,
-	            IDENTIFY_NUMBER identifyNumber,
-	            SPV_CAP_ACC_BANK spvCapAccBank,
-	            OTHER_CAP_ACC_BANK otherCapAccBank,
-	            SPV_REGIST_CODE spvRegistCode,
-	            HOLDER_DATE holderDate,
-	            HOLDER_NAME holderName,
-	            HOLDER_SEX holderSex,
-	            HOLDER_RISK_PREFER holderRiskPrefer,
-	            HOLDER_CELLPHONE holderCellphone,
-	            HOLDER_TELEPHONE holderTelephone,
-	            HOLDER_EMAIL holderEmail,
-	            ORG_CODE orgCode,
-	            DEPT_CODE deptCode,
-	            REMARK remark
-	   		FROM CHB_EQU_HOLD HOLD
-			 <where>
-			     <if test="keys !=null and keys.size()==1">
-					 AND concat_ws('',REGIST_BANK_CODE, '_', IDENTIFY_NUMBER, '_', HOLDER_NAME, '_', PERSONAL_IDENTIFY_TYPE,, '_', INSTITUTION_IDENTIFY_TYPE, '_', OTHER_IDENTIFY_NAME) IN
-			        <foreach collection="keys" item="key" open="(" separator=","  close=")">
-			            #{key,jdbcType=VARCHAR}
-			        </foreach>
-			    </if> 
-			 	AND STATUS !='D'
-			 	/*未报送*/
-		        AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
-		                        INNER JOIN CHB_SUBMIT_STATUS T2
-							    ON  T.SUMIT_SEQ = T2.SEQNO
-							    AND T2.SUBMIT_FEEDBACK_STATUS = '03'
-			    			    WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK
-		                      )
-			 </where>
-			 
-			 UNION ALL 
-			 
-			 SELECT 
-			    INDENTIFY_MARK indentifyMark,
-	            ORG_INDENTIFY_MARK orgIndentifyMark,
-	            REGIST_BANK_CODE bankCode,
-	            IS_BELONG_BANK isBelongBank,
-	            THE_BANK_NAME theBankName,
-	            THE_BANK_CODE theBankCode,
-	            HOLDER_MARK holderMark,
-	            HOLDER_REGION holderRegion,
-	            HOLDER_TYPE holderType,
-	            PERSONAL_IDENTIFY_TYPE personalIdentifyType,
-	            INSTITUTION_IDENTIFY_TYPE institutionIdentifyType,
-	            OTHER_IDENTIFY_NAME otherIdentifyName,
-	            IDENTIFY_NUMBER identifyNumber,
-	            SPV_CAP_ACC_BANK spvCapAccBank,
-	            OTHER_CAP_ACC_BANK otherCapAccBank,
-	            SPV_REGIST_CODE spvRegistCode,
-	            HOLDER_DATE holderDate,
-	            HOLDER_NAME holderName,
-	            HOLDER_SEX holderSex,
-	            HOLDER_RISK_PREFER holderRiskPrefer,
-	            HOLDER_CELLPHONE holderCellphone,
-	            HOLDER_TELEPHONE holderTelephone,
-	            HOLDER_EMAIL holderEmail,
-	            ORG_CODE orgCode,
-	            DEPT_CODE deptCode,
-	            REMARK remark
-		  	 FROM CHB_EQU_HOLD_CHECK HOLDCHECK
-		     WHERE 1=1 
-			 AND NOT EXISTS (SELECT 1 FROM CHB_EQU_HOLD HOLD
-                             WHERE ifnull(HOLD.REGIST_BANK_CODE,'') =  ifnull(HOLDCHECK.REGIST_BANK_CODE ,'')
-		            		 AND  ifnull(HOLD.IDENTIFY_NUMBER,'') =  ifnull(HOLDCHECK.IDENTIFY_NUMBER,'')
-		            		 AND  ifnull(HOLD.HOLDER_NAME,'') =  ifnull(HOLDCHECK.HOLDER_NAME,'')
-		            		 AND  ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,'') =  ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,'')
-		            		 AND  ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,'') =  ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,'')
-                			 AND  ifnull(HOLD.OTHER_IDENTIFY_NAME,'') =  ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,'')
-                			 AND ifnull(HOLD.INDENTIFY_MARK,'') = ifnull(HOLDCHECK.INDENTIFY_MARK,''))
-            AND NOT EXISTS (SELECT 1
-							FROM CHB_EQU_SUB SUB
-							INNER JOIN CHB_SUBMIT_STATUS T2
-							ON  SUB.SUMIT_SEQ = T2.SEQNO
-							AND T2.SUBMIT_FEEDBACK_STATUS = '03'
-							WHERE (HOLDCHECK.MERGER_INDENTIFY_MARK = SUB.INDENTIFY_MARK
-							OR HOLDCHECK.MERGER_INDENTIFY_MARK    = SUB.ORG_INDENTIFY_MARK))
-		       <if test="keys !=null and keys.size()==1">
-				   AND concat_ws('',HOLDCHECK.REGIST_BANK_CODE, '_', HOLDCHECK.IDENTIFY_NUMBER, '_', HOLDCHECK.HOLDER_NAME, '_', HOLDCHECK.PERSONAL_IDENTIFY_TYPE,, '_', HOLDCHECK.INSTITUTION_IDENTIFY_TYPE, '_', HOLDCHECK.OTHER_IDENTIFY_NAME) IN
-		        <foreach collection="keys" item="key" open="(" separator=","  close=")">
-		            #{key,jdbcType=VARCHAR}
-		        </foreach>
-			 </if> 
+
+	<select id="queryEquityInfoList" parameterType="java.util.List"
+			resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto"
+			resultSetType="FORWARD_ONLY" fetchSize="1000">
+		SELECT
+		INDENTIFY_MARK indentifyMark,
+		ORG_INDENTIFY_MARK orgIndentifyMark,
+		REGIST_BANK_CODE bankCode,
+		IS_BELONG_BANK isBelongBank,
+		THE_BANK_NAME theBankName,
+		THE_BANK_CODE theBankCode,
+		HOLDER_MARK holderMark,
+		HOLDER_REGION holderRegion,
+		HOLDER_TYPE holderType,
+		PERSONAL_IDENTIFY_TYPE personalIdentifyType,
+		INSTITUTION_IDENTIFY_TYPE institutionIdentifyType,
+		OTHER_IDENTIFY_NAME otherIdentifyName,
+		IDENTIFY_NUMBER identifyNumber,
+		SPV_CAP_ACC_BANK spvCapAccBank,
+		OTHER_CAP_ACC_BANK otherCapAccBank,
+		SPV_REGIST_CODE spvRegistCode,
+		HOLDER_DATE holderDate,
+		HOLDER_NAME holderName,
+		HOLDER_SEX holderSex,
+		HOLDER_RISK_PREFER holderRiskPrefer,
+		HOLDER_CELLPHONE holderCellphone,
+		HOLDER_TELEPHONE holderTelephone,
+		HOLDER_EMAIL holderEmail,
+		ORG_CODE orgCode,
+		DEPT_CODE deptCode,
+		REMARK remark
+		FROM CHB_EQU_HOLD HOLD
+		<where>
+			<if test="keys !=null and keys.size()==1">
+				AND concat_ws('_',REGIST_BANK_CODE,IDENTIFY_NUMBER,HOLDER_NAME,PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE,OTHER_IDENTIFY_NAME) IN
+				<foreach collection="keys" item="key" open="(" separator=","  close=")">
+					#{key,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			AND STATUS !='D'
+			/*未报送*/
+			AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
+			INNER JOIN CHB_SUBMIT_STATUS T2
+			ON  T.SUMIT_SEQ = T2.SEQNO
+			AND T2.SUBMIT_FEEDBACK_STATUS = '03'
+			WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK
+			)
+		</where>
+
+		UNION ALL
+
+		SELECT
+		INDENTIFY_MARK indentifyMark,
+		ORG_INDENTIFY_MARK orgIndentifyMark,
+		REGIST_BANK_CODE bankCode,
+		IS_BELONG_BANK isBelongBank,
+		THE_BANK_NAME theBankName,
+		THE_BANK_CODE theBankCode,
+		HOLDER_MARK holderMark,
+		HOLDER_REGION holderRegion,
+		HOLDER_TYPE holderType,
+		PERSONAL_IDENTIFY_TYPE personalIdentifyType,
+		INSTITUTION_IDENTIFY_TYPE institutionIdentifyType,
+		OTHER_IDENTIFY_NAME otherIdentifyName,
+		IDENTIFY_NUMBER identifyNumber,
+		SPV_CAP_ACC_BANK spvCapAccBank,
+		OTHER_CAP_ACC_BANK otherCapAccBank,
+		SPV_REGIST_CODE spvRegistCode,
+		HOLDER_DATE holderDate,
+		HOLDER_NAME holderName,
+		HOLDER_SEX holderSex,
+		HOLDER_RISK_PREFER holderRiskPrefer,
+		HOLDER_CELLPHONE holderCellphone,
+		HOLDER_TELEPHONE holderTelephone,
+		HOLDER_EMAIL holderEmail,
+		ORG_CODE orgCode,
+		DEPT_CODE deptCode,
+		REMARK remark
+		FROM CHB_EQU_HOLD_CHECK HOLDCHECK
+		WHERE 1=1
+		AND NOT EXISTS (SELECT 1 FROM CHB_EQU_HOLD HOLD
+		WHERE ifnull(HOLD.REGIST_BANK_CODE,'') =  ifnull(HOLDCHECK.REGIST_BANK_CODE ,'')
+		AND  ifnull(HOLD.IDENTIFY_NUMBER,'') =  ifnull(HOLDCHECK.IDENTIFY_NUMBER,'')
+		AND  ifnull(HOLD.HOLDER_NAME,'') =  ifnull(HOLDCHECK.HOLDER_NAME,'')
+		AND  ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,'') =  ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,'')
+		AND  ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,'') =  ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,'')
+		AND  ifnull(HOLD.OTHER_IDENTIFY_NAME,'') =  ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,'')
+		AND ifnull(HOLD.INDENTIFY_MARK,'') = ifnull(HOLDCHECK.INDENTIFY_MARK,''))
+		AND NOT EXISTS (SELECT 1
+		FROM CHB_EQU_SUB SUB
+		INNER JOIN CHB_SUBMIT_STATUS T2
+		ON  SUB.SUMIT_SEQ = T2.SEQNO
+		AND T2.SUBMIT_FEEDBACK_STATUS = '03'
+		WHERE (HOLDCHECK.MERGER_INDENTIFY_MARK = SUB.INDENTIFY_MARK
+		OR HOLDCHECK.MERGER_INDENTIFY_MARK    = SUB.ORG_INDENTIFY_MARK))
+		<if test="keys !=null and keys.size()==1">
+			AND concat_ws('_',HOLDCHECK.REGIST_BANK_CODE,HOLDCHECK.IDENTIFY_NUMBER,HOLDCHECK.HOLDER_NAME,HOLDCHECK.PERSONAL_IDENTIFY_TYPE,HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,HOLDCHECK.OTHER_IDENTIFY_NAME) IN
+			<foreach collection="keys" item="key" open="(" separator=","  close=")">
+				#{key,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</select>
 	<select id="queryRepeatEquityInfoUnSubmit" resultMap="BaseResultMap">
+		with s2 as(
+		SELECT count(1),ch.REGIST_BANK_CODE,ch.PERSONAL_IDENTIFY_TYPE,
+		ch.INSTITUTION_IDENTIFY_TYPE,ch.OTHER_IDENTIFY_NAME,ch.IDENTIFY_NUMBER,ch.HOLDER_NAME
+		FROM CHB_EQU_HOLD ch
+		INNER join CHB_equ_SUB cs
+		ON ch.INDENTIFY_MARK=cs.INDENTIFY_MARK
+		and ch.REGIST_BANK_CODE=cs.REGIST_BANK_CODE
+		WHERE cs.SUBMIT_STATUS ='01'
+		group by ch.REGIST_BANK_CODE, ch.PERSONAL_IDENTIFY_TYPE,
+		ch.INSTITUTION_IDENTIFY_TYPE, ch.OTHER_IDENTIFY_NAME,
+		ch.IDENTIFY_NUMBER, ch.HOLDER_NAME
+		having count(1)>1
+		)
 		SELECT  s1.*
-		FROM CHB_EQU_HOLD s1
-		INNER join (
-			SELECT count(1),ch.REGIST_BANK_CODE,ch.PERSONAL_IDENTIFY_TYPE,
-			ch.INSTITUTION_IDENTIFY_TYPE,ch.OTHER_IDENTIFY_NAME,ch.IDENTIFY_NUMBER,ch.HOLDER_NAME
-			FROM CHB_EQU_HOLD ch
-			INNER join CHB_equ_SUB cs
-			ON ch.INDENTIFY_MARK=cs.INDENTIFY_MARK
-			and ch.REGIST_BANK_CODE=cs.REGIST_BANK_CODE
-			WHERE cs.SUBMIT_STATUS ='01'
-			group by ch.REGIST_BANK_CODE, ch.PERSONAL_IDENTIFY_TYPE,
-			ch.INSTITUTION_IDENTIFY_TYPE, ch.OTHER_IDENTIFY_NAME,
-			ch.IDENTIFY_NUMBER, ch.HOLDER_NAME
-			having count(1)>1
-		) s2
+		FROM CHB_EQU_HOLD s1 INNER join s2
 		on s1.REGIST_BANK_CODE=s2.REGIST_BANK_CODE
 		and (s1.PERSONAL_IDENTIFY_TYPE=s2.PERSONAL_IDENTIFY_TYPE or(s1.PERSONAL_IDENTIFY_TYPE is null and s2.PERSONAL_IDENTIFY_TYPE is null ))
 		and (s1.INSTITUTION_IDENTIFY_TYPE=s2.INSTITUTION_IDENTIFY_TYPE  or(s1.INSTITUTION_IDENTIFY_TYPE is null and s2.INSTITUTION_IDENTIFY_TYPE is null ))
@@ -414,60 +377,60 @@
 		and s1.IDENTIFY_NUMBER=s2.IDENTIFY_NUMBER
 		and s1.HOLDER_NAME=s2.HOLDER_NAME
 		where s1.status='E'
-		 <if test="keys !=null and keys.size()>0">
-				 AND concat_ws('',s1.REGIST_BANK_CODE, '_', s1.IDENTIFY_NUMBER, '_', s1.HOLDER_NAME, '_', s1.PERSONAL_IDENTIFY_TYPE,, '_', s1.INSTITUTION_IDENTIFY_TYPE, '_', s1.OTHER_IDENTIFY_NAME) IN
-		        <foreach collection="keys" item="key" open="(" separator=","  close=")">
-		            #{key,jdbcType=VARCHAR}
-		        </foreach>
-			 </if>
+		<if test="keys !=null and keys.size()>0">
+			AND concat_ws('_',s1.REGIST_BANK_CODE,s1.IDENTIFY_NUMBER,s1.HOLDER_NAME,s1.PERSONAL_IDENTIFY_TYPE,s1.INSTITUTION_IDENTIFY_TYPE,s1.OTHER_IDENTIFY_NAME) IN
+			<foreach collection="keys" item="key" open="(" separator=","  close=")">
+				#{key,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</select>
 	<select id="queryEquityInfoRegistByPkUnsubmit"  parameterType="java.util.List"
-	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
-		 
+			resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
+
 		select INDENTIFY_MARK            as indentifyMark,
-       		ORG_INDENTIFY_MARK        as orgIndentifyMark,
-       		REGIST_BANK_CODE          as bankCode,
-       		IS_BELONG_BANK            as isBelongBank,
-       		THE_BANK_NAME             as theBankName,
-       		THE_BANK_CODE             as theBankCode,
-       		HOLDER_MARK               as holderMark,
-       		HOLDER_REGION             as holderRegion,
-       		HOLDER_TYPE               as holderType,
-       		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) identifyType,
-       		PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
-       		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
-       		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as IDENTIFY_TYPE,
-       		OTHER_IDENTIFY_NAME       as otherIdentifyName,
-       		IDENTIFY_NUMBER           as identifyNumber,
-       		SPV_CAP_ACC_BANK          as spvCapAccBank,
-       		OTHER_CAP_ACC_BANK        as otherCapAccBank,
-       		SPV_REGIST_CODE           as spvRegistCode,
-       		HOLDER_DATE               holderDate,
-       		HOLDER_NAME               holderName,
-       		HOLDER_SEX                holderSex,
-       		HOLDER_RISK_PREFER        as holderRiskPrefer,
-       		HOLDER_CELLPHONE          as holderCellphone,
-       		HOLDER_TELEPHONE          as holderTelephone,
-       		HOLDER_EMAIL              as holderEmail,
-       		TYPE                      as type,
-       		REMARK					  as remark,
-       		SUBMIT_STATUS             as submitStatus,
-       		SUBMIT_TIME               as submitTime,
-       		CHB_SUBMIT_DEADLINE       as chbSubmitDeadline,
-       		SUBMIT_DEADLINE           as submitDeadline,
-      	 	STATUS                    as status,
-       		UPDATE_TIME           	  as updateTime,
-       		SUMIT_SEQ                 as sumitSeq,
-       		ORG_CODE                  as orgCode,
-       		CHECK_SEQNO		  		  as checkSeqno
-		 from CHB_EQU_SUB
+		ORG_INDENTIFY_MARK        as orgIndentifyMark,
+		REGIST_BANK_CODE          as bankCode,
+		IS_BELONG_BANK            as isBelongBank,
+		THE_BANK_NAME             as theBankName,
+		THE_BANK_CODE             as theBankCode,
+		HOLDER_MARK               as holderMark,
+		HOLDER_REGION             as holderRegion,
+		HOLDER_TYPE               as holderType,
+		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) identifyType,
+		PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
+		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as IDENTIFY_TYPE,
+		OTHER_IDENTIFY_NAME       as otherIdentifyName,
+		IDENTIFY_NUMBER           as identifyNumber,
+		SPV_CAP_ACC_BANK          as spvCapAccBank,
+		OTHER_CAP_ACC_BANK        as otherCapAccBank,
+		SPV_REGIST_CODE           as spvRegistCode,
+		HOLDER_DATE               holderDate,
+		HOLDER_NAME               holderName,
+		HOLDER_SEX                holderSex,
+		HOLDER_RISK_PREFER        as holderRiskPrefer,
+		HOLDER_CELLPHONE          as holderCellphone,
+		HOLDER_TELEPHONE          as holderTelephone,
+		HOLDER_EMAIL              as holderEmail,
+		TYPE                      as type,
+		REMARK					  as remark,
+		SUBMIT_STATUS             as submitStatus,
+		SUBMIT_TIME               as submitTime,
+		CHB_SUBMIT_DEADLINE       as chbSubmitDeadline,
+		SUBMIT_DEADLINE           as submitDeadline,
+		STATUS                    as status,
+		UPDATE_TIME           	  as updateTime,
+		SUMIT_SEQ                 as sumitSeq,
+		ORG_CODE                  as orgCode,
+		CHECK_SEQNO		  		  as checkSeqno
+		from CHB_EQU_SUB
 		where SUBMIT_STATUS='01'
-		 <if test="keys !=null and keys.size()>0">
-		        AND concat_ws('',REGIST_BANK_CODE, '_', INDENTIFY_MARK)
-		            IN
-		        <foreach collection="keys" item="key" open="(" separator=","  close=")">
-		            #{key,jdbcType=VARCHAR}
-		        </foreach>
-		    </if>
+		<if test="keys !=null and keys.size()>0">
+			AND concat_ws('_',REGIST_BANK_CODE,INDENTIFY_MARK)
+			IN
+			<foreach collection="keys" item="key" open="(" separator=","  close=")">
+				#{key,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</select>
 </mapper>

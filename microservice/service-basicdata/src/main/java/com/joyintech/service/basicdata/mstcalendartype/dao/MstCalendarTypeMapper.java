@@ -156,4 +156,6 @@ public interface MstCalendarTypeMapper {
      * @since 1.0
      */
     List<SuggestDto> getTradeCalendarName(Map<String, Object> map);
+    
+    int calendarIdIsUsed(Map<String,Object> param);
 }

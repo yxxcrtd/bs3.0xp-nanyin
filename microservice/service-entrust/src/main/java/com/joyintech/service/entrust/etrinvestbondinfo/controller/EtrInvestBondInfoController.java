@@ -12,9 +12,12 @@ package com.joyintech.service.entrust.etrinvestbondinfo.controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -271,6 +274,16 @@ public class EtrInvestBondInfoController {
     }
 
     /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    @PostMapping("getLastPriceByPara")
+    public BigDecimal getLastPriceByPara(@RequestBody Map<String, Object> param) {
+        return etrInvestBondInfoService.getLastPriceByPara(param);
+    }
+
+    /**
      * 查询证券托管户：联想框文本框
      *
      * @param param 画面参数
@@ -281,5 +294,11 @@ public class EtrInvestBondInfoController {
     @RequestMapping("getSecManageAcctId")
     public List<SuggestDto> getSecManageAcctId(@RequestBody Map<String, Object> param) {
         return etrInvestBondInfoService.getSecManageAcctId(param);
+    }
+    
+    
+    @RequestMapping("getStdPosition")
+    public BigDecimal getStdPosition(@RequestBody Map<String,Object> param) {
+    	return etrInvestBondInfoService.getStdPosition(param);
     }
 }

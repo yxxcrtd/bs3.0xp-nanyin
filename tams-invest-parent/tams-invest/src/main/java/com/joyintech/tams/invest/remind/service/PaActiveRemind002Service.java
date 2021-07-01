@@ -170,6 +170,13 @@ public class PaActiveRemind002Service extends BaseService<PaActiveRemind001Dto> 
         param.put("returnThis", BussinessDictCodeList.交易方向_还本.getValue());
         param.put("maturity", BussinessDictCodeList.交易方向_到期.getValue());
         param.put("platDate", iPlatformDate.getSysDate());
+
+        param.put("R10S1", BussinessDictCodeList.提醒类型_小分类_债券上市流通操作.getValue());
+        param.put("R10S2", BussinessDictCodeList.提醒类型_小分类_资产要素登记修改.getValue());
+        param.put("quaryDateStr",DateUtil.format((Date)param.get("quaryDate")));
+        param.put("noFlag", BussinessDictCodeList.是否_否.getValue());
+        
+        
         // 多级法人改造 add by caiqun 20200615
         if(MultilevelDataAuthorityUtil.isEnabled()) {
 			param.put("isEnabled", true);	// add by liupengfei for 多级法人改造
@@ -212,6 +219,10 @@ public class PaActiveRemind002Service extends BaseService<PaActiveRemind001Dto> 
         //公共数据变更提醒
         if (StringUtil.isNotEmpty(mainCategory) && StringUtil.equals(mainCategory, BussinessDictCodeList.提醒类型_大分类_公共数据变更.getValue())){
             selramindR9(param, dto);
+        }
+        //债券上市流通提醒
+        if (StringUtil.isNotEmpty(mainCategory) && StringUtil.equals(mainCategory, BussinessDictCodeList.提醒类型_大分类_债券上市流通.getValue())){
+            selramindR10(param, dto);
         }
 
 
@@ -753,5 +764,20 @@ public class PaActiveRemind002Service extends BaseService<PaActiveRemind001Dto> 
         String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
         sysActivereminderInfo.setInstitutionCode(createInst);
         return sysActivereminderInfoMapper.insert(sysActivereminderInfo);
+    }
+
+    /**
+     * 债券上市流通提醒
+     * @param param
+     * @param dto
+     */
+    public void selramindR10(Map<String, Object> param, List<PaActiveRemind001Dto> dto){
+        String smallCategory = (String)param.get("smallCategory");
+        if(StringUtil.isEmpty(smallCategory) || StringUtil.equals(smallCategory, BussinessDictCodeList.提醒类型_小分类_债券上市流通操作.getValue())) {
+            dto.addAll(paActiveRemind002Mapper.selramindR10S1(param));
+        }
+        if(StringUtil.isEmpty(smallCategory) || StringUtil.equals(smallCategory, BussinessDictCodeList.提醒类型_小分类_资产要素登记修改.getValue())) {
+            dto.addAll(paActiveRemind002Mapper.selramindR10S2(param));
+        }
     }
 }

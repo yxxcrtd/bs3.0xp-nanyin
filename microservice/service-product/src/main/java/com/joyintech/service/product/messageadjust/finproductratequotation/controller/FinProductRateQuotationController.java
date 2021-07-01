@@ -48,9 +48,11 @@ public class FinProductRateQuotationController {
      * @param param
      * @return
      */
-    @PostMapping("getFinprodId")
-    public List<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param) {
-        return finProductRateQuotationService.getFinprodId(param);
+    @PostMapping("getFinprodId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page,
+                                              @PathVariable("length") int length) {
+        return finProductRateQuotationService.getFinprodId(page, length, param);
     }
     /**
      * 
@@ -97,9 +99,11 @@ public class FinProductRateQuotationController {
      * @see
      * @since 1.0
      */
-    @PostMapping("getSelectFinprodId")
-    public List<SelectOptionDto> getSelectFinprodId(@RequestBody Map<String, Object> param){
-        return finProductRateQuotationService.getSelectFinprodId(param);
+    @PostMapping("getSelectFinprodId/{page}/{length}")
+    public Page<SelectOptionDto> getSelectFinprodId(@RequestBody Map<String, Object> param,
+                                                    @PathVariable("page") int page,
+                                                    @PathVariable("length") int length){
+        return finProductRateQuotationService.getSelectFinprodId(page, length, param);
     }
     /**
      * 

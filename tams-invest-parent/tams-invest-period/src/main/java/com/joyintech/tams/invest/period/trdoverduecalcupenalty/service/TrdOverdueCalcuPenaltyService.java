@@ -244,6 +244,9 @@ public class TrdOverdueCalcuPenaltyService extends CommonExportService<TrdOverdu
                 param.put("liBranch",liBranch);
             }
         }
+        /* add by jiangpeng on 20210430 TISHKBS-2089 运营端-逾期标的信息导入报错 */
+        param.put("cashType2",DictCodeListExt1.现金流二级类型_利息.getValue());
+        /* add by jiangpeng on 20210430 TISHKBS-2089 运营端-逾期标的信息导入报错 */
         TrdSecOverdueDuration001Dto trdSecOverdueDurationDto = restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdSecOverdueDuration/selectJxwuFromFinprodId",
                 param, TrdSecOverdueDuration001Dto.class);
         return trdSecOverdueDurationDto;
@@ -346,8 +349,16 @@ public class TrdOverdueCalcuPenaltyService extends CommonExportService<TrdOverdu
                                 StringUtil.equals(penaltyBaseType, DictCodeListExt3.罚息计提基数_逾期利息.getValue()))){
                     TrdSecOverdueDuration001Dto dtos = this.selectCashIds(param.get("finprodId").toString(),bjBranch,liBranch,withOutBranchs);
                     dto.setCashIds(dtos.getCashIds());
+                    // add by jiangpeng on 20210428 start
+                    // TISHKBS-2061 CLONE - 投管系统本身审批报错，计划类存续期应收款查询，点击计息要素维护，计划类利率型可以2次提交至审批人
+                    dto.setOldCashIds(dtos.getCashIds());
+                    // add by jiangpeng on 20210428 end
                 }else{
                     dto.setCashIds(finprodId.getCashIds());
+                    // add by jiangpeng on 20210428 start
+                    // TISHKBS-2061 CLONE - 投管系统本身审批报错，计划类存续期应收款查询，点击计息要素维护，计划类利率型可以2次提交至审批人
+                    dto.setOldCashIds(finprodId.getCashIds());
+                    // add by jiangpeng on 20210428 end
                 }
             } catch (Exception e) {
                 e.printStackTrace();

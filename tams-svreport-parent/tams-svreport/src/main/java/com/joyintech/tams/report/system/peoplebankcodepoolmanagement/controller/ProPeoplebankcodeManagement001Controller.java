@@ -114,7 +114,7 @@ public class ProPeoplebankcodeManagement001Controller extends BaseController {
 				"/com/joyintech/tams/report/system/peoplebankcodepoolmanagement/conf/export_conf.xml", dtoList);
 		return ExportUtil.export(this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
 				+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
-				+ "xlsx", outFile, true);
+				+ FileNameUtil.getFileExtName(outFile), outFile, true);
 	}
 	
 	 /**

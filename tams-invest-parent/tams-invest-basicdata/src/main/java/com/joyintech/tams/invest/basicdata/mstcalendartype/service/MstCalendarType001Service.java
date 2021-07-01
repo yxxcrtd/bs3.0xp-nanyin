@@ -207,4 +207,11 @@ public class MstCalendarType001Service extends CommonExportService<MstCalendarTy
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCalendarType/getTradeCalendarName",
             map, SuggestDto.class);
     }
+    //TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 start
+    public boolean calendarIdIsUsed(Map<String,Object>map) {   	
+    	return restTemplate.postForObject(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCalendarType/calendarIdIsUsed", map,
+                boolean.class);
+    }
+    //TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 end
 }

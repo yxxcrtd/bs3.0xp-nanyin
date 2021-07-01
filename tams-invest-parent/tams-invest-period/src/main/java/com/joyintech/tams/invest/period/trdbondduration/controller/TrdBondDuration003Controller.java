@@ -3,19 +3,15 @@ package com.joyintech.tams.invest.period.trdbondduration.controller;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdbondduration.dto.SecPositionExerciseInfo003Dto;
-import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration002ProcessDto;
 import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration003ProcessDto;
-import com.joyintech.tams.invest.period.trdbondduration.service.TrdBondDuration002Service;
 import com.joyintech.tams.invest.period.trdbondduration.service.TrdBondDuration003Service;
-import com.joyintech.workflow.engine.WorkflowContext;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.entity.WorkflowEntity;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,8 +33,6 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-
-import static com.joyintech.tams.invest.period.common.service.PeriodCommonService.change现金流类型To交易方向;
 
 /**
  * @author : 强成西
@@ -142,6 +136,22 @@ public class TrdBondDuration003Controller extends BaseController {
         }
         String msg = trdBondDuration003Service.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+    /**
+     * 资产代码：下拉框
+     * @return 资产代码：下拉框
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getFinprodId")
+    @ResponseBody
+    public Page<SelectOptionDto> getFinprodId() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+
+        param.put("portType01", DictCodeListExt1.组合类型_投资类组合.getValue());
+        param.put("sysDate", DateUtil.getSysDate());
+        return trdBondDuration003Service.getFinprodId(param);
     }
 
 }

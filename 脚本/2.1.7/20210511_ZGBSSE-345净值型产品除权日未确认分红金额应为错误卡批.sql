@@ -1,0 +1,1 @@
+ update sys_prebatch_task_add set stop_flag = '01' where task_id = '88611';

@@ -360,10 +360,12 @@ public class PtlChlFundAllocation002Service extends BaseService<PtlChlFundAlloca
     @Override
     public void doBack(PtlChlFundAllocationDto entity) {
         AllTradeCommonUtil.deletePositionByOrderId(entity.getBussTrdTransferOrder().get(0).getOrderId());
+        restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlChlFundAllocation/doBack", entity, String.class);
     }
 
     @Override
     public void doRevoke(PtlChlFundAllocationDto entity) {
         AllTradeCommonUtil.deletePositionByOrderId(entity.getBussTrdTransferOrder().get(0).getOrderId());
+        restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlChlFundAllocation/doBack", entity, String.class);
     }
 }

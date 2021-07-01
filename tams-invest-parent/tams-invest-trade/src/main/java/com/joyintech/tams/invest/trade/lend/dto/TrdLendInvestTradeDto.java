@@ -209,6 +209,11 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
     private String revokeReason;
 
     /**
+     * 托管户剩余现金
+     */
+    private BigDecimal secAcctBalance;
+
+    /**
      * 组合T日可用现金
      */
     private BigDecimal avalibleCash;
@@ -216,12 +221,14 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
 
     /**
      * 组合T日可用现金,用于APP显示
+     *
      * @return
      */
     private String appAvalibleCash;
 
     /**
      * 组合T+1日可用现金,用于APP显示
+     *
      * @return
      */
     private String appAvalibleCash1;
@@ -240,24 +247,27 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
+
     private RiskCreditListCommonDto riskCreditListCommonDto;
-    
+
     /**
      * 获取 riskTrialRetDto
+     *
      * @return riskTrialRetDto.
      */
     public List<RiskTrialRetDto> getRiskTrialRetDto() {
         return riskTrialRetDto;
     }
-    
+
     /**
      * 设置 riskTrialRetDto
+     *
      * @param riskTrialRetDto riskTrialRetDto
      */
     public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
         this.riskTrialRetDto = riskTrialRetDto;
     }
+
     /**
      * 取得 交易日期
      *
@@ -546,7 +556,7 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
     public String getBusiPsText() {
         if (StringUtil.isNotBlank(this.getFinprodType2())) {
             busiPsText = SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用,
-                this.getFinprodType2());
+                    this.getFinprodType2());
         }
         // busiPsText = finTradeProduct != null ? SysDataUtil.getNameFromDataDict(
         // DictCode.回购拆借方向, finTradeProduct.getBusiPs()) : null;
@@ -773,6 +783,24 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
     }
 
     /**
+     * 获取 secAcctBalance
+     *
+     * @return secAcctBalance.
+     */
+    public BigDecimal getSecAcctBalance() {
+        return secAcctBalance;
+    }
+
+    /**
+     * 设置 secAcctBalance
+     *
+     * @param secAcctBalance secAcctBalance
+     */
+    public void setSecAcctBalance(BigDecimal secAcctBalance) {
+        this.secAcctBalance = secAcctBalance;
+    }
+
+    /**
      * 获取 avalibleCash
      *
      * @return avalibleCash.
@@ -825,7 +853,7 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
     public void setActPortfolioId(String actPortfolioId) {
         this.actPortfolioId = actPortfolioId;
     }
-    
+
     public RiskCreditListCommonDto getRiskCreditListCommonDto() {
         return riskCreditListCommonDto;
     }

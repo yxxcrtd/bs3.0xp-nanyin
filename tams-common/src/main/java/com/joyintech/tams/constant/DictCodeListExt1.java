@@ -748,6 +748,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	估值资产来源_系统内(DictCode.估值资产来源,"01","系统内"),
 	估值资产来源_WIND债券(DictCode.估值资产来源,"02","WIND债券"),
 	估值资产来源_WIND基金(DictCode.估值资产来源,"03","WIND基金"),
+	估值资产来源_WIND股票(DictCode.估值资产来源,"04","WIND股票"),
 	导入方式_手工(DictCode.导入方式,"01","手工"),
 	导入方式_自动(DictCode.导入方式,"02","自动"),
 	资产科目类型_债券(DictCode.资产科目类型,"ZQ","债券"),
@@ -1657,9 +1658,17 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	持仓类型_委托指令可用(DictCode.持仓类型,"E01","委托指令可用"),
 	持仓类型_委托指令预增(DictCode.持仓类型,"E02","委托指令预增"),
 	持仓类型_预占用(DictCode.持仓类型,"08","预占用"),
+	// add by jiangpeng on 20210416 start
+	// ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+	持仓类型_融入(DictCode.持仓类型,"05","融入"),
+	持仓类型_融出(DictCode.持仓类型,"06","融出"),
+	持仓类型_借贷融入(DictCode.持仓类型,"09","借贷融入"),
+	持仓类型_借贷融出(DictCode.持仓类型,"10","借贷融出"),
+	// add by jiangpeng on 20210416 end
 	持仓类型_卖空(DictCode.持仓类型,"11","卖空"),
 	持仓类型_卖空可用(DictCode.持仓类型,"12","卖空可用"),
 	持仓类型_人工调整(DictCode.持仓类型,"99","人工调整"),
+	持仓类型_临时(DictCode.持仓类型,"13","人工调整"),
 	资产科目类型_存款类(DictCode.资产科目类型,"CKL","存款类"),
 	资产科目类型_项目类(DictCode.资产科目类型,"LLXFB","项目类"),
 	活期类存放同业收息方式_计入活期存款(DictCode.活期类存放同业收息方式,"01","计入活期存款"),
@@ -1822,6 +1831,10 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
     目标投资者_PR3(DictCode.目标投资者,"PR3","PR3"),
     目标投资者_PR4(DictCode.目标投资者,"PR4","PR4"),
     机构所属行业三级分类_中央银行服务(DictCode.机构所属行业三级分类,"01","中央银行服务"),
+	银行账场景代码_产品固定管理费支付(DictCode.银行账场景代码,"B8103","产品固定管理费支付"),
+	银行账场景代码_产品固定管理费计提(DictCode.银行账场景代码,"B8104","产品固定管理费计提"),
+	银行账场景代码_产品浮动管理费支付(DictCode.银行账场景代码,"B8105","产品浮动管理费支付"),
+	银行账场景代码_产品浮动管理费计提(DictCode.银行账场景代码,"B8104","产品浮动管理费计提"),
 	;
     /**
      * 对应于数据字典code

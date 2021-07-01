@@ -353,7 +353,7 @@
 			LEFT JOIN
 		  			(SELECT ESP.PORTFOLIO_ID,
 							ESP.SEC_ACCT_ID,
-							SUM(NVL(ESP.AMOUNT, 0)) AMOUNT
+							SUM(NVL(ESP.AMOUNT, 0)*100) AMOUNT
 					   FROM ETR_SEC_POSITION ESP
 						WHERE ESP.PORTFOLIO_ID = #{portfolioId}
 						AND ESP.SEC_ACCT_ID =  #{manageId, jdbcType=VARCHAR}
@@ -387,7 +387,7 @@
 
 	<select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
         SELECT
-            A.ACCT_NO hidCode,
+			distinct A.ACCT_NO hidCode,
             A.ACCT_NO code,
             B.SEC_ACCT_NAME name,
             B.SEC_ACCT_NAME shortName

@@ -556,7 +556,9 @@ public class ValApiCommonService {
                 // 定义 变量.产品对应账套Dto ValBooksetInfoDto
                 ValBooksetInfoDto dto = new ValBooksetInfoDto();
                 // 变量.产品对应账套Dto.账套代码 = 变量.入库账套DTO.账套代码
-                dto.setBooksetId(bokBookset.getBooksetId());
+                if(bokBookset != null){
+                    dto.setBooksetId(bokBookset.getBooksetId());
+                }
                 // 变量.本次新增产品对应账套List.add（变量.产品对应账套Dto）
                 listValBooksetInfoDto.add(dto);
             }

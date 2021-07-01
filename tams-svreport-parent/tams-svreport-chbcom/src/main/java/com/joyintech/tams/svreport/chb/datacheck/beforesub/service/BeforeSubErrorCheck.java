@@ -25,6 +25,8 @@ import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
 import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.dao.ChbDeadLineMapper;
+import com.joyintech.tams.report.common.dto.ChbDeadLine001Dto;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.chb.common.SvrCustomerNumCheckService;
@@ -69,6 +71,9 @@ public class BeforeSubErrorCheck {
      */
     @Autowired
     private SvrCustomerNumCheckService svrCustomerNumCheckService;
+	
+	@Autowired
+    private ChbDeadLineMapper chbDeadLineMapper;
    
     
     /**
@@ -369,10 +374,12 @@ public class BeforeSubErrorCheck {
             CheckReport001Dto chbReportCheck = new CheckReport001Dto();
             chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
             chbReportCheck.setRefseqno(m.get("REGIST_SEQNO"));
-            chbReportCheck.setUniqueKey(m.get("PROD_ID")+GlobalConstant.COMMA+m.get("ASSET_CODE"));
+            chbReportCheck.setUniqueKey(m.get("PROD_ID")+GlobalConstant.COMMA+m.get("ASSET_CODE")+GlobalConstant.COMMA+m.get("TRADE_CODE")+GlobalConstant.COMMA+m.get("CUR_ASSET_TYPE")+" "+SvrDataUtil.getNameFromDataDict(DictCode.资金流动类型,m.get("CUR_ASSET_TYPE")));
             chbReportCheck.setRepCode(DictCodeListExt2.报表名称_资产交易信息登记.getValue());
             chbReportCheck.setRepName(DictCodeListExt2.报表名称_资产交易信息登记.getCodeName());
-            chbReportCheck.setValidKey("产品代码:"+m.get("PROD_ID") + (StringUtil.isNotEmpty(m.get("ASSET_CODE")) ? (";资产代码:"+m.get("ASSET_CODE")): ""));
+            chbReportCheck.setValidKey("产品代码:"+m.get("PROD_ID") + (StringUtil.isNotEmpty(m.get("ASSET_CODE")) ? (";资产代码:"+m.get("ASSET_CODE")): "")
+            													  +(StringUtil.isNotEmpty(m.get("TRADE_CODE")) ? (";行内交易编码:"+m.get("TRADE_CODE")): "")
+            													  +(StringUtil.isNotEmpty(m.get("CUR_ASSET_TYPE")) ? (";资金流动类型:"+m.get("CUR_ASSET_TYPE")+SvrDataUtil.getNameFromDataDict(DictCode.资金流动类型,m.get("CUR_ASSET_TYPE"))): ""));
             chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
                 DictCode.检查结果, DictCodeListExt2.检查结果_检查不通过.getCodeName()));
             chbReportCheck.setDataTime(checkdate);
@@ -534,6 +541,34 @@ public class BeforeSubErrorCheck {
             errMsgSb.append("须填报已登记的投资经理身份证号!");
             errMsgSb.append(GlobalConstant.VERTICAL_LINE);
         }
+        
+        //募集起始日期（从） 有效性验证
+        //募集方式 01公募 02私募
+        String  raiseType=  dataMap.get("RAISE_TYPE"); 
+        //募集起始日期（从）
+        Date raisePsTrdate = DateUtil.parse(dataMap.get("RAISE_PSTRDATE"));          
+        
+        //最早募集起始日-公募
+        ChbDeadLine001Dto holidaymarket001DtoGM =  chbDeadLineMapper.getChbDeadline(CacheUtil.getSysParam(SVReportGlobalConstant.SVR_CALENDAR_ID),
+        		DateUtil.format(DateUtil.now()), "02", 10);        
+        //最早募集起始日-私募
+        ChbDeadLine001Dto holidaymarket001DtoSM =  chbDeadLineMapper.getChbDeadline(CacheUtil.getSysParam(SVReportGlobalConstant.SVR_CALENDAR_ID),
+        		DateUtil.format(DateUtil.now()), "02", 2);
+        
+        if(DictCodeListExt2.募集方式_中债_公募.getValue().equals(raiseType)) {
+        	//公募产品：募集起始日期(从)应晚于申报登记日至少 10个工作日
+        	if(raisePsTrdate.compareTo(holidaymarket001DtoGM.getBusiDate()) == -1){
+                errMsgSb.append("公募产品：募集起始日期(从)应晚于申报登记日至少 10个工作日");
+                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+            }
+        }else if(DictCodeListExt2.募集方式_中债_私募.getValue().equals(raiseType)) {
+        	//私募产品：募集起始日期(从)应晚于申报登记日至少 2 个工作日
+        	if(raisePsTrdate.compareTo(holidaymarket001DtoSM.getBusiDate()) == -1){
+                errMsgSb.append("私募产品：募集起始日期(从)应晚于申报登记日至少 2 个工作日");
+                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+            }
+        }
+                      
         //是否上传9大附件
         //String fileNo = ;
         if(!isUploadFile(dataMap)){

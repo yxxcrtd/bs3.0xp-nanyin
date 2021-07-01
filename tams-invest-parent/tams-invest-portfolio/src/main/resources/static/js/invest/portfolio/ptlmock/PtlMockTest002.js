@@ -4,7 +4,7 @@
     var picinfo_DaySevenDayRate;
     var bakupMockTestParam = null; // 模拟试算画面参数
     var bakupMockTestResult = null; // 模拟试算结果
-
+    var psFlag;
     //清空信息
     var clearInfo = function () {
         $('#baseRule').attr('disabled', false);
@@ -128,9 +128,21 @@
             }
             , {field: 'tradeDate', sortable: false, width:100, title: 'PtlMockTest002.tradeDate', type: 'date'}
             , {
-                field: 'ps', edit: true, sortable: false, width:100, title: 'PtlMockTest002.ps',
+                field: 'ps', edit: true, sortable: false, width: 100, title: 'PtlMockTest002.ps',
                 editOption: {
-                    type: 'select', multiple: false, searchable: true, result: PS
+                    type: 'select',
+                    showField: 'text',
+                    formatoption: true,
+                    id: 'psStr',
+                    parentIds: 'psFlag',
+                    multiple: false,
+                    searchable: true,
+                    url: JoyinUtil.getRealPath('/invest/portfolio/ptlmock/PtlMockTest002/getPs'),
+                    postData: function () {
+                        return {
+                            psFlag : psFlag
+                        };
+                    }
                 }
             }
             , {
@@ -174,16 +186,27 @@
             if($('#portfolioId').val() != null && $('#portfolioId').val() != ''){
                 row.portfolioId = $('#portfolioId').val();    
             }
+            if($('#portfolioName').val() != null && $('#portfolioName').val() != ''){
+                row.portfolioName = $('#portfolioName').val();
+            }
         },
         beforeEditCell: function (preVal, field, rowData) {
-            // 资产类型不允许编辑
-            // if (field == 'type8') {
-            //     return false;
-            // } else {
-            // 可选资产带出时  交易方向 投资目的 不可修改
-            if (rowData.portfolioId) {
-                if (field == 'ps') {
-                    return false;
+            if (field == 'ps') {
+                var amount;
+                if (rowData.portfolioId != null && rowData.portfolioId != '' &&
+                            rowData.finprodId != null && rowData.finprodId != '' &&
+                                rowData.tradeDate != null && rowData.tradeDate != ''){
+                    Joyin.ajaxSync(JoyinUtil.getRealPath('/invest/portfolio/ptlmock/PtlMockTest003/findPage'), rowData, function (result) {
+                        if (result && result.root[0]) {
+                            amount = result.root[0].amountp;
+                        }
+                    });
+
+                    if(amount != null && amount != '' ){
+                        psFlag = "T02";
+                    }else {
+                        psFlag = "T01";
+                    }
                 }
             }
             // 选择了资产，则到期日、到期收益率不允许标记
@@ -526,13 +549,24 @@
                     newRowData.mdate = rowData.mdate;
                     newRowData.yield = rowData.yield;
                     newRowData.exerYield = rowData.exerYield;
-	                 newRowData.ccy = rowData.assetCcy;
-	                 if (!newRowData.ccy) {
-	                     // 币种：默认人民币
-	                     newRowData.ccy = CCY_CNY;
-	                 }
-
-                    mockTradeTable.addRow(newRowData);
+                    newRowData.ccy = rowData.assetCcy;
+                    if (!newRowData.ccy) {
+                        // 币种：默认人民币
+                        newRowData.ccy = CCY_CNY;
+                    }
+                    var tempTable = mockTradeTable.getAllRows();
+                    for (i = 0; i < tempTable.length; i++) {
+                        if (tempTable[i].portfolioId === newRowData.portfolioId
+                            && tempTable[i].finprodId === newRowData.finprodId
+                            && tempTable[i].invAim === newRowData.invAim) {
+                            // 已经存在的不重复添加
+                        }else{
+                            mockTradeTable.addRow(newRowData);
+                        }
+                    }
+                    if(tempTable.length === 0){
+                        mockTradeTable.addRow(newRowData);
+                    }
                 });
             }
         });

@@ -389,4 +389,11 @@ public interface TrdFundInvestTradeMapper {
 	BigDecimal getPriceByTradeId(String tradeId);
 	
 	BigDecimal getPriceByWorkflowId(String workflowId);
+
+    /**
+     * 查询待结转份额
+     * @param map
+     * @return
+     */
+    BigDecimal getcarryAmtNew(Map<String,Object> map);
 }

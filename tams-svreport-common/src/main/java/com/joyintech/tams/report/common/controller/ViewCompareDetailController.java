@@ -48,6 +48,7 @@ import com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
@@ -607,6 +608,26 @@ public class ViewCompareDetailController extends BaseController {
                         v = SysDataUtil.getNameFromDataDict(code, (String)value);
                     } else {
                         v = SysDataUtil.getZZDictCodeAndName(code, (String)value);
+                        //update zhangweiqi 2021-5-12 HYXXDJZL-101  【资产要素登记】项目类标的--非标资产/新增可投资，双击打开时，融资人所属地区字段为空 begin
+                        if(DictCode.行政区划_省市县.getValue().equals(code.getValue())&&"finArea".equals(field)&&!StringUtil.isNotEmpty(v)){
+                        	if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省市县,(String)value))){
+            					
+                        		v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_省市县, (String)value);
+            				}
+            				else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省,(String)value))){
+            					
+            					v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_省, (String)value);
+            				
+            				}else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_市,(String)value))){
+            				
+            					v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_市, (String)value);
+            					
+            				}else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_县,(String)value))){
+            					
+            					v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_县, (String)value);
+            				}
+                           }
+                        //update zhangweiqi 2021-5-12 HYXXDJZL-101  【资产要素登记】项目类标的--非标资产/新增可投资，双击打开时，融资人所属地区字段为空 end
                     }
                 }
             }

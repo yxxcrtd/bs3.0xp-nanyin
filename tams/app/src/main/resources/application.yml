@@ -23,18 +23,21 @@ spring:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
-    maxTotal: 10
-    maxIdle: 10
-    minIdle: 5
-    timeBetweenEvictionRunsMillis: 60000
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    logAbandoned: false
   activemq:
     active: false
     systemId: tams
@@ -56,50 +59,14 @@ base:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
-    maxTotal: 10
-    maxIdle: 10
-    minIdle: 5
-    timeBetweenEvictionRunsMillis: 60000
-    numTestsPerEvictionRun: 10
-    removeAbandonedOnBorrow: true
-    removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-interf:
-  datasource:
-    type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
-    maxTotal: 10
-    maxIdle: 10
-    minIdle: 5
-    timeBetweenEvictionRunsMillis: 60000
-    numTestsPerEvictionRun: 10
-    removeAbandonedOnBorrow: true
-    removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
     testWhileIdle: true
-stresstest:
-  datasource:
-    type: org.apache.commons.dbcp2.BasicDataSource
-    validationQuery: select 1 from dual
-    maxTotal: 10
-    maxIdle: 10
-    minIdle: 5
-    timeBetweenEvictionRunsMillis: 60000
-    numTestsPerEvictionRun: 10
-    removeAbandonedOnBorrow: true
-    removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-    testWhileIdle: true
-#wind数据库配置
-wind:
-  datasource:
-    type: org.apache.commons.dbcp2.BasicDataSource
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    validationQuery: SELECT 1 FROM DUAL
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
@@ -107,8 +74,89 @@ wind:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.jdbc.ReadTimeout=50000
+    logAbandoned: false
+interf:
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: false
+stresstest:
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: false
+#wind数据库配置
+wind:
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: false
+#中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
+chbsend:
+  datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: false
 tx-lcn:
   springcloud:
     loadbalance:
@@ -129,7 +177,7 @@ shiro:
     /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
     /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**, /api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
-
+  allowDuplicateLogin: true
 specialsyspara:
   parakey: AUTHORIZE_LIMIT||PRICE_CAL_TYPE||portfolio_handle_userid||settle_acct_name||settle_acct_no||prod_tru_acct_no||prod_tru_acct_name||lending_acct_no||lending_acct_name
 #页面特殊参数取值
@@ -142,13 +190,18 @@ application:
     #由于一二期直连调用组件包，组件包不能访问缓存，故在此配置同三期一致的路径
     download-file-path: /home/tams/svr_nb_prod/sharedata/chb/recive/CB/
     maxSqlNum: 1000
-    msg-start-time: 0600
+    msg-start-time: '0600'
     msg-end-time: 2200
     reportCbFeedBackHandleCountOneTime: 10000
     isExceptionWhenSendTimeout: 01
+    diDirectAccessFlg: '01' #中债反馈文件下载获取方式(01：DI获取   02：本地获取)
+    chbPerNo: '00' #中债一二三期部署方式(01:独立一二期  03：独立三期  00：一起部署)
+    download-file-path-movepath: E:/home/wasadmin/sharedata/chb/recive/CB/bak
+    base64Key: HF*ts303HF*ts303
+    dangbanFlag: '01'#01标识挡板  02直联
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: invest/remindMain  
+  remindPage: invest/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top
@@ -172,6 +225,10 @@ application:
   reportCbFeedBackHandleCountOneTime: 10000
   riskTestMaxCorePoolSize: 20
   riskTestmaxSubmitProductSize: 50
+  versionInfo:
+     systemVersion: V2.1.7
+     lastChromeVersion: 73
+     customerName: 兆尹科技
 #  不使用服务注册中心,tams和tams-service-container分开部署的方式
 #  loadbalance: false
 #  micorservice:
@@ -198,7 +255,7 @@ application:
 #      chb3Service: http://127.0.0.1:8114
 #      svrcomService: http://127.0.0.1:8114
 #      pbcService: http://127.0.0.1:8114
-#      channelService: http://127.0.0.1:8114 
+#      channelService: http://127.0.0.1:8114
 #      customerInterfService: http://127.0.0.1:8114
 #      tamsServer: http://127.0.0.1:8114
 #      investInterfService: http://127.0.0.1:8114
@@ -270,6 +327,16 @@ application:
 
 #交易压力测试性能优化开关
 flag: false
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://ip:8084进行批处理缓存更新
+url:
+  batch: http://127.0.0.1:8084/main/about/refreshCache
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
+# 平台日调整集群配置
+#changePlatformDate:
+#  ip: 127.0.0.1:8080,127.0.0.2:8080
 
 ---
 spring:
@@ -297,7 +364,7 @@ application:
   sqldiruserName: zgtams0810
   sqldirpassword: zgtams0810_123
 shiro:
-  ssoEnable: true
+  ssoEnable: false
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
     /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
     /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
@@ -321,6 +388,12 @@ stresstest:
     username: zgtams0810
     password: zgtams0810_123
 wind:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810_123
+#中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
+chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
@@ -380,6 +453,12 @@ wind:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
     username: zgtams0810
     password: zgtams0810_123
+#中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: zgtams0810
+    password: zgtams0810_123
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG
@@ -407,13 +486,4 @@ tx-lcn:
     managerAddress: 192.168.90.197:8070
 
 
-# 温州 APP 消息推送接口配置，默认 false
-workflow:
-  isSentMessage: false
-  serviceName: messageService
-
-
-#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
-url:
-  batch: http://localhost:8084/main/about/refreshCache
 

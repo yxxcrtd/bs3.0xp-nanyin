@@ -31,7 +31,7 @@ public interface BaseEtrCashPositionCommService {
      * @param needNegative 是否取反
      * @return 执行结果
      */
-    CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型, boolean needNegative,String ieFlag,String isOverdueDeal);
+    CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型, boolean needNegative,String ieFlag,String isOverdueDeal,String 交易流程状态);
 
     /**
      * 委托开始执行共通
@@ -89,10 +89,12 @@ public interface BaseEtrCashPositionCommService {
 
     /**
      * 产品端影响实时现金共通方法
+     * // modify by jiangpeng on 20210429 start
+     * // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
      * @param cashInputDto
      * @return
      */
-    CommonResult productEtrCashPosition(PortfolioCashPositionsFlowInputDto cashInputDto);
+    CommonResult productEtrCashPosition(PortfolioCashPositionsFlowInputDto cashInputDto, String positionType);
 
     /**
      * 组合划款（自定义现金流、资金划拨、通道划款（回款））影响实时现金共通方法

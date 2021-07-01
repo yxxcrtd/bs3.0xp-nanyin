@@ -61,6 +61,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      */
     提醒类型_大分类_公共数据变更(BussinessDictCode.提醒类型_大分类,"R9","公共数据变更"),
     /**
+     * 提醒类型_大分类_债券上市流通
+     */
+    提醒类型_大分类_债券上市流通(BussinessDictCode.提醒类型_大分类,"R10","债券上市流通"),
+    /**
      * 提醒类型_小分类_债券借贷融出的券还本收息
      */
     提醒类型_小分类_债券借贷融出的券还本收息(BussinessDictCode.提醒类型_小分类,"R3S16","债券借贷融出的券还本收息"),
@@ -259,6 +263,16 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 计划类（净值型）赎回确认
      */
     提醒类型_小分类_计划类净值型赎回确认(BussinessDictCode.提醒类型_小分类,"S17","计划类净值型赎回确认"),
+
+    /**
+     * 债券上市流通操作
+     */
+    提醒类型_小分类_债券上市流通操作(BussinessDictCode.提醒类型_小分类,"R10S1","债券上市流通操作"),
+
+    /**
+     * 资产要素登记修改
+     */
+    提醒类型_小分类_资产要素登记修改(BussinessDictCode.提醒类型_小分类,"R10S2","资产要素登记修改"),
 
     /**
      * 入库
@@ -5117,6 +5131,8 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     行内资产三级分类_私募股权投资基金(BussinessDictCode.行内资产三级分类, "66", "私募股权投资基金"),
     行内资产三级分类_即期(BussinessDictCode.行内资产三级分类, "67", "即期"),
     行内资产三级分类_掉期(BussinessDictCode.行内资产三级分类, "68", "掉期"),
+    指令业务类型_银证转账(BussinessDictCode.指令业务类型, "49", "银证转账"),
+    指令业务类型_证银转账(BussinessDictCode.指令业务类型, "50", "证银转账"),
 
     /**
      * 行权方式_回售

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,7 +90,7 @@ public class DisclosureHomeController extends BaseController {
             }
             jsonStr = JsonUtils.object2Json(colsList);
         }
-        return jsonStr;
+        return StringUtil.trimHtmlTag(jsonStr);
     }
     
     /**

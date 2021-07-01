@@ -127,6 +127,10 @@ implements BaseProcessService<TrdFundDuration001Dto>{
                     entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(Collectors.toList()), entity.getTotleTradeId());
         }
     	if (BussinessConstant.SUBMIT.equals(entity.getOperateType())) {
+
+    	    if(StringUtil.isNotEmpty(entity.getTotleTradeId())) {
+                periodCommonService.deleteWflByTradeId(entity.getTotleTradeId());
+            }
             setWorkflowId(entity.getBaseTotalTradeInfoDto(), entity.getWorkflowId());
         }
         dealEntityService.saveDataWhenStartWorkflow(entity, type, DictCodeListExt1.交易流程状态_流程中.getValue(), false);
@@ -139,6 +143,10 @@ implements BaseProcessService<TrdFundDuration001Dto>{
     @Override
     public void doUpdate(TrdFundDuration001Dto entity) {
 //    	baseTradeProductDealCommServiceImpl.delete(entity.getWorkflowId());
+        if (BussinessConstant.SUBMIT.equals(entity.getOperateType())) {
+            periodCommonService.deleteWflByTradeId(entity.getTotleTradeId());
+        }
+
         entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
         if (CollectionUtils.isNotEmpty(entity.getUploadFileList())
                 && com.joyintech.framework.util.StringUtil.isNotEmpty(entity.getTotleTradeId())) {

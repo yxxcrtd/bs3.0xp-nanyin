@@ -10,13 +10,13 @@
 
 package com.joyintech.tams.invest.common.component.base.group.impl.dao;
 
+import com.joyintech.tams.common.base.entity.PtlCashPosition;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import org.springframework.stereotype.Repository;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 
 /**
  * 组合可用现金和实际现金查询更新组件mapper
@@ -91,4 +91,13 @@ public interface BasePtlCashPositionInfoMapper {
      * @date 2018/9/30
      */
     BigDecimal selectCashPositionNew(PtlCashPositionFlowDto positionQueryDto);
+
+    // add by etliu 汇总表更新并发问题解决 20210511 start
+    /**
+     * 针对一笔流水，将该笔流水的数值加到组合现金的主表
+     * @param record 一笔流水的数据
+     * @return 更新条数
+     */
+    int updateByPrimaryKeySelectiveForFlow(PtlCashPosition record);
+    // add by etliu 汇总表更新并发问题解决 20210511 end
 }

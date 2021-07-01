@@ -12,6 +12,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
@@ -74,7 +75,9 @@ public class TrdRepoDuration002Controller extends BaseController {
 
     @Autowired
     private BaseTradeFeeCommService baseTradeFeeCommService;
-
+    //add by jiangpeng on 20210422 TISHKBS-1803
+    @Autowired
+    private CommonBusinessService commonBusinessService;
     /**
      * 需要初始化的下拉菜单
      */
@@ -93,6 +96,11 @@ public class TrdRepoDuration002Controller extends BaseController {
                     && bustype==null){//流程中显示到期续做信息
                 bustype=entity.getPstype();
             }
+            //add by jiangpeng on 20210422 TISHKBS-1803
+            if(entity != null) {
+                model.addAttribute("isTodo", commonBusinessService.isBackCheckNode(entity.getBusiCode()));
+            }
+            //add by jiangpeng on 20210422 TISHKBS-1803
         }
         else {
             entity = trdRepoDuration002Service.findEffectiveData(RequestUtil.getPageParam());

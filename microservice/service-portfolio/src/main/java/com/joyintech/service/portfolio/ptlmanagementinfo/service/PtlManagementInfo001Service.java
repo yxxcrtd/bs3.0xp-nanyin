@@ -755,6 +755,23 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
         return userList;
     }
     /*add by liupengfei for 多级法人改造 默认选中 上级管理员用户和本级管理员 end*/
+    
+    
+    @DataSource(DataSourceType.OTHER)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public List<String> getUserList(Map<String,Object> param){
+    	if(param.get("resourcesTreeInstCodeList")==null||((List)param.get("resourcesTreeInstCodeList")).size()==0) {
+    		return new ArrayList<String>();
+    	}
+        List<String> userList = ptlManagementInfo001Mapper.getAllUserList(param);
+        return userList;
+    }
+    
+    @DataSource(DataSourceType.OTHER)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public String getUserInstitution(String userName){
+        return ptlManagementInfo001Mapper.getUserInstitution(userName);
+    }
 
     @DataSource(DataSourceType.OTHER)
     @Transactional(propagation = Propagation.REQUIRES_NEW)

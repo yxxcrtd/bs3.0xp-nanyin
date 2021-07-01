@@ -80,9 +80,12 @@ public class TrdPlanCcyInvestTradeConfirmValidator implements BeanValidator {
                     if(shareAmt != null && shareAmt.compareTo(zero)==-1){
                         errorList.add(new ValidMessage("shareAmt",this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"),"0")));
                     }
+                    
+                    /*ZGBSS-1436 赎回确认时不需要校验可用持仓，可用持仓在赎回时已校验扣除
                     if(assetAvailablePosition != null && shareAmt != null && shareAmt.compareTo(assetAvailablePosition)==1){
                         errorList.add(new ValidMessage("shareAmt",this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),this.getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
                     }
+                    */
                 }
                 if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue()) && StringUtil.isEmptyList(dto.getBussTrdTransferOrder())){
                     errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0038", getMessage("TrdFundInvestTrade002.transOrder"))));
@@ -116,9 +119,11 @@ public class TrdPlanCcyInvestTradeConfirmValidator implements BeanValidator {
                     if(shareAmt != null && shareAmt.compareTo(zero)==-1){
                         errorList.add(new ValidMessage("shareAmt",this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"),"0")));
                     }
+                    /*ZGBSS-1436 赎回确认时不需要校验可用持仓，可用持仓在赎回时已校验扣除
                     if(assetAvailablePosition != null && shareAmt != null && shareAmt.compareTo(assetAvailablePosition)==1){
                         errorList.add(new ValidMessage("shareAmt",this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),this.getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
                     }
+                    */
                 }
                 if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())){
                     // 划款指令

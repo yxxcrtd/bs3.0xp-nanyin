@@ -250,10 +250,10 @@ $(function() {
         $('#calRateType_div').hide();
     }
     
-    var issuerChange = function(){
+    /*var issuerChange = function(){
         var customerId = $('#issuer').val();
         AssetCommon.getRepInfoByIssuer(customerId);
-    }
+    }*/
 
     var resetForm = function(id,value,pageId){
         //update by zhangnian 20191112 start
@@ -525,8 +525,12 @@ $(function() {
                     });
 
                     //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 start
+                    var finExercisePlanList = baseFinProductBaseInfoList[0].finExercisePlanList;
+                    if(finExercisePlanList == undefined || finExercisePlanList == null){
+                        finExercisePlanList = result.data.busiFinExercisePlanDto.finExercisePlanList;
+                    }
                     $('#busiFinExercisePlanTable').data('joyintable').reload({
-                        data : baseFinProductBaseInfoList[0].finExercisePlanList,
+                        data : finExercisePlanList,
                         url : null
                     });
                     //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 end
@@ -564,7 +568,7 @@ $(function() {
 	                    }
 	                    isCityBondChange();
                     }
-                    if(result.data.registOrg != "99" ){
+                    if(result.data.registOrg != "99" && result.data.registOrg != "06"){
                         $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
                     }
 				}
@@ -580,6 +584,17 @@ $(function() {
         var customerId = $('#issuer').val();
         if(customerId){
             AssetCommon.getRepInfoByIssuer(customerId);
+            if (typeof pageModel !== 'undefined' && pageModel !== PAGE_MODEL_REFERENCE){
+            　　　Joyin.ajax(basePath + 'invest/asset/bond/FinBondTargetAsset002/getFinBondRatingDto?issuer='+customerId, '' ,function(result){
+                    if (result) {
+                    　　　　$('#busiFinBondRatingInfoTable').data('joyintable').reload({
+                              data : result,
+                              url : null
+                              });
+                           }
+                });
+            }
+          　
         }
     }
     window.componentLoadCallback = function(isDone, pagePath, params){
@@ -618,7 +633,10 @@ $(function() {
         }
     }
     var init = function(){
-    	
+        if ($('#isAllowModify').val() == 'N'){
+            $('#isIssueAsset').attr('disabled', true).trigger('change');
+        }
+        
        //资产代码拆分
        var finprodMarketId =  $('#finprodMarketId').val();
        if (finprodMarketId){
@@ -782,13 +800,13 @@ $(function() {
             obj.type = FINPROD_TYPE_TG_F01;
             AssetCommon.checkDate(obj);
         });
-        $("#registOrg").change(function () {
-            if($(this).val()=='04'){
-                $('#bussFinBondRepInfoDto_repRegistorgComment').val('中证机构间报价系统股份有限公司');
-            }else{
-                $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
-            }
-        });
+//        $("#registOrg").change(function () {
+//            if($(this).val()=='04'){
+//                $('#bussFinBondRepInfoDto_repRegistorgComment').val('中证机构间报价系统股份有限公司');
+//            }else{
+//                $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
+//            }
+//        });
         $("#pflsh").change(function(){
             var str = '';
             if($('#pflsh').select2('data')[0].object){

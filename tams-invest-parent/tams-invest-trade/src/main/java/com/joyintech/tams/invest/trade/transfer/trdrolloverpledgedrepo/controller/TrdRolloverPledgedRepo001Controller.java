@@ -21,6 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.assetstransfer.dto.AssetsTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.FinDealPledgeDto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.TrdRolloverPledgedRepo001Dto;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +70,9 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
      */
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     @Override
     public String init(Model model){
         Map<String ,Object> param = RequestUtil.getPageParam();
@@ -356,6 +361,19 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
 //                if(dto.getPrinAmt().compareTo(sumPrinAmt)>0){
 //                    confirmMsg = "本金金额大于转仓交易汇总券面总额，是否确认提交？";
 //                }
+            }
+        }
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (TrdRolloverPledgedRepo001Dto ptl : dto.getPledgedRepoInfoList()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    errorList.add(new ValidMessage("交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！"));
+                }
             }
         }
         if(errorList.size()>0){

@@ -1,0 +1,1 @@
+update sys_datadict_list t set t.item_value = '资金收款-债券类资产卖出行权回售行权赎回' where T.DICT_CODE='TABLE_ID' AND T.ITEM_CODE='2702';

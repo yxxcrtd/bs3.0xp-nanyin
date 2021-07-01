@@ -145,4 +145,8 @@
           and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
     </update>
+        <delete id="deleteBySeq" parameterType="java.lang.String" >
+        delete from TRD_STASEC_FLOW_DETAIL
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
 </mapper>

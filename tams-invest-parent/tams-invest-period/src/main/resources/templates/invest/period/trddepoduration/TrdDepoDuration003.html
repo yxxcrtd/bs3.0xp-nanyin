@@ -338,7 +338,8 @@
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="tradeDate" name="tradeDate" required
                                                 data-th-value="${#dates.format(entity?.tradeDate,'yyyy-MM-dd')}"
-                                                class="layui-input form-input input-dateSelect" />
+                                                class="layui-input form-input input-dateSelect"
+                                                   data-th-data-ignore='${isTodo}'/><!--modify by jiangpeng on 20210422 TISHKBS-1803-->
                                         </div>
                                     </div>
                                 </div>
@@ -388,8 +389,8 @@
                                         class="layui-btn layui-btn-sm"
                                         th:text="#{BussTrdTransferOrder.generate}">生成指令</a>
                                 </div>
-                                <table class="layui-table" th:id="|bussTrdTransferOrder_table|"
-                                    th:name="bussTrdTransferOrder"></table>
+                                <table class="layui-table" th:id="|bussTrdTransferOrder_table|" data-th-data-ignore='${isTodo}'
+                                    th:name="bussTrdTransferOrder"></table><!--modify by jiangpeng on 20210422 TISHKBS-1803-->
                             </div>
                         </div>
                     </div>
@@ -462,7 +463,7 @@
             var CHANNEL=/*[[${entity?.channel}]]*/'';
             var IS_CAL_LOADRATE = /*[[${IS_CAL_LOADRATE}]]*/'';
             var GEN_PAY_ORDERS_AUTO=/*[[${GEN_PAY_ORDERS_AUTO}]]*/'';
-
+            var isTodo = /*[[${isTodo}]]*/false;//是否是总集节点 add by jiangpeng on 20210422 TISHKBS-1803
         </script>
         <script
             data-th-src="@{/js/invest/period/trddepoduration/TrdDepoDuration003.js}"

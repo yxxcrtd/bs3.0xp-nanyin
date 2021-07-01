@@ -180,4 +180,11 @@ public class PtlChlFundAllocationController {
     public String doInsert(@RequestBody PtlChlFundAllocationDto entity) {
         return ptlChlFundAllocationService.doInsert(entity);
     }
+    
+    @RequestMapping("/doBack")
+    @Transactional
+    @DTXTransaction
+    public String doBack(@RequestBody PtlChlFundAllocationDto entity) {
+        return ptlChlFundAllocationService.doBack(entity);
+    }
 }

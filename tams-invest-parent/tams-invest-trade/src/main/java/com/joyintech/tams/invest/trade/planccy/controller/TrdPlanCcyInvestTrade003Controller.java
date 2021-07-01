@@ -211,20 +211,22 @@ public class TrdPlanCcyInvestTrade003Controller extends BaseController {
             else {
                 dto = trdPlanCcyInvestTrade003Service.getTrdFundDto(tradeId,feeType);
                 if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()) || StringUtil.equals(dto.getPs(),DictCodeList.交易方向_赎回.getValue())){
-                    Map<String, Object> param = new HashMap<String, Object>();
-                    param.put("finprodId", dto.getFinprodId());
-                    Map<String, Object> result = trdPlanCcyInvestTrade003Service.getPurSpeed(param);
-                    Long speed = dto.getSettleSpeed();
-                    String calId = (String)result.get("CALID");
-                    if (speed == 1) {
-                        Date tradeDate = dto.getTradeDate();
-                        List<String> holidayList = dateCalService.getDealCalendarHoliday(
-                            DateUtil.parse(DateUtil.format(tradeDate)),
-                            DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15), calId);
-                        Date tradeDay = dateCalService.calculationTradingDay(
-                            DateUtil.parse(DateUtil.format(tradeDate)), 1, holidayList, "1");
-                        dto.setTradeDate(tradeDay);
-                    }
+//                    Map<String, Object> param = new HashMap<String, Object>();
+//                    param.put("finprodId", dto.getFinprodId());
+//                    Map<String, Object> result = trdPlanCcyInvestTrade003Service.getPurSpeed(param);
+//                    Long speed = dto.getSettleSpeed();
+//                    String calId = (String)result.get("CALID");
+//                    if (speed == 1) {
+//                        Date tradeDate = dto.getTradeDate();
+//                        List<String> holidayList = dateCalService.getDealCalendarHoliday(
+//                            DateUtil.parse(DateUtil.format(tradeDate)),
+//                            DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15), calId);
+//                        Date tradeDay = dateCalService.calculationTradingDay(
+//                            DateUtil.parse(DateUtil.format(tradeDate)), 1, holidayList, "1");
+//                        dto.setTradeDate(tradeDay);
+//                    }
+                    //显示实际的确认日期
+                    dto.setTradeDate(dto.getPurCfmDate());
                 }
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
                     Map<String, Object> accountTradId = new HashMap<>();
@@ -302,6 +304,12 @@ public class TrdPlanCcyInvestTrade003Controller extends BaseController {
             TrdInvestPersonInfo002Dto tipiDto = dto.getTrdInvestPersonInfo();
             model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(tipiDto));
             model.addAttribute("businessId", workflowId);
+            // add by jiangpeng on 20210421 start
+            // TISHKBS-2005【风险试算】：申购申请复核,赎回确认复核时风险试算无数据
+            if(StringUtil.isNotEmpty(dto.getTradeId())){
+                model.addAttribute("tradeId", dto.getTradeId());
+            }
+            // add by jiangpeng on 20210421 end
         } 
         dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         dto.setProfitType(DictCodeList.收益类型_货币型.getValue());
@@ -361,7 +369,7 @@ public class TrdPlanCcyInvestTrade003Controller extends BaseController {
         if (!isAuthorizationSoftcontrol) {
             if (authorizationvalid(dto)){
                 ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                errorList.add(new ValidMessage(getMessage("TRD_E_0016", "副总裁/总裁助理")));
+                errorList.add(new ValidMessage(getMessage("TRD_E_0016", "领导")));
                 ar.setErrorList(errorList);
             }
         }
@@ -395,7 +403,7 @@ public class TrdPlanCcyInvestTrade003Controller extends BaseController {
         boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
         if (isAuthorizationSoftcontrol) {
             if (authorizationvalid(dto)){
-                JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
+                JoyinMessage ms = new JoyinMessage("交易本金金额超过领导授权额度，是否确认提交!", MessageType.确认消息);
                 joyinMessages.add(ms);
                 wr.setJoyinMessages(joyinMessages);
             } 

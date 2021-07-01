@@ -31,6 +31,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCo
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCode;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.dto.TrdFinProductBarterDto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1507,14 +1508,16 @@ public class FinProductCommonService {
     	//double amount = 0;
     	//变量.剩余券面
     	double surplusSec = 0;
-    	for(TargetCashPlan listRedinfo : listRedinfoList) {
-    		for(Date queryDate : queryDateList) {
-    			if(listRedinfo.getMdate().compareTo(queryDate)==-1 || listRedinfo.getMdate().compareTo(queryDate)==0) {
-    				surplusSec = resultMap.get(queryDate)-listRedinfo.getPrinAmt().doubleValue();
-    				resultMap.put(queryDate, surplusSec);
-    			}
-    		}
-    	}
+    	if (listRedinfoList != null){
+            for(TargetCashPlan listRedinfo : listRedinfoList) {
+                for(Date queryDate : queryDateList) {
+                    if(listRedinfo.getMdate().compareTo(queryDate)==-1 || listRedinfo.getMdate().compareTo(queryDate)==0) {
+                        surplusSec = resultMap.get(queryDate)-listRedinfo.getPrinAmt().doubleValue();
+                        resultMap.put(queryDate, surplusSec);
+                    }
+                }
+            }
+        }
     	//返回 出参.百元券面结果集
 		return resultMap;
     	
@@ -1657,5 +1660,30 @@ public class FinProductCommonService {
      */
     public Map<String, Object> selectHBFXData(Map<String, Object> map) {
         return finProductCommonMapper.selectHBFXData(map);
+    }
+    /**
+     * 公用方法：标的类共通方法 - 标的信息查询，查询是否还本不带息
+     * @param finprodId 标的代码【必输项】
+     * @return　返回值获取，直接查询是否还本不带息
+     */
+    public String getIsPayInt(String finprodId) {
+        return  finProductCommonMapper.getIsPayInt(finprodId);
+    }
+
+    /**
+     * 实物查询交易信息
+     * @param tradeId
+     * @return
+     */
+    public TrdFinProductBarterDto selectTrdFinProductBarter(Map<String, Object> map) {
+        return finProductCommonMapper.selectTrdFinProductBarter(map);
+    }
+    /**
+     * 公共方法：标的类共通方法 - 标的信息查询，查询标的金融产品类型（投管分类）
+     * @param finprodId 标的代码【必输项】
+     * @return　返回值获取，直接查询标的金融产品类型（投管分类）
+     */
+    public String getfinprodType2(String finprodId) {
+        return  finProductCommonMapper.getfinprodType2(finprodId);
     }
 }

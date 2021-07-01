@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.interf.framework.util;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -225,7 +226,7 @@ public class FtpUtil {
             FTPFile[] fs = FTP_CLIENT.listFiles();
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(fileName)) {
-                    File localFile = new File(localPath + SEPARATOR + ff.getName());
+                    File localFile = new SafelyFile(localPath + SEPARATOR + ff.getName());
                     OutputStream is = null;
                     try {
                         is = new FileOutputStream(localFile);
@@ -460,7 +461,7 @@ public class FtpUtil {
                         FTPFile[] fs = FTP_CLIENT.listFiles();
                         for (FTPFile ff : fs) {
                             if (ff.getName().equals(dataFileName)) {
-                                File localFile = new File(localPath + SEPARATOR + ff.getName());
+                                File localFile = new SafelyFile(localPath + SEPARATOR + ff.getName());
                                 OutputStream is = null;
                                 try {
                                     is = new FileOutputStream(localFile);
@@ -535,7 +536,7 @@ public class FtpUtil {
                 if (!ff.isDirectory() && CollectionUtils.exists(containsFile, name -> {
                     return ff.getName().contains((String) name);
                 })) {
-                    File localFile = new File(localPath + SEPARATOR + ff.getName());
+                    File localFile = new SafelyFile(localPath + SEPARATOR + ff.getName());
                     if (!localFile.exists()) {
                         localFile.createNewFile();
 

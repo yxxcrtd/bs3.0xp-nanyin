@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -44,34 +45,42 @@ public class ReadExcelFile extends ReadFileBasic {
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		
 		for (String filepath : filePaths) {
-			InputStream stream = new FileInputStream(filepath);  
+			InputStream stream = new FileInputStream(new SafelyFile(filepath));  
 			Workbook workbook=null;
-			//创建实例，并判断是否为xls或者xlsx格式的文件
-			workbook=WorkbookFactory.create(stream);
+			try {
+				//创建实例，并判断是否为xls或者xlsx格式的文件
+				workbook=WorkbookFactory.create(stream);
 
-			Sheet sheet = null;
-			if (source.getTablename() != null && !source.getTablename().equals("")) {
-				sheet = workbook.getSheet(source.getTablename());
-			} else {
-				sheet = workbook.getSheetAt(0);
-			}
-			
-			for (int i = source.getTableStartLine(); i <= sheet.getLastRowNum(); i++) {
-				Row row = sheet.getRow(i);
-				int celltotalnum=row.getLastCellNum();
-				List<Object> fieldsList = new ArrayList<Object>();
-				for (int cellnum=0; cellnum<celltotalnum;cellnum++) {
-					Cell cell=row.getCell(cellnum);
-					if(source.getTableEndChar()!=null && !source.getTableEndChar().equals("")){
-						if(getCellContent(cell).contains(source.getTableEndChar()))
-							break;
-					}else{
-						fieldsList.add(getCellContent(cell));
-					}
+				Sheet sheet = null;
+				if (source.getTablename() != null && !source.getTablename().equals("")) {
+					sheet = workbook.getSheet(source.getTablename());
+				} else {
+					sheet = workbook.getSheetAt(0);
 				}
-				fileContainer.add(fieldsList);
+
+				for (int i = source.getTableStartLine(); i <= sheet.getLastRowNum(); i++) {
+					Row row = sheet.getRow(i);
+					int celltotalnum=row.getLastCellNum();
+					List<Object> fieldsList = new ArrayList<Object>();
+					for (int cellnum=0; cellnum<celltotalnum;cellnum++) {
+						Cell cell=row.getCell(cellnum);
+						if(source.getTableEndChar()!=null && !source.getTableEndChar().equals("")){
+							if(getCellContent(cell).contains(source.getTableEndChar()))
+								break;
+						}else{
+							fieldsList.add(getCellContent(cell));
+						}
+					}
+					fileContainer.add(fieldsList);
+				}
+			}finally {
+				if(stream != null){
+					stream.close();
+				}
+				if(workbook != null){
+					workbook.close();
+				}
 			}
-			workbook.close();
 		}
 
 		result.setDataResult(fileContainer);

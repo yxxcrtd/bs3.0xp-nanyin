@@ -13,6 +13,8 @@ package com.joyintech.tams.valuation.assetsamortize.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -125,8 +127,20 @@ public class ValAssetsAmortizeSet002Service extends CommonExportService<ValAsset
     	return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssetsAmortizeSet002/checkBokAmoConfig",
     			dto,boolean.class);
     }
-    
-    
-    
-    
+
+
+    /**
+     * 资产代码下拉框获取
+     *
+     * @return 返回的数据
+     * @exception Exception
+     *                异常
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getFinprodId2(Map<String, Object> map) {
+        map.put("finprodType", DictCodeListExt1.金融产品类型_债券.getValue());
+        return restTemplate.postForPage(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssetsAmortizeSet002/getFinprodId2",
+                map, SelectOptionDto.class);
+    }
 }

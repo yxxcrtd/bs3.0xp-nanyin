@@ -286,7 +286,11 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 //            page = selectForPage(pageParam);
 
 			page = selectForPage(pageParam);
-
+			if(!CollectionUtils.isEmpty(page.getRoot())){
+				for(ProdDurationReg001Dto dto : page.getRoot()){
+					dto.setBelongInstitutionCode(null);
+				}
+			}
         }  else {
             @SuppressWarnings("unchecked")
             List<ProdDurationReg001Dto> dataList =  (List<ProdDurationReg001Dto>) pageParam.get("prodDurationList");

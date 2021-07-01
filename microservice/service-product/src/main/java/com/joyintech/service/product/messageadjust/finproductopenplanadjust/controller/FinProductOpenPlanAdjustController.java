@@ -48,9 +48,11 @@ public class FinProductOpenPlanAdjustController {
      * @param param
      * @return
      */
-    @PostMapping("getFinprodId")
-    public List<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param) {
-        return finProductOpenPlanService.getFinprodId(param);
+    @PostMapping("getFinprodId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page,
+                                              @PathVariable("length") int length) {
+        return finProductOpenPlanService.getFinprodId(page, length, param);
     }
     
     /**

@@ -89,7 +89,7 @@ public class SysInstRegBankCodeController{
      */
     @PostMapping("queryExportList")
     public List<SysInstRegBankCode001Dto> queryExportList(@RequestBody Map<String, Object> param) {
-        return sysInstRegBankCode001Service.queryExportList(RequestUtil.getPageParam());
+        return sysInstRegBankCode001Service.queryExportList(param);
     }
 
     /**

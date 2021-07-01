@@ -425,6 +425,24 @@ public class MonthReportProdService {
 			
 
 			if (ProdConstants.PROFITTYPE_FBBFDSY.equals(pos.getProfitType())) { // 非保本
+				// 将币种转换成人民币，统计其它行
+				if (!ProdConstants.CCY_CNY.equals(pos.getCcy())) {// 外币
+					BigDecimal exchangeRate = ChbCcyConvertUtil.changeCnyMoney(pos.getCcy(), BigDecimal.ONE,
+							lastday, rateMap);
+					if (exchangeRate == null)
+						exchangeRate = BigDecimal.ZERO;
+					pos.setDirtyamtsum(pos.getDirtyamtsum().multiply(exchangeRate));
+					pos.setCleanamtsum(pos.getCleanamtsum().multiply(exchangeRate));
+
+					if(!yieldmap.containsKey(pos.getProdid())){
+						pos.setEndamtsumOth(pos.getEndamtsumOth().multiply(exchangeRate));
+					}
+					pos.setPayamtsum(pos.getPayamtsum().multiply(exchangeRate));
+					pos.setCustomeramt(pos.getCustomeramt().multiply(exchangeRate));
+				}
+
+				/**与币种不同.重新编译**/
+
 
 				// 先保留本币，统计第六组，按币种划分
 				// 第31行
@@ -496,22 +514,6 @@ public class MonthReportProdService {
 					
 				}
 
-				// 将币种转换成人民币，统计其它行
-				if (!ProdConstants.CCY_CNY.equals(pos.getCcy())) {// 外币
-					BigDecimal exchangeRate = ChbCcyConvertUtil.changeCnyMoney(pos.getCcy(), BigDecimal.ONE,
-							lastday, rateMap);
-					if (exchangeRate == null)
-						exchangeRate = BigDecimal.ZERO;
-					pos.setDirtyamtsum(pos.getDirtyamtsum().multiply(exchangeRate));
-					pos.setCleanamtsum(pos.getCleanamtsum().multiply(exchangeRate));
-					
-					if(!yieldmap.containsKey(pos.getProdid())){
-						pos.setEndamtsumOth(pos.getEndamtsumOth().multiply(exchangeRate));
-					}
-					pos.setCustomeramt(pos.getCustomeramt().multiply(exchangeRate));
-				}
-
-				/**与币种不同.重新编译**/
 				
 				flagType(2, flag, pos);
 				

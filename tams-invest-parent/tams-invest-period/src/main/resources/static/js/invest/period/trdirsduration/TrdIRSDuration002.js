@@ -53,8 +53,34 @@
      * 页面初始化
      */
     var init = function () {
-
+        //add by jiangpeng on 20210422 start TISHKBS-1803
+        $("#fixActPayDate").change(function () {
+            isTodoGenerateOrders();
+        });
+        $("#floatActPayDate").change(function () {
+            isTodoGenerateOrders();
+        });
+        //add by jiangpeng on 20210422 end TISHKBS-1803
     }
+    //add by jiangpeng on 20210422 start TISHKBS-1803
+    /**
+     * 总集复核时修改实际支付日,指令随着变更
+     */
+    function isTodoGenerateOrders() {
+        if (isTodo) {
+            let irsType = $("#irsType").val();
+            let param = {};//判断条件
+            let dateMap = {};//日期参数
+            param.isOnlyOneDate = true;
+            param.ps_pay = '02';
+            param.irsType = irsType === irsType_payFloat;
+            param.isTrdIRS = true;
+            dateMap.floatMdate = $("#floatActPayDate").val();
+            dateMap.fixMdate = $("#fixActPayDate").val();
+            window.BussTrdTransferOrder['bussTrdTransferOrder'].updateGenerateOrders(dateMap,param);
+        }
+    }
+    //add by jiangpeng on 20210422 end TISHKBS-1803
 
     function saveOrSubmit(operateType) {
         if (GEN_PAY_ORDERS_AUTO == '01') {

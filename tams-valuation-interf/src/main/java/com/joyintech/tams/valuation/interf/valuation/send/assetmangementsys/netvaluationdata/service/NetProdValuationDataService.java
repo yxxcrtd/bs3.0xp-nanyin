@@ -5,32 +5,26 @@
 
 package com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.service;
 
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.BokStatBokPosition;
+import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.dao.NetProdValuationDataMapper;
+import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.dto.NetBokStatBokPositionDto;
+import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.dto.NetProdValuationDataDto;
+import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.vatflow.dto.ValAddTaxFlowprocessorResult;
+import com.joyintech.tams.valuation.interf.valuation.send.common.entity.SendReaderEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.vatflow.dto.ValAddTaxFlowprocessorResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BokStatBokPosition;
-import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.dao.NetProdValuationDataMapper;
-import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.dto.NetBokStatBokPositionDto;
-import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.dto.NetProdValuationDataDto;
-import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.netvaluationdata.dto.NetProdValuationDataResult;
-import com.joyintech.tams.valuation.interf.valuation.send.common.entity.SendReaderEntity;
 
 /**
  * 净值型产品估值数据Service
@@ -66,10 +60,43 @@ public class NetProdValuationDataService {
          * List<BokBookset> bokBooksetList = new ArrayList<BokBookset>(); List<String>idList = new ArrayList<String>(); for(BokBookset bokBookset :
          * bokBooksetList){ idList.add(bokBookset.getBooksetId()); }
          */
+        // modify by tanxuan on 20210409 兼容db2数据库，在代码中进行字符串处理
         netValuationDataList = netValuationDataMapper.queryNetValuationData(item);
 
         // 循环返回的list，取得累计分红净值
         for (NetProdValuationDataDto netValuationDataDto : netValuationDataList) {
+            /*add by tanxuan on 20210409 兼容db2数据库，在代码中进行字符串处理 start*/
+            if(netValuationDataDto.getProdAllAmt() == null && StringUtil.isNotEmpty(netValuationDataDto.getProdAllAmtStr())){
+                String prodAllAmtStr = netValuationDataDto.getProdAllAmtStr().replaceAll("[^0-9|.]", "");
+                if(StringUtil.isNotEmpty(prodAllAmtStr)) {
+                    netValuationDataDto.setProdAllAmt(new BigDecimal(prodAllAmtStr));
+                }
+            }
+            if(netValuationDataDto.getTotalValue() == null && StringUtil.isNotEmpty(netValuationDataDto.getTotalValueStr())){
+                String totalValueStr = netValuationDataDto.getTotalValueStr().replaceAll("[^0-9|.]", "");
+                if(StringUtil.isNotEmpty(totalValueStr)) {
+                    netValuationDataDto.setTotalValue(new BigDecimal(totalValueStr));
+                }
+            }
+            if(netValuationDataDto.getDailyAssetAllValue() == null && StringUtil.isNotEmpty(netValuationDataDto.getDailyAssetAllValueStr())){
+                String dailyAssetAllValueStr = netValuationDataDto.getDailyAssetAllValueStr().replaceAll("[^0-9|.]", "");
+                if(StringUtil.isNotEmpty(dailyAssetAllValueStr)) {
+                    netValuationDataDto.setDailyAssetAllValue(new BigDecimal(dailyAssetAllValueStr));
+                }
+            }
+            if(netValuationDataDto.getDailyAllDebt() == null && StringUtil.isNotEmpty(netValuationDataDto.getDailyAllDebtStr())){
+                String dailyAllDebtStr = netValuationDataDto.getDailyAllDebtStr().replaceAll("[^0-9|.]", "");
+                if(StringUtil.isNotEmpty(dailyAllDebtStr)) {
+                    netValuationDataDto.setDailyAllDebt(new BigDecimal(dailyAllDebtStr));
+                }
+            }
+            if(netValuationDataDto.getUnitValue() == null && StringUtil.isNotEmpty(netValuationDataDto.getUnitValueStr())){
+                String unitValueStr = netValuationDataDto.getUnitValueStr().replaceAll("[^0-9|.]", "");
+                if(StringUtil.isNotEmpty(unitValueStr)) {
+                    netValuationDataDto.setUnitValue(new BigDecimal(unitValueStr));
+                }
+            }
+            /*add by tanxuan on 20210409 兼容db2数据库，在代码中进行字符串处理 end*/
             if (netValuationDataDto.getTotalValue() == null) {
                 netValuationDataDto.setTotalValue(BigDecimal.ZERO);
             }

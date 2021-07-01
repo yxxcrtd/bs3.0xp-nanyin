@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.finexercisepara.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.finexercisepara.dto.ValFinExercisePara001Dto;
 import com.joyintech.tams.valuation.finexercisepara.dto.ValFinExercisePara002Dto;
 
@@ -28,5 +29,12 @@ public interface ValFinExercisePara001Mapper {
     List<ValFinExercisePara001Dto> selectAll(Map<String, Object> map);
     
     int deleteByPrimaryKey(ValFinExercisePara002Dto dto);
+
+    /**
+     * 检索账套资产（债券）
+     * @param param
+     * @return
+     */
+    List<SelectOptionDto> findFinprod(Map<String, Object> param);
 
 }

@@ -1210,6 +1210,15 @@ public class AccountingCommonService {
     }
 
     /**
+     * TISHKBS-1998 【估值核算-估值表】货币型产品估值表中的“本日收益-费后”统计的是当日应付利润发生额，但是并未将手工账的应付利润发生额统计进去
+     * @param params
+     * @return
+     */
+    public BigDecimal getVouchAmt(Map<String, Object> params) {
+        return accountingCommonMapper.getVouchAmt(params);
+    }
+
+    /**
      * 公用方法：帐套资产负债插入及更新
      *
      * @param valStatBokPosition CDate 统计日期 bookSetId 账套代码
@@ -2666,6 +2675,45 @@ public class AccountingCommonService {
 
         return num;
     }
-    /** add by yanya on 20191203 增加债券实际成本数量查询方法 end**/
+    /**
+     * 凭证最新账务查询
+     *
+     * @param booksetId 账套代码
+     * @param bookDate 入账日
+     * @param bokDetailId 账务明细代码
+     * @param baseSubjectNature 基础科目性质
+     * @param tableId 场景代码
+     * @param tradeId 交易编号
+     * @param happenDate 发生日
+     * @param onwayDate 在途日期
+     * @param beginHappenCycDate 发生周期开始日
+     * @param endHappenCycDate 发生周期结束日
+     * @return List<BookLatestInfoDto>
+     * @see
+     * @since 1.0
+     */
+    public List<BookLatestInfoDto> getBookRePayListInfo(String booksetId, Date bookDate,
+                                                     String bokDetailId, String baseSubjectNature,
+                                                     String tableId, String tradeId,
+                                                     Date happenDate, Date onwayDate,
+                                                     Date beginHappenCycDate,
+                                                     Date endHappenCycDate) {
+
+        // 设置sql查询参数map
+        Map<String, Object> paMap = new HashMap<String, Object>();
+        paMap.put("booksetId", booksetId);
+        paMap.put("bookDate", bookDate);
+        paMap.put("bokDetailId", bokDetailId);
+        paMap.put("baseSubjectNature", baseSubjectNature);
+        paMap.put("tableId", tableId);
+        paMap.put("tradeId", tradeId);
+        paMap.put("happenDate", happenDate);
+        paMap.put("onwayDate", onwayDate);
+        paMap.put("offsetFlag", DictCodeList.冲正标识_正常交易.getValue());
+        paMap.put("beginHappenCycDate", beginHappenCycDate);
+        paMap.put("endHappenCycDate", endHappenCycDate);
+
+        return accountingCommonMapper.getBookRePayListInfo(paMap);
+    }
 
 }

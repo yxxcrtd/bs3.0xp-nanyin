@@ -237,26 +237,28 @@ public class ProLedgerAutoGenerationService {
         		mapLast.put("finProdId", rdto.getFinprodId());
         		mapLast.put("finBaseRuleType", DictCodeListExt1.业绩基准类型_产品披露.getValue());
         		List<FinBaseRuleInfoDto> finBaseRuleInfoDtoList = proLedgerAutoGenerationMapper.getLastFinBaseRuleInfoFD(mapLast);
-    			for(FinBaseRuleInfoDto finBaseRuleInfoDto:finBaseRuleInfoDtoList){
+    			List<String> rateStr = new ArrayList<>();
+        		for(FinBaseRuleInfoDto finBaseRuleInfoDto:finBaseRuleInfoDtoList){
     				if(DictCodeListExt1.披露类型_区间披露.getValue().equals(finBaseRuleInfoDto.getPublishType())) {
     					//变量.预期收益率/业绩比较基准 += "款型" +DTO.产品款型+":"+DTO.利率下限*100 +"（%）-"+DTO.利率上限限*100 +"（%）;"
     					BigDecimal RateLow = finBaseRuleInfoDto.getRateLower().multiply(BigDecimal.valueOf(100));
     					BigDecimal RateLim = finBaseRuleInfoDto.getRateLimit().multiply(BigDecimal.valueOf(100));
-    					String rateStr = "款型"+finBaseRuleInfoDto.getProdStyle()+":"+RateLow+"(%)-"+RateLim+"(%)";
-    					rdto.setRateStr(rateStr);
+    					rateStr.add("款型"+finBaseRuleInfoDto.getProdStyle()+":"+RateLow+"(%)-"+RateLim+"(%)");
     				}else {
     					if(DictCodeList.利率类型_固定利率.getValue().equals(finBaseRuleInfoDto.getRateType())) {
-    						rdto.setRateStr(finBaseRuleInfoDto.getRate().multiply(BigDecimal.valueOf(100)).toString());
+    						rateStr.add(finBaseRuleInfoDto.getRate().multiply(BigDecimal.valueOf(100)).toString());
     					}else{
     						//变量.预期收益率/业绩比较基准 += "款型" +DTO.产品款型+":"+上述结果.GET(0).浮动利率*100 +"（%）"+";"
     						//调用【业绩基准信息共通】获取浮动利率，参数参考产品台账查询	
     						List<FinProductFloatFeeDto> pList = queryLayerFloatFeeInfoByFinprodId2(rdto.getFinprodId());
     						BeanUtil.copyPropertiesIgnoreNull(bDto,pList.get(0));
-    						String rateStr = "款型"+finBaseRuleInfoDto.getProdStyle()+":"+this.getFloatRate(bDto)+"(%)";
-    						rdto.setRateStr(rateStr);
+    						rateStr.add("款型"+finBaseRuleInfoDto.getProdStyle()+":"+this.getFloatRate(bDto)+"(%)");
     					}
     				}
     			}
+        		if(rateStr.size()>0) {
+        			rdto.setRateStr(String.join("/", rateStr));
+        		}
         	  }else{//周期型
       			//查询最新业绩基准信息
           		Map<String, Object> mapLast = new HashMap<String, Object>();

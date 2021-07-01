@@ -66,4 +66,6 @@ public interface TrdBondDurationMapper {
     Map<String,Object> getPkByBizCode(String bizCode);
 
     List<String> findWorkflowProcessDtos(Map<String, Object> params);
+
+    List<SelectOptionDto> getFinprodId(Map<String, Object> param);
 }

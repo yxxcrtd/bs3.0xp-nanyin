@@ -72,8 +72,12 @@ public class TradeRdsCommonAop {
     
     @Autowired
     private RiskTrialComm riskTrialComm;
-    
-    private List<String> 通道费=Arrays.asList("ChannelFeePay002Service");
+    /**
+     * 忽略service
+     * modify by jiangpeng on 20210511 ZGBSSE-351
+     * 【标准券管理】标准券入库交易审核报错
+     */
+    private List<String> ignoreList=Arrays.asList("ChannelFeePay002Service","TrdStandardBond002Service");
 	/*@Pointcut("execution(* com.joyintech.workflow.engine.service.ProcessStartService.start(..))")
     protected void startPoint() {
 
@@ -108,13 +112,19 @@ public class TradeRdsCommonAop {
             return;
         }
         Object[] args = joinPoint.getArgs();
+
         Map<String,Object> mapTrd=JsonUtils.object2Map(args[0]);
         if (StringUtil.isNotEmpty(mapTrd.get("operateType"))&&mapTrd.get("operateType").equals("submit")) {
             //如果是撤销的退回再提交直接退去，不需要调实占
             if(!checkRevokeAction(mapTrd.get("workflowId"))){
                 return;
             }
-        	revokeBackRiskCommon(mapTrd,BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),joinPoint);
+            //债券上市流通交易不走实占接口代码
+            String infCode = BussinessDictCodeListRds.接口系统ID_实占接口.getValue();
+            if (mapTrd.get("ps") != null && StringUtil.equals(mapTrd.get("ps"),DictCodeList.交易方向_上市流通.getValue())){
+                infCode = BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue();
+            }
+        	revokeBackRiskCommon(mapTrd,infCode,joinPoint);
         }
     }
 
@@ -126,8 +136,12 @@ public class TradeRdsCommonAop {
         Object[] args = joinPoint.getArgs();
         OperationType operationType = (OperationType) args[1];
         Map<String,Object> mapTrd=JsonUtils.object2Map(args[0]);
+        String infCode = BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue();
+        if (mapTrd.get("ps") != null && StringUtil.equals(mapTrd.get("ps"),DictCodeList.交易方向_上市流通.getValue())){
+            infCode = BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue();
+        }
         if (operationType.equals(OperationType.REVOKE)||operationType.equals(OperationType.DELETE)) {
-            revokeBackRiskCommon(mapTrd,BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),joinPoint);
+            revokeBackRiskCommon(mapTrd,infCode,joinPoint);
         }
     }
     @After("backPoint()")
@@ -146,12 +160,16 @@ public class TradeRdsCommonAop {
         if(!checkRevokeAction(mapTrd.get("workflowId"))){
             return;
         }
-        revokeBackRiskCommon(mapTrd,BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),joinPoint);
+        String infCode = BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue();
+        if (mapTrd.get("ps") != null && StringUtil.equals(mapTrd.get("ps"),DictCodeList.交易方向_上市流通.getValue())){
+            infCode = BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue();
+        }
+        revokeBackRiskCommon(mapTrd,infCode,joinPoint);
     }
 
     private void revokeBackRiskCommon(Map<String,Object> mapTrd,String infCode,JoinPoint joinPoint) throws BusinessException {
-    	  //通道费支付去除
-        if(通道费.contains(joinPoint.getTarget().getClass().getSimpleName())){
+    	  //通道费支付去除 标准券入库 modify by jiangpeng on 20210511 ZGBSSE-351
+        if(ignoreList.contains(joinPoint.getTarget().getClass().getSimpleName())){
             return;
         }
 		setEachAstType(mapTrd,joinPoint);

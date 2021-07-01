@@ -55,4 +55,11 @@ public interface RskParamReCalcMapper {
      */
     int deleteRskIndParaDtlTwo(Map<String, Object> map);
     
+    /**
+     * 从RSK_INDICATOR_PARA_CALCDETAIL表中获取交易时的tradeAmtReal
+     * @param eventId
+     * @return
+     */
+    String getTradeAmtByEventId(String eventId);
+    
 }

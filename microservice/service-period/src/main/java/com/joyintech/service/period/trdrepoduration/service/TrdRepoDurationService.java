@@ -338,7 +338,9 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
       	   // 质押式到期交易撤销 额度重新占用 20.5.8 end
 
             // add by mashukai 20210302 ZGBSS-633 start
-            if(StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeList.交易方向_到期.getValue())) {
+            if(StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeList.交易方向_到期.getValue())
+                    ||StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeListExt3.交易方向_投资端_提前终止.getValue())
+                    ||StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeListExt3.交易方向_投资端_逾期返售.getValue())) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("finprodId", trdRepoDurationDto.getFinprodId());
                 params.put("holdingType", DictCodeList.持仓类型_质押.getValue());
@@ -356,6 +358,7 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
                             params.put("finprodId", flow.getFinprodId());
                             params.put("tradeId", trdRepoDurationDto.getFinprodId());
                             params.put("isRevoke", "true");
+                            params.put("invAim", flow.getInvAim());
                             //生成持仓流水数据，如果没有生成流水，重复跑当天的批处理会导致持仓数据错误
                             trdRepoDurationMapper.insertSelect04SecFlowByDate(params);
                         }
@@ -378,7 +381,9 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
             deletePledgeSecPosition(wflTrdFinProductDealTotal);
         }
         // add by yujiaping 20210205 ZGBSS-489质押式回购交易—银行间正回购交易已做到期交易，质押式回购新建交易添加质押券，查看该债券信息有误start
-       if(StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeList.交易方向_到期.getValue())) {
+       if(StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeList.交易方向_到期.getValue())
+               ||StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeListExt3.交易方向_投资端_提前终止.getValue())
+               ||StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeListExt3.交易方向_投资端_逾期返售.getValue())) {
     	   Map<String, Object> params = new HashMap<>();
            params.put("finprodId", trdRepoDurationDto.getFinprodId());
            params.put("holdingType", DictCodeList.持仓类型_质押.getValue());
@@ -393,6 +398,7 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
                        params.put("mDate", DateUtil.parse(trdRepoDurationDto.getSettleDate()));
                        params.put("vDate", DateUtil.parse(trdRepoDurationDto.getvDate()));
                        params.put("finprodId", flow.getFinprodId());
+                       params.put("invAim", flow.getInvAim());
                        params.put("tradeId", trdRepoDurationDto.getFinprodId());
                        //生成持仓流水数据，如果没有生成流水，重复跑当天的批处理会导致持仓数据错误
                        trdRepoDurationMapper.insertSelect04SecFlowByDate(params);
@@ -596,7 +602,7 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
                     flow.setUpdateTime(updateTime);
  //                   trdRepoDurationMapper.insertSelect04Sec(flow);
                     flow.setSeqno(IDGenerator.generate());
-                    flow.setTradeId(wflTrdFinProductDealTotal.getTotleTradeId());
+                    flow.setTradeId(wflTrdFinProductDealTotal.getFinprodId());
                     ptlSecPositionFlowMapper.insert(flow);
                     PtlSecPositionFlowDto secPositionFlowDto =new PtlSecPositionFlowDto();//汇总头寸表
                     PtlSecPosition secPosition= new PtlSecPosition();

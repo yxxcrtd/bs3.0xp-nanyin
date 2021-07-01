@@ -258,7 +258,8 @@ var table;
             var currentCalcParam = getCalcParam();
             for ( var key in currentCalcParam) {
                 //---update by jjpei 20190731---排除riskMathFlag----
-                if (key == 'selectValue'||key=='riskMathFlag' || key=='remark') {
+                if (key == 'selectValue' || key == 'riskMathFlag' || key == 'remark' || key == 'isPayWithTrade'
+                    || key == 'exchangeIsPayWithTrade' || key == 'settleIsPayWithTrade' || key == 'stampDutyIsPayWithTrade') {
                     continue;
                 }
                 //---update by jjpei 20190731---排除riskMathFlag----
@@ -595,6 +596,10 @@ var table;
                 			disabled: false
                 		});
                 	}
+                    if($('#tradeMarket').val() === '05'){
+                        $('#tradePlat').prop("disabled",true);
+                        checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
+                    }
                     break;
             }
         }
@@ -605,6 +610,11 @@ var table;
      * 1.1交易场所
      */
     $('#tradeMarket').on("change", function () {
+    	if($('#ps').val()=="T01" && ($('#tradeMarket').val() == "03" || $('#tradeMarket').val() == "04")){
+        	$("#tradeMarketCash_div").show();
+        }else{
+        	$("#tradeMarketCash_div").hide();
+        }
         //update by zhangnian 20200213  start 交易场所和币种联合联动费用
         controlTradeFee();
         //update by zhangnian 20200213  end 交易场所和币种联合联动费用
@@ -648,6 +658,15 @@ var table;
             }*/
         } else {
             // $("#commissionAmt").prop("disabled", false).val(commissionAmt).trigger('blur').trigger('change');
+            //编辑模式或者新建模式下交易市场为二级市场时影响资产代码，对应资产不能为发行标的
+            if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT){
+                if ($('#finprodId').val != null && $('#finprodId').val != ''){
+                    var data = $('#finprodId').select2('data')[0].object;
+                    if (data && data.isIssueAsset == 'Y' && $("#tradeMarketMode").val() == '02'){
+                        $('#finprodId').val('').trigger("change");
+                    }
+                }
+            }
             if ($("#entrustId").val()) {
                 $("#ps").attr("disabled", true);
             }else if ($("#fTradeId").val()){
@@ -667,6 +686,12 @@ var table;
      * 1.3交易方向
      */
     $("#ps").on("change", function () {
+    	
+    	if($('#ps').val()=="T01" && ($('#tradeMarket').val() == "03" || $('#tradeMarket').val() == "04")){
+        	$("#tradeMarketCash_div").show();
+        }else{
+        	$("#tradeMarketCash_div").hide();
+        }
         var ps = $("#ps").val();
         //交易方向发生变化，重新计算所有数据
         changeTradeAmtAndFee();
@@ -680,10 +705,10 @@ var table;
         if (ps == PS_T02 || ps == PS_T03 || ps == PS_T39) {
         // 一体化对应etliu end
             if (pageModel == '0') {
-                $("#yield").val("").trigger("change").attr("disabled", true);
+                // $("#yield").val("").trigger("change").attr("disabled", true);
                 $("#exerYield").val("").trigger("change").attr("disabled", true);
             }
-            $("#calculateField_yield").attr("disabled", true);
+            // $("#calculateField_yield").attr("disabled", true);
             $("#calculateField_exerYield").attr("disabled", true);
             if($("#zhilingtype").val() =="02"){
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hidePosition(true);
@@ -703,9 +728,9 @@ var table;
             }
         }
         else if (ps == PS_T01) {
-            $("#yield").attr("disabled", false);
+            // $("#yield").attr("disabled", false);
             $("#exerYield").attr("disabled", false);
-            $("#calculateField_yield").attr("disabled", false);
+            // $("#calculateField_yield").attr("disabled", false);
             $("#calculateField_exerYield").attr("disabled", false);
             if($("#zhilingtype").val() =="02"){
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hideCash(true);
@@ -941,10 +966,10 @@ var table;
             exerYieldDivContrl();
             } else {
 	        	//自动加券 yjm
-	        	var autoCoupon = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
+                var autoCoupon = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
                 isautobond = true;
 	            // 资产名称文本框根据资产代码选择自动显示对应名称;
-	            $("#finprodName").val(autoCoupon.finprodAbbr).trigger('change');
+	            $("#finprodName").val(autoCoupon.finprodId).trigger('change');
 	            // 同时带出资产相关信息，包括起息日，到期日，发行日，交易场所，币种，交易日历，计息基础等;
 	            $("#vdate").val(autoCoupon.vdate).trigger('change');
 	            $("#mdate").val(autoCoupon.mdate).trigger('change');
@@ -1105,6 +1130,7 @@ var table;
             $("#chlId").prop("disabled", false);
         }
         updateCash();
+        getTradeMarketCash();
         
         // 将甲类户对应的交易手续费、结算费、佣金设置为不可编辑
 //        controllFeeItem();
@@ -1122,6 +1148,16 @@ var table;
             }
         });
     });
+    //查询交易所资金账户可用现金
+    var getTradeMarketCash = function(){
+        var data = {portfolioId:$('#portfolioId').val(),secAcctId:$('#secManageAcctId').val(),ccy:$('#ccy').val(),tradeDate:$('#tradeDate').val()}
+        if(data.portfolioId && data.secAcctId && data.ccy && data.tradeDate){
+        Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getTradeMarketCash',data,
+                function(result) {           
+            $('#tradeMarketCash').val(result.cashS).trigger('blur');
+        });
+        }
+    };  
 
     $("#chlId").on("change", function () {
         if ($("#chlId").val()) {
@@ -1949,7 +1985,7 @@ var table;
             	}
             	if ((!$("#secManageAcctId").val() || typeof $("#secManageAcctId").val() == 'undefined')
                		 && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined') && !formTodoList){
-               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券托管户或者通道']));
+               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券托管户或者合作资产']));
                		return null;
                	}
                 var list;
@@ -2106,6 +2142,12 @@ var table;
                 	$("#exchangeAmtDiv").hide();
                 }
             //add by yujiaping 20210304 ZGBSS-592债券交易的交易场所为上交所/深交所，交易市场为一级市场时，审批人的待办事项和完成交易详情中不应展示结算费和经手费字段end                
+                if($('#ps').val()=="T01" && (tradeMarket == "03" || tradeMarket == "04")){
+                	$("#tradeMarketCash_div").show();
+                }else{
+                	$("#tradeMarketCash_div").hide();
+                }
+                
                 if($('#ps').val()=="T03"){                		
             		$("#settleAmtDiv").hide();
             		$("#exchangeAmtDiv").hide();
@@ -2266,7 +2308,7 @@ var table;
                 } else if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
                     // 选择【上海证券交易所】或【深圳证券交易所】时，
                     // 1)交易平台可自主选择;
-                    if($("#entrustId").val() != ''){
+                    if(/*$("#entrustId").val() != ''*/$('#tradeMarketMode').val()===SHARES_TRADE_MARKET_01){
                         $("#tradePlat").attr("disabled", true);
                     }else{
                         $("#tradePlat").attr("disabled", false);
@@ -2310,7 +2352,7 @@ var table;
                     // 1)交易平台可自主选择;
                     // 1)交易平台默认为其它，可改
                     checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
-                    if($("#entrustId").val() != ''){
+                    if($("#entrustId").val() != ''||tradeMarket === '05'){
                         $("#tradePlat").attr("disabled", true);
                     }else{
                         $("#tradePlat").attr("disabled", false);

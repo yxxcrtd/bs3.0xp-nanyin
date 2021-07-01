@@ -143,6 +143,9 @@ public class ValBondMarketQuotationInfoImportDataService extends CommonExportSer
 			List<String> list = dataList.get(i);
 
 			Map<String,Object> param = new HashMap<String,Object>();
+			// add by qk start HFZG-5 基础数据管理-每日债券行情
+			param.put("finprodType", DictCodeListExt1.金融产品类型_债券.getValue());
+			// add by qk end HFZG-5 基础数据管理-每日债券行情
 			// 验证消息
 			List<String> message = new ArrayList<>();
 			//资产代码

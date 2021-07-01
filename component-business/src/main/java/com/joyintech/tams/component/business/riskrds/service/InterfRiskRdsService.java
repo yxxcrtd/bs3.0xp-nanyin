@@ -10,23 +10,12 @@
 
 package com.joyintech.tams.component.business.riskrds.service;
 
-import java.math.BigDecimal;
-
-import com.joyintech.framework.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory; 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
@@ -52,8 +41,17 @@ import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDt
 import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
-import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;  
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+
+import net.sf.ehcache.hibernate.management.impl.BeanUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -478,6 +476,82 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
             result.add(BeanUtil.object2Map(szDto));
         }
+        else if(StringUtil.equals(DictCodeList.交易方向_上市流通.getValue(),ps)) {
+        	//上市流通可能存在多个组合交易，每个组合需要拆分为原资产卖出和上市资产买入两笔交易
+        	if(StringUtil.isNotEmpty(dataMap.get("baseTradeInfoDtos"))) {
+        		List<Map> baseTradeInfoDtos = (List<Map>)dataMap.get("baseTradeInfoDtos");
+        		String regionFinprodId = (String)dataMap.get("finprodId");
+        		String newFinprodId = "F01_"+(String)dataMap.get("appearMarketId");
+        		String eventDate = null;
+				if(StringUtil.isNotEmpty(dataMap.get("tradeDate"))) {
+					Object tradeDate = dataMap.get("tradeDate");
+					String type = tradeDate.getClass().toString();
+					if("Long".equals( type.substring(type.lastIndexOf('.') + 1, type.length()))) {
+						eventDate = DateUtil.format(new Date((long)tradeDate));
+					}
+					else {
+						eventDate = DateUtil.format(DateUtil.parse(tradeDate.toString()));
+					}
+				}
+        		for(Map<String,Object> map:baseTradeInfoDtos) {
+        			//获取接口类型
+        			String infCode = v.getInfCode();
+        			if(CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占批量接口)) {
+        				infCode = BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue();
+        			}
+        			else {
+        				infCode = BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue();
+        			}
+        			//获取 组合代码
+        			String portfolioId = null,invAim=null,tradeId=null;
+        			BigDecimal tradeAmt = BigDecimal.ZERO,shareAmt = BigDecimal.ZERO;
+        			if(StringUtil.isNotEmpty(map.get("trdProductDeal"))) {
+        				Map<String,Object> trdProductDeal = (Map<String,Object>)map.get("trdProductDeal");
+        				//交易金额：市价
+        				if(StringUtil.isNotEmpty(trdProductDeal.get("tradeAmt"))) {
+        					tradeAmt = new BigDecimal(trdProductDeal.get("tradeAmt").toString());
+        				}
+        				//交易数量：券面总额
+        				if(StringUtil.isNotEmpty(trdProductDeal.get("shareAmt"))) {
+        					shareAmt = new BigDecimal(trdProductDeal.get("shareAmt").toString());
+        				}
+        				invAim = (String)trdProductDeal.get("invAim");
+        				tradeId = (String)trdProductDeal.get("tradeId");
+        			}
+        			if(StringUtil.isNotEmpty(map.get("trdProductDealAdd"))) {
+        				Map<String,Object> trdProductDealAdd = (Map<String,Object>)map.get("trdProductDealAdd");
+        				portfolioId = (String)trdProductDealAdd.get("portfolioId");
+        			}
+        			if(StringUtil.isNotEmpty(tradeId)&&StringUtil.isNotEmpty(eventDate)) {
+        				//买入
+        				 InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
+        				 infRiskRdsDto.setEventType(v.getEventType());
+        				 infRiskRdsDto.setCcy(BussinessDictCodeListRds.币种_人民币_CNY.getValue());
+        				 infRiskRdsDto.setInfCode(infCode);
+        				 infRiskRdsDto.setEventId(tradeId);
+        				 infRiskRdsDto.setEventDate(eventDate);
+        				 infRiskRdsDto.setPortfolioCode(portfolioId);
+        				 infRiskRdsDto.setAssetCode(newFinprodId);
+        				 infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+        				 infRiskRdsDto.setAmount(tradeAmt);
+        				 infRiskRdsDto.setTradeNum(shareAmt);
+        				 infRiskRdsDto.setDeliveryDate(DateUtil.parse(eventDate));
+        				 infRiskRdsDto.setMarketCode(newFinprodId);
+        				 infRiskRdsDto.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+        			     infRiskRdsDto.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+        			     infRiskRdsDto.setTradeAmtReal(tradeAmt);
+        			     infRiskRdsDto.setInvAim(invAim);
+        			     infRiskRdsDto.setTradePlace((String)dataMap.get("tradeMarket"));
+        			     result.add(BeanUtil.object2Map(infRiskRdsDto));
+        			     //卖出
+        			     infRiskRdsDto.setAssetCode(regionFinprodId);
+        			     infRiskRdsDto.setMarketCode(regionFinprodId);
+        			     infRiskRdsDto.setPs(DictCodeList.交易方向_卖出.getValue());
+        			     result.add(BeanUtil.object2Map(infRiskRdsDto));
+        			}
+        		}
+        	}
+        }
         return result;
     }
 
@@ -590,6 +664,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infRiskRdsDto.setTradeNum(finDto.getEntrustNum());
             }
             //update by  zhangnian  20200326  end
+            //
+            if(StringUtil.isNotEmpty(finDto.getPriceModel())){
+                infRiskRdsDto.setPriceModel(finDto.getPriceModel());
+            }
         }
         //基金，计划类
         if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_赎回.getValue()) && !StringUtil.equals(DictCodeList.平安资产类型_计划类资产_净值型.getValue(),v.getAssetType())){
@@ -680,7 +758,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         TradeBaseDto finDto=(TradeBaseDto)JsonUtils.map2entity(dataMap,TradeBaseDto.class);
         finDto.setTotleTradeId(removeLasStr(finDto.getTotleTradeId()));
         finDto.setTradeId(removeLasStr(finDto.getTradeId()));
-        infRiskRdsDto.setEventId(StringUtil.isNotEmpty(finDto.getTotleTradeId())?finDto.getTotleTradeId():StringUtil.isNotEmpty(finDto.getTradeId())?finDto.getTradeId():finDto.getBusiCode());
+        infRiskRdsDto.setEventId(StringUtil.isNotEmpty(finDto.getTotleTradeId())?finDto.getTotleTradeId():StringUtil.isNotEmpty(finDto.getTradeId())?finDto.getTradeId():StringUtil.isNotEmpty(finDto.getBusiCode())?finDto.getBusiCode():finDto.getZcId() );
         infRiskRdsDto.setEventDate(DateUtil.format(finDto.getTradeDate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
         //设置母组合代码
         infRiskRdsDto.setPortfolioCode(AllTradeCommonUtil.exchangePortfolio(StringUtil.isNotEmpty(finDto.getPortfolioId())?finDto.getPortfolioId():finDto.getActPortfolioId()));
@@ -952,7 +1030,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             	infRiskRdsDto.setCalendarCode(calendars.get(0));
             }
             if(StringUtil.isNotEmpty(dataMap.get("mdate"))) {
-            	infRiskRdsDto.setMdate((Date)dataMap.get("mdate"));
+                // add by jiangpeng on 20210423 start
+                // ZGBSSE-139 债券借贷存续期-融出，待办事项提交报错
+                //时间戳
+                if (dataMap.get("mdate") instanceof Long) {
+                    infRiskRdsDto.setMdate(new Date((long) dataMap.get("mdate")));
+                } else {
+                    infRiskRdsDto.setMdate((Date) dataMap.get("mdate"));
+                }
+//            	infRiskRdsDto.setMdate((Date)dataMap.get("mdate"));
+                // add by jiangpeng on 20210423 end
             }
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())||
@@ -1351,7 +1438,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     
     /**
      * 查询组合包明细数据
-     * @param parameters
+     * @param bagId
      * @return RskPortfolioPackage003Dto
      * @since 1.0
      */

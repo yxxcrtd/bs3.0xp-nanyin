@@ -595,7 +595,7 @@
             UNION ALL
         </if>
         <if test="(statusValid == null or statusValid.isEmpty() or statusValid.contains(STATUS_VALID_03) or statusValid.contains(STATUS_VALID_01)) and (isMatched == null or isMatched.isEmpty() or isMatched == NO)">
-            <if test="statusValid == null or statusValid.isEmpty() or statusValid.contains(STATUS_VALID_03)">
+            <if test="statusValid == null or statusValid.isEmpty() or statusValid.contains(STATUS_VALID_03) or statusValid.contains(STATUS_VALID_01)">
                 SELECT
                 '${sysOrEn}' sysOrEn,
                 T4.TOTLE_TRADE_ID sysSeqNo,
@@ -656,6 +656,16 @@
                 OR (T5.PA_BUSS_TYPE IN (#{PA_BUSINESS_TYPE35}, #{PA_BUSINESS_TYPE36}, #{PA_BUSINESS_TYPE37}) AND FPA.PAY_TYPE = '01' AND SSAI.TRADE_PLACE IN (#{TP03}, #{TP04}))/*逐笔划款: 交易所债券（收息、还本、到期）*/
                 OR (T4.FINPROD_TYPE2 IN (#{F29}, #{F30}, #{F10}, #{F11}, #{F12}, #{F13}) AND WFL_ORDERS.PS = #{PS01})
                 )
+                <if test="statusValid != null and !statusValid.contains(STATUS_VALID_03)">
+                    AND T5.PA_BUSS_TYPE IN (
+                    #{PA_BUSINESS_TYPE18}
+                    )
+                </if>
+                <if test="statusValid != null and !statusValid.contains(STATUS_VALID_01)">
+                    AND T5.PA_BUSS_TYPE NOT IN (
+                     #{PA_BUSINESS_TYPE18}
+                    )
+                </if>
 
                 AND NOT EXISTS (SELECT 1 FROM SYS_WFL_BUSINESS_NODE TT WHERE TT.SEQ_NO = T9.SEQ_NO AND TT.HIS_NO > T10.HIS_NO)
                 and (T10.NODE_ID IS NULL OR T10.NODE_ID = #{BACK_OPERATOR} OR T10.NODE_ID = #{BACK_CHECKER}) AND (T9.PROCESS_STATE != 'END' or T9.PROCESS_STATE  is null)
@@ -684,10 +694,10 @@
                     <foreach collection="paBizType" open="AND t5.PA_BUSS_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
                 </if>
             </if>
-            <if test="statusValid == null or statusValid.isEmpty() or (statusValid.contains(STATUS_VALID_03) and statusValid.contains(STATUS_VALID_01))">
+            <if test="statusValid == null or statusValid.isEmpty() or (statusValid.contains(STATUS_VALID_03) or statusValid.contains(STATUS_VALID_01))">
                 UNION ALL
             </if>
-            <if test="statusValid == null or statusValid.isEmpty() or statusValid.contains(STATUS_VALID_01)">
+            <if test="statusValid == null or statusValid.isEmpty() or statusValid.contains(STATUS_VALID_01) or statusValid.contains(STATUS_VALID_03)">
                 SELECT
                 '${sysOrEn}' sysOrEn,
                 T3.TRADE_ID sysSeqNo,
@@ -793,8 +803,20 @@
             	#{PA_BUSINESS_TYPE125}
                 )
                 OR PT.TRADE_ID IS NULL)
-                <if test="statusValid != null and statusValid.contains(STATUS_VALID_01)">
+                <if test="statusValid != null and !statusValid.contains(STATUS_VALID_03)">
                     AND T5.PA_BUSS_TYPE IN (
+                    #{PA_BUSINESS_TYPE58},
+                    #{PA_BUSINESS_TYPE54},
+                    #{PA_BUSINESS_TYPE83},
+                    #{PA_BUSINESS_TYPE56},#{PA_BUSINESS_TYPE80},
+                    #{PA_BUSINESS_TYPE66},
+                    #{PA_BUSINESS_TYPE67},#{PA_BUSINESS_TYPE73},
+                    #{PA_BUSINESS_TYPE68},
+            		#{PA_BUSINESS_TYPE125}
+                    )
+                </if>
+                <if test="statusValid != null and !statusValid.contains(STATUS_VALID_01)">
+                    AND T5.PA_BUSS_TYPE NOT IN (
                     #{PA_BUSINESS_TYPE58},
                     #{PA_BUSINESS_TYPE54},
                     #{PA_BUSINESS_TYPE83},

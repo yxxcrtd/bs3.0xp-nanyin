@@ -10,19 +10,9 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.nprd;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.dto.NPrdBaseInfoValCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
@@ -30,6 +20,15 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValFloatCalcRuleN;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 净值型产品浮动管理费计提规则表(Val_PRD_FLOAT_FEE_N) 〈功能详细描述〉
@@ -128,6 +127,8 @@ public class NPrdFloatCountingRuleTemplateRecService {
         valFloatCalcRule.setAstVdateType(dto.getAstVluDate());
         // 生效规则 = E.生效规则
         valFloatCalcRule.setActRule(dto.getActRule());
+        // 基数类型 = D.计费基数
+        valFloatCalcRule.setBaseType(dto.getChargeBasis());
         return valFloatCalcRule;
     }
 }

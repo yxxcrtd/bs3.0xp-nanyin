@@ -1,5 +1,7 @@
 package com.joyintech.tams.valuation.common.interf.base.util;
 
+import com.joyintech.framework.file.SafelyFile;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,12 +23,12 @@ public class GZUtils {
         String ouputfile = "";
         try {
             //建立gzip压缩文件输入流
-            fin = new FileInputStream(sourcedir);
+            fin = new FileInputStream(new SafelyFile(sourcedir));
             //建立gzip解压工作流
             gzin = new GZIPInputStream(fin);
             //建立解压文件输出流
             ouputfile = sourcedir.substring(0,sourcedir.lastIndexOf('.'));
-            fout = new FileOutputStream(ouputfile);
+            fout = new FileOutputStream(new SafelyFile(ouputfile));
 
             int num;
             byte[] buf=new byte[1024];

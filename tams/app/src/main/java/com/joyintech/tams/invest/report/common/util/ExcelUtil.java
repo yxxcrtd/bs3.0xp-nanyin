@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -190,7 +191,7 @@ public class ExcelUtil {
 //                }
             }
 
-            File file = new File(outputFilepath);
+            File file = new SafelyFile(outputFilepath);
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }

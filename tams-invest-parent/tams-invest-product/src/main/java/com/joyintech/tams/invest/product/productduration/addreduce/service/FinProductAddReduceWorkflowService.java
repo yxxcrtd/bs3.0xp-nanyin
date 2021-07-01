@@ -10,12 +10,15 @@ import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.trade.impl.BussTrdTransferOrderImplService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlSecPositionInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.product.addreduce.ProductTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.product.addreduce.ReduceInfoDto;
@@ -24,6 +27,7 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.BussTrdPositionDto;
 import com.joyintech.tams.invest.common.trade.service.TradeProductDealCommService;
 import com.joyintech.tams.invest.product.productduration.addreduce.dto.FinProductAddReduce002Dto;
+import com.joyintech.tams.invest.product.productduration.netproductduration.dto.FinNetProductDurationDto;
 import com.joyintech.tams.valuation.common.service.BooksetCommonService;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -111,6 +115,19 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
     @Autowired
     private BooksetCommonService booksetCommonService;
 
+    @Autowired
+    private EtrCashPositionMapper etrCashPositionMapper;
+    
+    @Autowired
+    private BasePtlCashPositionInfoMapper basePtlCashPositionInfoMapper;
+    
+    /**
+     * 组合可用持仓和实际持仓查询更新组件Mapper
+     */
+    @Autowired
+    private BasePtlSecPositionInfoMapper basePtlSecPositionInfoMapper;
+
+    
     @Override
     public void doComplete(FinProductAddReduce002Dto entity, OperationType type) {
         if (!type.equals(OperationType.REVOKE) && !type.equals(OperationType.DELETE)) {
@@ -136,6 +153,57 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
         if(StringUtil.isNotEmpty(entity.getWorkflowId())) {
             baseTradeProductDealCommService.deleteWflData(entity.getWorkflowId());
         }
+        if (!StringUtil.equals("revoke", entity.getOperateType())
+                && !StringUtil.equals("delete", entity.getOperateType())) {
+	    	 this.delhandleBussFlowData(entity);
+	    	 }
+    }
+    
+    private void delhandleBussFlowData(FinProductAddReduce002Dto entity) {
+    	 // 划款指令
+         if (entity.getBussTrdTransferOrder() != null && entity.getBussTrdTransferOrder().size() > 0) {
+        	 for (BussTrdTransferOrderDto orderDto : entity.getBussTrdTransferOrder()) {
+                 StlPayOrders stlPayOrdersDto = new StlPayOrders();
+                 BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, orderDto);
+                 stlPayOrdersDto.setOrderId(orderDto.getOrderId());
+                 stlPayOrdersDto.setTradeId(entity.getProductTradeInfoDto().getTrdProductDeals().get(0).getTradeId());
+                 stlPayOrdersDto.setOrderType(orderDto.getOrderType());
+                 stlPayOrdersDto.setIsTotalTrade(DictCodeList.是否_是.getValue());               
+                 stlPayOrdersDto.setSettleAmt(orderDto.getSettleAmt());
+                 stlPayOrdersDto.setCcy(orderDto.getCcy());
+                 stlPayOrdersDto.setSettleDate(orderDto.getSettleDate());                
+                 /**
+                  * 指令现金流水
+                  */                    
+                 EtrCashPosition tempPosition = new EtrCashPosition();            
+                 tempPosition.setPortfolioId(stlPayOrdersDto.getPortfolioId());
+                 tempPosition.setAcctId(orderDto.getPayAcctNo());                   
+                 tempPosition.setAmount(stlPayOrdersDto.getSettleAmt());                     
+                 tempPosition.setCcy(stlPayOrdersDto.getCcy());
+                 tempPosition.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                 tempPosition.setCdate(stlPayOrdersDto.getSettleDate());
+                 EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
+                 BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
+                 EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
+                 tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));                    
+                	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);        
+                	 
+              // 组合现金流水
+                PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+                ptlCashPositionFlowDto.setPortfolioId(stlPayOrdersDto.getPortfolioId()); 
+                ptlCashPositionFlowDto.setCdate(stlPayOrdersDto.getSettleDate());
+                ptlCashPositionFlowDto.setOrderId(orderDto.getOrderId());
+                basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
+                
+                // 组合持仓流水
+                PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
+                ptlSecPositionFlowDto.setPortfolioId(stlPayOrdersDto.getPortfolioId()); 
+                ptlSecPositionFlowDto.setCdate(stlPayOrdersDto.getSettleDate());
+                ptlSecPositionFlowDto.setTradeId(entity.getProductTradeInfoDto().getTrdProductDeals().get(0).getTradeId());
+                basePtlSecPositionInfoMapper.deletePtlSecPositionFlow(ptlSecPositionFlowDto);
+             }  
+         }
+         
     }
 
     @Override
@@ -385,13 +453,14 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
         wflStlPayOrders.forEach(wflTrdProductDeal -> wflStlPayOrdersMapper.insertSelective(wflTrdProductDeal));
 
         // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水
-//        BussTrdPositionDto bussTrdPositionDto = new BussTrdPositionDto();
-//        bussTrdPositionDto.setPortfolioId(entity.getPtlId());
-//        bussTrdPositionDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
-//        bussTrdPositionDto.setTrdProductDealList(trade.getTrdProductDeals());
-//        bussTrdPositionDto.setStlPayOrders(trade.getStlPayOrders());
-//        baseTradeProductDealCommService.trdProductInsertPosition(bussTrdPositionDto);
-
+        if(!isRevoke) {
+        BussTrdPositionDto bussTrdPositionDto = new BussTrdPositionDto();
+        bussTrdPositionDto.setPortfolioId(entity.getPtlId());
+        bussTrdPositionDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+        bussTrdPositionDto.setTrdProductDealList(trade.getTrdProductDeals());
+        bussTrdPositionDto.setStlPayOrders(trade.getStlPayOrders());
+        baseTradeProductDealCommService.trdProductInsertPosition(bussTrdPositionDto);
+        }
         // PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
         // setHoldingType(entity.getProductTradeInfoDto(), DictCodeList.持仓类型_可用, true);
         // ptlPositionHoldDto.setPtlSecPositionFlows(entity.getProductTradeInfoDto().getPtlSecPositionFlows());

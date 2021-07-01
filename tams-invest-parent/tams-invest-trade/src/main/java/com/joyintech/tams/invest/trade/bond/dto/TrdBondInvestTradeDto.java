@@ -295,6 +295,11 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      * 经手费
      */
     private BigDecimal exchangeAmt;
+    
+    /**
+     * 交易所资金账户可用现金
+     */
+    private BigDecimal tradeMarketCash;
 
     public BigDecimal getExchangeAmt() {
         return exchangeAmt;
@@ -2175,5 +2180,13 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
+
+	public BigDecimal getTradeMarketCash() {
+		return tradeMarketCash;
+	}
+
+	public void setTradeMarketCash(BigDecimal tradeMarketCash) {
+		this.tradeMarketCash = tradeMarketCash;
+	}
 
 }

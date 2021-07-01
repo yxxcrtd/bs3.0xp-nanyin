@@ -965,7 +965,7 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
     public BaseEtrInvestInfoDto getEtrustDto(String entrustId) {
         if (baseEtrInvestInfoService == null) {
             return new BaseEtrInvestInfoDto();
-    }
+        }
         BaseEtrInvestInfoDto resultDto = baseEtrInvestInfoService.queryActiveMandate(entrustId);
         if (resultDto != null && resultDto.getEtrEntrust() != null) {
             // 委托数量中扣除已完成额度
@@ -974,9 +974,13 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
                 for (EtrFinishStatus etrFinishStatus : resultDto.getEtrFinishStatusList()) {
                     已完成额度 = ArithmeticUtil.doAdd(已完成额度,etrFinishStatus.getFinishAmt());
                 }
-
-                resultDto.getEtrEntrust().setEntrustAmt(
-                        ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustAmt(), 已完成额度));
+                if(StringUtil.isNotEmpty(resultDto.getEtrEntrust().getEntrustAmt())) {
+                    resultDto.getEtrEntrust().setEntrustAmt(
+                            ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustAmt(), 已完成额度));
+                }else if(StringUtil.isNotEmpty(resultDto.getEtrEntrust().getEntrustNum())) {
+                    resultDto.getEtrEntrust().setEntrustNum(
+                            ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustNum(), 已完成额度));
+                }
             }
         }
         return resultDto;
@@ -1235,5 +1239,18 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
 		Map<String, Object> map = new HashMap<>();
         map.put("finprodId", finprodId);
         return trdPlanNetInvestTradeMapper.queryIssueAmt(map);
+    }
+
+    /**
+     *
+     * 获取最原始留痕表創建人
+     * <功能详细描述>
+     * @param workflowId
+     * @return 最原始留痕表創建人
+     * @see
+     * @since 1.0
+     */
+    public String getSysDateMark(String workflowId) {
+        return trdPlanNetInvestTradeMapper.getSysDateMark(workflowId);
     }
 }

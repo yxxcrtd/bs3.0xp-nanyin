@@ -52,7 +52,8 @@ public class InAstValInfoBatchService extends FileImpService {
     /**
      * 重复性检查字段
      */
-    private static final String[] DUPLICATIED_LIST = {"ASSET_CODE"};
+    private static final String[] DUPLICATIED_LIST = {"ASSET_CODE", "VAL_DATE"};
+    
     
     /**
      * 业务主键
@@ -315,7 +316,7 @@ public class InAstValInfoBatchService extends FileImpService {
     			.setScale(8, BigDecimal.ROUND_HALF_UP));
     	gendto.setUnitValTotal((dto.getUnitValTotal()==null?BigDecimal.ZERO:dto.getUnitValTotal())
     			.setScale(8, BigDecimal.ROUND_HALF_UP));
-    	gendto.setRemark(dto.getRemark());
+    	gendto.setRemark(null==dto.getRemark()?"":dto.getRemark());
         return gendto;
     }
  

@@ -130,8 +130,9 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
 	 * @throws Exception
 	 */
 	public List<SelectOptionDto> findFinprod(Map<String, Object> parameters) throws Exception {
-		List<ValuationMethodScheme001Dto> resultList = super.queryForPage(
-				() -> valuationMethodScheme001Mapper.selectFinprod(parameters)).getRoot();
+		List<ValuationMethodScheme001Dto> resultList = valuationMethodScheme001Mapper.selectFinprod(parameters);
+//		List<ValuationMethodScheme001Dto> resultList = super.queryForPage(
+//				() -> valuationMethodScheme001Mapper.selectFinprod(parameters)).getRoot();
 		List<SelectOptionDto> selectOptionList = new ArrayList<>();
 		if (CollectionUtils.isNotEmpty(resultList)) {
 			for (ValuationMethodScheme001Dto single : resultList) {

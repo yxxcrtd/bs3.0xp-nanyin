@@ -190,13 +190,13 @@ $(function() {
             ChannelAssetCommon.setChannelSelectObject($("#chlId"), $('#finprodId').val(), $("#entrustId").val(), function () {
 
             });
-            if($("#type7").val()== plansType01 && ps == ps_T06){
+            /*if($("#type7").val()== plansType01 && ps == ps_T06){
                 $('#tradeAmt').val('').attr('disabled',true);
                 $('#shareAmt').attr('disabled',false);
-            }else{
+            }else{*/
             	$('#tradeAmt').attr('disabled',false);
             	$('#shareAmt').attr('disabled',false);
-            }
+            // }
             $('#netDate').change();
             
             if ((ps == ps_T06 || ps == ps_mc) && finprodId && portfolioId) {
@@ -225,6 +225,12 @@ $(function() {
             var finprodId = $('#finprodId').val();
             var portfolioId =  $('#portfolioId').val();
             var ccy = $('#ccy').val();
+            //非查看模式下,交易方向不为买入和申购时，清空组合可用金额
+            if (pageModel != PAGE_MODEL_REFERENCE && (ps != ps_T04 || ps != ps_mr)){
+                $('#proAvailableCash').val('').trigger('change');;
+                $('#proAvailableCash1').val('').trigger('change');
+            }
+            
             if(ps == ps_T04){
                 $('#proAvailableCash_div').show();
                 $('#proAvailableCash1_div').show();
@@ -275,10 +281,10 @@ $(function() {
                 if(finprodId && portfolioId){
                     getPtlSecPositionInfo();
                 }
-                if(finprodId && $("#type7").val()== plansType01 && ps == ps_T06){
+                /*if(finprodId && $("#type7").val()== plansType01 && ps == ps_T06){
                     $('#tradeAmt').val('').attr('disabled',true);
                     $('#shareAmt').attr('disabled',false);
-                }
+                }*/
                 //-----add by 裴家俊 切换到赎回时清空风险试算列表 start ----
                 if($("#baseRiskMathCommTable").data('joyintable')!=null) {
                     $("#riskTrialSpan").empty();

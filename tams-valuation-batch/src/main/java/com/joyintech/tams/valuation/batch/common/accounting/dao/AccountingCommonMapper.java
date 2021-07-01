@@ -164,6 +164,12 @@ public interface AccountingCommonMapper {
     List<BokStatBokPosition> getValStatBokPosition(BokStatBokPositionDto position);
 
     /**
+     * TISHKBS-1998 【估值核算-估值表】货币型产品估值表中的“本日收益-费后”统计的是当日应付利润发生额，但是并未将手工账的应付利润发生额统计进去
+     * @param params
+     * @return
+     */
+    BigDecimal getVouchAmt(Map<String, Object> params);
+    /**
      * 查询传入条件下帐套资产负债信息
      *
      * @param bookDate 入账日
@@ -499,4 +505,13 @@ public interface AccountingCommonMapper {
      * @return
      */
     BigDecimal selectFloatSubjectBalance(Map<String, Object> map);
+    /**
+     *
+     * 最新账务查询
+     * @param paMap
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<BookLatestInfoDto> getBookRePayListInfo(Map<String, Object> paMap);
 }

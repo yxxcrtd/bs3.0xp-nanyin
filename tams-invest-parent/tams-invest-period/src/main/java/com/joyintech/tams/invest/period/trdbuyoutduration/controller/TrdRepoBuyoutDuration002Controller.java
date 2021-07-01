@@ -12,6 +12,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
@@ -71,6 +72,9 @@ public class TrdRepoBuyoutDuration002Controller extends BaseController {
      * 需要初始化的下拉菜单
      */
     private static final IDictCode[] DICT_CODES = new DictCode[]{DictCode.币种};
+    //add by jiangpeng on 20210422 TISHKBS-1803
+    @Autowired
+    private CommonBusinessService commonBusinessService;
 
     @Override
     public String init(Model model) {
@@ -80,6 +84,11 @@ public class TrdRepoBuyoutDuration002Controller extends BaseController {
         String workflowId = RequestUtil.getParam("workflowId");
         if (StringUtil.isNotEmpty(isTodoList) && StringUtil.equals(isTodoList, "true") || StringUtil.isNotEmpty(workflowId)) {
             entity = trdRepoBuyoutDuration002Service.getBussinessEntityByWorkflowId(workflowId);
+            //add by jiangpeng on 20210422 TISHKBS-1803
+            if(entity != null) {
+                model.addAttribute("isTodo", commonBusinessService.isBackCheckNode(entity.getBusiCode()));
+            }
+            //add by jiangpeng on 20210422 TISHKBS-1803
         } else {
             entity = trdRepoBuyoutDuration002Service.findEffectiveData(RequestUtil.getPageParam());
             String statusValid = RequestUtil.getParam("statusValid");

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName TrdSecOverdueDurationService
@@ -175,6 +176,9 @@ public class TrdSecOverdueDuration001Service extends CommonExportService<TrdSecO
                 dto.setTheoryPenaltyInt(theoryPenaltyInt);
                 
             }
+            //ZGBSS-1324 【全流程测试-应收款查询】应收款转仓撤销后，原应收款的持仓明细展示问题
+            retPage.setRoot(retPage.getRoot().stream().filter(item->item.getTheoryAmt().compareTo(BigDecimal.ZERO) != 0
+                     || item.getTheoryInt().compareTo(BigDecimal.ZERO) != 0).collect(Collectors.toList()));
         }
         return retPage;
     }

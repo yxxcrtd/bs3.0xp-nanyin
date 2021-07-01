@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,8 +90,8 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
         // 文件名称
         String fileName = FileNameUtil.formatFileName(filePath);
         try {
-            File file = new File(filePath);
-            boolean rec = file.renameTo(new File(fileName));
+            File file = new SafelyFile(filePath);
+            boolean rec = file.renameTo(new SafelyFile(fileName));
             if (rec) {
                 logger.info("处理成功");
             }
@@ -122,7 +123,7 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
             logger.error(e.getMessage(), e);
             throw e;
         } finally {
-            File file = new File(fileName);
+            File file = new SafelyFile(fileName);
             if(file !=  null && file.isFile()) {
                 if (file.delete()) {
                     logger.info("应用服务器文件删除成功！");

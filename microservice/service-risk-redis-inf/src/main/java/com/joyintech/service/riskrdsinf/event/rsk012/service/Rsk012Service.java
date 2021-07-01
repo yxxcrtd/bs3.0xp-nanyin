@@ -92,6 +92,7 @@ public class Rsk012Service extends OccupyReleasService<Rsk004InEntity> {
 		List<IOccupyRelParam> ListIOccupyRel = new ArrayList<>();
 		// 取得所有指标参数的值
 		Map<String, Map<String, IValue<Object>>> paraValMapSum = new HashMap<String, Map<String, IValue<Object>>>();
+		List<Map> paraValMapList = new ArrayList<>();
         // add by zhangrui1 start
         List<String> fields = new ArrayList<>();
         final List<Map> tempList = mapList;
@@ -126,6 +127,23 @@ public class Rsk012Service extends OccupyReleasService<Rsk004InEntity> {
 				Map<String, Map<String, IValue<Object>>> hashList = makeHashList(items, mapData);
 				// 取得所有指标参数的值
 				Map<String, Map<String, IValue<Object>>> paraValMap = paramValSrv.getParamVal(hashList);
+				/*
+				 *使用新计算的值替换redis中的值 
+				 */
+				for(String key:paraValMap.keySet()) {
+					Map<String, IValue<Object>> valMap = paraValMap.get(key);
+					for(int i=0;i<paraValMapList.size();i++) {
+						Map<String, Map<String, IValue<Object>>> tempParaValMap = paraValMapList.get(i);
+						if(tempParaValMap.containsKey(key)) {
+							Map<String, IValue<Object>> tempValMap = tempParaValMap.get(key);
+							for(String field:tempValMap.keySet()) {
+								if(valMap.containsKey(field)) {
+									valMap.put(field, tempValMap.get(field));
+								}
+							}
+						}
+					}	
+				}
 				// 若指标参数值未初始化到Redis则抛出异常
 				if (CollectionUtils.isEmpty(paraValMap)) {
 					throw new InterfException("指标参数值不存在");
@@ -151,7 +169,7 @@ public class Rsk012Service extends OccupyReleasService<Rsk004InEntity> {
 	        		// 更新人
 	        		single.setUpdateUser(getInfId());
 	        	});
-				paraValMapSum.putAll(paraValMap);
+				paraValMapList.add(paraValMap);
 				details.addAll(detail);
 				// modify by zhangrui1 start
 				//return ocpRelParam;
@@ -165,7 +183,9 @@ public class Rsk012Service extends OccupyReleasService<Rsk004InEntity> {
 			}
 		}
 		// 更新参数值信息
-        paramValSrv.setParamVal(paraValMapSum);
+    	for(Map<String, Map<String, IValue<Object>>> map:paraValMapList) {
+    		paramValSrv.setParamVal(map);	
+    	}
 		// modify by zhangrui1 start
         getOcpService().deleteInfoFromRedis(RedisKeyEnum.预占实占信息.key(), fields.toArray(new String[fields.size()]));
 		//for (Map mapData : mapList) {

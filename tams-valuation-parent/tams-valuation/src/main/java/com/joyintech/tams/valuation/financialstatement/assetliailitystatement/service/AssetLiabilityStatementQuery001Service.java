@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -612,7 +613,7 @@ public class AssetLiabilityStatementQuery001Service extends CommonExportService<
 	public ResponseEntity<byte[]> exportExcel(AssetLiabilityStatementQuery001SearchDto dto)
 			throws ParseException, IOException {
 		ExportFileDto exportFileDto = createExcel(dto);
-		File file = new File(exportFileDto.getFilePath());
+		File file = new SafelyFile(exportFileDto.getFilePath());
 		return ExportUtil.export(exportFileDto.getFileName(), file, true);
 	}
 
@@ -666,7 +667,7 @@ public class AssetLiabilityStatementQuery001Service extends CommonExportService<
 		String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		String fileName = prefix + "_" + sdf.format(reportDate) + "_资产负债表" + ".xls";
 		String tempName = "AssetLiabilityStatement.xls";
-		String tplFlodPath = "financialstatement/assetliailitystatement/AssetLiabilityStatement.xls";
+		String tplFlodPath = "financialstatement" + File.separator + "assetliailitystatement"  + File.separator +  "AssetLiabilityStatement.xls";
 		String tplPath = FileNameUtil.getTplFile(tplFlodPath);
 		String outPath = exportFilePath + File.separator + fileName;
 
@@ -711,7 +712,7 @@ public class AssetLiabilityStatementQuery001Service extends CommonExportService<
 		try {
 
             //针对weblogic环境部署，FileNameUtil.getTplFile无法获取tpl文件夹下模版。
-            File templeteFile = new File(tplPath);
+            File templeteFile = new SafelyFile(tplPath);
             //文件存在情况,直接该路径获取文件流
             if (templeteFile.exists()) {
                 stream = new FileInputStream(templeteFile);

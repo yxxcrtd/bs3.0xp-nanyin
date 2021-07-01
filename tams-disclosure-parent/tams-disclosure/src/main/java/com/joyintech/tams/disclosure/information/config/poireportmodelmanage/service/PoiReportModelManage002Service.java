@@ -332,14 +332,17 @@ public class PoiReportModelManage002Service extends CommonExportService<RepInfo>
 		String zipFileName = FileNameUtil.createFileName("zip");
 		File zipFile = new File(uploadFilePath + File.separator + zipFileName);
 		ZipOutputStream  zipOut =null;
-		if(filepath.exists()){
-			zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-			zipOut.setEncoding("gbk");
-			compressFile2(zipOut, filepath,filepath.getName());
-			zipOut.close();
-		 }
-		
-		
+		try {
+			if(filepath.exists()){
+				zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+				zipOut.setEncoding("gbk");
+				compressFile2(zipOut, filepath,filepath.getName());
+			}
+		}finally {
+			if(zipOut != null){
+				zipOut.close();
+			}
+		}
 		return ExportUtil.export(zipFileName, zipFile, true);
 
 	}
@@ -366,16 +369,25 @@ public class PoiReportModelManage002Service extends CommonExportService<RepInfo>
 			}
         }
         else {
-			out.putNextEntry(new ZipEntry(basedir));
-			FileInputStream fos = new FileInputStream(sourcefile);
-	        BufferedInputStream bis = new BufferedInputStream(fos);
-	        int len;
-	        byte[] buf = new byte[1024];
-	        while((len=bis.read(buf, 0, 1024)) != -1) {
-	        	out.write(buf, 0, len);
-	        }
-	        bis.close();
-	        fos.close();
+			FileInputStream fos = null;
+			BufferedInputStream bis = null;
+			try {
+				out.putNextEntry(new ZipEntry(basedir));
+				fos = new FileInputStream(sourcefile);
+				bis = new BufferedInputStream(fos);
+				int len;
+				byte[] buf = new byte[1024];
+				while((len=bis.read(buf, 0, 1024)) != -1) {
+					out.write(buf, 0, len);
+				}
+			}finally {
+				if (fos != null){
+					fos.close();
+				}
+				if (fos != null){
+					bis.close();
+				}
+			}
     	}
 	}
 	   /**

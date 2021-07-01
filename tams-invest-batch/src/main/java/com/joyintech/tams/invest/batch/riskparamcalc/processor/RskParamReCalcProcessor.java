@@ -15,6 +15,7 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RskIndicatorParaCalcdetail;
+import com.joyintech.tams.invest.batch.riskparamcalc.dao.RskParamReCalcMapper;
 import com.joyintech.tams.invest.batch.riskparamcalc.dto.RskParamReCalcReaderDto;
 import com.joyintech.tams.invest.batch.riskparamcalc.dto.RskParamReCalcWriterDto;
 import com.joyintech.tams.invest.common.riskinfrds.base.service.CalcOccupyInfoService;
@@ -42,6 +43,9 @@ public class RskParamReCalcProcessor extends BaseProcessor<NeedOperateEntity, Rs
      */
     @Autowired
     private CalcOccupyInfoService calcService;
+    
+    @Autowired
+    private RskParamReCalcMapper rskParamReCalcMapper;
 
     /**
      * {@inheritDoc}
@@ -64,6 +68,16 @@ public class RskParamReCalcProcessor extends BaseProcessor<NeedOperateEntity, Rs
             Map<String, Object> response = new HashMap<>();
             dataMap.put("sysDate", sysDate);
             //调用计算逻辑
+            /**
+             * 获取tradeAmtReal
+             */
+            Object tradeAmtReal = rskParamReCalcMapper.getTradeAmtByEventId((String)dataMap.get("eventId"));
+            if(tradeAmtReal==null) {
+            	dataMap.put("tradeAmtReal", tradeAmtReal);	
+            }
+            else {
+            	dataMap.put("tradeAmtReal", dataMap.get("amount"));	
+            }
             calcService.calcIndParam(dataMap, response);
             Object dtlObj = response.get("PARA_VAL_DETAILS");
             if (dtlObj != null) {

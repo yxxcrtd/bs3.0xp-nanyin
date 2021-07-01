@@ -169,9 +169,23 @@ $(function() {
         var paramObj = getSearchParams();
         Joyin.ajaxJson(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch001/exportCheck', paramObj, function(result) {
             if (result && result.statuCode == '200') {
-                Joyin.exportExcel('export', paramObj);
+
+                if (table != null && table != '') {
+                    var selArr = table.getAllCheckedRows();
+                    var datas = JSON.stringify(selArr);
+                }
+                if (!selArr || selArr.length == 0) {
+                    var paramObj = getSearchParams();
+                    Joyin.exportExcel('export', paramObj);
+                } else {
+                    Joyin.exportExcel('export', {
+                        datas : datas
+                    });
+                }
+
             }
         });
+
     };
     /**
      * 点击链接跳转到该组合信息查看页面
@@ -242,6 +256,20 @@ $(function() {
         Joyin.ajaxJson(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch002/exportCheck', paramObj, function(result) {
             if (result && result.statuCode == '200') {
                 Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch002/export', paramObj);
+
+                if (substitutionDataTable != null && substitutionDataTable != '') {
+                    var selArr = substitutionDataTable.getAllCheckedRows();
+                    var datas = JSON.stringify(selArr);
+                }
+                if (!selArr || selArr.length == 0) {
+                    var paramObj = getSubstitutionSearchParams();
+                    Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch002/export', paramObj);
+                } else {
+                    Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch002/export', {
+                        datas : datas
+                    });
+                }
+
             }
         }); 
     };
@@ -250,20 +278,35 @@ $(function() {
      * 绑定导出事件->质押券汇总查询导出
      */
     var exportPledgeSummaryExcel = function() {
-        if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
-            Joyin.error('请选择组合代码!');
-            return;
-        }
-        if ($('#pledgeSummaryTradeDate').val() == null || $('#pledgeSummaryTradeDate').val() == ''){
-            Joyin.error('请选择交易日期!');
-            return;
-        }
-        var paramObj = getPledgeSummarySearchParams();
-        Joyin.ajaxJson(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch004/exportCheck', paramObj, function(result) {
-            if (result && result.statuCode == '200') {
-                Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch004/export', paramObj);
-            }
-        });
+
+//        var paramObj = getPledgeSummarySearchParams();
+//        Joyin.ajaxJson(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch004/exportCheck', paramObj, function(result) {
+//            if (result && result.statuCode == '200') {
+//                Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch004/export', paramObj);
+
+                if (pledgeSummaryDataTable != null && pledgeSummaryDataTable != '') {
+                    var selArr = pledgeSummaryDataTable.getAllCheckedRows();
+                    var datas = JSON.stringify(selArr);
+                }
+                if (!selArr || selArr.length == 0) {
+                    if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
+                        Joyin.error('请选择组合代码!');
+                        return;
+                    }
+                    if ($('#pledgeSummaryTradeDate').val() == null || $('#pledgeSummaryTradeDate').val() == ''){
+                        Joyin.error('请选择交易日期!');
+                        return;
+                    }
+                    var paramObj = getPledgeSummarySearchParams();
+                    Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch004/export', paramObj);
+                } else {
+                    Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch004/export', {
+                        datas : datas
+                    });
+                }
+
+//            }
+//        });
     };
     
     /**
@@ -282,18 +325,21 @@ $(function() {
         $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
             substitutionDataTable.load();
         });
-        
-        $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
-            if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
-                Joyin.error('请选择组合代码!');
-                return;
-            }
-            if ($('#pledgeSummaryTradeDate').val() == null || $('#pledgeSummaryTradeDate').val() == ''){
-                Joyin.error('请选择交易日期!');
-                return;
-            }
-            pledgeSummaryDataTable.load();
-        });
+
+ //TISHKBS-2014 wyn 组合代码和交易日期不是必填 start
+//        $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
+////            if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
+////                Joyin.error('请选择组合代码!');
+////                return;
+////            }
+////            if ($('#pledgeSummaryTradeDate').val() == null || $('#pledgeSummaryTradeDate').val() == ''){
+////                Joyin.error('请选择交易日期!');
+////                return;
+////            }
+//            pledgeSummaryDataTable.load();
+//        });
+ //TISHKBS-2014 wyn 组合代码和交易日期不是必填 end
+
         // 绑定按钮事件
         $('.substitutionSearchDiv #PtlRepoPledgeSearch001_btn_export').click(function() {
             exportSubstitutionExcel();

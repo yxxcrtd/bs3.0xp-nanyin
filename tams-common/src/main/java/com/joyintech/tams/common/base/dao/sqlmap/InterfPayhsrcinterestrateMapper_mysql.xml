@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfPayhsrcinterestrateMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfPayhsrcinterestrate" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="PUBLISHDATE" property="publishdate" jdbcType="DATE" />
+        <result column="INTERESTRATEKIND" property="interestratekind" jdbcType="VARCHAR" />
+        <result column="CURRENCYCODE" property="currencycode" jdbcType="VARCHAR" />
+        <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+        <result column="INTERESTRATE" property="interestrate" jdbcType="DECIMAL" />
+        <result column="EFFECTIVEDATE" property="effectivedate" jdbcType="DATE" />
+        <result column="ISEFFECTORNOT" property="iseffectornot" jdbcType="VARCHAR" />
+        <result column="INNAME" property="inname" jdbcType="VARCHAR" />
+        <result column="RELATDATA" property="relatdata" jdbcType="VARCHAR" />
+        <result column="PUBDATE" property="pubdate" jdbcType="DATE" />
+        <result column="CHANGEHIS" property="changehis" jdbcType="VARCHAR" />
+        <result column="DATASRC" property="datasrc" jdbcType="VARCHAR" />
+        <result column="UPORDOWN" property="upordown" jdbcType="VARCHAR" />
+        <result column="TERM" property="term" jdbcType="VARCHAR" />
+        <result column="CREATEDATE" property="createdate" jdbcType="DATE" />
+        <result column="CREATEUSER" property="createuser" jdbcType="VARCHAR" />
+        <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
+        <result column="LSTMNTUSER" property="lstmntuser" jdbcType="VARCHAR" />
+        <result column="NEEDREFRESH" property="needrefresh" jdbcType="VARCHAR" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, PUBLISHDATE PUBLISHDATE, INTERESTRATEKIND INTERESTRATEKIND, 
+        CURRENCYCODE CURRENCYCODE, CURRENCY CURRENCY, INTERESTRATE INTERESTRATE, EFFECTIVEDATE EFFECTIVEDATE, 
+        ISEFFECTORNOT ISEFFECTORNOT, INNAME INNAME, RELATDATA RELATDATA, PUBDATE PUBDATE, 
+        CHANGEHIS CHANGEHIS, DATASRC DATASRC, UPORDOWN UPORDOWN, TERM TERM, CREATEDATE CREATEDATE, 
+        CREATEUSER CREATEUSER, LSTMNTDATE LSTMNTDATE, LSTMNTUSER LSTMNTUSER, NEEDREFRESH NEEDREFRESH, 
+        OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcinterestrateMapper.Base_Column_List" />
+        from INTERF_PAYHSRCINTERESTRATE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcinterestrateMapper.Base_Column_List" />
+        from INTERF_PAYHSRCINTERESTRATE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcinterestrateMapper.Base_Column_List" />
+        from INTERF_PAYHSRCINTERESTRATE
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_PAYHSRCINTERESTRATE
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcinterestrate" >
+        insert into INTERF_PAYHSRCINTERESTRATE (OBJECT_ID, PUBLISHDATE, INTERESTRATEKIND, 
+            CURRENCYCODE, CURRENCY, INTERESTRATE, 
+            EFFECTIVEDATE, ISEFFECTORNOT, INNAME, 
+            RELATDATA, PUBDATE, CHANGEHIS, 
+            DATASRC, UPORDOWN, TERM, 
+            CREATEDATE, CREATEUSER, LSTMNTDATE, 
+            LSTMNTUSER, NEEDREFRESH, OPDATE, 
+            OPMODE)
+        values (#{objectId,jdbcType=VARCHAR}, #{publishdate,jdbcType=DATE}, #{interestratekind,jdbcType=VARCHAR}, 
+            #{currencycode,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, #{interestrate,jdbcType=DECIMAL}, 
+            #{effectivedate,jdbcType=DATE}, #{iseffectornot,jdbcType=VARCHAR}, #{inname,jdbcType=VARCHAR}, 
+            #{relatdata,jdbcType=VARCHAR}, #{pubdate,jdbcType=DATE}, #{changehis,jdbcType=VARCHAR}, 
+            #{datasrc,jdbcType=VARCHAR}, #{upordown,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, 
+            #{createdate,jdbcType=DATE}, #{createuser,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}, 
+            #{lstmntuser,jdbcType=VARCHAR}, #{needrefresh,jdbcType=VARCHAR}, #{opdate,jdbcType=DATE}, 
+            #{opmode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcinterestrate" >
+        insert into INTERF_PAYHSRCINTERESTRATE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="publishdate != null" >
+                PUBLISHDATE,
+            </if>
+            <if test="interestratekind != null" >
+                INTERESTRATEKIND,
+            </if>
+            <if test="currencycode != null" >
+                CURRENCYCODE,
+            </if>
+            <if test="currency != null" >
+                CURRENCY,
+            </if>
+            <if test="interestrate != null" >
+                INTERESTRATE,
+            </if>
+            <if test="effectivedate != null" >
+                EFFECTIVEDATE,
+            </if>
+            <if test="iseffectornot != null" >
+                ISEFFECTORNOT,
+            </if>
+            <if test="inname != null" >
+                INNAME,
+            </if>
+            <if test="relatdata != null" >
+                RELATDATA,
+            </if>
+            <if test="pubdate != null" >
+                PUBDATE,
+            </if>
+            <if test="changehis != null" >
+                CHANGEHIS,
+            </if>
+            <if test="datasrc != null" >
+                DATASRC,
+            </if>
+            <if test="upordown != null" >
+                UPORDOWN,
+            </if>
+            <if test="term != null" >
+                TERM,
+            </if>
+            <if test="createdate != null" >
+                CREATEDATE,
+            </if>
+            <if test="createuser != null" >
+                CREATEUSER,
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE,
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER,
+            </if>
+            <if test="needrefresh != null" >
+                NEEDREFRESH,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="publishdate != null" >
+                #{publishdate,jdbcType=DATE},
+            </if>
+            <if test="interestratekind != null" >
+                #{interestratekind,jdbcType=VARCHAR},
+            </if>
+            <if test="currencycode != null" >
+                #{currencycode,jdbcType=VARCHAR},
+            </if>
+            <if test="currency != null" >
+                #{currency,jdbcType=VARCHAR},
+            </if>
+            <if test="interestrate != null" >
+                #{interestrate,jdbcType=DECIMAL},
+            </if>
+            <if test="effectivedate != null" >
+                #{effectivedate,jdbcType=DATE},
+            </if>
+            <if test="iseffectornot != null" >
+                #{iseffectornot,jdbcType=VARCHAR},
+            </if>
+            <if test="inname != null" >
+                #{inname,jdbcType=VARCHAR},
+            </if>
+            <if test="relatdata != null" >
+                #{relatdata,jdbcType=VARCHAR},
+            </if>
+            <if test="pubdate != null" >
+                #{pubdate,jdbcType=DATE},
+            </if>
+            <if test="changehis != null" >
+                #{changehis,jdbcType=VARCHAR},
+            </if>
+            <if test="datasrc != null" >
+                #{datasrc,jdbcType=VARCHAR},
+            </if>
+            <if test="upordown != null" >
+                #{upordown,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="createdate != null" >
+                #{createdate,jdbcType=DATE},
+            </if>
+            <if test="createuser != null" >
+                #{createuser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="needrefresh != null" >
+                #{needrefresh,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcinterestrate" >
+        insert into INTERF_PAYHSRCINTERESTRATE(OBJECT_ID, PUBLISHDATE, INTERESTRATEKIND, 
+        CURRENCYCODE, CURRENCY, INTERESTRATE, EFFECTIVEDATE, ISEFFECTORNOT, INNAME, RELATDATA, 
+        PUBDATE, CHANGEHIS, DATASRC, UPORDOWN, TERM, CREATEDATE, CREATEUSER, LSTMNTDATE, 
+        LSTMNTUSER, NEEDREFRESH, OPDATE, OPMODE)
+        select OBJECT_ID, PUBLISHDATE, INTERESTRATEKIND, 
+            CURRENCYCODE, CURRENCY, INTERESTRATE, EFFECTIVEDATE, ISEFFECTORNOT, INNAME, RELATDATA, 
+            PUBDATE, CHANGEHIS, DATASRC, UPORDOWN, TERM, CREATEDATE, CREATEUSER, LSTMNTDATE, 
+            LSTMNTUSER, NEEDREFRESH, OPDATE, OPMODE
+             from INTERF_PAYHSRCINTERESTRATE
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcinterestrate" >
+        update INTERF_PAYHSRCINTERESTRATE
+        <set >
+            <if test="publishdate != null" >
+                PUBLISHDATE = #{publishdate,jdbcType=DATE},
+            </if>
+            <if test="interestratekind != null" >
+                INTERESTRATEKIND = #{interestratekind,jdbcType=VARCHAR},
+            </if>
+            <if test="currencycode != null" >
+                CURRENCYCODE = #{currencycode,jdbcType=VARCHAR},
+            </if>
+            <if test="currency != null" >
+                CURRENCY = #{currency,jdbcType=VARCHAR},
+            </if>
+            <if test="interestrate != null" >
+                INTERESTRATE = #{interestrate,jdbcType=DECIMAL},
+            </if>
+            <if test="effectivedate != null" >
+                EFFECTIVEDATE = #{effectivedate,jdbcType=DATE},
+            </if>
+            <if test="iseffectornot != null" >
+                ISEFFECTORNOT = #{iseffectornot,jdbcType=VARCHAR},
+            </if>
+            <if test="inname != null" >
+                INNAME = #{inname,jdbcType=VARCHAR},
+            </if>
+            <if test="relatdata != null" >
+                RELATDATA = #{relatdata,jdbcType=VARCHAR},
+            </if>
+            <if test="pubdate != null" >
+                PUBDATE = #{pubdate,jdbcType=DATE},
+            </if>
+            <if test="changehis != null" >
+                CHANGEHIS = #{changehis,jdbcType=VARCHAR},
+            </if>
+            <if test="datasrc != null" >
+                DATASRC = #{datasrc,jdbcType=VARCHAR},
+            </if>
+            <if test="upordown != null" >
+                UPORDOWN = #{upordown,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                TERM = #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="createdate != null" >
+                CREATEDATE = #{createdate,jdbcType=DATE},
+            </if>
+            <if test="createuser != null" >
+                CREATEUSER = #{createuser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="needrefresh != null" >
+                NEEDREFRESH = #{needrefresh,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcinterestrate" >
+        update INTERF_PAYHSRCINTERESTRATE
+        set PUBLISHDATE = #{publishdate,jdbcType=DATE},
+            INTERESTRATEKIND = #{interestratekind,jdbcType=VARCHAR},
+            CURRENCYCODE = #{currencycode,jdbcType=VARCHAR},
+            CURRENCY = #{currency,jdbcType=VARCHAR},
+            INTERESTRATE = #{interestrate,jdbcType=DECIMAL},
+            EFFECTIVEDATE = #{effectivedate,jdbcType=DATE},
+            ISEFFECTORNOT = #{iseffectornot,jdbcType=VARCHAR},
+            INNAME = #{inname,jdbcType=VARCHAR},
+            RELATDATA = #{relatdata,jdbcType=VARCHAR},
+            PUBDATE = #{pubdate,jdbcType=DATE},
+            CHANGEHIS = #{changehis,jdbcType=VARCHAR},
+            DATASRC = #{datasrc,jdbcType=VARCHAR},
+            UPORDOWN = #{upordown,jdbcType=VARCHAR},
+            TERM = #{term,jdbcType=VARCHAR},
+            CREATEDATE = #{createdate,jdbcType=DATE},
+            CREATEUSER = #{createuser,jdbcType=VARCHAR},
+            LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            NEEDREFRESH = #{needrefresh,jdbcType=VARCHAR},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

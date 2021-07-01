@@ -10,16 +10,6 @@
 
 package com.joyintech.tams.invest.batch.autodurdealgenerate.repo.runner;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.batch.batchbase.baseclass.*;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
@@ -33,6 +23,15 @@ import com.joyintech.tams.invest.batch.autodurdealgenerate.repo.reader.RepoAutoD
 import com.joyintech.tams.invest.batch.autodurdealgenerate.repo.writer.RepoAutoDurDealGenerateDelWriter;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.repo.writer.RepoAutoDurDealGenerateWriter;
 import com.joyintech.tams.invest.batch.common.util.BatchConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 回购自动存续期

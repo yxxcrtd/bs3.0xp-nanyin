@@ -771,6 +771,7 @@ public class CalcOccupyInfoService {
             else {
                 // 构建组合与指标参数索引
                 Map<String, Map<String, String>> ptlParamMap = getPtlParamMap(ptlInd, indMap);
+                putEventParam(ptlParamMap, paraIdList);
                 paraCond = createCondition(paramMap, mapData, ptlParamMap);
             }
         }
@@ -814,6 +815,24 @@ public class CalcOccupyInfoService {
             saveDetails(details, mapData, occupyCode);
             resMap.put("PARA_VAL_DETAILS", details);
         }
+    }
+    
+    /**
+     * 构建组合(包)与风险事件关联的参数关系索引
+     * 
+     * @param ptlParamMap 组合(包)与参数关系索引
+     * @param paraIdList 风险事件
+     */
+    protected void putEventParam(Map<String, Map<String, String>> ptlParamMap, Set<String> paraIdList){
+    	if (CollectionUtils.isEmpty(paraIdList)) {
+    		return;
+    	}
+    	if (!CollectionUtils.isEmpty(ptlParamMap)) {
+    		ptlParamMap.entrySet().forEach(en->{
+    			Map<String, String> value = en.getValue();
+    			paraIdList.forEach(item->value.putIfAbsent(item, StringUtil.EMPTY));
+    		});
+    	}
     }
 
     /**
@@ -1769,7 +1788,10 @@ public class CalcOccupyInfoService {
             return StringUtil.EMPTY;
         }
         for (int i = 0; i < redisFld.length; i++ ) {
-            Object val = mapData.getOrDefault(redisFld[i], StringUtil.EMPTY);
+            Object val = mapData.getOrDefault(redisFld[i], redisFld[i] + GlobalConstant.COLON + mapData.get(EVENT_ID));
+            if (!StringUtil.isNotEmpty(val)) {
+            	val = redisFld[i] + GlobalConstant.COLON + mapData.get(EVENT_ID);
+            }
             builder.append(GlobalConstant.COMMA).append(val);
         }
         return builder.length() > 1 ? builder.substring(1) : StringUtil.EMPTY;

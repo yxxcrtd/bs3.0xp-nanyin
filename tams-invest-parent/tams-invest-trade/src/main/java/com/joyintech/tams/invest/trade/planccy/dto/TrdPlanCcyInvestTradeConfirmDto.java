@@ -94,7 +94,17 @@ public class TrdPlanCcyInvestTradeConfirmDto extends TrdProductDeal implements P
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
+
+    private Date purCfmDate;
+
+    public Date getPurCfmDate() {
+        return purCfmDate;
+    }
+
+    public void setPurCfmDate(Date purCfmDate) {
+        this.purCfmDate = purCfmDate;
+    }
+
     /**
      * 获取 riskTrialRetDto
      * @return riskTrialRetDto.

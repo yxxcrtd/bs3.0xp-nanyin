@@ -14,8 +14,9 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.risk.stresstestmanage.flowriskscenemanage.dto.FlowRiskFactroRManageDto;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -185,8 +187,23 @@ public class RiskFactor001Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
             throws Exception {
-        return service.export(this.getPageId(),
-                RequestUtil.getParameters(getRequest()));
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            return service.export(this.getPageId(),
+                    RequestUtil.getParameters(getRequest()));
+        }
+
+        List<RiskFactor001Dto> param1 = JsonUtils.json2List(datas, RiskFactor001Dto.class);
+        File outFile =  service.makeFile(
+                "/com/joyintech/tams/invest/risk/stresstestmanage/riskfactor/conf/RiskFactor001_config.xml",
+                param1);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
 
     }
     /**

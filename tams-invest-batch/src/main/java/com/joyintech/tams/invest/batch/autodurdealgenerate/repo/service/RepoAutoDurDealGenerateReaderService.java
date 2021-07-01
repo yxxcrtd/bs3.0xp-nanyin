@@ -55,7 +55,7 @@ public class RepoAutoDurDealGenerateReaderService extends BaseService {
         Map<String, Object> paramMap = new HashMap<String, Object>();
 
         paramMap.put("statusValid", Arrays.asList(DictCodeListExt1.画面数据状态_待处理.getValue()));
-        paramMap.put("ps", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()));
+        paramMap.put("ps", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()));
         paramMap.put("notChannelFlag", "1");
         SysBatchExecInfoDto dto = (SysBatchExecInfoDto)param.get(BatchConstant.BATCH_INFO);
         String mdate = DateUtil.format(dto.getExecuteDate());

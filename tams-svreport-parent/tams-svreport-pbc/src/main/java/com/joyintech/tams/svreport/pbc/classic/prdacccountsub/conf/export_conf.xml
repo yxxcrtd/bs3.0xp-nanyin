@@ -13,7 +13,7 @@
 			<Cell order="9" name="内部产品代码">accountId</Cell>
 			<Cell order="10" name="发起机构代码">issuePartyId</Cell>
 			<Cell order="11" name="资产池名称">accountName</Cell>
-			<Cell order="12" name="资产池起始日期">vdate01</Cell>
+			<Cell order="12" name="资产池起始日期">vdate02</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

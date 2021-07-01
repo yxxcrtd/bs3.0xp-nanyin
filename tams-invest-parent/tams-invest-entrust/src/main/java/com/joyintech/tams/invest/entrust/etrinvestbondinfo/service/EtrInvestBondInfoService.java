@@ -446,13 +446,21 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
         dto1.setFinprodId((String)param.get("finprodId"));
         dto1.setCcy((String)param.get("ccy"));
         dto1.setSecAcctId((String)param.get("secAcctId"));
+        if(StringUtil.isEmpty(dto1.getSecAcctId())){
+            dto1.setSecAcctId((String)param.get("chlId"));
+        }
         dto1.setInvAim((String)param.get("invAim"));
         dto1.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
 //        var data = {portfolioId:portfolioId1,calId:$('#calendarId').val(),finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), secAcctId: $("#secManageAcctId").val(), chlId: $('#chlFinprodId').val()}
 //        // 一体化对应etliu start
 //        data.invAim = $('#invAim').val();
         Map<String,Object>ret = new HashMap<>();
-        ret.put("position",etrCommonService.getAssetAvailablePosition(dto1));
+        BigDecimal position = etrCommonService.getAssetAvailablePosition(dto1);
+        /*指令持仓需考虑入库的券*/
+        position = ArithmeticUtil.doSub(position, restTemplate.postForObject(
+	            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getStdPosition",param,
+	            BigDecimal.class));
+        ret.put("position",position);
         if(StringUtil.isNotEmpty(calId)&&sysDate_1!=null){
             dto1.setCdate(sysDate_1);
             ret.put("positionT1",etrCommonService.getAssetAvailablePosition(dto1));
@@ -1213,6 +1221,22 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
 	            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getClosePriceByPara", paramMap,
 	            BigDecimal.class);
 	}
+
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    public BigDecimal getLastPriceByPara(Map<String, Object> paramMap) {
+        if (StringUtil.isEmpty((String) paramMap.get("sysdate"))) {
+            paramMap.put("sysdate", iPlatformDate.getSysDateStr());
+        }
+        String sysdate = (String) paramMap.get("sysdate");
+        paramMap.put("sysdate", DateUtil.addDay(sysdate, -1));
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getLastPriceByPara", paramMap,
+                BigDecimal.class);
+    }
 
     /**
      * 导入数据文件

@@ -26,6 +26,7 @@
 		<result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
 		<result column="channelFee" property="channelFee" jdbcType="DECIMAL" />
 		<result column="RED_CFM_DATE"       property="redCfmDate"      jdbcType="DATE" />
+		<result column="PUR_CFM_DATE"       property="purCfmDate"      jdbcType="DATE" />
 		<result column="TYPE_6" property="type6" jdbcType="VARCHAR" />
         <!--添加二-四级分类 lishuping 2019/7/30 start-->
         <result column="TYPE_9" property="type9" jdbcType="VARCHAR" />
@@ -68,6 +69,8 @@
                 	 SELECT W1.* FROM WFL_TRD_PRODUCT_DEAL W1 INNER JOIN WFL_TRD_PRODUCT_DEAL W2 ON W1.B_TRADE_ID = W2.TRADE_ID WHERE W1.PS = #{PS24}) T1
 				LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD T2 ON T1.TRADE_ID = T2.TRADE_ID
 				LEFT JOIN PTL_PORTFOLIO pp ON pp.PORTFOLIO_ID = T2.PORTFOLIO_ID
+				/*过滤流程已结束的数据*/
+				inner join sys_wfl_business_list list on list.seq_no = t1.workflow_id and list.process_state !='END'
 				<where>
 					(T1.IS_CANCEL is null or T1.IS_CANCEL = #{YES_NO_NO})
 					and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
@@ -216,6 +219,8 @@
             <result column="TYPE_9" property="type9" jdbcType="VARCHAR" />
             <result column="TYPE_10" property="type10" jdbcType="VARCHAR" />
             <result column="TYPE_11" property="type11" jdbcType="VARCHAR" />
+			<result column="PUR_SPEED" property="purSpreed" jdbcType="VARCHAR" />
+			<result column="RED_SPEED" property="redSpreed" jdbcType="VARCHAR" />
             <!--添加二-四级分类 lishuping 2019/7/30 end-->
 			<result column="TYPE_7" property="type7" jdbcType="VARCHAR" />
 			<result column="MANAGER" property="manager" jdbcType="VARCHAR" />
@@ -237,9 +242,12 @@
 		T2.TYPE_11,
         <!--添加二-四级分类 lishuping 2019/7/30 end-->
 		T2.TYPE_7,
+		T3.PUR_SPEED,
+		T3.RED_SPEED,
 		T1.MANAGER
 		FROM FIN_PRODUCT T1
 		LEFT JOIN FIN_PRODUCT_TYPE T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT_ADD T3 ON T1.FINPROD_ID = T3.FINPROD_ID
 		<where>
 			<if test="search != null and search != ''">
 				(T1.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
@@ -290,6 +298,7 @@
 		tpd.FINPROD_TYPE2,
 		tpda.ENTRUST_ID,
 		tpda.RED_CFM_DATE,
+		tpda.PUR_CFM_DATE,
 		PP.PORTFOLIO_ID,
 		tpd.SETTLE_SPEED,
 		tpd.TRADE_DATE,
@@ -545,6 +554,7 @@
 	</select>
 
 	<select id="selectAccountTrdIdinwfl" resultType="java.util.Map">
+		select * from(
 		SELECT
 		TRADE_ID tradId,
 		'0' workflowId
@@ -553,6 +563,9 @@
 		<where>
 			B_TRADE_ID = #{tradId}
 		</where>
+		order by update_time desc
+		)where rownum =1 
+		
 	</select>
 
 	<select id="selectAccountTrdId" resultType="java.util.Map">

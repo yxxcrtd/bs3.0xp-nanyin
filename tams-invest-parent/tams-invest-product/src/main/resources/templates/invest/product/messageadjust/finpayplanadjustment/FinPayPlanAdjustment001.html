@@ -46,28 +46,29 @@
                                 </select>       
                             </div>
                         </div>
-                        
-						<div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">
-							<label class="layui-form-label form-lable"
-								data-th-text="#{FinPayPlanAdjustment001.feeName}">费用名称</label>
-							<div class="layui-input-inline input-inline">
-								<select type="text" id="cashId" name="cashId" class="layui-input form-input input-select"
-	                                allowClear="true" placeholder="请输入内容"
-	                                data-th-placeholder="#{SysCommon.placeholder}" formatoption = "false" 
-	                                required 
-	                                parentIds="finprodMarketId,prodType"
-	                                data-th-data-url="@{/invest/product/messageadjust/finpayplanadjustment/FinPayPlanAdjustment001/getFeeName}" 
-	                                data-th-initvalue="${entity?.cashId}"
-	                                >
-	                            </select>		
-							</div>
-						</div>
 						<div style="display:none;" class="layui-input-inline input-inline">
 	                        <input type="text" id="workflowId" name="workflowId" 
 	                            class="layui-input form-input"
 	                            data-th-value="${workflowId}"
 	                            disabled=true/>
                     	</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">
+							<label class="layui-form-label form-lable"
+								   data-th-text="#{FinPayPlanAdjustment001.feeName}">费用名称</label>
+							<div class="layui-input-inline input-inline">
+								<select type="text" id="cashId" name="cashId" class="layui-input form-input input-select"
+										allowClear="true" placeholder="请输入内容"
+										data-th-placeholder="#{SysCommon.placeholder}" formatoption = "false"
+										required
+										parentIds="finprodMarketId,prodType"
+										data-th-data-url="@{/invest/product/messageadjust/finpayplanadjustment/FinPayPlanAdjustment001/getFeeName}"
+										data-th-initvalue="${entity?.cashId}"
+								>
+								</select>
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>

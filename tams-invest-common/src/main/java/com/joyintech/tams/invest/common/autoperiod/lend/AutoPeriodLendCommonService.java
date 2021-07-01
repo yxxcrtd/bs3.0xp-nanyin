@@ -85,6 +85,7 @@ public class AutoPeriodLendCommonService extends BaseService {
         trdFinProductDealTotal.setWorkflowStatus(DictCodeList.数据状态_新建.getValue());
         trdFinProductDealTotal.setWorkflowId(entity.getWorkflowId());
         trdFinProductDealTotal.setStatus(DictCodeList.数据状态_新建.getValue());
+        trdFinProductDealTotal.setRemark(entity.getRemark());
         return trdFinProductDealTotal;
     }
 

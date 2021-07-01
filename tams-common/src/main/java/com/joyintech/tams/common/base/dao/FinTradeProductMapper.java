@@ -20,10 +20,19 @@ public interface FinTradeProductMapper {
 
     FinTradeProduct selectByPrimaryKey(FinTradeProductKey key);
 
+    List<FinTradeProduct> selectByFinprodId(String finprodId);
+
     int updateByPrimaryKeySelective(FinTradeProduct record);
 
     int updateByPrimaryKey(FinTradeProduct record);
     
     @Select("select CALENDAR_ID from FIN_TRADE_PRODUCT where finprod_id = #{finprodId,jdbcType=VARCHAR}")
-    List<String> getCalendarByFinprodId(String finprodId); 
+    List<String> getCalendarByFinprodId(String finprodId);
+
+    /**
+     * 根据交易编号查询委托编号
+     * @param tradeId 交易编号
+     * @return 委托编号
+     */
+    String findEntrustIdByTradeId(String tradeId);
 }

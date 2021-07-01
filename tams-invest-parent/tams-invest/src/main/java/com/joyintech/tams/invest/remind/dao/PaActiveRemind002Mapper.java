@@ -562,6 +562,27 @@ public interface PaActiveRemind002Mapper {
      * @since 1.0
      */
     List<PaActiveRemind001Dto> selramindR3S4(Map<String, Object> param);
-    
-    
+
+
+    /**
+     *
+     * 主动提醒 债券上市流通--债券上市流通操作
+     * <功能详细描述>
+     * @param param 传入查询参数
+     * @return 返回查询出信息的集合
+     * @see
+     * @since 1.0
+     */
+    List<PaActiveRemind001Dto> selramindR10S1(Map<String, Object> param);
+
+    /**
+     *
+     * 主动提醒 债券上市流通--资产要素登记修改
+     * <功能详细描述>
+     * @param param 传入查询参数
+     * @return 返回查询出信息的集合
+     * @see
+     * @since 1.0
+     */
+    List<PaActiveRemind001Dto> selramindR10S2(Map<String, Object> param);
 }

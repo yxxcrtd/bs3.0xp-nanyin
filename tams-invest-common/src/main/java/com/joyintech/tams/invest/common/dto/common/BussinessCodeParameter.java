@@ -5,6 +5,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class BussinessCodeParameter {
      */
     private DictCodeList commonBusinessType;
     //-----------add by jjpei 20190627---------
+    private BussinessDictCodeList commonBusinessType1;
     /**
      * 共通业务类型EXT
      */
@@ -85,6 +87,15 @@ public class BussinessCodeParameter {
      */
     public void setCommonBusinessType(DictCodeList commonBusinessType) {
         this.commonBusinessType = commonBusinessType;
+    }
+
+    /**
+     * 设置 commonBusinessType
+     *
+     * @param commonBusinessType commonBusinessType
+     */
+    public void setCommonBusinessType1(BussinessDictCodeList commonBusinessType) {
+        this.commonBusinessType1 = commonBusinessType;
     }
 
     /**

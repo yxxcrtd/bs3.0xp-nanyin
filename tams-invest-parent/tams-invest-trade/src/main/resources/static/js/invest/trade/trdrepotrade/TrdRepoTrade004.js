@@ -19,28 +19,41 @@ window.componentLoadCallback = function (isDone, pagePath, params) {
     if (isDone)
     {
         var workflowId=$('#workflowId').val();
-        if(workflowId!='')
+        if(workflowId!=='')
         {
-        	initFlag = true;	
+        	initFlag = true;
             outOk();
             initFlag = false;
         }
         else {
-            var oldpledgeBondList;//定义换入质押券列表值没发生变化前的记录
+            var oldpledgeBondList = null;//定义换入质押券列表值没发生变化前的记录
+            var oldOutBondList = null;//定义换出债券列表值没发生变化前的记录
             var intertime = setInterval(function () {
-
                 var object = $.serializeToObject('#submitForm');
-                 if (object.bussRepoSec!=undefined && object.bussRepoSec.pledgeBondList != null && object.bussRepoSec.pledgeBondList.length > 0 && oldpledgeBondList !=JSON.stringify(object.bussRepoSec.pledgeBondList)) {
-                     oldpledgeBondList=JSON.stringify(object.bussRepoSec.pledgeBondList);
-                     outOk();
+                if (object.bussRepoSec !== undefined
+                    && ((object.bussRepoSec.pledgeBondList != null
+                            && object.bussRepoSec.pledgeBondList.length > 0
+                            && oldpledgeBondList !== JSON.stringify(object.bussRepoSec.pledgeBondList))
+                        || (object.outDataTable != null
+                            && object.outDataTable.length > 0
+                            && oldOutBondList !== JSON.stringify(object.outDataTable))
+                    )
+                ) {
+                    oldpledgeBondList = JSON.stringify(object.bussRepoSec.pledgeBondList);
+                    oldOutBondList = JSON.stringify(object.outDataTable);
+                    outOk();
                 }
-                if(object.bussRepoSec.pledgeBondList.length == 0)
-                { outOk();}
-             }, 2000);
+                if ((object.bussRepoSec.pledgeBondList.length === 0
+                    && oldpledgeBondList !== JSON.stringify(object.bussRepoSec.pledgeBondList))
+                    || (object.outDataTable.length === 0
+                        && oldpledgeBondList !== JSON.stringify(object.outDataTable))) {
+                    oldpledgeBondList = JSON.stringify(object.bussRepoSec.pledgeBondList);
+                    oldOutBondList = JSON.stringify(object.outDataTable);
+                    outOk();
+                }
+            }, 2000);
         }
         setBussRepoSecInput();
-      
-
     }
 };
 /**

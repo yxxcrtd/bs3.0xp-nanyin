@@ -523,8 +523,19 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 		FinDealPledge finDealPledge = this.genFinDealPledge(entity, trdProductDeal.getBranch());
 
 		if (isUpdate) {
-			finTradeProductMapper.updateByPrimaryKeySelective(finTradeProduct);
-			finDealPledgeMapper.updateByPrimaryKeySelective(finDealPledge);
+			FinTradeProduct tempfinTradeProduct = finTradeProductMapper.selectByPrimaryKey(finTradeProduct);
+			if(tempfinTradeProduct!=null) {
+				finTradeProductMapper.updateByPrimaryKeySelective(finTradeProduct);
+			}else{
+				finTradeProductMapper.insertSelective(finTradeProduct);
+			}
+
+			FinDealPledge tempFinDealPledge = finDealPledgeMapper.selectByPrimaryKey(finDealPledge);
+			if(tempFinDealPledge!=null) {
+				finDealPledgeMapper.updateByPrimaryKeySelective(finDealPledge);
+			}else{
+				finDealPledgeMapper.insertSelective(finDealPledge);
+			}
 		} else {
 			finTradeProductMapper.insertSelective(finTradeProduct);
 			finDealPledgeMapper.insertSelective(finDealPledge);

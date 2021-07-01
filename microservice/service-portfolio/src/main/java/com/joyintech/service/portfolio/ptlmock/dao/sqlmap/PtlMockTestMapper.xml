@@ -17,23 +17,31 @@
 	<select id="getPtlInfo" resultMap="PtlInfoMap">
 		SELECT DISTINCT
 			A.PORTFOLIO_ID id,
-			A.PORTFOLIO_ID text,
-			A.PORTFOLIO_NAME,              
-			DECODE(A.PORTFOLIO_TYPE ,#{PORTFOLIO_TYPE_XNZH},TO_CHAR(A.VDATE, 'yyyy-MM-dd'),TO_CHAR(fin.VDATE, 'yyyy-MM-dd')) AS VDATE,
-			DECODE(A.PORTFOLIO_TYPE ,#{PORTFOLIO_TYPE_XNZH},TO_CHAR(A.MDATE, 'yyyy-MM-dd'),TO_CHAR(fin.MDATE, 'yyyy-MM-dd')) AS MDATE,
+			A.PORTFOLIO_NAME ,
+		    A.PORTFOLIO_NAME text,
+			DECODE(A.PORTFOLIO_TYPE ,#{PORTFOLIO_TYPE_XNZH},TO_CHAR(A.VDATE, 'yyyy-MM-dd'),
+				DECODE(fin.VDATE,null,TO_CHAR(A.VDATE, 'yyyy-MM-dd'),TO_CHAR(fin.VDATE, 'yyyy-MM-dd'))) AS VDATE,
+			DECODE(A.PORTFOLIO_TYPE ,#{PORTFOLIO_TYPE_XNZH},TO_CHAR(A.MDATE, 'yyyy-MM-dd'),
+				DECODE(fin.MDATE,null,TO_CHAR(A.MDATE, 'yyyy-MM-dd'),TO_CHAR(fin.MDATE, 'yyyy-MM-dd'))) AS MDATE,
 			A.PORTFOLIO_TYPE,
 			A.PROFIT_TYPE
 		FROM PTL_PORTFOLIO A
 		left join fin_product fin
 		on fin.FINPROD_MARKET_ID = A.PORTFOLIO_ID
 		  inner join PA_PTL_PORTFOLIO B on A.PORTFOLIO_ID = B.PORTFOLIO_ID
+		  left join FIN_CASH_INFO fci on fci.FINPROD_ID = fin.FINPROD_ID and fci.CASH_TYPE_1 =  #{cashType1}
+		  								and fci.CASH_TYPE_2 = #{cashType2} and fci.FINPROD_TYPE = #{finprodType}
+		  left join FIN_OPEN_RULE fopen on fopen.CASH_ID = fci.CASH_ID
 		<where>
 		   <if test="searchAllPtl == null or searchAllPtl == '' or searchAllPtl != 'Y'.toString()">
-			   (A.PROFIT_TYPE = #{PROFIT_TYPE_HBX}
-			      or (A.PROFIT_TYPE = #{PROFIT_TYPE_JZX}
-			       and B.OPEN_TYPE in (#{PTL_ISSUE_MODE_FBS}, #{PTL_ISSUE_MODE_DQKF},#{PTL_ISSUE_MODE_GPKF}))
-			    )
-		      and A.PORTFOLIO_TYPE in (#{PORTFOLIO_TYPE_CPZH}, #{PORTFOLIO_TYPE_XNZH})
+			   (
+				   (
+					(A.PROFIT_TYPE = #{PROFIT_TYPE_HBX}
+					  or (A.PROFIT_TYPE = #{PROFIT_TYPE_JZX} and B.OPEN_TYPE in (#{PTL_ISSUE_MODE_FBS}))
+					  or (A.PROFIT_TYPE = #{PROFIT_TYPE_JZX} and B.OPEN_TYPE in (#{OPEN_TYPE_KFS}) and fopen.OPEN_MODE = #{OPEN_MODE_DQKF})
+					)
+		      		and A.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_CPZH})
+		      	or A.PORTFOLIO_TYPE =  #{PORTFOLIO_TYPE_XNZH})
 		    </if>
 			<if test="search != null and search != ''">
 				and (A.PORTFOLIO_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))

@@ -1,0 +1,4 @@
+--产品新建报送页面新增业绩比较基准格式校验
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID in('ys214A49-6813-B451-E050-007F22700029','ys214A49-6813-4B38-E050-007F22700029');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('ys214A49-6813-B451-E050-007F22700029','FinNetValueProductBuild002','isNumber2','bussRepFinProductInfoDto.repYield',null,'8,5','Y','业绩比较基准以百分数形式表示时必须为n（8,5）格式。','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('ys214A49-6813-4B38-E050-007F22700029','FinProductBuild001','isNumber2','bussRepFinProductInfoDto.repYield',null,'8,5','Y','业绩比较基准以百分数形式表示时必须为n（8,5）格式。','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');

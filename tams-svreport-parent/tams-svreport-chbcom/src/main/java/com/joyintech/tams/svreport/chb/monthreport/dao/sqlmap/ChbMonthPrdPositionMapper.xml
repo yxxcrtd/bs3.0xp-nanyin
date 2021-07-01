@@ -56,10 +56,9 @@
     <include refid="Base_Column_List_inst" />
     from CHB_MONTH_PRD_POSITION
     <if test="modelType != null">
-     	left join (      select f.finprod_market_id,di.institution_code 
-      from fin_product f
-      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
-      WHERE f.p_finprod_id is null) di on di.finprod_market_id = CHB_MONTH_PRD_POSITION.PRODID
+     	left join (      select  distinct di.business_id　finprod_market_id,di.institution_code
+      from  DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+      ) di on di.finprod_market_id = CHB_MONTH_PRD_POSITION.PRODID
      </if>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </select>
@@ -361,10 +360,9 @@
     pos.TERMINATIONINTAMT, pos.CASHAMT, pos.DURATIONFLAG, pos.VDATE,pos.OPENDURATION,pos.CASH_MANA_CATE, di.INSTITUTION_CODE,
     pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP
        from CHB_MONTH_PRD_POSITION pos
-      left join (      select f.finprod_market_id,di.institution_code
-      from fin_product f
-      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
-      WHERE f.p_finprod_id is null) di on di.finprod_market_id = pos.PRODID
+      left join (      select distinct  di.business_id　finprod_market_id,di.institution_code
+      from DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+      ) di on di.finprod_market_id = pos.PRODID
      left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID
       where startdate = #{startdate,jdbcType=DATE}
       and enddate = #{enddate,jdbcType=DATE}
@@ -433,14 +431,9 @@
 	    ,info.OPENTYPEP
         ,info.CASH_MANA_CATE
         /***封闭期在半年以上的定期开放式产品：改成按照期限品种统计； leipeng 20201226***/
-      ,          case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
-                      then '02' else
-                      (case when info.SHORT_TERM is null
-                          then null
-                          when info.SHORT_TERM>184
-                          then '02'
-                          else
-                          '01' end)
+      ,          case when info.CASH_MANA_CATE='01' then '01'
+                      when info.operate_mode in ('03') and info.termtype in ('06','08','09')
+                      then '02' else '03'
                       end openduration
 	    ,info.PROFIT_TYPE
 	    ,decode(info.EXC_FIN_SECTOR,'01','04',info.SALETARGET) saletarget
@@ -798,16 +791,6 @@
               #{item}
           </foreach>
       </if>
-    <if test="prodid!=null">
-    	and deal.prodid=#{prodid,jdbcType=VARCHAR} 
-    </if>
-      <if test="prodids !=null">
-          and deal.prodid in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-          </foreach>
-      </if>
 
 
     /*合并已起息，但没进行交易的产品*/
@@ -830,7 +813,7 @@
             prod.profit_type,
             decode(prod.EXC_FIN_SECTOR,'01','04',prod.SALETARGET) saletarget,
             prod.vdate,
-            '03' openduration,
+            pi.OPENDURATION openduration,
             prod.CASH_MANA_CATE,
             pi.durationflag,
             NULL con_prd_traget,
@@ -858,7 +841,7 @@
             CHB_MONTH_PRD_POSITION pos1          
             left join  chb_prd_baseinfo prod
             on pos1.PRODID = prod.PROD_ID
-            left join pi on pi.prodid=prod.prod_id
+            inner join pi on pi.prodid=prod.prod_id
 			/*left join pm on pm.prodid=prod.prod_id*/
 			LEFT JOIN PM ON PM.PRODID=POS1.PRODID
       		and  (PM.ord_identified=pos1.ord_identified 
@@ -885,19 +868,10 @@
                       #{item}
                   </foreach>
               </if>
-              <if test="prodid!=null and prodid.length > 0">
-                  and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR}
-              </if>
 		    <if test="prodid!=null">
 		    	and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR} 
 		    </if>
-              <if test="prodids !=null">
-                  and nvl(prod.fprod_id,prod_id) in
-				<foreach collection="prodids" item="item" open="(" separator=","
-					close=")">
-                      #{item}
-                  </foreach>
-              </if>
+
     
   </insert>
   

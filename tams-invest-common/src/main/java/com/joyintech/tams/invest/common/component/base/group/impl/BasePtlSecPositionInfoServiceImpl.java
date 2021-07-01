@@ -186,7 +186,13 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
                 // 查询最近的那一天
                 Date maxCdate = basePtlSecPositionInfoMapper.selectSecPositionMaxCdate(positionFlowDto);
                 if (maxCdate == null) {
-                    ptlSecPositionMapper.insertSelective(position);
+                    // modify by etliu 汇总表更新并发问题解决 20210511 start
+                    try {
+                        ptlSecPositionMapper.insertSelective(position);
+                    } catch (Exception e) {
+                        basePtlSecPositionInfoMapper.updateByPrimaryKeySelectiveForFlow(position);
+                    }
+                    // modify by etliu 汇总表更新并发问题解决 20210511 end
                 }
                 else {
                     PtlSecPositionFlowDto tempPositionFlowDto = new PtlSecPositionFlowDto();
@@ -194,13 +200,25 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
                     tempPositionFlowDto.setCdate(maxCdate);
 
                     BigDecimal tempAmount = basePtlSecPositionInfoMapper.selectSecPosition(tempPositionFlowDto);
+                    // modify by etliu 汇总表更新并发问题解决 20210511 start
+                    BigDecimal flowAmount = position.getAmount();
                     position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), tempAmount));
-                    ptlSecPositionMapper.insertSelective(position);
+                    try {
+                        ptlSecPositionMapper.insertSelective(position);
+                    } catch (Exception e) {
+                        position.setAmount(flowAmount);
+                        basePtlSecPositionInfoMapper.updateByPrimaryKeySelectiveForFlow(position);
+                    }
+                    // modify by etliu 汇总表更新并发问题解决 20210511 end
                 }
             }
             else {
-                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
-                ptlSecPositionMapper.updateByPrimaryKeySelective(position);
+                // modify by etliu 汇总表更新并发问题解决 20210511 start
+//                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
+//                ptlSecPositionMapper.updateByPrimaryKeySelective(position);
+                basePtlSecPositionInfoMapper.updateByPrimaryKeySelectiveForFlow(position);
+                // modify by etliu 汇总表更新并发问题解决 20210511 end
+
             }
 
             // 2.2.2 检索组合持仓的最大日期
@@ -269,6 +287,48 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
 //            }
         }
         //华兴银行：组合持仓融入融出明细共通 added by liuwei 2020/1/9 E
+
+        // add by jiangpeng on 20210416 start
+        // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+        if (
+                 DictCodeListExt1.持仓类型_借贷融入.getValue().equals(positionFlowDto.getHodingType())
+                || DictCodeListExt1.持仓类型_借贷融出.getValue().equals(positionFlowDto.getHodingType())) {
+            PtlSecPosition position = getPtlSecPosition(positionFlowDto);
+            BigDecimal amount = basePtlSecPositionInfoMapper.selectSecPosition(positionFlowDto);
+            if (amount == null) {
+                // 如果当天的持仓数据没有，取当天之前最近一天的数据
+                // 查询最近的那一天
+                Date maxCdate = basePtlSecPositionInfoMapper.selectSecPositionMaxCdate(positionFlowDto);
+                if (maxCdate == null) {
+                    ptlSecPositionMapper.insertSelective(position);
+                } else {
+                    PtlSecPositionFlowDto tempPositionFlowDto = new PtlSecPositionFlowDto();
+                    BeanUtils.copyProperties(positionFlowDto, tempPositionFlowDto);
+                    tempPositionFlowDto.setCdate(maxCdate);
+
+                    BigDecimal tempAmount = basePtlSecPositionInfoMapper.selectSecPosition(tempPositionFlowDto);
+                    position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), tempAmount));
+                    ptlSecPositionMapper.insertSelective(position);
+                }
+            } else {
+                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
+                ptlSecPositionMapper.updateByPrimaryKeySelective(position);
+            }
+
+            // 2.2.2 检索组合持仓的最大日期
+            String maxCdate = basePtlSecPositionInfoMapper.selectMaxCdate(positionFlowDto);
+            String cDate = DateUtil.format(positionFlowDto.getCdate());
+            // 2.2.3 上面检索出的最大日期 <> 输入参数.日期，将输入参数.日期到2.2.2检索出来的最大日期的数据全部更新
+            if (maxCdate != null && !maxCdate.equals(cDate)) {
+                String minDate = maxCdate.compareTo(cDate) > 0 ? DateUtil.addDay(cDate, 1) : maxCdate;
+                String maxDate = maxCdate.compareTo(cDate) < 0 ? DateUtil.addDay(cDate, -1) : maxCdate;
+                Map<String, Object> params = BeanUtil.object2Map(positionFlowDto);
+                params.put("minDate", minDate);
+                params.put("maxDate", maxDate);
+                basePtlSecPositionInfoMapper.updatePosition(params);
+            }
+        }
+        // add by jiangpeng on 20210416 end
         return true;
     }
 

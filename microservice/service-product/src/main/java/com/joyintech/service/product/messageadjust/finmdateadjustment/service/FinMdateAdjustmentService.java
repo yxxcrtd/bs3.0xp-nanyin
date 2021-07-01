@@ -127,10 +127,10 @@ public class FinMdateAdjustmentService extends BaseService<FinMdateAdjustmentDto
      * @param map 入参
      * @return 产品代码下拉框
      */
-    public List<SelectOptionDto> queryAdjustProdIdList(Map<String, Object> map) {
+    public Page<SelectOptionDto> queryAdjustProdIdList(int page, int length, Map<String, Object> map) {
         map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         map.put("ISSUE_STATUS01", DictCodeListExt1.发行状态_发行成功.getValue());
-        return finMdateAdjustmentMapper.queryAdjustProdIdList(map);
+        return this.queryForPageForSelectReturn(page, length, () -> finMdateAdjustmentMapper.queryAdjustProdIdList(map));
     }
 
     /**
@@ -471,7 +471,10 @@ public class FinMdateAdjustmentService extends BaseService<FinMdateAdjustmentDto
 			
 			//更新计提规则表
 			countRule.seteAccrDate(new_eAccrDate);
-			finFloatCountingRuleMapper.updateByPrimaryKeySelective(countRule);
+			//modify by tuqirong 2021-02-25 start 更新计提规则表中该产品所有的数据
+//			finFloatCountingRuleMapper.updateByPrimaryKeySelective(countRule);
+			finFloatCountingRuleMapper.updateEndAccrDate(countRule);
+			//modify by tuqirong 2021-02-25 end 更新计提规则表中该产品所有的数据
 		   }
         }
     /**

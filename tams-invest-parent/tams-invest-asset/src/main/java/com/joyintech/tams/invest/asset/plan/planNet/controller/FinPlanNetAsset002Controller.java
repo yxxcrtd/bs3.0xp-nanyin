@@ -120,7 +120,7 @@ public class FinPlanNetAsset002Controller extends BaseController{
             dto.setTransMode(DictCodeList.清算速度_T_0.getValue());
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
             dto.setFjId("fj" + System.currentTimeMillis());
-            dto.setInvestmentAttributes(DictCodeList.投资性质_权益类.getValue());
+//            dto.setInvestmentAttributes(DictCodeList.投资性质_权益类.getValue());//modify by jiangpeng on 20210522 TISHKBS-1373
             model.addAttribute("entity", dto);
         }
         else if(StringUtil.isNotEmpty(finprodId) && WorkFlowUtil.isNotFromToDoList()){

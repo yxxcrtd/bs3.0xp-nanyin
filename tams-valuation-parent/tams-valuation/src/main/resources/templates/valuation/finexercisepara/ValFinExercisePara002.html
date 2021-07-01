@@ -12,6 +12,7 @@
                     data-th-value="${entity?.branch}">
 				<input type="text" id="workflowId" name="workflowId" placeholder="流程 Id" class="layui-input form-input"
 					data-th-value="${entity?.workflowId}">
+				<input type="hidden" id="pageModel" name="pageModel" th:value="${pageModel}" />
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md12">

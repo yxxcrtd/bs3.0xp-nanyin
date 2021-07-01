@@ -2,6 +2,7 @@ package com.joyintech.tams.systemtools.dfs;
 
 import com.jcraft.jsch.*;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -48,7 +49,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
     @Override
     public UploadFile fecth(SysUploadFileInfo file) {
         String remotePathPrefix = CacheUtil.getSysParam("SYS_FS_REMOTE_PATH_PREFIX");
-        File f = new File(file.getPath());
+        File f = new SafelyFile(file.getPath());
         if (f.exists()) {
             // 本地文件存在不去下载
             UploadFile uploadFile = new UploadFile(null, file.getSeqNo(), f);
@@ -81,7 +82,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
      * @since 1.0
      */
     private void getFile(SftpDto dto, String remoteFile, String localDir) throws Exception {
-        File localFile = new File(localDir);
+        File localFile = new SafelyFile(localDir);
         if (localFile.exists()) {
             // 本地目录不是目录，先删除
             if (!localFile.isDirectory()) {

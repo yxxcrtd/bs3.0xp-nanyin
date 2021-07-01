@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.json.JsonSanitizer;
 
 
 public class JsonUtil {
@@ -21,7 +22,7 @@ public class JsonUtil {
 		PrintWriter pw;  
         try {  
             pw = response.getWriter(); 
-            pw.print(json);  
+            pw.print(JsonSanitizer.sanitize(json));  
             pw.flush(); 
             pw.close();
         } catch (IOException e) {  
@@ -61,7 +62,7 @@ public class JsonUtil {
 	
 	public static List<Object> stringToList(String json){
 		try {
-			return objectMapper.readValue(json, List.class);
+			return objectMapper.readValue(JsonSanitizer.sanitize(json), List.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<Object>();
@@ -70,7 +71,7 @@ public class JsonUtil {
 	
 	public static Map<String, Object> stringToMap(String json){
 		try {
-			return objectMapper.readValue(json, Map.class);
+			return objectMapper.readValue(JsonSanitizer.sanitize(json), Map.class);
 		} catch (Exception e) {
 			return new HashMap<String, Object>();
 		}
@@ -78,7 +79,7 @@ public class JsonUtil {
 	
 	public static HashMap<String, String> stringToHashMap(String json){
 		try {
-			return objectMapper.readValue(json, HashMap.class);
+			return objectMapper.readValue(JsonSanitizer.sanitize(json), HashMap.class);
 		} catch (Exception e) {
 			return new HashMap<String, String>();
 		}
@@ -92,7 +93,7 @@ public class JsonUtil {
 	public static List<List<String>> stringToList2(String json){
 		try {
 			List<List<String>> aaa=new ArrayList<List<String>>();
-			return objectMapper.readValue(json, aaa.getClass());
+			return objectMapper.readValue(JsonSanitizer.sanitize(json), aaa.getClass());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<List<String>>();
@@ -102,7 +103,7 @@ public class JsonUtil {
 	public static List<HashMap<String, Object>> stringToListHashmap(String json){
 		try {
 			List<HashMap<String, Object>> aaa=new ArrayList<HashMap<String, Object>>();
-			return objectMapper.readValue(json, aaa.getClass());
+			return objectMapper.readValue(JsonSanitizer.sanitize(json), aaa.getClass());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<HashMap<String, Object>>();

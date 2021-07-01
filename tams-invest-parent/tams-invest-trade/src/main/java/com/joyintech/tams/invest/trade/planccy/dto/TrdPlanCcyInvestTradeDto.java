@@ -106,7 +106,22 @@ public class TrdPlanCcyInvestTradeDto extends TrdProductDeal implements ProcessE
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
+
+    private Date purCfmDate;
+
+    public Date getPurCfmDate() {
+        return purCfmDate;
+    }
+
+    public void setPurCfmDate(Date purCfmDate) {
+        this.purCfmDate = purCfmDate;
+    }
+
+    /**
+     * 交易编号
+     */
+    private String tradeId;
+
     /**
      * 取得 交易编号
      *
@@ -115,7 +130,11 @@ public class TrdPlanCcyInvestTradeDto extends TrdProductDeal implements ProcessE
     @Override
     @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getTradeId() {
-        return StringUtil.isNotEmpty(super.getTradeId())?super.getTradeId():IDGenerator.generate();
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;;
     }
     /**
      * 

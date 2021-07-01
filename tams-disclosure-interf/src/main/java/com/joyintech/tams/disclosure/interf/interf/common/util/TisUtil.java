@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.interf.interf.common.util;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ public class TisUtil {
 	public static BufferedReader bufread;
 	// 指定文件路径和名称
 	private static String path = "suncity.txt";
-	private static File filename = new File(path);
+	private static File filename = new SafelyFile(path);
 	private static String readStr = "";
 
 	/**
@@ -43,7 +44,7 @@ public class TisUtil {
 	 * 
 	 */
 	public static void creatTxtFile(String path) throws IOException {
-		filename = new File(path);
+		filename = new SafelyFile(path);
 		//如果本地已存在同名文件，删除本地重新生成
 		if (filename.exists()) {
 			filename.delete();
@@ -56,7 +57,7 @@ public class TisUtil {
 	 * @throws IOException
 	 */
 	public static void reTxtFilename(String path) throws IOException {
-		File file = new File(path);
+		File file = new SafelyFile(path);
 		if (filename.exists()) {
 			filename.renameTo(file);
 		}
@@ -203,7 +204,7 @@ public class TisUtil {
 		FileOutputStream fos=null;
 		PrintWriter pw =null;
 		try {
-			File file = new File(path);
+			File file = new SafelyFile(path);
 			fis = new FileInputStream(file);
 			isr = new InputStreamReader(fis);
 			br = new BufferedReader(isr);

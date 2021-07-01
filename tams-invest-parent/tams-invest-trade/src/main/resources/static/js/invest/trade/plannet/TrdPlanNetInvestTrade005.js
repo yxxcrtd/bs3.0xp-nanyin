@@ -452,6 +452,11 @@ $(function() {
          * 赎回费
          */
         $('#feeAmtRedem').change(function(){
+            if(!$('#unitCprice').val()){
+                $('#feeAmtRedem').val('');
+                Joyin.error("请先维护单位净值");
+                return;
+            }
             var feeAmtRedem = $('#feeAmtRedem').val();
             var tradeAmt = $('#tradeAmtHid').val();
             var unitCprice = $('#unitCprice').val();
@@ -467,7 +472,7 @@ $(function() {
 
             if(isDisabled){
                 // 如果金额不允许编辑 则影响的是份额
-                $('#shareAmt').val(JoyinMath.doDiv(JoyinMath.doMinus(tradeAmt,feeAmtRedem,2) ,unitCprice,2)  ).trigger('change');
+                $('#shareAmt').val(JoyinMath.doDiv(JoyinMath.doAdd(tradeAmt,feeAmtRedem,2) ,unitCprice,2)  ).trigger('change');
                 feeAmtRedemByTradeAmt();
 
             }else{

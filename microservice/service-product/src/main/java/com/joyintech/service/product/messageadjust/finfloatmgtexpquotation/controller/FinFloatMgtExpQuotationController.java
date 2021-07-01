@@ -53,9 +53,11 @@ public class FinFloatMgtExpQuotationController {
      * @see
      * @since 1.0
      */
-    @PostMapping("getFinprodId")
-    public List<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param) {
-        return finFloatMgtExpQuotationService.getFinprodId(param);
+    @PostMapping("getFinprodId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page,
+                                              @PathVariable("length") int length) {
+        return finFloatMgtExpQuotationService.getFinprodId(page, length, param);
     }
     /**
      * 浮动管理费报价 分页查询

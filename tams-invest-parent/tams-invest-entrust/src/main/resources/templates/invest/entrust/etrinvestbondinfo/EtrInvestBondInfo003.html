@@ -20,6 +20,7 @@
                             <input type="hidden" id="finmdate" name="finmdate">
                             <input type="hidden" id="isRight" name="isRight">
                            	<input type="hidden" id="profitType" name="profitType">
+                            <input type="hidden" id="pageId" name="pageId" th:value="${pageId}" />
                         	<div class="pro-module-item">
                         		<div class="layui-form-item">
                                     <div class="form-inline-wrap">
@@ -47,6 +48,7 @@
                                                 class="layui-input form-input input-select" allowClear="true"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                                 required="required"
+                                                parentIds="pageId,tradeMarketMode"
                                                 data-th-data-url="@{/invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getfinprodIdForAdd}"
                                                 data-th-initvalue="${entity?.finprodMarketId}">
                                             </select>
@@ -196,6 +198,18 @@
                                 </div>
                                 <div class="layui-form-item">
                                     <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap"
+                                               th:text="#{EtrInvestBondInfo002.priceModel}">价格模式</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <select type="text" id="priceModel" name="priceModel" required
+                                                    class="layui-input form-input input-select" placeholder="请输入内容"
+                                                    th:placeholder="#{SysCommon.placeholder}" data-th-data-result='${PRICE_MODEL}'
+                                                    allowClear="true" th:initValue="${entity?.priceModel}"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{EtrInvestBondInfo002.fpriceAmt}">全价</label>
                                         <div class="layui-input-inline input-inline">
@@ -325,7 +339,7 @@
             var T03 = /*[[${T03}]]*/'';
             var TREAD_MARKET_SH = /*[[${03}]]*/'';
             var TREAD_MARKET_SZ = /*[[${04}]]*/'';
-            
+
 	        // 一体化对应etliu start
 	        var T39 = /*[[${T39}]]*/'';
 	        // 一体化对应etliu end

@@ -19,4 +19,6 @@ public interface TrdStasecFlowDetailMapper {
     int updateByPrimaryKeySelective(TrdStasecFlowDetail record);
 
     int updateByPrimaryKey(TrdStasecFlowDetail record);
+    
+    int deleteBySeq(String seqno);
 }

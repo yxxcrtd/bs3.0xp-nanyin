@@ -13,6 +13,7 @@ package com.joyintech.service.asset.bond.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -71,6 +72,63 @@ public interface FinBondTargetAssetMapper {
 	int isHqTrade(@Param("finprodId") String finprodId);
     int selectCountByfinprodId(@Param("finprodId") String finprodId);
 
-    int selectCountByOFinprodId(@Param("oFinprodId") String oFinprodId);
+    int selectCountByOFinprodId(@Param("oFinprodId") String oFinprodId,@Param("finprodId") String finprodId);
 
+    /**
+     * 根据资产代码查询是否是上市标的
+     *
+     * @param finprodId
+     * @return 是否是上市标的，大于0则为是
+     * @see
+     * @since 1.0
+     */
+    int selectIsIssueAsset(@Param("finprodId") String finprodId);
+    /**
+     * 查询标的现金流计划list
+     * @author sjj
+     * @param finprodId
+     * @return FinCashPlan
+     * @see
+     * @since 1.0
+     */
+    List<FinCashPlan> getFinCashPlanList(@Param("finprodId") String finprodId);
+
+    /**
+     * 查询标的现金流支付规则list
+     * @author sjj
+     * @param finprodId
+     * @return FinCashPlan
+     * @see
+     * @since 1.0
+     */
+    List<FinCashPayRule> getFinCashPayRuleList(@Param("finprodId") String finprodId);
+
+    /**
+     * 查询标的现金流计算规则list
+     * @author sjj
+     * @param finprodId
+     * @return FinCashPlan
+     * @see
+     * @since 1.0
+     */
+    List<FinCashCalcRule> getTargetCashCalcRuleList(String finprodId);
+    /**
+     * 查询标的现金流信息list
+     * @author sjj
+     * @param finprodId
+     * @return FinCashPlan
+     * @see
+     * @since 1.0
+     */
+    List<FinCashInfo> selectFinCashInfo(String finprodId);
+
+    /**
+     * 查询标的利率信息list
+     * @author sjj
+     * @param finprodId
+     * @return FinCashPlan
+     * @see
+     * @since 1.0
+     */
+    List<FinRateInfo> getFinRateInfoList(String finprodId);
 }

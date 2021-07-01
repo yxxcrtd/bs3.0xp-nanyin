@@ -54,12 +54,12 @@ public class FinProductQuotation001Service extends CommonExportService<FinProduc
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfoIssueSuc(Map<String, Object> map) {
+    public Page<SelectOptionDto> queryProdIdInfoIssueSuc(Map<String, Object> map) {
         if(!StringUtil.isNotEmpty(map.get("initValue"))){
             map.put("userId", SecurityUtil.getLoginUser().getUserName());
             map.put("platDate", DateUtil.format(platformDate.getSysDate()));
         }
-        return restTemplate.postForList(
+        return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductQuotation001/queryProdIdInfoIssueSuc", map,
             SelectOptionDto.class);
     }

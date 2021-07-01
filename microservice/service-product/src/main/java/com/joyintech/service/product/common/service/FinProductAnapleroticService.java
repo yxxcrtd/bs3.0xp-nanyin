@@ -368,13 +368,13 @@ public class FinProductAnapleroticService extends BaseService<FinProductAnaplero
         param.put("isCalcY", BussinessDictCodeList.是否_是.getValue());
         return finProductAnapleroticMapper.queryAnapleroticInfoByFinprodId(param);
     }
-    public List<SelectOptionDto> queryProdIdInfo(Map<String,Object> param){
+    public Page<SelectOptionDto> queryProdIdInfo(int page, int length, Map<String,Object> param){
         param.put("finprodType1", BussinessDictCodeList.金融产品类型_理财产品.getValue());
         param.put("finprodType2", BussinessDictCodeList.金融产品类型_理财产品.getValue());
         param.put("notProfitType", BussinessDictCodeList.收益类型_预期收益.getValue());
         //平台日
         param.put("currentDate", DateUtil.platDateFromCache());
-        return finProductAnapleroticMapper.queryProdIdInfo(param);
+        return this.queryForPageForSelectReturn(page, length, () -> finProductAnapleroticMapper.queryProdIdInfo(param));
     }
     
     public FinProductAnapleroticInfoDto queryAnapAndProdInfo(String finprodId,String dealMode){

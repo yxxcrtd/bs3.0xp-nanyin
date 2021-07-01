@@ -45,15 +45,18 @@ public class JasperReportDataSourceService implements JRDataSource {
 		String startDate=String.valueOf(parameters.get("startDate"));
 		String endDate=String.valueOf(parameters.get("endDate"));
 		String prodId=String.valueOf(parameters.get("prodId"));
-		Connection  conn=Dao.getConnection(reportType);
-		if(ReportGlobalConstant.pAjZ_TWO.equals(reportType)){
-			data = t.printTargetNetTypeTbTwo(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId,conn);
-		}else if(ReportGlobalConstant.pAzb_TWO.equals(reportType)){
-			data = t.printTargetCurrencyTypeTbTwo(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId,conn);
-		}
-
-		if(conn!=null){
-			conn.close();
+		Connection  conn= null;
+		try {
+			conn =Dao.getConnection(reportType);
+			if(ReportGlobalConstant.pAjZ_TWO.equals(reportType)){
+				data = t.printTargetNetTypeTbTwo(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId,conn);
+			}else if(ReportGlobalConstant.pAzb_TWO.equals(reportType)){
+				data = t.printTargetCurrencyTypeTbTwo(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId,conn);
+			}
+		}finally {
+			if(conn!=null){
+				conn.close();
+			}
 		}
 	}
 	public boolean next() throws JRException {

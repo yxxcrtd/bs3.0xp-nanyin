@@ -1047,6 +1047,50 @@
                         val.othInfo.pledgeBondInfoList[i].pledgePrin=prinLast;
                     }
 
+                    //添加-可质押券面总额信息
+                    //正回购
+                    if( $("#ps").val()==BACK_LEND_DIRECTION_03){
+                    	//银行间 或 质押式协议回购
+                    	if($("#tradeMarket").val()==TRADE_PLACE_01||TARGET_BACK_TYPE_H01==$("#repoType").val()){
+                    		var secAcctId = $("#secAcctId").val();
+                    		if(!secAcctId){
+                    			secAcctId = etrEntrustAdd.secAcctId;
+                    		}
+                    		var chlId = $("#chlId").val();
+                    		if(!chlId){
+                    			chlId =  etrEntrust.chlId;
+                    		}
+                    		if(secAcctId||chlId){
+                    			for(var i=0;i<val.othInfo.pledgeBondInfoList.length;i++){
+                    				var avaPledgePrin =val.othInfo.pledgeBondInfoList[i].avaPledgePrin;
+                    				if(avaPledgePrin==null||avaPledgePrin==""){
+                                		var portfolioId = val.othInfo.pledgeBondInfoList[i].portfolioId;
+                                		var bondCode = val.othInfo.pledgeBondInfoList[i].bondCode;
+                                		if(portfolioId&&bondCode){
+                                			var param = {};
+                                			param.ps =BACK_LEND_DIRECTION_03;
+                                			param.portfolioId = portfolioId;
+                                			param.chlId = chlId;
+                                			param.secAcctId =secAcctId;
+                                			param.bondCode = bondCode;
+                                            $.ajax({
+                                           	 url:JoyinUtil.getRealPath('/component/trade/BussRepoSecDialog/selectAvaPledgeBondDetailList'),
+                                           	 data:param,
+                                           	 async:false,
+                                           	 type:'post',
+                                           	 success:function(result){
+                                           		if(result[0]){
+                                           		 val.othInfo.pledgeBondInfoList[i].avaPledgePrin = result[0].pledgePrin;
+                                           		}
+                                           	 }
+                                            });
+                                		}
+                    				}
+                    			}
+                    		}
+                    	}
+                    }
+                    
                     window.BussRepoSecPtl['bussRepoSecPtl'].addPledgeBond(val.othInfo.pledgeBondInfoList);
                 }
                 // window.BussRepoSecPtl['bussRepoSecPtl'].pledgeBondTotalTblDetailed;
@@ -1085,6 +1129,12 @@
                     if (data && data.etrEntrust) {
                         etrEntrust = data.etrEntrust;
                         entrustList = data.baseEtrInvestInfoDtoList;
+                       
+                        //多比委托进入交易放开组合自动分配
+                        if(entrustList.length>1){
+                        	$("#bussRepoSecPtl_btn_autoAllocation").removeClass("layui-btn-disabled");
+                        }
+                        
                         window.testData = data;
                         // 组合代码
                         // checkAndAssign("#portfolioId", etrEntrust.portfolioId);
@@ -1194,7 +1244,7 @@
                     }
                 });
                 if (isTrue && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined')){
-                    Joyin.error(JoyinUtil.getMessage('FW_E_0006',['组合分配证券账户或者通道']));
+                    Joyin.error(JoyinUtil.getMessage('FW_E_0006',['组合分配证券账户或者合作资产']));
                     return null;
                 }
                 var object = $.serializeToObject('#submitForm', true);
@@ -1983,13 +2033,14 @@
             settleSpeedChangeAction();
         });
         $('#ps').on("change", function () {
-            debugger;
             // 交易场所、回购类型、交易方向改变时
             // tradeMarketRepoTypePsOnChange();
             // 交易方向改变时
             //psOnChange();
             // 组合代码、证券托管户、交易日、到期日改变时，刷新可使用标准券额度
             //refreshAvaStandardStockPosition();
+            //交易方向改变时,清空质押券信息
+            window.BussRepoSecPtl["bussRepoSecPtl"].clearRepoList();
             // 设置添加质押券共通参数
             setBussRepoSecInput();
             // add by wangguoxian 费用设置 20190807 start
@@ -2135,10 +2186,16 @@
              // 设置添加质押券共通参数
              setBussRepoSecInput();
          });*/
-        // 本金金额、回购利率、回购期限、计息基础改变时，刷新回购利息
-        $('#prinAmt, #rebackPrice,  #basis').on("change", function () {
+        // 本金金额、回购期限、计息基础改变时，刷新回购利息
+        $('#prinAmt,  #basis').on("change", function () {
             refreshRebackIntAmt();
             setBussRepoSecInput();
+        });
+        // 回购利率改变时，刷新回购利息
+        $('#rebackPrice').on("change", function () {
+            refreshRebackIntAmt();
+            setBussRepoSecInput();
+            window.BussRepoSecPtl["bussRepoSecPtl"].rebackPriceChange();
         });
 
        /* $('#secAcctId').on("change", function () {

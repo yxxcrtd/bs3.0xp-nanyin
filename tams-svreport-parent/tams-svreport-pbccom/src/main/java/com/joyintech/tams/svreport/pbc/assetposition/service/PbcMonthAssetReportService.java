@@ -7146,6 +7146,7 @@ public class PbcMonthAssetReportService  extends BaseService{
                     }
                 }
             }
+        }
             /*end by jyl*/
             // 汇率取值开关
             String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
@@ -7327,7 +7328,7 @@ public class PbcMonthAssetReportService  extends BaseService{
 //	            }
 //	        }
 //        }
-        }
+
     }
    /**
     * 将周期型产品余额数据转换成计算需要的产品头寸数据
@@ -8729,7 +8730,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         sub.setReporttype(orgDto.getReporttype());
         sub.setGrouptype(orgDto.getGrouptype());
         sub.setPropertycode(orgDto.getGrouptype());
-        sub.setCny(orgDto.getCny());
+        sub.setCny((orgDto.getCny()==null?BigDecimal.ZERO:orgDto.getCny()).setScale(2, BigDecimal.ROUND_HALF_UP));
         sub.setUsdToCny((orgDto.getUsdToCny()==null?BigDecimal.ZERO:orgDto.getUsdToCny()).setScale(2, BigDecimal.ROUND_HALF_UP));
         sub.setEurToCny((orgDto.getEurToCny()==null?BigDecimal.ZERO:orgDto.getEurToCny()).setScale(2, BigDecimal.ROUND_HALF_UP));
         sub.setGbpToCny((orgDto.getGbpToCny()==null?BigDecimal.ZERO:orgDto.getGbpToCny()).setScale(2, BigDecimal.ROUND_HALF_UP));

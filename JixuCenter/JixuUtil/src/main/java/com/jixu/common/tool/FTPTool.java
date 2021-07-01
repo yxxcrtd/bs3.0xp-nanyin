@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.slf4j.Logger;
@@ -149,7 +150,7 @@ public class FTPTool {
      */
     public void putFile(String local, String remote) throws Exception {
 		
-		File dir = new File(local);
+		File dir = new SafelyFile(local);
 //		// 上传扫FTP的目录
 //		String ftpFileDir = new String(
 //				(ftpConfig.getFileDir() + nowStr + "/").getBytes(ENCODE_UTF8),
@@ -161,17 +162,23 @@ public class FTPTool {
 		// 单个文件流上传
 		for (File file : files) {
 			if (file.isFile()) {
-				FileInputStream fis = new FileInputStream(file);
-				String fileName = new String(file.getName().getBytes(
-						ENCODE_UTF8), ENCODE_ISO);
-				String remoteFile = remote + file.getName();
-				boolean flag4 = ftp.storeFile(fileName, fis);
-				if (flag4) {
-					logger.info("上传文件成功：" + remoteFile);
-				} else {
-					logger.error("上传文件失败：" + remoteFile);
+				FileInputStream fis = null;
+				try{
+					new FileInputStream(file);
+					String fileName = new String(file.getName().getBytes(
+							ENCODE_UTF8), ENCODE_ISO);
+					String remoteFile = remote + file.getName();
+					boolean flag4 = ftp.storeFile(fileName, fis);
+					if (flag4) {
+						logger.info("上传文件成功：" + remoteFile);
+					} else {
+						logger.error("上传文件失败：" + remoteFile);
+					}
+				}finally {
+					if(fis != null){
+						fis.close();
+					}
 				}
-				fis.close();
 			}
 		}
         logger.info("文件上传成功");
@@ -282,8 +289,8 @@ public class FTPTool {
 		 //本地输出流记得手动关闭，系统调用不会关闭本地流  
         FileOutputStream fos = null;
 		try {
-			File file = new File(ftpFileName);
-			File temp = new File(localDir);
+			File file = new SafelyFile(ftpFileName);
+			File temp = new SafelyFile(localDir);
 			if (!temp.exists()) {
 				temp.mkdirs();
 			}
@@ -297,7 +304,7 @@ public class FTPTool {
 						downLoadNums++;
 						ftp.changeToParentDirectory();
 					} else {
-						File localfile = new File(localDir + File.separator
+						File localfile = new SafelyFile(localDir + File.separator
 								+ names[i]);
 						if (localfile.exists()) 
 							localfile.delete();
@@ -314,7 +321,7 @@ public class FTPTool {
 				}
 			} else {
 				
-				File localfile = new File(localDir + File.separator
+				File localfile = new SafelyFile(localDir + File.separator
 						+ file.getName());
 				if (localfile.exists()) 
 					file.delete();
@@ -327,14 +334,15 @@ public class FTPTool {
 				ftp.changeToParentDirectory();
 				
 			}
-			fos.close();
 		} catch (SocketException e) {
 			e.printStackTrace();
-			
 		} catch (IOException e) {
 			e.printStackTrace();
-			
-		} 
+		} finally {
+			if(fos != null) {
+				fos.close();
+			}
+		}
 	}
  
 // 判断是否是目录

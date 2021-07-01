@@ -105,7 +105,7 @@ $(function () {
             ,{field:'conPrice', title:'EtrBondToStock001.conPrice',width:'10%',sortable:"conPrice"}
             ,{field:'prec', title:'EtrBondToStock001.prec',width:'10%',sortable:"prec"}
             ,{field:'preb', title:'EtrBondToStock001.preb',width:'10%',sortable:"preb"}
-            ,{field:'invAimName', title:'EtrInvestBondInfo002.invAim',width:'10%',sortable:"invAim"}
+            ,{field:'invAimName', title:'EtrInvestBondInfo002.invAim',width:'10%',sortable:"invAim",sortField:"invAim"}
             ,{field:'tradeMarket', visible:false}
             ,{field:'busTradeMarket', title: 'EtrInvestBondInfo001.tradeMarket', width:'10%',sortField:"tradeMarket"}
             ,{field:'ccy',visible:false}
@@ -183,11 +183,41 @@ $(function () {
      * 导出事件
      */
     var entrustExportExcel = function () {
-        Joyin.exportExcel('export', getPageParams());
+//        Joyin.exportExcel('export', getPageParams());
+
+        if (table != null && table != '') {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getPageParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas,
+                isPosi : false
+            });
+        }
+
     };
 
     var positionExportExcel = function () {
-        Joyin.exportExcel('export', getPositionFormParams());
+//        Joyin.exportExcel('export', getPositionFormParams());
+
+        if (othertable != null && othertable != '') {
+            var selArr = othertable.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getPositionFormParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas,
+                isPosi : true
+            });
+        }
+
     };
     //自动刷新时间
 

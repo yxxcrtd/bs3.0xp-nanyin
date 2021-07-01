@@ -47,6 +47,11 @@ public class TrdRepoDuration002Dto extends TrdRepoDurationDto implements Process
         return super.getFinprodId();
     }
 
+    @PrimaryKey(PrimaryKey.Field.PK_3)
+    public String getBusiCode() {
+        return super.getBusiCode();
+    }
+
     /**
      * 划款指令信息
      */

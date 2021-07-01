@@ -84,6 +84,11 @@ public class ProdOtherInfoInitInputDto extends BaseEntity {
      */
     private String isLayer;
     /**
+     * add by jiangpeng on 20210401
+     * 是否是产品编辑 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+     */
+    private boolean isProductEdit = false;
+    /**
      * 获取 pageId
      * 
      * @return pageId.
@@ -270,5 +275,12 @@ public class ProdOtherInfoInitInputDto extends BaseEntity {
 	public void setIsLayer(String isLayer) {
 		this.isLayer = isLayer;
 	}
-    
+
+    public boolean isProductEdit() {
+        return isProductEdit;
+    }
+
+    public void setProductEdit(boolean productEdit) {
+        isProductEdit = productEdit;
+    }
 }

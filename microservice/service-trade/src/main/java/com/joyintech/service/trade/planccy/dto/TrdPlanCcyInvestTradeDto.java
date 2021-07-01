@@ -129,8 +129,16 @@ public class TrdPlanCcyInvestTradeDto extends TrdProductDeal {
      * 委托金额
      */
     private BigDecimal prinAmt;
-    
-    
+
+    private Date purCfmDate;
+
+    public Date getPurCfmDate() {
+        return purCfmDate;
+    }
+
+    public void setPurCfmDate(Date purCfmDate) {
+        this.purCfmDate = purCfmDate;
+    }
 
     public BigDecimal getEntrustAmt() {
 		return entrustAmt;

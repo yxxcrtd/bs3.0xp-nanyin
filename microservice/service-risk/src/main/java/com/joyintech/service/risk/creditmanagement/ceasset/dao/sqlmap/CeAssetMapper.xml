@@ -121,6 +121,8 @@
 		CONCAT(a.FINPROD_MARKET_ID,CONCAT(':' ,a.FINPROD_ABBR)) text
 		FROM
 		FIN_PRODUCT a
+		LEFT JOIN FIN_PRODUCT_ADD FPA
+			ON FPA.FINPROD_ID = a.FINPROD_ID
 		inner join fin_product_type b on a.finprod_id=b.finprod_id
 		<where>
 			b.TYPE_8 is not null
@@ -132,6 +134,7 @@
 				a.FINPROD_ABBR like concat(concat('%',
 				#{finprodMarketId,jdbcType=VARCHAR}),'%') )
 			</if>
+			AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
 		</where>
 	</select>
  	

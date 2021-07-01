@@ -409,7 +409,6 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      */
     @DataSource(DataSourceType.OTHER)
     public Page<SelectOptionDto> findBooksetGroup(int page,int length,Map<String, Object> param) {
-    	//多极法人改造  start  add by hxy 20200618
   	  if(MultilevelDataAuthorityUtil.isEnabled()) {
        	 //联社模式
        	  //根据选择的账套组，查询出它们的所属机构

@@ -4,7 +4,19 @@
      * 页面初始化
      */
     var init = function () {
-
+        //add by jiangpeng on 20210422 start TISHKBS-1803
+        $("#tradeDate").change(function () {
+            if(isTodo){
+                if(isTodo){
+                    let param = {};
+                    let dateMap = {};
+                    param.isOnlyOneDate = true;
+                    dateMap.settleDate = $("#tradeDate").val();
+                    window.BussTrdTransferOrder['bussTrdTransferOrder'].updateGenerateOrders(dateMap,param);
+                }
+            }
+        });
+        //add by jiangpeng on 20210422 end TISHKBS-1803
     }
 
 

@@ -451,7 +451,7 @@
          	}
          	flag = false;
          	//新增列设置系数 = 1
-     		if(table1.length > tempRowNum){
+     		if(table1.length > tempRowNum && pageModel !== PAGE_MODEL_REFERENCE){
      			table.renderRow(table1.length-1, {coefficient: 1,spreadRate:0});
      		}
      		tempRowNum = table1.length;

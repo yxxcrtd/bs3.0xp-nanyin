@@ -300,7 +300,7 @@ public class FinProductFeePay002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("queryLastPayDate")
     public String queryLastPayDate(String ptlId, String feeId,String operateType,String org) {
-        return finProductFeePay002Service.queryLastPayDate(ptlId, feeId,operateType,org);
+        return StringUtil.trimHtmlTag(finProductFeePay002Service.queryLastPayDate(ptlId, feeId,operateType,org));
     }
 
     /**
@@ -505,12 +505,12 @@ public class FinProductFeePay002Controller extends BaseController {
     }
     /**
      * 	查询组合起息日
-     * @param params
+     * @param ptlId
      * @return
      */
     @ResponseBody
     @RequestMapping("queryVdate")
         public String queryVdate(String ptlId) {
-            return finProductFeePay002Service.queryVdate(ptlId);
+            return StringUtil.trimHtmlTag(finProductFeePay002Service.queryVdate(ptlId));
         }
 }

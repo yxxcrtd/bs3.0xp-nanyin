@@ -318,4 +318,23 @@ public interface EtrCommonCashPositionMapper {
     List<PtlSecPositionFlow> selectSecFlow(Map<String, Object> params);
 
     List<EtrSecPositionFlowDto> findNegateSecFlowByEntrustId(String entrustId);
+
+    String selectAcctId(String secAcctId);
+
+    // add by etliu 汇总表更新并发问题解决 20210511 start
+    /**
+     * 针对一笔流水，将该笔流水的数值加到指令现金的主表
+     * @param record 一笔流水的数据
+     * @return 更新条数
+     */
+    int updateByPrimaryKeySelectiveForFlow(EtrCashPosition record);
+
+    /**
+     * 针对一笔流水，将该笔流水的数值加到指令持仓的主表
+     * @param record 一笔流水的数据
+     * @return 更新条数
+     */
+    int updateByPrimaryKeySelectiveForSecFlow(EtrSecPosition record);
+    // add by etliu 汇总表更新并发问题解决 20210511 end
+
 }

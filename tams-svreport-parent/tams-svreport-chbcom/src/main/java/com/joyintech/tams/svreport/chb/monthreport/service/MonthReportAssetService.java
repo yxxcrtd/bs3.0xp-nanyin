@@ -127,9 +127,10 @@ public class MonthReportAssetService {
         ChbMonthPrdPosition para = new ChbMonthPrdPosition();
 //        para.setStartdate(firstday);
         para.setEnddate(lastday);
+		para.setProdids(report.getProdids());
         //先删除今日头寸 重复跑批
         logger.info("删除今日资产月报头寸开始：");
-        chbMonthAssetPositionMapper.deleteByDate(firstday);
+        chbMonthAssetPositionMapper.deleteByDate(para);
         logger.info("删除今日资产月报头寸结束：");
         //1.查询投资交易
         ChbMonthAssetPosition dealpara = new ChbMonthAssetPosition();

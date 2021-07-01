@@ -194,7 +194,7 @@ public class TrdCommandsCollection002Service extends CommonExportService<TrdComm
                 nullDto.setPrice(dto.getPrice());
                 nullDto.setExerYield(dto.getExerYield());
                 nullDto.setMatureYield(dto.getMatureYield());
-                BeanUtil.copyProperties(dto, nullDto);
+                BeanUtil.copyPropertiesIgnoreNull(dto, nullDto);//【从3.0合并代码】 by jianpeng on 20210514 TISHKBS-2142
             }
             catch (Exception e) {
                 e.printStackTrace();

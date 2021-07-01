@@ -104,7 +104,7 @@
         <!--add by xuzhihao-->
         SELECT DISTINCT
         pp.PORTFOLIO_ID id,
-        pp.PORTFOLIO_NAME text
+        pp.PORTFOLIO_ID || ':' || pp.PORTFOLIO_NAME text
         <!--PORTFOLIO_ID || ':' || PORTFOLIO_NAME shortName,
             PORTFOLIO_ID hidCode -->
         FROM
@@ -203,8 +203,7 @@
             and B.BUSI_ID = #{finprodId}
             AND TO_CHAR(B.HAPPEN_DATE, 'yyyy-MM-dd') = #{sysDate}
             <!-- add by liuwei for huaxing 20200309 start -->
-            AND b.BOOKSET_ID = #{portfolioId}
-            <!-- add by liuwei for huaxing 20200309 end -->
+            AND b.BOOKSET_ID = decode(f.profit_type,#{PROFIT_TYPE_02},#{portfolioId},CONCAT(#{FINPROD_TYPE_TG_F16},#{portfolioId}))
         </if>
         <if test="invAim != null and invAim != 'AC'">
             SELECT
@@ -261,5 +260,23 @@
                    AND t1.IS_CANCEL = 'N'
                    and t1.ps='T02'
              )
+    </select>
+
+    <select id="selectApperInfo" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+        SELECT DISTINCT
+            FP2.FINPROD_ID     
+        FROM FIN_PRODUCT FP
+        INNER JOIN FIN_PRODUCT_ADD FPA
+            ON FP.FINPROD_MARKET_ID = FPA.APPEAR_MARKET_ID
+        LEFT JOIN FIN_PRODUCT FP2 
+            ON FP2.FINPROD_ID = FPA.FINPROD_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
+            ON TFPDT.FINPROD_ID = FP.FINPROD_ID
+        <where>
+            FP.FINPROD_ID = #{finprodId}
+            AND TFPDT.TRADE_DATE = TO_DATE(#{searchDate,jdbcType=DATE},'YYYY-MM-DD')
+            AND TFPDT.TRADE_STATUS = #{TRADE_STATUS01}
+            AND TFPDT.IS_CANCEL = #{NO}
+        </where>
     </select>
 </mapper>

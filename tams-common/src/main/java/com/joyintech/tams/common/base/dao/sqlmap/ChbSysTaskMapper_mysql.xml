@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysTaskMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysTask" >
+        <id column="C_S_T_TASK_ID" property="taskId" jdbcType="VARCHAR" />
+        <result column="C_S_T_FTASK_ID" property="ftaskId" jdbcType="VARCHAR" />
+        <result column="C_S_T_BEAN_NAME" property="beanName" jdbcType="VARCHAR" />
+        <result column="C_S_T_TASK_NAME" property="taskName" jdbcType="VARCHAR" />
+        <result column="C_S_T_TASK_CLASS_CODE" property="taskClassCode" jdbcType="VARCHAR" />
+        <result column="C_S_T_TASK_PRI" property="taskPri" jdbcType="DECIMAL" />
+        <result column="C_S_T_STATUS" property="status" jdbcType="CHAR" />
+        <result column="C_S_T_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_S_T_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_S_T_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_S_T_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TASK_ID as C_S_T_TASK_ID, FTASK_ID as C_S_T_FTASK_ID, BEAN_NAME as C_S_T_BEAN_NAME,
+        TASK_NAME as C_S_T_TASK_NAME, TASK_CLASS_CODE as C_S_T_TASK_CLASS_CODE, TASK_PRI as C_S_T_TASK_PRI,
+        STATUS as C_S_T_STATUS, CREATE_USER as C_S_T_CREATE_USER, CREATE_TIME as C_S_T_CREATE_TIME,
+        UPDATE_USER as C_S_T_UPDATE_USER, UPDATE_TIME as C_S_T_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysTaskMapper.Base_Column_List" />
+        from CHB_SYS_TASK
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysTaskMapper.Base_Column_List" />
+        from CHB_SYS_TASK
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysTaskMapper.Base_Column_List" />
+        from CHB_SYS_TASK
+        where TASK_ID = #{taskId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SYS_TASK
+        where TASK_ID = #{taskId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SYS_TASK
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysTask" >
+        insert into CHB_SYS_TASK (TASK_ID, FTASK_ID, BEAN_NAME,
+            TASK_NAME, TASK_CLASS_CODE, TASK_PRI,
+            STATUS, CREATE_USER, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{taskId,jdbcType=VARCHAR}, #{ftaskId,jdbcType=VARCHAR}, #{beanName,jdbcType=VARCHAR},
+            #{taskName,jdbcType=VARCHAR}, #{taskClassCode,jdbcType=VARCHAR}, #{taskPri,jdbcType=DECIMAL},
+            #{status,jdbcType=CHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysTask" >
+        insert into CHB_SYS_TASK
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="taskId != null" >
+                TASK_ID,
+            </if>
+            <if test="ftaskId != null" >
+                FTASK_ID,
+            </if>
+            <if test="beanName != null" >
+                BEAN_NAME,
+            </if>
+            <if test="taskName != null" >
+                TASK_NAME,
+            </if>
+            <if test="taskClassCode != null" >
+                TASK_CLASS_CODE,
+            </if>
+            <if test="taskPri != null" >
+                TASK_PRI,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="taskId != null" >
+                #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="ftaskId != null" >
+                #{ftaskId,jdbcType=VARCHAR},
+            </if>
+            <if test="beanName != null" >
+                #{beanName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskName != null" >
+                #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskClassCode != null" >
+                #{taskClassCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskPri != null" >
+                #{taskPri,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysTask" >
+        insert into CHB_SYS_TASK(TASK_ID, FTASK_ID, BEAN_NAME, TASK_NAME, TASK_CLASS_CODE,
+        TASK_PRI, STATUS, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TASK_ID, FTASK_ID, BEAN_NAME, TASK_NAME, TASK_CLASS_CODE,
+            TASK_PRI, #{status,jdbcType=VARCHAR} as STATUS, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from CHB_SYS_TASK
+             where STATUS = 'E' and TASK_ID = #{taskId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysTask" >
+        update CHB_SYS_TASK
+        <set >
+            <if test="ftaskId != null" >
+                FTASK_ID = #{ftaskId,jdbcType=VARCHAR},
+            </if>
+            <if test="beanName != null" >
+                BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskName != null" >
+                TASK_NAME = #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskClassCode != null" >
+                TASK_CLASS_CODE = #{taskClassCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskPri != null" >
+                TASK_PRI = #{taskPri,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TASK_ID = #{taskId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysTask" >
+        update CHB_SYS_TASK
+        <set >
+            <if test="taskId != null" >
+                TASK_ID = #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="ftaskId != null" >
+                FTASK_ID = #{ftaskId,jdbcType=VARCHAR},
+            </if>
+            <if test="beanName != null" >
+                BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskName != null" >
+                TASK_NAME = #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskClassCode != null" >
+                TASK_CLASS_CODE = #{taskClassCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskPri != null" >
+                TASK_PRI = #{taskPri,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysTask" >
+        update CHB_SYS_TASK
+        set
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+        FTASK_ID = #{ftaskId,jdbcType=VARCHAR},
+        BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+        TASK_NAME = #{taskName,jdbcType=VARCHAR},
+        TASK_CLASS_CODE = #{taskClassCode,jdbcType=VARCHAR},
+        TASK_PRI = #{taskPri,jdbcType=DECIMAL},
+        STATUS = #{status,jdbcType=CHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysTask" >
+        update CHB_SYS_TASK
+        set FTASK_ID = #{ftaskId,jdbcType=VARCHAR},
+            BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+            TASK_NAME = #{taskName,jdbcType=VARCHAR},
+            TASK_CLASS_CODE = #{taskClassCode,jdbcType=VARCHAR},
+            TASK_PRI = #{taskPri,jdbcType=DECIMAL},
+            STATUS = #{status,jdbcType=CHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TASK_ID = #{taskId,jdbcType=VARCHAR}
+    </update>
+</mapper>

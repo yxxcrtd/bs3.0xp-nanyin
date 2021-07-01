@@ -32,22 +32,6 @@ public class RepAssetOther extends BaseEntity {
      * 是否投向金融资产投资公司发行的私募资产管理产品
      */
     private String repPrivateprdFlag;
-    /**
-     * 是否标准化票据
-     */
-    private String isBzhpj;
-    /**
-     * 是否政府出资产业投资基金
-     */
-    private String isUnlisted;
-    /**
-     * 是否商业银行可转债
-     */
-    private String bankSecKzzq;
-    /**
-     * 是否专项债券
-     */
-    private String bankSecZxzq;
 
     /**
      * 人行机构规模
@@ -58,6 +42,26 @@ public class RepAssetOther extends BaseEntity {
      * 受让形式
      */
     private String repAssignee;
+
+    /**
+     * 是否商业银行可转债
+     */
+    private String bankSecKzzq;
+
+    /**
+     * 是否专项债券
+     */
+    private String bankSecZxzq;
+
+    /**
+     * 是否政府出资产业投资基金
+     */
+    private String isunlisted;
+
+    /**
+     * 是否标准化票据
+     */
+    private String isBzhpj;
 
     /**
      * 取得 金融产品代码
@@ -187,35 +191,67 @@ public class RepAssetOther extends BaseEntity {
         this.repAssignee = repAssignee == null ? null : repAssignee.trim();
     }
 
-	public String getIsBzhpj() {
-		return isBzhpj;
-	}
+    /**
+     * 取得 是否商业银行可转债
+     * @return 是否商业银行可转债
+     */
+    public String getBankSecKzzq() {
+        return bankSecKzzq;
+    }
 
-	public void setIsBzhpj(String isBzhpj) {
-		this.isBzhpj = isBzhpj;
-	}
+    /**
+     * 设置 是否商业银行可转债
+     * @param bankSecKzzq 是否商业银行可转债
+     */
+    public void setBankSecKzzq(String bankSecKzzq) {
+        this.bankSecKzzq = bankSecKzzq == null ? null : bankSecKzzq.trim();
+    }
 
-	public String getIsUnlisted() {
-		return isUnlisted;
-	}
+    /**
+     * 取得 是否专项债券
+     * @return 是否专项债券
+     */
+    public String getBankSecZxzq() {
+        return bankSecZxzq;
+    }
 
-	public void setIsUnlisted(String isUnlisted) {
-		this.isUnlisted = isUnlisted;
-	}
+    /**
+     * 设置 是否专项债券
+     * @param bankSecZxzq 是否专项债券
+     */
+    public void setBankSecZxzq(String bankSecZxzq) {
+        this.bankSecZxzq = bankSecZxzq == null ? null : bankSecZxzq.trim();
+    }
 
-	public String getBankSecKzzq() {
-		return bankSecKzzq;
-	}
+    /**
+     * 取得 是否政府出资产业投资基金
+     * @return 是否政府出资产业投资基金
+     */
+    public String getIsunlisted() {
+        return isunlisted;
+    }
 
-	public void setBankSecKzzq(String bankSecKzzq) {
-		this.bankSecKzzq = bankSecKzzq;
-	}
+    /**
+     * 设置 是否政府出资产业投资基金
+     * @param isunlisted 是否政府出资产业投资基金
+     */
+    public void setIsunlisted(String isunlisted) {
+        this.isunlisted = isunlisted == null ? null : isunlisted.trim();
+    }
 
-	public String getBankSecZxzq() {
-		return bankSecZxzq;
-	}
+    /**
+     * 取得 是否标准化票据
+     * @return 是否标准化票据
+     */
+    public String getIsBzhpj() {
+        return isBzhpj;
+    }
 
-	public void setBankSecZxzq(String bankSecZxzq) {
-		this.bankSecZxzq = bankSecZxzq;
-	}
+    /**
+     * 设置 是否标准化票据
+     * @param isBzhpj 是否标准化票据
+     */
+    public void setIsBzhpj(String isBzhpj) {
+        this.isBzhpj = isBzhpj == null ? null : isBzhpj.trim();
+    }
 }

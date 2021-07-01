@@ -45,6 +45,10 @@
         delete from ETR_CASH_POSITION_FLOW
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </delete>
+    <delete id="deleteFlowByOrderId" parameterType="java.lang.String" >
+        delete from ETR_CASH_POSITION_FLOW
+        where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+    </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.EtrCashPositionFlow" >
         insert into ETR_CASH_POSITION_FLOW (SEQNO, PORTFOLIO_ID, ACCT_ID, 
             HODING_TYPE, CDATE, CCY, 

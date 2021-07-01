@@ -113,6 +113,10 @@ public class TrdStandardBond003Controller extends BaseController {
         workFlowParameter.setBusinessCode((entity) -> dto.getOutBondList().get(0).getSecAcctId());
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_质押式回购交易.getValue());
         workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment("标准券出库"));
+        /*如果是提交，需要生成tradeId,并保存到留痕表，doinsert的修改并不会影响到留痕表*/
+        if ("submit".equals(dto.getOperateType())&&!StringUtil.isEmptyList(dto.getOutBondList())) {
+        	trdStandardBond003Service.setTradeIdList(dto);
+        }
         String msg = trdStandardBond003Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }

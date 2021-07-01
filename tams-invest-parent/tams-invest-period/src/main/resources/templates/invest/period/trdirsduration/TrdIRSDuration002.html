@@ -236,7 +236,8 @@
 
                 <!-- 划款信息 -->
                 <div class="page-component hkxx" th:data-path="@{/component/trade/BussTrdTransferOrder/init}" th:style="${GEN_PAY_ORDERS_AUTO == '01'?'display:none':''}"
-                     th:data-params="|{entityList:'${entityList}',entityName: 'bussTrdTransferOrder', pageFrom: 'informationForm', entity:'', bizCode:'${entity?.busiCode}',isMulti:'1'}|"></div>
+                     th:data-params="|{entityList:'${entityList}',entityName: 'bussTrdTransferOrder', pageFrom: 'informationForm', entity:'', bizCode:'${entity?.busiCode}'
+                     ,isMulti:'1', isTodo:'${isTodo}'}|"></div><!--modify by jiangpeng on 20210422 TISHKBS-1803-->
             </div>
             <!-- add by zhangpuyu 2019/10/30 start -->
             <div class="page-component" th:data-path="@{/component/core/FileCommon/init}"
@@ -298,6 +299,7 @@
         var ps_pay = /*[[${ps_pay}]]*/'';
         var ps_rec = /*[[${ps_rec}]]*/'';
         var GEN_PAY_ORDERS_AUTO=/*[[${GEN_PAY_ORDERS_AUTO}]]*/'';
+        var isTodo = /*[[${isTodo}]]*/false;//是否是总集节点 add by jiangpeng on 20210422 TISHKBS-1803
     </script>
     <script data-th-src="@{/js/invest/period/trdirsduration/TrdIRSDuration002.js}" type="text/javascript"></script>
 </div>

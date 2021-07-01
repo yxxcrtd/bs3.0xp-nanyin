@@ -266,50 +266,6 @@ public class InfoDisclosureGenService {
 	}
 
 	/**
-	 * 上传文件到ftp服务器功能
-	 * 
-	 * @param id
-	 *            披露表主键
-	 * @param ftpCode
-	 *            ftp相关配置
-	 * @param fileName
-	 *            文件名
-	 * @param localPath
-	 *            真实路径
-	 * @param filePathSeqno
-	 *            对应文件seqno
-	 * @return
-	 * @throws FileNotFoundException
-	 */
-	public boolean uploadFile(String id, String ftpCode, String fileName, String localPath, String filePathSeqno)
-			throws FileNotFoundException {
-		boolean isFtpUploadSucess = false;
-		// ftp相关配置通过ftpCode获取
-		String url = "192.168.70.66";
-		int port = 21;
-		String userName = "test1";
-		String passWord = "112233";
-		String path = "/test1/information";
-		// String filename = infoDisclosureGenAndSendEntity.getFileName();
-		if (StringUtil.isEmpty(filePathSeqno) && StringUtil.isNotEmpty(id)) {
-			// 首先查询出披露表的信息
-			RepReveal repReveal = repRevealMapper.selectByPrimaryKey(id);
-			// 通过其报表关联id查询匹配相关信息
-			UploadFile uploadFile = fileAttachmentProcess.fetch(repReveal.getSysFilepath());
-			if (uploadFile != null) {
-				fileName = uploadFile.getFileName();
-				localPath = uploadFile.getTargetFile().getPath();
-			}
-		}
-		if (StringUtil.isNotEmpty(localPath)) {
-			InputStream input = new FileInputStream(localPath);
-			isFtpUploadSucess = FtpUtil.uploadFile(url, port, userName, passWord, path, fileName, input);
-		}
-
-		return isFtpUploadSucess;
-	}
-
-	/**
 	 * 生成文件方法
 	 * 
 	 * @param infoDisclosureGenAndSendEntity

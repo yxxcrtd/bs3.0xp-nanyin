@@ -233,8 +233,25 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
         String delegateCloseWay = dto.getCloseWay();
         List<String> traderList = new ArrayList<>();
         traderList.add(dto.getTrader());
-        return baseEtrInvestInfoService.checkDelegateOperation(entrustId, delegateOperationType,
-            traderList, delegateCloseWay);
+        // add by jiangpeng on 20210518 start TISHKBS-2126
+        //【投资交易-债券二级指令】新建债券二级指令，如果交易日<债券起息日，指令提交报错
+        List<ValidMessage> errorList = new ArrayList<>();
+        errorList.addAll(baseEtrInvestInfoService.checkDelegateOperation(entrustId, delegateOperationType,
+                traderList, delegateCloseWay));
+        if (StringUtil.isNotEmpty(dto.getSettleSpreed())
+                && StringUtil.isNotEmpty(dto.getVdate())
+                && StringUtil.isNotEmpty(dto.getFinprodMarketId())
+                //债券二级指令中，若是一级市场可以选择未起息的债券进行提交，若是二级市场提交时加上控制：委托终止日+清算速度<债券起息日 ，不允许提交。
+                && StringUtil.equals(dto.getTradeMarketMode(), DictCodeListExt1.交易市场_二级市场.getValue())) {
+            Date vDate = DateUtil.addDay(dto.getVdate(), Integer.parseInt(dto.getSettleSpreed()));//委托开始日+清算速度
+            Date bondVDate = this.getBondVDate(dto.getFinprodMarketId());//债券起息日
+            if (DateUtil.compareDate(vDate, bondVDate) < 0) {//委托开始日+清算速度<债券起息日，不允许提交
+                errorList.add(new ValidMessage(
+                        this.getMessage("ETR_E_0014", dto.getFinprodMarketId())));
+            }
+        }
+        return errorList;
+        // add by jiangpeng on 20210518 end TISHKBS-2126
     }
 
     /**
@@ -636,6 +653,19 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
 	}
 
     /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    public BigDecimal getLastPriceByPara(Map<String, Object> param) {
+        if (StringUtil.equals(DictCodeListExt1.投资目的_摊余成本类.getValue(), (String) param.get("invAim"))) {
+            return etrInvestBondInfoMapper.getLastDSCPriceByPara(param);
+        } else {
+            return etrInvestBondInfoMapper.getLastPriceByPara(param);
+        }
+    }
+
+    /**
      * 查询证券托管户：联想框文本框
      *
      * @param param 画面参数
@@ -646,5 +676,21 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
     public List<SuggestDto> getSecManageAcctId(Map<String, Object> param) {
         return this.queryForSuggest(() -> etrInvestBondInfoMapper.getSecManageAcctId(param),
             null);
+    }
+    
+    public BigDecimal getStdPosition(Map<String,Object> param) {
+    	return etrInvestBondInfoMapper.getStdPosition(param);
+    }
+
+    /**
+     * 获取债券起息日
+     *
+     * @param finprodMarketId 债券市场代码
+     * @return Date
+     * @author jiangpeng
+     */
+    public Date getBondVDate(String finprodMarketId) {
+        Date vDate = etrInvestBondInfoMapper.getBondVDate(finprodMarketId);
+        return vDate;
     }
 }

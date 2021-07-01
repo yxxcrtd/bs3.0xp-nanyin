@@ -86,6 +86,7 @@ public class PaActiveRemind001Controller extends BaseController implements Activ
         model.addAttribute("R6", BussinessDictCodeList.提醒类型_大分类_披露管理.getValue());
         model.addAttribute("R7", BussinessDictCodeList.提醒类型_大分类_变更提醒.getValue());
         model.addAttribute("R9", BussinessDictCodeList.提醒类型_大分类_公共数据变更.getValue());
+        model.addAttribute("R10", BussinessDictCodeList.提醒类型_大分类_债券上市流通.getValue());
         //小分类
         model.addAttribute("R6S1", BussinessDictCodeList.提醒类型_小分类_净值披露提醒.getValue());
         model.addAttribute("R7S1", BussinessDictCodeList.提醒类型_小分类_债项和主体评级变动.getValue());
@@ -131,7 +132,11 @@ public class PaActiveRemind001Controller extends BaseController implements Activ
         model.addAttribute("R5S2", BussinessDictCodeList.提醒类型_小分类_指标违规提醒.getValue());
 
         model.addAttribute("R9S1", BussinessDictCodeList.提醒类型_小分类_数据修改.getValue());
-       return super.init(model);
+
+        model.addAttribute("R10S1", BussinessDictCodeList.提醒类型_小分类_债券上市流通操作.getValue());
+        model.addAttribute("R10S2", BussinessDictCodeList.提醒类型_小分类_资产要素登记修改.getValue());
+
+        return super.init(model);
     }
     /**
      * 

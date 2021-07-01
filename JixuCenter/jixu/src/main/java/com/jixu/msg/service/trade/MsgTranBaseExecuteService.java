@@ -106,7 +106,9 @@ public abstract class MsgTranBaseExecuteService<T extends TranBaseMsgDto> extend
 		}
 			
 		if(!msgcontainer.isCorrectFlag() && operation.equalsIgnoreCase(update)){
-			oldTran.setPostStatus(PostStatusType.post);
+			if (oldTran != null){
+				oldTran.setPostStatus(PostStatusType.post);
+			}
 			tranBasicDao.updateEntity(oldTran);
 			return msgcontainer;
 		}

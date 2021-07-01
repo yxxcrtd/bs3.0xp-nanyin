@@ -24,7 +24,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -117,7 +118,14 @@ public class RskValTableImport002Controller extends BaseController{
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody RskValtblAssetSubDto dto) throws ParseException {
         dto.setImpMode(DictCodeListExt1.导入方式_手工.getValue());
-        rskValTableImportService.insert(dto);
+        List<String> errorList=rskValTableImportService.insert(dto);
+        String eMsg="";
+        if(!StringUtil.isEmptyList(errorList)){
+        	for(String errorInfo:errorList){
+            	eMsg+=StringUtil.isNotEmpty(errorInfo)?("["+errorInfo+"]"):"";
+            }
+        	return new AjaxResult(getMessage("BUSS_COM_E_0033")+GlobalConstant.HTML_NEWLINE+"以下资产未通过中债要素校验，自动加券失败，需在对应页面新建资产信息："+eMsg);
+        }  
         return new AjaxResult(getMessage("BUSS_COM_E_0033"));
     }
 }
