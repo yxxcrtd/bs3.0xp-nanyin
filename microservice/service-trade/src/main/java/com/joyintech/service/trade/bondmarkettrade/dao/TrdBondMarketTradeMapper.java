@@ -175,4 +175,6 @@ public interface TrdBondMarketTradeMapper {
      * @since 1.0
      */
     int selectIssueAsset(@Param("finprodId") String finprodId);
+
+    String getInfBondName(@Param("secId") String secId);
 }
