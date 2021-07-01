@@ -4,6 +4,7 @@
 	namespace="com.joyintech.service.entrust.etrseclend.dao.EtrSecLendMapper">
 	<select id="selectForPage"
 		resultType="com.joyintech.service.entrust.etrseclend.dto.EtrSecLendDto">
+		SELECT * FROM (
 		SELECT
 			T1.ENTRUST_ID                                              entrustId,
 			T1.ENTRUST_STATUS                                          entrustStatus,
@@ -115,7 +116,119 @@
 			AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
 		</if>
 		</where>
-		order by T1.ENTRUST_ID DESC
+		<!-- order by T1.ENTRUST_ID DESC -->
+		
+		<!-- 查询流程中数据 -->
+		<if test="entrustStatusList == null or entrustStatusList.contains(&quot;08&quot;)">
+			union all 
+			
+			SELECT
+				T1.ENTRUST_ID                                              entrustId,
+				T1.ENTRUST_STATUS                                          entrustStatus,
+				T7.REAL_NAME                                           	   invManagerId,
+				T1.PORTFOLIO_ID                                            portfolioId,
+				T2.PORTFOLIO_NAME                                          portfolioName,
+				T5.FINPROD_MARKET_ID                                       finprodId,
+				T4.TARGET_FINPROD_ID                                       targetFinprodId,
+				NVL( T5.FINPROD_ABBR,T5.FINPROD_NAME)                      targetFinprodName,
+				T3.BUSI_PS                                                 busiPs,
+				T1.TRADE_MARKET                                            tradeMarket,
+				T1.ENTRUST_AMT/10000                                       totalAmt,
+				T1.CCY                                                     ccy,
+				T1.VDATE                                                   vdate,
+				T1.MDATE                                                   mdate,
+				NVL(T6.FINISH_AMT,0)                                   	   finishAmt,
+				NVL2(T6.FINISH_AMT ,case when T1.ENTRUST_AMT!=0 then
+				 ROUND(NVL(T6.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4) else 0 end,0) transactioncom,
+				T1.REMARK                                                  remark
+			FROM
+			    WFL_ETR_ENTRUST T1
+			LEFT JOIN
+			    PTL_PORTFOLIO T2
+			ON
+			    T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+			INNER JOIN
+			    WFL_ETR_ENTRUST_ADD T3
+			ON
+			    T1.ENTRUST_ID = T3.ENTRUST_ID
+			INNER JOIN
+			    WFL_ETR_TARGET T4
+			ON
+			    T1.ENTRUST_ID = T4.ENTRUST_ID
+			INNER JOIN
+			    FIN_PRODUCT T5
+			ON
+			    T4.TARGET_FINPROD_ID = T5.FINPROD_ID
+			LEFT JOIN
+			    (
+			        SELECT
+			            ENTRUST_ID,
+			            SUM(FINISH_AMT) AS FINISH_AMT
+			        FROM
+			            ETR_FINISH_STATUS
+			        GROUP BY
+			            ENTRUST_ID) T6
+			ON
+			    T1.ENTRUST_ID = T6.ENTRUST_ID
+			LEFT JOIN SYS_USER T7 ON T1.INV_MANAGER_ID = T7.USER_NAME
+			<where>
+				AND T1.FINPROD_TYPE2 IN
+				<foreach collection="bondList" item="bond" open="(" separator="," close=")" >
+						#{bond,jdbcType=VARCHAR}
+				</foreach>
+	
+			<if test="portfolioIdList != null and portfolioIdList.size() >0">
+				AND (T2.PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+	                            null) OR T2.PORTFOLIO_ID IN (
+	                     </if>
+					#{prot}
+				</foreach>
+				or T2.PARENT_PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+	                            null) OR T2.PARENT_PORTFOLIO_ID IN (
+	                     </if>
+					#{prot}
+				</foreach>
+				)
+			</if>
+			<if test="finprodIdList != null and finprodIdList.size() >0">
+					AND  (T4.TARGET_FINPROD_ID IN
+					<foreach collection="finprodIdList" item="prot" index="index" open="(" separator="," close=")" >
+							<if test="(index % 998) == 0">
+								null) OR T4.TARGET_FINPROD_ID IN (
+							</if>
+						#{prot,jdbcType=VARCHAR}
+					</foreach>
+				)
+			</if>
+			<if test="ccyList != null and ccyList.size() >0">
+					AND T1.CCY IN
+					<foreach collection="ccyList" item="prot" open="(" separator="," close=")" >
+						#{prot}
+					</foreach>
+			</if>
+			<if test="tradeMarketList != null and tradeMarketList.size() >0">
+					AND  T1.TRADE_MARKET IN
+					<foreach collection="tradeMarketList" item="prot" open="(" separator="," close=")" >
+						#{prot,jdbcType=VARCHAR}
+					</foreach>
+			</if>
+			<if test="busiPs != null  and busiPs != ''">
+					AND  T3.BUSI_PS = #{busiPs,jdbcType=VARCHAR}
+			</if>
+			<if test="startDate != null and !startDate.equals('')">
+				AND T1.VDATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
+			</if>
+			<if test="endDate != null and !endDate.equals('')">
+				AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
+			</if>
+			</where>
+		</if>
+		)order by entrustId DESC
+		
 	</select>
 
 	<resultMap id="finprodIdMap"
@@ -356,6 +469,62 @@
 		</where>
 	</select>
 	
+	<select id="selectWflByKey"
+		resultMap="selByKeyResult">
+		SELECT
+		    T1.PORTFOLIO_ID      portfolioId,
+		    T1.ENTRUST_ID      entrustId,
+		    T1.VDATE             vdate,
+		    T1.MDATE             mdate,
+		    T1.AVAILABLE_NUM     objectAvailablePosition,
+			T1.FINPROD_ID        finprodId,
+		    T1.ENTRUST_AMT/10000 totalAmt,
+		    T3.SEC_ACCT_ID       secAcctId,
+		    T3.TERM_TYPE         termType,
+		    T3.SETTLE_SPREED     settleSpeed,
+		    T1.TRADE_MARKET      tradeMarket,
+		    CASE T1.FINPROD_TYPE2
+		        WHEN 'F29'
+		        THEN '05'
+		        WHEN 'F30'
+		        THEN '06'
+		    END            busiPs,
+		    T1.CALENDAR_ID calendarId,
+		    T1.PRICE       busiRate,
+		    T1.CCY         ccy,
+		    T1.REMARK      remark,
+		    T1.COUNTER_ID     counterId,
+			T1.COUNTER_TRADER    counterTrader,
+			T1.CONTACT_INFO       contactInfo,
+			T2.TRADER            trader,
+			T1.INV_MANAGER_ID    invManagerId
+		FROM
+			WFL_ETR_ENTRUST T1
+		LEFT JOIN
+			ETR_DISTRIBUTE T2
+		ON 
+		T1.ENTRUST_ID = T2.ENTRUST_ID
+		INNER JOIN
+		    WFL_ETR_ENTRUST_ADD T3
+		ON
+		    T1.ENTRUST_ID = T3.ENTRUST_ID
+		INNER JOIN
+		    FIN_PRODUCT T5
+		ON
+		   T1.FINPROD_ID  = T5.FINPROD_ID
+		<where>
+		<if test="portfolioId != null and !portfolioId.equals('')">
+			T1.PORTFOLIO_ID=#{portfolioId}
+		</if>
+		<if test="finprodId != null and !finprodId.equals('')">
+			AND T1.FINPROD_ID = #{finprodId}
+		</if>
+		<if test="entrustId !=null and !entrustId.equals('')">
+			AND T1.ENTRUST_ID = #{entrustId}
+		</if>
+		</where>
+	</select>
+	
 	<select id="getAvailableNum" resultType="java.math.BigDecimal">
 		select 100-sum(nvl(PRIN_AMT,0))
 		from FIN_CASH_PLAN 
@@ -373,4 +542,8 @@
 			USER_NAME = #{userName}
 		</where>
 	</select>
+	
+	<delete id="deleteWflwflEtrTarget">
+		DELETE FROM WFL_ETR_TARGET WHERE WORKFLOW_ID = #{workflowId}
+	</delete>
 </mapper>

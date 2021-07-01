@@ -180,6 +180,7 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
         dto.setOperateType(operationType.toString());
         Date sysDate = DateUtil.platDateFromCache();
         dto.setEntrustDate(sysDate);
+        deleteWflEntity(dto);
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doComplete",dto,
@@ -205,6 +206,22 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
                bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
          }
      }
+     
+     @Override
+    public void doBack(EtrSecLendDto entity) {
+    	 deleteWflEntity(entity);
+    }
+     
+    
+     
+     /**
+      * 删除流程中数据和流水
+      * @param dto
+      */
+     public void deleteWflEntity(EtrSecLendDto dto) {
+    	 restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME+"/EtrSecLend/doDeleteFlow", 
+    			 dto, Void.class);
+     }
 
      /**
       *
@@ -212,6 +229,7 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
       */
      @Override
      public void doUpdate(EtrSecLendDto dto){
+    	 deleteWflEntity(dto);
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doInsert",dto,
              Integer.class);
