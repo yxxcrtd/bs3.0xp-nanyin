@@ -10,40 +10,49 @@
 
 package com.joyintech.tams.invest.entrust.etrwtspotex.service;
 
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
+import com.joyintech.tams.invest.entrust.etroption.dto.EtrOptionDto;
+import com.joyintech.tams.invest.entrust.etrwtspotex.dto.EtrWtSpotexDto;
+import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.entrust.etrwtfxswap.dto.EtrWtFxswapDto;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.export.ExportParam;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.system.base.entity.SysUploadFileInfo;
-import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
-import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.entrust.etrwtspotex.dto.EtrWtSpotexDto;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.service.BaseProcessService;
 
 /**
  * 拆解委托画面端service 〈功能详细描述〉
@@ -171,13 +180,15 @@ public class EtrWtSpotexService extends CommonExportService<EtrWtSpotexDto> impl
      */
     @Override
     public void doComplete(EtrWtSpotexDto dto, OperationType operationType) {
-        dto.setOperateType(operationType.toString());
-        Date sysDate = DateUtil.platDateFromCache();
-        dto.setEntrustDate(sysDate);
-        basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
-        restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrWtSpotex/doComplete", dto,
-            Integer.class);
+        if (doDeleteFlow(dto.getWorkflowId())){
+            dto.setOperateType(operationType.toString());
+            Date sysDate = DateUtil.platDateFromCache();
+            dto.setEntrustDate(sysDate);
+            basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
+            restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrWtSpotex/doComplete", dto,
+                    Integer.class);
+        }
     }
 
     /**
@@ -188,6 +199,10 @@ public class EtrWtSpotexService extends CommonExportService<EtrWtSpotexDto> impl
         dto.setOperateType(type.toString());
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrWtSpotex/doInsert", dto, Integer.class);
+        
+        if ("submit".equals(dto.getOperateType())) {
+            doInsertFlow(dto);
+        }
     }
 
     /**
@@ -197,6 +212,35 @@ public class EtrWtSpotexService extends CommonExportService<EtrWtSpotexDto> impl
     public void doUpdate(EtrWtSpotexDto dto) {
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrWtSpotex/doInsert", dto, Integer.class);
+
+        if (!StringUtil.equals("revoke", dto.getOperateType())
+                && !StringUtil.equals("delete", dto.getOperateType())) {
+
+            // 执行通用方法删除并重新插入流程指令数据
+            boolean isSuccess = doDeleteFlow(dto.getWorkflowId()) && doInsertFlow(dto);
+
+            if(isSuccess){
+                ProcessMark newEntity;
+                try {
+                    newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrOptionDto.class, true);
+                    newEntity.setWorkflowId(dto.getWorkflowId());
+                    newEntity.setStatus(dto.getStatus());
+                    newEntity.setBusinessData(JsonUtils.object2Json(dto));
+                    // 操作留痕表
+                    WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+                } catch (Exception e){
+                    throw new RuntimeException("数据留痕失败", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void doBack(EtrWtSpotexDto dto) {
+        if (doDeleteFlow(dto.getWorkflowId())){
+            restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doBack",dto,
+                    Boolean.class);
+        }
     }
 
     /**
@@ -332,5 +376,53 @@ public class EtrWtSpotexService extends CommonExportService<EtrWtSpotexDto> impl
         else {
             return null;
         }
+    }
+
+    private boolean doInsertFlow(EtrWtSpotexDto dto){
+        boolean isSuccess = false;
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // EtrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
+            etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+            etrEntrust.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_即期.getValue());
+            entity.setEtrEntrust(etrEntrust);
+
+            // EtrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            etrEntrustAdd.setAssetType(DictCodeListExt2.平安资产类型_外汇即期.getValue());
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 附件 MstFileInputParameter
+            MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
+            mstFileInputParameter.setFileList(dto.getFileArray());
+            mstFileInputParameter.setBussinessId(dto.getEntrustId());
+            entity.setMstFileInputParameter(mstFileInputParameter);
+
+            // WorkflowId
+            entity.setWorkFlowId(dto.getWorkflowId());
+
+            isSuccess = restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
+                    Boolean.class);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+        return isSuccess;
+    }
+
+    private boolean doDeleteFlow(String workflowId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("workflowId", workflowId);
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doDeleteEtrFlow", param,
+                Boolean.class);
+
     }
 }
