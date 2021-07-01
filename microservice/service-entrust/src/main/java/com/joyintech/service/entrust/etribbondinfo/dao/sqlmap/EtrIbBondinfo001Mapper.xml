@@ -242,8 +242,8 @@
             AND T1.ENTRUST_ID = #{entrustId}
         </if>
         <if test="entrustStartDate!=null and entrustStartDate!='' and  entrustEndDate!=null and entrustEndDate!='' ">
-            <![CDATA[ AND to_date(T1.ENTRUST_DATE,'yyyy-mm-dd')  >= to_date(#{entrustStartDate},'yyyy-mm-dd') ]]>
-            <![CDATA[ AND to_date(T1.ENTRUST_DATE,'yyyy-mm-dd') <= to_date(#{entrustEndDate},'yyyy-mm-dd') ]]>
+            <![CDATA[ AND T1.ENTRUST_DATE  >= to_date(#{entrustStartDate},'yyyy-mm-dd') ]]>
+            <![CDATA[ AND T1.ENTRUST_DATE <= to_date(#{entrustEndDate},'yyyy-mm-dd') ]]>
         </if>
     </sql>
     <sql id="onlyWtfEtrEntrust">

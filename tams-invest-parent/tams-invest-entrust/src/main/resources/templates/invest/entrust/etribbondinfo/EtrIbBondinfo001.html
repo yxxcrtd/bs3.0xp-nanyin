@@ -163,10 +163,21 @@
 										<label class="layui-form-label form-lable"
 											   data-th-text="#{EtrIbBondinfo001.ps}">交易方向</label>
 										<div class="layui-input-inline input-inline">
-											<select type="text" id="ps" name="ps" class="layui-input form-input input-select" placeholder="请输入内容"
+<!--											<select type="text" id="EtrIbBondinfo001_query_ps" name="ps" class="layui-input form-input input-select" placeholder="请输入内容"-->
+<!--													data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--													data-th-data-result="${PS}" >-->
+<!--											</select>-->
+											<select
+													type="text"
+													id="ps"
+													name="ps"
+													allowClear="true"
+													class="layui-input form-input input-select"
+													data-th-data-result="${PS}"
+													placeholder="请输入内容"
 													data-th-placeholder="#{SysCommon.placeholder}"
-													data-th-data-result="${PS}" >
-											</select>
+													formatoption="true"
+											></select>
 										</div>
 									</div>
 									<div class="sgePortDiv">
@@ -180,7 +191,7 @@
 									<div class="sgePortDiv">
 										<label class="layui-form-label form-lable" data-th-utext="#{EtrInvestAllInfo001.invManagerId}">投资经理</label>
 										<div class="layui-input-inline input-inline">
-											<select type="text" id="EtrIbBondinfo001_queryDialog_repManager" name="repManager"
+											<select type="text" id="repManager" name="repManager"
 													class="layui-input form-input input-select"
 													allowClear="true" placeholder="请输入内容"
 													data-th-placeholder="#{SysCommon.placeholder}"
@@ -192,9 +203,17 @@
 										<label class="layui-form-label form-lable"
 											   data-th-text="#{EtrTransactionDetail001.entrustId}">指令代码</label>
 										<div class="layui-input-inline input-inline">
-											<select  type="text" id="entrustId" name="entrustId" class="layui-input form-input input-select" maxlength="60"
-													 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-													 data-th-data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryEntrustInfoList?noLoginUserId=true}" formatoption = "false"></select>
+<!--											<select  type="text" id="entrustId" name="entrustId" class="layui-input form-input input-select" maxlength="60"-->
+<!--													 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--													 data-th-data-url="@{/invest/trade/investtrade/investdealquery/TrdInvestDealQuery001/getEntrustIds}" -->
+<!--													 formatoption = "false"></select>-->
+											<input type="text" id="entrustId" name="entrustId"
+												   class="layui-input form-input input-lenovoselect" maxlength="50"
+												   data-th-data-url="@{/invest/trade/investtrade/investdealquery/TrdInvestDealQuery001/getEntrustIds}"
+												   data-idfield="code" data-th-data-effectivefields="code"
+												   data-th-data-effectivefieldsalias='|{"code":""}|'
+												   allowClear="true" placeholder="请输入内容"
+												   data-th-placeholder="#{SysCommon.placeholder}"/>
 										</div>
 									</div>
 									<div class="sgePortDiv">
@@ -284,7 +303,7 @@
 </div>
 <div layout:fragment="script">
 	<script
-			data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfo001.js?new1}"
+			data-th-src="@{/js/invest/entrust/etribbondinfo/EtrIbBondinfo001.js?new}"
 			type="text/javascript"></script>
 	<script th:inline="javascript" type="text/javascript">
 		var FINPROD_TYPE_TG_F01 = /*[[${FINPROD_TYPE_TG_F01}]]*/'';

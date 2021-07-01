@@ -242,7 +242,10 @@
         });
         // 指令管理tab-->查询dialog 重置
         $('#EtrIbBondinfo001_queryDialog_btn_seachReset').click(function() {
-            $("#entrustOrder_portfolioId").empty(); // 重置组合名称
+            $("#entrustOrder_portfolioId").val('').trigger("change");
+            $("#searchForm_zqzy #ps").val('').trigger("change");
+            $("#searchForm_zqzy #settleSpeed").val('').trigger("change");
+            $("#searchForm_zqzy #repManager").val('').trigger("change");
             $('#searchForm_zqzy')[0].reset();
         });
         // 指令管理tab-->委托单选按钮查询
