@@ -819,9 +819,9 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 creditLines.setUpdateTime(model.getUpdateTime());
                 creditLines.setUpdateUser(model.getUpdateUser());
                 String institutionCode = "";
-                if(MultilevelDataAuthorityUtil.isEnabled()){
+//                if(MultilevelDataAuthorityUtil.isEnabled()){
                     institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
-                }
+//                }
                 creditLines.setInstitutionCode(institutionCode);
                 hapCreditAmt = extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(), institutionCode);
                 // 实际占用额度
