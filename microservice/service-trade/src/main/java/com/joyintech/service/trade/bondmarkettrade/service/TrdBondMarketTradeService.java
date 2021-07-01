@@ -395,6 +395,7 @@ public class TrdBondMarketTradeService extends BaseService {
             if (finProduct != null){
                 finProduct.setFinprodId(newFinprodId);
                 finProduct.setFinprodMarketId(dto.getAppearMarketId());
+                finProduct.setFinprodName(trdBondMarkettTradeMapper.getInfBondName(dto.getAppearMarketId()));
             }
             
             if (finProductAdd != null){

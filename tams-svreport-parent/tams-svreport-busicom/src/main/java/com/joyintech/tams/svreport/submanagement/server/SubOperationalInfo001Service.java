@@ -3497,6 +3497,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				dictIndex.add(i);
 			}
 		}
+
+		//添加日期类型默认字段 减少处理  ,从业人员登记因无其他入口.不需要ROW_DATE字段 leipeng
+		firstData.add("ROW_DATE");
 		dataList.add(0, firstData);
 		// 后续数据处理
 		int size = originalDataList.size();
@@ -3566,6 +3569,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					data.add(0, "修改");
 				}
 			}
+
+			data.add(DateUtil.getCurrentDate());
+
 			dataList.add(i, data);
 		}
 		return dataList;
