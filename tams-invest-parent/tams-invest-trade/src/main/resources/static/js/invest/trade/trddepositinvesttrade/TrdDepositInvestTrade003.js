@@ -122,7 +122,7 @@
         if (checkData.ps == 'T01' && checkData.finprodId != null && checkData.ccy != null && checkData.tradeDate != null){
             ajaxJsonSync(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade003/getIssueAmt', checkData, function(resultc) {
                 if(resultc.data != null && resultc.data != ''){
-                    if(resultc.data <= checkData.prinAmt){
+                    if(Number(resultc.data) <= Number(checkData.prinAmt)){
                         isOver = true;
                     }
                 }
