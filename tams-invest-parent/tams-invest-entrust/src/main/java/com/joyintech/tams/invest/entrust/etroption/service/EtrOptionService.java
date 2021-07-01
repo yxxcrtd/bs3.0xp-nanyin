@@ -296,8 +296,10 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
 
     @Override
     public void doBack(EtrOptionDto dto) {
-        restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doBack",dto,
-                Boolean.class);
+        if (doDeleteFlow(dto.getWorkflowId())){
+            restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doBack",dto,
+                    Boolean.class);
+        }
     }
 
     /**
