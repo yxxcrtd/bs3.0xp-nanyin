@@ -174,12 +174,12 @@ public class PbcClassicsUtil {
 	    }
 	    return (char) (number+'0');
 	}
-	public static void  main(String args[] ) {
-        System.out.println(PbcClassicsUtil.theLuhnMod10("C10307Z1900003"));
-//        System.out.println(Character.highSurrogate(26));
-//        System.out.println((char) (1+'0'));
-//        System.out.println(letterToNum(String.valueOf((char) 'i')));
-//		  System.out.println(letterToNumber("B"));
-//        System.out.println(String.format("%05d",99L));
-	}
+//	public static void  main(String args[] ) {
+//        System.out.println(PbcClassicsUtil.theLuhnMod10("C10307Z1900003"));
+////        System.out.println(Character.highSurrogate(26));
+////        System.out.println((char) (1+'0'));
+////        System.out.println(letterToNum(String.valueOf((char) 'i')));
+////		  System.out.println(letterToNumber("B"));
+////        System.out.println(String.format("%05d",99L));
+//	}
 }

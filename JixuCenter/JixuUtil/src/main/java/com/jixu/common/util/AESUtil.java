@@ -95,17 +95,17 @@ public class AESUtil {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		// 修改为使用AES-CBC加密模式，key需要为16位。
-		// 需要加密的字串
-		String pwd = null;
-		// 加密
-		System.out.println("输入的字符串是: " + pwd);
-		String enString = AESUtil.Encrypt(pwd);
-		System.out.println("加密后字符串是: " + enString);
-
-		// 解密
-		String DeString = AESUtil.Decrypt(enString);
-		System.out.println("解密后字符串是: " + DeString);
-	}
+//	public static void main(String[] args) throws Exception {
+//		// 修改为使用AES-CBC加密模式，key需要为16位。
+//		// 需要加密的字串
+//		String pwd = null;
+//		// 加密
+//		System.out.println("输入的字符串是: " + pwd);
+//		String enString = AESUtil.Encrypt(pwd);
+//		System.out.println("加密后字符串是: " + enString);
+//
+//		// 解密
+//		String DeString = AESUtil.Decrypt(enString);
+//		System.out.println("解密后字符串是: " + DeString);
+//	}
 }

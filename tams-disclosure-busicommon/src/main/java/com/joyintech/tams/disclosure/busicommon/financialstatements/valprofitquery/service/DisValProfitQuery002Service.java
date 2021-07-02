@@ -339,12 +339,12 @@ public class DisValProfitQuery002Service extends CommonExportService<DisValProfi
 		return retMap;
 	}
 
-	public static void main(String[] args) {
-		Map<String,String> map1 = new HashMap<String,String>();
-		map1.put("1", "123");
-		Map<String,String> map2 = map1;
-		map2.remove("1");
-		System.out.println(map1.size());
-		System.out.println(map2.size());
-	}
+//	public static void main(String[] args) {
+//		Map<String,String> map1 = new HashMap<String,String>();
+//		map1.put("1", "123");
+//		Map<String,String> map2 = map1;
+//		map2.remove("1");
+//		System.out.println(map1.size());
+//		System.out.println(map2.size());
+//	}
 }

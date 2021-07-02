@@ -152,10 +152,10 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
 //        return holidaymarket001Mapper.initHolid(param);
     }
 
-    public static void main(String[] args) {
-
-
-    }
+//    public static void main(String[] args) {
+//
+//
+//    }
 
     /**
      * 导入文件

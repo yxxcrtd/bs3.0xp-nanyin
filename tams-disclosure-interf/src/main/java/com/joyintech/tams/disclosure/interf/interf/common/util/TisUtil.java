@@ -333,16 +333,16 @@ public class TisUtil {
 
    }
 
-	/** */
-	/**
-	 * main方法测试
-	 * 
-	 * @param s
-	 * @throws IOException
-	 */
-	public static void main(String[] s) throws IOException {
-
-	}
+//	/** */
+//	/**
+//	 * main方法测试
+//	 *
+//	 * @param s
+//	 * @throws IOException
+//	 */
+//	public static void main(String[] s) throws IOException {
+//
+//	}
 //	public static void main(String[] args) throws MalformedURLException,Exception{
 //		Service s=new ObjectServiceFactory().create(IHelloWorldService.class);
 //	}

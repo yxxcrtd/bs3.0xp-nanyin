@@ -1527,18 +1527,18 @@ public class CommonCodeCheckTmpBatchService extends FileImpService{
     	return Pattern.matches("^-?[0-9]+.?[0-9]*$", str);
     }
 	
-	public static void main(String[] args) {
-		String  str="张文芳资产管理计划测试某些字段的最大长度张文芳资产管理计划测试某些字段的最大长度张文芳资产管理计划测试某些字段的最大长度张文芳资产管理计划测试某些字段的最大长度张文芳资产管理计划测试某些字段的最大长度。";
-		// 数据对象
-				Map<String, String> data = new HashMap<>();
-				// 规则对象
-				CheckElement rule = new CheckElement();
-				rule.setSrcproperty("SUBSCRIBEAMT");
-				rule.setObjvalue("257");
-				rule.setNullable("Y");
-				data.put("SUBSCRIBEAMT", str);
-				if (!BaseCheckLib.lessThanCharLength(data, rule)){
-					System.out.println("123");
-					}
-	}
+//	public static void main(String[] args) {
+//		String  str="张文芳资产管理计划测试某些字段的最大长度张文芳资产管理计划测试某些字段的最大长度张文芳资产管理计划测试某些字段的最大长度张文芳资产管理计划测试某些字段的最大长度张文芳资产管理计划测试某些字段的最大长度。";
+//		// 数据对象
+//				Map<String, String> data = new HashMap<>();
+//				// 规则对象
+//				CheckElement rule = new CheckElement();
+//				rule.setSrcproperty("SUBSCRIBEAMT");
+//				rule.setObjvalue("257");
+//				rule.setNullable("Y");
+//				data.put("SUBSCRIBEAMT", str);
+//				if (!BaseCheckLib.lessThanCharLength(data, rule)){
+//					System.out.println("123");
+//					}
+//	}
 }

@@ -143,29 +143,29 @@ public class ChbSensitiveInfoUtil {
 	        return str.replaceAll(" ", "");
 	    }
     
-    public static void main(String[] args) {
-        String str = "鿕";
-        System.out.println(unicodeEncode(str));
-        System.out.println(str.matches(CHINESE_REGEX));
-        System.out.println(str.matches(BaseCheckLib.PATTERN_ALL));
-        
-        String dataStr = "\\u9fd5";
-        System.out.println(decodeUnicode(dataStr));
-        
-        String teString = "(";
-        System.out.println(teString.matches(BaseCheckLib.PATTERN_ALL));
-        
-        String testStr = "刘二二二通";
-        System.out.println(handle汉字变形(testStr));
-        try {
-            String ss=replaceIdNoToMd5("131000000104150829XX","131000000104150829");
-            System.out.println(ss);
-        }
-        catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        String str = "鿕";
+//        System.out.println(unicodeEncode(str));
+//        System.out.println(str.matches(CHINESE_REGEX));
+//        System.out.println(str.matches(BaseCheckLib.PATTERN_ALL));
+//
+//        String dataStr = "\\u9fd5";
+//        System.out.println(decodeUnicode(dataStr));
+//
+//        String teString = "(";
+//        System.out.println(teString.matches(BaseCheckLib.PATTERN_ALL));
+//
+//        String testStr = "刘二二二通";
+//        System.out.println(handle汉字变形(testStr));
+//        try {
+//            String ss=replaceIdNoToMd5("131000000104150829XX","131000000104150829");
+//            System.out.println(ss);
+//        }
+//        catch (UnsupportedEncodingException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//    }
     
     
     /***

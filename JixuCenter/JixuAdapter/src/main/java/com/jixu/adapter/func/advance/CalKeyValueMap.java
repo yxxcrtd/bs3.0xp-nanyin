@@ -68,16 +68,16 @@ public class CalKeyValueMap extends AdditionFunc{
 		return null;
 	}
 	
-	public static void main(String[] args) {
-		AdditionFunc aa=new CalKeyValueMap();
-		HashMap<String, Object> map=new HashMap<String, Object>();
-		map.put("A", "111");
-		
-		try {
-			Object bbb=aa.calFunc("[A] | (111:222,222:333,333:444)", map);
-			System.out.println(bbb.toString());
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		AdditionFunc aa=new CalKeyValueMap();
+//		HashMap<String, Object> map=new HashMap<String, Object>();
+//		map.put("A", "111");
+//
+//		try {
+//			Object bbb=aa.calFunc("[A] | (111:222,222:333,333:444)", map);
+//			System.out.println(bbb.toString());
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

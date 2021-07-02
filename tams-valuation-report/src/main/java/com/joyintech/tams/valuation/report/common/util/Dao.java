@@ -48,45 +48,45 @@ public class Dao {
 
 	  }
 
-	public static void main(String[] args) {
-		//读取配置文件连接信息
-		Properties prop = new Properties();
-		InputStream is = null;
-		Connection conn = null;
-		try {
-			is = Dao.class.getClassLoader().getResourceAsStream("application.properties");
-			prop.load(is);
-			//加载驱动
-			Class.forName(prop.getProperty("driver"));
-			//获取地址
-			String url = prop.getProperty("url");
-			//获取用户名
-			String userName = prop.getProperty("userName");
-			//获取密码
-			String passWord = prop.getProperty("passWord");
-
-			//获取连接对象
-			conn = DriverManager.getConnection(url, userName, passWord);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally {
-			if (conn!=null) {
-				try {
-					conn.close();
-				}
-				catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if(is != null){
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+//	public static void main(String[] args) {
+//		//读取配置文件连接信息
+//		Properties prop = new Properties();
+//		InputStream is = null;
+//		Connection conn = null;
+//		try {
+//			is = Dao.class.getClassLoader().getResourceAsStream("application.properties");
+//			prop.load(is);
+//			//加载驱动
+//			Class.forName(prop.getProperty("driver"));
+//			//获取地址
+//			String url = prop.getProperty("url");
+//			//获取用户名
+//			String userName = prop.getProperty("userName");
+//			//获取密码
+//			String passWord = prop.getProperty("passWord");
+//
+//			//获取连接对象
+//			conn = DriverManager.getConnection(url, userName, passWord);
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		finally {
+//			if (conn!=null) {
+//				try {
+//					conn.close();
+//				}
+//				catch (SQLException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			if(is != null){
+//				try {
+//					is.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
 }

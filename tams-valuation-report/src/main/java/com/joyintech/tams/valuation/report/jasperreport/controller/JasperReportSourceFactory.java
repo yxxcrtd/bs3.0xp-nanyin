@@ -13,8 +13,8 @@ public class JasperReportSourceFactory {
         		new Date((DateUtil.parse("2018-06-30")).getTime()),"pAjZ_TWO");
     }
     
-    public static void main(String[] args) throws Exception {
-    	createDatasource();
-    }
+//    public static void main(String[] args) throws Exception {
+//    	createDatasource();
+//    }
 }
     
