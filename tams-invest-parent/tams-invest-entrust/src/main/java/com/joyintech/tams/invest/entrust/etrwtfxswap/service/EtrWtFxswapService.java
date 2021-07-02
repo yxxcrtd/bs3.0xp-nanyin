@@ -25,6 +25,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.entrust.etroption.dto.EtrOptionDto;
@@ -353,6 +354,7 @@ public class EtrWtFxswapService extends CommonExportService<EtrWtFxswapDto> impl
             if(iPlatformDate != null){
                 etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             }
+            etrEntrust.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
             etrEntrust.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_掉期.getValue());
             etrEntrust.setPs(dto.getTradePs());
             etrEntrust.setCcy(dto.getTradeCcy());

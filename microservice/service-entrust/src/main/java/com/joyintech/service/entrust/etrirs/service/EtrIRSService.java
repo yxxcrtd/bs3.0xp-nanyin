@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -491,7 +492,7 @@ public class EtrIRSService extends BaseService<EtrIRSDto> {
             BeanUtil.copyProperties(etrEntrust, dto);
             BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
             etrEntrust.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
-            etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+            etrEntrust.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
             etrEntrust.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_利率互换.getValue());
             etrEntrust.setPs(DictCodeList.交易方向_买入.getValue());
             //设置金额 数量  乘以一万

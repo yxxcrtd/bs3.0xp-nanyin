@@ -388,7 +388,7 @@ public class EtrWtSpotexService extends CommonExportService<EtrWtSpotexDto> impl
             BeanUtil.copyProperties(etrEntrust, dto);
             BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
             etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
-            etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+            etrEntrust.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
             etrEntrust.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_即期.getValue());
             entity.setEtrEntrust(etrEntrust);
 
