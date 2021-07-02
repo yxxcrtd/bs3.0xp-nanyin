@@ -3,7 +3,10 @@ package com.joyintech.tams.invest.asset.plan.planProfit.validator;
 import java.util.ArrayList;
 import java.util.List;
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,6 +41,8 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 
 	@Autowired
 	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+	@Autowired
+	private IPlatformDate iPlatformDate;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -57,6 +62,10 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 	            errorList.add(new ValidMessage("vdate",getMessage("BUSS_COM_E_0035",getMessage("FinPlanProfitAsset002.vdate"),
 	                getMessage("FinPlanProfitAsset002.mdate"))));
 	        }
+			if (dto.getMdate()!=null && dto.getMdate().compareTo(iPlatformDate.getSysDate()) < 0) {
+				errorList.add(new ValidMessage("mdate",
+						"终止日期不能小于平台当前日期。"));
+			}
 	        if (!GlobalConstant.DETAIL_PAGE_MODEL_EDIT.equals(dto.getPageModel())) {
 				//非母计划  买断利率必填
 				if (StringUtil.equals(dto.getParentPlan(), DictCodeList.是否_否.getValue())) {
