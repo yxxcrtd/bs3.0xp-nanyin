@@ -22,9 +22,10 @@
 			<Cell order="18" name="城建税附加税">constructionTax</Cell>
 			<Cell order="19" name="教育税附加税">educationTax</Cell>
 			<Cell order="20" name="地方教育费附加税">placeeducationTax</Cell>
-			<Cell order="21" name="附加税">additionalTax</Cell>
-			<Cell order="22" name="税费总额">taxTotal</Cell>
-			<Cell order="23" name="收款账户">actName</Cell>
+			<Cell order="21" name="水利基金附加税">waterTrafficTax</Cell>
+			<Cell order="22" name="附加税">additionalTax</Cell>
+			<Cell order="23" name="税费总额">taxTotal</Cell>
+			<Cell order="24" name="收款账户">actName</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>
