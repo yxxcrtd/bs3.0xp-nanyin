@@ -121,6 +121,13 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
             errorList.add(new ValidMessage("请选择交易类型！"));
         }
         // TISHKBS-1688 add by jiangpeng on 20210429 end
+        //判断交易方向是产品到期 和 产品收益类型 是货币型 判断收益金额不为空
+        if(DictCodeList.交易方向_产品到期.getValue().equals(dto.getDealType())
+                && DictCodeList.收益类型_货币型.getValue().equals(dto.getProfitType())){
+            if(dto.getExpireProfit03()==null){//FinNetProductDuration.profitAmt
+                errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0038",this.getMessage("FinNetProductDuration.profitAmt"))));
+            }
+        }
         
         if (WorkFlowUtil.isNotFromToDoList()) {
 	        //产品不能存在其他存续期交易
