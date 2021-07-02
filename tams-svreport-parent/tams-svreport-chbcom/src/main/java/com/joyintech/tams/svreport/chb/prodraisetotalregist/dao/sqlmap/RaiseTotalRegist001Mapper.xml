@@ -393,12 +393,7 @@
 	select 
     sub.REGIST_SEQNO registSeqno,
     sub.PROD_ID prodId,
-    <if test="model_type != null">
-		info.REG_CODE issuePartyId, /*发行机构代码*/
-	  </if>
-	  <if test="model_type == null">
-    	sub.ISSUE_PARTY_ID issuePartyId,
-	  </if>
+    decode(info.REG_CODE,null, sub.ISSUE_PARTY_ID) issuePartyId, /*发行机构代码*/
     sub.SINGLE_TOTAL singleTotal,
     sub.LEGAL_TOTAL legalTotal,
     sub.UNLEGAL_TOTAL unlegalTotal,
