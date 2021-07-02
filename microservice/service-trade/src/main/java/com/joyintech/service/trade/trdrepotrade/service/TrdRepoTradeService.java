@@ -320,7 +320,7 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
         BaseEtrInvestInfoDto resultDto = baseEtrInvestInfoService.queryActiveMandate(entrustId);
         if (resultDto != null && resultDto.getEtrEntrust() != null) {
             // 委托数量中扣除已完成额度
-            if (!StringUtil.isEmptyList(resultDto.getEtrFinishStatusList())) {
+            /*if (!StringUtil.isEmptyList(resultDto.getEtrFinishStatusList())) {
                 BigDecimal 已完成额度 = BigDecimal.ZERO;
                 for (EtrFinishStatus etrFinishStatus : resultDto.getEtrFinishStatusList()) {
                     已完成额度 = ArithmeticUtil.doAdd(etrFinishStatus.getFinishAmt(),已完成额度);
@@ -328,7 +328,7 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
 
                 resultDto.getEtrEntrust().setEntrustAmt(
                         ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustAmt(), 已完成额度));
-            }
+            }*/
             // 查询金融产品名称
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(resultDto.getEtrEntrust().getFinprodId());
             if (finProduct != null) {
