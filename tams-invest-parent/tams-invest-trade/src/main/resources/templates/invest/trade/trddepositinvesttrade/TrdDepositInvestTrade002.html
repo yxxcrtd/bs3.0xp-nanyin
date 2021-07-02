@@ -175,7 +175,7 @@
 										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdDepositInvestTrade001.assetProvider}">资产推荐方</label>
 										<div class="layui-input-inline input-inline">
 											<select type="text" id="assetProvider" name="assetProvider" parentIds="finprodName"
-													class="layui-input form-input input-select" placeholder="请输入内容" th:initValue="${entity?.assetProvider}"
+													class="layui-input form-input input-select hidden" placeholder="请输入内容" th:initValue="${entity?.assetProvider}"
 													data-th-data-url = "@{/invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002/getAssetProvider}"
 													data-th-placeholder="#{SysCommon.placeholder}"
 													allowClear="true" ></select>
