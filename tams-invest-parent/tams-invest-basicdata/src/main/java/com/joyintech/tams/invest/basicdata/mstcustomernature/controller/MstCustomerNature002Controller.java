@@ -252,10 +252,10 @@ public class MstCustomerNature002Controller extends BaseController {
                 listCustomerCharater.add((String)map.get("flag_09"));
             }
             //将客户代码加入list中，不能重复
-            if (!listCustomerId.contains(mstCustomerNatureDto.getCustomerId())) {
+            if (listCustomerId.size()<=7 &&  !listCustomerId.contains(mstCustomerNatureDto.getCustomerId()) ) {
                 listCustomerId.add(mstCustomerNatureDto.getCustomerId());
             }
-            if (!listCustomerName.contains(mstCustomerNatureDto.getCustomerName())) {
+            if (listCustomerName.size()<=7 && !listCustomerName.contains(mstCustomerNatureDto.getCustomerName())) {
                 listCustomerName.add(mstCustomerNatureDto.getCustomerName());
             }
             //将客户类型code值改成name值
