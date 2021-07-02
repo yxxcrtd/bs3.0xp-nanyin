@@ -158,6 +158,11 @@
 	            }
 	        }
             }
+            //在检查指令参数是否变化之前增加对组合分配是否为空的判断
+            if(table.getAllRows().length == 0){
+                Joyin.error(JoyinUtil.getMessage("FIN_PROD_E_0123","组合分配"));
+                return ;
+            }
 	        // 检查生成划款指令参数是否发生变化
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
 	            return;
