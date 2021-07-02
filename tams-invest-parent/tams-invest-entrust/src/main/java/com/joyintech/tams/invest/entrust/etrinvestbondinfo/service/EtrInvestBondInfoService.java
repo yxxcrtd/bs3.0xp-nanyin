@@ -1009,13 +1009,8 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 }
             }else {
                 DictCodeListExt3 basisDict3 = DictCodeListExt3.from(DictCode.计息基础, basis);
-                if (basisDict3 != null){
-                    switch (basisDict3) {
-                        case 计息基础_30U_360:
-                            secInfoModel.setBasis(Basis._30U_360);
-                            break;
-                    }
-
+                if (basisDict3 != null && basisDict3.equals(DictCodeListExt3.计息基础_30U_360)){
+                    secInfoModel.setBasis(Basis._30U_360);
                 }
             }
         }
