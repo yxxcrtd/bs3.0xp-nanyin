@@ -2145,6 +2145,7 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
             resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));
         }
 
+        resultDto.setData("noInfoShowOut");
         return resultDto;
     }
 
