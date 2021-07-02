@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.entrust.etrwtfxswap.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,10 +19,21 @@ import java.util.Map;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
+import com.joyintech.tams.invest.entrust.etroption.dto.EtrOptionDto;
 import com.joyintech.tams.invest.entrust.etrseclend.dto.EtrSecLendDto;
+import com.joyintech.tams.invest.entrust.etrwtspotex.dto.EtrWtSpotexDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +45,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -68,10 +77,13 @@ public class EtrWtFxswapService extends CommonExportService<EtrWtFxswapDto> impl
 
     @Autowired
     private CommonBusinessService commonBusinessService;
+
+    @Autowired(required=false)
+    private IPlatformDate iPlatformDate;
     /**
      * 项目类委托分页查询 <功能详细描述>
      * 
-     * @param pageParam
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -166,7 +178,7 @@ public class EtrWtFxswapService extends CommonExportService<EtrWtFxswapDto> impl
     /**
      * 撤回委托 <功能详细描述>
      *
-     * @param entity
+     * @param dto
      * @see
      * @since 1.0
      */
@@ -193,13 +205,15 @@ public class EtrWtFxswapService extends CommonExportService<EtrWtFxswapDto> impl
      */
     @Override
     public void doComplete(EtrWtFxswapDto dto, OperationType operationType) {
-        dto.setOperateType(operationType.toString());
-        Date sysDate =  CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
-        dto.setEntrustDate(sysDate);
-        basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
-        restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrWtFxswap/doComplete", dto,
-            Integer.class);
+        if (doDeleteFlow(dto.getWorkflowId())){
+            dto.setOperateType(operationType.toString());
+            Date sysDate =  CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+            dto.setEntrustDate(sysDate);
+            basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
+            restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrWtFxswap/doComplete", dto,
+                    Integer.class);
+        }
     }
     /**
      * 
@@ -211,6 +225,10 @@ public class EtrWtFxswapService extends CommonExportService<EtrWtFxswapDto> impl
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrWtFxswap/doInsert",dto,
              Integer.class);
+
+         if ("submit".equals(dto.getOperateType())) {
+             doInsertFlow(dto);
+         }
      }
 
      /**
@@ -222,8 +240,35 @@ public class EtrWtFxswapService extends CommonExportService<EtrWtFxswapDto> impl
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrWtFxswap/doInsert",dto,
              Integer.class);
+
+         if (!StringUtil.equals("revoke", dto.getOperateType())
+                 && !StringUtil.equals("delete", dto.getOperateType())) {
+
+             // 执行通用方法删除并重新插入流程指令数据
+             boolean isSuccess = doDeleteFlow(dto.getWorkflowId()) && doInsertFlow(dto);
+
+             if(isSuccess){
+                 ProcessMark newEntity;
+                 try {
+                     newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrOptionDto.class, true);
+                     newEntity.setWorkflowId(dto.getWorkflowId());
+                     newEntity.setStatus(dto.getStatus());
+                     newEntity.setBusinessData(JsonUtils.object2Json(dto));
+                     // 操作留痕表
+                     WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+                 } catch (Exception e){
+                     throw new RuntimeException("数据留痕失败", e);
+                 }
+             }
+         }
      }
-     /**
+ 
+    @Override
+    public void doBack(EtrWtFxswapDto dto) {
+        doDeleteFlow(dto.getWorkflowId());
+    }
+
+    /**
      *
      * 删除投资委托
      * <功能详细描述>
@@ -239,7 +284,7 @@ public class EtrWtFxswapService extends CommonExportService<EtrWtFxswapDto> impl
     /**
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -261,7 +306,7 @@ public class EtrWtFxswapService extends CommonExportService<EtrWtFxswapDto> impl
     /**
      * 货币账户查询
      * <功能详细描述>
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -296,4 +341,86 @@ public class EtrWtFxswapService extends CommonExportService<EtrWtFxswapDto> impl
             return null;
         }
     }
+
+    private boolean doInsertFlow(EtrWtFxswapDto dto){
+        boolean isSuccess = false;
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+        try {
+            // EtrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            if(iPlatformDate != null){
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            etrEntrust.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_掉期.getValue());
+            etrEntrust.setPs(dto.getTradePs());
+            etrEntrust.setCcy(dto.getTradeCcy());
+            etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
+            etrEntrust.setEntrustAmt(dto.getTradeAmt());
+            if(StringUtil.isNotEmpty(dto.getTradeCcyAvailablePosition())){
+                etrEntrust.setProAvailableCash(dto.getTradeCcyAvailablePosition());
+            }
+            if(StringUtil.isNotEmpty(dto.getSwapsPoint())){
+                etrEntrust.setPrice(dto.getSwapsPoint());
+            }
+            entity.setEtrEntrust(etrEntrust);
+
+            // EtrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            etrEntrustAdd.setEntrustId(dto.getEntrustId());
+            etrEntrustAdd.setExcDealType(dto.getTradeType());
+            etrEntrustAdd.setCurPair(dto.getCcyPair());
+            etrEntrustAdd.setCorCcy(dto.getContraCcy());
+            etrEntrustAdd.setDealCurAcct(dto.getTradeCcyAcct());
+            etrEntrustAdd.setCorCurAcct(dto.getContraCcyAcct());
+            etrEntrustAdd.setExcFxsTermType(dto.getTermType());
+            etrEntrustAdd.setAssetType(DictCodeListExt2.平安资产类型_外汇掉期.getValue());
+
+            if(StringUtil.isNotEmpty(dto.getProximalDeliveryDate())){
+                List<String> proximalDeliveryDateList = StringUtil.splitToList(" ", dto.getProximalDeliveryDate());
+                etrEntrustAdd.setVdate(DateUtil.parse(proximalDeliveryDateList.get(0)));
+                etrEntrustAdd.setVdate2(DateUtil.parse(proximalDeliveryDateList.get(2)));
+            }else{
+                etrEntrustAdd.setVdate(null);
+                etrEntrustAdd.setVdate2(null);
+            }
+            if(StringUtil.isNotEmpty(dto.getRemoteDeliveryDate())){
+                List<String> remoteDeliveryDateList = StringUtil.splitToList(" ", dto.getRemoteDeliveryDate());
+                etrEntrustAdd.setMdate(DateUtil.parse(remoteDeliveryDateList.get(0)));
+                etrEntrustAdd.setMdate2(DateUtil.parse(remoteDeliveryDateList.get(2)));
+            }else{
+                etrEntrustAdd.setMdate(null);
+                etrEntrustAdd.setMdate2(null);
+            }
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 附件 MstFileInputParameter
+            MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
+            mstFileInputParameter.setFileList(dto.getFileArray());
+            mstFileInputParameter.setBussinessId(dto.getEntrustId());
+            entity.setMstFileInputParameter(mstFileInputParameter);
+
+            // WorkflowId
+            entity.setWorkFlowId(dto.getWorkflowId());
+
+            isSuccess = restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
+                    Boolean.class);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+        return isSuccess;
+    }
+
+    private boolean doDeleteFlow(String workflowId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("workflowId", workflowId);
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doDeleteEtrFlow", param,
+                Boolean.class);
+    }
+    
 }
