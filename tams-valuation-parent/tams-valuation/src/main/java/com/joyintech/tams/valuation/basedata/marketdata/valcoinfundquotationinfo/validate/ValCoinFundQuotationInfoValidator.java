@@ -55,7 +55,7 @@ public class ValCoinFundQuotationInfoValidator implements BeanValidator {
             // 判断操作类型
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
                 // 判断是否获取到删除的项目
-                if (dto.getSelectedItem() != null || dto.getSelectedItem().size() > 0) {
+                if (dto.getSelectedItem() != null && dto.getSelectedItem().size() > 0) {
                     // 遍历选择的项目
                     for (ValCoinFundQuotationInfo001Dto cur : dto.getSelectedItem()) {
 					/*

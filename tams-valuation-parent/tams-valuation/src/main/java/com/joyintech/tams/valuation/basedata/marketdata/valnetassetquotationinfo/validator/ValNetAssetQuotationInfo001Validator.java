@@ -54,7 +54,7 @@ public class ValNetAssetQuotationInfo001Validator implements BeanValidator{
         Date sysDate = DateUtil.platDateFromCache();
         if (WorkFlowUtil.isNotFromToDoList()) {
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
-                if(dto.getSelectedItem()!=null||dto.getSelectedItem().size()>0){
+                if(dto.getSelectedItem()!=null&&dto.getSelectedItem().size()>0){
                     //删除时估值日期小于平台日期，报错
                     for(ValNetAssetQuotationInfo001Dto selectDto:dto.getSelectedItem()){
 						/*

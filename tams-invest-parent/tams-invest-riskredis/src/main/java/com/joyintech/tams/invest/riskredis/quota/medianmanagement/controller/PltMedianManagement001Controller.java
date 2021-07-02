@@ -70,7 +70,7 @@ public class PltMedianManagement001Controller extends BaseController{
 			map.put("paraCode", paraCodeList);
 		}
 		Object blank = map.get("blank");
-		if(blank != null || blank != ""){
+		if(blank != null && blank != ""){
 			map.put("blank", blank);
 		}
 		Object supDate = map.get("supDate");

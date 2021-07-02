@@ -72,7 +72,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
         //modify by mashukai ZGBS-32 计划类净值型标的，点击删除按钮，提示请输入发行金额 20201126 end
         if (WorkFlowUtil.isNotFromToDoList()) {
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
-                if(dto.getSelectedItem()!=null||dto.getSelectedItem().size()>0){
+                if(dto.getSelectedItem()!=null&&dto.getSelectedItem().size()>0){
                     for(FinPlanNetAssetDto dto1:dto.getSelectedItem()) {
                         if (commonBusinessService.isTransInAsset(dto1.getFinprodId())>0){
                             errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0043")));
