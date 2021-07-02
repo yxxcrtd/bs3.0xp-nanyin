@@ -342,8 +342,8 @@ public class VatDrawProcessorService {
             // 4'.2 根据上述查询结果,账务明细代码排重后取税则
             List<String> listBokDetailId = new ArrayList<String>();
             for (BookLatestInfoDto info : listBookLatestInfoDto) {
-                if (!listBokDetailId.contains(info.getBokDetailId())
-                    && info.getBokDetailId() != null) {
+                if (info.getBokDetailId() != null
+                    && !listBokDetailId.contains(info.getBokDetailId())) {
                     listBokDetailId.add(info.getBokDetailId());
                 }
             }
@@ -486,8 +486,8 @@ public class VatDrawProcessorService {
         for (
 
             BookLatestInfoDto info : listBookLatestInfo) {
-            if (!listBokDetailId.contains(info.getBokDetailId())
-                && info.getBokDetailId() != null) {
+            if (info.getBokDetailId() != null
+                && !listBokDetailId.contains(info.getBokDetailId())) {
                 listBokDetailId.add(info.getBokDetailId());
             }
         }

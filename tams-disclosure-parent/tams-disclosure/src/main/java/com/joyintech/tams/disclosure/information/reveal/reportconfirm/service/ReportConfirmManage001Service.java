@@ -170,7 +170,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                         String fileType = StringUtil.substring(report.getSysFilename(),
                             report.getSysFilename().lastIndexOf("."));
                         String reportName = report.getReportName() + fileType;
-                        if (StringUtil.isNotEmpty(report.getEndDate()) && report.getEndDate() != null) {
+                        if (report.getEndDate() != null && StringUtil.isNotEmpty(report.getEndDate())) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
                                          + GlobalConstant.UNDER_LINE + reportName;
                         }
@@ -340,7 +340,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                     for (RepReveal report : reportList) {
                         // TODO
                         String reportName = report.getReportName();
-                        if (StringUtil.isNotEmpty(report.getEndDate()) && report.getEndDate() != null) {
+                        if (report.getEndDate() != null && StringUtil.isNotEmpty(report.getEndDate())) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
                                          + GlobalConstant.UNDER_LINE + reportName;
                         }

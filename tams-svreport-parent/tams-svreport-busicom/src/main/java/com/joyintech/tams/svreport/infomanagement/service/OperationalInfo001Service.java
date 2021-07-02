@@ -1572,7 +1572,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				for (int j = 0; j < obj.length; j++) {
 					XSSFCell cell = null; // 设置单元格的数据类型
 					cell = row.createCell(j, CellType.STRING);
-					if (!"".equals(obj[j]) && obj[j] != null) {
+					if (obj[j] != null && !"".equals(obj[j])) {
 						cell.setCellValue(obj[j].toString()); // 设置单元格的值
 					}
 				}
@@ -1597,7 +1597,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				for (int j = 0; j < length; j++) {
 					XSSFCell cell = null; // 设置单元格的数据类型
 					cell = row.createCell(j, CellType.STRING);
-					if (!"".equals(dictArr[j]) && dictArr[j] != null) {
+					if (dictArr[j] != null && !"".equals(dictArr[j])) {
 						cell.setCellValue(dictArr[j]); // 设置单元格的值
 					}
 				}
@@ -1721,7 +1721,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				for (int j = 0; j < obj.length; j++) {
 					XSSFCell cell = null; // 设置单元格的数据类型
 					cell = row.createCell(j, CellType.STRING);
-					if (!"".equals(obj[j]) && obj[j] != null) {
+					if (obj[j] != null && !"".equals(obj[j])) {
 						cell.setCellValue(obj[j].toString()); // 设置单元格的值
 					}
 				}
@@ -1747,7 +1747,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					for (int j = 0; j < length; j++) {
 						XSSFCell cell = null; // 设置单元格的数据类型
 						cell = row.createCell(j, CellType.STRING);
-						if (!"".equals(dictArr[j]) && dictArr[j] != null) {
+						if (dictArr[j] != null && !"".equals(dictArr[j])) {
 							cell.setCellValue(dictArr[j]); // 设置单元格的值
 						}
 					}

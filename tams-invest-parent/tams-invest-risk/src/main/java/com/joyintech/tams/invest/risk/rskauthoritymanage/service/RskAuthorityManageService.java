@@ -113,7 +113,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param parameters
+     * @param pageParam
      * @return
      * @see
      * @since 1.0
@@ -128,7 +128,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param e
+     * @param dto
      * @return
      * @see
      * @since 1.0
@@ -141,7 +141,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
 
     /**
      * 检查是否有流程中的资产交易数据
-     * @param e
+     * @param rsklist
      * @return
      * @see
      * @since 1.0
@@ -149,7 +149,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
     public int selectAssetTrade(List<RskAuthorityManageDto> rsklist) {
     	int rsknum =0;
         Map<String, Object> param = new HashMap<String, Object>();
-        if(rsklist.size()>0 && rsklist!=null){
+        if(rsklist!=null && rsklist.size()>0){
             for (RskAuthorityManageDto e : rsklist) {
             	param.put("ASSET_TYPE", e.getAssetType());
             	param.put("ASSET_SEC_TYPE", e.getAssetSecType());
@@ -275,7 +275,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param userName
+     * @param map
      * @return
      * @see
      * @since 1.0

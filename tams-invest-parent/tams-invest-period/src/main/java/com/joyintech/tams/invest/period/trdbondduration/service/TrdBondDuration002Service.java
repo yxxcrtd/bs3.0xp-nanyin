@@ -580,8 +580,8 @@ public class TrdBondDuration002Service extends BaseService<TrdBondDuration002Pro
     private StlPayOrders gen划款指令流程2(List<BussTrdTransferOrderDto> stlPayOrdersList, TrdFinProductDealTotal total, TrdBondDuration002ProcessDto entity) {
     	StlPayOrders stlPayOrders = null;
         for (BussTrdTransferOrderDto dto : stlPayOrdersList) {
-            if (dto.getPortfolioId().equals(total.getPortfolioId()) && ((StringUtil.isEmpty(dto.getInvAim()) && StringUtil.isEmpty(total.getInvAim()))
-                    || (dto.getInvAim() != null && dto.getInvAim().equals(total.getInvAim())))) {
+            if (dto.getPortfolioId().equals(total.getPortfolioId()) && ((dto.getInvAim() != null && dto.getInvAim().equals(total.getInvAim())) ||
+                    (StringUtil.isEmpty(dto.getInvAim()) && StringUtil.isEmpty(total.getInvAim())))) {
                 stlPayOrders = dto;
                 stlPayOrders.setOrderStatus(DictCodeList.清算操作类型_新建.getValue());
                 stlPayOrders.setTradeId(total.getTotleTradeId());

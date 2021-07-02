@@ -146,7 +146,7 @@ public class RepCheckInfoService {
      */
     public void notNullCheck(CheckConfirmMessage ccm, Object obj, RepCheckInfoDto checkInfo) {
         // 如果校验数据为空则设置校验结果
-        if (!StringUtil.isNotEmpty(obj) || obj == null) {
+        if (obj == null || !StringUtil.isNotEmpty(obj)) {
             ccm.setFlag(false);
             ccm.setMsg((StringUtil.isNotEmpty(ccm.getMsg()) ? ccm.getMsg() + ";" : "")
                        + checkInfo.getQueryContenDescr() + "数据为空");
@@ -164,7 +164,7 @@ public class RepCheckInfoService {
      */
     public void nullCheck(CheckConfirmMessage ccm, Object obj, RepCheckInfoDto checkInfo) {
         // 如果校验数据为非空则设置校验结果
-        if (StringUtil.isNotEmpty(obj) && obj != null) {
+        if (obj != null && StringUtil.isNotEmpty(obj)) {
             ccm.setFlag(false);
             ccm.setMsg((StringUtil.isNotEmpty(ccm.getMsg()) ? ccm.getMsg() + ";" : "")
                        + checkInfo.getQueryContenDescr() + "数据不为空");
@@ -191,7 +191,7 @@ public class RepCheckInfoService {
                         Object prod, Class<?> T)
         throws NoSuchFieldException, SecurityException, IllegalAccessException,
         IllegalArgumentException, InvocationTargetException, IntrospectionException,Exception {
-        if (StringUtil.isNotEmpty(obj) && obj != null) {
+        if (obj != null && StringUtil.isNotEmpty(obj)) {
             Object data = new Object();
             Object data2 = new Object();
             // 如果校验对象是dto字段，则从dto中获取待比较值

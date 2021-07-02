@@ -916,7 +916,7 @@ public abstract class FileImpService extends InterfService{
         else {
             monitorInfoDto.setFileHandleStatus(DictCodeListExt2.上游接口文件读取处理状态_异常结束.getValue());
             //add by liubin start 当异常在解析时未捕获时，即handLeResultMsg为空，则处理给个默认值
-            if("".equals(monitorInfoDto.getFileHandleResultMsg()) || monitorInfoDto.getFileHandleResultMsg() == null){
+            if(monitorInfoDto.getFileHandleResultMsg() == null || "".equals(monitorInfoDto.getFileHandleResultMsg())){
                  monitorInfoDto.setFileHandleResultMsg("数据文件有问题，已移动到fail文件夹下");
             }
             //add by liubin end

@@ -247,7 +247,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
     public List<ValProductInfoFeeDto> queryFeeList(Map<String, Object> pageParam) {
     	List<ValProductInfoFeeDto> resurt = new ArrayList<>();
     	String finprodId = (String) pageParam.get("finprodId");
-    	if(finprodId != "" && finprodId != null){
+    	if(finprodId != null && finprodId != ""){
     		resurt = mapper.queryFeeList(pageParam);
     	}
         return resurt;
@@ -256,7 +256,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param pageParam
+     * @param params
      * @return
      * @see
      * @since 1.0
@@ -311,7 +311,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
     	List<ValProductInfoAcctDto> resurt = new ArrayList<>();
     	String finprodId = (String) map.get("finprodId");
     	String acctName = (String) map.get("acctName");
-    	if((finprodId != "" && finprodId != null) || (acctName != "" && acctName != null)){
+    	if((finprodId != null && finprodId != "") || (acctName != null && acctName != "")){
     		resurt = mapper.getFinprodAcct(map);
     	}
         return resurt;
@@ -342,7 +342,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
     
     /**
      * 查看费用调节 - 分页
-     * @param pageParam
+     * @param map
      * @return
      * @throws Exception 
      */
@@ -353,7 +353,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
     
     /**
      * 浮动费用查询（原方法把固定费用与浮动管理费放到一起，由于浮动费用不需要合并，所以重写一个方法）
-     * @param map
+     * @param pageParam
      * @return
      * @see
      * @since 1.0
@@ -364,7 +364,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
 
     /**
      * 浮动费用查询（原方法把固定费用与浮动管理费放到一起，由于浮动费用不需要合并，所以重写一个方法）
-     * @param map
+     * @param pageParam
      * @return
      * @see
      * @since 1.0
@@ -372,7 +372,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
 	public List<ValProductInfoFeeDto> queryfloatFeeList1(Map<String, Object> pageParam) {
     	List<ValProductInfoFeeDto> resurt = new ArrayList<>();
     	String finprodId = (String) pageParam.get("finprodId");
-    	if(finprodId != "" && finprodId != null){
+    	if(finprodId != null && finprodId != ""){
     		resurt = mapper.queryfloatFeeList1(pageParam);
     	}
         return resurt;
@@ -380,7 +380,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
 	
     /**
      * 浮动费用查询（原方法把固定费用与浮动管理费放到一起，由于浮动费用不需要合并，所以重写一个方法）
-     * @param map
+     * @param pageParam
      * @return
      * @see
      * @since 1.0
@@ -388,7 +388,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
 	public List<ValProductInfoFeeDto> queryfloatFeeList2(Map<String, Object> pageParam) {
     	List<ValProductInfoFeeDto> resurt = new ArrayList<>();
     	String finprodId = (String) pageParam.get("finprodId");
-    	if(finprodId != "" && finprodId != null){
+    	if(finprodId != null && finprodId != ""){
     		resurt = mapper.queryfloatFeeList2(pageParam);
     	}
         return resurt;
@@ -396,8 +396,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
 	
 	/**
      * 查询账套配置表
-     * @param finprodId 金融产品代码
-     * @param finprodType 金融产品类型
+     * @param map
      * @return
      * @see
      * @since 1.0
@@ -409,8 +408,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
     /**
      * 通过主键 查询账套配置表
      * <一句话功能简述>
-     * @param finprodId
-     * @param paramCode
+     * @param map
      * @return
      */
 	public List<BokBooksetExt>  queryBooksetExtByKey(Map<String, Object> map) {
@@ -530,15 +528,15 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
 		//理财产品估值参数
 		PrdValParam prdValParam = new PrdValParam();
 		prdValParam.setFinprodId(entity.getFinprodId());
-		if(entity.getMilionProfitDec() != "" && entity.getMilionProfitDec() != null){
+		if(entity.getMilionProfitDec() != null && entity.getMilionProfitDec() != ""){
 			prdValParam.setMilionProfitDec(Long.parseLong(entity.getMilionProfitDec()));
 		}
 		prdValParam.setMilionProfitDecMode(entity.getMilionProfitDecMode());
-		if(entity.getYearYieldDec() != "" && entity.getYearYieldDec() != null){
+		if(entity.getYearYieldDec() != null && entity.getYearYieldDec() != ""){
 			prdValParam.setYearYieldDec(Long.parseLong(entity.getYearYieldDec()));
 		}
 		prdValParam.setYearYieldDecMode(entity.getYearYieldDecMode());
-		if(entity.getUnitvalueDec() != "" && entity.getUnitvalueDec() != null){
+		if(entity.getUnitvalueDec() != null && entity.getUnitvalueDec() != ""){
 			prdValParam.setUnitvalueDec(Long.parseLong(entity.getUnitvalueDec()));
 		}
 		prdValParam.setUnitvalueMode(entity.getUnitvalueMode());

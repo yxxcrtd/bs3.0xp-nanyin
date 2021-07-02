@@ -87,7 +87,7 @@ public class RiskFactor003Controller extends BaseController {
     public Page<RiskFactor003Dto> selectForPage()
         throws Exception {
        Map<String, Object> map = RequestUtil.getParameters(getRequest());
-       if(!map.get("twoClass").equals("")&&map.get("twoClass")!=null){
+       if(map.get("twoClass")!=null && !map.get("twoClass").equals("")){
            map.put("investtype1", null);
            map.put("investtype2", null);
            map.put("FTRVALUESTRUCT", null);
@@ -111,7 +111,7 @@ public class RiskFactor003Controller extends BaseController {
     public ResponseEntity<byte[]> export()
             throws Exception {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
-        if(!map.get("twoClass").equals("")&&map.get("twoClass")!=null){
+        if(map.get("twoClass")!=null && !map.get("twoClass").equals("")){
             map.put("investtype1", null);
             map.put("investtype2", null);
             map.put("FTRVALUESTRUCT", null);

@@ -999,7 +999,7 @@ public class ValSchemeHZBankService extends CommonExportService<ValSchemeBatchDt
         params.put("vatType", DictCodeList.增值税类型_价差收入.getValue());
         params.put("taxPType", DictCodeList.增值税_确认类型_发生计税.getValue());
         TaxBokBalanceSum dtoInvIncomeTax = valSchemeMapper.selectInvIncomeTax(params);
-        if(StringUtil.isNotEmpty(dtoInvIncomeTax) && (BigDecimal.ZERO.compareTo(deductInvIncomeTax) <= 0 || deductInvIncomeTax == null)){
+        if((deductInvIncomeTax == null || BigDecimal.ZERO.compareTo(deductInvIncomeTax) <= 0) && StringUtil.isNotEmpty(dtoInvIncomeTax)){
         	deductInvIncomeTax = dtoInvIncomeTax.getTaxAmtSum().setScale(2, RoundingMode.HALF_UP);
         }
         
@@ -1014,7 +1014,7 @@ public class ValSchemeHZBankService extends CommonExportService<ValSchemeBatchDt
         params.put("vatType", DictCodeList.增值税类型_价差收入.getValue());
         params.put("taxPType", DictCodeList.增值税_确认类型_预估计税.getValue());
         TaxBokBalanceSum dtoProEstInvIncomeTax = valSchemeMapper.selectInvIncomeTax(params);
-        if(StringUtil.isNotEmpty(dtoProEstInvIncomeTax) && (BigDecimal.ZERO.compareTo(extDeductInvIncomeTax) <= 0 || extDeductInvIncomeTax == null)){
+        if((extDeductInvIncomeTax == null || BigDecimal.ZERO.compareTo(extDeductInvIncomeTax) <= 0) && StringUtil.isNotEmpty(dtoProEstInvIncomeTax)){
         	extDeductInvIncomeTax = dtoProEstInvIncomeTax.getTaxAmtSum().setScale(2, RoundingMode.HALF_UP);
         }
         ProdValuationDto extDeductInvestIncomeTax = new ProdValuationDto();

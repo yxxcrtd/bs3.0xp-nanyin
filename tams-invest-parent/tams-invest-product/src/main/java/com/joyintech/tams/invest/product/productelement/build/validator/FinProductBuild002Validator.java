@@ -637,10 +637,11 @@ public class FinProductBuild002Validator implements BeanValidator {
                 }
             }
           //当申赎不同频并且不是周期型产品时，对赎回计划进行校验
-            if (!StringUtil.equals(DictCodeList.处理模式_周期型.getValue(), entity.getDealMode())
+            if (entity.getBussFinProductOpenPlanRedDto() != null
+                    &&!StringUtil.equals(DictCodeList.处理模式_周期型.getValue(), entity.getDealMode())
             		&&!StringUtil.equals(entity.getBussFinProductOpenPlanRedDto().getOpenMode(), DictCodeList.开放模式_高频开放.getValue())
             		&&!StringUtil.equals(entity.getBussFinProductOpenPlanDto().getOpenType(),DictCodeList.申赎开放类型_申赎开放.getValue())
-            		&&entity.getBussFinProductOpenPlanRedDto() != null) {
+            		) {
             	if(StringUtil.isEmptyList(entity.getBussFinProductOpenPlanRedDto().getFinOpenPlanList())){
             	    validList.add(new ValidMessage("bussFinProductOpenPlanRedDto.finOpenPlanList",
                             "申赎不同频时，请生成赎回计划"));

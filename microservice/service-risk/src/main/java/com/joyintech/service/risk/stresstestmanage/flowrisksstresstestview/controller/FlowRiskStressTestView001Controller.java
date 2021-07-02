@@ -52,7 +52,7 @@ public class FlowRiskStressTestView001Controller{
 		 Map<String, Object> param1=param;
 		 Object st=param1.get("testId");
 		 Object sce=param1.get("sceneId");
-		 if(st!=""&&st!=null){
+		 if(st!=null && st!=""){
 		     String [] str=((String) st).split(",");
              List<String> list=Arrays.asList(str);
              param1.replace("testId", list);
@@ -60,7 +60,7 @@ public class FlowRiskStressTestView001Controller{
  	     }else{
              param1.remove("testId");
  	     }
-		 if(sce!=""&&sce!=null){
+		 if(sce!=null && sce!=""){
              String [] strS=((String) sce).split(",");
              List<String> listS=Arrays.asList(strS);
              param1.replace("sceneId", listS); 

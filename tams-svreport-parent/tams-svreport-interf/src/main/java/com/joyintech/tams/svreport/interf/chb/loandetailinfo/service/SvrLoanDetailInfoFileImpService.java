@@ -146,7 +146,7 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
                 ChbLoanDetailInfoInterfMapper batchMapper = session.getMapper(ChbLoanDetailInfoInterfMapper.class);
                 Map<String,String> typeMap = batchMapper.selectPbcAssetType(loanInfo.get("ASSET_CODE"));
                 if (typeMap!=null){
-                    if(!"".equals(typeMap.get("pbcAssetType1"))&&typeMap.get("pbcAssetType1")!=null&&!"".equals(typeMap.get("pbcAssetType2"))&&typeMap.get("pbcAssetType2")!=null){
+                    if(typeMap.get("pbcAssetType1")!=null&&!"".equals(typeMap.get("pbcAssetType1"))&&typeMap.get("pbcAssetType2")!=null&&!"".equals(typeMap.get("pbcAssetType2"))){
                         loanInfo.put("PBC_ASSET_TYPE1",typeMap.get("pbcAssetType1"));
                         loanInfo.put("PBC_ASSET_TYPE2",typeMap.get("pbcAssetType2"));
                     }
