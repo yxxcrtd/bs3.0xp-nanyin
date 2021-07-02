@@ -94,13 +94,13 @@ public class VasInterfCommonService{
 			filePath = recv.getRemotePath();
 			DbUtil db = new DbUtil(recv.getServerIp(), recv.getServerPort(), recv.getServerName(), recv.getUserName(), recv.getPassword());
 	        db.init();
-			Connection conn = db.getDbConnection();
-	    	if(null==conn){
-				strList.add("组装xml文件时数据库连接失败 请联系管理员配置相关数据库配置!");		
-	    		log.error("组装xml文件时数据库连接失败：" + startDa + "至" +endDa + "文件生成失败！");
-	    	}
-
-			try { 
+			Connection conn = null;
+			try {
+				conn = db.getDbConnection();
+				if(null==conn){
+					strList.add("组装xml文件时数据库连接失败 请联系管理员配置相关数据库配置!");
+					log.error("组装xml文件时数据库连接失败：" + startDa + "至" +endDa + "文件生成失败！");
+				}
 				if(null!=conn){
 					// 获取时间参数，默认为平台日期
 				/*	Date startDate = new Date(DateUtil.parse(startDa).getTime());
@@ -130,7 +130,12 @@ public class VasInterfCommonService{
 				strList.add("Error:-------------生成文件异常!"+e.getMessage());
 				log.error("生成文件异常", e);
 			} finally {
-				db.release();
+				if (db != null){
+					db.release();	
+				}
+				if (conn != null){
+					conn.close();
+				}
 			}
 		}else{
 			strList.add( "Error:-------------获取ValRecvServerInfo数据源异常  请联系管理员！"+"共获取到"+recvServerList.size()+"条!"+"\n");

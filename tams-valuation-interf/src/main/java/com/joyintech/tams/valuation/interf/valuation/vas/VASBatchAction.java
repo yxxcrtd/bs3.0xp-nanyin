@@ -83,12 +83,12 @@ public class VASBatchAction{
 			filePath = recv.getRemotePath();
 			DbUtil db = new DbUtil(recv.getServerIp(), recv.getServerPort(), recv.getServerName(), recv.getUserName(), recv.getPassword());
 	        db.init();
-			Connection conn = db.getDbConnection();
-	    	if(null==conn){
-	    		log.error("组装xml文件时数据库连接失败：" + startDa + "至" +endDa + "文件生成失败！");
-	    	}
-
+			Connection conn = null;
 			try {
+				conn = db.getDbConnection();
+				if(null==conn){
+					log.error("组装xml文件时数据库连接失败：" + startDa + "至" +endDa + "文件生成失败！");
+				}
 				if(null!=conn){
 				    Date startDate;
 				    Date endDate;
@@ -111,7 +111,12 @@ public class VASBatchAction{
 			} catch (Exception e) {
 				log.error("生成文件异常", e);
 			} finally {
-				db.release();
+				if (db != null){
+					db.release();
+				}
+				if (conn != null){
+					conn.close();
+				}
 			}
 		}else{
 			log.error("获取ValRecvServerInfo数据源异常,"+"共获取到"+recvServerList.size()+"条!");

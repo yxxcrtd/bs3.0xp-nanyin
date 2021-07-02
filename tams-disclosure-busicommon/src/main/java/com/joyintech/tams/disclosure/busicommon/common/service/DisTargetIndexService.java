@@ -1578,21 +1578,30 @@ public class DisTargetIndexService {
 	 * 查询收益类型
 	 * @throws SQLException 
 	 */
-	public  String   getProfitType(String prodId,Connection conn) throws SQLException{
+	public String getProfitType(String prodId,Connection conn) throws SQLException{
 		String profitType=null;
-		
-		//编写sql
-		String sql="select PROD_TYPE  profitType from rep_prod_info where PROD_ID = ?";		
-				  //创建执行语句
-				PreparedStatement ps = conn.prepareStatement(sql);
-				// 传参
-				ps.setString(1, prodId);
-				// 执行语句
-				ResultSet rs = ps.executeQuery();
-				if(rs.next()){
-					profitType=rs.getString("profitType");
-				}
-				return profitType;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try{
+			//编写sql
+			String sql="select PROD_TYPE  profitType from rep_prod_info where PROD_ID = ?";
+			//创建执行语句
+			ps = conn.prepareStatement(sql);
+			// 传参
+			ps.setString(1, prodId);
+			// 执行语句
+			rs = ps.executeQuery();
+			if(rs.next()){
+				profitType=rs.getString("profitType");
+			}
+		}finally {
+			if (ps != null){
+				ps.close();
+			}
+			if (rs != null){
+				rs.close();
+			}
+		}
+		return profitType;
 	}
-	
 }
