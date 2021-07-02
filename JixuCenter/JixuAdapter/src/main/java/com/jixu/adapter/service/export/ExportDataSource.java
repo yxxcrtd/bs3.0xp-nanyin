@@ -84,11 +84,9 @@ public class ExportDataSource implements InitializingBean, ApplicationContextAwa
 			
 			for (Field field:fields) {  
 				FieldMeta meta=field.getAnnotation(FieldMeta.class);
-				try{
-					fieldNum++;
+				fieldNum++;
+				if(meta != null){
 					fieldsHM.put(fieldNum, meta.desc());
-				}catch(NullPointerException npe){
-					continue;
 				}
 			}
 		}
