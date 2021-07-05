@@ -400,9 +400,9 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
         }
-        if (baseEtrCashPositionCommService != null ) {
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if (baseEtrCashPositionCommService != null ) {
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
 
     /**
@@ -558,5 +558,63 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
             map.put("sysDate",iPlatformDate.getSysDate());
         }
         return etrBoutRepoMapper.selectStandardAmt(map);
+    }
+    
+    public BaseEtrInvestInfoDto initBaseDto(EtrBoutRepoDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            dto.setFinprodType2(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue());
+            dto.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
+            dto.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            if(iPlatformDate != null){
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            etrEntrust.setEntrustNum(etrEntrust.getEntrustAmt().divide(new BigDecimal(100)));
+            etrEntrust.setEntrustAmt(null);
+            if(StringUtil.isNotEmpty(etrEntrust.getPrice())){
+                etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));
+            }
+            entity.setEtrEntrust(etrEntrust);            
+            
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            etrEntrustAdd.setEntrustId(dto.getEntrustId());
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_0.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long)0);
+            }
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_1.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long)1);
+            }
+            etrEntrustAdd.setVdate(dto.getVdateAdd());
+            etrEntrustAdd.setMdate(dto.getMdateAdd());
+            if(StringUtil.isNotEmpty(dto.getRepoTerm())){
+                etrEntrustAdd.setTermDays(Long.valueOf(dto.getRepoTerm()));
+            }
+            if(StringUtil.isNotEmpty(dto.getRepoTerm2())) {
+                etrEntrustAdd.setTermDays2(Long.valueOf(dto.getRepoTerm2()));
+            }
+            etrEntrustAdd.setTermType(dto.getTermType());
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_买断式回购.getValue());
+            etrEntrustAdd.setAssetType1(dto.getAssetType1());
+            etrEntrustAdd.setBusiPs(dto.getPs());
+            etrEntrustAdd.setCashUsedate(dto.getAvailableDay());
+            etrEntrustAdd.setSecAcctId(dto.getSecuritiesCust());
+            etrEntrustAdd.setFirstUnitCprice(dto.getFirstprice());
+            etrEntrustAdd.setFirstUnitCprice2(dto.getFirstprice2());
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        } 
+        return entity;
     }
 }
