@@ -328,7 +328,14 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         if (StringUtil.isEmptyList(orgcreLineslist) && ((creLineslist==null || creLineslist.size()==0)||
                 (creLineslist!=null && creLineslist.size()>0 && iscreditflag))){
             isKDQ = true;
-            customerid = creditLinesMapper.getCustomerid(mapParm);
+            // 拆借/回购 空档期以交易对手生成
+            if ((model.getFinprodType2() != null && (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
+                    || StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())
+                    || StringUtil.equals(model.getInputValue1(), DictCodeList.平安资产类型_拆借.getValue())))) {
+                customerid = model.getCounterId();
+            }else{
+                customerid = creditLinesMapper.getCustomerid(mapParm);
+            }
             if(StringUtil.isEmpty(customerid)){
                 customerid = model.getCounterId();
             }
