@@ -56,7 +56,7 @@ public class DocumentManagement002Service extends CommonExportService<DocumentMa
 	 */
 	public void readFile(HttpServletRequest request) throws Exception {
 		// 文件本地路径
-		String filePath = request.getParameter("fileName1");
+		String filePath = request.getParameter("fileName1")==null?"":request.getParameter("fileName1");
 		/*
 		//上传文件名称
 		String name = request.getParameter("fileName");*/
@@ -95,14 +95,14 @@ public class DocumentManagement002Service extends CommonExportService<DocumentMa
 		String fileId = IDGenerator.generate();
 		dto.setFileId(fileId);
 		// 设置文件名称
-		String fileName = request.getParameter("fileNameOnly");
+		String fileName = request.getParameter("fileNameOnly")==null?"":request.getParameter("fileNameOnly");
 		dto.setFileName(fileName);
 		// 设置文件类型
-		String fileType = request.getParameter("fileType");		
+		String fileType = request.getParameter("fileType")==null?"":request.getParameter("fileType");
 		//String fileType = DictCodeList.文件类型_操作手册.getValue();
 		dto.setFileType(fileType);
 		// 文件存放目录
-		dto.setFilePath(request.getParameter("fileName1"));
+		dto.setFilePath(request.getParameter("fileName1")==null?"":request.getParameter("fileName1"));
 
 		return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/DocumentManagement002/uploadFile",

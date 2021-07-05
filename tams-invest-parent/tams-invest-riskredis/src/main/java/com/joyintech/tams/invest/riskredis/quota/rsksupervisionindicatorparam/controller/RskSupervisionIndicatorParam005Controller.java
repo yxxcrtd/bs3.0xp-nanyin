@@ -146,11 +146,11 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
     @RequestMapping("getIndustryTreeNode")
     public List<TreeNode> getIndustryTreeNode(HttpServletRequest request) {
 		List<TreeNode> list = new ArrayList<>();
-		String parentId = request.getParameter("id");
-        String parentName = request.getParameter("name");
-		String parentChecked = request.getParameter("checked");
-        String category = request.getParameter("category");
-		String initValue = request.getParameter("initValue");
+		String parentId = request.getParameter("id")==null?"":request.getParameter("id");
+        String parentName = request.getParameter("name")==null?"":request.getParameter("name");
+		String parentChecked = request.getParameter("checked")==null?"":request.getParameter("checked");
+        String category = request.getParameter("category")==null?"":request.getParameter("category");
+		String initValue = request.getParameter("initValue")==null?"":request.getParameter("initValue");
 		List<String> initValueList = StringUtil.splitToList(",",initValue);
         if(StringUtil.isNotEmpty(category)&&StringUtil.equals(category, "WIND")){
         	if(null == parentId) {
@@ -222,11 +222,11 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
     @RequestMapping("getAssetTreeNode")
     public List<TreeNode> getAssetTreeNode(HttpServletRequest request) {
 		List<TreeNode> list = new ArrayList<>();
-		String parentId = request.getParameter("id");
-        String parentName = request.getParameter("name");
-        String parentChecked = request.getParameter("checked");
-        String assetType = request.getParameter("assetType");
-        String initValue = request.getParameter("initValue");
+		String parentId = request.getParameter("id")==null?"":request.getParameter("id");
+        String parentName = request.getParameter("name")==null?"":request.getParameter("name");
+        String parentChecked = request.getParameter("checked")==null?"":request.getParameter("checked");
+        String assetType = request.getParameter("assetType")==null?"":request.getParameter("assetType");
+        String initValue = request.getParameter("initValue")==null?"":request.getParameter("initValue");
         List<String> initValueList = StringUtil.splitToList(",",initValue);
         if(StringUtil.isNotEmpty(assetType)&&StringUtil.equals(assetType, BussinessDictCodeListRds.资产类型分类_授权分类.getValue())){
         	if(null == parentId) {

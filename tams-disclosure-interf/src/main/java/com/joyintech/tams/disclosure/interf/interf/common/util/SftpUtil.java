@@ -26,7 +26,7 @@ public class SftpUtil {
 
     private static Session sshSession;
 
-    public static final String ENCODE = System.getProperty("file.encoding");
+    public static final String ENCODE = System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding");
 
     /**
      * 日志

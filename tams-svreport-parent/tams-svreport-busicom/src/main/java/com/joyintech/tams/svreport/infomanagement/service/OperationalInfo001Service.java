@@ -3701,8 +3701,10 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         try{   
             Reader inStreamDoc = clob.getCharacterStream();   
                
-            char[] tempDoc = new char[(int) clob.length()];   
-            inStreamDoc.read(tempDoc);   
+            char[] tempDoc = new char[(int) clob.length()];
+            if(inStreamDoc!=null) {
+				inStreamDoc.read(tempDoc);
+			}
             inStreamDoc.close();   
             return new String(tempDoc);   
         }   

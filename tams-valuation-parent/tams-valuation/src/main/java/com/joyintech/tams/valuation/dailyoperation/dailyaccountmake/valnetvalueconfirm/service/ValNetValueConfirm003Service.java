@@ -243,7 +243,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
      */
     public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws Exception {
         // 文件本地路径
-        String fileId = request.getParameter("fileId");
+        String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
         
 //        BokFileTransfer003Dto dto = valNetValueConfirm001Mapper.qryBokFileInfoByFileId(fileId);
         BokFileTransfer003Dto dto = restTemplate.postForObject(
@@ -315,7 +315,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
      */
     public void deleteFile(HttpServletRequest request) throws Exception {
         // 文件id
-        String fileId = request.getParameter("fileId");
+        String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
         //文件信息
         BokFileInfoDto infoDto = new BokFileInfoDto();
         //净值确认附件信息

@@ -757,7 +757,7 @@ public class DisTargetIndexService {
 				map.put("SSZB", rs.getBigDecimal("SSZB"));
 				map.put("JZSY", rs.getBigDecimal("JZSY"));
 				map.put("FEJZ", rs.getBigDecimal("FEJZ"));
-				map.put("PROD_ID", rs.getString("PROD_ID"));
+				map.put("PROD_ID", rs.getString("PROD_ID")==null?"":rs.getString("PROD_ID"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1209,8 +1209,8 @@ public class DisTargetIndexService {
 						dataMap = new HashMap<String,Object>();
 						dataMap.put("TDY_COST_AMT", rs.getBigDecimal("TDY_COST_AMT"));// 估值
 						dataMap.put("END_DAYS_2", rs.getInt("END_DAYS_2"));// 剩余存续期限
-						dataMap.put("AL_FLAG", rs.getString("AL_FLAG"));// 资产负债标识
-						dataMap.put("ASSET_TYPE_DIS", rs.getString("DIS_ASSET_TYPETWO"));// 资产一级分类(已经转换为信批资产类型，数据字典=ASSET_TYPE_DIS)
+						dataMap.put("AL_FLAG", rs.getString("AL_FLAG")==null?"":rs.getString("AL_FLAG"));// 资产负债标识
+						dataMap.put("ASSET_TYPE_DIS", rs.getString("DIS_ASSET_TYPETWO")==null?"":rs.getString("DIS_ASSET_TYPETWO"));// 资产一级分类(已经转换为信批资产类型，数据字典=ASSET_TYPE_DIS)
 						dataMapList.add(dataMap);
 					}
 
@@ -1313,11 +1313,11 @@ public class DisTargetIndexService {
 			 rs = ps.executeQuery();
 			//获取结果集
 			while(rs.next()){
-				String aSSET_NAME=rs.getString("ASSET_NAME");
-				String bUY_PARTY=rs.getString("BUY_PARTY");
-				String sELL_PARTY=rs.getString("SELL_PARTY");
+				String aSSET_NAME=rs.getString("ASSET_NAME")==null?"":rs.getString("ASSET_NAME");
+				String bUY_PARTY=rs.getString("BUY_PARTY")==null?"":rs.getString("BUY_PARTY");
+				String sELL_PARTY=rs.getString("SELL_PARTY")==null?"":rs.getString("SELL_PARTY");
 				BigDecimal tRADE_AMT=rs.getBigDecimal("TRADE_AMT");
-				String cONTRACT_NO=rs.getString("CONTRACT_NO");
+				String cONTRACT_NO=rs.getString("CONTRACT_NO")==null?"":rs.getString("CONTRACT_NO");
 				RepTreadInfoDto dto=new RepTreadInfoDto();
 				dto.setAssetName(aSSET_NAME);
 				dto.setBuyParty(bUY_PARTY);
@@ -1377,11 +1377,11 @@ public class DisTargetIndexService {
 			 rs = ps.executeQuery();
 			//获取结果集
 			while(rs.next()){
-				String aSSET_NAME=rs.getString("ASSET_NAME");
-				String bUY_PARTY=rs.getString("BUY_PARTY");
-				String sELL_PARTY=rs.getString("SELL_PARTY");
+				String aSSET_NAME=rs.getString("ASSET_NAME")==null?"":rs.getString("ASSET_NAME");
+				String bUY_PARTY=rs.getString("BUY_PARTY")==null?"":rs.getString("BUY_PARTY");
+				String sELL_PARTY=rs.getString("SELL_PARTY")==null?"":rs.getString("SELL_PARTY");
 				BigDecimal tRADE_AMT=rs.getBigDecimal("TRADE_AMT");
-				String cONTRACT_NO=rs.getString("CONTRACT_NO");
+				String cONTRACT_NO=rs.getString("CONTRACT_NO")==null?"":rs.getString("CONTRACT_NO");
 				RepTreadInfoDto dto=new RepTreadInfoDto();
 				dto.setAssetName(aSSET_NAME);
 				dto.setBuyParty(bUY_PARTY);
@@ -1439,11 +1439,11 @@ public class DisTargetIndexService {
 			rs = ps.executeQuery();
 			//获取结果集
 			while(rs.next()){
-				String aSSET_NAME=rs.getString("ASSET_NAME");
-				String bUY_PARTY=rs.getString("BUY_PARTY");
-				String sELL_PARTY=rs.getString("SELL_PARTY");
+				String aSSET_NAME=rs.getString("ASSET_NAME")==null?"":rs.getString("ASSET_NAME");
+				String bUY_PARTY=rs.getString("BUY_PARTY")==null?"":rs.getString("BUY_PARTY");
+				String sELL_PARTY=rs.getString("SELL_PARTY")==null?"":rs.getString("SELL_PARTY");
 				BigDecimal tRADE_AMT=rs.getBigDecimal("TRADE_AMT");
-				String cONTRACT_NO=rs.getString("CONTRACT_NO");
+				String cONTRACT_NO=rs.getString("CONTRACT_NO")==null?"":rs.getString("CONTRACT_NO");
 				RepTreadInfoDto dto=new RepTreadInfoDto();
 				dto.setAssetName(aSSET_NAME);
 				dto.setBuyParty(bUY_PARTY);

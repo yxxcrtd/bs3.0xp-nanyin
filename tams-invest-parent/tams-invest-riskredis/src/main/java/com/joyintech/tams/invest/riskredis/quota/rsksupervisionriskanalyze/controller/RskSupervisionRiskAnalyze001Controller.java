@@ -72,7 +72,7 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
         while (paramNames.hasMoreElements()){
             String key=paramNames.nextElement();
             if("valDate".equals(key)&& StringUtil.isNotEmpty(request.getParameter(key))){
-                model.addAttribute(key,DateUtil.format(DateUtil.parse(request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN)+" - "+DateUtil.format(DateUtil.parse(request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN));
+                model.addAttribute(key,DateUtil.format(DateUtil.parse(request.getParameter(key)==null?"":request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN)+" - "+DateUtil.format(DateUtil.parse(request.getParameter(key)==null?"":request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN));
             }else {
                 model.addAttribute(key, request.getParameter(key));
             }

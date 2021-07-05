@@ -23,7 +23,7 @@ public class ScanSFTPFile implements Runnable{
 		//sftp用户名
 		String sftpUserName ="";
 		//sftp密码
-		String sftpWord;
+		String sftpWord = "";
 		//读取配置文件，获取请求资管的接口地址
 		//sftp服务ip
 		String sftpIp ="";
@@ -40,10 +40,12 @@ public class ScanSFTPFile implements Runnable{
 				e1.printStackTrace();
 			}
 			if (prop != null){
-				sftpUserName = prop.getProperty("sftpUserName");
-				sftpWord= prop.getProperty("sftpWord");
-				sftpIp = prop.getProperty("sftpIp");
-				sftpPort = prop.getProperty("sftpPort");
+				if(prop!=null) {
+					sftpUserName = prop.getProperty("sftpUserName");
+					sftpWord = prop.getProperty("sftpWord");
+					sftpIp = prop.getProperty("sftpIp");
+					sftpPort = prop.getProperty("sftpPort");
+				}
 				int port = Integer.parseInt(sftpPort);
 
 				// 创建sftp工具类对象

@@ -134,7 +134,7 @@ public class DocumentManagement002Controller extends BaseController {
                              ModelMap model)
         throws Exception {
         // 画面ID
-        String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID));
+        String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID)==null?"":request.getParameter(GlobalConstant.PAGE_ID));
         // 初始化进度条
         progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0D, true);
         String uploadFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);

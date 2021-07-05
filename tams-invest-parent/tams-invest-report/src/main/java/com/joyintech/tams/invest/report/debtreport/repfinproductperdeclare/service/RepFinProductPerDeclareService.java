@@ -267,12 +267,14 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 	OutputStream os=null;
                     try {
 						bis = new BufferedInputStream(new FileInputStream(new SafelyFile(templetFileFullPath)));
-						byte[] bytes = new byte[bis.available()];
-						os = new FileOutputStream(new SafelyFile(exportPath+"/"+ftlName));
-						bis.read(bytes);
-						os.write(bytes);
-						bis.close();
-						os.close();
+                        if(bis!=null) {
+						    byte[] bytes = new byte[bis.available()];
+						    os = new FileOutputStream(new SafelyFile(exportPath+"/"+ftlName));
+                            bis.read(bytes);
+                            os.write(bytes);
+                            bis.close();
+                            os.close();
+                        }
 						arrFileTemp.add(new SafelyFile(exportPath+"/"+ftlName));
 					} finally {
 	                    if (bis != null) {

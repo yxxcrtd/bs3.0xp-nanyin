@@ -59,7 +59,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
     public void readFile(HttpServletRequest request)
         throws Exception {
         // 文件本地路径
-        String filePath = request.getParameter("fileName");
+        String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
         request.getParameter("id");
         request.getParameter("fileNo");
         request.getParameter("fileNameOnly");
@@ -70,10 +70,10 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
          */
 
         // 产品id
-        String finprodId = request.getParameter("finprodId");
+        String finprodId = request.getParameter("finprodId")==null?"":request.getParameter("finprodId");
 
         // 估值表余额表标识
-        String valBalFlag = request.getParameter("valBalFlag");
+        String valBalFlag = request.getParameter("valBalFlag")==null?"":request.getParameter("valBalFlag");
         if (StringUtil.isNotEmpty(valBalFlag)) {
             // if(valBalFlag.equals(DictCodeList.文件类型_估值表.getCodeName())){
             // valBalFlag = DictCodeList.文件类型_估值表.getValue();
@@ -83,7 +83,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
         }
 
         // 估值表余额表标识
-        String valDateS = request.getParameter("valDate");
+        String valDateS = request.getParameter("valDate")==null?"":request.getParameter("valDate");
         String valDate = valDateS.replace("-", "");
 
         // 产品唯一标识
@@ -149,13 +149,13 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
         cfmDto.setValBalFlag(valBalFlag);
         dto.setValBalFlag(valBalFlag);
         // 估值日期
-        String valDateS = request.getParameter("valDate");
+        String valDateS = request.getParameter("valDate")==null?"":request.getParameter("valDate");
         Date valDate = DateUtil.parseDate(valDateS, "yyyy-MM-dd");
         cfmDto.setValDate(valDate);
         dto.setValDate(valDate);
 
         // 文件名称
-        String filename = request.getParameter("fileNameOnly");
+        String filename = request.getParameter("fileNameOnly")==null?"":request.getParameter("fileNameOnly");
         infoDto.setFileName(filename);
         dto.setFileName(filename);
 
@@ -224,7 +224,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
     public ResponseEntity<byte[]> downloadFile(HttpServletRequest request)
         throws Exception {
         // 文件本地路径
-        String fileId = request.getParameter("fileId");
+        String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
 
         BokFileTransfer003Dto dto = reportConfirmManage001Mapper.qryBokFileInfoByFileId(fileId);
         // 附件存储路径

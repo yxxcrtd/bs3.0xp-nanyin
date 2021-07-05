@@ -278,10 +278,16 @@ public class Joyin2JixuInterface {
 		bka.setBankdesc(dto.getAcct_name());
 		
 		//读取bkcashacct.properties配置文件中的银行现金科目配置
-		String cashglcode=SecurityCoreFactory.getBkcashacctProperties().getProperty(dto.getAcc_type()+"_"+dto.getCcy());
+		String cashglcode = "";
+		if(SecurityCoreFactory.getBkcashacctProperties()!=null && dto.getAcc_type()!=null && dto.getCcy()!=null) {
+			cashglcode = SecurityCoreFactory.getBkcashacctProperties().getProperty(dto.getAcc_type() + "_" + dto.getCcy());
+		}
 		bka.setCashglcode(cashglcode);
 		//获取汇兑损益科目
-		String hdsy=SecurityCoreFactory.getBkcashacctProperties().getProperty("HDSY");
+		String hdsy = "";
+		if(SecurityCoreFactory.getBkcashacctProperties()!=null) {
+			hdsy = SecurityCoreFactory.getBkcashacctProperties().getProperty("HDSY");
+		}
 		bka.setCashrealfxgnls(hdsy);
 		bka.setCashunrealfxgnls(hdsy);
 		bka.setExternalacctnumber(dto.getAcct_no());

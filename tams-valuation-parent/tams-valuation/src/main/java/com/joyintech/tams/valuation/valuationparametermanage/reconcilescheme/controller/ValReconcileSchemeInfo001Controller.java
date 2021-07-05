@@ -303,9 +303,9 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
         ValReconcileSchemeInfo001Dto infoDto = new ValReconcileSchemeInfo001Dto();
 
         // 文件名
-        String fileName = request.getParameter("fileName");
-        String schemeType = request.getParameter("schemeType");
-        String booksetId = request.getParameter("booksetId");
+        String fileName = request.getParameter("fileName")==null?"":request.getParameter("fileName");
+        String schemeType = request.getParameter("schemeType")==null?"":request.getParameter("schemeType");
+        String booksetId = request.getParameter("booksetId")==null?"":request.getParameter("booksetId");
         if (!StringUtil.isNotEmpty(schemeType)) {
             String msg = "方案类型不能为空";
             res = new AjaxResult(msg, MessageType.错误消息);

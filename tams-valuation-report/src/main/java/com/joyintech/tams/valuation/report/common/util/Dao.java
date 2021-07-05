@@ -33,15 +33,19 @@ public class Dao {
 				is.close();
 			}
 		  }
-		  //加载驱动
-		  Class.forName(prop.getProperty("driver"));
-		  //获取地址
-		  String url=prop.getProperty("url");
-		  //获取用户名
-		  String userName=prop.getProperty("userName");
-		 //获取密码
-		  String passWord=prop.getProperty("passWord");
-
+		  String url = "";
+		  String userName = "";
+		  String passWord = "";
+		  if(prop!=null) {
+			  //加载驱动
+			  Class.forName(prop.getProperty("driver"));
+			  //获取地址
+			  url = prop.getProperty("url");
+			  //获取用户名
+			  userName = prop.getProperty("userName");
+			  //获取密码
+			  passWord = prop.getProperty("passWord");
+		  }
 		//获取连接对象
 		  Connection conn=DriverManager.getConnection(url, userName, passWord);
 		  return conn;

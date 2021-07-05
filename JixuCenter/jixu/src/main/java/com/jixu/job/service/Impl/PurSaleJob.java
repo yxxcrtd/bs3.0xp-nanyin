@@ -92,7 +92,10 @@ public class PurSaleJob extends JNLJob {
 					pursaleCooa.setVoucher(voucher);
 					
 					if(!JixuUserUtil.jixuUserSystemFlag() && JixuUserUtil.isJoyinTablesFlag()){
-						String tableID=SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.PURSALEJNL+","+sec.getIssueType()+","+inc.getTrantype());
+						String tableID = "";
+						if(SecurityCoreFactory.getTableIDProperties()!=null && sec.getIssueType()!=null && inc!=null){
+							tableID=SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.PURSALEJNL+","+sec.getIssueType()+","+inc.getTrantype());
+						}
 						pursaleCooa.setTableID(tableID);	//业务场景
 						List<VoucherDetails> voucherDetailsList=pursaleCooa.getVoucherDetails();
 						for (VoucherDetails voucherDetails : voucherDetailsList) {

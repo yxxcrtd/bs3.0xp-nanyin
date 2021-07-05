@@ -229,10 +229,10 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		}
 		
 		//生效日期
-		String indexDate = request.getParameter("indexDate");
+		String indexDate = request.getParameter("indexDate")==null?"":request.getParameter("indexDate");
 		dto.setIndexDate(DateUtil.parse(indexDate));
 		//指标名称
-		String indexName = request.getParameter("fileNameOnly");
+		String indexName = request.getParameter("fileNameOnly")==null?"":request.getParameter("fileNameOnly");
 		dto.setIndexName(indexName);
 		
 		String priId =request.getParameter("priId");
@@ -243,7 +243,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 				+ DateUtil.format(DateUtil.parse(Sysdate), DateUtil.DEFAULT_OTHER_FORMAT);
 		dto.setIndexValue(indexValue);
 		//指标类型
-		String indexType = request.getParameter("indexType");
+		String indexType = request.getParameter("indexType")==null?"":request.getParameter("indexType");
 		dto.setIndexType(indexType);
 		
 		return repIndexSubMapper.insert(dto);

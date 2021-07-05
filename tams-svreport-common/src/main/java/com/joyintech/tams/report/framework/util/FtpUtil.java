@@ -49,7 +49,7 @@ public class FtpUtil {
     /**
      * 编码
      */
-    private static String encoding = System.getProperty("file.encoding");
+    private static String encoding = System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding");
 
     /**
      * 路径分隔符

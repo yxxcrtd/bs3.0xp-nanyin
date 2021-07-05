@@ -13,14 +13,16 @@ public class ApplicationConfig {
 		try{
 			is =Thread.currentThread().getContextClassLoader().getResourceAsStream("sztInterfClientMsg.properties");
 			prop.load(is);
-			connector.setAppId(prop.getProperty("fromAppId"));
-			connector.setUserId(prop.getProperty("fromUserId"));
-			connector.setAppPwd(prop.getProperty("appPwd"));
-			connector.setMrIp(prop.getProperty("mrIp"));
-			connector.setMrPort(Short.valueOf(prop.getProperty("mrPort")));
-			connector.setMrIpBak(prop.getProperty("mrIpBak"));
-			connector.setMrPortBak(Short.valueOf(prop.getProperty("mrPortBak")));
-			connector.setBizTypeBySend(Byte.decode(prop.getProperty("bizType")));
+			if(prop!=null) {
+				connector.setAppId(prop.getProperty("fromAppId"));
+				connector.setUserId(prop.getProperty("fromUserId"));
+				connector.setAppPwd(prop.getProperty("appPwd"));
+				connector.setMrIp(prop.getProperty("mrIp"));
+				connector.setMrPort(Short.valueOf(prop.getProperty("mrPort")));
+				connector.setMrIpBak(prop.getProperty("mrIpBak"));
+				connector.setMrPortBak(Short.valueOf(prop.getProperty("mrPortBak")));
+				connector.setBizTypeBySend(Byte.decode(prop.getProperty("bizType")));
+			}
 			return connector;
 		}finally {
 			if(is != null){
@@ -34,16 +36,16 @@ public class ApplicationConfig {
 		
 		Properties prop = new Properties();
 		prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("sztInterfClientMsg.properties"));
-		
-		msg.setFromAppId(prop.getProperty("fromAppId"));
-		msg.setFromUserId(prop.getProperty("fromUserId"));
-		msg.setToAppId(prop.getProperty("toAppId"));
-		msg.setToUserId(prop.getProperty("toUserId"));
+		if(prop!=null) {
+			msg.setFromAppId(prop.getProperty("fromAppId"));
+			msg.setFromUserId(prop.getProperty("fromUserId"));
+			msg.setToAppId(prop.getProperty("toAppId"));
+			msg.setToUserId(prop.getProperty("toUserId"));
+			msg.setUcBizType(Byte.decode(prop.getProperty("bizType")));
+		}
 		msg.setUserData1("2");
 		msg.setUserData2("3");
 		msg.setCorrPkgId("");
-		msg.setUcBizType(Byte.decode(prop.getProperty("bizType")));
-		
 		return msg;
 	}
 }

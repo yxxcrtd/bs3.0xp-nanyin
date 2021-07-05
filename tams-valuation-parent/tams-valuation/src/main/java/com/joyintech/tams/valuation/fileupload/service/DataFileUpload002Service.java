@@ -86,7 +86,7 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
      */
     public void readFile(HttpServletRequest request) throws Exception {
         // 文件本地路径（应用服务器路径，同名添加）
-        String filePath = request.getParameter("fileName1");
+        String filePath = request.getParameter("fileName1")==null?"":request.getParameter("fileName1");
         // 文件名称
         String fileName = FileNameUtil.formatFileName(filePath);
         try {
@@ -142,9 +142,9 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
      */
     public int insertFileTransferInfo(HttpServletRequest request) throws Exception {
     	Map<String, Object> params = new HashMap<String, Object>();
-    	params.put("fileType", request.getParameter("fileType"));
-    	params.put("filePath", request.getParameter("fileName1"));
-    	params.put("fileNameOnly", request.getParameter("fileNameOnly"));
+    	params.put("fileType", request.getParameter("fileType")==null?"":request.getParameter("fileType"));
+    	params.put("filePath", request.getParameter("fileName1")==null?"":request.getParameter("fileName1"));
+    	params.put("fileNameOnly", request.getParameter("fileNameOnly")==null?"":request.getParameter("fileNameOnly"));
     	return restTemplate.postForObject(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/DataFileUpload002/insertFileTransferInfo",
                 params, Integer.class);

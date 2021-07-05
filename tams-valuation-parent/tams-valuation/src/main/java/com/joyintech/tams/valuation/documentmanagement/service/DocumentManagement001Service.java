@@ -86,7 +86,7 @@ public class DocumentManagement001Service extends CommonExportService<DocumentMa
 	 */
 	public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws IOException, JSchException {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("fileId", request.getParameter("fileId"));
+		params.put("fileId", request.getParameter("fileId")==null?"":request.getParameter("fileId"));
 		return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME
 	                + "/DocumentManagement001/downloadFile",
 	                params, ResponseEntity.class);

@@ -92,19 +92,25 @@ public class DBFReader extends DBFBase {
 				case 67:
 					byte[] b_array = new byte[this.header.fieldArray[i]
 							.getFieldLength()];
-					this.dataInputStream.read(b_array);
+					if(this.dataInputStream!=null){
+						this.dataInputStream.read(b_array);
+					}
 					recordObjects[i] = new String(b_array,
 							this.characterSetName);
 					break;
 				case 68:
 					byte[] t_byte_year = new byte[4];
-					this.dataInputStream.read(t_byte_year);
-
+					if(this.dataInputStream!=null) {
+						this.dataInputStream.read(t_byte_year);
+					}
 					byte[] t_byte_month = new byte[2];
-					this.dataInputStream.read(t_byte_month);
-
+					if(this.dataInputStream!=null) {
+						this.dataInputStream.read(t_byte_month);
+					}
 					byte[] t_byte_day = new byte[2];
-					this.dataInputStream.read(t_byte_day);
+					if(this.dataInputStream!=null) {
+						this.dataInputStream.read(t_byte_day);
+					}
 					try {
 						GregorianCalendar calendar = new GregorianCalendar(
 								Integer.parseInt(new String(t_byte_year)),
@@ -121,7 +127,9 @@ public class DBFReader extends DBFBase {
 					try {
 						byte[] t_float = new byte[this.header.fieldArray[i]
 								.getFieldLength()];
-						this.dataInputStream.read(t_float);
+						if(this.dataInputStream!=null) {
+							this.dataInputStream.read(t_float);
+						}
 						t_float = DBFUtils.trimLeftSpaces(t_float);
 						if ((t_float.length > 0)
 								&& (!DBFUtils.contains(t_float, (byte) 63))) {
@@ -139,7 +147,9 @@ public class DBFReader extends DBFBase {
 					try {
 						byte[] t_numeric = new byte[this.header.fieldArray[i]
 								.getFieldLength()];
-						this.dataInputStream.read(t_numeric);
+						if(this.dataInputStream!=null) {
+							this.dataInputStream.read(t_numeric);
+						}
 						t_numeric = DBFUtils.trimLeftSpaces(t_numeric);
 						// 添加代码
 						String strtemp = new String(t_numeric);

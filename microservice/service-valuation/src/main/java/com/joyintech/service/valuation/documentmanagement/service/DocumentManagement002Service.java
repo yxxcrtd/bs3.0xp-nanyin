@@ -54,7 +54,7 @@ public class DocumentManagement002Service {
 	 */
 	public void readFile(HttpServletRequest request) throws Exception {
 		// 文件本地路径
-		String filePath = request.getParameter("fileName1");
+		String filePath = request.getParameter("fileName1")==null?"":request.getParameter("fileName1");
 		/*
 		//上传文件名称
 		String name = request.getParameter("fileName");*/

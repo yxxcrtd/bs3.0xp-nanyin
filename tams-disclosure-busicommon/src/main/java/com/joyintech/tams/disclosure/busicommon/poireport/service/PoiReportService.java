@@ -307,7 +307,7 @@ public class PoiReportService {
 					for (int i = 1; i < 50; i++) {
 						try {
 							// 遍历超越列数则异常，跳出for循环
-							row.add(rs.getString(i));
+							row.add(rs.getString(i)==null?"":rs.getString(i));
 						} catch (Exception e) {
 							break;
 						}

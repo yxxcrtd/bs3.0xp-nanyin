@@ -725,7 +725,7 @@ public class TargetIndexService {
 				map.put("SSZB", rs.getBigDecimal("SSZB"));
 				map.put("JZSY", rs.getBigDecimal("JZSY"));
 				map.put("FEJZ", rs.getBigDecimal("FEJZ"));
-				map.put("PROD_ID", rs.getString("PROD_ID"));
+				map.put("PROD_ID", rs.getString("PROD_ID")==null?"":rs.getString("PROD_ID"));
 			}
 		}
 		catch (SQLException e) {

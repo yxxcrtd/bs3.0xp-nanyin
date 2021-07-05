@@ -521,7 +521,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 	private String getEncodeFileName(String fileName) {
 		try {
 			return StringUtil.isNotEmpty(fileName)
-					? (new String(fileName.getBytes(System.getProperty("file.encoding")), "UTF-8")) : fileName;
+					? (new String(fileName.getBytes(System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding")), "UTF-8")) : fileName;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

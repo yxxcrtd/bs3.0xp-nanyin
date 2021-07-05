@@ -70,7 +70,9 @@ public class ChbFileDownloadController extends BaseController {
         fits=new FileInputStream(path);
         fis = new BufferedInputStream(fits);
         byte[] buffer = new byte[fis.available()];
-        fis.read(buffer);
+        if(fis!=null) {
+            fis.read(buffer);
+        }
         fits.close();
         fis.close();
         response.reset();

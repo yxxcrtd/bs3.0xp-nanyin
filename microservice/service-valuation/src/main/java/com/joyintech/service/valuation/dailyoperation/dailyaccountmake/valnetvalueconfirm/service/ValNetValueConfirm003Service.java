@@ -58,13 +58,13 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
 	 */
 	public void readFile(HttpServletRequest request) throws Exception {
 		// 文件本地路径
-		String filePath = request.getParameter("fileName");
+		String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
 		
 		//产品id
-		String finprodId = request.getParameter("finprodId");
+		String finprodId = request.getParameter("finprodId")==null?"":request.getParameter("finprodId");
 		
 		//估值表余额表标识
-		String valBalFlag = request.getParameter("valBalFlag");
+		String valBalFlag = request.getParameter("valBalFlag")==null?"":request.getParameter("valBalFlag");
         if(StringUtil.isNotEmpty(valBalFlag)){
             if(valBalFlag.equals(DictCodeList.文件类型_估值表.getCodeName())){
                 valBalFlag = DictCodeList.文件类型_估值表.getValue();
@@ -74,7 +74,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
         }
 		
 		//估值表余额表标识
-        String valDateS = request.getParameter("valDate");
+        String valDateS = request.getParameter("valDate")==null?"":request.getParameter("valDate");
         String valDate = valDateS.replace("-", "");
         
 		//产品唯一标识
@@ -250,7 +250,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
      */
     public void deleteFile(HttpServletRequest request) throws Exception {
         // 文件id
-        String fileId = request.getParameter("fileId");
+        String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
         //文件信息
         BokFileInfoDto infoDto = new BokFileInfoDto();
         //净值确认附件信息
