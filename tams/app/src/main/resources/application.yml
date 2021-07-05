@@ -356,13 +356,13 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0810
-  sqldirpassword: zgtams0810_123
+  sqldiruserName: zgtams0702ls
+  sqldirpassword: zgtams0702ls_123
 shiro:
   ssoEnable: false
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -375,29 +375,105 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
+log:
+  path: /home/tams/logs/tams
+  level: debug
+eureka:
+  client:
+    enabled: false
+jixu:
+  user:
+    type: 2
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.197:8070
+---
+spring:
+  profiles: jlzl
+  thymeleaf:
+    cache: false
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.90.198
+    port: 6379
+    timeout: 20000
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.70.212:7001,192.168.70.212:7002,192.168.70.212:7003,192.168.70.212:7004,192.168.70.212:7005,192.168.70.212:7006
+  #  redislock:
+  #    redissonEnabled: false
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+    username: zgtams217_zzsj0606_ls_08
+    password: zgtams217_zzsj0606_ls_08
+    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+application:
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+  sqldiruserName: zgtams217_zzsj0606_ls_08
+  sqldirpassword: zgtams217_zzsj0606_ls_08
+shiro:
+  ssoEnable: false
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+    username: zgtams217_zzsj0606_ls_08
+    password: zgtams217_zzsj0606_ls_08
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+    username: zgtams217_zzsj0606_ls_08
+    password: zgtams217_zzsj0606_ls_08
+stresstest:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+    username: zgtams217_zzsj0606_ls_08
+    password: zgtams217_zzsj0606_ls_08
+wind:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+    username: zgtams217_zzsj0606_ls_08
+    password: zgtams217_zzsj0606_ls_08
+#中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+    username: zgtams217_zzsj0606_ls_08
+    password: zgtams217_zzsj0606_ls_08
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -425,40 +501,40 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  username: zgtams0810
-  password: zgtams0810_123
+  username: zgtams0702ls
+  password: zgtams0702ls_123
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    username: zgtams0702ls
+    password: zgtams0702ls_123
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG
