@@ -401,6 +401,8 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+
+		logger.info(dataList.toString());
 		param.put("userName", CommonUtil.getUserName());
 		param.put("tableName", tableName);
 		param.put("dataList", dataList);
