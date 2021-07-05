@@ -385,7 +385,7 @@
 			   FIN_PRODUCT.FINPROD_ID as finprodId,
     		   FIN_PRODUCT.PROFIT_TYPE as profitType,
 			   FIN_PRODUCT_ADD.DEAL_MODE  as dealMode,
-    		   FIN_PRODUCT.MDATE,   mdate
+    		   FIN_PRODUCT.MDATE as mdate
     	  from FIN_PRODUCT, FIN_PRODUCT_ADD
 			/*,  PA_FIN_PRODUCT*/
     	 where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID

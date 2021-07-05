@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.product.messageadjust.finproductquotation.dao.FinProductQuotation001Mapper_mysql">
 	<select id="queryProdIdInfoIssueSuc" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select FIN_PRODUCT.FINPROD_ID id, CONCAT_WA('',FINPROD_MARKET_ID , ':', FINPROD_ABBR) text
+		select FIN_PRODUCT.FINPROD_ID id, CONCAT_WA('',FIN_PRODUCT.FINPROD_MARKET_ID , ':', FIN_PRODUCT.FINPROD_ABBR) text
 		from FIN_PRODUCT, FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY
 		where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
 		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodTypeProd}

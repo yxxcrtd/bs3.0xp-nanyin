@@ -82,15 +82,15 @@
 		FROM FIN_PRODUCT T1
 		INNER JOIN FIN_PRODUCT_TYPE T2 ON T1.FINPROD_ID = T2.FINPROD_ID
 		WHERE T1.FINPROD_ID = #{dto.finprodId,jdbcType=VARCHAR}),#{dto.counterId,jdbcType=VARCHAR})
-		AND T.CREDIT_MST_ID IN (select seqno from CREDIT_MST_INFO T5
+		AND T.CREDIT_MST_ID IN (select T5.seqno from CREDIT_MST_INFO T5
 		where trim(concat(T5.credit_quote_type_code, T5.CREDIT_QUOTE_TYPE_VALUE)) in
-		(select trim(concat(dict_code, item_code)) from SYS_DATADICT_LIST_LINK,
+		(select trim(concat(SYS_DATADICT_LIST_LINK.dict_code, SYS_DATADICT_LIST_LINK.item_code)) from SYS_DATADICT_LIST_LINK,
 		(select T4.TYPE_6, T4.TYPE_7, T4.TYPE_8 from FIN_PRODUCT_TYPE T4
 		where T4.Finprod_Id = #{dto.finprodId,jdbcType=VARCHAR}) T6
-		where (item_code=T6.TYPE_6 or item_code=T6.TYPE_7)
-		start with trim(concat(linked_dict_code, linked_item_code)) =
+		where (SYS_DATADICT_LIST_LINK.item_code=T6.TYPE_6 or SYS_DATADICT_LIST_LINK.item_code=T6.TYPE_7)
+		start with trim(concat(SYS_DATADICT_LIST_LINK.linked_dict_code, SYS_DATADICT_LIST_LINK.linked_item_code)) =
 		trim(concat('PINAN_ASSET_TYPE', T6.TYPE_8))
-		connect by trim(concat(linked_dict_code, linked_item_code)) = prior trim(concat(dict_code, item_code))))
+		connect by trim(concat(SYS_DATADICT_LIST_LINK.linked_dict_code, SYS_DATADICT_LIST_LINK.linked_item_code)) = prior trim(concat(SYS_DATADICT_LIST_LINK.dict_code, SYS_DATADICT_LIST_LINK.item_code))))
 		)
 		)
 		AND T.VDATE = (select max(tt.vdate)
@@ -126,25 +126,25 @@
 			<when test="dto.finprodType2 != null and dto.finprodType2 != '' and dto.finprodType2 =='F10'">
 				AND T. CREDIT_MST_ID IN ( SELECT A.CREDIT_MST_ID as
 				creditMstId FROM CREDIT_LINES A left join CREDIT_MST_INFO B
-				on a.CREDIT_MST_ID=b.seqno where PFLSH =T
-				.PFLSH and PARENT_CUSTOMER_ID = T.CUSTOMER_ID AND
+				on a.CREDIT_MST_ID=b.seqno where A.PFLSH =T
+				.PFLSH and A.PARENT_CUSTOMER_ID = T.CUSTOMER_ID AND
 				B.credit_quote_type_value=(select TYPE_8 from FIN_PRODUCT_TYPE where
 				FINPROD_ID = #{dto.finprodId,jdbcType=VARCHAR}))
 			</when>
 			<otherwise>
-				AND T.CREDIT_MST_ID IN (select seqno from
+				AND T.CREDIT_MST_ID IN (select T5.seqno from
 				CREDIT_MST_INFO T5
 				where trim(concat(T5.
 				credit_quote_type_code, T5.CREDIT_QUOTE_TYPE_VALUE)) in
-				(select trim(concat(dict_code, item_code)) from
+				(select trim(concat(SYS_DATADICT_LIST_LINK.dict_code, SYS_DATADICT_LIST_LINK.item_code)) from
 				SYS_DATADICT_LIST_LINK,
 				(select T4.TYPE_6, T4.TYPE_7, T4.TYPE_8 from FIN_PRODUCT_TYPE T4
 				where T4.Finprod_Id = #{ dto.finprodId,jdbcType=VARCHAR}) T6
-				where (item_code=T6.TYPE_6 or item_code=T6.TYPE_7)
-				start with trim(concat(linked_dict_code, linked_item_code)) =
+				where (SYS_DATADICT_LIST_LINK.item_code=T6.TYPE_6 or SYS_DATADICT_LIST_LINK.item_code=T6.TYPE_7)
+				start with trim(concat(SYS_DATADICT_LIST_LINK.linked_dict_code, SYS_DATADICT_LIST_LINK.linked_item_code)) =
 				trim(concat('PINAN_ASSET_TYPE', T6.TYPE_8))
-				connect by trim(concat(linked_dict_code, linked_item_code)) = prior
-				trim(concat(dict_code, item_code))))
+				connect by trim(concat(SYS_DATADICT_LIST_LINK.linked_dict_code, SYS_DATADICT_LIST_LINK.linked_item_code)) = prior
+				trim(concat(SYS_DATADICT_LIST_LINK.dict_code, SYS_DATADICT_LIST_LINK.item_code))))
 			</otherwise>
 		</choose>
 
@@ -175,18 +175,18 @@
 		from PA_FIN_PRODUCT T1
 		where T1.FINPROD_ID=#{dto.finprodId,jdbcType=VARCHAR})
 		and T.credit_mst_id =  #{creditmstidJG,jdbcType=VARCHAR})
-		OR( T.parent_customer_id = (select ACTUAL_CREDIT_PROVID
+		OR( T.parent_customer_id = (select T1.ACTUAL_CREDIT_PROVID
 		from PA_FIN_PRODUCT T1
 		where T1.FINPROD_ID=#{dto.finprodId,jdbcType=VARCHAR})
-		and T.credit_mst_id in (select seqno from CREDIT_MST_INFO T5
+		and T.credit_mst_id in (select T5.seqno from CREDIT_MST_INFO T5
 		where trim(concat(T5.credit_quote_type_code, T5.CREDIT_QUOTE_TYPE_VALUE)) in
-		(select trim(concat(dict_code, item_code)) from SYS_DATADICT_LIST_LINK,
+		(select trim(concat(SYS_DATADICT_LIST_LINK.dict_code, SYS_DATADICT_LIST_LINK.item_code)) from SYS_DATADICT_LIST_LINK,
 		(select T4.TYPE_6, T4.TYPE_7, T4.TYPE_8 from FIN_PRODUCT_TYPE T4
 		where T4.Finprod_Id = #{dto.finprodId,jdbcType=VARCHAR}) T6
-		where (item_code=T6.TYPE_6 or item_code=T6.TYPE_7)
-		start with trim(concat(linked_dict_code, linked_item_code)) =
+		where (SYS_DATADICT_LIST_LINK.item_code=T6.TYPE_6 or SYS_DATADICT_LIST_LINK.item_code=T6.TYPE_7)
+		start with trim(concat(SYS_DATADICT_LIST_LINK.linked_dict_code, SYS_DATADICT_LIST_LINK.linked_item_code)) =
 		trim(concat('PINAN_ASSET_TYPE', T6.TYPE_8))
-		connect by trim(concat(linked_dict_code, linked_item_code)) = prior trim(concat(dict_code, item_code))))
+		connect by trim(concat(SYS_DATADICT_LIST_LINK.linked_dict_code, SYS_DATADICT_LIST_LINK.linked_item_code)) = prior trim(concat(SYS_DATADICT_LIST_LINK.dict_code, SYS_DATADICT_LIST_LINK.item_code))))
 		))
 		AND T.VDATE = (select max(tt.vdate)
 		from CREDIT_LINES_PRE tt
@@ -205,18 +205,18 @@
 		from PA_FIN_PRODUCT T1
 		where T1.FINPROD_ID=#{dto.finprodId,jdbcType=VARCHAR})
 		and T.credit_mst_id = #{creditmstidJG,jdbcType=VARCHAR})
-		OR( T.parent_customer_id = (select ACTUAL_CREDIT_PROVID
+		OR( T.parent_customer_id = (select T1.ACTUAL_CREDIT_PROVID
 		from PA_FIN_PRODUCT T1
 		where T1.FINPROD_ID=#{dto.finprodId,jdbcType=VARCHAR})
-		and T.credit_mst_id in (select seqno from CREDIT_MST_INFO T5
+		and T.credit_mst_id in (select T5.seqno from CREDIT_MST_INFO T5
 		where trim(concat(T5.credit_quote_type_code, T5.CREDIT_QUOTE_TYPE_VALUE)) in
-		(select trim(concat(dict_code, item_code)) from SYS_DATADICT_LIST_LINK,
+		(select trim(concat(SYS_DATADICT_LIST_LINK.dict_code, SYS_DATADICT_LIST_LINK.item_code)) from SYS_DATADICT_LIST_LINK,
 		(select T4.TYPE_6, T4.TYPE_7, T4.TYPE_8 from FIN_PRODUCT_TYPE T4
 		where T4.Finprod_Id = #{dto.finprodId,jdbcType=VARCHAR}) T6
-		where (item_code=T6.TYPE_6 or item_code=T6.TYPE_7)
-		start with trim(concat(linked_dict_code, linked_item_code)) =
+		where (SYS_DATADICT_LIST_LINK.item_code=T6.TYPE_6 or SYS_DATADICT_LIST_LINK.item_code=T6.TYPE_7)
+		start with trim(concat(SYS_DATADICT_LIST_LINK.linked_dict_code, SYS_DATADICT_LIST_LINK.linked_item_code)) =
 		trim(concat('PINAN_ASSET_TYPE', T6.TYPE_8))
-		connect by trim(concat(linked_dict_code, linked_item_code)) = prior trim(concat(dict_code, item_code))))
+		connect by trim(concat(SYS_DATADICT_LIST_LINK.linked_dict_code, SYS_DATADICT_LIST_LINK.linked_item_code)) = prior trim(concat(SYS_DATADICT_LIST_LINK.dict_code, SYS_DATADICT_LIST_LINK.item_code))))
 		))
 		AND T.VDATE = (select max(tt.vdate)
 		from CREDIT_LINES tt

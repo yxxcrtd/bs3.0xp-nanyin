@@ -133,11 +133,11 @@
 		   </choose>
 	</select>
 	<select id="queryFloatFeeDetailByFinprodId" resultType="com.joyintech.tams.common.base.entity.FinFloatCalcRuleDetail">
-		select  LEV lev,
-				BASE_RULE_ID baseRuleId,
-				COEFFICIENT coefficient,
-				SPREAD_RATE * 100 spreadRate,
-				CHARGE_RATIO * 100 chargeRatio
+		select  FIN_FLOAT_CALC_RULE_DETAIL.LEV lev,
+				FIN_FLOAT_CALC_RULE_DETAIL.BASE_RULE_ID baseRuleId,
+				FIN_FLOAT_CALC_RULE_DETAIL.COEFFICIENT coefficient,
+				FIN_FLOAT_CALC_RULE_DETAIL.SPREAD_RATE * 100 spreadRate,
+				FIN_FLOAT_CALC_RULE_DETAIL.CHARGE_RATIO * 100 chargeRatio
 		from FIN_FLOAT_CALC_RULE_DETAIL, FIN_CASH_INFO, FIN_PRODUCT, FIN_PRODUCT_ADD
 		where FIN_FLOAT_CALC_RULE_DETAIL.CASH_ID = FIN_CASH_INFO.CASH_ID
 		  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
@@ -165,7 +165,7 @@
 		   		     OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
 		   	</otherwise>
 		   </choose>
-		  order by LEV
+		  order by FIN_FLOAT_CALC_RULE_DETAIL.LEV
 	</select>
 	<select id="getMaxLevByCashIdAndEffDate" resultType="java.lang.Integer">
 		select

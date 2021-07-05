@@ -23,7 +23,7 @@
 		</if>
 	</select>
 	<select id="queryProdIdInfoIssueSuc" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select FIN_PRODUCT.FINPROD_ID id, concat_ws('',FINPROD_MARKET_ID ,':', FINPROD_ABBR) text
+		select FIN_PRODUCT.FINPROD_ID id, concat_ws('',FIN_PRODUCT.FINPROD_MARKET_ID ,':', FIN_PRODUCT.FINPROD_ABBR) text
 		from FIN_PRODUCT, FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY
 		where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
 		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodTypeProd}
