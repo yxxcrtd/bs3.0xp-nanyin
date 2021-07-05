@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.entrust.etrseclend.service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -111,7 +112,10 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
         //有效状态
         String entrustStatus = (String)param.get("entrustStatus");
         if(StringUtil.isNotEmpty(entrustStatus)){
-            param.put("entrustStatusList", StringUtil.splitToList(GlobalConstant.COMMA,entrustStatus));
+            // 去除空字符串值
+            List<String> entrustStatusList = StringUtil.splitToList(GlobalConstant.COMMA, entrustStatus);
+            entrustStatusList = entrustStatusList.stream().filter(i->!i.isEmpty()).collect(Collectors.toList());
+            param.put("entrustStatusList", entrustStatusList);
         }
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         return restTemplate.postForPage(

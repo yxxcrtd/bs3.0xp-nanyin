@@ -135,6 +135,8 @@ public class EtrSecLendService extends BaseService {
     public Page<EtrSecLendDto> selectForPage(int page, int length,
                                                     Map<String, Object> param)
         throws Exception {
+        param.put("ENTRUST_STATUS_08",DictCodeListExt3.委托状态_流程中.getValue());
+        param.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
         param.put("bondList", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(),DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue()));
         Page<EtrSecLendDto> pageDto = queryForPage(page, length,
             () -> etrSecLendMapper.selectForPage(param));
