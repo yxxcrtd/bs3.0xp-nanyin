@@ -3421,7 +3421,10 @@
         LEFT JOIN FIN_CASH_PAY_RULE T33
         ON (T33.CASH_ID = T13.CASH_ID AND T33.EFF_DATE = T23.VDATE)
 
-        left join fin_product_credit tt
+        left join (select t1.* from (
+            select row_number() over(partition by t.finprod_id order by t.update_time) idx,t.*
+            from fin_product_credit t)t1
+            where t1.idx=1) tt
         on tt.FINPROD_ID = detail.REP_FINPROD_ID
         left join mst_customer_info_add a
         on tt.credit_flag = a.customer_id	

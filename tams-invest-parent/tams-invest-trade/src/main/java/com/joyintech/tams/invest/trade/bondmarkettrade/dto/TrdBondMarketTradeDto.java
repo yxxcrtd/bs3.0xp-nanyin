@@ -220,6 +220,7 @@ public class TrdBondMarketTradeDto extends TrdFinProductDealTotal implements Pro
      * 获取资产代码
      */
     @Override
+    @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getFinprodId() {
         return finprodId;
     }
