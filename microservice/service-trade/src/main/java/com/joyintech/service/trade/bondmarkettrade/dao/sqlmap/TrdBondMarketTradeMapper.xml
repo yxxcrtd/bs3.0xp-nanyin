@@ -316,7 +316,7 @@
         count (1)
         from(
         SELECT
-        TPD.FINPROD_ID
+        TPD.FINPROD_ID FINPROD_ID
         FROM TRD_PRODUCT_DEAL TPD
         <where>
             TPD.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
@@ -326,7 +326,7 @@
         UNION
 
         SELECT
-        TFPDT.FINPROD_ID
+        TFPDT.FINPROD_ID FINPROD_ID
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
         <where>
             TFPDT.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
@@ -336,7 +336,7 @@
         UNION
 
         SELECT
-        WTPD.FINPROD_ID
+        WTPD.FINPROD_ID  FINPROD_ID
         FROM WFL_TRD_PRODUCT_DEAL WTPD
         <where>
             WTPD.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
@@ -345,10 +345,22 @@
         UNION
 
         SELECT
-        WTFPDT.FINPROD_ID
+        WTFPDT.FINPROD_ID FINPROD_ID
         FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL WTFPDT
         <where>
             WTFPDT.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </where>
+
+        UNION
+
+        SELECT
+        SDPM.BUSINESS_DATA_PK3 FINPROD_ID
+        FROM SYS_DATA_PROCESS_MARK SDPM
+        INNER JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL WTFPDT
+        ON WTFPDT.WORKFLOW_ID = SDPM.WORKFLOW_ID
+        <where>
+            SDPM.BUSINESS_DATA_PK3 = #{finprodId,jdbcType=VARCHAR}
+            AND WTFPDT.PS = 'T41'
         </where>
         )
 
