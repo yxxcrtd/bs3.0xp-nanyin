@@ -3562,13 +3562,13 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					pkDataMap.put(key, value);
 				}
 			}
-			if (flag) {
-				int count = baseInformationMapper.checkDataIsExist(pkDataMap, tableName);
-				if (count > 0) {
-					data.remove(0);
-					data.add(0, "修改");
-				}
-			}
+//			if (flag) {
+//				int count = baseInformationMapper.checkDataIsExist(pkDataMap, tableName);
+//				if (count > 0) {
+//					data.remove(0);
+//					data.add(0, "修改");
+//				}
+//			}
 
 			data.add(DateUtil.getCurrentDate());
 
