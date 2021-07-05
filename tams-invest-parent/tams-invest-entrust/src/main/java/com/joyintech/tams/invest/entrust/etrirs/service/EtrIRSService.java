@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 利率互换委托画面端service 〈功能详细描述〉
@@ -103,6 +104,8 @@ public class EtrIRSService extends CommonExportService<EtrIRSDto> implements Bas
         if (StringUtil.isNotEmpty(param.get("entrustStatus"))) {
             List<String> entrustStatusList = StringUtil.splitToList(GlobalConstant.COMMA,
                 (String)param.get("entrustStatus"));
+            // 去除空字符串值
+            entrustStatusList = entrustStatusList.stream().filter(i->!i.isEmpty()).collect(Collectors.toList());
             param.put("entrustStatusList", entrustStatusList);
         }
         param.put("loginUser", SecurityUtil.getLoginUser().getUserName());

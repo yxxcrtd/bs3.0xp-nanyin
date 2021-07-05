@@ -52,6 +52,7 @@
 		T2.PORTFOLIO_ID=T5.PORTFOLIO_ID and T5.USER_ID= #{loginUser}
 		inner join OPT_TARGET_INFO T6 on T3.ASSET_TYPE_10 = T6.TARGET_ID
 		<where>
+			AND T1.TRADE_MARKET = #{TRADE_MARKET_01} 
 			<if test="portfolioIdList != null and portfolioIdList.size() >0">
 				AND ((T2.PORTFOLIO_ID IN
 				<foreach collection="portfolioIdList" item="prot" index="index" open="(" close=")" separator=",">
@@ -131,6 +132,7 @@
 		T2.PORTFOLIO_ID=T5.PORTFOLIO_ID and T5.USER_ID= #{loginUser}
 		inner join OPT_TARGET_INFO T6 on T3.ASSET_TYPE_10 = T6.TARGET_ID
 		<where>
+			AND T1.TRADE_MARKET = #{TRADE_MARKET_01} 
 			<if test="portfolioIdList != null and portfolioIdList.size() >0">
 				AND ((T2.PORTFOLIO_ID IN
 				<foreach collection="portfolioIdList" item="prot" index="index" open="(" close=")" separator=",">

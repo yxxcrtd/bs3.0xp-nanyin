@@ -10,33 +10,14 @@
 
 package com.joyintech.service.entrust.etrirs.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
-import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
-import com.joyintech.service.entrust.common.service.EntrustCommonPersonSelectService;
-import com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoDto;
-import com.joyintech.service.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.service.entrust.etrirs.dao.EtrIRSMapper;
 import com.joyintech.service.entrust.etrirs.dto.EtrIRSDto;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
@@ -47,11 +28,20 @@ import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
+import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 利率互换委托微服务service 〈功能详细描述〉
@@ -120,6 +110,8 @@ public class EtrIRSService extends BaseService<EtrIRSDto> {
      */
     public Page<EtrIRSDto> selectForPage(int page, int length, Map<String, Object> param)
         throws Exception {
+        param.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
+        param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         param.put("FINPROD_TYPE_TG_F14", DictCodeListExt1.金融产品类型_投管用_利率互换.getValue());
         Page<EtrIRSDto> pagelist =queryForPage(page, length, () -> etrIRSMapper.selectForPage(param));
         for(EtrIRSDto dto:pagelist.getRoot()){

@@ -111,6 +111,7 @@ public class EtrOptionService extends BaseService<EtrOptionDto> {
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
         param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
+        param.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
         Page<EtrOptionDto> page1= queryForPage(page,length,()->etrOptionMapper.selectForPage(param));
 
         return page1;

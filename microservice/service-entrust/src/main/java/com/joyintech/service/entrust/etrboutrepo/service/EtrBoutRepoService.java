@@ -126,6 +126,7 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
         param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
+        param.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
         return queryForPage(page, length, () -> etrBoutRepoMapper.selectForPage(param));
     }
     /**

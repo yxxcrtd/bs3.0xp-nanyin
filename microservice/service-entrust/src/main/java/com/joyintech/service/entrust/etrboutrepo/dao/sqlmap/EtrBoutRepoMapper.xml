@@ -76,7 +76,7 @@
 		ON
 		T2.PORTFOLIO_ID = T6.PORTFOLIO_ID
 		<where>
-			AND T6.USER_ID = #{userId}
+			AND T6.USER_ID = #{userId} AND T1.TRADE_MARKET = #{TRADE_MARKET_01} 
 			<if test="portfolioIdList != null and portfolioIdList.size()>0">
 				AND (T2.PORTFOLIO_ID IN
 				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
@@ -175,7 +175,7 @@
 		ON
 		T2.PORTFOLIO_ID = T6.PORTFOLIO_ID
 		<where>
-			AND T6.USER_ID = #{userId}
+			AND T6.USER_ID = #{userId} AND T1.TRADE_MARKET = #{TRADE_MARKET_01} 
 			<if test="portfolioIdList != null and portfolioIdList.size()>0">
 				AND (T2.PORTFOLIO_ID IN
 				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
