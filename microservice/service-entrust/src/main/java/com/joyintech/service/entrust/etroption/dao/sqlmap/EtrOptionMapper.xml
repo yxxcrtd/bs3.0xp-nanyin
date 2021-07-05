@@ -2,6 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.service.entrust.etroption.dao.EtrOptionMapper">
 	<select id="selectForPage" resultType="com.joyintech.service.entrust.etroption.dto.EtrOptionDto">
+		select aaa.* from (
+		<choose>
+			<when test="entrustStatusList == null 
+			|| (entrustStatusList.size() > 1 and entrustStatusList.contains(ENTRUST_STATUS_08)) ">
+				<!-- 查询全部状态 多选包含流程中状态 -->
+				<include refid="onlyEtrEntrust"></include>
+				UNION ALL
+				<include refid="onlyWtfEtrEntrust"></include>
+			</when>
+			<when test="entrustStatusList != null and entrustStatusList.contains(ENTRUST_STATUS_08)">
+				<!-- 只查流程中的数据 -->
+				<include refid="onlyWtfEtrEntrust"></include>
+			</when>
+			<otherwise>
+				<include refid="onlyEtrEntrust"></include>
+			</otherwise>
+		</choose>
+		) aaa
+		left join SYS_DATADICT_LIST sdl on aaa.entrustStatus=sdl.ITEM_CODE and sdl.DICT_CODE='ENTRUST_STATUS'
+		order by sdl.ORDER_NO, aaa.entrustId DESC
+	</select>
+
+	<sql id="onlyEtrEntrust">
 		SELECT
 		T6.TARGET_NAME       assetType10Str,
 		T1.ENTRUST_ID 			entrustId,
@@ -19,7 +42,7 @@
 		T1.INV_MANAGER_ID       invManagerId,
 		T1.ENTRUST_NUM          entrustNum,
 		T1.REMARK 				remark
-		FROM 
+		FROM
 		ETR_ENTRUST T1
 		inner join PTL_PORTFOLIO T2 on T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
 		inner join ETR_ENTRUST_ADD T3 on T3.ENTRUST_ID = T1.ENTRUST_ID
@@ -33,15 +56,15 @@
 				AND ((T2.PORTFOLIO_ID IN
 				<foreach collection="portfolioIdList" item="prot" index="index" open="(" close=")" separator=",">
 					<if test="(index % 998) == 0">
-					null) OR T2.PORTFOLIO_ID IN (
-				   </if>
+						null) OR T2.PORTFOLIO_ID IN (
+					</if>
 					#{prot}
 				</foreach>)
 				or (T2.PARENT_PORTFOLIO_ID IN
 				<foreach collection="portfolioIdList" item="prot" index="index" open="(" close=")" separator=",">
 					<if test="(index % 998) == 0">
-					null) OR T2.PARENT_PORTFOLIO_ID in (
-				   </if>
+						null) OR T2.PARENT_PORTFOLIO_ID in (
+					</if>
 					#{prot}
 				</foreach>)
 				)
@@ -49,13 +72,13 @@
 			<if test="contractTypeList != null">
 				AND T3.ASSET_TYPE_11 in
 				<foreach collection="contractTypeList" item="item" open="(" close=")" separator=",">
-				#{item}
+					#{item}
 				</foreach>
 			</if>
 			<if test="contractSubMatterList != null">
 				AND T3.ASSET_TYPE_10 in
 				<foreach collection="contractSubMatterList" item="item" open="(" close=")" separator=",">
-				#{item}
+					#{item}
 				</foreach>
 			</if>
 			<if test="ps != null and ps!=''">
@@ -67,7 +90,7 @@
 			<if test="entrustStatusList != null">
 				AND T1.ENTRUST_STATUS in
 				<foreach collection="entrustStatusList" item="item" open="(" close=")" separator=",">
-				#{item}
+					#{item}
 				</foreach>
 			</if>
 			<if test="startDate != null">
@@ -76,10 +99,83 @@
 			<if test="endDate != null">
 				AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-mm-dd')
 			</if>
-				AND T3.ASSET_TYPE in(#{option})
+			AND T3.ASSET_TYPE in(#{option})
 		</where>
-		ORDER BY T1.ENTRUST_ID DESC
-	</select>
+	</sql>
+
+	<sql id="onlyWtfEtrEntrust">
+		SELECT
+		T6.TARGET_NAME       assetType10Str,
+		T1.ENTRUST_ID 			entrustId,
+		T1.ENTRUST_STATUS 		entrustStatus,
+		T1.PORTFOLIO_ID			portfolioId,
+		T2.PORTFOLIO_NAME 		portfolioName,
+		T3.ASSET_TYPE1 			assetType1,
+		T3.ASSET_TYPE_10        assetType10,
+		T3.ASSET_TYPE_11        assetType11,
+		T3.BUSI_PS				ps,
+		T3.TERM_DAYS 			termDays,
+		T3.EXERCISE_TYPE		exerciseType,
+		T1.VDATE				vdate,
+		T1.MDATE				mdate,
+		T1.INV_MANAGER_ID       invManagerId,
+		T1.ENTRUST_NUM          entrustNum,
+		T1.REMARK 				remark
+		FROM
+		WFL_ETR_ENTRUST T1
+		inner join PTL_PORTFOLIO T2 on T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
+		inner join WFL_ETR_ENTRUST_ADD T3 on T3.ENTRUST_ID = T1.ENTRUST_ID
+		inner join
+		PTL_PORTFOLIO_AUTHORITY T5
+		on
+		T2.PORTFOLIO_ID=T5.PORTFOLIO_ID and T5.USER_ID= #{loginUser}
+		inner join OPT_TARGET_INFO T6 on T3.ASSET_TYPE_10 = T6.TARGET_ID
+		<where>
+			<if test="portfolioIdList != null and portfolioIdList.size() >0">
+				AND ((T2.PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" item="prot" index="index" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR T2.PORTFOLIO_ID IN (
+					</if>
+					#{prot}
+				</foreach>)
+				or (T2.PARENT_PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" item="prot" index="index" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR T2.PARENT_PORTFOLIO_ID in (
+					</if>
+					#{prot}
+				</foreach>)
+				)
+			</if>
+			<if test="contractTypeList != null">
+				AND T3.ASSET_TYPE_11 in
+				<foreach collection="contractTypeList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="contractSubMatterList != null">
+				AND T3.ASSET_TYPE_10 in
+				<foreach collection="contractSubMatterList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="ps != null and ps!=''">
+				AND T3.BUSI_PS =#{ps}
+			</if>
+			<if test="exerciseType != null and exerciseType !=''">
+				AND T3.EXERCISE_TYPE =#{exerciseType}
+			</if>
+			<if test="startDate != null">
+				AND T1.VDATE &gt;= to_date(#{startDate},'yyyy-mm-dd')
+			</if>
+			<if test="endDate != null">
+				AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-mm-dd')
+			</if>
+			AND T3.ASSET_TYPE in(#{option})
+		</where>
+	</sql>
+	
 	<select id="getentrustId" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT
 		T1.PORTFOLIO_ID code,
@@ -248,5 +344,47 @@
 	<where>
 		T1.ENTRUST_ID = #{entrustId}
 	</where>
+	union all
+		select
+		T4.TARGET_NAME       assetType10Str,
+		T1.ENTRUST_ID			entrustId,
+		T1.PORTFOLIO_ID			portfolioId,
+		T1.VDATE				vdate,
+		T1.MDATE				mdate,
+		T1.CCY					ccy,
+		T2.ASSET_TYPE1			assetType1,
+		T2.ASSET_TYPE_10        assetType10,
+		T2.ASSET_TYPE_11        assetType11,
+		T2.EXERCISE_TYPE        exerciseType,
+		T2.EXEC_BASE_DATE       execBaseDate,
+		T2.OPT_FEE_PAY_TYPE     optFeePayType,
+		T2.OPT_FEE_PAY_TYPE2    optFeePayType2,
+		T2.EXE_PRICE            exePrice,
+		T2.KNOCK_PRICE          knockPrice,
+		T2.LOW_HIND_PRICE       lowHindPrice,
+		T2.LOW_EXERC_PRICE      lowExercPrice,
+		T2.HIGH_HIND_PRICE      highHindPrice,
+		T2.HIGH_EXERC_PRICE     highExercPrice,
+		T2.BUSI_PS				ps,
+		T1.TRADE_MARKET         tradeMarket,
+		T1.ENTRUST_NUM          entrustNum,
+		T2.VDATE				vdateAdd,
+		T2.MDATE				mdateAdd,
+		T2.TERM_DAYS			termDays,
+		T1.CALENDAR_ID			calendarId,
+		T1.INV_MANAGER_ID		invManagerId,
+		T3.TRADER				trader,
+		T1.COUNTER_ID			counterId,
+		T1.COUNTER_TRADER		counterTrader,
+		T1.CONTACT_INFO			contactInfo,
+		T1.REMARK				remark
+		from
+		WFL_ETR_ENTRUST T1
+		LEFT JOIN WFL_ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
+		LEFT JOIN ETR_DISTRIBUTE T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
+		LEFT JOIN OPT_TARGET_INFO T4 ON T2.ASSET_TYPE_10 = T4.TARGET_ID
+		<where>
+			T1.ENTRUST_ID = #{entrustId}
+		</where>
 	</select>
 </mapper>

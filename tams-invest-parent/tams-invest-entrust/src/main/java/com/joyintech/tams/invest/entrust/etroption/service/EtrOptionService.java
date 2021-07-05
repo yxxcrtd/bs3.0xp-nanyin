@@ -45,10 +45,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 期权委托画面端service 〈功能详细描述〉
@@ -106,6 +104,8 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
         }
         if(StringUtil.isNotEmpty(param.get("entrustStatus"))){
             List<String> entrustStatusList = StringUtil.splitToList(",",(String)param.get("entrustStatus"));
+            // 去除空字符串值
+            entrustStatusList = entrustStatusList.stream().filter(i->!i.isEmpty()).collect(Collectors.toList());
             param.put("entrustStatusList", entrustStatusList);
         }
         param.put("option", DictCodeListExt3.平安资产类型_期权.getValue());

@@ -110,6 +110,7 @@ public class EtrOptionService extends BaseService<EtrOptionDto> {
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
+        param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         Page<EtrOptionDto> page1= queryForPage(page,length,()->etrOptionMapper.selectForPage(param));
 
         return page1;
