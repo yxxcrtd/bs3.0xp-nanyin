@@ -55,7 +55,6 @@
 		inner join PTL_PORTFOLIO_AUTHORITY t4
 		on t2.PORTFOLIO_ID=t4.PORTFOLIO_ID and t4.USER_ID = #{loginUser}
 		<where>
-			AND t1.TRADE_MARKET = #{TRADE_MARKET_01} 
 			<if test="portfolioIdList != null and portfolioIdList.size() >0">
 				AND (T2.PORTFOLIO_ID IN
 				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
@@ -135,7 +134,6 @@
 		inner join PTL_PORTFOLIO_AUTHORITY t4
 		on t2.PORTFOLIO_ID=t4.PORTFOLIO_ID and t4.USER_ID = #{loginUser}
 		<where>
-			AND t1.TRADE_MARKET = #{TRADE_MARKET_01}
 			<if test="portfolioIdList != null and portfolioIdList.size() >0">
 				AND (T2.PORTFOLIO_ID IN
 				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">

@@ -110,7 +110,6 @@ public class EtrIRSService extends BaseService<EtrIRSDto> {
      */
     public Page<EtrIRSDto> selectForPage(int page, int length, Map<String, Object> param)
         throws Exception {
-        param.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
         param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         param.put("FINPROD_TYPE_TG_F14", DictCodeListExt1.金融产品类型_投管用_利率互换.getValue());
         Page<EtrIRSDto> pagelist =queryForPage(page, length, () -> etrIRSMapper.selectForPage(param));
