@@ -4,106 +4,222 @@
 	namespace="com.joyintech.service.entrust.etrboutrepo.dao.EtrBoutRepoMapper">
 	
 	<select id="selectForPage" resultType="com.joyintech.service.entrust.etrboutrepo.dto.EtrBoutRepoDto">
-	SELECT
-				T1.ENTRUST_ID		 entrustId,
-			    T1.ENTRUST_STATUS    entrustStatus,
-			    T1.PORTFOLIO_ID      portfolioId,
-			    T4.ASSET_TYPE1		 assetType1,	
-			    T3.FINPROD_MARKET_ID finprodMarketId,
-			    T3.FINPROD_NAME      finprodName,
-			    T2.PORTFOLIO_NAME    portfolioName,
-			    T1.PRICE*100		 price,
-			    T4.TERM_TYPE		 termType,
-			    T4.BUSI_PS           ps,
-				<!--T1.ENTRUST_AMT*100   entrustAmt, -->
-			    T1.ENTRUST_NUM*100   entrustAmt,
-			    T1.CCY               ccy,
-			    T1.VDATE             vdate,
-			    T1.MDATE             mdate,
-			    T1.PRICE_MODEL       priceModel,
-			    NVL(T5.FINISH_AMT,0)*100    finishAmt,
-			    round(NVL(T5.FINISH_AMT,0)/ NVL(T1.ENTRUST_NUM, T1.ENTRUST_AMT),4)*100		transactioncom,
-				T1.REMARK            remark
-			FROM
-			    ETR_ENTRUST T1
-			LEFT JOIN
-			    PTL_PORTFOLIO T2
-			ON
-			    T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
-			INNER JOIN
-			    FIN_PRODUCT T3
-			ON
-			    T1.FINPROD_ID = T3.FINPROD_ID
-			INNER JOIN
-			    ETR_ENTRUST_ADD T4
-			ON
-			    T4.ENTRUST_ID = T1.ENTRUST_ID
-			LEFT JOIN
-			    (
-			        SELECT
-			            ENTRUST_ID,
-			            SUM(NVL(FINISH_AMT,0)) FINISH_AMT
-			        FROM
-			            ETR_FINISH_STATUS
-			        GROUP BY
-			            ENTRUST_ID) T5
-			ON
-			    T1.ENTRUST_ID = T5.ENTRUST_ID
-			INNER JOIN 
-			PTL_PORTFOLIO_AUTHORITY T6
-			ON
-			T2.PORTFOLIO_ID = T6.PORTFOLIO_ID
+		select aaa.* from (
+		<choose>
+			<when test="entrustStatus == ''">
+				<!-- 查询全部状态 -->
+				<include refid="onlyEtrEntrust"></include>
+				UNION ALL
+				<include refid="onlyWtfEtrEntrust"></include>
+			</when>
+			<when test="entrustStatus == ENTRUST_STATUS_08">
+				<!-- 只查流程中的数据 -->
+				<include refid="onlyWtfEtrEntrust"></include>
+			</when>
+			<otherwise>
+				<include refid="onlyEtrEntrust"></include>
+			</otherwise>
+		</choose>
+		) aaa
+		left join SYS_DATADICT_LIST sdl on aaa.entrustStatus=sdl.ITEM_CODE and sdl.DICT_CODE='ENTRUST_STATUS'
+		order by sdl.ORDER_NO, aaa.entrustId DESC
+	</select>
+
+	<sql id="onlyEtrEntrust">
+		SELECT
+		T1.ENTRUST_ID		 entrustId,
+		T1.ENTRUST_STATUS    entrustStatus,
+		T1.PORTFOLIO_ID      portfolioId,
+		T4.ASSET_TYPE1		 assetType1,
+		T3.FINPROD_MARKET_ID finprodMarketId,
+		T3.FINPROD_NAME      finprodName,
+		T2.PORTFOLIO_NAME    portfolioName,
+		T1.PRICE*100		 price,
+		T4.TERM_TYPE		 termType,
+		T4.BUSI_PS           ps,
+		<!--T1.ENTRUST_AMT*100   entrustAmt, -->
+		T1.ENTRUST_NUM*100   entrustAmt,
+		T1.CCY               ccy,
+		T1.VDATE             vdate,
+		T1.MDATE             mdate,
+		T1.PRICE_MODEL       priceModel,
+		NVL(T5.FINISH_AMT,0)*100    finishAmt,
+		round(NVL(T5.FINISH_AMT,0)/ NVL(T1.ENTRUST_NUM, T1.ENTRUST_AMT),4)*100		transactioncom,
+		T1.REMARK            remark
+		FROM
+		ETR_ENTRUST T1
+		LEFT JOIN
+		PTL_PORTFOLIO T2
+		ON
+		T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+		INNER JOIN
+		FIN_PRODUCT T3
+		ON
+		T1.FINPROD_ID = T3.FINPROD_ID
+		INNER JOIN
+		ETR_ENTRUST_ADD T4
+		ON
+		T4.ENTRUST_ID = T1.ENTRUST_ID
+		LEFT JOIN
+		(
+		SELECT
+		ENTRUST_ID,
+		SUM(NVL(FINISH_AMT,0)) FINISH_AMT
+		FROM
+		ETR_FINISH_STATUS
+		GROUP BY
+		ENTRUST_ID) T5
+		ON
+		T1.ENTRUST_ID = T5.ENTRUST_ID
+		INNER JOIN
+		PTL_PORTFOLIO_AUTHORITY T6
+		ON
+		T2.PORTFOLIO_ID = T6.PORTFOLIO_ID
 		<where>
 			AND T6.USER_ID = #{userId}
-		<if test="portfolioIdList != null and portfolioIdList.size()>0">
-			AND (T2.PORTFOLIO_ID IN
-			<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
-			<if test="(index % 998) == 0">
-                            null) OR T2.PORTFOLIO_ID IN (
-                     </if>
-				#{prot}
-			</foreach>
-			or T2.PARENT_PORTFOLIO_ID IN
-			<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
-				<if test="(index % 998) == 0">
-                            null) OR T2.PARENT_PORTFOLIO_ID IN (
-                     </if>
-				#{prot}
-			</foreach>
-			)
-		</if>
-		<if test="assetType1 !=null and !assetType1.equals('')">
-			AND T4.ASSET_TYPE1 = #{assetType1}
-			<!-- <foreach collection="assetType1List" index="index" item="item" open="(" close=")" separator=",">
-				#{item}
-			</foreach> -->
-		</if>
-		<if test="ccy != null and !ccy.equals('')">
-			AND T1.CCY = #{ccy}
-			<!-- <foreach collection="ccyList" index="index" item="item" open="(" close=")" separator=",">
-				#{item}
-			</foreach> -->
-		</if>
-		<if test="ps != null and !ps.equals('')">
-			AND T1.PS=#{ps}
-		</if>
-		<if test="entrustStatus != null and !entrustStatus.equals('')">
-			AND T1.ENTRUST_STATUS = #{entrustStatus}
-		</if>
-		<if test="startDate != null and !startDate.equals('')">
-			AND T1.VDATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
-		</if>
-		<if test="endDate != null and !endDate.equals('')">
-			AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
-		</if>
-		<if test="priceModel != null and priceModel != ''">
-			AND T1.PRICE_MODEL = #{priceModel}
-		</if>
+			<if test="portfolioIdList != null and portfolioIdList.size()>0">
+				AND (T2.PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR T2.PORTFOLIO_ID IN (
+					</if>
+					#{prot}
+				</foreach>
+				or T2.PARENT_PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR T2.PARENT_PORTFOLIO_ID IN (
+					</if>
+					#{prot}
+				</foreach>
+				)
+			</if>
+			<if test="assetType1 !=null and !assetType1.equals('')">
+				AND T4.ASSET_TYPE1 = #{assetType1}
+				<!-- <foreach collection="assetType1List" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach> -->
+			</if>
+			<if test="ccy != null and !ccy.equals('')">
+				AND T1.CCY = #{ccy}
+				<!-- <foreach collection="ccyList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach> -->
+			</if>
+			<if test="ps != null and !ps.equals('')">
+				AND T1.PS=#{ps}
+			</if>
+			<if test="entrustStatus != null and !entrustStatus.equals('')">
+				AND T1.ENTRUST_STATUS = #{entrustStatus}
+			</if>
+			<if test="startDate != null and !startDate.equals('')">
+				AND T1.VDATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
+			</if>
+			<if test="endDate != null and !endDate.equals('')">
+				AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
+			</if>
+			<if test="priceModel != null and priceModel != ''">
+				AND T1.PRICE_MODEL = #{priceModel}
+			</if>
 			AND T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
 		</where>
-		order by T1.ENTRUST_ID DESC
-	</select>
-	
+	</sql>
+	<sql id="onlyWtfEtrEntrust">
+		SELECT
+		T1.ENTRUST_ID		 entrustId,
+		T1.ENTRUST_STATUS    entrustStatus,
+		T1.PORTFOLIO_ID      portfolioId,
+		T4.ASSET_TYPE1		 assetType1,
+		T3.FINPROD_MARKET_ID finprodMarketId,
+		T3.FINPROD_NAME      finprodName,
+		T2.PORTFOLIO_NAME    portfolioName,
+		T1.PRICE*100		 price,
+		T4.TERM_TYPE		 termType,
+		T4.BUSI_PS           ps,
+		<!--T1.ENTRUST_AMT*100   entrustAmt, -->
+		T1.ENTRUST_NUM*100   entrustAmt,
+		T1.CCY               ccy,
+		T1.VDATE             vdate,
+		T1.MDATE             mdate,
+		T1.PRICE_MODEL       priceModel,
+		NVL(T5.FINISH_AMT,0)*100    finishAmt,
+		round(NVL(T5.FINISH_AMT,0)/ NVL(T1.ENTRUST_NUM, T1.ENTRUST_AMT),4)*100		transactioncom,
+		T1.REMARK            remark
+		FROM
+		WFL_ETR_ENTRUST T1
+		LEFT JOIN
+		PTL_PORTFOLIO T2
+		ON
+		T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+		INNER JOIN
+		FIN_PRODUCT T3
+		ON
+		T1.FINPROD_ID = T3.FINPROD_ID
+		INNER JOIN
+		WFL_ETR_ENTRUST_ADD T4
+		ON
+		T4.ENTRUST_ID = T1.ENTRUST_ID
+		LEFT JOIN
+		(
+		SELECT
+		ENTRUST_ID,
+		SUM(NVL(FINISH_AMT,0)) FINISH_AMT
+		FROM
+		ETR_FINISH_STATUS
+		GROUP BY
+		ENTRUST_ID) T5
+		ON
+		T1.ENTRUST_ID = T5.ENTRUST_ID
+		INNER JOIN
+		PTL_PORTFOLIO_AUTHORITY T6
+		ON
+		T2.PORTFOLIO_ID = T6.PORTFOLIO_ID
+		<where>
+			AND T6.USER_ID = #{userId}
+			<if test="portfolioIdList != null and portfolioIdList.size()>0">
+				AND (T2.PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR T2.PORTFOLIO_ID IN (
+					</if>
+					#{prot}
+				</foreach>
+				or T2.PARENT_PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR T2.PARENT_PORTFOLIO_ID IN (
+					</if>
+					#{prot}
+				</foreach>
+				)
+			</if>
+			<if test="assetType1 !=null and !assetType1.equals('')">
+				AND T4.ASSET_TYPE1 = #{assetType1}
+				<!-- <foreach collection="assetType1List" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach> -->
+			</if>
+			<if test="ccy != null and !ccy.equals('')">
+				AND T1.CCY = #{ccy}
+				<!-- <foreach collection="ccyList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach> -->
+			</if>
+			<if test="ps != null and !ps.equals('')">
+				AND T1.PS=#{ps}
+			</if>
+			<if test="startDate != null and !startDate.equals('')">
+				AND T1.VDATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
+			</if>
+			<if test="endDate != null and !endDate.equals('')">
+				AND T1.MDATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
+			</if>
+			<if test="priceModel != null and priceModel != ''">
+				AND T1.PRICE_MODEL = #{priceModel}
+			</if>
+			AND T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
+		</where>
+	</sql>
 	<select id="getentrustId" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT
 		T1.PORTFOLIO_ID code,
@@ -241,6 +357,63 @@
 				T1.ENTRUST_ID = T6.ENTRUST_ID
 		<where>
 				T1.ENTRUST_ID = #{entrustId}
+		</where>
+					
+		UNION ALL
+
+		SELECT
+		T1.ENTRUST_ID		 entrustId,
+		T1.PORTFOLIO_ID		 portfolioId,
+		T1.VDATE             vdate,
+		T1.MDATE             mdate,
+		T6.ASSET_TYPE1		 assetType1,
+		T6.VDATE			 vdateAdd,
+		T6.MDATE			 mdateAdd,
+		T6.TERM_DAYS		 termDays,
+		T6.TERM_DAYS2		 termDays2,
+		T6.TERM_DAYS		 repoTerm,
+		T6.TERM_DAYS2		 repoTerm2,
+		T6.SETTLE_SPREED 	 settleSpeed,
+		T6.CASH_USEDATE	 	 availableDay,
+		T6.SEC_ACCT_ID	 	 securitiesCust,
+		T6.TERM_TYPE		 termType,
+		T6.FIRST_UNIT_CPRICE firstprice,
+		T6.FIRST_UNIT_CPRICE2 firstprice2,
+		T1.CCY               ccy,
+		T3.FINPROD_MARKET_ID finprodMarketId,
+		T3.FINPROD_NAME      finprodName,
+		T1.PS                ps,
+		T1.PRICE*100		 price,
+		T1.PRICE_MODEL		 priceModel,
+		T1.ENTRUST_AMT*100	 entrustAmt,
+		T1.Entrust_Num * 100 entrustNum,
+		T1.TRADE_MARKET		 tradeMarket,
+		T1.CALENDAR_ID		 calendarId,
+		T1.PRO_AVAILABLE_CASH proAvailableCash,
+		T1.ACC_AVAILABLE_CASH accAvailableCash,
+		T1.REMARK            remark,
+		T1.COUNTER_ID		 counterId,
+		T1.COUNTER_TRADER  	 counterTrader,
+		T1.CONTACT_INFO		 contactInfo,
+		T2.TRADER			 trader,
+		T1.INV_MANAGER_ID	 invManagerId,
+		T1.CHL_ID chlId
+		FROM
+		WFL_ETR_ENTRUST T1
+		LEFT JOIN
+		ETR_DISTRIBUTE T2
+		ON
+		T1.ENTRUST_ID = T2.ENTRUST_ID
+		LEFT JOIN
+		FIN_PRODUCT T3
+		ON
+		T1.FINPROD_ID = T3.FINPROD_ID
+		LEFT JOIN
+		WFL_ETR_ENTRUST_ADD T6
+		ON
+		T1.ENTRUST_ID = T6.ENTRUST_ID
+		<where>
+			T1.ENTRUST_ID = #{entrustId}
 		</where>
 	</select>
 	
