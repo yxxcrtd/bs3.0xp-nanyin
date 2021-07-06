@@ -48,9 +48,7 @@
         FROM
         SYS_UPLOAD_FILE_INFO
         <where>
-            <if test="businessCode != null and businessCode != ''">
-                BUSINESS_ID = #{businessCode, jdbcType=VARCHAR}
-            </if>
+            BUSINESS_ID = #{businessCode, jdbcType=VARCHAR}
         </where>
     </select>
 

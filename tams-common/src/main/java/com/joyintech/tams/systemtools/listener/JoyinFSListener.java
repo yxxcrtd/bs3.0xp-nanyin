@@ -1,5 +1,25 @@
 package com.joyintech.tams.systemtools.listener;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -13,25 +33,6 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.systemtools.dao.JoyinFSMapper;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import com.joyintech.tools.util.FileUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @description: 文件系统存储监听
@@ -128,15 +129,20 @@ public class JoyinFSListener implements FileUploadListener, FileAttachmentProces
     @DataSource(DataSourceType.OTHER)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<UploadFile> fetchByBusinessCode(String businessCode) {
-        List<SysUploadFileInfo> files = joyinFSMapper.getUploadInfo(businessCode);
-        List<UploadFile> uploadFiles = new ArrayList<>(files.size());
-        files.forEach(file -> {
-            UploadFile f = new UploadFile(null, file.getSeqNo(), new SafelyFile(file.getPath()));
-            f.setFileName(file.getFileName());
-            joyinDFSTemplate.fetch(file);
-            uploadFiles.add(f);
-        });
-        return uploadFiles;
+    	if (StringUtil.isNotEmpty(businessCode)) {
+	        List<SysUploadFileInfo> files = joyinFSMapper.getUploadInfo(businessCode);
+	        List<UploadFile> uploadFiles = new ArrayList<>(files.size());
+	        files.forEach(file -> {
+	            UploadFile f = new UploadFile(null, file.getSeqNo(), new SafelyFile(file.getPath()));
+	            f.setFileName(file.getFileName());
+	            joyinDFSTemplate.fetch(file);
+	            uploadFiles.add(f);
+	        });
+	        return uploadFiles;
+    	}
+    	else {
+    		return new ArrayList<UploadFile>();
+    	}
     }
 
     @Override
