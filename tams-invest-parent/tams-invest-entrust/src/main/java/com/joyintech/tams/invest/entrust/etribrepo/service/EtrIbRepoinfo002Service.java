@@ -28,6 +28,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.component.business.trade.BussRepoSecService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -60,6 +61,9 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
     
     @Autowired
     private CommonBusinessService commonBusinessService;
+    
+    @Autowired(required = false)
+    private BussRepoSecService bussRepoSecService;
 
     /**
      * b45接口
@@ -187,6 +191,10 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
             Integer.class);
         doDeleteFlow(dto.getWorkflowId());
 
+        if(bussRepoSecService != null){
+            bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
+        }
+        
         //向b45发送信息
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("entrustId", dto.getEntrustId());

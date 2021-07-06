@@ -16,17 +16,23 @@ function dbclickRefreshRisk(){
 
 $(function() {
     //用于判断当前属于单组合打开还是多组合打开
-    changeFlg = '01';
+	changeFlg ='02';
+	if(single_etr_isshow=='Y'){
+		changeFlg = '01';
+	}
+    
 
     layui.use(['element', 'form'], function() {
         // 组合平台TAB切换事件
         var element = layui.element;
         element.on('tab(zlPlatform)', function(data) {
-            if(data.index == 0) {
-                changeFlg = '01';
-            }else if(data.index == 1) {
-                changeFlg = '02';
-            }
+        	if(single_etr_isshow=='Y'){
+        		if(data.index == 0) {
+                    changeFlg = '01';
+                }else if(data.index == 1) {
+                    changeFlg = '02';
+                }
+        	}
         });
     });
 

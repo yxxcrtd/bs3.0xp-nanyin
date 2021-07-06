@@ -19,7 +19,9 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtribBondInfo003Service;
@@ -105,6 +107,7 @@ public class EtribRepoInfo003Controller extends BaseController {
             model.addAttribute("person_entity", JsonUtils.object2Json(entity.getEtrInvestPersonInfo()));
             model.addAttribute("businessId",workflowId);
             model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getBussCombDistribtList()));
+            model.addAttribute("entity_PledgeBondTotalListDetailed",  JsonUtils.object2Json(entity.getPledgeBondTotalListDetailed()));
             todoList = true;
             model.addAttribute("businessId", entity.getTotalEtrustId());
         } else {
@@ -168,6 +171,7 @@ public class EtribRepoInfo003Controller extends BaseController {
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("TodoList", todoList);
         model.addAttribute("SHARES_TRADE_MARKET_02", DictCodeListExt1.交易市场_二级市场.getValue());
+        model.addAttribute("repo_pledge_model",CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         return super.init(model);
     }
 
@@ -250,8 +254,20 @@ public class EtribRepoInfo003Controller extends BaseController {
             if(!StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt()))
                 messages.add(new ValidMessage("请输入指令金额(第"+(i+1)+"行)。"));
             
-            if(StringUtil.isNotEmpty(dtoList.get(0).getPs())&&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dtoList.get(0).getPs())&&!StringUtil.isNotEmpty(dtoList.get(i).getZyqk()))
+            if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"03")
+            		&&StringUtil.isNotEmpty(dtoList.get(0).getPs())
+            		&&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dtoList.get(0).getPs())
+            		&&!StringUtil.isNotEmpty(dtoList.get(i).getZyqk())){
                 messages.add(new ValidMessage("请输入质押券库(第"+(i+1)+"行)。"));
+            }
+            if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"02")
+            		&&StringUtil.isNotEmpty(dtoList.get(0).getPs())
+            		&&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dtoList.get(0).getPs())){
+            	if(StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId())){
+            	
+            	}
+//                messages.add(new ValidMessage("请输入质押券库(第"+(i+1)+"行)。"));
+            }
         }
 
         if(messages.size()>0) {
@@ -329,6 +345,19 @@ public class EtribRepoInfo003Controller extends BaseController {
                 dataList.add(dto);
             }
             // ----------add by zhangrui1 20200715 预占功能 end----------
+            if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL), "02")
+            		||StringUtil.equals(RepoInfoDto.getPs(), DictCodeListExt1.回购方向_正回购.getValue())){
+            	dto.setBussRepoSec(new BussRepoSecDto());
+                dto.getBussRepoSec().setPageFrom(this.getPageId());;
+                List<PledgeBondInfoDto> pledgeBondList= new ArrayList<>();
+                for(PledgeBondInfoDto pledgeBondInfoDto :RepoInfoDto.getPledgeBondTotalListDetailed()){
+                	if(StringUtil.equals(dto.getPortfolioId(), pledgeBondInfoDto.getPortfolioId())){
+                		//组合代码相同
+                		pledgeBondList.add(pledgeBondInfoDto);
+                	}
+                }
+                dto.getBussRepoSec().setPledgeBondList(pledgeBondList);
+            }
         }
 //        if (StringUtil.equals(BussinessConstant.SUBMIT, RepoInfoDto.getOperateType())) {
 //            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(

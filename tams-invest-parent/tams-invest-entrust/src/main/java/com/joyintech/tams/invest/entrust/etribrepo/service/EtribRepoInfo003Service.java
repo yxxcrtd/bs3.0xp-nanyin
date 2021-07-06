@@ -13,6 +13,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.trade.BussRepoSecService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -80,6 +81,9 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+    
+    @Autowired(required = false)
+    private BussRepoSecService bussRepoSecService;
 
     /**
      * b45接口
@@ -365,6 +369,13 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepoinfo003/doComplete", entity,
                 Integer.class);
+        
+        for (EtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+        	if(bussRepoSecService != null){
+                bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
+            }
+        }
+        
 
         doDeleteFlow(entity.getWorkflowId());
 

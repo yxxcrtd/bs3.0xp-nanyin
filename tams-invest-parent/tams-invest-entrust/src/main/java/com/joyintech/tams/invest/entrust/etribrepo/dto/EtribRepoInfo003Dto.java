@@ -25,6 +25,8 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -65,6 +67,16 @@ public class EtribRepoInfo003Dto  extends EtrEntrust implements ProcessEntity {
      * 质押券库
      */
     private String zyqk;
+    
+    /**
+     * 质押券信息列表明细
+     */
+    private List<PledgeBondInfoDto> pledgeBondTotalListDetailed;
+    
+    /**
+     * 添加质押券信息
+     */
+    private BussRepoSecDto bussRepoSec;
     
     public String getZyqk() {
 		return zyqk;
@@ -580,4 +592,21 @@ public class EtribRepoInfo003Dto  extends EtrEntrust implements ProcessEntity {
     public void setParentPortfolioId(String parentPortfolioId) {
         this.parentPortfolioId = parentPortfolioId;
     }
+
+	public List<PledgeBondInfoDto> getPledgeBondTotalListDetailed() {
+		return pledgeBondTotalListDetailed;
+	}
+
+	public void setPledgeBondTotalListDetailed(List<PledgeBondInfoDto> pledgeBondTotalListDetailed) {
+		this.pledgeBondTotalListDetailed = pledgeBondTotalListDetailed;
+	}
+
+	public BussRepoSecDto getBussRepoSec() {
+		return bussRepoSec;
+	}
+
+	public void setBussRepoSec(BussRepoSecDto bussRepoSec) {
+		this.bussRepoSec = bussRepoSec;
+	}
+
 }

@@ -185,17 +185,23 @@
             , sortable: false, type: 'number', digit: 2,
             visible: ($("#chlFinprodId").val() == null || $("#chlFinprodId").val() == '')?false:true
         }
+     // 添加质押券
+        ,{field: 'addPledgeInfo',width:100,title: 'BussRepoSecPtl.addPledgeInfo',visible:false,sortable: false,
+            render:function (data, type, row, meta) {
+            return '<a class="btn_add_plegin" style="padding-left: 0px;display:block;width: 40px;height: 20px;line-height: 20px;text-align: center;background-color: rgb(38, 147, 255);border-radius: 2px;color: #fff;margin: 3px 15px;">添加</a>'
+            }
+        }
         , {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
     ]
     var table = $("#bussCombDistribtTable").joyintable({
         data:entity_BussCombDistribtList||[],
         cols: cols,
-        page: true,
+        page: false,
         addbtn: true,
         addToLast: true,
         searchOnInit: true,
         checkbox: false,
-        height: 290,
+        height: 190,
         addclick: function (row) {
 
         },
@@ -223,11 +229,20 @@
                                 rowData.proAvailableCash = result.proAvailableCash;
                                 rowData.proAvailableCash1 = result.proAvailableCashT1;
                             }
-                            if ($('#ps').val() == '04') {
-                            	table.showColumns([{field: 'zyqk', visible: false}]);
-                                rowData.zyqk = '';
-                            }else{
-                            	table.showColumns([{field: 'zyqk', visible: true}]);
+                            if(repo_pledge_model=='03'){
+                            	if ($('#ps').val() == '04') {
+                                	table.showColumns([{field: 'zyqk', visible: false}]);
+                                    rowData.zyqk = '';
+                                }else{
+                                	table.showColumns([{field: 'zyqk', visible: true}]);
+                                }
+                            }else if (repo_pledge_model=='02'){
+                            	if ($('#ps').val() == '04') {
+                                	table.showColumns([{field: 'addPledgeInfo', visible: false}]);
+                                    rowData.zyqk = '';
+                                }else{
+                                	table.showColumns([{field: 'addPledgeInfo', visible: true}]);
+                                }
                             }
                             /*else if ($('#ps').val() == PS_T02 || $('#ps').val() == PS_T03) {
                                 rowData.proAvailableCash = ' ';
@@ -358,6 +373,216 @@
     });
 
 
+    if(repo_pledge_model=='02'){
+    	
+    	
+    	table.bind('click', 'a.btn_add_plegin', function(data,index) {
+    	        var data = {
+    	                portfolioId: data.portfolioId,
+    	                portfolioName: data.portfolioName,
+    	                ps: $("#ps").val(),
+    	               tradeMarket: $("#tradeMarket").val(),
+    	                secAcctId: data.secAcctId,
+    	                repoType: data.repoType,
+    	                chlId: $("#chlId").val()
+    	            }
+    	            var object = {
+    	                portfolioId: ['portfolioId', 'TrdRepoTrade002.portfolioId'],
+    	                portfolioName: ['portfolioName', 'TrdRepoTrade002.portfolioName'],
+    	                ps: ['ps', 'TrdRepoTrade002.ps'],
+    	                secAcctId: ['secAcctId', 'TrdRepoTrade002.secAcctId'],
+    	                repoType: ['repoType', 'TrdRepoTrade002.repoType'],
+    	                chlId: ['chlId', 'TrdRepoTrade002.chlId'],
+    	                data: data
+    	            }
+    	        param = object;
+    	        Joyin.ajaxJson(basePath + 'component/trade/BussRepoSec/check',
+    	                param, function () {
+    	                    if (entity_pledgeBondList == null) {
+    	                    	entity_pledgeBondList = {};
+    	                    }
+    	                    var pledgeBondList = pledgeBondTotalTblDetailed.getAllRows();
+    	                    entity_pledgeBondList.pledgeBondList =[];
+    	                    $.each(pledgeBondList,function (index,data) {
+    	                        if(data.avaPledgePrin){
+    	                            data.avaPledgePrin = data.avaPledgePrin;
+    	                        }else if(data.avaPledgePrin){
+    	                            data.avaPledgePrin = data.avaPledgePrin;
+    	                        }
+    	                        if(param.data.portfolioId ==data.portfolioId){
+    	                        	entity_pledgeBondList.pledgeBondList.push(data);
+    	                        }
+    	                    });
+    	                    Joyin.dialog(JoyinUtil.getLabel('BussRepoSecPtl.addPledgeInfo'),basePath+
+    	                        '/component/trade/BussRepoSecDialog/init', '98%', '98%',
+    	                        {
+    	                            portfolioId: param.data.portfolioId,
+    	                            portfolioName: param.data.portfolioName,
+    	                            ps: param.data.ps,
+    	                            secAcctId: param.data.secAcctId,
+    	                            tradeMarket :param.data.tradeMarket,
+    	                            chlId: param.data.chlId,
+    	                            entity: JSON.stringify(entity_pledgeBondList),
+    	                            entityName: 'bussRepoSec',
+    	                            pageFromTz: pageId,
+//    	                            statusValid: statusValid,
+//    	                            bizCode: bizCode,
+//    	                            pageModel: pageModel,
+//    	                            operationType: operationType,
+//    	                            workflowId: workflowId
+    	                        });
+    	                },false);
+    	        
+    	    });
+    	
+    	var buttons = [ { text: '&#xe640;',ignore:true, clas: 'delt', title: '删除' }];
+        if (pageId != 'EtribRepoInfo003'){
+            buttons = ['delt'];
+        }
+        
+    	/**
+         * 质押券汇总信息（Total）
+         */
+        var pledgeBondTotalTblDetailed = $("#pledgeBondTotalListDetailed").joyintable({
+            page: false,
+            data:  entity_PledgeBondTotalListDetailed||[],
+            height: 200,
+            /**
+             * 定义表头
+             */
+            cols: [
+                // 委托代码
+               /* {field: 'entrustId',title: 'BussRepoSecPtl.entrustId',type: 'text',align: 'left',sortable: false,edit: false},*/
+                // 债券代码
+                {field: 'bondCode',title: 'BussRepoSecPtl.secId',type: 'text',align: 'left',sortable: false,edit: false}
+                // 债券简称
+                ,{field: 'bondAbbrName',title: '债券简称',type: 'text',align: 'left',sortable: true,edit: false}
+                // 债券类型
+                /*,{field: 'secTypeStr',title: 'BussRepoSecPtl.secType',type: 'text',align: 'left',edit: false,sortable: false}*/
+                // 组合代码
+                ,{field: 'portfolioId',title: 'BussRepoSecPtl.portfolioId',type: 'text',sortable: false,edit: false}
+                // 组合名称
+                ,{field: 'portfolioName',title: 'BussRepoSecPtl.portfolioName',type: 'text',edit: false,sortable: false}
+                // 质押本方券券面总额
+//                , {field: 'pledgeBfPrin',title: '质押本方券券面总额',type: 'number',edit: true,sortable: false}
+                // 质押融入券券面总额
+//                , {field: 'pledgeRrPrin',title: '质押融入券券面总额',type: 'number',edit: true,sortable: false}
+                // 可质押券面总额
+                , {field: 'avaPledgePrin',title: '可质押券面总额',type: 'number',edit: false,sortable: false}
+                //质押券汇总券面总额
+                , {field: 'pledgePrin',title: '质押券券面总额',type: 'number',edit: true,sortable: false}
+                //折算比例%
+                ,{field: 'pledgeRatio',title: 'BussRepoSecPtl.pledgeBondTotalTblDetailed.colmodel.pledgeRatio',type: 'number',edit: false,sortable: false}
+             // 首次净价
+                , {
+                    field: 'firstNetPrice',
+                    width: 100,
+                    title: '首次净价',
+                    sortable: false
+                }
+                // 登记托管机构
+                ,{field: 'repRegistOrgStr',title: 'BussRepoSecPtl.repRegistOrg',type: 'text',align: 'left',edit:false,sortable:false}
+                //可质押本方券券面总额
+//                ,{field: 'avaPledgeBfPrin',title: '可质押本方券券面总额',type: 'number',edit: false,sortable: false}
+                //可质押融入券券面总额
+//                ,{field: 'avaPledgeRrPrin',title: '可质押融入券券面总额',type: 'number',edit: false,sortable: false}
+               //操作
+               ,{field:'operation',title: '删除',type:'action',buttons: buttons}
+            ],
+            done:function(){
+                this.bind('click', '.delt', function(data, index) {
+                    var pbtd2=pledgeBondTotalTblDetailed.getAllRows();
+                    for(var i in pbtd2){
+                        if(pbtd2[i].portfolioId==data.portfolioId){
+                            var totalPrinAmt2=Number(pbtd2[i].totalPrinAmt)-Number(data.pledgePrin);
+                            if(totalPrinAmt2==0){
+                                var totalPrinAmt2="0";
+                                pledgeBondTotalTblDetailed.renderRow(i, {totalPrinAmt:totalPrinAmt2});
+                            }else{
+                                pledgeBondTotalTblDetailed.renderRow(i, {totalPrinAmt:totalPrinAmt2});
+                            }
+                        }
+                    }
+                    pledgeBondTotalTblDetailed.deleteRow(index);
+                    createAuto();
+                });
+           },
+            beforeEditCell: function (preVal, field, rowData) {
+                if (field === "pledgePrin") {
+                    tempPledgePrin = preVal.replace(/\,/g, '');
+                }
+                return true;
+            },
+            checkbox:false
+        });
+        
+        /**
+         * 保存按钮按下，添加子画面传回的质押券信息
+         */
+        var addPledgeBond = function (pledgeRows) {
+            // 列表中未勾选
+            if (!pledgeRows || pledgeRows.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            } else {
+            	pledgeBondTotalTblDetailed.clear(function () {
+                    var totalPrinAmt = Number(0);
+                    var zzdPrinAmt = Number(0);
+                    var sqsPrinAmt = Number(0);
+                    //券面总额合计  不计算折算率
+                    var totalPrinAmtSum = Number(0);
+                    for (var i in pledgeRows) {
+                        var obj = pledgeRows[i];
+                        totalPrinAmt += obj.pledgePrin * obj.pledgeRatio / 100;
+                        totalPrinAmtSum += obj.pledgePrin / 10000; //以万元为单位
+                        if(obj.repRegistOrg=='01'){
+                            zzdPrinAmt+=obj.pledgePrin * obj.pledgeRatio / 100;
+                        }
+                        if(obj.repRegistOrg=='02'){
+                            sqsPrinAmt+=obj.pledgePrin * obj.pledgeRatio / 100;
+                        }
+                        pledgeBondTotalTblDetailed.addRow(obj);
+                    }
+                    //多组合  可质押券面额和质押券面额 以万元为单位
+//                    if(isDzh == 'Y'){
+                        totalPrinAmtSum = totalPrinAmtSum*10000;
+                        totalPrinAmt = totalPrinAmt*10000;
+                        zzdPrinAmt = zzdPrinAmt*10000;
+                        sqsPrinAmt = sqsPrinAmt*10000;
+//                    }
+//                    getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
+//                    getElementById("zzdTotalPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
+//                    getElementById("sqsTotalPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
+                    $("#zzdPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
+                    $("#sqsPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
+                    //更新CFETS质押式回购报价要素信息
+//                    refreshParentFace({totalPrinAmt:totalPrinAmtSum,shareCtAmt:zzdPrinAmt+sqsPrinAmt});
+                });
+            }
+        };
+        
+        window.sss="sss";
+        pledgeBondTotalTblDetailed.load();
+        if(!window.BussRepoSec){
+        	window.BussRepoSec={};
+        }
+        window.BussRepoSec['bussRepoSec'] = {
+//                setInputParam: setInputParam,
+//                clearHideRepo: clearHideRepo,
+//                setStlCommandInput:setStlCommandInput,
+//                showRepo: showRepo,
+//                showCash: showCash,
+                addPledgeBond: addPledgeBond,
+//                refreshCashAndBalance: refreshCashAndBalance,
+//                "pledgeBondTotalTblDetailed":pledgeBondTotalTblDetailed,
+//                "pledgeBondTotalTblDetailed":pledgeBondTotalTblDetailed,
+//                reloadPledgeBond: reloadPledgeBond,
+//                extractedJiSuan:extractedJiSuan,
+//                extractedCpriceAmt:extractedCpriceAmt,
+//                entrustSurAmtAll:entrustSurAmtAll,
+//                extractedTime:extractedTime
+            };
+    }
 
     /**
      * 获取期限品种  date(yyyy-MM-dd),repoterm

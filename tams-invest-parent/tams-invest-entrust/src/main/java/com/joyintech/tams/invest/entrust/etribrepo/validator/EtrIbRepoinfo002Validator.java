@@ -52,11 +52,18 @@ public class EtrIbRepoinfo002Validator implements EtrCommonValidator {
                     errorList.add(new ValidMessage("vdate", this.getMessage("ETR_X_005")));
                 }
             }
-//        	if (StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())) {
-//        		if (!StringUtil.isNotEmpty(dto.getZyqk())) {
-//                    errorList.add(new ValidMessage("zyqk", this.getMessage("请输入质押券库")));
-//                }
-//        	}
+        	//模式03 指定质押券库
+        	if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"03")&&StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())) {
+        		if (!StringUtil.isNotEmpty(dto.getZyqk())) {
+                    errorList.add(new ValidMessage("zyqk", this.getMessage("请输入质押券库！")));
+                }
+        	}
+        	//模式02  质押券必填
+        	if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"02")&&StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())) {
+        		if (!StringUtil.isNotEmpty(dto.getBussRepoSec())&&!StringUtil.isNotEmpty(dto.getBussRepoSec().getPledgeBondList())) {
+                    errorList.add(new ValidMessage("zyqk", this.getMessage("请输入质押券信息！")));
+                }
+        	}
             if (dto.getEntrustAmt() != null) {
                 if (dto.getEntrustAmt().compareTo(BigDecimal.ZERO) == 0
                     || dto.getEntrustAmt().compareTo(BigDecimal.ZERO) == -1) {

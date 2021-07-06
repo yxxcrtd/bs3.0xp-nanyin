@@ -23,11 +23,11 @@
         obj.counterId = $('#etrInvestPersonInfo_counterId').val();
         // add by zhangrui1 交易对手影响风险试算 end
         obj.repoTerm = $('#repoTerm').val();
-        var object = {tradeDirection:['ps','EtrRepo002.ps'],portfolioCode:['portfolioId','EtrRepo002.portfolioId'],tradeAmount:['entrustAmt','EtrRepo002.entrustAmt'],assetType:['assetType1','EtrRepo002.assetType1'],data:obj}
+        var object = {tradeDirection:['ps','EtrIbRepoinfo002.ps'],portfolioCode:['portfolioId','EtrIbRepoinfo002.portfolioId'],tradeAmount:['entrustAmt','EtrIbRepoinfo002.entrustAmt'],assetType:['assetType1','EtrIbRepoinfo002.assetType1'],data:obj}
         // add by zhangrui1 交易对手影响风险试算 start
         object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
         // add by zhangrui1 交易对手影响风险试算 end
-        object.repoTerm = ['repoTerm', 'EtrRepo002.repoTerm'];
+        object.repoTerm = ['repoTerm', 'EtrIbRepoinfo002.repoTerm'];
         return object;
     };
 
@@ -598,6 +598,13 @@
             }
         });*/
         
+        window.componentLoadCallback = function (isDone, pagePath, params) {
+            if (isDone) {
+             // 设置添加质押券共通参数
+                setBussRepoSecInput();
+            }
+        };
+        
         $('#termType').change(function(){
 
             if ($('#tradeMarket').val() !== '01'){
@@ -720,6 +727,8 @@
             if (todoList == false) {
                 parent.EtrIbRepoinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId, termType);
             }
+            
+            setBussRepoSecInput();
 
         });
 
@@ -763,15 +772,50 @@
         	
             if (pageModel != PAGE_MODEL_REFERENCE) {
                 if ($("#ps").val() == ps_04) {
-                    $("#zyqk").val("").attr("disabled", true);
+                    $("#zyqk").val("").trigger("change").attr("disabled", true);
                     $('#zyqk').removeAttr("required");
                 } else {
-                    $("#zyqk").attr("disabled", false);
+                    $("#zyqk").trigger("change").attr("disabled", false);
                     $('#zyqk').attr("required", "true");
                 }
                 star();
+                setBussRepoSecInput();
             }
         });
+        
+        /**
+         * 设置添加质押券共通参数
+         */
+        var setBussRepoSecInput = function () {
+        	if(repo_pledge_model !='02'){
+        		return ;
+        	}
+            var data = {
+                portfolioId: $('#portfolioId').val(),
+                securitiesCust: $('#securitiesCust').val(),
+                chlId: $('#chlId').val(),
+                assetType1: $('#assetType1').val(),
+                ps: $("#ps").val()
+                // add 自动导入质押券参数 lizhi start
+                ,vdate: $("#vdate").val()
+                ,entrustAmt: $("#entrustAmt").val()
+                // add 自动导入质押券参数 lizhi end
+            }
+            var object = {
+                portfolioId: ['portfolioId', 'EtrIbRepoinfo002.portfolioId'],
+                ps: ['ps', 'EtrIbRepoinfo002.ps'],
+                securitiesCust: ['securitiesCust', 'EtrIbRepoinfo002.securitiesCust'],
+                chlId: ['chlId','invest.channelId'],
+                assetType1: ['assetType1','EtrIbRepoinfo002.assetType1'],
+                // add 自动导入质押券参数 lizhi start
+                vdate: ['vdate','EtrIbRepoinfo002.vdate'],
+                entrustAmt: ['entrustAmt','EtrIbRepoinfo002.entrustAmt'],
+                // add 自动导入质押券参数 lizhi end
+                data: data
+            }
+            window.BussRepoSec["bussRepoSec"].setInputParam(object);
+        };
+        
 
         /**
          * 通道

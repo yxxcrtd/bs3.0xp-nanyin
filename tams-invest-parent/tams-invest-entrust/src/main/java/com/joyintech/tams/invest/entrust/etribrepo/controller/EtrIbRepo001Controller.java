@@ -17,6 +17,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -24,6 +25,7 @@ import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoServic
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrFinProductDto;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepo001Dto;
@@ -85,6 +87,7 @@ public class EtrIbRepo001Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.回购期限品种);
         this.setSelectOptionToModel(model, DictCode.价格模式);
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
+        model.addAttribute("repo_pledge_model",CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         return super.init(model);
     }
     

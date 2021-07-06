@@ -155,6 +155,7 @@ public class EtrIbRepoinfo002Controller extends BaseController {
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             EtrIbRepoinfo002Dto dto = etrIbRepoinfo002Service.getBussinessEntityByWorkflowId(
                     workflowId);
+            model.addAttribute("entity_bussRepoSecDto", JsonUtils.object2Json(dto.getBussRepoSec()));
 //            if (StringUtil.isBlank(dto.getParentPortfolioId())) {
 //                dto.setParentPortfolioId(etrCommonService.selectParentPortfolioIdByPortfolioId(
 //                        dto.getPortfolioId()
@@ -180,6 +181,7 @@ public class EtrIbRepoinfo002Controller extends BaseController {
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("shortSellingSupported", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         model.addAttribute("TodoList", todoList);
+        model.addAttribute("repo_pledge_model",CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         return super.init(model);
     }
 

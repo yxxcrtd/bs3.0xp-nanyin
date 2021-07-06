@@ -206,7 +206,10 @@ public class BussRepoSecImplService implements BussRepoSecService {
         if (bussRepoSec != null && !StringUtil.isEmptyList(bussRepoSec.getPledgeBondList())) {
             for (PledgeBondInfoDto pledgeBond : bussRepoSec.getPledgeBondList()) {
                 // 回购委托新建
-                if (PAGE_FROM_EtrRepo002.equals(bussRepoSec.getPageFrom())) {
+                if (PAGE_FROM_EtrRepo002.equals(bussRepoSec.getPageFrom())
+                		||PAGE_FROM_EtrIbRepoinfo002.equals(bussRepoSec.getPageFrom())
+                		||PAGE_FROM_EtribRepoInfo003.equals(bussRepoSec.getPageFrom())
+                		) {
                     EtrPledge etrPledge = new EtrPledge();
                     // 委托代码 = 委托代码
                     etrPledge.setEntrustId(bizCode);

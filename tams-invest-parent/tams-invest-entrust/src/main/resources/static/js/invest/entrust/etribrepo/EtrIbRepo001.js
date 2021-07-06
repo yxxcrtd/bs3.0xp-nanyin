@@ -79,56 +79,6 @@
         ]
     });
 
-    /**
-     * 定义数据表格
-     */
-    var zyqglTable = $("#zyqglTable").joyintable({ 
-        ajax: {
-            url: 'findZlglPositionPage',//请求路径
-            type: 'POST',//请求类型
-            data: function() {
-                return getZqzyPositionParams();//获取请求参数
-            }//ajax请求数据
-        },
-        dblclick:function(table, data) {
-        },
-        /**
-         * 定义表格名称
-         */
-        checkbox: true,
-        searchOnInit:true,
-        cols:[
-            {field:'portfolioId', title: 'EtrInvestBondInfo001.portfolioId', width: 100,
-                render : function(data, type, row, meta) {
-                    return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
-                },sortField:"portfolioId"
-            }
-            ,{field:'portfolioName', title: 'EtrInvestBondInfo001.portfolioName', width:180,sortField:"portfolioName"}
-            ,{field:'secAcctId', visible:false}
-            ,{field:'secAcctStr', title: 'EtrIbRepo001.secAcctId', width:150,sortField:"finprodAbbr"}
-            , {field: 'finprodMarketId', title: 'EtrInvestBondInfo001.finprodId',  width:150,sortField: 'finProdId'}
-            , {field: 'finProdName', title: 'EtrInvestBondInfo001.finprodAbbr',  width:150,sortField: 'finProdName'}
-            , {field: 'posStrdPrinAmt', title: 'EtrIbRepo001.posStrdPrinAmt', type: 'money', width:150}
-            , {field: 'pledStrdPrinAmt', title: 'EtrIbRepo001.pledStrdPrinAmt1', type: 'money', width:150}
-            , {field: 'gradeResultName', title: 'EtrIbRepo001.gradeResult', width:150, sortField: 'gradeResult'}
-            , {field: 'mdateStr', title: 'EtrIbRepo001.mdate', width:150,/*type:'date'*/}
-            , {field: 'lastPeriod', title: 'EtrIbRepo001.lastPeriod', width:150}
-            , {field: 'registOrgName', title: 'EtrIbRepo001.registOrg', width:150}
-            , {field: 'pledgeStockId', visible: false}
-            ],
-        //计算总可质押券面总额
-        done : function(allData, table){
-            var totalPledStrdPrinAmt = '0';
-            if (allData && allData.length > 0){
-                $.each(allData, function(id, value){
-                	totalPledStrdPrinAmt = JoyinMath.doAdd(totalPledStrdPrinAmt, value.pledStrdPrinAmt, 2, JoyinMath.ROUND_HALF_UP);
-                });          	
-            }
-           // $('#totalFinProdBalance').attr("value",thousandBitSeparator(totalFinProdBalance));
-            $('#pledStrdPrinAmt').attr("value",thousandBitSeparator(totalPledStrdPrinAmt));
-        }
-    });
-
     //数字转千分符
     function thousandBitSeparator(num) {
     return num && num
@@ -142,16 +92,6 @@
      * 组合代码链接
      */
     zlglTable.bind('click','.portfolioIdLink', function(row) {
-        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
-                portfolioId:row.portfolioId});//主键组合代码
-    });
-
-    /**
-     * 组合代码链接
-     */
-    zyqglTable.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
             basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
             "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
@@ -178,6 +118,68 @@
     var getZqzyPositionExportExcel = function () {
         Joyin.exportExcel('export', getZqzyPositionParams());
     };
+    var zyqglTable = null;
+    if(repo_pledge_model =='03'){
+    	 /**
+         * 定义数据表格
+         */
+        zyqglTable = $("#zyqglTable").joyintable({ 
+            ajax: {
+                url: 'findZlglPositionPage',//请求路径
+                type: 'POST',//请求类型
+                data: function() {
+                    return getZqzyPositionParams();//获取请求参数
+                }//ajax请求数据
+            },
+            dblclick:function(table, data) {
+            },
+            /**
+             * 定义表格名称
+             */
+            checkbox: true,
+            searchOnInit:true,
+            cols:[
+                {field:'portfolioId', title: 'EtrInvestBondInfo001.portfolioId', width: 100,
+                    render : function(data, type, row, meta) {
+                        return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
+                    },sortField:"portfolioId"
+                }
+                ,{field:'portfolioName', title: 'EtrInvestBondInfo001.portfolioName', width:180,sortField:"portfolioName"}
+                ,{field:'secAcctId', visible:false}
+                ,{field:'secAcctStr', title: 'EtrIbRepo001.secAcctId', width:150,sortField:"finprodAbbr"}
+                , {field: 'finprodMarketId', title: 'EtrInvestBondInfo001.finprodId',  width:150,sortField: 'finProdId'}
+                , {field: 'finProdName', title: 'EtrInvestBondInfo001.finprodAbbr',  width:150,sortField: 'finProdName'}
+                , {field: 'posStrdPrinAmt', title: 'EtrIbRepo001.posStrdPrinAmt', type: 'money', width:150}
+                , {field: 'pledStrdPrinAmt', title: 'EtrIbRepo001.pledStrdPrinAmt1', type: 'money', width:150}
+                , {field: 'gradeResultName', title: 'EtrIbRepo001.gradeResult', width:150, sortField: 'gradeResult'}
+                , {field: 'mdateStr', title: 'EtrIbRepo001.mdate', width:150,/*type:'date'*/}
+                , {field: 'lastPeriod', title: 'EtrIbRepo001.lastPeriod', width:150}
+                , {field: 'registOrgName', title: 'EtrIbRepo001.registOrg', width:150}
+                , {field: 'pledgeStockId', visible: false}
+                ],
+            //计算总可质押券面总额
+            done : function(allData, table){
+                var totalPledStrdPrinAmt = '0';
+                if (allData && allData.length > 0){
+                    $.each(allData, function(id, value){
+                    	totalPledStrdPrinAmt = JoyinMath.doAdd(totalPledStrdPrinAmt, value.pledStrdPrinAmt, 2, JoyinMath.ROUND_HALF_UP);
+                    });          	
+                }
+               // $('#totalFinProdBalance').attr("value",thousandBitSeparator(totalFinProdBalance));
+                $('#pledStrdPrinAmt').attr("value",thousandBitSeparator(totalPledStrdPrinAmt));
+            }
+        });
+        
+        /**
+         * 组合代码链接
+         */
+        zyqglTable.bind('click','.portfolioIdLink', function(row) {
+            Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+                "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+                    portfolioId:row.portfolioId});//主键组合代码
+        });
+    }
 
     /**
 	 * 画面加载完成
@@ -349,7 +351,9 @@
          */
         setInterval(function(){
             refreshzlglTable();
-            refreshZqzyzlglTable();
+            if(repo_pledge_model =='03'){
+            	 refreshZqzyzlglTable();
+            }
         },300000);
     });
 

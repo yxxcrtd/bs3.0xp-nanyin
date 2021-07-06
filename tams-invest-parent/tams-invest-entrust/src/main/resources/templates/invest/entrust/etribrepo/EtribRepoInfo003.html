@@ -243,6 +243,18 @@
                     </div>
                 </div>
             </div>
+             <div class="pro-module-wrap">
+	            <div th:if=" ${repo_pledge_model} =='02'"  class="pro-module" >
+				    <h3 class="pro-module-title">
+				        <span class="title-des" data-th-utext="#{BussRepoSecPtl.pledgeInfo}">质押券汇总信息</span>
+				        <i class="iconfont icon-arrow-down pro-down-icon"></i>
+				    </h3>
+				    <div>
+				        <table class="layui-table" id="pledgeBondTotalListDetailed"
+				               name="pledgeBondTotalListDetailed"></table>
+				    </div>
+				 </div>
+			</div>
             <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
                 <div class="text-center">
                     <a id="EtribRepoInfo003_btn_fileupload" class="layui-btn layui-btn-sm"
@@ -345,6 +357,9 @@
         var SHARES_TRADE_MARKET_02 = eval(/*[[${SHARES_TRADE_MARKET_02}]]*/'');
 
         var todoList = /*[[${TodoList}]]*/'';
+        var repo_pledge_model = /*[[${repo_pledge_model}]]*/'';
+        var entity_pledgeBondList = eval(/*[[${entity_pledgeBondList}]]*/'');
+        var entity_PledgeBondTotalListDetailed = eval(/*[[${entity_PledgeBondTotalListDetailed}]]*/'');
     </script>
     <script data-th-src="@{/js/invest/entrust/etribrepo/EtribRepoInfo003.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/component/autocoupon/AutoCoupon.js}" type="text/javascript"></script>

@@ -229,7 +229,7 @@
                     <div class="layui-form-item" style="padding:0px;">
                    
                         
-                    	<div class="form-inline-wrap"  style="display:none; width: 50%; padding:0px;">
+                    	<div class="form-inline-wrap" th:if="${repo_pledge_model} =='03'"   style="width: 50%; padding:0px;" >
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbRepo001.zyqk}">质押券库</label>
                             <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
                                 <select
@@ -247,6 +247,12 @@
                                 ></select> 
                             </div>
                         </div> 
+                         <div th:if=" ${repo_pledge_model} =='02'"  class="page-component" th:data-path="@{/component/trade/BussRepoSec/init}"
+		                     th:data-params="|{entityNameBussRepoSec: 'bussRepoSec', pageFrom: 'EtrIbRepoinfo002', entity:'${entity_bussRepoSecDto}',
+		                     portfolioId:'${entity?.portfolioId==null?'':entity?.portfolioId}', ps:'${entity?.ps==null?'':entity?.ps}',
+		                     bizCode:'${buscode==null?'':buscode}', entrustId:'${entity?.entrustId==null?'':entity?.entrustId}',
+		                     securitiesCust: '${entity?.securitiesCust == null? '': entity?.securitiesCust}',
+		                     chlId:'${entity?.chlId == null? '': entity?.chlId}' , tradeMarketId: 'tradeMarket'}|"></div> 
                     </div>
                     <div class="layui-form-item" style="padding:0px;">
                         <div class="form-inline-wrap" style="width: 100%;" >
@@ -368,7 +374,8 @@
 
                 var todoList = /*[[${TodoList}]]*/'';
 
-                var shortSellingSupported = /*[[${shortSellingSupported}]]*/ ''
+                var shortSellingSupported = /*[[${shortSellingSupported}]]*/ '';
+                var repo_pledge_model = /*[[${repo_pledge_model}]]*/ '';
             </script>
             <script data-th-src="@{/js/component/common/TradeCommon.js}" type="text/javascript"></script>
             <script data-th-src="@{/js/invest/entrust/etribrepo/EtrIbRepoinfo002.js}" type="text/javascript"></script>

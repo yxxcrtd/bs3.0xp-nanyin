@@ -12,8 +12,10 @@ package com.joyintech.tams.invest.entrust.etribrepo.controller;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.etribbondinfo.controller.EtrIbBondinfo001Controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +40,8 @@ public class EtrIbRepoMainController extends BaseController{
 
         model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 
+        model.addAttribute("single_etr_isshow",CacheUtil.getSysParam(BussinessConstant.SINGLE_ETR_ISSHOW));
+        model.addAttribute("repo_pledge_model",CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         return super.init(model);
     }
 }
