@@ -289,3 +289,9 @@ VALUES('EtrIbBondinfoHq_dyn', '{"name":"dynInfo","all":[{"value":"secType","labe
        '债券二级左下角资产信息动态配置', 'ld', sysdate, 'ld', sysdate);
 
 
+--外汇掉期指令取消委托状态控制
+DELETE FROM SYS_PAGE_DICTLIST spd WHERE PAGE_ID ='EtrWtFxswap001' AND DICT_ID ='ENTRUST_STATUS';
+--利率互换指令取消委托状态控制
+DELETE FROM SYS_PAGE_DICTLIST spd WHERE PAGE_ID ='EtrIRS001' AND DICT_ID ='ENTRUST_STATUS';
+--外汇远期指令取消委托状态控制
+DELETE FROM SYS_PAGE_DICTLIST spd WHERE PAGE_ID ='EtrForwex001' AND DICT_ID ='ENTRUST_STATUS';
