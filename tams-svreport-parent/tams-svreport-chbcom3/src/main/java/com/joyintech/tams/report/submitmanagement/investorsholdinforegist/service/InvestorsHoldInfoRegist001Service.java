@@ -543,14 +543,16 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 
 	@Override
 	public com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto> selectPageData(Map<String, Object> pageParam) {
-		List<InvestorsHoldInfoRegist001Dto> data = simpleRestTemplate.postForList(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfoRegist/selectAllData",pageParam,
-				InvestorsHoldInfoRegist001Dto.class);
-		com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto>();
-		page.setRoot(data);
+		//--------delete by lingxq on 2021-06-25 for 微服务又调回当前类方法,改为直接调用-------->>>>>>>>
+//		List<InvestorsHoldInfoRegist001Dto> data = simpleRestTemplate.postForList(
+//				SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfoRegist/selectAllData",pageParam,
+//				InvestorsHoldInfoRegist001Dto.class);
+//		com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto>();
+//		page.setRoot(data);
 //        page.setTotal(data.size());
 //        return  selectForPage(pageParam);
-		return page;
+		//--------delete by lingxq on 2021-06-25 for 微服务又调回当前类方法,改为直接调用--------<<<<<<<<<
+		return selectForPage(pageParam);
 	}
 
 	public List<InvestorsHoldInfoRegist001Dto> selectAllData(Map<String,Object> map){
