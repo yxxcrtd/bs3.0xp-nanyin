@@ -136,9 +136,9 @@ public class FinProductDurDeal001Controller extends BaseController {
         String tableId = this.getParam("tableId");
         String fileName = "";
         if(StringUtil.equals(tableId,"dataTable")){
-            fileName = "产品存续期交易汇总"+ "(" + iPlatformDate.getSysDateStr() + ").xls";
+            fileName = "产品存续期交易查询-汇总"+ "(" + iPlatformDate.getSysDateStr() + ").xls";
         }else{
-            fileName = "产品存续期交易明细"+ "(" + iPlatformDate.getSysDateStr() + ").xls";
+            fileName = "产品存续期交易查询-明细"+ "(" + iPlatformDate.getSysDateStr() + ").xls";
         }
 
         return finProductDurDeal001Service.export(fileName, RequestUtil.getPageParam());
