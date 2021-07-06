@@ -23,6 +23,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.product.durdeal.dto.FinProductDurDeal001Dto;
 import com.joyintech.tams.invest.product.durdeal.service.FinProductDurDeal001Service;
@@ -64,6 +65,9 @@ public class FinProductDurDeal001Controller extends BaseController {
      */
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private IPlatformDate iPlatformDate;
 
     /**
      * {@inheritDoc}
@@ -129,7 +133,15 @@ public class FinProductDurDeal001Controller extends BaseController {
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
         throws Exception {
-        return finProductDurDeal001Service.export(this.getPageId(), RequestUtil.getPageParam());
+        String tableId = this.getParam("tableId");
+        String fileName = "";
+        if(StringUtil.equals(tableId,"dataTable")){
+            fileName = "产品存续期交易汇总"+ "(" + iPlatformDate.getSysDateStr() + ").xls";
+        }else{
+            fileName = "产品存续期交易明细"+ "(" + iPlatformDate.getSysDateStr() + ").xls";
+        }
+
+        return finProductDurDeal001Service.export(fileName, RequestUtil.getPageParam());
     }
 
     /**

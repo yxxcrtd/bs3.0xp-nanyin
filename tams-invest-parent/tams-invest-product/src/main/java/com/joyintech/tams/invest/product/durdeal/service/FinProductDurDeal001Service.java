@@ -161,7 +161,7 @@ public class FinProductDurDeal001Service extends CommonExportService<FinProductD
     protected void buildExportParam(ExportParam exportParam) {
         Map<String, Object> param = exportParam.getSelectParam();
         String tableId = (String)param.get("tableId");
-        if (StringUtil.equals(tableId, "total")) {
+        if (StringUtil.equals(tableId, "dataTable")) {
             exportParam.config("/com/joyintech/tams/invest/product/durdeal/conf/export_conf.xml").dataSource(
                 DataSourceType.MASERT);
         }
@@ -178,7 +178,7 @@ public class FinProductDurDeal001Service extends CommonExportService<FinProductD
     @Override
     public Page<FinProductDurDeal001Dto> selectPageData(Map<String, Object> selectParam) {
         String tableId = (String)selectParam.get("tableId");
-        if (StringUtil.equals(tableId, "total")) {
+        if (StringUtil.equals(tableId, "dataTable")) {
             Page<FinProductDurDeal001Dto> result = findPage(selectParam);
             return result;
         }

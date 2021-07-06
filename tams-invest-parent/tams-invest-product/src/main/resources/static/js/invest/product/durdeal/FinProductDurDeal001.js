@@ -33,9 +33,9 @@
         	pageParam.dealMode = $("#dealMode").val();
         }
         if ($('#dataTable').parent().attr("class") == "layui-tab-item") {
-        	pageParam.tableId = "detail";
+        	pageParam.tableId = "detailDataTable";
         }else {
-        	pageParam.tableId = "total";
+        	pageParam.tableId = "dataTable";
         } 
         if ($("#dealType").val()) {
             pageParam.dealType = $("#dealType").val();
