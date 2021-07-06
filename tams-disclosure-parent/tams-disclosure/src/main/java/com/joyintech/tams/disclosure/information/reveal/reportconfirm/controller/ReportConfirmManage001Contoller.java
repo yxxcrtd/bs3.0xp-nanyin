@@ -77,7 +77,7 @@ import com.joyintech.framework.util.CacheUtil;
  * 金融产品交易查询
  * @author weipengconfirmCancle
  * @version 1.0 2018年5月16日
- * @see ValNetValueConfirm001Contoller
+ * @see ReportConfirmManage001Contoller
  * @since 1.0
  */
 @Controller
@@ -372,7 +372,6 @@ public class ReportConfirmManage001Contoller extends BaseController {
 	 * 下载报表
 	 * <一句话功能简述>
 	 * <功能详细描述>
-	 * @param dto
 	 * @return
 	 * @throws Exception
 	 */
@@ -491,14 +490,22 @@ public class ReportConfirmManage001Contoller extends BaseController {
 //        String targetFileName = attachment.getFileName();
         // 目标文件
         File targetFile = attachment.getTargetFile();
-        
-        InputStream in = null;
-        if (!targetFile.exists()) {
-            throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
-        }
-        else {
-            in = new FileInputStream(targetFile);
-        }
-        return ExportUtil.export(targetFileName, in);
+		InputStream in = null;
+        try {
+			if (!targetFile.exists()) {
+				throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
+			}
+			else {
+				in = new FileInputStream(targetFile);
+			}
+			return ExportUtil.export(targetFileName, in);
+		}finally {
+			if (in != null){
+				in.close();
+			}
+		}
+
+
+
     }
 }

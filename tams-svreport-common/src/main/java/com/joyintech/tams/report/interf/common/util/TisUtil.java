@@ -471,6 +471,7 @@ public class TisUtil {
 		// 工作表对象
 		HSSFWorkbook wb = null;
 		InputStream inputStream = null;
+		FileOutputStream outputStream = null;
 		try {
 			// 原文件
 			File srcFile = new SafelyFile(template);
@@ -648,11 +649,10 @@ public class TisUtil {
 			if (!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
 			}
-			FileOutputStream outputStream = new FileOutputStream(file);
+			outputStream = new FileOutputStream(file);
 
 			wb.write(outputStream);
-			outputStream.flush();
-			outputStream.close();
+
 			return file;
 		}
 		catch (Exception e) {
@@ -665,6 +665,10 @@ public class TisUtil {
 				}
 				if(inputStream != null) {
 					inputStream.close();
+				}
+				if (outputStream != null){
+					outputStream.flush();
+					outputStream.close();
 				}
 			}
 			catch (IOException e) {
@@ -733,10 +737,16 @@ public class TisUtil {
 	 * @throws Exception
 	 */
 	public static void fileWrite(File targetFile,HSSFWorkbook wb) throws Exception{
-		FileOutputStream fileOut = new FileOutputStream(targetFile);
-		wb.write(fileOut);
-		fileOut.flush();
-		fileOut.close();
+		FileOutputStream fileOut = null;
+		try {
+			new FileOutputStream(targetFile);
+			wb.write(fileOut);
+		} finally {
+			if (fileOut != null){
+				fileOut.flush();
+				fileOut.close();
+			}
+		}
 	}
 
 

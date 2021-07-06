@@ -328,172 +328,174 @@ public class Chb3CnBondUpInterfService extends InterfService {
                 continue;
             }
             String suffix = FileNameUtil.getFileExtName(realName);
-            InputStream in = new FileInputStream(file);
+            InputStream in = null;
+            try {
+                in = new FileInputStream(file);
 
-            // 解析处理开始前，登录监控信息表，状态处理中
-            ChbFileReadMonitorInfo monitorInfoDto = new ChbFileReadMonitorInfo();
-            monitorInfoDto.setHandleSeqno(
-                CommonUtil.getSequenceIndexData(DataIndexSequenceType.上游文件读取处理监控序列号));
-            monitorInfoDto.setHandleFileName(realName);
-            monitorInfoDto.setHandleFilePath(remotePath);
-            monitorInfoDto.setFileReadStartTime(new Date());
-            monitorInfoDto.setFileHandleStatus(DictCodeListExt2.上游接口文件读取处理状态_处理中.getValue());
+                // 解析处理开始前，登录监控信息表，状态处理中
+                ChbFileReadMonitorInfo monitorInfoDto = new ChbFileReadMonitorInfo();
+                monitorInfoDto.setHandleSeqno(
+                        CommonUtil.getSequenceIndexData(DataIndexSequenceType.上游文件读取处理监控序列号));
+                monitorInfoDto.setHandleFileName(realName);
+                monitorInfoDto.setHandleFilePath(remotePath);
+                monitorInfoDto.setFileReadStartTime(new Date());
+                monitorInfoDto.setFileHandleStatus(DictCodeListExt2.上游接口文件读取处理状态_处理中.getValue());
 
-            // 产品运作模式数据处理
-            if (realName.contains(XML_FILE_NAME[0])) {
-                String remoteDir = "fail";
-                try {
-                    monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_产品运作模式信息.getValue());
-                    chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
-
-                    remoteDir=proRegistCodeManage001Service.getOperateModeByInterf(in, type, localPath, suffix, monitorInfoDto);
-
-                    //add by liubin start
-                    this.handleSqlldrLogMsg(monitorInfoDto);
-                    //add by liubin end
-                    this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
-                }
-                catch (Exception e) {
-                    logger.error("上游接口数据处理失败：", e);
-
-                    this.handleMonitorInfoAfterException(monitorInfoDto, e);
-                }
-                finally {
-                    // ftp文件移动
-                    if (StringUtil.isNotEmpty(remoteDir)) {
-                        InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
-                                realName, remoteDir);
-                    }
-                    // 删除临时文件
-                    file.delete();
-                }
-            }
-            // 解析投资者身份信息，并做存库处理
-            else if (realName.contains(XML_FILE_NAME[1])) {
-                String remoteDir = "fail";
-                try {
-                    monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者身份信息.getValue());
-                    chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
-
-                    if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
-                        remoteDir = equityInfo001Service.getEquityInfoByInterfYC(in, type, localPath,
-                                suffix, monitorInfoDto, realName);
-                    }else{
-                        remoteDir = equityInfo001Service.getEquityInfoByInterf(in, type, localPath,
-                                suffix, monitorInfoDto);
-                    }
-
-
-                    //add by liubin start 解析sqlldr日志存入monitorInfoDto中
-                    this.handleSqlldrLogMsg(monitorInfoDto);
-                    //add by liubin end
-                    this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
-                }
-                catch (Exception e) {
-                    logger.error("上游接口数据处理失败：", e);
-
-                    this.handleMonitorInfoAfterException(monitorInfoDto, e);
-                }
-                finally {
+                // 产品运作模式数据处理
+                if (realName.contains(XML_FILE_NAME[0])) {
+                    String remoteDir = "fail";
                     try {
-                        // 删除导入用的临时的数据
-                        equityInfo001Service.deleteImportTmpData();
+                        monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_产品运作模式信息.getValue());
+                        chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
+
+                        remoteDir=proRegistCodeManage001Service.getOperateModeByInterf(in, type, localPath, suffix, monitorInfoDto);
+
+                        //add by liubin start
+                        this.handleSqlldrLogMsg(monitorInfoDto);
+                        //add by liubin end
+                        this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
                     }
-                    catch (Exception e1) {
-                        logger.error(e1.getMessage(), e1);
+                    catch (Exception e) {
+                        logger.error("上游接口数据处理失败：", e);
+
+                        this.handleMonitorInfoAfterException(monitorInfoDto, e);
                     }
-                    // ftp文件移动
-                    if (StringUtil.isNotEmpty(remoteDir)) {
-                        InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
-                                realName, remoteDir);
+                    finally {
+                        // ftp文件移动
+                        if (StringUtil.isNotEmpty(remoteDir)) {
+                            InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
+                                    realName, remoteDir);
+                        }
+                        // 删除临时文件
+                        file.delete();
                     }
-                    // 删除临时文件
-                    file.delete();
                 }
-            }
-            // 解析业务明细信息，并做存库处理
-            else if (realName.contains(XML_FILE_NAME[2])) {
-                String remoteDir = "fail";
-                try {
-                    monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者明细信息.getValue());
-                    chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
-                    // 删除导入用的临时的数据
-                    equityBusiDetails001Service.deleteImportTmpData();
-                    remoteDir = equityBusiDetails001Service.getEquityBusiDetailsByInterf(in, type,
-                            localPath, suffix, monitorInfoDto);
-                    //add by liubin start 解析sqlldr日志存入monitorInfoDto中
-                    this.handleSqlldrLogMsg(monitorInfoDto);
-                    //add by liubin end
-                    this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
-                }
-                catch (Exception e) {
-                    logger.error("上游接口数据处理失败：", e);
-                    this.handleMonitorInfoAfterException(monitorInfoDto, e);
-                }
-                finally {
+                // 解析投资者身份信息，并做存库处理
+                else if (realName.contains(XML_FILE_NAME[1])) {
+                    String remoteDir = "fail";
                     try {
+                        monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者身份信息.getValue());
+                        chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
+
+                        if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
+                            remoteDir = equityInfo001Service.getEquityInfoByInterfYC(in, type, localPath,
+                                    suffix, monitorInfoDto, realName);
+                        }else{
+                            remoteDir = equityInfo001Service.getEquityInfoByInterf(in, type, localPath,
+                                    suffix, monitorInfoDto);
+                        }
+
+
+                        //add by liubin start 解析sqlldr日志存入monitorInfoDto中
+                        this.handleSqlldrLogMsg(monitorInfoDto);
+                        //add by liubin end
+                        this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
+                    }
+                    catch (Exception e) {
+                        logger.error("上游接口数据处理失败：", e);
+
+                        this.handleMonitorInfoAfterException(monitorInfoDto, e);
+                    }
+                    finally {
+                        try {
+                            // 删除导入用的临时的数据
+                            equityInfo001Service.deleteImportTmpData();
+                        }
+                        catch (Exception e1) {
+                            logger.error(e1.getMessage(), e1);
+                        }
+                        // ftp文件移动
+                        if (StringUtil.isNotEmpty(remoteDir)) {
+                            InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
+                                    realName, remoteDir);
+                        }
+                        // 删除临时文件
+                        file.delete();
+                    }
+                }
+                // 解析业务明细信息，并做存库处理
+                else if (realName.contains(XML_FILE_NAME[2])) {
+                    String remoteDir = "fail";
+                    try {
+                        monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者明细信息.getValue());
+                        chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
                         // 删除导入用的临时的数据
                         equityBusiDetails001Service.deleteImportTmpData();
-                    }
-                    catch (Exception e1) {
-                        logger.error(e1.getMessage(), e1);
-                    }
-                    // ftp文件移动
-                    if (StringUtil.isNotEmpty(remoteDir)) {
-                        InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
-                                realName, remoteDir);
-                    }
-                    // 删除临时文件
-                    file.delete();
-                }
-            }
-            //投资者持有信息上游数据处理
-            else if(realName.contains(XML_FILE_NAME[3])) {
-                String remoteDir = "fail";
-                try {
-                    monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者持有信息.getValue());
-                    chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
-                    if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
-                        remoteDir = investorsHoldInfo001Service.getInvestorsHoldInfoByInterfYC(in, type,
-                                localPath, suffix, monitorInfoDto, realName);
-                    }else{
-                        remoteDir = investorsHoldInfo001Service.getInvestorsHoldInfoByInterf(in, type,
+                        remoteDir = equityBusiDetails001Service.getEquityBusiDetailsByInterf(in, type,
                                 localPath, suffix, monitorInfoDto);
+                        //add by liubin start 解析sqlldr日志存入monitorInfoDto中
+                        this.handleSqlldrLogMsg(monitorInfoDto);
+                        //add by liubin end
+                        this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
                     }
-
-                    //add by liubin start
-                    this.handleSqlldrLogMsg(monitorInfoDto);
-                    //add by liubin end
-                    this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
-                }
-                catch (Exception e) {
-                    logger.error("上游接口数据处理失败：", e);
-
-                    this.handleMonitorInfoAfterException(monitorInfoDto, e);
-                }
-                finally {
-                    if (in != null){
+                    catch (Exception e) {
+                        logger.error("上游接口数据处理失败：", e);
+                        this.handleMonitorInfoAfterException(monitorInfoDto, e);
+                    }
+                    finally {
                         try {
-                            in.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            // 删除导入用的临时的数据
+                            equityBusiDetails001Service.deleteImportTmpData();
                         }
+                        catch (Exception e1) {
+                            logger.error(e1.getMessage(), e1);
+                        }
+                        // ftp文件移动
+                        if (StringUtil.isNotEmpty(remoteDir)) {
+                            InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
+                                    realName, remoteDir);
+                        }
+                        // 删除临时文件
+                        file.delete();
                     }
+                }
+                //投资者持有信息上游数据处理
+                else if(realName.contains(XML_FILE_NAME[3])) {
+                    String remoteDir = "fail";
+                    try {
+                        monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者持有信息.getValue());
+                        chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
+                        if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
+                            remoteDir = investorsHoldInfo001Service.getInvestorsHoldInfoByInterfYC(in, type,
+                                    localPath, suffix, monitorInfoDto, realName);
+                        }else{
+                            remoteDir = investorsHoldInfo001Service.getInvestorsHoldInfoByInterf(in, type,
+                                    localPath, suffix, monitorInfoDto);
+                        }
+
+                        //add by liubin start
+                        this.handleSqlldrLogMsg(monitorInfoDto);
+                        //add by liubin end
+                        this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
+                    }
+                    catch (Exception e) {
+                        logger.error("上游接口数据处理失败：", e);
+
+                        this.handleMonitorInfoAfterException(monitorInfoDto, e);
+                    }
+                    finally {
+                        if (in != null){
+                            try {
+                                in.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
 //                    try {
-                    // 删除导入用的临时的数据
+                        // 删除导入用的临时的数据
 //                        investorsHoldInfo001Service.deleteImportTmpData();
 //                    }
 //                    catch (Exception e1) {
 //                    }
-                    // ftp文件移动
-                    if (StringUtil.isNotEmpty(remoteDir)) {
-                        InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
-                                realName, remoteDir);
+                        // ftp文件移动
+                        if (StringUtil.isNotEmpty(remoteDir)) {
+                            InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
+                                    realName, remoteDir);
+                        }
+                        // 删除临时文件
+                        file.delete();
                     }
-                    // 删除临时文件
-                    file.delete();
                 }
-            }
 //         // 解析汇率行情信息并做入库处理
 //            else if (realName.contains(XML_FILE_NAME[3])) {
 //                String remoteDir = "fail";
@@ -529,7 +531,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
 //
 //                    remoteDir = holidaymarket001Service.getHolidaymarketByInterf(in, type,
 //                        localPath, suffix, monitorInfoDto);
-//                    
+//
 //                    //add by liubin start
 //                    this.handleSqlldrLogMsg(monitorInfoDto);
 //                    //add by liubin end
@@ -549,7 +551,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
 //                    file.delete();
 //                }
 //            }
-            //产品基本要素
+                //产品基本要素
 //            else if (realName.contains(XML_FILE_NAME[5])) {
 //                String remoteDir = "fail";
 //                try {
@@ -593,7 +595,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
 //                    // 删除临时文件
 //                    file.delete();
 //                }
-//          	  
+//
 //            }else if(realName.contains(XML_FILE_NAME[7])){
 //            	  logger.info("销售系统产品交易文件处理开始");
 //                String remoteDir = "fail";
@@ -614,8 +616,18 @@ public class Chb3CnBondUpInterfService extends InterfService {
 //                    // 删除临时文件
 //                    file.delete();
 //                }
-//          	  
+//
 //            }
+
+            }finally {
+                if (in != null){
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+            }
 
         }
     }

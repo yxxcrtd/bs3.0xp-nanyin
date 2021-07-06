@@ -278,23 +278,28 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         File templeteFile = new File(this.buildTempleteFilePath(tempFilePath));
         reportConfig.setTempleteFile(fileName + fileType);
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
-        } else {
-            stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
-        }
-
-        if (StringUtil.equals(fileType, ".xls")) {
-            wb = new HSSFWorkbook((InputStream)stream);
-        } else {
-            if (!StringUtil.equals(fileType, ".xlsx")) {
-                ((InputStream)stream).close();
-                throw new BusinessException("不是一个有效的Excel文件");
+        try {
+            if (templeteFile.exists()) {
+                stream = new FileInputStream(templeteFile);
+            } else {
+                stream = CommonExportService.class.getResourceAsStream("/tpl/" + tempFilePath);
             }
 
-            wb = new XSSFWorkbook((InputStream)stream);
-        }
+            if (StringUtil.equals(fileType, ".xls")) {
+                wb = new HSSFWorkbook((InputStream)stream);
+            } else {
+                if (!StringUtil.equals(fileType, ".xlsx")) {
+                    ((InputStream)stream).close();
+                    throw new BusinessException("不是一个有效的Excel文件");
+                }
 
+                wb = new XSSFWorkbook((InputStream)stream);
+            }
+        }finally {
+            if (stream != null){
+                stream.close();
+            }
+        }
         return (Workbook)wb;
     }
 

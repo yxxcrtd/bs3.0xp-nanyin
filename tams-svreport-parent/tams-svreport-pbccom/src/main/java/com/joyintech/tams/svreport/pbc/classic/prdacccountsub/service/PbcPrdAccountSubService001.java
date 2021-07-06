@@ -474,7 +474,6 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
 				wb = new XSSFWorkbook(stream);
 			}
 			else {
-				stream.close();
 				throw new BusinessException("不是一个有效的Excel文件");
 			}
 		}finally {

@@ -1767,15 +1767,19 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             // 处理中文不能自动调整列宽的问题
             this.setSizeColumn(sheet, columnNum);
 			if (workbook != null) {
+				FileOutputStream out = null;
 				try {
 					File exportFile = new SafelyFile(fileName);
-					FileOutputStream out = new FileOutputStream(exportFile);
+					out = new FileOutputStream(exportFile);
 					workbook.write(out);
-					out.close();
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 					e.printStackTrace();
+				} finally {
+					if (out != null){
+						out.close();
+					}
 				}
 			}
 

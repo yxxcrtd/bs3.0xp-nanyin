@@ -123,9 +123,11 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 
 
 		//表３附表单元格合并
-		InputStream inputStream = new FileInputStream(table3AddFile);
-		POIFSFileSystem fs = new POIFSFileSystem(inputStream);
-		Workbook wb = new HSSFWorkbook(fs);
+		InputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(table3AddFile);
+			POIFSFileSystem fs = new POIFSFileSystem(inputStream);
+			Workbook wb = new HSSFWorkbook(fs);
 			Sheet sheet = wb.getSheetAt(0);
 			int index1 = 3;
 			int index2 = index1+listLocal.size()-1;
@@ -143,37 +145,43 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 				sheet.getRow(index4).getCell(j).
 						setCellStyle(sheet.getRow(0).getCell(0).getCellStyle());
 			}
-		wb.write(new FileOutputStream(table3AddFile));
+			wb.write(new FileOutputStream(table3AddFile));
 
-		sourceFiles.add(table3AddFile);
+			sourceFiles.add(table3AddFile);
 
-		// 如果生成excel文件个数大于1，生成压缩文件
-		File outFile = null;
-		String exportFilePath = SvrDataUtil.getSysParam(com.joyintech.framework.constant.GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+			// 如果生成excel文件个数大于1，生成压缩文件
+			File outFile = null;
+			String exportFilePath = SvrDataUtil.getSysParam(com.joyintech.framework.constant.GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-		String zipFileName = "表内外投资业务情况统计表"+"_"+exportYear+"年" +exportQuarter+ "月"+".zip";
-		outFile = new File(exportFilePath + File.separator + zipFileName);
-		// 导出路径不存在则重新生成
-		if (!outFile.getParentFile().exists()) {
-			outFile.getParentFile().mkdirs();
-		}
-		try {
-			ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
-		}
-		catch (Exception e) {
-			// 压缩文件失败后，删除所有临时文件
-			for (File file : sourceFiles) {
-				if (file.exists()) {
-					file.delete();
-				}
+			String zipFileName = "表内外投资业务情况统计表"+"_"+exportYear+"年" +exportQuarter+ "月"+".zip";
+			outFile = new File(exportFilePath + File.separator + zipFileName);
+			// 导出路径不存在则重新生成
+			if (!outFile.getParentFile().exists()) {
+				outFile.getParentFile().mkdirs();
 			}
-			logger.error(e.getMessage(),e);
+			try {
+				ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+			}
+			catch (Exception e) {
+				// 压缩文件失败后，删除所有临时文件
+				for (File file : sourceFiles) {
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+				logger.error(e.getMessage(),e);
+			}
+			//删掉xls文件
+			for(File single : sourceFiles){
+				single.delete();
+			}
+			return ExportUtil.export(zipFileName, outFile, true);
+		}finally {
+			if (inputStream != null){
+				inputStream.close();
+			}
 		}
-		//删掉xls文件
-		for(File single : sourceFiles){
-			single.delete();
-		}
-		return ExportUtil.export(zipFileName, outFile, true);
+
 
 	}
 	/**  
@@ -249,6 +257,7 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 	    String flieName = exceltemplate+".xls";
 	    File depositfile = null;
 	    FileOutputStream fos=null;
+		InputStream fis = null;
 		try{		
 			
 		// 关联模板
@@ -271,7 +280,7 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 		File srcFile = new File(template);
 		// 目标文件
 		File destFile = new File(temp);
-		InputStream fis = null;
+
 		if (srcFile.exists()) {
 			fis = new FileInputStream(srcFile);
 		} else {
@@ -299,6 +308,13 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 					e.printStackTrace();
 				}
 	    	}
+	    	if(fis !=null){
+				try {
+					fis.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
 	    }
 		 return depositfile;
 	}

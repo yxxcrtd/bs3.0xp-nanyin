@@ -367,12 +367,14 @@ public class EchartsPictureService {
 	/**
 	 * 生成options存储json文件
 	 * 
-	 * @param options 图表数据
+	 * @param option 图表数据
+	 * @param echartsFileTmp    
 	 * @return 文件
 	 */
 	private String buildEChartOptionsFile(String option, String echartsFileTmp) {
 		// Echarts临时json文件
 		String dataPath = echartsFileTmp + ".json";
+		BufferedWriter out = null;
 		try {
 			File writename = new File(dataPath);
 			if (!writename.exists()) {
@@ -380,12 +382,20 @@ public class EchartsPictureService {
 				dir.mkdirs();
 				writename.createNewFile();
 			}
-			BufferedWriter out = new BufferedWriter(new FileWriter(writename));
+			out = new BufferedWriter(new FileWriter(writename));
 			out.write(option);
-			out.flush();
-			out.close();
+
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally {
+			if (out !=null){
+				try {
+					out.flush();
+					out.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
 		}
 		return dataPath;
 	}

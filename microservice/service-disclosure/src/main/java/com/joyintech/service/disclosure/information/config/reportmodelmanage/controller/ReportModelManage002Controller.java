@@ -255,13 +255,14 @@ public class ReportModelManage002Controller extends BaseController {
 			 if(filepath.exists()&&filepath.isDirectory()){
 				 //获取已经下载的文件，并且转化为文件流
 				 File uploadfile = new SafelyFile(this.getParam("fileName"));///home/tamsuser/upload/.txt
-				 FileInputStream fis = new FileInputStream(uploadfile);
+				 FileInputStream fis = null;
 				 //要存放的文件名称，并且用输出流降读取的文件流内容输出
 
 				 FileOutputStream fos = null;
 				 BufferedInputStream bis = null;
 				 BufferedOutputStream bos = null;
 			  try {
+				  fis = new FileInputStream(uploadfile);
 				  File downFile = new SafelyFile(uploadFilePath+this.getParam("folder")+"/"+this.getParam("uploadFileName"));
 				   fos= new FileOutputStream(downFile);
 				   bis=new BufferedInputStream(fis);
@@ -289,14 +290,11 @@ public class ReportModelManage002Controller extends BaseController {
 				{
 					bos.close();
 				}
+				if (fis != null){
+					fis.close();
+				}
 			  }
-
-				 
 		 }
-//			 
-			
-			
-			 
 				return res;
 		}
 		

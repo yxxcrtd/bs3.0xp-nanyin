@@ -582,7 +582,6 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
                 wb = new XSSFWorkbook(stream);
             }
             else {
-                stream.close();
                 throw new BusinessException("不是一个有效的Excel文件");
             }
             return wb;

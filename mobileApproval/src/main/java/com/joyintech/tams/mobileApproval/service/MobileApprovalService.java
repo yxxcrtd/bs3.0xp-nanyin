@@ -1168,8 +1168,15 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
             	if(!"pdf".equals(fileInfo.getFileName().substring(fileInfo.getFileName().indexOf(".")+1, fileInfo.getFileName().length()).toLowerCase())) {
             		file=Office2PDFUtils.officeToPdf(fileInfo.getPath());
             	}
-                InputStream in = new FileInputStream(file);
-                return ExportUtil.export(fileInfo.getFileName().substring(0,fileInfo.getFileName().indexOf("."))+".pdf", in);
+                InputStream in = null;
+            	try{
+                    in =  new FileInputStream(file);
+                    return ExportUtil.export(fileInfo.getFileName().substring(0,fileInfo.getFileName().indexOf("."))+".pdf", in);
+                }finally {
+            	    if (in != null){
+                        in.close();
+                    }
+                }
             }
         }
         return MobileUtils.Objetc2Json("",null,"文件不存在");
@@ -1185,8 +1192,16 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 //                throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");
 //                return MobileUtils.Objetc2Json("",null,"文件不存在");
             } else {
-                InputStream in = new FileInputStream(file);
-                return ExportUtil.export(fileInfo.getFileName(), in);
+                InputStream in = null;
+                try{
+                    in = new FileInputStream(file);
+                    return ExportUtil.export(fileInfo.getFileName(), in);
+                }finally {
+                    if (in != null){
+                        in.close();
+                    }
+                }
+
             }
         }
         return MobileUtils.Objetc2Json("",null,"文件不存在");
@@ -1200,8 +1215,15 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
             if (!file.exists()) {
                 throw new BusinessException("文件[" + fileInfo.getFileName() + "]不存在！");
             } else {
-                InputStream in = new FileInputStream(file);
-                return ExportUtil.export(fileInfo.getFileName(), in);
+                InputStream in = null;
+                try {
+                    in = new FileInputStream(file);
+                    return ExportUtil.export(fileInfo.getFileName(), in);
+                }finally {
+                    if (in != null){
+                        in.close();
+                    }
+                }
             }
         }
         return "文件名传入错误，未找到该文件";

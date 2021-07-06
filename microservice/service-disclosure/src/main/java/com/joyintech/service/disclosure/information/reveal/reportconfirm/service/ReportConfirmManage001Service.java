@@ -627,11 +627,15 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								downloadFile.delete();
 							}
 						}
-						zipOut.close();
+
 					} 
 					catch(Exception e) {
 			        	log.error("",e);
-			        }
+			        }finally {
+						if (zipOut != null){
+							zipOut.close();
+						}
+					}
 					
 				}
 			}

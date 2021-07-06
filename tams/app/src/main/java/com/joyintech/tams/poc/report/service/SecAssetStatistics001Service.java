@@ -240,6 +240,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
      String flieName = exceltemplate+".xlsx";
      File depositfile = null;
      FileOutputStream fos=null;
+     InputStream fis = null;
      try{          
      // 关联模板
      XLSTransformer transformer = new XLSTransformer();
@@ -259,7 +260,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
      File srcFile = new SafelyFile(template);
      // 目标文件
      File destFile = new SafelyFile(temp);
-     InputStream fis = null;
+
      if (srcFile.exists()) {
          fis = new FileInputStream(srcFile);
      } else {
@@ -285,6 +286,13 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
                  fos.close();
              } catch (IOException e) {
                  e.printStackTrace();
+             }
+         }
+         if(fis !=null){
+             try {
+                 fis.close();
+             } catch (IOException e) {
+                 logger.error("",e);
              }
          }
      }

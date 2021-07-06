@@ -45,9 +45,10 @@ public class ReadExcelFile extends ReadFileBasic {
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		
 		for (String filepath : filePaths) {
-			InputStream stream = new FileInputStream(new SafelyFile(filepath));  
+			InputStream stream = null;
 			Workbook workbook=null;
 			try {
+				stream = new FileInputStream(new SafelyFile(filepath));
 				//创建实例，并判断是否为xls或者xlsx格式的文件
 				workbook=WorkbookFactory.create(stream);
 

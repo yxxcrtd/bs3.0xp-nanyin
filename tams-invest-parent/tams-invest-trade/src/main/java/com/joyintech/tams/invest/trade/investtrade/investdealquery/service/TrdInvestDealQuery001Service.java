@@ -618,10 +618,10 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		}
 		tmpDir.mkdirs();
 		ZipOutputStream zipOut= null;
+		InputStream input = null;
 		try {
 			File zipFile = new SafelyFile(exportFilePath + File.separator + fileName);
 			zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-			InputStream input = null;
 			if (files != null && !files.isEmpty()) {
 				for (File realFile : files) {
 					if (realFile.exists()) {
@@ -655,6 +655,13 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 					zipOut.close();
 				} catch (IOException e) {
 					e.printStackTrace();
+				}
+			}
+			if (input != null){
+				try {
+					input.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}

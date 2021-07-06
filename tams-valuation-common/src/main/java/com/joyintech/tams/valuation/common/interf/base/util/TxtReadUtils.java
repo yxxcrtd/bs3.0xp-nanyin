@@ -78,7 +78,7 @@ public class TxtReadUtils {
         List<String> pathList = SearchFilePath.queryFilePath(filePath, tmpEName);
         for (String path : pathList) {
             List list = new ArrayList();
-            InputStreamReader isr;
+            InputStreamReader isr = null;
             BufferedReader br =null;
             try {          	
                 File file = new File(path);
@@ -167,6 +167,13 @@ public class TxtReadUtils {
 						logger.error("",e);
 					} 
             	}
+            	if (isr != null){
+                    try {
+                        isr.close();
+                    } catch (IOException e) {
+                        logger.error("",e);
+                    }
+                }
             }
             listAll.addAll(list);
         }

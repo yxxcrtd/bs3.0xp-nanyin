@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,10 @@ import com.joyintech.tams.valuation.report.common.constant.DateUtil;
 @Service("valuationInfoDisclosureGenService")
 @Transactional(rollbackFor = Exception.class)
 public class InfoDisclosureGenService {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(InfoDisclosureGenService.class);
     @Autowired
 	//private FileAttachmentProcess fileAttachmentProcess;
     private ServiceFromJar fileAttachmentProcess;
@@ -177,12 +183,23 @@ public class InfoDisclosureGenService {
 				localPath = uploadFile.getTargetFile().getPath();
 			}
 		}
-		if(StringUtil.isNotEmpty(localPath)){
-			InputStream input = new FileInputStream(localPath);
-			isFtpUploadSucess = FtpUtil.uploadFile(url, port, userName, passWord, path, fileName, input);
-		}		
-		
-		return isFtpUploadSucess;
+		InputStream input = null;
+		try {
+			if(StringUtil.isNotEmpty(localPath)){
+				input = new FileInputStream(localPath);
+				isFtpUploadSucess = FtpUtil.uploadFile(url, port, userName, passWord, path, fileName, input);
+			}
+			return isFtpUploadSucess;
+		}finally {
+			if (input != null){
+				try {
+					input.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+		}
+
 	}
 	/**
      * 生成文件方法

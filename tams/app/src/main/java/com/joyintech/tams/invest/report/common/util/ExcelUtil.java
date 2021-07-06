@@ -195,10 +195,15 @@ public class ExcelUtil {
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            FileOutputStream outputStream = new FileOutputStream(file);
-            wb.write(outputStream);
-            outputStream.close();
-
+            FileOutputStream outputStream = null;
+            try{
+                outputStream = new FileOutputStream(file);
+                wb.write(outputStream);
+            }finally {
+                if (outputStream != null){
+                    outputStream.close();
+                }
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
