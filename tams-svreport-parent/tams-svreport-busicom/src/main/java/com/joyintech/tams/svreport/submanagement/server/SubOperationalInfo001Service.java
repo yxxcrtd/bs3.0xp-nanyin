@@ -2644,7 +2644,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								}  else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
 									columnData = "'" +columnData.replace("'", "''")+ "'";
 								} else {
-									columnData = "'" + columnData==null?"":columnData + "'";
+									columnData = "'" + columnData + "'";
 								}
 								insertMap.put(column, columnData);
 							}
