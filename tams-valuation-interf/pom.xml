@@ -99,10 +99,10 @@
 			<artifactId>ESBClientAPI</artifactId>
 			<version>1.0</version>
 		</dependency>
-		<dependency>  
-		    <groupId>com.jixu</groupId>  
-             <artifactId>jixu</artifactId>  
-             <version>0.0.1</version>  
+		<dependency>
+		    <groupId>com.jixu</groupId>
+             <artifactId>api</artifactId>
+             <version>0.0.1</version>
         </dependency>
         <dependency>
 			<groupId>com.joyintech</groupId>

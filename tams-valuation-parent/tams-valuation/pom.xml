@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>com.jixu</groupId>
-            <artifactId>jixu</artifactId>
+            <artifactId>api</artifactId>
             <version>0.0.1</version>
         </dependency>
     </dependencies>

@@ -1,10 +1,10 @@
 package com.jixu.common.valid;
 
-import java.util.Date;
+import com.joyintech.framework.util.DateUtil;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import com.jixu.common.util.DateUtil;
+import java.util.Date;
 
 /**
  * 校验是否为整数类型
@@ -30,7 +30,7 @@ public class IsDateYYYYMMDDJixuValidator implements ConstraintValidator<IsDateYY
         
         String dateStr=str.replaceAll("-", "");
 		dateStr=dateStr.replaceAll("/", "");
-		Date pdate=DateUtil.convertStr2Date(dateStr);
+		Date pdate= DateUtil.parse(dateStr);
 		if(dateStr.length()!=8 || pdate==null){
 			return false;
 		}else {

@@ -31,12 +31,11 @@
 		<!-- <module>JixuDataCenter</module> -->
 		<module>jixu</module>
     	<module>JixuUtil</module>
-    	<!-- <module>JixuReportCenter</module>
-    	<module>JixuTest</module>
-    	<module>JixuJoyinUtil</module> -->
     	<module>JixuAdapter</module>
-    	<!-- <module>JixuJasperReport</module> -->
-  	</modules>
+		<module>JixuApi</module>
+		<module>JixuCommon</module>
+        <module>JixuCommon</module>
+    </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
