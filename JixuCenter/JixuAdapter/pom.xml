@@ -32,6 +32,11 @@
             <artifactId>JixuUtil</artifactId>  
             <version>${project.version}</version>  
         </dependency>
+		<dependency>
+			<groupId>com.jixu</groupId>
+			<artifactId>JixuCommon</artifactId>
+			<version>${project.version}</version>
+		</dependency>
         
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

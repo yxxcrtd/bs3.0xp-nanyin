@@ -1,7 +1,5 @@
 package com.joyintech.tams.invest.period.trdirsduration.service;
 
-import com.alibaba.fastjson.JSON;
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.CacheUtil;

@@ -1,6 +1,5 @@
 package com.joyintech.tams.invest.trade.transfer.trdassetsProject.service;
 
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.grid.Page;
@@ -531,7 +530,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         TrdAssetsProject001Dto dto = BeanUtil.mapToObject(param,TrdAssetsProject001Dto.class);
         List<TrdAssetsProject001Dto> list = new ArrayList<>();
         if(StringUtil.isNotEmpty(param.get("projectListInfoList"))){
-            list = JsonUtils.json2List(JsonUtil.objToString(param.get("projectListInfoList")),TrdAssetsProject001Dto.class);
+            list = JsonUtils.json2List(JsonUtils.object2Json(param.get("projectListInfoList")),TrdAssetsProject001Dto.class);
             dto.setProjectListInfoList(list);
         }
         if(StringUtil.isNotEmpty(dto)){

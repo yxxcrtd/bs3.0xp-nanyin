@@ -9,20 +9,12 @@
  */
 package com.joyintech.tams.invest.common.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.system.base.dao.SysUserMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
@@ -30,10 +22,16 @@ import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 投管接口用共通Service
@@ -47,17 +45,6 @@ import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 public class InvestInterfCommService extends BaseService<InvestInterfCommDto> {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    /**
-     * IPlatformDate
-     */
-    @Autowired(required = false)
-    private IPlatformDate iPlatformDate;
-
-    /**
-     * 用户表Mapper
-     */
-    @Autowired(required = false)
-    private SysUserMapper sysUserMapper;
 
     /**
      * 组合表Mapper
@@ -179,7 +166,7 @@ public class InvestInterfCommService extends BaseService<InvestInterfCommDto> {
                 }
             }
             // 平台日期
-            map.put("platDate", iPlatformDate.getSysDate());
+            map.put("platDate", DateUtil.platDateFromCache());
             // 调用接口
             return restTemplate.postForObject(
                 ServiceApplication.INVEST_INTERF_SERVICE_NAME + "/invest/interf/send", map,
@@ -201,7 +188,7 @@ public class InvestInterfCommService extends BaseService<InvestInterfCommDto> {
         }
         try {
             // 调用接口
-            mapParm.put("platDate",iPlatformDate.getSysDate());
+            mapParm.put("platDate", DateUtil.platDateFromCache());
             return restTemplate.postForObject(
                 ServiceApplication.INVEST_INTERF_SERVICE_NAME + "/invest/interf/send", mapParm,
                 Map.class);

@@ -1,32 +1,22 @@
 package com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.controller;
 
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil; 
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.base.entity.FinPledgeDisplaceDetail;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlRepoPledgeSearchDto;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.service.PtlRepoPledgeSearch001Service;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
@@ -88,8 +78,8 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
         typeSelectOptionTwo.setId(DictCodeList.业务类型_债券借贷交易.getValue());
         typeSelectOptionTwo.setText(DictCodeList.业务类型_债券借贷交易.getCodeName());
         typeList.add(typeSelectOptionTwo);
-        model.addAttribute("TradePs", JsonUtil.objToString(psList));
-        model.addAttribute("TradeType", JsonUtil.objToString(typeList));
+        model.addAttribute("TradePs", JsonUtils.object2Json(psList));
+        model.addAttribute("TradeType", JsonUtils.object2Json(typeList));
         return super.init(model);
     }
 

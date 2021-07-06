@@ -8,9 +8,8 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.jixu.joyin2jixu.service.config;
+package com.jixu.config;
 
-import com.jixu.joyin2jixu.service.config.ServiceApplication.AutoConfig.ContextPathConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -43,7 +42,7 @@ public class ServiceApplication {
     
     @Configuration
     @ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "customerInterfService")
-    @EnableConfigurationProperties(ContextPathConfiguration.class)
+    @EnableConfigurationProperties(AutoConfig.ContextPathConfiguration.class)
     class AutoConfig {
 
         @Autowired
