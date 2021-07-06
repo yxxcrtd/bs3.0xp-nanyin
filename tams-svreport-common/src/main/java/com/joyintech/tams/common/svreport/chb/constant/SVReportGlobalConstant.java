@@ -326,6 +326,9 @@ public class SVReportGlobalConstant {
      * 人行汇率取值来源(01:开盘价，02:收盘价，03:最高价，04:最低价，05:中间价)
      */
     public static final String SVR_EXCHANGE_SOURCE_PBC = "SVR_EXCHANGE_SOURCE_PBC";
+
+    /**统一数据维护删除逻辑***/
+    public static final String SVR_OPER_DELETE_FLAG = "SVR_OPER_DELETE_FLAG";
     /**
      * 人行报表-报送时点配置时分秒
      */

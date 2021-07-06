@@ -26,6 +26,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
@@ -71,6 +72,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import static com.joyintech.tams.common.svreport.chb.util.SvrDataUtil.getSysParam;
 
 
 /**
@@ -1491,7 +1493,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 	private ResponseEntity<byte[]> chbAssetListToExcel(String tableId,String tableName, String[] title, List<Object[]> objList, Map<Integer, String> enumIndexMap, List<Integer> mergeIndexList) {
 		ResponseEntity<byte[]> responseEntity= null;
 		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date()).toString();
-		String exportFilePath = SvrDataUtil.getSysParam("access_exportfilepath");
+		String exportFilePath = getSysParam("access_exportfilepath");
 		List<BaseInformationDto> baseInformationDtoList = baseInformationMapper.queryBaseInfoByTableId(tableId);
 		// modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 start
 		String fileName = exportFilePath + File.separator + tableName + createTime + ".xlsx";
@@ -1642,7 +1644,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 	private ResponseEntity<byte[]> objListToExcel(String tableId,String tableName, String[] title, List<Object[]> objList, boolean flag,Map<Integer, String> enumIndexMap) {
 		ResponseEntity<byte[]> responseEntity= null;
 		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date()).toString();
-		String exportFilePath = SvrDataUtil.getSysParam("access_exportfilepath");
+		String exportFilePath = getSysParam("access_exportfilepath");
 		String fileName = "";
 		String exportFileName = "";
 		String chiName="";
@@ -2969,7 +2971,13 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		List<JSONObject> jsonList = JSONArray.parseArray(dataObj).toJavaList(JSONObject.class);
 		List<String> timeColumnList =  baseInformationMapper.queryTimeColumnList(tableId);
 		List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableId);
-		boolean flag = isHaveStatus(tableId);
+
+		String DFlag =  CacheUtil.getSysParam(SVReportGlobalConstant.SVR_OPER_DELETE_FLAG);
+		boolean flag = false;
+		if(!"01".equals(DFlag)){
+			flag = isHaveStatus(tableId);
+		}
+
 		for (JSONObject jsonObj : jsonList) {
 			Map<String, Object> jsonMap = JSONObject.toJavaObject(jsonObj, Map.class);
 			Map<String, String> itemMap = new HashMap<String, String>();
