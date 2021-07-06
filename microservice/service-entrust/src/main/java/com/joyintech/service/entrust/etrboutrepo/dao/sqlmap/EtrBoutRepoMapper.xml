@@ -8,9 +8,9 @@
 		<choose>
 			<when test="entrustStatus == ''">
 				<!-- 查询全部状态 -->
-				<include refid="onlyEtrEntrust"></include>
-				UNION ALL
 				<include refid="onlyWtfEtrEntrust"></include>
+				UNION ALL
+				<include refid="onlyEtrEntrust"></include>
 			</when>
 			<when test="entrustStatus == ENTRUST_STATUS_08">
 				<!-- 只查流程中的数据 -->
@@ -304,63 +304,6 @@
 	</resultMap>
 	
 	<select id="selectByKey" resultMap="selByKeyResult">
-					SELECT
-			    T1.ENTRUST_ID		 entrustId,
-			    T1.PORTFOLIO_ID		 portfolioId,
-			    T1.VDATE             vdate,
-			    T1.MDATE             mdate,
-			    T6.ASSET_TYPE1		 assetType1,
-			    T6.VDATE			 vdateAdd,
-			    T6.MDATE			 mdateAdd,
-			    T6.TERM_DAYS		 termDays,
-			    T6.TERM_DAYS2		 termDays2,
-		        T6.TERM_DAYS		 repoTerm,
-			    T6.TERM_DAYS2		 repoTerm2,
-			    T6.SETTLE_SPREED 	 settleSpeed,
-			    T6.CASH_USEDATE	 	 availableDay,
-			    T6.SEC_ACCT_ID	 	 securitiesCust,
-			    T6.TERM_TYPE		 termType,
-			    T6.FIRST_UNIT_CPRICE firstprice,
-			    T6.FIRST_UNIT_CPRICE2 firstprice2,
-			    T1.CCY               ccy,
-			    T3.FINPROD_MARKET_ID finprodMarketId,
-			    T3.FINPROD_NAME      finprodName,
-			    T1.PS                ps,
-			    T1.PRICE*100		 price,
-			    T1.PRICE_MODEL		 priceModel,
-			    T1.ENTRUST_AMT*100	 entrustAmt,
-		        T1.Entrust_Num * 100 entrustNum,
-			    T1.TRADE_MARKET		 tradeMarket,
-			    T1.CALENDAR_ID		 calendarId,
-			    T1.PRO_AVAILABLE_CASH proAvailableCash,
-			    T1.ACC_AVAILABLE_CASH accAvailableCash,
-			    T1.REMARK            remark,
-				T1.COUNTER_ID		 counterId,
-				T1.COUNTER_TRADER  	 counterTrader,
-				T1.CONTACT_INFO		 contactInfo,
-				T2.TRADER			 trader,
-				T1.INV_MANAGER_ID	 invManagerId,
-		        T1.CHL_ID chlId
-			FROM
-			    ETR_ENTRUST T1
-			LEFT JOIN
-				ETR_DISTRIBUTE T2
-			ON 
-				T1.ENTRUST_ID = T2.ENTRUST_ID
-			LEFT JOIN
-			    FIN_PRODUCT T3
-			ON
-			    T1.FINPROD_ID = T3.FINPROD_ID
-			LEFT JOIN 
-				ETR_ENTRUST_ADD T6
-			ON
-				T1.ENTRUST_ID = T6.ENTRUST_ID
-		<where>
-				T1.ENTRUST_ID = #{entrustId}
-		</where>
-					
-		UNION ALL
-
 		SELECT
 		T1.ENTRUST_ID		 entrustId,
 		T1.PORTFOLIO_ID		 portfolioId,
@@ -410,6 +353,61 @@
 		T1.FINPROD_ID = T3.FINPROD_ID
 		LEFT JOIN
 		WFL_ETR_ENTRUST_ADD T6
+		ON
+		T1.ENTRUST_ID = T6.ENTRUST_ID
+		<where>
+			T1.ENTRUST_ID = #{entrustId}
+		</where>
+		UNION ALL
+		SELECT
+		T1.ENTRUST_ID		 entrustId,
+		T1.PORTFOLIO_ID		 portfolioId,
+		T1.VDATE             vdate,
+		T1.MDATE             mdate,
+		T6.ASSET_TYPE1		 assetType1,
+		T6.VDATE			 vdateAdd,
+		T6.MDATE			 mdateAdd,
+		T6.TERM_DAYS		 termDays,
+		T6.TERM_DAYS2		 termDays2,
+		T6.TERM_DAYS		 repoTerm,
+		T6.TERM_DAYS2		 repoTerm2,
+		T6.SETTLE_SPREED 	 settleSpeed,
+		T6.CASH_USEDATE	 	 availableDay,
+		T6.SEC_ACCT_ID	 	 securitiesCust,
+		T6.TERM_TYPE		 termType,
+		T6.FIRST_UNIT_CPRICE firstprice,
+		T6.FIRST_UNIT_CPRICE2 firstprice2,
+		T1.CCY               ccy,
+		T3.FINPROD_MARKET_ID finprodMarketId,
+		T3.FINPROD_NAME      finprodName,
+		T1.PS                ps,
+		T1.PRICE*100		 price,
+		T1.PRICE_MODEL		 priceModel,
+		T1.ENTRUST_AMT*100	 entrustAmt,
+		T1.Entrust_Num * 100 entrustNum,
+		T1.TRADE_MARKET		 tradeMarket,
+		T1.CALENDAR_ID		 calendarId,
+		T1.PRO_AVAILABLE_CASH proAvailableCash,
+		T1.ACC_AVAILABLE_CASH accAvailableCash,
+		T1.REMARK            remark,
+		T1.COUNTER_ID		 counterId,
+		T1.COUNTER_TRADER  	 counterTrader,
+		T1.CONTACT_INFO		 contactInfo,
+		T2.TRADER			 trader,
+		T1.INV_MANAGER_ID	 invManagerId,
+		T1.CHL_ID chlId
+		FROM
+		ETR_ENTRUST T1
+		LEFT JOIN
+		ETR_DISTRIBUTE T2
+		ON
+		T1.ENTRUST_ID = T2.ENTRUST_ID
+		LEFT JOIN
+		FIN_PRODUCT T3
+		ON
+		T1.FINPROD_ID = T3.FINPROD_ID
+		LEFT JOIN
+		ETR_ENTRUST_ADD T6
 		ON
 		T1.ENTRUST_ID = T6.ENTRUST_ID
 		<where>

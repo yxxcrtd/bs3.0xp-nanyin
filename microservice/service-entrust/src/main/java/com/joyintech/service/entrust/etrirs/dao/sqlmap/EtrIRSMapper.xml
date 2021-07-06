@@ -7,9 +7,9 @@
 			<when test="entrustStatusList == null 
    			|| (entrustStatusList.size() > 1 and entrustStatusList.contains(ENTRUST_STATUS_08)) ">
 				<!-- 查询全部状态 多选包含流程中状态 -->
-				<include refid="onlyEtrEntrust"></include>
-				UNION ALL
 				<include refid="onlyWtfEtrEntrust"></include>
+				UNION ALL
+				<include refid="onlyEtrEntrust"></include>
 			</when>
 			<when test="entrustStatusList != null and entrustStatusList.contains(ENTRUST_STATUS_08)">
 				<!-- 只查流程中的数据 -->
@@ -198,7 +198,7 @@
 	</resultMap>
 	
 	<select id="selectByKey" resultMap="selByKeyResult">
-	select 
+		select
 		T1.ENTRUST_ID			entrustId,
 		T1.PORTFOLIO_ID			portfolioId,
 		T1.VDATE				vdate,
@@ -206,7 +206,7 @@
 		T1.CCY					ccy,
 		to_char(T2.MDATE,'yyyy-MM-dd') || ' - ' || to_char(T2.MDATE2,'yyyy-MM-dd') as dueDate,
 		T2.MDATE 				mdateAdd,
-        T2.MDATE2  				mdate2Add,
+		T2.MDATE2  				mdate2Add,
 		T2.term_type            termType,
 		T1.ENTRUST_AMT/10000	entrustAmt,
 		T2.busi_ps				busiPs,
@@ -218,13 +218,41 @@
 		T1.COUNTER_TRADER		counterTrader,
 		T1.CONTACT_INFO			contactInfo,
 		T1.REMARK				remark
-	from 
+		from
+		WFL_ETR_ENTRUST T1
+		LEFT JOIN WFL_ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
+		LEFT JOIN ETR_DISTRIBUTE T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
+		<where>
+			T1.ENTRUST_ID = #{entrustId}
+		</where>
+		union all
+		select
+		T1.ENTRUST_ID			entrustId,
+		T1.PORTFOLIO_ID			portfolioId,
+		T1.VDATE				vdate,
+		T1.MDATE				mdate,
+		T1.CCY					ccy,
+		to_char(T2.MDATE,'yyyy-MM-dd') || ' - ' || to_char(T2.MDATE2,'yyyy-MM-dd') as dueDate,
+		T2.MDATE 				mdateAdd,
+		T2.MDATE2  				mdate2Add,
+		T2.term_type            termType,
+		T1.ENTRUST_AMT/10000	entrustAmt,
+		T2.busi_ps				busiPs,
+		T2.mature_yield*100		matureYield,
+		T2.deal_mode			dealMode,
+		T1.INV_MANAGER_ID		invManagerId,
+		T3.TRADER				trader,
+		T1.COUNTER_ID			counterId,
+		T1.COUNTER_TRADER		counterTrader,
+		T1.CONTACT_INFO			contactInfo,
+		T1.REMARK				remark
+		from
 		ETR_ENTRUST T1
 		LEFT JOIN ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
 		LEFT JOIN ETR_DISTRIBUTE T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
-	<where>
-		T1.ENTRUST_ID = #{entrustId}
-	</where>
+		<where>
+			T1.ENTRUST_ID = #{entrustId}
+		</where>
 	</select>
 	
 	<select id="judgeCounterType" resultType="java.lang.String">

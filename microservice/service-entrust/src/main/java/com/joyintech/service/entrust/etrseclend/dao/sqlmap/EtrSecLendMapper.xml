@@ -9,9 +9,9 @@
 			<when test="entrustStatusList == null 
   				 || (entrustStatusList.size() > 1 and entrustStatusList.contains(ENTRUST_STATUS_08)) ">
 				<!-- 查询全部状态 多选包含流程中状态 -->
-				<include refid="onlyEtrEntrust"></include>
-				UNION ALL
 				<include refid="onlyWtfEtrEntrust"></include>
+				UNION ALL
+				<include refid="onlyEtrEntrust"></include>
 			</when>
 			<when test="entrustStatusList != null and entrustStatusList.contains(ENTRUST_STATUS_08)">
 				<!-- 只查流程中的数据 -->
