@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.product.productduration.netproductbonusscheme.dto.ActualTimeCapital001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,12 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
      */
     @Autowired(required=false)
     private BaseGetBusinessId baseGetBusinessId;
+
+    /**
+     * 与日期有关日期组件
+     */
+    @Autowired(required=false)
+    private DateCalService dateCalService;
 
     /**
      * 净值型分红方案登记界面的初始化
@@ -254,6 +261,12 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
             }
             // add by qk 20201112 JSUAT-236净值型产品现金分红交易，在红利下发的时候，如果托管户中资金不足，不报提示 end
 
+            JoyinMessage ms4 = new JoyinMessage(getMessage("BUSS_COM_E_0039",
+                    getMessage("FinNetProductBonusScheme002.bonusDate")), MessageType.确认消息);
+            if(dateCalService.isDealCalendarHoliday(dto.getActBonusDate(),
+                    finNetProductBonusSchemeService.selectCalendarId(dto.getFinprodId()))){
+                joyinMessages.add(ms4);
+            }
             AjaxResult wr = commonCheck(result, dto.getOperateType());
             wr.setJoyinMessages(joyinMessages);
             return wr;

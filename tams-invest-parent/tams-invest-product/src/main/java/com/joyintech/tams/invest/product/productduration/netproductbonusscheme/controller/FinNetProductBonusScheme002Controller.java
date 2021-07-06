@@ -206,8 +206,6 @@ public class FinNetProductBonusScheme002Controller extends BaseController {
                     getMessage("FinNetProductBonusScheme002.delDate")), MessageType.确认消息);
             JoyinMessage ms2 = new JoyinMessage(getMessage("FIN_PROD_E_0059"), MessageType.确认消息);
             JoyinMessage ms3 = new JoyinMessage(getMessage("FIN_PROD_E_0060"), MessageType.确认消息);
-            JoyinMessage ms4 = new JoyinMessage(getMessage("BUSS_COM_E_0039",
-                    getMessage("FinNetProductBonusScheme002.bonusDate")), MessageType.确认消息);
             if(StringUtil.isNotEmpty(dto.getNetvalue())&&dto.getNetvalue().compareTo(BigDecimal.ONE) < 0) {
                 joyinMessages.add(ms);
             }
@@ -225,10 +223,6 @@ public class FinNetProductBonusScheme002Controller extends BaseController {
 //                    joyinMessages.add(ms2);
 //                }
                 // 未分配利润占时未取到值 先注释 lijun modify BS1.9BSBS-308 2019-05-16 end
-            }
-            if(dateCalService.isDealCalendarHoliday(dto.getBonusDate(),
-                    finNetProductBonusSchemeService.selectCalendarId(dto.getFinprodId()))){
-                joyinMessages.add(ms4);
             }
             AjaxResult wr = commonCheck(result, dto.getOperateType());
             wr.setJoyinMessages(joyinMessages);
