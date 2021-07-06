@@ -7,9 +7,9 @@
 			<when test="entrustStatusList == null 
 			|| (entrustStatusList.size() > 1 and entrustStatusList.contains(ENTRUST_STATUS_08)) ">
 				<!-- 查询全部状态 多选包含流程中状态 -->
-				<include refid="onlyEtrEntrust"></include>
-				UNION ALL
 				<include refid="onlyWtfEtrEntrust"></include>
+				UNION ALL
+				<include refid="onlyEtrEntrust"></include>
 			</when>
 			<when test="entrustStatusList != null and entrustStatusList.contains(ENTRUST_STATUS_08)">
 				<!-- 只查流程中的数据 -->
@@ -303,48 +303,6 @@
 	</resultMap>
 	
 	<select id="selectByKey" resultMap="selByKeyResult">
-	select
-	    T4.TARGET_NAME       assetType10Str,
-		T1.ENTRUST_ID			entrustId,
-		T1.PORTFOLIO_ID			portfolioId,
-		T1.VDATE				vdate,
-		T1.MDATE				mdate,
-		T1.CCY					ccy,
-		T2.ASSET_TYPE1			assetType1,
-		T2.ASSET_TYPE_10        assetType10,
-		T2.ASSET_TYPE_11        assetType11,
-		T2.EXERCISE_TYPE        exerciseType,
-		T2.EXEC_BASE_DATE       execBaseDate,
-		T2.OPT_FEE_PAY_TYPE     optFeePayType,
-		T2.OPT_FEE_PAY_TYPE2    optFeePayType2,
-		T2.EXE_PRICE            exePrice,
-		T2.KNOCK_PRICE          knockPrice,
-		T2.LOW_HIND_PRICE       lowHindPrice,
-		T2.LOW_EXERC_PRICE      lowExercPrice,
-		T2.HIGH_HIND_PRICE      highHindPrice,
-		T2.HIGH_EXERC_PRICE     highExercPrice,
-		T2.BUSI_PS				ps,
-		T1.TRADE_MARKET         tradeMarket,
-		T1.ENTRUST_NUM          entrustNum,
-		T2.VDATE				vdateAdd,
-		T2.MDATE				mdateAdd,
-		T2.TERM_DAYS			termDays,
-		T1.CALENDAR_ID			calendarId,
-		T1.INV_MANAGER_ID		invManagerId,
-		T3.TRADER				trader,
-		T1.COUNTER_ID			counterId,
-		T1.COUNTER_TRADER		counterTrader,
-		T1.CONTACT_INFO			contactInfo,
-		T1.REMARK				remark
-	from 
-		ETR_ENTRUST T1
-		LEFT JOIN ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
-		LEFT JOIN ETR_DISTRIBUTE T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
-		LEFT JOIN OPT_TARGET_INFO T4 ON T2.ASSET_TYPE_10 = T4.TARGET_ID
-	<where>
-		T1.ENTRUST_ID = #{entrustId}
-	</where>
-	union all
 		select
 		T4.TARGET_NAME       assetType10Str,
 		T1.ENTRUST_ID			entrustId,
@@ -381,6 +339,48 @@
 		from
 		WFL_ETR_ENTRUST T1
 		LEFT JOIN WFL_ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
+		LEFT JOIN ETR_DISTRIBUTE T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
+		LEFT JOIN OPT_TARGET_INFO T4 ON T2.ASSET_TYPE_10 = T4.TARGET_ID
+		<where>
+			T1.ENTRUST_ID = #{entrustId}
+		</where>
+		union all
+		select
+		T4.TARGET_NAME       assetType10Str,
+		T1.ENTRUST_ID			entrustId,
+		T1.PORTFOLIO_ID			portfolioId,
+		T1.VDATE				vdate,
+		T1.MDATE				mdate,
+		T1.CCY					ccy,
+		T2.ASSET_TYPE1			assetType1,
+		T2.ASSET_TYPE_10        assetType10,
+		T2.ASSET_TYPE_11        assetType11,
+		T2.EXERCISE_TYPE        exerciseType,
+		T2.EXEC_BASE_DATE       execBaseDate,
+		T2.OPT_FEE_PAY_TYPE     optFeePayType,
+		T2.OPT_FEE_PAY_TYPE2    optFeePayType2,
+		T2.EXE_PRICE            exePrice,
+		T2.KNOCK_PRICE          knockPrice,
+		T2.LOW_HIND_PRICE       lowHindPrice,
+		T2.LOW_EXERC_PRICE      lowExercPrice,
+		T2.HIGH_HIND_PRICE      highHindPrice,
+		T2.HIGH_EXERC_PRICE     highExercPrice,
+		T2.BUSI_PS				ps,
+		T1.TRADE_MARKET         tradeMarket,
+		T1.ENTRUST_NUM          entrustNum,
+		T2.VDATE				vdateAdd,
+		T2.MDATE				mdateAdd,
+		T2.TERM_DAYS			termDays,
+		T1.CALENDAR_ID			calendarId,
+		T1.INV_MANAGER_ID		invManagerId,
+		T3.TRADER				trader,
+		T1.COUNTER_ID			counterId,
+		T1.COUNTER_TRADER		counterTrader,
+		T1.CONTACT_INFO			contactInfo,
+		T1.REMARK				remark
+		from
+		ETR_ENTRUST T1
+		LEFT JOIN ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
 		LEFT JOIN ETR_DISTRIBUTE T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
 		LEFT JOIN OPT_TARGET_INFO T4 ON T2.ASSET_TYPE_10 = T4.TARGET_ID
 		<where>

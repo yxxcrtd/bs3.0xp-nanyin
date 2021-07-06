@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -128,6 +129,7 @@ public class EtrForwexService extends BaseService<EtrForwexDto> {
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_远期.getValue());
         pageParam.put("endDate", DateUtil.parse((String)pageParam.get("endDate")));
         pageParam.put("startDate", DateUtil.parse((String)pageParam.get("startDate")));
+        pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return super.queryForPage(page, length, () -> etrForwexMapper.select(pageParam));
     }
     

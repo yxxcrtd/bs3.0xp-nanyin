@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,7 @@ public class EtrWtFxswapService extends BaseService<EtrWtFxswapDto>{
      */
     public Page<EtrWtFxswapDto> selectForPage(int page, int length, Map<String, Object> param) throws Exception {
         param.put("F13", DictCodeListExt1.金融产品类型_投管用_掉期.getValue());
+        param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return queryForPage(page, length, () -> etrWtFxswapMapper.selectForPage(param));
     }
     

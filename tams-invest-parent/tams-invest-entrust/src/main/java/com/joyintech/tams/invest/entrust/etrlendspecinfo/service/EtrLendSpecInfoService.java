@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -126,6 +127,8 @@ public class EtrLendSpecInfoService extends CommonExportService<EtrLendSpecInfoD
         }
         if(StringUtil.isNotEmpty(param.get("entrustStatus"))){
             List<String> entrustStatusList = StringUtil.splitToList(",",(String)param.get("entrustStatus"));
+            // 去除空字符串
+            entrustStatusList = entrustStatusList.stream().filter(i->!i.isEmpty()).collect(Collectors.toList());
             param.put("entrustStatusList", entrustStatusList);
         }
         if(StringUtil.isNotEmpty(param.get("tradeMarket"))){
