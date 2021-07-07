@@ -181,7 +181,7 @@ public class PbcClassicsDataFileHelper {
                 		sb.append("|");
                 	}
                 }
-                writer.write(sb.substring(0,sb.length()-1).toString());//删除最后一个“|”
+                writer.write(sb.substring(0,sb.length()-1));//删除最后一个“|”
                 writer.flush();
                 writer.newLine();
                 fileSize = file.length();

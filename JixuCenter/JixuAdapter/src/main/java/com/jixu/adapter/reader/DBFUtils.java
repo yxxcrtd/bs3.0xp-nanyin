@@ -123,7 +123,7 @@ public final class DBFUtils {
 
 		DecimalFormat df = new DecimalFormat(format.toString());
 
-		return textPadding(df.format(doubleNum.doubleValue()).toString(),
+		return textPadding(df.format(doubleNum.doubleValue()),
 				characterSetName, fieldLength, 12);
 	}
 

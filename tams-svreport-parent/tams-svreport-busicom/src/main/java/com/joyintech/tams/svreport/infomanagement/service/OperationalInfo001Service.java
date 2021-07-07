@@ -1508,7 +1508,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	@SuppressWarnings("deprecation")
 	private ResponseEntity<byte[]> chbAssetListToExcel(String tableId,String tableName, String[] title, List<Object[]> objList, Map<Integer, String> enumIndexMap, List<Integer> mergeIndexList) {
 		ResponseEntity<byte[]> responseEntity= null;
-		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date()).toString();
+		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		String exportFilePath = SvrDataUtil.getSysParam("access_exportfilepath");
 		List<BaseInformationDto> baseInformationDtoList = baseInformationMapper.queryBaseInfoByTableId(tableId);
 		// modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 start
@@ -1664,7 +1664,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	@SuppressWarnings("deprecation")
 	private ResponseEntity<byte[]> objListToExcel(String tableId,String tableName, String[] title, List<Object[]> objList, boolean flag,Map<Integer, String> enumIndexMap) {
 		ResponseEntity<byte[]> responseEntity= null;
-		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date()).toString();
+		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		String exportFilePath = SvrDataUtil.getSysParam("access_exportfilepath");
 		String fileName = "";
 		String exportFileName = "";

@@ -34,7 +34,7 @@ public class CalFuncNumberToCharFormat extends AdditionFunc{
 		String newValue=genConvertFormula(inputValue, colcfgMap);
 		
 		String[] strArr=newValue.split("\\|");
-		String numstr=strArr[0].toString();
+		String numstr=strArr[0];
 		if(numstr==null || numstr.toLowerCase().trim().equals("null")){
 			numstr="0";
 		}

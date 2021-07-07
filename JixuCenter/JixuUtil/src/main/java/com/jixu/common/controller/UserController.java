@@ -212,9 +212,9 @@ public class UserController extends ExceptionControl{
 		Users user=userService.loadUserByID(userID);
 		//1判断密码有没有重复
 		List<UserHisPwd> ulist=userService.getUserHisPwdList(userID, pages);
-		if(!param_list.get(1).toString().equals(ulist.get(0).getHispwd().toString())){//更新时如果输入的密码与上一次密码一致则不修改密码
+		if(!param_list.get(1).toString().equals(ulist.get(0).getHispwd())){//更新时如果输入的密码与上一次密码一致则不修改密码
 			for (int i = 0; i < ulist.size(); i++) {
-				if(Md5Util.md5(param_list.get(1).toString()).equals(ulist.get(i).getHispwd().toString())){
+				if(Md5Util.md5(param_list.get(1).toString()).equals(ulist.get(i).getHispwd())){
 					//JsonUtil.writeObjToResponse(response, "密码6次内不能重复");
 					
 					HashMap<String, Object> result = new HashMap<String, Object>();

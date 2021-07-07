@@ -1405,7 +1405,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         			debtbaseinfo.setCreateDept(LoginUserUtil.getDeptCode());
         			debtbaseinfo.setUpdateUser(LoginUserUtil.getUserName());
         			//判断交易对手表中是否存在
-        			int flag=trdFinProductDealTotalMapper.selectCounterName(debtbaseinfo.getCounterName().toString());
+        			int flag=trdFinProductDealTotalMapper.selectCounterName(debtbaseinfo.getCounterName());
         			if(flag == 0){
             			trdFinProductDealTotalMapper.insertDebtBaseInfo(debtbaseinfo);
         			}

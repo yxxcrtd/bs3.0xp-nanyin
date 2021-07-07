@@ -53,7 +53,7 @@ public class ExternalOptions002DtoValidator implements BeanValidator {
 
             validParam1.setBusinessDataPk1(dto.getFinprodId2());
             //validParam1.setBusinessDataPk2(dto.getDatasourceType());
-            validParam1.setBusinessDataPk3(dto.getValDate().toString());
+            validParam1.setBusinessDataPk3(dto.getValDate());
             if (mstWorkflowCommonService.isInWflProcess(validParam1)) {
                 // 流程存在情况
                 errorList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识",

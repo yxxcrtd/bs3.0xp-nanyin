@@ -112,7 +112,7 @@ public class PointDetail {
 				for(String fobEntry:fobArray){
 					String[] fobSubArray=fobEntry.trim().split("\\|\\|");
 					if(fobSubArray.length>=1){
-						fobStr+=fobSubArray[0].toString()+",";
+						fobStr+=fobSubArray[0]+",";
 					}
 				}
 			}
