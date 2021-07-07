@@ -168,8 +168,6 @@ public class EtrBoutRepoController {
     @PostMapping("doBack")
     public void doBack(@RequestBody EtrBoutRepoDto dto){
         WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
-
-        etrBoutRepoService.doInsert(dto, dto.getOperateType());
     }
     /**
      * 
