@@ -272,7 +272,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
     @SuppressWarnings("unchecked")
 	public int deleteData(Map<String, Object> param) {
 		return simpleRestTemplate.postForObject(
-        		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/deleteData",param,
+        		SvrServiceApplication.COMMON_SERVICE_NAME + "/SubOperationalInfo/deleteData",param,
         		Integer.class);
     }
 
