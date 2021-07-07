@@ -141,7 +141,7 @@ public class EtrBondFirstLBiddingService extends BaseService<EtrBondFirstLBiddin
         // add by etliu 20210501 银行间场内场外拆分 start
         pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
         // add by etliu 20210501 银行间场内场外拆分 end
-
+        pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return super.queryForPage(page, length, () -> mapper.selectForPage(pageParam));
     }
     
@@ -469,9 +469,9 @@ public class EtrBondFirstLBiddingService extends BaseService<EtrBondFirstLBiddin
             }
         }
 
-        if(baseEtrCashPositionCommService!=null){
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if(baseEtrCashPositionCommService!=null){
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
 
 //    /**
@@ -625,5 +625,40 @@ public class EtrBondFirstLBiddingService extends BaseService<EtrBondFirstLBiddin
     public Page<SelectOptionDto> getMainConsignee(int page, int length,Map<String, Object> param) {
         param.put("YESORNO_YES", DictCodeList.是否_是.getValue());
         return this.queryForPageForSelectReturn(page, length,()->mapper.getMainConsignee(param));
+    }
+    
+    public BaseEtrInvestInfoDto initBaseEtrInvestInfoDto(EtrBondFirstLBiddingDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            dto.setFinprodType2(BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue());
+            dto.setIsOutTrade(BussinessDictCodeList.是否_是.getValue());
+            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            etrEntrust.setEntrustDate(dto.getEntrustDate());
+            etrEntrust.setEntrustAmt(null);
+            if (StringUtil.isNotEmpty(dto.getEntrustNum())) {
+                etrEntrust.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(100)));
+            }
+            entity.setEtrEntrust(etrEntrust);
+
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            etrEntrustAdd.setPayType(dto.getEtrPayType());
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            etrEntrustAdd.setAssetType(BussinessDictCodeList.平安资产类型_一级投标债券.getValue());
+            etrEntrustAdd.setVdate(null);
+            etrEntrustAdd.setMdate(null);
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 添加流程编号
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+        return entity;
     }
 }

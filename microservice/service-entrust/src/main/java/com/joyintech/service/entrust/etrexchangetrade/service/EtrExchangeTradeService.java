@@ -209,7 +209,37 @@ public class EtrExchangeTradeService extends BaseService{
 
         // 构造单组合单资产DTO
         EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(dto);
-
+        
+        //待分发逻辑处理
+        BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto);
+        BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, dto);
+        // 自动分发
+        List<EtrDistribute> etrDistributeList = new ArrayList<>();
+        if (busiAutoEtrDispService != null) {
+            // 检测是否设置交易员
+            if (!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)) {
+                // 跳出自动分发
+                entity.setEtrDistributeList(etrDistributeList);
+                isPushMsg = DictCodeList.是否_是.getValue();
+            } else {
+                // 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
+                // 设置指令日期 add by yufei 20200808 start
+                if(etrEntrust.getEntrustDate() == null) {
+                    etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+                }
+                // 设置指令日期 add by yufei 20200808 end
+                if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
+                    // 自动分发
+                    entity.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
+                    isPushMsg = DictCodeList.是否_是.getValue();
+                }
+            }
+        }
+        if(StringUtil.isEmptyList(entity.getEtrDistributeList())){//无分发人员
+        	baseDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
+        	etrSinglePortfolioDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
+        }
+        
         // 股票竞价指令dto
         EtrStockBiddingDto etrStockBiddingDto = new EtrStockBiddingDto();
         if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(baseDto.getEntrustType())) {
@@ -559,30 +589,6 @@ public class EtrExchangeTradeService extends BaseService{
         EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);*/
         //产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 end
 
-        BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto);
-        BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, dto);
-        // 自动分发
-        List<EtrDistribute> etrDistributeList = new ArrayList<>();
-        if (busiAutoEtrDispService != null) {
-            // 检测是否设置交易员
-            if (!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)) {
-                // 跳出自动分发
-                entity.setEtrDistributeList(etrDistributeList);
-                isPushMsg = DictCodeList.是否_是.getValue();
-            } else {
-                // 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
-                // 设置指令日期 add by yufei 20200808 start
-                if(etrEntrust.getEntrustDate() == null) {
-                    etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
-                }
-                // 设置指令日期 add by yufei 20200808 end
-                if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
-                    // 自动分发
-                    entity.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
-                    isPushMsg = DictCodeList.是否_是.getValue();
-                }
-            }
-        }
         // 自动分发数据入库 add by yufei 20200808 start
         if(!StringUtil.isEmptyList(entity.getEtrDistributeList())){
             baseEtrInvestInfoService.distributeDelegate(entity.getEtrDistributeList());
@@ -908,7 +914,8 @@ public class EtrExchangeTradeService extends BaseService{
         //关闭委托
         componentService.entrustRevoke(etrBaseDto);
         //处理指令持仓和头寸(仅有未被接收的指令才可以撤会,所以一般只可能存在下指令时生成的持仓和流水)
-        if (baseEtrCashPositionCommService != null && DictCodeList.委托状态_待接收.getValue().equals(entity.getEntrustStatus())) {
+        if (baseEtrCashPositionCommService != null && (DictCodeList.委托状态_待接收.getValue().equals(entity.getEntrustStatus())
+        		||DictCodeListExt3.委托状态_待分发.getValue().equals(entity.getEntrustStatus()))) {
             baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
         }
         //		if(StringUtil.isNotEmpty(entity.getEntrustId())) {

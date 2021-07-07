@@ -39,6 +39,16 @@ public interface BussRepoSecService {
      * 引用画面：EtrRepo002（回购委托新建）
      */
     String PAGE_FROM_EtrRepo002 = "EtrRepo002";
+    
+    /**
+     * 引用画面：EtrRepo002（回购委托新建）
+     */
+    String PAGE_FROM_EtrIbRepoinfo002 = "EtrIbRepoinfo002";
+    
+    /**
+     * 引用画面：EtrRepo002（回购委托新建）
+     */
+    String PAGE_FROM_EtribRepoInfo003 = "EtribRepoInfo003";
 
     /**
      * 引用画面：TrdRepoTrade002（回购交易新建）

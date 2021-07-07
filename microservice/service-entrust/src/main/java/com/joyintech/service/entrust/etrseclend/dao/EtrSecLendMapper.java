@@ -69,4 +69,21 @@ public interface EtrSecLendMapper {
      * @since 1.0
      */ 
     EtrSecLendDto selectByKey(Map<String, Object> map);
+    
+    /**
+     * 
+     * 通过主键查询流程中信息
+     * <功能详细描述>
+     * @param entrustId
+     * @return
+     * @see
+     * @since 1.0
+     */ 
+    EtrSecLendDto selectWflByKey(Map<String, Object> map);
+    
+    /**
+     * 删除流程中数据
+     * @param workflowId
+     */
+    void deleteWflwflEtrTarget(String workflowId);
 }

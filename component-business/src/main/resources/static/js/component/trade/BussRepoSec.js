@@ -535,6 +535,10 @@
     		$('#EtrRepo002_auto_pledge_div').show();
     	}
     	
+    	if(getElementById('pageFrom').val()=="EtrIbRepoinfo002"&&repo_pledge_model=='02'){
+    		$('#EtrIbRepoinfo002_auto_pledge_div').show();
+    	}
+    	
         if(isBondLendTrade){
             $('#isBondLendTrade').show();
         }

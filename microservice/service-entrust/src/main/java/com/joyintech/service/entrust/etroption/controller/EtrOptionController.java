@@ -10,23 +10,22 @@
 
 package com.joyintech.service.entrust.etroption.controller;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.service.entrust.etroption.dto.EtrOptionDto;
-import com.joyintech.service.entrust.etroption.service.EtrOptionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.service.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
+import com.joyintech.service.entrust.etroption.dto.EtrOptionDto;
+import com.joyintech.service.entrust.etroption.service.EtrOptionService;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 期权投资委托微服务controller
@@ -67,7 +66,6 @@ public class EtrOptionController {
      *
      * 查询页面组合代码联想文本框
      * <功能详细描述>
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -81,7 +79,6 @@ public class EtrOptionController {
      *
      * 查询页面合约标的联想文本框
      * <功能详细描述>
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -94,7 +91,6 @@ public class EtrOptionController {
      *
      * 新建页面组合代码联想下拉框
      * <功能详细描述>
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -107,7 +103,6 @@ public class EtrOptionController {
      *
      * 新建页面合约标的联想下拉框
      * <功能详细描述>
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -149,7 +144,6 @@ public class EtrOptionController {
     /**
      * 关闭委托
      *
-     * @param dto
      * @return
      * @see
      * @since 1.0
@@ -192,7 +186,6 @@ public class EtrOptionController {
      *
      * 工作流完成方法
      * <功能详细描述>
-     * @param map
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      * @see
@@ -209,8 +202,37 @@ public class EtrOptionController {
     @DTXTransaction
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrOptionDto dto){
-        etrOptionService.doInsert(dto, dto.getOperateType());
+        etrOptionService.doInsert(dto);
     }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doUpdate")
+    public boolean doUpdate(@RequestBody EtrOptionDto dto){
+        try {
+            etrOptionService.doUpdate(dto);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBack")
+    public boolean doBack(@RequestBody EtrOptionDto dto){
+        try {
+            etrOptionService.doBack(dto);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
 //    /**
 //     *
 //     * 组合可用现金查询

@@ -665,7 +665,7 @@
                      * add by chendijun 20200710 上农商场内交易页面试算和展示不在同一个页面，需要回调传出数据
                      */
                     if(callback) {
-                        callback(result,cluflag);
+                        callback(results,cluflag);
                     }
                 }, true);
             },true);

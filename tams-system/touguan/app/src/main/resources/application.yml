@@ -24,8 +24,8 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -87,6 +87,10 @@ base:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+#市场行情信息接口
+MarketInfoInterf:
+  exchangeUrl: http://10.1.20.135:8099 #交易所
+  cmdsUrl: http://10.1.20.135:8099  #外汇交易中心
 interf:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
@@ -320,13 +324,13 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: BS30INIT
-  sqldirpassword: BS30INIT
+  sqldiruserName: BS30BANKENTRUST
+  sqldirpassword: BS30BANKENTRUST
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -343,23 +347,23 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
 log:
   path: D:/home/tams/logs/tams/touguan
   level: debug
@@ -434,34 +438,34 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  username: BS30INIT
-  password: BS30INIT
+  username: BS30BANKENTRUST
+  password: BS30BANKENTRUST
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT
-    password: BS30INIT
+    username: BS30BANKENTRUST
+    password: BS30BANKENTRUST
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG

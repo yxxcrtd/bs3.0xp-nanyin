@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,6 +119,7 @@ public class EtrLendSpecInfoService extends BaseService<EtrLendSpecInfoDto> {
         // add by wangpeng 20210525 银行间场内场外拆分 start
         param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
         // add by wangpeng 20210525 银行间场内场外拆分 end
+        param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return queryForPage(page,length,()->etrLendSpecInfoMapper.selectForPage(param));
     }
     /**

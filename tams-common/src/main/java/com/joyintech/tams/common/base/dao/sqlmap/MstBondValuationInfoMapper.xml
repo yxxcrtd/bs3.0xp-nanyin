@@ -22,13 +22,23 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="MBPVALUE" property="mbpvalue" jdbcType="DECIMAL" />
+        <result column="VAR" property="var" jdbcType="DECIMAL" />
+        <result column="CVAR" property="cvar" jdbcType="DECIMAL" />
+        <result column="MDURATION" property="mduration" jdbcType="DECIMAL" />
+        <result column="IMPLICIT_GRADE" property="implicitGrade" jdbcType="VARCHAR" />
+        <result column="IMPLICIT_HGRADE" property="implicitHgrade" jdbcType="VARCHAR" />
+        <result column="NETVALUATION_EXERCISE" property="netvaluationExercise" jdbcType="DECIMAL" />
+        <result column="NETVALUATION_RECOMMENDED" property="netvaluationRecommended" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEC_ID SEC_ID, VALUE_DATE VALUE_DATE, VALUE_SOURCE VALUE_SOURCE, LAST_PERIOD LAST_PERIOD, 
         PRICE PRICE, NETPRICE NETPRICE, M_DURATION M_DURATION, M_CONVEXITY M_CONVEXITY, BPVALUE BPVALUE, 
         SDURATION SDURATION, SCNVXTY SCNVXTY, INTEREST_DURATION INTEREST_DURATION, INTEREST_CNVXTY INTEREST_CNVXTY, 
         BPYIELD BPYIELD, INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, MBPVALUE MBPVALUE, 
+        VAR VAR, CVAR CVAR, MDURATION MDURATION, IMPLICIT_GRADE IMPLICIT_GRADE, IMPLICIT_HGRADE IMPLICIT_HGRADE, 
+        NETVALUATION_EXERCISE NETVALUATION_EXERCISE, NETVALUATION_RECOMMENDED NETVALUATION_RECOMMENDED
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -61,14 +71,20 @@
             SDURATION, SCNVXTY, INTEREST_DURATION, 
             INTEREST_CNVXTY, BPYIELD, INPUT_TYPE, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME, MBPVALUE, 
+            VAR, CVAR, MDURATION, 
+            IMPLICIT_GRADE, IMPLICIT_HGRADE, NETVALUATION_EXERCISE, 
+            NETVALUATION_RECOMMENDED)
         values (#{secId,jdbcType=VARCHAR}, #{valueDate,jdbcType=DATE}, #{valueSource,jdbcType=VARCHAR}, 
             #{lastPeriod,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{netprice,jdbcType=DECIMAL}, 
             #{mDuration,jdbcType=DECIMAL}, #{mConvexity,jdbcType=DECIMAL}, #{bpvalue,jdbcType=DECIMAL}, 
             #{sduration,jdbcType=DECIMAL}, #{scnvxty,jdbcType=DECIMAL}, #{interestDuration,jdbcType=DECIMAL}, 
             #{interestCnvxty,jdbcType=DECIMAL}, #{bpyield,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{mbpvalue,jdbcType=DECIMAL}, 
+            #{var,jdbcType=DECIMAL}, #{cvar,jdbcType=DECIMAL}, #{mduration,jdbcType=DECIMAL}, 
+            #{implicitGrade,jdbcType=VARCHAR}, #{implicitHgrade,jdbcType=VARCHAR}, #{netvaluationExercise,jdbcType=DECIMAL}, 
+            #{netvaluationRecommended,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstBondValuationInfo" >
         insert into MST_BOND_VALUATION_INFO
@@ -133,6 +149,30 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="mbpvalue != null" >
+                MBPVALUE,
+            </if>
+            <if test="var != null" >
+                VAR,
+            </if>
+            <if test="cvar != null" >
+                CVAR,
+            </if>
+            <if test="mduration != null" >
+                MDURATION,
+            </if>
+            <if test="implicitGrade != null" >
+                IMPLICIT_GRADE,
+            </if>
+            <if test="implicitHgrade != null" >
+                IMPLICIT_HGRADE,
+            </if>
+            <if test="netvaluationExercise != null" >
+                NETVALUATION_EXERCISE,
+            </if>
+            <if test="netvaluationRecommended != null" >
+                NETVALUATION_RECOMMENDED,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="secId != null" >
@@ -195,17 +235,43 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="mbpvalue != null" >
+                #{mbpvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="var != null" >
+                #{var,jdbcType=DECIMAL},
+            </if>
+            <if test="cvar != null" >
+                #{cvar,jdbcType=DECIMAL},
+            </if>
+            <if test="mduration != null" >
+                #{mduration,jdbcType=DECIMAL},
+            </if>
+            <if test="implicitGrade != null" >
+                #{implicitGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="implicitHgrade != null" >
+                #{implicitHgrade,jdbcType=VARCHAR},
+            </if>
+            <if test="netvaluationExercise != null" >
+                #{netvaluationExercise,jdbcType=DECIMAL},
+            </if>
+            <if test="netvaluationRecommended != null" >
+                #{netvaluationRecommended,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstBondValuationInfo" >
         insert into MST_BOND_VALUATION_INFO(SEC_ID, VALUE_DATE, VALUE_SOURCE, LAST_PERIOD, 
         PRICE, NETPRICE, M_DURATION, M_CONVEXITY, BPVALUE, SDURATION, SCNVXTY, INTEREST_DURATION, 
         INTEREST_CNVXTY, BPYIELD, INPUT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME)
+        UPDATE_TIME, MBPVALUE, VAR, CVAR, MDURATION, IMPLICIT_GRADE, IMPLICIT_HGRADE, NETVALUATION_EXERCISE, 
+        NETVALUATION_RECOMMENDED)
         select SEC_ID, VALUE_DATE, VALUE_SOURCE, LAST_PERIOD, 
             PRICE, NETPRICE, M_DURATION, M_CONVEXITY, BPVALUE, SDURATION, SCNVXTY, INTEREST_DURATION, 
             INTEREST_CNVXTY, BPYIELD, INPUT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, MBPVALUE, VAR, CVAR, MDURATION, IMPLICIT_GRADE, IMPLICIT_HGRADE, NETVALUATION_EXERCISE, 
+            NETVALUATION_RECOMMENDED
              from MST_BOND_VALUATION_INFO
              where 1 = 1 and SEC_ID = #{secId,jdbcType=VARCHAR} and VALUE_DATE = #{valueDate,jdbcType=DATE} and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
     </insert>
@@ -254,6 +320,30 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="mbpvalue != null" >
+                MBPVALUE = #{mbpvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="var != null" >
+                VAR = #{var,jdbcType=DECIMAL},
+            </if>
+            <if test="cvar != null" >
+                CVAR = #{cvar,jdbcType=DECIMAL},
+            </if>
+            <if test="mduration != null" >
+                MDURATION = #{mduration,jdbcType=DECIMAL},
+            </if>
+            <if test="implicitGrade != null" >
+                IMPLICIT_GRADE = #{implicitGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="implicitHgrade != null" >
+                IMPLICIT_HGRADE = #{implicitHgrade,jdbcType=VARCHAR},
+            </if>
+            <if test="netvaluationExercise != null" >
+                NETVALUATION_EXERCISE = #{netvaluationExercise,jdbcType=DECIMAL},
+            </if>
+            <if test="netvaluationRecommended != null" >
+                NETVALUATION_RECOMMENDED = #{netvaluationRecommended,jdbcType=DECIMAL},
+            </if>
         </set>
         where SEC_ID = #{secId,jdbcType=VARCHAR}
           and VALUE_DATE = #{valueDate,jdbcType=DATE}
@@ -274,7 +364,15 @@
             BPYIELD = #{bpyield,jdbcType=DECIMAL},
             INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            MBPVALUE = #{mbpvalue,jdbcType=DECIMAL},
+            VAR = #{var,jdbcType=DECIMAL},
+            CVAR = #{cvar,jdbcType=DECIMAL},
+            MDURATION = #{mduration,jdbcType=DECIMAL},
+            IMPLICIT_GRADE = #{implicitGrade,jdbcType=VARCHAR},
+            IMPLICIT_HGRADE = #{implicitHgrade,jdbcType=VARCHAR},
+            NETVALUATION_EXERCISE = #{netvaluationExercise,jdbcType=DECIMAL},
+            NETVALUATION_RECOMMENDED = #{netvaluationRecommended,jdbcType=DECIMAL}
         where SEC_ID = #{secId,jdbcType=VARCHAR}
           and VALUE_DATE = #{valueDate,jdbcType=DATE}
           and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
