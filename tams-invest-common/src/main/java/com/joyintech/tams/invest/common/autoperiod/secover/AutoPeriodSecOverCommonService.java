@@ -313,7 +313,7 @@ public class AutoPeriodSecOverCommonService {
     
     /**
      * 构造对象
-     * @param subMap
+     * @param
      * @return
      */
     private BaseTradeInfoDto gen(FinAssetIntInfo finAssetIntInfo,TrdSecOverdueDurationDto dto,TrdFinProductDealTotal trdFinProductDealTotal,BaseTradeInfoDto baseTradeInfoDto,String totalTradeId) {
@@ -752,6 +752,20 @@ public class AutoPeriodSecOverCommonService {
 		trdProductDeal.setIsOutTrade(DictCodeList.是否_是.getValue());
 		//交易场所  
 		trdProductDeal.setTradeMarket( dto.getTradeMarket());
+		if (StringUtil.equals(交易方向, DictCodeList.交易方向_收息到账.getValue())) {
+			//重新查询资产持仓，以便中债报送使用数量
+			Map<String,Object> tempMap = new HashMap<>();
+			tempMap.put("portfolioId",finAssetIntInfo.getPortfolioId());
+			if (!dto.isChannel()) {
+				tempMap.put("secAcctId",trdProductDeal.getSecManageAcctId());
+			}else{
+				tempMap.put("secAcctId",trdProductDeal.getChlId());
+			}
+			tempMap.put("finprodId",trdProductDeal.getFinprodId());
+			tempMap.put("cdate",DateUtil.format(dto.getMdate()));
+			BigDecimal assetPosition = autoPeriodSecOverCommonMapper.selectPosition(tempMap);
+			trdProductDeal.setAccrNum(assetPosition);
+		}
 		return trdProductDeal;
     }
     
