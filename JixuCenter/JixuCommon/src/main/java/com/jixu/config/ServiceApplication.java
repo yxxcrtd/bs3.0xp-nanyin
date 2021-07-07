@@ -36,9 +36,6 @@ public class ServiceApplication {
     
     //下游资产服务
     public static String ASSET_SERVICE_NAME = "http://assetService";
-
-    //几许服务
-    public static String JIXU_SERVICE_NAME = "http://jixuService";
     
     @Configuration
     @ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "customerInterfService")
@@ -54,13 +51,11 @@ public class ServiceApplication {
                 ADAPTER_SERVICE_NAME = ADAPTER_SERVICE_NAME + config.getAdapterService();
                 CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
 				ASSET_SERVICE_NAME = ASSET_SERVICE_NAME + config.getAssetService();
-                JIXU_SERVICE_NAME = JIXU_SERVICE_NAME + config.getJixuService();
             }
             else {
                 ADAPTER_SERVICE_NAME = config.getAdapterService();
                 CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
 				ASSET_SERVICE_NAME = config.getAssetService();
-                JIXU_SERVICE_NAME = config.getJixuService();
             }
         }
         
@@ -74,8 +69,6 @@ public class ServiceApplication {
             private String customerInterfService;
 
             private String assetService;
-
-            private String jixuService;
 
             /**
              * 获取 single
@@ -138,14 +131,6 @@ public class ServiceApplication {
 			public void setAssetService(String assetService) {
 				this.assetService = assetService;
 			}
-
-            public String getJixuService() {
-                return jixuService;
-            }
-
-            public void setJixuService(String jixuService) {
-                this.jixuService = jixuService;
-            }
         }
     }
     
