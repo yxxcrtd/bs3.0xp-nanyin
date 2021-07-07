@@ -612,8 +612,9 @@ public class FtpUtil {
             LOGGER.error(e.getMessage());
         }
         finally {
-            return bool;
+//            return bool;
         }
+        return bool;
     }
 
     /**

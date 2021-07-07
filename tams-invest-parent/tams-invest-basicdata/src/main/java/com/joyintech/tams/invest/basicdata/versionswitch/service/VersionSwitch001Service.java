@@ -177,7 +177,7 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 					reader.close();
 				} catch (IOException e) {
 					e.printStackTrace();
-					return false;
+//					return false;
 				}
 			}
 			if (conn != null) {
@@ -185,7 +185,7 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 					conn.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
-					return false;
+//					return false;
 				}
 			}
 		}
@@ -215,7 +215,7 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 					ps.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
-					return false;
+//					return false;
 				}
 			}
 			if (rs != null) {
@@ -223,7 +223,7 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 					rs.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
-					return false;
+//					return false;
 				}
 			}
 		}
