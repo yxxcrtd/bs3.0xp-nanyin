@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.portfolio.ptlaccountcurrentinterest.dto.MarkRate;
@@ -28,6 +29,7 @@ import com.joyintech.service.portfolio.ptlaccountcurrentinterest.dto.PtlAccountC
  * @see PtlAccountCurrentInterest001Mapper
  * @since 1.0
  */
+@Repository
 public interface PtlAccountCurrentInterest001Mapper {
     /**
      * 获取账号

@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.joyintech</groupId>
         <artifactId>tams-parent</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.3.1</version>
     </parent>
   
     <name>mobileApproval</name>

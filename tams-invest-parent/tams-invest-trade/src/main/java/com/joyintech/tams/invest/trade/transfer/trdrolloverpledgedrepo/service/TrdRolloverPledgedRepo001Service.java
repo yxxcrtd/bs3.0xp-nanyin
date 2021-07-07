@@ -1,6 +1,5 @@
 package com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.service;
 
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
@@ -146,7 +145,7 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
         List<FinDealPledgeDto> list = new ArrayList<>();
 
         if (StringUtil.isNotEmpty(param.get("pledgedRepoRolloverList"))) {
-            list = JsonUtils.json2List(JsonUtil.objToString(param.get("pledgedRepoRolloverList")), FinDealPledgeDto.class);
+            list = JsonUtils.json2List(JsonUtils.object2Json(param.get("pledgedRepoRolloverList")), FinDealPledgeDto.class);
             dto.setPledgedRepoRolloverList(list);
         }
         if (StringUtil.isNotEmpty(dto)) {

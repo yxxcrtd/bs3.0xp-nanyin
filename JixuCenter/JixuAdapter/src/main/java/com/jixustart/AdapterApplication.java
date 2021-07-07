@@ -23,7 +23,7 @@ import java.util.Locale;
 @EnableEurekaClient
 @EnableCaching
 @EnableAsync
-@ComponentScan(basePackages ="com.joyintech.jixu", includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {
+@ComponentScan(basePackages = {"com.joyintech.jixu"}, includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {
     RestController.class}))
 public class AdapterApplication extends SpringBootServletInitializer{
 	

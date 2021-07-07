@@ -8,9 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.jixu.common.util;
-
-import javax.annotation.PostConstruct;
+package com.jixu.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,7 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import com.jixu.common.util.ServiceApplication.AutoConfig.ContextPathConfiguration;
+import javax.annotation.PostConstruct;
 
 /**
  * 微服务访问路径定义
@@ -38,10 +36,13 @@ public class ServiceApplication {
     
     //下游资产服务
     public static String ASSET_SERVICE_NAME = "http://assetService";
+
+    //几许服务
+    public static String JIXU_SERVICE_NAME = "http://jixuService";
     
     @Configuration
     @ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "customerInterfService")
-    @EnableConfigurationProperties(ContextPathConfiguration.class)
+    @EnableConfigurationProperties(AutoConfig.ContextPathConfiguration.class)
     class AutoConfig {
 
         @Autowired
@@ -53,11 +54,13 @@ public class ServiceApplication {
                 ADAPTER_SERVICE_NAME = ADAPTER_SERVICE_NAME + config.getAdapterService();
                 CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
 				ASSET_SERVICE_NAME = ASSET_SERVICE_NAME + config.getAssetService();
+                JIXU_SERVICE_NAME = JIXU_SERVICE_NAME + config.getJixuService();
             }
             else {
                 ADAPTER_SERVICE_NAME = config.getAdapterService();
                 CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
 				ASSET_SERVICE_NAME = config.getAssetService();
+                JIXU_SERVICE_NAME = config.getJixuService();
             }
         }
         
@@ -71,6 +74,9 @@ public class ServiceApplication {
             private String customerInterfService;
 
             private String assetService;
+
+            private String jixuService;
+
             /**
              * 获取 single
              * @return single.
@@ -133,6 +139,13 @@ public class ServiceApplication {
 				this.assetService = assetService;
 			}
 
+            public String getJixuService() {
+                return jixuService;
+            }
+
+            public void setJixuService(String jixuService) {
+                this.jixuService = jixuService;
+            }
         }
     }
     

@@ -1,6 +1,5 @@
 package com.joyintech.tams.invest.period.common.controller;
 
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.CacheUtil;
@@ -13,7 +12,6 @@ import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonServic
 import com.joyintech.tams.invest.common.autoperiod.secover.AutoPeriodSecOverCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
-import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,7 +75,7 @@ public class ChildPortfolioInfoController extends BaseController{
         }else{
         	childPortfolioInfo =  commonService.distributeDataByPercent(map);
         }
-        model.addAttribute("childPortfolioInfo", JsonUtil.objToString(childPortfolioInfo));
+        model.addAttribute("childPortfolioInfo", JsonUtils.object2Json(childPortfolioInfo));
         model.addAttribute("portfolioId",map.get("portfolioId"));
         return "invest/period/trdplancurrduration/ChildPortfolioInfo";
     }

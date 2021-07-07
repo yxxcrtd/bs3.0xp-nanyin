@@ -1,8 +1,8 @@
 package com.jixu.msg.dto;
 
-import java.util.List;
-
 import com.jixu.common.valid.IsIntegerJixu;
+
+import java.util.List;
 
 public class TranMsgDto extends TranBaseMsgDto{
 

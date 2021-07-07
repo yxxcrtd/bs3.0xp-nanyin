@@ -13,6 +13,8 @@ package com.joyintech.service.basicdata.mstopicsparamante.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.service.basicdata.mstopicsparamante.dto.MstOpicsParaManteDto;
 
 
@@ -23,6 +25,7 @@ import com.joyintech.service.basicdata.mstopicsparamante.dto.MstOpicsParaManteDt
  * @see MstOpicsParaManteMapper
  * @since 1.0
  */
+@Repository
 public interface MstOpicsParaManteMapper {
 
     /**

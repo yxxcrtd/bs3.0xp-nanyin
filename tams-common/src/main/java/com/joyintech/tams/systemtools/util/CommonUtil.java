@@ -25,6 +25,7 @@ import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -51,6 +52,7 @@ import com.joyintech.tams.systemtools.listener.TamsAuthorizationListener;
 import com.joyintech.tams.systemtools.service.SystemToolService;
 import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 
+@Lazy(false)
 @Component
 public class CommonUtil {
 	

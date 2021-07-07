@@ -32,12 +32,11 @@
 		<!-- <module>JixuDataCenter</module> -->
 		<module>jixu</module>
     	<module>JixuUtil</module>
-    	<!-- <module>JixuReportCenter</module>
-    	<module>JixuTest</module>
-    	<module>JixuJoyinUtil</module> -->
     	<module>JixuAdapter</module>
-    	<!-- <module>JixuJasperReport</module> -->
-  	</modules>
+		<module>JixuApi</module>
+		<module>JixuCommon</module>
+        <module>JixuCommon</module>
+    </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -109,7 +108,7 @@
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-core</artifactId>
-			<version>0.0.3</version>
+			<version>0.0.3.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 		<dependency>

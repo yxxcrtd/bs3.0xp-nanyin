@@ -1,9 +1,9 @@
 package com.jixu.msg.dto;
 
-import java.util.List;
-
 import com.jixu.common.valid.IsIntegerJixu;
 import com.jixu.common.valid.IsNumberJixu;
+
+import java.util.List;
 
 public class InterestSwapMaturityDto extends TranBaseMsgDto{
 
