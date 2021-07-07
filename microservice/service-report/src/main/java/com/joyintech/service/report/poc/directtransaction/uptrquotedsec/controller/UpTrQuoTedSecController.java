@@ -13,6 +13,7 @@ package com.joyintech.service.report.poc.directtransaction.uptrquotedsec.control
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -136,6 +137,6 @@ public class UpTrQuoTedSecController {
     @ResponseBody
     @PostMapping("getFinprodName")
     public String getFinprodName(@RequestBody Map<String, Object> param){
-        return upTrQuoTedSecService.getFinprodName(param);
+        return StringUtil.trimHtmlTag(upTrQuoTedSecService.getFinprodName(param));
     }
 }

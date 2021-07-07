@@ -12,10 +12,8 @@ package com.joyintech.tams.invest.entrust.etrproject.controller;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
@@ -45,8 +43,6 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -157,7 +153,6 @@ public class EtrProject002Controller extends BaseController {
     /**
      * 获取新建界面的资产代码联想下拉框框
      * 
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -182,13 +177,13 @@ public class EtrProject002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/searchType")
     public String searchType(String finprodId){
-        return etrProjectService.searchType(finprodId);
+        return StringUtil.trimHtmlTag(etrProjectService.searchType(finprodId));
     }
     /**
      * 
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0

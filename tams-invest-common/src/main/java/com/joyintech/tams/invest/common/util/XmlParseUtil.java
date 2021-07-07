@@ -15,9 +15,12 @@ import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tools.util.FileUtil;
@@ -76,7 +79,19 @@ public class XmlParseUtil {
         try {
             JAXBContext context = JAXBContext.newInstance(c);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            t = (T)unmarshaller.unmarshal(new StringReader(xml));
+//            t = (T)unmarshaller.unmarshal(new StringReader(xml));
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            //------start---------2020-12-24 马数凯 添加
+            //禁用DTDs (doctypes),几乎可以防御所有xml实体攻击
+            dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true); //首选
+            //如果不能禁用DTDs,可以使用下两项，必须两项同时存在
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);        //防止外部实体POC
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);   //防止参数实体POC
+            //------end---------
+            dbf.setExpandEntityReferences(false);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document document = db.parse(xml);
+            t = (T)unmarshaller.unmarshal(document);
         }
         catch (Exception e) {
             logger.info(xml);

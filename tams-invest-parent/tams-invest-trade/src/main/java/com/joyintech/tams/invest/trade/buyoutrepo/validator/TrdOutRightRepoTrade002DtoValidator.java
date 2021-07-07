@@ -102,7 +102,7 @@ public class TrdOutRightRepoTrade002DtoValidator implements TradeCommonValidator
             }
             
             if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmpty(inputDto.getSecAcctId())) {
-                errorList.add(new ValidMessage("chlId", "通道代码和证券账户不能同时为空！"));
+                errorList.add(new ValidMessage("chlId", "合作资产和证券账户不能同时为空！"));
             }
         }else{
             List<TrdOutRightRepoTradePtl> dtoList = inputDto.getTrdOutRightRepoTradePtl();
@@ -113,7 +113,7 @@ public class TrdOutRightRepoTrade002DtoValidator implements TradeCommonValidator
                }
                
                if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmpty(dtoList.get(i).getSecManageAcctId())) {
-                   errorList.add(new ValidMessage("chlId", "通道代码和证券账户不能同时为空！"));
+                   errorList.add(new ValidMessage("chlId", "合作资产和证券账户不能同时为空！"));
                    break;
                }
             }

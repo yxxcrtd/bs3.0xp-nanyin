@@ -186,6 +186,7 @@ public class RegTimePoints001Controller extends BaseController {
     @RequestMapping("/getReportCode")
     public Page<SelectOptionDto> getReportCode(){
         Map<String, String> reportCodeMap = SvrDataUtil.getSysDictDataMap(DictCode.报表名称);
+        String search = this.getParam("search");//页面传递过来的搜索内容
         List<SelectOptionDto> resultList = new ArrayList<>();
         if(MapUtils.isNotEmpty(reportCodeMap)){
             for (String key : reportCodeMap.keySet()) {
@@ -198,7 +199,17 @@ public class RegTimePoints001Controller extends BaseController {
                 SelectOptionDto resultDto = new SelectOptionDto();
                 resultDto.setId(key);
                 resultDto.setText(reportCodeMap.get(key));
-                resultList.add(resultDto);
+                //modify by yanya on 20210526 增加模糊匹配的功能 start
+                if(StringUtil.isNotEmpty(search)) {
+                    if(key.toLowerCase().contains(search.toLowerCase())
+                            || reportCodeMap.get(key).toLowerCase().contains(search.toLowerCase())) {
+                        resultList.add(resultDto);
+                    }
+                }
+                else {
+                    resultList.add(resultDto);
+                }
+                //modify by yanya on 20210526 增加模糊匹配的功能 end
             }
         }
         

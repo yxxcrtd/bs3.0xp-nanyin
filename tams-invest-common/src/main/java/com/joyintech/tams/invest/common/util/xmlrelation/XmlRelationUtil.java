@@ -254,7 +254,15 @@ public class XmlRelationUtil {
         if (null != inStream) {
             XmlRelationSAXHandler handler = new XmlRelationUtil.XmlRelationSAXHandler();
             InputSource is = new InputSource(inStream);
-            SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+//            SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            //------start---------2020-11-25 周敏 添加 
+            spf.setValidating(false);
+            spf.setFeature("http://xml.org/sax/features/validation",false);
+            spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
+            spf.setFeature("http://xml.org/sax/features/use-entity-resolver2",false);
+            SAXParser sax = spf.newSAXParser();
+            //------end---------
             sax.parse(is, handler);
             return handler.getRecordList();
         }
@@ -288,6 +296,14 @@ public class XmlRelationUtil {
             }
             catch (IOException e) {
                 e.printStackTrace();
+            }finally {
+                if (xmlFileInStream != null){
+                    try {
+                        xmlFileInStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
 

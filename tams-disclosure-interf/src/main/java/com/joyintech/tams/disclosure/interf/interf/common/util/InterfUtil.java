@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -161,7 +162,7 @@ public class InterfUtil {
         try {
             // 本地文件系统方式
             if (StringUtil.equals(ftpType, "03")) {
-                File remoteDir = new File(remotePath);
+                File remoteDir = new SafelyFile(remotePath);
                 if (remoteDir.exists() && remoteDir.isDirectory()) {
                     Collection<File> files = FileUtils.listFiles(remoteDir,
                         new String[] {"xml", "txt"}, false);
@@ -170,7 +171,7 @@ public class InterfUtil {
                         if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
                             return fileName.contains((String)name);
                         })) {
-                            File lf = new File(localPath + File.separatorChar + fileName);
+                            File lf = new SafelyFile(localPath + File.separatorChar + fileName);
                             if (!lf.exists()) {
                                 lf.createNewFile();
                                 FileUtils.copyFile(ff, lf);
@@ -191,7 +192,7 @@ public class InterfUtil {
                         if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
                             return fileName.contains((String)name);
                         })) {
-                            File lf = new File(localPath + File.separatorChar + fileName);
+                            File lf = new SafelyFile(localPath + File.separatorChar + fileName);
                             if (!lf.exists()) {
                                 SftpUtil.downloadSftp(remotePath, entry.getFilename(), localPath);
                             }
@@ -235,7 +236,7 @@ public class InterfUtil {
         try {
             // 本地文件系统方式
             if (StringUtil.equals(ftpType, "03")) {
-                File remoteDir = new File(remotePath);
+                File remoteDir = new SafelyFile(remotePath);
                 if (remoteDir.exists() && remoteDir.isDirectory()) {
                     Collection<File> files = FileUtils.listFiles(remoteDir,
                         new String[] {reportInterfOkFileExtension}, false);
@@ -303,7 +304,7 @@ public class InterfUtil {
         try {
             // 本地文件系统方式
             if (StringUtil.equals(ftpType, "03")) {
-                File remoteDir = new File(remotePath);
+                File remoteDir = new SafelyFile(remotePath);
                 if (remoteDir.exists() && remoteDir.isDirectory()) {
                     Collection<File> files = FileUtils.listFiles(remoteDir,
                         new String[] {"xml", "txt"}, false);
@@ -311,7 +312,7 @@ public class InterfUtil {
                         String name = ff.getName();
                         if (StringUtil.equals(name, fileName)) {
                             FileUtils.moveFileToDirectory(ff,
-                                new File(remotePath + File.separatorChar + newRemotePath), true);
+                                new SafelyFile(remotePath + File.separatorChar + newRemotePath), true);
                         }
                     }
                 }
@@ -354,7 +355,7 @@ public class InterfUtil {
      */
     public static void deleteLocalTmpFile(String localPath) {
         try {
-            File localDir = new File(localPath);
+            File localDir = new SafelyFile(localPath);
             if (localDir.exists() && localDir.isDirectory()) {
                 Collection<File> files = FileUtils.listFiles(localDir,
                     new String[] {"xml", "txt", "tmp"}, false);

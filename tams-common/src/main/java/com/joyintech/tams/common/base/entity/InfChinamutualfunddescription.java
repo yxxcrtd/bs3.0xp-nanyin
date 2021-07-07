@@ -13,6 +13,11 @@ public class InfChinamutualfunddescription extends BaseEntity {
      * 对象ID
      */
     private String objectId;
+    
+    /**
+     * 金融产品代码，组装规则：金融产品类型（投管分类） _ 市场代码 _通道代码，如重复，则加4位流水后缀（0001开始）
+     */
+    private String finprodId;
 
     /**
      * Wind代码
@@ -1026,4 +1031,12 @@ public class InfChinamutualfunddescription extends BaseEntity {
     public void setOpmode(String opmode) {
         this.opmode = opmode == null ? null : opmode.trim();
     }
+    
+    public String getFinprodId() {
+		return finprodId;
+	}
+
+	public void setFinprodId(String finprodId) {
+		this.finprodId = finprodId;
+	}
 }

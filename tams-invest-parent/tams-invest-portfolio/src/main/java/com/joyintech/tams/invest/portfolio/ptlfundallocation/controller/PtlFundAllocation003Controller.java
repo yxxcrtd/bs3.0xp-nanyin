@@ -13,6 +13,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -79,9 +81,12 @@ public class PtlFundAllocation003Controller extends BaseController {
         super.setSelectOptionToModel(model, BussinessDictCode.指令类型,BussinessDictCode.币种);
         model.addAttribute("Fin_Type", BussinessDictCodeList.共同业务类型_资金划拨管理.getValue());
         model.addAttribute("YES_OR_NO_N", BussinessDictCodeList.是否_否.getValue());
+        model.addAttribute("payType1001", DictCodeListExt1.指令类型_银证转账_银转证.getValue());
+        model.addAttribute("payType1002", DictCodeListExt1.指令类型_银证转账_证转银.getValue());
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String orderId = getParam("orderId");
         String portfolioId = getParam("portfolioId");
+        model.addAttribute("formTodoList", !WorkFlowUtil.isNotFromToDoList());
         //add by 20190626
         if (!WorkFlowUtil.isNotFromToDoList()&&StringUtil.isNotEmpty(workflowId)) {
             PtlFundAllocation002Dto dto = ptlFundAllocation003Service.getBussinessEntityByWorkflowId(workflowId);
@@ -204,17 +209,17 @@ public class PtlFundAllocation003Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) PtlFundAllocation002Dto dto, BindingResult result) {
-        if(result.getErrorCount()<=0){
-            if(!StringUtil.isEmptyList(dto.getPtlFundAllocation001Dtos())){
-                for (int i = 0; i < dto.getPtlFundAllocation001Dtos().size(); i++ ) {
-                    if (dto.getPtlFundAllocation001Dtos().get(i).getAmount().compareTo(dto.getPtlFundAllocation001Dtos().get(i).getSettleAmt())<0){
-                        AjaxResult ar = new AjaxResult();
-                        ar.setMessage("明细(第"+(i+1)+"行)划款金额大于账户剩余金额！是否继续？", MessageType.警告消息);
-                        return ar;
-                    }
-                }
-            }
-        }
+//        if(result.getErrorCount()<=0){
+//            if(!StringUtil.isEmptyList(dto.getPtlFundAllocation001Dtos())){
+//                for (int i = 0; i < dto.getPtlFundAllocation001Dtos().size(); i++ ) {
+//                    if (dto.getPtlFundAllocation001Dtos().get(i).getAmount().compareTo(dto.getPtlFundAllocation001Dtos().get(i).getSettleAmt())<0){
+//                        AjaxResult ar = new AjaxResult();
+//                        ar.setMessage("明细(第"+(i+1)+"行)划款金额大于账户剩余金额！是否继续？", MessageType.警告消息);
+//                        return ar;
+//                    }
+//                }
+//            }
+//        }
         return commonCheck(result, dto.getOperateType());
     }
 
@@ -235,7 +240,7 @@ public class PtlFundAllocation003Controller extends BaseController {
         }
         if(StringUtil.isEmpty(dto.getBusiNo())){
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-            bussinessCodeParameter.setCommonBusinessType1(BussinessDictCodeList.共同业务类型_资金划拨管理);
+            bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资金划拨管理);
             dto.setTradeId(baseGetBussinessId !=null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter):IDGenerator.generate());
 //            for (BussTrdTransferOrderDto bussTrdTransferOrderDto : dto.getBussTrdTransferOrder()){
 //
@@ -287,5 +292,15 @@ public class PtlFundAllocation003Controller extends BaseController {
         return ptlFundAllocation003Service.getPtlFundAllocation001Dtos(paraMap);
     }
 
+    /**
+     * 获取组合在该证券账户的明细信息
+     * @return
+     * @see
+     */
+    @RequestMapping("/getDetailInfo")
+    @ResponseBody
+    public List<PtlFundAllocation001Dto> getDetailInfo(){
+        return ptlFundAllocation003Service.getDetailInfo(RequestUtil.getPageParam());
+    }
 
 }

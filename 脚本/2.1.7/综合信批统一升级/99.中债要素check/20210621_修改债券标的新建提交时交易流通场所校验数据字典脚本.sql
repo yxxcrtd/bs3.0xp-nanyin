@@ -1,0 +1,2 @@
+--修改债券标的新建提交时交易流通场所校验数据字典脚本
+update CHB_DATACHECK_RULE_INV set OBJVALUE = 'TRADE_MARKET' where CHECKRULEID in('5545a772-5ad0-4b0a-9c82-c19837501fa4','38390ebb-906b-4d55-a40d-5399950b4bf7');

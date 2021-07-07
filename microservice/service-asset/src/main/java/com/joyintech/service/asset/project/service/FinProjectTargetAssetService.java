@@ -271,10 +271,10 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
         if(null!=baseRepAssetAstBillInfoService){
             if(null!=entity.getBaseRepAssetAstBillInfoDto()){
                 List<RepAssetAstBill> bills = entity.getBaseRepAssetAstBillInfoDto().getRepAssetAstBillList();
-                for (RepAssetAstBill r: bills) {  
-                    r.setRepIndustry(entity.getPaFinProduct().getProjInvestIndustry());
-                    r.setRepIndustryLevel2(entity.getPaFinProduct().getProjInvestIndustry2());
-                }
+//                for (RepAssetAstBill r: bills) {  
+//                    r.setRepIndustry(entity.getPaFinProduct().getProjInvestIndustry());
+//                    r.setRepIndustryLevel2(entity.getPaFinProduct().getProjInvestIndustry2());
+//                }
                 baseRepAssetAstBillInfoService.insert(bills);
             }
         }
@@ -478,10 +478,10 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
         if(null!=baseRepAssetAstBillInfoService){
         	if(null!=entity.getBaseRepAssetAstBillInfoDto()){
                 List<RepAssetAstBill> bills = entity.getBaseRepAssetAstBillInfoDto().getRepAssetAstBillList();
-                for (RepAssetAstBill r : bills) {
-                    r.setRepIndustry(entity.getPaFinProduct().getProjInvestIndustry());
-                    r.setRepIndustryLevel2(entity.getPaFinProduct().getProjInvestIndustry2());
-                }
+//                for (RepAssetAstBill r : bills) {
+//                    r.setRepIndustry(entity.getPaFinProduct().getProjInvestIndustry());
+//                    r.setRepIndustryLevel2(entity.getPaFinProduct().getProjInvestIndustry2());
+//                }
                 entity.getBaseRepAssetAstBillInfoDto().setRepAssetAstBillList(bills);
                 baseRepAssetAstBillInfoService.update(entity.getBaseRepAssetAstBillInfoDto());
             }

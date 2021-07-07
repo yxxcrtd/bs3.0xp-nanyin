@@ -12,17 +12,24 @@ spring:
     cache: false
   #数据源配置
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
     initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
-    timeBetweenEvictionRunsMillis: 60000  # 默认是-1
+    timeBetweenEvictionRunsMillis: 600000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
+    logAbandoned: false
   activemq:
     active: false
     systemId: valuation_batch
@@ -37,8 +44,16 @@ spring:
 #base数据源配置  
 base:
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
@@ -46,13 +61,21 @@ base:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
+    logAbandoned: false
   casEnable: false        
 #interf数据源配置
 interf:
   datasource:
+    type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
@@ -60,9 +83,28 @@ interf:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true
-    testWhileIdle: true
+    logAbandoned: false
+#中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
+chbsend:
+  datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: true
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 1800000
+    removeAbandonedTimeout: 300
+    initialSize: 10
+    maxTotal: 50
+    maxIdle: 50
+    minIdle: 20
+    timeBetweenEvictionRunsMillis: 600000  # 默认是-1
+    numTestsPerEvictionRun: 10
+    removeAbandonedOnBorrow: true
+    removeAbandonedOnMaintenance: true
+    logAbandoned: false
 #用户系统
 #1 jixu用户系统
 #2 joyin用户系统
@@ -82,6 +124,10 @@ application:
     msg-end-time: 2200
     reportCbFeedBackHandleCountOneTime: 10000
     isExceptionWhenSendTimeout: 01
+    diDirectAccessFlg: '01' #中债反馈文件下载获取方式(01：DI获取   02：本地获取)
+    chbPerNo: '00' #中债一二三期部署方式(01:独立一二期  03：独立三期  00：一起部署)
+    download-file-path-movepath: /home/wasadmin/sharedata/chb/recive/CB/bak
+    dangbanFlag: '01'#01标识挡板  02直连
   cache:
     file: classpath:ehcache_batch.xml
   sysCode: TAMS
@@ -108,7 +154,7 @@ batch:
     maxJobPoolSize: 5 #job线程池
     maxExeUser: 2 #最大并发用户数
     maxThreadPerUser: 5 #任务并发数
-    sleeptime: 1000 #轮询时间
+    sleeptime: 3000 #轮询时间
     maxSqlNum: 50 #批量提交数
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -131,15 +177,15 @@ spring:
     cluster:
       nodes: 192.168.90.180:6379,192.168.90.180:6380,192.168.90.181:6381,192.168.90.181:6382,192.168.90.182:6383,192.168.90.182:6384
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2121_test
-    password: zjtams2121_test 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM 
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zjtams2121_test
-  sqldirpassword: zjtams2121_test
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+  sqldiruserName: zgtams217_0618_ZJM
+  sqldirpassword: zgtams217_0618_ZJM
   #以下根据实际ip和端口进行修改
   micorservice:
     contextPath:
@@ -170,15 +216,15 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2121_test
-    password: zjtams2121_test
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2121_test
-    password: zjtams2121_test
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
 #日志路径配置
 log:
   path: /home/tams/logs/batch
@@ -199,13 +245,13 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: zgtams214_v1203
     password: zgtams214_v1203 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
   sqldiruserName: zgtams214_v1203
   sqldirpassword: zgtams214_v1203
   loadbalance: false
@@ -238,15 +284,21 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: zgtams214_v1203
     password: zgtams214_v1203
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: zgtams214_v1203
     password: zgtams214_v1203
+#中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//38.212.199.155:1521/orcl
+    username: TAMS
+    password: TAMS
 #日志路径配置
 log:
   path: /home/tams/logs/batch
@@ -285,15 +337,15 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0702ls
-  sqldirpassword: zgtams0702ls_123
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+  sqldiruserName: zgtams217_0618_ZJM
+  sqldirpassword: zgtams217_0618_ZJM
   loadbalance: false
   micorservice:
     contextPath:
@@ -321,22 +373,29 @@ application:
       pbcService: http://127.0.0.1:8080/tams
       investInterfService: http://127.0.0.1:8080/tams
       tamsServer: http://127.0.0.1:8080/tams
+      #tamsServer: http://127.0.0.1:8080/tams,http://127.0.0.2:8080/tams
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
+#中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
+    username: zgtams217_0618_ZJM
+    password: zgtams217_0618_ZJM
 #日志路径配置
 log:
   path: /home/tams/logs/batch
-  level: DEBUG
+  level: INFO
 logging:
   path: /home/tams/logs/batch
 #注册中心配置
@@ -372,13 +431,13 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLS_20210318_LY
     password: productLS_20210318_LY 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
   sqldiruserName: productLS_20210318_LY
   sqldirpassword: productLS_20210318_LY
   loadbalance: false
@@ -411,15 +470,21 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLS_20210318_LY
     password: productLS_20210318_LY
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLS_20210318_LY
     password: productLS_20210318_LY
+#中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//38.212.199.155:1521/orcl
+    username: TAMS
+    password: TAMS
 #日志路径配置
 log:
   path: /home/tams/logs/batch
@@ -457,13 +522,13 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLs_20210301_WY
     password: productLs_20210301_WY 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    reportSqlldrDatabaseName: 192.168.70.1:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.1:1521/orcl
   sqldiruserName: productLs_20210301_WY
   sqldirpassword: productLs_20210301_WY
   loadbalance: false
@@ -496,15 +561,21 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLs_20210301_WY
     password: productLs_20210301_WY
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@192.168.70.1:1521/orcl
     username: productLs_20210301_WY
     password: productLs_20210301_WY
+#中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//38.212.199.155:1521/orcl
+    username: TAMS
+    password: TAMS
 #日志路径配置
 log:
   path: /home/tams/logs/batch

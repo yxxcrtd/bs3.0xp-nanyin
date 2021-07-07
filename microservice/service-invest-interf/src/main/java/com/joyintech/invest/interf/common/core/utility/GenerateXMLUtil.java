@@ -12,7 +12,7 @@ public class GenerateXMLUtil {
 			//投管请求资管的验证用户名
 		    String userName = prop.getProperty("userName");
 		    //投管请求资管的验证密码
-		    String password = prop.getProperty("password");
+		    String word = prop.getProperty("word");
 		
 		// 把json串中的双引号转换为%
 		//String json2 = json.replaceAll("\"","%");
@@ -41,7 +41,7 @@ public class GenerateXMLUtil {
 		sb.append(userName);
 		sb.append("</bner08>");
 		sb.append("<bs89p7>");
-		sb.append(password);
+		sb.append(word);
 		sb.append("</bs89p7>");
 		sb.append("<bs89p8>12.99.141.61</bs89p8>");
 		sb.append("</SoapHeader>");

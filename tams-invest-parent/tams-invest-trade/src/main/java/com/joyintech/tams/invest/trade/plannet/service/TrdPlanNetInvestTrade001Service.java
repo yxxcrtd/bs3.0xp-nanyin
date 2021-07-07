@@ -137,6 +137,7 @@ public class TrdPlanNetInvestTrade001Service extends CommonExportService<TrdPlan
         		StringUtil.equals(DictCodeList.交易方向_赎回确认.getValue(), entity.getPs())) {
             if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
                 List<String> tradeids = riskCreditListCommonValidatorService.selectTradeidByBTtradid(entity.getTradeId());
+                tradeids.add(entity.getTradeId());
                 if (StringUtil.isNotEmpty(tradeids)) {
                     for(String tradeid : tradeids) {
                         riskCreditListCommonValidatorService.deleteCredit(tradeid);

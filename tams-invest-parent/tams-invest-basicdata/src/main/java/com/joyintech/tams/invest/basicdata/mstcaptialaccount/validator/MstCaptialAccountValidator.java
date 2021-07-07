@@ -165,6 +165,12 @@ public class MstCaptialAccountValidator implements BeanValidator{
                 }
             }
         }
+        /*add by lpf 2021-04-27 增加字段 账户性质*/
+        if(!StringUtil.equals(dto.getOperateType(),"delete")&&!StringUtil.equals(dto.getOperateType(),"edit")){
+            if(StringUtil.isEmpty(dto.getAccountNature())){
+                errorList.add(new ValidMessage("accountNature", getMessage("COMMON_E_0057",getMessage("MstCaptialAccount002.accountNature"))));
+            }
+        }
         return errorList;
     }
 

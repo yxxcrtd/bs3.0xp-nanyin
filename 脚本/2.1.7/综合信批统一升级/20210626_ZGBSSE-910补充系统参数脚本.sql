@@ -1,0 +1,3 @@
+DELETE FROM SYS_PARA WHERE PARA_CODE = 'SVR_TMP_PATH';
+insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
+values ('SVR', 'SVR_TMP_PATH', '/app/tams/tmp', '  ', null, '中债导出临时中转路径', 'system', null, sysdate, 'system',sysdate, null, '02');

@@ -69,7 +69,7 @@ public class PeriodicManagement001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getFinprodIds")
-	public List<SelectOptionDto> getFinprodid(){
+	public Page<SelectOptionDto> getFinprodid(){
         return periodicManagement001Service.getFinprodIds(RequestUtil.getPageParam());
     }
 

@@ -45,6 +45,19 @@ public class PtlMockTestController extends BaseService<PtlMockTestDto> {
     }
 
     /**
+     * 组合代码下拉框选项获取
+     *
+     * @param map 参数map
+     * @return 组合代码下拉框选项
+     */
+    @PostMapping("getPtlInfoForPage/{page}/{length}")
+    public Page<SelectOptionDto> getPtlInfoForPage(@RequestBody Map<String, Object> map,
+                                            @PathVariable("page") int page,
+                                            @PathVariable("length") int length) {
+        return ptlMockTestService.getPtlInfoForPage(page, length, map);
+    }
+
+    /**
      * 画面查询方法
      * 
      * @param pageParam 请求参数

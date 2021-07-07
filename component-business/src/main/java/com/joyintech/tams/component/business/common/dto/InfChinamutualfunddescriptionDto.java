@@ -46,6 +46,12 @@ public class InfChinamutualfunddescriptionDto extends InfChinamutualfunddescript
      * 基金市场行情list
      */
     private List<MstFundMarketInfo> mstFundMarketInfoList;
+    
+    /**
+     *存放中债校验不通过的基金信息
+     */
+    private List<String> errorFundList;
+    
     /**
      * 获取 baseFinProductBaseInfoList
      * @return baseFinProductBaseInfoList.
@@ -103,6 +109,13 @@ public class InfChinamutualfunddescriptionDto extends InfChinamutualfunddescript
         this.fInfoWindcodeList = fInfoWindcodeList;
     }
     
-    
+    public List<String> getErrorFundList() {
+		return errorFundList;
+	}
+
+
+	public void setErrorFundList(List<String> errorFundList) {
+		this.errorFundList = errorFundList;
+	}
 
 }

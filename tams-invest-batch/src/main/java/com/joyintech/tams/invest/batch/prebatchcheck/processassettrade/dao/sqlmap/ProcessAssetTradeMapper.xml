@@ -172,12 +172,14 @@
 			            T.NEXT_USER  AS nextUser,
 			            T.CRT_DATE AS createTaskTime,
 			            sd.institution_code instCode,
-                        '' remark 
+						nvl(chlfp.finprod_name,ssai.sec_acct_name) remark
                     from SYS_WFL_BUSINESS_LIST T
-                    inner join temp on temp.workflow_id = T.seq_no and temp.page_id ='TrdFundDuration002'
+                    inner join temp on temp.workflow_id = T.seq_no and temp.page_id in ('TrdFundDuration002','TrdBondDuration003')
                     left join WFL_TRD_PRODUCT_DEAl deal on deal.workflow_id = t.seq_no
                     left join fin_product fp on fp.finprod_id = replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"finprodId":"[^"]+"',1,1)),'"finprodId":"',''),'"','')
-                    LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+					left join fin_product chlfp on chlfp.finprod_id = replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"chlId":"[^"]+"',1,1)),'"chlId":"',''),'"','')
+					left join  STL_SEC_ACCT_INFO ssai ON  ssai.sec_acct_id = replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"secManageAcctId":"[^"]+"',1,1)),'"secManageAcctId":"',''),'"','')
+					LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
 		            LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
                     where T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
                         and deal.trade_id is null
@@ -219,5 +221,39 @@
 					where mark.page_id = 'TrdFundDuration002' and replace(replace(to_char(REGEXP_SUBSTR(mark.business_data,'"bonusMode":"[^"]+"',1,1)),'"bonusMode":"',''),'"','') = '02'
 					and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
 				)
+			union all
+		SELECT
+		T.create_user launchUser,
+		decode(t.page_id,'PtlFundAllocation003','',
+		replace(replace(to_char(REGEXP_SUBSTR(sdpm.business_data,'"portfolioId":"[^"]+"',1,1)),'"portfolioId":"',''),'"','') ) portfolioId,
+		decode(t.page_id,'PtlFundAllocation003','',
+		replace(replace(to_char(REGEXP_SUBSTR(sdpm.business_data,'"portfolioName":"[^"]+"',1,1)),'"portfolioName":"',''),'"','') ) portfolioName,
+		'' finprodId,
+		'' finprodName,
+		t.trade_id tradeId,
+		t.trade_id  totleTradeId,
+		replace(replace(to_char(REGEXP_SUBSTR(sdpm.business_data,'"settleAmt":"[^"]+"',1,1)),'"settleAmt":"',''),'"','') tradeAmt,
+		T.NEXT_USER nextUser,
+		T.CRT_DATE createTaskTime,
+		sd.institution_code instCode,
+		'银证转账管理'     remark
+		FROM SYS_WFL_BUSINESS_LIST T
+		left join (
+		select
+		pm.workflow_id workflow_id,pm.business_data business_data
+		from sys_data_process_mark pm
+		inner join(
+		select
+		workflow_id, max(his_no) HIS_NO
+		from sys_data_process_mark
+		group by workflow_id
+		) tempHis on  pm.HIS_NO = tempHis.HIS_NO and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
+		) sdpm on sdpm.workflow_id = t.seq_no
+		LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+		LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
+		WHERE T.PROCESS_STATE  not in ('END','NEW')
+		and t.seq_no not in (select workflow_id from filter)
+		AND T.BUSINESS_TYPE in ( 'PTL05')
+		and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
     </select>
 </mapper>

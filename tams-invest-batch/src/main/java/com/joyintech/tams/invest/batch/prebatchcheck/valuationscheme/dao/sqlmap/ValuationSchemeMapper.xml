@@ -8,6 +8,7 @@
 				select 
 					A.*,
 					fp.trade_market,
+					fp.profit_type,
 					nvl(fp.finprod_Name,fp.finprod_abbr) finprodName,
 					decode(ftp.type_8,'F02','02','F11','06','F01','01','F04','10','F09','11') secType
 				from (
@@ -19,26 +20,26 @@
 						a.portfolio_id,
 						a.portfolio_name,
 						a.institution_code
-					from( 
-						select 
+					from(
+						select
 							bsdp.*,
 							pp.portfolio_id,
 							pp.portfolio_name,
 							sd.institution_code,
 							rank() over(partition by BOOKSET_ID,BOK_DETAIL_ID order by BOOK_SUMMARY_ORDER desc)rn
 						from BOK_STAT_DET_POSIITON  bsdp
-						left join ptl_portfolio pp on 
-                            (case 
+						left join ptl_portfolio pp on
+                            (case
                                 when bsdp.BOOKSET_ID like '%_F28_%' THEN regexp_replace(substr(bsdp.BOOKSET_ID,0, INSTR(bsdp.BOOKSET_ID, '_F28_', 1, 1)-1), '^F16_','')
                                 else regexp_replace(bsdp.BOOKSET_ID,  '^F16_','')
-                                end 
+                                end
                             ) = pp.portfolio_id
 						left join sys_department sd on nvl(pp.create_dept,bsdp.create_dept) = sd.dept_code
-						where 
+						where
 							bsdp.BOOK_DATE = #{checkDate,jdbcType=DATE}-1 and bsdp.HAPPEN_DATE = #{checkDate,jdbcType=DATE}-1
 							and bsdp.POS_AMT!=0
 					)a
-					union 
+					union
 					/*当天交易*/
 					select distinct
 						bda.bookset_id,
@@ -50,14 +51,14 @@
 					from TRD_PRODUCT_DEAL deal
 					inner join BOK_DEAL_ACCOUNTING bda on bda.busi_no = deal.trade_Id
 						and bda.BUSI_TABLE = '02'
-					left join trd_product_deal_add tpda on tpda.trade_id = deal.trade_id 
-					left join ptl_portfolio pp on 
-                        (case 
-                            when bda.BOOKSET_ID like '%_F28_%' then regexp_replace(substr(bda.BOOKSET_ID,0, INSTR(bda.BOOKSET_ID, '_F28_', 1, 1)-1), '^F16_','') 
+					left join trd_product_deal_add tpda on tpda.trade_id = deal.trade_id
+					left join ptl_portfolio pp on
+                        (case
+                            when bda.BOOKSET_ID like '%_F28_%' then regexp_replace(substr(bda.BOOKSET_ID,0, INSTR(bda.BOOKSET_ID, '_F28_', 1, 1)-1), '^F16_','')
                             else regexp_replace(bda.BOOKSET_ID,  '^F16_','')
                         end) = pp.portfolio_id or
-                        (case 
-                            when tpda.portfolio_id like '%_F28_%' then regexp_replace(substr(tpda.portfolio_id,0, INSTR(tpda.portfolio_id, '_F28_', 1, 1)-1), '^F16_','') 
+                        (case
+                            when tpda.portfolio_id like '%_F28_%' then regexp_replace(substr(tpda.portfolio_id,0, INSTR(tpda.portfolio_id, '_F28_', 1, 1)-1), '^F16_','')
                             else regexp_replace(tpda.portfolio_id,  '^F16_','')
                         end) = pp.portfolio_id
                     left join sys_department sd on nvl(pp.create_dept,deal.create_dept) = sd.dept_code
@@ -73,17 +74,22 @@
 					A.BOOKSET_ID,a.busi_id,a.inv_aim
 				from A
 				inner join BOK_BOOKSET_PLAN bbp on  bbp.BOOKSET_ID = a.BOOKSET_ID
-				inner join BOK_VAL_SCHEME_DETAIL bvsd on bbp.SCHEME_ID = bvsd.SCHEME_ID and bvsd.vdate &lt;=  #{checkDate,jdbcType=DATE} 
-					and nvl(a.inv_aim,'999999') = NVL(bvsd.inv_Aim,'999999') AND (A.trade_market IS NULL OR A.trade_market = bvsd.trade_market)
+				inner join BOK_VAL_SCHEME_DETAIL bvsd on bbp.SCHEME_ID = bvsd.SCHEME_ID and bvsd.vdate &lt;=  #{checkDate,jdbcType=DATE}
+					and (
+					(   bvsd.sec_type in ('10','11') and  ( A.INV_AIM IS NULL OR nvl(a.inv_aim,'FVTPL') = NVL(bvsd.inv_Aim,'FVTPL') ) )
+					or (  bvsd.sec_type in ('02') and a.profit_type <![CDATA[!=]]> '03'  )
+					or (  nvl(a.inv_aim,'999999') = NVL(bvsd.inv_Aim,'999999') )
+					)
+					AND (A.trade_market IS NULL OR A.trade_market = bvsd.trade_market)
 					and a.secType = bvsd.sec_type
 			),
 			/*特殊估值方案配置*/
 			C as(
-				select 
+				select
 					A.BOOKSET_ID,a.busi_id,a.inv_aim
 				from A
 				inner join BOK_BOOKSET_PLAN bbp on  bbp.BOOKSET_ID = a.BOOKSET_ID
-				inner join BOK_VAL_SCHEME_DETAIL_SPECIAL bvsd on bvsd.SCHEME_ID = bbp.SCHEME_ID and bvsd.vdate &lt;= #{checkDate,jdbcType=DATE} 
+				inner join BOK_VAL_SCHEME_DETAIL_SPECIAL bvsd on bvsd.SCHEME_ID = bbp.SCHEME_ID and bvsd.vdate &lt;= #{checkDate,jdbcType=DATE}
 					and (bvsd.mdate is null or  bvsd.mdate &gt;=  #{checkDate,jdbcType=DATE}) and bvsd.finprod_id =  a.busi_id and nvl(a.inv_aim,'999999') = NVL(bvsd.inv_Aim,'999999')
 			)
 			select DISTINCT
@@ -94,7 +100,9 @@
 				a.bookset_id,
 				a.institution_code instCode
 			FROM a
-			WHERE NOT exists (select 1 from B where a.BOOKSET_ID = b.BOOKSET_ID and a.busi_id = b.busi_id and a.inv_aim = b.inv_aim)
+			WHERE NOT exists (select 1 from B where a.BOOKSET_ID = b.BOOKSET_ID and a.busi_id = b.busi_id and nvl(a.inv_aim,'999999') = NVL(b.inv_Aim,'999999')	)
+				and ( a.secType in ('01','06','10','11')
+		or 		( a.secType = '02'  and  a.profit_type != '03' ) )
 				and not exists(select 1 from c where a.BOOKSET_ID = c.BOOKSET_ID and a.busi_id = c.busi_id and a.inv_aim = c.inv_aim)
     </select>
 </mapper>

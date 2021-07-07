@@ -78,7 +78,7 @@ public class FinProductAnapleroticInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdIdInfo")
-    public List<SelectOptionDto> queryProdIdInfo() {
+    public Page<SelectOptionDto> queryProdIdInfo() {
         return finProductAnapleroticInfo001Service.queryProdIdInfo(RequestUtil.getPageParam());
     }
     /**

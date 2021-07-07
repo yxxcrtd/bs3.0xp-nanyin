@@ -881,6 +881,6 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getModelValue")
     public String getModelValue(@RequestParam(value="modelCode") String modelCode){
-    	return rskSupervisionIndicatorParam005Service.getModelValue(modelCode);
+    	return StringUtil.trimHtmlTag(rskSupervisionIndicatorParam005Service.getModelValue(modelCode));
     }
 }

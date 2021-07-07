@@ -1,0 +1,2 @@
+--放开计划类净值型标的的预期最高收益率校验条件
+update CHB_DATACHECK_CONDITION_INV set Status = 'E' where CHECKCONDITIONID = '784807E5-DF8C-D920-E250-007F010077FD';

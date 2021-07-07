@@ -26,11 +26,14 @@ import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductRecomment;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinRateInfo;
+import com.joyintech.tams.common.base.entity.JxsIssueInfo;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.common.base.entity.PaFinProduct;
 import com.joyintech.tams.common.base.entity.RepAssetBond;
 import com.joyintech.tams.common.base.entity.RepAssetDept;
+import com.joyintech.tams.common.base.entity.RepAssetEquity;
 import com.joyintech.tams.common.base.entity.RepFund;
+import com.joyintech.tams.component.base.report.dto.BaseRepAssetEquityInfoDto;
 
 /**
  * 〈一句话功能简述〉
@@ -109,6 +112,13 @@ public class BaseFinProductBaseInfoDto {
      * 
      */
     private RepAssetDept repAssetDept;
+    
+    /**
+     * 权益类资产中债报送
+     * 
+     */
+    private RepAssetEquity repAssetEquity;
+    
     /**
      * 债券信用评级信息
      */
@@ -119,6 +129,18 @@ public class BaseFinProductBaseInfoDto {
      * 标的类金融产品推荐表
      */
     List<FinProductRecomment> finProductRecommentList;
+    
+    /**
+     * 债券中债报送--权益类资产报送信息
+     * 
+     */    
+    private BaseRepAssetEquityInfoDto baseRepAssetEquityInfoDto;
+    
+    /**
+     * JXS_ISSUE_INFO
+     * 
+     */
+    private JxsIssueInfo jxsIssueInfo;
 
     /**
      * 获取 finProductRecommentList
@@ -391,5 +413,27 @@ public class BaseFinProductBaseInfoDto {
 		this.mstBondCreditRatingList = mstBondCreditRatingList;
 	}
     
-    
+	public BaseRepAssetEquityInfoDto getBaseRepAssetEquityInfoDto() {
+		return baseRepAssetEquityInfoDto;
+	}
+
+	public void setBaseRepAssetEquityInfoDto(BaseRepAssetEquityInfoDto baseRepAssetEquityInfoDto) {
+		this.baseRepAssetEquityInfoDto = baseRepAssetEquityInfoDto;
+	}
+
+	public JxsIssueInfo getJxsIssueInfo() {
+		return jxsIssueInfo;
+	}
+
+	public void setJxsIssueInfo(JxsIssueInfo jxsIssueInfo) {
+		this.jxsIssueInfo = jxsIssueInfo;
+	}
+
+	public RepAssetEquity getRepAssetEquity() {
+		return repAssetEquity;
+	}
+
+	public void setRepAssetEquity(RepAssetEquity repAssetEquity) {
+		this.repAssetEquity = repAssetEquity;
+	}
 }

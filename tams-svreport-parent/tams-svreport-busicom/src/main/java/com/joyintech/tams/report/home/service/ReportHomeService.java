@@ -111,9 +111,9 @@ public class ReportHomeService{
         			dtoList.addAll(reportHomeMapper.selectChbEquSub(parmMap));
         		} else if (DictCodeListExt2.报表名称_投资者持有信息登记.getValue().equals(report)){
         			dtoList.addAll(reportHomeMapper.selectChbInvestholdInfoSub(parmMap));
-        		} else if ("28".equals(report)){
-        			dtoList.addAll(reportHomeMapper.selectChbEqudetSub(parmMap));
-        		} else if (DictCodeListExt2.报表名称_资产池基本信息.getValue().equals(report)){
+        		} else if (DictCodeListExt2.报表名称_投资者明细信息登记.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectChbEqudetSub(parmMap));
+				} else if (DictCodeListExt2.报表名称_资产池基本信息.getValue().equals(report)){
         			dtoList.addAll(reportHomeMapper.selectPbcPrdAccountSub(parmMap));
         		} else if (DictCodeListExt2.报表名称_产品基本信息.getValue().equals(report)){
         			dtoList.addAll(reportHomeMapper.selectPbcPrdBaseinfoSub(parmMap));

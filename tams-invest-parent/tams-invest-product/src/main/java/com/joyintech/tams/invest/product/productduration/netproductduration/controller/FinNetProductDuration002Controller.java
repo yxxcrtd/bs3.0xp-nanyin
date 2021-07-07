@@ -497,7 +497,7 @@ public class FinNetProductDuration002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIdList")
-    public List<SelectOptionDto> getFinprodMarketIdList(String pageModel){
+    public Page<SelectOptionDto> getFinprodMarketIdList(String pageModel){
         Map<String,Object> map = RequestUtil.getPageParam();
         map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         List<String> profitTypeList = new ArrayList<String>();
@@ -516,7 +516,7 @@ public class FinNetProductDuration002Controller extends BaseController{
             map.put("userName", LoginUserUtil.getUserName());
         }
 
-        return finNetProductDurationService.getFinprodMarketIdList(map);
+        return finNetProductDurationService.getFinprodMarketIdListForPgae(map);
     }
     
     /**

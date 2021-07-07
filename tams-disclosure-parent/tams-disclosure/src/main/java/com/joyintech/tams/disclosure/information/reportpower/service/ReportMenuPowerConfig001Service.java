@@ -92,11 +92,11 @@ public class ReportMenuPowerConfig001Service extends CommonExportService<ReportM
      * @since 1.0
      */
     @DataSource(DataSourceType.OTHER)
-    public List<SysRole> selectForPage(){
+    public List<SysRole> selectForPage(Map<String, Object> params){
 //        return reportMenuPowerConfig001Mapper.select();
         return restTemplate.postForList(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ReportMenuPowerConfig002/findAllRole",
-                null, SysRole.class);
+                params, SysRole.class);
     }
     
     /** 

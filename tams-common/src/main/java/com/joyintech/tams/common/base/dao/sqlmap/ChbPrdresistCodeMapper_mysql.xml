@@ -1,7 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper_mysql">
-	<insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+        <id column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <id column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="PRODNAME" property="prodname" jdbcType="VARCHAR" />
+        <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="INVESTOR" property="investor" jdbcType="CHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PRODID PRODID, ORG_CODE ORG_CODE, PRODNAME PRODNAME, REG_CODE REG_CODE, VDATE VDATE,
+        MDATE MDATE, DEPT_CODE DEPT_CODE, INVESTOR INVESTOR, REMARK REMARK, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper.Base_Column_List" />
+        from CHB_PRDRESIST_CODE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper.Base_Column_List" />
+        from CHB_PRDRESIST_CODE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper.Base_Column_List" />
+        from CHB_PRDRESIST_CODE
+        <where>
+            1=1
+            <if test="reg_code != null  and flag == '1'.toString()" >
+                and REG_CODE = #{reg_code,jdbcType=VARCHAR}
+            </if>
+            <if test="prodid != null and flag == '2'.toString()" >
+                and PRODID = #{prodid,jdbcType=VARCHAR}
+            </if>
+        </where>
+        <!-- where REG_CODE = #{reg_code,jdbcType=VARCHAR} -->
+        <!--  where PRODID = #{prodid,jdbcType=VARCHAR} -->
+        <!-- and ORG_CODE = #{orgCode,jdbcType=VARCHAR} -->
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey" >
+        delete from CHB_PRDRESIST_CODE
+        where PRODID = #{prodid,jdbcType=VARCHAR}
+          and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="selectBankCodeByOrgCode" resultType ="java.lang.String" parameterType="java.lang.String">
+    	SELECT T.REGIST_BANK_CODE FROM CHB_ORG_REGIST_BANK_CODE T WHERE T.ORG_CODE = #{orgCode, jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_PRDRESIST_CODE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+        insert into CHB_PRDRESIST_CODE (PRODID, ORG_CODE, PRODNAME,
+            REG_CODE, VDATE, MDATE,
+            DEPT_CODE, INVESTOR, REMARK,
+            UPDATE_USER, UPDATE_TIME, CREATE_USER,
+            CREATE_TIME, CREATE_DEPT)
+        values (#{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{prodname,jdbcType=VARCHAR},
+            #{regCode,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE},
+            #{deptCode,jdbcType=VARCHAR}, #{investor,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         insert into CHB_PRDRESIST_CODE
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="prodid != null" >
@@ -90,7 +164,17 @@
             </if>
         </trim>
     </insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+        insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, PRODNAME, REG_CODE, VDATE, MDATE,
+        DEPT_CODE, INVESTOR, REMARK, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
+        CREATE_DEPT)
+        select PRODID, ORG_CODE, PRODNAME, REG_CODE, VDATE, MDATE,
+            DEPT_CODE, INVESTOR, REMARK, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME,
+            CREATE_DEPT
+             from CHB_PRDRESIST_CODE
+             where STATUS = 'E' and PRODID = #{prodid,jdbcType=VARCHAR} and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         update CHB_PRDRESIST_CODE
         <set >
             <if test="prodname != null" >
@@ -128,5 +212,74 @@
         where PRODID = #{prodid,jdbcType=VARCHAR}
        
           
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+        update CHB_PRDRESIST_CODE
+        <set >
+            <if test="prodid != null" >
+                PRODID = #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="prodname != null" >
+                PRODNAME = #{prodname,jdbcType=VARCHAR},
+            </if>
+            <if test="regCode != null" >
+                REG_CODE = #{regCode,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="investor != null" >
+                INVESTOR = #{investor,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+        update CHB_PRDRESIST_CODE
+        set
+        PRODID = #{prodid,jdbcType=VARCHAR},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        PRODNAME = #{prodname,jdbcType=VARCHAR},
+        REG_CODE = #{regCode,jdbcType=VARCHAR},
+        VDATE = #{vdate,jdbcType=DATE},
+        MDATE = #{mdate,jdbcType=DATE},
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        INVESTOR = #{investor,jdbcType=CHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
+        update CHB_PRDRESIST_CODE
+        set PRODNAME = #{prodname,jdbcType=VARCHAR},
+            REG_CODE = #{regCode,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            INVESTOR = #{investor,jdbcType=CHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where PRODID = #{prodid,jdbcType=VARCHAR}
+          and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </update>
 </mapper>

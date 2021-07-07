@@ -1,0 +1,1 @@
+update BOK_TABLEDICT set DICT_NAME ='交易费用（不随交易支付）' where DICT_ID='71' and TABLE_ID ='1301';

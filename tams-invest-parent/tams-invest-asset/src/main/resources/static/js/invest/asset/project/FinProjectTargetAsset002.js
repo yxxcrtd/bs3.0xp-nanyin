@@ -318,31 +318,43 @@ $(function() {
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetType_div').show();
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetTyprExplain_div').show();
             $('#bussRepOtherInvestTargetInfoDto_isUnlisted_div').hide();
-            $('#bussRepOtherInvestTargetInfoDto_div').show();   
-            $('#bussRepOtherInvestTargetInfoDto_repFinancier').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancier').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustry1').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustry1').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repProIndustry').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repProIndustry').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').val('').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').val('N').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').attr('disabled',true).trigger('change');
-		    $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').val('N').trigger('change'); 
-		    $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').attr('disabled',true).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_project_div1').hide();
+            $('#bussRepOtherInvestTargetInfoDto_project_div2').hide();
+            $('#bussRepOtherInvestTargetInfoDto_div').show();
+            if(repAssetType=="1299"){
+            	$('#bussRepOtherInvestTargetInfoDto_project_div1').show();
+            	$('#bussRepOtherInvestTargetInfoDto_project_div2').show();
+            }
+
+
+            /****ZGBSSE-595  【中债直连check】新建项目类资产，报送信息页面“融资人”check未满足报送规范***/
+            // $('#bussRepOtherInvestTargetInfoDto_repFinancier').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancier').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustry1').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustry1').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repProIndustry').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repProIndustry').attr('disabled',true).trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').val('').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').attr('disabled',true).trigger('change');
+
+            /***ZGBSSE-601 【中债直连check】新建项目类资产，资产负债类别为1299，2299时，“项目是否属于重点监控行业和领域”字段无法编辑***/
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').val('N').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').attr('disabled',true).trigger('change');
+		    /***ZGBSSE-598  【中债直连check】新建项目类资产，当资产负债类别为1299 、2299时，“是否有预期收益率”字段无法编辑***/
+		    // $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').val('N').trigger('change');
+		    // $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').attr('disabled',true).trigger('change');
         }else if(repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"||repAssetType=="1205"||repAssetType=="2202"
             ||repAssetType=="1206"||repAssetType=="1207"||repAssetType=="1208"||repAssetType=="1209"||repAssetType=="2201"){
             $('#bussRepAssetCreditNonstdInfoDto_div').show();  
@@ -352,6 +364,14 @@ $(function() {
             	$('#bussRepAssetCreditNonstdInfoDto_repIsResale').val('N').trigger('change'); 
             	$('#bussRepAssetCreditNonstdInfoDto_repIsResale').attr('disabled',true).trigger('change');
             }*/
+
+            /****ZGBSSE-676  【中债直连check】新建项目类资产，当资产负债类别为[2201][2202]时，“分期还本条款标识”字段应不可填写且为空**/
+            if(repAssetType=="2201"||repAssetType=="2202"){
+                $('#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag').val('').trigger('change');
+                $('#bussRepAssetCreditNonstdInfoDto_repRepaymentType').val('').trigger('change');
+            }
+
+
             // 中债新增 20200408 信贷资产流转项目，法定到期日置灰不可填 start
             $('#bussRepAssetCreditNonstdInfoDto_repFmdate').attr('disabled',false).trigger('change');
             //含权类型 选填
@@ -377,6 +397,15 @@ $(function() {
 		    	$('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').val('').trigger('change'); 
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').attr('disabled',true).trigger('change');
 		    }
+		    //计息类型
+		   // $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',false).trigger('change');
+		    //担保方式
+            $('#bussRepAssetCreditNonstdInfoDto_repGuaType').attr('disabled',false).trigger('change');
+            //递延利息是否计息
+            $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').attr('disabled',false).trigger('change');
+            //行权价格
+            $('#bussRepAssetCreditNonstdInfoDto_repExercisePrice').attr('disabled',false).trigger('change');
+
 		    //[资产/负债类别]为“收/受益权[1205]”以外时,收/受益权类型不可填
 		    if(repAssetType != "1205"){
 		    	$('#bussRepAssetCreditNonstdInfoDto_repProfitType').val('').trigger('change'); 
@@ -418,7 +447,18 @@ $(function() {
 			    //部分赎回比例% 置灰不可填
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').val('').trigger('change'); 
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').attr('disabled',true).trigger('change');
-			    
+			    //计息类型 置灰不可填
+			     $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').val('').trigger('change');
+                 $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',true).trigger('change');
+                 //担保方式不可填写
+                 $('#bussRepAssetCreditNonstdInfoDto_repGuaType').val('').trigger('change');
+                 $('#bussRepAssetCreditNonstdInfoDto_repGuaType').attr('disabled',true).trigger('change');
+                 //递延利息是否计息
+                 $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').val('').trigger('change');
+                 $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').attr('disabled',true).trigger('change');
+                 //行权价格
+                 $('#bussRepAssetCreditNonstdInfoDto_repExercisePrice').val('').trigger('change');
+                 $('#bussRepAssetCreditNonstdInfoDto_repExercisePrice').attr('disabled',true).trigger('change');
             }
             //新增可投资资产时，部分赎回比例%不可填
             if(type9=="08"){
@@ -426,6 +466,15 @@ $(function() {
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').attr('disabled',true).trigger('change');
 	            $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').val('').trigger('change'); 
 			    $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').attr('disabled',true).trigger('change');
+            }
+            if(repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"||repAssetType=="1205"
+                           ||repAssetType=="1206"||repAssetType=="1207"||repAssetType=="1208"||repAssetType=="1209"){
+               $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').attr('disabled',false).trigger('change');
+               $('#bussRepAssetCreditNonstdInfoDto_repBasicAssetType').val('').trigger('change');
+               if($('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestType').val()!=null &&　$('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestType').val()!='' && $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestType').val()=='01'){
+                   $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').val('').trigger('change');
+                   $('#bussRepAssetCreditNonstdInfoDto_repDeferredInterestInt').attr('disabled',true).trigger('change');
+               }
             }
             // 中债新增 20200408 end
         }else if(repAssetType=="1201"||repAssetType=="1210"){
@@ -717,6 +766,15 @@ $(function() {
             repCouponSpecies();
 	        getPayInterestStdInfoElementById('payCycle').change(function(){
 	            repCouponSpecies();
+	            console.log('是多少',$("#finPayInterestStdInfoDto_payCycle").val())
+	            if($("#finPayInterestStdInfoDto_payCycle").val() == '08'){
+                    $("#finPayInterestStdInfoDto_remark").attr("required", true);
+                    star();
+                    console.log('进来了')
+                    } else {
+                        $("#finPayInterestStdInfoDto_remark").attr("required", false);
+                        star();
+                    }
 	        });
 	        $("#bussFinRepaymentDto_payCycle").change(function(){
 	            repCouponSpecies();
@@ -811,24 +869,33 @@ $(function() {
         }else{
         	$("#bussRepAssetCreditNonstdInfoDto_repCouponSpecies").val('').attr('disabled',true).trigger('change');
         }
+        var repAssetType = $('#repAssetType').val();
+        if(repAssetType!=null && (repAssetType=="2201" || repAssetType=="2202")){
+             //计息类型 置灰不可填
+          	 $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').val('').trigger('change');
+             $('#bussRepAssetCreditNonstdInfoDto_repCouponSpecies').attr('disabled',true).trigger('change');
+        }
     }
 
     //【还本方式】、【分期还本条款标识】默认规则 20200409
     var byPayCycle = function(){
         //【还本方式】、【分期还本条款标识】默认规则 20200409
-        if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_16){
-            $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_01).attr('disabled',true).trigger('change');
-            $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_99).attr('disabled',true).trigger('change');
-        }else if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_07){
-            $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
-            $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_02).attr('disabled',true).trigger('change');
-        }else if($("#bussFinRepaymentDto_payCycle").val()!=""){
-            $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
-            $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_01).attr('disabled',true).trigger('change');
-        }else{
-            $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
-            $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val('').attr('disabled',true).trigger('change');
+        /****ZGBSSE-676  【中债直连check】新建项目类资产，当资产负债类别为[2201][2202]时，“分期还本条款标识”字段应不可填写且为空**/
+        if($('#repAssetType').val()!=2201&&$('#repAssetType').val()!=2202){
+            if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_16){
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_01).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_99).attr('disabled',true).trigger('change');
+            }else if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_07){
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_02).attr('disabled',true).trigger('change');
+            }else if($("#bussFinRepaymentDto_payCycle").val()!=""){
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_01).attr('disabled',true).trigger('change');
+            }else{
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val('').attr('disabled',true).trigger('change');
 
+            }
         }
     }
     //【利息分布方式】默认规则 20200409

@@ -592,12 +592,12 @@
                                 ["指令生成要素", "生成划款指令"]));
                             return true;
                         } else if (typeof currentDealObj == "object") {
-                            for (var i in currentDealObj) {
-                                if (i == "createTime" || i == "updateTime") {
+                            for (var j in currentDealObj) {
+                                if (j == "createTime" || j == "updateTime") {
                                     continue;
                                 }
-                                if (typeof currentDealObj[i] != "object"
-                                    && backupDealObj[i] != currentDealObj[i]) {
+                                if (typeof currentDealObj[j] != "object"
+                                    && backupDealObj[j] != currentDealObj[j]) {
                                     Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
                                         ["指令生成要素", "生成划款指令"]));
                                     return true;

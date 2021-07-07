@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.trdrepotrade.validator;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -60,6 +61,10 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
     
 	@Autowired
 	private TradeCommonService tradeCommonService;
+    /**
+     * 白名单校验正则表达式
+     */
+    private static final String whitePattern = "^[\\u4e00-\\u9fa5\\ue815-\\ue864\\uff01-\\uff5e\\uffe0-\\uffe5\\u3000-\\u3003\\u3005-\\u3017\\u301d-\\u301e\\u2010\\u2013-\\u2016\\u2018-\\u2019\\u201c-\\u201d\\u2025-\\u2026\\u2030\\u2032-\\u2033\\u2035\\u203b\\u00b7\\u0030-\\u0039\\u0041-\\u005a\\u0061-\\u007a\\u2160-\\u216b\\u0020-\\u0026\\u0028-\\u007B\\u007D\\u007E]{0,}$";
 
     /**
      * {@inheritDoc}
@@ -309,7 +314,7 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
 
         
         if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmpty(inputDto.getSecAcctId())) {
-            errorList.add(new ValidMessage("chlId","通道代码和证券账户不能同时为空。"));
+            errorList.add(new ValidMessage("chlId","合作资产和证券账户不能同时为空。"));
         }
 
         // 1、  交易场所：银行间，必须上传成交单
@@ -373,28 +378,6 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
 	        }
         }
 	    // add by chenlei1 2020-03-17--end----
-        // MODIFY BY WJ 20200818
-        if (  StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue() , inputDto.getPs())
-        && ( StringUtil.equals(inputDto.getTradeMarket(), DictCodeList.交易流通场所_银行间债券市场.getValue())
-                || (  StringUtil.equals(inputDto.getTradeMarket(), DictCodeList.交易流通场所_上海证券交易所.getValue()) && StringUtil.equals(inputDto.getRepoType(), DictCodeList.回购类型_质押式协议回购.getValue()))
-        ) ) {
-
-            if(inputDto.getBussRepoSec() == null || inputDto.getBussRepoSec().getTotalPrinAmt()==null || StringUtil.isEmptyList(inputDto.getBussRepoSec().getPledgeBondList())){
-
-                errorList.add(new ValidMessage("","请输入质押券信息！"));
-
-            }else {
-
-                BigDecimal prinAmt = inputDto.getPrinAmt()==null ? BigDecimal.ZERO :inputDto.getPrinAmt() ;
-                BigDecimal totalPrinAmt = inputDto.getBussRepoSec() == null ? BigDecimal.ZERO : inputDto.getBussRepoSec().getTotalPrinAmt();
-                if (totalPrinAmt.compareTo(prinAmt) < 0) {
-                    ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_00122"));
-                    errorList.add(validMessage);
-                }
-            }
-
-        }
-        // end
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
         if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
@@ -408,6 +391,10 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
             }
         }
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end
+        if (null!=inputDto.getRemark() && !inputDto.getRemark().matches(whitePattern)){
+            ValidMessage validMessage = new ValidMessage("",getMessage("备注必须填写白名单中的文字"));
+            errorList.add(validMessage);
+        }
         return errorList;
     }
 }

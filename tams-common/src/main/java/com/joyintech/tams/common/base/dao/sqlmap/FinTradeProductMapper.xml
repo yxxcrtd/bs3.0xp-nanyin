@@ -652,4 +652,10 @@
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
     </update>
+    <select id="findEntrustIdByTradeId" resultType="java.lang.String">
+        select tpda.ENTRUST_ID from TRD_PRODUCT_DEAL deal
+            inner join TRD_PRODUCT_DEAL_ADD tpda on deal.TRADE_ID = tpda.TRADE_ID
+        where deal.IS_CANCEL ='N' and deal.TRADE_STATUS = '01'
+        and deal.TRADE_ID  = #{tradeId,jdbcType=VARCHAR}
+    </select>
 </mapper>

@@ -99,7 +99,7 @@ public class FinProductDurDeal001Controller extends BaseController {
      */
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
-    public List<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param)
+    public Page<SelectOptionDto> queryProdIdInfo(@RequestParam Map<String, Object> param)
             throws Exception {
         return finProductDurDeal001Service.queryProdIdInfo(param);
     }

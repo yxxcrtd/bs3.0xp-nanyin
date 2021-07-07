@@ -9,7 +9,6 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.trade.dto.BussTrdAvailableCashQuery;
 import com.joyintech.tams.constant.DictCode;
@@ -17,6 +16,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.fund.dto.FundAssetTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.fund.service.FundAssetTransfer001Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
@@ -53,17 +53,15 @@ public class FundAssetTransfer001Controller extends BaseController {
      */
     @Autowired
     private FundAssetTransfer001Service fundAssetTransfer001Service;
-    /**
-     * bussCommonMapperDelegateService
-     */
-    @Autowired
-    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
     /**
      * 主键生成类
      */
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -247,6 +245,19 @@ public class FundAssetTransfer001Controller extends BaseController {
                         confirmMsg = "多笔转仓交易中单位净值不一致，是否确认提交？";
                         break;
                     }
+                }
+            }
+        }
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (FundAssetTransfer001Dto ptl : dto.getFunAssetTransferDtoList()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    errorList.add(new ValidMessage("交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！"));
                 }
             }
         }

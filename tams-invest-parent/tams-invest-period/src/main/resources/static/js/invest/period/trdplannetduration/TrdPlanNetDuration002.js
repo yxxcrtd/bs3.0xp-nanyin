@@ -817,6 +817,11 @@ var bonusModeChange = function() {
      * 画面加载完成
      */
     $(function() {
+        //通过来账分拣初始化的页面交易金额不可改变
+        if(pageModel==PAGE_MODEL_NEW&&isFromCheck&&isFromCheck=='true'){
+            $("#tradeAmt").attr("disabled",true);
+        }
+
 //    1.资产代码下拉框选择后，联动带出 币种、资产类型、资产名称、金融产品代码、发行人
         $('#finprodMarketId').change(function(){
             var finprodMarketId = $('#finprodMarketId').val();

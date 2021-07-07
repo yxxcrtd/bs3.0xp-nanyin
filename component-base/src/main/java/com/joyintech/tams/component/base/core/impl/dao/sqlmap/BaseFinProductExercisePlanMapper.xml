@@ -27,7 +27,7 @@
         MDATE mdate, EXERCISE_STATUS exerciseStatus, EXERCISE_PRICE exercisePrice, EXERCISE_REMARK exerciseRemark, 
         FINPROD_ID finprodId, FINPROD_TYPE finprodType, FINPROD_TYPE2 finprodType2, BRANCH branch, 
         CREATE_USER createUser, CREATE_DEPT createDept, CREATE_TIME createTime, UPDATE_USER updateUser, 
-        UPDATE_TIME updateTime
+        UPDATE_TIME updateTime,ACT_EXERCISE_DATE actExerciseDate
         	from FIN_EXERCISE_PLAN
         	<where>
         		<if test="cashId !=null and cashId !=''">

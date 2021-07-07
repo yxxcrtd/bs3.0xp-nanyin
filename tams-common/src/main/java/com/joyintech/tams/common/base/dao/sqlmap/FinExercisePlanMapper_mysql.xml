@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinExercisePlanMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinExercisePlan" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="EXERCISE_TYPE" property="exerciseType" jdbcType="VARCHAR" />
+        <id column="EXERCISE_DATE" property="exerciseDate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="EXERCISE_STATUS" property="exerciseStatus" jdbcType="VARCHAR" />
+        <result column="EXERCISE_PRICE" property="exercisePrice" jdbcType="DECIMAL" />
+        <result column="EXERCISE_REMARK" property="exerciseRemark" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ACT_EXERCISE_DATE" property="actExerciseDate" jdbcType="DATE" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, EXERCISE_TYPE EXERCISE_TYPE, EXERCISE_DATE EXERCISE_DATE, VDATE VDATE,
+        MDATE MDATE, EXERCISE_STATUS EXERCISE_STATUS, EXERCISE_PRICE EXERCISE_PRICE, EXERCISE_REMARK EXERCISE_REMARK,
+        FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, BRANCH BRANCH,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME, ACT_EXERCISE_DATE ACT_EXERCISE_DATE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinExercisePlanMapper.Base_Column_List" />
+        from FIN_EXERCISE_PLAN
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinExercisePlanMapper.Base_Column_List" />
+        from FIN_EXERCISE_PLAN
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinExercisePlanKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinExercisePlanMapper.Base_Column_List" />
+        from FIN_EXERCISE_PLAN
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+        and EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR}
+        and EXERCISE_DATE = #{exerciseDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinExercisePlanKey" >
+        delete from FIN_EXERCISE_PLAN
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR}
+          and EXERCISE_DATE = #{exerciseDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinExercisePlan" >
+        insert into FIN_EXERCISE_PLAN (CASH_ID, EXERCISE_TYPE, EXERCISE_DATE,
+            VDATE, MDATE, EXERCISE_STATUS,
+            EXERCISE_PRICE, EXERCISE_REMARK, FINPROD_ID,
+            FINPROD_TYPE, FINPROD_TYPE2, BRANCH,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, ACT_EXERCISE_DATE
+            )
+        values (#{cashId,jdbcType=VARCHAR}, #{exerciseType,jdbcType=VARCHAR}, #{exerciseDate,jdbcType=DATE},
+            #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{exerciseStatus,jdbcType=VARCHAR},
+            #{exercisePrice,jdbcType=DECIMAL}, #{exerciseRemark,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR},
+            #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{actExerciseDate,jdbcType=DATE}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinExercisePlan" >
+        insert into FIN_EXERCISE_PLAN
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="exerciseType != null" >
+                EXERCISE_TYPE,
+            </if>
+            <if test="exerciseDate != null" >
+                EXERCISE_DATE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="exerciseStatus != null" >
+                EXERCISE_STATUS,
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE,
+            </if>
+            <if test="exerciseRemark != null" >
+                EXERCISE_REMARK,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="actExerciseDate != null" >
+                ACT_EXERCISE_DATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="exerciseType != null" >
+                #{exerciseType,jdbcType=VARCHAR},
+            </if>
+            <if test="exerciseDate != null" >
+                #{exerciseDate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="exerciseStatus != null" >
+                #{exerciseStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="exercisePrice != null" >
+                #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exerciseRemark != null" >
+                #{exerciseRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="actExerciseDate != null" >
+                #{actExerciseDate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinExercisePlan" >
+        insert into FIN_EXERCISE_PLAN(CASH_ID, EXERCISE_TYPE, EXERCISE_DATE, VDATE, MDATE,
+        EXERCISE_STATUS, EXERCISE_PRICE, EXERCISE_REMARK, FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2,
+        BRANCH, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ACT_EXERCISE_DATE
+        )
+        select CASH_ID, EXERCISE_TYPE, EXERCISE_DATE, VDATE, MDATE,
+            EXERCISE_STATUS, EXERCISE_PRICE, EXERCISE_REMARK, FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2,
+            BRANCH, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ACT_EXERCISE_DATE
+
+             from FIN_EXERCISE_PLAN
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR} and EXERCISE_DATE = #{exerciseDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinExercisePlan" >
+        update FIN_EXERCISE_PLAN
+        <set >
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="exerciseStatus != null" >
+                EXERCISE_STATUS = #{exerciseStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exerciseRemark != null" >
+                EXERCISE_REMARK = #{exerciseRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="actExerciseDate != null" >
+                ACT_EXERCISE_DATE = #{actExerciseDate,jdbcType=DATE},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+        and EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR}
+        and EXERCISE_DATE = #{exerciseDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinExercisePlan" >
+        update FIN_EXERCISE_PLAN
+        set VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            EXERCISE_STATUS = #{exerciseStatus,jdbcType=VARCHAR},
+            EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            EXERCISE_REMARK = #{exerciseRemark,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ACT_EXERCISE_DATE = #{actExerciseDate,jdbcType=DATE}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR}
+          and EXERCISE_DATE = #{exerciseDate,jdbcType=DATE}
+    </update>
+</mapper>

@@ -137,18 +137,20 @@ public class CorpActionSmfDivMsg extends MsgExecuteService{
 			msgcontainer.setObjID(div.getId());
 			msgcontainer.setEntityObj(div);
 		}else if(operation.equalsIgnoreCase(update)){
-			oldSmfDiv.setCusip(div.getCusip());
-			oldSmfDiv.setCaType(caType);
-			oldSmfDiv.setRecordDate(div.getRecordDate());
-			oldSmfDiv.setExDate(div.getExDate());
-			oldSmfDiv.setPayDate(div.getPayDate());
-			oldSmfDiv.setRate(div.getRate());
-			oldSmfDiv.setLastUpdate(new Date());
-			
-			smfDivDao.updateEntity(oldSmfDiv);
-			
-			msgcontainer.setObjID(oldSmfDiv.getId());
-			msgcontainer.setEntityObj(oldSmfDiv);
+			if (oldSmfDiv != null){
+				oldSmfDiv.setCusip(div.getCusip());
+				oldSmfDiv.setCaType(caType);
+				oldSmfDiv.setRecordDate(div.getRecordDate());
+				oldSmfDiv.setExDate(div.getExDate());
+				oldSmfDiv.setPayDate(div.getPayDate());
+				oldSmfDiv.setRate(div.getRate());
+				oldSmfDiv.setLastUpdate(new Date());
+
+				smfDivDao.updateEntity(oldSmfDiv);
+
+				msgcontainer.setObjID(oldSmfDiv.getId());
+				msgcontainer.setEntityObj(oldSmfDiv);
+			}
 		}
 	}
 

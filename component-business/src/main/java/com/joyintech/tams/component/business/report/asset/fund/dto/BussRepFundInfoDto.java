@@ -145,7 +145,10 @@ public class BussRepFundInfoDto extends RepFund {
         return super.getRepTrustPartyName();
     }
 
-    
+    @Length(fieldName = "BussRepFundInfo.repMngPartyName", max = 200, groups = {ValidateGroupEdit.class})
+    public String getRepMngPartyName(){
+        return super.getRepMngPartyName();
+    }
     /**
      * 获取 finprodType2
      * @return finprodType2.

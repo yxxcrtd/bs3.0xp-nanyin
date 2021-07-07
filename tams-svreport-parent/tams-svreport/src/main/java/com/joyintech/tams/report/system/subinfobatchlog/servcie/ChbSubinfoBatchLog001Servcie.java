@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -68,7 +69,7 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 				stringBuilder.append("没有文件").append(",");
 				continue;
 			}
-			File file = new File(dataFile.getCompresFilePath());
+			File file = new SafelyFile(dataFile.getCompresFilePath());
 			if (!file.exists()) {
 				String filePath = dataFile.getCompresFilePath();
 				String[] filePathSplit = filePath.split("/");
@@ -98,7 +99,7 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 		}
 		List<File> sourceFiles = new ArrayList<File>(16);
 		for (ChbSubinfoBatchLog001Dto dataFile : fileList) {
-			File file = new File(dataFile.getCompresFilePath());
+			File file = new SafelyFile(dataFile.getCompresFilePath());
 			if(!file.exists()){
 				UploadFile	 upd=  fileAttachmentProcess.fetch(dataFile.getCompresFileId());
 				sourceFiles.add(upd.getTargetFile());
@@ -116,13 +117,13 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 			String exportFilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 			String zipFileName = "中债报送文件" + DateUtil.getCurrentDateTime() + ".zip";
 			zipFileName = zipFileName.replaceAll(":", "-");
-			outFile = new File(exportFilePath + File.separator + zipFileName);
+			outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
 			try {
-				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new File[] {}));
+				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new SafelyFile[] {}));
 			} catch (Exception e) {
 				e.printStackTrace();
 //				// 压缩文件失败后，删除所有临时文件

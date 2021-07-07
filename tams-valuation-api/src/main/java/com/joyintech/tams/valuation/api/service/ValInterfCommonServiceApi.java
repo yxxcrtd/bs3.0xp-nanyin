@@ -590,7 +590,9 @@ public class ValInterfCommonServiceApi {
                 // 定义 变量.产品对应账套Dto ValBooksetInfoDto
                 ValBooksetInfoDto dto = new ValBooksetInfoDto();
                 // 变量.产品对应账套Dto.账套代码 = 变量.入库账套DTO.账套代码
-                dto.setBooksetId(bokBookset.getBooksetId());
+                if (bokBookset != null){
+                    dto.setBooksetId(bokBookset.getBooksetId());
+                }
                 // 变量.本次新增产品对应账套List.add（变量.产品对应账套Dto）
                 listValBooksetInfoDto.add(dto);
             }
@@ -689,17 +691,21 @@ public class ValInterfCommonServiceApi {
         			qtMap.put("SHOW_BEFORE_DEC_DIGITS", mapBooksetParam.get(key));
         			qtMap.put("SHOW_AFTER_DEC_DIGITS", mapBooksetParam.get(key));
                     qtMap.put("SHOW_TOTBOUNS_DEC_DIGITS", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else if("VAL_DEC_TYPE".equals(key)){
         			qtMap.put("SHOW_BEFORE_DEC_TYPE", mapBooksetParam.get(key));
         			qtMap.put("SHOW_AFTER_DEC_TYPE", mapBooksetParam.get(key));
                     qtMap.put("SHOW_TOTBOUNS_DEC_TYPE", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else if("YEILD_DEC_DIGITS".equals(key)){
         			qtMap.put("TDY_YEILD_DEC_DIGITS", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else if("YEILD_DEC_TYPE".equals(key)){
         			qtMap.put("DAY7_YEILD_DEC_TYPE", mapBooksetParam.get(key));
+                    qtMap.put(key, mapBooksetParam.get(key));
         		}
         		else{
         			qtMap.put(key, mapBooksetParam.get(key));

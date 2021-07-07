@@ -84,8 +84,8 @@ public class ReportMenuPowerConfig001Service extends CommonExportService<ReportM
      * @since 1.0
      */
     @DataSource(DataSourceType.OTHER)
-    public List<SysRole> selectForPage(){
-        return reportMenuPowerConfig001Mapper.select();
+    public List<SysRole> selectForPage(Map<String, Object> params){
+        return reportMenuPowerConfig001Mapper.select(params);
     }
     
     /**

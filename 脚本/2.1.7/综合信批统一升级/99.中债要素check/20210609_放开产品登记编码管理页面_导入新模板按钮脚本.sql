@@ -1,0 +1,1 @@
+update PAGE_ELEMENT_CONFIG set IS_SHOW = 'Y' where page_id = 'ProRegistCodeManage001' and element_id = 'ProRegistCodeManage001_btn_importnew';

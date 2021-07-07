@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -166,7 +167,7 @@ public class InterfUtil {
         try {
             // 本地文件系统方式
             if (StringUtil.equals(ftpType, "03")) {
-                File remoteDir = new File(remotePath);
+                File remoteDir = new SafelyFile(remotePath);
                 if (remoteDir.exists() && remoteDir.isDirectory()) {
 //                    Collection<File> files = FileUtils.listFiles(remoteDir,
 //                        new String[] {"xml", "txt"}, false);
@@ -180,7 +181,7 @@ public class InterfUtil {
                         if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
                             return fileName.contains((String)name);
                         })) {
-                            File lf = new File(localPath + File.separatorChar + fileName);
+                            File lf = new SafelyFile(localPath + File.separatorChar + fileName);
                             if (!lf.exists()) {
                                 lf.createNewFile();
                                 FileUtils.copyFile(ff, lf);
@@ -201,7 +202,7 @@ public class InterfUtil {
                         if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
                             return fileName.contains((String)name);
                         })) {
-                            File lf = new File(localPath + File.separatorChar + fileName);
+                            File lf = new SafelyFile(localPath + File.separatorChar + fileName);
                             if (!lf.exists()) {
                                 SftpUtil.downloadSftp(remotePath, entry.getFilename(), localPath);
                             }
@@ -245,7 +246,7 @@ public class InterfUtil {
         try {
             // 本地文件系统方式
             if (StringUtil.equals(ftpType, "03")) {
-                File remoteDir = new File(remotePath);
+                File remoteDir = new SafelyFile(remotePath);
                 if (remoteDir.exists() && remoteDir.isDirectory()) {
                     Collection<File> files = FileUtils.listFiles(remoteDir,
                         new String[] {reportInterfOkFileExtension}, false);
@@ -313,7 +314,7 @@ public class InterfUtil {
         try {
             // 本地文件系统方式
             if (StringUtil.equals(ftpType, "03")) {
-                File remoteDir = new File(remotePath);
+                File remoteDir = new SafelyFile(remotePath);
                 if (remoteDir.exists() && remoteDir.isDirectory()) {
                     Collection<File> files = FileUtils.listFiles(remoteDir,
                         null, false);
@@ -321,7 +322,7 @@ public class InterfUtil {
                         String name = ff.getName();
                         if (StringUtil.equals(name, fileName)) {
                             FileUtils.moveFileToDirectory(ff,
-                                new File(remotePath + File.separatorChar + newRemotePath), true);
+                                new SafelyFile(remotePath + File.separatorChar + newRemotePath), true);
                         }
                     }
                 }
@@ -365,7 +366,7 @@ public class InterfUtil {
      */
     public static void deleteLocalTmpFile(String localPath) {
         try {
-            File localDir = new File(localPath);
+            File localDir = new SafelyFile(localPath);
             if (localDir.exists() && localDir.isDirectory()) {
                 Collection<File> files = FileUtils.listFiles(localDir,
                     new String[] {"xml", "txt", "tmp"}, false);
@@ -396,7 +397,7 @@ public class InterfUtil {
      */
     public static void deleteLocalTmpFile(String localPath,List<String> containsFile) {
         try {
-            File localDir = new File(localPath);
+            File localDir = new SafelyFile(localPath);
             if (localDir.exists() && localDir.isDirectory()) {
                 Collection<File> files = FileUtils.listFiles(localDir,
                     new String[] {"xml", "txt", "tmp"}, false);
@@ -440,7 +441,7 @@ public class InterfUtil {
         try {
             // 本地文件系统方式
             if (StringUtil.equals(ftpType, "03")) {
-                File remoteDir = new File(remotePath);
+                File remoteDir = new SafelyFile(remotePath);
                 if (remoteDir.exists() && remoteDir.isDirectory()) {
                     Collection<File> files = FileUtils.listFiles(remoteDir,
                         null, false);
@@ -448,7 +449,7 @@ public class InterfUtil {
                         String name = ff.getName();
                         if (StringUtil.equals(name, fileName)) {
                             FileUtils.moveFileToDirectory(ff,
-                                new File(remotePath + File.separatorChar + newRemotePath), true);
+                                new SafelyFile(remotePath + File.separatorChar + newRemotePath), true);
                         }
                     }
                 }
@@ -485,7 +486,7 @@ public class InterfUtil {
 	 * @return
 	 */
 	public static List<String> getFileNamesNotHandle(String path) {
-		String[] fileNames = new File(path).list();
+		String[] fileNames = new SafelyFile(path).list();
 		if (fileNames == null) {
 			return null;
 		}
@@ -502,9 +503,9 @@ public class InterfUtil {
 
 	// 修改文件名
 	public static void replaceFileName(String allPath, String fileName) {
-		File file = new File(allPath + fileName);
+		File file = new SafelyFile(allPath + fileName);
 		if(!file.exists()) {
-			file = new File(allPath + File.separator + fileName);
+			file = new SafelyFile(allPath + File.separator + fileName);
 		}
 		StringBuffer buffer = new StringBuffer(allPath + File.separatorChar
 				+ fileName);
@@ -514,10 +515,10 @@ public class InterfUtil {
 		 * 程序中会出现，重命名之后。原有的文件与重命名的文件共存的情况。 （没有解决）
 		 * 所以当发现上述情况时，会删除已有的文件，避免第二种情况，去再次使用重命名.可能的原因：文件读写冲突
 		 */
-		if (file.renameTo(new File(buffer.toString()))) {
+		if (file.renameTo(new SafelyFile(buffer.toString()))) {
 		} else {
-			(new File(buffer.toString())).delete();
-			file.renameTo(new File(buffer.toString()));
+			(new SafelyFile(buffer.toString())).delete();
+			file.renameTo(new SafelyFile(buffer.toString()));
 		}
 	}
 }

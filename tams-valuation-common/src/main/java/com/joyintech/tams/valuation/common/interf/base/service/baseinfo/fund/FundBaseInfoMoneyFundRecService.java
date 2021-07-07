@@ -161,7 +161,10 @@ public class FundBaseInfoMoneyFundRecService {
         
         // 本金收益特征 = A.本金收益特征
         result.setCapiIncomeFeature(dto.getCapiProfFeature());
-        
+        /* modify by yanya on 20210222 增加发行人字段入库 start */
+        result.setIssuer(dto.getManagerId());
+        /* modify by yanya on 20210222 增加发行人字段入库 end */
+        result.setManager(dto.getManagerId());
         return result;
     }
 

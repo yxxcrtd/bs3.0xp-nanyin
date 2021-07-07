@@ -147,7 +147,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_floatFactor|" th:name="|${entityName}.floatFactor|"
                                th:value="${entity?.floatFactor}"
-                               class="layui-input form-input text-number" data-textrange="4"/>
+                               class="layui-input form-input text-number" data-textrange="5"/>
                     </div>
                 </div>
 
@@ -157,7 +157,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_spreadRate|" th:name="|${entityName}.spreadRate|"
                                th:value="${entity?.spreadRate}"
-                               class="layui-input form-input text-number" data-textrange="4"/>
+                               class="layui-input form-input text-number" data-textrange="5"/>
                     </div>
                 </div>
             </div>
@@ -170,7 +170,7 @@
                             <textarea th:id="|${entityName}_repRepayCmt|" th:name="|${entityName}.repRepayCmt|"
                                       th:value="${entity?.repRepayCmt}" data-th-text="${entity?.repRepayCmt}"
                                       class="layui-textarea"
-                                      placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"></textarea>
+                                      placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required="required"></textarea>
                     </div>
                 </div>
             </div>
@@ -201,7 +201,7 @@
                         <input type="text" th:id="|${entityName}_repFcrGradeOut|"
                                th:name="|${entityName}.repFcrGradeOut|" data-th-value="${entity?.repFcrGradeOut}"
                                class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}" required>
+                               data-th-placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>
             </div>
@@ -233,8 +233,8 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repFinancierType2}">融资人类型（按经济类型划分）</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repFinancierType2|" th:name="|${entityName}.repFinancierType2|"
-                                th:initValue="${entity?.repFinancierType2}"
+                        <select th:id="|${entityName}_repFinancierType3|" th:name="|${entityName}.repFinancierType3|"
+                                th:initValue="${entity?.repFinancierType3}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_PARTY_TYPE2}">
@@ -245,8 +245,8 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repFinancierType3}">融资人类型（按技术领域划分）</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_repFinancierType3|" th:name="|${entityName}.repFinancierType3|"
-                                th:initValue="${entity?.repFinancierType3}"
+                        <select th:id="|${entityName}_repFinancierType2|" th:name="|${entityName}.repFinancierType2|"
+                                th:initValue="${entity?.repFinancierType2}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_PARTY_TYPE3}">
@@ -651,7 +651,7 @@
                         <input type="text" th:id="|${entityName}_repExcessProfitRate|"
                                th:name="|${entityName}.repExcessProfitRate|"
                                data-th-value="${entity?.repExcessProfitRate}"
-                               class="layui-input form-input text-number" placeholder="请输入内容" data-textrange="2"
+                               class="layui-input form-input text-number" placeholder="请输入内容" data-textrange="5"
                                data-th-placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>
@@ -717,7 +717,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_repExercisePrice|"
                                th:name="|${entityName}.repExercisePrice|" data-th-value="${entity?.repExercisePrice}"
-                               class="layui-input form-input text-number" placeholder="请输入内容" data-textrange="2"
+                               class="layui-input form-input text-number" placeholder="请输入内容" data-textrange="4"
                                data-th-placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>
@@ -819,7 +819,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_repPartRedemRate|"
                                th:name="|${entityName}.repPartRedemRate|" data-th-value="${entity?.repPartRedemRate}"
-                               class="layui-input form-input text-number" placeholder="请输入内容" data-textrange="2"
+                               class="layui-input form-input text-number" placeholder="请输入内容" data-textrange="5"
                                data-th-placeholder="#{SysCommon.placeholder}" >
                     </div>
                 </div>
@@ -910,7 +910,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_totalFeeRate|" th:name="|${entityName}.totalFeeRate|"
                                th:value="${entity?.totalFeeRate}" required
-                               class="layui-input form-input text-number" data-textrange="4"/>
+                               class="layui-input form-input text-number" data-textrange="5"/>
                     </div>
                 </div>
 

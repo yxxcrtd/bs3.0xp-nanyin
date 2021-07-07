@@ -154,6 +154,27 @@ public class PayTheVatQuery002Controller extends BaseController{
 	        if(DateUtil.compareDate(dto.getPayTaxVDate(), lastSettleDateStr)<0) {
 	            return new AjaxResult("纳税日期必须大于等于"+lastSettleDateStr+"日期",MessageType.错误消息); 
 	        }
+	        // add by jiangpeng on 20210602 start
+			// ZGBSSE-383 查询通道下的产品已跑批日期小于纳税结束日
+			param.put("payment1", dto.getPayment1());
+			if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
+				param.put("portfolioId", dto.getPortfolioId());
+			}
+			String msg2 = "";
+			List<String> finprodStrList = payTheVatQuery002Service.searchChlPtlBookSet(param);
+			if (!CollectionUtils.isEmpty(finprodStrList)) {
+				for (int i = 0; i < finprodStrList.size(); i++) {
+					if (i == 0) {
+						msg2 = finprodStrList.get(i);
+					} else {
+						msg2 += finprodStrList.get(i);
+					}
+				}
+			}
+			if (StringUtils.isNotEmpty(msg2)) {
+				return new AjaxResult("存在账套日-1小于纳税结束日的账套:" + msg2, MessageType.错误消息);
+			}
+			// add by jiangpeng on 20210602 end
 	    }
 
         return new AjaxResult(); 
@@ -236,6 +257,9 @@ public class PayTheVatQuery002Controller extends BaseController{
 				param.setPageId("FinproductPayTheVatQuery002");
 				// 查询该产品流程中的增值税信息 查询出的结果产品id已经与校验数据产品id相同
 				List<ProcessMark> processMarkList = mstWorkflowCommonService.getDataStatusFromProcessMarkList(param);
+				if (processMarkList == null) {
+					continue;
+				}
 				for (ProcessMark processMark : processMarkList) {
 					PayTheVatQuery002Dto payTheVatQuery002Dto = JsonUtils.OBJECT_MAPPER.readValue(processMark.getBusinessData(), PayTheVatQuery002Dto.class);
 					if (!StringUtil.isNotEmpty(payTheVatQuery002Dto)
@@ -249,7 +273,7 @@ public class PayTheVatQuery002Controller extends BaseController{
 					}// 增值税品种为通道增值税时,判断通道户是否一致
 					else if (StringUtil.equals(payTheVatQuery002Dto.getChannelId(), mo.getChannelId())) {
 						ms = this.getMessage("COMMON_E_0021", payTheVatQuery002Dto.getTotleTradeId(), mo.getFinprodId());
-						return new AjaxResult(ms, MessageType.错误消息);
+						return new AjaxResult(ms + ",通道:" + mo.getChannelId(), MessageType.错误消息);
 					}
 				}
 			}

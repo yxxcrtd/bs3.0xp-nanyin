@@ -114,9 +114,12 @@
 			$("#repFinanSerModel").attr('disabled',true);
 			$("#repInDepName").val('').trigger('change');
 			$("#repInDepName").attr('disabled',true);
+			$("#repInDepCode").val('').trigger('change');
+			$("#repInDepCode").attr('disabled',true);
 		}else{
 			$("#repFinanSerModel").attr('disabled',false);
 			$("#repInDepName").attr('disabled',false);
+			$("#repInDepCode").attr('disabled',false);
 		}
 	});
 	//产品管理模式联动
@@ -223,6 +226,8 @@
 			$("#repFinanSerModel").attr('disabled',true);
 			$("#repInDepName").val('').trigger('change');
 			$("#repInDepName").attr('disabled',true);
+			$("#repInDepCode").val('').trigger('change');
+			$("#repInDepCode").attr('disabled',true);
 		}
 		//运作模式
 		var repOperateMode = $("#repOperateMode").val();

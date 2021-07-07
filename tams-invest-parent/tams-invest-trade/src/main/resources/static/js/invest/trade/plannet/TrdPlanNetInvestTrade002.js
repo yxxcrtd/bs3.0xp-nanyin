@@ -190,13 +190,13 @@ $(function() {
             ChannelAssetCommon.setChannelSelectObject($("#chlId"), $('#finprodId').val(), $("#entrustId").val(), function () {
 
             });
-            if($("#type7").val()== plansType01 && ps == ps_T06){
+            /*if($("#type7").val()== plansType01 && ps == ps_T06){
                 $('#tradeAmt').val('').attr('disabled',true);
                 $('#shareAmt').attr('disabled',false);
-            }else{
+            }else{*/
             	$('#tradeAmt').attr('disabled',false);
             	$('#shareAmt').attr('disabled',false);
-            }
+            // }
             $('#netDate').change();
             
             if ((ps == ps_T06 || ps == ps_mc) && finprodId && portfolioId) {
@@ -281,10 +281,10 @@ $(function() {
                 if(finprodId && portfolioId){
                     getPtlSecPositionInfo();
                 }
-                if(finprodId && $("#type7").val()== plansType01 && ps == ps_T06){
+                /*if(finprodId && $("#type7").val()== plansType01 && ps == ps_T06){
                     $('#tradeAmt').val('').attr('disabled',true);
                     $('#shareAmt').attr('disabled',false);
-                }
+                }*/
                 //-----add by 裴家俊 切换到赎回时清空风险试算列表 start ----
                 if($("#baseRiskMathCommTable").data('joyintable')!=null) {
                     $("#riskTrialSpan").empty();

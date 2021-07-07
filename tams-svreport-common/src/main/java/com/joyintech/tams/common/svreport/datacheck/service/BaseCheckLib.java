@@ -461,6 +461,106 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
 
     }
+    
+    
+    
+    /**
+     * 根据指定的规则，判断指定的值是否在数据字典枚举类型范围内 (带字符判断)
+     * @param data 被检查的数据
+     * @param rule 检查规则实体
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean inDatadict2(Map<String, String> data, CheckElement rule) {
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;
+        // add by zhangmingming 数据字典增加多选情况 20191224 start
+        if(StringUtils.equals(rule.getCompareto(),"<")){
+        	 List<String> srcValueList = Arrays.asList(srcValue.split(","));
+            // 可以多选 但是不能重复
+            if(srcValueList.size() != new HashSet<String>(srcValueList).size()){
+                return false;
+            }
+            int flag = 0;
+            for (String value : srcValueList) {
+                String objValue = rule.getObjvalue();
+                DataDict dto = CacheUtil.getDictCode(objValue);
+                if (null != dto) {
+                    List<? extends DataDictItem> items = dto.getItems();
+                    for (DataDictItem item : items) {
+                        if (value.equals(item.getItemCode()+" "+item.getItemValue()))  flag++;
+                    }
+                }
+            }
+            if(flag == srcValueList.size())  return true;
+
+            return false;
+        // add by zhangmingming 数据字典增加多选情况 20191224 end
+        }else {
+            String objValue = rule.getObjvalue();
+            DataDict dto = CacheUtil.getDictCode(objValue);
+            if (null != dto) {
+                List<? extends DataDictItem> items = dto.getItems();
+
+                for (DataDictItem item : items) {
+                    if (srcValue.equals(item.getItemCode()+" "+item.getItemValue()))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+    }
+    
+    
+    
+    /**
+     * 根据指定的规则，判断指定的值是否在数据字典枚举类型范围内 (带字符判断)
+     * @param data 被检查的数据
+     * @param rule 检查规则实体
+     * @param rule 是否允许多选
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean inDatadict3(String srcValue, String dictCode,boolean canNull,boolean canMultiple) {
+        if ( StringUtils.isEmpty(srcValue)  && canNull )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;
+        List<String> srcValueList = Arrays.asList(srcValue.split(","));
+        
+        //添加多选判断
+        if(!canMultiple){
+        	if(null!=srcValueList&&srcValueList.size()>1){
+        		return false;
+        	}
+        }
+        
+        // 可以多选 但是不能重复
+        if(srcValueList.size() != new HashSet<String>(srcValueList).size()){
+            return false;
+        }
+        int flag = 0;
+        for (String value : srcValueList) {
+            DataDict dto = CacheUtil.getDictCode(dictCode);
+            if (null != dto) {
+                List<? extends DataDictItem> items = dto.getItems();
+                for (DataDictItem item : items) {
+                    if (value.equals(item.getItemCode()+" "+item.getItemValue()))  flag++;
+                }
+            }
+        }
+        if(flag == srcValueList.size())  return true;
+
+        return false;
+    // add by zhangmingming 数据字典增加多选情况 20191224 end
+
+    }
 
     /**
      * 根据指定的规则，判断日期数据是否是指定的格式 
@@ -852,6 +952,45 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 
         return ret;
     }
+    
+    /**
+     * 根据指定的规则，判断日期数据是否是指定的格式 
+     * ※严格判断是否符合日期格式
+     * @param srcValue 被检查的数据
+     * @param isNull 是否可为空
+     * @param objValue  是否有格式要求
+     * @return
+     */
+    public static boolean isDate(String srcValue, boolean isNull,String objValue) {
+        boolean ret = false;
+        if ( StringUtils.isEmpty(srcValue)  && isNull )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;                
+
+        SimpleDateFormat sdf = new SimpleDateFormat(objValue);
+        try {
+            sdf.setLenient(false);
+            sdf.parse(srcValue);
+            ret = true;
+        } catch (ParseException e) {
+            //e.printStackTrace();
+            ret = false;
+        }
+        
+        // ※严格判断是否符合日期格式
+        if (ret && DateUtil.isDateStr(srcValue, objValue)
+            && srcValue.length() == objValue.length()) {
+            ret = true;
+        }
+        else {
+            ret = false;
+        }
+
+        return ret;
+    }
+    
+    
     // etliu 20191115 add end
     
     /**

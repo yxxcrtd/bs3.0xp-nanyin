@@ -69,7 +69,7 @@ public class BussRepFundInfoController extends BaseController{
             DictCode.是否_中债, DictCode.登记备案机构, DictCode.资产_负债二级类别,
             DictCode.营业日准则,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类
             ,DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分,DictCode.发行机构类型_按技术领域划分
-            ,DictCode.投资阶段,DictCode.交易流通场所,DictCode.人行机构规模,DictCode.受让形式});
+            ,DictCode.投资阶段,DictCode.交易流通场所,DictCode.交易流通场所_中债,DictCode.人行机构规模,DictCode.受让形式});
         //设置页面参数
         model.addAttribute("fundTypeElement", this.getParam("fundTypeElement"));
         model.addAttribute("secondTypeElement", this.getParam("secondTypeElement"));

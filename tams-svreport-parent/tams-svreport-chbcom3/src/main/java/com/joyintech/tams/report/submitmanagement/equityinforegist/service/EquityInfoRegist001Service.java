@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -333,26 +334,26 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
 
     @Override
     public com.joyintech.framework.grid.Page<EquityInfoRegist001Dto> selectPageData(Map<String, Object> pageParam) {
-//        List<EquityInfoRegist001Dto> data = null;
-    	Page<EquityInfoRegist001Dto> page = null;
+        List<EquityInfoRegist001Dto> data = null;
+//    	Page<EquityInfoRegist001Dto> page = null;
         String exportMethodFlg = (String)pageParam.get("export_method_flg");
         if (StringUtil.equals(exportMethodFlg, "export")) {
-//            data =  restTemplate.postForList(
-//                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryForEquityInfoRegistPage",pageParam,
-//                    EquityInfoRegist001Dto.class);
+            data =  restTemplate.postForList(
+                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryForEquityInfoRegistPage",pageParam,
+                    EquityInfoRegist001Dto.class);
         }  else {
             List<EquityInfoRegist001Dto> eList = (List<EquityInfoRegist001Dto>) pageParam.get("listParm");
             int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
     	    int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
             Page<EquityInfoRegist001Dto> pageList = super.queryForPage(
             		pagenum,legth,()->equityInfoRegist001Mapper.queryExportListByKeys(eList));
-//            
-//            data =  restTemplate.postForList(
-//                        SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryExportListByKeys",eList,
-//                        EquityInfoRegist001Dto.class);
+
+            data =  restTemplate.postForList(
+                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryExportListByKeys",eList,
+                    EquityInfoRegist001Dto.class);
         }
-//        com.joyintech.framework.grid.Page<EquityInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<EquityInfoRegist001Dto>();
-//        page.setRoot(data);
+        com.joyintech.framework.grid.Page<EquityInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<EquityInfoRegist001Dto>();
+        page.setRoot(data);
 //        page.setTotal(data.size());
         return  page;
     }
@@ -2098,7 +2099,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                    +ReportGlobalConstant.VERTICAL_LINE
                            +dto.getOtherCapAccBank()+ReportGlobalConstant.VERTICAL_LINE/*+dto.getSpvRegistCode()+"|"*/
                            //要求原则上境内投资者名称中不得含有空格。
-                           +(dto.getHolderName().replaceAll(StringUtil.EMPTY, ""))+ReportGlobalConstant.VERTICAL_LINE
+                           +(dto.getHolderName().replaceAll(Pattern.quote(StringUtil.EMPTY), ""))+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getHolderSex()+ReportGlobalConstant.VERTICAL_LINE+dto.getHolderRiskPrefer()+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getHolderCellphone()+ReportGlobalConstant.VERTICAL_LINE+dto.getHolderTelephone()+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getHolderEmail()+ReportGlobalConstant.VERTICAL_LINE
@@ -2116,7 +2117,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                            +dto.getIdentifyNumber()+ReportGlobalConstant.VERTICAL_LINE+dto.getSpvCapAccBank()+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getOtherCapAccBank()+ReportGlobalConstant.VERTICAL_LINE/*+dto.getSpvRegistCode()+"|"*/
                            //要求原则上境内投资者名称中不得含有空格。
-                           +(dto.getHolderName().replaceAll(StringUtil.EMPTY, ""))+ReportGlobalConstant.VERTICAL_LINE
+                           +(dto.getHolderName().replaceAll(Pattern.quote(StringUtil.EMPTY), ""))+ReportGlobalConstant.VERTICAL_LINE
                            +dto.getHolderSex()+ReportGlobalConstant.VERTICAL_LINE+dto.getHolderRiskPrefer()+ReportGlobalConstant.VERTICAL_LINE
                            +(StringUtil.equals(dto.getHolderCellphone(), empt)||StringUtil.isEmpty(dto.getHolderCellphone())?defaultPhone:dto.getHolderCellphone())+ReportGlobalConstant.VERTICAL_LINE
                            +(StringUtil.equals(dto.getHolderTelephone(), empt)||StringUtil.isEmpty(dto.getHolderTelephone())?defaultTel:dto.getHolderTelephone())+ReportGlobalConstant.VERTICAL_LINE

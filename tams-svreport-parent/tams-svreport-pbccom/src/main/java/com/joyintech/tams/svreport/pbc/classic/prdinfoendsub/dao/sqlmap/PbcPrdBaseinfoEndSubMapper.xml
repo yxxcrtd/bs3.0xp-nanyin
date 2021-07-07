@@ -329,7 +329,7 @@
   <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub" flushCache="true" useCache="false">
   	select     
   		a.REGIST_SEQNO registSeqno,
-	    nvl(t2.pbc_code,a.PBC_PROD_ID) PBC_PROD_ID,
+	    a.PBC_PROD_ID PBC_PROD_ID,
 	    a.MDATE mdate,
 	    a.CCY ccy,
 	    a.PROFIT profit,
@@ -861,10 +861,10 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
       </select>
       <select id="queryBookBalanceLevel1SubSystem" parameterType="java.util.Map" resultType="java.math.BigDecimal">
       		select  SUM(nvl(BALANCE.B_AMT,0)) from bok_balance BALANCE
-			where BOOKSET_ID=#{prodid,jdbcType=VARCHAR} 
+			where 1=1 and (BOOKSET_ID=#{prodid,jdbcType=VARCHAR} or BOOKSET_ID='F16_'||#{prodid,jdbcType=VARCHAR})
 			and BALANCE_DATE=(
 				select max(BALANCE_DATE) from bok_balance
-				where BOOKSET_ID=#{prodid,jdbcType=VARCHAR} 
+				where 1=1 and (BOOKSET_ID=#{prodid,jdbcType=VARCHAR} or BOOKSET_ID='F16_'||#{prodid,jdbcType=VARCHAR}  )
 				and BALANCE_DATE >=#{cdate,jdbcType=DATE}
 				)
 			and SUBJECT_LEVEL='1'

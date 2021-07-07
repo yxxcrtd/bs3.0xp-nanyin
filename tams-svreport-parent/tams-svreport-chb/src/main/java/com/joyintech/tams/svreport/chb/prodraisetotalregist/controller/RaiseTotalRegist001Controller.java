@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdRaisetotSubDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.svreport.chbsd.prdraisetotsub.service.SdProdRaisetotBatchService;
@@ -206,7 +207,11 @@ public class RaiseTotalRegist001Controller extends BaseController{
             dataList.add(target);
         }
 
-        sdProdRaisetotBatchService.sendBatchCommon(dataList);
+        SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
+        if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
+            sendDataCheckType = SendDataCheckType.重新报送;
+        }
+        sdProdRaisetotBatchService.sendBatchCommon(dataList, sendDataCheckType);
 
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
     }

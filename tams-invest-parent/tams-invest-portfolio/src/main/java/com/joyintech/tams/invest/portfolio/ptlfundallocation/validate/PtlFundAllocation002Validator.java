@@ -48,7 +48,8 @@ public class PtlFundAllocation002Validator implements BeanValidator{
         PtlFundAllocation002Dto dto = (PtlFundAllocation002Dto)value;
         LinkedHashMap<String,List<Integer>> portfolioIdMap = new LinkedHashMap<String,List<Integer>>();//用来组合代码去重 wyd 20210331
         
-        if(StringUtil.equals(dto.getOperateType(), "submit") || StringUtil.equals(dto.getOperateType(), "save")){
+//        if(StringUtil.equals(dto.getOperateType(), "submit") || StringUtil.equals(dto.getOperateType(), "save")){
+        if(StringUtil.equals(dto.getOperateType(), "submit")){
             if(!StringUtil.isEmptyList(dto.getPtlFundAllocation001Dtos())){
                 for (int i = 0; i < dto.getPtlFundAllocation001Dtos().size(); i++ ) {
                 	//校验逻辑修改，同时增加账户、余额的校验  wyd 20210331 start
@@ -79,14 +80,19 @@ public class PtlFundAllocation002Validator implements BeanValidator{
                 	
                 	//划款金额
                     BigDecimal settleAmt=tempDto.getSettleAmt();
-                    if (settleAmt==null||settleAmt.equals("")){
-                        errorList.add(new ValidMessage("明细(第"+(i+1)+"行)划款金额不能为空！"));
+                	BigDecimal amount = tempDto.getAmount();
+                    if (settleAmt==null||settleAmt.equals("")||settleAmt.compareTo(BigDecimal.ZERO)<=0){
+                        errorList.add(new ValidMessage("请删除划款金额为0或者为空的记录！"));
+                        break;
                     }else{
-                        if(settleAmt.compareTo(BigDecimal.ZERO)<=0){
-                            errorList.add(new ValidMessage("明细(第"+(i+1)+"行)划款金额必须大于0！"));
+                        //划拨金额不能大于付款账户余额的校验
+                        if(amount==null ||amount.compareTo(BigDecimal.ZERO)<=0){
+                            errorList.add(new ValidMessage("明细(第"+(i+1)+"行)付款账户余额为空或者小于0！"));
+                        }else if(settleAmt.compareTo(tempDto.getAmount()) > 0){
+                            errorList.add(new ValidMessage("明细(第"+(i+1)+"行)划款金额不能大于付款账户余额！"));
                         }
                     }
-                	//校验逻辑修改，同时增加账户、余额的校验  wyd 20210331 start                    
+                	//校验逻辑修改，同时增加账户、余额的校验  wyd 20210331 start
                 }
             	//组合代码重复校验 wyd 20210331
                 for(Entry<String, List<Integer>> temp:portfolioIdMap.entrySet()){
@@ -98,9 +104,6 @@ public class PtlFundAllocation002Validator implements BeanValidator{
                 }
 
             }
-//            if(dto.getBussTrdTransferOrder() == null || dto.getBussTrdTransferOrder().size() == 0){
-//                errorList.add(new ValidMessage(getMessage("FW_E_0006",getMessage("PtlActivityPeriod001.stlPayOrders"))));
-//            }
             // 划款指令
             if (bussTrdTransferOrderService != null) {
                 List<ValidMessage> list = bussTrdTransferOrderService.check(dto.getBussTrdTransferOrder());

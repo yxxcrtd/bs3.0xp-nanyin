@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -84,6 +86,19 @@ public class FinNetProductDurationService extends BaseService<FinNetProductDurat
     public List<SelectOptionDto> getFinprodMarketIdList(Map<String, Object> map) {
         return finNetProductDurationMapper.getFinprodMarketIdList(map);
     }
+
+	/**
+	 * <一句话功能简述>
+	 * <功能详细描述>
+	 *
+	 * @param map
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public Page<SelectOptionDto> getFinprodMarketIdListForPgae(int page, int length, Map<String, Object> map) {
+		return this.queryForPageForSelectReturn(page, length, () -> finNetProductDurationMapper.getFinprodMarketIdList(map));
+	}
 
     /**
      * <一句话功能简述>
@@ -384,7 +399,11 @@ public class FinNetProductDurationService extends BaseService<FinNetProductDurat
 		for(FinNetProductDurationDto finNetProductDurationDto : list) {
 			Map<String, Object> requestMap = new HashMap<>();
 			requestMap.put("finprodId", map.get("finprodId"));	//产品代码
-			requestMap.put("cDate", finNetProductDurationDto.getmDate());	//到期日
+			if(StringUtil.equals((String)map.get("dealMode"),"10")) {
+				requestMap.put("cDate", DateUtil.addDay(finNetProductDurationDto.getmDate(), -1));    //到期日
+			}else{
+				requestMap.put("cDate", finNetProductDurationDto.getmDate());    //到期日
+			}
 			requestMap.put("branch", 0L);	//到期日
 			BokPositionPrd bokPositionPrd = finNetProductDurationMapper.getBokPositionPrd(requestMap);
 			if(StringUtil.isNotEmpty(bokPositionPrd)){

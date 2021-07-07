@@ -180,6 +180,7 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
         map.put("cashType", DictCodeList.现金流类型_费用支付.getValue());
         map.put("payCycle", DictCodeList.频率_不规则.getValue());
         map.put("feeType04", DictCodeList.费用品种类型_浮动差额中收.getValue());
+        map.put("feeType99", DictCodeList.费用品种类型_其他费用.getValue());
         map.put("profitType02", DictCodeList.收益类型_收益型.getValue());
         map.put("yes", DictCodeList.是否_是.getValue());
         map.put("feeType12", DictCodeList.费用品种类型_浮动管理费.getValue());

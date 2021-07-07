@@ -154,16 +154,18 @@ public class ReportConfirmManage004Service extends BaseService<BaseEntity> {
         // SysDataUtil.getDataDictItem("REVEAL_CHANNEL");
         List<SelectOptionDto> listSelectDto = new ArrayList<SelectOptionDto>();
         SelectOptionDto s1 = new SelectOptionDto();
-        SelectOptionDto s2 = new SelectOptionDto();
+//        SelectOptionDto s2 = new SelectOptionDto();
         SelectOptionDto s3 = new SelectOptionDto();
         s1.setId("01");
         s1.setText("官网");
-        s2.setId("02");
-        s2.setText("点对点");
+//        update by zoujiamin 2021/05/28 TISHKBS-2070 start
+//        s2.setId("02");
+//        s2.setText("点对点");
+//        update by zoujiamin 2021/05/28 TISHKBS-2070 end
         s3.setId("03");
         s3.setText("其他");
         listSelectDto.add(s1);
-        listSelectDto.add(s2);
+//        listSelectDto.add(s2);
         listSelectDto.add(s3);
         // for(DataDictItem channel : channelList){
         // SelectOptionDto dto = new SelectOptionDto();

@@ -10,14 +10,17 @@
 
 package com.joyintech.tams.invest.product.productelement.netvalueproduct.validator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -33,7 +36,6 @@ import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 //import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.prod.dto.BussBenchMarkInfoDto;
 import com.joyintech.tams.component.business.prod.dto.BussBenchMarkLayeredInfoDto;
@@ -44,6 +46,7 @@ import com.joyintech.tams.component.business.prod.dto.BussFinProductLayeredInfoD
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticInfoDto;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.dto.FinNetValueProductBuild002Dto;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.service.FinNetValueProductBuild001Service;
@@ -87,8 +90,8 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     /**
      * {@linkplain}
@@ -117,6 +120,22 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
         if (StringUtil.isNotEmpty(entity.getFinprodId())){
             finNetValueProductBuild001Service.wflInFlowCheck(entity.getWorkflowId(), entity.getFinprodId(), validList);
         }
+
+        if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
+
+            //报送信息页面托管费率和销售费率必填
+            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepSaleFeeRate())) {
+                validList.add(new ValidMessage("bussRepFinProductInfoDto.repSaleFeeRate", this.getMessage("BUSS_COM_E_0038",
+                        this.getMessage("BussRepFinProductInfo.repSaleFeeRate"))));
+            }
+
+            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepTruFeeRate())) {
+                validList.add(new ValidMessage("bussRepFinProductInfoDto.repTruFeeRate", this.getMessage("BUSS_COM_E_0038",
+                        this.getMessage("BussRepFinProductInfo.repTruFeeRate"))));
+            }
+
+        }
+
         if (StringUtil.isNotEmpty(entity.getFinprodMarketId())) {
             // 规则：代码(1~3位，第1位为大写字母，第2~3位为数字或大写字母)+销售渠道代码(1位大写字母)+品牌代码(1位大写字母)+年份(2位数字)+产品序号(4位数）
 //            Pattern pattern = Pattern.compile("^[A-Za-z]{1}[A-Za-z0-9]{0,2}[A-Za-z]{2}[0-9]{6}$");
@@ -160,6 +179,11 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 entity.getFinprodName(), entity.getFinprodId()) > 0) {
                 validList.add(new ValidMessage("finprodName",
                     getMessage("BUSS_COM_I_0017", getMessage("FinProductBuild002.finprodName"))));
+            }else
+            // 产品代码不能与组合代码重复
+            if (finProductScheduling002Service.chekPortfolExist(entity.getFinprodMarketId()) > 0) {
+                validList.add(new ValidMessage("finprodMarketId", getMessage("BUSS_COM_I_0017",
+                        "组合代码")));
             }
 
             // 流程中的市场代码(排期和产品新建)
@@ -1076,6 +1100,11 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 if(DateUtil.compareDate(anapleroticEndDate,mdate) >= 1){
                     validList.add(new ValidMessage(getMessage("FIN_PROD_E_0233",getMessage("FIN_PROD_E_0236"),getMessage("FIN_PROD_E_0237"))));
                 }
+                //首次回补日:若为封闭式产品，则默认为产品到期日-1自然日，可修改为产品到期日，修改为其他日期不允许修改成功
+                if (StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_封闭式.getValue())
+                        && !(DateUtil.compareDate(firstAnapleroticDate, mdate) == 0 || DateUtil.compareDate(DateUtil.addDay(mdate, -1), firstAnapleroticDate) == 0)) {
+                    validList.add(new ValidMessage("封闭式产品,首次回补日为产品到期日-1自然日或产品到期日"));
+                }
             }
             //修改bug 回补规则相关校验 20191101 add by wangcheng 20191101 start
             if(entity.getFinProductAnapleroticTabInfoDtoList() != null&&entity.getFinProductAnapleroticTabInfoDtoList().size()>0){
@@ -1205,15 +1234,16 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 entity.getBussRepFinProductInfoDto().getRepOperateMode())
                  || DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(
                      entity.getBussRepFinProductInfoDto().getRepOperateMode()))) {
-                if (!StringUtil.isNotEmpty(
-                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
-                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
-                        this.getMessage("FIN_PROD_E_0133")));
-                }
+//                if (!StringUtil.isNotEmpty(
+//                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
+//                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
+//                        this.getMessage("FIN_PROD_E_0133")));
+//                }
             }
             else{
                 // 选择封闭式净值型和“封闭式非净值型”时，开放模式必须为空
                 if (StringUtil.isNotEmpty(
+                        entity.getBussRepFinProductInfoDto().getRepOperateMode()) && StringUtil.isNotEmpty(
                     entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
                     validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
                         this.getMessage("FIN_PROD_E_0134")));
@@ -1361,21 +1391,22 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
 	    	}
         }
     	//产品设计系列不为空  yzg 20191211 end
-    	//产品运作模式不为空
-    	if(entity.getBussRepFinProductInfoDto()!=null && StringUtil.isEmpty(entity.getBussRepFinProductInfoDto().getRepOperateMode())) {
-    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOperateMode",getMessage("BUSS_COM_E_0038",
-	                getMessage("BussRepFinProductInfo.repOperateMode"))));
-    	}
+        //modify by mashukai 2210609 产品运作模式在中债报送校验处已经进行了校验，这里注释掉重复的校验
+//    	//产品运作模式不为空
+//    	if(entity.getBussRepFinProductInfoDto()!=null && StringUtil.isEmpty(entity.getBussRepFinProductInfoDto().getRepOperateMode())) {
+//    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOperateMode",getMessage("BUSS_COM_E_0038",
+//	                getMessage("BussRepFinProductInfo.repOperateMode"))));
+//    	}
     	//开放模式01有规律开放时规律开放周期必填
-    	if("01".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) && 
-    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOpenCircle())) {
-    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenCircle","开放模式01有规律开放时规律开放周期必填"));
-    	}
+//    	if("01".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) &&
+//    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOpenCircle())) {
+//    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenCircle","开放模式01有规律开放时规律开放周期必填"));
+//    	}
     	//开放模式02无规律开放时无规律开放说明必填
-    	if("02".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) && 
-    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepRuleComment())) {
-    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repRuleComment","开放模式02无规律开放时无规律开放说明必填"));
-    	}
+//    	if("02".equals(entity.getBussRepFinProductInfoDto().getRepOpenMode()) &&
+//    			!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepRuleComment())) {
+//    		validList.add(new ValidMessage("bussRepFinProductInfoDto.repRuleComment","开放模式02无规律开放时无规律开放说明必填"));
+//    	}
     	//周期型和普通型业绩基准不能为空
     	if (StringUtil.isNotEmpty(entity.getDealMode())){
     		if(StringUtil.equals(entity.getDealMode(), DictCodeList.处理模式_周期型.getValue()) ||
@@ -1405,7 +1436,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
 
-        // validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null, ValidMessage.class);
+         validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null, ValidMessage.class);
 
         return validList;
     }

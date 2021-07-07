@@ -36,13 +36,9 @@ import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAsse
 import com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery.dto.ValBalanceStatementQuery001Dto;
 import com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery.service.ValBalanceStatementQuery001Service;
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valaccounthandle.service.ValAccountHandle001Service;
-import com.joyintech.tams.common.base.dao.BokBooksetExtMapper;
 import com.joyintech.tams.common.base.entity.BokBooksetExt;
 import com.joyintech.tams.common.base.entity.BokBooksetExtKey;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**
  * 估值余额表查询Controller
@@ -126,7 +122,7 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
     @ResponseBody
     public String checkBokkSetDate(){
         Map<String,Object> map = RequestUtil.getPageParam();
-        return valBalanceStatementQuery001Service.checkBokkSetDate(map);
+        return StringUtil.trimHtmlTag(valBalanceStatementQuery001Service.checkBokkSetDate(map));
 //        String msg=valAccountHandle001Service.checkBokkSetDateForVluTab(map);//modify by dongjun on 20181207
 //        return msg;
     }

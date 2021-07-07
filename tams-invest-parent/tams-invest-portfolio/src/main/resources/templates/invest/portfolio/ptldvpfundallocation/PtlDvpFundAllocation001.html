@@ -19,14 +19,16 @@
                         <label class="layui-form-label form-lable" 
                             data-th-text="#{PtlDvpFundAllocation001.portfolioId}">组合代码</label>
                         <div class="layui-input-inline input-inline">
+                            <!-- TISHKBS-2310查询页面和新建页面保持一致，只需要产品组合  by wangyaning 20210623 start -->
                             <select id="portfolioId" name="portfolioId"
                                     allowClear="true"
                                     class="layui-input form-input input-select"
-                                    data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId}"
+                                    data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId?act=true}"
                                     placeholder="请输入内容" multiple=true
                                     formatoption = "false"
                                     data-th-placeholder="#{SysCommon.placeholder}">
                             </select>
+                            <!-- TISHKBS-2310查询页面和新建页面保持一致，只需要产品组合  by wangyaning 20210623 end -->
                         </div>
                     </div>
                     <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">

@@ -161,11 +161,15 @@ public class PtlManagementInfo001Validator implements BeanValidator{
             List<String> acctList = new ArrayList<String>();
             //资金账户账号
             for(FundAccountInfoDto fundDto : dto.getFundAccountInfoDto()){
-                acctList.add(fundDto.getAcctNo());
+                if(StringUtil.isNotEmpty(fundDto.getAcctNo())) {
+                    acctList.add(fundDto.getAcctNo());
+                }
             }
             //证券账户账号
             for(SecuritiesAccountInfoDto secDto : dto.getSecuritiesAccountInfoDto()){
-                acctList.add(secDto.getTrdAcctId());
+                if(StringUtil.isNotEmpty(secDto.getTrdAcctId())) {
+                    acctList.add(secDto.getTrdAcctId());
+                }
             }
             param.put("busiAcctNoList", acctList);
             param.put("F28", DictCodeListExt1.金融产品类型_投管用_通道.getValue());

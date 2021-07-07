@@ -332,7 +332,7 @@
 			ENTRUST_ID code
 		FROM ETR_ENTRUST 
 		<where>
-			AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustReceive},#{entrustUntread},#{entrustClose})
+			AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustFinish})
 			<if test="entId != null and entId != ''">
 				AND ENTRUST_ID like concat(concat('%',
 				#{entId,jdbcType=VARCHAR}),'%')

@@ -152,6 +152,10 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
             ptlPortfolioInfoDto.setIsGuarantee("N");
             PtlValParam ptlValParam = new PtlValParam();
             BeanUtil.copyProperties(ptlValParam, entity.getBussFinProductValuationDto());
+            if(StringUtil.isNotBlank(ptlPortfolioInfoDto.getProfitType()) && StringUtil.equals(ptlPortfolioInfoDto.getProfitType(),DictCodeList.收益类型_货币型.getValue())){
+                ptlValParam.setMilionProfitDec(ptlValParam.getUnitvalueDec());
+                ptlValParam.setMilionProfitDecMode(ptlValParam.getUnitvalueMode());
+            }
             ptlPortfolioInfoDto.setPtlValParam(ptlValParam);
 
             // 二级法人改造 modify by wj  20200619 五个特殊参数 修改 为特殊取值方法

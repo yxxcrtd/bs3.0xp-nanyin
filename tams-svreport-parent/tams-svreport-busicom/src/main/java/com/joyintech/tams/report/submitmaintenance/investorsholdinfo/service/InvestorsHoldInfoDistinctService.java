@@ -208,7 +208,9 @@ public class InvestorsHoldInfoDistinctService {
 					 ChbInvestholdInfoCheckDto record=new ChbInvestholdInfoCheckDto();
 					 record.setRegistBankCode(info.getRegistBankCode());
 					 record.setIndentifyMark(info.getIndentifyMark());
-					 record.setHoldDate(qmodel.getHoldDate());
+					 if (qmodel != null){
+						 record.setHoldDate(qmodel.getHoldDate());
+					 }
 					 List<ChbInvestholdInfoCheckDto> temList=chbInvestholdInfoCheckDtoMapper.selectBymodel(record);
 					 if(temList==null||temList.isEmpty()){//持有信息中没有数据 再去维护表找是否有数据 (排除已报送)
 						List<ChbInvestholdInfoCheckDto> infoList= chbInvestholdInfoCheckDtoMapper.selectBymodelFromFormer(record);
@@ -570,7 +572,7 @@ public class InvestorsHoldInfoDistinctService {
 //		}
 		int dataCount = listE.size();
 		if (dataCount <= maxDataCountOneTime) {
-			allDataList.addAll(chbInvestholdInfoCheckDtoMapper.selectAllHoldInfoData(listE));
+			allDataList.addAll(investorsHoldInfo001Mapper.selectAllHoldInfoData(listE));
 		} else {
 			List<InvestorsHoldInfo001Dto> newKeyList = new ArrayList<InvestorsHoldInfo001Dto>();
 			newKeyList.addAll(listE);
@@ -579,12 +581,12 @@ public class InvestorsHoldInfoDistinctService {
 			int part = dataCount / maxDataCountOneTime; // 分批数
 			for (int i = 0; i < part; i++) {
 				allDataList.addAll(
-						chbInvestholdInfoCheckDtoMapper.selectAllHoldInfoData(newKeyList.subList(0, maxDataCountOneTime)));
+						investorsHoldInfo001Mapper.selectAllHoldInfoData(newKeyList.subList(0, maxDataCountOneTime)));
 				newKeyList.subList(0, maxDataCountOneTime).clear();
 			}
 			// 最后剩下的数据
 			if (CollectionUtils.isNotEmpty(newKeyList)) {
-				allDataList.addAll(chbInvestholdInfoCheckDtoMapper.selectAllHoldInfoData(newKeyList));
+				allDataList.addAll(investorsHoldInfo001Mapper.selectAllHoldInfoData(newKeyList));
 			}
 		}
 		Map<String, InvestorsHoldInfo001Dto> allHoldInfoDataMap = StringUtil.isEmptyList(allDataList)

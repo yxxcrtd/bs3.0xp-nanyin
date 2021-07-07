@@ -10,7 +10,7 @@
         WHERE
         1 = 1
         <if test="taskGrpId != null">
-            AND BATCH_SEQ_NO＝#{taskGrpId, jdbcType=VARCHAR}
+            AND BATCH_SEQ_NO=#{taskGrpId, jdbcType=VARCHAR}
         </if>
     </select>
 

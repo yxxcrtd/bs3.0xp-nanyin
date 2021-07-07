@@ -11,6 +11,7 @@
 package com.joyintech.service.entrust.etrinvestbondinfo.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -115,6 +116,19 @@ public interface EtrInvestBondInfoMapper {
      * @author wangguiqi
      */
 	BigDecimal getClosePriceByPara(Map<String, Object> param);
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    BigDecimal getLastPriceByPara(Map<String, Object> param);
+
+    /**
+     * 查询上一日摊销净价
+     *
+     * @author jiangpeng
+     */
+    BigDecimal getLastDSCPriceByPara(Map<String, Object> param);
 
     /**
      * 查询证券托管户：联想框文本框
@@ -133,4 +147,13 @@ public interface EtrInvestBondInfoMapper {
      * @return
      */
     BigDecimal getStdPosition(Map<String,Object> param);
+
+    /**
+     * 获取债券起息日
+     *
+     * @param finprodMarketId 债券市场代码
+     * @return Date
+     * @author jiangpeng
+     */
+    Date getBondVDate(String finprodMarketId);
 }

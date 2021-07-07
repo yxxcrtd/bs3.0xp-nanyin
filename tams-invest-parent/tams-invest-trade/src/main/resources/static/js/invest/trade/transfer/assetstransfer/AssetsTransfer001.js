@@ -570,6 +570,10 @@
 
         // 已转仓交易查询按钮事件
         $('#AssetsTransfer001_btn_transferSearch').click(function () {
+            if(!$('#tradeDate').val()){
+                Joyin.error("请输入交易日期!");
+                return;
+            }
             transferTable.load();
         });
 

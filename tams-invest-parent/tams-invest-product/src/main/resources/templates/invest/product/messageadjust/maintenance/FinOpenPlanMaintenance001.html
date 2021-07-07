@@ -61,7 +61,7 @@
                             <div class="layui-input-inline input-inline">
                                 <select type="text" id="scheduletype" name="scheduletype"
                                     class="layui-input form-input input-select" 
-                                    data-th-data-result='${SVR_PLAN_TYPE}'
+                                    data-th-data-result='${SVR_PLAN_TYPE}' data-th-initValue="${scheduletype}"
                                     data-th-placeholder="#{SysCommon.placeholder}"
                                      required>
                                 </select>
@@ -110,6 +110,7 @@
 			var OPEN_TYPE = '';
 			var RANSOM_ISSUE_MODE_03=/*[[${RANSOM_ISSUE_MODE_03}]]*/'03';//申赎
 			var SESSION_SYS_DATE = /*[[${SESSION_SYS_DATE}]]*/'';
+			var scheduletype = /*[[${scheduletype}]]*/'';
         </script>
 		<script data-th-src="@{/js/invest/product/messageadjust/maintenance/FinOpenPlanMaintenance001.js}"></script>
 	</div>

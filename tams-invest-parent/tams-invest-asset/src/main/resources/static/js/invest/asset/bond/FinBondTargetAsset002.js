@@ -568,7 +568,7 @@ $(function() {
 	                    }
 	                    isCityBondChange();
                     }
-                    if(result.data.registOrg != "99" ){
+                    if(result.data.registOrg != "99" && result.data.registOrg != "06"){
                         $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
                     }
 				}
@@ -800,13 +800,13 @@ $(function() {
             obj.type = FINPROD_TYPE_TG_F01;
             AssetCommon.checkDate(obj);
         });
-        $("#registOrg").change(function () {
-            if($(this).val()=='04'){
-                $('#bussFinBondRepInfoDto_repRegistorgComment').val('中证机构间报价系统股份有限公司');
-            }else{
-                $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
-            }
-        });
+//        $("#registOrg").change(function () {
+//            if($(this).val()=='04'){
+//                $('#bussFinBondRepInfoDto_repRegistorgComment').val('中证机构间报价系统股份有限公司');
+//            }else{
+//                $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
+//            }
+//        });
         $("#pflsh").change(function(){
             var str = '';
             if($('#pflsh').select2('data')[0].object){

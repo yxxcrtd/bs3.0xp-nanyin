@@ -1,5 +1,6 @@
 package com.joyintech.tams.valuation.report.common.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -27,7 +28,11 @@ public class Dao {
 			} catch (Exception e) {
 				is= Dao.class.getClassLoader().getResourceAsStream("jdbc.properties");
 				prop.load(is);
+			}finally {
+		  	if(is != null){
+				is.close();
 			}
+		  }
 		  //加载驱动
 		  Class.forName(prop.getProperty("driver"));
 		  //获取地址
@@ -46,9 +51,10 @@ public class Dao {
 	public static void main(String[] args) {
 		//读取配置文件连接信息
 		Properties prop = new Properties();
-		InputStream is = Dao.class.getClassLoader().getResourceAsStream("application.properties");
+		InputStream is = null;
 		Connection conn = null;
 		try {
+			is = Dao.class.getClassLoader().getResourceAsStream("application.properties");
 			prop.load(is);
 			//加载驱动
 			Class.forName(prop.getProperty("driver"));
@@ -71,6 +77,13 @@ public class Dao {
 					conn.close();
 				}
 				catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}

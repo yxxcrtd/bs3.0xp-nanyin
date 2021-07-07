@@ -43,11 +43,11 @@ public class SocketServer {
     public void startSocketServer() {
         //监听端口
         int port = Integer.parseInt(SocketUtils.getPropertyValue("listener.port"));
+        ServerSocket serverSocket = null;
+        Socket client = null;
         try {
-            @SuppressWarnings("resource")
-            ServerSocket serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(port);
             logger.info("Socket服务端进入启动状态，端口=" + port);
-            Socket client = null;
             while (true) {
                 // 一旦有堵塞, 则表示服务器与客户端获得了连接
                 client = serverSocket.accept();
@@ -60,6 +60,18 @@ public class SocketServer {
 //            e.printStackTrace();
         	logger.error("error:",e);
             logger.error("Socket服务端异常: " + e.getMessage());
+        }
+        finally {
+        	try {
+        		if (client != null && !client.isClosed()) {
+        			client.close();
+        		}
+        		if (serverSocket != null && !serverSocket.isClosed()) {
+        			serverSocket.close();
+        		}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
     }
 }

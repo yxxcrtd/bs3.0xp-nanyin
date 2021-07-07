@@ -149,11 +149,39 @@ $(function () {
     });
 
     var dvpExportExcel = function () {
-        Joyin.exportExcel('export', getPageParams());
+        //Joyin.exportExcel('export', getPageParams());
+
+        if (dvpTransferTable != null && dvpTransferTable != '') {
+            var selArr = dvpTransferTable.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getPageParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas,
+                isDvp : true
+            });
+        }
+
     };
 
     var ExportExcel = function () {
-        Joyin.exportExcel('export', getTransferFormParams());
+        //Joyin.exportExcel('export', getTransferFormParams());
+        if (transferTable != null && transferTable != '') {
+            var selArr = transferTable.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getTransferFormParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas,
+                isDvp : false
+            });
+        }
     };
 
     var printData = function() {

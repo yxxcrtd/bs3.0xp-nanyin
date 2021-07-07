@@ -570,6 +570,10 @@ public class EtrProjectService extends BaseService<EtrProjectDto> {
      */
     public String getCounterName(String counterId){
         MstCounterParty mstCounterParty = mstCounterPartyMapper.selectByPrimaryKey(counterId);
-        return mstCounterParty.getCounterName();
+        if (mstCounterParty != null){
+            return mstCounterParty.getCounterName();
+        }else {
+            return null;
+        }
     }
 }

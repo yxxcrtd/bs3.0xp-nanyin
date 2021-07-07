@@ -287,7 +287,7 @@
          from
             CHB_PRD_DEAL deal
         where  trade_type = '01' and status IN ('E','M')
-        group by DEAL.FPROD_ID,DEAL.PROD_ID
+        group by nvl(DEAL.FPROD_ID,DEAL.PROD_ID)
 
       ) DEAL ON INFO.PROD_ID = deal.PROD_ID
       where to_char(greatest(nvl(NVL(info.UPDATE_TIME, info.CREATE_TIME),

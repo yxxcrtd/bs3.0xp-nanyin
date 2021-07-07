@@ -97,6 +97,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.清算速度);
         this.setSelectOptionToModel(model, DictCode.投资目的);
         this.setSelectOptionToModel(model, DictCode.交易平台);
+        this.setSelectOptionToModel(model, DictCode.价格模式);
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("bankRoom", DictCodeListExt1.交易场所_银行间.getValue());
@@ -257,7 +258,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
                     if (!isAuthorizationSoftcontrol) {
                         ValidMessage validMessage = new ValidMessage(
                             // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 start
-                            getMessage("ETR_E_0014","副总裁/总裁助理"));
+                            getMessage("TRD_E_0016","领导"));
                             // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 end
                         messages.add(validMessage);
                         AjaxResult errorRs = new AjaxResult();
@@ -265,7 +266,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
                         return errorRs;
                     } else {
                         AjaxResult ar = new AjaxResult();
-                        ar.setData("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!");
+                        ar.setData("交易本金金额超过领导授权额度，是否确认提交?");
                         return ar;
                     }
                 }

@@ -59,12 +59,13 @@ public class BussRepOtherInvestTargetInfoValidator implements BeanValidator{
                     resultList.add(new ValidMessage("repIntpayCycle",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repIntpayCycle"))));
                 }
-                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
-                if(StringUtil.isEmpty(dto.getRepFinancier())){
-                    resultList.add(new ValidMessage("repFinancier",
-                            getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancier"))));
-                }
-                }
+                /***ZGBSSE-595 【中债直连check】新建项目类资产，报送信息页面“融资人”check未满足报送规范**/
+//                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
+//                if(StringUtil.isEmpty(dto.getRepFinancier())){
+//                    resultList.add(new ValidMessage("repFinancier",
+//                            getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancier"))));
+//                }
+//                }
                 if(StringUtil.isEmpty(dto.getRepFinancierOrgCode())){
                     resultList.add(new ValidMessage("repFinancierOrgCode",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancierOrgCode"))));
@@ -175,10 +176,50 @@ public class BussRepOtherInvestTargetInfoValidator implements BeanValidator{
                                 getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repBankAssetType"))));
                     }
 //                }
-                if(StringUtil.isNotEmpty(dto.getRepBankAssetType())
-                    && dto.getRepBankAssetType().equals(DictCodeListExt2.行内资产类别_其他.getValue())&&StringUtil.isEmpty(dto.getRepBankAssetTyprExplain())){
-                    resultList.add(new ValidMessage("repBankAssetTyprExplain",
-                            getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repBankAssetTyprExplain"))));
+                /***ZGBSSE-592  【中债直连check】新建项目类资产，报送信息页面“行内资产类别说明”check未满足报送规范***/
+//                if(StringUtil.isNotEmpty(dto.getRepBankAssetType())
+//                    && dto.getRepBankAssetType().equals(DictCodeListExt2.行内资产类别_其他.getValue())&&StringUtil.isEmpty(dto.getRepBankAssetTyprExplain())){
+//                    resultList.add(new ValidMessage("repBankAssetTyprExplain",
+//                            getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repBankAssetTyprExplain"))));
+//                }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他非标准化债权类投资.getValue())
+                        ||StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他新增可投资资产.getValue())){
+                    //融资项目
+                    if(StringUtil.isEmpty(dto.getRepFinanceProj())){
+                        resultList.add(new ValidMessage("repFinanceProj",
+                                getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinanceProj"))));
+                    }
+                    //融资人类型（按规模划分）
+                    if(StringUtil.isEmpty(dto.getRepFinancierType1())){
+                        resultList.add(new ValidMessage("repFinancierType1",
+                                getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancierType1"))));
+                    }
+                    //融资人类型（按经济类型划分）
+                    if(StringUtil.isEmpty(dto.getRepFinancierType2())){
+                        resultList.add(new ValidMessage("repFinancierType2",
+                                getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancierType2"))));
+                    }
+                    if(StringUtil.isEmpty(dto.getRepFinancierType3())){
+                        resultList.add(new ValidMessage("repFinancierType3",
+                                getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancierType3"))));
+                    }
+                    if(StringUtil.isEmpty(dto.getRepIndustry1())){
+                        resultList.add(new ValidMessage("repIndustry1",
+                                getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repIndustry1"))));
+                    }
+                    if(StringUtil.isEmpty(dto.getRepIndustryLevel2())){
+                        resultList.add(new ValidMessage("repIndustryLevel2",
+                                getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repIndustryLevel2"))));
+                    }
+                    if(StringUtil.isEmpty(dto.getRepProIndustry())){
+                        resultList.add(new ValidMessage("repProIndustry",
+                                getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repProIndustry"))));
+                    }
+                    if(StringUtil.isEmpty(dto.getRepProIndustryLevel2())){
+                        resultList.add(new ValidMessage("repProIndustryLevel2",
+                                getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repProIndustryLevel2"))));
+                    }
+
                 }
             }
 

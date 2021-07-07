@@ -33,6 +33,15 @@ public class AssetTypeSettingValidator implements BeanValidator {
                  if (StringUtil.isEmpty(dto.getAssetType1())){
                      errorList.add(new ValidMessage("资产一级分类不可为空"));
                  }
+                 if (StringUtil.isEmpty(dto.getAssetType2())){
+                     errorList.add(new ValidMessage("资产二级分类不可为空"));
+                 }
+                 if (StringUtil.isEmpty(dto.getAssetType3())){
+                     errorList.add(new ValidMessage("资产三级分类不可为空"));
+                 }
+                 if (StringUtil.isEmpty(dto.getAssetBusiType())){
+                     errorList.add(new ValidMessage("业务分类不可为空"));
+                 }
                  if (StringUtil.isEmptyList(dto.getSelectedItem1())){
                      errorList.add(new ValidMessage("资产负债类别、资产负债二级类别不可为空"));
                  }else{

@@ -251,7 +251,7 @@
 	</select>
 	<select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT
-		A.ACCT_NO hidCode,
+		distinct A.ACCT_NO hidCode,
 		A.ACCT_NO code,
 		B.SEC_ACCT_NAME name,
 		B.SEC_ACCT_NAME shortName

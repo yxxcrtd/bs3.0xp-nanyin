@@ -28,7 +28,7 @@ import com.joyintech.tams.common.base.entity.RepPower;
  *
  * @author huwei
  * @version 1.0 2018年11月06日
- * @see ReportMenuPowerConfig001
+ * @see ReportMenuPowerConfig002Controller
  * @since 1.0
  */
 @RestController(value="serviceReportMenuPowerConfig002Controller")
@@ -44,8 +44,8 @@ public class ReportMenuPowerConfig002Controller extends BaseController{
      * @return 所有角色列表
      */
     @PostMapping("/findAllRole")
-    public List<SysRole> findAllRole() {
-        return reportMenuPowerConfig001Service.selectForPage();
+    public List<SysRole> findAllRole(@RequestBody Map<String,Object> map) {
+        return reportMenuPowerConfig001Service.selectForPage(map);
 
     }
     

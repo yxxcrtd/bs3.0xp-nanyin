@@ -61,9 +61,8 @@
 			COUNT(DISTINCT(A.PROD_ID))
 		FROM
 			objRec A
-			INNER JOIN CHB_INVESTHOLD_INFO_SUB B
-			 	ON(A.PROD_ID = B.PRODID
-			 	   AND B.STATUS IN ('01','02'))	
+			INNER JOIN CHB_INVESTHOLD_INFO_SUB_SUM B
+			 	ON A.PROD_ID = B.PRODID			 	   	
 		WHERE
 		    TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 				 	   						
@@ -97,20 +96,17 @@
 					A.VDATE,
 					A.RAISE_QTY,
 					A.TOTAL_AMT,
-					CASE WHEN B.STATUS = '03' THEN 0 ELSE B.CNY_AMT END CNY_AMT,						
-					CASE WHEN B.STATUS = '03' THEN 0 ELSE B.QTY END QTY,
-					D.REG_CODE,
-					ROW_NUMBER() over( partition by A.PROD_ID , B.INDENTIFY_MARK ORDER BY B.UPDATE_TIME DESC )  AS investStatusNo
+					B.CNY_AMT CNY_AMT,						
+					B.QTY QTY,
+					D.REG_CODE					
 				FROM  objRec A
 					LEFT JOIN CHB_PRDRESIST_CODE D
 						ON A.PROD_ID = D.PRODID					
-					INNER JOIN CHB_INVESTHOLD_INFO_SUB B
+					INNER JOIN CHB_INVESTHOLD_INFO_SUB_SUM B
 						ON A.PROD_ID = B.PRODID
 				WHERE
 					TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')	   					
 				) tmp1
-			WHERE 	
-				investStatusNo = 1
 			GROUP BY
 				tmp1.PROD_ID,
 				tmp1.REG_CODE,				

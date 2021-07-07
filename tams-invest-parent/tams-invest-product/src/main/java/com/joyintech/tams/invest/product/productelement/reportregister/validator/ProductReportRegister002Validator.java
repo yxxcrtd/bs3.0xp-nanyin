@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,8 +46,8 @@ public class ProductReportRegister002Validator implements BeanValidator {
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
 
-//	@Autowired
-//	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+	@Autowired
+	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
 	@Override
 	public List<ValidMessage> valid(Object value) {
@@ -140,9 +141,10 @@ public class ProductReportRegister002Validator implements BeanValidator {
         		&& !StringUtil.equals("01", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"))) {
             validList.add(new ValidMessage("isFhxgcp", getMessage("请输入新老产品标记")));
         }
-        if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
-            validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
-        }    
+		/****缺少“是否养老理财”字段，与新建输入页面字段不一致   修改方案为将此字段注释 挪到产品新建界面   leipeng 20210430***/
+//        if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
+//            validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
+//        }
 
 		// 产品期次
 		if (StringUtil.isNotEmpty(entity.getRepFinprodStage())) {
@@ -358,8 +360,9 @@ public class ProductReportRegister002Validator implements BeanValidator {
 					validList.add(new ValidMessage("repInvestCountry",
 							getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repInvestCountry"))));
 				} else {
-					if (StringUtil.indexOf(entity.getRepInvestCountry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
-						validList.add(new ValidMessage("repInvestCountry", getMessage("REP_E_0006")));
+					if (StringUtil.equals(entity.getRepInvestArea(),
+							DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(entity.getRepInvestCountry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
+						validList.add(new ValidMessage("repInvestCountry", getMessage("REP_E_00011")));
 					}
 				}
 				// 境外托管机构国别
@@ -367,8 +370,8 @@ public class ProductReportRegister002Validator implements BeanValidator {
 					validList.add(new ValidMessage("repOutDepCtry",
 							getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.repOutDepCtry"))));
 				} else {
-					if (StringUtil.indexOf(entity.getRepOutDepCtry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
-						validList.add(new ValidMessage("repOutDepCtry", getMessage("REP_E_0007")));
+					if (StringUtil.equals(entity.getRepInvestArea(), DictCodeListExt2.资金投向地区_境外.getValue()) && StringUtil.indexOf(entity.getRepOutDepCtry(), DictCodeListExt2.所属国家或地区_中国.getValue()) > -1) {
+						validList.add(new ValidMessage("repOutDepCtry", getMessage("REP_E_0008")));
 					}
 				}
 				// 境外托管机构名称
@@ -403,12 +406,12 @@ public class ProductReportRegister002Validator implements BeanValidator {
 		}
 
 		// 起点销售金额
-		if (StringUtil.isNotEmpty(entity.getRepSaleAmtStr())) {
-			if (entity.getRepSaleAmtStr().compareTo(BigDecimal.ZERO) < 0) {
-				validList.add(new ValidMessage("repSaleAmtStr",
-						getMessage("BUSS_COM_E_0004", getMessage("BussRepFinProductInfo.repSaleAmtStr"), "0")));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepSaleAmtStr())) {
+//			if (entity.getRepSaleAmtStr().compareTo(BigDecimal.ZERO) < 0) {
+//				validList.add(new ValidMessage("repSaleAmtStr",
+//						getMessage("BUSS_COM_E_0004", getMessage("BussRepFinProductInfo.repSaleAmtStr"), "0")));
+//			}
+//		}
 		// 合作模式
 		if (StringUtil.isNotEmpty(entity.getRepContMode())) {
 			// 合作机构名称
@@ -431,7 +434,13 @@ public class ProductReportRegister002Validator implements BeanValidator {
             validList.add(new ValidMessage("请输入是否现金管理类"));
         }
 
-		// validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
+		//发行机构代码必须与银行代码相同
+		if (!StringUtil.isNotEmpty(entity.getRepIssuePartyId())
+				&& StringUtil.equals(entity.getRepIssuePartyId(), CommonUtil.selectBankCode())) {
+			validList.add(new ValidMessage("发行机构代码必须与银行代码相同。"));
+		}
+
+		 validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
 
 		return validList;
 	}

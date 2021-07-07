@@ -15,12 +15,10 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.assign.dto.TrdAssetAssignDto;
 import com.joyintech.tams.invest.trade.transfer.assign.service.TrdAssetAssignService;
-import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecResolute001Dto;
-import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecResoluteDto;
-import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecTransfer001Dto;
-import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecTransferDto;
+import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.*;
 import com.joyintech.tams.invest.trade.transfer.sectransfer.service.SecTransfer001Service;
 import com.joyintech.tams.invest.trade.transfer.sectransfer.service.TrdBondDuration001Service;
 import com.joyintech.tams.invest.trade.transfer.trdassetsProject.service.TrdAssetsProject001Service;
@@ -84,6 +82,10 @@ public class SecTransfer001Controller extends BaseController {
     
     @Autowired
     private TrdAssetAssignService trdAssetAssignService;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
+
 
     /**
      * 重写init方法，加载页面
@@ -397,6 +399,26 @@ public class SecTransfer001Controller extends BaseController {
             wr.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             wr.setMessage("转仓列表信息不能空", MessageType.错误消息);
             return wr;
+        }
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<String, Object>();
+            for (PtlFundAllocationDto ptl : dto.getPtlFundAllocationDtos()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    if (!StringUtil.equals(str, "")) {
+                        str += "</br>";
+                    }
+                    str += "交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！";
+                }
+            }
+            if(StringUtil.isNotEmpty(str)){
+                wr.setMessage(str, MessageType.错误消息);
+                return wr;
+            }
         }
         //查询债券类资产存续期交易 状态为 01-待处理、03-流程中 的数据  2020-10-22 start
         /*Map<String, Object> params = new HashMap<String,Object>();

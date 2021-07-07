@@ -23,6 +23,7 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
+import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
 import com.joyintech.tams.svreport.chb.prodraisetotalregist.dao.ChbPrdRaisetotSubHisMapper;
 import com.joyintech.tams.svreport.chb.prodraisetotalregist.dao.RaiseTotalRegist001Mapper;
 import com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto;
@@ -267,7 +268,11 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
         com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto> page = new com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto>();
         page.setRoot(data);
         //page.setTotal(data.size());
-
+		if(!CollectionUtils.isEmpty(page.getRoot())){
+			for(RaiseTotalRegist001Dto dto : page.getRoot()){
+				dto.setBelongInstitutionCode(null);
+			}
+		}
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
 		if(data!=null){

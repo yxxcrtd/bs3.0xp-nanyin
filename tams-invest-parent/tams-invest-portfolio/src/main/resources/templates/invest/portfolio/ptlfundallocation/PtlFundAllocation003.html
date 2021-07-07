@@ -65,7 +65,7 @@
                                            data-th-text="#{PtlFundAllocation002.ccy}">币种</label>
                                     <div class="layui-input-inline input-inline">
                                         <select class="layui-input form-input input-select " id="ccy" required
-                                                name="ccy" th:data-result="${CCY}" placeholder="请输入内容" th:initValue='${entity?.ccy}'
+                                                name="ccy" th:data-result="${CCY}" placeholder="请输入内容" th:initValue='${entity?.ccy?:CCY_default}'
                                                 data-th-placeholder="#{SysCommon.placeholder}">
                                         </select>
                                     </div>
@@ -103,12 +103,10 @@
                      th:data-params="|{entityName: 'bussTrdTransferOrder', pageFrom: 'submitForm', entityList:'${stlPayOrdersList}',bizCode:'${tradeId}',isMulti:'1'}|"></div>
                 <div class="pro-module-wrap">
                     <div class="pro-module">
-                        <h3 class="pro-module-title"><span class="aleft stuff" >备注信息</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
+                        <h3 class="pro-module-title"><span class="title-des" >备注</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
                         <div class="pro-module-item pro-item-wrap">
                             <div class="layui-form-item">
-                                <label class="layui-form-label form-label-wrap" style="width: 11.9%;"
-                                       data-th-text="#{PtlFundAllocation001.remark}">备注</label>
-                                <div class="layui-input-inline input-inline" style="width: 85%!important;">
+                                <div class="layui-input-inline input-inline" style="margin:0 10px;width: 98%!important;">
                                     <textarea class="layui-textarea" id="remark" maxLength="1000" name="remark" data-th-placeholder="#{SysCommon.placeholder}"  th:text="${entity?.remark}" placeholder="请输入内容"></textarea>
                                 </div>
                             </div>
@@ -129,6 +127,9 @@
         var Fin_Type = /*[[${Fin_Type}]]*/'';
         var YES_OR_NO_N = /*[[${YES_OR_NO_N}]]*/'';
         var ptlFundAllocation001Dtos = /*[[${ptlFundAllocation001Dtos}]]*/'';
+        var payType1001 =/*[[${payType1001}]]*/'';
+        var payType1002 =/*[[${payType1002}]]*/'';
+        var formTodoList =/*[[${formTodoList}]]*/'';
         function zd(){
             debugger;
             hklx = $('#payType').val();
