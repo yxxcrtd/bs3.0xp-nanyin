@@ -128,16 +128,16 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>framework-core</artifactId>
-            <version>0.0.3.1</version>
+            <version>0.0.3-BOOTVIS</version>
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>joyintech-system</artifactId>
-            <version>0.0.3.1</version>
+            <version>0.0.3-BOOTVIS</version>
         </dependency>
         <dependency>
             <groupId>com.jixu</groupId>
-            <artifactId>api</artifactId>
+            <artifactId>JixuApi</artifactId>
             <version>0.0.1</version>
         </dependency>
     </dependencies>
