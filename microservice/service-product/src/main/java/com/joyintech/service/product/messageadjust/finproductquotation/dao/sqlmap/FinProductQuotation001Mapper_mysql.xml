@@ -2,24 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.product.messageadjust.finproductquotation.dao.FinProductQuotation001Mapper_mysql">
 	<select id="queryProdIdInfoIssueSuc" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select FIN_PRODUCT.FINPROD_ID id, CONCAT_WA('',FIN_PRODUCT.FINPROD_MARKET_ID , ':', FIN_PRODUCT.FINPROD_ABBR) text
-		from FIN_PRODUCT, FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY
-		where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodTypeProd}
-		and FIN_PRODUCT.PROFIT_TYPE = #{profitType}
-		and FIN_PRODUCT.P_FINPROD_ID IS NULL
+		select FP.FINPROD_ID id, CONCAT_WA('',FP.FINPROD_MARKET_ID , ':', FP.FINPROD_ABBR) text
+		from FIN_PRODUCT FP, FIN_PRODUCT_ADD FPA, PTL_PORTFOLIO_AUTHORITY PPA
+		where FP.FINPROD_ID = FPA.FINPROD_ID
+		and FP.FINPROD_TYPE2 = #{finprodTypeProd}
+		and FP.PROFIT_TYPE = #{profitType}
+		and FP.P_FINPROD_ID IS NULL
 
-		and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+		and FPA.PORTFOLIO_ID = PPA.PORTFOLIO_ID
 		<if test="userId != null and userId != ''">
-			and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+			and PPA.USER_ID = #{userId}
 		</if>
 
 		<if test="search != null and search != ''">
-			and (FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',#{search},'%')
-			or FIN_PRODUCT.FINPROD_ABBR like concat('%',#{search},'%'))
+			and (FP.FINPROD_MARKET_ID like concat('%',#{search},'%')
+			or FP.FINPROD_ABBR like concat('%',#{search},'%'))
 		</if>
 		<if test="initValue != null and initValue != ''">
-			and FIN_PRODUCT.FINPROD_ID = #{initValue}
+			and FP.FINPROD_ID = #{initValue}
 		</if>
 	</select>
 	<select id="selectForPage" resultType="com.joyintech.service.product.messageadjust.finproductquotation.dto.FinProductQuotation001Dto">

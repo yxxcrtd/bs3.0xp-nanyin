@@ -18,10 +18,10 @@
 	</select>
 
 	<select id="selectFinprodIdByPortfolioId" resultType="string">
-		select FIN_PRODUCT.FINPROD_ID from FIN_PRODUCT_ADD,FIN_PRODUCT
-		where FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-		  and FIN_PRODUCT.P_FINPROD_ID is null
-		  and FIN_PRODUCT_ADD.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+		select FP.FINPROD_ID from FIN_PRODUCT_ADD FPA,FIN_PRODUCT FP
+		where FPA.FINPROD_ID = FP.FINPROD_ID
+		  and FP.P_FINPROD_ID is null
+		  and FPA.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
 	</select>
 	
 	<select id="selectLayerFinprodIdByPfinprodId" resultType="string" >

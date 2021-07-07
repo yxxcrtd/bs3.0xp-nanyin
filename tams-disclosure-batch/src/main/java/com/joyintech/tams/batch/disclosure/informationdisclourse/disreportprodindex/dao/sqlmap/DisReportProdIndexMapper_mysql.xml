@@ -67,13 +67,13 @@
     <select id="getYeildE" resultType="java.math.BigDecimal" parameterType="java.util.Map">
 		SELECT       a.RATE
 		from (
-		SELECT  REP_CASH_YIELD.RATE,
+		SELECT  RCY.RATE,
 		             @rn := @rn + 1  AS RN
-		  FROM REP_CASH_YIELD, (select @rn := 0) b
-		WHERE  REP_CASH_YIELD.busi_id = #{prodid,jdbcType=VARCHAR}
-		AND REP_CASH_YIELD.START_DATE &lt;= #{valuedate,jdbcType=DATE}
-		AND REP_CASH_YIELD.CASH_TYPE = #{cashType,jdbcType=VARCHAR}
-		ORDER BY REP_CASH_YIELD.START_DATE DESC
+		  FROM REP_CASH_YIELD RCY, (select @rn := 0) b
+		WHERE  RCY.busi_id = #{prodid,jdbcType=VARCHAR}
+		AND RCY.START_DATE &lt;= #{valuedate,jdbcType=DATE}
+		AND RCY.CASH_TYPE = #{cashType,jdbcType=VARCHAR}
+		ORDER BY RCY.START_DATE DESC
 		) a
 		limit 1
 	</select>

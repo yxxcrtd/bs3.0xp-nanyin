@@ -100,73 +100,73 @@
 	
 	<select id="queryFeePositionByPtlId" resultType="com.joyintech.service.product.feepay.dto.FinProductFeePayFeeDetailDto">
 		<!-- 单产品费用 -->
-		select  FIN_PRODUCT_ADD.FINPROD_ID finprodId,
-				BOK_POSITION_PRDFEE.BRANCH branch,
+		select  FPA.FINPROD_ID finprodId,
+				BPP.BRANCH branch,
 				'' sFinprodId,
-				SUM(NVL(BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP, 0)) actPayAmt
-	      from BOK_POSITION_PRDFEE, FIN_PRODUCT_ADD, FIN_PRODUCT
-		where BOK_POSITION_PRDFEE.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		  and FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+				SUM(NVL(BPP.TDY_UNPAID_INTINCEXP, 0)) actPayAmt
+	      from BOK_POSITION_PRDFEE BPP, FIN_PRODUCT_ADD FPA, FIN_PRODUCT FP
+		where BPP.FINPROD_ID = FPA.FINPROD_ID
+		  and FPA.FINPROD_ID = FP.FINPROD_ID
 		 <!-- and FIN_PRODUCT.PROFIT_TYPE = #{profitType} -->
 		  <!-- 一体化对应etliu start -->
-		  and FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
+		  and FPA.PORTFOLIO_ID = #{ptlId}
 		  <!-- 一体化对应etliu end -->
-		  and BOK_POSITION_PRDFEE.FEE_TYPE = #{feeType}
+		  and BPP.FEE_TYPE = #{feeType}
 		  <choose>
 		  	<when test="feeType == cashType2_C04">
 		  		<!-- BS 1.9 NZ start -->
-				 and BOK_POSITION_PRDFEE.CDATE = to_date(#{calcEndDate}, 'yyyy-MM-dd')
+				 and BPP.CDATE = to_date(#{calcEndDate}, 'yyyy-MM-dd')
 				<!-- BS 1.9 NZ end -->
 		  	</when>
 		  	<otherwise>
-				and 1 = to_date(#{calcEndDate}, 'yyyy-MM-dd') -BOK_POSITION_PRDFEE.CDATE
+				and 1 = to_date(#{calcEndDate}, 'yyyy-MM-dd') -BPP.CDATE
 		  	</otherwise>
 		  </choose>
-		  and BOK_POSITION_PRDFEE.P_FINPROD_ID is NULL
-		  group by FIN_PRODUCT_ADD.FINPROD_ID, BOK_POSITION_PRDFEE.BRANCH
+		  and BPP.P_FINPROD_ID is NULL
+		  group by FPA.FINPROD_ID, BPP.BRANCH
 		union all
 		<!-- 分层子产品费用 -->
-		select  FIN_PRODUCT_ADD.FINPROD_ID finprodId,
-				BOK_POSITION_PRDFEE.BRANCH branch,
-				BOK_POSITION_PRDFEE.FINPROD_ID sFinprodId, 
-				SUM(NVL(BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP, 0)) actPayAmt
-	      from BOK_POSITION_PRDFEE, FIN_PRODUCT_ADD, FIN_PRODUCT,FIN_PRODUCT F1
-		where BOK_POSITION_PRDFEE.P_FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		  and FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-		  AND F1.P_FINPROD_ID=FIN_PRODUCT_ADD.FINPROD_ID
+		select  FPA.FINPROD_ID finprodId,
+				BPP.BRANCH branch,
+				BPP.FINPROD_ID sFinprodId, 
+				SUM(NVL(BPP.TDY_UNPAID_INTINCEXP, 0)) actPayAmt
+	      from BOK_POSITION_PRDFEE BPP, FIN_PRODUCT_ADD FPA, FIN_PRODUCT FP,FIN_PRODUCT F1
+		where BPP.P_FINPROD_ID = FPA.FINPROD_ID
+		  and FPA.FINPROD_ID = FP.FINPROD_ID
+		  AND F1.P_FINPROD_ID=FPA.FINPROD_ID
 		  <!-- and FIN_PRODUCT.PROFIT_TYPE = #{profitType} -->
 		  <!-- 一体化对应etliu start -->
-		  and FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
+		  and FPA.PORTFOLIO_ID = #{ptlId}
 		  <!-- 一体化对应etliu end -->
-		  and BOK_POSITION_PRDFEE.FEE_TYPE = #{feeType}
+		  and BPP.FEE_TYPE = #{feeType}
 		  <choose>
 		  	<when test="feeType == cashType2_C04">
 		  		<!-- BS 1.9 NZ start -->
-				 and BOK_POSITION_PRDFEE.CDATE = to_date(#{calcEndDate}, 'yyyy-MM-dd')
+				 and BPP.CDATE = to_date(#{calcEndDate}, 'yyyy-MM-dd')
 				<!-- BS 1.9 NZ end -->
 		  	</when>
 		  	<otherwise>
-				and 1 = to_date(#{calcEndDate}, 'yyyy-MM-dd') -BOK_POSITION_PRDFEE.CDATE
+				and 1 = to_date(#{calcEndDate}, 'yyyy-MM-dd') -BPP.CDATE
 		  	</otherwise>
 		  </choose>
-		  group by FIN_PRODUCT_ADD.FINPROD_ID, BOK_POSITION_PRDFEE.BRANCH,BOK_POSITION_PRDFEE.FINPROD_ID
+		  group by FPA.FINPROD_ID, BPP.BRANCH,BPP.FINPROD_ID
 		union all
 		<!-- 差额中收等费用可能挂在组合上 -->
-		select  FIN_PRODUCT_ADD.FINPROD_ID finprodId,
+		select  FPA.FINPROD_ID finprodId,
 				0 branch,
 				'' sFinprodId,
-				SUM(NVL(PTL_FEE_POSITION.TDY_ACCUMUL_PAY_FEE, 0)) actPayAmt
-	      from PTL_FEE_POSITION, FIN_PRODUCT_ADD, FIN_PRODUCT
-		where PTL_FEE_POSITION.PORTFOLIO_ID = FIN_PRODUCT_ADD.PORTFOLIO_ID
-		  and FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+				SUM(NVL(PFP.TDY_ACCUMUL_PAY_FEE, 0)) actPayAmt
+	      from PTL_FEE_POSITION PFP, FIN_PRODUCT_ADD FPA, FIN_PRODUCT FP
+		where PFP.PORTFOLIO_ID = FPA.PORTFOLIO_ID
+		  and FPA.FINPROD_ID = FP.FINPROD_ID
 		 <!-- and FIN_PRODUCT.PROFIT_TYPE = #{profitType} -->
 		  <!-- 一体化对应etliu start -->
-		  and FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
+		  and FPA.PORTFOLIO_ID = #{ptlId}
 		  <!-- 一体化对应etliu end -->
-		  and PTL_FEE_POSITION.PTL_FEE_TYPE = #{feeType}
-		  and 1 = to_date(#{calcEndDate}, 'yyyy-MM-dd') - PTL_FEE_POSITION.CDATE
-		  and FIN_PRODUCT.p_Finprod_Id is null<!-- 去除其他分层子账套 -->
-		  group by FIN_PRODUCT_ADD.FINPROD_ID
+		  and PFP.PTL_FEE_TYPE = #{feeType}
+		  and 1 = to_date(#{calcEndDate}, 'yyyy-MM-dd') - PFP.CDATE
+		  and FP.p_Finprod_Id is null<!-- 去除其他分层子账套 -->
+		  group by FPA.FINPROD_ID
 	</select>
 	
 	<select id="queryFeePositionByPtlLayeredId" resultType="com.joyintech.service.product.feepay.dto.FinProductFeePayFeeDetailDto">
@@ -175,7 +175,7 @@
 			TEMP.finprodId finprodId,
 			TEMP.sFinprodId sFinprodId,
 			TEMP.feeId feeId,
-			sys_datadict_list.item_value basicBill,
+			SDL.item_value basicBill,
 			TEMP.feeName feeName,
 			TEMP.feeType feeType,	
 			TEMP.calcStartDate calcStartDate,
@@ -185,35 +185,35 @@
 			TEMP.payAmt payAmt																		
 			FROM(
 				SELECT
-				FIN_PRODUCT_ADD.PORTFOLIO_ID finprodMarketId
-				,FIN_PRODUCT.Finprod_Id finprodId	
+				FPA.PORTFOLIO_ID finprodMarketId
+				,FP.Finprod_Id finprodId	
 				,NULL as sFinprodId
-				,MST_FEEINFO.FEE_ID	feeId
-				,MST_FEEINFO.BASIC_BILL basicBill<!-- 计费基数 -->
-				,MST_FEEINFO.Fee_Name feeName
-				,BOK_POSITION_PRDFEE.FEE_TYPE feeType 
+				,MF.FEE_ID	feeId
+				,MF.BASIC_BILL basicBill<!-- 计费基数 -->
+				,MF.Fee_Name feeName
+				,BPP.FEE_TYPE feeType 
 				,TRD_PRODUCT_DEAL.MDATE as calcStartDate
 				,to_date(#{calcEndDate}, 'yyyy-MM-dd') calcEndDate
-				,FIN_CASH_INFO.ccy   
-				,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP as actPayAmt 
-				,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP as payAmt                                             
+				,FCI.ccy   
+				,BPP.TDY_UNPAID_INTINCEXP as actPayAmt 
+				,BPP.TDY_UNPAID_INTINCEXP as payAmt                                             
 			    FROM                                                                     
-			      FIN_CASH_INFO                                                                 
-			    INNER JOIN FIN_CASH_PAY_RULE                                                     
-			        ON    FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID    
+			      FIN_CASH_INFO  FCI                                                               
+			    INNER JOIN FIN_CASH_PAY_RULE  FCPR                                                   
+			        ON    FCI.CASH_ID = FCPR.CASH_ID    
       		    		<if test="flag != null and flag == 'Y'.toString()">
-					      	AND    FIN_CASH_PAY_RULE.PAY_CYCLE != #{payCycle}
+					      	AND    FCPR.PAY_CYCLE != #{payCycle}
 					      </if> 
 					      <if test="flag != null and flag == 'N'.toString()">
-					      	AND    FIN_CASH_PAY_RULE.PAY_CYCLE = #{payCycle}
+					      	AND    FCPR.PAY_CYCLE = #{payCycle}
 					      </if>                             
-			    INNER JOIN        MST_FEEINFO                                                  
-			        ON    FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID                                        
-			        AND    MST_FEEINFO.CHARGE_TYPE IN(#{chargeType})                         
-			    INNER JOIN        BOK_POSITION_PRDFEE                                                
-			        ON    FIN_CASH_INFO.FINPROD_ID = BOK_POSITION_PRDFEE.FINPROD_ID                                  
-			        AND    FIN_CASH_INFO.BRANCH = BOK_POSITION_PRDFEE.BRANCH                                     
-			        and    FIN_CASH_INFO.CASH_TYPE_2 = BOK_POSITION_PRDFEE.FEE_TYPE
+			    INNER JOIN        MST_FEEINFO  MF                                                
+			        ON    FCI.FEE_ID = MF.FEE_ID                                        
+			        AND    MF.CHARGE_TYPE IN(#{chargeType})                         
+			    INNER JOIN        BOK_POSITION_PRDFEE  BPP                                              
+			        ON    FCI.FINPROD_ID = BPP.FINPROD_ID                                  
+			        AND    FCI.BRANCH = BPP.BRANCH                                     
+			        and    FCI.CASH_TYPE_2 = BPP.FEE_TYPE
 			   LEFT JOIN (
 	             SELECT MDATE,FINPROD_ID,BRANCH,FINPROD_TYPE2 
 	             FROM TRD_PRODUCT_DEAL S 
@@ -228,60 +228,60 @@
 	                                    AND S.BRANCH=D.BRANCH
 	                                    AND S.FINPROD_TYPE2=D.FINPROD_TYPE2
 	                                    ))TRD_PRODUCT_DEAL 
-	                                    on FIN_CASH_INFO.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
-	                                  AND FIN_CASH_INFO.BRANCH = TRD_PRODUCT_DEAL.BRANCH
-			        				AND     TRD_PRODUCT_DEAL.FINPROD_TYPE2 = BOK_POSITION_PRDFEE.FEE_TYPE                           
-			    LEFT JOIN        FIN_PRODUCT                                                
-			        ON    FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID     
-			    LEFT JOIN FIN_PRODUCT_ADD
-						ON FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID                            			                                                                            
+	                                    on FCI.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
+	                                  AND FCI.BRANCH = TRD_PRODUCT_DEAL.BRANCH
+			        				AND     TRD_PRODUCT_DEAL.FINPROD_TYPE2 = BPP.FEE_TYPE                           
+			    LEFT JOIN        FIN_PRODUCT  FP                                            
+			        ON    FCI.FINPROD_ID = FP.FINPROD_ID     
+			    LEFT JOIN FIN_PRODUCT_ADD  FPA
+						ON FP.FINPROD_ID = FPA.FINPROD_ID                            			                                                                            
 			    WHERE                                                                    
-			      FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}                                         
-				AND    FIN_PRODUCT.P_FINPROD_ID is null                                          
-				AND    FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}                                      
-				AND    FIN_PRODUCT.FINPROD_ID = #{finprodId}                                
-				AND    MST_FEEINFO.FEE_ID = #{feeId}  
-				AND BOK_POSITION_PRDFEE.CDATE =
+			      FCI.CASH_TYPE_1 = #{cashType1}                                         
+				AND    FP.P_FINPROD_ID is null                                          
+				AND    FPA.PORTFOLIO_ID = #{ptlId}                                      
+				AND    FP.FINPROD_ID = #{finprodId}                                
+				AND    MF.FEE_ID = #{feeId}  
+				AND BPP.CDATE =
 		               (SELECT max(B.CDATE)
 		                  FROM BOK_POSITION_PRDFEE B
 		                 WHERE B.FINPROD_ID =
-		                     BOK_POSITION_PRDFEE.FINPROD_ID
+		                     BPP.FINPROD_ID
 		                 AND B.BRANCH =
-		                     BOK_POSITION_PRDFEE.BRANCH
-		                 AND BOK_POSITION_PRDFEE.FEE_TYPE =
+		                     BPP.BRANCH
+		                 AND BPP.FEE_TYPE =
 		                     B.FEE_TYPE
 		                  AND B.CDATE &lt;to_date(#{calcEndDate}, 'yyyy-MM-dd'))                                               
 			  UNION                                                                     
 				SELECT
-				FIN_PRODUCT_ADD.PORTFOLIO_ID finprodMarketId
+				FPA.PORTFOLIO_ID finprodMarketId
 				,FIN_PRODUCT1.FINPROD_MARKET_ID finprodId	
-				,FIN_PRODUCT.FINPROD_ID as sFinprodId
-				,MST_FEEINFO.FEE_ID	feeId
-				,MST_FEEINFO.BASIC_BILL basicBill<!-- 计费基数 -->
-				,MST_FEEINFO.Fee_Name feeName
-				,BOK_POSITION_PRDFEE.FEE_TYPE feeType 
+				,FP.FINPROD_ID as sFinprodId
+				,MF.FEE_ID	feeId
+				,MF.BASIC_BILL basicBill<!-- 计费基数 -->
+				,MF.Fee_Name feeName
+				,BPP.FEE_TYPE feeType 
 				,TRD_PRODUCT_DEAL.MDATE as calcStartDate
 				,to_date(#{calcEndDate}, 'yyyy-MM-dd') calcEndDate
-				,FIN_CASH_INFO.ccy   
-				,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP as actPayAmt   
-				,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP as payAmt                                              
+				,FCI.ccy   
+				,BPP.TDY_UNPAID_INTINCEXP as actPayAmt   
+				,BPP.TDY_UNPAID_INTINCEXP as payAmt                                              
 			  FROM                                                                       
-			    FIN_CASH_INFO                                                                   
-			  INNER JOIN FIN_CASH_PAY_RULE                                                       
-			      ON    FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID                                    
+			    FIN_CASH_INFO FCI                                                                  
+			  INNER JOIN FIN_CASH_PAY_RULE FCPR                                                      
+			      ON    FCI.CASH_ID = FCPR.CASH_ID                                    
      	    			<if test="flag != null and flag == 'Y'.toString()">
-					      	AND    FIN_CASH_PAY_RULE.PAY_CYCLE != #{payCycle}
+					      	AND    FCPR.PAY_CYCLE != #{payCycle}
 					      </if> 
 					      <if test="flag != null and flag == 'N'.toString()">
-					      	AND    FIN_CASH_PAY_RULE.PAY_CYCLE = #{payCycle}
+					      	AND    FCPR.PAY_CYCLE = #{payCycle}
 					      </if>                                  
-			  INNER JOIN        MST_FEEINFO                                                    
-			      ON    FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID                                          
-			      AND    MST_FEEINFO.CHARGE_TYPE IN(#{chargeType})                            
-			  INNER JOIN        BOK_POSITION_PRDFEE                                                  
-			      ON    FIN_CASH_INFO.FINPROD_ID = BOK_POSITION_PRDFEE.FINPROD_ID                                    
-			      AND    FIN_CASH_INFO.BRANCH = BOK_POSITION_PRDFEE.BRANCH                                       
-			      and    FIN_CASH_INFO.CASH_TYPE_2 = BOK_POSITION_PRDFEE.FEE_TYPE                                      
+			  INNER JOIN        MST_FEEINFO  MF                                                  
+			      ON    FCI.FEE_ID = MF.FEE_ID                                          
+			      AND    MF.CHARGE_TYPE IN(#{chargeType})                            
+			  INNER JOIN        BOK_POSITION_PRDFEE  BPP                                                
+			      ON    FCI.FINPROD_ID = BPP.FINPROD_ID                                    
+			      AND    FCI.BRANCH = BPP.BRANCH                                       
+			      and    FCI.CASH_TYPE_2 = BPP.FEE_TYPE                                      
 			  LEFT JOIN (
 	             SELECT MDATE,FINPROD_ID,BRANCH,FINPROD_TYPE2 
 	             FROM TRD_PRODUCT_DEAL S 
@@ -296,49 +296,49 @@
 	                                    AND S.BRANCH=D.BRANCH
 	                                    AND S.FINPROD_TYPE2=D.FINPROD_TYPE2
 	                                    ))TRD_PRODUCT_DEAL 
-	                                    on FIN_CASH_INFO.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
-	                                  AND FIN_CASH_INFO.BRANCH = TRD_PRODUCT_DEAL.BRANCH
-			        				AND     TRD_PRODUCT_DEAL.FINPROD_TYPE2 = BOK_POSITION_PRDFEE.FEE_TYPE
-			  LEFT JOIN        FIN_PRODUCT                                                  
-			      ON    FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID                                   
+	                                    on FCI.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
+	                                  AND FCI.BRANCH = TRD_PRODUCT_DEAL.BRANCH
+			        				AND     TRD_PRODUCT_DEAL.FINPROD_TYPE2 = BPP.FEE_TYPE
+			  LEFT JOIN        FIN_PRODUCT FP                                                 
+			      ON    FCI.FINPROD_ID = FP.FINPROD_ID                                   
 			  LEFT JOIN        FIN_PRODUCT   FIN_PRODUCT1                                              
-			      ON    BOK_POSITION_PRDFEE.FINPROD_ID = FIN_PRODUCT1.FINPROD_ID   
+			      ON    BPP.FINPROD_ID = FIN_PRODUCT1.FINPROD_ID   
 			      
-			  LEFT JOIN FIN_PRODUCT_ADD
-						ON FIN_PRODUCT1.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID                              
+			  LEFT JOIN FIN_PRODUCT_ADD FPA
+						ON FIN_PRODUCT1.FINPROD_ID = FPA.FINPROD_ID                              
 			  WHERE                                                                      
-					FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}                                         
-				AND    FIN_PRODUCT.P_FINPROD_ID is not null                                          
-				AND    FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}                                      
-				AND    FIN_PRODUCT.P_FINPROD_ID = #{finprodId}                                
-				AND    MST_FEEINFO.FEE_ID = #{feeId}  
-				AND 	BOK_POSITION_PRDFEE.CDATE =
+					FCI.CASH_TYPE_1 = #{cashType1}                                         
+				AND    FP.P_FINPROD_ID is not null                                          
+				AND    FPA.PORTFOLIO_ID = #{ptlId}                                      
+				AND    FP.P_FINPROD_ID = #{finprodId}                                
+				AND    MF.FEE_ID = #{feeId}  
+				AND 	BPP.CDATE =
 		               (SELECT max(B.CDATE)
 		                  FROM BOK_POSITION_PRDFEE B
 		                 WHERE B.FINPROD_ID =
-		                     BOK_POSITION_PRDFEE.FINPROD_ID
+		                     BPP.FINPROD_ID
 		                 AND B.BRANCH =
-		                     BOK_POSITION_PRDFEE.BRANCH
-		                 AND BOK_POSITION_PRDFEE.FEE_TYPE =
+		                     BPP.BRANCH
+		                 AND BPP.FEE_TYPE =
 		                     B.FEE_TYPE
 
 		                 AND B.CDATE &lt;to_date(#{calcEndDate}, 'yyyy-MM-dd'))  
 		                 
 		    union all
 		    
-		    select   PTL_PORTFOLIO.PORTFOLIO_ID finprodMarketId
-			        ,FIN_PRODUCT_ADD.FINPROD_ID finprodId  
+		    select   PP.PORTFOLIO_ID finprodMarketId
+			        ,FPA.FINPROD_ID finprodId  
 			        ,''  as sFinprodId
-			        ,MST_FEEINFO.FEE_ID  feeId
-			        ,MST_FEEINFO.BASIC_BILL basicBill<!-- 计费基数 -->
-			        ,MST_FEEINFO.Fee_Name feeName
-			        ,PTL_FEE_POSITION.PTL_FEE_TYPE feeType 
-			        ,nvl(TRD_PRODUCT_DEAL.MDATE,PTL_PORTFOLIO.vdate) as calcStartDate
+			        ,MF.FEE_ID  feeId
+			        ,MF.BASIC_BILL basicBill<!-- 计费基数 -->
+			        ,MF.Fee_Name feeName
+			        ,PFP.PTL_FEE_TYPE feeType 
+			        ,nvl(TRD_PRODUCT_DEAL.MDATE,PP.vdate) as calcStartDate
 			        ,to_date(#{calcEndDate}, 'yyyy-MM-dd') calcEndDate
-			        ,FIN_CASH_INFO.ccy   
-			        ,PTL_FEE_POSITION.TDY_ACCUMUL_PAY_FEE as actPayAmt   
-			        ,PTL_FEE_POSITION.TDY_ACCUMUL_PAY_FEE as payAmt    
-			        from PTL_FEE_POSITION, FIN_PRODUCT_ADD, PTL_PORTFOLIO ,MST_FEEINFO, FIN_CASH_INFO
+			        ,FCI.ccy   
+			        ,PFP.TDY_ACCUMUL_PAY_FEE as actPayAmt   
+			        ,PFP.TDY_ACCUMUL_PAY_FEE as payAmt    
+			        from PTL_FEE_POSITION PFP, FIN_PRODUCT_ADD FPA, PTL_PORTFOLIO PP,MST_FEEINFO MF, FIN_CASH_INFO FCI
 			        LEFT JOIN (
 			               SELECT MDATE,FINPROD_ID,BRANCH,FINPROD_TYPE2 
 			               FROM TRD_PRODUCT_DEAL S 
@@ -353,22 +353,22 @@
 				                                    AND S.BRANCH=D.BRANCH
 				                                    AND S.FINPROD_TYPE2=D.FINPROD_TYPE2
 				                                    ))TRD_PRODUCT_DEAL 
-				                                    on FIN_CASH_INFO.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
-				                                  AND FIN_CASH_INFO.BRANCH = TRD_PRODUCT_DEAL.BRANCH  
-			                                    and FIN_CASH_INFO.CASH_TYPE_2 = TRD_PRODUCT_DEAL.FINPROD_TYPE2                         
-			    where PTL_FEE_POSITION.PORTFOLIO_ID = FIN_PRODUCT_ADD.PORTFOLIO_ID
-			      and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
-			      and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-			      and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1} 
-			      and FIN_CASH_INFO.CASH_TYPE_2 = #{cashType2_C04} 
-			      and FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID      
-			      and PTL_FEE_POSITION.PTL_FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2                                    
-				  AND MST_FEEINFO.CHARGE_TYPE = #{chargeType}         
-			      and FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
-			      and PTL_FEE_POSITION.PTL_FEE_TYPE = #{feeType}
-			      and 1 = to_date(#{calcEndDate}, 'yyyy-MM-dd') - PTL_FEE_POSITION.CDATE
-			      and PTL_PORTFOLIO.PROFIT_TYPE = #{profitType}                                                    
-			)TEMP left join sys_datadict_list on TEMP.basicBill = sys_datadict_list.item_code and dict_code = 'BILL_BASE_FEE_KIND'
+				                                    on FCI.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
+				                                  AND FCI.BRANCH = TRD_PRODUCT_DEAL.BRANCH  
+			                                    and FCI.CASH_TYPE_2 = TRD_PRODUCT_DEAL.FINPROD_TYPE2                         
+			    where PFP.PORTFOLIO_ID = FPA.PORTFOLIO_ID
+			      and FPA.PORTFOLIO_ID = PP.PORTFOLIO_ID
+			      and FCI.FINPROD_ID = FPA.FINPROD_ID
+			      and FCI.CASH_TYPE_1 = #{cashType1} 
+			      and FCI.CASH_TYPE_2 = #{cashType2_C04} 
+			      and FCI.FEE_ID = MF.FEE_ID      
+			      and PFP.PTL_FEE_TYPE = FCI.CASH_TYPE_2                                    
+				  AND MF.CHARGE_TYPE = #{chargeType}         
+			      and FPA.PORTFOLIO_ID = #{ptlId}
+			      and PFP.PTL_FEE_TYPE = #{feeType}
+			      and 1 = to_date(#{calcEndDate}, 'yyyy-MM-dd') - PFP.CDATE
+			      and PP.PROFIT_TYPE = #{profitType}                                                    
+			)TEMP left join sys_datadict_list SDL on TEMP.basicBill = SDL.item_code and SDL.dict_code = 'BILL_BASE_FEE_KIND'
 	</select>
 	
 	<!-- 获取支付类型 -->
@@ -381,17 +381,17 @@
     </select>
 	
 	<select id="queryByPtlId" resultType="com.joyintech.service.product.feepay.dto.FinProductFeePayDto">
-    	select t.* from (select row_number() over() as rownum,FIN_PRODUCT.CCY as ccy ,
-			   FIN_PRODUCT.FINPROD_ID as finprodId,
-    		   FIN_PRODUCT.PROFIT_TYPE as profitType,
-			   FIN_PRODUCT_ADD.DEAL_MODE  as dealMode,
-    		   FIN_PRODUCT.MDATE as mdate
-    	  from FIN_PRODUCT, FIN_PRODUCT_ADD
+    	select t.* from (select row_number() over() as rownum,FP.CCY as ccy ,
+			   FP.FINPROD_ID as finprodId,
+    		   FP.PROFIT_TYPE as profitType,
+			   FPA.DEAL_MODE  as dealMode,
+    		   FP.MDATE as mdate
+    	  from FIN_PRODUCT FP, FIN_PRODUCT_ADD FPA
 			/*,  PA_FIN_PRODUCT*/
-    	 where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-    	   /*AND FIN_PRODUCT.FINPROD_ID = PA_FIN_PRODUCT.FINPROD_ID*/
+    	 where FP.FINPROD_ID = FPA.FINPROD_ID
+    	   /*AND FP.FINPROD_ID = PA_FIN_PRODUCT.FINPROD_ID*/
 	   	 	<if test="ptlId != null and ptlId != ''">
-		  	and FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
+		  	and FPA.PORTFOLIO_ID = #{ptlId}
 		  	</if> 
 		  ) t where t.rownum = 1
     </select>

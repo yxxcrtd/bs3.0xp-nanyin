@@ -1839,21 +1839,21 @@
 		count(1) R6S1
 		FROM
 		(
-		select #{R6S1} as remType,REP_REVEAL.PRODID as finprodId,REP_REVEAL.PRODID as prodId,REP_REVEAL.PROD_NAME as finprodName,'净值披露查看' as reminder,
+		select #{R6S1} as remType,RR.PRODID as finprodId,RR.PRODID as prodId,RR.PROD_NAME as finprodName,'净值披露查看' as reminder,
 <!-- 	REP_REVEAL.REVEAL_END_DATE as mDate,REP_REVEAL.UPDATE_TIME -->
-		REP_REVEAL.REVEAL_END_DATE as mdate,
+		RR.REVEAL_END_DATE as mdate,
 		T5.MENU_ID as menuId,
 		T5.URL,
 		T5.LABLE as lable,
 		T5.DEALF as dealF,
 		T5.CLOSF as closF,
 		T5.DAYS
-		from REP_REVEAL,SYS_ACTIVEREMINDER_SET T5 where T5.REM_TYPE=#{R6S1}
-		and REP_REVEAL.UPDATE_TIME&lt;= #{quaryDate}+1
-		and REP_REVEAL.UPDATE_TIME&gt;=#{quaryDate}-T5.DAYS
+		from REP_REVEAL RR,SYS_ACTIVEREMINDER_SET T5 where T5.REM_TYPE=#{R6S1}
+		and RR.UPDATE_TIME&lt;= #{quaryDate}+1
+		and RR.UPDATE_TIME&gt;=#{quaryDate}-T5.DAYS
 		and not exists (select S.SEQNO 
 			from SYS_ACTIVEREMINDER_INFO S where S.REM_TYPE=#{R6S1} and S.EFFFLAG=#{noFlag}
-			and S.FINPROD_ID=REP_REVEAL.PRODID and to_char(S.MDATE, 'yyyy-MM-dd')=to_char(REP_REVEAL.REVEAL_END_DATE, 'yyyy-MM-dd'))
+			and S.FINPROD_ID=RR.PRODID and to_char(S.MDATE, 'yyyy-MM-dd')=to_char(RR.REVEAL_END_DATE, 'yyyy-MM-dd'))
 		)
 	</select>
 	<select id="searchCountR7S1"
@@ -1863,67 +1863,67 @@
 		FROM
 		(
 		select #{R7S1} as remType,	
-	MST_BOND_CREDIT_RATING.O_CODE as assetId,
-		MST_BOND_CREDIT_RATING.O_CODE as assetCode,
-		decode(MST_BOND_CREDIT_RATING.O_TYPE,'01',MST_CUSTOMER_INFO.CUSTOMER_NAME,FIN_PRODUCT.FINPROD_ABBR) as assetName,
+	    MBCRT.O_CODE as assetId,
+		MBCRT.O_CODE as assetCode,
+		decode(MBCRT.O_TYPE,'01',MCI.CUSTOMER_NAME,FP.FINPROD_ABBR) as assetName,
 		'债项和主体评级变动查看' as reminder,
-		MST_BOND_CREDIT_RATING.UPDATE_TIME as mdate,
+		MBCRT.UPDATE_TIME as mdate,
 		T5.MENU_ID as menuId,
 		T5.URL,
 		T5.LABLE as lable,
 		T5.DEALF as dealF,
 		T5.CLOSF as closF,
 		T5.DAYS
-		from MST_BOND_CREDIT_RATING
-		left join MST_CUSTOMER_INFO 
-		on MST_CUSTOMER_INFO.CUSTOMER_ID=MST_BOND_CREDIT_RATING.O_CODE and MST_BOND_CREDIT_RATING.O_TYPE='01'
-		left join FIN_PRODUCT on FIN_PRODUCT.FINPROD_MARKET_ID=MST_BOND_CREDIT_RATING.O_CODE and MST_BOND_CREDIT_RATING.O_TYPE='02'		
+		from MST_BOND_CREDIT_RATING MBCRT
+		left join MST_CUSTOMER_INFO MCI
+		on MCI.CUSTOMER_ID=MBCRT.O_CODE and MBCRT.O_TYPE='01'
+		left join FIN_PRODUCT FP on FP.FINPROD_MARKET_ID=MBCRT.O_CODE and MBCRT.O_TYPE='02'		
 		,SYS_ACTIVEREMINDER_SET T5 
-		where T5.REM_TYPE=#{R7S1} and MST_BOND_CREDIT_RATING.UPDATE_TIME&lt;=#{quaryDate}+1
-		and MST_BOND_CREDIT_RATING.UPDATE_TIME&gt;=#{quaryDate}-T5.DAYS
-		and MST_BOND_CREDIT_RATING.O_TYPE in('01','02')		
+		where T5.REM_TYPE=#{R7S1} and MBCRT.UPDATE_TIME&lt;=#{quaryDate}+1
+		and MBCRT.UPDATE_TIME&gt;=#{quaryDate}-T5.DAYS
+		and MBCRT.O_TYPE in('01','02')		
 		and not exists (select S.SEQNO 
 			from SYS_ACTIVEREMINDER_INFO S where S.REM_TYPE=#{R7S1} and S.EFFFLAG=#{noFlag}
-			and S.FINPROD_ID=MST_BOND_CREDIT_RATING.O_CODE and to_char(S.MDATE, 'yyyy-MM-dd')=to_char(MST_BOND_CREDIT_RATING.UPDATE_TIME, 'yyyy-MM-dd'))
+			and S.FINPROD_ID=MBCRT.O_CODE and to_char(S.MDATE, 'yyyy-MM-dd')=to_char(MBCRT.UPDATE_TIME, 'yyyy-MM-dd'))
 			 AND EXISTS
  (SELECT 1
           FROM MST_BOND_CREDIT_RATING MBCR
-         WHERE MBCR.O_CODE = MST_BOND_CREDIT_RATING.O_CODE
-           AND MBCR.O_TYPE = MST_BOND_CREDIT_RATING.O_TYPE
-           AND MBCR.GRADE_DATE &lt; MST_BOND_CREDIT_RATING.GRADE_DATE
+         WHERE MBCR.O_CODE = MBCRT.O_CODE
+           AND MBCR.O_TYPE = MBCRT.O_TYPE
+           AND MBCR.GRADE_DATE &lt; MBCRT.GRADE_DATE
            AND TRUNC(MBCR.UPDATE_TIME) &lt;
-               TRUNC(MST_BOND_CREDIT_RATING.UPDATE_TIME))
+               TRUNC(MBCRT.UPDATE_TIME))
 union all
 select #{R7S1} as remType,	
-	MST_INNER_CREDIT_RATING.O_CODE as assetId,
-		MST_INNER_CREDIT_RATING.O_CODE as assetCode,
-		decode(MST_INNER_CREDIT_RATING.O_TYPE,'01',MST_CUSTOMER_INFO.CUSTOMER_NAME,FIN_PRODUCT.FINPROD_ABBR) as assetName,
+	MICRT.O_CODE as assetId,
+		MICRT.O_CODE as assetCode,
+		decode(MICRT.O_TYPE,'01',MCI.CUSTOMER_NAME,FP.FINPROD_ABBR) as assetName,
 		'债项和主体评级变动查看' as reminder,
-		MST_INNER_CREDIT_RATING.UPDATE_TIME as mdate,
+		MICRT.UPDATE_TIME as mdate,
 		T5.MENU_ID as menuId,
 		T5.URL,
 		T5.LABLE as lable,
 		T5.DEALF as dealF,
 		T5.CLOSF as closF,
 		T5.DAYS
-		from MST_INNER_CREDIT_RATING
-		left join MST_CUSTOMER_INFO 
-		on MST_CUSTOMER_INFO.CUSTOMER_ID=MST_INNER_CREDIT_RATING.O_CODE and MST_INNER_CREDIT_RATING.O_TYPE='01'
-		left join FIN_PRODUCT on FIN_PRODUCT.FINPROD_MARKET_ID=MST_INNER_CREDIT_RATING.O_CODE and MST_INNER_CREDIT_RATING.O_TYPE='02'		
+		from MST_INNER_CREDIT_RATING MICRT
+		left join MST_CUSTOMER_INFO MCI
+		on MCI.CUSTOMER_ID=MICRT.O_CODE and MICRT.O_TYPE='01'
+		left join FIN_PRODUCT FP on FP.FINPROD_MARKET_ID=MICRT.O_CODE and MICRT.O_TYPE='02'		
 		,SYS_ACTIVEREMINDER_SET T5 
-		where T5.REM_TYPE=#{R7S1} and MST_INNER_CREDIT_RATING.UPDATE_TIME&lt;=#{quaryDate}+1
-		and MST_INNER_CREDIT_RATING.UPDATE_TIME&gt;=#{quaryDate}-T5.DAYS
-		and MST_INNER_CREDIT_RATING.O_TYPE in('01','02')		
+		where T5.REM_TYPE=#{R7S1} and MICRT.UPDATE_TIME&lt;=#{quaryDate}+1
+		and MICRT.UPDATE_TIME&gt;=#{quaryDate}-T5.DAYS
+		and MICRT.O_TYPE in('01','02')		
 		and not exists (select S.SEQNO 
 			from SYS_ACTIVEREMINDER_INFO S where S.REM_TYPE=#{R7S1} and S.EFFFLAG=#{noFlag}
-			and S.FINPROD_ID=MST_INNER_CREDIT_RATING.O_CODE and to_char(S.MDATE, 'yyyy-MM-dd')=to_char(MST_INNER_CREDIT_RATING.UPDATE_TIME, 'yyyy-MM-dd'))
+			and S.FINPROD_ID=MICRT.O_CODE and to_char(S.MDATE, 'yyyy-MM-dd')=to_char(MICRT.UPDATE_TIME, 'yyyy-MM-dd'))
 			AND EXISTS  (SELECT 1
           FROM MST_INNER_CREDIT_RATING MICR
-         WHERE MICR.O_CODE = MST_INNER_CREDIT_RATING.O_CODE
-           AND MICR.O_TYPE = MST_INNER_CREDIT_RATING.O_TYPE
-           AND MICR.GRADE_DATE &lt; MST_INNER_CREDIT_RATING.GRADE_DATE
+         WHERE MICR.O_CODE = MICRT.O_CODE
+           AND MICR.O_TYPE = MICRT.O_TYPE
+           AND MICR.GRADE_DATE &lt; MICRT.GRADE_DATE
            AND TRUNC(MICR.UPDATE_TIME) &lt;
-               TRUNC(MST_INNER_CREDIT_RATING.UPDATE_TIME))
+               TRUNC(MICRT.UPDATE_TIME))
 		)
 	</select>
 	<select id="searchCountR7S2"
@@ -1933,23 +1933,23 @@ select #{R7S1} as remType,
 		FROM
 		(
 		select #{R7S2} as remType,	
-		FIN_PRODUCT.FINPROD_MARKET_ID as finprodId,
-		FIN_PRODUCT.FINPROD_ID as prodId,
-		FIN_PRODUCT.FINPROD_ABBR as finprodName,
+		FP.FINPROD_MARKET_ID as finprodId,
+		FP.FINPROD_ID as prodId,
+		FP.FINPROD_ABBR as finprodName,
 		'项目类资产标的信息被修改查看' as reminder,
-		FIN_PRODUCT.UPDATE_TIME as mdate,
+		FP.UPDATE_TIME as mdate,
 		T5.MENU_ID as menuId,
 		T5.URL,
 		T5.LABLE as lable,
 		T5.DEALF as dealF,
 		T5.CLOSF as closF,
 		T5.DAYS
-		from FIN_PRODUCT,SYS_ACTIVEREMINDER_SET T5 where FIN_PRODUCT.FINPROD_TYPE2=#{finType_F18} and T5.REM_TYPE=#{R7S2} 
-		and FIN_PRODUCT.UPDATE_TIME&lt;= #{quaryDate}+1
-		and FIN_PRODUCT.UPDATE_TIME&gt;=#{quaryDate}-T5.DAYS
+		from FIN_PRODUCT FP,SYS_ACTIVEREMINDER_SET T5 where FP.FINPROD_TYPE2=#{finType_F18} and T5.REM_TYPE=#{R7S2} 
+		and FP.UPDATE_TIME&lt;= #{quaryDate}+1
+		and FP.UPDATE_TIME&gt;=#{quaryDate}-T5.DAYS
 		and not exists (select S.SEQNO 
 			from SYS_ACTIVEREMINDER_INFO S where S.REM_TYPE=#{R7S2} and S.EFFFLAG=#{noFlag}
-			and S.FINPROD_ID=FIN_PRODUCT.FINPROD_ID and to_char(S.MDATE, 'yyyy-MM-dd')=to_char(FIN_PRODUCT.UPDATE_TIME, 'yyyy-MM-dd'))
+			and S.FINPROD_ID=FP.FINPROD_ID and to_char(S.MDATE, 'yyyy-MM-dd')=to_char(FP.UPDATE_TIME, 'yyyy-MM-dd'))
 		)
 	</select>
 	<select id="searchAssetInfo" resultType="com.joyintech.tams.invest.remind.dto.PaActiveRemind002Dto">

@@ -23,44 +23,44 @@
 		</if>
 	</select>
 	<select id="queryProdIdInfoIssueSuc" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select FIN_PRODUCT.FINPROD_ID id, concat_ws('',FIN_PRODUCT.FINPROD_MARKET_ID ,':', FIN_PRODUCT.FINPROD_ABBR) text
-		from FIN_PRODUCT, FIN_PRODUCT_ADD, PTL_PORTFOLIO_AUTHORITY
-		where FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		and FIN_PRODUCT.FINPROD_TYPE2 = #{finprodTypeProd}
-		and FIN_PRODUCT.P_FINPROD_ID IS NULL
+		select FP.FINPROD_ID id, concat_ws('',FP.FINPROD_MARKET_ID ,':', FP.FINPROD_ABBR) text
+		from FIN_PRODUCT FP, FIN_PRODUCT_ADD FPA, PTL_PORTFOLIO_AUTHORITY PPA
+		where FP.FINPROD_ID = FPA.FINPROD_ID
+		and FP.FINPROD_TYPE2 = #{finprodTypeProd}
+		and FP.P_FINPROD_ID IS NULL
 		<if test="issueStatus != null and issueStatus != ''">
-			and FIN_PRODUCT_ADD.ISSUE_STATUS = #{issueStatus}
+			and FPA.ISSUE_STATUS = #{issueStatus}
 		</if>
 		<!-- 一体化对应etliu -->
-		and FIN_PRODUCT_ADD.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+		and FPA.PORTFOLIO_ID = PPA.PORTFOLIO_ID
 		<!-- and FIN_PRODUCT.MDATE &gt; to_date(#{platDate}, '%Y-%m-%d') -->
 		<if test="search != null and search != ''">
-			and (FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',#{search},'%')
-			or FIN_PRODUCT.FINPROD_ABBR like concat('%',#{search},'%'))
+			and (FP.FINPROD_MARKET_ID like concat('%',#{search},'%')
+			or FP.FINPROD_ABBR like concat('%',#{search},'%'))
 		</if>
 		<if test="userId != null and userId != ''">
-			and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+			and PPA.USER_ID = #{userId}
 		</if>
 		<choose>
 			<when test="initValue != null and initValue != ''">
-				and FIN_PRODUCT.FINPROD_ID = #{initValue}
+				and FP.FINPROD_ID = #{initValue}
 			</when>
 		</choose>
 	</select>
 	<select id="queryFeeAccountList" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select STL_CAPACCT_INFO.ACCT_NO id,
-		concat_ws('',STL_CAPACCT_INFO.ACCT_NO , ':', STL_CAPACCT_INFO.ACCT_NAME) text
-		from STL_CAPACCT_INFO,STL_FIN_PRODUCT_ACCT
-		where STL_CAPACCT_INFO.ACCT_NO = STL_FIN_PRODUCT_ACCT.ACCT_NO
+		select SCI.ACCT_NO id,
+		concat_ws('',SCI.ACCT_NO , ':', SCI.ACCT_NAME) text
+		from STL_CAPACCT_INFO SCI,STL_FIN_PRODUCT_ACCT SFPA
+		where SCI.ACCT_NO = SFPA.ACCT_NO
 		<!-- 	 	 AND STL_FIN_PRODUCT_ACCT.ACCT_TYPE in (#{acctType1_fix}, #{acctType1_trust}, #{acctType1_sale}) -->
 		<if test="search != null and search != ''">
-			and (STL_CAPACCT_INFO.ACCT_NO like concat('%', #{search}, '%')
-			or STL_CAPACCT_INFO.ACCT_NAME like concat('%', #{search}, '%'))
+			and (SCI.ACCT_NO like concat('%', #{search}, '%')
+			or SCI.ACCT_NAME like concat('%', #{search}, '%'))
 		</if>
 		<if test="initValue != null and initValue != ''">
-			and STL_CAPACCT_INFO.ACCT_NO IN (#{initValue})
+			and SCI.ACCT_NO IN (#{initValue})
 		</if>
-		GROUP BY STL_CAPACCT_INFO.ACCT_NO,STL_CAPACCT_INFO.ACCT_NAME
+		GROUP BY SCI.ACCT_NO,SCI.ACCT_NAME
 	</select>
 	<select id="queryFeeInfoList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select  FEE_ID id,
