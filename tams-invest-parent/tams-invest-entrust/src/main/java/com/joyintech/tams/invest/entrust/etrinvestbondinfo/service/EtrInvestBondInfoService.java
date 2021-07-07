@@ -1223,6 +1223,22 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
 	}
 
     /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    public BigDecimal getLastPriceByPara(Map<String, Object> paramMap) {
+        if (StringUtil.isEmpty((String) paramMap.get("sysdate"))) {
+            paramMap.put("sysdate", iPlatformDate.getSysDateStr());
+        }
+        String sysdate = (String) paramMap.get("sysdate");
+        paramMap.put("sysdate", DateUtil.addDay(sysdate, -1));
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getLastPriceByPara", paramMap,
+                BigDecimal.class);
+    }
+
+    /**
      * 导入数据文件
      *
      * @param fileName 导入的文件名

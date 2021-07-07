@@ -965,7 +965,7 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
     public BaseEtrInvestInfoDto getEtrustDto(String entrustId) {
         if (baseEtrInvestInfoService == null) {
             return new BaseEtrInvestInfoDto();
-    }
+        }
         BaseEtrInvestInfoDto resultDto = baseEtrInvestInfoService.queryActiveMandate(entrustId);
         if (resultDto != null && resultDto.getEtrEntrust() != null) {
             // 委托数量中扣除已完成额度
@@ -974,9 +974,13 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
                 for (EtrFinishStatus etrFinishStatus : resultDto.getEtrFinishStatusList()) {
                     已完成额度 = ArithmeticUtil.doAdd(已完成额度,etrFinishStatus.getFinishAmt());
                 }
-
-                resultDto.getEtrEntrust().setEntrustAmt(
-                        ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustAmt(), 已完成额度));
+                if(StringUtil.isNotEmpty(resultDto.getEtrEntrust().getEntrustAmt())) {
+                    resultDto.getEtrEntrust().setEntrustAmt(
+                            ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustAmt(), 已完成额度));
+                }else if(StringUtil.isNotEmpty(resultDto.getEtrEntrust().getEntrustNum())) {
+                    resultDto.getEtrEntrust().setEntrustNum(
+                            ArithmeticUtil.subtract(resultDto.getEtrEntrust().getEntrustNum(), 已完成额度));
+                }
             }
         }
         return resultDto;

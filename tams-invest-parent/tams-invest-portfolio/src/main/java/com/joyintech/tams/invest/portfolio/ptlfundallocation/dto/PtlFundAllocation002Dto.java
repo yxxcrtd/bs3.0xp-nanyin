@@ -51,6 +51,11 @@ public class PtlFundAllocation002Dto extends StlPayOrders implements ITableRow,P
      * 组合名称
      */
     private String portfolioName;
+
+    /**
+     * 实体投资组合代码
+     */
+    private String actPortfolioId;
     /**
      * 业务编号
      */
@@ -409,4 +414,12 @@ public class PtlFundAllocation002Dto extends StlPayOrders implements ITableRow,P
         this.isImportFlag = isImportFlag;
     }
     /* 添加导入标志 add by liuwei 20210401 end */
+
+    public String getActPortfolioId() {
+        return actPortfolioId;
+    }
+
+    public void setActPortfolioId(String actPortfolioId) {
+        this.actPortfolioId = actPortfolioId;
+    }
 }

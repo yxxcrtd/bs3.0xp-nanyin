@@ -208,6 +208,9 @@ public class MstCustomerNature003Controller extends BaseController {
                 String  customerCharater =  DictCodeList.客户性质_发行人.getValue();
 
                 if (customerCharater.equals(entity.getCustomerCharater())) {
+                    if (StringUtil.equals(dto.getCustomerType(), DictCodeList.客户类型_自然人.getValue())) {
+                        return new AjaxResult("客户性质为发行人时，选择数据的客户类型不能为自然人！", MessageType.错误消息);
+                    }
                     String isFinLicenceStr = mstCustomerNatureService.checkIsFinLicenceStr(dto.getCustomerId());
                     if(StringUtil.isEmpty(isFinLicenceStr)) {
                         return new AjaxResult("客户性质为发行人时，机构信息中的“是否持有金融牌照”字段不可以为空！", MessageType.错误消息);

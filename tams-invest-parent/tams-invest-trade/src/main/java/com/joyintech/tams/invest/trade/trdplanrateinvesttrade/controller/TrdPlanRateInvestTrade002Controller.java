@@ -95,7 +95,7 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
     /**
      * 主键生成类
      */
-    @Autowired(required = false)
+    @Autowired
     private BaseGetBusinessId baseGetBusinessId;
     /**
      * 附件上传类

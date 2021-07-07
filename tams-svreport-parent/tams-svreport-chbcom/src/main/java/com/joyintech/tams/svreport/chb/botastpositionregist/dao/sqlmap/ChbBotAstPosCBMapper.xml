@@ -93,8 +93,8 @@
 		    f_guid() REGIST_SEQNO,
 			POS.ISSUE_PARTY_ID  as ISSUE_PARTY_ID,
 		    to_date(#{generateDate,jdbcType=VARCHAR},'yyyy-MM-dd')  as POS_DATE,
-		    NVL(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE) as PLAN_ASSET_ID, 
-		    NVL(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE) as ASSET_CODE,
+		    NVL(PLANASSET.ASSET_CODE_OLD,nvl(PLANASSET.ASSET_CODE,pos.plan_asset_id)) as PLAN_ASSET_ID, 
+		    NVL(BOTASSET.ASSET_CODE_OLD,nvl(BOTASSET.ASSET_CODE,pos.asset_code)) as ASSET_CODE,
 		    POS.TOTAL_NUM as TOTAL_NUM,
 		    POS.ISSUE_AMT as ISSUE_AMT,
 		    POS.UNINVEST_CASH as UNINVEST_CASH,
@@ -117,31 +117,23 @@
         LEFT JOIN CHB_ASSET_INFO BOTASSET
         ON BOTASSET.ASSET_CODE = POS.ASSET_CODE
 		<if test="InstitutionCode != null and InstitutionCode != '' ">
-			left join chb_asset_info_sub csb on csb.ASSET_CODE=POS.ASSET_CODE
-			LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
-			LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
-			LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
-			WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
-			LEFT JOIN (
-			SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
-			WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
-			) DA
-			ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
-			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+			<!--left join chb_asset_info_sub csb on csb.ASSET_CODE=POS.ASSET_CODE
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'-->
+			left join data_auth_notify_inst dis on (dis.business_id=POS.PLAN_ASSET_ID or dis.business_id='F28_'||POS.PLAN_ASSET_ID)
+			and dis.model_type = '02' AND dis.DATA_TYPE in ('FINASSET12','PTL01')
 		</if>
 		WHERE to_char(POS.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		<if test="ischbbtm != null and ischbbtm == '02'">
 			and POS.ISCHL = '02'
 		</if>
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
-			AND( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
-			or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR}
-			and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+			<!--AND CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}-->
+			and dis.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
 		</if>
 		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB 
 			where SUB.POS_DATE = POS.POS_DATE
-			  and SUB.PLAN_ASSET_ID = NVL(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE)
-			  and SUB.ASSET_CODE = NVL(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE)
+			  and SUB.PLAN_ASSET_ID = NVL(PLANASSET.ASSET_CODE_OLD,nvl(PLANASSET.ASSET_CODE,pos.plan_asset_id))
+			  and SUB.ASSET_CODE = NVL(BOTASSET.ASSET_CODE_OLD,nvl(BOTASSET.ASSET_CODE,pos.asset_code))
 			  and SUB.SEND_STATUS in ('02','03')
 			  and SUB.STATUS != '03')
 		and POS.STATUS != 'D'
@@ -173,17 +165,10 @@
 			  and POS.ASSET_CODE = BOTASSET.ASSET_CODE
 			  and POS.status in ('M','E')
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
-			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
-			LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
-			LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
-			LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
-			WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
-			LEFT JOIN (
-			SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
-			WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
-			) DA
-			ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
-			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+			<!--left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'-->
+			left join data_auth_notify_inst dis on (dis.business_id=sub.PLAN_ASSET_ID or dis.business_id='F28_'||sub.PLAN_ASSET_ID)
+			and dis.model_type = '02' AND dis.DATA_TYPE in ('FINASSET12','PTL01')
 		</if>
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
@@ -193,9 +178,8 @@
 				or (POS.UNINVEST_CASH is not null and SUB.UNINVEST_CASH &lt;&gt; POS.UNINVEST_CASH)
 				or (POS.POS_AMT is not null and SUB.POS_AMT &lt;&gt; POS.POS_AMT))
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
-			AND( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
-			or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR}
-			and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+			<!--AND CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}-->
+			and dis.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
 		</if>
 		union all
 		SELECT
@@ -216,24 +200,16 @@
         LEFT JOIN CHB_ASSET_INFO BOTASSET
         ON NVL(BOTASSET.ASSET_CODE_OLD , BOTASSET.ASSET_CODE) = sub.ASSET_CODE
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
-			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
-			LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
-			LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
-			LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
-			WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
-			LEFT JOIN (
-			SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
-			WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
-			) DA
-			ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
-			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+			<!--left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'-->
+			left join data_auth_notify_inst dis on (dis.business_id=sub.PLAN_ASSET_ID or dis.business_id='F28_'||sub.PLAN_ASSET_ID)
+			and dis.model_type = '02' AND dis.DATA_TYPE in ('FINASSET12','PTL01')
 		</if>
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
-			AND( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
-			or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR}
-			and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+			<!--	AND CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}-->
+			and dis.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
 		</if>
 		and not exists  (
 		select 1 from CHB_BOT_AST_POS POS 
@@ -257,7 +233,7 @@
 		    sub.POS_AMT as posAmt
 		FROM CHB_BOT_AST_POS_SUB sub
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
-		  and SUB.SEND_STATUS in ('02','03')
+		and SUB.SEND_STATUS in ('02','03')
 	</select>
 
 
@@ -301,20 +277,11 @@
 
 			<if test="InstitutionCode != null and InstitutionCode != '' "  >
 				and c.regist_seqno in (select  d.regist_seqno from CHB_BOT_AST_POS_SUB d
-				left join chb_asset_info_sub csb on csb.ASSET_CODE=d.ASSET_CODE
-				LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
-				LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
-				LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
-				WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
-				LEFT JOIN (
-				SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
-				WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
-				) DA
-				ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
-				LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
-				where ( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
-				or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR}
-				and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+				<!--left join chb_asset_info_sub csb on csb.ASSET_CODE=d.ASSET_CODE
+			    LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'-->
+				left join data_auth_notify_inst dis on (dis.business_id=d.PLAN_ASSET_ID or dis.business_id='F28_'||d.PLAN_ASSET_ID)
+				and dis.model_type = '02' AND dis.DATA_TYPE in ('FINASSET12','PTL01')
+				where <!--CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and--> dis.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
 				)
 			</if>
 		</where>

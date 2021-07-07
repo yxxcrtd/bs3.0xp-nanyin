@@ -606,15 +606,20 @@ $(function () {
 	    	   if(isDefault==='Y'){
 	    	        var effDate = data.effDate;
 	    	        // 生效日
-                    if(new Date(platDate).DateDiff('d',effDate)<=0){
-                        Joyin.alert("默认方案下非公共附加税税则生效日小于或等于平台日期时，不允许删除",2);
+                    if(new Date(platDate).DateDiff('d',effDate)<0){
+                        Joyin.alert("默认方案下只能删除生效日为平台日（含）之后的附加税信息",2);
                         return false;
                     }
 	    	   }
 	    	}else{
                 if(isDefault==='Y'){
-                    Joyin.alert("默认税务方案附加税则表中内容不可删除",2);
-                    return false;
+                    //Joyin.alert("默认税务方案附加税则表中内容不可删除",2);
+                    var effDate = data.effDate;
+                    // 生效日
+                    if(new Date(platDate).DateDiff('d',effDate)<0){
+                        Joyin.alert("默认方案下只能删除生效日为平台日（含）之后的附加税信息",2);
+                        return false;
+                    }
                 }
 	    	}
 
@@ -653,14 +658,18 @@ $(function () {
                     var effDate = rowArr[0].effDate;
                     // 生效日
                     if(new Date(platDate).DateDiff('d',effDate)<=0){
-                        Joyin.alert("默认方案下非公共附加税税则生效日小于或等于平台日期时，不允许删除",2);
+                        Joyin.alert("默认方案下只能删除生效日为平台日（含）之后的附加税信息",2);
                         return false;
                     }
                }
             }else{
                 if(rowArr[0].isDefault==='Y'){
-                    Joyin.alert("默认税务方案附加税则表中内容不可删除",2);
-                    return false;
+                    var effDate = rowArr[0].effDate;
+                    // 生效日
+                    if(new Date(platDate).DateDiff('d',effDate)<0){
+                        Joyin.alert("默认方案下只能删除生效日为平台日（含）之后的附加税信息",2);
+                        return false;
+                    }
                 }
             }
 
@@ -814,9 +823,9 @@ $(function () {
 			var object = {};
 	    	object.seqNo = data.seqNo;
 	    	var isDefault =data.isDefault;
-	    	if(isDefault==='Y'){
-	    		Joyin.alert("默认税务方案资产应税信息中内容不可删除",2);
-	    	}else{
+//	    	if(isDefault==='Y'){
+//	    		Joyin.alert("默认税务方案资产应税信息中内容不可删除",2);
+//	    	}else{
 	    		object.operateType = "delete";
 			   	Joyin.ajaxJson(basePath + 'valuation/taxparametermanage/taxscheme/TaxScheme001/check', object, function(result) {
 			           Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
@@ -825,7 +834,7 @@ $(function () {
 	    	              });
 			           });
 		       });
-	    	}
+//	    	}
 	   });
 		
       /** 事件绑定: 资产应税信息-批量删除 */

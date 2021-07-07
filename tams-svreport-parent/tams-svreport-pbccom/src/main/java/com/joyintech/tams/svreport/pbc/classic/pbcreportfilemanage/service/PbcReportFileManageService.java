@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -162,7 +163,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 			e.printStackTrace();
 		}
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
-			File file = new File(pbcDataFile.getFilepath());
+			File file = new SafelyFile(pbcDataFile.getFilepath());
 			if (!file.exists()) {
 				String filePath = pbcDataFile.getFilepath();
 				String[] filePathSplit = filePath.split("/");
@@ -192,7 +193,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		}
 		List<File> sourceFiles = new ArrayList<File>(16);
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
-			File file = new File(pbcDataFile.getFilepath());
+			File file = new SafelyFile(pbcDataFile.getFilepath());
 			sourceFiles.add(file);
 		}
 		// 只有一个文件,直接导出,且不能删除源文件
@@ -205,13 +206,13 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 			String exportFilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 			String zipFileName = "人行报送文件" + DateUtil.getCurrentDateTime() + ".zip";
 			zipFileName = zipFileName.replaceAll(":", "-");
-			outFile = new File(exportFilePath + File.separator + zipFileName);
+			outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
 			try {
-				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new File[] {}));
+				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new SafelyFile[] {}));
 			} catch (Exception e) {
 				e.printStackTrace();
 //				// 压缩文件失败后，删除所有临时文件

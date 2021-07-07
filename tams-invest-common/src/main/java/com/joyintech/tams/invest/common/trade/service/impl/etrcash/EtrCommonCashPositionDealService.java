@@ -763,21 +763,40 @@ public class EtrCommonCashPositionDealService extends BaseService {
                 // 查询最近的那一天
                 Date maxCdate = etrCommonCashPositionMapper.selectSecPositionMaxCdate(positionFlowDto);
                 if (maxCdate == null) {
-                    etrSecPositionMapper.insertSelective(position);
+                    // modify by etliu 汇总表更新并发问题解决 20210511 start
+                    try {
+                        etrSecPositionMapper.insertSelective(position);
+                    } catch (Exception e) {
+                        etrCommonCashPositionMapper.updateByPrimaryKeySelectiveForSecFlow(position);
+                    }
+                    // modify by etliu 汇总表更新并发问题解决 20210511 end
+
                 }
                 else {
                     EtrSecPositionFlowDto tempPositionFlowDto = new EtrSecPositionFlowDto();
                     BeanUtils.copyProperties(positionFlowDto, tempPositionFlowDto);
                     tempPositionFlowDto.setCdate(maxCdate);
 
+                    // modify by etliu 汇总表更新并发问题解决 20210511 start
+                    BigDecimal flowAmount = position.getAmount();
                     BigDecimal tempAmount = etrCommonCashPositionMapper.selectSecPosition(tempPositionFlowDto);
                     position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), tempAmount));
-                    etrSecPositionMapper.insertSelective(position);
+                    try {
+                        etrSecPositionMapper.insertSelective(position);
+                    } catch (Exception e) {
+                        position.setAmount(flowAmount);
+                        etrCommonCashPositionMapper.updateByPrimaryKeySelectiveForSecFlow(position);
+                    }
+                    // modify by etliu 汇总表更新并发问题解决 20210511 end
                 }
             }
             else {
-                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
-                etrSecPositionMapper.updateByPrimaryKeySelective(position);
+                // modify by etliu 汇总表更新并发问题解决 20210511 start
+//                position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
+//                etrSecPositionMapper.updateByPrimaryKeySelective(position);
+                etrCommonCashPositionMapper.updateByPrimaryKeySelectiveForSecFlow(position);
+                // modify by etliu 汇总表更新并发问题解决 20210511 end
+
             }
 
             // 2.2.2 检索组合持仓的最大日期
@@ -919,21 +938,40 @@ public class EtrCommonCashPositionDealService extends BaseService {
             // 查询最近的那一天
             Date maxCdate = etrCommonCashPositionMapper.selectCashPositionMaxCdate(positionFlowDto);
             if (maxCdate == null) {
-                etrCashPositionMapper.insert(position);
+                // add by etliu 汇总表更新并发问题解决 20210511 start
+                try {
+                    etrCashPositionMapper.insert(position);
+                } catch (Exception e) {
+                    etrCommonCashPositionMapper.updateByPrimaryKeySelectiveForFlow(position);
+                }
+                // add by etliu 汇总表更新并发问题解决 20210511 end
             }
             else {
                 EtrCashPositionFlowDto tempPositionFlowDto = new EtrCashPositionFlowDto();
                 BeanUtil.copyPropertiesIgnoreNull(tempPositionFlowDto, positionFlowDto);
                 tempPositionFlowDto.setCdate(maxCdate);
 
+                // add by etliu 汇总表更新并发问题解决 20210511 start
+                BigDecimal flowAmount = position.getAmount();
                 BigDecimal tempAmount = etrCommonCashPositionMapper.selectCashPosition(tempPositionFlowDto);
                 position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), tempAmount));
-                etrCashPositionMapper.insert(position);
+                try {
+                    etrCashPositionMapper.insert(position);
+                } catch (Exception e) {
+                    position.setAmount(flowAmount);
+                    etrCommonCashPositionMapper.updateByPrimaryKeySelectiveForFlow(position);
+                }
+                // add by etliu 汇总表更新并发问题解决 20210511 end
+
             }
         }
         else {
-            position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
-            etrCashPositionMapper.updateByPrimaryKeySelective(position);
+            // add by etliu 汇总表更新并发问题解决 20210511 start
+//            position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
+//            etrCashPositionMapper.updateByPrimaryKeySelective(position);
+            etrCommonCashPositionMapper.updateByPrimaryKeySelectiveForFlow(position);
+            // add by etliu 汇总表更新并发问题解决 20210511 end
+
         }
 
         // 2.2.2 检索组合持仓的最大日期

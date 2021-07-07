@@ -45,7 +45,7 @@ public interface ReportMenuPowerConfig001Mapper {
      * @see
      * @since 1.0
      */
-    List<SysRole> select();
+    List<SysRole> select(Map<String, Object> params);
     
     /**
      * 查询报表所对应的角色

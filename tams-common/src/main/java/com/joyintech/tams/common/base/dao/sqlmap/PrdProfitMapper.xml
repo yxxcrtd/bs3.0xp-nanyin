@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.PrdProfitMapper">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PrdProfit">
+    <constructor>
+      <arg column="real_prd_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="subject_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="subject_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ccy" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="current_amt" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="current_year_accumu_amt" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="busi_date" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PrdProfit">
+    insert into prd_profit (real_prd_id, subject_id, subject_name,
+                            ccy, current_amt, current_year_accumu_amt,
+                            busi_date)
+    values (#{realPrdId,jdbcType=VARCHAR}, #{subjectId,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR},
+            #{ccy,jdbcType=VARCHAR}, #{currentAmt,jdbcType=DECIMAL}, #{currentYearAccumuAmt,jdbcType=DECIMAL},
+            #{busiDate,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PrdProfit">
+    insert into prd_profit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="realPrdId != null">
+        real_prd_id,
+      </if>
+      <if test="subjectId != null">
+        subject_id,
+      </if>
+      <if test="subjectName != null">
+        subject_name,
+      </if>
+      <if test="ccy != null">
+        ccy,
+      </if>
+      <if test="currentAmt != null">
+        current_amt,
+      </if>
+      <if test="currentYearAccumuAmt != null">
+        current_year_accumu_amt,
+      </if>
+      <if test="busiDate != null">
+        busi_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="realPrdId != null">
+        #{realPrdId,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectId != null">
+        #{subjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null">
+        #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="ccy != null">
+        #{ccy,jdbcType=VARCHAR},
+      </if>
+      <if test="currentAmt != null">
+        #{currentAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="currentYearAccumuAmt != null">
+        #{currentYearAccumuAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="busiDate != null">
+        #{busiDate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

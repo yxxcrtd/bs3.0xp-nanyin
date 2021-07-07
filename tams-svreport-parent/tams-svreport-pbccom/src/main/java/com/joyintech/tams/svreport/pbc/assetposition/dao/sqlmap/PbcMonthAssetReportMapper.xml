@@ -214,9 +214,8 @@
 	</if>
     from PBC_MONTH_ASSET_POSITION
     <if test="modelType != null">
-	      	left join (      select f.finprod_market_id,di.institution_code 
-		      from fin_product f
-		      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' and DI.DATA_TYPE='FINPROD04' and f.p_finprod_id is null) di on di.finprod_market_id = PBC_MONTH_ASSET_POSITION.PRODID
+	      	left join (      select distinct di.business_id　finprod_market_id,di.institution_code
+		      from DATA_AUTH_NOTIFY_INST di where di.model_type = '02' and DI.DATA_TYPE='PTL01') di on di.finprod_market_id = PBC_MONTH_ASSET_POSITION.PRODID
 	      </if>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </select>
@@ -434,16 +433,12 @@
      <if test="modelType != null">
 	      	left join 
 	      	 (      
-	      	     select 
-	      	      f.finprod_market_id,di.institution_code 
-		         from fin_product f
-		         
-		         left join DATA_AUTH_NOTIFY_INST di 
-		         on f.finprod_id=di.business_id 
+	      	     select
+                 distinct di.business_id finprod_market_id,di.institution_code
+		         from DATA_AUTH_NOTIFY_INST di
 
                  where di.model_type = '02' 
-                 and DI.DATA_TYPE='FINPROD04' 
-                 and f.p_finprod_id is null
+                 and DI.DATA_TYPE='PTL01'
              ) di on di.finprod_market_id = PBC_MONTH_ASSET_POSITION.PRODID
 	      </if>
     

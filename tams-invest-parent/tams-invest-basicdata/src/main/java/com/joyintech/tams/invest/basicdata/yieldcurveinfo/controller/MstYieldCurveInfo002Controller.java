@@ -135,7 +135,7 @@ public class MstYieldCurveInfo002Controller  extends BaseController{
             //修改流程中的曲线名称和曲线类型 modified by lishuping 20191008 start
             entity ->"曲线名称"+"("+ String.format(entity.getCurveCode()) + ")"
                     +"-"+"曲线日期" + "(" + DateUtil.format(entity.getCurveDate()) + ")"
-                +"-"+"区线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.曲线利率类型,
+                +"-"+"曲线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.曲线利率类型,
                     entity.getCurveType())+")");
         //修改流程中的曲线名称和曲线类型 modified by lishuping 20191008 end
         //给参数变成ProcessParameter而非WorkFlowParameter

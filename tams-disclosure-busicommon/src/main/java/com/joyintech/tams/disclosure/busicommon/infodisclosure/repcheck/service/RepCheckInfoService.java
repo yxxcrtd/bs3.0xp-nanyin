@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -80,7 +81,7 @@ public class RepCheckInfoService {
      * @since 1.0
      */
     public String replaceForString(String sql, String reg, String replacement) {
-        return sql.replaceAll("\\$" + reg.trim() + "", "'" + replacement + "'");
+        return sql.replaceAll(Pattern.quote("\\$" + reg.trim() + ""), "'" + replacement + "'");
     }
 
     /**
@@ -422,7 +423,7 @@ public class RepCheckInfoService {
      */
     public void regularCheck(CheckConfirmMessage ccm, Object obj, RepCheckInfoDto checkInfo) {
         if (obj != null && StringUtil.isNotEmpty(obj)) {
-            if (!((String)obj).matches(checkInfo.getParamValue1())) {
+            if (!((String)obj).matches(Pattern.quote(checkInfo.getParamValue1()))) {
                 ccm.setFlag(false);
                 ccm.setMsg((StringUtil.isNotEmpty(ccm.getMsg()) ? ccm.getMsg() + ";" : "")
                            + checkInfo.getQueryContenDescr() + "正则验证" + checkInfo.getParamValue1()

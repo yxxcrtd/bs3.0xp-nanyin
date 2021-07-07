@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinProductClassMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinProductClass" >
+        <id column="OPTSN" property="optsn" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_NAME" property="assetTypeName" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="BLN_AREA" property="blnArea" jdbcType="VARCHAR" />
+        <result column="ORG_CLASS" property="orgClass" jdbcType="VARCHAR" />
+        <result column="ORG_CLASS_NAME" property="orgClassName" jdbcType="VARCHAR" />
+        <result column="ACCOUNTING_CLASS" property="accountingClass" jdbcType="VARCHAR" />
+        <result column="ACCOUNTING_CLASS_NAME" property="accountingClassName" jdbcType="VARCHAR" />
+        <result column="TAX_CLASS" property="taxClass" jdbcType="VARCHAR" />
+        <result column="TAX_CLASS_NAME" property="taxClassName" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OPTSN OPTSN, FINPROD_TYPE FINPROD_TYPE, ASSET_TYPE ASSET_TYPE, ASSET_TYPE_NAME ASSET_TYPE_NAME,
+        TRADE_MARKET TRADE_MARKET, BLN_AREA BLN_AREA, ORG_CLASS ORG_CLASS, ORG_CLASS_NAME ORG_CLASS_NAME,
+        ACCOUNTING_CLASS ACCOUNTING_CLASS, ACCOUNTING_CLASS_NAME ACCOUNTING_CLASS_NAME, TAX_CLASS TAX_CLASS,
+        TAX_CLASS_NAME TAX_CLASS_NAME, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinProductClassMapper.Base_Column_List" />
+        from FIN_PRODUCT_CLASS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinProductClassMapper.Base_Column_List" />
+        from FIN_PRODUCT_CLASS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinProductClassMapper.Base_Column_List" />
+        from FIN_PRODUCT_CLASS
+        where OPTSN = #{optsn,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from FIN_PRODUCT_CLASS
+        where OPTSN = #{optsn,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinProductClass" >
+        insert into FIN_PRODUCT_CLASS (OPTSN, FINPROD_TYPE, ASSET_TYPE,
+            ASSET_TYPE_NAME, TRADE_MARKET, BLN_AREA,
+            ORG_CLASS, ORG_CLASS_NAME, ACCOUNTING_CLASS,
+            ACCOUNTING_CLASS_NAME, TAX_CLASS, TAX_CLASS_NAME,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{optsn,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR},
+            #{assetTypeName,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, #{blnArea,jdbcType=VARCHAR},
+            #{orgClass,jdbcType=VARCHAR}, #{orgClassName,jdbcType=VARCHAR}, #{accountingClass,jdbcType=VARCHAR},
+            #{accountingClassName,jdbcType=VARCHAR}, #{taxClass,jdbcType=VARCHAR}, #{taxClassName,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductClass" >
+        insert into FIN_PRODUCT_CLASS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="optsn != null" >
+                OPTSN,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
+            <if test="assetTypeName != null" >
+                ASSET_TYPE_NAME,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="blnArea != null" >
+                BLN_AREA,
+            </if>
+            <if test="orgClass != null" >
+                ORG_CLASS,
+            </if>
+            <if test="orgClassName != null" >
+                ORG_CLASS_NAME,
+            </if>
+            <if test="accountingClass != null" >
+                ACCOUNTING_CLASS,
+            </if>
+            <if test="accountingClassName != null" >
+                ACCOUNTING_CLASS_NAME,
+            </if>
+            <if test="taxClass != null" >
+                TAX_CLASS,
+            </if>
+            <if test="taxClassName != null" >
+                TAX_CLASS_NAME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="optsn != null" >
+                #{optsn,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetTypeName != null" >
+                #{assetTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="blnArea != null" >
+                #{blnArea,jdbcType=VARCHAR},
+            </if>
+            <if test="orgClass != null" >
+                #{orgClass,jdbcType=VARCHAR},
+            </if>
+            <if test="orgClassName != null" >
+                #{orgClassName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountingClass != null" >
+                #{accountingClass,jdbcType=VARCHAR},
+            </if>
+            <if test="accountingClassName != null" >
+                #{accountingClassName,jdbcType=VARCHAR},
+            </if>
+            <if test="taxClass != null" >
+                #{taxClass,jdbcType=VARCHAR},
+            </if>
+            <if test="taxClassName != null" >
+                #{taxClassName,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProductClass" >
+        insert into FIN_PRODUCT_CLASS(OPTSN, FINPROD_TYPE, ASSET_TYPE, ASSET_TYPE_NAME, TRADE_MARKET,
+        BLN_AREA, ORG_CLASS, ORG_CLASS_NAME, ACCOUNTING_CLASS, ACCOUNTING_CLASS_NAME, TAX_CLASS,
+        TAX_CLASS_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select OPTSN, FINPROD_TYPE, ASSET_TYPE, ASSET_TYPE_NAME, TRADE_MARKET,
+            BLN_AREA, ORG_CLASS, ORG_CLASS_NAME, ACCOUNTING_CLASS, ACCOUNTING_CLASS_NAME, TAX_CLASS,
+            TAX_CLASS_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from FIN_PRODUCT_CLASS
+             where 1 = 1 and OPTSN = #{optsn,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinProductClass" >
+        update FIN_PRODUCT_CLASS
+        <set >
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetTypeName != null" >
+                ASSET_TYPE_NAME = #{assetTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="blnArea != null" >
+                BLN_AREA = #{blnArea,jdbcType=VARCHAR},
+            </if>
+            <if test="orgClass != null" >
+                ORG_CLASS = #{orgClass,jdbcType=VARCHAR},
+            </if>
+            <if test="orgClassName != null" >
+                ORG_CLASS_NAME = #{orgClassName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountingClass != null" >
+                ACCOUNTING_CLASS = #{accountingClass,jdbcType=VARCHAR},
+            </if>
+            <if test="accountingClassName != null" >
+                ACCOUNTING_CLASS_NAME = #{accountingClassName,jdbcType=VARCHAR},
+            </if>
+            <if test="taxClass != null" >
+                TAX_CLASS = #{taxClass,jdbcType=VARCHAR},
+            </if>
+            <if test="taxClassName != null" >
+                TAX_CLASS_NAME = #{taxClassName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where OPTSN = #{optsn,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProductClass" >
+        update FIN_PRODUCT_CLASS
+        set FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            ASSET_TYPE_NAME = #{assetTypeName,jdbcType=VARCHAR},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            BLN_AREA = #{blnArea,jdbcType=VARCHAR},
+            ORG_CLASS = #{orgClass,jdbcType=VARCHAR},
+            ORG_CLASS_NAME = #{orgClassName,jdbcType=VARCHAR},
+            ACCOUNTING_CLASS = #{accountingClass,jdbcType=VARCHAR},
+            ACCOUNTING_CLASS_NAME = #{accountingClassName,jdbcType=VARCHAR},
+            TAX_CLASS = #{taxClass,jdbcType=VARCHAR},
+            TAX_CLASS_NAME = #{taxClassName,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where OPTSN = #{optsn,jdbcType=VARCHAR}
+    </update>
+</mapper>

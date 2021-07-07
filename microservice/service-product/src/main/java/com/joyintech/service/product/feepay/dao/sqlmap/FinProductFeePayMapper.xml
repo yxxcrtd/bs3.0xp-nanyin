@@ -1405,7 +1405,7 @@
         AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS=#{tradeStatus}
         AND TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL=#{noFlag}
         AND TRD_FIN_PRODUCT_DEAL_TOTAL.BUSI_TYPE=#{businessType}
-
+        and ((TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE is not null and TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE!='142' )  or TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE is  null)
         <!-- 产品费用新建页面条件追加 -->
         <if test="cashId != null and cashId != ''">
             and FIN_CASH_INFO.CASH_ID = #{cashId}
@@ -1569,6 +1569,7 @@
     <!-- 新建界面的费用取值 -->
     <select id="queryFeeInfoListEx" resultType="com.joyintech.framework.select.SelectOptionDto">
         <!-- 一次性费用 -->
+        select distinct id,text from (
         select MST_FEEINFO.FEE_ID id,
         MST_FEEINFO.FEE_ID || ':' || MST_FEEINFO.FEE_NAME text
         from FIN_CASH_INFO,FIN_PRODUCT,MST_FEEINFO,FIN_PRODUCT_ADD ,FIN_CASH_PAY_RULE
@@ -1647,6 +1648,14 @@
         <if test="initValue != null and initValue != ''">
             and MST_FEEINFO.FEE_ID = #{initValue}
         </if>
+        union all
+        SELECT MST_FEEINFO.FEE_ID id
+        ,MST_FEEINFO.FEE_ID || ':' || MST_FEEINFO.FEE_NAME text
+        FROM MST_FEEINFO
+        where MST_FEEINFO.APPLY_TYPE in (#{relationProd}, #{relationOther})
+        AND MST_FEEINFO.CHARGE_TYPE = #{chargeType02}
+        and MST_FEEINFO.FEE_TYPE = #{feeType99}
+        )
     </select>
 
     <select id="queryLastPayDate" resultType="java.lang.String">

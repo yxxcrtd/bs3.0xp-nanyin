@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PtlSecPositionDetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PtlSecPositionDetail" >
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <id column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR" />
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <id column="HODING_TYPE" property="hodingType" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PORTFOLIO_ID PORTFOLIO_ID, SEC_ACCT_ID SEC_ACCT_ID, FINPROD_ID FINPROD_ID, BRANCH BRANCH, 
+        TRADE_ID TRADE_ID, HODING_TYPE HODING_TYPE, CDATE CDATE, AMOUNT AMOUNT, CCY CCY, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecPositionDetailMapper.Base_Column_List" />
+        from PTL_SEC_POSITION_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecPositionDetailMapper.Base_Column_List" />
+        from PTL_SEC_POSITION_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionDetailKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecPositionDetailMapper.Base_Column_List" />
+        from PTL_SEC_POSITION_DETAIL
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionDetailKey" >
+        delete from PTL_SEC_POSITION_DETAIL
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionDetail" >
+        insert into PTL_SEC_POSITION_DETAIL (PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, 
+            BRANCH, TRADE_ID, HODING_TYPE, 
+            CDATE, AMOUNT, CCY, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{portfolioId,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{branch,jdbcType=DECIMAL}, #{tradeId,jdbcType=VARCHAR}, #{hodingType,jdbcType=VARCHAR}, 
+            #{cdate,jdbcType=DATE}, #{amount,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionDetail" >
+        insert into PTL_SEC_POSITION_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="hodingType != null" >
+                HODING_TYPE,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="amount != null" >
+                AMOUNT,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null" >
+                #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="hodingType != null" >
+                #{hodingType,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="amount != null" >
+                #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionDetail" >
+        insert into PTL_SEC_POSITION_DETAIL(PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, 
+        TRADE_ID, HODING_TYPE, CDATE, AMOUNT, CCY, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, 
+            TRADE_ID, HODING_TYPE, CDATE, AMOUNT, CCY, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PTL_SEC_POSITION_DETAIL
+             where 1 = 1 and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR} and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and HODING_TYPE = #{hodingType,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionDetail" >
+        update PTL_SEC_POSITION_DETAIL
+        <set >
+            <if test="amount != null" >
+                AMOUNT = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionDetail" >
+        update PTL_SEC_POSITION_DETAIL
+        set AMOUNT = #{amount,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+</mapper>

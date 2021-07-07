@@ -114,23 +114,19 @@
 	    FROM (
 	        SELECT RSK_ACCESS_LIST_DETAIL.LIST_ID,RSK_ACCESS_LIST_DETAIL.INSTITUTION_CODE /* add by songyawei 20200701 */ FROM
 	        RSK_ACCESS_LIST_DETAIL where LIST_ID = #{listId}
-	        AND (
 	        <if test="finprodId != null and finprodId != ''">
-	             LIST_DETAIL_ID = #{finprodId,jdbcType=VARCHAR}
+                AND LIST_DETAIL_ID = #{finprodId,jdbcType=VARCHAR}
 	        </if>
-	        )
 	        UNION ALL
 	        SELECT RSK_ACCESS_LIST_DETAIL.LIST_ID,RSK_ACCESS_LIST_DETAIL.INSTITUTION_CODE /* add by songyawei 20200701 */ FROM
 	        RSK_ACCESS_LIST_DETAIL 
 	        LEFT JOIN FIN_PRODUCT
 	               ON RSK_ACCESS_LIST_DETAIL.LIST_DETAIL_ID = FIN_PRODUCT.FINPROD_MARKET_ID
 	        where LIST_ID = #{listId}
-	        AND (
 	        <if test="finprodId != null and finprodId != ''">
-	             FIN_PRODUCT.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                AND FIN_PRODUCT.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
 	        </if>
-	        )
-	     )  
+	     )
     </select>
 
     <select id="selectCustomerInfo" resultType="com.joyintech.tams.invest.common.risk.dto.RiskNamListCommonDto">

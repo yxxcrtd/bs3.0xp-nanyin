@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SysBatchUnistartMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SysBatchUnistart" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="TASK_NAME" property="taskName" jdbcType="VARCHAR" />
+        <result column="PRD_GROUP_SEQ_NO" property="prdGroupSeqNo" jdbcType="VARCHAR" />
+        <result column="BUSI_START_DATE" property="busiStartDate" jdbcType="DATE" />
+        <result column="BUSI_END_DATE" property="busiEndDate" jdbcType="DATE" />
+        <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, TASK_NAME TASK_NAME, PRD_GROUP_SEQ_NO PRD_GROUP_SEQ_NO, BUSI_START_DATE BUSI_START_DATE, 
+        BUSI_END_DATE BUSI_END_DATE, START_TIME START_TIME, END_TIME END_TIME, STATUS STATUS, 
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SysBatchUnistartMapper.Base_Column_List" />
+        from SYS_BATCH_UNISTART
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SysBatchUnistartMapper.Base_Column_List" />
+        from SYS_BATCH_UNISTART
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SysBatchUnistartMapper.Base_Column_List" />
+        from SYS_BATCH_UNISTART
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SYS_BATCH_UNISTART
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SysBatchUnistart" >
+        insert into SYS_BATCH_UNISTART (SEQ_NO, TASK_NAME, PRD_GROUP_SEQ_NO, 
+            BUSI_START_DATE, BUSI_END_DATE, START_TIME, 
+            END_TIME, STATUS, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, #{prdGroupSeqNo,jdbcType=VARCHAR}, 
+            #{busiStartDate,jdbcType=DATE}, #{busiEndDate,jdbcType=DATE}, #{startTime,jdbcType=TIMESTAMP}, 
+            #{endTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SysBatchUnistart" >
+        insert into SYS_BATCH_UNISTART
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="taskName != null" >
+                TASK_NAME,
+            </if>
+            <if test="prdGroupSeqNo != null" >
+                PRD_GROUP_SEQ_NO,
+            </if>
+            <if test="busiStartDate != null" >
+                BUSI_START_DATE,
+            </if>
+            <if test="busiEndDate != null" >
+                BUSI_END_DATE,
+            </if>
+            <if test="startTime != null" >
+                START_TIME,
+            </if>
+            <if test="endTime != null" >
+                END_TIME,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="taskName != null" >
+                #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="prdGroupSeqNo != null" >
+                #{prdGroupSeqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="busiStartDate != null" >
+                #{busiStartDate,jdbcType=DATE},
+            </if>
+            <if test="busiEndDate != null" >
+                #{busiEndDate,jdbcType=DATE},
+            </if>
+            <if test="startTime != null" >
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SysBatchUnistart" >
+        insert into SYS_BATCH_UNISTART(SEQ_NO, TASK_NAME, PRD_GROUP_SEQ_NO, BUSI_START_DATE, 
+        BUSI_END_DATE, START_TIME, END_TIME, STATUS, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, TASK_NAME, PRD_GROUP_SEQ_NO, BUSI_START_DATE, 
+            BUSI_END_DATE, START_TIME, END_TIME, #{status,jdbcType=VARCHAR} STATUS, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from SYS_BATCH_UNISTART
+             where STATUS = 'E' and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SysBatchUnistart" >
+        update SYS_BATCH_UNISTART
+        <set >
+            <if test="taskName != null" >
+                TASK_NAME = #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="prdGroupSeqNo != null" >
+                PRD_GROUP_SEQ_NO = #{prdGroupSeqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="busiStartDate != null" >
+                BUSI_START_DATE = #{busiStartDate,jdbcType=DATE},
+            </if>
+            <if test="busiEndDate != null" >
+                BUSI_END_DATE = #{busiEndDate,jdbcType=DATE},
+            </if>
+            <if test="startTime != null" >
+                START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SysBatchUnistart" >
+        update SYS_BATCH_UNISTART
+        set TASK_NAME = #{taskName,jdbcType=VARCHAR},
+            PRD_GROUP_SEQ_NO = #{prdGroupSeqNo,jdbcType=VARCHAR},
+            BUSI_START_DATE = #{busiStartDate,jdbcType=DATE},
+            BUSI_END_DATE = #{busiEndDate,jdbcType=DATE},
+            START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -14,7 +14,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
 
-import cn.hutool.core.math.MathUtil;
 
 
 /**

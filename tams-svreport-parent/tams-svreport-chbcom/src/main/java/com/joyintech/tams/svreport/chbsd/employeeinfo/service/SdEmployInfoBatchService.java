@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,11 +96,11 @@ public class SdEmployInfoBatchService {
 			}
 			
 			//调用报送组件
-			sendBatchCommon(dataList);
+			sendBatchCommon(dataList, SendDataCheckType.报送);
 
 	}
 
-	public void sendBatchCommon(List<ChbEmployeeInfoDto> dataList)
+	public void sendBatchCommon(List<ChbEmployeeInfoDto> dataList, SendDataCheckType sendDataCheckType)
 			throws Exception {
 		//获取单批次发送条目数
 		int dataCountPerTime = Integer.valueOf(
@@ -116,14 +117,14 @@ public class SdEmployInfoBatchService {
 		//分批处理数据报送
 		if (dataCount <= dataCountPerTime) {
 			sdEmployInfoBatchServiceOneService
-					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult);
+					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult, sendDataCheckType);
 		}else{
 		 // 分批次数
 		     int part = dataCount / dataCountPerTime;
 		     for (int i = 0; i < part; i++ ) {
 		    	 sdEmployInfoBatchServiceOneService
 		    			 .handleDataPerTime(handleIndex, dataCountPerTime,newDataList.subList(0, dataCountPerTime),
-		    					 sendResult);
+		    					 sendResult, sendDataCheckType);
 		         newDataList.subList(0, dataCountPerTime).clear();
 		    	 handleIndex ++;
 
@@ -131,7 +132,7 @@ public class SdEmployInfoBatchService {
 		     // 最后剩下的数据
 		     if (!StringUtil.isEmptyList(newDataList)) {
 		    	 sdEmployInfoBatchServiceOneService
-		    			 .handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult);
+		    			 .handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult, sendDataCheckType);
 		    }
 		}
 
@@ -183,8 +184,10 @@ public class SdEmployInfoBatchService {
 		    	List<String> crtfs=StringUtil.splitToList(GlobalConstant.COMMA, item.getFinProfessionalCrtf());
 				item.setFinProfessionalCrtf("");
 				for(String crtf : crtfs){
-					item.setFinProfessionalCrtf(item.getFinProfessionalCrtf() + "," + crtf + " "
-												+SvrDataUtil.getNameFromDataDict(DictCode.理财专业证书, crtf));
+					if(StringUtil.isNotEmpty(crtf)){
+						item.setFinProfessionalCrtf(item.getFinProfessionalCrtf() + "," + crtf + " "
+								+SvrDataUtil.getNameFromDataDict(DictCode.理财专业证书, crtf));
+					}
 				}
 				item.setFinProfessionalCrtf(item.getFinProfessionalCrtf().substring(1));
 		    }
@@ -193,8 +196,10 @@ public class SdEmployInfoBatchService {
 		    	List<String> regBusiTypes=StringUtil.splitToList(GlobalConstant.COMMA, item.getRegBusiType());
 				item.setRegBusiType("");
 				for(String regBusiType : regBusiTypes){
-					item.setRegBusiType(item.getRegBusiType() + "," + regBusiType + " "
-												+SvrDataUtil.getNameFromDataDict(DictCode.登记业务分类, regBusiType));
+					if(StringUtil.isNotEmpty(regBusiType)){
+					item.setRegBusiType(item.getRegBusiType() + "," + regBusiType
+							+ " "+SvrDataUtil.getNameFromDataDict(DictCode.登记业务分类, regBusiType));
+					}
 				}
 				item.setRegBusiType(item.getRegBusiType().substring(1));
 		    }
@@ -203,10 +208,13 @@ public class SdEmployInfoBatchService {
 		    	List<String> regEmployeeTypes=StringUtil.splitToList(GlobalConstant.COMMA, item.getRegEmployeeType());
 				item.setRegEmployeeType("");
 				for(String regEmployeeType : regEmployeeTypes){
-					item.setRegEmployeeType(item.getRegEmployeeType() + "," + regEmployeeType + " "
-												+SvrDataUtil.getNameFromDataDict(DictCode.登记人员类别, regEmployeeType));
+					if(StringUtil.isNotEmpty(regEmployeeType)){
+						item.setRegEmployeeType(item.getRegEmployeeType() + "," + regEmployeeType
+								+ " "+SvrDataUtil.getNameFromDataDict(DictCode.登记人员类别, regEmployeeType));
+						}
+					
 				}
-				item.setRegEmployeeType(item.getRegEmployeeType().substring(1));
+				item.setRegEmployeeType(item.getRegEmployeeType().substring(1) );
 		    }
 
 		});

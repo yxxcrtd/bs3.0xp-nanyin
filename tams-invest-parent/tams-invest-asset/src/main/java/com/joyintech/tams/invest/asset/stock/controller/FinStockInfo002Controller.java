@@ -213,6 +213,32 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
         return ar;
     }
 
+    /**
+     * 新建时根据市场代码查询wind接口股票信息
+     * @param finprodMarketId 市场代码
+     * @return
+     * @throws ParseException
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getInterfStockDto")
+    public AjaxResult getInterfStockDto(@RequestParam("finprodMarketId") String finprodMarketId,
+                                       @RequestParam("tradeMarketId") String tradeMarketId) throws ParseException{
+
+        AjaxResult ar = new AjaxResult();
+        FinStockInfoDto dto = finStockInfoService.getInterfStockDto(finprodMarketId + tradeMarketId);
+        if (StringUtil.isNotEmpty(dto)) {
+            dto.setFinprodMarketId(finprodMarketId);
+            ar.setData(dto);
+        }else {
+            List<ValidMessage> errList = new ArrayList<ValidMessage>();
+            errList.add(new ValidMessage(this.getMessage("COMMON_E_0008",this.getMessage("FinStockInfo001.finprodMarketId"))));
+            ar.setData(errList);
+        }
+        return ar;
+    }
+
 
     /**
      * 保存

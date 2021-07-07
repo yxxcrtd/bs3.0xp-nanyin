@@ -7098,6 +7098,14 @@ public class InterfCommonService {
     			&& DictCodeList.业务类型_债券质押式回购交易.getValue().equals(deal.getBusiType())){
     		dateType = "02";
     	}
+    	// add by jiangpeng on 20210528 start TISHKBS-1921 货币型产品收益需要在收益支付日记账
+    	// 货币型产品 赎回收益
+        if(DictCodeListExt1.金融产品类型_理财产品.getValue().equals(deal.getFinprodType())
+                && DictCodeList.交易方向_赎回收益确认.getValue().equals(deal.getPs())
+                && DictCodeList.业务类型_货币型TA交易.getValue().equals(deal.getBusiType())){
+            dateType = "02";
+        }
+        // add by jiangpeng on 20210528 end TISHKBS-1921
     	return  dateType;
     }
 

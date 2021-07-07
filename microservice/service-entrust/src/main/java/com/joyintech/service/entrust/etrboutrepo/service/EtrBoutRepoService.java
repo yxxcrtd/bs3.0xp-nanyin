@@ -451,6 +451,16 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
      * @since 1.0
      */
     public List<SuggestDto> getSecManageAcctId(Map<String, Object> param) {
+        Object finprodIdTemp = param.get("finprodId");
+        String finProdType = DictCodeListExt1.金融产品类型_投管用_债券.getValue();
+        //部分页面没有finprodId特殊处理
+        if(finprodIdTemp == null){
+            if(param.get("finprodMarketId") != null){
+                String finprodMarketId = param.get("finprodMarketId").toString();
+                finprodMarketId = finProdType.concat(GlobalConstant.UNDER_LINE).concat(finprodMarketId);
+                param.put("finprodId",finprodMarketId);
+            }
+        }
         return this.queryForSuggest(() -> etrBoutRepoMapper.getSecManageAcctId(param),
             null);
     }

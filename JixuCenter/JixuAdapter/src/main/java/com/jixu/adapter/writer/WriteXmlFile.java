@@ -69,16 +69,18 @@ public class WriteXmlFile extends WriteFileBasic {
 				
 				//写具体数据
 				for (List<Object> fieldsList : fieldsDataSet) {
-					Element info=ele.addElement(levelList);
-					for(int i=0;i<headerList.size();i++) {
-						String fieldStr="";
-						Object fieldObj=fieldsList.get(i);
-						if(fieldObj!=null)
-							fieldStr=fieldObj.toString();
-						if(i==0) {
-							info.addElement(firstheader).addText(fieldStr);
-						}else {
-							info.addElement(headerList.get(i)).addText(fieldStr);
+					if (ele != null){
+						Element info=ele.addElement(levelList);
+						for(int i=0;i<headerList.size();i++) {
+							String fieldStr="";
+							Object fieldObj=fieldsList.get(i);
+							if(fieldObj!=null)
+								fieldStr=fieldObj.toString();
+							if(i==0) {
+								info.addElement(firstheader).addText(fieldStr);
+							}else {
+								info.addElement(headerList.get(i)).addText(fieldStr);
+							}
 						}
 					}
 				}

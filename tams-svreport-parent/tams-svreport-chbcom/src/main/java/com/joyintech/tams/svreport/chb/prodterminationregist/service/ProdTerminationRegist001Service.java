@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
+import com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -299,17 +300,22 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
                     SvrServiceApplication.CHB_SERVICE_NAME + "/ProdTerminationRegist/selectAllData",pageParam,
                     ProdTerminationRegist001Dto.class);
         //update by leipeng BS-1722 【 产品终止登记】未选中导出，客户实际年化收益率、产品实际年化收益率与列表不一致，多除100
-        data.forEach(item ->{
+        /*data.forEach(item ->{
         	item.setCusYearYield(item.getCusYearYield().multiply(new BigDecimal(100)));
         	item.setPrdYearYield(item.getPrdYearYield().multiply(new BigDecimal(100)));
-        });
+        });*/
         
         com.joyintech.framework.grid.Page<ProdTerminationRegist001Dto> page = new com.joyintech.framework.grid.Page<ProdTerminationRegist001Dto>();
         page.setRoot(data);
         //page.setTotal(data.size());
+		if(!CollectionUtils.isEmpty(page.getRoot())){
+			for(ProdTerminationRegist001Dto dto : page.getRoot()){
+				dto.setBelongInstitutionCode(null);
+			}
+		}
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
-		if(data!=null){
+		if(data!=null && data.size()>0){
 			page.setTotal(data.size()/pageSize+1);
 		}else{
 			page.setTotal(0);

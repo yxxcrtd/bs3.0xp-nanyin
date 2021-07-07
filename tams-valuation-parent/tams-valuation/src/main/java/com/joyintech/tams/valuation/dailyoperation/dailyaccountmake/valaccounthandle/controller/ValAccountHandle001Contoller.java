@@ -158,7 +158,7 @@ public class ValAccountHandle001Contoller extends BaseController {
         }
         map.put("booksetIdArr", booksetIdArr);
         String msg=valAccountHandle001Service.checkBokkSetDate(map);
-        return msg;
+        return StringUtil.trimHtmlTag(msg);
     }
     @RequestMapping("checkExecute")
     @ResponseBody

@@ -62,7 +62,16 @@ public class CheckNumService {
 
 	public List<Map<String, String>> getCheckNumInterf(String fileName, String tmpPath) throws Exception {
 		logger.info("文件解析开始...");
-		List<Map<String, String>> equityList = XmlParseUtil.parse(new FileInputStream(new File(tmpPath + fileName)));
+		FileInputStream fileInputStream = null;
+		List<Map<String, String>> equityList = null;
+		try {
+			fileInputStream = new FileInputStream(new File(tmpPath + fileName));
+			equityList = XmlParseUtil.parse(new FileInputStream(new File(tmpPath + fileName)));
+		}finally {
+			if(fileInputStream != null){
+				fileInputStream.close();
+			}
+		}
 		for(Map<String, String> map:equityList){
 			map.remove(null);
 		}

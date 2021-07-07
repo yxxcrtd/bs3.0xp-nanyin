@@ -18,6 +18,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -136,7 +137,7 @@ public class ChbFileUploadController {
         // if (!StringUtils.isEmpty(filePath)) {
         // + File.separator + filePath;
         // }
-        File fileMik = new File(uploadFilePath);
+        File fileMik = new SafelyFile(uploadFilePath);
         if (!fileMik.exists()) {
             fileMik.mkdir();
         }
@@ -169,7 +170,7 @@ public class ChbFileUploadController {
                                       + myFileName.substring(
                                           myFileName.lastIndexOf(GlobalConstant.POINT) + 1,
                                           myFileName.length());
-                        File localFile = new File(path);
+                        File localFile = new SafelyFile(path);
                         file.transferTo(localFile);
                         fileNames.add(localFile.getName());
                     }
@@ -198,14 +199,14 @@ public class ChbFileUploadController {
         TemplateName tempName = getTemplateFileNameByPageId(pageId, exts);
         // 如果当前画面的模板存在，则下载对应模板
         if(null != tempName) {
-            File tplFile = new File(appRealPath + File.separator + tempName.getFileName());
+            File tplFile = new SafelyFile(appRealPath + File.separator + tempName.getFileName());
             String targetFileName = tempName.name() + GlobalConstant.POINT + FileNameUtil.getFileExtName(tempName.getFileName());
             return ExportUtil.export(targetFileName, tplFile, false);
         }
         // 如果当前画面的模板不存在，则下载所有模板
         String exportFilePath = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         String zipFileName = FileNameUtil.createFileName("zip");
-        File zipFile = new File(exportFilePath + File.separator + zipFileName);
+        File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
         FileOutputStream fos=null;
         ZipOutputStream zipOut=null;
         InputStream input = null;
@@ -213,7 +214,7 @@ public class ChbFileUploadController {
         fos=new FileOutputStream(zipFile);
         zipOut = new ZipOutputStream(fos);
 
-        File tmpDir = new File(appRealPath);
+        File tmpDir = new SafelyFile(appRealPath);
         if (tmpDir.isDirectory()) {
             File[] files = tmpDir.listFiles();
             for (int i = 0; i < files.length; ++i) {

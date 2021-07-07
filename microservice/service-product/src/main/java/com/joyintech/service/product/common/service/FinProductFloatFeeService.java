@@ -10,23 +10,23 @@
  
 package com.joyintech.service.product.common.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.product.common.dao.FinProductFloatFeeMapper;
+import com.joyintech.service.product.common.dto.FinProductFloatFeeDto;
 import com.joyintech.tams.common.base.dao.FinCashInfoMapper;
 import com.joyintech.tams.common.base.dao.FinFloatCalcRuleMapper;
 import com.joyintech.tams.common.base.entity.FinFloatCalcRuleDetail;
 import com.joyintech.tams.common.base.entity.FinFloatCalcRuleKey;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.service.product.common.dao.FinProductFloatFeeMapper;
-import com.joyintech.service.product.common.dto.FinProductFloatFeeDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉
@@ -100,6 +100,13 @@ public class FinProductFloatFeeService {
         map.put("dealMode10", DictCodeList.处理模式_周期型.getValue());
         map.put("termType02", DictCodeListExt2.期限类型_多固定期限.getValue());
 
+        map.put("sysDate", DateUtil.getSysDate());
+        if (StringUtil.isNotEmpty(map.get("effDate"))
+                && DateUtil.compareDate(map.get("effDate").toString(),DateUtil.getSysDate())!=-1) {
+            map.put("sysDate", map.get("effDate").toString());
+        }
+
+
         return finProductFloatFeeMapper.queryFloatFeeDetailByFinprodId(map);
     }
     
@@ -137,6 +144,12 @@ public class FinProductFloatFeeService {
         map.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
         map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_系列模板.getValue());
         map.put("baseRuleType", DictCodeListExt1.业绩基准类型_浮动管理费.getValue());
+        map.put("sysDate", DateUtil.getSysDate());
+        if (StringUtil.isNotEmpty(map.get("effDate"))
+                && DateUtil.compareDate(map.get("effDate").toString(),DateUtil.getSysDate())!=-1) {
+            map.put("sysDate", map.get("effDate").toString());
+        }
+
         List<FinProductFloatFeeDto> finProductFloatFeeDtos = finProductFloatFeeMapper.queryLayerFloatFeeInfoByFinprodId(map);
         for(FinProductFloatFeeDto finProductFloatFeeDto : finProductFloatFeeDtos){
             map.put("finprodId", finProductFloatFeeDto.getFinprodid());

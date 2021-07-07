@@ -1,0 +1,12 @@
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID='LZ482123-DF35-D920-E050-321F01000654';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('LZ482123-DF35-D920-E050-321F01000654', 'FinProjectTargetAsset002', 'compareValueAsNumber', 'bussRepAssetCreditNonstdInfoDto.repReprceCycle', '>=', '0', 'Y', '重定价周期必须大于等于0。', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID='LZ482123-DF35-D920-E050-321F01000655';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('LZ482123-DF35-D920-E050-321F01000655', 'FinProjectTargetAsset002', 'isNumber', 'bussRepAssetCreditNonstdInfoDto.repReprceCycle', '>=', '5,0', 'Y', '重定价周期必须为n..5格式。', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
+delete from chb_datacheck_condition_inv where CHECKRULEID='LZ482123-DF35-D920-E050-321F01000654';
+insert into chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
+values ('LZ482123-DF35-D920-E050-321F01000656', 'LZ482123-DF35-D920-E050-321F01000654', 'inArray', 'repAssetType', '==',  '1202,1203,1204,1205,1206,1207,1208,1209', null, 'E');
+delete from chb_datacheck_condition_inv where CHECKRULEID='LZ482123-DF35-D920-E050-321F01000655';
+insert into chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
+values ('LZ482123-DF35-D920-E050-321F01000657', 'LZ482123-DF35-D920-E050-321F01000655', 'inArray', 'repAssetType', '==', '1202,1203,1204,1205,1206,1207,1208,1209', null, 'E');

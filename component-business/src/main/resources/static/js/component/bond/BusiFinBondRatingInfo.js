@@ -47,7 +47,7 @@
             
             // 新增数据 非新增 都  列名是评级类型的 不让编辑此列。
             //rowData.updateFlg ==='01' &&
-            if(rowData.updateFlg !='01' && field == 'oType'){
+            if(pageId && pageId =='FinBondTargetAsset002' && field == 'oType'){
             	return false;
             }
            return true;

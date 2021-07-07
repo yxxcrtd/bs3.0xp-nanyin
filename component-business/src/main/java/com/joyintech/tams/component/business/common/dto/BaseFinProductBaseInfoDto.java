@@ -12,9 +12,6 @@ package com.joyintech.tams.component.business.common.dto;
 
 import java.util.List;
 
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.FinRateInfo;
-import com.joyintech.tams.common.base.entity.RepFund;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinCashInfo;
 import com.joyintech.tams.common.base.entity.FinCashPayRule;
@@ -24,10 +21,16 @@ import com.joyintech.tams.common.base.entity.FinExerciseRule;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
 import com.joyintech.tams.common.base.entity.FinOpenRule;
 import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.MstBondCreditRating;
-import com.joyintech.tams.common.base.entity.RepAssetDept;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.FinRateInfo;
+import com.joyintech.tams.common.base.entity.JxsIssueInfo;
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.common.base.entity.RepAssetBond;
+import com.joyintech.tams.common.base.entity.RepAssetDept;
+import com.joyintech.tams.common.base.entity.RepAssetEquity;
+import com.joyintech.tams.common.base.entity.RepFund;
+import com.joyintech.tams.component.base.report.dto.BaseRepAssetEquityInfoDto;
 
 /**
  * 〈一句话功能简述〉
@@ -101,6 +104,18 @@ public class BaseFinProductBaseInfoDto {
      * 
      */
     private RepAssetDept repAssetDept;
+    
+    /**
+     * 权益类资产报送
+     * 
+     */
+    private RepAssetEquity repAssetEquity;
+    
+    /**
+     * 债券中债报送--权益类资产报送信息
+     * 
+     */    
+    private BaseRepAssetEquityInfoDto baseRepAssetEquityInfoDto;    
 
     /**
      * 资产/负债类别
@@ -110,6 +125,12 @@ public class BaseFinProductBaseInfoDto {
      * 债券评级信息list add by shenchen 2019-04-25
      */
     private List<MstBondCreditRating> mstBondCreditRatingList;
+    
+    /**
+     * JXS_ISSUE_INFO
+     * 
+     */
+    private JxsIssueInfo jxsIssueInfo;
     
     /**
      * 获取 标的类金融产品entity
@@ -349,4 +370,27 @@ public class BaseFinProductBaseInfoDto {
 		this.mstBondCreditRatingList = mstBondCreditRatingList;
 	}
    
+	public BaseRepAssetEquityInfoDto getBaseRepAssetEquityInfoDto() {
+		return baseRepAssetEquityInfoDto;
+	}
+
+	public void setBaseRepAssetEquityInfoDto(BaseRepAssetEquityInfoDto baseRepAssetEquityInfoDto) {
+		this.baseRepAssetEquityInfoDto = baseRepAssetEquityInfoDto;
+	}
+
+	public JxsIssueInfo getJxsIssueInfo() {
+		return jxsIssueInfo;
+	}
+
+	public void setJxsIssueInfo(JxsIssueInfo jxsIssueInfo) {
+		this.jxsIssueInfo = jxsIssueInfo;
+	}
+
+	public RepAssetEquity getRepAssetEquity() {
+		return repAssetEquity;
+	}
+
+	public void setRepAssetEquity(RepAssetEquity repAssetEquity) {
+		this.repAssetEquity = repAssetEquity;
+	}
 }

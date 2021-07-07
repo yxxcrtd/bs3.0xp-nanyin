@@ -44,7 +44,7 @@
 	var investorTypeAction = function(){
 		var repInArr = getElementById('investorType').val();
 		if(repInArr == null){
-			$('#'+bussFinProductSaleParamDto + '_sameOrg').val('').prop('disabled',true);
+			$('#'+bussFinProductSaleParamDto + '_sameOrg').val('').trigger('change').prop('disabled',true);
 			return;
 		}
 		for(var i = 0;i < repInArr.length ; i++){
@@ -64,7 +64,7 @@
 			}
             //客户类型仅有金融同业时，中债报送的 是否同业专属字段 才为是 必输 可编辑 yjm end 20190807 
 			if(i == repInArr.length - 1){
-				$('#'+bussFinProductSaleParamDto + '_sameOrg').val('').prop('disabled',true);
+				$('#'+bussFinProductSaleParamDto + '_sameOrg').val('').trigger('change').prop('disabled',true);
 			}
 		}
 	};

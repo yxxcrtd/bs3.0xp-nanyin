@@ -131,6 +131,16 @@ public class BussFinProductOpenPlanDto extends FinOpenRule {
      */
     private String workdayOfMonth;
 
+    private String openDateRadio;
+
+    public String getOpenDateRadio() {
+        return openDateRadio;
+    }
+
+    public void setOpenDateRadio(String openDateRadio) {
+        this.openDateRadio = openDateRadio;
+    }
+
     /**
      * 几号/第几工作日 标识
      */

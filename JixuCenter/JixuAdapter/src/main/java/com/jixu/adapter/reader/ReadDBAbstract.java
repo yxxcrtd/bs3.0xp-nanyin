@@ -332,13 +332,13 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 		}
 		
 		Connection conn=null;
-		Statement stmt=null;
+		PreparedStatement stmt=null;
 		ResultSet rs=null;
 		try{
 			conn=targetDAO.getConnection();
-			stmt=conn.createStatement();
 			String sql="select * from " + tablename;
-			rs=stmt.executeQuery(sql);
+			stmt=conn.prepareStatement(sql);
+			rs=stmt.executeQuery();
 			ResultSetMetaData rsmd = rs.getMetaData(); //获得结果集结构信息,元数据
 			for( int i=1; i<=rsmd.getColumnCount(); i++ ){
 				String field = rsmd.getColumnName(i);
@@ -378,12 +378,11 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 		List<String> columnList=new ArrayList<String>();
 		String connectInfo=source.getFilepath();
 		Connection conn=null;
-		Statement stmt=null;
+		PreparedStatement stmt=null;
 		try{
 			conn=getConnection(connectInfo, source.getChannelAccount(), AESUtil.Decrypt(source.getChannelPWD()));
-			stmt=conn.createStatement();
-			String sql=source.getDbSQL();
 			
+			String sql=source.getDbSQL();
 			while(sql.contains(":")){
 				String param=sql.substring(sql.indexOf(":"),sql.length());
 				if(param.contains(" ")){
@@ -391,8 +390,8 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 				}
 				sql=sql.replace(param, "null");
 			}
-			
-			ResultSet rs=stmt.executeQuery(sql);
+			stmt=conn.prepareStatement(sql);
+			ResultSet rs=stmt.executeQuery();
 			
 			ResultSetMetaData rsmd = rs.getMetaData(); //获得结果集结构信息,元数据
 			for( int i=1; i<=rsmd.getColumnCount(); i++ ){

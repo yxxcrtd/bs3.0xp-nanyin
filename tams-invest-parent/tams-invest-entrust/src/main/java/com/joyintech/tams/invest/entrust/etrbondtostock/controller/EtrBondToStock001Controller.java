@@ -1,8 +1,11 @@
 package com.joyintech.tams.invest.entrust.etrbondtostock.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,9 +22,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.entrust.etrbondtostock.dto.EtrBondToStockDto;
@@ -194,11 +194,42 @@ public class EtrBondToStock001Controller extends BaseController{
     public ResponseEntity<byte[]> export()
             throws Exception {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
+        String datas = this.getParam("datas");
         String fileName = "债转股委托查询" + "(" + DateUtil.getCurrentDate() + ").xlsx";
         if (searchParams.get("isPosi") != null && Boolean.parseBoolean((String)searchParams.get("isPosi"))) {
             fileName = "持仓" + "(" + DateUtil.getCurrentDate() + ").xlsx";
         }
-        return service.export(fileName, RequestUtil.getParameters(getRequest()));
+        if(datas==null) {
+            return service.export(fileName, RequestUtil.getParameters(getRequest()));
+        }
+
+        if (searchParams.get("isPosi") != null && Boolean.parseBoolean((String)searchParams.get("isPosi"))) {
+            List<EtrBondToStockDto> param1 = JsonUtils.json2List(datas, EtrBondToStockDto.class);
+            File outFile = service.makeFile(
+                    "/com/joyintech/tams/invest/entrust/etrbondtostock/conf/export_confPosi.xml",
+                    param1);
+            return ExportUtil.export(
+                    "持仓" + SystemGlobalConstant.OPEN_PARENTHESIS
+                            + DateUtil.format(DateUtil.platDateFromCache())
+                            + SystemGlobalConstant.CLOSE_PARENTHESIS
+                            + SystemGlobalConstant.POINT
+                            + FileNameUtil.getFileExtName(outFile),
+                    outFile, true);
+        }else{
+            List<EtrBondToStockDto> param1 = JsonUtils.json2List(datas, EtrBondToStockDto.class);
+            File outFile = service.makeFile(
+                    "/com/joyintech/tams/invest/entrust/etrbondtostock/conf/export_conf.xml",
+                    param1);
+            return ExportUtil.export(
+                    "债转股委托查询" + SystemGlobalConstant.OPEN_PARENTHESIS
+                            + DateUtil.format(DateUtil.platDateFromCache())
+                            + SystemGlobalConstant.CLOSE_PARENTHESIS
+                            + SystemGlobalConstant.POINT
+                            + FileNameUtil.getFileExtName(outFile),
+                    outFile, true);
+
+        }
+
     }
     
 }

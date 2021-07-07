@@ -284,7 +284,7 @@ $(function() {
                 $('#tradeAmt_div').show();
                 $('#tradeAmt').attr('disabled',false);
                 $('#confirmDate').show();
-                $('#trdDate').hide();
+                $('#trdDate').show();
                 $('#settleSpreed_div').hide();
                 $('#unitCprice_div').show();
                 $('#purchaseFee_div').show();
@@ -309,7 +309,7 @@ $(function() {
                 $('#tradeAmt').attr('disabled',true);
                 $('#settleSpreed').val(settlet1).change();
                 $('#confirmDate').show();
-                $('#trdDate').hide();
+                $('#trdDate').show();
                 $('#settleSpreed_div').hide();
                 $('#unitCprice_div').show();
                 $('#purchaseFee_div').show();

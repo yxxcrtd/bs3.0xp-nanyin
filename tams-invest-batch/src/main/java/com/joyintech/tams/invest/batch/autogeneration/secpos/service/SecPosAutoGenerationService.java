@@ -229,6 +229,10 @@ public class SecPosAutoGenerationService {
             }
             
             for(AssetTargetDbDto item:secPosDataList) {
+                //剩余期限计算
+                if(item.getMdate()!=null){
+                    item.setLastPeriod(calculationSurplusDays(item.getFinprodId(), DateUtil.format(item.getVdate()), DateUtil.format(item.getMdate()), DateUtil.format(batchDate), item.getBranch()));
+                }
                 //获取剩余期限、成本收益率、含权信息、下一行权日、剩余行权期限信息、债券评级
                 if (StringUtil.isNotEmpty(item.getPinanAssetType()) && item.getPinanAssetType().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
                     //****债券评级**** begin
@@ -272,8 +276,6 @@ public class SecPosAutoGenerationService {
                     // ****债券评级**** end
                     //成本收益率计算
                     item.setCostRate(calculationCostRate(item.getFinprodId(), DateUtil.format(batchDate), item.getPortfolioId(), item.getIsPerne()));
-                    //剩余期限计算
-                    item.setLastPeriod(calculationSurplusDays(item.getFinprodId(), DateUtil.format(item.getVdate()), DateUtil.format(item.getMdate()), DateUtil.format(batchDate), item.getBranch()));
 
                     if (item.getIsRight().equals(DictCodeList.是否_是.getValue())) {
                         List<FinExercisePlan> finExercisePlanList =new ArrayList<FinExercisePlan>();
@@ -417,6 +419,7 @@ public class SecPosAutoGenerationService {
         map.put("finprodId",finprodId);
         map.put("effDate",vdate);
         map.put("branch",branch);
+        map.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         FinCashCalcRule finCashCaluRule = secPosAutoGenerationMapper.getBasisByFinprodId
                 (map);
         if(finCashCaluRule!=null )
@@ -465,6 +468,7 @@ public class SecPosAutoGenerationService {
         map.put("finprodId",finprodId);
         map.put("effDate",date);
         map.put("branch",branch);
+        map.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         FinCashCalcRule finCashCalcRule = secPosAutoGenerationMapper.getBasisByFinprodId(
                 map);
         if(finCashCalcRule!=null )

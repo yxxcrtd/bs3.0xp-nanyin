@@ -62,7 +62,7 @@
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{FinProductBuild002.finprodMarketId}">产品代码</label>
 										<div class="layui-input-inline input-inline">
-											<input type="text" name="finprodMarketId" onKeyUp="value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')"
+											<input type="text" name="finprodMarketId" onKeyUp="value=value.replace(/[^\u0030-\u0039\u0041-\u005a\u0061-\u007a\u0020-\u0026\u0028-\u007B\u007D\u007E]/g,'')"
 												id="FinNetValueProductBuild002_finprodMarketId"
 												class="layui-input form-input" maxLength="32"
 												data-th-value='${entity?.finprodMarketId}'
@@ -90,7 +90,7 @@
 										<div class="layui-input-inline input-inline">
 											<input type="text" name="finprodName"
 												id="FinNetValueProductBuild002_finprodName"
-												class="layui-input form-input" maxlength=60
+												class="layui-input form-input" maxlength=200
 												data-th-placeholder="#{SysCommon.placeholder}"
 												data-th-value='${entity?.finprodName}' required>
 										</div>
@@ -882,7 +882,6 @@
 									</div>
 									<!--业绩回补合版本相关 end wangcheng 20191025  -->
 								</div>
-
 							</div>
 						</div>
 					</div>

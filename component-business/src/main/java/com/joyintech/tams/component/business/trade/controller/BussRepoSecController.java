@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -97,6 +98,12 @@ public class BussRepoSecController extends BaseController {
                 model.addAttribute("entity", entity);
             }
         }
+        // 佣金
+        model.addAttribute("FEE_TYPE_05", BussinessDictCodeList.费用类型_佣金.getValue());
+        // 交易手续费
+        model.addAttribute("FEE_TYPE_06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+        // 结算手续费
+        model.addAttribute("FEE_TYPE_08", BussinessDictCodeList.费用类型_结算手续费.getValue());
         //add by gaopeng 2019/10/12 start
         model.addAttribute("entrustId", entrustId);
         //add by gaopeng 2019/10/12 end

@@ -253,7 +253,7 @@ public class PrdFloatFeeExpensesUpProcessorService {
                             data = subjectBalanceList.get(0);
                         }
                     }
-                    calBalance(balFlagMap.get(detail.getBaseSubjectNature()), data, detail);
+                    //calBalance(balFlagMap.get(detail.getBaseSubjectNature()), data, detail);
                     SubjectBalance data1 = new SubjectBalance();
                     data1.setBalance(detail.getoAmtHappenDate());
                     data1.setBalFlagHappenDate(detail.getBalFlagHappenDate());

@@ -56,9 +56,10 @@ public class FinMdateAdjustmentController {
      * @param param 入参
      * @return 产品代码下拉框
      */
-    @PostMapping("queryAdjustProdIdList")
-    public List<SelectOptionDto> queryAdjustProdIdList(@RequestBody Map<String, Object> param){
-        return finMdateAdjustmentService.queryAdjustProdIdList(param);
+    @PostMapping("queryAdjustProdIdList/{page}/{length}")
+    public Page<SelectOptionDto> queryAdjustProdIdList(@RequestBody Map<String, Object> param,
+                                                       @PathVariable("page") int page, @PathVariable("length") int length){
+        return finMdateAdjustmentService.queryAdjustProdIdList(page, length, param);
     }
     
     /**

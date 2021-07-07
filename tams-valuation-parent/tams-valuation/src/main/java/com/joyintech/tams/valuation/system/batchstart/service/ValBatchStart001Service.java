@@ -297,8 +297,10 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		if (doBatchDispatch) {
 			dates.add(start);
 		} else {
-			for (Date date = start; !date.after(end); date = DateUtil.addDay(date, 1)) {
-				dates.add(date);
+			if (start != null){
+				for (Date date = start; !date.after(end); date = DateUtil.addDay(date, 1)) {
+					dates.add(date);
+				}
 			}
 		}
 		for (Date exeDate : dates) {

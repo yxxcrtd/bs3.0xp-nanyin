@@ -92,14 +92,15 @@
 		  b.OPERATE_MODE operateMode,
 		  to_char(b.VDATE,'yyyy-MM-dd') vdate,
 		  to_char(b.MDATE,'yyyy-MM-dd') mdate,
-		  psp.INVESTOR_TYPE investor,
+		 <!-- psp.INVESTOR_TYPE investor,-->
+		  b.investor_type investor,
 		  to_char(A.CREATE_TIME,'yyyy-MM-dd') generateDate,
 		  A.REMARK remark
 		 FROM CHB_PRDRESIST_CODE A
 		 left join chb_prd_baseinfo b
 		 on b.prod_id = a.PRODID
-		 left join PRD_SALE_PARAM  psp
-		 on psp.FINPROD_ID = 'F16_'||a.PRODID
+		 <!--left join PRD_SALE_PARAM  psp
+		 on psp.FINPROD_ID = 'F16_'||a.PRODID-->
 		 <where>
 		    <if test="prodList != null and prodList.size() > 0">
 		 	<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">
@@ -316,25 +317,24 @@
     <select id="selectInfo" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto">
         select 
 		chb_prd_baseinfo.PROD_NAME prodName,
-		chb_prd_baseinfo.OPERATE_MODE operateMode,
+		chb_prd_baseinfo.OPERATE_MODE operateMode<!--,
 		chb_prd_baseinfo.VDATE vdate,
-		chb_prd_baseinfo.MDATE mdate
+		chb_prd_baseinfo.MDATE mdate-->
 		from chb_prd_baseinfo
-		left join FIN_PRODUCT on FIN_PRODUCT.FINPROD_MARKET_ID = chb_prd_baseinfo.PROD_ID
+		<!--left join FIN_PRODUCT on FIN_PRODUCT.FINPROD_MARKET_ID = chb_prd_baseinfo.PROD_ID-->
         where chb_prd_baseinfo.PROD_ID = #{prodId}
-        and FIN_PRODUCT.FINPROD_TYPE = 'F16' and FIN_PRODUCT.FINPROD_TYPE2 = 'F16'
+      <!--  and FIN_PRODUCT.FINPROD_TYPE = 'F16' and FIN_PRODUCT.FINPROD_TYPE2 = 'F16'-->
     </select>
     
     <select id="selectInfoN" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto">
-        select 
-		FIN_PRODUCT.FINPROD_NAME prodName,
-		REP_PROD_DECLARE.REP_OPERATE_MODE operateMode,
+        select
+		ci.prod_NAME prodName,
+		REP_PROD_DECLARE.REP_OPERATE_MODE operateMode<!--,
 		FIN_PRODUCT.VDATE vdate,
-		FIN_PRODUCT.MDATE mdate
-		from FIN_PRODUCT
-		left join REP_PROD_DECLARE  on REP_PROD_DECLARE.REP_FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-       where FIN_PRODUCT.FINPROD_MARKET_ID = #{prodId}
-       and FIN_PRODUCT.FINPROD_TYPE = 'F16' and FIN_PRODUCT.FINPROD_TYPE2 = 'F16'
+		FIN_PRODUCT.MDATE mdate-->
+		from chb_prd_declare_info ci
+		left join REP_PROD_DECLARE  on REP_PROD_DECLARE.rep_finprod_ins_id = ci.prod_ins_id
+       where ci.prod_ins_id = #{prodId}
     </select>
     
     <select id="selectId" resultType="java.util.Map">

@@ -76,40 +76,64 @@ public class AssetMarketDataService extends BaseService{
         	if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_股票.getValue())) {
         		 Map<String, Object> data = finProductCommonBatchService.getStockMarket(dto.getCheckDate(),resultDto.getBooksetId(),
         				 resultDto.getFinprodId(),resultDto.getTradeMarket(),resultDto.getInvAim());
-        		 if(checkDateEqual((Date)data.get("valDate"),dto.getCheckDate())){
-        			 detailIterator.remove();
-        		 }
+//        		 if(checkDateEqual((Date)data.get("valDate"),dto.getCheckDate())){
+//        			 detailIterator.remove();
+//        		 }
+				if(data!=null  &&  StringUtil.isNotEmpty(data.get("valuation"))){
+					detailIterator.remove();
+				}
+
         	}
-        	else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_净值型.getValue())) {
-        		MarketPriceDto pDto = finProductCommonBatchService.getFundMarketPriceForPlanAsset(dto.getCheckDate(), resultDto.getFinprodId(), resultDto.getBooksetId());
-        		if(pDto!=null) {
-        			Date valDate = pDto.getValDate()==null?pDto.getSchemeValDate():pDto.getValDate();
-        			if(checkDateEqual(dto.getCheckDate(),valDate)) {
-        				detailIterator.remove();	
-        			}
-        		}
+        	else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_净值型.getValue())
+			         || StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_货币型.getValue())) {
+        		MarketPriceDto marketPriceDto = finProductCommonBatchService.getPlanAssetPreCheckDto(dto.getCheckDate(), resultDto.getFinprodId(), resultDto.getBooksetId(),resultDto.getSecType());
+//        		if(pDto!=null) {
+//        			Date valDate = pDto.getValDate()==null?pDto.getSchemeValDate():pDto.getValDate();
+//        			if(checkDateEqual(dto.getCheckDate(),valDate)) {
+//        				detailIterator.remove();
+//        			}
+//        		}
+				if (marketPriceDto != null && marketPriceDto.isPreCheckFlag()){
+					detailIterator.remove();
+				}
         	}
         	//2.2 债券，基金，计划类货币型需要通过http访问本机服务
-        	else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_债券.getValue())
-        			||StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_基金.getValue())
-        			||StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_货币型.getValue())) {
+        	else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_债券.getValue()) ) {
         		//债券
-        		String url = null;
-        		if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_债券.getValue())) {
-        			url = urlHead+"/FinproductCommon/getBondMarketPrice?happenDate="+happenDateStr
-            				+"&booksetId="+resultDto.getBooksetId()+"&finProdId="+resultDto.getFinprodId()+"&invAim="+resultDto.getInvAim();
-        		}
-        		else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_基金.getValue())) {
-        			url = urlHead+"/FinproductCommon/getFundMarketPrice?happenDate="+happenDateStr
-            				+"&booksetId="+resultDto.getBooksetId()+"&finProdId="+resultDto.getFinprodId();
-        		}
-        		else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_货币型.getValue())) {
-        			url = urlHead+"/FinproductCommon/queryFinProductValuation?happenDate="+happenDateStr
-            				+"&booksetId="+resultDto.getBooksetId()+"&finprodMarketId="+resultDto.getFinprodId().substring(3)+"&calenderId="+resultDto.getCalenderId();
-        		}
-        		if(checkByTemplate(dto.getCheckDate(),url)) {
-        			detailIterator.remove();
-        		}
+//        		String url = null;
+//        		if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_债券.getValue())) {
+//        			url = urlHead+"/FinproductCommon/getBondMarketPriceDto?happenDate="+happenDateStr
+//            				+"&booksetId="+resultDto.getBooksetId()+"&finProdId="+resultDto.getFinprodId()+"&invAim="+resultDto.getInvAim();
+//
+//					MarketPriceDto marketPriceDto = restTemplate.getForObject(url, MarketPriceDto.class);
+
+                MarketPriceDto marketPriceDto = finProductCommonBatchService.getBondMarketPricePreCheckDto(dto.getCheckDate(), resultDto.getBooksetId(), resultDto.getFinprodId(),resultDto.getInvAim(),resultDto.getCalenderId());
+
+                if(marketPriceDto!=null && marketPriceDto.isPreCheckFlag()){
+                    detailIterator.remove();
+                }
+
+            }
+            else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_基金.getValue())) {
+//        			url = urlHead+"/FinproductCommon/getFundMarketPriceDto?happenDate="+happenDateStr
+//            				+"&booksetId="+resultDto.getBooksetId()+"&finProdId="+resultDto.getFinprodId();
+//
+//					MarketPriceDto marketPriceDto = restTemplate.getForObject(url, MarketPriceDto.class);
+                MarketPriceDto marketPriceDto = finProductCommonBatchService.getFundMarketPricePreCheckDto(dto.getCheckDate(), resultDto.getBooksetId(), resultDto.getFinprodId(),resultDto.getCalenderId());
+                if(marketPriceDto!=null && marketPriceDto.isPreCheckFlag()){
+                    detailIterator.remove();
+                }
+
+//        		else if(StringUtil.equals(resultDto.getSecType(), DictCodeListExt1.证券品种_计划类资产_货币型.getValue())) {
+//        			String finprodMarketId = resultDto.getFinprodId() == null?"": resultDto.getFinprodId().startsWith("F17")?resultDto.getFinprodId().substring(4): resultDto.getFinprodId() ;
+//
+//        			url = urlHead + "/FinproductCommon/queryFinProductValuation?happenDate=" + happenDateStr
+//							+ "&booksetId=" + resultDto.getBooksetId() + "&finprodMarketId=" + finprodMarketId + "&calenderId=" + resultDto.getCalenderId();
+//
+//					if (checkByTemplate(dto.getCheckDate(), url)) {
+//						detailIterator.remove();
+//					}
+//				}
         	}
         	else {
         		//不是需要校验的数据
@@ -126,7 +150,7 @@ public class AssetMarketDataService extends BaseService{
         List<SysPrebatchResultDetail> finalDetails = new ArrayList<>(details);
         prebatchCheckCommonService.insertBatchResultDetail(dto,finalDetails);
     }
-    
+
     /**
      * 设置错误信息与SysPrebatchResultDto关联
      * @param batchExecuteInfo
@@ -144,27 +168,27 @@ public class AssetMarketDataService extends BaseService{
         item.setUpdateUser(dto.getUpdateUser());
     }
     
-    /**
-     * 通过restTemplate进行校验校验
-     * @param checkDate
-     * @param url
-     * @return
-     */
-    private boolean checkByTemplate(Date checkDate,String url) {
-    	Date valDate = restTemplate.getForObject(url, Date.class);
-    	return checkDateEqual(valDate,checkDate);
-    }
-    
-    /**
-     * 判断两个日期是否相等
-     * @param a
-     * @param b
-     * @return
-     */
-    private boolean checkDateEqual(Date a,Date b) {
-    	if(a!=null&&b!=null) {
-    		return StringUtil.equals(DateUtil.format(a), DateUtil.format(b));
-    	}
-    	return false;
-    }
+//    /**
+//     * 通过restTemplate进行校验校验
+//     * @param checkDate
+//     * @param url
+//     * @return
+//     */
+//    private boolean checkByTemplate(Date checkDate,String url) {
+//    	Date valDate = restTemplate.getForObject(url, Date.class);
+//    	return checkDateEqual(valDate,checkDate);
+//    }
+//
+//    /**
+//     * 判断两个日期是否相等
+//     * @param a
+//     * @param b
+//     * @return
+//     */
+//    private boolean checkDateEqual(Date a,Date b) {
+//    	if(a!=null&&b!=null) {
+//    		return true;
+//    	}
+//    	return false;
+//    }
 }

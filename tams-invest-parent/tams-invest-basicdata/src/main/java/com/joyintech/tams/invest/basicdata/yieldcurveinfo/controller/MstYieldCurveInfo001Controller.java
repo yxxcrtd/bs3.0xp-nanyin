@@ -123,10 +123,12 @@ public class MstYieldCurveInfo001Controller extends BaseController{
         params.setBusinessType(DictCodeList.共通业务类型_收益率曲线信息.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
-            entity ->"曲线名称"+"("+ SysDataUtil.getNameFromDataDict(DictCode.收益率曲线,
-                entity.getCurveCode()) +")"+"-"+"曲线日期" + "(" + DateUtil.format(entity.getCurveDate()) + ")"
-                +"-"+"区线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.收益率曲线类型,
-                    entity.getCurveType())+")");
+                //修改流程中的曲线名称和曲线类型 modified by lishuping 20191008 start
+                entity ->"曲线名称"+"("+ String.format(entity.getCurveCode()) + ")"
+                        +"-"+"曲线日期" + "(" + DateUtil.format(entity.getCurveDate()) + ")"
+                        +"-"+"曲线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.曲线利率类型,
+                        entity.getCurveType())+")");
+
         processParameter.setWorkFlowParameter(params);
         String msg = mstYieldCurveInfoService.start(processParameter, 
             dto.getSelectedItem().toArray(new MstYieldCurveInfoDto[dto.getSelectedItem().size()]));

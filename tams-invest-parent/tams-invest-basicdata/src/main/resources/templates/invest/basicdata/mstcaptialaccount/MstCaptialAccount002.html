@@ -94,6 +94,19 @@
                                                 data-th-value="${entity?.swiftCode}">
                                         </div>
                                     </div>
+                                    <!--add by lpf 2021-04-27 增加字段 账户性质-->
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap"
+                                               data-th-text="#{MstCaptialAccount002.accountNature}">账户性质</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <input type="text" id="accountNature" name="accountNature" required
+                                                   class="layui-input form-input input-select" allowClear="true"
+                                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                                   data-th-data-result='${ACCOUNT_NATURE}'
+                                                   data-th-initValue="${entity?.accountNature}"
+                                                   formatoption=true>
+                                        </div>
+                                    </div>
                                 </div>
                              </div>
                         </div>

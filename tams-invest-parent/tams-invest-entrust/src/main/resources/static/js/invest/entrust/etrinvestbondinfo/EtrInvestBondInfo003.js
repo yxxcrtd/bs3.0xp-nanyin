@@ -47,7 +47,7 @@
           	 ,editOption:{type:'select',id:"invAim",formatoption:true,result:INV_AIM} }
         ,{field:'entrustNum', width:100, title: 'EtrInvestBondInfo002.entrustAmt', edit:true, sortable: false, type:'number', digit:2}
         ,{field:'secManageAcctId', width:100,  title: 'EtrInvestBondInfo003.secManageAcctId',edit:true,sortable: false,
-            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
+            editOption:{type:'select', parentIds:'portfolioId,tradeMarket,finprodName', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
                 url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
            }
         }
@@ -251,9 +251,9 @@
         for(var index in object.bussCombDistribtList){
         	var item = object.bussCombDistribtList[index];
         	var temp = JSON.parse(JSON.stringify(object));
-            if (temp.priceModel){
-                temp.priceModel = '';
-            }
+            // if (temp.priceModel){
+            //     temp.priceModel = '';
+            // }
         	// 指令授信 start
             temp.inputValue1 = 'F01';
             temp.finprodType2 = 'F01';

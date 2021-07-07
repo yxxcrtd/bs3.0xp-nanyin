@@ -521,6 +521,16 @@
  		    where finprod_id = #{finprodId}
     </select>
 
+	<select id="getPledgeAmt"  resultType="java.math.BigDecimal" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal">
+		select sum(fdp.pledge_number * newfaceValue) pledge_number
+		from FIN_DEAL_PLEDGE fdp
+				 left join (SELECT FINPROD_ID, nvl(100 - sum(nvl(PRIN_AMT, 0)), 100) newfaceValue
+							FROM FIN_CASH_PLAN
+							WHERE #{tradeDate,jdbcType=DATE} >= MDATE
+							GROUP BY FINPROD_ID) fcp on fdp.PLEDGE_FINPROD_ID = fcp.finprod_id
+		where fdp.finprod_id = #{finprodId}
+    </select>
+
 	<select id="getAssetInfoByFinId" resultMap="FinProductCreditMap">
 		SELECT T2.TYPE_6 type6,T2.TYPE_7 type7,T1.FINPROD_ID finprodId,
 		T1.ISSUE_TYPE issueType,T3.IS_SEC_BOND isSecBond,
@@ -545,6 +555,29 @@
 		FROM CREDIT_MST_INFO T
 		WHERE T.SEQNO = #{creditMstId,jdbcType=VARCHAR})
 	</select>
+
+	<select id="getPierceTradeAmt" resultType="java.math.BigDecimal" >
+		SELECT
+			SUM(E.CREDIT_AMT) AS TRADE_AMT
+		FROM CREDIT_LINES_PIERCE E
+		left join CREDIT_LINES A
+			on A.CUSTOMER_ID= E.CUSTOMER_ID
+			AND A.CREDIT_MST_ID= E.CREDIT_MST_ID
+			AND A.INSTITUTION_CODE = E.INSTITUTION_CODE
+			AND E.CDATE BETWEEN A.VDATE AND A.MDATE
+		WHERE E.CDATE = (
+				SELECT  MAX (CDATE)
+				FROM CREDIT_LINES_PIERCE
+				WHERE CDATE <![CDATA[<=]]> #{tradedate,jdbcType=DATE})
+			AND E.CREDIT_FLAG != 'N'
+			AND E.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
+			AND E.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		GROUP BY  E.CUSTOMER_ID
+		,E.CREDIT_MST_ID
+		,E.INSTITUTION_CODE
+		,E.CDATE
+	</select>
+
 	<select id="getPrehapamtForPingan" resultType="java.math.BigDecimal" >
 		SELECT T.CREDIT_AMT FROM CREDIT_LINES_PRE T
 		WHERE T.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
@@ -611,6 +644,14 @@
 	<select id="selectCreditDealByTradeId" resultType="com.joyintech.tams.common.base.entity.CreditLinesDeal">
 		select SEQNO,TRADE_AMT tradeAmt from CREDIT_LINES_DEAL
 		where trade_id = #{tradeId}
+	</select>
+
+	<select id="selectCreditOriginDealByTradeId" resultType="com.joyintech.tams.common.base.entity.CreditLinesDeal">
+		select
+			cld.SEQNO,cld.TRADE_AMT tradeAmt
+		from CREDIT_LINES_DEAL cld
+			left join TRD_PRODUCT_DEAL fpd on cld.trade_id = fpd.FINPROD_ID
+		where fpd.trade_id = #{tradeId}
 	</select>
 	
 	<select id="selectCeLinesInfoBySeqno" resultType="com.joyintech.tams.common.base.entity.CreditLines">
@@ -703,7 +744,7 @@
 				   CCY,
 				   CREDIT_AMT,
 				   INSTITUTION_CODE,
-				   row_number() over (PARTITION BY c.CUSTOMER_ID,c.CREDIT_MST_ID ORDER BY c.CDATE ASC) as newResult
+				   row_number() over (PARTITION BY c.CUSTOMER_ID,c.CREDIT_MST_ID ORDER BY c.CDATE DESC) as newResult
 				FROM CREDIT_LINES_PIERCE c
 				where to_date(#{tradeDate},'yyyy-MM-dd') >= c.CDATE
 				  and c.CREDIT_MST_ID is not null
@@ -951,4 +992,17 @@
 		AND T.MDATE >=#{tradeDate,jdbcType=DATE}
 		GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CREDIT_CONDITION,T.INSTITUTION_CODE,T.CUSTOMER_ID,T.CREATE_TIME
 	</select>
+
+    <select id="selectCreditMstInfo" resultType="com.joyintech.tams.common.base.entity.CreditMstInfo" parameterType="java.lang.String" >
+        select
+        SEQNO SEQNO, CREDIT_INFO_TYPE CREDIT_INFO_TYPE, CREDIT_QUOTE_TYPE_CODE CREDIT_QUOTE_TYPE_CODE,
+        CREDIT_QUOTE_TYPE_VALUE CREDIT_QUOTE_TYPE_VALUE, CREDIT_QUOTE_RANK CREDIT_QUOTE_RANK,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME
+        from CREDIT_MST_INFO
+        where seqno not in ('0001','0002','0003')
+        <if test="seqno != null and seqno != ''">
+            SEQNO = #{seqno,jdbcType=VARCHAR}
+        </if>
+    </select>
 </mapper>

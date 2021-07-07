@@ -47,11 +47,12 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseS
 
     @Override
     public InvestorsQualityCheck001Dto cntHGL(Map<String, Object> param) {
-        // 查询所有记录
         dealParamMap(param);
-        List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchCPZTAll(param);
+        // 查询所有记录
+        List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchCPZTCalc(param);
         // 查询不合格记录
-        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchCPZTErrCalc(param);
+        param.put("queryErrFlag", "01");
+        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchCPZTCalc(param);
 
         return cntHGLComm(allList, unQualifiedList, CPZT);
     }

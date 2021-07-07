@@ -5,13 +5,17 @@
 (function() {
     //划款指令信息
     window.componentLoadCallback = function(isDone, pagePath, params){
-        if(isDone){
+      if(isDone){
             if(window.BussTrdTransferOrder && window.BussTrdTransferOrder['bussTrdTransferOrder']) {
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     var rows = table.getAllRows();
                     if(!rows || rows.length == 0){
-                        Joyin.error("明细信息不能为空！");
-                        return;
+                        if(!ptlFundAllocation001Dtos ||ptlFundAllocation001Dtos.length == 0){
+                            Joyin.error("明细信息不能为空！");
+                            return;
+                        }else{
+                            rows = ptlFundAllocation001Dtos;
+                        }
                     }
                     var list = new Array();
                     // 付款账户
@@ -53,15 +57,13 @@
                             acctNo.object = "isUsePageAcctTrue";
                             acctNoList[0] = acctNo;
                         }
-                        if(payType==1001){
+                        if(payType==payType1001){
                             dealObj.payAcctNoList = acctNoList;
                             dealObj.recAcctNoList = recAcctNoList;
                         }else{
                             dealObj.payAcctNoList = payAcctNoList;
                             dealObj.recAcctNoList = acctNoList;
                         }
-//                    dealObj.payAcctNo = $("#counterAcctNo").val();
-//                    dealObj.secManageAcctId = $("#myAcctNo").val();
                         dealObj.isUsePageAcct = true;
                         dealObj.portfolioId = rows[i].portfolioId;
                         list.push(dealObj);
@@ -73,21 +75,26 @@
                         , 'portfolioId': 'dzh'
                         , 'jiaoyiType':'dzh'
                         , 'deal':list
-                        , 'repPageId': 'TrdRepoTrade003'
+                        , 'repPageId': 'PtlFundAllocation002'
                     };
                 });
+
+                if (formTodoList) {
+                    window.BussTrdTransferOrder['bussTrdTransferOrder'].saveCalcCondition();
+                }
             }
         }
     }
     //初始化
     var init =function(){
+        debugger;
         var payType = $("#payType").val();
         /* 收付款账户显示 add by liuwei 20210226 start */
-        if(!payType || payType=='1001'){
+        if(!payType || payType==payType1001){
             $("#myAcctNo_id").hide();
             $("#counterAcctNo_id").show();
         }
-        else if(payType=='1002'){
+        else if(payType==payType1002){
             $("#myAcctNo_id").show();
             $("#counterAcctNo_id").hide();
         }
@@ -166,105 +173,13 @@
         }
     }
     var cols = [
-        {field:'portfolioId', title: '组合代码', edit:true,width:280, editOption:{id: 'portfolioId', type:'select',parentIds:'acctNo', url:JoyinUtil.getRealPath('invest/portfolio/ptlfundallocation/PtlFundAllocation003/getPortfolioId'),showField :'id'}},
+        {field:'portfolioId', title: '组合代码', edit:true,width:280, editOption:{id: 'portfolioId', type:'select',parentIds:'acctNo,payType,ccy,settleDate,myAcctNo,counterAcctNo', url:JoyinUtil.getRealPath('invest/portfolio/ptlfundallocation/PtlFundAllocation003/getPortfolioId'),showField :'id'}},
         {field:'acctNo', title: '收/付款账户', edit:false,width:280},
         {field:'acctName', title: '收/付款账户', edit:true,visible:false,width:280},
         {field:'amount', title: '付款账户余额', edit: false, align: 'right',type: 'money', digit: 2,width:280},
-        {field:'settleAmt', title: '划款金额', edit: true, align: 'right',width:280, editOption:{type: 'money', digit: 2,pattern: '#.00'}},
+        {field:'settleAmt', title: '划款金额', edit: true, align: 'right',width:280, type: 'money',digit: 2,editOption:{type: 'money', digit: 2,pattern: '#.00'}},
         {field:'operation', title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['delt'],visible: !$("#isImportFlag").val() || $("#isImportFlag").val() !== '01'}/* 导入后隐藏删除按钮 add by liuwei 20210413 start */
     ]
-    /**
-     * 定义数据表格
-     */
-//     function reloadTable(object,acctNo){
-//         $("#showTable").empty();
-//         $("#showTable").append('<table class="layui-table" id="dataTable" name="ptlFundAllocation001Dtos"></table>');
-//         var table1 = $("#dataTable").joyintable({
-//             ajax: {
-//                 url: 'getPtlFundAllocation001Dtos',
-//                 type: 'POST',
-//                 data: object
-//             },
-//             searchOnInit: true,
-//             checkbox: false,
-//             height: 180,
-//             page: false,
-//             editCell: function(value, data, field, cell, column) {
-//                 setTimeout(function() {
-//                     var settleAmt = Number(0);
-//                     if (field == 'settleAmt') {
-//                         var allrows = table1.getAllRows();
-//                         for(var i in allrows){
-//                             if(allrows[i].settleAmt==null||allrows[i].settleAmt==''||allrows[i].settleAmt=='NaN'){
-//                                 allrows[i].settleAmt = Number(0);
-//                             }
-//                             settleAmt = Number(settleAmt)+Number(allrows[i].settleAmt);
-//                         }
-//                         $("#settleAmt").val(settleAmt+'.00');
-//                     }
-//                     if (!(field == 'portfolioId' || field == "myAcctNo" )) {
-//                         return;
-//                     }
-//                     if(!value || value.trim() == ''){
-//                         return;
-//                     }
-//
-//                     if(!$("#settleDate").val()){
-//                         Joyin.error(JoyinUtil.getMessage("1.请选择交易时间！"));
-//                         return;
-//                     }
-//                     if(!$("#ccy").val()){
-//                         Joyin.error(JoyinUtil.getMessage("1.请选择币种！"));
-//                         return;
-//                     }
-//                     var object = {portfolioId: data.portfolioId, cdate: $("#settleDate").val(),ccy: $("#ccy").val()};
-//                     Joyin.ajax(basePath + 'portfolio/ptlfundallocation/PtlFundAllocation003/getPosition', object, function(result){
-//                         if (result==null||result=="") {
-//                             data.portfolioId='';
-//                             Joyin.error(JoyinUtil.getMessage("1.组合没有挂资金账户！"));
-//                             return;
-//                         }
-//                         var rstdata = result;
-//                         data.acctNo = rstdata.acctNo;
-//                         data.amount = rstdata.amount;
-//                         data.acctName = rstdata.acctName;
-//                         // 刷新表格
-//                         var allrows = table1.getAllRows();
-//                         table1.reload({data : allrows});
-//                         table1.events();
-//                     });
-//                 }, 10);
-//             },
-//             cols: [
-//                 {field:'portfolioId', title: '组合代码', edit:true, editOption:{id: 'portfolioId', type:'select', url:JoyinUtil.getRealPath('/portfolio/ptlfundallocation/PtlFundAllocation003/getPortfolioId?acctNo='+acctNo),showField :'id'}},
-//                 {field:'acctNo', title: '收/付款账户', edit:false},
-//                 {field:'acctName', title: '收/付款账户', edit:true,visible:false},
-//                 {field:'amount', title: '付款账户余额', edit: false, align: 'right', editOption:{type: 'money', pattern: '#.00'}},
-//                 {field:'settleAmt', title: '划款金额', edit: true, align: 'right', editOption:{type: 'money', pattern: '#.00'}},
-//                 {field:'operation', title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['delt']}
-//             ],
-//             addbtn:true,
-//             done:function(){
-//                 this.bind('click', '.delt', function(data, index) {
-//                     table1.deleteRow(index);
-//                 });
-//                 var settleAmt = Number(0);
-//                 var allrows = table1.getAllRows();
-//                 for(var i in allrows){
-//                     if(allrows[i].settleAmt==null||allrows[i].settleAmt==''||allrows[i].settleAmt=='NaN'){
-//                         allrows[i].settleAmt = Number(0);
-//                     }
-//                     settleAmt = Number(settleAmt)+Number(allrows[i].settleAmt);
-//                 }
-//                 $("#settleAmt").val(settleAmt+'.00');
-//             }
-//         });
-// //        Joyin.ajax(basePath + 'portfolio/ptlfundallocation/PtlFundAllocation003/getPtlFundAllocation001Dtos', object, function(result){
-// //                table.clear();
-// //                table.addRow(result == null || result == '' ? null : JSON.parse(result));
-// //        })
-//     }
-
 
     var table=$("#dataTable").joyintable({
         data: ptlFundAllocation001Dtos != null ? ptlFundAllocation001Dtos : [],
@@ -274,6 +189,23 @@
         page: false,
         sortfont: true,
         rowno: true,
+        beforeEditCell:function(value, field, data){
+             if(field=='portfolioId'){
+                 if(!$("#settleDate").val()){
+                     Joyin.error(JoyinUtil.getMessage("请选择转账日期！"));
+                     return false;
+                 }
+                 if(!$("#ccy").val()){
+                     Joyin.error(JoyinUtil.getMessage("请选择币种！"));
+                     return false;
+                 }
+                 if(!$("#myAcctNo").val() && !$("#counterAcctNo").val()){
+                     Joyin.error(JoyinUtil.getMessage("收/付款账户不能为空"));
+                     return false;
+                 }
+             }
+             return true;
+        },
         editCell: function(value, data, field, cell, column) {
             setTimeout(function() {
                 var settleAmt = Number(0);
@@ -287,47 +219,27 @@
                     }
                     $("#settleAmt").val(settleAmt).trigger('blur');
                 }
-                if (!(field == 'portfolioId' || field == "myAcctNo" )) {
-                    return;
-                }
-                if(!value || value.trim() == ''){
-                    return;
-                }
+                if(field == 'portfolioId'){
+                    var object = {portfolioId: data.portfolioId, cdate: $("#settleDate").val(),
+                                    ccy: $("#ccy").val(),payType:$("#payType").val(),myAcctNo:$("#myAcctNo").val()};
 
-                if(!$("#settleDate").val()){
-                    Joyin.error(JoyinUtil.getMessage("1.请选择交易时间！"));
-                    return;
+                    Joyin.ajax(basePath + 'invest/portfolio/ptlfundallocation/PtlFundAllocation003/getPosition', object, function(result){
+                        if (result==null||result=="") {
+                            data.portfolioId='';
+                            Joyin.error(JoyinUtil.getMessage("1.组合没有挂资金账户！"));
+                            return;
+                        }
+                        table.renderRow(data.LAY_TABLE_INDEX, {"acctNo": result.acctNo});
+                        table.renderRow(data.LAY_TABLE_INDEX, {"acctName": result.acctName});
+                        table.renderRow(data.LAY_TABLE_INDEX, {"amount": result.amount});
+                    });
                 }
-                if(!$("#ccy").val()){
-                    Joyin.error(JoyinUtil.getMessage("1.请选择币种！"));
-                    return;
-                }
-                var object = {portfolioId: data.portfolioId, cdate: $("#settleDate").val(),ccy: $("#ccy").val(),payType:$("#payType").val(),myAcctNo:$("#myAcctNo").val()};
-                Joyin.ajax(basePath + 'invest/portfolio/ptlfundallocation/PtlFundAllocation003/getPosition', object, function(result){
-                    if (result==null||result=="") {
-                        data.portfolioId='';
-                        Joyin.error(JoyinUtil.getMessage("1.组合没有挂资金账户！"));
-                        return;
-                    }
-                    var rstdata = result;
-                    data.acctNo = rstdata.acctNo;
-                    data.amount = rstdata.amount;
-                    data.acctName = rstdata.acctName;
-                    // 刷新表格(表单添加新行时会覆盖旧行)
-//                    var allrows = table.getAllRows();
-//                    var dataList = [];
-//                    dataList.push(data);
-//                    table.reload({data : dataList});
-                    var allrows = table.getAllRows();
-                    table.reload({data : allrows});
-                });
             }, 20);
         },
 
         cols: cols,
         addbtn:!$("#isImportFlag").val() || $("#isImportFlag").val() !== '01',//导入后该按钮不显示
         done:function(){
-            // this.cols = [];
             this.bind('click', '.delt', function(data, index) {
                 table.deleteRow(index);
                 var settleAmt = Number(0);
@@ -347,6 +259,27 @@
 
     function reloadTable(object,acctNo){
         $("#acctNo").val(acctNo);
+        //证银转账时，初始化自动在明细信息中显示各组合在该证券账户的组合情况
+        //且划款金额默认等于组合该证券账户余额
+        if(object.payType && object.payType == payType1002){
+            Joyin.ajax(basePath + 'invest/portfolio/ptlfundallocation/PtlFundAllocation003/getDetailInfo', object, function(result){
+                if(result && result != ''){
+                    table.reload({data: result});
+                    var settleAmt = Number(0);
+                    for(var i in result){
+                        if(result[i].settleAmt==null||result[i].settleAmt==''||result[i].settleAmt=='NaN'){
+                            result[i].settleAmt = Number(0);
+                        }
+                        settleAmt = Number(settleAmt)+Number(result[i].settleAmt);
+                    }
+                    $("#settleAmt").val(settleAmt).trigger('blur');
+                }else{
+                    table.reload({ajax:null, url: null, data:[]});
+                }
+            });
+        }else{
+            table.reload({ajax:null, url: null, data:[]});
+        }
     }
 
     /**
@@ -359,12 +292,11 @@
          */
         $(".baseInfo").change(function(){
             var payType = $("#payType").val();
-            if(payType==1001){
+            if(payType==payType1001){
                 $("#myAcctNo_id").hide();
                 $("#counterAcctNo_id").show();
                 $('#myAcctNo').val('').trigger('change');
                 $('#myAcctNo').text('');
-
             }else{
                 $("#myAcctNo_id").show();
                 $("#counterAcctNo_id").hide();
@@ -375,6 +307,9 @@
 
         $("#settleDate").change(function(){
             initAmount();
+            var acctNo = $("#myAcctNo").val();
+            var object = {payType: $("#payType").val(), acctNo: acctNo,cdate:$("#settleDate").val(),ccy:$("#ccy").val()};
+            reloadTable(object,acctNo);
         })
         /**
          * 付款账户联动事件

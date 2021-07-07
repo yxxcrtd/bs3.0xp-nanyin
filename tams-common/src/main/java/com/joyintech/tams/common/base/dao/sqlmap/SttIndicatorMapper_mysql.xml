@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttIndicatorMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttIndicator" >
+        <id column="S_I_IND_ID" property="indId" jdbcType="VARCHAR" />
+        <result column="S_I_IND_NAME" property="indName" jdbcType="VARCHAR" />
+        <result column="S_I_IND_YPE" property="indYpe" jdbcType="VARCHAR" />
+        <result column="S_I_PARAM_CODE" property="paramCode" jdbcType="VARCHAR" />
+        <result column="S_I_IS_VISIBLE" property="isVisible" jdbcType="VARCHAR" />
+        <result column="S_I_EFF_STATUS" property="effStatus" jdbcType="VARCHAR" />
+        <result column="S_I_IS_ALL_USEABLE" property="isAllUseable" jdbcType="VARCHAR" />
+        <result column="S_I_REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="S_I_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_I_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_I_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_I_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_I_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        IND_ID as S_I_IND_ID, IND_NAME as S_I_IND_NAME, IND_YPE as S_I_IND_YPE, PARAM_CODE as S_I_PARAM_CODE, 
+        IS_VISIBLE as S_I_IS_VISIBLE, EFF_STATUS as S_I_EFF_STATUS, IS_ALL_USEABLE as S_I_IS_ALL_USEABLE, 
+        REMARK as S_I_REMARK, CREATE_USER as S_I_CREATE_USER, CREATE_DEPT as S_I_CREATE_DEPT, 
+        CREATE_TIME as S_I_CREATE_TIME, UPDATE_USER as S_I_UPDATE_USER, UPDATE_TIME as S_I_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttIndicatorMapper.Base_Column_List" />
+        from STT_INDICATOR
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttIndicatorMapper.Base_Column_List" />
+        from STT_INDICATOR
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttIndicatorMapper.Base_Column_List" />
+        from STT_INDICATOR
+        where IND_ID = #{indId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STT_INDICATOR
+        where IND_ID = #{indId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_INDICATOR
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttIndicator" >
+        insert into STT_INDICATOR (IND_ID, IND_NAME, IND_YPE, 
+            PARAM_CODE, IS_VISIBLE, EFF_STATUS, 
+            IS_ALL_USEABLE, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{indId,jdbcType=VARCHAR}, #{indName,jdbcType=VARCHAR}, #{indYpe,jdbcType=VARCHAR}, 
+            #{paramCode,jdbcType=VARCHAR}, #{isVisible,jdbcType=VARCHAR}, #{effStatus,jdbcType=VARCHAR}, 
+            #{isAllUseable,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttIndicator" >
+        insert into STT_INDICATOR
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="indId != null" >
+                IND_ID,
+            </if>
+            <if test="indName != null" >
+                IND_NAME,
+            </if>
+            <if test="indYpe != null" >
+                IND_YPE,
+            </if>
+            <if test="paramCode != null" >
+                PARAM_CODE,
+            </if>
+            <if test="isVisible != null" >
+                IS_VISIBLE,
+            </if>
+            <if test="effStatus != null" >
+                EFF_STATUS,
+            </if>
+            <if test="isAllUseable != null" >
+                IS_ALL_USEABLE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="indId != null" >
+                #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="indName != null" >
+                #{indName,jdbcType=VARCHAR},
+            </if>
+            <if test="indYpe != null" >
+                #{indYpe,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCode != null" >
+                #{paramCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isVisible != null" >
+                #{isVisible,jdbcType=VARCHAR},
+            </if>
+            <if test="effStatus != null" >
+                #{effStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isAllUseable != null" >
+                #{isAllUseable,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttIndicator" >
+        insert into STT_INDICATOR(IND_ID, IND_NAME, IND_YPE, PARAM_CODE, IS_VISIBLE, EFF_STATUS, 
+        IS_ALL_USEABLE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select IND_ID, IND_NAME, IND_YPE, PARAM_CODE, IS_VISIBLE, EFF_STATUS, 
+            IS_ALL_USEABLE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+            
+             from STT_INDICATOR
+             where STATUS = 'E' and IND_ID = #{indId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttIndicator" >
+        update STT_INDICATOR
+        <set >
+            <if test="indName != null" >
+                IND_NAME = #{indName,jdbcType=VARCHAR},
+            </if>
+            <if test="indYpe != null" >
+                IND_YPE = #{indYpe,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCode != null" >
+                PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isVisible != null" >
+                IS_VISIBLE = #{isVisible,jdbcType=VARCHAR},
+            </if>
+            <if test="effStatus != null" >
+                EFF_STATUS = #{effStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isAllUseable != null" >
+                IS_ALL_USEABLE = #{isAllUseable,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where IND_ID = #{indId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttIndicator" >
+        update STT_INDICATOR
+        <set >
+            <if test="indId != null" >
+                IND_ID = #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="indName != null" >
+                IND_NAME = #{indName,jdbcType=VARCHAR},
+            </if>
+            <if test="indYpe != null" >
+                IND_YPE = #{indYpe,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCode != null" >
+                PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isVisible != null" >
+                IS_VISIBLE = #{isVisible,jdbcType=VARCHAR},
+            </if>
+            <if test="effStatus != null" >
+                EFF_STATUS = #{effStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isAllUseable != null" >
+                IS_ALL_USEABLE = #{isAllUseable,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttIndicator" >
+        update STT_INDICATOR
+        set 
+        IND_ID = #{indId,jdbcType=VARCHAR},
+        IND_NAME = #{indName,jdbcType=VARCHAR},
+        IND_YPE = #{indYpe,jdbcType=VARCHAR},
+        PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+        IS_VISIBLE = #{isVisible,jdbcType=VARCHAR},
+        EFF_STATUS = #{effStatus,jdbcType=VARCHAR},
+        IS_ALL_USEABLE = #{isAllUseable,jdbcType=VARCHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttIndicator" >
+        update STT_INDICATOR
+        set IND_NAME = #{indName,jdbcType=VARCHAR},
+            IND_YPE = #{indYpe,jdbcType=VARCHAR},
+            PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+            IS_VISIBLE = #{isVisible,jdbcType=VARCHAR},
+            EFF_STATUS = #{effStatus,jdbcType=VARCHAR},
+            IS_ALL_USEABLE = #{isAllUseable,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where IND_ID = #{indId,jdbcType=VARCHAR}
+    </update>
+</mapper>

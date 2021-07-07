@@ -40,7 +40,13 @@ $(function() {
     var exportExcel = function() {
         var paramObj = getSearchParams();
         paramObj.tradeCalendarId = tradeCalendarId;
-        Joyin.exportExcel('export', paramObj);
+        if(paramObj.startCDate =="" && paramObj.endCDate =="" ){
+           Joyin.error("请输入查询日期");
+           return false;
+        }
+        else {
+           Joyin.exportExcel('export', paramObj);
+        }
     };
     /**
      * 画面加载完成

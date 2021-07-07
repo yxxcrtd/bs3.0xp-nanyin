@@ -748,6 +748,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	估值资产来源_系统内(DictCode.估值资产来源,"01","系统内"),
 	估值资产来源_WIND债券(DictCode.估值资产来源,"02","WIND债券"),
 	估值资产来源_WIND基金(DictCode.估值资产来源,"03","WIND基金"),
+	估值资产来源_WIND股票(DictCode.估值资产来源,"04","WIND股票"),
 	导入方式_手工(DictCode.导入方式,"01","手工"),
 	导入方式_自动(DictCode.导入方式,"02","自动"),
 	资产科目类型_债券(DictCode.资产科目类型,"ZQ","债券"),

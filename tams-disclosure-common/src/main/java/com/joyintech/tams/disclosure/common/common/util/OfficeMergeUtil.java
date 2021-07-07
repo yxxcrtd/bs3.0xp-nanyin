@@ -7,6 +7,7 @@ package com.joyintech.tams.disclosure.common.common.util;
 import java.io.*;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -53,7 +54,9 @@ public class OfficeMergeUtil {
                 }
                 finally {
                     try {
-                        fileInputStream.close();
+                        if (fileInputStream != null){
+                            fileInputStream.close();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -73,24 +76,27 @@ public class OfficeMergeUtil {
             }
             finally {
                 try {
-                    fileInputStream.close();
-                    srcPackage.close();
+                    if(fileInputStream!=null) {
+                        fileInputStream.close();
+                    }
+                    if(srcPackage!=null) {
+                        srcPackage.close();
+                    }
                     if(srcDocument!=null) {
                         srcDocument.close();
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
-
         }
 
              OutputStream dest = null;
              try {
-                 dest = new FileOutputStream(destFile);
-                 srcDocumentTmp.write(dest);
+                 dest = new FileOutputStream(new SafelyFile(destFile));
+                 if(srcDocumentTmp != null){
+                     srcDocumentTmp.write(dest);
+                 }
              } catch (Exception e) {
                  e.printStackTrace();
              }finally {
@@ -144,6 +150,7 @@ public class OfficeMergeUtil {
     public static void mergeExcel(String outputFileName, List<String> inputFileNameArray) {
         XSSFWorkbook outputExcel = null;
         Workbook inputExcel = null;
+        FileOutputStream fos = null;
         try {
             // 生成的excel
              outputExcel = new XSSFWorkbook();
@@ -159,7 +166,7 @@ public class OfficeMergeUtil {
             for (String fileName : inputFileNameArray) {
                 // 创建excel文件的工作簿对象book
                 //@SuppressWarnings("resource")
-                 inputExcel = new XSSFWorkbook(new FileInputStream(new File(fileName)));
+                 inputExcel = new XSSFWorkbook(new FileInputStream(new SafelyFile(fileName)));
                 // 获取excel文件工作簿的工作表数量sheets
                 Sheet sheet = null;
                 for (int i = 0; i < inputExcel.getNumberOfSheets(); i++ ) {// 获取每个Sheet表
@@ -174,12 +181,12 @@ public class OfficeMergeUtil {
                 index = index + 2;
             }
             /** **********将以上缓存中的内容写到EXCEL文件中******** */
-            File outputFile = new File(outputFileName);
+            File outputFile = new SafelyFile(outputFileName);
             File dir = outputFile.getParentFile();
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            FileOutputStream fos = new FileOutputStream(outputFile);
+            fos = new FileOutputStream(outputFile);
             outputExcel.write(fos);
             /** *********关闭文件************* */
             if (fos != null) {
@@ -195,8 +202,19 @@ public class OfficeMergeUtil {
         }
         finally {
             try {
-                inputExcel.close();
-                outputExcel.close();
+                if(inputExcel != null){
+                    inputExcel.close();
+                }
+                if(outputExcel != null){
+                    outputExcel.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if(fos != null){
+                    fos.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

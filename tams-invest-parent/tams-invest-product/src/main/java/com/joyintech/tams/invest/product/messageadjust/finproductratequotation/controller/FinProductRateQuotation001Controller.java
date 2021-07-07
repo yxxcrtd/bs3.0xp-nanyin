@@ -90,7 +90,7 @@ public class FinProductRateQuotation001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("getFinprodId")
-    public List<SelectOptionDto> getProdId() {
+    public Page<SelectOptionDto> getProdId() {
         return finProductRateQuotationService.getFinprodIds(RequestUtil.getPageParam());
     }
     

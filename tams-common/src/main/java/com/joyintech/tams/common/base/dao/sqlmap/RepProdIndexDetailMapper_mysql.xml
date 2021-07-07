@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.RepProdIndexDetailMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdIndexDetail">
+        <constructor>
+            <arg column="FPROD_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="PROD_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="PROD_NAME" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="VALUE_DATE" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+            <arg column="CAPITAL" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="ASSET_TOTAL_MARKET" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="ASSET_VALUE_COST" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="ASSET_VALUE_MARKET" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="DEVIATION" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="UNIT_VALUE" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="UNIT_VALUE_T" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="PROFIT_TDY" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="W_YIELD" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="YIELD_TDY" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="YIELD_7" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="PROFIT_CURRENT_YES" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="PROFIT_CURRENT_NO" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="BENCHMARK_INFO" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="RATE_BENCHMARK" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="CASH_FORM_GRANT_TDY" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="REINVEST_FORM_GRANT_TDY" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="REDEM_INTAMT_TDY" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="PROFIT_CHANGE_TDY" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+            <arg column="REMARK" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="CREATE_TIME" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="UPDATE_TIME" javaType="java.lang.String" jdbcType="VARCHAR" />
+        </constructor>
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexDetail">
+        insert into rep_prod_index_detail (FPROD_ID, PROD_ID, PROD_NAME,
+                                           VALUE_DATE, CAPITAL, ASSET_TOTAL_MARKET,
+                                           ASSET_VALUE_COST, ASSET_VALUE_MARKET, DEVIATION,
+                                           UNIT_VALUE, UNIT_VALUE_T, PROFIT_TDY,
+                                           W_YIELD, YIELD_TDY, YIELD_7,
+                                           PROFIT_CURRENT_YES, PROFIT_CURRENT_NO, BENCHMARK_INFO,
+                                           RATE_BENCHMARK, CASH_FORM_GRANT_TDY, REINVEST_FORM_GRANT_TDY,
+                                           REDEM_INTAMT_TDY, PROFIT_CHANGE_TDY, REMARK,
+                                           CREATE_TIME, UPDATE_TIME)
+        values (#{fprodId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR},
+                #{valueDate,jdbcType=TIMESTAMP}, #{capital,jdbcType=DECIMAL}, #{assetTotalMarket,jdbcType=DECIMAL},
+                #{assetValueCost,jdbcType=DECIMAL}, #{assetValueMarket,jdbcType=DECIMAL}, #{deviation,jdbcType=DECIMAL},
+                #{unitValue,jdbcType=DECIMAL}, #{unitValueT,jdbcType=DECIMAL}, #{profitTdy,jdbcType=DECIMAL},
+                #{wYield,jdbcType=DECIMAL}, #{yieldTdy,jdbcType=DECIMAL}, #{yield7,jdbcType=DECIMAL},
+                #{profitCurrentYes,jdbcType=DECIMAL}, #{profitCurrentNo,jdbcType=DECIMAL}, #{benchmarkInfo,jdbcType=VARCHAR},
+                #{rateBenchmark,jdbcType=DECIMAL}, #{cashFormGrantTdy,jdbcType=DECIMAL}, #{reinvestFormGrantTdy,jdbcType=DECIMAL},
+                #{redemIntamtTdy,jdbcType=DECIMAL}, #{profitChangeTdy,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR},
+                #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexDetail">
+        insert into rep_prod_index_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fprodId != null">
+                FPROD_ID,
+            </if>
+            <if test="prodId != null">
+                PROD_ID,
+            </if>
+            <if test="prodName != null">
+                PROD_NAME,
+            </if>
+            <if test="valueDate != null">
+                VALUE_DATE,
+            </if>
+            <if test="capital != null">
+                CAPITAL,
+            </if>
+            <if test="assetTotalMarket != null">
+                ASSET_TOTAL_MARKET,
+            </if>
+            <if test="assetValueCost != null">
+                ASSET_VALUE_COST,
+            </if>
+            <if test="assetValueMarket != null">
+                ASSET_VALUE_MARKET,
+            </if>
+            <if test="deviation != null">
+                DEVIATION,
+            </if>
+            <if test="unitValue != null">
+                UNIT_VALUE,
+            </if>
+            <if test="unitValueT != null">
+                UNIT_VALUE_T,
+            </if>
+            <if test="profitTdy != null">
+                PROFIT_TDY,
+            </if>
+            <if test="wYield != null">
+                W_YIELD,
+            </if>
+            <if test="yieldTdy != null">
+                YIELD_TDY,
+            </if>
+            <if test="yield7 != null">
+                YIELD_7,
+            </if>
+            <if test="profitCurrentYes != null">
+                PROFIT_CURRENT_YES,
+            </if>
+            <if test="profitCurrentNo != null">
+                PROFIT_CURRENT_NO,
+            </if>
+            <if test="benchmarkInfo != null">
+                BENCHMARK_INFO,
+            </if>
+            <if test="rateBenchmark != null">
+                RATE_BENCHMARK,
+            </if>
+            <if test="cashFormGrantTdy != null">
+                CASH_FORM_GRANT_TDY,
+            </if>
+            <if test="reinvestFormGrantTdy != null">
+                REINVEST_FORM_GRANT_TDY,
+            </if>
+            <if test="redemIntamtTdy != null">
+                REDEM_INTAMT_TDY,
+            </if>
+            <if test="profitChangeTdy != null">
+                PROFIT_CHANGE_TDY,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fprodId != null">
+                #{fprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null">
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null">
+                #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="valueDate != null">
+                #{valueDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="capital != null">
+                #{capital,jdbcType=DECIMAL},
+            </if>
+            <if test="assetTotalMarket != null">
+                #{assetTotalMarket,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValueCost != null">
+                #{assetValueCost,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValueMarket != null">
+                #{assetValueMarket,jdbcType=DECIMAL},
+            </if>
+            <if test="deviation != null">
+                #{deviation,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValue != null">
+                #{unitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValueT != null">
+                #{unitValueT,jdbcType=DECIMAL},
+            </if>
+            <if test="profitTdy != null">
+                #{profitTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="wYield != null">
+                #{wYield,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldTdy != null">
+                #{yieldTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="yield7 != null">
+                #{yield7,jdbcType=DECIMAL},
+            </if>
+            <if test="profitCurrentYes != null">
+                #{profitCurrentYes,jdbcType=DECIMAL},
+            </if>
+            <if test="profitCurrentNo != null">
+                #{profitCurrentNo,jdbcType=DECIMAL},
+            </if>
+            <if test="benchmarkInfo != null">
+                #{benchmarkInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="rateBenchmark != null">
+                #{rateBenchmark,jdbcType=DECIMAL},
+            </if>
+            <if test="cashFormGrantTdy != null">
+                #{cashFormGrantTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="reinvestFormGrantTdy != null">
+                #{reinvestFormGrantTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="redemIntamtTdy != null">
+                #{redemIntamtTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="profitChangeTdy != null">
+                #{profitChangeTdy,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

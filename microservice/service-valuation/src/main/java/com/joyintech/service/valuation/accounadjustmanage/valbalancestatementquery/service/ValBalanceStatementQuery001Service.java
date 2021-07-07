@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -130,7 +131,7 @@ public class ValBalanceStatementQuery001Service extends CommonExportService<ValB
         // 获取导出文件
         ExportFileDto exportFileDto = valTableGenerate001Service.createExcel(
             booksetId, valDate, bokBookset.getBooksetFullname());
-        File file = new File(exportFileDto.getFilePath());
+        File file = new SafelyFile(exportFileDto.getFilePath());
         return ExportUtil.export(exportFileDto.getFileName(), file, true);
     }
 

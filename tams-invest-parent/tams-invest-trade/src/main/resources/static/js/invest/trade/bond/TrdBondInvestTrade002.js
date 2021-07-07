@@ -258,7 +258,8 @@ var table;
             var currentCalcParam = getCalcParam();
             for ( var key in currentCalcParam) {
                 //---update by jjpei 20190731---排除riskMathFlag----
-                if (key == 'selectValue'||key=='riskMathFlag' || key=='remark') {
+                if (key == 'selectValue' || key == 'riskMathFlag' || key == 'remark' || key == 'isPayWithTrade'
+                    || key == 'exchangeIsPayWithTrade' || key == 'settleIsPayWithTrade' || key == 'stampDutyIsPayWithTrade') {
                     continue;
                 }
                 //---update by jjpei 20190731---排除riskMathFlag----
@@ -595,6 +596,10 @@ var table;
                 			disabled: false
                 		});
                 	}
+                    if($('#tradeMarket').val() === '05'){
+                        $('#tradePlat').prop("disabled",true);
+                        checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
+                    }
                     break;
             }
         }
@@ -961,10 +966,10 @@ var table;
             exerYieldDivContrl();
             } else {
 	        	//自动加券 yjm
-	        	var autoCoupon = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
+                var autoCoupon = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
                 isautobond = true;
 	            // 资产名称文本框根据资产代码选择自动显示对应名称;
-	            $("#finprodName").val(autoCoupon.finprodAbbr).trigger('change');
+	            $("#finprodName").val(autoCoupon.finprodId).trigger('change');
 	            // 同时带出资产相关信息，包括起息日，到期日，发行日，交易场所，币种，交易日历，计息基础等;
 	            $("#vdate").val(autoCoupon.vdate).trigger('change');
 	            $("#mdate").val(autoCoupon.mdate).trigger('change');
@@ -1980,7 +1985,7 @@ var table;
             	}
             	if ((!$("#secManageAcctId").val() || typeof $("#secManageAcctId").val() == 'undefined')
                		 && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined') && !formTodoList){
-               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券托管户或者通道']));
+               		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券托管户或者合作资产']));
                		return null;
                	}
                 var list;
@@ -2303,7 +2308,7 @@ var table;
                 } else if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
                     // 选择【上海证券交易所】或【深圳证券交易所】时，
                     // 1)交易平台可自主选择;
-                    if($("#entrustId").val() != ''){
+                    if(/*$("#entrustId").val() != ''*/$('#tradeMarketMode').val()===SHARES_TRADE_MARKET_01){
                         $("#tradePlat").attr("disabled", true);
                     }else{
                         $("#tradePlat").attr("disabled", false);
@@ -2347,7 +2352,7 @@ var table;
                     // 1)交易平台可自主选择;
                     // 1)交易平台默认为其它，可改
                     checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
-                    if($("#entrustId").val() != ''){
+                    if($("#entrustId").val() != ''||tradeMarket === '05'){
                         $("#tradePlat").attr("disabled", true);
                     }else{
                         $("#tradePlat").attr("disabled", false);

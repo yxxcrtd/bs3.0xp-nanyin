@@ -584,10 +584,9 @@ SELECT
     tradetype,
     ccy,
     SUM(tradeprince)tradeprince,
-    SUM(tradeqty)tradeqty,
+    SUM(tradeqty)tradeqty, ISAGENCY,
     remark,
     settdatedate,
-    isagency,
     /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
     sum(cust_counts) cust_counts,
     customer_type2
@@ -597,8 +596,7 @@ FROM(
 	NVL(deal.fprod_id,deal.prod_id) prodid,
 	deal.buy_place
 	buyplace,deal.trade_type tradetype,deal.ccy ccy,deal.trade_prince
-	tradeprince,deal.trade_qty tradeqty,info.ISAGENCY remark,deal.SETTDATE_DATE settdateDate,
-	deal.ISAGENCY isagency
+	tradeprince,deal.trade_qty tradeqty,deal.ISAGENCY,deal.remark,deal.SETTDATE_DATE settdateDate
         /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
         ,deal.customer_type2,deal.cust_counts
         from chb_prd_deal deal
@@ -617,9 +615,8 @@ FROM(
     buyplace,
     tradetype,
     ccy,
-    remark,
-    settdatedate,
-    isagency
+    remark,ISAGENCY,
+    settdatedate
     /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
     ,customer_type2
 </select>
@@ -828,7 +825,7 @@ FROM(
     nvl(info.ISSUING_STATUS,info1.ISSUING_STATUS) ISSUING_STATUS,
     deal.status
 	from CHB_PRD_BASEINFO info
-	left join CHB_PRD_DEAL deal
+	inner join CHB_PRD_DEAL deal
 	on info.prod_id = deal.prod_id
 	and info.status in ('E','M')
 	and deal.TRADE_TYPE='01'
@@ -909,7 +906,7 @@ FROM(
       STATUS_DATE, STATUS, CREATE_USER, 
       CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG
       )
       select  SUMIT_SEQ,PROD_REGIST_CODE,
       REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
@@ -920,7 +917,7 @@ FROM(
       STATUS_DATE, STATUS, CREATE_USER, 
       CREATE_DEPT, sysdate, UPDATE_USER, 
       sysdate, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG
     from CHB_PRD_RAISETOT_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">

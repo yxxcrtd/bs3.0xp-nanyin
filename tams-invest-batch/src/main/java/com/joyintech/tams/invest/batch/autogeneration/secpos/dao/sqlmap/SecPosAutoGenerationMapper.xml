@@ -213,7 +213,7 @@
         (select t.trade_date from TRD_PRODUCT_DEAL t where t.finprod_id=TEMP.finprod_id and t.branch=0 and t.trade_date &lt;= #{batchDate,jdbcType=DATE} and rownum=1) LATEST_DEAL_DATE,            <!--最近交易日期 sql关联查询-->
         TEMP.shareAmt*100 BSHARE_FACE_VALUE,  <!--持仓券面总额  计算-->
         decode(fp.ISSUE_AMT, null, 0,fp.ISSUE_AMT)  ISSUE_FACE_VALUE, <!--发行券面总额  计算-->
-        ( select round(t.yield,2) yield from FIN_CASH_CALC_RULE t where t.finprod_id=TEMP.finprod_id and t.branch=0 and t.EFF_DATE &lt;= #{batchDate,jdbcType=DATE} and rownum=1 ) RATE, <!--票面利率-->
+        ( select round(t.yield,4) yield from FIN_CASH_CALC_RULE t where t.finprod_id=TEMP.finprod_id and t.branch=0 and t.EFF_DATE &lt;= #{batchDate,jdbcType=DATE} and rownum=1 ) RATE, <!--票面利率-->
         '' COST_RATE, <!--综合成本收益率  计算-->
         round(mbvi.BPYIELD,4) BPYIELD,   <!--估价收益率-->
         mbvi.INTEREST_DURATION MDURATION,  <!--久期-->
@@ -527,7 +527,7 @@
         (select t.trade_date from TRD_PRODUCT_DEAL t where t.finprod_id=TEMP.finprod_id and t.branch=0 and t.trade_date &lt;= #{batchDate,jdbcType=DATE} and rownum=1) LATEST_DEAL_DATE,            <!--最近交易日期 sql关联查询-->
         TEMP.shareAmt*100 BSHARE_FACE_VALUE,  <!--持仓券面总额  计算-->
         decode(fp.ISSUE_AMT, null, 0,fp.ISSUE_AMT) ISSUE_FACE_VALUE, <!--发行券面总额  计算-->
-        ( select round(t.yield,2) yield from FIN_CASH_CALC_RULE t where t.finprod_id=TEMP.finprod_id and t.branch=0 and t.EFF_DATE &lt;= #{batchDate,jdbcType=DATE} and rownum=1 ) RATE, <!--票面利率-->
+        ( select round(t.yield,4) yield from FIN_CASH_CALC_RULE t where t.finprod_id=TEMP.finprod_id and t.branch=0 and t.EFF_DATE &lt;= #{batchDate,jdbcType=DATE} and rownum=1 ) RATE, <!--票面利率-->
         '' COST_RATE, <!--综合成本收益率  计算-->
         round(mbvi.BPYIELD,4) BPYIELD,   <!--估价收益率-->
         mbvi.INTEREST_DURATION MDURATION,  <!--久期-->
@@ -760,7 +760,7 @@
         and to_date(#{date},'yyyy-MM-dd')=t.TRADE_DATE  and fpt.type_8='F01'and t.trade_status='01'and t.is_cancel='N' and t.ps in('T01','T02') order by t.UPDATE_TIME asc
     </select>
     <select id="getBasisByFinprodId" resultType="com.joyintech.tams.common.base.entity.FinCashCalcRule">
-        select a.basis from    FIN_CASH_CALC_RULE a  inner join FIN_CASH_INFO b on a.cash_id=b.cash_id  where a.eff_date=to_date(#{effDate},'yyyy-MM-dd')  and b.branch=#{branch}   and b.finprod_id=#{finprodId} group by a.basis
+        select a.basis from    FIN_CASH_CALC_RULE a  inner join FIN_CASH_INFO b on a.cash_id=b.cash_id  where a.eff_date=to_date(#{effDate},'yyyy-MM-dd')  and b.branch=#{branch}   and b.finprod_id=#{finprodId}  and b.cash_type_2 =#{CASH_TYPE_2_C02} group by a.basis
     </select>
 
     <select id="getExerciseDate" resultType="com.joyintech.tams.common.base.entity.FinExercisePlan">
@@ -962,7 +962,7 @@
 		                      TEMP.shareAmt*100 BSHARE_FACE_VALUE,  <!--持仓券面总额  计算-->
 		                      decode(fp.ISSUE_AMT, null, 0,fp.ISSUE_AMT) ISSUE_FACE_VALUE, <!--发行券面总额  计算-->
 		                      (select 
-		                             round(t.yield,2) yield 
+		                             round(t.yield,4) yield
 		                         from 
 		                             FIN_CASH_CALC_RULE t 
 		                         where t.finprod_id=TEMP.finprod_id 

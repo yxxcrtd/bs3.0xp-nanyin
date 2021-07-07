@@ -55,6 +55,7 @@
         	,{field:'shareAmt',sortField:'shareAmt', width:180, title: 'TrdSecLendDuration001.tradeAmt', type: 'money'}
             ,{field:'vdate',sortField:'VDATE', width:140, title: 'TrdSecLendDuration001.vdate', type: 'date'}
             ,{field:'mdate',sortField:'MDATE', width:140, title: 'TrdSecLendDuration001.mdate', type: 'date'}
+            ,{field:'settleDate',sortField:'SETTLE_DATE', width:140, title: 'TrdSecLendDuration001.settleDate', type: 'date'}
             ,{field:'mYield',sortField:'INT_RATE', width:120, title: 'TrdSecLendDuration001.mYield',type:'number', digit:6}
             ,{field:'mTradeAmt',sortField:'PRIN', width:120, title: 'TrdSecLendDuration001.mTradeAmt', type: 'money'}
         	,{field:'validStatus', visible: false}

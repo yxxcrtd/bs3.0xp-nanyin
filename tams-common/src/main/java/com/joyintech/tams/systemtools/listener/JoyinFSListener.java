@@ -3,6 +3,7 @@ package com.joyintech.tams.systemtools.listener;
 import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.listener.FileAttachmentProcess;
@@ -11,6 +12,7 @@ import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.systemtools.dao.JoyinFSMapper;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import com.joyintech.tools.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +63,7 @@ public class JoyinFSListener implements FileUploadListener, FileAttachmentProces
         SysUploadFileInfo file = null;
         file = joyinFSMapper.selectByPrimaryKey(fileNo);
         if (file != null) {
-            UploadFile uploadFile = new UploadFile(null, fileNo, new File(file.getPath()));
+            UploadFile uploadFile = new UploadFile(null, fileNo, new SafelyFile(file.getPath()));
             uploadFile.setFileName(file.getFileName());
             joyinDFSTemplate.fetch(file);
             return uploadFile;
@@ -91,6 +93,7 @@ public class JoyinFSListener implements FileUploadListener, FileAttachmentProces
     public int remove(String fileNo) {
         UploadFile file = this.fetch(fileNo);
         if (null != file) {
+            FileUtil.deleteFile(file.getTargetFile().getPath());
             return joyinFSMapper.deleteByPrimaryKey(fileNo);
         }
         return 0;
@@ -128,7 +131,7 @@ public class JoyinFSListener implements FileUploadListener, FileAttachmentProces
         List<SysUploadFileInfo> files = joyinFSMapper.getUploadInfo(businessCode);
         List<UploadFile> uploadFiles = new ArrayList<>(files.size());
         files.forEach(file -> {
-            UploadFile f = new UploadFile(null, file.getSeqNo(), new File(file.getPath()));
+            UploadFile f = new UploadFile(null, file.getSeqNo(), new SafelyFile(file.getPath()));
             f.setFileName(file.getFileName());
             joyinDFSTemplate.fetch(file);
             uploadFiles.add(f);

@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -606,13 +607,13 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 //            String zipFileName = FileNameUtil.createFileName("zip");
             String zipFileName = "人行资管产品月度统计报表("+DateUtil.getSysDate()+").zip";
-            outFile = new File(exportFilePath + File.separator + zipFileName);
+            outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
             try {
-                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件
@@ -785,7 +786,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 		String depositfilePath = SvrDataUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		
-		depositfile = new File(depositfilePath + File.separator + flieName);
+		depositfile = new SafelyFile(depositfilePath + File.separator + flieName);
 		if (!depositfile.getParentFile().exists()) {
 			depositfile.getParentFile().mkdirs();
 		}
@@ -972,8 +973,8 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
         Connection conn = sqlSession.getConnection();
         try {
 //            ClassPathResource rc = new ClassPathResource("initReport.sql", PbcMonthReport001Service.class);
-            File path = new File(ResourceUtils.getURL("classpath:").getPath());
-            File upload = new File(path.getAbsolutePath(),"initReport.sql");
+            File path = new SafelyFile(ResourceUtils.getURL("classpath:").getPath());
+            File upload = new SafelyFile(path.getAbsolutePath(),"initReport.sql");
             FileSystemResource rc1 = new FileSystemResource(upload.getPath());
             EncodedResource er = new EncodedResource(rc1, "UTF-8");
             ScriptUtils.executeSqlScript(conn, er);

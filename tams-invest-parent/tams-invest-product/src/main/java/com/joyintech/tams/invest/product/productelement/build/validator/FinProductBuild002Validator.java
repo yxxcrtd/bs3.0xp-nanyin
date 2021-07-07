@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.productelement.build.validator;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -74,6 +75,9 @@ public class FinProductBuild002Validator implements BeanValidator {
     @Autowired
     private FinProductBuild001Service finProductBuild001Service;
 
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+
     /**
      * {@linkplain}
      */
@@ -104,6 +108,22 @@ public class FinProductBuild002Validator implements BeanValidator {
                 validList.add(new ValidMessage("finprodMarketId", "产品代码过长（可能有汉字）"));
             }
         }
+
+        if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
+
+            //报送信息页面托管费率和销售费率必填
+            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepSaleFeeRate())) {
+                validList.add(new ValidMessage("bussRepFinProductInfoDto.repSaleFeeRate", this.getMessage("BUSS_COM_E_0038",
+                        this.getMessage("BussRepFinProductInfo.repSaleFeeRate"))));
+            }
+
+            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepTruFeeRate())) {
+                validList.add(new ValidMessage("bussRepFinProductInfoDto.repTruFeeRate", this.getMessage("BUSS_COM_E_0038",
+                        this.getMessage("BussRepFinProductInfo.repTruFeeRate"))));
+            }
+
+        }
+
         if (!DictCodeList.是否_是.getValue().equals(entity.getIsSus()) && entity.getTermDays() == null) {
             validList.add(new ValidMessage("termDays", this.getMessage("BUSS_COM_E_0038",
                 this.getMessage("FinProductBuild002.termDays"))));
@@ -170,6 +190,11 @@ public class FinProductBuild002Validator implements BeanValidator {
                 entity.getFinprodName(), entity.getFinprodId()) > 0) {
                 validList.add(new ValidMessage("finprodName",
                     getMessage("BUSS_COM_I_0017", getMessage("FinProductBuild002.finprodName"))));
+            } else
+            // 产品代码不能与组合代码重复
+            if (finProductScheduling002Service.chekPortfolExist(entity.getFinprodMarketId()) > 0) {
+                validList.add(new ValidMessage("finprodMarketId", getMessage("BUSS_COM_I_0017",
+                        "组合代码")));
             }
 
             // 流程中的市场代码(排期和产品新建)
@@ -1115,6 +1140,8 @@ public class FinProductBuild002Validator implements BeanValidator {
                  this.getMessage("BussFinProductSaleParam.sameOrg"))));
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
+
+        validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinProductBuild002", null, ValidMessage.class);
         return validList;
     }
 

@@ -10,11 +10,17 @@
 
 package com.joyintech.tams.invest.period.trdfundduration.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,11 +37,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -142,15 +143,59 @@ public class TrdFundDuration001Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
         throws Exception {
-        return trdFundDuration001Service.export(this.getPageId(),
-            RequestUtil.getParameters(getRequest()));
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            return trdFundDuration001Service.export(this.getPageId(),
+                    RequestUtil.getParameters(getRequest()));
+        }
+        List<TrdFundDuration001Dto> param1 = JsonUtils.json2List(datas, TrdFundDuration001Dto.class);
+
+        String configxml = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            configxml = "/com/joyintech/tams/invest/period/trdfundduration/conf/export_conf_ls.xml";
+        }else{
+            configxml = "/com/joyintech/tams/invest/period/trdfundduration/conf/export_conf.xml";
+        }
+
+        File outFile =  trdFundDuration001Service.makeFile( configxml,param1);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
+
+
     }
 
     @RequestMapping("exportConversion")
     public ResponseEntity<byte[]> exportConversion()
             throws Exception {
-        return trdFundObversion001Service.export("TrdFundObversion001",
-                RequestUtil.getParameters(getRequest()));
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            return trdFundObversion001Service.export("TrdFundObversion001",
+                    RequestUtil.getParameters(getRequest()));
+        }
+
+        List<TrdFundObversionDto> param1 = JsonUtils.json2List(datas, TrdFundObversionDto.class);
+
+        String configxml = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            configxml = "/com/joyintech/tams/invest/period/trdfundobversion/conf/export_conf_ls.xml";
+        }else{
+            configxml = "/com/joyintech/tams/invest/period/trdfundobversion/conf/export_conf.xml";
+        }
+
+        File outFile =  trdFundObversion001Service.makeFile( configxml,param1);
+        return ExportUtil.export(
+                this.getMessage("TrdFundObversion001") + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
+
     }
     /**
      * 撤销

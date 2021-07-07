@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIsupIndicatorParaMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
+        <id column="PARA_CODE" property="paraCode" jdbcType="VARCHAR" />
+        <result column="PARA_NAME" property="paraName" jdbcType="VARCHAR" />
+        <result column="IS_FORBID" property="isForbid" jdbcType="VARCHAR" />
+        <result column="FORBID_ENUM" property="forbidEnum" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="MODEL_CODE" property="modelCode" jdbcType="VARCHAR" />
+        <result column="MODEL_VALUE" property="modelValue" jdbcType="VARCHAR" />
+        <result column="IS_UP_REDIS" property="isUpRedis" jdbcType="VARCHAR" />
+        <result column="PARAM_DATA_TYPE" property="paramDataType" jdbcType="VARCHAR" />
+        <result column="PARA_TYPE" property="paraType" jdbcType="VARCHAR" />
+    </resultMap>
+   <sql id="Base_Column_List" >
+        PARA_CODE PARA_CODE, PARA_NAME PARA_NAME, IS_FORBID IS_FORBID, FORBID_ENUM FORBID_ENUM, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, MODEL_CODE MODEL_CODE, MODEL_VALUE MODEL_VALUE, IS_UP_REDIS IS_UP_REDIS, 
+        PARAM_DATA_TYPE PARAM_DATA_TYPE,PARA_TYPE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupIndicatorParaMapper.Base_Column_List" />
+        from RSK_ISUP_INDICATOR_PARA
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupIndicatorParaMapper.Base_Column_List" />
+        from RSK_ISUP_INDICATOR_PARA
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupIndicatorParaMapper.Base_Column_List" />
+        from RSK_ISUP_INDICATOR_PARA
+        where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from RSK_ISUP_INDICATOR_PARA
+        where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
+       insert into RSK_ISUP_INDICATOR_PARA (PARA_CODE, PARA_NAME, IS_FORBID, 
+            FORBID_ENUM, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            MODEL_CODE, MODEL_VALUE, IS_UP_REDIS, 
+            PARAM_DATA_TYPE,PARA_TYPE)
+        values (#{paraCode,jdbcType=VARCHAR}, #{paraName,jdbcType=VARCHAR}, #{isForbid,jdbcType=VARCHAR}, 
+            #{forbidEnum,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{modelCode,jdbcType=VARCHAR}, #{modelValue,jdbcType=VARCHAR}, #{isUpRedis,jdbcType=VARCHAR}, 
+            #{paramDataType,jdbcType=VARCHAR},#{paraType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
+        insert into RSK_ISUP_INDICATOR_PARA
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="paraCode != null" >
+                PARA_CODE,
+            </if>
+            <if test="paraName != null" >
+                PARA_NAME,
+            </if>
+            <if test="isForbid != null" >
+                IS_FORBID,
+            </if>
+            <if test="forbidEnum != null" >
+                FORBID_ENUM,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="modelCode != null" >
+                MODEL_CODE,
+            </if>
+            <if test="modelValue != null" >
+                MODEL_VALUE,
+            </if>
+             <if test="isUpRedis != null" >
+                IS_UP_REDIS,
+            </if>
+            <if test="paramDataType != null" >
+                PARAM_DATA_TYPE,
+            </if>
+            <if test="paraType != null" >
+                PARA_TYPE,
+            </if> 
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="paraCode != null" >
+                #{paraCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paraName != null" >
+                #{paraName,jdbcType=VARCHAR},
+            </if>
+            <if test="isForbid != null" >
+                #{isForbid,jdbcType=VARCHAR},
+            </if>
+            <if test="forbidEnum != null" >
+                #{forbidEnum,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modelCode != null" >
+                #{modelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="modelValue != null" >
+                #{modelValue,jdbcType=VARCHAR},
+            </if>
+             <if test="isUpRedis != null" >
+                #{isUpRedis,jdbcType=VARCHAR},
+            </if>
+             <if test="paramDataType != null" >
+                #{paramDataType,jdbcType=VARCHAR},
+            </if>
+             <if test="paraType != null" >
+                #{paraType,jdbcType=VARCHAR},
+            </if> 
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
+         insert into RSK_ISUP_INDICATOR_PARA(PARA_CODE, PARA_NAME, IS_FORBID, FORBID_ENUM, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, MODEL_CODE, MODEL_VALUE, 
+        IS_UP_REDIS, PARAM_DATA_TYPE,PARA_TYPE)
+        select PARA_CODE, PARA_NAME, IS_FORBID, FORBID_ENUM, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, MODEL_CODE, MODEL_VALUE, 
+            IS_UP_REDIS, PARAM_DATA_TYPE,PARA_TYPE
+             from RSK_ISUP_INDICATOR_PARA
+             where 1 = 1 and PARA_CODE = #{paraCode,jdbcType=VARCHAR}     
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
+        update RSK_ISUP_INDICATOR_PARA
+        <set >
+            <if test="paraName != null" >
+                PARA_NAME = #{paraName,jdbcType=VARCHAR},
+            </if>
+            <if test="isForbid != null" >
+                IS_FORBID = #{isForbid,jdbcType=VARCHAR},
+            </if>
+            <if test="forbidEnum != null" >
+                FORBID_ENUM = #{forbidEnum,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modelCode != null" >
+                MODEL_CODE = #{modelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="modelValue != null" >
+                MODEL_VALUE = #{modelValue,jdbcType=VARCHAR},
+            </if>
+             <if test="isUpRedis != null" >
+                IS_UP_REDIS = #{isUpRedis,jdbcType=VARCHAR},
+            </if>
+            <if test="paramDataType != null" >
+                PARAM_DATA_TYPE = #{paramDataType,jdbcType=VARCHAR},
+            </if>
+            <if test="paraType != null" >
+                PARA_TYPE = #{paraType,jdbcType=VARCHAR},
+            </if> 
+        </set>
+        where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorPara" >
+         update RSK_ISUP_INDICATOR_PARA
+        set PARA_NAME = #{paraName,jdbcType=VARCHAR},
+            IS_FORBID = #{isForbid,jdbcType=VARCHAR},
+            FORBID_ENUM = #{forbidEnum,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            MODEL_CODE = #{modelCode,jdbcType=VARCHAR},
+            MODEL_VALUE = #{modelValue,jdbcType=VARCHAR},
+            IS_UP_REDIS = #{isUpRedis,jdbcType=VARCHAR},
+            PARAM_DATA_TYPE = #{paramDataType,jdbcType=VARCHAR},
+            PARA_TYPE = #{paraType,jdbcType=VARCHAR}
+        where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
+    </update>
+</mapper>

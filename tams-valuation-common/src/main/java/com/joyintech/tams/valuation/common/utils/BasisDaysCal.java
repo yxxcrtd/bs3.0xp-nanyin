@@ -78,20 +78,22 @@ public class BasisDaysCal {
                 fromDate = fDate;
                 endDate = mDate;
             } 
-            while (order == 1 && fromDate.compareTo(endDate) <= 0 
-                || order == -1 && fromDate.compareTo(endDate) >= 0) {
-                Date tempDate = CalendarUtil.calendarcal(fromDate, Calendar.YEAR, order);
-                if (order == 1 && svDate.compareTo(fromDate) >=0 && svDate.compareTo(tempDate) < 0
-                    || order == -1 && svDate.compareTo(tempDate) >=0 && svDate.compareTo(fromDate) < 0) {
-                    BigDecimal days = CalendarUtil.calendarDays(fromDate, tempDate);
-                    if (days != null) {
-                        return days.abs();
+            if (fromDate != null){
+                while (order == 1 && fromDate.compareTo(endDate) <= 0
+                        || order == -1 && fromDate.compareTo(endDate) >= 0) {
+                    Date tempDate = CalendarUtil.calendarcal(fromDate, Calendar.YEAR, order);
+                    if (order == 1 && svDate.compareTo(fromDate) >=0 && svDate.compareTo(tempDate) < 0
+                            || order == -1 && svDate.compareTo(tempDate) >=0 && svDate.compareTo(fromDate) < 0) {
+                        BigDecimal days = CalendarUtil.calendarDays(fromDate, tempDate);
+                        if (days != null) {
+                            return days.abs();
+                        }
+                        return days;
                     }
-                    return days;
-                }
-                else {
-                    fromDate = tempDate;
-                }
+                    else {
+                        fromDate = tempDate;
+                    }
+                }    
             }
         } 
         // 计息基础 = A/360 或者 30/360

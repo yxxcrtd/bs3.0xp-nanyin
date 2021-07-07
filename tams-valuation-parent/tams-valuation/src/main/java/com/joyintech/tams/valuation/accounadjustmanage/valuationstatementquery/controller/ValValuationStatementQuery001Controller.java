@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +91,7 @@ public class ValValuationStatementQuery001Controller extends BaseController {
 		// 如果当前画面的模板不存在，则下载所有模板
 		String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		String zipFileName = FileNameUtil.createFileName("zip");
-		File zipFile = new File(exportFilePath + File.separator + zipFileName);
+		File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
 		FileOutputStream stream = null;
 		ZipOutputStream zipOut = null;
 		try {
@@ -116,7 +117,7 @@ public class ValValuationStatementQuery001Controller extends BaseController {
     		for (int i = 0; i < val001dto.size(); i++) {
     			filepath1 = val001dto.get(i).getFilePath();
     			filename = val001dto.get(i).getFileName();
-    			File file = new File(filepath1);
+    			File file = new SafelyFile(filepath1);
     			String remotePath = CacheUtil.getSysParam("FILESERVER_REMOTE_PATH");
     			String remoteFile = CacheUtil.getSysParam("FILESERVER_REMOTE_PATH") + "/" + filename;
     			try {

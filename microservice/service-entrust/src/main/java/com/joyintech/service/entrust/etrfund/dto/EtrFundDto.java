@@ -5,8 +5,11 @@
 
 package com.joyintech.service.entrust.etrfund.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 
@@ -71,7 +74,8 @@ public class EtrFundDto extends EtrEntrust {
     /**
      * 已完成额度
      */
-    private long finishAmt;
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal finishAmt;
 
     /**
      * 交易完成度
@@ -297,7 +301,7 @@ public class EtrFundDto extends EtrEntrust {
      * 
      * @return finishAmt.
      */
-    public long getFinishAmt() {
+    public BigDecimal getFinishAmt() {
         return finishAmt;
     }
 
@@ -306,7 +310,7 @@ public class EtrFundDto extends EtrEntrust {
      * 
      * @param finishAmt finishAmt
      */
-    public void setFinishAmt(long finishAmt) {
+    public void setFinishAmt(BigDecimal finishAmt) {
         this.finishAmt = finishAmt;
     }
 

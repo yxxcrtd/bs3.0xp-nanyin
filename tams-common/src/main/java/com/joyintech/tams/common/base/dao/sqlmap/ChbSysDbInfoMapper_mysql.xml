@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysDbInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysDbInfo" >
+        <id column="C_S_D_I_IS_LOCK" property="isLock" jdbcType="VARCHAR" />
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SYS_DB_INFO
+        where IS_LOCK = #{isLock,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SYS_DB_INFO
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysDbInfo" >
+        insert into CHB_SYS_DB_INFO (IS_LOCK)
+        values (#{isLock,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysDbInfo" >
+        insert into CHB_SYS_DB_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="isLock != null" >
+                IS_LOCK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="isLock != null" >
+                #{isLock,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysDbInfo" >
+        insert into CHB_SYS_DB_INFO(IS_LOCK)
+        select IS_LOCK
+             from CHB_SYS_DB_INFO
+             where STATUS = 'E' and IS_LOCK = #{isLock,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysDbInfo" >
+        update CHB_SYS_DB_INFO
+        <set >
+            <if test="isLock != null" >
+                IS_LOCK = #{isLock,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysDbInfo" >
+        update CHB_SYS_DB_INFO
+        set
+        IS_LOCK = #{isLock,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+</mapper>

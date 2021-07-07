@@ -231,7 +231,7 @@
     <select id="selectPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
             A.PORTFOLIO_ID id,
-            A.PORTFOLIO_ID || ':' || A.PORTFOLIO_NAME  text,
+        　　 A.PORTFOLIO_NAME  text,
             B.IS_GUARANTEE object,
             <!-- 新增type yzg 20190904 start -->
             A.PROFIT_TYPE  col
@@ -714,13 +714,22 @@
         FROM FIN_PRODUCT A LEFT JOIN FIN_PRODUCT_TYPE B ON B.FINPROD_ID = A.FINPROD_ID
         <if test="exercise != null and exercise != ''">
             <!-- 支付日默认为平台日期及之后该资产最近一个行权方式为赎回的行权计划的实际行权日 -->
-            INNER JOIN FIN_EXERCISE_PLAN T1 ON T1.FINPROD_ID = A.FINPROD_ID AND T1.EXERCISE_TYPE = '01' and T1.EXERCISE_DATE IS NOT NULL AND t1.EXERCISE_DATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')
-            AND NOT EXISTS (
-                SELECT 1 FROM FIN_EXERCISE_PLAN TT1
-                WHERE TT1.FINPROD_ID = T1.FINPROD_ID
-                AND t1.EXERCISE_DATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')
-                AND TT1.EXERCISE_TYPE = '01'
-                AND TT1.EXERCISE_DATE > T1.EXERCISE_DATE
+            INNER JOIN FIN_EXERCISE_PLAN T1 ON T1.FINPROD_ID = A.FINPROD_ID AND T1.EXERCISE_TYPE = '01' and T1.EXERCISE_DATE IS NOT NULL
+            <!--AND t1.EXERCISE_DATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')-->
+            <!--AND NOT EXISTS (-->
+            <!--  SELECT 1 FROM FIN_EXERCISE_PLAN TT1-->
+            <!--      WHERE TT1.FINPROD_ID = T1.FINPROD_ID-->
+            <!--      AND t1.EXERCISE_DATE &lt;= to_date(#{sysDate}, 'yyyy-MM-dd')-->
+            <!--      AND TT1.EXERCISE_TYPE = '01'-->
+            <!--      AND TT1.EXERCISE_DATE > T1.EXERCISE_DATE-->
+            <!--)-->
+            <!-- 平台日大于行权日时，就算行权交易未做，也不可再做行权 -->
+            AND T1.ACT_EXERCISE_DATE >= to_date(#{sysDate}, 'yyyy-MM-dd')
+            AND T1.ACT_EXERCISE_DATE = (
+                SELECT min(TT1.ACT_EXERCISE_DATE) FROM FIN_EXERCISE_PLAN TT1
+                    WHERE TT1.FINPROD_ID = T1.FINPROD_ID
+                    AND TT1.ACT_EXERCISE_DATE >= to_date(#{sysDate}, 'yyyy-MM-dd')
+                    AND TT1.EXERCISE_TYPE = '01'
             )
             <if test="initValue == null or initValue == ''">
                 <if test="finprodType != 'F01'">

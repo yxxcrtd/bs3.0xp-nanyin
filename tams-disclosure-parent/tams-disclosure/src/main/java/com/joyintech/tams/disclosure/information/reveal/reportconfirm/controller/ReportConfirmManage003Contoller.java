@@ -14,6 +14,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -200,13 +201,13 @@ public class ReportConfirmManage003Contoller extends BaseController {
 		String filePath = request.getParameter("fileName");
 		//获取解压在服务器上的路径
         String localFilePath = CacheUtil.getSysParam(ReportGlobalConstant.DECOMPRESS_FILEPATH);
-        File localFilePath1 = new File(localFilePath);
+        File localFilePath1 = new SafelyFile(localFilePath);
 		if(!localFilePath1.exists()){
 			localFilePath1.mkdirs();
 		}
 		try{
 			//解压zip格式文件 (File originFile, String targetDir)
-			boolean deczip =  FileUtil.decompressZip(new File(filePath), localFilePath);
+			boolean deczip =  FileUtil.decompressZip(new SafelyFile(filePath), localFilePath);
 			//获取解压后本地文件全路径
 			List<String> listFileName = getAllFile(localFilePath,false);
 			for(int i=0; i<listFileName.size(); i++){
@@ -220,14 +221,14 @@ public class ReportConfirmManage003Contoller extends BaseController {
 				if(flag){
 					//创建服务器上的上传路径
 					String path = FileNameUtil.createUploadFilePath("");
-					File filepath1 = new File(path);
+					File filepath1 = new SafelyFile(path);
 					if(!filepath1.exists()){
 						filepath1.mkdirs();
 					}
 					String localFileName = getLocalFileName(listFileName.get(i));
-					File file = new File(localFileName);
+					File file = new SafelyFile(localFileName);
 					String uploadFilePath = dealUploadFilePath(localFileName);
-					File localFile = new File(uploadFilePath);
+					File localFile = new SafelyFile(uploadFilePath);
 					//读取、写入文件
 					FileInputStream fis = null;
 					FileOutputStream fos = null;
@@ -346,7 +347,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
         while (entry.hasMoreElements()) {
             zipEntry = entry.nextElement();
             String fileName = zipEntry.getName();
-            File outputFile = new File(targetDir + fileName);
+            File outputFile = new SafelyFile(targetDir + fileName);
             if (zipEntry.isDirectory()) {
                 FileUtils.forceMkdir(outputFile);
                 continue;
@@ -438,7 +439,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	    if (!sPath.endsWith(File.separator)) {  
 	        sPath = sPath + File.separator;  
 	    }  
-	    File dirFile = new File(sPath);  
+	    File dirFile = new SafelyFile(sPath);  
 	    //如果dir对应的文件不存在，或者不是一个目录，则退出  
 	    if (!dirFile.exists() || !dirFile.isDirectory()) {  
 	        return false;  
@@ -474,7 +475,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	public static boolean deleteFile(String sPath) {  
 		boolean flag = false;
 	    flag = false;  
-	    File file = new File(sPath);  
+	    File file = new SafelyFile(sPath);  
 	    // 路径为文件且不为空则进行删除  
 	    if (file.isFile() && file.exists()) {  
 	        file.delete();  
@@ -560,7 +561,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 * 获取本地上传文件名称并返回数组
 	 */
 	public static String[] getFileDetail(String fileName){
-		File file = new File(fileName);
+		File file = new SafelyFile(fileName);
 		String b = file.getName();
 		// modifed by zhangyf 20190422 start
 		// int endIndex = b.lastIndexOf(".pdf");
@@ -574,7 +575,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 * 获取本地文件名称
 	 */
 	public static String getLocalFileName(String filePath){
-		File file = new File(filePath);
+		File file = new SafelyFile(filePath);
 		String localFileNmae = file.getName();
 		return localFileNmae;
 	}
@@ -610,7 +611,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     public static List<String> getAllFile(String directoryPath,boolean isAddDirectory) {
         List<String> list = new ArrayList<String>();
-        File baseFile = new File(directoryPath);
+        File baseFile = new SafelyFile(directoryPath);
         if (baseFile.isFile() || !baseFile.exists()) {
             return list;
         }

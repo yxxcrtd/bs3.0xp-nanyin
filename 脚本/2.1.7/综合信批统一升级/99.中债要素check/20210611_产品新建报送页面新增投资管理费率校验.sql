@@ -1,0 +1,8 @@
+--产品新建报送页面新增投资管理费率校验 
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID in ('de4E4A67-6813-5A9E-BC59-007F01006A66','de4E4A68-6813-5A9E-BB91-007F01006A66','de4E4A67-6813-5A9E-9D72-007F01006A66','de4E4A68-6813-5A9E-B83D-007F01006A66');
+
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('de4E4A67-6813-5A9E-BC59-007F01006A66','FinNetValueProductBuild002','isNumber2','bussRepFinProductInfoDto.repInvestFeeRate',null,'8,5','Y','投资管理费率%以百分数形式表示时必须为n（8,5）格式。','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('de4E4A68-6813-5A9E-BB91-007F01006A66','FinNetValueProductBuild002','compareValueAsNumber','bussRepFinProductInfoDto.repInvestFeeRate','>=','0','Y','投资管理费率%必须大于等于0','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');
+
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('de4E4A67-6813-5A9E-9D72-007F01006A66','FinProductBuild002','isNumber2','bussRepFinProductInfoDto.repInvestFeeRate',null,'8,5','Y','投资管理费率%以百分数形式表示时必须为n（8,5）格式。','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');
+Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS) values ('de4E4A68-6813-5A9E-B83D-007F01006A66','FinProductBuild002','compareValueAsNumber','bussRepFinProductInfoDto.repInvestFeeRate','>=','0','Y','投资管理费率%必须大于等于0','E','com.joyintech.tams.invest.common.ChbBaseCheckLib');

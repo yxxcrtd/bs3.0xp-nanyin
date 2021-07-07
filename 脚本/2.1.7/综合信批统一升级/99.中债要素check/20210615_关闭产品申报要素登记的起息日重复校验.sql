@@ -1,0 +1,2 @@
+--关闭产品申报要素登记的起息日重复校验
+update CHB_DATACHECK_RULE_INV set STATUS = 'D' where CHECKRULEID = 'de244A61-6813-5A9E-E050-007F01006A65';

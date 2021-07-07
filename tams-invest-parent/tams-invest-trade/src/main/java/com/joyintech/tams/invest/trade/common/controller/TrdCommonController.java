@@ -163,7 +163,7 @@ public class TrdCommonController extends BaseController {
             trdProductDeal.setCounterId(counterId);
             boolean isRiskAuthorize = riskAuthorizeListCommonValidatorService.授权是否匹配(trdProductDeal);
             if (StringUtil.isNotEmpty(isRiskAuthorize) && isRiskAuthorize) {
-                JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
+                JoyinMessage ms = new JoyinMessage("交易本金金额超过领导授权额度，是否确认提交!", MessageType.确认消息);
                 joyinMessages.add(ms);
                 wr.setJoyinMessages(joyinMessages);  
             } 

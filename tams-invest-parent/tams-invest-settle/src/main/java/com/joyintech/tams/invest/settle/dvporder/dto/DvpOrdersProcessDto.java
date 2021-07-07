@@ -50,7 +50,8 @@ public class DvpOrdersProcessDto extends DvpOrdersDto implements ProcessEntity {
     public String getPayTypeString() {
         // 一体化对应etliu start
 //        return SysDataUtil.getNameFromDataDict(DictCode.划款类型, getPayType());
-        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, getPayType());
+//        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, getPayType());
+        return SysDataUtil.getNameFromDataDict(DictCode.平安划款类型, super.getPayType());
         // 一体化对应etliu end
     }
 

@@ -10,12 +10,12 @@
  
 package com.joyintech.tams.valuation.accounadjustmanage.bokbalancestatementquery.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,10 +32,8 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
 import com.joyintech.tams.valuation.accounadjustmanage.bokbalancestatementquery.dto.BokBalanceStatementQuery001Dto;
 import com.joyintech.tams.valuation.accounadjustmanage.bokbalancestatementquery.service.BokBalanceStatementQuery001Service;
-import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valaccounthandle.service.ValAccountHandle001Service;
 
 /**
  * 估值余额表查询Controller
@@ -100,7 +98,7 @@ public class BokBalanceStatementQuery001Controller extends BaseController {
     @ResponseBody
     public String checkBokkSetDate(){
         Map<String,Object> map = RequestUtil.getPageParam();
-        return bokBalanceStatementQuery001Service.checkBokkSetDate(map);
+        return StringUtil.trimHtmlTag(bokBalanceStatementQuery001Service.checkBokkSetDate(map));
 //        String msg=valAccountHandle001Service.checkBokkSetDateForVluTab(map);
 //        return msg;
     }

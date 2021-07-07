@@ -51,4 +51,9 @@ public interface ChbPrdPositionMapper {
 	void insertPos(ChbPrdPosition pos);
 	
 	List<ChbPrdDeal> selectPrdDeal(@Param("batchDate")Date batchDate,@Param("prodIdList")List<String> prodIdList);
+
+
+
+	Date  getVdate(String prodId);
+
 }

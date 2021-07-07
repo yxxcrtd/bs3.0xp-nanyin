@@ -62,6 +62,23 @@ public class FinproductCommonController {
 		  	}
 		  	return null;
 	}
+
+	/**
+	 * 市价查询-债券
+	 * @param happenDateStr
+	 * @param booksetId
+	 * @param finProdId
+	 * @param invAim
+	 * @return
+	 */
+	@GetMapping("getBondMarketPriceDto")
+	public MarketPriceDto getBondMarketPriceDto(@RequestParam("happenDate") String happenDateStr,
+								   @RequestParam("booksetId") String booksetId,@RequestParam("finProdId") String finProdId,
+								   @RequestParam("invAim") String invAim) {
+		Date happenDate= DateUtil.parse(happenDateStr);
+		MarketPriceDto dto = finProductCommonService.getBondMarketPrice(happenDate,booksetId,finProdId,invAim);
+		return dto;
+	}
 	
 	/**
 	 * 市价查询-基金
@@ -79,6 +96,14 @@ public class FinproductCommonController {
 		 		return dto.getValDate()!=null?dto.getValDate():dto.getSchemeValDate();
 		 	}
 		  	return null;
+	}
+
+	@GetMapping("getFundMarketPriceDto")
+	public MarketPriceDto getFundMarketPriceDto(@RequestParam("happenDate") String happenDateStr,
+								   @RequestParam("finProdId")  String finProdId, @RequestParam("booksetId") String booksetId) {
+		Date happenDate= DateUtil.parse(happenDateStr);
+		MarketPriceDto dto = finProductCommonService.getFundMarketPrice(happenDate,booksetId,finProdId);
+		return dto;
 	}
 	
 	/**

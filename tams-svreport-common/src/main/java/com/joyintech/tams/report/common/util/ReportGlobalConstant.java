@@ -322,4 +322,8 @@ public class ReportGlobalConstant {
      * 中债一二期直连报送每批次处理数据条数
      */
     public static final String SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST = "SEND_CB_DATA_COUNT_PER_TIME_FIRST";
+    
+    
+    public static final String SEND_CB_DATA_DECLARE_MAXCOUNT = "SEND_CB_DATA_DECLARE_MAXCOUNT";
+
 }

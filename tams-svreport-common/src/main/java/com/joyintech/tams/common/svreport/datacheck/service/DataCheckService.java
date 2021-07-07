@@ -531,7 +531,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式错误!["+r.getCheckconditionid()+"]");
                     continue;
@@ -630,7 +630,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"方法的目标格式错误!["+r.getCheckruleid()+"]");
                     continue;
@@ -652,7 +652,7 @@ public class DataCheckService {
      * @see
      * @since 1.0
      */
-    public List<CheckRule> queryCheckRulesByDataTypeAndColumns(String datatype,List<String>columns) {
+    public List<CheckRule> queryCheckRulesByDataTypeAndColumns(String datatype) {
         
         String baseCheckLib = "com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib";
         Map<String,Method> mapMethod = new HashMap<String,Method>();
@@ -746,7 +746,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式错误!["+r.getCheckconditionid()+"]");
                     continue;
@@ -847,7 +847,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"方法的目标格式错误!["+r.getCheckruleid()+"]");
                     continue;

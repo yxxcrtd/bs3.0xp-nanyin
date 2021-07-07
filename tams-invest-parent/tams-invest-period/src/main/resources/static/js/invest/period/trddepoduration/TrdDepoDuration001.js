@@ -133,7 +133,7 @@ $(function() {
         $('#TrdDepoDuration001_btn_search').click(function() {
             table.load();
             $('#TrdDepoDuration001_btn_revoke').show();
-            $('#TrdDepoDuration001_btn_draw').show();
+//            $('#TrdDepoDuration001_btn_draw').show();
         });
 
         $('#TrdDepoDuration001_btn_export').click(function() {

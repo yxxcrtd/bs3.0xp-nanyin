@@ -18,6 +18,7 @@ import com.joyintech.framework.export.handler.JoyinBookConfig;
 import com.joyintech.framework.export.handler.JoyinCellConfig;
 import com.joyintech.framework.export.handler.JoyinSheetConfig;
 import com.joyintech.framework.export.handler.ReportCfgHandler;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.progressbar.ProgressBarService;
 import com.joyintech.framework.util.BeanUtil;
@@ -170,29 +171,36 @@ public class PtlAnalyzeAfterInvest002Service extends CommonExportService<PtlAnal
         }
         // 从配置文件中获取模板文件  以及文件类型
         String tempFilePath = fileName + fileType;
-        File templeteFile = new File(buildTempleteFilePath(tempFilePath));
+        File templeteFile = new SafelyFile(buildTempleteFilePath(tempFilePath));
         reportConfig.setTempleteFile(fileName + fileType);
         // 模板输入流
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
+        try{
+            if (templeteFile.exists()) {
+                stream = new FileInputStream(templeteFile);
+            }
+            else {
+                stream = CommonExportService.class.getResourceAsStream(
+                        "/tpl/" + tempFilePath);
+            }
+            // 工作表对象初始化
+            if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
+                wb = new HSSFWorkbook(stream);
+            }
+            else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
+                wb = new XSSFWorkbook(stream);
+            }
+            else {
+                stream.close();
+                throw new BusinessException("不是一个有效的Excel文件");
+            }
+            return wb;
+        }finally {
+            if(stream != null){
+                stream.close();
+            }
         }
-        else {
-            stream = CommonExportService.class.getResourceAsStream(
-            		"/tpl/" + tempFilePath);
-        }
-        // 工作表对象初始化
-        if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
-            wb = new HSSFWorkbook(stream);
-        }
-        else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
-            wb = new XSSFWorkbook(stream);
-        }
-        else {
-            stream.close();
-            throw new BusinessException("不是一个有效的Excel文件");
-        }
-        return wb;
+
     }
 
     /**
@@ -307,11 +315,19 @@ public class PtlAnalyzeAfterInvest002Service extends CommonExportService<PtlAnal
         String outFileName = FileNameUtil.createFileName(fileType);
         // 从系统配置参数中获取文件存放路径
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-        File file = new File(exportFilePath + File.separator + outFileName);
+        File file = new SafelyFile(exportFilePath + File.separator + outFileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        wb.write(new FileOutputStream(file));
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream =new FileOutputStream(file);
+            wb.write(fileOutputStream);
+        }finally {
+            if (fileOutputStream != null){
+                fileOutputStream.close();
+            }
+        }
         return file;
     }
 }

@@ -7,8 +7,21 @@
  * 修改内容：新建
  * 系统名称：中信银行资管系统
  */
-
+ 
 package com.joyintech.service.svrcom.submitexamination.investorsqualitycheck.controller;
+
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,30 +31,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-
-import com.joyintech.framework.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.joyintech.framework.grid.Page;
-import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheck001Service;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckBaseService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPFEFBXService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPFEKFXService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPYEFBXService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPYEKFXService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPZTService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckDJWZXService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckMJQFEService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckMJQYEService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckSLPPService;
 
 
 /**
@@ -60,7 +49,7 @@ public class InvestorsQualityCheckController{
      */
     @Autowired
     private InvestorsQualityCheck001Service investorsQualityCheck001Service;
-
+    
     @Autowired
     private InvestorsQualityCheckCPZTService investorsQualityCheckCPZTService;
 
@@ -92,7 +81,7 @@ public class InvestorsQualityCheckController{
 
     /**
      * 查询列表
-     *
+     * 
      * @return Page
      */
     @PostMapping("/readConfig")
@@ -154,8 +143,8 @@ public class InvestorsQualityCheckController{
 
             }
         } catch (InterruptedException | ExecutionException e) {
-            Thread.currentThread().interrupt();
             logger.error("InvestorsQualityCheckController.searchInvestorsPassRate统计失败：", e);
+            Thread.currentThread().interrupt();
         }finally {
             // 任务结束，停止线程池的所有线程
             taskpool.shutdown();
@@ -166,7 +155,7 @@ public class InvestorsQualityCheckController{
         // add by zhangliang 20210224 多线程处理查询结果 end
     }
     /**
-     * 查询列表
+     * 查询列表 
      * --证件类型合格率
      * @return Page
      */
@@ -175,7 +164,7 @@ public class InvestorsQualityCheckController{
         return investorsQualityCheck001Service.searchTableZJLX(param);
     }
     /**
-     * 查询列表
+     * 查询列表 
      * --证件匹配合格率
      * @return Page
      */
@@ -184,7 +173,7 @@ public class InvestorsQualityCheckController{
         return investorsQualityCheck001Service.searchTableZJPP(param);
     }
     /**
-     * 查询列表
+     * 查询列表 
      * --及时性合格率
      * @return Page
      */
@@ -192,10 +181,10 @@ public class InvestorsQualityCheckController{
     public Page<InvestorsQualityCheck001Dto> searchTableJSX(@RequestBody Map<String, Object> param){
         return investorsQualityCheck001Service.searchTableJSX(param);
     }
-
+    
     /**
      * 查询列表
-     * --及时性合格率
+     * --产品资格合格率
      * @return Page
      */
     @PostMapping("/searchTableCPZT/{page}/{length}")
@@ -281,5 +270,25 @@ public class InvestorsQualityCheckController{
     @PostMapping("/searchTableCPFEKFX")
     public List<InvestorsQualityCheck001Dto> searchTableCPFEKFX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPFEKFXService.queryErrorRecList(param);
+    }
+
+    /**
+     * 获取上次汇总时间
+     * @return
+     */
+    @PostMapping("/getLastSummaryTime")
+    public String getLastSummaryTime(){
+        return investorsQualityCheck001Service.getLastSummaryTime();
+    }
+
+    /**
+     * 执行持有汇总
+     * @return
+     */
+    @PostMapping("/investorsSummary")
+    public String investorsSummary(@RequestBody Map<String, Object> param){
+        String startDate = (String) param.get("startDate");
+        String endDate = (String) param.get("endDate");
+        return investorsQualityCheck001Service.investorsSummary(null, startDate, endDate, 3);
     }
 }
