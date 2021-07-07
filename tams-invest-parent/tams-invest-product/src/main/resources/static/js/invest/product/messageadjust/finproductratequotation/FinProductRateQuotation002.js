@@ -152,7 +152,7 @@ $(function() {
     };
 	//产品代码画面联动
 	$("#finprodMarketId").change(function(){
-		$("#finprodAbbr").val($('#finprodMarketId').select2('data')[0].text);
+		$("#finprodAbbr").val($('#finprodMarketId').select2('data')[0].text.split(":")[1]);
 		$("#prodStyle").val('').trigger('change');
 		//分档
 		if($('#finprodMarketId').select2('data')[0].col == 'Y'){
@@ -177,7 +177,7 @@ $(function() {
 	//
 	var workflowId = $("#workflowId").val();
 	if(workflowId){
-	    $("#finprodAbbr").val($('#finprodMarketId').select2('data')[0].text);
+	    $("#finprodAbbr").val($('#finprodMarketId').select2('data')[0].text.split(":")[1]);
 	}
     
     /*
