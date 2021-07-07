@@ -1,17 +1,5 @@
 package com.joyintech.tams.invest.product.productelement.reportregister.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -24,8 +12,18 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.calculator.RepCheckUtil;
 import com.joyintech.tams.invest.product.productelement.reportregister.dto.ProductReportRegister002Dto;
 import com.joyintech.tams.invest.product.productelement.reportregister.service.ProductReportRegister002Service;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
 import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 产品收集删除修改验证
@@ -47,7 +45,7 @@ public class ProductReportRegister002Validator implements BeanValidator {
     private MstWorkflowCommonService mstWorkflowCommonService;
 
 	@Autowired
-	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+	private ChbDataCheckService chbDataCheckService;
 
 	@Override
 	public List<ValidMessage> valid(Object value) {
@@ -440,7 +438,7 @@ public class ProductReportRegister002Validator implements BeanValidator {
 			validList.add(new ValidMessage("发行机构代码必须与银行代码相同。"));
 		}
 
-		 validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
+		 validList = chbDataCheckService.chbCheckCommon(validList, entity, null, null);
 
 		return validList;
 	}

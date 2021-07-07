@@ -1,24 +1,21 @@
 package com.joyintech.tams.invest.asset.plan.planNet.validator;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.plan.planNet.dto.FinPlanNetAssetDto;
 import com.joyintech.tams.invest.asset.plan.planNet.service.FinPlanNetAssetService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
 public class FinPlanNetAssetValidator implements BeanValidator {
@@ -35,7 +32,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
     private CommonBusinessService commonBusinessService;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -135,7 +132,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
 		//注释掉多余的check by 赵东东 2019.10.15 end
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getRepAssetType(), ValidMessage.class);
+            errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, dto.getRepAssetType());
         }
 
         return errorList;
