@@ -1188,7 +1188,8 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 	}
 	
 	public String getXLSCellValue(Cell cell) {
-		String result = new String();
+//		String result = new String();
+		String result = "";
 		if(cell==null){
 			return "";
 		}

@@ -188,7 +188,7 @@ public class XlsxToHtml {
       */
      private static String getCellValue(Cell cell) {
  
-         String result = new String();  
+         String result = "";
 //         switch (cell.getCellType()) {
 //         case Cell.CELL_TYPE_NUMERIC:// 数字类型
          if (CellType.NUMERIC.equals(cell.getCellType())) {

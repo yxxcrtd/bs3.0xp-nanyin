@@ -462,7 +462,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
         }
         // 获取附件
         UploadFile attachment = fileAttachmentProcess.fetch(sysFilepath);
-        String targetFileName=new String();
+        String targetFileName="";
         String formate=reportConfirmManage001Service.getFormate(sysFilepath);
         formate=formate.substring(formate.lastIndexOf(".") );
         // 文件名

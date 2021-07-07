@@ -198,7 +198,7 @@ public class XlsxToHtml {
       */
      private static String getCellValue(Cell cell) {
  
-         String result = new String();
+         String result = "";
          if (CellType.NUMERIC.equals(cell.getCellType())) {
              if (HSSFDateUtil.isCellDateFormatted(cell)) {// 处理日期格式、时间格式
                  SimpleDateFormat sdf = null;

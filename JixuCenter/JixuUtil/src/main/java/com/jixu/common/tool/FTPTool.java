@@ -196,7 +196,7 @@ public class FTPTool {
     	String directory = remote.substring(0, remote.lastIndexOf("/") + 1);
 		// 如果远程目录不存在，则递归创建远程服务器目录
 		if (!directory.equalsIgnoreCase("/")
-				&& !ftp.changeWorkingDirectory(new String(directory))) {
+				&& !ftp.changeWorkingDirectory(directory)) {
 			int start = 0;
 			int end = 0;
 			if (directory.startsWith("/")) {
@@ -403,7 +403,7 @@ public class FTPTool {
 	private void createDir(String directory) throws Exception {
 		// 如果远程目录不存在，则递归创建远程服务器目录
 		if (!directory.equalsIgnoreCase("/")
-				&& !ftp.changeWorkingDirectory(new String(directory))) {
+				&& !ftp.changeWorkingDirectory(directory)) {
 			int start = 0;
 			int end = 0;
 			if (directory.startsWith("/")) {
@@ -419,7 +419,7 @@ public class FTPTool {
 			while (true) {
 				String subDirectory = new String(directory.substring(start, end)
 						.getBytes(ENCODE_UTF8), ENCODE_ISO);
-				String currPath = new String(directory.substring(0, end));
+				String currPath = directory.substring(0, end);
 				if (!ftp.changeWorkingDirectory(currPath)) {
 					if (ftp.makeDirectory(subDirectory)) {
 						ftp.changeWorkingDirectory(currPath);

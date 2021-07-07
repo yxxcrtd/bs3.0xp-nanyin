@@ -180,7 +180,8 @@ public class DBFReader extends DBFBase {
 					}
 					break;
 				case 77:
-					recordObjects[i] = new String("null");
+//					recordObjects[i] = new String("null");
+					recordObjects[i] = "null";
 					break;
 				case 69:
 				case 71:
@@ -189,7 +190,8 @@ public class DBFReader extends DBFBase {
 				case 74:
 				case 75:
 				default:
-					recordObjects[i] = new String("null");
+//					recordObjects[i] = new String("null");
+					recordObjects[i] = "null";
 				}
 			}
 		} catch (EOFException e) {
