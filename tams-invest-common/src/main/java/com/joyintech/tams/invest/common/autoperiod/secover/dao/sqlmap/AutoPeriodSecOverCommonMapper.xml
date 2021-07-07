@@ -161,4 +161,16 @@
         PTL_RECE_POSITION.INV_AIM,
         PTL_RECE_POSITION.PAY_DATE
     </select>
+
+	<select id="selectPosition" resultType="java.math.BigDecimal">
+		select
+			sum(decode(psp.hoding_type,'06',psp.amount*-1,'11',psp.amount*-1,psp.amount))
+		from PTL_SEC_POSITION psp
+		where psp.finprod_id = #{finprodId}
+		and psp.portfolio_id = #{portfolioId}
+		and psp.sec_acct_id = #{secAcctId}
+		and psp.branch = 0
+		and psp.cdate = to_date(#{cdate},'yyyy-MM-dd')
+	</select>
+
 </mapper>
