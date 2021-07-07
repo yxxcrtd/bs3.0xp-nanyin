@@ -116,6 +116,27 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
             Integer.class);
     }
 
+    @Override
+    public void doInsert(EtrConBondDto entity, OperationType type) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrConBond/doInsert",entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doUpdate(EtrConBondDto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrConBond/doUpdate",entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doBack(EtrConBondDto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrConBond/doBack",entity,
+                Integer.class);
+    }
+
     /**
      * 分页查询可转债委托信息
      * <功能详细描述>
