@@ -568,7 +568,7 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
             EtrEntrust etrEntrust = new EtrEntrust();
             dto.setFinprodType2(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue());
             dto.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
-            dto.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
             BeanUtil.copyProperties(etrEntrust, dto);
             BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
             if(iPlatformDate != null){
@@ -610,6 +610,7 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
             etrEntrustAdd.setFirstUnitCprice2(dto.getFirstprice2());
             entity.setEtrEntrustAdd(etrEntrustAdd);
 
+            // 添加流程编号
             entity.setWorkFlowId(dto.getWorkflowId());
         } catch (IllegalAccessException | InvocationTargetException e) {
             // 对象转换赋值失败
