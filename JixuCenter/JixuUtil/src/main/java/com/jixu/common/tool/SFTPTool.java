@@ -190,7 +190,8 @@ public class SFTPTool {
 			try {
 				sftp.ls(dir);
 			} catch (SftpException e) {
-				System.out.println("服务器上没有该目录：" + dir);
+//				System.out.println("服务器上没有该目录：" + dir);
+				logger.info("服务器上没有该目录：" + dir);
 				sftp.mkdir(dir);
 			}
 			sftp.cd(dir);
@@ -531,7 +532,8 @@ public class SFTPTool {
 			try {
 				sftp.ls(remote);
 			} catch (SftpException e) {
-				System.out.println("服务器上没有该目录：" + remote);
+//				System.out.println("服务器上没有该目录：" + remote);
+				logger.info("服务器上没有该目录：" + remote);
 				mkdir(remote);
 				return null;
 			}

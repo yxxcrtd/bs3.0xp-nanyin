@@ -22,6 +22,8 @@ import java.util.Map;
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.constant.GlobalConstant;
@@ -54,7 +56,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Component(value="disImportGenerator")
 public final class ImportGenerator {
-
+    private static final Logger logger = LoggerFactory.getLogger(ImportGenerator.class);
     public static List<ImpColumn> createImpTableColumns(String tableName) {
 
         TableStructService tableService = SpringContextUtil.getBean(TableStructService.class);
@@ -290,9 +292,11 @@ public final class ImportGenerator {
             param.setRows(reportInterfOneTimeSqlLdrCommitCount);
 
             // add by etliu 20180926 start
-            System.out.println("DatabaseName重置前值：" + param.getDatabaseName());
+//            System.out.println("DatabaseName重置前值：" + param.getDatabaseName());
+            logger.info("DatabaseName重置前值：" + param.getDatabaseName());
             param.setDatabaseName(reportSqlldrDatabaseName);
-            System.out.println("DatabaseName重置后值：" + param.getDatabaseName());
+//            System.out.println("DatabaseName重置后值：" + param.getDatabaseName());
+            logger.info("DatabaseName重置后值：" + param.getDatabaseName());
             // add by etliu 20180926 end
 
             // add by etliu 20181018 start

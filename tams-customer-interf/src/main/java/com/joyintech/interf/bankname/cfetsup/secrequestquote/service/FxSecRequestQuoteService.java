@@ -22,6 +22,8 @@ import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,7 @@ import java.util.Map;
 @Service(value="fxSecRequestQuoteService")
 public class FxSecRequestQuoteService
         extends BaseService<FxSecRequestQuoteDto> implements BaseProcessService<FxSecRequestQuoteDto> {
+    private static final Logger logger = LoggerFactory.getLogger(FxSecRequestQuoteService.class);
     @Autowired
     private FxSecRequestQuoteMapper fxSecRequestQuoteMapper;
 
@@ -120,10 +123,12 @@ public class FxSecRequestQuoteService
         //发送接口
         if("add".equals(fxSecRequestQuoteDto.getBusinessType())){
            CallReturn callReturn= clientService.send(fxSecRequestQuoteDto,"add","addQuote");
-           System.out.println(callReturn);
+//           System.out.println(callReturn);
+           logger.info(callReturn.toString());
         }else if("confirm".equals(fxSecRequestQuoteDto.getBusinessType())){//确认成交
             CallReturn callReturn=clientService.send(fxSecRequestQuoteDto,"confirm","confirmQuote");
-            System.out.println(callReturn);
+//            System.out.println(callReturn);
+            logger.info(callReturn.toString());
         }
     }
 

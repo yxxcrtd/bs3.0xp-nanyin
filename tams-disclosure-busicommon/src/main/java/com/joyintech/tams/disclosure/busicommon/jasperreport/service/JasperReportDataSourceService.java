@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.joyintech.framework.util.DateUtil;
@@ -36,6 +38,7 @@ import net.sf.jasperreports.engine.JRField;
  */
 
 public class JasperReportDataSourceService implements JRDataSource {
+	private static final Logger logger = LoggerFactory.getLogger(JasperReportDataSourceService.class);
 	private Map<String, Object> data = new HashMap<String, Object>();
 	int index = -1;
 	Map<String, Object> parameters=new HashMap<String, Object>();
@@ -246,7 +249,8 @@ public class JasperReportDataSourceService implements JRDataSource {
 		    data.put("dateval", DateUtil.format(DateUtil.parse(value), DateUtil.DEFAULT_DATE_FORMAT_CN)+"-"+DateUtil.format(DateUtil.parse(endDate), DateUtil.DEFAULT_DATE_FORMAT_CN));
 
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+//			System.err.println(e.getMessage());
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 		finally {

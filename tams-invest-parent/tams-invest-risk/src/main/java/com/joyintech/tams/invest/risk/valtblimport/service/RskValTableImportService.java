@@ -27,6 +27,8 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,7 +79,7 @@ import com.joyintech.tams.invest.risk.valtblimport.filtertools.filter.Filter;
  */
 @Service
 public class RskValTableImportService extends CommonExportService<RskValtblAssetSubDto>{
-
+    private static final Logger logger = LoggerFactory.getLogger(RskValTableImportService.class);
     /**
      * 指标结构映射
      */
@@ -619,7 +621,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
        Map<String,String> tempmap = new HashMap<String,String>();
        for(RskValtblAssetSubDto por:valList){
                if(por.getSubCode().startsWith("120404")){
-                   System.out.println(por.getSubCode());
+//                   System.out.println(por.getSubCode());
+                   logger.info(por.getSubCode());
                }
            String subSubjcode = StringUtil.EMPTY;
            RskValtblAssetSubDto tempporDto = new RskValtblAssetSubDto();
@@ -657,7 +660,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                            if(flag==false){
                                for(RskValtblSubject dto:vtcountSubList){
                                    if(dto.getSubCode().startsWith("120404")){
-                                       System.out.println(por.getSubCode());
+//                                       System.out.println(por.getSubCode());
+                                       logger.info(por.getSubCode());
                                    }
                                    if(dto.getSubCode().equals(subSubjcode)){
                                        flag=true;
@@ -720,7 +724,8 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            List<RskValtblAssetSubDto> valHand_threeList = commonHandleSum(valList,vtcountSubList,"03");
            for (RskValtblAssetSubDto rskValtblSubject : valHand_threeList) {
                if(rskValtblSubject.getSubCode().startsWith("120404")){
-                   System.out.println(rskValtblSubject.getSubCode());
+//                   System.out.println(rskValtblSubject.getSubCode());
+                   logger.info(rskValtblSubject.getSubCode());
                }
            }
            List<RskValtblAssetSubDto> valHand_twoList = commonHandleSum(valHand_threeList,vtcountSubList,"02");

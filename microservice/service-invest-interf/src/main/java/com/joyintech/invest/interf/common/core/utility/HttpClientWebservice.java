@@ -1,5 +1,8 @@
 package com.joyintech.invest.interf.common.core.utility;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpClientWebservice {
-
+	private static final Logger logger = LoggerFactory.getLogger(HttpClientWebservice.class);
 	//调用接口
 	public static String send(String json ,String url) {
 		OutputStream out = null;
@@ -70,7 +73,8 @@ public class HttpClientWebservice {
         }
         
 		} catch (Exception e) {
-            System.out.println("发送 POST 请求出现异常！" + e);
+//            System.out.println("发送 POST 请求出现异常！" + e);
+            logger.info("发送 POST 请求出现异常！" + e);
         }  // 使用finally块来关闭输出流、输入流
         finally {
             try {

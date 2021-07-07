@@ -9,6 +9,9 @@
  */
 package com.joyintech.tams.invest.common.risktrialrds.dto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExprTree {
-
+	private static final Logger logger = LoggerFactory.getLogger(ExprTree.class);
 	private static final Pattern patternOp = Pattern.compile("[*/+-]");
 	private static final Pattern patternOpLvl2 = Pattern.compile("[+-]");
 	private static final Pattern patternOpLvl1 = Pattern.compile("[*/]");
@@ -218,10 +221,13 @@ public class ExprTree {
 				case "*": result = vLeft * vRight; break;
 				case "/": result = vLeft / vRight; break;
 			}
-			System.out.println(
-					new StringBuffer().append(vLeft)
+//			System.out.println(
+//					new StringBuffer().append(vLeft)
+//					.append(v).append(vRight)
+//					.append("=").append(result));
+			logger.info(new StringBuffer().append(vLeft)
 					.append(v).append(vRight)
-					.append("=").append(result));
+					.append("=").append(result).toString());
 			vStack.push(result);
 		}
 	}
@@ -232,7 +238,8 @@ public class ExprTree {
 	public void travelCalc() {
 		Stack<String> vStack = new Stack<String>();
 		_travelCalc(root, vStack);
-		System.out.println(vStack.pop());
+//		System.out.println(vStack.pop());
+		logger.info(vStack.pop());
 	}
 	
 	private void _travelCalc(ExprNode node, Stack<String> vStack) {
@@ -249,7 +256,8 @@ public class ExprTree {
 			String vRight = vStack.pop();
 			String vLeft = vStack.pop();
 			StringBuffer result = new StringBuffer(vLeft).append(v).append(vRight);
-			System.out.println(result);
+//			System.out.println(result);
+			logger.info(result.toString());
 			vStack.push(result.insert(0, '(').append(')').toString());
 		}
 	}

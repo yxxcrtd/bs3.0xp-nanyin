@@ -241,7 +241,8 @@ public class SftpUtil {
         }
         catch (SftpException e) {
             // logger.error("error:",e);
-            System.out.println("未找到路劲");
+//            System.out.println("未找到路劲");
+            logger.info("未找到路劲");
         }
     }
 
@@ -276,7 +277,8 @@ public class SftpUtil {
             sftp.rm(deleteFile);
         }
         catch (SftpException e) {
-            System.out.println(e);
+//            System.out.println(e);
+            logger.info(e.toString());
         }
     }
 }

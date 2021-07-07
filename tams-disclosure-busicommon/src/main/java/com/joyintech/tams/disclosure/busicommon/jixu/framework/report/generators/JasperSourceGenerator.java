@@ -28,8 +28,11 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 import net.sf.jasperreports.web.util.WebHtmlResourceHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JasperSourceGenerator implements ReportGenerator{
+	private static final Logger logger = LoggerFactory.getLogger(JasperSourceGenerator.class);
 	public JasperSourceGenerator(DataSource dataSource) {
 		super();
 		this.dataSource = dataSource;
@@ -147,7 +150,8 @@ public class JasperSourceGenerator implements ReportGenerator{
 				docx(jp, dest);
 			}
 			else{
-				System.err.println("Export type not supported!");
+//				System.err.println("Export type not supported!");
+				logger.error("Export type not supported!");
 				throw new JRException("Type Not Support");
 			}
 		}
@@ -167,7 +171,8 @@ public class JasperSourceGenerator implements ReportGenerator{
 		exporter.setConfiguration(configuration);
 		exporter.exportReport();
 
-		System.err.println("XLSX creation time : " + (System.currentTimeMillis() - start));
+//		System.err.println("XLSX creation time : " + (System.currentTimeMillis() - start));
+		logger.error("XLSX creation time : " + (System.currentTimeMillis() - start));
 	}
 	
 	private void docx(JasperPrint jp, String dest) throws JRException
@@ -181,14 +186,16 @@ public class JasperSourceGenerator implements ReportGenerator{
 		exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(destFile));
 		exporter.exportReport();
 
-		System.err.println("Docx creation time : " + (System.currentTimeMillis() - start));
+//		System.err.println("Docx creation time : " + (System.currentTimeMillis() - start));
+		logger.error("Docx creation time : " + (System.currentTimeMillis() - start));
 	}
 	
 	private void pdf(JasperPrint jp, String dest) throws JRException
 	{
 		long start = System.currentTimeMillis();
 		JasperExportManager.exportReportToPdfFile(jp,dest);;
-		System.err.println("PDF creation time : " + (System.currentTimeMillis() - start));
+//		System.err.println("PDF creation time : " + (System.currentTimeMillis() - start));
+		logger.error("PDF creation time : " + (System.currentTimeMillis() - start));
 	}
 
 	@Override

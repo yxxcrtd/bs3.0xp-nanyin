@@ -163,7 +163,8 @@ public class PabDbUtil{
         }
 		/** add by dongjun on 20181011 title:债券行权计划 end**/
 		else{
-			System.out.println("模板"+tmpEName+"目前功能不支持...");
+//			System.out.println("模板"+tmpEName+"目前功能不支持...");
+			logger.info("模板"+tmpEName+"目前功能不支持...");
 		}
 		return SQL_;
 	}
@@ -476,7 +477,8 @@ public class PabDbUtil{
             }
 			/** add by dongjun on 20181011 title:债券行权计划 end**/
 			else{
-				System.out.println("模板"+tmpEName+"目前功能不支持...");
+//				System.out.println("模板"+tmpEName+"目前功能不支持...");
+				logger.info("模板"+tmpEName+"目前功能不支持...");
 			}
 		} catch (SQLException e) {
 		    logger.error(e.getMessage(), e);
@@ -486,7 +488,8 @@ public class PabDbUtil{
 	
 	public static Object queryResultData(Connection dbConnection,ValInterfTemplate tmplate,Date cdate){
 		String SQL_ = querySQL(tmplate.getTmpEName(),cdate);
-		System.out.println("模板"+tmplate.getTmpEName()+"查询SQL="+SQL_);
+//		System.out.println("模板"+tmplate.getTmpEName()+"查询SQL="+SQL_);
+		logger.info("模板"+tmplate.getTmpEName()+"查询SQL="+SQL_);
 		if(SQL_==null || SQL_.length()==0){
 			return null;
 		}
@@ -497,7 +500,8 @@ public class PabDbUtil{
 			rs = statement.executeQuery(SQL_);
 			return getResultSetData(rs,tmplate.getTmpEName());
 		} catch (SQLException e) {
-			System.out.println("模板"+tmplate.getTmpEName()+"查询错误  "+e.getMessage());
+//			System.out.println("模板"+tmplate.getTmpEName()+"查询错误  "+e.getMessage());
+			logger.info("模板"+tmplate.getTmpEName()+"查询错误  "+e.getMessage());
 			logger.error(e.getMessage(), e);
 		}finally{
 			if(statement != null){

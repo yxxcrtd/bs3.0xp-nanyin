@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +42,9 @@ import com.orm.obj.PortfolioHdr;
 
 @RestController
 public class JobsController extends ExceptionControl{
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(JobsController.class);
+
 	@RequestMapping(value="/job.do", method = RequestMethod.GET, name="作业-页面显示")
 	public String client() {
 		return "job";
@@ -341,8 +345,8 @@ public class JobsController extends ExceptionControl{
 					       HttpServletResponse response){
 		
 		List<Object> ports_list = JsonUtil.stringToList(ports);
-		System.out.println("Run job " + jobID + " on " + ports_list + " on " + date);
-		
+//		System.out.println("Run job " + jobID + " on " + ports_list + " on " + date);
+		logger.info("Run job " + jobID + " on " + ports_list + " on " + date);
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("作业名称", "投资组合", "开始时间",  "结束时间", "操作人");		
 		result.put("titles", titles);

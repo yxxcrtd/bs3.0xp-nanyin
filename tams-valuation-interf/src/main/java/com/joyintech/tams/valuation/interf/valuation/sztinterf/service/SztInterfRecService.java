@@ -47,8 +47,10 @@ public class SztInterfRecService {
 			String result = "";
 			if (null != respMsg) {
 				result = SztDecodeXml.decodeOutZip(respMsg.getBody());
-				System.out.println("result:" + result);
-				System.out.println("Response:orgPkgId:" + respMsg.getCorrPkgId() + ",body:" + respMsg.getBody());
+//				System.out.println("result:" + result);
+				logger.info("result:" + result);
+//				System.out.println("Response:orgPkgId:" + respMsg.getCorrPkgId() + ",body:" + respMsg.getBody());
+				logger.info("Response:orgPkgId:" + respMsg.getCorrPkgId() + ",body:" + respMsg.getBody());
 			}
 			else{
 				logger.info("深圳通接口轮询查询到的返回结果为空");

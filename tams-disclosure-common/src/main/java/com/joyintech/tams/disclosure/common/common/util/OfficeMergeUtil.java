@@ -22,9 +22,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlOptions;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OfficeMergeUtil {
-
+    private static final Logger logger = LoggerFactory.getLogger(OfficeMergeUtil.class);
     /**
      * 合并word文档
      * 
@@ -198,7 +200,8 @@ public class OfficeMergeUtil {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
-            System.out.println(sw.toString());
+//            System.out.println(sw.toString());
+            logger.info(sw.toString());
         }
         finally {
             try {

@@ -2796,7 +2796,8 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
             //生成图片
             return buffer;
         } catch (Exception e) {
-            System.out.println(e);
+//            System.out.println(e);
+            logger.info(e.toString());
             return null;
         }
     }

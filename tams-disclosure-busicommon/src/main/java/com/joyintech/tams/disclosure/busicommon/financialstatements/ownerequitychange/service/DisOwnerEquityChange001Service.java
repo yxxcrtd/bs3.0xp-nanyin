@@ -29,6 +29,8 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -59,7 +61,7 @@ import com.joyintech.tools.util.ExcelTools;
  */
 @Service
 public class DisOwnerEquityChange001Service extends CommonExportService<DisOwnerEquityChange001Dto> {
-
+	private static final Logger logger = LoggerFactory.getLogger(DisOwnerEquityChange001Service.class);
     @Autowired
     private DisOwnerEquityChange001Mapper ownerEquityChange001Mapper;
     
@@ -316,7 +318,8 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
 		// 计算明细项目
 		for (String key : profitCalculationMap.keySet()) {
 			if(key.equals("6.1")){
-				System.out.println(key);
+//				System.out.println(key);
+				logger.info(key);
 			}
 			DisProfitCalculationDto dto = profitCalculationMap.get(key);
 			if (1== dto.getProjLevel()) {
@@ -576,7 +579,8 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
 	        		try {
 						thisTermAmt = thisTermAmt.add(profitCalculationMap.get(childKeyArr[i + 1]).getThisTermAmt());
 					} catch (Exception e) {
-						System.out.println(i);
+//						System.out.println(i);
+						logger.info(String.valueOf(i));
 						e.printStackTrace();
 					}
 	        		lastTermAmt = lastTermAmt.add(profitCalculationMap.get(childKeyArr[i + 1]).getLastTermAmt());
@@ -1514,7 +1518,8 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
 				continue;
 			}
 			if(key.equals("6.7.1")){
-				System.out.println(key);
+//				System.out.println(key);
+				logger.info(key);
 			}
 			DisProfitCalculationDto dto = profitCalculationMap.get(key);
 			if (1== dto.getProjLevel()) {

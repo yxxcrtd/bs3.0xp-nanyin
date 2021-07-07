@@ -194,7 +194,8 @@ public class OfficeMergeUtil {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
-            System.out.println(sw.toString());
+//            System.out.println(sw.toString());
+            logger.info(sw.toString());
         }
         finally {
             /** *********关闭文件************* */

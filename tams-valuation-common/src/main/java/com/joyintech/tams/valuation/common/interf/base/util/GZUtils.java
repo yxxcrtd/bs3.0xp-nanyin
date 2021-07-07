@@ -1,6 +1,8 @@
 package com.joyintech.tams.valuation.common.interf.base.util;
 
 import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,7 +13,7 @@ import java.util.zip.GZIPInputStream;
  * 对.gz压缩文件解压
  */
 public class GZUtils {
-
+    private static final Logger logger = LoggerFactory.getLogger(GZUtils.class);
     public static void unGzipFile(String sourcedir)
         throws IOException {
         //建立gzip压缩文件输入流
@@ -40,7 +42,8 @@ public class GZUtils {
 
 
         } catch (Exception ex){
-            System.err.println(ex.toString());
+//            System.err.println(ex.toString());
+            logger.info(ex.toString());
         } finally {
             if (gzin != null) {
                 try {

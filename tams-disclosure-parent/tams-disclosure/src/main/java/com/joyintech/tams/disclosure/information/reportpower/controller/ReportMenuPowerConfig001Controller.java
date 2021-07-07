@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -46,7 +48,7 @@ import com.joyintech.framework.util.CacheUtil;
 @PageId("ReportMenuPowerConfig001")
 @RequestMapping("/disclosure/information/reportpower/ReportMenuPowerConfig001")
 public class ReportMenuPowerConfig001Controller extends BaseController{
-    
+    private static final Logger logger = LoggerFactory.getLogger(ReportMenuPowerConfig001Controller.class);
     @Autowired
     private ReportMenuPowerConfig001Service reportMenuPowerConfig001Service;
      
@@ -101,7 +103,8 @@ public class ReportMenuPowerConfig001Controller extends BaseController{
     @ResponseBody
     public void powerAssign(){
         String datas = this.getParam("datas");
-        System.out.println(datas);
+//        System.out.println(datas);
+        logger.info(datas);
     }
     /**
      * 导出信息excel

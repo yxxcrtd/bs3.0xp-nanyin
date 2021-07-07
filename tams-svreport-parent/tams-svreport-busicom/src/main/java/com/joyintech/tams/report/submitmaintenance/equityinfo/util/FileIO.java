@@ -23,7 +23,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -33,7 +34,7 @@ import com.joyintech.tams.report.common.util.ReportGlobalConstant;
  * 
  */
 public class FileIO {
-
+	private static final Logger logger = LoggerFactory.getLogger(FileIO.class);
 	private static final String GBK = "gbk";
 
 	private FileIO() {
@@ -92,7 +93,8 @@ public class FileIO {
 			writer = new BufferedWriter(write);
 			writer.write(content);
 		} catch (Exception ex) {
-			System.out.println(ex);
+//			System.out.println(ex);
+			logger.info(ex.toString());
 		}
 		finally {
     		if(writer !=null ){
@@ -145,7 +147,8 @@ public class FileIO {
 				inStream.close();
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+//			System.out.println(e);
+			logger.info(e.toString());
 		}
 		finally {
     		if(inStream !=null ){
@@ -235,7 +238,8 @@ public class FileIO {
 		if(StringUtil.isEmptyList(list)){
 			return;
 		}
-		System.out.println("结果list大小："+list.size());
+//		System.out.println("结果list大小："+list.size());
+		logger.info("结果list大小："+list.size());
 		/** 反馈文件写入文件中 */
 		FileIO.writeList(outputPath, list,
 				CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE));
@@ -260,7 +264,8 @@ public class FileIO {
 		if(StringUtil.isEmptyList(list)){
 			return;
 		}
-		System.out.println("结果list大小："+list.size());
+//		System.out.println("结果list大小："+list.size());
+		logger.info("结果list大小："+list.size());
 		/** 反馈文件写入文件中 */
 		FileIO.writeList(outputPath, list,
 				 CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE));

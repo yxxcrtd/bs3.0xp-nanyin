@@ -382,7 +382,8 @@ public class SftpUtil {
 				sftp.ls(dir);
 			}
 			catch (SftpException e) {
-				System.out.println("服务器上没有该目录：" + dir);
+//				System.out.println("服务器上没有该目录：" + dir);
+				logger.info("服务器上没有该目录：" + dir);
 				sftp.mkdir(dir);
 			}
 			sftp.cd(dir);

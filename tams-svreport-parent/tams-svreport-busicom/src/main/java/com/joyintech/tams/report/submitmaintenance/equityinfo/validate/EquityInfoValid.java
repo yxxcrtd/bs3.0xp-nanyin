@@ -3150,7 +3150,8 @@ public class EquityInfoValid {
                 checkMess+=mes;
 
 
-                System.out.println("message 信息如下："+mes);
+//                System.out.println("message 信息如下："+mes);
+                logger.info("message 信息如下："+mes);
                 logger.error("message 信息如下：{}" , mes);
             }
         }

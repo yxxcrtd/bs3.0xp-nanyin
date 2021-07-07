@@ -16,8 +16,9 @@ public class MD5Util {
             md5 = MessageDigest.getInstance("MD5");
         }
         catch (Exception e) {
-            System.out.println(e.toString());
+//            System.out.println(e.toString());
             logger.error("",e);
+            logger.info(e.toString());
             return "";
         }
         char[] charArray = inStr.toCharArray();

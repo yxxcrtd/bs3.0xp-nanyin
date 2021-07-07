@@ -59,11 +59,13 @@ public class DbUtil {
 			dbConnection = DriverManager.getConnection(url,LOAD_USERNAME,LOAD_PASSWORD);
 			connectionResult = "成功";
 		} catch (ClassNotFoundException e) {
-			System.out.println("对不起，找不到对应的驱动程序!");
+//			System.out.println("对不起，找不到对应的驱动程序!");
+			logger.info("对不起，找不到对应的驱动程序!");
 			connectionResult ="失败      "+e.getMessage();
 			logger.error("",e);
 		}catch (SQLException e) {
-			System.out.println("对不起，数据库连接异常!");
+//			System.out.println("对不起，数据库连接异常!");
+			logger.info("对不起，数据库连接异常!");
 			connectionResult ="失败      "+e.getMessage();
 			logger.error("",e);
 		} catch(Exception e){
