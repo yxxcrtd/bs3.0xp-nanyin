@@ -896,4 +896,109 @@ public class TrdStockDto extends TrdProductDeal {
 		this.price = price;
 	}
 	
+	
+	/**
+	 * 结算费
+	 */
+	private BigDecimal settleAmt;
+	
+	/**
+	 * 经手费
+	 */
+	private BigDecimal handleAmt;
+	
+	/**
+	 * 证管费
+	 */
+	private BigDecimal secManageAmt;
+	
+	/**
+	 * 过户费
+	 */
+	private BigDecimal transferAmt;
+	
+	/**
+	 * 结算是否随交易支付
+	 */
+	private String settleAmtIsPayWithTrade;
+	
+	/**
+	 * 经手是否随交易支付
+	 */
+	private String handleAmtIsPayWithTrade;
+	
+	/**
+	 * 证管是否随交易支付
+	 */
+	private String secManageAmtIsPayWithTrade;
+	
+	/**
+	 * 过户是否随交易支付
+	 */
+	private String transferAmtIsPayWithTrade;
+
+	public BigDecimal getSettleAmt() {
+		return settleAmt;
+	}
+
+	public void setSettleAmt(BigDecimal settleAmt) {
+		this.settleAmt = settleAmt;
+	}
+
+	public BigDecimal getHandleAmt() {
+		return handleAmt;
+	}
+
+	public void setHandleAmt(BigDecimal handleAmt) {
+		this.handleAmt = handleAmt;
+	}
+
+	public BigDecimal getSecManageAmt() {
+		return secManageAmt;
+	}
+
+	public void setSecManageAmt(BigDecimal secManageAmt) {
+		this.secManageAmt = secManageAmt;
+	}
+
+	public BigDecimal getTransferAmt() {
+		return transferAmt;
+	}
+
+	public void setTransferAmt(BigDecimal transferAmt) {
+		this.transferAmt = transferAmt;
+	}
+
+	public String getSettleAmtIsPayWithTrade() {
+		return settleAmtIsPayWithTrade;
+	}
+
+	public void setSettleAmtIsPayWithTrade(String settleAmtIsPayWithTrade) {
+		this.settleAmtIsPayWithTrade = settleAmtIsPayWithTrade;
+	}
+
+	public String getHandleAmtIsPayWithTrade() {
+		return handleAmtIsPayWithTrade;
+	}
+
+	public void setHandleAmtIsPayWithTrade(String handleAmtIsPayWithTrade) {
+		this.handleAmtIsPayWithTrade = handleAmtIsPayWithTrade;
+	}
+
+	public String getSecManageAmtIsPayWithTrade() {
+		return secManageAmtIsPayWithTrade;
+	}
+
+	public void setSecManageAmtIsPayWithTrade(String secManageAmtIsPayWithTrade) {
+		this.secManageAmtIsPayWithTrade = secManageAmtIsPayWithTrade;
+	}
+
+	public String getTransferAmtIsPayWithTrade() {
+		return transferAmtIsPayWithTrade;
+	}
+
+	public void setTransferAmtIsPayWithTrade(String transferAmtIsPayWithTrade) {
+		this.transferAmtIsPayWithTrade = transferAmtIsPayWithTrade;
+	}
+	
 }

@@ -1177,4 +1177,12 @@ public class TrdCommonBaseService extends BaseService {
         return faceValue;
     }
 
+    /**
+     * 根据组合ID查询母组合ID
+     * @param portfolioId
+     * @return
+     */
+    public String selectParentPortfolioIdByPortfolioId(String portfolioId) {
+        return trdCommonBaseMapper.selectParentPortfolioIdByPortfolioId(portfolioId);
+    }
 }

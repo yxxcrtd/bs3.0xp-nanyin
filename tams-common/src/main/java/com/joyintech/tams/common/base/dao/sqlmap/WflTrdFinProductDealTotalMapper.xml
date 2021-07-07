@@ -71,6 +71,13 @@
         <result column="IS_OVERDUE_DEAL" property="isOverdueDeal" jdbcType="VARCHAR" />
         <result column="PAY_UNPAIDINT_AMT" property="payUnpaidintAmt" jdbcType="DECIMAL" />
         <result column="ISPAY_UNPAIDINT" property="ispayUnpaidint" jdbcType="VARCHAR" />
+        <result column="YESTERDAY_POSITION" property="yesterdayPosition" jdbcType="DECIMAL" />
+        <result column="TRADE_AMT_HK" property="tradeAmtHk" jdbcType="DECIMAL" />
+        <result column="SELL_SETTLE_RATE" property="sellSettleRate" jdbcType="DECIMAL" />
+        <result column="IF_DIVIDEND" property="ifDividend" jdbcType="VARCHAR" />
+        <result column="DIVID_CCY" property="dividCcy" jdbcType="VARCHAR" />
+        <result column="EXCHANGE_RATE" property="exchangeRate" jdbcType="DECIMAL" />
+        <result column="REPLACE_PRICE" property="replacePrice" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, WORKFLOW_STATUS WORKFLOW_STATUS, BUSI_TYPE BUSI_TYPE, 
@@ -89,7 +96,9 @@
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, REMAIN_PRIN REMAIN_PRIN, TG_BUSI_TYPE TG_BUSI_TYPE, 
         SETTLE_SPEED SETTLE_SPEED, CLEAR_TYPE CLEAR_TYPE, EFF_TIME EFF_TIME, DELIVERY_TYPE DELIVERY_TYPE, 
         M_DELIVERY_TYPE M_DELIVERY_TYPE, RATE RATE, REPO_TERM REPO_TERM, TERM_TYPE TERM_TYPE, 
-        IS_OVERDUE_DEAL IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT ISPAY_UNPAIDINT
+        IS_OVERDUE_DEAL IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT ISPAY_UNPAIDINT,
+        YESTERDAY_POSITION YESTERDAY_POSITION, TRADE_AMT_HK TRADE_AMT_HK, SELL_SETTLE_RATE SELL_SETTLE_RATE,
+        IF_DIVIDEND IF_DIVIDEND, DIVID_CCY DIVID_CCY, EXCHANGE_RATE EXCHANGE_RATE, REPLACE_PRICE REPLACE_PRICE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -127,7 +136,8 @@
         TRADER, COUNTER_TRADER, COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID, PROD_ID, P_TOTLE_TRADE_ID, 
         REMARK, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
         REMAIN_PRIN, TG_BUSI_TYPE, SETTLE_SPEED, CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, 
-        RATE, REPO_TERM, TERM_TYPE, IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT)
+        RATE, REPO_TERM, TERM_TYPE, IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, YESTERDAY_POSITION,
+        TRADE_AMT_HK, SELL_SETTLE_RATE, IF_DIVIDEND, DIVID_CCY, EXCHANGE_RATE, REPLACE_PRICE)
         select TOTLE_TRADE_ID, WORKFLOW_STATUS, BUSI_TYPE, 
             FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, 
             CCY, UNIT_CPRICE, UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, 
@@ -137,7 +147,8 @@
             TRADER, COUNTER_TRADER, COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID, PROD_ID, P_TOTLE_TRADE_ID, 
             REMARK, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
             REMAIN_PRIN, TG_BUSI_TYPE, SETTLE_SPEED, CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, 
-            RATE, REPO_TERM, TERM_TYPE, IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT
+            RATE, REPO_TERM, TERM_TYPE, IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, YESTERDAY_POSITION,
+            TRADE_AMT_HK, SELL_SETTLE_RATE, IF_DIVIDEND, DIVID_CCY, EXCHANGE_RATE, REPLACE_PRICE
              from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
              where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
@@ -339,6 +350,27 @@
             <if test="ispayUnpaidint != null" >
                 ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
             </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmtHk != null" >
+                TRADE_AMT_HK = #{tradeAmtHk,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="ifDividend != null" >
+                IF_DIVIDEND = #{ifDividend,jdbcType=VARCHAR},
+            </if>
+            <if test="dividCcy != null" >
+                DIVID_CCY = #{dividCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="replacePrice != null" >
+                REPLACE_PRICE = #{replacePrice,jdbcType=DECIMAL},
+            </if>
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
@@ -409,7 +441,14 @@
         TERM_TYPE = #{termType,jdbcType=VARCHAR},
         IS_OVERDUE_DEAL = #{isOverdueDeal,jdbcType=VARCHAR},
         PAY_UNPAIDINT_AMT = #{payUnpaidintAmt,jdbcType=DECIMAL},
-        ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR}
+        ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
+        YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+        TRADE_AMT_HK = #{tradeAmtHk,jdbcType=DECIMAL},
+        SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
+        IF_DIVIDEND = #{ifDividend,jdbcType=VARCHAR},
+        DIVID_CCY = #{dividCcy,jdbcType=VARCHAR},
+        EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
+        REPLACE_PRICE = #{replacePrice,jdbcType=DECIMAL}
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotal" >
@@ -439,6 +478,8 @@
             <!-- 多级法人改造 add by caiqun 20200615 -->
             ,INSTITUTION_CODE
             <!-- 多级法人改造 add by caiqun 20200615 -->
+            ,YESTERDAY_POSITION, TRADE_AMT_HK, SELL_SETTLE_RATE
+            , IF_DIVIDEND, DIVID_CCY, EXCHANGE_RATE, REPLACE_PRICE
             )
         values (#{totleTradeId,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, 
             #{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
@@ -466,6 +507,8 @@
             <!-- 多级法人改造 add by caiqun 20200615 -->
             ,#{institutionCode,jdbcType=VARCHAR}
             <!-- 多级法人改造 add by caiqun 20200615 -->
+            ,#{yesterdayPosition,jdbcType=DECIMAL}, #{tradeAmtHk,jdbcType=DECIMAL}, #{sellSettleRate,jdbcType=DECIMAL}
+            ,#{ifDividend,jdbcType=VARCHAR}, #{dividCcy,jdbcType=VARCHAR},#{exchangeRate,jdbcType=DECIMAL}, #{replacePrice,jdbcType=DECIMAL}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotal" >
@@ -681,6 +724,27 @@
             <if test="institutionCode != null" >
                 INSTITUTION_CODE,
             </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION,
+            </if>
+            <if test="tradeAmtHk != null" >
+                TRADE_AMT_HK,
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE,
+            </if>
+            <if test="ifDividend != null" >
+                IF_DIVIDEND,
+            </if>
+            <if test="dividCcy != null" >
+                DIVID_CCY,
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE,
+            </if>
+            <if test="replacePrice != null" >
+                REPLACE_PRICE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="totleTradeId != null" >
@@ -893,6 +957,27 @@
             <if test="institutionCode != null" >
                 #{institutionCode,jdbcType=VARCHAR},
             </if>
+            <if test="yesterdayPosition != null" >
+                #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmtHk != null" >
+                #{tradeAmtHk,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="ifDividend != null" >
+                #{ifDividend,jdbcType=VARCHAR},
+            </if>
+            <if test="dividCcy != null" >
+                #{dividCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null" >
+                #{exchangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="replacePrice != null" >
+                #{replacePrice,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotal" >
@@ -905,7 +990,8 @@
         TRADER, COUNTER_TRADER, COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID, PROD_ID, P_TOTLE_TRADE_ID, 
         REMARK, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
         REMAIN_PRIN, TG_BUSI_TYPE, SETTLE_SPEED, CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, 
-        RATE, REPO_TERM, TERM_TYPE, IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT)
+        RATE, REPO_TERM, TERM_TYPE, IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, YESTERDAY_POSITION,
+        TRADE_AMT_HK, SELL_SETTLE_RATE, IF_DIVIDEND, DIVID_CCY, EXCHANGE_RATE, REPLACE_PRICE)
         select TOTLE_TRADE_ID, WORKFLOW_STATUS, BUSI_TYPE, 
             FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, 
             CCY, UNIT_CPRICE, UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, 
@@ -915,7 +1001,8 @@
             TRADER, COUNTER_TRADER, COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID, PROD_ID, P_TOTLE_TRADE_ID, 
             REMARK, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
             REMAIN_PRIN, TG_BUSI_TYPE, SETTLE_SPEED, CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, 
-            RATE, REPO_TERM, TERM_TYPE, IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT
+            RATE, REPO_TERM, TERM_TYPE, IS_OVERDUE_DEAL, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, YESTERDAY_POSITION,
+            TRADE_AMT_HK, SELL_SETTLE_RATE,IF_DIVIDEND, DIVID_CCY, EXCHANGE_RATE, REPLACE_PRICE
              from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
              where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR} and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </insert>
@@ -1114,6 +1201,27 @@
             <if test="ispayUnpaidint != null" >
                 ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
             </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmtHk != null" >
+                TRADE_AMT_HK = #{tradeAmtHk,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="ifDividend != null" >
+                IF_DIVIDEND = #{ifDividend,jdbcType=VARCHAR},
+            </if>
+            <if test="dividCcy != null" >
+                DIVID_CCY = #{dividCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="replacePrice != null" >
+                REPLACE_PRICE = #{replacePrice,jdbcType=DECIMAL},
+            </if>
         </set>
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
@@ -1183,7 +1291,14 @@
             TERM_TYPE = #{termType,jdbcType=VARCHAR},
             IS_OVERDUE_DEAL = #{isOverdueDeal,jdbcType=VARCHAR},
             PAY_UNPAIDINT_AMT = #{payUnpaidintAmt,jdbcType=DECIMAL},
-            ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR}
+            ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
+            YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            TRADE_AMT_HK = #{tradeAmtHk,jdbcType=DECIMAL},
+            SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
+            IF_DIVIDEND = #{ifDividend,jdbcType=VARCHAR},
+            DIVID_CCY = #{dividCcy,jdbcType=VARCHAR},
+            EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
+            REPLACE_PRICE = #{replacePrice,jdbcType=DECIMAL}
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </update>

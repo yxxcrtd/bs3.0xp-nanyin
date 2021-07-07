@@ -72,6 +72,9 @@ public class MstSecuritiesAccountValidator implements BeanValidator{
             return resultList;
         }
         else  if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
+            if((StringUtil.equals(dto.getTradePlace(),"03") || StringUtil.equals(dto.getTradePlace(),"04")) && StringUtil.isEmpty(dto.getyNHkstockc())){
+                resultList.add(new ValidMessage("yNHkstockc","是否开通港股通字段不可为空"));
+            }
         }
         else {// 新建校验
               // 判断新建的证券账户账号数据是否存在
@@ -101,6 +104,10 @@ public class MstSecuritiesAccountValidator implements BeanValidator{
                 if(sb.length()>1000) {
                 	resultList.add(new ValidMessage("remark","备注过长"));
                 }
+            }
+			
+			if((StringUtil.equals(dto.getTradePlace(),"03") || StringUtil.equals(dto.getTradePlace(),"04")) && StringUtil.isEmpty(dto.getyNHkstockc())){
+                resultList.add(new ValidMessage("yNHkstockc","是否开通港股通字段不可为空"));
             }
             
         }

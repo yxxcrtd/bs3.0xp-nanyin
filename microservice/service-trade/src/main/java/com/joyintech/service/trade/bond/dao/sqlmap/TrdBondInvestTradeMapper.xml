@@ -771,6 +771,14 @@
 	            <if test="windtypeone != null and windtypeone != ''">
 	                AND B.TYPE_4 = #{windtypeone}
 	            </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND A.TRADE_MARKET in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
 	        </where>
         <if test="isautobond != null and isautobond == 'true'">
         union

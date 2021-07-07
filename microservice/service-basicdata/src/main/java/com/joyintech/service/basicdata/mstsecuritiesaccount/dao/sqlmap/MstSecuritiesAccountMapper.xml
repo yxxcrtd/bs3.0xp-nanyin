@@ -67,7 +67,7 @@
  	<select id="selectBySecAcctId" resultType="com.joyintech.service.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto">
 		select SEC_ACCT_ID secAcctId, SEC_ACCT_NAME secAcctName, SEC_ACCT_SOURCE secAcctSource, REGIST_ORG registOrg,TRADE_NO,
         TRD_ACCT_ID trdAcctId, REC_ACCT_ID recAcctId, REMARK remark, CREATE_USER createUser, CREATE_DEPT createDept, CREATE_TIME createTime, UPDATE_USER updateUser, 
-        UPDATE_TIME updateTime,TRADE_PLACE tradePlace,SEC_ACCT_SOURCE secAcctSource ,BOND_ID bondId, BROKER_NAME brokerName
+        UPDATE_TIME updateTime,TRADE_PLACE tradePlace,SEC_ACCT_SOURCE secAcctSource ,BOND_ID bondId, BROKER_NAME brokerName,Y_N_HKSTOCKC yNHkstockc
         	from STL_SEC_ACCT_INFO
         WHERE 
         	SEC_ACCT_ID=#{secAcctId,jdbcType=VARCHAR}

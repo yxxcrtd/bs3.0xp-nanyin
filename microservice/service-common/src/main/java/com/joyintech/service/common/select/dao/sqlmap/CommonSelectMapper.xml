@@ -838,4 +838,93 @@
             </if>
         </where>
     </select>
+
+    <select id="selectParentPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT DISTINCT
+        A.PORTFOLIO_ID id,
+        A.PORTFOLIO_ID || ':' || A.PORTFOLIO_NAME  text,
+        B.IS_GUARANTEE object,
+        <!-- 新增type yzg 20190904 start -->
+        A.PROFIT_TYPE  col
+        <!-- 新增type yzg 20190904 end -->
+        FROM PTL_PORTFOLIO A
+        LEFT JOIN PA_PTL_PORTFOLIO B
+        ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+        <where>
+            (A.PARENT_PORTFOLIO_ID is null or A.PARENT_PORTFOLIO_ID = '')
+            <if test="search != null and search != ''">
+                and (A.PORTFOLIO_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                OR
+                A.PORTFOLIO_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+            <if test="initValue != null and initValue != ''">
+                AND A.PORTFOLIO_ID = #{initValue}
+            </if>
+            <if test="prod != null and prod != ''">
+                AND A.PORTFOLIO_TYPE = #{portType01}<!-- 产品组合 -->
+            </if>
+            <if test="act != null and act">
+                AND A.INVEST_YESORNO = 'Y'
+            </if>
+            <if test="ww != null and !ww">
+                AND A.PORTFOLIO_TYPE != '02'
+            </if>
+            <if test="portfolioType != null and portfolioType != ''">
+                AND A.PORTFOLIO_TYPE = #{portfolioType}
+            </if>
+            <if test="loginUserName != null and loginUserName != ''">
+                and A.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+            </if>
+            <if test="portType != null and portType != ''">
+                AND A.PORTFOLIO_TYPE IN (#{portType}, #{portType1})
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPortfolioIdChild" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT DISTINCT
+        A.PORTFOLIO_ID id,
+        A.PORTFOLIO_ID || ':' || A.PORTFOLIO_NAME  text,
+        B.IS_GUARANTEE object,
+        <!-- 新增type yzg 20190904 start -->
+        A.PROFIT_TYPE  col
+        <!-- 新增type yzg 20190904 end -->
+        FROM PTL_PORTFOLIO A
+        LEFT JOIN PA_PTL_PORTFOLIO B
+        ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+        <where>
+            <!--(A.PARENT_PORTFOLIO_ID is not null and A.PARENT_PORTFOLIO_ID != '')-->
+            <if test="search != null and search != ''">
+                and (A.PORTFOLIO_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                OR
+                A.PORTFOLIO_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+            <if test="initValue != null and initValue != ''">
+                AND A.PORTFOLIO_ID = #{initValue}
+            </if>
+            <if test="prod != null and prod != ''">
+                AND A.PORTFOLIO_TYPE = #{portType01}<!-- 产品组合 -->
+            </if>
+            <if test="act != null and act">
+                AND A.INVEST_YESORNO = 'Y'
+            </if>
+            <if test="ww != null and !ww">
+                AND A.PORTFOLIO_TYPE != '02'
+            </if>
+            <if test="parentPortfolioId != null and parentPortfolioId != ''">
+                AND A.PARENT_PORTFOLIO_ID = #{parentPortfolioId}
+            </if>
+            <if test="portfolioType != null and portfolioType != ''">
+                AND A.PORTFOLIO_TYPE = #{portfolioType}
+            </if>
+            <if test="loginUserName != null and loginUserName != ''">
+                and A.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+            </if>
+            <if test="portType != null and portType != ''">
+                AND A.PORTFOLIO_TYPE IN (#{portType}, #{portType1})
+            </if>
+        </where>
+    </select>
 </mapper>

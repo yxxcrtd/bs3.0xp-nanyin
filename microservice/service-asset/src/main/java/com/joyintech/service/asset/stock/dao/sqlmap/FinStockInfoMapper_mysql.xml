@@ -90,7 +90,9 @@
         FIN_PRODUCT.VDATE as vDate,
         FIN_PRODUCT.CCY as ccy,
         FIN_PRODUCT_ADD.SH_OR_ZH as shOrZh,
-        FIN_PRODUCT_ADD.IS_MARGIN_FINPROD as isMarginFinprod
+        FIN_PRODUCT_ADD.MIN_SALE_UNIT as minSaleUnit,
+        FIN_PRODUCT_ADD.IS_MARGIN_FINPROD as isMarginFinprod,
+        FIN_PRODUCT.REMARK as remark
         FROM
         FIN_PRODUCT
         LEFT JOIN

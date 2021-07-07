@@ -14,7 +14,9 @@ import java.util.List;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.MstSharePrice;
+import com.joyintech.tams.constant.DictCode;
 
 /**
  * 股票行情dto
@@ -126,5 +128,12 @@ public class MstSharePriceDto extends MstSharePrice implements ITableRow{
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
-   
+
+    /**
+     * 取得 币种
+     * @return 币种
+     */
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+    }
 }

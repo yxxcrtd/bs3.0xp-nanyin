@@ -324,6 +324,13 @@ public class ComSharePriceDto extends MstSharePrice implements ITableRow,Process
 	public String getFinprodAbbr() {
 		return super.getFinprodAbbr();
 	}
-   
+
+	/**
+	 * 取得 币种
+	 * @return 币种
+	 */
+	public String getCcyStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+	}
 
 }

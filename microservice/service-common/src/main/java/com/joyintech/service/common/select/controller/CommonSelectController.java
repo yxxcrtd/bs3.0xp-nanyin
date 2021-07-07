@@ -527,4 +527,11 @@ public class CommonSelectController {
                                                @PathVariable("length") int length) {
         return commonSelectService.getSecManageAcctId(page, length, param);
     }
+
+    @RequestMapping("getPortfolioIdChild/{page}/{length}")
+    public Page<SelectOptionDto> qryPortfolioIdChildByRequestParam(@RequestBody Map<String, Object> param,
+                                                                   @PathVariable("page") int page,
+                                                                   @PathVariable("length") int length) {
+        return commonSelectService.qryPortfolioIdChildByRequestParam(page, length, param);
+    }
 }

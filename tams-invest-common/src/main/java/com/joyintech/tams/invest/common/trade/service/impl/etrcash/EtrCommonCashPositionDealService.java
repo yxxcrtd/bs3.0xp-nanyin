@@ -1436,4 +1436,21 @@ public class EtrCommonCashPositionDealService extends BaseService {
 		param.put("entrustId", entrustId);
 		return etrCommonCashPositionMapper.selectSumTradeAmt(param);
 	}
+
+    public static BigDecimal getHkseClosePrice(String finprodId, Date cdate) {
+        BigDecimal 最新收盘价 = getLatestPrePrice(finprodId, cdate);
+        if (最新收盘价 == null) {
+            最新收盘价 = BigDecimal.ZERO;
+        }
+        return 最新收盘价;
+    }
+
+    public static BigDecimal getLatestPrePrice(String finprodId, Date cdate) {
+        BigDecimal 最新收盘价 = etrCommonCashPositionMapper.getPreClosePrice(finprodId, cdate);
+        if (最新收盘价 == null) {
+            最新收盘价 = etrCommonCashPositionMapper.getInterfPreClosePrice(finprodId, cdate);
+        }
+        return 最新收盘价;
+    }
+
 }

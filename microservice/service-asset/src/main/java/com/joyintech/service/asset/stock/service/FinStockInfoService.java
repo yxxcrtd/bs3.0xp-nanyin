@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.asset.project.dto.FinProjectTargetAssetDto;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.report.asset.BaseRepAssetEquityInfoService;
@@ -22,6 +23,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +58,12 @@ import com.joyintech.tams.invest.common.valuationinterf.dto.InterBorrowBaseInfoI
  */
 @Service("backFinStockInfoService")
 public class FinStockInfoService extends BaseService<FinStockInfoDto>{
+
+    /**
+     * 平台日获取接口
+     */
+    @Autowired(required=false)
+    private IPlatformDate iPlatformDate;
    
     // 一体化对应etliu
     /**
@@ -116,9 +124,15 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
      */
     public Page<FinStockInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
         throws Exception {
+        if(iPlatformDate != null){
+            pageParam.put("sysDate", iPlatformDate.getSysDate());
+        }
         return super.queryForPage(page, length, () -> finStockInfoMapper.queryForPage(pageParam));
     }
     public FinStockInfoDto getShares(Map<String, Object> Param) {
+        if(iPlatformDate != null){
+            Param.put("sysDate", iPlatformDate.getSysDate());
+        }
         return finStockInfoMapper.getShares(Param);
     }
 
@@ -324,6 +338,9 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
      */
     public FinStockInfoDto selectByFinprodId(String finprodId) {
         Map<String,Object> param = new HashMap<String,Object>();
+        if(iPlatformDate != null){
+            param.put("sysDate", DateUtil.getSysDate());
+        }
         param.put("finprodId", finprodId);
         //  param.put("CASH_TYPE_2", DictCodeListExt1.现金流二级类型_利息.getValue());
         //  param.put("FIN_CASH_BUSINESS_TYPE", DictCodeListExt1.金融产品类型_理财产品.getValue());

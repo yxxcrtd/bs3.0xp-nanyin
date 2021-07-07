@@ -322,6 +322,62 @@ public class WflTrdProductDeal extends WflTrdProductDealKey {
     private Date payDate;
 
     /**
+     * 港股通市场
+     */
+    private String hkMarket;
+    /**
+     * 买入结算汇兑比率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buySettleRate;
+    /**
+     * 卖出结算汇兑比率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal sellSettleRate;
+    /**
+     * 成交金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal dealAmt;
+    
+    /**
+     * 佣金
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal commission;
+    /**
+     * 印花税
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal stampDuty;
+    /**
+     * 交易征费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal transactionLevy;
+    /**
+     * 交易费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal transactionFee;
+    /**
+     * 交易系统使用费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal transactionSystemFee;
+    /**
+     * 股份交收费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal sharePaymentFee;
+ 	/**
+     * 前一日港股持仓市值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal yesterdayPosition;
+
+    /**
      * 取得 业务类型，债券交易、产品交易，估值核算专用
      * @return 业务类型，债券交易、产品交易，估值核算专用
      */
@@ -1330,5 +1386,93 @@ public class WflTrdProductDeal extends WflTrdProductDealKey {
 
     public void setIsSwapTransaction(String isSwapTransaction) {
         this.isSwapTransaction = isSwapTransaction;
+    }
+
+    public BigDecimal getYesterdayPosition() {
+        return yesterdayPosition;
+    }
+
+    public void setYesterdayPosition(BigDecimal yesterdayPosition) {
+        this.yesterdayPosition = yesterdayPosition;
+    }
+
+    public String getHkMarket() {
+        return hkMarket;
+    }
+
+    public void setHkMarket(String hkMarket) {
+        this.hkMarket = hkMarket;
+    }
+
+    public BigDecimal getBuySettleRate() {
+        return buySettleRate;
+    }
+
+    public void setBuySettleRate(BigDecimal buySettleRate) {
+        this.buySettleRate = buySettleRate;
+    }
+
+    public BigDecimal getSellSettleRate() {
+        return sellSettleRate;
+    }
+
+    public void setSellSettleRate(BigDecimal sellSettleRate) {
+        this.sellSettleRate = sellSettleRate;
+    }
+
+    public BigDecimal getDealAmt() {
+        return dealAmt;
+    }
+
+    public void setDealAmt(BigDecimal dealAmt) {
+        this.dealAmt = dealAmt;
+    }
+
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
+    }
+
+    public BigDecimal getStampDuty() {
+        return stampDuty;
+    }
+
+    public void setStampDuty(BigDecimal stampDuty) {
+        this.stampDuty = stampDuty;
+    }
+
+    public BigDecimal getTransactionLevy() {
+        return transactionLevy;
+    }
+
+    public void setTransactionLevy(BigDecimal transactionLevy) {
+        this.transactionLevy = transactionLevy;
+    }
+
+    public BigDecimal getTransactionFee() {
+        return transactionFee;
+    }
+
+    public void setTransactionFee(BigDecimal transactionFee) {
+        this.transactionFee = transactionFee;
+    }
+
+    public BigDecimal getTransactionSystemFee() {
+        return transactionSystemFee;
+    }
+
+    public void setTransactionSystemFee(BigDecimal transactionSystemFee) {
+        this.transactionSystemFee = transactionSystemFee;
+    }
+
+    public BigDecimal getSharePaymentFee() {
+        return sharePaymentFee;
+    }
+
+    public void setSharePaymentFee(BigDecimal sharePaymentFee) {
+        this.sharePaymentFee = sharePaymentFee;
     }
 }

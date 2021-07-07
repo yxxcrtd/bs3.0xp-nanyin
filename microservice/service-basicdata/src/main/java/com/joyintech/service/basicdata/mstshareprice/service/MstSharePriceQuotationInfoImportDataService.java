@@ -399,6 +399,13 @@ public class MstSharePriceQuotationInfoImportDataService extends CommonExportSer
             	MstSharePrice entity = new MstSharePrice();
             	//资产代码
             	entity.setSharesId(list.get(0));
+				String temp = list.get(0).toString();
+				String[] tempArr= StringUtil.split(temp,GlobalConstant.POINT);
+				if(StringUtil.equals(tempArr[1],"SH") || StringUtil.equals(tempArr[1],"SZ")){
+					entity.setCcy("CNY");
+				}else if(StringUtil.equals(tempArr[1],"HK")){
+					entity.setCcy("HKD");
+				}
             	//交易日期
             	entity.setDealDate(DateUtil.parse(list.get(4)));
             	//昨收盘价

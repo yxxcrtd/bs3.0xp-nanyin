@@ -235,6 +235,13 @@ public interface EtrCommonCashPositionMapper {
     BigDecimal getClosePrice(@Param("finprodId") String finprodId, @Param("dealDate") Date dealDate);
 
     /**
+     * 根据股票代码获取最新昨日收盘价
+     * @param finprodId
+     * @return
+     */
+    BigDecimal getPreClosePrice(@Param("finprodId") String finprodId, @Param("dealDate") Date dealDate);
+
+    /**
      * 根据股票代码获取最新收盘价
      * @param finprodId
      * @return
@@ -348,8 +355,13 @@ public interface EtrCommonCashPositionMapper {
      * @return
      */
     BigDecimal selectSumTradeAmt(Map<String, Object> param);
-    
-    
-    
+
+
+    /**
+     * 根据股票代码获取昨日最新收盘价
+     * @param finprodId
+     * @return
+     */
+    BigDecimal getInterfPreClosePrice(@Param("finprodId") String finprodId, @Param("dealDate") Date dealDate);
     
 }

@@ -271,6 +271,11 @@ public class TrdProductDealAdd extends BaseEntity {
     private String exerciseStatus;
 
     /**
+     * 以股代息股本
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal replaceAmt;
+    /**
      * 放弃行权日
      */
     private Date cancelExerciseDate;
@@ -1082,5 +1087,13 @@ public class TrdProductDealAdd extends BaseEntity {
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setCancelExerciseDate(Date cancelExerciseDate) {
         this.cancelExerciseDate = cancelExerciseDate;
+    }
+
+    public BigDecimal getReplaceAmt() {
+        return replaceAmt;
+    }
+
+    public void setReplaceAmt(BigDecimal replaceAmt) {
+        this.replaceAmt = replaceAmt;
     }
 }

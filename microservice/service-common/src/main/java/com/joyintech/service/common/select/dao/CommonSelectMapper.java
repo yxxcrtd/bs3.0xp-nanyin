@@ -75,4 +75,8 @@ public interface CommonSelectMapper {
     List<SelectOptionDto> selectFinprodMarketId(Map<String, Object> param);
     
     List<SelectOptionDto> selectWindFundAsset(Map<String, Object> param);
+
+    List<SelectOptionDto> selectPortfolioIdChild(Map<String, Object> param);
+
+    List<SelectOptionDto> selectParentPortfolioId(Map<String, Object> param);
 }

@@ -79,6 +79,11 @@ public class StlSecAcctInfo extends BaseEntity {
     private String tradeNo;
 
     /**
+     * 是否开通港股通
+     */
+    private String yNHkstockc;
+
+    /**
      * 取得 证券账户代码
      * @return 证券账户代码
      */
@@ -316,5 +321,21 @@ public class StlSecAcctInfo extends BaseEntity {
      */
     public void setTradeNo(String tradeNo) {
         this.tradeNo = tradeNo == null ? null : tradeNo.trim();
+    }
+
+    /**
+     * 取得 是否开通港股通
+     * @return 是否开通港股通
+     */
+    public String getyNHkstockc() {
+        return yNHkstockc;
+    }
+
+    /**
+     * 设置 是否开通港股通
+     * @param yNHkstockc 是否开通港股通
+     */
+    public void setyNHkstockc(String yNHkstockc) {
+        this.yNHkstockc = yNHkstockc == null ? null : yNHkstockc.trim();
     }
 }

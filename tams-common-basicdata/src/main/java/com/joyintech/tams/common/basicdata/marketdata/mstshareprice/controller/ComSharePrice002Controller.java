@@ -67,7 +67,7 @@ public class ComSharePrice002Controller extends BaseController{
     public String init(Model model) {
     	
         //单选框枚举值设置
-        this.setSelectOptionToModel(model, DictCode.股票交易状态);
+        this.setSelectOptionToModel(model, DictCode.股票交易状态,DictCode.币种);
         String workflowId = getParam("workflowId");
         String sharesId = getParam("sharesId");
         String dealDateString = getParam("dealDate");

@@ -76,10 +76,7 @@ public interface TrdCommonBaseMapper {
     /**
      * 检索已质押标准券额度
      *
-     * @param portfolioId  组合代码
-     * @param secAcctId    证券账户
-     * @param searchDate   检索日期（yyyy-MM-dd）
-     * @param isWithInvAim 检索项目是否包含检索投资目的
+     * @param paramMap paramMap
      * @return 已质押标准券信息Dto列表
      * @see
      * @since 1.0
@@ -89,7 +86,7 @@ public interface TrdCommonBaseMapper {
 
 	/**
      * 根据工作流代码查询金融产品交易流程
-     * @param workflowId 工作流代码
+     * @param param
      * @return 金融产品交易流程信息
      * @see
      * @since 1.0
@@ -107,7 +104,7 @@ public interface TrdCommonBaseMapper {
     
     /**
      * 指令接收交易录单根据委托代码查询流程中已录入金额
-     * @param entrustId String
+     * @param map map
      * @return BigDecimal
      * @author wangguiqi
      * @since 1.0
@@ -328,4 +325,12 @@ public interface TrdCommonBaseMapper {
      * @see
      */
     Long getSequenceIndexData(Map<String, String> param);
+
+
+    /**
+     * 根据组合ID查询母组合ID
+     * @param portfolioId 组合ID
+     * @return
+     */
+    public String selectParentPortfolioIdByPortfolioId(String portfolioId);
 }

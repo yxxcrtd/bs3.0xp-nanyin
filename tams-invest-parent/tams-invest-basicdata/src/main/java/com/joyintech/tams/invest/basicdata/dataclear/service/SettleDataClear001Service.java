@@ -25,6 +25,7 @@ import com.joyintech.tams.invest.basicdata.dataclear.dto.SettleBatchResultDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,6 +41,13 @@ import java.util.Map;
  */
 @Service
 public class SettleDataClear001Service extends BaseService {
+
+    /**
+     * 是否单体服务
+     */
+    @Value("${application.micorservice.contextPath.single:false}")
+    private boolean isSingle;
+
 
     @Autowired
     private SysBatchStart001Service sysBatchStart001Service;
@@ -76,9 +84,17 @@ public class SettleDataClear001Service extends BaseService {
     }
 
     public Page<SettleBatchResultDto> getInterActionLog(Map<String, Object> pageParam) {
-        return restTemplate.postForPage(
-                ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataClear/findLogPage",
-                pageParam, SettleBatchResultDto.class);
+        if(isSingle) {
+            return simpleRestTemplate.postForPage(
+                    ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataClear/findLogPage",
+                    pageParam, SettleBatchResultDto.class);
+        }
+        else {
+            return restTemplate.postForPage(
+                    ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataClear/findLogPage",
+                    pageParam, SettleBatchResultDto.class);
+        }
+
     }
 
     /**
@@ -130,9 +146,17 @@ public class SettleDataClear001Service extends BaseService {
                     json.addProperty("checkMsg", "正在进行批处理, 请稍后重试!");
                     return json.toString();
                 }
-                restTemplate.postForObject(
-                        ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataClear/insertSettleBatchParas",
-                        settleBatchParas, Integer.class);
+                if(isSingle) {
+                    simpleRestTemplate.postForObject(
+                            ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataClear/insertSettleBatchParas",
+                            settleBatchParas, Integer.class);
+                }
+                else {
+                    restTemplate.postForObject(
+                            ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataClear/insertSettleBatchParas",
+                            settleBatchParas, Integer.class);
+                }
+
                 executeBatch(dealDate);
             } else {
                 json.addProperty("checkMsg", "请选择导入数据文件!");
@@ -164,8 +188,16 @@ public class SettleDataClear001Service extends BaseService {
      * @return
      */
     private int checkIsBatchRunning() {
-        return restTemplate.postForObject(
-                ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataClear/checkIsBatchRunning",
-                null, Integer.class);
+        if(isSingle) {
+            return simpleRestTemplate.postForObject(
+                    ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataClear/checkIsBatchRunning",
+                    null, Integer.class);
+        }
+        else {
+            return restTemplate.postForObject(
+                    ServiceApplication.BASICDATA_SERVICE_NAME + "/SettleDataClear/checkIsBatchRunning",
+                    null, Integer.class);
+        }
+
     }
 }

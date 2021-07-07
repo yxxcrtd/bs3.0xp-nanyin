@@ -472,6 +472,17 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
     private String quoteType;
 
     /**
+     * 港股通市场
+     */
+    private String hkMarket;
+
+    /**
+     * 目标币种成交金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal entrustAmtTarget;
+
+    /**
      * 取得 清算速度
      * @return 清算速度
      */
@@ -1872,5 +1883,37 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
      */
     public void setQuoteType(String quoteType) {
         this.quoteType = quoteType == null ? null : quoteType.trim();
+    }
+
+    /**
+     * 取得 港股通市场
+     * @return 港股通市场
+     */
+    public String getHkMarket() {
+        return hkMarket;
+    }
+
+    /**
+     * 设置 港股通市场
+     * @param hkMarket 港股通市场
+     */
+    public void setHkMarket(String hkMarket) {
+        this.hkMarket = hkMarket == null ? null : hkMarket.trim();
+    }
+
+    /**
+     * 取得 目标币种成交金额
+     * @return 目标币种成交金额
+     */
+    public BigDecimal getEntrustAmtTarget() {
+        return entrustAmtTarget;
+    }
+
+    /**
+     * 设置 目标币种成交金额
+     * @param entrustAmtTarget 目标币种成交金额
+     */
+    public void setEntrustAmtTarget(BigDecimal entrustAmtTarget) {
+        this.entrustAmtTarget = entrustAmtTarget;
     }
 }

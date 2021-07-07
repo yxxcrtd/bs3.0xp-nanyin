@@ -342,6 +342,24 @@ public class WflTrdFinProductDealTotal extends WflTrdFinProductDealTotalKey {
      */
     private String institutionCode;
     // 多级法人改造 add by caiqun 20200615
+
+    /**
+     * 前一日港股持仓市值
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal yesterdayPosition;
+
+    /**
+     * 交易金额(港元)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tradeAmtHk;
+
+    /**
+     * 卖出结算汇兑比率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal sellSettleRate;
     /**
      * 取得 ????
      * @return ????
@@ -1356,4 +1374,115 @@ public class WflTrdFinProductDealTotal extends WflTrdFinProductDealTotalKey {
         this.institutionCode = institutionCode;
     }
     // 多级法人改造 add by caiqun 20200615
+
+    public BigDecimal getYesterdayPosition() {
+        return yesterdayPosition;
+    }
+
+    public void setYesterdayPosition(BigDecimal yesterdayPosition) {
+        this.yesterdayPosition = yesterdayPosition;
+    }
+
+    public BigDecimal getTradeAmtHk() {
+        return tradeAmtHk;
+    }
+
+    public void setTradeAmtHk(BigDecimal tradeAmtHk) {
+        this.tradeAmtHk = tradeAmtHk;
+    }
+
+    public BigDecimal getSellSettleRate() {
+        return sellSettleRate;
+    }
+
+	public void setSellSettleRate(BigDecimal sellSettleRate) {
+		this.sellSettleRate = sellSettleRate;
+	}
+
+    /**
+     * 是否含股利选择权
+     */
+    private String ifDividend;
+
+    /**
+     * 派息币种
+     */
+    private String dividCcy;
+
+    /**
+     * 汇率(派息等)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal exchangeRate;
+
+    /**
+     * 以股代息价格
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal replacePrice;
+
+    /**
+     * 取得 是否含股利选择权
+     * @return 是否含股利选择权
+     */
+    public String getIfDividend() {
+        return ifDividend;
+    }
+
+    /**
+     * 设置 是否含股利选择权
+     * @param ifDividend 是否含股利选择权
+     */
+    public void setIfDividend(String ifDividend) {
+        this.ifDividend = ifDividend == null ? null : ifDividend.trim();
+    }
+
+    /**
+     * 取得 派息币种
+     * @return 派息币种
+     */
+    public String getDividCcy() {
+        return dividCcy;
+    }
+
+    /**
+     * 设置 派息币种
+     * @param dividCcy 派息币种
+     */
+    public void setDividCcy(String dividCcy) {
+        this.dividCcy = dividCcy == null ? null : dividCcy.trim();
+    }
+
+    /**
+     * 取得 汇率(派息等)
+     * @return 汇率(派息等)
+     */
+    public BigDecimal getExchangeRate() {
+        return exchangeRate;
+    }
+
+    /**
+     * 设置 汇率(派息等)
+     * @param exchangeRate 汇率(派息等)
+     */
+    public void setExchangeRate(BigDecimal exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+    /**
+     * 取得 以股代息价格
+     * @return 以股代息价格
+     */
+    public BigDecimal getReplacePrice() {
+        return replacePrice;
+    }
+
+    /**
+     * 设置 以股代息价格
+     * @param replacePrice 以股代息价格
+     */
+    public void setReplacePrice(BigDecimal replacePrice) {
+        this.replacePrice = replacePrice;
+    }
+	
 }
