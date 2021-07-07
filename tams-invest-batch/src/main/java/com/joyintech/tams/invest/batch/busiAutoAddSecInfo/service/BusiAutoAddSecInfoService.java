@@ -40,6 +40,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.dao.FinProductCommon
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.*;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -526,6 +527,12 @@ public class BusiAutoAddSecInfoService {
                 TrdProductDealAdd trdProductDealAdd =new TrdProductDealAdd();
                 trdProductDealAdd.setTradeId(ptlSecPositionFlow.getTradeId());
                 trdProductDealAdd.setPortfolioId(ptlSecPositionFlow.getPortfolioId());
+                //如果是通过投资，则组合换成通道的账套
+                FinProduct finProductTemp = finProductMapper.selectByPrimaryKey(ptlSecPositionFlow.getSecAcctId());
+                if(finProductTemp !=null && StringUtil.equals(finProductTemp.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_通道.getValue())){
+                    String TempPortfolioId = DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()+ FinalString.LAYERING_SPLIT+ptlSecPositionFlow.getPortfolioId();
+                    trdProductDealAdd.setPortfolioId(TempPortfolioId + FinalString.LAYERING_SPLIT+ptlSecPositionFlow.getSecAcctId());
+                }
                 trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
                 dealAdds.add(trdProductDealAdd);
                 //金融产品交易明细表
@@ -553,6 +560,9 @@ public class BusiAutoAddSecInfoService {
 //            inputDto.setPageId("TrdBondInvestTrade002");
             inputDto.setProdid(trdProductDealAdd.getPortfolioId());
             inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+            if(inputDto.getProdid().contains("F28_")){
+                inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_通道.getValue());
+            }
             inputDto.setTrdProductDeal(trdProductDeal);
             inputDto.setTrdProductDealAdd(trdProductDealAdd);
             AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
