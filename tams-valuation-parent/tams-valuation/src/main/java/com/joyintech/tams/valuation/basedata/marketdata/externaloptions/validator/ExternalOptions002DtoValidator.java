@@ -1,12 +1,11 @@
 package com.joyintech.tams.valuation.basedata.marketdata.externaloptions.validator;
 
-import com.jixu.common.util.DateUtil;
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.valuation.basedata.marketdata.externaloptions.dto.ExternalOptions002Dto;
-import com.joyintech.tams.valuation.basedata.marketdata.valfxvaluztioninfo.dto.ValFxValuztionInfo002Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.valfxvaluztioninfo.validator.ValFxValuztionInfo002DtoValidator;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
@@ -63,11 +62,11 @@ public class ExternalOptions002DtoValidator implements BeanValidator {
 
             if(GlobalConstant.DETAIL_PAGE_MODEL_EDIT.equals(dto.getPageModel())){
                 String valDate = dto.getValDate();
-                Date valTime = DateUtil.convertStr2Date2(valDate);
+                Date valTime = DateUtil.parse(valDate);
 
                 Date platDate = platformDateImpl.getSysDate();
 
-                if(DateUtil.compareTime(valTime,platDate)==-1){
+                if(DateUtil.compareDate(valTime,platDate)==-1){
                     //如果 估值日期 小于平台日 则提醒。
                     errorList.add(new ValidMessage(getMessage("VAL_COMMON_E_0072")));
                 }

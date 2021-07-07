@@ -10,25 +10,23 @@
  
 package com.joyintech.service.valuation.basedata.marketdata.valshareprice.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.github.pagehelper.PageInfo;
-import com.jixu.joyin2jixu.dto.SecurityInfoDto;
 import com.jixu.joyin2jixu.service.Joyin2JixuInterface;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.valuation.basedata.marketdata.valshareprice.dao.ValSharePrice001Mapper;
 import com.joyintech.service.valuation.basedata.marketdata.valshareprice.dto.ValSharePriceDto;
 import com.joyintech.tams.common.base.dao.MstSharePriceMapper;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 股票行情管理service
@@ -104,7 +102,6 @@ public class ValSharePriceService extends BaseService<ValSharePriceDto>{
      * 工作流完结之后的操作
      * <功能详细描述>
      * @param entity 实体
-     * @param type 类型
      * @see
      * @since 1.0
      */
