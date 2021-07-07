@@ -372,7 +372,7 @@
 
     });
 
-
+    var pledgeBondTotalTblDetailed ;
     if(repo_pledge_model=='02'){
     	
     	
@@ -443,7 +443,7 @@
     	/**
          * 质押券汇总信息（Total）
          */
-        var pledgeBondTotalTblDetailed = $("#pledgeBondTotalListDetailed").joyintable({
+        pledgeBondTotalTblDetailed = $("#pledgeBondTotalListDetailed").joyintable({
             page: false,
             data:  entity_PledgeBondTotalListDetailed||[],
             height: 200,
@@ -471,8 +471,6 @@
                 , {field: 'avaPledgePrin',title: '可质押券面总额',type: 'number',edit: false,sortable: false}
                 //质押券汇总券面总额
                 , {field: 'pledgePrin',title: '质押券券面总额',type: 'number',edit: true,sortable: false}
-                //折算比例%
-                ,{field: 'pledgeRatio',title: 'BussRepoSecPtl.pledgeBondTotalTblDetailed.colmodel.pledgeRatio',type: 'number',edit: false,sortable: false}
              // 首次净价
                 , {
                     field: 'firstNetPrice',
@@ -480,6 +478,9 @@
                     title: '首次净价',
                     sortable: false
                 }
+                //折算比例%
+                ,{field: 'pledgeRatio',title: '折算比例%',type: 'number',edit: false,sortable: false}
+             
                 // 登记托管机构
                 ,{field: 'repRegistOrgStr',title: 'BussRepoSecPtl.repRegistOrg',type: 'text',align: 'left',edit:false,sortable:false}
                 //可质押本方券券面总额
@@ -912,6 +913,11 @@
         var platFormDate = $("#vdate").val();
         $("#mdate").val(platFormDate).trigger('change');
         $("#settleSpreed").val('').trigger('change');
+        if(repo_pledge_model =='03'){
+        	$("#zyqk").val("").trigger("change");
+        }else if (repo_pledge_model =='02'){
+        	pledgeBondTotalTblDetailed.clear();
+        }
         table.clear();
     }
 
@@ -1083,6 +1089,22 @@
             } else {
                 $("#price").val("").attr("disabled", false);
             }
+        }
+    });
+    
+    /**
+     * 价格模式
+     */
+    $("#ps").change(function () {
+        if (pageModel != PAGE_MODEL_REFERENCE) {
+        	if (repo_pledge_model =='02'){
+        		if ($("#ps").val() == ps_04) {
+        			pledgeBondTotalTblDetailed.clear();
+        			$("#pledgeBondTotalTblDetailed_div").hide()
+        		}else{
+        			$("#pledgeBondTotalTblDetailed_div").show()
+        		}
+        	}
         }
     });
 

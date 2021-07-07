@@ -70,7 +70,7 @@
                     <div class="layui-form-item" style="padding:0px;">
                        
                     	<div class="form-inline-wrap" style=" width: 50%; padding:0px;">
-                            <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrRepo002.entrustAmt}">指令金额</label>
+                            <label class="layui-form-label" style="width: 100px;" >指令金额</label>
                             <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
                                 <input
                                     type="text"
@@ -126,7 +126,7 @@
                             </div>
                         </div>
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
-                            <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrRepo002.price}">利率（%）</label>
+                            <label class="layui-form-label" style="width: 100px;" >回购利率（%）</label>
                             <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
                                 <input type="text" id="price" name="price" placeholder="请输入内容"
                                        data-pattern="" data-fixtype="2"
@@ -176,7 +176,7 @@
                                 ></select>
                             </div>
                         </div>
-  						<div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+  						<!-- <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{invest.channelId}">通道</label>
                             <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
                                 <select
@@ -191,10 +191,7 @@
                                         data-th-initvalue="${entity?.chlId}"
                                 ></select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="layui-form-item" style="padding:0px;">
-                      
+                        </div> -->
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbRepoinfo002.vdate}">指令开始日</label>
                             <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
@@ -209,8 +206,9 @@
                                 />
                             </div>
                         </div>
-                        
-                            
+                    </div>
+                    <div class="layui-form-item" style="padding:0px;">
+                      
                         <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbRepoinfo002.mdate}">指令终止日</label>
                             <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
@@ -247,7 +245,7 @@
                                 ></select> 
                             </div>
                         </div> 
-                         <div th:if=" ${repo_pledge_model} =='02'"  class="page-component" th:data-path="@{/component/trade/BussRepoSec/init}"
+                         <div th:if=" ${repo_pledge_model} =='02'" id ="bussRepoSec_pledge" class="page-component" th:data-path="@{/component/trade/BussRepoSec/init}"
 		                     th:data-params="|{entityNameBussRepoSec: 'bussRepoSec', pageFrom: 'EtrIbRepoinfo002', entity:'${entity_bussRepoSecDto}',
 		                     portfolioId:'${entity?.portfolioId==null?'':entity?.portfolioId}', ps:'${entity?.ps==null?'':entity?.ps}',
 		                     bizCode:'${buscode==null?'':buscode}', entrustId:'${entity?.entrustId==null?'':entity?.entrustId}',

@@ -331,13 +331,17 @@
         $("#priceModel").val("").trigger("change");
         $("#price").val("").trigger("change");
         $("#repoTerm").val("");
-        $("#zyqk").val("").trigger("change");
         $("#termType").val("").trigger("change");
         $("#counterId").val("").trigger("change");
         $("#chlFinprodId").val("").trigger("change");
         $("#entrustId").val("").trigger("change");
         $("#entrustStatus").val("").trigger("change");
-
+        if(repo_pledge_model =='03'){
+        	$("#zyqk").val("").trigger("change");
+        }else if (repo_pledge_model =='02'){
+        	window.BussRepoSec["bussRepoSec"].clearHideRepo();
+        	window.BussRepoSec["bussRepoSec"].showRepo();
+        }
         pageModel = PAGE_MODEL_NEW;
         operType = ENTRUST_RECORD_NEW;
     };
@@ -771,14 +775,22 @@
         $("#ps").change(function () {
         	
             if (pageModel != PAGE_MODEL_REFERENCE) {
-                if ($("#ps").val() == ps_04) {
-                    $("#zyqk").val("").trigger("change").attr("disabled", true);
-                    $('#zyqk').removeAttr("required");
-                } else {
-                    $("#zyqk").trigger("change").attr("disabled", false);
-                    $('#zyqk').attr("required", "true");
-                }
-                star();
+            	if(repo_pledge_model =='03'){
+            		 if ($("#ps").val() == ps_04) {
+                         $("#zyqk").val("").trigger("change").attr("disabled", true);
+                         $('#zyqk').removeAttr("required");
+                     } else {
+                         $("#zyqk").trigger("change").attr("disabled", false);
+                         $('#zyqk').attr("required", "true");
+                     }
+            		 star();
+            	}else if (repo_pledge_model =='02'){
+            		if ($("#ps").val() == ps_04) {
+            			$("#bussRepoSec_pledge").hide()
+            		}else{
+            			$("#bussRepoSec_pledge").show()
+            		}
+            	}
                 setBussRepoSecInput();
             }
         });
