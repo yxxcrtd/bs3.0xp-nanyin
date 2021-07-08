@@ -498,6 +498,14 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
 
         // 浮动管理费业务组件
         if (entity.getBussFinProductFloatFeeDto() != null) {
+            // add by jiangpeng on 20210708 TISHKBS-2425 start 收益类型为货币型的产品,浮动管理费仅支持选择计费基数为“资产净值”的费用
+            // 计费基数 03 资产净值 04 存续本金
+            if (StringUtil.isNotEmpty(entity.getBussFinProductFloatFeeDto().getBasicBill())
+                    && !StringUtil.equals(DictCodeList.计费基数_费用品种_资产规模.getValue(), entity.getBussFinProductFloatFeeDto().getBasicBill())
+                    && StringUtil.equals(entity.getProfitType(), DictCodeList.收益类型_货币型.getValue())) {
+                validList.add(new ValidMessage("收益类型为货币型的产品,浮动管理费仅支持选择计费基数为“资产净值”的费用"));
+            }
+            // add by jiangpeng on 20210708 TISHKBS-2425 end
             if(StringUtil.isNotEmpty(entity.getBussFinProductFloatFeeDto().getFeeId())
                 && (StringUtil.equals(DictCodeList.处理模式_普通.getValue(), entity.getDealMode())||
                 StringUtil.equals(DictCodeList.处理模式_周期型.getValue(), entity.getDealMode())) ){
