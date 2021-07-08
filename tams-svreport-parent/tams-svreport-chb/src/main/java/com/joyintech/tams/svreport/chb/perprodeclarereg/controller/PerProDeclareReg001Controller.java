@@ -253,7 +253,6 @@ public class PerProDeclareReg001Controller extends BaseController{
 						PerProDeclareRegDto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

@@ -32,7 +32,7 @@ public class FileReader {
 			}
 			reader.close();
 		}catch(IOException e){
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}finally{
 			if(reader != null){
 				try {

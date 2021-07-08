@@ -871,7 +871,7 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
             }
             catch (Exception e) {
                 logger.error("风险试算发生异常：" + e.getMessage());
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
     }
@@ -2697,7 +2697,7 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
 //            }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         PtlMockTestTradeDto resultDto = new PtlMockTestTradeDto();
@@ -2864,7 +2864,7 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
 
             return ExportUtil.export(exportFileName, outFile, true);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return null;

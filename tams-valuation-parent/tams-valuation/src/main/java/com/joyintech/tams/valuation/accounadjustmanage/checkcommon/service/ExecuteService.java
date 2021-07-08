@@ -622,7 +622,7 @@ public class ExecuteService {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return fileDataMap;
@@ -2019,7 +2019,7 @@ public class ExecuteService {
                 resultDate = formatter.parse(DateString);
             }
             catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
 
@@ -2449,7 +2449,6 @@ public class ExecuteService {
             logger.error(errorInfo + "错误信息：" + e.getMessage());
             mapReturn.put(errorKey, errorInfo);// 错误信息
             mapReturn.put(pathKey, null);// 上传SFTP后的路径
-            e.printStackTrace();
             return mapReturn;
         }
         finally {
@@ -2458,7 +2457,7 @@ public class ExecuteService {
 					stream.close();
 				}
 				catch (IOException e) {
-					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
 				}
 			}
         }
@@ -2493,7 +2492,6 @@ public class ExecuteService {
         }
         catch (Exception e) {
             sftpTools.close();// 关闭登录
-            e.printStackTrace();
             String errorInfo = "产品：" + prodName + "(" + prodId + ") " + "估值表余额表生成对账文件失败："
                                + SysDataUtil.getNameFromDataDict(DictCode.文件类型, valBalFlag) + "上传sftp失败。";
             logger.error(errorInfo + "错误信息：" + e.getMessage());
@@ -2600,7 +2598,7 @@ public class ExecuteService {
             result = sdf.parse(DateString);
         }
         catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return result;
@@ -2712,7 +2710,7 @@ public class ExecuteService {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return obj;

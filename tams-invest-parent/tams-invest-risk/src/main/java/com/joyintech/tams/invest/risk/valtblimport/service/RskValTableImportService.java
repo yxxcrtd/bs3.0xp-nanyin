@@ -79,7 +79,11 @@ import com.joyintech.tams.invest.risk.valtblimport.filtertools.filter.Filter;
  */
 @Service
 public class RskValTableImportService extends CommonExportService<RskValtblAssetSubDto>{
-    private static final Logger logger = LoggerFactory.getLogger(RskValTableImportService.class);
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskValTableImportService.class);
+
     /**
      * 指标结构映射
      */
@@ -933,7 +937,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            Collections.sort(valHand_oneList);
            return valHand_oneList;*/
        }catch(Exception e){
-           e.printStackTrace();
+           logger.error(e.getMessage(),e);
        }
        return null;
    }
@@ -1214,7 +1218,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                        break;
                }
            }catch(Exception e){
-               e.printStackTrace();
+               logger.error(e.getMessage(),e);
            }
        }
    }

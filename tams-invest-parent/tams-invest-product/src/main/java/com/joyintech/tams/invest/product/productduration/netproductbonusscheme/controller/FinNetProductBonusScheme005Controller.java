@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,6 +65,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("FinNetProductBonusScheme005")
 @RequestMapping("/invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme005")
 public class FinNetProductBonusScheme005Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinNetProductBonusScheme005Controller.class);
 
     /**
      * 净值型分红方案service
@@ -122,7 +128,7 @@ public class FinNetProductBonusScheme005Controller extends BaseController {
 //                    processMark.setPageId("FinNetProductBonusScheme002");
 //                    finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
 //                } catch (Exception e) {
-//                    e.printStackTrace();
+//                    logger.error(e.getMessage(),e);
 //                }
             }
             else{
@@ -159,7 +165,7 @@ public class FinNetProductBonusScheme005Controller extends BaseController {
 				processMark.setPageId("FinNetProductBonusScheme005");
 				finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
 			} catch (Exception e) {
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
             String operateType = getParam("operateType");
             finNetProductBonusSchemeInfo.setOperateType(operateType);

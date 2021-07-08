@@ -77,7 +77,7 @@ public class CalKeyValueMap extends AdditionFunc{
 //			Object bbb=aa.calFunc("[A] | (111:222,222:333,333:444)", map);
 //			System.out.println(bbb.toString());
 //		}catch(Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(),e);
 //		}
 //	}
 }

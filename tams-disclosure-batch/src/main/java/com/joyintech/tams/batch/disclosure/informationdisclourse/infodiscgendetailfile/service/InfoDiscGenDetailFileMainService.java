@@ -75,7 +75,6 @@ public class InfoDiscGenDetailFileMainService  extends AutoSendCBBaseService{
         	        }
     	        }
     	    	catch(Exception e){
-//    	    		e.printStackTrace();
     	    		logger.error("error:", e);
     	    		logger.info("jobid:"+infoDisclosureReadAndGenEntity.getJobId()+"jobName:"+infoDisclosureReadAndGenEntity.getJobName()+"的任务执行失败");
     	    	}

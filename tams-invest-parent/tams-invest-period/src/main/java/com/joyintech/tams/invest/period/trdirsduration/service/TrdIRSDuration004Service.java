@@ -20,6 +20,8 @@ import com.joyintech.tams.invest.common.dto.period.trdirsduration.TrdIRSDuration
 import com.joyintech.tams.invest.period.trdirsduration.dto.TrdIRSDuration004ProcessDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
@@ -43,6 +45,10 @@ import java.util.stream.Collectors;
 @Service
 public class TrdIRSDuration004Service extends BaseService<TrdIRSDuration004ProcessDto>
         implements BaseProcessService<TrdIRSDuration004ProcessDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdIRSDuration004Service.class);
 
     @Autowired
     private BussTrdTransferOrderService bussTrdTransferOrderImplService;
@@ -91,7 +97,7 @@ public class TrdIRSDuration004Service extends BaseService<TrdIRSDuration004Proce
             try {
                 dto.setPaymentPlanList(JsonUtils.json2List(dto.getPaymentPlanListMsg(), FinCashPlanEntity.class));
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         //循环固息端付息计划，构建现金流计划Entity，并加入到利率互换付息计划维护DTO.List<现金流计划Entity>

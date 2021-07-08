@@ -311,7 +311,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 					pageParam.put("reportuuid", astValueList.get(0).getReportuuid());
 				}
 			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 	            logger.error(e.getMessage(),e);
 			}
 		} else {
@@ -929,7 +929,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 		try {
 			runSqlBySpringUtils();
 		} catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(),e);
             logger.error(e.getMessage(),e);
 		}
 		
@@ -945,7 +945,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 //			endDate = sdf.parse(endStr);
 //			
 //		} catch (ParseException e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(),e);
 //		}
  		
  	}
@@ -979,7 +979,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             EncodedResource er = new EncodedResource(rc1, "UTF-8");
             ScriptUtils.executeSqlScript(conn, er);
         } catch (Exception e) {
-//            e.printStackTrace();
+//           logger.error(e.getMessage(),e);
             logger.error(e.getMessage(),e);
             return;
 		} finally {
@@ -987,8 +987,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			if (sqlSession != null)
 				sqlSession.close();
@@ -1023,7 +1022,6 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
         			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
         		} catch (ParseException e) {
         			logger.error(e.getMessage(),e);
-        			e.printStackTrace();
         		}
         		// 调用检查方法
         		resultlist.addAll(check(cdate));

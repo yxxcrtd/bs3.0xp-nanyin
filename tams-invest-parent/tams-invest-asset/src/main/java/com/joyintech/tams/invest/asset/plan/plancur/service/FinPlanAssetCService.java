@@ -25,6 +25,8 @@ import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.util.MapParseUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -63,6 +65,11 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class FinPlanAssetCService extends CommonExportService<FinPlanAssetCDto>
     implements BaseProcessService<FinPlanAssetCDto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinPlanAssetCService.class);
+
     @Autowired(required=false)
     private  FinPlanAssetCService finPlanAssetCService;
     /**
@@ -220,7 +227,7 @@ public class FinPlanAssetCService extends CommonExportService<FinPlanAssetCDto>
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

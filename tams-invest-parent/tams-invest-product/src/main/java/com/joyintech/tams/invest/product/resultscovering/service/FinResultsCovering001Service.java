@@ -3,6 +3,8 @@ package com.joyintech.tams.invest.product.resultscovering.service;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -21,6 +23,11 @@ import com.joyintech.tams.invest.product.resultscovering.dto.FinResultsCovering0
 
 @Service
 public class FinResultsCovering001Service extends CommonExportService<FinResultsCovering001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinResultsCovering001Service.class);
+
 	public Page<FinResultsCovering001Dto> selectForPage(Map<String, Object> map) {
         if (StringUtil.isNotEmpty(map.get("prodId"))) {
             map.put("prodId", StringUtil.splitToList(null, map.get("prodId").toString()));
@@ -57,7 +64,7 @@ public class FinResultsCovering001Service extends CommonExportService<FinResults
     	try {
 			return selectForPage(selectParam);
 		} catch (Exception e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
     	return null;
     }

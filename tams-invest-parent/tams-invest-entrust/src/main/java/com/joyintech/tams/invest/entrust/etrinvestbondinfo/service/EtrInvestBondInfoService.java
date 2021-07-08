@@ -26,6 +26,8 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -104,6 +106,11 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondInfoDto> implements BaseProcessService<EtrInvestBondInfoDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(EtrInvestBondInfoService.class);
+
     /**
      * 风险试算组件Service
      */
@@ -513,7 +520,7 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 BeanUtil.copyProperties(dto, nullDto);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             return;
         }
@@ -944,7 +951,7 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (dto.getMatureYield() != null) {

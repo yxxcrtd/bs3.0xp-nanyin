@@ -324,7 +324,7 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 				}
 			}catch (Exception e)
 			{
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}finally {
 	        	if(bis!=null)
 				{

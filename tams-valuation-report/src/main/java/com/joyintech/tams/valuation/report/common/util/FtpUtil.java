@@ -285,7 +285,7 @@ public class FtpUtil {
             result = "true";
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(),e);
             result = "false";
         }
         finally {

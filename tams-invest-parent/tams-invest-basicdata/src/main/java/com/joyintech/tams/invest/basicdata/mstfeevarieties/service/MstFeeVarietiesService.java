@@ -10,6 +10,8 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -32,6 +34,10 @@ import com.joyintech.workflow.engine.constant.OperationType;
  */
 @Service
 public class MstFeeVarietiesService extends CommonExportService<MstFeeVarietiesDto> implements BaseProcessService<MstFeeVarietiesDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MstFeeVarietiesService.class);
 
     /**
      * 根据页面条件查询数据
@@ -99,7 +105,7 @@ public class MstFeeVarietiesService extends CommonExportService<MstFeeVarietiesD
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

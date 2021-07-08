@@ -926,7 +926,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     logger.error(e.getMessage(), e);
                     // 从内存中移除当前画面的导出进度
                     progressBarService.removePercent(pageId, PROCESS_KEY);
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             // 从内存中移除当前画面的导出进度
@@ -1234,7 +1234,6 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     logger.error(e.getMessage(), e);
                     // 从内存中移除当前画面的导出进度
                     progressBarService.removePercent(pageId, PROCESS_KEY);
-                    e.printStackTrace();
                 }
             }
             // 从内存中移除当前画面的导出进度
@@ -1824,7 +1823,6 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     ibd.seteQuityConfDate(sdf.parse(map.get("EQUITY_CONF_DATE")));
                 }
                 catch (ParseException e) {
-                    // e.printStackTrace();
                     logger.error(e.getMessage(), e);
                 }
             }
@@ -2803,7 +2801,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         single.setCustContractNo(tuominStr);
                     }
                     catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
             }
@@ -2910,7 +2908,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     dto.setCustContractNo(tuominStr);
                 }
                 catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
@@ -2976,7 +2974,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         dto.setCustContractNo(tuominStr);
                     }
                     catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
             }

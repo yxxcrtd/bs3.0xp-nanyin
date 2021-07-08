@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,6 +64,11 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("MstMarketInstitutions002")
 @RequestMapping("/invest/basicdata/mstmarketinstitutions/MstMarketInstitutions002")
 public class MstMarketInstitutions002Controller extends BaseController{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MstMarketInstitutions002Controller.class);
+
     /**
      * 客户评级service注入
      */
@@ -208,7 +215,7 @@ public class MstMarketInstitutions002Controller extends BaseController{
                 dto.setCustomerId(customerId);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         ProcessParameter<MstMarketInstitutionsDto> processParameter = new ProcessParameter<MstMarketInstitutionsDto>();

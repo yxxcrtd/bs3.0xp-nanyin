@@ -183,7 +183,6 @@ public class ReportWorkMonitor001Service extends CommonExportService<ReportWorkM
     		flag = infoDisclosureReadAndGenDetailService.readAndGenMain(repJob, DictCodeListExt2.执行标志_重新执行.getValue(),
     				map.get("jobSeq").toString(), DateUtil.parse(map.get("execDate").toString()));
 		} catch (Exception e) {
-//			e.printStackTrace();
 			logger.error("error:",e);
 		}
     	return flag;
@@ -203,7 +202,6 @@ public class ReportWorkMonitor001Service extends CommonExportService<ReportWorkM
     		flag = infoDisclosureReadAndGenDetailService.readAndGenErrorAgain(repJob, dateMap, 
     				DateUtil.parse(map.get("execDate").toString()),map.get("jobSeq").toString());
 		} catch (Exception e) {
-//			e.printStackTrace();
 			logger.error("error:",e);
 		}
     	return flag;

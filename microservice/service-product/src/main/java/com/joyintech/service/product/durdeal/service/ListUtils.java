@@ -1,5 +1,8 @@
 package com.joyintech.service.product.durdeal.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.util.Collections;
@@ -13,6 +16,10 @@ import java.util.List;
  *
  */
 public class ListUtils {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(ListUtils.class);
 
     /**
      * 对list的元素按照多个属性名称排序,
@@ -34,7 +41,7 @@ public class ListUtils {
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 return ret;
             }
@@ -63,7 +70,7 @@ public class ListUtils {
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 return ret;
             }

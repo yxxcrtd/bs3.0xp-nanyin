@@ -14,7 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpRequest {
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(HttpRequest.class);
+
     /**
      * 向指定URL发送GET方法的请求
      *
@@ -51,9 +55,7 @@ public class HttpRequest {
                 result += line;
             }
         } catch (Exception e) {
-//            System.out.println("发送GET请求出现异常！" + e);
-            logger.info("发送GET请求出现异常！" + e);
-            e.printStackTrace();
+            logger.error("发送GET请求出现异常！",e);
         }
         // 使用finally块来关闭输入流
         finally {

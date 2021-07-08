@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +58,11 @@ import com.joyintech.tams.invest.risk.stresstestmanage.marketrisksstresstest.ser
 @PageId("MarketRiskStressTest001")
 @RequestMapping("/invest/risk/stresstestmanage/marketrisksstresstest/MarketRiskStressTest001")
 public class MarketRiskStressTest001Controller extends BaseController{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MarketRiskStressTest001Controller.class);
+
     @Autowired(required = false)
     private MarketRiskStressTest001Service MarketRiskStressTest001Service;
     
@@ -93,8 +100,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
             analysisDate = dft.parse(dft.format(date.getTime()));
         }
         catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         /*SelectDto selects = this.getSelectDataFromDataDic(DictCode.风险因子的异常处理, null);
         List<SelectOptionDto> options = selects.getOptions();

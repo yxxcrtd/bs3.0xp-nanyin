@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +49,11 @@ import com.joyintech.workflow.engine.constant.OperationType;
 @Service
 public class FinProductBmQuotationService extends CommonExportService<FinProductBmQuotationDto> 
     implements BaseProcessService<FinProductBmQuotationDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinProductBmQuotationService.class);
+
     /**
      * 
      */
@@ -179,7 +186,7 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

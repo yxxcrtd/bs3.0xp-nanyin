@@ -16,6 +16,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.CacheUtil;
@@ -48,6 +50,10 @@ import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
  */
 @Service
 public class DisTargetIndexService {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(DisTargetIndexService.class);
 
 	/**
 	 * 货币性表二
@@ -601,7 +607,7 @@ public class DisTargetIndexService {
 				list.add(index);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -609,14 +615,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -654,7 +660,7 @@ public class DisTargetIndexService {
 				return null;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -662,14 +668,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -708,7 +714,7 @@ public class DisTargetIndexService {
 				list.add(chbMktHoliday);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -716,14 +722,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -760,7 +766,7 @@ public class DisTargetIndexService {
 				map.put("PROD_ID", rs.getString("PROD_ID")==null?"":rs.getString("PROD_ID"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -768,14 +774,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -811,7 +817,7 @@ public class DisTargetIndexService {
 				map.put("NETVALUETOTAL", rs.getBigDecimal("NETVALUETOTAL"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -819,14 +825,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1215,7 +1221,7 @@ public class DisTargetIndexService {
 					}
 
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 				finally {
 					// 释放连接
@@ -1223,14 +1229,14 @@ public class DisTargetIndexService {
 						try {
 							ps.close();
 						} catch (SQLException e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(),e);
 						}
 					}
 					if (rs != null) {
 						try {
 							rs.close();
 						} catch (SQLException e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(),e);
 						}
 					}
 				}
@@ -1327,7 +1333,7 @@ public class DisTargetIndexService {
 				list.add(dto);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1335,14 +1341,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1391,7 +1397,7 @@ public class DisTargetIndexService {
 				list.add(dto);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1399,14 +1405,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1453,7 +1459,7 @@ public class DisTargetIndexService {
 				list.add(dto);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1461,14 +1467,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1501,7 +1507,7 @@ public class DisTargetIndexService {
 				count=rs.getInt(1);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1509,14 +1515,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1544,7 +1550,7 @@ public class DisTargetIndexService {
 				praManger=rs.getString("bankname");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1552,14 +1558,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}

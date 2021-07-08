@@ -56,12 +56,16 @@ import com.joyintech.tools.util.ExcelTools;
 /**
  * @author zhangzhao
  * @version 1.0 2018年9月18日
- * @see OwnerEquityChange001Service
+ * @see DisOwnerEquityChange001Service
  * @since 1.0
  */
 @Service
 public class DisOwnerEquityChange001Service extends CommonExportService<DisOwnerEquityChange001Dto> {
-	private static final Logger logger = LoggerFactory.getLogger(DisOwnerEquityChange001Service.class);
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(DisOwnerEquityChange001Service.class);
+
     @Autowired
     private DisOwnerEquityChange001Mapper ownerEquityChange001Mapper;
     
@@ -579,9 +583,8 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
 	        		try {
 						thisTermAmt = thisTermAmt.add(profitCalculationMap.get(childKeyArr[i + 1]).getThisTermAmt());
 					} catch (Exception e) {
-//						System.out.println(i);
-						logger.info(String.valueOf(i));
-						e.printStackTrace();
+                        logger.info(String.valueOf(i));
+						logger.error(e.getMessage(),e);
 					}
 	        		lastTermAmt = lastTermAmt.add(profitCalculationMap.get(childKeyArr[i + 1]).getLastTermAmt());
 	        	}

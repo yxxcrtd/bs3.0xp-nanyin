@@ -38,6 +38,8 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +61,10 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
  */
 @Service
 public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNetDuration001Dto> implements BaseProcessService<TrdPlanNetDuration001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanNetDuration001Service.class);
 
     /**
      * 业务编号
@@ -150,7 +156,7 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, false);
     }
@@ -218,7 +224,7 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
                     // 设置为提交 插入流程表
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

@@ -37,6 +37,8 @@ import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +58,11 @@ import java.util.Map;
  */
 @Service
 public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PtlFundAllocationService.class);
+
     /**
      * 注入资金划拨mapper
      */
@@ -276,7 +283,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
             amount = basePtlCashPositionInfoService.queryUsableCashPosition(ptlCashPositionFlowDto);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return amount;
     }
@@ -784,7 +791,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
                 }
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         return ptlFundAllocation001Dto;

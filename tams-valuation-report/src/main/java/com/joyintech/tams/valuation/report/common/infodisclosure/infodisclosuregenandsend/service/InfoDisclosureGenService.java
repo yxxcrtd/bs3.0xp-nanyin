@@ -146,7 +146,7 @@ public class InfoDisclosureGenService {
 //    		}
     	}
     	catch(Exception e){
-    		e.printStackTrace();	
+			logger.error(e.getMessage(),e);
     	}
     	finally{
     		repInstallLogDetail.setExecStatus(exeStatus);

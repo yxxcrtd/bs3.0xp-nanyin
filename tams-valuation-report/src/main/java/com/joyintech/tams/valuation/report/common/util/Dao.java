@@ -73,7 +73,7 @@ public class Dao {
 //			conn = DriverManager.getConnection(url, userName, passWord);
 //		}
 //		catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(),e);
 //		}
 //		finally {
 //			if (conn!=null) {
@@ -81,14 +81,14 @@ public class Dao {
 //					conn.close();
 //				}
 //				catch (SQLException e) {
-//					e.printStackTrace();
+//					logger.error(e.getMessage(),e);
 //				}
 //			}
 //			if(is != null){
 //				try {
 //					is.close();
 //				} catch (IOException e) {
-//					e.printStackTrace();
+//					logger.error(e.getMessage(),e);
 //				}
 //			}
 //		}

@@ -25,6 +25,8 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 //import com.joyintech.tams.invest.asset.common.dto.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +84,11 @@ public class ValBondTargetAssetService extends CommonExportService<ValBondTarget
 implements BaseProcessService<ValBondTargetAssetDto>{
 //    @Autowired
 //    private CommonAutoCouponService commonAutoService;
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValBondTargetAssetService.class);
+
     @Autowired
     private ValDateCalService dateCalService;
 
@@ -819,8 +825,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
         try {
 			return findPage(selectParam);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		return null;
     }
@@ -1484,7 +1489,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
         		try {
         			repAssetDept.setRepStatusDate(sdf.parse(DateUtil.getSysDate()));//数据日期
         		} catch (ParseException e) {
-					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
 				}
         		repAssetDept.setRepTradeMarket(interfPayhsrcsecinfo.getMarket2());//交易流通场所
         		repAssetDept.setIsRepTarget(BussinessDictCodeList.是否_否.getValue());//默认否

@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +44,11 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Component
 public class RskAuthorityManageValidator implements BeanValidator{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskAuthorityManageValidator.class);
+
     @Autowired
     private RskAuthorityManageService rskAuthorityManageService;
     /**
@@ -245,8 +252,7 @@ public class RskAuthorityManageValidator implements BeanValidator{
                                   }
                               }
                         catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                           
                       }

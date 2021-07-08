@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +62,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class FinAssetConfigPlan002Service extends BaseService<FinAssetConfigPlan001Dto> 
 	implements BaseProcessService<FinAssetConfigPlan001Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(FinAssetConfigPlan002Service.class);
 
     /**
      * 得到资产配置计划列表
@@ -292,7 +298,7 @@ public class FinAssetConfigPlan002Service extends BaseService<FinAssetConfigPlan
 						method = dto.getClass().getDeclaredMethod("getCurInvAmt" + month);
 		        		assetConfigMonDetail.setCurInvAmt((BigDecimal)method.invoke(dto));
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					} 
 	        		assetConfigMonDetailMapper.insert(assetConfigMonDetail);
 	        		month++;
@@ -351,7 +357,7 @@ public class FinAssetConfigPlan002Service extends BaseService<FinAssetConfigPlan
     					method = dto.getClass().getDeclaredMethod("getCurInvAmt" + month);
     	        		assetConfigMonDetail.setCurInvAmt((BigDecimal)method.invoke(dto));
     				} catch (Exception e) {
-    					e.printStackTrace();
+						logger.error(e.getMessage(),e);
     				} 
             		assetConfigMonDetailMapper.insert(assetConfigMonDetail);
             		month++;
@@ -392,7 +398,7 @@ public class FinAssetConfigPlan002Service extends BaseService<FinAssetConfigPlan
 					method = entity.getClass().getDeclaredMethod("getCurInvAmt" + month);
 	        		assetConfigMonDetail.setCurInvAmt((BigDecimal)method.invoke(entity));
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				} 
         		assetConfigMonDetailMapper.insert(assetConfigMonDetail);
     		}

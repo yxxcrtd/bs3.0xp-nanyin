@@ -173,7 +173,7 @@ public class PoiReportService {
 						logger.debug("等待生成echarts图片1000毫秒");
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 					waitTimes--;
 				}
@@ -322,21 +322,21 @@ public class PoiReportService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if (null != conn) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if (null != rs) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}

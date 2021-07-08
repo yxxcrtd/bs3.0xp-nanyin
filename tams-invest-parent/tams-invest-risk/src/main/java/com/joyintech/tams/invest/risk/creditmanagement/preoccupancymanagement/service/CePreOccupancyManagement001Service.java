@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -40,6 +42,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class CePreOccupancyManagement001Service extends CommonExportService<CePreOccupancyManagementDto>
 implements BaseProcessService<CePreOccupancyManagementDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(CePreOccupancyManagement001Service.class);
 
 	/**
 	 * {@inheritDoc}
@@ -120,7 +126,7 @@ implements BaseProcessService<CePreOccupancyManagementDto> {
 			Page<CePreOccupancyManagementDto> pageList=selectForPage(selectParam);
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}

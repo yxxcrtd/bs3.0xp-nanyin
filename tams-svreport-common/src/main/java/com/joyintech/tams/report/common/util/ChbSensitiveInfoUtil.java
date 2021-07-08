@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 中债报送信息敏感信息处理util
@@ -29,6 +31,8 @@ import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
  * @since 1.0
  */
 public class ChbSensitiveInfoUtil {
+    private static Logger logger = LoggerFactory.getLogger(ChbSensitiveInfoUtil.class);
+
     /**
      * 所有汉字
      */
@@ -162,8 +166,7 @@ public class ChbSensitiveInfoUtil {
 //            System.out.println(ss);
 //        }
 //        catch (UnsupportedEncodingException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
 //        }
 //    }
     
@@ -182,7 +185,7 @@ public class ChbSensitiveInfoUtil {
             String s = byteArrayToHex(bytes);
             return s.toLowerCase();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

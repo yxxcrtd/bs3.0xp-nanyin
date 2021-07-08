@@ -11,6 +11,8 @@ import java.util.*;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.dao.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -89,6 +91,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class FinNetProductDurationService extends CommonExportService<FinNetProductDurationDto> implements BaseProcessService<FinNetProductDurationDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(FinNetProductDurationService.class);
 
     @Autowired
     private TradeProductDealCommService baseTradeProductDealCommServiceImpl;
@@ -423,7 +429,7 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
     				 }
     			 }
     		}catch (Exception e) {
-    			e.printStackTrace();
+				logger.error(e.getMessage(),e);
     		}
     		 this.handleBussFlowData(dto);
     	}

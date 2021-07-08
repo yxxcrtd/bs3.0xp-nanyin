@@ -222,7 +222,6 @@ public class InvestTradeRegist001Controller extends BaseController{
                         InvestTradeRegist001Dto.class);
             }
             catch (IOException e) {
-                // e.printStackTrace();
                 logger.error(e.getMessage(), e);
             }
         }else{

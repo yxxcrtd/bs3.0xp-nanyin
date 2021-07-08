@@ -18,6 +18,8 @@ import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +66,10 @@ import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 @PageId("ReportConfirmManage003")
 @RequestMapping("/disclosure/information/reveal/reportconfirm/ReportConfirmManage003")
 public class ReportConfirmManage003Contoller extends BaseController {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(ReportConfirmManage003Contoller.class);
 
 	/**
 	 * 
@@ -252,7 +258,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 						}
 						catch (Exception e)
 						{
-							e.printStackTrace();
+							logger.error(e.getMessage(),e);
 						}
 
 					}
@@ -297,7 +303,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			String msg = "批量上传披露文件错误";
 			checkList.add(new ValidMessage(msg));
 			value = new AjaxResult(msg, MessageType.错误消息);
@@ -369,7 +375,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 			finally {
 				if(outputStream!=null)

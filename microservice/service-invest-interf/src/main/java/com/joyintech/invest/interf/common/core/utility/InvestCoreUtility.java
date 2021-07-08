@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 投管核心utility
@@ -17,7 +19,10 @@ import com.joyintech.framework.util.StringUtil;
  * @since 1.0
  */
 public class InvestCoreUtility {
-	
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(InvestCoreUtility.class);
 	
     /**
      * @Description: 发送数据给目标系统
@@ -43,7 +48,7 @@ public class InvestCoreUtility {
 				webserviceUrl = prop.getProperty("webseviceUrl");
 			}
  		} catch (IOException e) {
- 			e.printStackTrace();
+			logger.error(e.getMessage(),e);
  		}
  		// 调用资管接口
  		String result = HttpClientWebservice.send(requestXml, webserviceUrl);

@@ -2706,7 +2706,7 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
 //               ptlManagementInfo001Mapper.insertPtlPortfolio(entity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
     }
 

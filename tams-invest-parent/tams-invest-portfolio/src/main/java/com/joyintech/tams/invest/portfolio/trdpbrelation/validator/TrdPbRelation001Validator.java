@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.joyintech.framework.util.StringUtil;
@@ -23,6 +26,11 @@ import com.joyintech.tams.invest.portfolio.trdpbrelation.service.TrdPbRelation00
  */
 @Component
 public class TrdPbRelation001Validator implements BeanValidator{
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(TrdPbRelation001Validator.class);
+
     @Autowired
     private TrdPbRelation001Service trdPbRelation001Service;
 	@Override
@@ -78,8 +86,7 @@ public class TrdPbRelation001Validator implements BeanValidator{
 								errorList.add(new ValidMessage(getMessage("TRD_PB_E_005",String.valueOf(i+1),detail.getPbId())));
 							}
 						} catch (UnsupportedEncodingException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							logger.error(e.getMessage(),e);
 						}
 					}
 					

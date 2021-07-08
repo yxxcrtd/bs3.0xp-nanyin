@@ -34,7 +34,10 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class FileIO {
-	private static final Logger logger = LoggerFactory.getLogger(FileIO.class);
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(FileIO.class);
 	private static final String GBK = "gbk";
 
 	private FileIO() {
@@ -101,21 +104,21 @@ public class FileIO {
     			try {
     				writer.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
     		if(write !=null ){
     			try {
     				write.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
     		if(fos !=null ){
     			try {
     				fos.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
 		}
@@ -155,14 +158,14 @@ public class FileIO {
     			try {
     				inStream.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
     		if(fs !=null ){
     			try {
     				fs.close();
     			} catch (Exception e) {
-    				e.printStackTrace();
+					logger.error(e.getMessage(),e);
     			}
     		}
 		}
@@ -213,14 +216,13 @@ public class FileIO {
 			xmlWriter.writeClose(list);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}finally {
 			if(xmlWriter != null){
 				try {
 					xmlWriter.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -300,14 +302,13 @@ public class FileIO {
 			is = new FileInputStream(file);
 			sftp.upload(localPath, fileName1, is);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}finally {
 			if(is != null){
 				try {
 					is.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}

@@ -5,7 +5,10 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.jixu.common.tool.SFTPTool;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +17,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AESUtil {
-
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(SFTPTool.class);
 	@Value("${jixu.aesKey}")
 	private String aesKey;
 
@@ -60,7 +66,7 @@ public class AESUtil {
 			newpwd=newpwd+endkey;
 			return newpwd;
 		}catch(Exception e) {
-			e.printStackTrace();
+		    logger.error(e.getMessage(),e);
 			return "Error Password";
 		}
 	}
@@ -90,7 +96,7 @@ public class AESUtil {
 			String originalString = new String(original, "utf-8");
 			return originalString;
 		}catch(Exception e) {
-			e.printStackTrace();
+		    logger.error(e.getMessage(),e);
 			return "Error Password";
 		}
 	}

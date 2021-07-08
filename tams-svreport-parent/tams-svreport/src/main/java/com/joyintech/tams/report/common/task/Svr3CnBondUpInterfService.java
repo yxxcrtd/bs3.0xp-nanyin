@@ -218,8 +218,7 @@ public class Svr3CnBondUpInterfService extends InterfService {
 					this.getInterfInputStream(ftpType, url, StringUtil.toInt(port), username, password,
 					 salesRemotePath + currentDate, localPath, DictCodeListExt2.数据来源_销售系统.getValue());
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+                     logger.error(e.getMessage(),e);
 				}
 			}
             // // 读取销售系统
@@ -295,7 +294,7 @@ public class Svr3CnBondUpInterfService extends InterfService {
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
             logger.error(e.getMessage(),e);
             return;
         }
@@ -500,7 +499,7 @@ public class Svr3CnBondUpInterfService extends InterfService {
                     try {
                         in.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
             }
@@ -561,7 +560,7 @@ public class Svr3CnBondUpInterfService extends InterfService {
 					}
 					info.append("\n");
 				} catch (Exception e) {
-//					e.printStackTrace();
+//					logger.error(e.getMessage(),e);
 		            logger.error(e.getMessage(),e);
 				}finally {
                     //关闭流
@@ -569,7 +568,6 @@ public class Svr3CnBondUpInterfService extends InterfService {
                         try {
                             in.close();
                         } catch (Exception e) {
-//					e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -577,7 +575,6 @@ public class Svr3CnBondUpInterfService extends InterfService {
                         try {
                             bfinput.close();
                         } catch (IOException e) {
-//					e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -585,7 +582,6 @@ public class Svr3CnBondUpInterfService extends InterfService {
                         try {
                             inreader.close();
                         } catch (IOException e) {
-//					e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -593,7 +589,6 @@ public class Svr3CnBondUpInterfService extends InterfService {
                         try {
                             reader.close();
                         } catch (IOException e) {
-//					e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }

@@ -7220,7 +7220,7 @@ public class InterfCommonService {
 	        Object obj = method.invoke(dto);
 	        settleAmt = obj == null ? BigDecimal.ZERO :(BigDecimal) obj ;
         }catch(Exception e){
-        	e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return settleAmt;
     }

@@ -291,7 +291,7 @@ public class TrdIRSDuration004Controller extends BaseController {
 //            // 操作留痕表
 //            WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
 //        }
         processParameter.setWorkFlowParameter(params);
         if (BussinessConstant.SUBMIT.equals(dto.getOperateType())) {

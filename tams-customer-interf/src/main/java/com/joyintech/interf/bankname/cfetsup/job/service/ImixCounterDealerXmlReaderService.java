@@ -166,7 +166,6 @@ public class ImixCounterDealerXmlReaderService {
 //			imixService.updateBbjycytxl();
 //		} catch (RuntimeException e) {
 //			log.error("批量修改本币交易成员通讯表失败!");
-//			e.printStackTrace();
 //		}
 		//批量修改本币交易成员通讯表 end
 		log.info("任务结束!");
@@ -243,14 +242,14 @@ public class ImixCounterDealerXmlReaderService {
 				try {
 					imixServiceMapper.clearImixBondDealers();
 				} catch ( Exception e ) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 				for (int i = 0; i < data.size(); i+=500) {
 					List<FxImixBondinfoDto> saImixBondinfoVos = data.subList(i, i + 500 <= data.size() ? i + 500 : data.size());
 					try {
 						imixServiceMapper.saveImixBondDealers(saImixBondinfoVos);
 					} catch ( Exception e ) {
-						e.printStackTrace();
+						log.error(e.getMessage(),e);
 					}
 				}
 				// add by weipingwen @20200108 end
@@ -364,14 +363,14 @@ public class ImixCounterDealerXmlReaderService {
 				try {
 					imixServiceMapper.clearImixJgzcgx();
 				} catch ( Exception e ) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 				for (int i = 0; i < data.size(); i+=500) {
 					List<FxJgzcgxDto> saJgzcgxVos = data.subList(i, i + 500 <= data.size() ? i + 500 : data.size());
 					try {
 						imixServiceMapper.saveJgzcgx(saJgzcgxVos);
 					} catch ( Exception e ) {
-						e.printStackTrace();
+						log.error(e.getMessage(),e);
 					}
 				}
 				// add by weipingwen @20200108 end
@@ -467,14 +466,14 @@ public class ImixCounterDealerXmlReaderService {
 				try {
 					imixServiceMapper.clearErrorInfo();
 				} catch ( Exception e ) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 				for (int i = 0; i < data.size(); i+=500) {
 					List<FxImixErrorInfoDto> saImixErrorInfoVOS = data.subList(i, i + 500 <= data.size() ? i + 500 : data.size());
 					try {
 						imixServiceMapper.saveErrorInfo(saImixErrorInfoVOS);
 					} catch ( Exception e ) {
-						e.printStackTrace();
+						log.error(e.getMessage(),e);
 					}
 				}
 				// add by weipingwen @20200108 end
@@ -624,14 +623,14 @@ public class ImixCounterDealerXmlReaderService {
 				try {
 					imixServiceMapper.clearImixDealers();
 				} catch ( Exception e ) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 				for (int i = 0; i < data.size(); i+=500) {
 					List<FxImixMemMailInfoDto> saImixMemMailInfoVOS = data.subList(i, i + 500 <= data.size() ? i + 500 : data.size());
 					try {
 						imixServiceMapper.saveImixDealers(saImixMemMailInfoVOS);
 					} catch ( Exception e ) {
-						e.printStackTrace();
+						log.error(e.getMessage(),e);
 					}
 				}
 				//  add by weipingwen @20200108 end
@@ -746,14 +745,14 @@ public class ImixCounterDealerXmlReaderService {
 				try {
 					imixServiceMapper.clearImixMems();
 				} catch ( Exception e ) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 				for (int i = 0; i < data.size(); i+=500) {
 					List<FxImixMemInfoDto> saImixMemInfoVOS = data.subList(i, i + 500 <= data.size() ? i + 500 : data.size());
 					try {
 						imixServiceMapper.saveImixMems(saImixMemInfoVOS);
 					} catch ( Exception e ) {
-						e.printStackTrace();
+						log.error(e.getMessage(),e);
 					}
 				}
 				// add by weipingwen @20200106 end

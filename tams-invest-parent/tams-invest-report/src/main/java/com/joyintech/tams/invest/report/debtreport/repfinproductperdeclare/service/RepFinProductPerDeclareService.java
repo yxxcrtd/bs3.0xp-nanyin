@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,11 @@ import freemarker.template.Template;
  */
 @Service
 public class RepFinProductPerDeclareService extends CommonExportService<RepFinProductPerDeclareDto>{
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RepFinProductPerDeclareService.class);
+
     /**
      * 理财产品排期
      */
@@ -129,7 +134,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 selectParam, RepFinProductPerDeclareDto.class);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }
@@ -288,7 +293,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 
             }
             catch (Exception e) {
-            	e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             finally {
                 // 关闭流

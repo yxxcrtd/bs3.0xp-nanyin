@@ -523,7 +523,7 @@ public class RepCheckInfoService {
 			ccm.setFlag(false);
 			ccm.setMsg(ccm.getMsg()+e.getMessage());
 			logger.error(e.getMessage());
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
     	
     }
@@ -582,7 +582,7 @@ public class RepCheckInfoService {
         catch (Exception e) {
             msg.setFlag(false);
             msg.setMsg("阀值校验出现异常,请联系管理员!");
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return msg;
     }

@@ -17,6 +17,8 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +58,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("MstCoinFundQuotationInfo002")
 @RequestMapping("/invest/basicdata/mstcoinfundquotationinfo/MstCoinFundQuotationInfo002")
 public class MstCoinFundQuotationInfo002Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MstCoinFundQuotationInfo002Controller.class);
 
     /**
      * 向service注值
@@ -99,7 +105,7 @@ public class MstCoinFundQuotationInfo002Controller extends BaseController {
                 model.addAttribute("entity", dto1);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         // 初始化

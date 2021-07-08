@@ -361,7 +361,7 @@ public class InterfFileDownload001Service {
                     bis.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (zipOut != null) {
@@ -369,7 +369,7 @@ public class InterfFileDownload001Service {
                     zipOut.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (stream != null) {
@@ -377,7 +377,7 @@ public class InterfFileDownload001Service {
                     stream.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

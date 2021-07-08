@@ -157,7 +157,6 @@ public class SvrAssetBasisNoBtmFileImpService extends FileImpService{
 				success = true;
 			}catch(Exception e){
 				logger.error(e.getMessage(),e);
-				e.printStackTrace();
 				success = false;
 			}
 		}else{

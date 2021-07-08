@@ -17,6 +17,8 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,6 +35,11 @@ import java.util.Map;
  **/
 @Service
 public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSupervisionRiskAnalyzeDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(RskSupervisionRiskAnalyzeService.class);
+
 	/*@Autowired
 	private RoleCommonService roleCommonService;*/
     /**
@@ -212,7 +219,7 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
 			}
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
     }

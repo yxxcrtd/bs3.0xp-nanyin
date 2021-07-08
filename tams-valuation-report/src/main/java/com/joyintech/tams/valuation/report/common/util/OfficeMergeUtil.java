@@ -174,7 +174,7 @@ public class OfficeMergeUtil {
                     //每个文件增加n行空行
                     index = index + 2;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 } finally {
                     if (inputExcel !=null){
                         inputExcel.close();
@@ -204,7 +204,7 @@ public class OfficeMergeUtil {
                     fos.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (outputExcel != null) {
@@ -212,7 +212,7 @@ public class OfficeMergeUtil {
                     outputExcel.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

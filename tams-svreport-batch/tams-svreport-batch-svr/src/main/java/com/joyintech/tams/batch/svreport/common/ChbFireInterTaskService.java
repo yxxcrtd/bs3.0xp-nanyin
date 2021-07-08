@@ -124,7 +124,6 @@ public class ChbFireInterTaskService extends InterfService {
                     lock = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error("中债上游接口定时任务处理Error",e);
                 }
             }
@@ -135,7 +134,6 @@ public class ChbFireInterTaskService extends InterfService {
                     channel = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error("中债上游接口定时任务处理Error",e);
                 }
             }

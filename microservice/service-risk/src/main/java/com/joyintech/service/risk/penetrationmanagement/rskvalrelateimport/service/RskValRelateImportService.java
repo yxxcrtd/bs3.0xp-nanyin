@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +44,11 @@ import com.joyintech.service.risk.penetrationmanagement.rskvalrelateimport.dto.R
  */
 @Service
 public class RskValRelateImportService extends BaseService<RskValRelateImportDto> {
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskValRelateImportService.class);
+
     /**
      * RskValRelateImportMapper
      */
@@ -181,7 +187,7 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
             }
         }
         catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         //查询组合名称
         dto.setName(rskValRelateImportMapper.selectGroupName(ptlId));

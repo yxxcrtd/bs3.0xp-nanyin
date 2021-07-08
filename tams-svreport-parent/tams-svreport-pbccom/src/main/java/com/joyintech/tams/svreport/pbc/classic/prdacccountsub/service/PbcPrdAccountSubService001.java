@@ -198,7 +198,6 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
 			try {
 				infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcPrdAccountSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
 				logger.debug("数据转换异常",e.getMessage(),e);
 				return ;
 			}
@@ -693,7 +692,6 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
             fileList.add(makeSingleFile(wb, reportConfig, null, fileType, contents, new LongAdder(), 0L, count,isHasName));
         }
         catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         finally {

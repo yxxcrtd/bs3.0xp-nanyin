@@ -75,8 +75,7 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 		try {
 			conn = jdbcTemplate.getDataSource().getConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return false;
 		}
 
@@ -166,26 +165,26 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 			}
 			return true;
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return false;
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					e.printStackTrace();
-//					return false;
+					logger.error(e.getMessage(),e);
+					return false;
 				}
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
-//					return false;
+					logger.error(e.getMessage(),e);
+					return false;
 				}
 			}
 		}
@@ -206,7 +205,7 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 			rs = ps.executeQuery();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return false;
 		} finally {
 			// 释放连接
@@ -214,16 +213,16 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
-//					return false;
+					logger.error(e.getMessage(),e);
+					return false;
 				}
 			}
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
-//					return false;
+					logger.error(e.getMessage(),e);
+					return false;
 				}
 			}
 		}

@@ -561,7 +561,7 @@ public class CommonUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		return false;

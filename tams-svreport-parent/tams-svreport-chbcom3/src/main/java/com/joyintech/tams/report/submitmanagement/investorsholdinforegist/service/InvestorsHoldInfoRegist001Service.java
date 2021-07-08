@@ -186,7 +186,7 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 						InvestorsHoldInfoRegist001Dto.class);
 				pageParam.put("investList", investList);
 			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 				logger.error(e.getMessage(),e);
 			}
 		} else {

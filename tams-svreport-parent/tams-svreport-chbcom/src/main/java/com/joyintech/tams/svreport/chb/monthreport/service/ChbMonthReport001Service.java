@@ -137,7 +137,6 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 						ChbMonthReport.class);
 				pageParam.put("reportList", astValueList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {
@@ -625,14 +624,12 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 					fos.close();
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
-					e.printStackTrace();
 				}
 		    	if(fis !=null){
 		    		try {
 		    			fis.close();
 					} catch (IOException e) {
 						logger.error(e.getMessage(),e);
-						e.printStackTrace();
 					}
 		    	}
 	    	}

@@ -93,7 +93,6 @@ public class DisFileInterfCommonService {
                     }
                 } catch (FileNotFoundException e) {
                 	logger.error(e.getMessage(),e);
-                    e.printStackTrace();
                     success = "fail";
                 }
                 if(!StringUtil.equals("fail", success)) {

@@ -458,7 +458,6 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
         try {
             roleIdList = reportTreeMenuConfiguration001Mapper.getRoleIdList(dto);
         } catch (Exception e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
         } finally {
             DynamicDataSourceHolder.clearDataSource();

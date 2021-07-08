@@ -139,7 +139,7 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
         try {
             ZipFileUtil.compressZip(outFile,true,files);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         String fileName = outFile.getName();

@@ -486,7 +486,7 @@ public class CommonBusinessService extends BaseService {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         boolean 是否需要上级审批 = !DictCodeList.授权类型_无限授权.getValue().equals(authorizeLimitAmt.get("AUTHORIZE_TYPE"));
         //
@@ -504,7 +504,7 @@ public class CommonBusinessService extends BaseService {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return variables;
     }

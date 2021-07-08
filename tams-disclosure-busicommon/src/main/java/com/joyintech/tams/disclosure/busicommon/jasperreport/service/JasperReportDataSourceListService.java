@@ -30,7 +30,11 @@ import net.sf.jasperreports.engine.JRField;
  */
 
 public class JasperReportDataSourceListService implements JRDataSource {
-	private static final Logger logger = LoggerFactory.getLogger(JasperReportDataSourceListService.class);
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(JasperReportDataSourceListService.class);
+
 	private List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 	int index = -1;
 	Map<String, Object> parameters=new HashMap<String, Object>();
@@ -90,7 +94,7 @@ public class JasperReportDataSourceListService implements JRDataSource {
 					conn.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 

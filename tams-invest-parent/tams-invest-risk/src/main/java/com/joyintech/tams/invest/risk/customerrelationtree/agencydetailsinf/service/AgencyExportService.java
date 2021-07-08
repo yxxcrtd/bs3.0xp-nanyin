@@ -206,8 +206,7 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
             fileList.add(makeSingleFile(wb, reportConfig, null, fileType, contents, new LongAdder(), 0L, count));
         }
         catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
         }
         finally {
             try {

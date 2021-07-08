@@ -144,8 +144,6 @@ public class ValAccountsAdjustAccountEntry001Controller extends BaseController {
         // this.getResponse().setContentType("text/html;charset=UTF-8");
         // this.getResponse().getWriter().println(resultStr);
         // } catch (IOException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
         // }
     }
 

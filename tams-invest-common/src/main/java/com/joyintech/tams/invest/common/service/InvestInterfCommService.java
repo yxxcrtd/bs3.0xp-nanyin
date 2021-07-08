@@ -188,7 +188,6 @@ public class InvestInterfCommService extends BaseService<InvestInterfCommDto> {
         catch (Exception e) {
             // 目前接口报错先不处理
             logger.error("调投管接口异常，不影响交易", e);
-            e.printStackTrace();
             return null;
         }
     }

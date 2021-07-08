@@ -54,6 +54,8 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -75,6 +77,10 @@ import java.util.Map;
  */
 @Service
 public class TrdPlanCcyInvestTrade003Service extends BaseService<TrdPlanCcyInvestTradeConfirmDto> implements BaseProcessService<TrdPlanCcyInvestTradeConfirmDto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanCcyInvestTrade003Service.class);
 
     /**
      * 附件信息共通Service
@@ -236,7 +242,7 @@ public class TrdPlanCcyInvestTrade003Service extends BaseService<TrdPlanCcyInves
 					WorkFlowUtil.deleteProcess(flow.getSeqNo(), flow.getWorkflowId());
 				} catch (WorkFlowException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+                     logger.error(e.getMessage(),e);
 				}
            	 }
             }

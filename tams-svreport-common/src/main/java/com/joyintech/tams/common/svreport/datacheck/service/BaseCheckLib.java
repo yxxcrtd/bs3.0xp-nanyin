@@ -40,6 +40,8 @@ import com.joyintech.tams.report.common.dto.ChbTransformRuleObjDto;
 import com.joyintech.tams.report.common.dto.TransformRule001Dto;
 import com.joyintech.tams.report.common.util.ChbSensitiveInfoUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -50,6 +52,10 @@ import com.joyintech.tools.collectors.JoyinCollectors;
  * @since 1.0
  */
 public class BaseCheckLib {
+    /**
+     * 日志
+     */
+    private  static Logger logger = LoggerFactory.getLogger(BaseCheckLib.class);
 	  public static Map<String,List<ChbTransformRuleObjDto>> objFiledsMap;
 	  public static Map<String,TransformRule001Dto> spzMap;
 	  public static final String PATTERN_ALL = "^[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
@@ -187,7 +193,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 			byte[] b_gbk = srcValue.getBytes("GBK");
 			return (b_gbk.length < length);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 			return false;
 		}
     }
@@ -585,7 +591,6 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             sdf.parse(srcValue);
             ret = true;
         } catch (ParseException e) {
-            //e.printStackTrace();
             ret = false;
         }
 
@@ -647,7 +652,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         try {
             return srcValue.matches(format);
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return false;
         }
     }
@@ -672,7 +677,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         try {
             ff= srcValue.matches(format);
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return false;
         }
         //白名单验证不通过后继续检查有没有存在生僻字库中
@@ -937,7 +942,6 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             sdf.parse(srcValue);
             ret = true;
         } catch (ParseException e) {
-            //e.printStackTrace();
             ret = false;
         }
         
@@ -974,7 +978,6 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             sdf.parse(srcValue);
             ret = true;
         } catch (ParseException e) {
-            //e.printStackTrace();
             ret = false;
         }
         
@@ -1202,7 +1205,6 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             	return true;
             }
         } catch (ParseException e) {
-            //e.printStackTrace();
         	return true;
         }
     }

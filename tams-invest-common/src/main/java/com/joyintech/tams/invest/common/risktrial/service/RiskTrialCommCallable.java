@@ -315,7 +315,7 @@ public class RiskTrialCommCallable {
 				riskTrialRetDto.setInvestedAmountExpr(exprMath);
 				riskTrialRetList.add(riskTrialRetDto);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		return riskTrialRetList;

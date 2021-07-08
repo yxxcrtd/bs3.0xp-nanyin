@@ -370,7 +370,6 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 					FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		File file = new File(fileName);
 		Workbook workbook=null;
@@ -399,7 +398,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 				 fileName, null, null, 0, headerNum - 1, headerNum - 1);
 		     }
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		param.put("userName", CommonUtil.getUserName());
 		param.put("tableName", tableName);
@@ -424,7 +423,6 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
                 FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
         } catch (FileNotFoundException e) {
         	logger.error(e.getMessage(),e);
-        	e.printStackTrace();
         }
         File file = new File(fileName);
 		// 获取导入表名
