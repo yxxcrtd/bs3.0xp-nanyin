@@ -1,7 +1,9 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.HxProfit;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface HxProfitMapper {
     int deleteByPrimaryKey(Integer id);
 

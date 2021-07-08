@@ -1,7 +1,9 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.ChbSubjectBalance;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbSubjectBalanceMapper {
     int deleteByPrimaryKey(String produuid);
 
