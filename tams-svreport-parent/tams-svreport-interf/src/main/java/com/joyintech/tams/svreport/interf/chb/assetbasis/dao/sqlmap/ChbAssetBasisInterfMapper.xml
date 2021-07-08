@@ -259,13 +259,13 @@
   <select id="selectByValuedate" parameterType="java.lang.String" resultMap="BaseResultMap"
   resultSetType="FORWARD_ONLY" fetchSize="1000">
 	  select * from (
-	  select aa.PROD_ID,aa.ASSET_ID,aa.VALUE_DATE,aa.MDATE,aa.ccy,sum(aa.POS_AMT),
-	  sum(aa.TDY_COST_AMT),
-	  sum(aa.TDY_FLOAT_INGPL),
-	  sum(aa.TDY_INTINCEXP),
-	  sum(aa.DELAY_PAY_AMT),
-	  max(aa.UPDATE_TIME),
-	  max(aa.CREATE_TIME)
+	  select aa.PROD_ID,aa.ASSET_ID,aa.VALUE_DATE,aa.MDATE,aa.ccy,sum(aa.POS_AMT) POS_AMT,
+	  sum(aa.TDY_COST_AMT) TDY_COST_AMT,
+	  sum(aa.TDY_FLOAT_INGPL) TDY_FLOAT_INGPL,
+	  sum(aa.TDY_INTINCEXP) TDY_INTINCEXP,
+	  sum(aa.DELAY_PAY_AMT) DELAY_PAY_AMT,
+	  max(aa.UPDATE_TIME) UPDATE_TIME,
+	  max(aa.CREATE_TIME) CREATE_TIME
 	  from (
 	  select
 	  psv1.PROD_ID as PROD_ID,
