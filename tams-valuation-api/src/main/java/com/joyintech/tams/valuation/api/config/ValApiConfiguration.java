@@ -8,6 +8,6 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/7/7
  */
 @Configuration
-@ComponentScan(basePackages = "com.jixu.joyin2jixu.service")
+@ComponentScan(basePackages = "com.jixu")
 public class ValApiConfiguration {
 }

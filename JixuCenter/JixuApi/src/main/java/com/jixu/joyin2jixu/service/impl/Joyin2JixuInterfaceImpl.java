@@ -12,6 +12,8 @@ import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
@@ -53,18 +55,22 @@ public class Joyin2JixuInterfaceImpl implements Joyin2JixuInterface {
 
     @Override
     public List<SelectOptionDto> getSecurityDtoByAssetType(String... assetType) {
-        return restTemplate.postForList(apiUrl(ApiPathConst.SECURITY_OPTIONS), assetType, SelectOptionDto.class);
+        MultiValueMap<String, Object> valueMap = new LinkedMultiValueMap<>();
+        for (String s : assetType) {
+            valueMap.add("assetType[]", s);
+        }
+        return restTemplate.postForList(apiUrl(ApiPathConst.SECURITY_OPTIONS), valueMap, SelectOptionDto.class);
     }
 
     private ResultContainer executeJixuMessage(boolean withTx, String jsonMsg) {
         Map<String, Object> request = new HashMap<>(1);
         request.put("jsonMsg", jsonMsg);
         request.put("withTx", withTx);
-        return restTemplate.postForObject(apiUrl(ApiPathConst.API_PATH), request, ResultContainer.class);
+        return restTemplate.postForObject(apiUrl(ApiPathConst.EXECUTE_MESSAGE), request, ResultContainer.class);
     }
 
     private String apiUrl(String path) {
         return UriComponentsBuilder.fromHttpUrl(ServiceApplication.ADAPTER_SERVICE_NAME)
-                .pathSegment(path).toString();
+                .pathSegment(ApiPathConst.API_PATH, path).build().toString();
     }
 }

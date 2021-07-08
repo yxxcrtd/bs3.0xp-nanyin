@@ -32,12 +32,6 @@ public class Joyin2JixuInterfaceController {
         return joyin2JixuInterface.executeJixuMessageNoTx(jsonMsg);
     }
 
-
-    @PostMapping(ApiPathConst.EXECUTE_MESSAGE)
-    public ResultContainer executeJixuMessageNoTx(@RequestParam("jsonMsg") String jsonMsg) {
-        return joyin2JixuInterface.executeJixuMessageNoTx(jsonMsg);
-    }
-
     @PostMapping(ApiPathConst.CREATE_PORTFOLIOS)
     public ResultInterface createPortfolios(@RequestBody List<JJPortfolioDto> dtoList) {
         return joyin2JixuInterface.createPortfolios(dtoList);
@@ -48,8 +42,8 @@ public class Joyin2JixuInterfaceController {
         return joyin2JixuInterface.updateBkCashAccts(dtoList);
     }
 
-    @GetMapping(ApiPathConst.SECURITY_OPTIONS)
-    public List<SelectOptionDto> getSecurityDtoByAssetType(String[] assetType){
+    @PostMapping(ApiPathConst.SECURITY_OPTIONS)
+    public List<SelectOptionDto> getSecurityDtoByAssetType(@RequestParam("assetType[]") String[] assetType){
         return joyin2JixuInterface.getSecurityDtoByAssetTypes(assetType);
     }
 }

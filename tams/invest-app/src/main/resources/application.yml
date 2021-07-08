@@ -134,7 +134,7 @@ specialsyspage:
 application:
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: invest/remindMain  
+  remindPage: invest/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top
@@ -168,25 +168,26 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:${server.port}/${server.contextPath}
-      basicDataService: http://127.0.0.1:${server.port}/${server.contextPath}
-      documentService: http://127.0.0.1:${server.port}/${server.contextPath}
-      entrustService: http://127.0.0.1:${server.port}/${server.contextPath}
-      periodService: http://127.0.0.1:${server.port}/${server.contextPath}
-      assetService: http://127.0.0.1:${server.port}/${server.contextPath}
-      portfolioService: http://127.0.0.1:${server.port}/${server.contextPath}
-      productService: http://127.0.0.1:${server.port}/${server.contextPath}
-      quotaService: http://127.0.0.1:${server.port}/${server.contextPath}
-      reportService: http://127.0.0.1:${server.port}/${server.contextPath}
-      riskService: http://127.0.0.1:${server.port}/${server.contextPath}
-      riskRdsService: http://127.0.0.1:${server.port}/${server.contextPath}
-      riskInfService: http://127.0.0.1:${server.port}/${server.contextPath}
-      settleService: http://127.0.0.1:${server.port}/${server.contextPath}
-      tradeService: http://127.0.0.1:${server.port}/${server.contextPath}
-      channelService: http://127.0.0.1:${server.port}/${server.contextPath}
-      customerInterfService: http://127.0.0.1:${server.port}/${server.contextPath}
-      tamsServer: http://127.0.0.1:${server.port}/${server.contextPath}
-      investInterfService: http://127.0.0.1:${server.port}/${server.contextPath}
+      commonService: http://127.0.0.1:${server.port}${server.contextPath}
+      basicDataService: http://127.0.0.1:${server.port}${server.contextPath}
+      documentService: http://127.0.0.1:${server.port}${server.contextPath}
+      entrustService: http://127.0.0.1:${server.port}${server.contextPath}
+      periodService: http://127.0.0.1:${server.port}${server.contextPath}
+      assetService: http://127.0.0.1:${server.port}${server.contextPath}
+      portfolioService: http://127.0.0.1:${server.port}${server.contextPath}
+      productService: http://127.0.0.1:${server.port}${server.contextPath}
+      quotaService: http://127.0.0.1:${server.port}${server.contextPath}
+      reportService: http://127.0.0.1:${server.port}${server.contextPath}
+      riskService: http://127.0.0.1:${server.port}${server.contextPath}
+      riskRdsService: http://127.0.0.1:${server.port}${server.contextPath}
+      riskInfService: http://127.0.0.1:${server.port}${server.contextPath}
+      settleService: http://127.0.0.1:${server.port}${server.contextPath}
+      tradeService: http://127.0.0.1:${server.port}${server.contextPath}
+      channelService: http://127.0.0.1:${server.port}${server.contextPath}
+      customerInterfService: http://127.0.0.1:${server.port}${server.contextPath}
+      tamsServer: http://127.0.0.1:${server.port}${server.contextPath}
+      investInterfService: http://127.0.0.1:${server.port}${server.contextPath}
+      adapterService: http://127.0.0.1:9080/jixu
 #交易压力测试性能优化开关
 flag: false
 
