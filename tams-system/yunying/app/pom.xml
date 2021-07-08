@@ -111,6 +111,10 @@
 					<artifactId>service-exchange</artifactId>
 					<groupId>com.joyintech</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>service-quote</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
