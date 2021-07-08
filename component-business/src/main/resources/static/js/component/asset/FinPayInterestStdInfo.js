@@ -1351,7 +1351,7 @@
         list.sort(function(a,b){
             return -(new Date(a.vdate).DateDiff('d',b.vdate));
         })
-        generationPlanTable.reload({data:list, url:null})
+        generationPlanTable.reload({data:list, url:null});
     }
 
     function checkObjectDiff(currentDealObj, backupDealObj) {
@@ -1368,6 +1368,17 @@
             }
         }
         else if (currentDealObj != backupDealObj) {
+            // add by jiangpeng on 20210708 start
+            // TISHKBS-2450 mdate vdate 传值为number格式,表格reload后,转为string格式,导致判断不相等 此处转化为日期格式对比
+            if(typeof currentDealObj !== typeof backupDealObj){
+                var currentDealObjDate = new Date(currentDealObj);
+                var backupDealObjDate = new Date(backupDealObj);
+                var dsadf = new Date('dsadf');
+                if (currentDealObjDate.DateDiff('d', backupDealObjDate) === 0) {
+                    return false;
+                }
+            }
+            // add by jiangpeng on 20210708 end
             return true;
         }
         return result;
