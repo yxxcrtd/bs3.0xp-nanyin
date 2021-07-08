@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -191,6 +192,8 @@ public class EtrPlanAssetRController {
     public void doComplete(@RequestBody EtrPlanAssetRDto dto)
         throws IllegalAccessException,
         InvocationTargetException {
+        WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
+        
         etrPlanAssetService.doComplete(dto, dto.getOperateType());
     }
 
@@ -198,7 +201,25 @@ public class EtrPlanAssetRController {
     @DTXTransaction
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrPlanAssetRDto dto){
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), etrPlanAssetService.initBaseDto(dto));
+        
         etrPlanAssetService.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doUpdate")
+    public void doUpdate(@RequestBody EtrPlanAssetRDto dto){
+        WFlowCommonService.doUpdateFlow(dto.getOperateType(), etrPlanAssetService.initBaseDto(dto));
+        
+        etrPlanAssetService.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBack")
+    public void doBack(@RequestBody EtrPlanAssetRDto dto){
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
     }
     /**
      * 删除投资委托 <功能详细描述>
