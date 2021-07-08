@@ -5,3 +5,8 @@ insert into SYS_BATCH_TASK (task_id, system_code, task_name, ftask_id, bean_name
 DELETE FROM SYS_BATCH_JOB WHERE TASK_ID = '204' AND BATCH_SEQ_NO = '6f8803b3aa6fbaffe050007f01003cad';
 insert into SYS_BATCH_JOB values ('6f8803b3aa6fbaffe050007f01003cad','204','system','',to_date('2021/2/24', 'yyyy/mm/dd'), 'system',to_date('2021/2/24', 'yyyy/mm/dd'));
 
+/**删除203冗余配置**/
+DELETE FROM bok_match_rlat t WHERE t.source = '203' AND MATCH_TYPE = '01' AND ACCT_STANDARD = 'ALL' AND TARGET = '23';
+DELETE FROM bok_match_rlat t WHERE t.source = '204';
+insert into bok_match_rlat (MATCH_TYPE, ACCT_STANDARD, SOURCE, TARGET, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('01', 'ALL', '204', '23', 'system', null, sysdate, 'system', sysdate);
