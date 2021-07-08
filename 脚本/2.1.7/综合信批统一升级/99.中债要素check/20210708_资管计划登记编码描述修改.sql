@@ -1,3 +1,3 @@
 /**ZGBSSE-567  【中债直连】计划类利率型标的新建，中债报送信息页未对资管计划登记编码进行数据校验**/
-UPDATE CHB_DATACHECK_RULE_INV SET REMARK = '资管计划登记编码要素不可超过256位字符。' where CHECKMETHOD = 'lessThanCharLength'
+UPDATE CHB_DATACHECK_RULE_INV SET REMARK = '资管计划登记编码要素不可超过256位字符。' where CHECKMETHOD in ('lessThanCharLength','lessThanCharLengthUTF8')
 and SRCPROPERTY in ('bussRepAssetMngProdInfo.repRegistCode','svrBussRepAssetMngProdInfoDto.checkCode','bussRepAssetMngProdInfo.repRegistCode','bussRepAssetMngProdInfo.repRegistCode','bussRepAssetMngProdInfo.repRegistCode');
