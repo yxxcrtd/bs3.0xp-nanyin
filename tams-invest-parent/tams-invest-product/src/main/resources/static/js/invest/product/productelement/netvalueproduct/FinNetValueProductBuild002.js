@@ -1042,6 +1042,12 @@
 		}
 		//唤醒change事件
 		$("#FinNetValueProductBuild002_period").trigger('change');
+		// add by jiangpeng on 20210708 TISHKBS-2404 start
+		// 封闭式产品修改页面“是否永续”置灰状态
+		if ($("#FinNetValueProductBuild002_operationType").val() == ISSUE_MODE_01) {
+			$("#FinNetValueProductBuild002_isSus").prop('disabled',true);
+		}
+		// add by jiangpeng on 20210708 TISHKBS-2404 end
 	});
 }());
 
