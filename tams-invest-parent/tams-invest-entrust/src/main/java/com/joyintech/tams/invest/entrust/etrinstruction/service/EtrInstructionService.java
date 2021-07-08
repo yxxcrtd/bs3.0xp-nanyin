@@ -97,8 +97,15 @@ public class EtrInstructionService  extends CommonExportService<EtrInstructionDt
     @Override
     public void doUpdate(EtrInstructionDto entity){
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInstruction/doInsert",
+            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInstruction/doUpdate",
             entity, Integer.class);
+    }
+
+    @Override
+    public void doBack(EtrInstructionDto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInstruction/doBack",
+                entity, Integer.class);
     }
 
     /**

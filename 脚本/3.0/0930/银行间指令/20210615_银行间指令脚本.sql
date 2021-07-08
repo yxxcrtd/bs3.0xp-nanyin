@@ -287,15 +287,3 @@ INSERT INTO DYN_CONFIG_INFO
 (DYN_ID, DYN_INFO, REMARK, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES('EtrIbBondinfoHq_dyn', '{"name":"dynInfo","all":[{"value":"secType","label":"债券分类"},{"value":"issuer","label":"发行人"},{"value":"vdate","label":"起息日"},{"value":"mdate","label":"到期日"},{"value":"lastqx","label":"剩余期限"},{"value":"lastPaydate","label":"下一付息日"},{"value":"rateType","label":"利率类型"},{"value":"rate","label":"票面利率"},{"value":"zxGrade","label":"债项评级"},{"value":"ztGrade","label":"主体评级"},{"value":"xqFlg","label":"含权标识"},{"value":"xqdate","label":"下一行权日"},{"value":"priceXq","label":"估价净价（行权）"},{"value":"newPrice","label":"最新净价"},{"value":"newRate","label":"下一行权日"},{"value":"priceTj","label":"估价净价（推荐）"},{"value":"gzRate","label":"估值收益率"}],"checked":"secType,issuer,vdate,mdate,lastqx,lastPaydate,rateType,zxGrade,xqFlg,priceXq,newRate,gzRate"}',
        '债券二级左下角资产信息动态配置', 'ld', sysdate, 'ld', sysdate);
-
-
---外汇掉期指令取消委托状态控制
-DELETE FROM SYS_PAGE_DICTLIST spd WHERE PAGE_ID ='EtrWtFxswap001' AND DICT_ID ='ENTRUST_STATUS';
---利率互换指令取消委托状态控制
-DELETE FROM SYS_PAGE_DICTLIST spd WHERE PAGE_ID ='EtrIRS001' AND DICT_ID ='ENTRUST_STATUS';
---外汇远期指令取消委托状态控制
-DELETE FROM SYS_PAGE_DICTLIST spd WHERE PAGE_ID ='EtrForwex001' AND DICT_ID ='ENTRUST_STATUS';
---场内债券一级指令取消委托状态控制
-DELETE FROM SYS_PAGE_DICTLIST spd WHERE PAGE_ID ='EtrBondFirstLBidding001' AND DICT_ID ='ENTRUST_STATUS';
---可转债转股指令取消委托状态控制
-DELETE FROM SYS_PAGE_DICTLIST spd WHERE PAGE_ID ='EtrBondToStock001' AND DICT_ID ='ENTRUST_STATUS';
