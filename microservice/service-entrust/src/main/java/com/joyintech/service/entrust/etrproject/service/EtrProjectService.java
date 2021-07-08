@@ -21,6 +21,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
+import com.joyintech.service.entrust.etrplanassetc.dto.EtrPlanAssetCDto;
 import com.joyintech.service.entrust.etrproject.dao.EtrProjectMapper;
 import com.joyintech.service.entrust.etrproject.dto.EtrProjectDto;
 import com.joyintech.tams.common.base.dao.MstCounterPartyMapper;
@@ -31,6 +32,7 @@ import com.joyintech.tams.common.base.entity.MstCounterParty;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
@@ -142,7 +144,7 @@ public class EtrProjectService extends BaseService<EtrProjectDto> {
         // 项目类资产五级分类改造 add by renping 2019-08-01 end
         param.put("FINPROD_TYPE2", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
         //return queryForPage(page, length, () -> etrProjectMapper.selectForPage(param));
-        
+        param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return queryForPage(page, length, new ISelect() {
         	public void doSelect() {
         		etrProjectMapper.selectForPage(param);
@@ -394,9 +396,9 @@ public class EtrProjectService extends BaseService<EtrProjectDto> {
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
         }
-        if(baseEtrCashPositionCommService!=null){
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if(baseEtrCashPositionCommService!=null){
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
 
     /**
@@ -571,5 +573,42 @@ public class EtrProjectService extends BaseService<EtrProjectDto> {
     public String getCounterName(String counterId){
         MstCounterParty mstCounterParty = mstCounterPartyMapper.selectByPrimaryKey(counterId);
         return mstCounterParty.getCounterName();
+    }
+
+    public BaseEtrInvestInfoDto initBaseDto(EtrProjectDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+            dto.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
+            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            if(iPlatformDate != null){
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            entity.setEtrEntrust(etrEntrust);
+
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            etrEntrustAdd.setVdate(null);
+            etrEntrustAdd.setMdate(null);
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_项目类资产.getValue());
+            // 项目类资产五级分类改造 add by renping 2019-08-01 start
+            etrEntrustAdd.setAssetType1(dto.getType9());
+            etrEntrustAdd.setAssetType10(dto.getType10());
+            etrEntrustAdd.setAssetType11(dto.getType11());
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 添加流程编号
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (Exception e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+        return entity;
     }
 }

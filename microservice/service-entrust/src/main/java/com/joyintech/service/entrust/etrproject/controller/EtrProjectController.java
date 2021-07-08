@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -191,6 +192,8 @@ public class EtrProjectController {
     @DTXTransaction
     @PostMapping("doComplete")
     public void doComplete(@RequestBody EtrProjectDto dto) throws IllegalAccessException, InvocationTargetException{
+        WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
+        
         etrProjectService.doComplete(dto, dto.getOperateType());
     }
 
@@ -198,7 +201,25 @@ public class EtrProjectController {
     @DTXTransaction
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrProjectDto dto){
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), etrProjectService.initBaseDto(dto));
+        
         etrProjectService.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doUpdate")
+    public void doUpdate(@RequestBody EtrProjectDto dto){
+        WFlowCommonService.doUpdateFlow(dto.getOperateType(), etrProjectService.initBaseDto(dto));
+        
+        etrProjectService.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBack")
+    public void doBack(@RequestBody EtrProjectDto dto){
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
     }
     /**
      * 
