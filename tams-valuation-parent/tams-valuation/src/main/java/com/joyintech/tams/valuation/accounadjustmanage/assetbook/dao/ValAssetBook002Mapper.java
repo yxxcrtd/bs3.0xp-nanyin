@@ -21,6 +21,7 @@ import com.joyintech.tams.valuation.accounadjustmanage.assetbook.dto.ValAssetboo
 import com.joyintech.tams.common.base.entity.BokBooksetPlan;
 import com.joyintech.tams.common.base.entity.BokSchemeInfo;
 import com.joyintech.tams.common.base.entity.BokValScheme;
+import org.springframework.stereotype.Repository;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -30,6 +31,7 @@ import com.joyintech.tams.common.base.entity.BokValScheme;
  * @see ValAssetBook002Mapper
  * @since 1.0
  */
+@Repository
 public interface ValAssetBook002Mapper {
 
     /**

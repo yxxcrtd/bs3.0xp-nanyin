@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.base.BaseEntity;
+import org.springframework.stereotype.Repository;
 
 /**
  * 估值表生成
@@ -22,6 +23,7 @@ import com.joyintech.framework.base.BaseEntity;
  * @see ValuationReportBuild001
  * @since 1.0
  */
+@Repository
 public interface ValuationReportBuild001Mapper {
 
     /**

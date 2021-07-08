@@ -14,6 +14,7 @@ package com.joyintech.tams.valuation.trademanage.investtradequery.dao;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.trademanage.investtradequery.dto.RepurchaseTradeDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 回购交易查询
@@ -22,6 +23,7 @@ import com.joyintech.tams.valuation.trademanage.investtradequery.dto.RepurchaseT
  * @see RepurchaseQuery001Mapper2
  * @since 1.0
  */
+@Repository
 public interface RepurchaseTradeQuery001Mapper {
     
     RepurchaseTradeDto selectByTradeId(Map<String, Object> params);
