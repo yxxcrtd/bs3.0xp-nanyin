@@ -26,15 +26,16 @@ INSERT INTO sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER
 delete from sys_datadict_list where DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE ='TRD79';
 INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('COMMON_BUSINESS_TYPE', 'TRD79', '港股通股票分红交易', 1217, '0', 'system', null, sysdate, 'system', sysdate, null);
 
---
-delete from sys_page_dictlist where PAGE_ID = 'WorkflowMonitor001' and DICT_ID = 'COMMON_BUSINESS_TYPE' and DICT_ITEM_VAL = 'ETR_HKSE';
-INSERT INTO sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('WorkflowMonitor001', '999999', 'COMMON_BUSINESS_TYPE', 'ETR_HKSE', '港股通投资委托', null, 'system', null, sysdate, 'system', sysdate, null);
+--3.0产品要展示全量数据，不需要过滤
+--delete from sys_page_dictlist where PAGE_ID = 'WorkflowMonitor001' and DICT_ID = 'COMMON_BUSINESS_TYPE' and DICT_ITEM_VAL = 'ETR_HKSE';
+--INSERT INTO sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('WorkflowMonitor001', '999999', 'COMMON_BUSINESS_TYPE', 'ETR_HKSE', '港股通投资委托', null, 'system', null, sysdate, 'system', sysdate, null);
 
 delete from sys_page_dictlist where PAGE_ID = 'MainPage' and DICT_ID = 'COMMON_BUSINESS_TYPE' and DICT_ITEM_VAL = 'ETR_HKSE';
 INSERT INTO sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('MainPage', '999999', 'COMMON_BUSINESS_TYPE', 'ETR_HKSE', '港股通投资委托', null, 'system', null, sysdate, 'system', sysdate, null);
 
-delete from sys_page_dictlist where PAGE_ID = 'WorkflowMonitor001' and DICT_ID = 'COMMON_BUSINESS_TYPE' and DICT_ITEM_VAL = 'TRD79';
-INSERT INTO sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('WorkflowMonitor001', '999999', 'COMMON_BUSINESS_TYPE', 'TRD79', '港股通股票分红交易', null, 'system', null, sysdate, 'system', sysdate, null);
+--3.0产品要展示全量数据，不需要过滤
+--delete from sys_page_dictlist where PAGE_ID = 'WorkflowMonitor001' and DICT_ID = 'COMMON_BUSINESS_TYPE' and DICT_ITEM_VAL = 'TRD79';
+--INSERT INTO sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('WorkflowMonitor001', '999999', 'COMMON_BUSINESS_TYPE', 'TRD79', '港股通股票分红交易', null, 'system', null, sysdate, 'system', sysdate, null);
 
 delete from sys_page_dictlist where PAGE_ID = 'MainPage' and DICT_ID = 'COMMON_BUSINESS_TYPE' and DICT_ITEM_VAL = 'TRD79';
 INSERT INTO sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('MainPage', '999999', 'COMMON_BUSINESS_TYPE', 'TRD79', '港股通股票分红交易', null, 'system', null, sysdate, 'system', sysdate, null);

@@ -698,7 +698,7 @@ CREATE TABLE spring_festival_date(
 );
 -- Add comments to the table 
 comment on table spring_festival_date
-  is '参考汇率/结算汇率管理';
+  is '每年春节日期表';
 -- Add comments to the columns 
 comment on column spring_festival_date.year_id
   is '年份';

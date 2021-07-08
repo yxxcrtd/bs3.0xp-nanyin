@@ -363,7 +363,14 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
     @Override
     public void doUpdate(EtrBrowDepoInfoDto entity) {
         restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBrowDepoInfo/doInsert",
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBrowDepoInfo/doUpdate",
+                entity, Integer.class);
+    }
+
+    @Override
+    public void doBack(EtrBrowDepoInfoDto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBrowDepoInfo/doBack",
                 entity, Integer.class);
     }
 
