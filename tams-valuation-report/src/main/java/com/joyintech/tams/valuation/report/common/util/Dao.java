@@ -14,43 +14,43 @@ import java.util.Properties;
  *
  */
 public class Dao {
-	/**
-	 * 获取连接
-	 * @param object
-	 * @throws Exception
-	 */
-	  public static Connection getConnection(String object) throws Exception{
-		  //读取配置文件连接信息
-		  Properties prop= new Properties();
-		  InputStream is= Dao.class.getClassLoader().getResourceAsStream("resources/jdbc.properties");
-		  try {
-				prop.load(is);
-			} catch (Exception e) {
-				is= Dao.class.getClassLoader().getResourceAsStream("jdbc.properties");
-				prop.load(is);
-			}finally {
-		  	if(is != null){
-				is.close();
-			}
-		  }
-		  String url = "";
-		  String userName = "";
-		  String passWord = "";
-		  if(prop!=null) {
-			  //加载驱动
-			  Class.forName(prop.getProperty("driver"));
-			  //获取地址
-			  url = prop.getProperty("url");
-			  //获取用户名
-			  userName = prop.getProperty("userName");
-			  //获取密码
-			  passWord = prop.getProperty("passWord");
-		  }
-		//获取连接对象
-		  Connection conn=DriverManager.getConnection(url, userName, passWord);
-		  return conn;
-
-	  }
+//	/**
+//	 * 获取连接
+//	 * @param object
+//	 * @throws Exception
+//	 */
+//	  public static Connection getConnection(String object) throws Exception{
+//		  //读取配置文件连接信息
+//		  Properties prop= new Properties();
+//		  InputStream is= Dao.class.getClassLoader().getResourceAsStream("resources/jdbc.properties");
+//		  try {
+//				prop.load(is);
+//			} catch (Exception e) {
+//				is= Dao.class.getClassLoader().getResourceAsStream("jdbc.properties");
+//				prop.load(is);
+//			}finally {
+//		  	if(is != null){
+//				is.close();
+//			}
+//		  }
+//		  String url = "";
+//		  String userName = "";
+//		  String passWord = "";
+//		  if(prop!=null) {
+//			  //加载驱动
+//			  Class.forName(prop.getProperty("driver"));
+//			  //获取地址
+//			  url = prop.getProperty("url");
+//			  //获取用户名
+//			  userName = prop.getProperty("userName");
+//			  //获取密码
+//			  passWord = prop.getProperty("passWord");
+//		  }
+//		//获取连接对象
+//		  Connection conn=DriverManager.getConnection(url, userName, passWord);
+//		  return conn;
+//
+//	  }
 
 //	public static void main(String[] args) {
 //		//读取配置文件连接信息
@@ -73,7 +73,7 @@ public class Dao {
 //			conn = DriverManager.getConnection(url, userName, passWord);
 //		}
 //		catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(),e);
 //		}
 //		finally {
 //			if (conn!=null) {
@@ -81,14 +81,14 @@ public class Dao {
 //					conn.close();
 //				}
 //				catch (SQLException e) {
-//					e.printStackTrace();
+//					logger.error(e.getMessage(),e);
 //				}
 //			}
 //			if(is != null){
 //				try {
 //					is.close();
 //				} catch (IOException e) {
-//					e.printStackTrace();
+//					logger.error(e.getMessage(),e);
 //				}
 //			}
 //		}

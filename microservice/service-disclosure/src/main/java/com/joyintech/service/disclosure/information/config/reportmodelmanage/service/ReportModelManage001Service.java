@@ -103,7 +103,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
                              zipOut.write(tmp);
                          }
                       }catch (Exception e) {
- //                         e.printStackTrace();
+ //                       logger.error(e.getMessage(),e);
                           logger.error("error:",e);
                       }finally{
                           if(input!=null){
@@ -169,7 +169,6 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
               dto.setName(uploadFile.getSrcName());
               dto.setTemLoad(uploadFile.getTargetFile().getPath());
         } catch (Exception e) {
- //           e.printStackTrace();
         	logger.error("error:",e);
         }
         

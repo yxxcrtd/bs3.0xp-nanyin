@@ -213,7 +213,6 @@ public class Holidaymarket001Service extends CommonExportService<Holidaymarket00
                 checkDateList.add(temp);
             }
         } catch (ParseException e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         return checkDateList;

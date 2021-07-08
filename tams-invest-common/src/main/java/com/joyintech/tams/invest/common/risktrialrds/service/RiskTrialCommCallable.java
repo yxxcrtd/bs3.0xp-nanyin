@@ -174,7 +174,7 @@ public class RiskTrialCommCallable {
 				riskTrialRetDto.setFoulCond(rskTaskDto.getFoulCond());
 				riskTrialRetList.add(riskTrialRetDto);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		return riskTrialRetList;

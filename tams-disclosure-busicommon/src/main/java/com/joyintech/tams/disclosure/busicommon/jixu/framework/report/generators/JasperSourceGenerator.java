@@ -32,7 +32,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JasperSourceGenerator implements ReportGenerator{
-	private static final Logger logger = LoggerFactory.getLogger(JasperSourceGenerator.class);
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(JasperSourceGenerator.class);
+
 	public JasperSourceGenerator(DataSource dataSource) {
 		super();
 		this.dataSource = dataSource;
@@ -52,16 +56,14 @@ public class JasperSourceGenerator implements ReportGenerator{
 				connection = this.dataSource.getConnection();
 				jp = JasperFillManager.fillReport(reportFile, params, connection);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 				return null;
 			}finally{
 				if(null != connection){
 					try {
 						connection.close();
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 				}
 			}
@@ -75,16 +77,13 @@ public class JasperSourceGenerator implements ReportGenerator{
 				ds.setParameters(params);
 				jp = JasperFillManager.fillReport(reportFile, params, ds);
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 				return null;
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 				return null;
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 				return null;
 			}
 		}

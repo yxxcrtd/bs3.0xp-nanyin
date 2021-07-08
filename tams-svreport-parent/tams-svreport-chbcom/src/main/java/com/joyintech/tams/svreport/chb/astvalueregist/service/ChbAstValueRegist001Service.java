@@ -203,7 +203,6 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 						ChbAstValueRegist001Dto.class);
 				pageParam.put("astValueList", astValueList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {
@@ -788,7 +787,6 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 						ChbAstValueRegist001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

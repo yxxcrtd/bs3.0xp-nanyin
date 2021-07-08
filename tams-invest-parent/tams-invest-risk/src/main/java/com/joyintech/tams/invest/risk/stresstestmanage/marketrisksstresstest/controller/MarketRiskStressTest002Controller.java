@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,6 +48,11 @@ import com.joyintech.tams.invest.risk.stresstestmanage.marketrisksstresstest.ser
 @PageId("MarketRiskStressTest002")
 @RequestMapping("/invest/risk/stresstestmanage/marketrisksstresstest/MarketRiskStressTest002")
 public class MarketRiskStressTest002Controller extends BaseController{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MarketRiskStressTest002Controller.class);
+
     /**
      * 因子状态查看service
      */
@@ -112,8 +119,7 @@ public class MarketRiskStressTest002Controller extends BaseController{
         try {
 			date = format.parse(dateStr);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
         return date;
     }

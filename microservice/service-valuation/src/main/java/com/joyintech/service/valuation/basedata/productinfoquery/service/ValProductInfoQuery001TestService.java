@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,11 @@ import com.joyintech.tams.common.base.entity.BokBooksetExt;
  */
 @Service(value="serviceValProductInfoQuery001TestService")
 public class ValProductInfoQuery001TestService extends CommonExportService<ValProductInfoQuery001TestDto> {
-	
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValProductInfoQuery001TestService.class);
+
     /**
      * ValProductInfoQuery001Mapper
      */
@@ -57,8 +63,7 @@ public class ValProductInfoQuery001TestService extends CommonExportService<ValPr
 			try {
 				this.findAll(params);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
 		});
     }
@@ -130,8 +135,7 @@ public class ValProductInfoQuery001TestService extends CommonExportService<ValPr
 //		startDate = sim.parse(sDate);
 //	    endDate=sim.parse(eDate);
 //	} catch (ParseException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
+//		logger.error(e.getMessage(),e);
 //	}
 //  	  
 //  	  ValProductInfoQuery001TestDto  valDto=new ValProductInfoQuery001TestDto();

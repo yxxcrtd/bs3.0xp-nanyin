@@ -193,7 +193,6 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
 			 try {
 				infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcPrdBaseinfoEndSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
 				logger.debug("数据转换异常",e.getMessage(),e);
 				logger.error(e.getMessage(),e);
 				return ;
@@ -552,7 +551,6 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
             fileList.add(pbcPrdAccountSubService001.makeSingleFile(wb, reportConfig, null, fileType, contents, new LongAdder(), 0L, count,isHasName));
         }
         catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         finally {

@@ -331,7 +331,7 @@ public class EchartsPictureService {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		// 创建phantomjs命令（必须用全路径）
@@ -345,13 +345,12 @@ public class EchartsPictureService {
 		} catch (IOException e) {
 			logger.error("执行的phantomjs命令：" + phantomjsCmd);
 			logger.error("执行phantomjs命令异常，请检查phantomjs工具是否安装成功和phantomjs命令语句！");
-			e.printStackTrace();
 		} finally {
 			if (process != null) {
 				try {
 					process.waitFor();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 				process.destroy();
 			}
@@ -386,7 +385,7 @@ public class EchartsPictureService {
 			out.write(option);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}finally {
 			if (out !=null){
 				try {

@@ -224,8 +224,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
          return exportReportExcel(data,exceltemplate,fileName);
      }
      catch (IOException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         logger.error(e.getMessage(),e);
      }
      return null;
  }
@@ -285,7 +284,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
              try {
                  fos.close();
              } catch (IOException e) {
-                 e.printStackTrace();
+                 logger.error(e.getMessage(),e);
              }
          }
          if(fis !=null){
@@ -305,8 +304,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
 	try {
 		datesearch = format.parse(date);
 	} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+        logger.error(e.getMessage(),e);
 	}
 	 Calendar c= Calendar.getInstance();
 	 c.setTime(datesearch);
@@ -321,8 +319,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
 	try {
 		datesearch = format.parse(date);
 	} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+        logger.error(e.getMessage(),e);
 	}
 	 Calendar c= Calendar.getInstance();
 	 c.setTime(datesearch);
@@ -340,8 +337,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
 		try {
 			dateserach = format.parse(date);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		Calendar c = Calendar.getInstance();
 		c.setTime(dateserach);
@@ -366,8 +362,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
      try {
          dateserach = format.parse(date);
      } catch (ParseException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         logger.error(e.getMessage(),e);
      }
      Calendar c = Calendar.getInstance();
      c.setTime(dateserach);

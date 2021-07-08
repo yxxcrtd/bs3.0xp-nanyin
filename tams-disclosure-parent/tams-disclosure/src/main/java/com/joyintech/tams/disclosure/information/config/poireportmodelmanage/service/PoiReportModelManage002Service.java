@@ -194,8 +194,7 @@ public class PoiReportModelManage002Service extends CommonExportService<RepInfo>
 		        }
 			}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		//必填項校驗

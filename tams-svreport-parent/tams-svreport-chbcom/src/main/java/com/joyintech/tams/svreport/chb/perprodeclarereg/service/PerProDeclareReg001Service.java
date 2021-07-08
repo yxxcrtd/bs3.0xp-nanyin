@@ -131,7 +131,6 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 						PerProDeclareRegDto.class);
 				pageParam.put("perProDeclareList", perProDeclareList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {

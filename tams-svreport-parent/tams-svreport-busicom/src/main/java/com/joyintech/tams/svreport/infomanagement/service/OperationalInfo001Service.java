@@ -1031,7 +1031,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		try {
 			responseEntity = chbAssetListToExcel(tableId,tableName, title, dataList, enumIndexMap, mergeIndexList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return responseEntity;
 	}
@@ -1157,7 +1157,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			responseEntity = objListToExcel(tableId,tableName, title, dataList, false, enumIndexMap);
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		return responseEntity;
 	}
@@ -1405,7 +1404,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		return responseEntity;
 	}
@@ -1638,7 +1636,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					out.close();
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}finally {
 					if(out != null){
 						out.close();
@@ -1647,7 +1645,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return responseEntity;
 	}
@@ -1775,7 +1773,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
-					e.printStackTrace();
 				} finally {
 					if (out != null){
 						out.close();
@@ -1785,7 +1782,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		return responseEntity;
 	}
@@ -2996,7 +2992,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				svrReportGenetorService.generateReport(businessDate, dataObject, prodList, assetList);
 			} catch (ParseException e) {
 				logger.error(e.getMessage(),e);
-				e.printStackTrace();
 			}  
     	}
     	return count;
@@ -3130,7 +3125,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			svrReportGenetorService.generateReport(businessDate, dataObject, prodList, assetList);
 		} catch (ParseException e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}  
     	return count;
     }
@@ -3713,8 +3707,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             return new String(tempDoc);   
         }   
         catch (IOException e)   
-        {   
-            e.printStackTrace();   
+        {
+			logger.error(e.getMessage(),e);
         }   
         catch (SQLException es)   
         {   

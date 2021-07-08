@@ -360,7 +360,6 @@ public class ReportRevealManage001Contoller extends BaseController {
 			boolean result1 =  reportRevealManage001Service.updateRevealStatus(dto);
         }
         catch (IOException e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
             return new AjaxResult(e.getMessage());
         }
@@ -375,7 +374,6 @@ public class ReportRevealManage001Contoller extends BaseController {
 			boolean result1 =  reportRevealManage001Service.updateConfirmStatusWithGoBack(dto);
         }
         catch (IOException e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
             return new AjaxResult(e.getMessage());
         }

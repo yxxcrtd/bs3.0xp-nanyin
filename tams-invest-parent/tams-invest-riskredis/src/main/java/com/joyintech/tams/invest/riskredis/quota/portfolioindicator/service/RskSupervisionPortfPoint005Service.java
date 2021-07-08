@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -25,7 +27,10 @@ import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.dto.RskPtlPo
  */
 @Service
 public class RskSupervisionPortfPoint005Service extends CommonExportService<RskPtlPortfolioDto>{
-
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(RskSupervisionPortfPoint005Service.class);
 
 	/**
 	 * 画面查询 <功能详细描述>
@@ -72,7 +77,7 @@ public class RskSupervisionPortfPoint005Service extends CommonExportService<RskP
 			Page<RskPtlPortfolioDto> pageList=selectForPage(selectParam);
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}

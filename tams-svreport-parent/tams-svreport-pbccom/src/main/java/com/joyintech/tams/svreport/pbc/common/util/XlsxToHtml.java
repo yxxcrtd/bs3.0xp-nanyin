@@ -62,7 +62,6 @@ public class XlsxToHtml {
                 htmlExcel = XlsxToHtml.getExcelInfo(hWb,isWithStyle,sheetNum,tableWidth);
             }
         } catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }finally{
             try {
@@ -76,7 +75,6 @@ public class XlsxToHtml {
                 	file.delete();//删除临时文件
                 }
             } catch (IOException e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
             }
          }

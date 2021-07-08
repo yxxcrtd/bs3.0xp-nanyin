@@ -137,7 +137,7 @@ public class CreditRightsManagement002Controller extends BaseController{
                 dto.setSeqno(seqno);
             /*}
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }*/
         }
         ProcessParameter<CreditRightsManagementDto> processParameter = new ProcessParameter<CreditRightsManagementDto>();

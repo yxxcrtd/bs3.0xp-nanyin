@@ -95,8 +95,7 @@ public class ChbFileDownloadController extends BaseController {
         toClient.flush();
         toClient.close();
         }
-        catch(IOException e){ 
-//            e.printStackTrace();
+        catch(IOException e){
             logger.error(e.getMessage(),e);
         }
         finally{
@@ -105,7 +104,6 @@ public class ChbFileDownloadController extends BaseController {
                 fits.close();
             }
             catch (IOException e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
             }
           }  
@@ -114,7 +112,6 @@ public class ChbFileDownloadController extends BaseController {
                   fis.close();
               }
               catch (IOException e) {
-//                  e.printStackTrace();
                   logger.error(e.getMessage(),e);
               }
           }  
@@ -123,7 +120,6 @@ public class ChbFileDownloadController extends BaseController {
                   toClient.close();
               }
               catch (IOException e) {
-//                  e.printStackTrace();
                   logger.error(e.getMessage(),e);
               }
           }  

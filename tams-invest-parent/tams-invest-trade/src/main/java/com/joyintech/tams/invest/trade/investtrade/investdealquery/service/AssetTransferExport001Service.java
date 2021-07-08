@@ -278,7 +278,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 				}
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
         }
         return depositfile;
@@ -415,7 +415,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
 					os.close();
 				}
 			}catch (Exception e){
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
         }
         return depositfile;

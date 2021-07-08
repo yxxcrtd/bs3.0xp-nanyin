@@ -236,7 +236,7 @@ public class FtpUtil {
                     }
                     catch (Exception e)
                     {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     finally {
                         if(is!=null)
@@ -470,7 +470,7 @@ public class FtpUtil {
                                     FTP_CLIENT.retrieveFile(ff.getName(), is);
                                 }catch (Exception e)
                                 {
-                                    e.printStackTrace();
+                                    logger.error(e.getMessage(),e);
                                 }
                                 finally {
                                     if(is!=null)
@@ -548,7 +548,7 @@ public class FtpUtil {
                             FTP_CLIENT.retrieveFile(ff.getName(), out);
                         }catch (Exception e)
                         {
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }finally {
                             if(out!=null)
                             {

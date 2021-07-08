@@ -214,7 +214,6 @@ public class ProdPersonIssue001Controller extends BaseController {
 						ProdPersonIssue001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

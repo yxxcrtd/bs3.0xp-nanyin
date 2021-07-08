@@ -20,8 +20,15 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportGlob
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 
 import net.sf.jasperreports.engine.JRException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JasperServerGenerator implements ReportGenerator{
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(JasperServerGenerator.class);
+
 	private DataSource dataSource = null;
 	
 	@Override
@@ -57,7 +64,7 @@ public class JasperServerGenerator implements ReportGenerator{
 				try {
 					inputStream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -94,14 +101,14 @@ public class JasperServerGenerator implements ReportGenerator{
 				try {
 					fos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if (inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}

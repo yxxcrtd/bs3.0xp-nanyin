@@ -276,7 +276,6 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }
                 catch (IOException e) {
                     log.error("解析json异常，json=" + entity.getData());
-//                    e.printStackTrace();
                     logger.error("error:",e);
                 }
                 if(!StringUtil.isEmptyList(dtoList) && dtoList.get(0) != null  && StringUtil.isNotEmpty(dtoList.get(0).getSeqno())){
@@ -677,7 +676,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 					}
 				}catch (Exception e)
 				{
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 				finally {
 					if (bis != null){

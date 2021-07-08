@@ -161,7 +161,6 @@ public class PbcPrdInitRaiseSubService001 extends CommonExportService<PbcInitPro
 			try {
 				 infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcInitProdRaisingSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
 				logger.debug("数据转换异常",e.getMessage(),e);
 				logger.error(e.getMessage(),e);
 				return ;

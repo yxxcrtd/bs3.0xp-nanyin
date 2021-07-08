@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -116,6 +118,10 @@ import com.joyintech.tams.invest.common.util.xmlrelation.XmlRelationUtil;
 @SuppressWarnings("rawtypes")
 @Service
 public class CommonAutoCouponService extends BaseService{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(CommonAutoCouponService.class);
 
     @Autowired
     private CommonBusinessService commonBusinessService;
@@ -860,7 +866,7 @@ public class CommonAutoCouponService extends BaseService{
                 try {
                     repAssetDept.setRepStatusDate(sdf.parse(DateUtil.getSysDate()));//数据日期
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 repAssetDept.setRepTradeMarket(interfPayhsrcsecinfo.getMarket2());//交易流通场所
                 repAssetDept.setIsRepTarget(BussinessDictCodeList.是否_否.getValue());//默认否
@@ -993,7 +999,7 @@ public class CommonAutoCouponService extends BaseService{
             }
             return dto;
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }
@@ -1331,7 +1337,7 @@ public class CommonAutoCouponService extends BaseService{
                 try {
                     repAssetDept.setRepStatusDate(sdf.parse(DateUtil.getSysDate()));//数据日期
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 repAssetDept.setRepTradeMarket(infChinamutualfunddescription.getMarket2());//交易流通场所
                 repAssetDept.setIsRepTarget(DictCodeList.是否_否.getValue());//默认否
@@ -1541,7 +1547,7 @@ public class CommonAutoCouponService extends BaseService{
             return finProduct;
         }
         catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
 
@@ -1949,7 +1955,7 @@ public class CommonAutoCouponService extends BaseService{
             }
             return dto;
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

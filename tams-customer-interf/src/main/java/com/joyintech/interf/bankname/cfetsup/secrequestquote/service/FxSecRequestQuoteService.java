@@ -36,7 +36,11 @@ import java.util.Map;
 @Service(value="fxSecRequestQuoteService")
 public class FxSecRequestQuoteService
         extends BaseService<FxSecRequestQuoteDto> implements BaseProcessService<FxSecRequestQuoteDto> {
-    private static final Logger logger = LoggerFactory.getLogger(FxSecRequestQuoteService.class);
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FxSecRequestQuoteService.class);
+
     @Autowired
     private FxSecRequestQuoteMapper fxSecRequestQuoteMapper;
 
@@ -95,7 +99,7 @@ public class FxSecRequestQuoteService
             msg =this.start(processParameter,dto);
         } catch (WorkFlowException e) {
             msg="操作失败";
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return new AjaxResult(msg);
     }

@@ -197,7 +197,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
               
               flag = insertRepReveal(params, fileKey,fileName,reptree.getTreeName()+"集合",null);
         } catch (Exception e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
         }
         return flag;
@@ -289,7 +288,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 
                   fileList.add(uploadFile.getTargetFile().getPath());
             } catch (Exception e) {
-//                e.printStackTrace();
             	logger.error("error:",e);
             }
         }
@@ -395,7 +393,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                   logger.info("生成信息主表!");
 			}
         } catch (Exception e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
         }
         return flag;
@@ -441,7 +438,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             	}
 			}
         } catch (Exception e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
         }
         for(int i=0;i<list.size();i++){
@@ -686,7 +682,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 			try {
 				return (Date)CommonUtil.getValueByClassNameObject(prodInfoListEntity, CommonUtil.dealString(repRule.getBasisDateType(),true), ProdInfoListEntity.class);
 			} catch (Exception e) {
-//				e.printStackTrace();
 				logger.error("error:",e);
 			}
 		}

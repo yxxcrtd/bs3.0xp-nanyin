@@ -129,7 +129,6 @@ public class DisProfitNetValueService extends FileImpService {
         } catch (ParseException e) {
             logger.error("transMap2Dto方法转换CreateTime或UpdateTime异常");
             logger.error(e.getMessage(),e);
-            e.printStackTrace();
         }
         return dto;
     }

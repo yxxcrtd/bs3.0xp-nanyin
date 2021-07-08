@@ -1838,7 +1838,7 @@ public class VatDrawProcessorBService {
 //                                    BeanUtil.copyProperties(balance, entity);
 //                                }
 //                                catch (Exception e) {
-//                                    e.printStackTrace();
+//                                    logger.error(e.getMessage(),e);
 //                                }
 //                            }
 //                            else {

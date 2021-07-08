@@ -993,7 +993,6 @@ public abstract class FileImpService extends InterfService{
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
             return null;
         }

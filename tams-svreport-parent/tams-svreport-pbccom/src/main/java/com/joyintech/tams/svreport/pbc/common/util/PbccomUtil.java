@@ -50,7 +50,7 @@ public class PbccomUtil {
 				try {
 					in.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 			}
 		}

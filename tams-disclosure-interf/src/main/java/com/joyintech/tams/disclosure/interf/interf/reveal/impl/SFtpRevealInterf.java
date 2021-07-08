@@ -51,7 +51,6 @@ public class SFtpRevealInterf implements RevealInterf{
 				list.add(msg);
 			} catch (Exception e) {
 				logger.error("error",e);
-				e.printStackTrace();
 			}
 		}
 		

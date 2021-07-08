@@ -268,7 +268,7 @@ public class RepDetailsShow001Contoller extends BaseController {
             }
         }catch (Exception e) {
             value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
             logger.error("error:",e);
         }
         finally{
@@ -291,7 +291,7 @@ public class RepDetailsShow001Contoller extends BaseController {
             }
         }catch (MalformedURLException e) {
             value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
             logger.error("error:",e);
         }finally{
             //return value;
@@ -382,7 +382,6 @@ public class RepDetailsShow001Contoller extends BaseController {
 //               }
            }catch (Exception e) {
                value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
-//               e.printStackTrace();
                logger.error("error:",e);
            }
            finally{

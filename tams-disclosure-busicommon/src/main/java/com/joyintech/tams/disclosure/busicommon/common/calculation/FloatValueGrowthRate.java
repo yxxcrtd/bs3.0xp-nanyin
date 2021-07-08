@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.disclosure.busicommon.common.dto.RepProdIndex;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -23,6 +24,11 @@ import com.joyintech.tams.disclosure.busicommon.common.dto.RepProdIndex;
  * @since 2018-01-07
  */
 public class FloatValueGrowthRate {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(FloatValueGrowthRate.class);
+
 	/**
 	 * 阶段业绩比较基准增长率计算
 	 * 
@@ -104,7 +110,7 @@ public class FloatValueGrowthRate {
 					  list.add(vALUE_DATE);
 				  }
 			  } catch (SQLException e) {
-				  e.printStackTrace();
+				  logger.error(e.getMessage(),e);
 			  }
 			  finally {
 				  //释放连接
@@ -112,14 +118,14 @@ public class FloatValueGrowthRate {
 					  try {
 						  ps.close();
 					  } catch (SQLException e) {
-						  e.printStackTrace();
+						  logger.error(e.getMessage(),e);
 					  }
 				  }
 				  if(rs!=null){
 					  try {
 						  rs.close();
 					  } catch (SQLException e) {
-						  e.printStackTrace();
+						  logger.error(e.getMessage(),e);
 					  }
 				  }
 			  }

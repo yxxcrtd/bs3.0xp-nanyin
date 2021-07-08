@@ -66,7 +66,6 @@ public class XlsxToHtml {
                 htmlExcel = XlsxToHtml.getExcelInfo(hWb,isWithStyle);
             }
         } catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }finally{
             try {
@@ -76,7 +75,6 @@ public class XlsxToHtml {
                 }
 
             } catch (IOException e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
              }
             try {
@@ -85,7 +83,6 @@ public class XlsxToHtml {
                     wb.close();
                 }
             } catch (IOException e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
              }
          }

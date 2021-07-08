@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,6 +56,10 @@ import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvaluec
 @PageId("ProductValuationReconciliation001")
 @RequestMapping("/valuation/accounadjustmanage/valuareconcy/ProductValuationReconciliation001")
 public class ProductValuationReconciliation001Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ProductValuationReconciliation001Controller.class);
 
     /**
      * ValProductInfoQuery001Service
@@ -169,7 +175,7 @@ public class ProductValuationReconciliation001Controller extends BaseController 
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return new AjaxResult("对账失败", MessageType.错误消息);
         }
 

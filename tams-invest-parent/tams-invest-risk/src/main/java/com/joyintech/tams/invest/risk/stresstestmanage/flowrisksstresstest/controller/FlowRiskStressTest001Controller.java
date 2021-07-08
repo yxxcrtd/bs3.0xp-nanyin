@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,6 +59,11 @@ import com.joyintech.tools.collectors.JoyinCollectors;
 @PageId("FlowRiskStressTest001")
 @RequestMapping("/invest/risk/stresstestmanage/flowriskstresstest/FlowRiskStressTest001")
 public class FlowRiskStressTest001Controller extends BaseController{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FlowRiskStressTest001Controller.class);
+
     @Autowired(required = false)
     private FlowRiskStressTest001Service flowRiskStressTest001Service;
     
@@ -93,7 +100,7 @@ public class FlowRiskStressTest001Controller extends BaseController{
         }
         catch (ParseException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         model.addAttribute("analysisDate",analysisDate);
         return super.init(model);

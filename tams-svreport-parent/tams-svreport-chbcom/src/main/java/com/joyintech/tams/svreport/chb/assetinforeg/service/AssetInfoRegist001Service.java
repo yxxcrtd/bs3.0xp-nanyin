@@ -765,7 +765,6 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
     						AssetInfoRegist001Dto.class);
     				param.put("investList", investList);
     			} catch (IOException e) {
-//    				e.printStackTrace();
     	            logger.error(e.getMessage(),e);
     			}
     		} else {
@@ -1828,7 +1827,6 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 						AssetInfoRegist001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

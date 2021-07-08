@@ -112,11 +112,9 @@ public class TisUtil {
 					readStr = readStr + read + "\r\n";
 				}
 			} catch (IOException e) {
-//				e.printStackTrace();
 				logger.error(e.getMessage(),e);
 			}
 		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
 			logger.error(e.getMessage(),e);
 		}
 		finally {
@@ -153,12 +151,10 @@ public class TisUtil {
 				}
 				log.setTaskStatus(file+"读取文件成功！");
 			} catch (IOException e) {
-//				e.printStackTrace();
 				log.setTaskStatus(file+"读取文件失败！");
 				logger.error(e.getMessage(),e);
 			}
 		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
 			log.setTaskStatus(file+"读取文件失败！");
 			logger.error(e.getMessage(),e);
 		}
@@ -168,7 +164,6 @@ public class TisUtil {
 					fis.close();
 				}
 				catch (IOException e) {
-//                    e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -177,7 +172,6 @@ public class TisUtil {
 					read2.close();
 				}
 				catch (IOException e) {
-//                    e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -186,7 +180,6 @@ public class TisUtil {
 					bufread.close();
 				}
 				catch (IOException e) {
-//                    e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -211,7 +204,6 @@ public class TisUtil {
 			log.setTaskStatus("生成文件成功！");
 			log.setTaskStatus("文件内容是:" + "\r\n" + filein);
 		} catch (Exception e) {
-//			e.printStackTrace();
 			logger.error(e.getMessage(),e);
 			log.setTaskStatus("生成文件失败！");
 		} finally {
@@ -269,7 +261,6 @@ public class TisUtil {
 			fos.close();
 			pw.close();
 		} catch (IOException e) {
-//			e.printStackTrace();
 			logger.error(e.getMessage(),e);
 		}
 		finally{
@@ -278,7 +269,6 @@ public class TisUtil {
 					fis.close();
 				}
 				catch (IOException e) {
-//                    e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -287,7 +277,6 @@ public class TisUtil {
 					isr.close();
 				}
 				catch (IOException e) {
-//		            e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -296,7 +285,6 @@ public class TisUtil {
 					br.close();
 				}
 				catch (IOException e) {
-//		            e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -305,7 +293,6 @@ public class TisUtil {
 					fos.close();
 				}
 				catch (IOException e) {
-//                        e.printStackTrace();
 					logger.error(e.getMessage(),e);
 				}
 			}
@@ -726,7 +713,6 @@ public class TisUtil {
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 	}
 

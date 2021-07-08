@@ -187,7 +187,7 @@ public abstract class ExecuteDBAbstract implements ExecuteDBScripts{
 								try {
 									inStreamDoc.close();
 								} catch (IOException e) {
-									e.printStackTrace();
+									logger.error(e.getMessage(),e);
 								}
 							}
 						}

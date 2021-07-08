@@ -203,7 +203,7 @@ public class PoiReportModelManage002Controller extends BaseController {
 				  }
 			  }catch (Exception e)
 			  {
-			  	e.printStackTrace();
+				  logger.error(e.getMessage(),e);
 			  }
 			  finally {
 			  	if (fos != null){

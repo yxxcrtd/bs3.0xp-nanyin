@@ -28,6 +28,8 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.risk.rskauthoritymanage.dto.RskAuthorityManageDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +49,11 @@ import java.util.Map;
 @Service
 public class RskAuthorityManageService  extends CommonExportService<RskAuthorityManageDto>
     implements BaseProcessService<RskAuthorityManageDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskAuthorityManageService.class);
+
     /**
      * rskAuthorityManageService
      */
@@ -226,7 +233,7 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

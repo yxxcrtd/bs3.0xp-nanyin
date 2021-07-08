@@ -52,7 +52,7 @@ public class CommonMapperDelegateController {
                     param);
         }
         catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return null;
         }
     }
@@ -72,7 +72,7 @@ public class CommonMapperDelegateController {
                     null, param);
         }
         catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return null;
         }
     }

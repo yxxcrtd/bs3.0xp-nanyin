@@ -81,7 +81,7 @@ public class FtpDetailService {
 //					return true;
 //				}
 //			} catch (Exception e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 //			}
 //		}else {
 //			// 上传
@@ -99,7 +99,7 @@ public class FtpDetailService {
 //					return true;
 //				}
 //			} catch (Exception e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 //			}
 //		}
 		return false;

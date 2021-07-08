@@ -106,7 +106,6 @@ public class PoiReportModelManage001Service extends CommonExportService<ReportMo
                              zipOut.write(tmp);
                          }
                       }catch (Exception e) {
- //                         e.printStackTrace();
                           logger.error("error:",e);
                       }finally{
                           if(input!=null){
@@ -172,7 +171,6 @@ public class PoiReportModelManage001Service extends CommonExportService<ReportMo
               dto.setName(uploadFile.getSrcName());
               dto.setTemLoad(uploadFile.getTargetFile().getPath());
         } catch (Exception e) {
- //           e.printStackTrace();
         	logger.error("error:",e);
         }
         

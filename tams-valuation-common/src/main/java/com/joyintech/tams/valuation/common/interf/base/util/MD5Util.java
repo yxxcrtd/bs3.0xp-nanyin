@@ -18,7 +18,6 @@ public class MD5Util {
         catch (Exception e) {
 //            System.out.println(e.toString());
             logger.error("",e);
-            logger.info(e.toString());
             return "";
         }
         char[] charArray = inStr.toCharArray();

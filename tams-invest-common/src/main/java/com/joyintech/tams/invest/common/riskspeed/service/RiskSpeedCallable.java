@@ -121,7 +121,7 @@ public class RiskSpeedCallable<T extends IRiskSpeed> extends BaseService {
 					riskTrialRetList.add(returnDto);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+			    logger.error(e.getMessage(),e);
 			}
 		}
 		return riskTrialRetList;

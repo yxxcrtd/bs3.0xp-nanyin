@@ -299,7 +299,7 @@ public class BalTableGenerate001Controller extends BaseController {
 //            sftpTools.login(userName, password, host, port);
 //        }
 //        catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
 //        }
 //        for (int i = 0; i < val002dto.size(); i++ ) {
 //            filepath1 = val002dto.get(i).getFilePath();
@@ -313,7 +313,7 @@ public class BalTableGenerate001Controller extends BaseController {
 //                sftpTools.getFile(remotePath, remoteFile, localdir);
 //            }
 //            catch (Exception e) {
-//                e.printStackTrace();
+//                logger.error(e.getMessage(),e);
 //            }
 //            input = new FileInputStream(file);
 //            zipOut.putNextEntry(new ZipEntry(file.getName()));
@@ -327,7 +327,7 @@ public class BalTableGenerate001Controller extends BaseController {
 //            sftpTools.close();
 //        }
 //        catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
 //        }
 //        zipOut.flush();
 //        zipOut.close();

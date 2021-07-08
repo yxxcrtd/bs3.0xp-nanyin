@@ -261,7 +261,7 @@ public class ExcelUtil {
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         finally {
             if(inputStream!=null)

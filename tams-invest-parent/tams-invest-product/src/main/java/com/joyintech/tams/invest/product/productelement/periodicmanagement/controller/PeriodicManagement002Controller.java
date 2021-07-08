@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,6 +60,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("PeriodicManagement002")
 @RequestMapping("/invest/product/productelement/periodicmanagement/PeriodicManagement002")
 public class PeriodicManagement002Controller extends BaseController {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(PeriodicManagement002Controller.class);
 
 	@Autowired
 	private PeriodicManagement002Service periodicManagement002Service;
@@ -150,7 +156,7 @@ public class PeriodicManagement002Controller extends BaseController {
 	            	entity.setCcy(pmDto.getCcy());
 	            }
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 			if(entity.getStartDate()==null){
 				entity.setStartDate(iPlatformDate.getSysDate());

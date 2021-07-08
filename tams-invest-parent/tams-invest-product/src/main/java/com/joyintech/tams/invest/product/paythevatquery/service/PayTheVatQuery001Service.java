@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,10 @@ import com.joyintech.tams.invest.product.paythevatquery.dto.PayTheVatQuery001Dto
  */
 @Service("FinproductPayTheVatQuery001Service")
 public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery001Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(PayTheVatQuery001Service.class);
 
 	@Autowired
 	private PayTheVatQuery001Mapper payTheVatQuery001Mapper;
@@ -141,8 +147,7 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
         try {
 			return selectForPage(selectParam);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
     }

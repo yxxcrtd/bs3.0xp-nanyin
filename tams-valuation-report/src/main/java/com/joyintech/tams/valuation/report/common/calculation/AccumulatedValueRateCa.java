@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.report.common.dto.RepProdIndex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 累计净值收益率计算共通
@@ -18,6 +20,10 @@ import com.joyintech.tams.valuation.report.common.dto.RepProdIndex;
  * @since 2018-12-28
  */
 public class AccumulatedValueRateCa {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(AccumulatedValueRateCa.class);
 
 	/**
 	 * 累计净值收益率计算方法
@@ -38,7 +44,7 @@ public class AccumulatedValueRateCa {
 			bef.setTime(sdf.parse(startDate));
 	        aft.setTime(sdf.parse(endDate));
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
         Calendar curr = bef;
 

@@ -41,6 +41,8 @@ import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -60,6 +62,11 @@ import static org.apache.poi.ss.usermodel.CellType.*;
  */
 
 public class ExcelUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
+
     public static void writeExcel(InputStream stream, String tempName, Map<String, Object> paraMap,
             String outputFilepath) {
     	writeExcel(stream, tempName, paraMap, outputFilepath, null);
@@ -206,14 +213,14 @@ public class ExcelUtil {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         finally {
             try {
                 wb.close();
             }
             catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
     }
@@ -435,7 +442,7 @@ public class ExcelUtil {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return map;
     }
@@ -469,7 +476,7 @@ public class ExcelUtil {
         	}
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return map;
 
@@ -487,7 +494,7 @@ public class ExcelUtil {
     	try {
 			inputStream = resource.getInputStream();
 		} catch (IOException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
     	return inputStream;
     }

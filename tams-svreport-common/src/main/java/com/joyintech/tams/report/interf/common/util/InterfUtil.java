@@ -218,7 +218,6 @@ public class InterfUtil {
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         finally {
@@ -285,7 +284,6 @@ public class InterfUtil {
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         finally {
@@ -348,7 +346,6 @@ public class InterfUtil {
             return true;
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         finally {
@@ -475,7 +472,6 @@ public class InterfUtil {
             return true;
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         return false;

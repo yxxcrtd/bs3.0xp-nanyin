@@ -55,7 +55,6 @@ public class FtpRevealInterf implements RevealInterf{
 			list.add(msg);
 		} catch (Exception e) {
 			logger.error("error",e);
-			e.printStackTrace();
 		}
 		
 		return list;
@@ -149,7 +148,6 @@ public class FtpRevealInterf implements RevealInterf{
 
 					} catch (Exception e) {
 						logger.error("error",e);
-						e.printStackTrace();
 					}
 			}
 		} catch (NumberFormatException | IOException e1) {

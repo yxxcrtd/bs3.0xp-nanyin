@@ -38,7 +38,7 @@ public class FTPTool {
     /**
      * 日志
      */
-    private Logger logger = LoggerFactory.getLogger(FTPTool.class);
+    private static Logger logger = LoggerFactory.getLogger(FTPTool.class);
     
     private int downLoadNums=0;
 	private boolean isLogin = false;
@@ -271,7 +271,7 @@ public class FTPTool {
     			return new byte[0];
     		}
     	} catch (UnsupportedEncodingException e) {
-    		e.printStackTrace();
+			logger.error(e.getMessage(),e);
     	}
     	return null;
     }
@@ -335,9 +335,9 @@ public class FTPTool {
 				
 			}
 		} catch (SocketException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} finally {
 			if(fos != null) {
 				fos.close();
@@ -352,7 +352,7 @@ public class FTPTool {
 			boolean falg = ftp.changeWorkingDirectory(fileName);
 			return falg;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return false;
 	}
@@ -403,7 +403,7 @@ public class FTPTool {
 	private void createDir(String directory) throws IOException {
 		// 如果远程目录不存在，则递归创建远程服务器目录
 		if (!directory.equalsIgnoreCase("/")
-				&& !ftp.changeWorkingDirectory(directory)) {
+				&& !ftp.changeWorkingDirectory(new String(directory))) {
 			int start = 0;
 			int end = 0;
 			if (directory.startsWith("/")) {
@@ -419,7 +419,7 @@ public class FTPTool {
 			while (true) {
 				String subDirectory = new String(directory.substring(start, end)
 						.getBytes(ENCODE_UTF8), ENCODE_ISO);
-				String currPath = directory.substring(0, end);
+				String currPath = new String(directory.substring(0, end));
 				if (!ftp.changeWorkingDirectory(currPath)) {
 					if (ftp.makeDirectory(subDirectory)) {
 						ftp.changeWorkingDirectory(currPath);

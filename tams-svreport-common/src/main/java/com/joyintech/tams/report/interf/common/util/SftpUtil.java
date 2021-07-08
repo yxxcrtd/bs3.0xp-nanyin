@@ -69,7 +69,6 @@ public class SftpUtil {
             logger.info("文件上传成功");
         }
         catch (SftpException e) {
-//            e.printStackTrace();
             logger.error("文件上传失败:"+e.getMessage(),e);
         }
     }
@@ -88,7 +87,6 @@ public class SftpUtil {
             logger.info("文件重命名成功");
         }
         catch (SftpException e) {
-//            e.printStackTrace();
             logger.error("文件重命名失败:"+e.getMessage(),e);
         }
     }
@@ -147,12 +145,10 @@ public class SftpUtil {
                 return br;
             }
             catch (Exception e) {
-//                e.printStackTrace();
                 logger.error("获取流不成功:"+e.getMessage(),e);
             }
         }
         catch (SftpException e) {
-//            e.printStackTrace();
             logger.error("数据文件：" + fileName + "不存在！");
             logger.error(e.getMessage(),e);
         }
@@ -199,7 +195,6 @@ public class SftpUtil {
             sftp.get(downloadFile, saveFile);
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
     }
@@ -242,7 +237,6 @@ public class SftpUtil {
             sftp.mkdir(dirName);
         }
         catch (SftpException e) {
-            // e.printStackTrace();
 //            System.out.println("未找到路劲");
             logger.error("未找到路径!");
             logger.error(e.getMessage(),e);
@@ -261,7 +255,6 @@ public class SftpUtil {
             return true;
         }
         catch (SftpException e) {
-            // e.printStackTrace();
             logger.error(e.getMessage(),e);
             return false;
         }
@@ -373,7 +366,6 @@ public class SftpUtil {
             logger.info("文件重命名成功");
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error("文件重命名失败:{}",e.getMessage(),e);
         } finally {
             sFTPDisConnect();

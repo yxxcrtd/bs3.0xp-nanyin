@@ -89,7 +89,7 @@ public class BusinessDetailedMaintainInterfService {
 //            LOGGER.debug("********权益人业务明细接口数据插入结束********");
 //        }
 //        catch (ParserConfigurationException | SAXException | IOException e) {
-////            e.printStackTrace();
+////           logger.error(e.getMessage(),e);
 //        	LOGGER.error(e.getMessage(),e);
 //        }
 //    }

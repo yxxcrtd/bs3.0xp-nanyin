@@ -522,7 +522,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 			return StringUtil.isNotEmpty(fileName)
 					? (new String(fileName.getBytes(System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding")), "UTF-8")) : fileName;
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		return fileName;
 	}
@@ -563,7 +563,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }
             }catch (Exception e)
             {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }finally {
                 if(bis!=null)
                 {
@@ -620,7 +620,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }
             }catch (Exception e)
             {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }finally {
                 if(bis!=null)
                 {

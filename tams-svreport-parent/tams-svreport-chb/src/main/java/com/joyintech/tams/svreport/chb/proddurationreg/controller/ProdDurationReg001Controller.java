@@ -224,7 +224,6 @@ public class ProdDurationReg001Controller extends BaseController {
 						ProdDurationReg001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

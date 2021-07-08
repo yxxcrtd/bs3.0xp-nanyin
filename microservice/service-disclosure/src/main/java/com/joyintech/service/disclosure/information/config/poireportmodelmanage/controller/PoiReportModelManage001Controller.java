@@ -129,7 +129,6 @@ public class PoiReportModelManage001Controller extends BaseController {
 			value.setData(result);
 		} catch (Exception e) {
 			value.setMessage("查询报表模板:" + e.getMessage(), MessageType.错误消息);
-			// e.printStackTrace();
 			logger.error("error:", e);
 		} finally {
 			//return value;

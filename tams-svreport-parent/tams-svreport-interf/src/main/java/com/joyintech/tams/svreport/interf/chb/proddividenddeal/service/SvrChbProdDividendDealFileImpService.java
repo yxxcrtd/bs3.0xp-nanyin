@@ -154,7 +154,7 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 				success = true;
 			}catch(Exception e){
 				logger.error(e.getMessage(),e);
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 				success = false;
 			}
 		}else{

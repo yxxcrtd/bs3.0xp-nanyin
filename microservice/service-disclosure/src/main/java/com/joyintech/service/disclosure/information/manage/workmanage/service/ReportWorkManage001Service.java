@@ -1348,7 +1348,6 @@ public class ReportWorkManage001Service extends CommonExportService<ReportWorkMa
     			}
     		}
 		} catch (Exception e) {
-//			e.printStackTrace();
 			log.error("error:",e);
 		}
     	return flag;

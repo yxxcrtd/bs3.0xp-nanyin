@@ -339,7 +339,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 //			 }
 
 		 } catch (FileNotFoundException e) {
-			 e.printStackTrace();
+			 logger.error(e.getMessage(),e);
 		 }
 		 param.put("tableName", tableName);
 		 param.put("dataList", dataList);
@@ -364,7 +364,6 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 					FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 //		File file = new SafelyFile(fileName);
 		XSSFWorkbook xssfWorkBook = null;
@@ -383,7 +382,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 				try {
 					xssfWorkBook.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -399,7 +398,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 //						FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 //			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		param.put("userName", CommonUtil.getUserName());
 		param.put("tableName", tableName);
@@ -424,7 +423,6 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
                 FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
         } catch (FileNotFoundException e) {
         	logger.error(e.getMessage(),e);
-        	e.printStackTrace();
         }
         File file = new SafelyFile(fileName);
 		// 获取导入表名

@@ -7,6 +7,8 @@ import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.Rs
 import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividSpecialAssetDto;
 import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividSpecialStageDto;
 import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.RskIndividUniteDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class RskSupervisionIndividuation001Service extends BaseService<RskSupervisionIndividuationDto> 
 implements BaseProcessService<RskSupervisionIndividuationDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(RskSupervisionIndividuation001Service.class);
 
     /**
      * redis数据初始化
@@ -68,7 +74,7 @@ implements BaseProcessService<RskSupervisionIndividuationDto> {
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
             // 更新Redis
             ImplCond cond = new ImplCond();

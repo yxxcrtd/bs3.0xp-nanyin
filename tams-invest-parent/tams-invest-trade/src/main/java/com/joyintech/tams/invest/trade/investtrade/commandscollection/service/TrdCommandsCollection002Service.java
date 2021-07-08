@@ -39,6 +39,8 @@ import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.bondlend.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.trade.bondlend.dto.SecInfoModelDto;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +62,10 @@ import com.joyintech.tams.invest.trade.investtrade.commandscollection.dto.TrdCom
  */
 @Service
 public class TrdCommandsCollection002Service extends CommonExportService<TrdCommandsCollection002Dto>  {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdCommandsCollection002Service.class);
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
@@ -197,7 +203,7 @@ public class TrdCommandsCollection002Service extends CommonExportService<TrdComm
                 BeanUtil.copyPropertiesIgnoreNull(dto, nullDto);//【从3.0合并代码】 by jianpeng on 20210514 TISHKBS-2142
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             return;
         }
@@ -597,7 +603,7 @@ public class TrdCommandsCollection002Service extends CommonExportService<TrdComm
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (dto.getMatureYield() != null) {

@@ -15,6 +15,8 @@ import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccess
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListDto;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.service.AssetNameManagementService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -32,6 +34,10 @@ import java.util.stream.Collectors;
  */
 @Component
 public class AssetNameManagementValidator implements BeanValidator {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(AssetNameManagementValidator.class);
 
     @Autowired
     private AssetNameManagementService assetNameManagementService;
@@ -72,7 +78,7 @@ public class AssetNameManagementValidator implements BeanValidator {
                     excelUtil = ExcelUtil.build(dto.getFileName(), null);
                 }
                 catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 List<List<String>> dataList = excelUtil==null?null:excelUtil.readToList(0, 0, 0);
                 // 检查读出信息是否为空

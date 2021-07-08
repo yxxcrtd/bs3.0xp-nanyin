@@ -151,7 +151,6 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 						InvestTradeRegist001Dto.class);
 				pageParam.put("investList", investList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {

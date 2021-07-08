@@ -184,16 +184,14 @@ public class RskSupervisionIndicator001Service extends CommonExportService<RskSu
         	 try {
 				cell.setCellValue(transferWarnFoul(value,cell));
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
         }
         if(("foulCond".equals(propName)) && null!=value ){
             try {
 				cell.setCellValue(transferWarnFoul(value,cell));
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
         }*/
     }
@@ -255,7 +253,7 @@ public class RskSupervisionIndicator001Service extends CommonExportService<RskSu
 			}
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}

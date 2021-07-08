@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.asset.channel.service;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,11 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 @Service("ChannelAssetQueryService")
 @Transactional(rollbackFor = Exception.class)
 public class ChannelAssetQueryService  extends CommonExportService<ChannelAssetDto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ChannelAssetQueryService.class);
+
     /**
      * 
      * 分页查询
@@ -63,7 +70,7 @@ public class ChannelAssetQueryService  extends CommonExportService<ChannelAssetD
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

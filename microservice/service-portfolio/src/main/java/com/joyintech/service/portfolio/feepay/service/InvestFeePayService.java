@@ -14,6 +14,8 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +71,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("backInvestFeePayService")
 public class InvestFeePayService extends BaseService<InvestFeePayDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(InvestFeePayService.class);
 
     /**
      * {@linkplain}
@@ -211,7 +217,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
                 return "asc".equals (order)  ? ((Comparable) o1).compareTo(o2) : ((Comparable) o2).compareTo(o1);
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return 0;
     }

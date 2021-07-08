@@ -145,7 +145,7 @@ public class FtpUtil {
             	if(is !=null)
             	is.close();
             } catch (Exception e) {
-            	e.printStackTrace();
+                LOGGER.error(e.getMessage(),e);
              }
             ftpClose();
         }
@@ -292,7 +292,6 @@ public class FtpUtil {
             result = "true";
         }
         catch (IOException e) {
-//            e.printStackTrace();
             LOGGER.error(e.getMessage(),e);
             result = "false";
         }
@@ -408,7 +407,7 @@ public class FtpUtil {
 				try {
 					is.close();
 				} catch (Exception e) {
-					e.printStackTrace();
+                    LOGGER.error(e.getMessage(),e);
 				}
         }
         return rslt;

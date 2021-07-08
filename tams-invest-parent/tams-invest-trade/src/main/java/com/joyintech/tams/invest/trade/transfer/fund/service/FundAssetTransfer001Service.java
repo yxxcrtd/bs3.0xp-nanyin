@@ -31,6 +31,8 @@ import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,11 @@ import java.util.*;
  */
 @Service
 public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer001Dto> implements BaseProcessService<FundAssetTransfer001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FundAssetTransfer001Service.class);
+
     /**
      * baseGetBusinessId
      */
@@ -1084,7 +1091,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 // 操作留痕表
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             // 重新insert
             this.handleBussFlowData(dto);

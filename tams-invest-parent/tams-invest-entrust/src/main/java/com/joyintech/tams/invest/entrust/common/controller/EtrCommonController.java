@@ -492,8 +492,7 @@ public class EtrCommonController extends BaseController {
         }
         catch (Exception e) {
             logger.info("执行风险相关交易共通check出现异常，异常信息如下：");
-            logger.info(e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return wr;

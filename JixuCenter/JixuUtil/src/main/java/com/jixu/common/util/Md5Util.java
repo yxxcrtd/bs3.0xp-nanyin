@@ -1,9 +1,17 @@
 package com.jixu.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Md5Util {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(Md5Util.class);
+
 	public static String md5(String str){
 		if(str==null){
 			return "";
@@ -21,8 +29,7 @@ public class Md5Util {
 				}
 			}
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return strBuffer.toString();
 	}

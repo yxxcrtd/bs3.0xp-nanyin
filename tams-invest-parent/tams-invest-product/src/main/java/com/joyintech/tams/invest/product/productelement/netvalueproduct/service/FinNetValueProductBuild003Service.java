@@ -56,7 +56,11 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class FinNetValueProductBuild003Service extends BaseService<FinNetValueProductBuild003Dto> implements BaseProcessService<FinNetValueProductBuild003Dto> {
-    private static final Logger logger = LoggerFactory.getLogger(FinNetValueProductBuild003Service.class);
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinNetValueProductBuild003Service.class);
+
     /**
      * 业务流程表service
      */
@@ -128,7 +132,7 @@ public class FinNetValueProductBuild003Service extends BaseService<FinNetValuePr
              workflowService.updateTitle(map);
           }
           catch (Exception e) {
-              e.printStackTrace();
+              logger.error(e.getMessage(),e);
           }
 //        ProcessMark newEntity;
 //        try {
@@ -142,7 +146,6 @@ public class FinNetValueProductBuild003Service extends BaseService<FinNetValuePr
 //            WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
 //        }
 //        catch (Exception e) {
-//            e.printStackTrace();
 //        }
 //        if (StringUtil.equals(entity.getOperateType(), "submit")) {
 //           Map<String, Object> map = Maps.newConcurrentMap();

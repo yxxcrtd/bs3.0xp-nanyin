@@ -109,7 +109,7 @@ public class JasparConnectUtilService {
 			logger.info("写文件结束=====");
 		}catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			if (fos != null) {
@@ -219,7 +219,7 @@ public class JasparConnectUtilService {
 			fos.write(getData);
 		}catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			if (fos != null) {

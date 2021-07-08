@@ -17,6 +17,8 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -63,6 +65,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery002Dto> implements BaseProcessService<PayTheVatQuery002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PayTheVatQuery002Service.class);
 
     @Autowired
     private PayTheVatQuery002Mapper payTheVatQuery002Mapper;
@@ -194,7 +200,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
             this.docommit(dto);
         }
         catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
     }
 

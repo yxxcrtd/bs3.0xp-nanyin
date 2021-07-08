@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -48,6 +50,10 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  */
 @Service(value="serviceValSubjectWaterQuery001Service")
 public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubjectWaterQuery001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValSubjectWaterQuery001Service.class);
 
     @Autowired
     private ValSubjectWaterQuery001Mapper valSubjectWaterQuery001Mapper;
@@ -219,16 +225,14 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
             try {
 				dto.setBookDateBegin(DateUtil.parseDate(bookDateBegin, "yyyy-MM-dd"));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
         }
         if (StringUtil.isNotEmpty(bookDateEnd)) {
             try {
 				dto.setBookDateEnd(DateUtil.parseDate(bookDateEnd, "yyyy-MM-dd"));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
         }
         // 账套类别

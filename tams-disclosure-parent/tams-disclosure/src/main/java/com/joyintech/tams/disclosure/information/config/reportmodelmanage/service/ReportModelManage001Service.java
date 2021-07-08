@@ -108,7 +108,6 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
                              zipOut.write(tmp);
                          }
                       }catch (Exception e) {
- //                         e.printStackTrace();
                           logger.error("error:",e);
                       }finally{
                           if(input!=null){
@@ -201,7 +200,6 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             }
 
         } catch (Exception e) {
- //           e.printStackTrace();
         	logger.error("error:",e);
         }
         

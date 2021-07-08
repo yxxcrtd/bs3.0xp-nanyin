@@ -21,7 +21,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Base64 {
-	private static final Logger logger = LoggerFactory.getLogger(Base64.class);
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(Base64.class);
+
     @Value("${application.chb.base64Key}")
     private String base64Key;
 
@@ -61,7 +65,7 @@ public class Base64 {
 			byte[] encrypted = cipher.doFinal(input.getBytes());
 			return new Base64Encoder().encode(encrypted);//此处使用BASE64做转码功能，同时能起到2次加密的作用。
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}
@@ -101,7 +105,7 @@ public class Base64 {
 				return null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return input;
 	}
@@ -363,7 +367,7 @@ public class Base64 {
 				if (fos != null)
 					fos.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 	}

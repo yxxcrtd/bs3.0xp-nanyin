@@ -41,6 +41,8 @@ import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +59,10 @@ import java.util.*;
  */
 @Service
 public class FinStageManagementService extends CommonExportService<FinStageManagementDto> implements BaseProcessService<FinStageManagementDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinStageManagementService.class);
 
     @Autowired
     private IPlatformDate iPlatformDate;
@@ -403,7 +409,7 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
                     //add by zhangnian  20191017 end
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 finPlanProfitAssetList.add(finPlanProfitAssetDto);
             });

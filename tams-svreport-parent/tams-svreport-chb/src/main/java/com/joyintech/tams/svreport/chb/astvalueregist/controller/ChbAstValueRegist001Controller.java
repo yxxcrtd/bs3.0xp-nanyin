@@ -241,7 +241,6 @@ public class ChbAstValueRegist001Controller extends BaseController{
 						ChbAstValueRegist001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

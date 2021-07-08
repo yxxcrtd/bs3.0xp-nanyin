@@ -21,6 +21,8 @@ import java.util.Map;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +59,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implements BaseProcessService<FinPayPlanDto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinPayPlanService.class);
 
     @Autowired
     private AssetCommonService assetCommonService;
@@ -260,7 +266,7 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
             entity.setFinCashPlanList(assetCommonService.calCashBaseamt(finProduct, lis, lirs));
         }
         catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return entity;
     }

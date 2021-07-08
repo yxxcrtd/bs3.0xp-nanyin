@@ -36,6 +36,8 @@ import com.joyintech.workflow.engine.entity.CommentFunction;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +58,10 @@ import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCom
  */
 @Service
 public class TrdBondLendTargetDuration002Service extends BaseService<TrdBondLendTargetDuration002ProcessDto> implements BaseProcessService<TrdBondLendTargetDuration002ProcessDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdBondLendTargetDuration002Service.class);
 
     @Autowired
     private TradeProductDealCommService baseTradeProductDealCommServiceImpl;
@@ -358,7 +364,7 @@ public class TrdBondLendTargetDuration002Service extends BaseService<TrdBondLend
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         saveDataWhenStartWorkflow(entity, OperationType.MODIFY);
     }

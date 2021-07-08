@@ -14,6 +14,8 @@ import com.joyintech.tams.invest.common.autoperiod.secover.AutoPeriodSecOverComm
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +32,11 @@ import java.util.Map;
 @RequestMapping("/invest/period/common/ChildPortfolioInfo")
 @Controller
 public class ChildPortfolioInfoController extends BaseController{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ChildPortfolioInfoController.class);
+
     /**
      * 存续期共通service
      */
@@ -55,7 +62,7 @@ public class ChildPortfolioInfoController extends BaseController{
         		try {
 					childPortfolioInfo =JsonUtils.json2List((String)map.get("childPortfolioInfo"),FinAssetIntInfo.class);
 				} catch (IOException e) {
-					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
 				}
         	}else{
         		Map<String,Object>orgMap = JsonUtils.json2Object((String)map.get("preMap"),Map.class);

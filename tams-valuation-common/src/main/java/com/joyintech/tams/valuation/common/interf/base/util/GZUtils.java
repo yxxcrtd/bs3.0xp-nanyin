@@ -13,7 +13,9 @@ import java.util.zip.GZIPInputStream;
  * 对.gz压缩文件解压
  */
 public class GZUtils {
-    private static final Logger logger = LoggerFactory.getLogger(GZUtils.class);
+
+    private static Logger logger = LoggerFactory.getLogger(GZUtils.class);
+
     public static void unGzipFile(String sourcedir)
         throws IOException {
         //建立gzip压缩文件输入流
@@ -50,7 +52,7 @@ public class GZUtils {
                     gzin.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (fout != null) {
@@ -58,7 +60,7 @@ public class GZUtils {
                     fout.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             if (fin != null) {
@@ -66,7 +68,7 @@ public class GZUtils {
                     fin.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
@@ -76,8 +78,7 @@ public class GZUtils {
 //    	try {
 //    		unGzipFile("E:\\interf_file\\ZG\\20181220\\ValPrdInfoN_201812120_01.dat.gz");
 //		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			logger.error(e.getMessage(),e);
 //		}
 //    }
    

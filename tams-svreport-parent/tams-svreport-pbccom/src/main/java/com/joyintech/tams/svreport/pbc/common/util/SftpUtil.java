@@ -21,6 +21,10 @@ import com.jcraft.jsch.SftpException;
  */
 @Service
 public class SftpUtil {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(SftpUtil.class);
 
 	    private static ChannelSftp sftp = new ChannelSftp();
 	    
@@ -107,7 +111,7 @@ public class SftpUtil {
 	            sftp.cd(dirName);
 	            return true;
 	        } catch (SftpException e) {
-	            e.printStackTrace();
+				logger.error(e.getMessage(),e);
 	            return false;
 	        }
 	    }

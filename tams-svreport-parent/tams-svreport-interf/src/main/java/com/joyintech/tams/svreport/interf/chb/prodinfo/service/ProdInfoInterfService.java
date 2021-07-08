@@ -202,7 +202,7 @@ public class ProdInfoInterfService extends BaseService {
 					StringBuilder sBuilder = new StringBuilder();
 					// 浮动利率 不写 业绩比较基准，而在remark中进行备注，如：业绩比较基准=个人活期*1-0.02%
 					// 以下就是为了找到相关数据进行拼接，写入remark
-					sBuilder.append(model.getRemark() == null ? "" : model.getRemark()+";");
+					sBuilder.append(model.getRemark() == null ? "" : model.getRemark().toString()+";");
 					sBuilder.append("业绩比较基准=")
 							.append(SysDataUtil.getNameFromDataDict(DictCode.利率行情, prodYiedInfo.getIndexId()))
 							.append("*").append(prodYiedInfo.getCoefficient());

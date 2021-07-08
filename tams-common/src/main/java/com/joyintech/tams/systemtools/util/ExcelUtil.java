@@ -100,7 +100,7 @@ public class ExcelUtil {
                try {
                    wb.close();
                } catch (IOException e) {
-                   e.printStackTrace();
+                   logger.error(e.getMessage(),e);
                }
            }
         }
@@ -170,7 +170,7 @@ public class ExcelUtil {
                 try {
                     wb.close();
                 }catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
@@ -253,7 +253,6 @@ public class ExcelUtil {
                     inputStream.close();
                 }
                 catch (Exception e) {
-//                e.printStackTrace();
                     logger.error(e.getMessage(),e);
                 }
 
@@ -264,7 +263,6 @@ public class ExcelUtil {
                     inputStream.close();
                 }
                 catch (Exception e) {
-//                e.printStackTrace();
                     logger.error(e.getMessage(),e);
                 }
             }
