@@ -168,7 +168,6 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:${server.port}/${server.contextPath}
       valuationService: http://127.0.0.1:${server.port}/${server.contextPath}
       customerInterfService: http://127.0.0.1:${server.port}/${server.contextPath}
       tamsServer: http://127.0.0.1:${server.port}/${server.contextPath}
