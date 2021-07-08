@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbMonthFeePositionMapper {
     int deleteByPrimaryKey(String posuuid);
 

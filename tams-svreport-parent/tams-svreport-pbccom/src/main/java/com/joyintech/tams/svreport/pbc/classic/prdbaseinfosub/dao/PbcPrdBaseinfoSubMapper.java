@@ -7,8 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface PbcPrdBaseinfoSubMapper {
     int deleteByPrimaryKey(String registSeqno);
 

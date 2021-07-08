@@ -3,10 +3,12 @@ package com.joyintech.tams.svreport.interf.chb.investmentsinfo.dao;
 import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
 import com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbProdInfoRate;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
+@Repository
 public interface ChbProdInfoRateInterfMapper {
 
 	/**
