@@ -164,7 +164,7 @@ public class MstCoinFundQuotationInfo001Controller extends BaseController {
         // "基金代码"+"("+基金代码+")"+"-""估值日"
         // +"("+估值日+")"
         params.setComment(entity -> this.getMessage("MstCoinFundQuotationInfo001.finprodId") + "("
-                                    + entity.getFinprodId() + ")"
+                                    + entity.getFinprodMarketId() + ")"
                                     + this.getMessage("MstCoinFundQuotationInfo001.valDate") + "("
                                     + DateUtil.format(entity.getValDate()) + ")");
         processParameter.setWorkFlowParameter(params);// 设置工作流注解
