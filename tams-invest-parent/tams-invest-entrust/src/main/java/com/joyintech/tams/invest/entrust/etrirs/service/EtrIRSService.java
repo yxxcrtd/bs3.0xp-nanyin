@@ -10,39 +10,41 @@
 
 package com.joyintech.tams.invest.entrust.etrirs.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.invest.entrust.etrstock.dto.EtrStockDto;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etrirs.dto.EtrIRSDto;
+import com.joyintech.tams.invest.entrust.etroption.dto.EtrOptionDto;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 利率互换委托画面端service 〈功能详细描述〉
@@ -102,6 +104,8 @@ public class EtrIRSService extends CommonExportService<EtrIRSDto> implements Bas
         if (StringUtil.isNotEmpty(param.get("entrustStatus"))) {
             List<String> entrustStatusList = StringUtil.splitToList(GlobalConstant.COMMA,
                 (String)param.get("entrustStatus"));
+            // 去除空字符串值
+            entrustStatusList = entrustStatusList.stream().filter(i->!i.isEmpty()).collect(Collectors.toList());
             param.put("entrustStatusList", entrustStatusList);
         }
         param.put("loginUser", SecurityUtil.getLoginUser().getUserName());
@@ -170,13 +174,17 @@ public class EtrIRSService extends CommonExportService<EtrIRSDto> implements Bas
      */
     @Override
     public void doComplete(EtrIRSDto dto, OperationType operationType) {
-        dto.setOperateType(operationType.toString());
-        Date sysDate = DateUtil.platDateFromCache();
-        dto.setEntrustDate(sysDate);
-        basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
-        restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIRS/doComplete", dto,
-            Integer.class);
+        
+        if (doDeleteFlow(dto.getWorkflowId())){ // 先删除流程相关数据
+            
+            dto.setOperateType(operationType.toString());
+            Date sysDate = DateUtil.platDateFromCache();
+            dto.setEntrustDate(sysDate);
+            basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
+            restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIRS/doComplete", dto,
+                    Integer.class);
+        }
     }
 
     /**
@@ -184,6 +192,10 @@ public class EtrIRSService extends CommonExportService<EtrIRSDto> implements Bas
      */
     @Override
     public void doInsert(EtrIRSDto dto, OperationType type) {
+        if ("submit".equals(dto.getOperateType())) {
+            doInsertFlow(dto);
+        }
+        
         dto.setOperateType(type.toString());
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIRS/doInsert", dto, Integer.class);
@@ -196,6 +208,32 @@ public class EtrIRSService extends CommonExportService<EtrIRSDto> implements Bas
     public void doUpdate(EtrIRSDto dto) {
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIRS/doInsert", dto, Integer.class);
+
+        if (!StringUtil.equals("revoke", dto.getOperateType())
+                && !StringUtil.equals("delete", dto.getOperateType())) {
+
+            // 执行通用方法删除并重新插入流程指令数据
+            boolean isSuccess = doDeleteFlow(dto.getWorkflowId()) && doInsertFlow(dto);
+
+            if(isSuccess){
+                ProcessMark newEntity;
+                try {
+                    newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrOptionDto.class, true);
+                    newEntity.setWorkflowId(dto.getWorkflowId());
+                    newEntity.setStatus(dto.getStatus());
+                    newEntity.setBusinessData(JsonUtils.object2Json(dto));
+                    // 操作留痕表
+                    WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+                } catch (Exception e){
+                    throw new RuntimeException("数据留痕失败", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void doBack(EtrIRSDto dto) {
+        doDeleteFlow(dto.getWorkflowId());
     }
 
     /**
@@ -285,7 +323,6 @@ public class EtrIRSService extends CommonExportService<EtrIRSDto> implements Bas
     /**
      * 查询授权额度 <功能详细描述>
      * 
-     * @param map
      * @return
      * @see
      * @since 1.0
@@ -322,4 +359,22 @@ public class EtrIRSService extends CommonExportService<EtrIRSDto> implements Bas
             return null;
         }
     }
+    
+    
+    private boolean doInsertFlow(EtrIRSDto dto){
+        // 需要查询IsOutTrade，没使用通用它类而使用业务类处理
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIRS/doInsertEtrFlow", dto,
+                Boolean.class);
+    }
+
+    private boolean doDeleteFlow(String workflowId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("workflowId", workflowId);
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doDeleteEtrFlow", param,
+                Boolean.class);
+
+    }
+    
 }

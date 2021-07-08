@@ -22,7 +22,6 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ibm.db2.jcc.am.s;
 import com.joyintech.framework.util.DateUtil;
 
 /**

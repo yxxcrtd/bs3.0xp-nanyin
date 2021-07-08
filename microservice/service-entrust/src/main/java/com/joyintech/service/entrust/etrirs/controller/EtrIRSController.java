@@ -14,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -187,4 +189,23 @@ public class EtrIRSController {
     public List<SysUploadFileInfo> selectFileByBusinessId(String businessId) {
         return etrIRSService.selectFileByBusinessId(businessId);
     }
+
+    /**
+     * 插入指令流程中的数据
+     * @return
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doInsertEtrFlow")
+    public boolean doInsertEtrFlow(@RequestBody EtrIRSDto dto){
+        try {
+            etrIRSService.newDelegateFlow(dto);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
 }

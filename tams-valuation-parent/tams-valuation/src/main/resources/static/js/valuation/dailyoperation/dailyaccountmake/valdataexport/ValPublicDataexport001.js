@@ -17,7 +17,8 @@ $(function () {
 	var getSearchParams = function() {
 		var pageParam = {queryDate : $.trim($("#valDate").val()),
 			status : status,
-			execTaskId : $.trim(execTaskId)
+			execTaskId : $.trim(execTaskId),
+			booksetId : $('#booksetId').select2('data'),
 		}
 		var treeObj=$.fn.zTree.getZTreeObj("typeDatatree_tree"),
 			nodes=treeObj.getCheckedNodes(true),
@@ -33,12 +34,13 @@ $(function () {
 				booksetIds="";
 			for(var i=0;i<booksetIdList.length;i++){
 				if(booksetIdList[i].selected){
-					booksetIds+=booksetIdList[i].object + ",";
+					booksetIds+=booksetIdList[i].id + ",";
 				}
 			}
 		}
 		pageParam.booksetId = booksetIds;
 		pageParam.preseqno = preseqno;
+		debugger;
 		return pageParam;
 	};
 
@@ -203,6 +205,15 @@ $(function () {
 		if(startDate==''||endDate==''){
 			layer.alert('请选择时间!');
 			return ;
+		}
+		if(booksetId){
+			booksetIds="";
+			for(var i=0;i<$('#booksetId').select2('data').length;i++){
+				if($('#booksetId').select2('data')[i]){
+					booksetIds+=$('#booksetId').select2('data')[i].id + ",";
+				}
+			}
+			booksetId = booksetIds;
 		}
 		$.ajax({
 			url : "checkExecute",

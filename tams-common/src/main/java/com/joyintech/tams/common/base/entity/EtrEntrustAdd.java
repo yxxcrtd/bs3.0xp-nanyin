@@ -458,11 +458,6 @@ public class EtrEntrustAdd extends BaseEntity {
     private String redoType;
 
     /**
-     * 报价方式
-     */
-    private String quoteType;
-
-    /**
      * 衍生品买卖方向
      */
     private String derivativeBsDir;
@@ -471,6 +466,32 @@ public class EtrEntrustAdd extends BaseEntity {
      * 衍生品开平仓标志
      */
     private String derivativeOcFlag;
+
+    /**
+     * 报价方式
+     */
+    private String quoteType;
+
+    /**
+     * 港股通市场
+     */
+    private String hkMarket;
+
+    /**
+     * 目标币种成交金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal entrustAmtTarget;
+
+    /**
+     * 质押券库代码
+     */
+    private String pledgeStockId;
+
+    /**
+     * 计算方式
+     */
+    private String calculateField;
 
     /**
      * 取得 委托代码
@@ -1828,22 +1849,6 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 报价方式
-     * @return 报价方式
-     */
-    public String getQuoteType() {
-        return quoteType;
-    }
-
-    /**
-     * 设置 报价方式
-     * @param quoteType 报价方式
-     */
-    public void setQuoteType(String quoteType) {
-        this.quoteType = quoteType == null ? null : quoteType.trim();
-    }
-
-    /**
      * 取得 衍生品买卖方向
      * @return 衍生品买卖方向
      */
@@ -1873,5 +1878,85 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     public void setDerivativeOcFlag(String derivativeOcFlag) {
         this.derivativeOcFlag = derivativeOcFlag == null ? null : derivativeOcFlag.trim();
+    }
+
+    /**
+     * 取得 报价方式
+     * @return 报价方式
+     */
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    /**
+     * 设置 报价方式
+     * @param quoteType 报价方式
+     */
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType == null ? null : quoteType.trim();
+    }
+
+    /**
+     * 取得 港股通市场
+     * @return 港股通市场
+     */
+    public String getHkMarket() {
+        return hkMarket;
+    }
+
+    /**
+     * 设置 港股通市场
+     * @param hkMarket 港股通市场
+     */
+    public void setHkMarket(String hkMarket) {
+        this.hkMarket = hkMarket == null ? null : hkMarket.trim();
+    }
+
+    /**
+     * 取得 目标币种成交金额
+     * @return 目标币种成交金额
+     */
+    public BigDecimal getEntrustAmtTarget() {
+        return entrustAmtTarget;
+    }
+
+    /**
+     * 设置 目标币种成交金额
+     * @param entrustAmtTarget 目标币种成交金额
+     */
+    public void setEntrustAmtTarget(BigDecimal entrustAmtTarget) {
+        this.entrustAmtTarget = entrustAmtTarget;
+    }
+
+    /**
+     * 取得 质押券库代码
+     * @return 质押券库代码
+     */
+    public String getPledgeStockId() {
+        return pledgeStockId;
+    }
+
+    /**
+     * 设置 质押券库代码
+     * @param pledgeStockId 质押券库代码
+     */
+    public void setPledgeStockId(String pledgeStockId) {
+        this.pledgeStockId = pledgeStockId == null ? null : pledgeStockId.trim();
+    }
+
+    /**
+     * 取得 计算方式
+     * @return 计算方式
+     */
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    /**
+     * 设置 计算方式
+     * @param calculateField 计算方式
+     */
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField == null ? null : calculateField.trim();
     }
 }

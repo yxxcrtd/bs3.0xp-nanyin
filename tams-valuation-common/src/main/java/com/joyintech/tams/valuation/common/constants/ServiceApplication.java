@@ -44,6 +44,11 @@ public class ServiceApplication {
 	 * 自定义接口服务
 	 */
 	public static String VALUATION_BASICDATA_SERVICE_NAME = "http://valuationBasicdataService";
+	
+    /**
+     * 报表管理
+     */
+    public static String REPORT_SERVICE_NAME = "http://reportService";
 
 	@Configuration
 	@ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "valuationService")

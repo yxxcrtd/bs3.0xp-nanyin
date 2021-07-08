@@ -482,4 +482,16 @@
           from dual)
   </select>
 
+    <select id="selectCustomer" resultType="java.lang.String">
+       SELECT
+		decode(T2.Type_8,
+			'${fzq}',T1.ISSUER,
+			'${fck}',T1.ISSUER,
+			'${fxml}',T1.FINANCIER,
+			 T1.MANAGER)
+		FROM FIN_PRODUCT T1
+		INNER JOIN FIN_PRODUCT_TYPE T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+		WHERE T1.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

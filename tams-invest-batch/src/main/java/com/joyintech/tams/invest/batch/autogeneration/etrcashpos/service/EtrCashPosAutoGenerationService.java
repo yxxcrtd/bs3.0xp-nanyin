@@ -19,6 +19,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.autogeneration.etrcashpos.dao.EtrCashPosAutoGenerationMapper;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
@@ -87,6 +88,7 @@ public class EtrCashPosAutoGenerationService {
         // 查询债券、股票未关闭的委托
         paramMap.put("PRICE_MODEL_PRICE_MODEL", DictCodeListExt2.价格模式_市价指令.getValue());
         paramMap.put("ENTRUST_STATUS_02", DictCodeList.委托状态_待接收.getValue());
+        paramMap.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_待分发.getValue());
         paramMap.put("ENTRUST_STATUS_03", DictCodeList.委托状态_已接收.getValue());
         paramMap.put("FINPROD_TYPE2_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         paramMap.put("FINPROD_TYPE2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());

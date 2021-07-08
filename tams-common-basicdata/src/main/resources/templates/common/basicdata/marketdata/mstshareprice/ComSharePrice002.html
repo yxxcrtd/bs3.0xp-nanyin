@@ -60,6 +60,22 @@
                             </div>
                             <div class="layui-form-item">
                                 <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-lable"
+                                           data-th-text="#{ComSharePrice001.ccy}">币种</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select type="text" id="ccy" name="ccy"
+                                                class="layui-input form-input input-select"
+                                                data-th-data-result='${CCY}' th:allowClear="true"
+                                                th:placeholder="请输入内容"
+                                                data-th-initValue="${entity?.ccy}"
+                                                data-th-placeholder="#{SysCommon.placeholder}"
+                                                th:formatoption="true"
+                                                required="required">
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline-wrap">
                                  <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.sShares}">总股本</label>
                                     <div class="layui-input-inline input-inline">
@@ -79,6 +95,8 @@
                                                data-th-value="${entity?.cShares}" maxlength="16" >
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.preClosePrice}">昨收盘价</label>
@@ -90,8 +108,6 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <div id="code_div" class="form-inline-wrap">
                                    <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.openPrice}">开盘价</label>
@@ -114,7 +130,8 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div class="layui-form-item">
                                 <div id="price_div" class="form-inline-wrap">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.lowPrice}">最低价</label>
@@ -126,8 +143,6 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.closePrice}">收盘价</label>
@@ -149,6 +164,8 @@
                                                data-th-value="${entity?.change}" disabled="disabled"/>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <div class="form-inline-wrap" id="TongDaoNum2">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.changePercent}">涨跌幅%</label>
@@ -159,8 +176,7 @@
                                                data-th-value="${entity?.changePercent}" disabled="disabled"/>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
+
                                 <div class="form-inline-wrap" id="assetAvailablePosition_div">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.dealValume}">成交量</label>
@@ -182,6 +198,8 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <div class="form-inline-wrap" id="proAvailableCash1_div">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.avgPrice}">均价</label>
@@ -193,8 +211,6 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <div class="form-inline-wrap" id="accAvailableCash_div">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.preClosePriceAdj}">复权昨收盘价</label>
@@ -217,7 +233,9 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-                               <div class="form-inline-wrap">
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="form-inline-wrap">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.highPriceAdj}">复权最高价</label>
                                     <div class="layui-input-inline input-inline">
@@ -228,8 +246,6 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <div class="form-inline-wrap" id="accAvailableCash_div">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.lowPriceAdj}">复权最低价</label>
@@ -252,7 +268,10 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-                               <div class="form-inline-wrap">
+
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="form-inline-wrap">
                                     <label class="layui-form-label form-lable"
                                            data-th-text="#{ComSharePrice001.factorAdj}">复权因子</label>
                                     <div class="layui-input-inline input-inline">
@@ -262,8 +281,7 @@
                                                data-th-value="${entity?.factorAdj}" data-th-initValue='1'/>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
+
                                 <div class="form-inline-wrap">
 				                    <label class="layui-form-label form-lable" data-th-text="#{ComSharePrice001.tradeStatus}">交易状态</label>
 				                     <div class="layui-input-inline input-inline">

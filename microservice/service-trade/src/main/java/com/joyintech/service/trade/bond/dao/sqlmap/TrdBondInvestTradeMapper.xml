@@ -771,6 +771,14 @@
 	            <if test="windtypeone != null and windtypeone != ''">
 	                AND B.TYPE_4 = #{windtypeone}
 	            </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND A.TRADE_MARKET in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
 	        </where>
         <if test="isautobond != null and isautobond == 'true'">
         union
@@ -888,10 +896,17 @@
           AND B.CASH_TYPE_1 = #{cashType1}
       LEFT JOIN FIN_PRODUCT_TYPE D
         ON D.FINPROD_ID = A.FINPROD_ID
+        <!-- 可能存在多条规则  20210617 yzg start -->
+      left join (select FINPROD_ID, max(eff_date) as EFF_DATE
+                      from FIN_CASH_CALC_RULE
+                     group by FINPROD_ID) T1
+       		on T1.FINPROD_ID = A.FINPROD_ID 
+       <!-- 可能存在多条规则  20210617 yzg end -->
       LEFT JOIN FIN_CASH_CALC_RULE E
         ON E.FINPROD_ID = A.FINPROD_ID
           AND E.FINPROD_TYPE2 = #{finprodType2}
           and E.IS_INITIAL = #{YES_NO_Y}
+          and E.EFF_DATE = T1.EFF_DATE
       LEFT JOIN FIN_RATE_INFO F
         ON F.CASH_ID = B.CASH_ID
           AND F.FINPROD_TYPE2 = #{finprodType2}

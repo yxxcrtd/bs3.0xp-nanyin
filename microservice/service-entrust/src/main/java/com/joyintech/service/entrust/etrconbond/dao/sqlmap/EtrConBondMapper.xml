@@ -4,6 +4,28 @@
     <!-- 分页查询 -->
     <select id="selectForPage" parameterType="Map"
             resultType="com.joyintech.service.entrust.etrconbond.dto.EtrConBondDto">
+        select aaa.* from (
+        <choose>
+            <when test="entrustStatus == ''">
+                <!-- 查询全部状态 -->
+                <include refid="onlyWtfEtrEntrust"></include>
+                UNION ALL
+                <include refid="onlyEtrEntrust"></include>
+            </when>
+            <when test="entrustStatus == ENTRUST_STATUS_08">
+                <!-- 只查流程中的数据 -->
+                <include refid="onlyWtfEtrEntrust"></include>
+            </when>
+            <otherwise>
+                <include refid="onlyEtrEntrust"></include>
+            </otherwise>
+        </choose>
+        ) aaa
+        left join SYS_DATADICT_LIST sdl on aaa.entrustStatus=sdl.ITEM_CODE and sdl.DICT_CODE='ENTRUST_STATUS'
+        order by sdl.ORDER_NO, aaa.entrustId DESC
+    </select>
+
+    <sql id="onlyEtrEntrust">
         SELECT
         T1.ENTRUST_ID entrustId,
         T1.ENTRUST_STATUS entrustStatus,
@@ -25,20 +47,20 @@
         T7.PURCH_TYPE purchType,
         TT.PRIN_AMT winlotteryAmt
         FROM ETR_ENTRUST T1
-               INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+        INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
         INNER JOIN PTL_PORTFOLIO_AUTHORITY T11 ON T11.PORTFOLIO_ID = T2.PORTFOLIO_ID AND T11.USER_ID = #{userId}
         LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
         LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T3.FINPROD_ID
-       <!--  LEFT JOIN TRD_PRODUCT_DEAL_ADD T5 ON T1.ENTRUST_ID = T5.ENTRUST_ID
-        LEFT JOIN TRD_PRODUCT_DEAL T6 ON T5.TRADE_ID = T6.TRADE_ID and T6.ps = #{PS_T05} -->
+        <!--  LEFT JOIN TRD_PRODUCT_DEAL_ADD T5 ON T1.ENTRUST_ID = T5.ENTRUST_ID
+         LEFT JOIN TRD_PRODUCT_DEAL T6 ON T5.TRADE_ID = T6.TRADE_ID and T6.ps = #{PS_T05} -->
         LEFT JOIN (select T5.ENTRUST_ID,T6.PRIN_AMT from TRD_PRODUCT_DEAL_ADD T5
-					LEFT JOIN TRD_PRODUCT_DEAL T6
-						ON T5.TRADE_ID = T6.TRADE_ID 
-							AND T6.ps      = #{PS_T05}
-					where T6.PRIN_AMT is not null 
-						and t6.p_trade_id is null 
-						and t6.is_cancel= #{YES_OR_NO_N}
-		)TT on   T1.ENTRUST_ID = TT.ENTRUST_ID
+        LEFT JOIN TRD_PRODUCT_DEAL T6
+        ON T5.TRADE_ID = T6.TRADE_ID
+        AND T6.ps      = #{PS_T05}
+        where T6.PRIN_AMT is not null
+        and t6.p_trade_id is null
+        and t6.is_cancel= #{YES_OR_NO_N}
+        )TT on   T1.ENTRUST_ID = TT.ENTRUST_ID
         LEFT JOIN ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
         <where>
@@ -48,19 +70,19 @@
             <if test="portfolioIdList != null and portfolioIdList.size() >0">
                 AND ((T1.PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" item="prot" index= "index" open="(" close=")" separator="," >
-                	<if test="(index % 998) == 0">
-                		null) or T1.PORTFOLIO_ID in (
-                	</if>
-                	#{prot,jdbcType=VARCHAR}
+                    <if test="(index % 998) == 0">
+                        null) or T1.PORTFOLIO_ID in (
+                    </if>
+                    #{prot,jdbcType=VARCHAR}
                 </foreach>
                 )
                 OR
                 (T2.PARENT_PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" item="prot" index= "index" open="(" close=")" separator="," >
-                	<if test="(index % 998) == 0">
-                		null) or T2.PARENT_PORTFOLIO_ID in (
-                	</if>
-                	#{prot,jdbcType=VARCHAR}
+                    <if test="(index % 998) == 0">
+                        null) or T2.PARENT_PORTFOLIO_ID in (
+                    </if>
+                    #{prot,jdbcType=VARCHAR}
                 </foreach>
                 )
                 )
@@ -89,9 +111,91 @@
             </if>
 
         </where>
-        order by T1.ENTRUST_ID DESC
-    </select>
-
+    </sql>
+    <sql id="onlyWtfEtrEntrust">
+        SELECT
+        T1.ENTRUST_ID entrustId,
+        T1.ENTRUST_STATUS entrustStatus,
+        T8.REAL_NAME invManagerId,
+        T1.PORTFOLIO_ID portfolioId,
+        T2.PORTFOLIO_NAME portfolioName,
+        T1.FINPROD_ID finprodId,
+        T3.FINPROD_MARKET_ID finprodMarketId,
+        T3.FINPROD_NAME finprodName,
+        T1.PS ps,
+        T1.TRADE_MARKET tradeMarket,
+        T1.ENTRUST_NUM * 100 purchBondTotal,
+        T1.CCY ccy,
+        T1.REMARK remark,
+        T1.INV_AIM invAim,
+        T7.ASSET_TYPE1 assetType1,
+        T1.ENTRUST_DATE entrustDate,
+        T7.PURCH_MODLE purchModle,
+        T7.PURCH_TYPE purchType,
+        TT.PRIN_AMT winlotteryAmt
+        FROM WFL_ETR_ENTRUST T1
+        INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+        INNER JOIN PTL_PORTFOLIO_AUTHORITY T11 ON T11.PORTFOLIO_ID = T2.PORTFOLIO_ID AND T11.USER_ID = #{userId}
+        LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T3.FINPROD_ID
+        <!--  LEFT JOIN TRD_PRODUCT_DEAL_ADD T5 ON T1.ENTRUST_ID = T5.ENTRUST_ID
+         LEFT JOIN TRD_PRODUCT_DEAL T6 ON T5.TRADE_ID = T6.TRADE_ID and T6.ps = #{PS_T05} -->
+        LEFT JOIN (select T5.ENTRUST_ID,T6.PRIN_AMT from TRD_PRODUCT_DEAL_ADD T5
+        LEFT JOIN TRD_PRODUCT_DEAL T6
+        ON T5.TRADE_ID = T6.TRADE_ID
+        AND T6.ps      = #{PS_T05}
+        where T6.PRIN_AMT is not null
+        and t6.p_trade_id is null
+        and t6.is_cancel= #{YES_OR_NO_N}
+        )TT on   T1.ENTRUST_ID = TT.ENTRUST_ID
+        LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
+        LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
+        <where>
+            AND T3.FINPROD_TYPE2 =#{bond}
+            AND (T4.TYPE_6 = #{type6_B14} OR T4.TYPE_6 = #{type6_B15})
+            and T1.ps = #{PS_T04}
+            <if test="portfolioIdList != null and portfolioIdList.size() >0">
+                AND ((T1.PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="prot" index= "index" open="(" close=")" separator="," >
+                    <if test="(index % 998) == 0">
+                        null) or T1.PORTFOLIO_ID in (
+                    </if>
+                    #{prot,jdbcType=VARCHAR}
+                </foreach>
+                )
+                OR
+                (T2.PARENT_PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" item="prot" index= "index" open="(" close=")" separator="," >
+                    <if test="(index % 998) == 0">
+                        null) or T2.PARENT_PORTFOLIO_ID in (
+                    </if>
+                    #{prot,jdbcType=VARCHAR}
+                </foreach>
+                )
+                )
+            </if>
+            <if test="finprodId != null and !finprodId.equals('')">
+                AND (T3.FINPROD_ID like concat('%',concat(#{finprodId},'%'))
+                or T3.FINPROD_ABBR like concat('%',concat(#{finprodId},'%')))
+            </if>
+            <if test="tradeMarket != null and !tradeMarket.equals('')">
+                AND T1.TRADE_MARKET=#{tradeMarket}
+            </if>
+            <if test="purchModle != null and !purchModle.equals('')">
+                AND T7.PURCH_MODLE=#{purchModle}
+            </if>
+            <if test="purchType != null and !purchType.equals('')">
+                AND T7.PURCH_TYPE=#{purchType}
+            </if>
+            <if test="startDate != null and !startDate.equals('')">
+                AND T1.ENTRUST_DATE &gt;=to_date(#{startDate},'yyyy-MM-dd')
+            </if>
+            <if test="endDate != null and !endDate.equals('')">
+                AND T1.ENTRUST_DATE &lt;=to_date(#{endDate},'yyyy-MM-dd')
+            </if>
+        </where>
+    </sql>
+    
     <!-- 获取资产代码联想文本框信息 -->
     <select id="getFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
@@ -193,6 +297,7 @@
             <result column="contactInfo" property="contactInfo"/>
         </association>
     </resultMap>
+    
     <select id="selectByKey"
             resultMap="selByKeyResult">
         SELECT
@@ -232,6 +337,51 @@
         AND T3.FINPROD_TYPE2 =#{bond}
         LEFT JOIN
         ETR_ENTRUST_ADD T6
+        ON
+        T1.ENTRUST_ID = T6.ENTRUST_ID
+        <where>
+            <if test="entrustId !=null and !entrustId.equals('')">
+                AND T1.ENTRUST_ID = #{entrustId}
+            </if>
+        </where>
+        union all
+        SELECT
+        T1.ENTRUST_ID entrustId,
+        T1.PORTFOLIO_ID portfolioId,
+        T1.ENTRUST_DATE entrustDate,
+        T6.ASSET_TYPE1 assetType1,
+        T1.CCY ccy,
+        T1.FINPROD_ID finprodId,
+        T3.FINPROD_MARKET_ID finprodMarketId,
+        T3.FINPROD_NAME finprodName,
+        T1.TRADE_MARKET tradeMarket,
+        T1.INV_AIM invAim,
+        T1.PRO_AVAILABLE_CASH proAvailableCash,
+        T1.ACC_AVAILABLE_CASH accAvailableCash,
+        T1.REMARK remark,
+        T1.COUNTER_ID counterId,
+        T1.COUNTER_TRADER counterTrader,
+        T1.CONTACT_INFO contactInfo,
+        T2.TRADER trader,
+        T1.INV_MANAGER_ID invManagerId,
+        T6.PURCH_MODLE purchModle,
+        T6.PURCH_TYPE purchType,
+        T1.ENTRUST_NUM * 100 purchBondTotal,
+        T1.chl_id chlId,
+        T6.SEC_ACCT_ID secAcctId
+        FROM
+        WFL_ETR_ENTRUST T1
+        LEFT JOIN
+        ETR_DISTRIBUTE T2
+        ON
+        T1.ENTRUST_ID = T2.ENTRUST_ID
+        LEFT JOIN
+        FIN_PRODUCT T3
+        ON
+        T1.FINPROD_ID = T3.FINPROD_ID
+        AND T3.FINPROD_TYPE2 =#{bond}
+        LEFT JOIN
+        WFL_ETR_ENTRUST_ADD T6
         ON
         T1.ENTRUST_ID = T6.ENTRUST_ID
         <where>

@@ -96,6 +96,8 @@
         <result column="DERIVATIVE_BS_DIR" property="derivativeBsDir" jdbcType="VARCHAR" />
         <result column="DERIVATIVE_OC_FLAG" property="derivativeOcFlag" jdbcType="VARCHAR" />
         <result column="QUOTE_TYPE" property="quoteType" jdbcType="VARCHAR" />
+        <result column="HK_MARKET" property="hkMarket" jdbcType="VARCHAR" />
+        <result column="ENTRUST_AMT_TARGET" property="entrustAmtTarget" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         ENTRUST_ID ENTRUST_ID, WORKFLOW_STATUS WORKFLOW_STATUS, SETTLE_SPREED SETTLE_SPREED, 
@@ -123,7 +125,8 @@
         TARGET_TYPE TARGET_TYPE, COUNTER_ORG COUNTER_ORG, TRADER TRADER, WORKFLOW_ID WORKFLOW_ID, 
         VPAY_DATE VPAY_DATE, MPAY_DATE MPAY_DATE, M_INT_AMT M_INT_AMT, M_TRADE_AMT M_TRADE_AMT, 
         CAP_DAYS CAP_DAYS, TRADE_ID TRADE_ID, REQUEST_ID REQUEST_ID, REDO_TYPE REDO_TYPE, 
-        DERIVATIVE_BS_DIR DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG DERIVATIVE_OC_FLAG, QUOTE_TYPE QUOTE_TYPE
+        DERIVATIVE_BS_DIR DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG DERIVATIVE_OC_FLAG, QUOTE_TYPE QUOTE_TYPE, 
+        HK_MARKET HK_MARKET, ENTRUST_AMT_TARGET ENTRUST_AMT_TARGET
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -166,7 +169,7 @@
         PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
         COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, WORKFLOW_ID, 
         VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
-        DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE)
+        DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET)
         select ENTRUST_ID, WORKFLOW_STATUS, SETTLE_SPREED, EXER_YIELD, 
             MATURE_YIELD, VDATE, MDATE, TERM_DAYS, TERM_DAYS2, TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, 
             ASSET_TYPE, ASSET_TYPE1, BUSI_PS, CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, CREATE_DEPT, 
@@ -181,7 +184,7 @@
             PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
             COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
             VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
-            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE
+            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET
              from WFL_ETR_ENTRUST_ADD
              where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
@@ -458,6 +461,12 @@
             <if test="quoteType != null" >
                 QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
             </if>
+            <if test="hkMarket != null" >
+                HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAmtTarget != null" >
+                ENTRUST_AMT_TARGET = #{entrustAmtTarget,jdbcType=DECIMAL},
+            </if>
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
@@ -553,7 +562,9 @@
         REDO_TYPE = #{redoType,jdbcType=VARCHAR},
         DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
         DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
-        QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR}
+        QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+        HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+        ENTRUST_AMT_TARGET = #{entrustAmtTarget,jdbcType=DECIMAL}
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
@@ -588,7 +599,8 @@
             MPAY_DATE, M_INT_AMT, M_TRADE_AMT, 
             CAP_DAYS, TRADE_ID, REQUEST_ID, 
             REDO_TYPE, DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, 
-            QUOTE_TYPE)
+            QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET
+            )
         values (#{entrustId,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, #{settleSpreed,jdbcType=DECIMAL}, 
             #{exerYield,jdbcType=DECIMAL}, #{matureYield,jdbcType=DECIMAL}, #{vdate,jdbcType=DATE}, 
             #{mdate,jdbcType=DATE}, #{termDays,jdbcType=DECIMAL}, #{termDays2,jdbcType=DECIMAL}, 
@@ -620,7 +632,8 @@
             #{mpayDate,jdbcType=DATE}, #{mIntAmt,jdbcType=DECIMAL}, #{mTradeAmt,jdbcType=DECIMAL}, 
             #{capDays,jdbcType=DECIMAL}, #{tradeId,jdbcType=VARCHAR}, #{requestId,jdbcType=VARCHAR}, 
             #{redoType,jdbcType=VARCHAR}, #{derivativeBsDir,jdbcType=VARCHAR}, #{derivativeOcFlag,jdbcType=VARCHAR}, 
-            #{quoteType,jdbcType=VARCHAR})
+            #{quoteType,jdbcType=VARCHAR}, #{hkMarket,jdbcType=VARCHAR}, #{entrustAmtTarget,jdbcType=DECIMAL}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
         insert into WFL_ETR_ENTRUST_ADD
@@ -907,6 +920,12 @@
             <if test="quoteType != null" >
                 QUOTE_TYPE,
             </if>
+            <if test="hkMarket != null" >
+                HK_MARKET,
+            </if>
+            <if test="entrustAmtTarget != null" >
+                ENTRUST_AMT_TARGET,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="entrustId != null" >
@@ -1191,6 +1210,12 @@
             <if test="quoteType != null" >
                 #{quoteType,jdbcType=VARCHAR},
             </if>
+            <if test="hkMarket != null" >
+                #{hkMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAmtTarget != null" >
+                #{entrustAmtTarget,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
@@ -1208,7 +1233,7 @@
         PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
         COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, WORKFLOW_ID, 
         VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
-        DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE)
+        DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET)
         select ENTRUST_ID, WORKFLOW_STATUS, SETTLE_SPREED, EXER_YIELD, 
             MATURE_YIELD, VDATE, MDATE, TERM_DAYS, TERM_DAYS2, TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, 
             ASSET_TYPE, ASSET_TYPE1, BUSI_PS, CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, CREATE_DEPT, 
@@ -1223,7 +1248,7 @@
             PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
             COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
             VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
-            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE
+            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET
              from WFL_ETR_ENTRUST_ADD
              where 1 = 1 and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR} and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </insert>
@@ -1497,6 +1522,12 @@
             <if test="quoteType != null" >
                 QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
             </if>
+            <if test="hkMarket != null" >
+                HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAmtTarget != null" >
+                ENTRUST_AMT_TARGET = #{entrustAmtTarget,jdbcType=DECIMAL},
+            </if>
         </set>
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
@@ -1591,7 +1622,9 @@
             REDO_TYPE = #{redoType,jdbcType=VARCHAR},
             DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
             DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
-            QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR}
+            QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+            ENTRUST_AMT_TARGET = #{entrustAmtTarget,jdbcType=DECIMAL}
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </update>

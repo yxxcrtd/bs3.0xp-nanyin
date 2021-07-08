@@ -1,0 +1,2 @@
+DELETE FROM SYS_PARA sp WHERE PARA_CODE ='repo_pledge_model';
+INSERT INTO SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG) VALUES('ETR', 'repo_pledge_model', '01', '01', '01,02,03', '银行间质押式回购质押券模式：01无质押券库，02仅一个质押券库，03多个质押券库', 'system', NULL, sysdate, 'system', sysdate, NULL, '01');

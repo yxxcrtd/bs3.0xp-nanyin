@@ -905,6 +905,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	交易场所_上海证券交易所(DictCode.交易场所,"03","上海证券交易所"),
 	交易场所_深圳证券交易所(DictCode.交易场所,"04","深圳证券交易所"),
 	交易场所_机构间私募系统(DictCode.交易场所,"05","机构间私募系统"),
+	交易场所_香港联合交易所(DictCode.交易场所,"13","香港联合交易所"),
 	交易场所_OTC场外(DictCode.交易场所,"09","OTC场外"),
 	交易场所_境外交易场所(DictCode.交易场所,"10","境外交易场所"),
 	/*委托接收状态_待接收(DictCode.委托接收状态,"01","待接收"),

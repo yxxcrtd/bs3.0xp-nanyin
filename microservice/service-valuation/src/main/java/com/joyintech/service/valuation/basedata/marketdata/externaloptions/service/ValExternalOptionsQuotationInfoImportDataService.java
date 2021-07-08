@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.ExcelUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,6 @@ import com.joyintech.tams.common.base.dao.MstValOpMapper;
 import com.joyintech.tams.common.base.entity.MstValOp;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
-import com.joyintech.tams.invest.common.util.ExcelUtil;
 
 /**期权行情信息导入
  * @auther: 曹锦
@@ -70,7 +70,7 @@ public class ValExternalOptionsQuotationInfoImportDataService extends CommonExpo
 
      * @return 导入结果
      */
-    public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList,String userName, String orgCode, String deptCode) {
+    public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList, String userName, String orgCode, String deptCode) {
         if (!StringUtil.isEmptyList(dataList)) {
             List<String> headList = new ArrayList<String>();
             headList.add("合约标的");

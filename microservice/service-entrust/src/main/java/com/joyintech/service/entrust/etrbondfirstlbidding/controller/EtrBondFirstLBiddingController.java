@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -198,6 +199,8 @@ public class EtrBondFirstLBiddingController {
     @DTXTransaction
     @PostMapping("doComplete")
     public void doComplete(@RequestBody EtrBondFirstLBiddingDto dto) throws IllegalAccessException, InvocationTargetException{
+        WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
+        
         service.doComplete(dto, dto.getOperateType());
     }
 
@@ -205,7 +208,25 @@ public class EtrBondFirstLBiddingController {
     @DTXTransaction
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrBondFirstLBiddingDto dto){
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), service.initBaseEtrInvestInfoDto(dto));
+
         service.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doUpdate")
+    public void doUpdate(@RequestBody EtrBondFirstLBiddingDto dto){
+        WFlowCommonService.doUpdateFlow(dto.getOperateType(), service.initBaseEtrInvestInfoDto(dto));
+
+        service.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBack")
+    public void doBack(@RequestBody EtrBondFirstLBiddingDto dto){
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
     }
     /**
      * 

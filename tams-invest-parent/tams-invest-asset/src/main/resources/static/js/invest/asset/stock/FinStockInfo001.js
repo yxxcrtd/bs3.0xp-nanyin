@@ -46,7 +46,7 @@ cols: [
             ,{field:'sShares',  title: 'FinStockInfo001.allStock',sortField:"sShares"} //总股本
             ,{field:'cShares',  title: 'FinStockInfo001.currentCapital',sortField:"cShares"} //流通股本
         ,{field:'shOrZhName',  title: 'FinStockInfo001.shOrZh',sortField:"shOrZh"}//是否沪港通或深港通
-        ,{field:'isMarginFinprodName',title:'FinStockInfo001.isMarginFinprod',sortField:"isMarginFinprod"}//是否融资融券标的
+        ,{field:'isMarginFinprodName',title:'FinStockInfo001.isMarginFinprod',sortField:"isMarginFinprod"}//是否沪港通或深港通
        // ,{field:'ccy',  title: 'FinStockInfo001.ccy', sortField:'ccy'}//币种
             ,{field:'ccyAbbr', sortField:"ccy",width:150, title: 'FinStockInfo001.ccy'}//币种
         ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}        //编辑和删除事件
@@ -100,7 +100,7 @@ cols: [
      */
     $(function () {
         //设置人民币默认值
-        $('#ccy').textSelect('setValue', 'CNY');
+        //$('#ccy').textSelect('setValue', 'CNY');
         // //设置交易场所下拉框枚举
         // $('#tradeMarket').textSelect('setValue',null);
         // 绑定按钮事件

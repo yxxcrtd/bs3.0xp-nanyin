@@ -254,7 +254,6 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
      */
      @Override
      public void doInsert(EtrBoutRepoDto dto, OperationType type){
-         dto.setOperateType(type.toString());
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doInsert",dto,
              Integer.class);
@@ -267,10 +266,18 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
      @Override
      public void doUpdate(EtrBoutRepoDto dto){
          restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doInsert",dto,
+             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doUpdate",dto,
              Integer.class);
      }
-     /**
+
+    @Override
+    public void doBack(EtrBoutRepoDto dto) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doBack",dto,
+                Integer.class);
+    }
+
+    /**
       * 新建页面组合代码联想下拉框 <功能详细描述>
       * 
       * @param search

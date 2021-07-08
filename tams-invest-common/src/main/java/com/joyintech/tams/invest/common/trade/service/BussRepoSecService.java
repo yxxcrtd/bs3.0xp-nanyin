@@ -228,7 +228,9 @@ public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
             params.put("bondTypeArr", StringUtil.split(bondType,","));
         }
         //CFETS质押式回购报价界面，质押券维护界面 仅展示银行间的债券
-        if(StringUtils.equals(params.get("pageFromTz").toString(),"CfetsRepoDealQuotedPrice002")){
+        if(StringUtils.equals(params.get("pageFromTz").toString(),"CfetsRepoDealQuotedPrice002")
+        		||StringUtils.equals(params.get("pageFromTz").toString(),"EtrIbRepoinfo002")
+        		||StringUtils.equals(params.get("pageFromTz").toString(),"EtribRepoInfo003")){
             tradeMarket = DictCodeList.交易流通场所_银行间债券市场.getValue();
         }
         Page<PledgeBondInfoDto> resultList = new Page<>();
@@ -253,7 +255,11 @@ public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
             //resultList = this.queryForPage(page, length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params));
             //resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params);
             //银行间上下行多组合 正回购
-            if(DictCodeList.回购拆借方向_正回购.getValue().equals(ps)&&StringUtil.equals(params.get("pageFromTz"), "CfetsRepoDealQuotedPrice003")){
+            if(DictCodeList.回购拆借方向_正回购.getValue().equals(ps)&&
+            		(StringUtil.equals(params.get("pageFromTz"), "CfetsRepoDealQuotedPrice003")
+            				||StringUtil.equals(params.get("pageFromTz"), "EtrIbRepoinfo002")
+            				||StringUtil.equals(params.get("pageFromTz"), "EtribRepoInfo003")
+            				)){
                 String portfolioId = (String)params.get("portfolioId");
                 List<String> portfolioIds = Arrays.asList(portfolioId.split(","));
                 if(StringUtil.isNotEmpty(portfolioIds)&&portfolioIds.size()>0){

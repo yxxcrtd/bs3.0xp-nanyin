@@ -1,0 +1,2 @@
+delete from VAL_TEMP_COL_CHECK_INFO where TMP_E_NAME = 'ValAffirmPurTrade' and COL_E_NAME = 'fundType';
+insert into VAL_TEMP_COL_CHECK_INFO(TMP_C_NAME, TMP_E_NAME, COL_C_NAME, COL_E_NAME, COL_TYPE, IS_NULL, MAX_LENGTH, IS_EXIST, DICT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) values ('基金'||chr(38)||'计划类认申购确认交易','ValAffirmPurTrade','基金类型','fundType','1','Y','50','1','FUND_TYPE','system','',sysdate,'system',sysdate);

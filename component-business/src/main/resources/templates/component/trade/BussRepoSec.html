@@ -44,7 +44,7 @@
                         <a class="layui-btn layui-btn-sm btn-delete" th:id="|${entityNameBussRepoSec}_btn_delete|">
                             <i class="iconfont icon-delete"></i><span
                                 data-th-utext="#{BussRepoSec.delete}">删除</span></a>
-                  		<span id="EtrRepo002_auto_pledge_div" style="display: none">
+                  		<span  th:id="|${pageFrom}_auto_pledge_div|" style="display: none">
                   			&nbsp;&nbsp;
                        		<a class="layui-btn layui-btn-sm btn-create" th:id="|${entityNameBussRepoSec}_auto_pledge|">
                             	<i class="iconfont icon-quanka"></i>
@@ -81,6 +81,7 @@
     var ibuFlag_repoOverAvaCanContinue = /*[[${ibuFlag_repoOverAvaCanContinue}]]*/'';
     var isDzh = /*[[${isDzh}]]*/'';
     var quoteId = /*[[${quoteId}]]*/'';
+    var repo_pledge_model = /*[[${repo_pledge_model}]]*/'';
 </script>
 <script data-th-src="@{/js/component/trade/BussRepoSec.js}" type="text/javascript"></script>
 </body>

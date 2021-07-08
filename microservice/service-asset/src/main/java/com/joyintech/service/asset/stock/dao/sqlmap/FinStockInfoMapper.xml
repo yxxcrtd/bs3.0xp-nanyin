@@ -29,8 +29,8 @@
         LEFT JOIN
         (select a.S_SHARES ,a.c_shares,a.shares_id,a.deal_date from (
         select max(deal_date) deal_date,shares_id  from mst_share_price
-        where  
-		<![CDATA[  to_char(deal_date,'yyyy-MM-dd') < #{sysDate,jdbcType=VARCHAR} ]]>
+        where
+        deal_date <![CDATA[<]]> #{sysDate}
         group by shares_id
         ) b  left join 
          mst_share_price a
@@ -107,7 +107,9 @@
         FIN_PRODUCT.VDATE as vDate,
         FIN_PRODUCT.CCY as ccy,
         FIN_PRODUCT_ADD.SH_OR_ZH as shOrZh,
-        FIN_PRODUCT_ADD.IS_MARGIN_FINPROD as isMarginFinprod
+        FIN_PRODUCT_ADD.MIN_SALE_UNIT as minSaleUnit,
+        FIN_PRODUCT_ADD.IS_MARGIN_FINPROD as isMarginFinprod,
+        FIN_PRODUCT.REMARK as remark
         FROM
         FIN_PRODUCT
         LEFT JOIN
@@ -129,7 +131,7 @@
         MST_SHARE_PRICE b
         WHERE
         A .SHARES_ID = b.SHARES_ID
-        <![CDATA[AND  to_char(DEAL_DATE,'yyyy-MM-dd') < #{sysDate,jdbcType=VARCHAR} ]]>
+        AND DEAL_DATE <![CDATA[<]]> #{sysDate}
         GROUP BY
         SHARES_ID
         )
@@ -191,7 +193,7 @@
         MST_SHARE_PRICE b
         WHERE
         A .SHARES_ID = b.SHARES_ID
-        <![CDATA[AND  to_char(DEAL_DATE,'yyyy-MM-dd') < #{sysDate,jdbcType=VARCHAR} ]]>
+        AND DEAL_DATE <![CDATA[<]]> #{sysDate}
         GROUP BY
         SHARES_ID
         )
@@ -226,7 +228,7 @@
         MST_SHARE_PRICE b
         WHERE
         A .SHARES_ID = b.SHARES_ID
-        <![CDATA[AND  to_char(DEAL_DATE,'yyyy-MM-dd') < #{sysDate,jdbcType=VARCHAR} ]]>
+        AND DEAL_DATE <![CDATA[<]]> #{sysDate}
         GROUP BY
         SHARES_ID
         )

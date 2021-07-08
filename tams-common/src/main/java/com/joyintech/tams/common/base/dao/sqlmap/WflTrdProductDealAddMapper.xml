@@ -47,6 +47,7 @@
         <result column="PREC" property="prec" jdbcType="DECIMAL" />
         <result column="IS_CASHSET" property="isCashset" jdbcType="VARCHAR" />
         <result column="R_FINPROD_ID" property="rFinprodId" jdbcType="VARCHAR" />
+        <result column="REPLACE_AMT" property="replaceAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, WORKFLOW_STATUS WORKFLOW_STATUS, PORTFOLIO_ID PORTFOLIO_ID, PROD_ID PROD_ID, 
@@ -60,7 +61,7 @@
         WITH_LOCK_PERIOD WITH_LOCK_PERIOD, LOCK_MDATE LOCK_MDATE, DEVIATION DEVIATION, ASSET_RECOMMAND_ORG ASSET_RECOMMAND_ORG, 
         TERMINATE_RATE TERMINATE_RATE, PENALTY_INTAMT PENALTY_INTAMT, EXP_CON_VALUE EXP_CON_VALUE, 
         SPO_SHARE_NUM SPO_SHARE_NUM, FIRST_UNIT_CPRICE3 FIRST_UNIT_CPRICE3, PREB PREB, PREC PREC, 
-        IS_CASHSET IS_CASHSET, R_FINPROD_ID R_FINPROD_ID
+        IS_CASHSET IS_CASHSET, R_FINPROD_ID R_FINPROD_ID, REPLACE_AMT REPLACE_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -96,7 +97,7 @@
         OUR_ROLE, QUOT_PRE, PRICED_DATE, PRICED_DATE_RATE, DIF_PAY_AMT, DIF_PAY_CCY, DIF_PS, 
         REF_RATE, WITH_LOCK_PERIOD, LOCK_MDATE, DEVIATION, ASSET_RECOMMAND_ORG, TERMINATE_RATE, 
         PENALTY_INTAMT, EXP_CON_VALUE, SPO_SHARE_NUM, FIRST_UNIT_CPRICE3, PREB, PREC, IS_CASHSET, 
-        R_FINPROD_ID)
+        R_FINPROD_ID, REPLACE_AMT)
         select TRADE_ID, WORKFLOW_STATUS, PORTFOLIO_ID, PROD_ID, 
             CUSTOM_CASH_TYPE, GEN_TYPE, PUR_CFM_DATE, RED_CFM_DATE, REG_DATE, BONUS_CFM_DATE, 
             ENTRUST_ID, PAY_TYPE, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
@@ -104,7 +105,7 @@
             OUR_ROLE, QUOT_PRE, PRICED_DATE, PRICED_DATE_RATE, DIF_PAY_AMT, DIF_PAY_CCY, DIF_PS, 
             REF_RATE, WITH_LOCK_PERIOD, LOCK_MDATE, DEVIATION, ASSET_RECOMMAND_ORG, TERMINATE_RATE, 
             PENALTY_INTAMT, EXP_CON_VALUE, SPO_SHARE_NUM, FIRST_UNIT_CPRICE3, PREB, PREC, IS_CASHSET, 
-            R_FINPROD_ID
+            R_FINPROD_ID, REPLACE_AMT
              from WFL_TRD_PRODUCT_DEAL_ADD
              where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
@@ -234,6 +235,9 @@
             <if test="rFinprodId != null" >
                 R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
             </if>
+            <if test="replaceAmt != null" >
+                REPLACE_AMT = #{replaceAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
@@ -280,7 +284,8 @@
         PREB = #{preb,jdbcType=DECIMAL},
         PREC = #{prec,jdbcType=DECIMAL},
         IS_CASHSET = #{isCashset,jdbcType=VARCHAR},
-        R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR}
+        R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
+        REPLACE_AMT = #{replaceAmt,jdbcType=DECIMAL}
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealAdd" >
@@ -298,7 +303,8 @@
             LOCK_MDATE, DEVIATION, ASSET_RECOMMAND_ORG, 
             TERMINATE_RATE, PENALTY_INTAMT, EXP_CON_VALUE, 
             SPO_SHARE_NUM, FIRST_UNIT_CPRICE3, PREB, 
-            PREC, IS_CASHSET, R_FINPROD_ID
+            PREC, IS_CASHSET, R_FINPROD_ID, 
+	    REPLACE_AMT
             )
         values (#{tradeId,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, 
             #{prodId,jdbcType=VARCHAR}, #{customCashType,jdbcType=VARCHAR}, #{genType,jdbcType=VARCHAR}, 
@@ -314,8 +320,8 @@
             #{lockMdate,jdbcType=DATE}, #{deviation,jdbcType=DECIMAL}, #{assetRecommandOrg,jdbcType=VARCHAR}, 
             #{terminateRate,jdbcType=DECIMAL}, #{penaltyIntamt,jdbcType=DECIMAL}, #{expConValue,jdbcType=DECIMAL}, 
             #{spoShareNum,jdbcType=DECIMAL}, #{firstUnitCprice3,jdbcType=DECIMAL}, #{preb,jdbcType=DECIMAL}, 
-            #{prec,jdbcType=DECIMAL}, #{isCashset,jdbcType=VARCHAR}, #{rFinprodId,jdbcType=VARCHAR}
-            )
+            #{prec,jdbcType=DECIMAL}, #{isCashset,jdbcType=VARCHAR}, #{rFinprodId,jdbcType=VARCHAR},
+            #{replaceAmt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealAdd" >
         insert into WFL_TRD_PRODUCT_DEAL_ADD
@@ -455,6 +461,9 @@
             <if test="rFinprodId != null" >
                 R_FINPROD_ID,
             </if>
+            <if test="replaceAmt != null" >
+                REPLACE_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -592,6 +601,9 @@
             <if test="rFinprodId != null" >
                 #{rFinprodId,jdbcType=VARCHAR},
             </if>
+            <if test="replaceAmt != null" >
+                #{replaceAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDealAdd" >
@@ -602,7 +614,7 @@
         OUR_ROLE, QUOT_PRE, PRICED_DATE, PRICED_DATE_RATE, DIF_PAY_AMT, DIF_PAY_CCY, DIF_PS, 
         REF_RATE, WITH_LOCK_PERIOD, LOCK_MDATE, DEVIATION, ASSET_RECOMMAND_ORG, TERMINATE_RATE, 
         PENALTY_INTAMT, EXP_CON_VALUE, SPO_SHARE_NUM, FIRST_UNIT_CPRICE3, PREB, PREC, IS_CASHSET, 
-        R_FINPROD_ID)
+        R_FINPROD_ID, REPLACE_AMT)
         select TRADE_ID, WORKFLOW_STATUS, PORTFOLIO_ID, PROD_ID, 
             CUSTOM_CASH_TYPE, GEN_TYPE, PUR_CFM_DATE, RED_CFM_DATE, REG_DATE, BONUS_CFM_DATE, 
             ENTRUST_ID, PAY_TYPE, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
@@ -610,7 +622,7 @@
             OUR_ROLE, QUOT_PRE, PRICED_DATE, PRICED_DATE_RATE, DIF_PAY_AMT, DIF_PAY_CCY, DIF_PS, 
             REF_RATE, WITH_LOCK_PERIOD, LOCK_MDATE, DEVIATION, ASSET_RECOMMAND_ORG, TERMINATE_RATE, 
             PENALTY_INTAMT, EXP_CON_VALUE, SPO_SHARE_NUM, FIRST_UNIT_CPRICE3, PREB, PREC, IS_CASHSET, 
-            R_FINPROD_ID
+            R_FINPROD_ID, REPLACE_AMT
              from WFL_TRD_PRODUCT_DEAL_ADD
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </insert>
@@ -737,6 +749,9 @@
             <if test="rFinprodId != null" >
                 R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
             </if>
+            <if test="replaceAmt != null" >
+                REPLACE_AMT = #{replaceAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
@@ -782,7 +797,8 @@
             PREB = #{preb,jdbcType=DECIMAL},
             PREC = #{prec,jdbcType=DECIMAL},
             IS_CASHSET = #{isCashset,jdbcType=VARCHAR},
-            R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR}
+            R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
+ 	    REPLACE_AMT = #{replaceAmt,jdbcType=DECIMAL}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </update>

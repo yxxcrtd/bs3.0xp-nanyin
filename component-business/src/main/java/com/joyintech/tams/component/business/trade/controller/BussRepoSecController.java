@@ -34,6 +34,7 @@ import com.joyintech.tams.component.business.trade.BussRepoSecService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 
@@ -110,6 +111,7 @@ public class BussRepoSecController extends BaseController {
         model.addAttribute("entrustId", entrustId);
         //add by gaopeng 2019/10/12 end
         model.addAttribute("pageFrom", getParam("pageFrom"));
+        model.addAttribute("repo_pledge_model",CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
         model.addAttribute("tradeMarketId", getParam("tradeMarketId"));
         model.addAttribute("statusValid", getParam("statusValid"));
         model.addAttribute("bizCode", getParam("bizCode"));

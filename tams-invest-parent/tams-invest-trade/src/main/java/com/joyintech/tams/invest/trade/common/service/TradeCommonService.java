@@ -260,4 +260,17 @@ public class TradeCommonService extends BaseService {
                 String.class);
     }
     // add by etliu 20210129 end
+
+    /**
+     * 根据组合ID查询母组合ID
+     * @param portfolioId
+     * @return
+     */
+    public String selectParentPortfolioIdByPortfolioId(String portfolioId) {
+        if (StringUtil.isBlank(portfolioId)) {
+            return null;
+        }
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/selectParentPortfolioIdByPortfolioId", portfolioId,
+                String.class);
+    }
 }

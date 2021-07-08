@@ -3098,7 +3098,14 @@ public class IbuComponentCommonService extends BaseService {
                                                   Map<String, Object> param) {
         BondQuoteSearchDto inputBean = generateBondSearchCondition(param);
         inputBean.setAutoDataRole(true);
-        return ibuMainService.getBondQuotePageList(page, length, inputBean, null);
+        Page<BondQuoteExtDto> pageList =  ibuMainService.getBondQuotePageList(page, length, inputBean, null);
+        if(!StringUtil.isEmptyList(pageList.getRoot())) {
+        	for(BondQuoteExtDto bondQuoteExtDto : pageList.getRoot()) {
+        		// 回复量
+        		bondQuoteExtDto.setShareAmt(bondQuoteExtDto.getIbuQuoteBondDet() != null ? ArithmeticUtil.multiply(bondQuoteExtDto.getIbuQuoteBondDet().getShareAmt(), new BigDecimal(100)) : null);
+        	}
+        }
+        return pageList;
     }
 
     /**

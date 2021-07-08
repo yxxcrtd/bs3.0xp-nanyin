@@ -171,6 +171,27 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
 
     }
 
+    @Override
+    public void doInsert(EtrBondFirstLBiddingDto entity, OperationType type) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/doInsert", entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doUpdate(EtrBondFirstLBiddingDto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/doUpdate", entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doBack(EtrBondFirstLBiddingDto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/doBack", entity,
+                Integer.class);
+    }
+
     /**
      * 分页查询债券一级投标委托信息
      * <功能详细描述>

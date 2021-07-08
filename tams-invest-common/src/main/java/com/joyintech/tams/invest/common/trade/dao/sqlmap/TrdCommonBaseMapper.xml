@@ -1198,4 +1198,13 @@
             select ${sequenceName}.nextVal from dual
         </if>
     </select>
+
+    <select id="selectParentPortfolioIdByPortfolioId" resultType="java.lang.String">
+        select
+            p.PARENT_PORTFOLIO_ID
+        from
+            ptl_portfolio p
+        where
+            p.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
+    </select>
 </mapper>

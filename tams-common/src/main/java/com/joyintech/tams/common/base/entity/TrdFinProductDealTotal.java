@@ -411,6 +411,12 @@ public class TrdFinProductDealTotal extends BaseEntity {
     private Date regDate;
 
     /**
+     * 权益登记日份额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal regDateAmt;
+
+    /**
      * 除权除息日
      */
     private Date exDevidentDate;
@@ -448,6 +454,44 @@ public class TrdFinProductDealTotal extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal devidentAmt;
+
+    /**
+     * 是否含股利选择权
+     */
+    private String ifDividend;
+    /**
+     * 派息币种
+     */
+    private String dividCcy;
+    /**
+     * 汇率(派息等)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal exchangeRate;
+
+    /**
+     * 以股代息价格
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal replacePrice;
+
+    /**
+     * 前一日港股持仓市值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal yesterdayPosition;
+
+    /**
+     * 实付金额(港元)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tradeAmtHk;
+
+    /**
+     * 卖出结算汇兑比率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal sellSettleRate;
     /**
      * 取得 汇总交易编号
      * @return 汇总交易编号
@@ -1683,6 +1727,68 @@ public class TrdFinProductDealTotal extends BaseEntity {
 	public void setDevidentAmt(BigDecimal devidentAmt) {
 		this.devidentAmt = devidentAmt;
 	}
-    
-    
+
+    public BigDecimal getYesterdayPosition() {
+        return yesterdayPosition;
+    }
+
+    public void setYesterdayPosition(BigDecimal yesterdayPosition) {
+        this.yesterdayPosition = yesterdayPosition;
+    }
+
+    public BigDecimal getTradeAmtHk() {
+        return tradeAmtHk;
+    }
+
+    public void setTradeAmtHk(BigDecimal tradeAmtHk) {
+        this.tradeAmtHk = tradeAmtHk;
+    }
+
+    public BigDecimal getSellSettleRate() {
+        return sellSettleRate;
+    }
+
+    public void setSellSettleRate(BigDecimal sellSettleRate) {
+        this.sellSettleRate = sellSettleRate;
+    }
+
+    public String getIfDividend() {
+        return ifDividend;
+    }
+
+    public void setIfDividend(String ifDividend) {
+        this.ifDividend = ifDividend;
+    }
+
+    public String getDividCcy() {
+        return dividCcy;
+    }
+
+    public void setDividCcy(String dividCcy) {
+        this.dividCcy = dividCcy;
+    }
+
+    public BigDecimal getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(BigDecimal exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+    public BigDecimal getReplacePrice() {
+        return replacePrice;
+    }
+
+    public void setReplacePrice(BigDecimal replacePrice) {
+        this.replacePrice = replacePrice;
+    }
+
+    public BigDecimal getRegDateAmt() {
+        return regDateAmt;
+    }
+
+    public void setRegDateAmt(BigDecimal regDateAmt) {
+        this.regDateAmt = regDateAmt;
+    }
 }

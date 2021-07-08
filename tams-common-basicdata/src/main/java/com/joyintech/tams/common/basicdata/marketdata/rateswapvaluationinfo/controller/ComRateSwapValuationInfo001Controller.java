@@ -103,15 +103,17 @@ public class ComRateSwapValuationInfo001Controller extends BaseController {
         String msg = StringUtils.EMPTY;
         String operateType = dto.getOperateType();
         AjaxResult ar = new AjaxResult();
+        ArrayList<ValidMessage> errorList = new ArrayList<>();
         for(ComRateSwapValuationInfo002Dto comRateSwapValuationInfo002Dto : dto.getSelectedItem()) {
         	Boolean flag = comRateSwapValuationInfo002Service.checkBusinessDataInFlow(comRateSwapValuationInfo002Dto);
         	if(flag) {
-        		ArrayList<ValidMessage> errorList = new ArrayList<>();
 	        	errorList.add(new ValidMessage(getMessage("COMMON_E_0021", "标识",
 	                  StringUtil.join(Arrays.asList(comRateSwapValuationInfo002Dto.getFinprodId2(), comRateSwapValuationInfo002Dto.getDatasourceType(), comRateSwapValuationInfo002Dto.getValDate()), ","))));
-	        	ar.setErrorList(errorList);
-	            return ar;
         	}
+        }
+        if(!StringUtil.isEmptyList(errorList)) {
+        	ar.setErrorList(errorList);
+        	return ar;
         }
 
         return commonCheck(bindingResult, operateType);

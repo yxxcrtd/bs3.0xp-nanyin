@@ -95,6 +95,17 @@ public class FinStockInfoValidator implements BeanValidator {
                         getMessage("FinStockInfo002.vDate") + DateUtil.format(dto.getVdate()),
                         getMessage("FinStockInfo002.mDate")+DateUtil.format(dto.getMdate()))));
                 }
+
+               if((dto.getMinSaleUnit() != null)&&(dto.getMinSaleUnit() < 100 || dto.getMinSaleUnit() >5000)){
+                   errorList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0099",
+                           this.getMessage("FinStockInfo002.minSaleUnit"))));
+               }
+               if(dto.getTradeMarket() != null && StringUtil.equals(dto.getTradeMarket(),"06")){
+                   if(StringUtil.isEmpty(dto.getShOrZh())){
+                       errorList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0088",
+                               this.getMessage("FinStockInfo001.shOrZh"))));
+                   }
+               }
                 //中债,3个投资阶段选其他,备注必填
                 if((dto.getBussRepEquityInfoDto().getRepSharesType().equals(DictCodeListExt2.股票类型_其他.getValue())||
                     dto.getBussRepEquityInfoDto().getRepPartyType1().equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue())
