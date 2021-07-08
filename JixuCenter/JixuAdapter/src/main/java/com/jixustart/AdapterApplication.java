@@ -27,7 +27,7 @@ import java.util.Locale;
     RestController.class}))
 public class AdapterApplication extends SpringBootServletInitializer{
 	
-	public static void main(String[] args) throws Exception{
+	public static void main(String[] args){
 		Locale local = new Locale("zh", "CN");
 		Locale.setDefault(local);
 		SpringApplication.run(AdapterApplication.class, args);

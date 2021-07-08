@@ -37,7 +37,7 @@ public class CalFuncNextNDate extends AdditionFunc{
 	}
 	
 	//[交易日],天数,假期ID
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		String[] arrs=inputValue.split(",");
 		String columnName=getColumName(arrs[0]);
 		Date sourceDate=(Date)colcfgMap.get(columnName);
@@ -52,7 +52,7 @@ public class CalFuncNextNDate extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

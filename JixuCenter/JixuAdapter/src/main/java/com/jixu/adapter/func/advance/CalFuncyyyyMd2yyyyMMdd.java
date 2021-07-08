@@ -30,7 +30,7 @@ public class CalFuncyyyyMd2yyyyMMdd extends AdditionFunc{
 		return funcname;
 	}
 	
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		String date=genConvertFormula(inputValue, colcfgMap);
 		return DateUtil.convertD2YYYYMMDD(DateUtil.convertStr2DateYYYY_MM_DD2(date));
 	}
@@ -41,7 +41,7 @@ public class CalFuncyyyyMd2yyyyMMdd extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

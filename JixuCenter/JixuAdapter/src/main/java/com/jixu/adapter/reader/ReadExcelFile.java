@@ -1,6 +1,7 @@
 package com.jixu.adapter.reader;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,7 +36,7 @@ public class ReadExcelFile extends ReadFileBasic {
 		return InterfaceConfig.excel;
 	}
 
-	public DataReadResult readFileDataResult(InterfaceSource source,DataCounter dataCounter) throws Exception {
+	public DataReadResult readFileDataResult(InterfaceSource source,DataCounter dataCounter) throws IOException {
 		List<String> filePaths = getReadFiles(source);
 		DataReadResult result = new DataReadResult();
 		if(result.getFilePathList().size()==0){

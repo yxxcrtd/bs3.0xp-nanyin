@@ -30,7 +30,7 @@ public class CalFuncGetFxRate extends AdditionValFunc{
 		return funcname;
 	}
 	
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		String inputLine=genConvertFormula(inputValue, colcfgMap);
 		String[] lines=inputLine.split(",");
 		String date=lines[0].replaceAll("-", "");
@@ -47,7 +47,7 @@ public class CalFuncGetFxRate extends AdditionValFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+			 {
 		// TODO Auto-generated method stub
 		return null;
 	}

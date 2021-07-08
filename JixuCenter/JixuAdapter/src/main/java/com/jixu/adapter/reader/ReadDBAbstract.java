@@ -9,6 +9,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.script.ScriptException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -55,7 +57,7 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 	
 
 	@Override
-	public DataReadResult readFileData(InterfaceSource source, DataCounter dataCounter) throws Exception{
+	public DataReadResult readFileData(InterfaceSource source, DataCounter dataCounter) throws InterfaceException, SQLException, ClassNotFoundException, ScriptException, ParseException {
 		DataReadResult result=new DataReadResult();
 		
 		String sql=source.getDbSQL();
@@ -563,5 +565,5 @@ public abstract class ReadDBAbstract implements ReadDataFile{
 		return status;
 	}
 	
-	public abstract Connection getConnection(String urlpath, String userName, String password) throws Exception;
+	public abstract Connection getConnection(String urlpath, String userName, String password) throws ClassNotFoundException, SQLException;
 }

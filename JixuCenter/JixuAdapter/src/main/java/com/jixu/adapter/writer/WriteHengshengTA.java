@@ -36,7 +36,7 @@ public class WriteHengshengTA extends WriteFileBasic {
 	}
 
 	@Override
-	public boolean writeFile(InterfaceSource source, DataReadResult dataSet) throws Exception {
+	public boolean writeFile(InterfaceSource source, DataReadResult dataSet) throws IOException {
 		boolean writeSuccessFlag=false;
 		File file=getWriteFile(source, dataSet);
 		FileOutputStream out=null;

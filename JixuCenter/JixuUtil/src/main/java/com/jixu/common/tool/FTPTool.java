@@ -45,7 +45,7 @@ public class FTPTool {
 	private final String ENCODE_UTF8 = "UTF-8";
 	private final String ENCODE_ISO = "iso-8859-1";
     
-    public FTPTool(String userName, String password, String host, int port) throws Exception{
+    public FTPTool(String userName, String password, String host, int port) throws IOException, FTPNotLoginException {
     	loginByPassword(userName, password, host, port);
 	}
 
@@ -60,7 +60,7 @@ public class FTPTool {
      * @throws Exception 
      * @throws JSchException
      */
-    public void login(String userName, String password, String host, int port,String sftpLoginType) throws Exception{
+    public void login(String userName, String password, String host, int port,String sftpLoginType) throws IOException, FTPNotLoginException {
         
         // 私钥登录ssh服务
         if("02".equals(sftpLoginType)){
@@ -84,7 +84,7 @@ public class FTPTool {
      * @throws JSchException
      */
     public void loginByPassword(String userName, String password, String host, int port)
-        throws Exception {
+			throws IOException, FTPNotLoginException {
     	
 		ftp = new FTPClient();
 		ftp.connect(host, port);
@@ -106,7 +106,7 @@ public class FTPTool {
      * @param port 端口
      * @throws JSchException
      */
-    public void loginById(String userName, String identity, String host, int port) throws Exception {
+    public void loginById(String userName, String identity, String host, int port) {
 //        try {
 //            // 接口 SFTP 服务配置
 //            JSch jsch = new JSch();
@@ -148,7 +148,7 @@ public class FTPTool {
      * @param remote 远程文件路径
      * @throws SftpException 
      */
-    public void putFile(String local, String remote) throws Exception {
+    public void putFile(String local, String remote) throws IOException {
 		
 		File dir = new SafelyFile(local);
 //		// 上传扫FTP的目录
@@ -192,7 +192,7 @@ public class FTPTool {
      * @see
      * @since 1.0
      */
-    public void mkdir(String remote) throws Exception {
+    public void mkdir(String remote) throws IOException {
     	String directory = remote.substring(0, remote.lastIndexOf("/") + 1);
 		// 如果远程目录不存在，则递归创建远程服务器目录
 		if (!directory.equalsIgnoreCase("/")
@@ -232,7 +232,7 @@ public class FTPTool {
      * @param remote 远程文件路径
      * @throws SftpException 
      */
-    public void putFileDate(String local, String remote, String date) throws Exception {
+    public void putFileDate(String local, String remote, String date)  {
 //    	String remote = 
 //    			ApplicationConfig.get("toSaleFileDir") + filename;
 //    		StringBuffer bfFile = new StringBuffer();
@@ -285,7 +285,7 @@ public class FTPTool {
  * @param backupPath 
 	 * @param return 下载的文件数目
 	 */
-    public void downFileOrDir(String ftpFileName, String localDir, String backupPath) throws Exception {
+    public void downFileOrDir(String ftpFileName, String localDir, String backupPath) throws IOException {
 		 //本地输出流记得手动关闭，系统调用不会关闭本地流  
         FileOutputStream fos = null;
 		try {
@@ -366,7 +366,7 @@ public class FTPTool {
 	 * @description: 未登录FTP服务器异常
 	 * 
 	 */
-	private class FTPNotLoginException extends Exception {
+	public class FTPNotLoginException extends Exception {
 
 		private static final long serialVersionUID = 1L;
 
@@ -380,7 +380,7 @@ public class FTPTool {
      * 远程备份移动文件
      * @param string 
      */
-    private void rsBackup(String backupPath,String oldFileName, String backupPathName) throws Exception  {
+    private void rsBackup(String backupPath,String oldFileName, String backupPathName) throws IOException {
         //当前路径
     	String currPath = ftp.printWorkingDirectory();
     	ftp.setFileType(FTP.BINARY_FILE_TYPE);
@@ -400,7 +400,7 @@ public class FTPTool {
 		}
     }
 
-	private void createDir(String directory) throws Exception {
+	private void createDir(String directory) throws IOException {
 		// 如果远程目录不存在，则递归创建远程服务器目录
 		if (!directory.equalsIgnoreCase("/")
 				&& !ftp.changeWorkingDirectory(directory)) {

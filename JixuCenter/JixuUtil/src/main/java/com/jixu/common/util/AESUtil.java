@@ -95,7 +95,7 @@ public class AESUtil {
 		}
 	}
 
-//	public static void main(String[] args) throws Exception {
+//	public static void main(String[] args){
 //		// 修改为使用AES-CBC加密模式，key需要为16位。
 //		// 需要加密的字串
 //		String pwd = null;
