@@ -194,7 +194,7 @@ public class EtrStockService extends CommonExportService<EtrStockDto> implements
       */
      @Override
      public void doUpdate(EtrStockDto dto){
-         restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStock/doInsert",dto, Integer.class);
+         restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStock/doUpdate",dto, Integer.class);
      }
 
     @Override

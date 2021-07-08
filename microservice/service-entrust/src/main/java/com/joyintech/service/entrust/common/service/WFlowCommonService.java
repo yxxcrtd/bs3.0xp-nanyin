@@ -61,6 +61,16 @@ public class WFlowCommonService {
         }
     }
 
+    public void entrustStartExecute(BaseEtrInvestInfoDto dto){
+        if(baseEtrCashPositionCommService != null){
+            EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
+            entrustCommonDto.setEtrEntrust(dto.getEtrEntrust());
+            entrustCommonDto.setEtrEntrustAdd(dto.getEtrEntrustAdd());
+            // 持仓处理
+            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+        }
+    }
+    
     /**
      * 修改状态为已退回 & 持仓关闭
      * @param workflowId
@@ -80,12 +90,12 @@ public class WFlowCommonService {
         deleteFlow(workflowId);
     }
 
-    private static boolean insertFlow(BaseEtrInvestInfoDto dto){
+    public static boolean insertFlow(BaseEtrInvestInfoDto dto){
         dto.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
         return baseEtrInvestInfoServiceImpl.newDelegateFlow(dto);
     }
 
-    private static boolean deleteFlow(String workflowId) {
+    public static boolean deleteFlow(String workflowId) {
         Map<String, Object> param = new HashMap<>();
         param.put("workflowId", workflowId);
         return baseEtrInvestInfoServiceImpl.deleteDelegateFlow(param);

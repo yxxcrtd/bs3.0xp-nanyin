@@ -236,7 +236,7 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
     @Override
     public void doUpdate(EtrFundDto entity){
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrFund/doInsert",
+            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrFund/doUpdate",
             entity, Integer.class);
     }
 

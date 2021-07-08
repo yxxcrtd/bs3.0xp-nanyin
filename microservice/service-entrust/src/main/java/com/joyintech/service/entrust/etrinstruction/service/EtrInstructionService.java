@@ -17,6 +17,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrfund.dao.EtrFundMapper;
 import com.joyintech.service.entrust.etrfund.dto.EtrFundDto;
 import com.joyintech.service.entrust.etrinstruction.dao.EtrInstructionMapper;
@@ -109,6 +110,7 @@ public class EtrInstructionService extends BaseService<EtrInstructionDto> {
             pageParam.put("assetTypeTwoList", StringUtil.splitToList(GlobalConstant.COMMA,assetTypeTwo));
         }
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_立项指令.getValue());
+        pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return super.queryForPage(page, length, () -> instructionMapper.select(pageParam));
     }
 
@@ -240,18 +242,58 @@ public class EtrInstructionService extends BaseService<EtrInstructionDto> {
      * @see
      * @since 1.0
      */
-    public void doInsert(EtrInstructionDto entity)
+    public void doInsert(EtrInstructionDto dto)
         throws IllegalAccessException,
         InvocationTargetException {
         //文件
         MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
-        mstFileInputParameter.setFileList(entity.getFileArray());
-        mstFileInputParameter.setBussinessId(entity.getWorkflowId());
+        mstFileInputParameter.setFileList(dto.getFileArray());
+        mstFileInputParameter.setBussinessId(dto.getWorkflowId());
         if(mstFileCommonService != null){
             mstFileCommonService.updateBusinessId(mstFileInputParameter);
         }
+
+        if (!StringUtil.equals("HTQS", dto.getOperateType()) 
+                && "submit".equals(dto.getOperateType())) {
+            BaseEtrInvestInfoDto entity = initBaseDto(dto);
+            if(StringUtil.isEmpty(entity.getWorkFlowId())){
+                throw new RuntimeException("WorkFlowId初始化不能为空!");
+            }
+            WFlowCommonService.insertFlow(entity);
+            if (!StringUtil.equals("HTQS", dto.getOperateType())
+                    && !StringUtil.equals("revoke", dto.getOperateType())
+                    && !StringUtil.equals("delete", dto.getOperateType())) {
+
+                WFlowCommonService.deleteFlow(entity.getWorkFlowId());
+                WFlowCommonService.insertFlow(entity);
+            }
+        }
     }
 
+    public void doUpdate(EtrInstructionDto dto)
+            throws IllegalAccessException,
+            InvocationTargetException {
+        //文件
+        MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
+        mstFileInputParameter.setFileList(dto.getFileArray());
+        mstFileInputParameter.setBussinessId(dto.getWorkflowId());
+        if(mstFileCommonService != null){
+            mstFileCommonService.updateBusinessId(mstFileInputParameter);
+        }
+        
+        if (!StringUtil.equals("HTQS", dto.getOperateType()) 
+                && !StringUtil.equals("revoke", dto.getOperateType()) 
+                && !StringUtil.equals("delete", dto.getOperateType())) {
+            BaseEtrInvestInfoDto entity = initBaseDto(dto);
+            WFlowCommonService.deleteFlow(entity.getWorkFlowId());
+            WFlowCommonService.insertFlow(entity);
+            
+            WFlowCommonService.deleteFlow(entity.getWorkFlowId());
+            WFlowCommonService.insertFlow(entity);
+        }
+        
+    }
+    
     /**
      * 流程完成时的数据表单进程操作
      * @param entity
@@ -380,8 +422,43 @@ public class EtrInstructionService extends BaseService<EtrInstructionDto> {
             entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
         }
 
-        if(baseEtrCashPositionCommService!=null && !StringUtil.equals(type, "HTQS")){
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        if(baseEtrCashPositionCommService!=null && !StringUtil.equals(type, "HTQS")){
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
+    }
+
+    public BaseEtrInvestInfoDto initBaseDto(EtrInstructionDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getBussEtrInvestPersonInfoDto());
+            //设置委托状态
+            etrEntrust.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            etrEntrust.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+            etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
+            if(platformDateImpl != null){
+                etrEntrust.setEntrustDate(platformDateImpl.getSysDate());
+            }
+            entity.setEtrEntrust(etrEntrust);
+
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_基金.getValue());
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            //设置起息日到期日
+            etrEntrustAdd.setVdate(null);
+            etrEntrustAdd.setMdate(null);
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 添加流程编号
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
         }
+        return entity;
     }
 }
