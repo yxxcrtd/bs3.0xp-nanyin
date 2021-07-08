@@ -22,12 +22,14 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
 import com.joyintech.service.entrust.etrplanassetc.dao.EtrPlanAssetCMapper;
 import com.joyintech.service.entrust.etrplanassetc.dto.EtrPlanAssetCDto;
+import com.joyintech.service.entrust.etrplanassetr.dto.EtrPlanAssetRDto;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
@@ -127,6 +129,7 @@ public class EtrPlanAssetCService extends BaseService<EtrPlanAssetCDto>{
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
+        param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return queryForPage(page, length, () -> etrPlanAssetCMapper.selectForPage(param));
     }
     
@@ -382,9 +385,9 @@ public class EtrPlanAssetCService extends BaseService<EtrPlanAssetCDto>{
             }
         }
         //委托开始日对委托的持仓流水和现金流水做处理
-        if(baseEtrCashPositionCommService!=null){
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if(baseEtrCashPositionCommService!=null){
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
 
     /**
@@ -516,5 +519,40 @@ public class EtrPlanAssetCService extends BaseService<EtrPlanAssetCDto>{
         if (mstFileCommonService != null) {
             mstFileCommonService.updateBusinessId(mstFileInputParameter);
         }
+    }
+
+    public BaseEtrInvestInfoDto initBaseDto(EtrPlanAssetCDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto);
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto.getEtrInvestPersonInfo());
+            etrEntrust.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            if(iPlatformDate != null){
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())){
+                etrEntrust.setEntrustAmt(dto.getEntrustAmt2());
+                etrEntrust.setEntrustNum(dto.getEntrustNum2());
+            }
+            entity.setEtrEntrust(etrEntrust);
+
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, dto);
+            etrEntrustAdd.setVdate(null);
+            etrEntrustAdd.setMdate(null);
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_计划类资产_货币型.getValue());
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 添加流程编号
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (Exception e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+        return entity;
     }
 }
