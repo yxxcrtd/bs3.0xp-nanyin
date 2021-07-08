@@ -196,6 +196,12 @@ public class EtrStockService extends CommonExportService<EtrStockDto> implements
      public void doUpdate(EtrStockDto dto){
          restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStock/doInsert",dto, Integer.class);
      }
+
+    @Override
+    public void doBack(EtrStockDto entity) {
+        restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStock/doBack", entity, Integer.class);
+    }
+
     /**
      *@title: getentrustIdAdd
      *@description: 新建页面组合代码联想下拉框
