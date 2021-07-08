@@ -148,6 +148,9 @@
             </choose>
         ) aaa 
         left join SYS_DATADICT_LIST sdl on aaa.entrustStatus=sdl.ITEM_CODE and sdl.DICT_CODE='ENTRUST_STATUS'
+        left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
+        left join SYS_DATADICT_LIST dictpriceModel on aaa.priceModel=dictpriceModel.ITEM_CODE and dictps.DICT_CODE='PRICE_MODEL'
+        left join SYS_DATADICT_LIST dictaccountspeed on aaa.priceModel=dictaccountspeed.ITEM_CODE and dictps.DICT_CODE='ACCOUNT_SPEED'
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
         order by sdl.ORDER_NO, aaa.entrustId DESC
@@ -333,10 +336,10 @@
     <sql id="vagueQueryWhere">
         <if test="vagueQuery != null and vagueQuery != ''">
             <where>
-                aaa.entrustId || '|' || aaa.entrustStatus || '|' || aaa.invManagerId || '|' || aaa.portfolioId || '|' || aaa.portfolioName
-                || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr || '|' || aaa.secType1 || '|' || aaa.PS || '|' || aaa.shareNum || '|' || priceModel
-                || '|' || aaa.unitPrice || '|' || aaa.allPrice || '|' || aaa.matureYield || '|' || aaa.exerYield || '|' || aaa.SETTLE_SPREED || '|' || aaa.VDATE
-                || '|' || aaa.MDATE || '|' || aaa.finishAmt || '|' || aaa.transactioncom || '|' || aaa.REMARK || '|' || aaa.counterId || '|' || aaa.parentPortfolioId
+                aaa.entrustId || '|' || sdl.ITEM_VALUE || '|' || aaa.invManagerId || '|' || aaa.portfolioId || '|' || aaa.portfolioName
+                || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr || '|' || aaa.secType1 || '|' || dictps.ITEM_VALUE || '|' || aaa.shareNum || '|' || dictpriceModel.ITEM_VALUE
+                || '|' || aaa.unitPrice || '|' || aaa.allPrice || '|' || aaa.matureYield || '|' || aaa.exerYield || '|' || dictaccountspeed.ITEM_VALUE || '|' || TO_CHAR(aaa.VDATE, 'yyyy-MM-dd')
+                || '|' || TO_CHAR(aaa.MDATE, 'yyyy-MM-dd') || '|' || aaa.finishAmt || '|' || aaa.transactioncom || '|' || aaa.REMARK || '|' || aaa.counterId || '|' || aaa.parentPortfolioId
                 like '%' || #{vagueQuery} || '%'
             </where>
         </if>
