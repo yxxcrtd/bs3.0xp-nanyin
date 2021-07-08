@@ -448,6 +448,7 @@
 				T1.ENTRUST_ID = #{entrustId}
 		</where>
 		union all
+		SELECT
 		T1.ENTRUST_ID		 entrustId,
 		T1.PORTFOLIO_ID		 portfolioId,
 		T1.VDATE             vdate,
