@@ -51,37 +51,37 @@ function exportRaw(name, data) {
 	   
 
 
-function genReportHtml(report_info){
-    var username = report_info.username || REPORT_USERNAME;
-    var pwd = report_info.password || REPORT_PASSWORD;
-
-    var inputs = {j_username:username, j_password:pwd};
-    $.each(report_info.params, function(k, v){
-        inputs[k] = v;
-    });
-    
-    var url = report_info.url || REPORT_SERVER_URL;
-
-
-    $.ajax({
-        url: url + '/rest_v2/reports' + REPORT_SERVER_PATH + '/' + report_info.uri + '.html',
-        async: true,
-        type: "GET",
-        data: inputs,
-        success: function(report){
-        	var startIndex = report.indexOf("/jasperserver");
-        	var endIndex = report.indexOf(".png");
-        	var subStr = report.substring(startIndex, endIndex);
-        	var repStr = "http://220.180.239.103:7080"+basePath+"/image/disclosure/zxlogo";
-        	var newReport = report.replace(subStr,repStr);
-  //      	exportRaw(report_info.downloadName + "." + report_info.formatType,report)
-        	exportRaw(report_info.downloadName + "." + report_info.formatType,newReport)
-        },
-        error: function(xhr, errorType, errorMsg){
-			//在此处理错误
-        }
-    });
-}
+// function genReportHtml(report_info){
+//     var username = report_info.username || REPORT_USERNAME;
+//     var pwd = report_info.password || REPORT_PASSWORD;
+//
+//     var inputs = {j_username:username, j_password:pwd};
+//     $.each(report_info.params, function(k, v){
+//         inputs[k] = v;
+//     });
+//
+//     var url = report_info.url || REPORT_SERVER_URL;
+//
+//
+//     $.ajax({
+//         url: url + '/rest_v2/reports' + REPORT_SERVER_PATH + '/' + report_info.uri + '.html',
+//         async: true,
+//         type: "GET",
+//         data: inputs,
+//         success: function(report){
+//         	var startIndex = report.indexOf("/jasperserver");
+//         	var endIndex = report.indexOf(".png");
+//         	var subStr = report.substring(startIndex, endIndex);
+//         	var repStr = "";
+//         	var newReport = report.replace(subStr,repStr);
+//   //      	exportRaw(report_info.downloadName + "." + report_info.formatType,report)
+//         	exportRaw(report_info.downloadName + "." + report_info.formatType,newReport)
+//         },
+//         error: function(xhr, errorType, errorMsg){
+// 			//在此处理错误
+//         }
+//     });
+// }
 
 //导出各种形式的报表
 function exportReport(report_info){

@@ -11,6 +11,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +37,7 @@ import com.joyintech.tams.valuation.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.valuation.report.common.constant.DateUtil;
 
 
-
+@Component
 @Service("valuationInfoDisclosureGenService")
 @Transactional(rollbackFor = Exception.class)
 public class InfoDisclosureGenService {
@@ -70,7 +72,10 @@ public class InfoDisclosureGenService {
      */
     @Autowired
     private RepInstallLogDetailMapper repInstallLogDetailMapper;
-    
+
+	@Value("${infoDisclosureGenService.url}")
+	protected String url;
+
     public void genDetail(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity, String serverUrl, 
     		String serverUser, String serverPwd){
     	String exeStatus = ReportDictCodeList.执行结果_失败.getValue();
@@ -167,7 +172,7 @@ public class InfoDisclosureGenService {
 	public  boolean uploadFile(String id,String ftpCode,String fileName,String localPath,String filePathSeqno) throws FileNotFoundException{
 		boolean isFtpUploadSucess = false;
 		//ftp相关配置通过ftpCode获取
-		String url = "192.168.70.66";
+//		String url = "192.168.70.66";
 		int port  = 21;
 		String userName = "test1";
 		String passWord = "112233";

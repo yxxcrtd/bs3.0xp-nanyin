@@ -16,15 +16,15 @@ import java.util.Map;
 public class TestService extends BaseService {
 
     public void test() {
-        Map<String, Object> dataMap = new HashMap<>();
-
-        Map<String, Object> head = new HashMap<>();
-        Map<String, Object> body = new HashMap<>();
-        head.put("stdprocode", "send");
-        dataMap.put("head", head);
-        dataMap.put("body", body);
-
-
-        simpleRestTemplate.postForEntity("http://127.0.0.1:8211/invest/interf/execute", dataMap, Object.class);
+//        Map<String, Object> dataMap = new HashMap<>();
+//
+//        Map<String, Object> head = new HashMap<>();
+//        Map<String, Object> body = new HashMap<>();
+//        head.put("stdprocode", "send");
+//        dataMap.put("head", head);
+//        dataMap.put("body", body);
+//
+//
+//        simpleRestTemplate.postForEntity("http://127.0.0.1:8211/invest/interf/execute", dataMap, Object.class);
     }
 }
