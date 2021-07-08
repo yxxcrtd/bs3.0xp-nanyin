@@ -15,6 +15,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
 import com.joyintech.service.entrust.etrbrowdepoinfo.service.EtrBrowDepoInfoService;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
@@ -223,6 +224,8 @@ public class EtrBrowDepoInfoController {
     @DTXTransaction
     @PostMapping("/doComplete")
     public void doComplete(@RequestBody EtrBrowDepoInfoDto dto) throws IllegalAccessException, InvocationTargetException {
+        WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
+        
         etrBrowDepoInfoService.doComplete(dto);
     }
 
@@ -240,9 +243,26 @@ public class EtrBrowDepoInfoController {
     @DTXTransaction
     @PostMapping("/doInsert")
     public void doInsert(@RequestBody EtrBrowDepoInfoDto dto) throws IllegalAccessException, InvocationTargetException {
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), etrBrowDepoInfoService.initBaseDto(dto));
+        
         etrBrowDepoInfoService.doInsert(dto);
     }
 
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/doUpdate")
+    public void doUpdate(@RequestBody EtrBrowDepoInfoDto dto) throws IllegalAccessException, InvocationTargetException {
+        WFlowCommonService.doUpdateFlow(dto.getOperateType(), etrBrowDepoInfoService.initBaseDto(dto));
+        
+        etrBrowDepoInfoService.doInsert(dto);
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/doBack")
+    public void doBack(@RequestBody EtrBrowDepoInfoDto dto) {
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
+    }
     /**
      *
      * <一句话功能简述>
