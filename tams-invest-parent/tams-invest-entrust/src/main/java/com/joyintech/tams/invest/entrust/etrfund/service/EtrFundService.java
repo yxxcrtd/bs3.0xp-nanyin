@@ -240,6 +240,13 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
             entity, Integer.class);
     }
 
+    @Override
+    public void doBack(EtrFundDto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrFund/doBack",
+                entity, Integer.class);
+    }
+
     /**
      * 导出
      *

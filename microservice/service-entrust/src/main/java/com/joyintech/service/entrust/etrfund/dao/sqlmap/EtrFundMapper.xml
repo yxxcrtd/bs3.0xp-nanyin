@@ -6,7 +6,7 @@
         SELECT
             PTL_PORTFOLIO.PORTFOLIO_ID code,
             PTL_PORTFOLIO.PORTFOLIO_NAME name,
-            PTL_PORTFOLIO.PORTFOLIO_NAME shortName，
+            PTL_PORTFOLIO.PORTFOLIO_NAME shortName,
             PTL_PORTFOLIO.PORTFOLIO_ID hidCode
         FROM
             PTL_PORTFOLIO
@@ -52,119 +52,141 @@
         </where>
     </select>
     <select id="select" resultType="com.joyintech.service.entrust.etrfund.dto.EtrFundDto">
-        SELECT 
-            entrustId,
-            entrustStatus,
-            portfolioId,
-            portfolioName,
-            assetType1, 
-            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
-            assetType10, 
-            assetType11, 
-            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
-            finprodMarketId,
-            finprodId,
-            <!--添加资产简称 add by lishuping 20191029 start-->
-            <!--finprodName,-->
-            finprodAbbr,
-            <!--添加资产简称 add by lishuping 20191029 end-->
-            ps,
-            ccy,
-            vdate,
-            mdate,
-            entrustAmt,
-            entrustNum,
-            finishAmt,
-            transactioncom,
-            trmFundType,
-            tradeMarket
-        FROM    
+        select aaa.* from (
+        <choose>
+            <when test="entrustStatus == ''">
+                <!-- 查询全部状态 -->
+                <include refid="onlyWtfEtrEntrust"></include>
+                UNION ALL
+                <include refid="onlyEtrEntrust"></include>
+            </when>
+            <when test="entrustStatus == ENTRUST_STATUS_08">
+                <!-- 只查流程中的数据 -->
+                <include refid="onlyWtfEtrEntrust"></include>
+            </when>
+            <otherwise>
+                <include refid="onlyEtrEntrust"></include>
+            </otherwise>
+        </choose>
+        ) aaa
+        left join SYS_DATADICT_LIST sdl on aaa.entrustStatus=sdl.ITEM_CODE and sdl.DICT_CODE='ENTRUST_STATUS'
+        order by sdl.ORDER_NO, aaa.entrustId DESC
+    </select>
+    
+    <sql id="onlyEtrEntrust">
+        SELECT
+        entrustId,
+        entrustStatus,
+        portfolioId,
+        portfolioName,
+        assetType1,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
+        assetType10,
+        assetType11,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
+        finprodMarketId,
+        finprodId,
+        <!--添加资产简称 add by lishuping 20191029 start-->
+        <!--finprodName,-->
+        finprodAbbr,
+        <!--添加资产简称 add by lishuping 20191029 end-->
+        ps,
+        ccy,
+        vdate,
+        mdate,
+        entrustAmt,
+        entrustNum,
+        finishAmt,
+        transactioncom,
+        trmFundType,
+        tradeMarket
+        FROM
         (select
-            ETR_ENTRUST.ENTRUST_ID             entrustId,             
-            ETR_ENTRUST.ENTRUST_STATUS        entrustStatus,
-            ETR_ENTRUST.PORTFOLIO_ID        portfolioId,
-            PTL_PORTFOLIO.PORTFOLIO_NAME    portfolioName,
-            ETR_ENTRUST_ADD.ASSET_TYPE1        assetType1,
-            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
-            ETR_ENTRUST_ADD.ASSET_TYPE_10    assetType10,
-            ETR_ENTRUST_ADD.ASSET_TYPE_11    assetType11,
-            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
-            FIN_PRODUCT.FINPROD_MARKET_ID    finprodMarketId,
-            FIN_PRODUCT.FINPROD_ID            finprodId,
-            <!--添加资产简称 add by lishuping 20191029 start-->
-            <!--FIN_PRODUCT.FINPROD_NAME        finprodName,-->
-            FIN_PRODUCT.FINPROD_ABBR        finprodAbbr,
-            <!--添加资产简称 add by lishuping 20191029 end-->
-            ETR_ENTRUST.PS                    ps,
-            ETR_ENTRUST.CCY                    ccy,
-            ETR_ENTRUST.VDATE                vdate,
-            ETR_ENTRUST.MDATE                mdate,
-            ETR_ENTRUST.ENTRUST_AMT            entrustAmt,
-            ETR_ENTRUST.ENTRUST_NUM            entrustNum,
-            FIN_PRODUCT_ADD.TRM_FUND_TYPE   trmFundType,
-            FIN_PRODUCT.TRADE_MARKET        tradeMarket,
-            nvl(ETR_FINISH_STATUS_A.FINISH_AMT,0)    finishAmt,
-            round(ETR_FINISH_STATUS_A.FINISH_AMT/NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM),2)*100 transactioncom
+        ETR_ENTRUST.ENTRUST_ID             entrustId,
+        ETR_ENTRUST.ENTRUST_STATUS        entrustStatus,
+        ETR_ENTRUST.PORTFOLIO_ID        portfolioId,
+        PTL_PORTFOLIO.PORTFOLIO_NAME    portfolioName,
+        ETR_ENTRUST_ADD.ASSET_TYPE1        assetType1,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
+        ETR_ENTRUST_ADD.ASSET_TYPE_10    assetType10,
+        ETR_ENTRUST_ADD.ASSET_TYPE_11    assetType11,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
+        FIN_PRODUCT.FINPROD_MARKET_ID    finprodMarketId,
+        FIN_PRODUCT.FINPROD_ID            finprodId,
+        <!--添加资产简称 add by lishuping 20191029 start-->
+        <!--FIN_PRODUCT.FINPROD_NAME        finprodName,-->
+        FIN_PRODUCT.FINPROD_ABBR        finprodAbbr,
+        <!--添加资产简称 add by lishuping 20191029 end-->
+        ETR_ENTRUST.PS                    ps,
+        ETR_ENTRUST.CCY                    ccy,
+        ETR_ENTRUST.VDATE                vdate,
+        ETR_ENTRUST.MDATE                mdate,
+        ETR_ENTRUST.ENTRUST_AMT            entrustAmt,
+        ETR_ENTRUST.ENTRUST_NUM            entrustNum,
+        FIN_PRODUCT_ADD.TRM_FUND_TYPE   trmFundType,
+        FIN_PRODUCT.TRADE_MARKET        tradeMarket,
+        nvl(ETR_FINISH_STATUS_A.FINISH_AMT,0)    finishAmt,
+        round(ETR_FINISH_STATUS_A.FINISH_AMT/NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM),2)*100 transactioncom
         from ETR_ENTRUST
         left join          PTL_PORTFOLIO on PTL_PORTFOLIO.PORTFOLIO_ID = ETR_ENTRUST.PORTFOLIO_ID
         inner join         FIN_PRODUCT on FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID
         inner join         FIN_PRODUCT_ADD on FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         inner join         ETR_ENTRUST_ADD on ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         left join         (select ENTRUST_ID,sum(nvl(FINISH_AMT,0)) as FINISH_AMT from ETR_FINISH_STATUS where ENTRUST_ID != TRADE_ID group by ENTRUST_ID) ETR_FINISH_STATUS_A
-            on            ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        on            ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         INNER JOIN
-            PTL_PORTFOLIO_AUTHORITY
+        PTL_PORTFOLIO_AUTHORITY
         ON
-            PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
-            AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}            
+        PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+        AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
         <where>
             <if test="portfolioIdList != null and portfolioIdList.size() >0">
-                AND (PTL_PORTFOLIO.PORTFOLIO_ID IN              
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
-					<if test="(index % 998) == 0">
-                            null) OR PTL_PORTFOLIO.PORTFOLIO_ID IN (
-                     </if>
-					#{prot}
-				</foreach>
+                    <if test="(index % 998) == 0">
+                        null) OR PTL_PORTFOLIO.PORTFOLIO_ID IN (
+                    </if>
+                    #{prot}
+                </foreach>
                 or PTL_PORTFOLIO.PARENT_PORTFOLIO_ID IN
                 <foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
-					<if test="(index % 998) == 0">
-                            null) OR PTL_PORTFOLIO.PORTFOLIO_ID IN (
-                     </if>
-					#{prot}
-				</foreach>
+                    <if test="(index % 998) == 0">
+                        null) OR PTL_PORTFOLIO.PORTFOLIO_ID IN (
+                    </if>
+                    #{prot}
+                </foreach>
                 )
             </if>
             <if test="assetType1List != null and assetType1List.size()>0">
                 AND     ETR_ENTRUST_ADD.ASSET_TYPE1 IN
-                <foreach collection="assetType1List" index="index" item="item" open="(" separator="," close=")">  
+                <foreach collection="assetType1List" index="index" item="item" open="(" separator="," close=")">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
-            </if>         
-            
+            </if>
+
             <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
             <if test="assetType10List != null and assetType10List.size()>0">
                 AND     ETR_ENTRUST_ADD.ASSET_TYPE_10 IN
-                <foreach collection="assetType10List" index="index" item="item" open="(" separator="," close=")">  
+                <foreach collection="assetType10List" index="index" item="item" open="(" separator="," close=")">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
-            </if>     
+            </if>
             <if test="assetType11List != null and assetType11List.size()>0">
                 AND     ETR_ENTRUST_ADD.ASSET_TYPE_11 IN
-                <foreach collection="assetType11List" index="index" item="item" open="(" separator="," close=")">  
+                <foreach collection="assetType11List" index="index" item="item" open="(" separator="," close=")">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
-            </if>     
+            </if>
             <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
             <if test="ccy != null and ccy != ''">
                 AND ETR_ENTRUST.CCY = #{ccy,jdbcType=VARCHAR}
             </if>
             <if test="psList != null and psList.size()>0 ">
                 AND ETR_ENTRUST.PS IN
-                <foreach collection="psList" index="index" item="item" open="(" separator="," close=")">  
+                <foreach collection="psList" index="index" item="item" open="(" separator="," close=")">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
-            </if>  
+            </if>
             <if test="entrustStatus != null and entrustStatus != ''">
                 AND ETR_ENTRUST.ENTRUST_STATUS = #{entrustStatus,jdbcType=VARCHAR}
             </if>
@@ -177,7 +199,7 @@
             <if test="finprodId != null and finprodId != ''">
                 AND (FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',concat(#{finprodId,jdbcType=VARCHAR},'%'))
                 OR    FIN_PRODUCT.FINPROD_NAME like concat('%',concat(#{finprodId,jdbcType=VARCHAR},'%'))
-                ) 
+                )
             </if>
             <if test="finprodType2 != null and finprodType2 != ''">
                 AND FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
@@ -199,26 +221,26 @@
         </where>
         union all
         select
-            ETR_ENTRUST.ENTRUST_ID          entrustId,
-            ETR_ENTRUST.ENTRUST_STATUS        entrustStatus,
-            ETR_ENTRUST.PORTFOLIO_ID        portfolioId,
-            PTL_PORTFOLIO.PORTFOLIO_NAME    portfolioName,
-            ETR_ENTRUST_ADD.ASSET_TYPE1        assetType1,
-            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
-            ETR_ENTRUST_ADD.ASSET_TYPE_10    assetType10,
-            ETR_ENTRUST_ADD.ASSET_TYPE_11    assetType11,
-            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
-            NULL    finprodMarketId,
-            NULL            finprodId,
-            NULL        finprodName,
-            ETR_ENTRUST.PS                    ps,
-            ETR_ENTRUST.CCY                    ccy,
-            ETR_ENTRUST.VDATE                vdate,
-            ETR_ENTRUST.MDATE                mdate,
-            ETR_ENTRUST.ENTRUST_AMT            entrustAmt,
-            ETR_ENTRUST.ENTRUST_NUM            entrustNum,
-            NULL        trmFundType,
-            NULL        tradeMarket,
+        ETR_ENTRUST.ENTRUST_ID          entrustId,
+        ETR_ENTRUST.ENTRUST_STATUS        entrustStatus,
+        ETR_ENTRUST.PORTFOLIO_ID        portfolioId,
+        PTL_PORTFOLIO.PORTFOLIO_NAME    portfolioName,
+        ETR_ENTRUST_ADD.ASSET_TYPE1        assetType1,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
+        ETR_ENTRUST_ADD.ASSET_TYPE_10    assetType10,
+        ETR_ENTRUST_ADD.ASSET_TYPE_11    assetType11,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
+        NULL    finprodMarketId,
+        NULL            finprodId,
+        NULL        finprodName,
+        ETR_ENTRUST.PS                    ps,
+        ETR_ENTRUST.CCY                    ccy,
+        ETR_ENTRUST.VDATE                vdate,
+        ETR_ENTRUST.MDATE                mdate,
+        ETR_ENTRUST.ENTRUST_AMT            entrustAmt,
+        ETR_ENTRUST.ENTRUST_NUM            entrustNum,
+        NULL        trmFundType,
+        NULL        tradeMarket,
         nvl(ETR_FINISH_STATUS_A.FINISH_AMT,0) finishAmt,
         round(ETR_FINISH_STATUS_A.FINISH_AMT/NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM),2)*100 transactioncom
         from ETR_ENTRUST
@@ -230,37 +252,37 @@
             <if test="portfolioId != null and portfolioId != ''">
                 AND (PTL_PORTFOLIO.PORTFOLIO_ID like concat('%',concat(#{portfolioId,jdbcType=VARCHAR},'%'))
                 OR PTL_PORTFOLIO.PORTFOLIO_NAME like concat('%',concat(#{portfolioId,jdbcType=VARCHAR},'%'))
-                ) 
+                )
             </if>
             <if test="assetType1List != null and assetType1List.size()>0">
                 AND     ETR_ENTRUST_ADD.ASSET_TYPE1 IN
-                <foreach collection="assetType1List" index="index" item="item" open="(" separator="," close=")">  
+                <foreach collection="assetType1List" index="index" item="item" open="(" separator="," close=")">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
-            </if>     
+            </if>
             <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
             <if test="assetType10List != null and assetType10List.size()>0">
                 AND     ETR_ENTRUST_ADD.ASSET_TYPE_10 IN
-                <foreach collection="assetType10List" index="index" item="item" open="(" separator="," close=")">  
+                <foreach collection="assetType10List" index="index" item="item" open="(" separator="," close=")">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
-            </if>     
+            </if>
             <if test="assetType11List != null and assetType11List.size()>0">
                 AND     ETR_ENTRUST_ADD.ASSET_TYPE_11 IN
-                <foreach collection="assetType11List" index="index" item="item" open="(" separator="," close=")">  
+                <foreach collection="assetType11List" index="index" item="item" open="(" separator="," close=")">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
-            </if>     
+            </if>
             <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
             <if test="ccy != null and ccy != ''">
                 AND ETR_ENTRUST.CCY = #{ccy,jdbcType=VARCHAR}
             </if>
             <if test="psList != null and psList.size()>0 ">
                 AND ETR_ENTRUST.PS IN
-                <foreach collection="psList" index="index" item="item" open="(" separator="," close=")">  
+                <foreach collection="psList" index="index" item="item" open="(" separator="," close=")">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
-            </if>  
+            </if>
             <if test="entrustStatus != null and entrustStatus != ''">
                 AND ETR_ENTRUST.ENTRUST_STATUS = #{entrustStatus,jdbcType=VARCHAR}
             </if>
@@ -287,9 +309,241 @@
                 </foreach>
             </if>
             <!-- add by etliu 20210501 银行间场内场外拆分 end -->
-        </where>)    
-        order by entrustId  desc
-    </select>
+        </where>)
+    </sql>
+    
+    <sql id="onlyWtfEtrEntrust">
+        SELECT
+        entrustId,
+        entrustStatus,
+        portfolioId,
+        portfolioName,
+        assetType1,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
+        assetType10,
+        assetType11,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
+        finprodMarketId,
+        finprodId,
+        <!--添加资产简称 add by lishuping 20191029 start-->
+        <!--finprodName,-->
+        finprodAbbr,
+        <!--添加资产简称 add by lishuping 20191029 end-->
+        ps,
+        ccy,
+        vdate,
+        mdate,
+        entrustAmt,
+        entrustNum,
+        finishAmt,
+        transactioncom,
+        trmFundType,
+        tradeMarket
+        FROM
+        (select
+        ETR_ENTRUST.ENTRUST_ID             entrustId,
+        ETR_ENTRUST.ENTRUST_STATUS        entrustStatus,
+        ETR_ENTRUST.PORTFOLIO_ID        portfolioId,
+        PTL_PORTFOLIO.PORTFOLIO_NAME    portfolioName,
+        ETR_ENTRUST_ADD.ASSET_TYPE1        assetType1,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
+        ETR_ENTRUST_ADD.ASSET_TYPE_10    assetType10,
+        ETR_ENTRUST_ADD.ASSET_TYPE_11    assetType11,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
+        FIN_PRODUCT.FINPROD_MARKET_ID    finprodMarketId,
+        FIN_PRODUCT.FINPROD_ID            finprodId,
+        <!--添加资产简称 add by lishuping 20191029 start-->
+        <!--FIN_PRODUCT.FINPROD_NAME        finprodName,-->
+        FIN_PRODUCT.FINPROD_ABBR        finprodAbbr,
+        <!--添加资产简称 add by lishuping 20191029 end-->
+        ETR_ENTRUST.PS                    ps,
+        ETR_ENTRUST.CCY                    ccy,
+        ETR_ENTRUST.VDATE                vdate,
+        ETR_ENTRUST.MDATE                mdate,
+        ETR_ENTRUST.ENTRUST_AMT            entrustAmt,
+        ETR_ENTRUST.ENTRUST_NUM            entrustNum,
+        FIN_PRODUCT_ADD.TRM_FUND_TYPE   trmFundType,
+        FIN_PRODUCT.TRADE_MARKET        tradeMarket,
+        nvl(ETR_FINISH_STATUS_A.FINISH_AMT,0)    finishAmt,
+        round(ETR_FINISH_STATUS_A.FINISH_AMT/NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM),2)*100 transactioncom
+        from WFL_ETR_ENTRUST ETR_ENTRUST
+        left join          PTL_PORTFOLIO on PTL_PORTFOLIO.PORTFOLIO_ID = ETR_ENTRUST.PORTFOLIO_ID
+        inner join         FIN_PRODUCT on FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID
+        inner join         FIN_PRODUCT_ADD on FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+        inner join         WFL_ETR_ENTRUST_ADD ETR_ENTRUST_ADD on ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        left join         (select ENTRUST_ID,sum(nvl(FINISH_AMT,0)) as FINISH_AMT from ETR_FINISH_STATUS where ENTRUST_ID != TRADE_ID group by ENTRUST_ID) ETR_FINISH_STATUS_A
+        on            ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY
+        ON
+        PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+        AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+        <where>
+            <if test="portfolioIdList != null and portfolioIdList.size() >0">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR PTL_PORTFOLIO.PORTFOLIO_ID IN (
+                    </if>
+                    #{prot}
+                </foreach>
+                or PTL_PORTFOLIO.PARENT_PORTFOLIO_ID IN
+                <foreach collection="portfolioIdList" index="index" item="prot" open="(" close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR PTL_PORTFOLIO.PORTFOLIO_ID IN (
+                    </if>
+                    #{prot}
+                </foreach>
+                )
+            </if>
+            <if test="assetType1List != null and assetType1List.size()>0">
+                AND     ETR_ENTRUST_ADD.ASSET_TYPE1 IN
+                <foreach collection="assetType1List" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
+            <if test="assetType10List != null and assetType10List.size()>0">
+                AND     ETR_ENTRUST_ADD.ASSET_TYPE_10 IN
+                <foreach collection="assetType10List" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="assetType11List != null and assetType11List.size()>0">
+                AND     ETR_ENTRUST_ADD.ASSET_TYPE_11 IN
+                <foreach collection="assetType11List" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
+            <if test="ccy != null and ccy != ''">
+                AND ETR_ENTRUST.CCY = #{ccy,jdbcType=VARCHAR}
+            </if>
+            <if test="psList != null and psList.size()>0 ">
+                AND ETR_ENTRUST.PS IN
+                <foreach collection="psList" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="startDate != null">
+                AND ETR_ENTRUST.VDATE  >= #{startDate,jdbcType=DATE}
+            </if>
+            <if test="endDate != null">
+                AND ETR_ENTRUST.MDATE <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+            </if>
+            <if test="finprodId != null and finprodId != ''">
+                AND (FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',concat(#{finprodId,jdbcType=VARCHAR},'%'))
+                OR    FIN_PRODUCT.FINPROD_NAME like concat('%',concat(#{finprodId,jdbcType=VARCHAR},'%'))
+                )
+            </if>
+            <if test="finprodType2 != null and finprodType2 != ''">
+                AND FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+            </if>
+            <if test="trmFundType != null and trmFundType != ''">
+                AND FIN_PRODUCT_ADD.TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR}
+            </if>
+            <if test="tradeMarket != null and tradeMarket != ''">
+                AND FIN_PRODUCT.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+            <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                AND nvl(ETR_ENTRUST.TRADE_MARKET, FIN_PRODUCT.TRADE_MARKET) in
+                <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                    #{currTradeMarket}
+                </foreach>
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 end -->
+        </where>
+        union all
+        select
+        ETR_ENTRUST.ENTRUST_ID          entrustId,
+        ETR_ENTRUST.ENTRUST_STATUS        entrustStatus,
+        ETR_ENTRUST.PORTFOLIO_ID        portfolioId,
+        PTL_PORTFOLIO.PORTFOLIO_NAME    portfolioName,
+        ETR_ENTRUST_ADD.ASSET_TYPE1        assetType1,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
+        ETR_ENTRUST_ADD.ASSET_TYPE_10    assetType10,
+        ETR_ENTRUST_ADD.ASSET_TYPE_11    assetType11,
+        <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
+        NULL    finprodMarketId,
+        NULL            finprodId,
+        NULL        finprodName,
+        ETR_ENTRUST.PS                    ps,
+        ETR_ENTRUST.CCY                    ccy,
+        ETR_ENTRUST.VDATE                vdate,
+        ETR_ENTRUST.MDATE                mdate,
+        ETR_ENTRUST.ENTRUST_AMT            entrustAmt,
+        ETR_ENTRUST.ENTRUST_NUM            entrustNum,
+        NULL        trmFundType,
+        NULL        tradeMarket,
+        nvl(ETR_FINISH_STATUS_A.FINISH_AMT,0) finishAmt,
+        round(ETR_FINISH_STATUS_A.FINISH_AMT/NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM),2)*100 transactioncom
+        from WFL_ETR_ENTRUST ETR_ENTRUST
+        left join PTL_PORTFOLIO on PTL_PORTFOLIO.PORTFOLIO_ID = ETR_ENTRUST.PORTFOLIO_ID
+        inner join WFL_ETR_ENTRUST_ADD ETR_ENTRUST_ADD on ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        left join (select ENTRUST_ID,sum(nvl(FINISH_AMT,0)) as FINISH_AMT from ETR_FINISH_STATUS where ENTRUST_ID != TRADE_ID group by ENTRUST_ID) ETR_FINISH_STATUS_A on ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        INNER JOIN PTL_PORTFOLIO_AUTHORITY ON PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+        <where>
+            <if test="portfolioId != null and portfolioId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID like concat('%',concat(#{portfolioId,jdbcType=VARCHAR},'%'))
+                OR PTL_PORTFOLIO.PORTFOLIO_NAME like concat('%',concat(#{portfolioId,jdbcType=VARCHAR},'%'))
+                )
+            </if>
+            <if test="assetType1List != null and assetType1List.size()>0">
+                AND     ETR_ENTRUST_ADD.ASSET_TYPE1 IN
+                <foreach collection="assetType1List" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 开始 -->
+            <if test="assetType10List != null and assetType10List.size()>0">
+                AND     ETR_ENTRUST_ADD.ASSET_TYPE_10 IN
+                <foreach collection="assetType10List" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="assetType11List != null and assetType11List.size()>0">
+                AND     ETR_ENTRUST_ADD.ASSET_TYPE_11 IN
+                <foreach collection="assetType11List" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <!-- 新增个性分类三、四级 王贵奇 2019/7/29 结束 -->
+            <if test="ccy != null and ccy != ''">
+                AND ETR_ENTRUST.CCY = #{ccy,jdbcType=VARCHAR}
+            </if>
+            <if test="psList != null and psList.size()>0 ">
+                AND ETR_ENTRUST.PS IN
+                <foreach collection="psList" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="startDate != null">
+                AND ETR_ENTRUST.VDATE  >= #{startDate,jdbcType=DATE}
+            </if>
+            <if test="endDate != null">
+                AND ETR_ENTRUST.MDATE <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+            </if>
+            <!-- <if test="finprodId != null and finprodId != ''">
+                AND (FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',concat(#{finprodId,jdbcType=VARCHAR},'%'))
+                OR    FIN_PRODUCT.FINPROD_NAME like concat('%',concat(#{finprodId,jdbcType=VARCHAR},'%'))
+                ) 
+            </if> -->
+            <if test="finprodType2 != null and finprodType2 != ''">
+                AND ETR_ENTRUST.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+                AND NOT EXISTS (SELECT 1 FROM FIN_PRODUCT WHERE FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID)
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+            <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                AND ETR_ENTRUST.TRADE_MARKET in
+                <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                    #{currTradeMarket}
+                </foreach>
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 end -->
+        </where>)
+    </sql>
     
     <resultMap id="finprodIdMap" type="com.joyintech.framework.select.SelectOptionDto">
         <id column="id" property="id" jdbcType="VARCHAR"/>
@@ -510,15 +764,15 @@
             R_PRODUCT.FINPROD_MARKET_ID changeToFinprodMarketId,
             NVL(R_PRODUCT.FINPROD_ABBR, R_PRODUCT.FINPROD_NAME) changeToFinprodName,
             ETR_ENTRUST.CONTACT_INFO        contactInfo
-        from        ETR_ENTRUST        
+        from        WFL_ETR_ENTRUST ETR_ENTRUST       
         left join         PTL_PORTFOLIO        
             on            PTL_PORTFOLIO.PORTFOLIO_ID = ETR_ENTRUST.PORTFOLIO_ID        
                                 
         left join         FIN_PRODUCT        
             on            FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID    
             
-        inner join         ETR_ENTRUST_ADD        
-            on            ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        inner join         WFL_ETR_ENTRUST_ADD ETR_ENTRUST_ADD
+        on            ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
 
         LEFT JOIN           FIN_PRODUCT R_PRODUCT ON ETR_ENTRUST_ADD.R_FINPROD_ID = R_PRODUCT.FINPROD_ID
 
@@ -526,6 +780,55 @@
             on             ETR_DISTRIBUTE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID    
         where 
                 ETR_ENTRUST.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+        union all 
+        select
+        ETR_ENTRUST.ENTRUST_ID             entrustId,
+        ETR_ENTRUST.PORTFOLIO_ID        portfolioId,
+        PTL_PORTFOLIO.PORTFOLIO_NAME    portfolioName,
+        ETR_ENTRUST_ADD.ASSET_TYPE1        assetType1,
+        <!-- 新增个性分类三、四 王贵奇 2019/8/2 开始 -->
+        ETR_ENTRUST_ADD.ASSET_TYPE_10    assetType10,
+        ETR_ENTRUST_ADD.ASSET_TYPE_11    assetType11,
+        <!-- 新增个性分类三、四 王贵奇 2019/8/2 结束 -->
+        ETR_ENTRUST.CHL_ID chlId,
+        FIN_PRODUCT.FINPROD_ID            finprodId,
+        FIN_PRODUCT.FINPROD_MARKET_ID    finprodMarketId,
+        FIN_PRODUCT.FINPROD_NAME        finprodName,
+        <!-- add by zhangpuyu 2019/12/6 start -->
+        ETR_ENTRUST_ADD.SEC_ACCT_ID secAcctId,
+        <!-- add by zhangpuyu 2019/12/6 start -->
+        ETR_ENTRUST.PS                    ps,
+        ETR_ENTRUST.CCY                    ccy,
+        ETR_ENTRUST.TRADE_MARKET        tradeMarket,
+        ETR_ENTRUST.REMARK                remark,
+        ETR_ENTRUST.VDATE                vdate,
+        ETR_ENTRUST.MDATE                mdate,
+        ETR_ENTRUST.ENTRUST_AMT            entrustAmt,
+        ETR_ENTRUST.ENTRUST_NUM            entrustNum,
+        ETR_ENTRUST.INV_MANAGER_ID        invManagerId,
+        ETR_DISTRIBUTE.TRADER            trader,
+        ETR_ENTRUST.COUNTER_ID            counterId,
+        ETR_ENTRUST.COUNTER_TRADER        counterTrader,
+        R_PRODUCT.FINPROD_ID rFinprodId,
+        R_PRODUCT.FINPROD_MARKET_ID changeToFinprodMarketId,
+        NVL(R_PRODUCT.FINPROD_ABBR, R_PRODUCT.FINPROD_NAME) changeToFinprodName,
+        ETR_ENTRUST.CONTACT_INFO        contactInfo
+        from        ETR_ENTRUST
+        left join         PTL_PORTFOLIO
+        on            PTL_PORTFOLIO.PORTFOLIO_ID = ETR_ENTRUST.PORTFOLIO_ID
+
+        left join         FIN_PRODUCT
+        on            FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID
+
+        inner join         ETR_ENTRUST_ADD
+        on            ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+
+        LEFT JOIN           FIN_PRODUCT R_PRODUCT ON ETR_ENTRUST_ADD.R_FINPROD_ID = R_PRODUCT.FINPROD_ID
+
+        left join         ETR_DISTRIBUTE
+        on             ETR_DISTRIBUTE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        where
+        ETR_ENTRUST.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </select>
     
     <!-- 查询已委托金额 -->

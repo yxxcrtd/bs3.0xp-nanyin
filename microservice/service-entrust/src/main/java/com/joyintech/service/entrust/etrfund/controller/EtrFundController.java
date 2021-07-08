@@ -15,6 +15,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrfund.dto.EtrFundDto;
 import com.joyintech.service.entrust.etrfund.service.EtrFundService;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
@@ -141,9 +142,26 @@ public class EtrFundController {
     @DTXTransaction
     @PostMapping("/doInsert")
     public void doInsert(@RequestBody EtrFundDto dto) throws IllegalAccessException, InvocationTargetException {
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), etrFundService.initBaseDto(dto));
+        
         etrFundService.doInsert(dto);
     }
-    
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/doUpdate")
+    public void doUpdate(@RequestBody EtrFundDto dto) throws IllegalAccessException, InvocationTargetException {
+        WFlowCommonService.doUpdateFlow(dto.getOperateType(), etrFundService.initBaseDto(dto));
+        
+        etrFundService.doInsert(dto);
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/doBack")
+    public void doBack(@RequestBody EtrFundDto dto) {
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
+    }
     /**
      * 
      * <一句话功能简述>
@@ -238,6 +256,8 @@ public class EtrFundController {
     @DTXTransaction
     @PostMapping("/doComplete")
     public void doComplete(@RequestBody EtrFundDto dto) throws IllegalAccessException, InvocationTargetException {
+        WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
+        
         etrFundService.doComplete(dto);
     }
     
