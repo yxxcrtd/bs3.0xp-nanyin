@@ -125,8 +125,14 @@
             sortable: false,
             type: 'number',
             digit: 2
-        }
-        , {
+        }, {/*投资目的*/
+            field: 'invAim',
+            width: 100,
+            title: 'EtrIbBondinfo002.invAim',
+            edit: true,
+            sortable: false,
+            editOption:{type:'select', formatoption:true, result: INV_AIM}
+        }, {
             field: 'proAvailableCash',
             width: 40,
             title: 'EtribBondInfo003.proAvailableCash',

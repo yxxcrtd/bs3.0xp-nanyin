@@ -135,7 +135,7 @@
             ,{field:'settleSpreedName', title: 'EtrInvestBondInfo002.settleSpreed', width : 100}
             ,{field:'vdate', title: 'EtrInvestBondInfo001.vdate', width:100,type:'date',sortField:"vdate"}
             ,{field:'mdate', title: 'EtrInvestBondInfo001.mdate', width:100,type:'date',sortField:"mdate"}
-            ,{field:'finishAmt',type:'money', title: 'EtrIbBondinfo001.finishAmt', width:100}
+            ,{field:'finishAmt',type:'money', title: 'EtrIbBondinfo001.finishAmt', fixed:'right',width:100}
             ,{field:'transactioncom', title: 'EtrInvestBondInfo001.transactioncom',render : function(data, type, row, meta){
                     return "<div class='layui-progress layui-progress-big' style='margin-top:3px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.transactioncom+"%'><span class='layui-progress-text'>"+row.transactioncom+"%</span></div></div>";
                 }, width:100,sortable:false}

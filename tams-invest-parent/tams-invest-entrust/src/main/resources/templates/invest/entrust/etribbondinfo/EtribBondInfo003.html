@@ -164,22 +164,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                   
-                    <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="exerYieldDiv">
-                        <!-- <label class="layui-form-label form-lable" style="width: 95px;"
-                               data-th-text="#{EtribBondInfo003.exerYield}">行权收益率(%)</label> -->
-                        <label class="layui-form-label form-lable" style="width: 115px;">
-                                    <input type="radio" id="calculateField_exerYield" name="calculateField" value="exerYield" th:title="#{EtribBondInfo003.exerYield}" />
-                        </label>
-                        <div class="layui-input-inline input-inline">
-                            <input type="text" id="exerYield" name="exerYield" placeholder="请输入内容"
-                                   data-pattern="" data-fixtype="2" data-textrange="4"
-                                   class="layui-input form-input text-number"
-                                   data-th-value="${entity?.exerYield}">
-                            <span class="input-right-show">%</span>
-                        </div>
-                    </div>
-                     <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                    <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                         <label class="layui-form-label form-lable" style="width: 95px;"
                                data-th-utext="#{EtribBondInfo003.counterId}">交易对手</label>
                         <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
@@ -192,35 +177,21 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="exerYieldDiv">
+                        <label class="layui-form-label form-lable" style="width: 115px;">
+                                    <input type="radio" id="calculateField_exerYield" name="calculateField" value="exerYield" th:title="#{EtribBondInfo003.exerYield}" />
+                        </label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="exerYield" name="exerYield" placeholder="请输入内容"
+                                   data-pattern="" data-fixtype="2" data-textrange="4"
+                                   class="layui-input form-input text-number"
+                                   data-th-value="${entity?.exerYield}">
+                            <span class="input-right-show">%</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="layui-form-item">
-                   
-                    <!-- <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
-                        <label class="layui-form-label form-lable" style="width: 95px;"
-                               data-th-text="#{invest.channelId}">通道</label>
-                        <div class="layui-input-inline input-inline">
-                            <select type="text" id="chlFinprodId" name="chlId"
-                                    class="layui-input form-input input-select" allowClear="true"
-                                    data-th-placeholder="#{SysCommon.placeholder}" formatoption="false"
-                                    data-th-data-url="@{/component/trade/BussChannelCommon/getChannelId}"
-                                    data-th-initvalue="${entity?.chlId}">
-                            </select>
-                        </div>
-                    </div> -->
-                    <div class="form-inline-wrap"  style=" width: 50%; padding:0px;">
-                                    <label class="layui-form-label form-lable" style="width: 95px;" 
-                                           data-th-text="#{EtrIbBondinfo002.invAim}">投资目的</label>
-                                    <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
-                                        <select type="text" id="invAim" name="invAim"
-                                                class="layui-input form-input input-select"
-                                                data-th-data-result='${INV_AIM}' allowClear="true"
-                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                                required="required" formatoption="true"
-                                                data-th-initValue="${entity?.invAim}">
-                                        </select>
-                                    </div>
-                         </div>
-                      <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                    <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                         <label class="layui-form-label form-lable" style="width: 95px;"
                                data-th-text="#{EtribBondInfo003.vdate}">指令开始日</label>
                         <div class="layui-input-inline input-inline">
@@ -231,9 +202,6 @@
                                    required="required">
                         </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                  
                     <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                         <label class="layui-form-label form-lable" style="width: 95px;"
                                data-th-text="#{EtribBondInfo003.mdate}">指令终止日</label>
@@ -308,7 +276,7 @@
         var sysDate = /*[[${sysDate}]]*/'';
         var entity_BussCombDistribtList = eval(/*[[${entity_BussCombDistribtList}]]*/'');
         var SHARES_TRADE_MARKET_02 = /*[[${SHARES_TRADE_MARKET_02}]]*/'';
-
+        var INV_AIM = /*[[${INV_AIM}]]*/'';
         var todoList = /*[[${TodoList}]]*/'';
         
         var calculateField = /*[[${calculateField}]]*/ '';//计算方式
