@@ -79,8 +79,7 @@ public class Sqlldr implements ImpExcutor {
      * {@inheritDoc}
      */
     @Override
-    public boolean excute(ImpArgument args)
-        throws Exception {
+    public boolean excute(ImpArgument args) throws IOException, InterruptedException {
         String sh = "sqlldr ";
         if (!(args instanceof SqlldrImpArgument)) {
             LOGGER.warn("不支持的参数类型:" + args.getClass().getName());

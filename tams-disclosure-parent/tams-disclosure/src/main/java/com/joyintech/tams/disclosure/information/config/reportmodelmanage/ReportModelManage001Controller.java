@@ -11,6 +11,8 @@
 package com.joyintech.tams.disclosure.information.config.reportmodelmanage;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +97,7 @@ public class ReportModelManage001Controller extends BaseController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		// Map<String, Object> paraMap = RequestUtil.getPageParam();
 		String datas = this.getParam("datas");
 		List<ReportModelManage001Dto> listdto = null;
@@ -128,7 +130,7 @@ public class ReportModelManage001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping("exportZip")
-	public ResponseEntity<byte[]> exportZip() throws Exception {
+	public ResponseEntity<byte[]> exportZip() throws IOException {
 		String datas = this.getParam("datas");
 		List<ReportModelManage001Dto> val001dto = JsonUtils.json2List(datas, ReportModelManage001Dto.class);
 		Map<String, Object> param = RequestUtil.getPageParam();
@@ -150,10 +152,16 @@ public class ReportModelManage001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping("mergeExport")
-	public ResponseEntity<byte[]> mergeExport() throws Exception {
+	public ResponseEntity<byte[]> mergeExport() throws IOException {
 		Map<String, Object> param = RequestUtil.getPageParam();
-		ReportModelManage001Dto reportModelManage001Dto = (ReportModelManage001Dto) JsonUtils.map2entity(param,
-				ReportModelManage001Dto.class);
+		ReportModelManage001Dto reportModelManage001Dto = null;
+		try {
+			reportModelManage001Dto = (ReportModelManage001Dto) JsonUtils.map2entity(param,
+					ReportModelManage001Dto.class);
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			throw new IllegalArgumentException("转换异常");
+		}
 		reportModelManage001Dto.setParam(param);
 		return reportModelManage001Service.mergeExportSingle(reportModelManage001Dto);
 	}
@@ -161,7 +169,7 @@ public class ReportModelManage001Controller extends BaseController {
 	@SuppressWarnings("finally")
 	@RequestMapping("/searchReports")
 	@ResponseBody
-	public AjaxResult searchReports() throws Exception {
+	public AjaxResult searchReports() {
 		AjaxResult value = new AjaxResult();
 		try {
 			// List<Map<String,String>> result =
@@ -186,7 +194,7 @@ public class ReportModelManage001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<ReportModelManage001Dto> findIndexId() throws Exception {
+	public Page<ReportModelManage001Dto> findIndexId() {
 		Page<ReportModelManage001Dto> page = reportModelManage001Service.findByPage(RequestUtil.getPageParam());
 		return page;
 	}

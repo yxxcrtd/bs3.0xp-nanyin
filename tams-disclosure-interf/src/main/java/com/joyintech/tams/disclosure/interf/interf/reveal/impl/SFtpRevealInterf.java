@@ -73,7 +73,7 @@ public class SFtpRevealInterf implements RevealInterf{
 	 * @return
 	 * @throws Exception
 	 */
-	public Boolean ftpPushFile(RepFtpPath ftpPath,String filePath,String filename, String option) throws Exception {
+	public Boolean ftpPushFile(RepFtpPath ftpPath,String filePath,String filename, String option) {
 		boolean flag = false;
 
 			

@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.reportpower.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -70,8 +71,7 @@ public class ReportMenuPowerConfig001Controller extends BaseController{
      */
     @RequestMapping("searchPage")
     @ResponseBody
-    public Page<ReportMenuPowerConfig001Dto> searchPage()
-        throws Exception {
+    public Page<ReportMenuPowerConfig001Dto> searchPage() {
         return reportMenuPowerConfig001Service.findPage(RequestUtil.getPageParam());
     }
     /**
@@ -112,8 +112,7 @@ public class ReportMenuPowerConfig001Controller extends BaseController{
      * @throws Exception Exception
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         String datas1=datas.replace("[", "");
         String datas2=datas1.replace("]", "");

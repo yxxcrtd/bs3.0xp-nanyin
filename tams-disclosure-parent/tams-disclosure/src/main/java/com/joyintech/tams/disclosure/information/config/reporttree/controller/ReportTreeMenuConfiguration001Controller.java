@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.disclosure.information.config.reporttree.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,8 +85,7 @@ public class ReportTreeMenuConfiguration001Controller extends BaseController{
     */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<RepInfo> findPage()
-        throws Exception {
+    public Page<RepInfo> findPage(){
         return reportTreeMenuConfiguration001Service.findPage(RequestUtil.getPageParam());
     }
     /**
@@ -98,7 +98,7 @@ public class ReportTreeMenuConfiguration001Controller extends BaseController{
      */
     @RequestMapping("getAddAll")
     @ResponseBody
-    public AjaxResult getAddAll() throws Exception{
+    public AjaxResult getAddAll() throws IOException {
         AjaxResult ajaxResult=
             reportTreeMenuConfiguration001Service.checkData(RequestUtil.getPageParam());
         return ajaxResult;       
@@ -114,7 +114,7 @@ public class ReportTreeMenuConfiguration001Controller extends BaseController{
      */
     @RequestMapping("edit")
     @ResponseBody
-    public AjaxResult edit() throws Exception{
+    public AjaxResult edit() {
         AjaxResult ajaxResult=
             reportTreeMenuConfiguration001Service.edit(RequestUtil.getPageParam());
         return ajaxResult;       

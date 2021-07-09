@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.common.common.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -58,8 +59,7 @@ public class ExcelUtil {
      * @return 读取结果列表
      * @throws Exception 异常
      */
-    public static List<List<String>> readToList(File file, int sheetIndex)
-        throws Exception {
+    public static List<List<String>> readToList(File file, int sheetIndex) throws IOException {
         List<List<String>> ls = new ArrayList<List<String>>();
         Workbook wb = loadWorkbook(null, file, null);
         if (null != wb) {
@@ -107,8 +107,7 @@ public class ExcelUtil {
      */
     public static List<List<String>> readToList(String fileName, File file,
                                                 InputStream inputStream, int sheetIndex,
-                                                int skipRows, int titleRow)
-        throws Exception {
+                                                int skipRows, int titleRow) throws IOException {
         List<List<String>> ls = new ArrayList<List<String>>();
         Workbook wb = loadWorkbook(fileName, file, inputStream);
         if (null != wb) {
@@ -206,8 +205,7 @@ public class ExcelUtil {
      * @return wb
      * @throws Exception yc
      */
-    public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream)
-        throws Exception {
+    public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream) throws IOException {
         Workbook wb = null;
         try {
             if (null == file && StringUtil.isEmpty(fileName)) {
@@ -256,7 +254,7 @@ public class ExcelUtil {
                 }
             }
             else {
-                throw new Exception("不是一个有效的Excel文件");
+                throw new IllegalArgumentException("不是一个有效的Excel文件");
             }
         }
         catch (Exception e)
@@ -284,8 +282,7 @@ public class ExcelUtil {
      * @throws Exception 文件异常
      */
     public static String getSheetName(String fileName, File file, InputStream inputStream,
-                                      int sheetIndex)
-        throws Exception {
+                                      int sheetIndex) throws IOException {
         Workbook wb = loadWorkbook(fileName, file, inputStream);
         if (null != wb) {
             Sheet sh = wb.getSheetAt(sheetIndex);

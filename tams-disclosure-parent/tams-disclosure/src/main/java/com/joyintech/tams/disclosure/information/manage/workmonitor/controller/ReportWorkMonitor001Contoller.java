@@ -108,7 +108,7 @@ public class ReportWorkMonitor001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ReportWorkMonitorNew001Dto> findPage() throws Exception{
+    public Page<ReportWorkMonitorNew001Dto> findPage() {
     	Page<ReportWorkMonitorNew001Dto> pageList = reportWorkMonitor001Service.findPage(RequestUtil.getPageParam());
     	pageList.getRoot().forEach(dto -> {
     		if(StringUtil.isNotEmpty(dto.getEndExecDate()) && StringUtil.isNotEmpty(dto.getStartExecDate())) {
@@ -249,7 +249,7 @@ public class ReportWorkMonitor001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
 //         Map<String, Object> paraMap = RequestUtil.getPageParam();
          List<ReportWorkMonitorNew001Dto> dtoList;

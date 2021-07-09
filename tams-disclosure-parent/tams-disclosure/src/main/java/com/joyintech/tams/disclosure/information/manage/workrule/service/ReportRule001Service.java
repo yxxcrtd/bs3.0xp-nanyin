@@ -56,7 +56,7 @@ public class ReportRule001Service extends CommonExportService<ReportRule001Dto> 
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ReportRule001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ReportRule001Dto> findPage(Map<String, Object> params) {
     	return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ReportRule001/findPage",
                 params, ReportRule001Dto.class);

@@ -135,7 +135,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<BokFileTransfer003Dto> findPage() throws Exception{
+    public Page<BokFileTransfer003Dto> findPage(){
 //        return valNetValueConfirm003Service.findPage(RequestUtil.getPageParam());
         return null;
     }
@@ -157,8 +157,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 */
 	@RequestMapping(value = "/uploadFile")
 	@ResponseBody
-	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws Exception {
+	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model){
 	    AjaxResult res = new AjaxResult();
 //		try {
 //		    reportConfirmManage003Service.readFile(request);
@@ -196,8 +195,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 */
 	@RequestMapping(value = "/batchUploadFile")
 	@ResponseBody
-	public AjaxResult batchUploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws Exception {
+	public AjaxResult batchUploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model){
 	    AjaxResult value = new AjaxResult();
 	    //获取所有错误信息
 	    List<ValidMessage> checkList = new ArrayList<ValidMessage>();
@@ -650,8 +648,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo)
-			throws Exception {
+	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo){
 		return null;
 	}
 	
@@ -669,8 +666,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     @RequestMapping(value = "/downloadFile")
     @ResponseBody
-    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request)
-            throws Exception { 
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request){
 //           return valNetValueConfirm003Service.downloadFile(request);
            return null;
     }
@@ -688,8 +684,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     @RequestMapping(value = "/deleteFile")
     @ResponseBody
-    public void deleteFile(HttpServletRequest request)
-            throws Exception { 
+    public void deleteFile(HttpServletRequest request) {
 //           valNetValueConfirm003Service.deleteFile(request);
     }
 }

@@ -61,8 +61,7 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 	 * @param susprdfutureopenplangendto
 	 * @param years 推迟年数
 	 */
-	public BussFinProductOpenPlanDto executeDto(SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto,int years)
-			throws Exception {
+	public BussFinProductOpenPlanDto executeDto(SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto,int years){
 
 		BussFinProductOpenPlanDto bussFinProductOpenPlanDto = new BussFinProductOpenPlanDto();
 		BeanUtil.copyPropertiesIgnoreNull(bussFinProductOpenPlanDto, susprdfutureopenplangendto);
@@ -107,7 +106,7 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 	}
 
 	public List<FinOpenPlan> executeList(List<FinOpenPlan> finOpenPlanList,
-			SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto) throws Exception {
+			SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto) {
 		// 经过处理的List<开放计划>
 		List<FinOpenPlan> newFinOpenPlanList = new ArrayList<FinOpenPlan>();
 
@@ -165,7 +164,7 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FinCashPlan> executePayList(List<FinCashPlan> finCashPlanList, SusPrdFutureOpenPlanGenDto popuDto) throws Exception {
+	public List<FinCashPlan> executePayList(List<FinCashPlan> finCashPlanList, SusPrdFutureOpenPlanGenDto popuDto) {
 		// 经过处理的List<付息计划>
 		List<FinCashPlan> newFinCashPlanList = new ArrayList<FinCashPlan>();
 

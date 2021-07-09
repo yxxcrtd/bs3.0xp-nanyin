@@ -48,6 +48,9 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.JasparConnec
 import com.joyintech.tams.disclosure.common.common.util.OfficeMergeUtil;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.ReportModelManage001Dto;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * 记账凭证查询service
@@ -130,7 +133,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             return ExportUtil.export(zipFileName, zipFile, true);
     }
 
-    public void createExcel(ReportModelManage001Dto dto) throws IOException {
+    public void createExcel(ReportModelManage001Dto dto){
         
         
        // URL url = new URL(dto.getUrl());
@@ -233,7 +236,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
          * @see
          * @since 1.0
          */
-        public ResponseEntity<byte[]> mergeExport(List<ReportModelManage001Dto> list) throws Exception {
+        public ResponseEntity<byte[]> mergeExport(List<ReportModelManage001Dto> list) {
             List<String> srcFileList = new ArrayList<String>();
             for (ReportModelManage001Dto reportModelManage001Dto : list) {
                 createExcel(reportModelManage001Dto);
@@ -261,7 +264,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
          * @see
          * @since 1.0
          */
-        public ResponseEntity<byte[]> mergeExportSingle(ReportModelManage001Dto reportModelManage001Dto) throws Exception {
+        public ResponseEntity<byte[]> mergeExportSingle(ReportModelManage001Dto reportModelManage001Dto) throws IOException {
         	//提前获取模板中文名称，用以获取下载文件名称，如果中文名称没有，就用英文名称
         	
         	Map<String,String> resultMap = new HashMap<>() ;
@@ -357,7 +360,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
         }
         
         
-        public List<Map<String,String>> searchReports(Map<String,Object> params) throws Exception{
+        public List<Map<String,String>> searchReports(Map<String,Object> params) throws IOException, SAXException, ParserConfigurationException {
         	//后台批处理报表地址单独啦出来
     		String serverUrl = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_SERVER_URL);
     		//用户名
@@ -373,7 +376,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
     		return result;
         }
         
-        public List<ReportModelManage001Dto> searchReportsNew(Map<String,Object> params) throws Exception{
+        public List<ReportModelManage001Dto> searchReportsNew(Map<String,Object> params) {
 //    		List<ReportModelManage001Dto> result = reportModelManage001Mapper.searchReports(params);
     		
         	List<ReportModelManage001Dto> result =restTemplate.postForList(
@@ -389,7 +392,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
     	 * @param pageParam
     	 * @return
     	 */
-    	public Page<ReportModelManage001Dto> findByPage(Map<String, Object> pageParam) throws Exception {
+    	public Page<ReportModelManage001Dto> findByPage(Map<String, Object> pageParam) {
 //    		return super.queryForPage(() -> reportModelManage001Mapper.searchReports(pageParam));
     		
     		return restTemplate.postForPage(

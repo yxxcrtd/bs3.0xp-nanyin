@@ -27,7 +27,7 @@ public class ReportProdFileManage001Service extends CommonExportService<ReportPr
 	 * @return
 	 * @throws Exception
 	 */
-	public List<SelectOptionDto> getPrdInfoSelectPF(Map<String, Object> paraMap) throws Exception {
+	public List<SelectOptionDto> getPrdInfoSelectPF(Map<String, Object> paraMap) {
 		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportProdFileManage001/getPrdInfoSelectPF", 
 				paraMap, SelectOptionDto.class);
 	}
@@ -38,7 +38,7 @@ public class ReportProdFileManage001Service extends CommonExportService<ReportPr
 	 * @return
 	 * @throws Exception
 	 */
-	public List<SelectOptionDto> getProdSeriesSelectPF(Map<String, Object> paraMap) throws Exception {
+	public List<SelectOptionDto> getProdSeriesSelectPF(Map<String, Object> paraMap){
 		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportProdFileManage001/getProdSeriesSelectPF", 
 				paraMap, SelectOptionDto.class);
 	}

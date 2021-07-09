@@ -135,7 +135,7 @@ public class ReportPageManage002Controller extends BaseController {
     }
     @ResponseBody   
     @RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-    public AjaxResult doAdd(@RequestBody ReportPageManage001Dto param) throws Exception {
+    public AjaxResult doAdd(@RequestBody ReportPageManage001Dto param) {
     	reportPageManage001Service.insertReportInfo(param);
         return new AjaxResult("保存成功");
     }
@@ -143,7 +143,7 @@ public class ReportPageManage002Controller extends BaseController {
 	@SuppressWarnings("finally")
 	@RequestMapping("/getReportInputs")
     @ResponseBody
-    public AjaxResult getReportInputs() throws Exception{
+    public AjaxResult getReportInputs() {
         AjaxResult value = new AjaxResult();
         try {
 //        	List<Map<String,String>> result = reportPageManage001Service.getReportInputs(RequestUtil.getPageParam());

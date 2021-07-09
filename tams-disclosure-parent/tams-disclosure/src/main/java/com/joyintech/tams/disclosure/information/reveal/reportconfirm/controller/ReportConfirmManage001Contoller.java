@@ -148,8 +148,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect(){
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
         return prdInfoSelect;
     }
@@ -164,7 +163,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ReportConfirmManage001Dto> findPage() throws Exception{
+    public Page<ReportConfirmManage001Dto> findPage() throws IOException {
     	String workflowId =this.getParam("workflowId");
     	
     	Page<ReportConfirmManage001Dto> page;
@@ -300,7 +299,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
          Map<String, Object> paraMap = RequestUtil.getPageParam();
          List<ReportConfirmManage001Dto> dtoList;
@@ -342,7 +341,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("deleteCheck")
-	public AjaxResult deletecheck(@RequestBody ReportWorkManage001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult deletecheck(@RequestBody ReportWorkManage001Dto dto, BindingResult result) {
 		
 		return new AjaxResult();
 	}
@@ -377,7 +376,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("downloadReport")
-	public ResponseEntity<byte[]> downloadReport() throws Exception {
+	public ResponseEntity<byte[]> downloadReport() throws IOException {
 		String id = RequestUtil.getParam("id");
 		List<String> idList = new ArrayList<String>();
 		if(StringUtil.isNotEmpty(id)){

@@ -9,6 +9,7 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.detailshow.controller;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -123,8 +124,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect(){
 	    Map<String, Object> param=RequestUtil.getPageParam();
 	    if(param.get("repId")!=null){
 	        repDetailsShow001Service.getRandgeRule(param);
@@ -142,8 +142,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 */
 	@RequestMapping("getCusInfoSelect")
 	@ResponseBody
-	public Page<SelectOptionDto> getCusInfoSelect()
-			throws Exception {
+	public Page<SelectOptionDto> getCusInfoSelect() {
 		Map<String, Object> param=RequestUtil.getPageParam();
 		Page<SelectOptionDto> cusInfoSelect = getPrdInfoSelectService.getCusInfoSelect(param);
 		return cusInfoSelect;
@@ -310,7 +309,7 @@ public class RepDetailsShow001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("mergeExport")
-    public ResponseEntity<byte[]> mergeExport() throws Exception {
+    public ResponseEntity<byte[]> mergeExport() throws IOException {
         return repDetailsShow001Service.mergeExport(RequestUtil.getPageParam());
     }
     
@@ -336,7 +335,7 @@ public class RepDetailsShow001Contoller extends BaseController {
     @SuppressWarnings("unused")
 	@ResponseBody
     @RequestMapping("/querySameCount")
-    public AjaxResult querySameCount() throws Exception{
+    public AjaxResult querySameCount() {
     	String msg = StringUtil.EMPTY;
     	Map<String, Object>params = RequestUtil.getPageParam();
     	int count = repDetailsShow001Service.querySameCount(params);
@@ -419,8 +418,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 */
 	@RequestMapping("getProdSeriesList")
 	@ResponseBody
-    public List<SelectOptionDto> getProdSeriesList()
-        throws Exception {
+    public List<SelectOptionDto> getProdSeriesList(){
 	    Map<String, Object> param=RequestUtil.getPageParam();
 	    if(param.get("repId")!=null){
 	        repDetailsShow001Service.getRandgeRule(param);
