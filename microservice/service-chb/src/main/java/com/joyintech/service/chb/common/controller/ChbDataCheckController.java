@@ -20,7 +20,7 @@ public class ChbDataCheckController {
     private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     @PostMapping("chbDataCheck/{pageId}/{repType}")
-    public List<ValidMessage> chbDataCheck(@RequestBody Map entity, @PathVariable("pageId") String pageId, @PathVariable(name = "repType", required = false) String repType) {
+    public List<ValidMessage> chbDataCheck(@RequestBody Map entity, @PathVariable(name = "pageId", required = false) String pageId, @PathVariable(name = "repType", required = false) String repType) {
         return chbDataCheckCommonUtil.chbCheckCommon(null, entity, pageId, repType, ValidMessage.class);
     }
 }

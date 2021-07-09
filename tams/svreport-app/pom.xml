@@ -21,7 +21,7 @@
 
     <dependencies>
         <!-- 画面 -->
-        <!-- 估值画面端 -->
+        <!-- 中债画面端 -->
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>tams-svreport</artifactId>
