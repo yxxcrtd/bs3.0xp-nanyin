@@ -112,7 +112,7 @@ public class TaxFlowQuery001Controller extends BaseController {
      * @throws Exception
      */
      @PostMapping("/findPageout")
-     public List<TaxFlowQuery001Dto> findPageout(TaxFlowQuery001Dto dto) throws Exception {
+     public List<TaxFlowQuery001Dto> findPageout(@RequestBody TaxFlowQuery001Dto dto) throws Exception {
         return taxFlowQuery001Service.findPageout(dto);
     }
 
