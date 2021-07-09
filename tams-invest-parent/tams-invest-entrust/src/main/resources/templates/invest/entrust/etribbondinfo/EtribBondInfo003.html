@@ -89,7 +89,7 @@
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="tradeAmt" name="tradeAmt" placeholder="请输入内容"
                                    data-pattern="" data-fixtype="2" data-textrange='2'
-                                   class="layui-input form-input text-number" disabled="disabled"
+                                   class="layui-input form-input text-number" 
                                    data-th-value="${entity?.tradeAmt}">
                             <span class="input-right-show">万元</span>
                         </div>
@@ -198,7 +198,6 @@
                             <input class="layui-input form-input input-dateSelect" id="vdate"
                                    name="vdate" placeholder="请选择时间"
                                    data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
-                                   disabled="disabled"
                                    required="required">
                         </div>
                     </div>
@@ -209,7 +208,7 @@
                             <input class="layui-input form-input input-dateSelect" id="mdate"
                                    name="mdate" placeholder="请选择时间"
                                    data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
-                                   required="required" disabled="disabled">
+                                   required="required" >
                         </div>
                     </div>
                 </div>

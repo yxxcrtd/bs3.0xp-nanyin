@@ -53,11 +53,7 @@
         checkbox:false,
         searchOnInit:true,
         cols:[
-            {field:'portfolioId', title: 'EtrInvestBondInfo001.portfolioId', width: 100,
-                render : function(data, type, row, meta) {
-                    return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
-                },sortField:"portfolioId"
-            }
+            {field:'portfolioId', title: 'EtrInvestBondInfo001.portfolioId', width: 100,sortField: "portfolioId"}
             ,{field:'portfolioName', title: 'EtrInvestBondInfo001.portfolioName', width:180,sortField:"portfolioName"}
             ,{field:'finprodId', visible:false}
             ,{field:'finprodMarketId', title: 'EtrInvestBondInfo001.finprodId', width:100,
@@ -151,7 +147,7 @@
     positionsTable.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
             basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+            "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                 portfolioId:row.portfolioId});//主键组合代码
     });
     /**
@@ -162,7 +158,7 @@
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
             basePath
             + "invest/asset/bond/FinBondTargetAsset002/init",
-            "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+            "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,
                 finprodId:row.finprodId,  //金融产品代码
                 //valDate:data.valDate,//估值日
                 //finprodMarketId:data.finprodMarketId//市场代码
@@ -175,7 +171,7 @@
     positionsTable_zqzy.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
             basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+            "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                 portfolioId:row.portfolioId});//主键组合代码
     });
     /**
@@ -186,7 +182,7 @@
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
             basePath
             + "invest/asset/bond/FinBondTargetAsset002/init",
-            "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+            "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,
                 finprodId:row.finprodId,  //金融产品代码
                 //valDate:data.valDate,//估值日
                 //finprodMarketId:data.finprodMarketId//市场代码
