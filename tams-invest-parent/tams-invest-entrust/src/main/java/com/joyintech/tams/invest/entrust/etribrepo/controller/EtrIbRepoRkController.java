@@ -57,8 +57,8 @@ public class EtrIbRepoRkController extends BaseController {
 
     @Override
     public String init(Model model) {
-    	this.setSelectOptionToModel(model, DictCode.是否,DictCode.行内资产二级分类,
-                DictCode.行内资产三级分类,DictCode.评级结果);
+    	this.setSelectOptionToModel(model, DictCode.是否,DictCode.WIND一级分类_含债券一级分类等,
+                DictCode.WIND二级分类_含债券二级分类等,DictCode.评级结果);
             model.addAttribute("NO",DictCodeListExt1.是否_否.getValue());
             model.addAttribute("YES",DictCodeListExt1.是否_是.getValue());
         return super.init(model);
