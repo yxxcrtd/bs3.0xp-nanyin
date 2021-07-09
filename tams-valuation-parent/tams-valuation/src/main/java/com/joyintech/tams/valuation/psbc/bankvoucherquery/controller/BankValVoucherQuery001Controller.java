@@ -177,7 +177,7 @@ public class BankValVoucherQuery001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<BankValVoucherQuery001Dto> findPage(BankValVoucherQuery001SearchDto dto) throws Exception {
+    public Page<BankValVoucherQuery001Dto> findPage(BankValVoucherQuery001SearchDto dto){
         return valVoucherQuery001Service.findPage(dto);
 
     }

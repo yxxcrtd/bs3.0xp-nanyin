@@ -110,7 +110,7 @@ public class ValProdSchemeConfig002Controller extends BaseController{
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public List<ValProdSchemeConfig002Dto> findPage() throws Exception {
+    public List<ValProdSchemeConfig002Dto> findPage()  {
         return valProdSchemeConfig002Service.findPage(RequestUtil.getPageParam());
     }
     

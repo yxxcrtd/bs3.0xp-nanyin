@@ -37,7 +37,7 @@ public class ValOrdersQuery002Service extends BaseService<ValOrdersDto> {
      * @since 1.0
      */
     public Page<ValOrdersDto> findBycondition(Map<String, Object> map)
-        throws Exception {
+          {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ValOrdersQuery002/findPage", map,
             ValOrdersDto.class);
     }
@@ -52,7 +52,7 @@ public class ValOrdersQuery002Service extends BaseService<ValOrdersDto> {
      * @since 1.0
      */
     public Page<ValOrdersDto> findDepBycondition(Map<String, Object> map)
-        throws Exception {
+          {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ValOrdersQuery002/findDepPage",
             map, ValOrdersDto.class);
     }
@@ -67,7 +67,7 @@ public class ValOrdersQuery002Service extends BaseService<ValOrdersDto> {
      * @since 1.0
      */
     public Page<ValOrdersDto> selectFeeBycondition(Map<String, Object> map)
-        throws Exception {
+          {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ValOrdersQuery002/findFeePage",
             map, ValOrdersDto.class);
     }

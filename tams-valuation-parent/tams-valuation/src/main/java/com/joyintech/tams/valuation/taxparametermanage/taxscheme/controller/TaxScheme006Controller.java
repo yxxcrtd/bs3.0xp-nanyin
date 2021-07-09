@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -110,7 +111,7 @@ public class TaxScheme006Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) TaxScheme006Dto dto, BindingResult bindingResult) throws Exception {
+	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) TaxScheme006Dto dto, BindingResult bindingResult) throws ParseException {
 		String msg = StringUtils.EMPTY;
 		String operateType = dto.getOperateType();
 
@@ -151,7 +152,7 @@ public class TaxScheme006Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findProject")
-    public List<SelectOptionDto> findProject() throws Exception {
+    public List<SelectOptionDto> findProject() {
         return taxScheme006Service.findProject(RequestUtil.getPageParam());
     }
     
@@ -163,7 +164,7 @@ public class TaxScheme006Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findValue")
-    public List<SelectOptionDto> findValue() throws Exception {
+    public List<SelectOptionDto> findValue() {
         List<SelectOptionDto> list = Lists.newArrayList();
         
         String dictCode = taxScheme006Service.findValue(RequestUtil.getPageParam());

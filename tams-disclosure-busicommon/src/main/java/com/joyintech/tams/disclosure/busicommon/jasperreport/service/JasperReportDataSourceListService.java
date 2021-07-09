@@ -38,7 +38,7 @@ public class JasperReportDataSourceListService implements JRDataSource {
 	private List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 	int index = -1;
 	Map<String, Object> parameters=new HashMap<String, Object>();
-	public JasperReportDataSourceListService(String prodId, Date startDate, Date endDate,String reportType) throws Exception {
+	public JasperReportDataSourceListService(String prodId, Date startDate, Date endDate,String reportType){
 		this.parameters.put("prodId", prodId);
 		this.parameters.put("startDate", startDate);
 		this.parameters.put("endDate", endDate);

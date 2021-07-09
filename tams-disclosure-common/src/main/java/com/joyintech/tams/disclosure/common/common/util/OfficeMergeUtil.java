@@ -20,6 +20,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.slf4j.Logger;
@@ -130,7 +131,7 @@ public class OfficeMergeUtil {
      * @since 1.0
      */
     private static CTBody appendBody(CTBody src, CTBody append)
-        throws Exception {
+            throws XmlException {
         if(null == src){
             return append;
         }

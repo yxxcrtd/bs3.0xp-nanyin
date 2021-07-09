@@ -39,7 +39,7 @@ public class TaxSchBokCfgManage001Service extends CommonExportService<TaxSchBokC
      * @see
      * @since 1.0
      */
-    public List<TaxSchBokCfgManage001Dto> findTaxSchaBokConfig(Map<String, Object> pageParam) throws Exception {
+    public List<TaxSchBokCfgManage001Dto> findTaxSchaBokConfig(Map<String, Object> pageParam) {
         return restTemplate.postForList(
             ServiceApplication.VALUATION_SERVICE_NAME + "/TaxSchBokCfgManage001/findTaxSchaBokConfig",
             pageParam, TaxSchBokCfgManage001Dto.class);

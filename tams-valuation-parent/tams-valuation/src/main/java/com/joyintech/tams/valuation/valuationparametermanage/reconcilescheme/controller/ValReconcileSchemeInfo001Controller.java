@@ -114,7 +114,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findSchemeList")
-    public Page<ValReconcileSchemeInfo001Dto> findSchemeList() throws Exception {
+    public Page<ValReconcileSchemeInfo001Dto> findSchemeList() {
         List<String> schemeTypeList = new ArrayList<>();
         schemeTypeList.add(DictCodeListExt1.配置方案类型_估值表对账方案.getValue());
         schemeTypeList.add(DictCodeListExt1.配置方案类型_余额表对账方案.getValue());
@@ -304,7 +304,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
     @RequestMapping("uploadFile")
     public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response,
                                  ModelMap model)
-        throws Exception {
+         {
         AjaxResult res = new AjaxResult();
         ValReconcileSchemeInfo001Dto infoDto = new ValReconcileSchemeInfo001Dto();
 
@@ -376,7 +376,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      */
     private List<ValReconcileSchemeStructConfigDto> getStructList(String schemeType,
                                                                   String fileName)
-        throws Exception, IOException {
+        throws IOException {
 
         // 导入文件数据列表,
         ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName), null);
@@ -427,7 +427,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      */
     private List<ValReconcileSchemeSubjectConfigDto> getSubjectList(String fileName,
                                                                     String booksetId)
-        throws Exception, IOException {
+        throws IOException {
         Map<String, BokSubject> bokSubjectMap = reconcileSchemeInfo001Service.getAllBokSubjectMap(booksetId);
 
         // 导入文件数据列表,第二个sheet
@@ -477,7 +477,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      */
     private List<ValReconcileSchemeNatureConfigDto> getNatureList(String fileName,
                                                                   String booksetId)
-        throws Exception, IOException {
+        throws IOException {
 //        Map<String, BokSubject> bokSubjectMap = reconcileSchemeInfo001Service.getAllBokSubjectMap(
 //            booksetId);
         // 导入文件数据列表,第二个sheet
@@ -520,7 +520,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      * @since 1.0
      */
     private List<ValReconcileSchemeAssetConfigDto> getAssetList(String fileName)
-        throws Exception, IOException {
+        throws IOException {
 
         // 导入文件数据列表,第三个sheet
         ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName), null);
