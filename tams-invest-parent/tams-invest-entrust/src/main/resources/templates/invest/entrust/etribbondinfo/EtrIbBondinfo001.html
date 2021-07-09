@@ -150,13 +150,20 @@
 										</div>
 									</div>
 									<div class="sgePortDiv">
-										<label class="layui-form-label form-lable"
-											   data-th-text="#{EtrIbBondinfo001.finpordAbbr}">资产简称</label>
+<!--										<label class="layui-form-label form-lable"-->
+<!--											   data-th-text="#{EtrIbBondinfo001.finpordAbbr}">资产简称</label>-->
+<!--										<div class="layui-input-inline input-inline">-->
+<!--											<input type="text" id="finprodAbbr" name="finprodAbbr" class="layui-input form-input input-lenovoselect" placeholder="请输入内容"-->
+<!--												   data-th-data-url="@{/common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/getAssetName}"-->
+<!--												   data-idfield="shortName" data-keyfield="shortName"-->
+<!--												   data-th-data-effectivefieldsalias='|{"code":"资产编号", "shortName":"资产名称"}|' data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--										</div>-->
+										<label class="layui-form-label form-lable" >资产简称</label>
 										<div class="layui-input-inline input-inline">
-											<input type="text" id="finprodAbbr" name="finprodAbbr" class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
-												   data-th-data-url="@{/common/basicdata/marketdata/mstrateassetquotationinfo/ComRateAssetQuotationInfo001/getAssetName}"
-												   data-idfield="shortName" data-keyfield="shortName"
-												   data-th-data-effectivefieldsalias='|{"code":"资产编号", "shortName":"资产名称"}|' data-th-placeholder="#{SysCommon.placeholder}">
+											<select type="text" id="finprodAbbr" name="finprodAbbr"
+													class="layui-input form-input input-select" placeholder="请输入内容"
+													th:data-url="@{/business/common/CommonSelect/selectFinprodMarketId?finprodType=F01}"
+													allowClear="true" ></select>
 										</div>
 									</div>
 									<div class="sgePortDiv">

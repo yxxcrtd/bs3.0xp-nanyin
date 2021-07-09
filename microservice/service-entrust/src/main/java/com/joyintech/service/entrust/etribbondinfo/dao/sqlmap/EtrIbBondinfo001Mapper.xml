@@ -221,7 +221,8 @@
             </foreach>)
         </if>
         <if test="finprodAbbr != null and finprodAbbr != ''">
-            AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
+            <!--联想框返回为市场代码-->
+            AND T3.FINPROD_MARKET_ID like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
             AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
