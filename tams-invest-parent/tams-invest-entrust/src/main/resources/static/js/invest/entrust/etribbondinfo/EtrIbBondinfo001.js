@@ -221,6 +221,17 @@
         $(".cc-transfer-form #EtrIbBondinfo001_btn_search").click(function () {
             positionsTable.load();
         })
+        
+        var resetBtn = $('<a class="layui-btn layui-btn-sm btn-reset"></a>');
+        resetBtn.attr('id', pageId + '_btn_reset')
+            .text(JoyinUtil.getLabel('SysCommon.reset'));
+        $(".cc-transfer-form #EtrIbBondinfo001_btn_search").after(resetBtn);
+        resetBtn.click(function () {
+            $("#searchForm_cc #portfolioId").val('').trigger("change");
+            $("#searchForm_cc #secType1").val('').trigger("change");
+            $("#searchForm_cc #finprodId").val('').trigger("change");
+        })
+        
         $(".transfer-form #EtrIbBondinfo001_btn_search").click(function () { 
             // 指令管理tab-->查询
             if($("#EtrIbBondinfo001_selectorConditionFilter").css("display")=="none"){
