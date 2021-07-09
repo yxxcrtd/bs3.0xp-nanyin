@@ -158,7 +158,7 @@ public class MstCoinFundQuotationInfo001Controller extends BaseController {
         params.setPageId("MstCoinFundQuotationInfo002");
         params.setElementId(dto.getElementId());
         // finprodId基金代码进行设置工作流代码
-        params.setBusinessCode(item -> item.getFinprodId());
+        params.setBusinessCode(item -> item.getFinprodMarketId());
         params.setBusinessType(DictCodeList.共通业务类型_基金类估值行情信息.getValue());
         // 设置流程业务说明, entity即传入的流程信息
         // "基金代码"+"("+基金代码+")"+"-""估值日"

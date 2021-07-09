@@ -1654,7 +1654,6 @@
         FROM MST_FEEINFO
         where MST_FEEINFO.APPLY_TYPE in (#{relationProd}, #{relationOther})
         AND MST_FEEINFO.CHARGE_TYPE = #{chargeType02}
-        and MST_FEEINFO.FEE_TYPE = #{feeType99}
         )
     </select>
 
