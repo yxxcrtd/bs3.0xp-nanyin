@@ -84,7 +84,7 @@ public class FxSecRequestQuoteService
         return StringUtil.EMPTY;
     }
 
-    public AjaxResult save(FxSecRequestQuoteDto dto) throws Exception{
+    public AjaxResult save(FxSecRequestQuoteDto dto){
         ProcessParameter<FxSecRequestQuoteDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<FxSecRequestQuoteDto> params = new WorkFlowParameter<>();
         params.setPageId("FxSecRequestQuote002");

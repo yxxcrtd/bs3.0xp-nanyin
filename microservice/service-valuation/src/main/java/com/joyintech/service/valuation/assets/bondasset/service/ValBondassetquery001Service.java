@@ -162,7 +162,7 @@ public class ValBondassetquery001Service extends CommonExportService<ValBondasse
      * @since 1.0
      */
     @DataSource(DataSourceType.OTHER)
-    public int getDataInWorklow(ProcessMark processMark) throws Exception {
+    public int getDataInWorklow(ProcessMark processMark){
         return mapper.getDataInWorklow(processMark);
     }
     

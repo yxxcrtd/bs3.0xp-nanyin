@@ -52,8 +52,7 @@ public class TaxScheme005Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("/findAsset")
-    public List<SelectOptionDto> findAsset(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<SelectOptionDto> findAsset(@RequestBody Map<String, Object> param){
         return taxScheme005Service.findAsset(param);
     }
 
@@ -64,8 +63,7 @@ public class TaxScheme005Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("getAssetInfo")
-    public TaxScheme005Dto getAssetInfo(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public TaxScheme005Dto getAssetInfo(@RequestBody Map<String, Object> param){
         return taxScheme005Service.getAssetInfo(param);
     }
     

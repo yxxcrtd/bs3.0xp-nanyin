@@ -108,8 +108,6 @@ public class HttpRequest {
             while ((line = in.readLine()) != null) {
                 result += line;
             }
-        } catch (Exception e) {
-            throw e;
         }
         //使用finally块来关闭输出流、输入流
         finally {
@@ -121,7 +119,7 @@ public class HttpRequest {
                     in.close();
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                logger.error(ex.getMessage(),ex);
             }
         }
         return result;

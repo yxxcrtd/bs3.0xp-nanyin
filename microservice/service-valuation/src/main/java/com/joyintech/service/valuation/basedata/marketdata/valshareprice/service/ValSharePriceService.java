@@ -64,7 +64,7 @@ public class ValSharePriceService extends BaseService<ValSharePriceDto>{
      * @see
      * @since 1.0
      */
-    public Page<ValSharePriceDto> selectForPage(int page,int length,Map<String, Object> pageParam) throws Exception {
+    public Page<ValSharePriceDto> selectForPage(int page,int length,Map<String, Object> pageParam) {
         return super.queryForPage(page,length,()-> valSharePrice001Mapper.select(pageParam));
     }
     /**

@@ -27,10 +27,10 @@ public class JasperReportDataSourceService implements JRDataSource {
 	int index = -1;
 	Map<String, Object> parameters=new HashMap<String, Object>();
 	
-	public void createService() throws Exception {
+	public void createService() {
 		new JasperReportDataSourceService("",new Date(1),new Date(1),"");
 	}
-	public JasperReportDataSourceService(String prodId, Date startDate, Date endDate,String reportType) throws Exception {
+	public JasperReportDataSourceService(String prodId, Date startDate, Date endDate,String reportType) {
 		this.parameters.put("prodId", prodId);
 		this.parameters.put("startDate", startDate);
 		this.parameters.put("endDate", endDate);

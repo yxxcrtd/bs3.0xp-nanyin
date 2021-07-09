@@ -58,13 +58,9 @@ public class ValProductInfoQuery001TestService extends CommonExportService<ValPr
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValProductInfoQuery001TestDto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValProductInfoQuery001TestDto> findPage(Map<String, Object> params) {
         return super.queryForPage(()->{
-			try {
 				this.findAll(params);
-			} catch (Exception e) {
-                logger.error(e.getMessage(),e);
-			}
 		});
     }
 
@@ -124,7 +120,7 @@ public class ValProductInfoQuery001TestService extends CommonExportService<ValPr
      * @since 1.0
      */
     @SuppressWarnings("static-access")
-	public List<ValProductInfoQuery001TestDto> findAll(Map<String, Object> params) throws Exception {
+	public List<ValProductInfoQuery001TestDto> findAll(Map<String, Object> params){
 //  	  String  prodId=(String)params.get("finprodId");
 //  	  String sDate=(String)params.get("vdateStart");
 //  	  String eDate=(String)params.get("vdateEnd");

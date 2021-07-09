@@ -100,14 +100,11 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
     /**
      * 科目流水查询
      * 
-     * @param vouchNum 凭证编号
-     * @param bookDate 入账日期
      * @return 科目流水List
      * @see
      * @since 1.0
      */
-    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto)
-        throws Exception {
+    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto){
         // 账套类别
         dto.setBooksetType(DictCodeList.账套类别_理财账套.getValue());
         return valSubjectWaterQuery001Mapper.getSubjectWater(dto);
@@ -122,8 +119,7 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
      * @return 表格信息
      * @throws Exception
      */
-    public Page<ValSubjectWaterQuery001Dto> findPage(int page, int length, Map<String, Object> params)
-        throws Exception {
+    public Page<ValSubjectWaterQuery001Dto> findPage(int page, int length, Map<String, Object> params) throws ParseException {
         ValSubjectWaterQuery001SearchDto dto = new ValSubjectWaterQuery001SearchDto();
         // 账套代码
         // String booksetId = (String)params.get("booksetId");

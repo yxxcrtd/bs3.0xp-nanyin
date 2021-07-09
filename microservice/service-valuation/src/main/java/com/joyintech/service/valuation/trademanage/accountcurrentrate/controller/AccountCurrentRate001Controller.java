@@ -51,8 +51,7 @@ public class AccountCurrentRate001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<AccountCurrentRate001Dto> findPage(@RequestBody Map<String, Object> param,
-                                                   @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+                                                   @PathVariable("page") int page, @PathVariable("length") int length){
         return accountCurrentRate001Service.queryAccountCurrentRateList(page, length, param);
     }
 
@@ -65,8 +64,7 @@ public class AccountCurrentRate001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("getAccount")
-    public List<SuggestDto> getAccount(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<SuggestDto> getAccount(@RequestBody Map<String, Object> param){
         return accountCurrentRate001Service.getAccount(param);
     }
 
@@ -80,8 +78,7 @@ public class AccountCurrentRate001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("findAll")
-    public List<AccountCurrentRate001Dto> findAll(@RequestBody Map<String, Object> params)
-        throws Exception {
+    public List<AccountCurrentRate001Dto> findAll(@RequestBody Map<String, Object> params){
         return accountCurrentRate001Service.findAll(params);
     }
 

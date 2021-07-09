@@ -120,7 +120,7 @@ public class PerformanceBenchmarkCa {
      * @throws SQLException 
      * @returnMap<BigDecimal, List<BigDecimal>>
      */
-	public static Map<String,Object> getClaCompareRule(Date startDate, Date endDate,String prodId, Connection conn) throws Exception {
+	public static Map<String,Object> getClaCompareRule(Date startDate, Date endDate,String prodId, Connection conn) {
 		Map<String,Object> resultMap = new HashMap<>();
 		//定义：期末业绩比较基准 = 0；
 		BigDecimal  qmCompareValue=BigDecimal.ZERO;

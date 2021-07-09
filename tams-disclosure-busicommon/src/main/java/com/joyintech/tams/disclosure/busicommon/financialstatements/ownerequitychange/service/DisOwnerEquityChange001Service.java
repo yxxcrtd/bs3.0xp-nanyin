@@ -89,12 +89,10 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * 
      * @param pageParam
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
-    public List<DisOwnerEquityChange001Dto> selectList(Map<String, Object> pageParam)
-        throws Exception {
+    public List<DisOwnerEquityChange001Dto> selectList(Map<String, Object> pageParam){
         //changeMapData(pageParam);
         Map<String, DisOwnerEquityChange001Dto> dtoMap = new HashMap<String, DisOwnerEquityChange001Dto>();
         initData(dtoMap);
@@ -199,8 +197,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * @return
      * @throws Exception
      */
-    public   List<DisValProfitQuery001Dto> selectListPz(Map<String, Object> pageParam)
-            throws Exception {
+    public   List<DisValProfitQuery001Dto> selectListPz(Map<String, Object> pageParam) {
     	  String thisTermVdate1 = (String)pageParam.get("thisTermVdate"); // 实收资本
           String thisTermVdate2 = (String)pageParam.get("thisTermVdate"); // 非实收资本
           String thisTermMdate = (String)pageParam.get("thisTermMdate");
@@ -1078,8 +1075,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * @see
      * @since 1.0
      */
-    public void changeMapData(Map<String, Object> pageParam)
-        throws Exception {
+    public void changeMapData(Map<String, Object> pageParam) throws ParseException {
         String reportTermType = (String)pageParam.get("reportTermType");
         String valDate = DateUtil.format(analyseDate(pageParam), DateUtil.DEFAULT_DATE_FORMAT_EN);
         int thisYear = DateUtil.getYear(valDate);
@@ -1404,8 +1400,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> exportExcel(Map<String, Object> params)
-        throws Exception {
+    public ResponseEntity<byte[]> exportExcel(Map<String, Object> params) throws ParseException {
         ExportFileDto exportFileDto = createExcel(params);
         File file = new File(exportFileDto.getFilePath());
         return ExportUtil.export(exportFileDto.getFileName(), file, true);
@@ -1420,8 +1415,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
      * @see
      * @since 1.0
      */
-    private ExportFileDto createExcel(Map<String, Object> params)
-        throws Exception {
+    private ExportFileDto createExcel(Map<String, Object> params) throws ParseException {
         // 报表日期
         String reportDate = DateUtil.format(analyseDate(params), DateUtil.DEFAULT_DATE_FORMAT_EN);
         // 导出数据集
@@ -1594,8 +1588,7 @@ public class DisOwnerEquityChange001Service extends CommonExportService<DisOwner
 	/*** 计算利润表各项目值   add  by dongxiangyang  20200212 start*/
     
 	 /*** 所有者权益配置  add  by  dongxiangyang  20200212  start*/
-    public   List<DisValProfitQuery001Dto> selectListPzYth(Map<String, Object> pageParam)
-            throws Exception {
+    public   List<DisValProfitQuery001Dto> selectListPzYth(Map<String, Object> pageParam){
     	  String thisTermVdate1 = (String)pageParam.get("thisTermVdate"); // 实收资本
           String thisTermVdate2 = (String)pageParam.get("thisTermVdate"); // 非实收资本
           String thisTermMdate = (String)pageParam.get("thisTermMdate");

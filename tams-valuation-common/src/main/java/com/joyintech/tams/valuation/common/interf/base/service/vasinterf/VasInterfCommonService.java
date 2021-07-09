@@ -82,7 +82,7 @@ public class VasInterfCommonService{
 
 	@ResponseBody
     @RequestMapping(InterfCommonConstant.组装XMl文件)
-	public  List<ValInertfBuildXml001Dto> execute(String startDa,String endDa) throws Exception {
+	public  List<ValInertfBuildXml001Dto> execute(String startDa,String endDa) throws SQLException, ClassNotFoundException {
 		Map<String, Object> params = new HashMap<>();
 		params.put(InterfCommonConstant.接口_对接系统ID, DictCodeInterfList.接口对接系统ID_资管.getValue());
 		List<com.joyintech.tams.valuation.common.interf.base.service.send.dto.ValRecvServerInfoEntity> recvServerList = mapper.getValServerInfo(params);

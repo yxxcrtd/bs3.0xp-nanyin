@@ -101,8 +101,7 @@ public class AssetLiabilityStatementQuery001Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("/getTermLink")
-    public List<SelectOptionDto> getTradeMarket(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<SelectOptionDto> getTradeMarket(@RequestBody Map<String, Object> param){
         String reportTermType = (String)param.get("reportTermType");
 
         param.put("dict_code_parent", DictCode.报表期限类型.getValue());
