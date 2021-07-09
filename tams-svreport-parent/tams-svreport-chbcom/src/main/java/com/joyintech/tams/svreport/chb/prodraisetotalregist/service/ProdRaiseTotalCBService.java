@@ -489,7 +489,7 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 		dto.setSingleTotal(singleTotal==0?0:singleTotal);//个人
 		dto.setLegalTotal(legalTotal==0?0:legalTotal);//法人
 		dto.setUnlegalTotal(unlegalTotal==0?0:unlegalTotal);//非法人
-		dto.setTotalAmt(totAmt);//实际募集金额
+		dto.setTotalAmt(totAmt.setScale(2,BigDecimal.ROUND_HALF_UP));//实际募集金额
 		dto.setRaiseQty(totQty);//募集总额
 		StringBuffer place = new StringBuffer();
 		Iterator<Map.Entry<String, BigDecimal>> entries = placeMap.entrySet().iterator();
