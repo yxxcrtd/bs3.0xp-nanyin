@@ -369,11 +369,8 @@ public class BaseCommonAssetCommonService extends BaseService {
      * 金融产品基本信息查询
      *
      */
-<<<<<<< HEAD
-    public List<MockAssetInfoDto> selectAsset(Map<String, Object> map)  {
-=======
+
     public List<MockAssetInfoDto> selectAsset(Map<String, Object> map){
->>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
     	//基本信息批量查询
     	List<MockAssetInfoDto> list = selectAssetjb(map);
     	//现金流计算规则批量查询
@@ -474,11 +471,8 @@ public class BaseCommonAssetCommonService extends BaseService {
      * 基本信息批量查询
      *
      */
-<<<<<<< HEAD
-    public List<MockAssetInfoDto> selectAssetjb(Map<String, Object> map)  {
-=======
+
     public List<MockAssetInfoDto> selectAssetjb(Map<String, Object> map) {
->>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
         map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         map.put("FINPROD_TYPE_TG_F04", DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue());
@@ -490,11 +484,8 @@ public class BaseCommonAssetCommonService extends BaseService {
      * 现金流计算规则批量查询
      *
      */
-<<<<<<< HEAD
-    public List<FinCashCalcRule> selectAssetxjl(Map<String, Object> map)  {
-=======
+
     public List<FinCashCalcRule> selectAssetxjl(Map<String, Object> map) {
->>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
         return assetCommonMapper.selectAssetxjl(map);
     }
     
@@ -502,11 +493,8 @@ public class BaseCommonAssetCommonService extends BaseService {
      * 现金流计划批量查询
      *
      */
-<<<<<<< HEAD
-    public List<MockFinCashPlanDto> selectAssetjh(Map<String, Object> map)  {
-=======
+
     public List<MockFinCashPlanDto> selectAssetjh(Map<String, Object> map) {
->>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
         return assetCommonMapper.selectAssetjh(map);
     }
     
@@ -514,11 +502,8 @@ public class BaseCommonAssetCommonService extends BaseService {
      * 行权计划批量查询
      *
      */
-<<<<<<< HEAD
-    public List<FinExercisePlan> selectAssetxq(Map<String, Object> map)  {
-=======
+
     public List<FinExercisePlan> selectAssetxq(Map<String, Object> map){
->>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
         List<String> exerciseTypeList = new ArrayList<>();
         exerciseTypeList.add(DictCodeList.行权方式_赎回.getValue());
         exerciseTypeList.add(DictCodeList.行权方式_回售.getValue());
@@ -530,11 +515,8 @@ public class BaseCommonAssetCommonService extends BaseService {
      * 回售权下一行权计划列表
      *
      */
-<<<<<<< HEAD
     public List<FinExercisePlan> selectAssetxqhs(Map<String, Object> map)  {
-=======
-    public List<FinExercisePlan> selectAssetxqhs(Map<String, Object> map) {
->>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
+
         List<String> exerciseTypeList = new ArrayList<>();
         exerciseTypeList.add(DictCodeList.行权方式_回售.getValue());
         map.put("exerciseTypeList", exerciseTypeList);
@@ -553,11 +535,8 @@ public class BaseCommonAssetCommonService extends BaseService {
      * 基金开放计划批量查询
      *
      */
-<<<<<<< HEAD
+
     public List<FinOpenPlan> selectFundOpenjh(Map<String, Object> map)  {
-=======
-    public List<FinOpenPlan> selectFundOpenjh(Map<String, Object> map){
->>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
     	map.put("openTypeshui", DictCodeList.申赎开放类型_赎回开放.getValue());
     	map.put("openTypesh", DictCodeList.申赎开放类型_申赎开放.getValue());
     	map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_基金.getValue());

@@ -52,7 +52,7 @@ public abstract class AopBaseService<V extends IRiskRds>  {
     private FinProductMapper finProductMapper;
 
     public interface IInfCallback<V>{
-        ClientData receive(Map<String,Object> t, V v) throws IOException;
+        ClientData receive(Map<String,Object> t, V v) throws IOException, InstantiationException;
     }
 
     /**

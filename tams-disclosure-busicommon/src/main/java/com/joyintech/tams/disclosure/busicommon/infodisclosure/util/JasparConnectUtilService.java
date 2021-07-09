@@ -389,11 +389,9 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
-<<<<<<< HEAD
-	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws IOException, ParserConfigurationException, SAXException {
-=======
+
 	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws ParserConfigurationException, SAXException, IOException {
->>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
+
 		
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
