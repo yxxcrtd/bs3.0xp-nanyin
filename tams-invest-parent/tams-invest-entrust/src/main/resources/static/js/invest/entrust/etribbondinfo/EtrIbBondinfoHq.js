@@ -117,6 +117,9 @@
                     secId = result.secId;
                     $("#secName").html('');
                     $("#secName").html(result.secName);
+                    result.secType=result.secTypeName;
+                    result.rateType=result.rateTypeName;
+                    result.issuer=result.issuerName;
                     dynview.resultToView(result);
                     //
                     // if (result.secName != null && result.secName != '') {
