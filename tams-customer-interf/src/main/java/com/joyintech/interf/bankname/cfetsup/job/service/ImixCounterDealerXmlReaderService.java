@@ -5,13 +5,14 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.interf.bankname.cfetsup.exception.FTPDirectoryAccessException;
 import com.joyintech.interf.bankname.cfetsup.exception.FTPDownloadException;
 
+import com.joyintech.interf.bankname.cfetsup.exception.FTPLoginException;
 import com.joyintech.interf.bankname.cfetsup.job.dao.ImixServiceMapper;
 import com.joyintech.interf.bankname.cfetsup.job.dto.*;
 import com.joyintech.interf.bankname.cfetsup.utils.FTPHelper;
 import com.joyintech.interf.bankname.cfetsup.utils.ZipUtils;
 
 
-
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public class ImixCounterDealerXmlReaderService {
 
 	private String ftpword;
 
-	public void doBusiness() throws Exception {
+	public void doBusiness() throws FTPLoginException, ArchiveException, IOException, InterruptedException {
 		log.info("开始导入本币交易成员信息批处理任务");
 		// 查询ftp文件存储的位置
 		log.info("读取rdi服务信息");
@@ -115,13 +116,8 @@ public class ImixCounterDealerXmlReaderService {
 		}
 
 		File[] membersFile = null;
-		try {
-			membersFile = getMembersFile();
-		} catch (Exception e) {
-			log.error(e);
-			log.error("获取文件失败！");
-			throw e;
-		}
+		membersFile = getMembersFile();
+
 
 		ExecutorService es = Executors.newCachedThreadPool();
 		
@@ -179,7 +175,7 @@ public class ImixCounterDealerXmlReaderService {
 		}
 
 		@Override
-		public Boolean call() throws Exception {
+		public Boolean call() throws IOException, SAXException, ParserConfigurationException {
 			this.parseBondFile(membersFile);
 			return true;
 		}
@@ -272,7 +268,7 @@ public class ImixCounterDealerXmlReaderService {
 			this.membersFile = membersFile;
 		}
 		@Override
-		public Boolean call() throws Exception {
+		public Boolean call() throws IOException, SAXException, ParserConfigurationException {
 			this.parseJgzcFile(membersFile);
 			return true;
 		}
@@ -392,7 +388,7 @@ public class ImixCounterDealerXmlReaderService {
 		}
 
 		@Override
-		public Boolean call() throws Exception {
+		public Boolean call() throws IOException, SAXException, ParserConfigurationException {
 			this.parseErrorMapperFile(membersFile);
 			return true;
 		}
@@ -493,7 +489,7 @@ public class ImixCounterDealerXmlReaderService {
 		}
 
 		@Override
-		public Boolean call() throws Exception {
+		public Boolean call() throws IOException, SAXException, ParserConfigurationException {
 			this.parseMemberFile(membersFile);
 			return true;
 		}
@@ -657,7 +653,7 @@ public class ImixCounterDealerXmlReaderService {
 		}
 
 		@Override
-		public Boolean call() throws Exception {
+		public Boolean call() throws IOException, SAXException, ParserConfigurationException {
 			this.parseCounterFile(membersFile);
 			return true;
 		}
@@ -771,7 +767,7 @@ public class ImixCounterDealerXmlReaderService {
 	 * @throws Exception
 	 *             e
 	 */
-	private File[] getMembersFile() throws Exception {
+	private File[] getMembersFile() throws IOException, FTPLoginException, ArchiveException {
 
 		if (uri == null) {
 			return null;
@@ -793,7 +789,7 @@ public class ImixCounterDealerXmlReaderService {
 		}
 	}
 
-	private File[] getFilesThroughFtp(String uri) throws Exception {
+	private File[] getFilesThroughFtp(String uri) throws FTPLoginException, IOException, ArchiveException {
 		log.info("通过ftp获取文件");
 		// 查询ftp的用户名和密码
 		// String username = "download";
@@ -816,20 +812,16 @@ public class ImixCounterDealerXmlReaderService {
 		} catch (FTPDownloadException e) {
 			log.error(e);
 			log.error("文件下载出错");
+		} catch (IOException e) {
+			log.error(e);
 		}
 		// 解压文件
 		log.info("解压文件!");
 		File tempFolder = new File(TEMPFOLDER);
 		File[] subFiles = tempFolder.listFiles();
 		for (File file : subFiles) {
-			try {
 				ZipUtils.unZip(file, TEMPFOLDER);
 				log.info("..." + file.getName() + "解压成功!");
-			} catch (Exception e) {
-				log.error(e);
-				log.error("文件解压失败");
-				throw e;
-			}
 		}
 		// 关闭ftp连接
 		helper.closeServer();

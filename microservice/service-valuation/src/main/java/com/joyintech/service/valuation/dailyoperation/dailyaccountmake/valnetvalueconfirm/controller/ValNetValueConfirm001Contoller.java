@@ -117,7 +117,7 @@ public class ValNetValueConfirm001Contoller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValNetValueConfirm001Dto> findPage(@RequestBody Map<String, Object> map,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    		@PathVariable("page") int page, @PathVariable("length") int length) {
         return valNetValueConfirm001Service.findPage(page,length,map);
     }
     /**

@@ -52,7 +52,7 @@ public class DocumentManagement001Controller extends BaseController {
      */
 	@PostMapping("findPage/{page}/{length}")
 	public Page<DocumentManagement001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return DocumentManagement001Service.findPage(page, length, param);
 	}
 	
@@ -66,7 +66,7 @@ public class DocumentManagement001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@PostMapping("/findPageout")
-	public List<DocumentManagement001Dto> findPageout(@RequestBody Map<String, Object> params) throws Exception {
+	public List<DocumentManagement001Dto> findPageout(@RequestBody Map<String, Object> params) {
 		return DocumentManagement001Service.findPageout(params);
 	}
 	
@@ -81,8 +81,7 @@ public class DocumentManagement001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@PostMapping("/downloadFile")
-    public ResponseEntity<byte[]> downloadFile(@RequestBody Map<String, Object> params)
-            throws Exception { 
+    public ResponseEntity<byte[]> downloadFile(@RequestBody Map<String, Object> params){
            return DocumentManagement001Service.downloadFile(params);
     }
 }

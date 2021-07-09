@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.interf.interf.common.imp;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -230,8 +231,7 @@ public final class ImportGenerator {
      * @return 导入是否成功
      */
     public static boolean importToDB(ImpTable table, String path, String dataFileName,
-                                     List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName)
-        throws Exception {
+                                     List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName) throws IOException, InterruptedException {
         if (!path.endsWith("/")) {
             path = path + File.separator;
         }
@@ -328,8 +328,7 @@ public final class ImportGenerator {
                                            Integer reportInterfOneTimeSqlLdrDataCount,
                                            Integer reportInterfOneTimeSqlLdrCommitCount,
                                            String sqlDataFileExtension,
-                                           String reportSqlldrDatabaseName)
-        throws Exception {
+                                           String reportSqlldrDatabaseName) throws IOException, InterruptedException {
         if (StringUtil.isEmptyList(content)) {
             return true;
         }

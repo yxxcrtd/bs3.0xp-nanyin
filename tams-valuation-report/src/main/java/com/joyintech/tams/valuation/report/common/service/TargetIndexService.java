@@ -50,7 +50,7 @@ public class TargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表二
 	 */
-	public  Map<String,Object> printTargetCurrencyTypeTbTwo(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public  Map<String,Object> printTargetCurrencyTypeTbTwo(Date startDate, Date endDate, String prodId,Connection conn) throws SQLException {
 		//定义返回值
 		Map<String,Object> resultmap=new HashMap<>();
 //		// 表二dto
@@ -171,7 +171,7 @@ public class TargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表二
 	 */
-	public Map<String,Object> printTargetNetTypeTbTwo(Date startDate, Date endDate, String prodId,Connection  conn) throws Exception {
+	public Map<String,Object> printTargetNetTypeTbTwo(Date startDate, Date endDate, String prodId,Connection  conn) throws SQLException {
 		//定义 
 		Map<String,Object> resultmap=new HashMap<>();
 		// 表二dto
@@ -275,7 +275,7 @@ public class TargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表三
 	 */
-	public  Map<String,Object> printTargetCurrencyTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public  Map<String,Object> printTargetCurrencyTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) throws SQLException{
 		Map<String,Object> resultmap=new HashMap<>();
 		// 表三dto
 		//ResultTwoDto twoDto = new ResultTwoDto();
@@ -367,7 +367,7 @@ public class TargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表三
 	 */
-	public static Map<String,Object> printTargetNetTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public static Map<String,Object> printTargetNetTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) throws SQLException {
 		Map<String,Object> resultmap=new HashMap<>();
 		// 表三dto
 		//ResultTwoDto twoDto = new ResultTwoDto();
@@ -516,7 +516,7 @@ public class TargetIndexService {
 	 * @param 
 	 * @throws Exception 
 	 */
-	public static  List<RepProdIndex>  getListRepProdIndebyJjdbc(Date beforeDate,Date endDate,String prodId,Connection  conn) throws Exception{
+	public static  List<RepProdIndex>  getListRepProdIndebyJjdbc(Date beforeDate,Date endDate,String prodId,Connection  conn) throws SQLException {
 		//定义返回结果
 		List<RepProdIndex>  list=new ArrayList<>();
 		
@@ -589,7 +589,7 @@ public class TargetIndexService {
 	 * @param String prodId
 	 * @throws Exception 
 	 */
-	public  static FinProduct getFinProductByJdbc(String prodId,Connection conn) throws Exception{
+	public  static FinProduct getFinProductByJdbc(String prodId,Connection conn) throws SQLException {
 		//定义返回值
 		FinProduct finProduct = new FinProduct();
 		//编写sql
@@ -645,7 +645,7 @@ public class TargetIndexService {
 	 * @throws Exception 
 	 */
 	
-	public  List<MstHoliday> getListMstHolidaybyJdbc( Map<String, Object> paramMap,Connection conn) throws Exception{
+	public  List<MstHoliday> getListMstHolidaybyJdbc( Map<String, Object> paramMap,Connection conn) throws SQLException {
 		//定义返回值
 		List<MstHoliday> list = new ArrayList<>();
 
@@ -703,7 +703,7 @@ public class TargetIndexService {
 	 * @param
 	 * @throws Exception 
 	 */
-	public  void  setCTTableOther(Date startDate,Date endDate,String prodId,Map<String,Object> map,Connection conn) throws Exception{
+	public  void  setCTTableOther(Date startDate,Date endDate,String prodId,Map<String,Object> map,Connection conn) throws SQLException {
 		//编写sql
 		String sql = "SELECT SUM(NVL(bqysx,0))  BQYSX ,SUM(NVL(BQLR,0)) BQLR ,SUM(NVL(SSZB,0)) SSZB ,round(SUM(NVL(JZSY,0)),4)  JZSY,1 FEJZ ,PROD_ID FROM (select PROFIT_CURRENT_YES  bqysx, PROFIT_CURRENT  BQLR, case when VALUE_DATE=? then CAPITAL  end SSZB,case when VALUE_DATE=? then NETVALUE_TOTAL_YIELD end JZSY,prod_id from rep_prod_index WHERE PROD_ID=?  and  VALUE_DATE<=? and VALUE_DATE>=?) GROUP BY PROD_ID";
 		//创建执行语句
@@ -758,7 +758,7 @@ public class TargetIndexService {
 	 * @param
 	 * @throws Exception 
 	 */
-	public void setNTTableOther(Date startDate,Date endDate,String prodId,Map<String,Object> map,Connection conn) throws Exception{
+	public void setNTTableOther(Date startDate,Date endDate,String prodId,Map<String,Object> map,Connection conn) throws SQLException {
 
 		//编写sql
 		String sql = "SELECT sum(a.PROFITCURRENTYES) PROFITCURRENTYES,sum(a.PROFITCURRENT) PROFITCURRENT,sum(b.ASSETVALUEMARKET) ASSETVALUEMARKET,sum(b.UNITVALUE) UNITVALUE, sum(b.NETVALUETOTAL) NETVALUETOTAL FROM (SELECT SUM(RPI.PROFIT_CURRENT_YES) PROFITCURRENTYES,SUM(RPI.PROFIT_CURRENT) PROFITCURRENT FROM REP_PROD_INDEX RPI where RPI.VALUE_DATE BETWEEN ? AND ? and RPI.PROD_ID = ? ) a,(select a.ASSET_VALUE_MARKET   ASSETVALUEMARKET, a.UNIT_VALUE   UNITVALUE,a.NETVALUE_TOTAL_INCRE NETVALUETOTAL from REP_PROD_INDEX a where a.VALUE_DATE = ? and a.PROD_ID =?)b";

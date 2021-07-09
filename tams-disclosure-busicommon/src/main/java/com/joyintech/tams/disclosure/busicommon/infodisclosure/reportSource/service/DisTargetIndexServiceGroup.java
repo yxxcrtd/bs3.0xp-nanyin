@@ -18,7 +18,7 @@ public class DisTargetIndexServiceGroup {
 	 */
 	private Logger logger = LoggerFactory.getLogger(DisTargetIndexServiceGroup.class);
 
-	public Map<String,Object> printGS(Date startDate, Date endDate, String prodId,Connection conn)throws Exception {
+	public Map<String,Object> printGS(Date startDate, Date endDate, String prodId,Connection conn) {
 		//定义返回值
 		Map<String,Object> resultmap=new HashMap<>();
 		// 期初总资产估值

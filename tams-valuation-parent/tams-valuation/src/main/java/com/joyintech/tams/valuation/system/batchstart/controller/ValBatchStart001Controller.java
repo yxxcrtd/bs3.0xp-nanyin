@@ -2,6 +2,7 @@ package com.joyintech.tams.valuation.system.batchstart.controller;
 
 import java.util.Map;
 
+import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -97,14 +98,14 @@ public class ValBatchStart001Controller extends BaseController {
     @RequestMapping(value = "findAllTask")
     @ResponseBody
     public Page<SysBatchTask> findAllTask()
-        throws Exception {
+          {
         return sysBatchStart001Service.findAllTask(RequestUtil.getPageParam());
     }
 
     @RequestMapping(value = "findAllProd")
     @ResponseBody
     public Page<Product> findAllProd()
-        throws Exception {
+         {
         /**
          * modify by wujie on 20190328 start return sysBatchStart002Service.findAllProd(RequestUtil.getPageParam());
          **/
@@ -118,15 +119,20 @@ public class ValBatchStart001Controller extends BaseController {
     @RequestMapping({"findAllPrdGroup"})
     @ResponseBody
     public Page<SysBatchPrdGrpDto001> findAllPrdGroup()
-        throws Exception {
+         {
         return this.valBatchProcess003Service.findAllPrdGroup(RequestUtil.getPageParam());
     }
 
     @RequestMapping(value = "findAllBatch")
     @ResponseBody
-    public Page<SysBatchGrpDto> findAllBatch()
-        throws Exception {
-        return settingService.findAllBatch(RequestUtil.getPageParam());
+    public Page<SysBatchGrpDto> findAllBatch() throws BatchException {
+        try {
+            return settingService.findAllBatch(RequestUtil.getPageParam());
+        } catch (Exception e) {
+//            e.printStackTrace();
+            getLogger().error(e.getMessage());
+            throw new BatchException(e.getMessage());
+        }
     }
 
     @RequestMapping("checkExecute")

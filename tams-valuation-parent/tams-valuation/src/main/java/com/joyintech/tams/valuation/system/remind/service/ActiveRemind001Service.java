@@ -65,7 +65,7 @@ public class ActiveRemind001Service extends BaseService<ActiveRemind001Dto> impl
      * @see
      * @since 1.0
      */
-	public Page<ActiveRemind001Dto> findDetail(Map<String, Object> param) throws Exception {
+	public Page<ActiveRemind001Dto> findDetail(Map<String, Object> param)  {
 		 return super.queryForPage(ActiveRemind001Mapper.class, "findDetail", param);
 	}
 

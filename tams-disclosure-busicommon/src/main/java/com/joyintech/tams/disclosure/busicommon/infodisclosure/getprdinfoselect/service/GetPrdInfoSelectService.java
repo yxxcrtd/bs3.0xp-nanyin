@@ -22,7 +22,11 @@ public class GetPrdInfoSelectService extends BaseService {
 	 * @return
 	 * @throws Exception
 	 */
+<<<<<<< HEAD
 	public Page<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paraMap) {
+=======
+	public Page<SelectOptionDto> getPrdInfoSelect(Map<String, Object> paraMap){
+>>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
         Page<SelectOptionDto> page = this.queryForPage(GetPrdInfoSelectMapper.class, "getPrdInfoSelect", paraMap);
         return page;
     }

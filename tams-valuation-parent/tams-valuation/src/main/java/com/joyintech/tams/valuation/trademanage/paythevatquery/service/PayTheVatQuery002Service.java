@@ -134,7 +134,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
      * @since 1.0
      */
     public List<PayTheVatQuery002TableDto> search(Map<String, Object> pageParam)
-        throws Exception {
+         {
         // 产品多选
         if (StringUtil.isNotEmpty(pageParam.get("booksetId"))) {
             String booksetId = (String)pageParam.get("booksetId");

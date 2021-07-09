@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import net.sf.jxls.exception.ParsePropertyException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -235,7 +237,7 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
  }
  
  //创建导出文件
- public File createFile(Map<Object,Object> data,String exceltemplate){
+ public File createFile(Map<Object,Object> data,String exceltemplate) throws InvalidFormatException, IOException {
      String flieName = exceltemplate+".xlsx";
      File depositfile = null;
      FileOutputStream fos=null;
@@ -276,9 +278,15 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
          fos.flush();
      }
      transformer.transformXLS(temp, data, depositfilePath + File.separator +flieName);
-     }catch(Exception e){
+     }catch(ParsePropertyException e){
          logger.info(exceltemplate+"生成失败！");
-         throw new RuntimeException(e);
+         throw new ParsePropertyException(e.getMessage());
+     }catch (IOException e){
+         logger.info(exceltemplate+"生成失败！");
+         throw new IOException(e);
+     }catch (InvalidFormatException e){
+         logger.info(exceltemplate+"生成失败！");
+         throw new InvalidFormatException(e.getMessage());
      }finally{
          if(fos !=null){
              try {

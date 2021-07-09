@@ -190,7 +190,7 @@ public class RepCheckInfoService {
     public void compare(CheckConfirmMessage ccm, Object obj, RepCheckInfoDto checkInfo,
                         Object prod, Class<?> T)
         throws NoSuchFieldException, SecurityException, IllegalAccessException,
-        IllegalArgumentException, InvocationTargetException, IntrospectionException,Exception {
+        IllegalArgumentException, InvocationTargetException, IntrospectionException {
         if (obj != null && StringUtil.isNotEmpty(obj)) {
             Object data = new Object();
             Object data2 = new Object();
@@ -225,7 +225,7 @@ public class RepCheckInfoService {
             	
             	if(StringUtil.isEmpty((String)obj) || StringUtil.isEmpty((String)data)){
             		logger.error("日期为空，不能进行比较");
-            		throw new Exception("日期为空，不能进行比较");
+            		throw new IllegalArgumentException("日期为空，不能进行比较");
             	}
             	
                 if (StringUtil.equals(checkInfo.getQueryType(),

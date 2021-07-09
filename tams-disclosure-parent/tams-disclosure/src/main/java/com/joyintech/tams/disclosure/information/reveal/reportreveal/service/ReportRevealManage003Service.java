@@ -1,12 +1,14 @@
 package com.joyintech.tams.disclosure.information.reveal.reportreveal.service;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jcraft.jsch.JSchException;
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +56,7 @@ public class ReportRevealManage003Service extends CommonExportService<BokFileTra
 	 * @param request
 	 * @throws Exception
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) throws JSchException {
 		// 文件本地路径
 		String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
 		request.getParameter("id");
@@ -119,7 +121,7 @@ public class ReportRevealManage003Service extends CommonExportService<BokFileTra
 	}
 	
 	
-	public int insertFileTransferInfo(HttpServletRequest request) throws Exception {
+	public int insertFileTransferInfo(HttpServletRequest request) throws ParseException {
 	    BokFileTransfer003Dto dto = new BokFileTransfer003Dto();
 	    //文件信息
 	    BokFileInfoDto infoDto = new BokFileInfoDto();
@@ -200,7 +202,7 @@ public class ReportRevealManage003Service extends CommonExportService<BokFileTra
      * @param request
      * @throws Exception
      */
-    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws Exception {
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws JSchException {
         // 文件本地路径
         String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
         

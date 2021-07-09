@@ -66,7 +66,7 @@ public class ValFinProductValuation001Controller extends BaseController {
      */
     @PostMapping("/tableLoadPage/{page}/{length}")
     public Page<ResultDto> tableLoadPage(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    		@PathVariable("page") int page, @PathVariable("length") int length) {
 //        String finprodId = this.getParam("finprodId");
 //        String fundtype = this.getParam("fundtype");
 //        String fundAbbr = this.getParam("fundAbbr");
@@ -89,7 +89,7 @@ public class ValFinProductValuation001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/tableLoad")
-    public List<ResultDto> tableLoad(@RequestBody Map<String, Object> params) throws Exception {
+    public List<ResultDto> tableLoad(@RequestBody Map<String, Object> params) {
             return valFinProductValuation001Service.tableLoad(params);
         
     }

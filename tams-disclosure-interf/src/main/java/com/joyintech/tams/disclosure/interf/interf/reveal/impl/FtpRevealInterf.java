@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.interf.interf.reveal.impl;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -75,9 +76,8 @@ public class FtpRevealInterf implements RevealInterf{
 	 * @param filename
 	 * @param option
 	 * @return
-	 * @throws Exception
 	 */
-	public Boolean ftpPushFile(RepFtpPath ftpPath,String filePath,String filename, String option) throws Exception {
+	public Boolean ftpPushFile(RepFtpPath ftpPath,String filePath,String filename, String option) throws IOException {
 		boolean flag = false;
 		// 通过seqno获取文件路径
 			InputStream pdfIs = new FileInputStream(filePath);

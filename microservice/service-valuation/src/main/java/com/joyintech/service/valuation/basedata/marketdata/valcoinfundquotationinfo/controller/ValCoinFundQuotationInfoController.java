@@ -51,7 +51,7 @@ public class ValCoinFundQuotationInfoController  {
      * @since 1.0
      */
     @PostMapping("/selectForPage/{page}/{length}")
-    public Page<ValCoinFundQuotationInfo001Dto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<ValCoinFundQuotationInfo001Dto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) {
         Page<ValCoinFundQuotationInfo001Dto> pages = valCoinFundQuotationInfoService.selectForPage(page,length,pageParam);
         return pages;
     }

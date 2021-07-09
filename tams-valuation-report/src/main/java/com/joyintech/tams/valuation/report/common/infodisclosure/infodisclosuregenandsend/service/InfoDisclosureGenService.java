@@ -212,7 +212,7 @@ public class InfoDisclosureGenService {
      * @return
      * @throws MalformedURLException 
      */
-    public Boolean gentFile(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity,String url) throws MalformedURLException,Exception{
+    public Boolean gentFile(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity,String url) throws MalformedURLException,IOException{
     	boolean flag = false;
     	UploadFile fileInfo  = jasparConnectUtilService.connectJasparAndDownload(url, infoDisclosureGenAndSendEntity.getReportName(), infoDisclosureGenAndSendEntity.getFileType());
 //    	URL connUrl = new URL(url);

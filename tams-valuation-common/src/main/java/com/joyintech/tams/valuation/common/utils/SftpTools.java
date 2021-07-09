@@ -67,7 +67,7 @@ public class SftpTools {
      * @throws Exception 
      * @throws JSchException
      */
-    public void login(String userName, String password, String host, int port,String sftpLoginType) throws Exception{
+    public void login(String userName, String password, String host, int port,String sftpLoginType) throws JSchException {
         
         // 私钥登录ssh服务
         if("02".equals(sftpLoginType)){
@@ -116,7 +116,7 @@ public class SftpTools {
      * @param port 端口
      * @throws JSchException
      */
-    public void loginById(String userName, String identity, String host, int port) throws Exception {
+    public void loginById(String userName, String identity, String host, int port) throws JSchException {
         try {
             // 接口 SFTP 服务配置
             JSch jsch = new JSch();
@@ -133,7 +133,7 @@ public class SftpTools {
             sftp = (ChannelSftp) channel;
         } catch (JSchException e) {
             logger.error("", e);
-            throw new Exception("登录文件服务器失败");
+            throw new JSchException("登录文件服务器失败");
         }
     }
 

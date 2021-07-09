@@ -52,7 +52,7 @@ public class AccountsReceivableInfoQuery001Service extends CommonExportService<A
      * @throws Exception
      */
     public Page<AccountsReceivableInfoQuery001Dto> findByPage(Map<String, Object> params)
-        throws Exception {
+         {
         return restTemplate.postForPage(
             ServiceApplication.VALUATION_SERVICE_NAME + "/AccountsReceivableInfoQuery001/findPage", params,
             AccountsReceivableInfoQuery001Dto.class);

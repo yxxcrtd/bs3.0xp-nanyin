@@ -64,8 +64,7 @@ public class FundAccountQuery001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<FundAccountQuery001Dto> findPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
-                                                 @PathVariable("length") int length)
-        throws Exception {
+                                                 @PathVariable("length") int length){
         return fundAccountQuery001Service.queryFundAccountList(page, length, param);
     }
 
@@ -78,8 +77,7 @@ public class FundAccountQuery001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/findAll")
-    public List<FundAccountQuery001Dto> findAll(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<FundAccountQuery001Dto> findAll(@RequestBody Map<String, Object> param){
         return fundAccountQuery001Service.findAll(param);
     }
 

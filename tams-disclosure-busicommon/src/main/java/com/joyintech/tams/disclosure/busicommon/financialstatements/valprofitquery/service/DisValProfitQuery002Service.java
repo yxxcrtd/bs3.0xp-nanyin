@@ -281,7 +281,7 @@ public class DisValProfitQuery002Service extends CommonExportService<DisValProfi
      * @see
      * @since 1.0
      */
-    public List<DisValProfitQuery001Dto> findPageAll(Map<String, Object> parameters) throws Exception {
+    public List<DisValProfitQuery001Dto> findPageAll(Map<String, Object> parameters) throws ParseException, CloneNotSupportedException {
         List<DisValProfitQuery001Dto> dtoList = this.selectListAll(parameters);
         return dtoList;
     }
@@ -296,8 +296,7 @@ public class DisValProfitQuery002Service extends CommonExportService<DisValProfi
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-	public List<DisValProfitQuery001Dto> selectListAll(Map<String, Object> pageParam)
-        throws Exception {
+	public List<DisValProfitQuery001Dto> selectListAll(Map<String, Object> pageParam) throws ParseException, CloneNotSupportedException {
     	// 查询表样
     	List<DisProfitCalculationDto> profitCalculationDtoList = valProfitQuery001Mapper.selectProfitCalculationDtoList();
     	List<DisValProfitQuery001Dto> list = new ArrayList<DisValProfitQuery001Dto>();

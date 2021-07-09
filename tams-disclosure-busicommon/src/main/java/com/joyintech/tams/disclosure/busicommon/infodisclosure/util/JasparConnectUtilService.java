@@ -80,7 +80,7 @@ public class JasparConnectUtilService {
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndDownload_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
-			String fileType, String repId, String prodId) throws Exception{
+			String fileType, String repId, String prodId) throws IOException {
 		logger.info("连接报表服务器开始=====");
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -141,7 +141,7 @@ public class JasparConnectUtilService {
 	}
 	
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
-			String fileType, String repId, String prodId,Map<String,Object> params) throws Exception{
+			String fileType, String repId, String prodId,Map<String,Object> params) {
 		if(null!=params.get("endDate")){
     		Date endDate = DateUtil.parse(params.get("endDate").toString());
     		params.put("endDate", new java.sql.Date(endDate.getTime()));
@@ -193,7 +193,7 @@ public class JasparConnectUtilService {
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndExport_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
-			String fileType) throws Exception{
+			String fileType) throws IOException {
 		
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -249,7 +249,7 @@ public class JasparConnectUtilService {
 		return uploadFile;
 	}
 	public UploadFile connectJasparAndExport(String strUrl, String fileName,
-			String fileType,String repId,Map<String,Object> params) throws Exception{
+			String fileType,String repId,Map<String,Object> params) {
 		if(null!=params.get("endDate")){
     		Date endDate = DateUtil.parse(params.get("endDate").toString());
     		params.put("endDate", new java.sql.Date(endDate.getTime()));
@@ -389,7 +389,11 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
+<<<<<<< HEAD
 	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws IOException, ParserConfigurationException, SAXException {
+=======
+	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws ParserConfigurationException, SAXException, IOException {
+>>>>>>> 61f36465ea35a32a0ee6a593e73e5a5e560937cf
 		
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;

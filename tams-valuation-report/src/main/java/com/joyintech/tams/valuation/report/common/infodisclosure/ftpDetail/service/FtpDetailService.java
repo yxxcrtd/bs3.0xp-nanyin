@@ -3,6 +3,7 @@ package com.joyintech.tams.valuation.report.common.infodisclosure.ftpDetail.serv
 import java.io.InputStream;
 import java.util.Date;
 
+import com.jcraft.jsch.JSchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +115,7 @@ public class FtpDetailService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Boolean filesToXmlAndPut(String sysFilepath, String id, String uuid) throws Exception {
+	public Boolean filesToXmlAndPut(String sysFilepath, String id, String uuid) throws JSchException {
 		// 通过seqno获取文件路径
 		String filePath = fileAttachmentProcess.fetch(sysFilepath).getTargetFile().getPath();
 		String fileType = DIAN + FileUtil.getFileType(filePath);

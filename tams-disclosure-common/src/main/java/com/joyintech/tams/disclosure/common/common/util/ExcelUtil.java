@@ -59,8 +59,7 @@ public class ExcelUtil {
      * @return 读取结果列表
      * @throws Exception 异常
      */
-    public static List<List<String>> readToList(File file, int sheetIndex)
-        throws Exception {
+    public static List<List<String>> readToList(File file, int sheetIndex) throws IOException {
         List<List<String>> ls = new ArrayList<List<String>>();
         Workbook wb = loadWorkbook(null, file, null);
         if (null != wb) {
@@ -255,7 +254,7 @@ public class ExcelUtil {
                 }
             }
             else {
-                throw new Exception("不是一个有效的Excel文件");
+                throw new IllegalArgumentException("不是一个有效的Excel文件");
             }
         }
         catch (Exception e)
@@ -283,8 +282,7 @@ public class ExcelUtil {
      * @throws Exception 文件异常
      */
     public static String getSheetName(String fileName, File file, InputStream inputStream,
-                                      int sheetIndex)
-        throws Exception {
+                                      int sheetIndex) throws IOException {
         Workbook wb = loadWorkbook(fileName, file, inputStream);
         if (null != wb) {
             Sheet sh = wb.getSheetAt(sheetIndex);

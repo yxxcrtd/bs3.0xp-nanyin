@@ -68,8 +68,7 @@ public class ValPenaltyInterestQuery001Controller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ValPenaltyInterestQuery001Dto> findPage(@RequestBody Map<String,Object> map,
-			@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length){
         return valPenaltyInterestQuery001Service.findPage(page,length,map);
     }
 

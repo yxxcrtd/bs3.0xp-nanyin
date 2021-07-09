@@ -37,7 +37,7 @@ public class StageValueGrowthRate {
 	 * @throws Exception 
 	 * @retun 阶段净值增长率计算
 	 */
-	public static BigDecimal getStageValueGrowthRate(Date startDate, Date endDate, Map<Date, RepProdIndex> map,String prodId,Connection conn) throws Exception {
+	public static BigDecimal getStageValueGrowthRate(Date startDate, Date endDate, Map<Date, RepProdIndex> map,String prodId,Connection conn){
 		// 定义 阶段净值增长率 = 1
 		BigDecimal stageRate = BigDecimal.ONE;
 

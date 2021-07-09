@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -86,7 +87,7 @@ public class ExcelUtil {
                 wb = new HSSFWorkbook(stream);
             }
             else {
-                throw new Exception("不是一个有效的Excel文件");
+                throw new BusinessException("不是一个有效的Excel文件");
             }
 
             for (Sheet sheet : wb) {

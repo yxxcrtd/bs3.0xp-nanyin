@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jcraft.jsch.JSchException;
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +56,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
 	 * @param request
 	 * @throws Exception
 	 */
-	public void readFile(Map<String, Object> params) throws Exception {
+	public void readFile(Map<String, Object> params) throws JSchException {
 		// 文件本地路径
 		String filePath = (String) params.get("fileName");
 		
@@ -110,7 +111,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
 	}
 	
 	
-	public int insertFileTransferInfo(Map<String, Object> params) throws Exception {
+	public int insertFileTransferInfo(Map<String, Object> params) {
 //	    BokFileTransfer003Dto dto = new BokFileTransfer003Dto();
 //	    //文件信息
 //	    BokFileInfoDto infoDto = new BokFileInfoDto();
@@ -196,7 +197,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<BokFileTransfer003Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<BokFileTransfer003Dto> findPage(Map<String, Object> params) {
         //产品代码
 //        String finprodId = (String)params.get("finprodId");
 //        //估值表余额表标识
@@ -241,7 +242,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
      * @param request
      * @throws Exception
      */
-    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws Exception {
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws JSchException {
         // 文件本地路径
         String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
         
@@ -313,7 +314,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
      * @param request
      * @throws Exception
      */
-    public void deleteFile(HttpServletRequest request) throws Exception {
+    public void deleteFile(HttpServletRequest request) {
         // 文件id
         String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
         //文件信息

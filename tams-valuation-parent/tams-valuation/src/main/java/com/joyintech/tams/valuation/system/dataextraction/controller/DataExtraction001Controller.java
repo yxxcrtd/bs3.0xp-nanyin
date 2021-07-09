@@ -11,6 +11,8 @@
 package com.joyintech.tams.valuation.system.dataextraction.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,7 +74,7 @@ public class DataExtraction001Controller extends BaseController{
     
     @RequestMapping("checkSearch")
     @ResponseBody
-    public WebResult checkSearch(HttpSession session) throws Exception {
+    public WebResult checkSearch(HttpSession session) {
         WebResult webResult = new WebResult();
         try {
             String sqlText = this.getRequest().getParameter("sqlText").replace(";", "");
@@ -102,7 +104,7 @@ public class DataExtraction001Controller extends BaseController{
     
     @RequestMapping("search")
     @ResponseBody
-    public Page<ExportEntity> search() throws Exception {
+    public Page<ExportEntity> search()  {
         String sqlText = this.getRequest().getParameter("sqlText").replace(";", "");
         String queryHead = this.getRequest().getParameter("queryHead");
         Page<ExportEntity> page = new Page<ExportEntity>();
@@ -165,7 +167,7 @@ public class DataExtraction001Controller extends BaseController{
     @RequestMapping(ACTION_EXPORT)
     @SuppressWarnings("unchecked")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+            throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         String sqlText = this.getRequest().getParameter("sqlText").replace(";", "");
     	Page<LinkedHashMap<String, Object>> resultListPage = this.dataExtraction001Service.querySelectAllDataPage(this.getParam("dataSource"), sqlText);
         List<LinkedHashMap<String, Object>> resultList = resultListPage.getRoot();  
@@ -202,8 +204,7 @@ public class DataExtraction001Controller extends BaseController{
             outFile, true);
     }
 
-    private ExportEntity listToEntity(List<String> allColumns)
-        throws Exception {
+    private ExportEntity listToEntity(List<String> allColumns) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         ExportEntity entity = new ExportEntity();
         int index = 0;
         while (index < 100 && index < allColumns.size()) {

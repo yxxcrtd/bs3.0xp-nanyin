@@ -57,7 +57,7 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
    * @return 表格信息
    * @throws Exception 
    */
- public Page<PositionStatistics001Dto> findPage(Map<String, Object> params) throws Exception {  
+ public Page<PositionStatistics001Dto> findPage(Map<String, Object> params){
       if (StringUtil.isNotEmpty(params.get("manager"))) {
          params.put("manager", StringUtil.splitToList(null, params.get("manager").toString()));
       }
@@ -141,7 +141,7 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
      transformer.transformXLS(temp, data, depositfilePath + File.separator +flieName);
      }catch(Exception e){
          logger.info(exceltemplate+"生成失败！");
-         throw new RuntimeException(e);
+//         throw new RuntimeException(e);
      }finally{
          if(fos !=null){
              try {

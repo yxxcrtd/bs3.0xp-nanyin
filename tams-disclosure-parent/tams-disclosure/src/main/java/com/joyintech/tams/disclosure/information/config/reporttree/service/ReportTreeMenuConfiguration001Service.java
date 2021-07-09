@@ -9,6 +9,7 @@
  */
  
 package com.joyintech.tams.disclosure.information.config.reporttree.service;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +99,7 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public AjaxResult checkData(Map<String, Object> map) throws Exception{
+    public AjaxResult checkData(Map<String, Object> map) throws IOException {
         String datas = (String)map.get("datas");
         List<RepInfo> listdto= JsonUtils.json2List(datas, RepInfo.class);
         if(listdto.size()==0){
@@ -170,7 +171,7 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public AjaxResult edit(Map<String, Object> map) throws Exception{
+    public AjaxResult edit(Map<String, Object> map) {
         String Id = (String)map.get("Id");
 //        List<ReportTreeMenuConfiguration001Dto> dtolist=reportTreeMenuConfiguration001Mapper.selectByPrimaryKey(Id);
         
@@ -289,8 +290,7 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
      * @see
      * @since 1.0
      */
-    public Page<RepInfo> findPage(Map<String, Object> params)
-        throws Exception {
+    public Page<RepInfo> findPage(Map<String, Object> params){
     	 return restTemplate.postForPage(
                  ServiceApplication.VALUATION_SERVICE_NAME + "/ReportTreeMenuConfiguration001/findPage",
                  params, RepInfo.class);

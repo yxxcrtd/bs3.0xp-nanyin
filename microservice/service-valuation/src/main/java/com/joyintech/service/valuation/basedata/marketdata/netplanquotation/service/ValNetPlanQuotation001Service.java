@@ -52,7 +52,7 @@ public class ValNetPlanQuotation001Service extends CommonExportService<ValNetPla
       * @return
       * @throws Exception
       */
-     public Page<ValNetPlanQuotation001Dto> queryPageList(int page,int length,Map<String, Object> params) throws Exception{
+     public Page<ValNetPlanQuotation001Dto> queryPageList(int page,int length,Map<String, Object> params) {
          
          return super.queryForPage(page,length,()->valNetPlanQuotation001Mapper.queryPageList(params));
      }

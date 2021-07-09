@@ -94,7 +94,7 @@ public class PrdOpenPlanUpdateProcessorService extends BaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FinOpenPlan> executeList(List<FinOpenPlan> finOpenPlanList, PrdOpenPlanUpdateDto popuDto) throws Exception {
+	public List<FinOpenPlan> executeList(List<FinOpenPlan> finOpenPlanList, PrdOpenPlanUpdateDto popuDto) {
 		// 经过处理的List<开放计划>
 		List<FinOpenPlan> newFinOpenPlanList = new ArrayList<FinOpenPlan>();
 
@@ -143,7 +143,7 @@ public class PrdOpenPlanUpdateProcessorService extends BaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FinCashPlan> executePayList(List<FinCashPlan> finCashPlanList, PrdOpenPlanUpdateDto popuDto) throws Exception {
+	public List<FinCashPlan> executePayList(List<FinCashPlan> finCashPlanList, PrdOpenPlanUpdateDto popuDto) {
 		// 经过处理的List<付息/分红计划>
 		List<FinCashPlan> newFinCashPlanList = new ArrayList<FinCashPlan>();
 

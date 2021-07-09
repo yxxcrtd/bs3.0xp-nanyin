@@ -109,7 +109,7 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
      * @see
      * @since 1.0
      */
-    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto) throws Exception {
+    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto) {
     	return restTemplate.postForList(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValSubjectWaterQuery001/getSubjectWater",
                 dto, ValSubjectWaterQuery001Dto.class);
@@ -122,7 +122,7 @@ public class ValSubjectWaterQuery001Service extends CommonExportService<ValSubje
      * @return 表格信息
      * @throws Exception
      */
-    public Page<ValSubjectWaterQuery001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValSubjectWaterQuery001Dto> findPage(Map<String, Object> params) {
     	 return restTemplate.postForPage(
 	                ServiceApplication.VALUATION_SERVICE_NAME + "/ValSubjectWaterQuery001/findPage",
 	                params, ValSubjectWaterQuery001Dto.class);

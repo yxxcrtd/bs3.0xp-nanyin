@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.common.risktrial.dto;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
@@ -23,13 +24,13 @@ public class PointDetail {
 	private LimitPointThreshold limitPointThreshold;
 	private ForbidPointThreshold forbidPointThreshold;
 
-	public PointDetail(String vdetailJson,String wdetailJson,String indType) throws Exception {
+	public PointDetail(String vdetailJson,String wdetailJson,String indType) {
 		//ObjectMapper mapper = new ObjectMapper();
 		Map<?, ?> violationMap = JsonUtils.json2Object(vdetailJson, Map.class);
 		try {
 			this.type = indType;
 		} catch(Exception e) {
-			throw new Exception("invalid indicator type: " + type);
+			throw new BusinessException("invalid indicator type: " + type);
 		}
 		
 		Map<?, ?> vThreshold1Map = (Map<?, ?>)violationMap.get("threshold_1");

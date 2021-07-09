@@ -66,7 +66,7 @@ public class DataExtraction001Service extends CommonExportService{
      * @since 1.0
      */
 	@SuppressWarnings("unchecked")
-	public Page<LinkedHashMap<String, Object>> querySelectAllDataPage(String dataSource, String sqlText) throws Exception {
+	public Page<LinkedHashMap<String, Object>> querySelectAllDataPage(String dataSource, String sqlText) {
 		return super.queryForPageForSelectReturn(()-> this.selectAllData(dataSource,sqlText));
     }
 	
@@ -94,7 +94,7 @@ public class DataExtraction001Service extends CommonExportService{
 //     * @since 1.0
 //     */
 //    @SuppressWarnings("unchecked")
-//    public Page<LinkedHashMap> querySelectAllDataPage(String dataSource, String sqlText) throws Exception {
+//    public Page<LinkedHashMap> querySelectAllDataPage(String dataSource, String sqlText)  {
 //        //return super.queryForPageForSelectReturn(()-> this.selectAllData(dataSource,sqlText));
 //        Map<String, Object> map = Maps.newHashMap();
 //        map.put("dataSource", dataSource);

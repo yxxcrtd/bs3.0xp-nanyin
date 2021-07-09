@@ -103,7 +103,7 @@ public class ValBankAccountQuery001Controller extends BaseController {
      */
     @PostMapping("/findIncomeStatisticsPage/{page}/{length}")
     public Page<ValIncomeStatisticsQuery001Dto> findIncomeStatisticsPage(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length)throws Exception {
+    		@PathVariable("page") int page, @PathVariable("length") int length){
         return valIncomeStatisticsQuery001Service.findPage(page,length,params);
     }
 
@@ -120,8 +120,7 @@ public class ValBankAccountQuery001Controller extends BaseController {
     @RequestMapping("checkIncomeStatistics")
     @ResponseBody
     public AjaxResult checkIncomeStatistics(@Valid @RequestBody ValIncomeStatisticsQuery001Dto dto,
-                                            BindingResult result)
-        throws Exception {
+                                            BindingResult result){
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -157,7 +156,7 @@ public class ValBankAccountQuery001Controller extends BaseController {
      */
     @PostMapping("/findAccountDetailsPage/{page}/{length}")
     public Page<AccountDetailsQuery001Dto> findAccountDetailsPage(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length)throws Exception {
+    		@PathVariable("page") int page, @PathVariable("length") int length){
         return accountDetailsQuery001Service.findAccountDetailsPage(page,length,params);
     }
 

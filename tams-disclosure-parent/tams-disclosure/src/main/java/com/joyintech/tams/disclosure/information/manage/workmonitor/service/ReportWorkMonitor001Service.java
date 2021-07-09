@@ -59,9 +59,8 @@ public class ReportWorkMonitor001Service extends CommonExportService<ReportWorkM
      * 
      * @param params 筛选条件
      * @return 表格信息
-     * @throws Exception 
      */
-    public Page<ReportWorkMonitorNew001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ReportWorkMonitorNew001Dto> findPage(Map<String, Object> params) {
         
 //    	String jobId = (String)params.get("jobId");
 //        String[] jobIdArr = null;

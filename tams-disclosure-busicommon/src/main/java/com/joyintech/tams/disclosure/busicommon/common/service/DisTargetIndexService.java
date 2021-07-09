@@ -63,7 +63,7 @@ public class DisTargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表二
 	 */
-	public  Map<String,Object> printTargetCurrencyTypeTbTwo(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public  Map<String,Object> printTargetCurrencyTypeTbTwo(Date startDate, Date endDate, String prodId,Connection conn) {
 		//定义返回值
 		Map<String,Object> resultmap=new HashMap<>();
 //		// 表二dto
@@ -153,7 +153,7 @@ public class DisTargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表二
 	 */
-	public Map<String,Object> printTargetNetTypeTbTwo(Date startDate, Date endDate, String prodId,Connection  conn) throws Exception {
+	public Map<String,Object> printTargetNetTypeTbTwo(Date startDate, Date endDate, String prodId,Connection  conn) {
 		//定义 
 		Map<String,Object> resultmap=new HashMap<>();
 		// 产品指标表集合查询
@@ -244,7 +244,7 @@ public class DisTargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表三
 	 */
-	public  Map<String,Object> printTargetCurrencyTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public  Map<String,Object> printTargetCurrencyTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) {
 		Map<String,Object> resultmap=new HashMap<>();
 		// 表三dto
 		//ResultTwoDto twoDto = new ResultTwoDto();
@@ -347,7 +347,7 @@ public class DisTargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表三
 	 */
-	public static Map<String,Object> printTargetNetTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public static Map<String,Object> printTargetNetTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) {
 		Map<String,Object> resultmap=new HashMap<>();
 		// 表三dto
 		//ResultTwoDto twoDto = new ResultTwoDto();
@@ -464,7 +464,7 @@ public class DisTargetIndexService {
 	 * @return
 	 * @throws Exception
 	 */
-	public  static Map<String,Object> printTableCpValueConfig(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public  static Map<String,Object> printTableCpValueConfig(Date startDate, Date endDate, String prodId,Connection conn){
 		Map<String,Object> resultmap=new HashMap<>();
 		// 产品指标集合的查询
 		List<RepProdIndex> list=getListRepProdIndebyJjdbc(startDate, endDate, prodId,conn);
@@ -1252,7 +1252,7 @@ public class DisTargetIndexService {
 	 * @return
 	 * @throws Exception
 	 */
-	public  static List<Map<String,Object>> printTableTradeRela(Date startDate, Date endDate,Connection conn) throws Exception{
+	public  static List<Map<String,Object>> printTableTradeRela(Date startDate, Date endDate,Connection conn){
 		List<Map<String,Object>>  listMap=new ArrayList<>();
 		 
 		List<RepTreadInfoDto> list=new ArrayList<>();

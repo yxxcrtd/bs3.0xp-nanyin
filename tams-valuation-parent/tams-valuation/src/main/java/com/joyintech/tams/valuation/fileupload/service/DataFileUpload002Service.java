@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jcraft.jsch.SftpException;
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
      * @param request
      * @throws Exception
      */
-    public void readFile(HttpServletRequest request) throws Exception {
+    public void readFile(HttpServletRequest request) throws JSchException, SftpException {
         // 文件本地路径（应用服务器路径，同名添加）
         String filePath = request.getParameter("fileName1")==null?"":request.getParameter("fileName1");
         // 文件名称
@@ -119,7 +120,7 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
             sftpTools.close();// 关闭登录
 
             progressBarService.updatePercent("DocumentManagement002", ProgressBarService.FILE_UPLOAD_ID, 1D, false);
-        } catch (JSchException e) {
+        } catch (JSchException | SftpException e) {
             logger.error(e.getMessage(), e);
             throw e;
         } finally {
@@ -140,7 +141,7 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
      * @return
      * @throws Exception
      */
-    public int insertFileTransferInfo(HttpServletRequest request) throws Exception {
+    public int insertFileTransferInfo(HttpServletRequest request) {
     	Map<String, Object> params = new HashMap<String, Object>();
     	params.put("fileType", request.getParameter("fileType")==null?"":request.getParameter("fileType"));
     	params.put("filePath", request.getParameter("fileName1")==null?"":request.getParameter("fileName1"));

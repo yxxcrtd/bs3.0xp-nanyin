@@ -15,8 +15,11 @@ import com.joyintech.tams.invest.entrust.etrplanassetr.service.EtrPlanAssetRServ
 import com.joyintech.tams.mobileApproval.dao.MobileApprovalMapper;
 import com.joyintech.tams.mobileApproval.dto.ReturnTodoDto;
 import com.joyintech.tams.mobileApproval.util.MobileUtils;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * <b>方法：</b>MobilePtlManagementInfoService<br>
@@ -39,7 +42,7 @@ public class MobileEtrPlanAssetRService {
 	public MobileEtrPlanAssetRService() {
 	}
 
-	public String getWorkFlowInfo(String businessData) throws Exception {
+	public String getWorkFlowInfo(String businessData) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //1、获取业务数据
     	EtrPlanAssetRDto dto = JsonUtils.json2Object(businessData, EtrPlanAssetRDto.class);
     	

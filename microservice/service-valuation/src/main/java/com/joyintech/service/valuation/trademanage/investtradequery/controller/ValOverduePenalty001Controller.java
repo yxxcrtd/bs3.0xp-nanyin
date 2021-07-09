@@ -27,7 +27,7 @@ public class ValOverduePenalty001Controller extends BaseController{
     private ValOverduePenalty001Service valOverduePenalty001Service;
 
     @PostMapping("/findByTradeId")
-    public OverduePenaltyDto findByTradeId(@RequestBody Map<String, Object> param) throws Exception {
+    public OverduePenaltyDto findByTradeId(@RequestBody Map<String, Object> param) {
         return valOverduePenalty001Service.findByTradeId(param);
     }
     

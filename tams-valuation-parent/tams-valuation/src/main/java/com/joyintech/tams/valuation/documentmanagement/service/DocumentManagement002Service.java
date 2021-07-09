@@ -54,7 +54,7 @@ public class DocumentManagement002Service extends CommonExportService<DocumentMa
 	 * @param request
 	 * @throws Exception
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
 		// 文件本地路径
 		String filePath = request.getParameter("fileName1")==null?"":request.getParameter("fileName1");
 		/*
@@ -84,7 +84,7 @@ public class DocumentManagement002Service extends CommonExportService<DocumentMa
 	 * @return
 	 * @throws Exception
 	 */
-	public int insertFileTransferInfo(HttpServletRequest request) throws Exception {
+	public int insertFileTransferInfo(HttpServletRequest request) {
 		DocumentManagement001Dto dto = new DocumentManagement001Dto();
 		// 系统时间
 		String Sysdate = baseCommonService.getSysDateString();

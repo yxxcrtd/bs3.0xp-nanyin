@@ -17,6 +17,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.slf4j.Logger;
@@ -34,8 +35,7 @@ public class OfficeMergeUtil {
      * @see
      * @since 1.0
      */
-    public static void mergeWord(String destFile,List<String> srcFile)
-        throws Exception {
+    public static void mergeWord(String destFile,List<String> srcFile) throws IOException, InvalidFormatException, XmlException {
         OPCPackage srcPackage = null;
         XWPFDocument srcDocument = null;
         CTBody srcBody = null;
@@ -65,7 +65,7 @@ public class OfficeMergeUtil {
                 srcBody = srcDocument.getDocument().getBody();
                 appendBody(srcBodyTmp, srcBody);
             }
-            catch (IOException | InvalidFormatException e) {
+            catch (IOException | InvalidFormatException | XmlException e) {
                 throw e;
             }
             finally {
@@ -117,7 +117,7 @@ public class OfficeMergeUtil {
      * @since 1.0
      */
     private static CTBody appendBody(CTBody src, CTBody append)
-        throws Exception {
+            throws XmlException {
         if(null == src){
             return append;
         }

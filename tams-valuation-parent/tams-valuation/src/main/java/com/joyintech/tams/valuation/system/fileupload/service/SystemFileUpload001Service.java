@@ -4,6 +4,8 @@ import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,7 @@ public class SystemFileUpload001Service {
 	 * @param request
 	 * @throws Exception
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) throws SftpException, JSchException {
 		// 文件本地路径
 		String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
 		
