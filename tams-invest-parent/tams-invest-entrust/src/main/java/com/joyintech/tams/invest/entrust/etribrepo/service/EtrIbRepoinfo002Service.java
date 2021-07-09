@@ -13,6 +13,8 @@ import com.joyintech.tams.common.base.entity.*;
 //import com.joyintech.tams.invest.interf.b45.service.SendService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,12 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
     
     @Autowired(required = false)
     private BussRepoSecService bussRepoSecService;
+    
+    /**
+     * 委托指令共同
+     */
+    @Autowired(required=false)
+    private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 
     /**
      * b45接口
@@ -204,8 +212,12 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
         try {
             dto.setOperateType(dto.getOperateType());
             BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+            EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
             EtrEntrust etrEntrust = new EtrEntrust();
             EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            entrustCommonDto.setEtrEntrust(etrEntrust);
+            entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+            entrustCommonDto.setBussRepoSecDto(dto.getBussRepoSec());
             dto.setFinprodType2(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
             dto.setIsOutTrade(DictCodeList.是否_是.getValue());
             dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
@@ -245,6 +257,9 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
             restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
                 Boolean.class);
+            if(baseEtrCashPositionCommService!=null){
+                baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+            }
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -385,5 +400,6 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
 
     @Override
     public void doBack(EtrIbRepoinfo002Dto entity) {
+    	baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
     }
 }

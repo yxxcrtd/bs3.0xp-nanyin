@@ -483,9 +483,9 @@ public class EtrIbRepoinfo002Service extends BaseService {
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
         }
-        if(baseEtrCashPositionCommService!=null){
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if(baseEtrCashPositionCommService!=null){
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
         // 指令分发推送信息到交易系统
         if(DictCodeList.是否_是.getValue().equals(isPushMsg)){
         	Map<String, Object> param = new HashMap<>();

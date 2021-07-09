@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtribRepoInfo003Dto;
@@ -241,8 +242,12 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
         try {
             dto.setOperateType(dto.getOperateType());
             BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+            EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
             EtrEntrust etrEntrust = new EtrEntrust();
             EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            entrustCommonDto.setEtrEntrust(etrEntrust);
+            entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+            entrustCommonDto.setBussRepoSecDto(dto.getBussRepoSec());
             dto.setFinprodType2(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
             dto.setIsOutTrade(DictCodeList.是否_是.getValue());
             dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
@@ -286,6 +291,9 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
             restTemplate.postForObject(
                     ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
                     Boolean.class);
+            if(baseEtrCashPositionCommService!=null){
+                baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+            }
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();
