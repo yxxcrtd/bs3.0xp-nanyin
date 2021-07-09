@@ -138,7 +138,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                         //风险需要流程中存入持仓值，入库时持仓值不入库
                         baseTradeInfoDto.getTrdProductDeal().setShareAmt(null);
                         inputDto.setProdid(baseTradeInfoDto.getTrdProductDealAdd().getPortfolioId());
-                        inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_理财产品.getValue());
+                        inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
                         if(inputDto.getProdid().contains("F28_")){
                             inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_通道.getValue());
                         }
