@@ -286,14 +286,20 @@
 							<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
 								<label class="layui-form-label form-lable"
 									   data-th-text="#{EtrIbBondinfo001.finpordAbbr}">资产简称</label>
+<!--								<div class="layui-input-inline input-inline">-->
+<!--									<select type="text" id="finprodId" name="finprodId"-->
+<!--											class="layui-input form-input input-select"-->
+<!--											placeholder="请输入内容"-->
+<!--											data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--											data-th-data-url="@{/invest/entrust/etribbondinfo/EtrIbBondinfo001/queryAssetCode}"-->
+<!--											data-th-value="${entity?.finprodId}" multiple="true">-->
+<!--									</select>-->
+<!--								</div>-->
 								<div class="layui-input-inline input-inline">
 									<select type="text" id="finprodId" name="finprodId"
-											class="layui-input form-input input-select"
-											placeholder="请输入内容"
-											data-th-placeholder="#{SysCommon.placeholder}"
-											data-th-data-url="@{/invest/entrust/etribbondinfo/EtrIbBondinfo001/queryAssetCode}"
-											data-th-value="${entity?.finprodId}" multiple="true">
-									</select>
+											class="layui-input form-input input-select" placeholder="请输入内容"
+											th:data-url="@{/business/common/CommonSelect/selectFinprodMarketId?finprodType=F01}"
+											allowClear="true" multiple="true"></select>
 								</div>
 							</div>
 						</div>
