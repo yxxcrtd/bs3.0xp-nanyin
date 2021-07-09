@@ -19,4 +19,6 @@ public class ApiPathConst {
     public static final String UPDATE_BK_CASH_ACCT = "updateBkCashAccts";
 
     public static final String SECURITY_OPTIONS = "getSecurityDtoByAssetType";
+
+    public static final String EXECUTE_APPOINTED_JOBS = "job/executeAppointedJobs";
 }

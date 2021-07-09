@@ -1,9 +1,9 @@
 package com.jixu.joyin2jixu.service.impl;
 
+import com.jixu.api.util.RestUrlUtil;
 import com.jixu.common.apiconst.ApiPathConst;
 import com.jixu.common.type.ResultContainer;
 import com.jixu.common.type.ResultInterface;
-import com.jixu.config.ServiceApplication;
 import com.jixu.joyin2jixu.service.Joyin2JixuInterface;
 import com.jixu.msg.dto.JJBkCashAcctDto;
 import com.jixu.msg.dto.JJPortfolioDto;
@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.Map;
  */
 @Lazy
 @Service
-public class Joyin2JixuInterfaceImpl implements Joyin2JixuInterface {
+public class RemoteJoyin2JixuInterfaceImpl implements Joyin2JixuInterface {
 
     @Autowired
     private JoyinRestTemplate restTemplate;
@@ -45,12 +44,12 @@ public class Joyin2JixuInterfaceImpl implements Joyin2JixuInterface {
 
     @Override
     public ResultInterface createPortfolios(List<JJPortfolioDto> dtoList) {
-        return restTemplate.postForObject(apiUrl(ApiPathConst.CREATE_PORTFOLIOS), dtoList, ResultInterface.class);
+        return restTemplate.postForObject(RestUrlUtil.apiUrl(ApiPathConst.CREATE_PORTFOLIOS), dtoList, ResultInterface.class);
     }
 
     @Override
     public ResultInterface updateBkCashAccts(List<JJBkCashAcctDto> dtoList) {
-        return restTemplate.postForObject(apiUrl(ApiPathConst.UPDATE_BK_CASH_ACCT), dtoList, ResultInterface.class);
+        return restTemplate.postForObject(RestUrlUtil.apiUrl(ApiPathConst.UPDATE_BK_CASH_ACCT), dtoList, ResultInterface.class);
     }
 
     @Override
@@ -59,18 +58,13 @@ public class Joyin2JixuInterfaceImpl implements Joyin2JixuInterface {
         for (String s : assetType) {
             valueMap.add("assetType[]", s);
         }
-        return restTemplate.postForList(apiUrl(ApiPathConst.SECURITY_OPTIONS), valueMap, SelectOptionDto.class);
+        return restTemplate.postForList(RestUrlUtil.apiUrl(ApiPathConst.SECURITY_OPTIONS), valueMap, SelectOptionDto.class);
     }
 
     private ResultContainer executeJixuMessage(boolean withTx, String jsonMsg) {
         Map<String, Object> request = new HashMap<>(1);
         request.put("jsonMsg", jsonMsg);
         request.put("withTx", withTx);
-        return restTemplate.postForObject(apiUrl(ApiPathConst.EXECUTE_MESSAGE), request, ResultContainer.class);
-    }
-
-    private String apiUrl(String path) {
-        return UriComponentsBuilder.fromHttpUrl(ServiceApplication.ADAPTER_SERVICE_NAME)
-                .pathSegment(ApiPathConst.API_PATH, path).build().toString();
+        return restTemplate.postForObject(RestUrlUtil.apiUrl(ApiPathConst.EXECUTE_MESSAGE), request, ResultContainer.class);
     }
 }
