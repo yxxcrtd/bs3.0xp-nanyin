@@ -385,7 +385,7 @@ select
     t3.CUSTOMER_NAME issuerName,
     TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,
     TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,
-    TO_NUMBER(t1.MDATE - to_date(#{sysDate},'yyyy-MM-dd')) lastqx,
+    TO_NUMBER(MBVI.LAST_PERIOD) lastqx,
     TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate
     ,t6.INT_TYPE AS rateType
 	,NVL(t8.YIELD, t6.RATE)*100 rate

@@ -216,9 +216,9 @@ public class EtrIbBondinfo001Service extends BaseService{
             if (dto.getLastqx() != null && dto.getLastqx().compareTo(BigDecimal.ZERO) < 0) {
                 dto.setLastqx(BigDecimal.ZERO);
             }
-            if (dto.getLastqx() != null) {
-                dto.setLastqx(ArithmeticUtil.divide(dto.getLastqx(), new BigDecimal(365), 2));
-            }
+//            if (dto.getLastqx() != null) {
+//                dto.setLastqx(ArithmeticUtil.divide(dto.getLastqx(), new BigDecimal(365), 2));
+//            }
             String xqfangshi = "";
             List<String> plan = etrIbBondinfo001Mapper.getEtrFinExerciseInfo(pageParam);
             if (plan != null && plan.size() > 0) {
