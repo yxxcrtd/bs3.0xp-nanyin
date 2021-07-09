@@ -25,9 +25,14 @@ $(function() {
    $("#EtrIbRepoinfoFile_btn_save").click(function() {
        var object =  $.serializeToObject("#searchForm");
        object.fileArray = FileCommon.getUploadFileInfo();
-       Joyin.ajaxJson(basePath + 'invest/entrust/etribrepo/EtrIbRepoinfoFile/save', object, function(result1) {
+       if(object.fileArray != null && object.fileArray != ''){
+           Joyin.ajaxJson(basePath + 'invest/entrust/etribrepo/EtrIbRepoinfoFile/save', object, function(result1) {
+               Joyin.closeTopWindow();
+           });
+       }else{
            Joyin.closeTopWindow();
-       });
+       }
+       
 
    });
 });
