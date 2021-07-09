@@ -57,7 +57,7 @@ public class PtlFutureCashPosiService extends BaseService<PtlFutureCashPosiDto> 
      * @since 1.0
      */
     public List<PtlFutureCashPosiDto> selectData(Map<String, Object> pageParam)
-        throws Exception {
+    {
         setParam(pageParam);
         List<PtlFutureCashPosiDto> pages = ptlFutureCashPosiMapper.selectData(pageParam);
         if (StringUtil.isEmptyList(pages)) {

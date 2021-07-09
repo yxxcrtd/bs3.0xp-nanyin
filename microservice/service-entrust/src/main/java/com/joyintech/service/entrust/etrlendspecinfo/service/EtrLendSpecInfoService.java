@@ -114,7 +114,8 @@ public class EtrLendSpecInfoService extends BaseService<EtrLendSpecInfoDto> {
      * @see
      * @since 1.0
      */
-    public Page<EtrLendSpecInfoDto> selectForPage(int page,int length,Map<String, Object> param) throws Exception{
+    public Page<EtrLendSpecInfoDto> selectForPage(int page,int length,Map<String, Object> param)
+    {
         String portfolioId = (String)param.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));

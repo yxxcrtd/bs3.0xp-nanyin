@@ -1,12 +1,14 @@
 package com.joyintech.service.disclosure.information.reveal.reportconfirm.service;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jcraft.jsch.JSchException;
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +66,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
 	 * @param request
 	 * @throws Exception
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) throws JSchException {
 		// 文件本地路径
 		String filePath = request.getParameter("fileName")==null? "":request.getParameter("fileName");
 		request.getParameter("id");
@@ -136,7 +138,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
 	}
 	
 	
-	public int insertFileTransferInfo(HttpServletRequest request) throws Exception {
+	public int insertFileTransferInfo(HttpServletRequest request) throws ParseException {
 	    BokFileTransfer003Dto dto = new BokFileTransfer003Dto();
 	    //文件信息
 	    BokFileInfoDto infoDto = new BokFileInfoDto();
@@ -218,7 +220,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<BokFileTransfer003Dto> findPage( int page, int length, Map<String, Object> params) throws Exception {
+    public Page<BokFileTransfer003Dto> findPage( int page, int length, Map<String, Object> params) throws ParseException {
         //产品代码
         String finprodId = (String)params.get("finprodId");
         //估值表余额表标识
@@ -259,7 +261,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
      * @param request
      * @throws Exception
      */
-    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws Exception {
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws JSchException {
         // 文件本地路径
         String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
         
@@ -334,7 +336,7 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
      * @param request
      * @throws Exception
      */
-    public void deleteFile(HttpServletRequest request) throws Exception {
+    public void deleteFile(HttpServletRequest request) {
         // 文件id
         String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
         //文件信息

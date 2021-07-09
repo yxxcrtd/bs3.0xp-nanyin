@@ -47,7 +47,7 @@ public class EstimateReveal001Controller extends BaseController {
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
     public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+	{
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
         return prdInfoSelect;
     }
@@ -62,7 +62,7 @@ public class EstimateReveal001Controller extends BaseController {
      */
 	@PostMapping("findPage/{page}/{length}")
     public Page<EstimateReveal001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+			@PathVariable("page") int page, @PathVariable("length") int length) {
     	Page<EstimateReveal001Dto> pageList = estimateReveal001Service.findPage(page, length, param);
         return pageList;
     }

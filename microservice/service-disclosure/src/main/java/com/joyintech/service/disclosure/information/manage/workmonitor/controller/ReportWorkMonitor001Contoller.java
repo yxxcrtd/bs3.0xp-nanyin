@@ -77,7 +77,7 @@ public class ReportWorkMonitor001Contoller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ReportWorkMonitorNew001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 //    	Page<ReportWorkMonitorNew001Dto> pageList = reportWorkMonitor001Service.findPage(RequestUtil.getPageParam());
 //    	pageList.getRoot().forEach(dto -> {
 //    		if(StringUtil.isNotEmpty(dto.getEndExecDate()) && StringUtil.isNotEmpty(dto.getStartExecDate())) {

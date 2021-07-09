@@ -49,7 +49,7 @@ public class MstFeeVarietiesController  {
      */
     @RequestMapping("/getFeeNameOption")
     public List<SuggestDto> getFeeNameOption(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         List<SuggestDto> list = mstFeeVarietiesService.getFeeNameOption(param);
         return list;// 返回费用名称
     }
@@ -62,7 +62,7 @@ public class MstFeeVarietiesController  {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<MstFeeVarietiesDto> selectForPage(@RequestBody Map<String, Object> map,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstFeeVarietiesService.selectForPage(page,length,map);
     }
     /**

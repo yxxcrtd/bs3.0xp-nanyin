@@ -47,14 +47,14 @@ public class FinStageManagementController {
     }
     
     @PostMapping("getfinStageManagementByProductId")
-    public List<FinStageManagementDto> getfinStageManagementByProductId(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinStageManagementDto> getfinStageManagementByProductId(@RequestBody Map<String, Object> param) {
         return finStageManagementService.getfinStageManagementByProductId(param);
     }
 
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody FinStageManagementDto dto) throws Exception {
+    public void insert(@RequestBody FinStageManagementDto dto) {
         finStageManagementService.insert(dto);
     }
 
@@ -65,12 +65,12 @@ public class FinStageManagementController {
      * @throws Exception
      */
     @PostMapping("isCheckMature")
-    public boolean isCheckMature(@RequestBody FinStageManagementDto dto) throws Exception{
+    public boolean isCheckMature(@RequestBody FinStageManagementDto dto){
         return finStageManagementService.isCheckMature(dto);
     }
 
     @PostMapping("isWorkFlowCheck")
-    public List<ProcessMark> isWorkFlowCheck(@RequestBody Map<String, Object> map) throws Exception{
+    public List<ProcessMark> isWorkFlowCheck(@RequestBody Map<String, Object> map){
         return finStageManagementService.isWorkFlowCheck(map);
     }
     /**

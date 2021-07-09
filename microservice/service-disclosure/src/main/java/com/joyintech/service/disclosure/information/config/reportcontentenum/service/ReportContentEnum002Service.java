@@ -84,7 +84,8 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
      * @return
      * @throws Exception
      */
-	public Page<ReportContentEnum002Dto> findIndexDetailByPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+	public Page<ReportContentEnum002Dto> findIndexDetailByPage(int page, int length, Map<String, Object> pageParam)
+	{
 		return super.queryForPageForSelectReturn(page, length, () -> reportContentEnum002Mapper.selectIndexDetail(pageParam));
 	}
 	
@@ -162,7 +163,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 * @param request
 	 * @throws JSchException 
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
         // 文件本地路径
 //		String filePath = request.getParameter("fileName");
 //		/*

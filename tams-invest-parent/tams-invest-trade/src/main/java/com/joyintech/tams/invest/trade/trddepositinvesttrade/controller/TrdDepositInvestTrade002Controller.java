@@ -49,6 +49,8 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -59,6 +61,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,6 +80,9 @@ import java.util.stream.Collectors;
 @PageId("TrdDepositInvestTrade002")
 @RequestMapping("/invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002")
 public class TrdDepositInvestTrade002Controller extends BaseController {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private TradeCommonService tradeCommonService;
     /**
@@ -666,7 +672,17 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
         if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
             AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
                     BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_存款.getValue(),
-                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
+                    (en)-> {
+                        try {
+                            return interfRiskRdsService.sendRiskRdsData(dto,en);
+                        } catch (IOException e) {
+                            logger.error(e.getMessage(), e);
+                            throw new IOException();
+                        } catch (InstantiationException e) {
+                            logger.error(e.getMessage(), e);
+                            throw new InstantiationException();
+                        }
+                    });
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }

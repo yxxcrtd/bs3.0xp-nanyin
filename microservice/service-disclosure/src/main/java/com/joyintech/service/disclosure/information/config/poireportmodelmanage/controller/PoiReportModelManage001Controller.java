@@ -10,6 +10,7 @@
 
 package com.joyintech.service.disclosure.information.config.poireportmodelmanage.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +87,7 @@ public class PoiReportModelManage001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping("exportZip")
-	public ResponseEntity<byte[]> exportZip() throws Exception {
+	public ResponseEntity<byte[]> exportZip() throws IOException {
 		String datas = this.getParam("datas");
 		List<ReportModelManage001Dto> val001dto = JsonUtils.json2List(datas, ReportModelManage001Dto.class);
 		Map<String, Object> param = RequestUtil.getPageParam();
@@ -108,10 +109,16 @@ public class PoiReportModelManage001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping("mergeExport")
-	public ResponseEntity<byte[]> mergeExport() throws Exception {
+	public ResponseEntity<byte[]> mergeExport() throws IOException, InstantiationException {
 		Map<String, Object> param = RequestUtil.getPageParam();
-		ReportModelManage001Dto reportModelManage001Dto = (ReportModelManage001Dto) JsonUtils.map2entity(param,
-				ReportModelManage001Dto.class);
+		ReportModelManage001Dto reportModelManage001Dto = null;
+		try {
+			reportModelManage001Dto = (ReportModelManage001Dto) JsonUtils.map2entity(param,
+					ReportModelManage001Dto.class);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new InstantiationException();
+		}
 		reportModelManage001Dto.setParam(param);
 		return reportModelManage001Service.mergeExportSingle(reportModelManage001Dto);
 	}
@@ -119,7 +126,7 @@ public class PoiReportModelManage001Controller extends BaseController {
 	@SuppressWarnings("finally")
 	@RequestMapping("/searchReports")
 	@ResponseBody
-	public AjaxResult searchReports() throws Exception {
+	public AjaxResult searchReports() {
 		AjaxResult value = new AjaxResult();
 		try {
 			// List<Map<String,String>> result =
@@ -144,7 +151,7 @@ public class PoiReportModelManage001Controller extends BaseController {
 	 */
 	 @PostMapping("findPage/{page}/{length}")
 	public Page<DisPoiTab> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		Page<DisPoiTab> page1 = poireportModelManage001Service.findByPage(page, length, param);
 		return page1;
 	}

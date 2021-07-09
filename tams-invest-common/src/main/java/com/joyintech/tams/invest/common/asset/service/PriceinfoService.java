@@ -34,14 +34,14 @@ public class PriceinfoService extends BaseService {
      * 行情服务查询
      *
      */
-    public List<MockQuotationInfoDto> selectPriceinfo(Map<String, Object> map) throws Exception {
+    public List<MockQuotationInfoDto> selectPriceinfo(Map<String, Object> map)  {
         return priceinfoMapper.selectPriceinfo(map);
     }
     /**
      * 汇率行情查询
      *
      */
-    public List<MockMstExchargeQuoteDto> selectQuotationofrate(Map<String, Object> map) throws Exception {
+    public List<MockMstExchargeQuoteDto> selectQuotationofrate(Map<String, Object> map) {
         return priceinfoMapper.selectQuotationofrate(map);
     }
 

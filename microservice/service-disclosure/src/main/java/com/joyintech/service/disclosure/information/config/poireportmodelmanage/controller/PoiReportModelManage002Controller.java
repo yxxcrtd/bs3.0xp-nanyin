@@ -106,23 +106,23 @@ public class PoiReportModelManage002Controller extends BaseController {
 	}
 
 	 @PostMapping("selectRepIdAndUri")
-	    public int selectRepIdAndUri(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public int selectRepIdAndUri(@RequestBody ReportModelManage002Dto dto)  {
 		 return reportModelManage002Service.selectRepIdAndUri(dto);
 	    }
 	 
 	 @PostMapping("insertDisPoiTab")
-	    public void insert(@RequestBody DisPoiTab dto) throws Exception {
+	    public void insert(@RequestBody DisPoiTab dto) {
 		 poireportModelManage002Service.insertDisPoiTab(dto);
 	    }
 	 
 	 @PostMapping("insertDisPraamsSub")
-	 public void insertDisPraamsSub(@RequestBody List<DisPraamsSub> list) throws Exception {
+	 public void insertDisPraamsSub(@RequestBody List<DisPraamsSub> list) {
 		 poireportModelManage002Service.insertDisPraamsSub(list);
 	    }
 	 
 	 
 	 @PostMapping("update")
-	    public void update(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public void update(@RequestBody ReportModelManage002Dto dto) {
 		 reportModelManage002Service.update(dto);
 	    }
 		
@@ -140,8 +140,7 @@ public class PoiReportModelManage002Controller extends BaseController {
 		 */
 		@RequestMapping(value = "/uploadFile")
 		@ResponseBody
-		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-				throws Exception {
+		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws IOException {
 			 AjaxResult res = new AjaxResult();
 //			 if(request.getParameter("size")>1048576){}
 			 if(StringUtil.isEmpty(this.getParam("folder"))){

@@ -38,7 +38,7 @@ public class FeeProvisionSettingService extends BaseService<FeeProvisionSettingD
 	 * @throws Exception 异常信息
 	 */
 	public Page<FeeProvisionSettingDto> selectForPage(int page, int length, Map<String, Object> map)
-			throws Exception {
+	{
 		return super.queryForPage(page, length, () -> feeProvisionSettingMapper.selectForPage(map));
 	}
 
@@ -62,7 +62,7 @@ public class FeeProvisionSettingService extends BaseService<FeeProvisionSettingD
 	 * @since 1.0
 	 */
 	public Page<TrdAccountmfConfigdetailDto> selectDetail(int page, int length, Map<String, Object> pageParam)
-			throws Exception {
+	{
 		return this.queryForPageForSelectReturn(page,length,() -> feeProvisionSettingMapper.selectDetail(pageParam));
 	}
 

@@ -49,7 +49,7 @@ public class FinChannelAssetQueryController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ChannelAssetDto> selectAll(@RequestBody Map<String, Object> param, 
-                                                @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                @PathVariable("page") int page, @PathVariable("length") int length) {
         return service.selectForPage(page,length,param);
     }
 }

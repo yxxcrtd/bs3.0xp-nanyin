@@ -63,7 +63,7 @@ public class SFTPTool {
 	 * @throws Exception
 	 * @throws JSchException
 	 */
-	public void login(String userName, String password, String host, int port, String sftpLoginType) throws Exception {
+	public void login(String userName, String password, String host, int port, String sftpLoginType) throws JSchException {
 
 		// 私钥登录ssh服务
 		if ("02".equals(sftpLoginType)) {
@@ -110,7 +110,7 @@ public class SFTPTool {
 	 * @param port     端口
 	 * @throws JSchException
 	 */
-	public void loginById(String userName, String identity, String host, int port) throws Exception {
+	public void loginById(String userName, String identity, String host, int port) throws JSchException {
 		try {
 			// 接口 SFTP 服务配置
 			JSch jsch = new JSch();
@@ -127,7 +127,7 @@ public class SFTPTool {
 			sftp = (ChannelSftp) channel;
 		} catch (JSchException e) {
 			logger.error("", e);
-			throw new Exception("登录文件服务器失败");
+			throw new JSchException("登录文件服务器失败");
 		}
 	}
 
@@ -235,7 +235,7 @@ public class SFTPTool {
 	 * @param remote
 	 * @param localDir
 	 */
-	public void getFile(String remotePath, String remoteFile, String localDir) throws Exception {
+	public void getFile(String remotePath, String remoteFile, String localDir) throws JSchException, SftpException {
 		/**
 		 * 本地文件夹
 		 */
@@ -260,7 +260,7 @@ public class SFTPTool {
 				logger.debug("文件已经删除");
 				sftp.get(remoteFile, localfileName);
 			} else {
-				throw new Exception("无法删除本地文件: " + localfileName);
+				throw new JSchException("无法删除本地文件: " + localfileName);
 			}
 		}
 	}
@@ -313,7 +313,7 @@ public class SFTPTool {
 	 * @param localDir
 	 * @param backupPath
 	 */
-	public void downFileOrDir(String remoteFileName, String localDir, String backupPath) throws Exception {
+	public void downFileOrDir(String remoteFileName, String localDir, String backupPath) throws JSchException {
 		try {
 			String curDir = "";
 			File file = new SafelyFile(remoteFileName);
@@ -363,7 +363,7 @@ public class SFTPTool {
 											backupPath + '/' + names.get(i));
 								}
 							} else {
-								throw new Exception("无法删除本地文件: " + localfileName);
+								throw new JSchException("无法删除本地文件: " + localfileName);
 							}
 						}
 					}
@@ -397,7 +397,7 @@ public class SFTPTool {
 									backupPath + '/' + file.getName());
 						}
 					} else {
-						throw new Exception("无法删除本地文件: " + localfileName);
+						throw new JSchException("无法删除本地文件: " + localfileName);
 					}
 				}
 				sftp.cd("..");

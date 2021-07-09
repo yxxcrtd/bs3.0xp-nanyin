@@ -182,17 +182,17 @@ public class ReportModelManage002Controller extends BaseController {
 	 
 	 
 	 @PostMapping("selectRepIdAndUri")
-	    public int selectRepIdAndUri(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public int selectRepIdAndUri(@RequestBody ReportModelManage002Dto dto) {
 		 return reportModelManage002Service.selectRepIdAndUri(dto);
 	    }
 	 
 	 @PostMapping("insert")
-	    public void insert(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public void insert(@RequestBody ReportModelManage002Dto dto) {
 		 reportModelManage002Service.insert(dto);
 	    }
 	 
 	 @PostMapping("update")
-	    public void update(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public void update(@RequestBody ReportModelManage002Dto dto) {
 		 reportModelManage002Service.update(dto);
 	    }
 		
@@ -210,8 +210,7 @@ public class ReportModelManage002Controller extends BaseController {
 		 */
 		@RequestMapping(value = "/uploadFile")
 		@ResponseBody
-		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-				throws Exception {
+		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws IOException {
 			 AjaxResult res = new AjaxResult();
 //			 if(request.getParameter("size")>1048576){}
 			 if(StringUtil.isEmpty(this.getParam("folder"))){

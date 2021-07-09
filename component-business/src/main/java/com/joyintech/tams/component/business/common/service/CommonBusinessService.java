@@ -1079,7 +1079,7 @@ public class CommonBusinessService extends BaseService {
     * @since 1.0
     */
    public List<FinCashResetPlan> calFinCashResetPlanList(FinCashResetRuleDto finCashResetRuleDto,
-		   List<FinCashPlanDto> scheList,List<String> holidayList) throws Exception{
+		   List<FinCashPlanDto> scheList,List<String> holidayList) {
 	   // 重置计划列表
 	   List<FinCashResetPlan> finCashResetPlanList = new ArrayList<FinCashResetPlan>();
 	   // 频率值
@@ -1275,7 +1275,7 @@ public class CommonBusinessService extends BaseService {
      * @since 1.0
      */
     public String getNextLastWorkDay(Map<String, Object> parameters)
-        throws Exception {
+    {
         if (dateCalService != null) {
             String lastDay = (String)parameters.get("lastDay");
             Date lastday = DateUtil.parse(lastDay);

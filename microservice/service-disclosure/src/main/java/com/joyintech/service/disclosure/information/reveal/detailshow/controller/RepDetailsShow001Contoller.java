@@ -9,6 +9,7 @@
 */
 package com.joyintech.service.disclosure.information.reveal.detailshow.controller;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.List;
@@ -97,7 +98,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 */
 	@PostMapping("/getRandgeRule")
     public List<RepJobRange> getRandgeRule(@RequestBody Map<String,Object> map)
-        throws Exception {
+    {
 //	    Map<String, Object> param=RequestUtil.getPageParam();
 //	    if(param.get("repId")!=null){
 	        return repDetailsShow001Service.getRandgeRule(map);
@@ -298,7 +299,7 @@ public class RepDetailsShow001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("mergeExport")
-    public ResponseEntity<byte[]> mergeExport() throws Exception {
+    public ResponseEntity<byte[]> mergeExport() throws IOException {
         return repDetailsShow001Service.mergeExport(RequestUtil.getPageParam());
     }
     
@@ -324,7 +325,7 @@ public class RepDetailsShow001Contoller extends BaseController {
     @SuppressWarnings("unused")
 	@ResponseBody
     @RequestMapping("/querySameCount")
-    public AjaxResult querySameCount() throws Exception{
+    public AjaxResult querySameCount() {
     	String msg = StringUtil.EMPTY;
     	Map<String, Object>params = RequestUtil.getPageParam();
     	int count = repDetailsShow001Service.querySameCount(params);

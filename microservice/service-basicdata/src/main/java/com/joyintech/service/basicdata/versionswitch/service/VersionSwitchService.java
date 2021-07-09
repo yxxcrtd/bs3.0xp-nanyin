@@ -45,7 +45,8 @@ public class VersionSwitchService {
      * @see
      * @since 1.0
      */
-    public String selectVersionType() throws Exception {
+    public String selectVersionType()
+	{
     	return mstYieldCurveInfo001Mapper.selectVersionType();
     }
     
@@ -60,7 +61,7 @@ public class VersionSwitchService {
      * @see
      * @since 1.0
      */
-    public void updateVersionType(String versionType) throws Exception {
+    public void updateVersionType(String versionType)  {
     	Map<String, Object> pageParam = new HashMap<String, Object>();
     	String type1 = "";
     	String type2 = "";

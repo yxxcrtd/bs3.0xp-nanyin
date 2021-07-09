@@ -297,7 +297,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
      * @return 查询结果集
      * @throws Exception 异常
      */
-    public Page<PtlFundAllocationDto> findPage(int page, int length, Map<String, Object> map) throws Exception {
+    public Page<PtlFundAllocationDto> findPage(int page, int length, Map<String, Object> map) {
 //        return super.queryForPage(page, length, ()->ptlFundAllocationMapper.findPage(map));
         Page<PtlFundAllocationDto> pageData = super.queryForPage(page, length, () -> ptlFundAllocationMapper.findPage(map));
         if (pageData != null && !StringUtil.isEmptyList(pageData.getRoot())) {

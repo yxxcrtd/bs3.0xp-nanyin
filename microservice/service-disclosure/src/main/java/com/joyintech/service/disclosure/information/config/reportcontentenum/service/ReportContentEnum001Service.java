@@ -60,7 +60,8 @@ public class ReportContentEnum001Service extends CommonExportService<ReportConte
 	 * @param pageParam
 	 * @return
 	 */
-	public Page<ReportContentEnum001Dto> findIndexByPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+	public Page<ReportContentEnum001Dto> findIndexByPage(int page, int length, Map<String, Object> pageParam)
+	{
 		
 		
 		return super.queryForPageForSelectReturn(page, length, ()  -> reportContentEnum001Mapper.selectIndex(pageParam));

@@ -145,8 +145,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
      * @return Page类 Page
      * @throws Exception 异常信息
      */
-    public Page<InvestFeePayDto> selectForPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    public Page<InvestFeePayDto> selectForPage(int page, int length, Map<String, Object> map) throws NoSuchFieldException {
         map.put("pendingStatus", DictCodeListExt1.有效状态_流程中.getValue());
         map.put("effectStatus", DictCodeListExt1.有效状态_有效.getValue());
         map.put("cancleStatus", DictCodeListExt1.有效状态_撤销.getValue());
@@ -185,7 +184,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
      * @param clazz 类
      * @param <T>
      */
-    private <T> void sort(List<T> list, String key, String order, Class<T> clazz) throws Exception {
+    private <T> void sort(List<T> list, String key, String order, Class<T> clazz) throws NoSuchFieldException {
         if(StringUtil.isEmpty(key)){
             return ;
         }
@@ -1630,7 +1629,7 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
     }
     
     public Page<InvestFeePayFeeDetailDto> selectDetail(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         return this.queryForPageForSelectReturn(page,length,() -> investFeePayMapper.selectDetail(pageParam));
     }
 

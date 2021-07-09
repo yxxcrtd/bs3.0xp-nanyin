@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -84,7 +85,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
     
-    public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap,V v) throws Exception {  
+    public ClientData sendRiskRdsDataCommon(Map<String, Object> dataMap,V v) throws IOException, InstantiationException {
         // add by zhangrui1 增加批量接口调用逻辑 start
         String infCode = v.getInfCode();
         boolean isInnerTrd =checkInnerCounter(dataMap);
@@ -153,7 +154,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    public <T> ClientData sendRiskRdsData(T t,V v) throws Exception {
+    public <T> ClientData sendRiskRdsData(T t,V v) throws IOException, InstantiationException {
         logger.info("==========后端交易或委托类转换接口:{} start==========",v.getEventType()+v.getInfCode());
         Map<String,Object> dataMap=JsonUtils.object2Map(t);
         ClientData returnCli = this.sendRiskRdsDataCommon(dataMap,v);
@@ -193,7 +194,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    public AjaxResult checkRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds) throws Exception {
+    public AjaxResult checkRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds) throws IOException, InstantiationException {
         ClientData returnCli=execRiskRds(v,eventType,infCode,assetType,iInfRds);
         if (StringUtil.isNotEmpty(returnCli)) { 
             if(StringUtil.isNotEmpty(returnCli.getHead())){
@@ -236,7 +237,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    public <T> Map<String,Object>  baseBatchRiskRds(T t,V v,String eventType,String infCode,String assetType,IInfBatchRds<T,V> iInfRds) throws Exception {
+    public <T> Map<String,Object>  baseBatchRiskRds(T t,V v,String eventType,String infCode,String assetType,IInfBatchRds<T,V> iInfRds) throws IOException, InstantiationException {
         ClientData returnCli=execBatchRiskRds(t,v,eventType,infCode,assetType,iInfRds);
         Map<String,Object> retMap=new HashMap<>();
         retMap.put(InterfUtil.BACK_PAGE_FLAG,DictCodeList.是否_否.getValue());
@@ -276,7 +277,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    public <T> AjaxResult  checkBatchRiskRds(List<T> list,V v,String eventType,String infCode,String infRevCode,String assetType,IInfBatchRds<T,V> iInfRds) throws Exception {
+    public <T> AjaxResult  checkBatchRiskRds(List<T> list,V v,String eventType,String infCode,String infRevCode,String assetType,IInfBatchRds<T,V> iInfRds) throws IOException, InstantiationException {
         List<T> revokeList=new ArrayList<>();
         AjaxResult ar=new AjaxResult();
         boolean needBackFlag=false;
@@ -374,7 +375,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     }
 
     @SuppressWarnings("unchecked")
-    public List<Map<String, Object>> prepareRiskListEntity(Map<String, Object> dataMap, V v) throws Exception {
+    public List<Map<String, Object>> prepareRiskListEntity(Map<String, Object> dataMap, V v) throws InstantiationException, IOException {
         List<Map<String, Object>> result = new ArrayList<>();
         String ps = (String) dataMap.get(InterfUtil.ps);
         if (CommonUtil.isType(ps, DictCodeListExt1.交易方向_债转股)) {
@@ -598,7 +599,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    public InterfRiskRdsDto prepareRiskEntity(Map<String, Object> dataMap,V v) throws Exception {
+    public InterfRiskRdsDto prepareRiskEntity(Map<String, Object> dataMap,V v) throws InstantiationException, IOException {
         if(StringUtil.isNotEmpty(dataMap.get(InterfUtil.finprodId))&&!StringUtil.isNotEmpty(v.getAssetType())){
             Map<String, IAssetInfo> mapAsset = assetInfoSrc.getMapFromRedis(RedisKeyEnum.资产基本信息.key(), Arrays.asList(dataMap.get(InterfUtil.finprodId).toString()));
             for(IAssetInfo iAst:mapAsset.values()){
@@ -624,10 +625,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto entrustEntityDev(Map<String, Object> dataMap,V v) throws Exception {
+    private InterfRiskRdsDto entrustEntityDev(Map<String, Object> dataMap,V v) throws InstantiationException {
         //定义返回实体
         InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
-        EntrustBaseDto finDto=(EntrustBaseDto)JsonUtils.map2entity(dataMap,EntrustBaseDto.class);
+        EntrustBaseDto finDto= null;
+        try {
+            finDto = (EntrustBaseDto) JsonUtils.map2entity(dataMap,EntrustBaseDto.class);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new InstantiationException();
+        }
         infRiskRdsDto.setEventId(finDto.getEntrustId());
         infRiskRdsDto.setEventDate( DateUtil.format(DateUtil.platDateFromCache(),DateUtil.DEFAULT_DATE_FORMAT_EN));
         //设置母组合代码和子组合代码
@@ -752,10 +759,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto tradeEntityDev(Map<String, Object> dataMap,V v) throws Exception {
+    private InterfRiskRdsDto tradeEntityDev(Map<String, Object> dataMap,V v) throws InstantiationException {
         //定义返回实体
         InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
-        TradeBaseDto finDto=(TradeBaseDto)JsonUtils.map2entity(dataMap,TradeBaseDto.class);
+        TradeBaseDto finDto= null;
+        try {
+            finDto = (TradeBaseDto) JsonUtils.map2entity(dataMap,TradeBaseDto.class);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new InstantiationException();
+        }
         finDto.setTotleTradeId(removeLasStr(finDto.getTotleTradeId()));
         finDto.setTradeId(removeLasStr(finDto.getTradeId()));
         infRiskRdsDto.setEventId(StringUtil.isNotEmpty(finDto.getTotleTradeId())?finDto.getTotleTradeId():StringUtil.isNotEmpty(finDto.getTradeId())?finDto.getTradeId():StringUtil.isNotEmpty(finDto.getBusiCode())?finDto.getBusiCode():finDto.getZcId() );
@@ -901,10 +914,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @return
      * @throws Exception
      */
-    private InterfRiskRdsDto periodEntityDev(Map<String, Object> dataMap,V v) throws Exception {
+    private InterfRiskRdsDto periodEntityDev(Map<String, Object> dataMap,V v) throws InstantiationException, IOException {
         //定义返回实体
-        InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto(); 
-        TradeBaseDto finDto=(TradeBaseDto)JsonUtils.map2entity(dataMap,TradeBaseDto.class);
+        InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
+        TradeBaseDto finDto= null;
+        try {
+            finDto = (TradeBaseDto) JsonUtils.map2entity(dataMap,TradeBaseDto.class);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new InstantiationException();
+        }
         finDto.setBusiCode(removeLasStr(finDto.getBusiCode()));
         finDto.setTotleTradeId(removeLasStr(finDto.getTotleTradeId()));
         infRiskRdsDto.setEventDate(StringUtil.isNotEmpty(finDto.getmDate())?finDto.getmDate():DateUtil.format(finDto.getMdate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
@@ -1288,7 +1307,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @param dataMap
      * @throws Exception
      */
-    private void setProductInfColumn(InterfRiskRdsDto infRiskRdsDto,TradeBaseDto finDto,Map<String, Object> dataMap) throws Exception{
+    private void setProductInfColumn(InterfRiskRdsDto infRiskRdsDto,TradeBaseDto finDto,Map<String, Object> dataMap) throws IOException {
             //收益类型
             String profitType = (String)dataMap.get("profitType");
             infRiskRdsDto.setPs(finDto.getPs());

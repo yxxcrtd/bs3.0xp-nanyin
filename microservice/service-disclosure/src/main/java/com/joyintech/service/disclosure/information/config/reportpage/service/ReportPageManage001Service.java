@@ -10,6 +10,7 @@
  
 package com.joyintech.service.disclosure.information.config.reportpage.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,9 @@ import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeLi
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * 〈一句话功能简述〉
@@ -159,7 +163,7 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
      * @return
      * @throws Exception
      */
-    public List<Map<String,String>> getReportInputs(Map<String,Object> params) throws Exception{
+    public List<Map<String,String>> getReportInputs(Map<String,Object> params) throws IOException, ParserConfigurationException, SAXException {
     	//后台批处理报表地址单独啦出来
 		String serverUrl = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_SERVER_URL);
 		//用户名

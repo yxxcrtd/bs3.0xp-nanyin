@@ -44,6 +44,9 @@ import com.joyintech.tams.common.base.entity.DisPoiTab;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.JasparConnectUtilService;
 import com.joyintech.tams.disclosure.common.common.util.OfficeMergeUtil;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * 记账凭证查询service
@@ -204,7 +207,7 @@ public class PoiReportModelManage001Service extends CommonExportService<ReportMo
          * @see
          * @since 1.0
          */
-        public ResponseEntity<byte[]> mergeExport(List<ReportModelManage001Dto> list) throws Exception {
+        public ResponseEntity<byte[]> mergeExport(List<ReportModelManage001Dto> list) throws IOException {
             List<String> srcFileList = new ArrayList<String>();
             for (ReportModelManage001Dto reportModelManage001Dto : list) {
                 createExcel(reportModelManage001Dto);
@@ -231,7 +234,7 @@ public class PoiReportModelManage001Service extends CommonExportService<ReportMo
          * @see
          * @since 1.0
          */
-        public ResponseEntity<byte[]> mergeExportSingle(ReportModelManage001Dto reportModelManage001Dto) throws Exception {
+        public ResponseEntity<byte[]> mergeExportSingle(ReportModelManage001Dto reportModelManage001Dto) throws IOException {
         	//连接报表服务器并且将文件下载到本地
             createExcel(reportModelManage001Dto);
             //文件类型
@@ -252,7 +255,7 @@ public class PoiReportModelManage001Service extends CommonExportService<ReportMo
             return ExportUtil.export(fileName, exportFile, true);
         }
         
-        public List<Map<String,String>> searchReports(Map<String,Object> params) throws Exception{
+        public List<Map<String,String>> searchReports(Map<String,Object> params) throws IOException, ParserConfigurationException, SAXException {
         	//后台批处理报表地址单独啦出来
     		String serverUrl = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_SERVER_URL);
     		//用户名
@@ -278,7 +281,8 @@ public class PoiReportModelManage001Service extends CommonExportService<ReportMo
     	 * @param pageParam
     	 * @return
     	 */
-    	public Page<DisPoiTab> findByPage(int page, int length, Map<String, Object> params) throws Exception {
+    	public Page<DisPoiTab> findByPage(int page, int length, Map<String, Object> params)
+        {
     		return super.queryForPageForSelectReturn(page, length, () -> poireportModelManage001Mapper.searchReports(params));
     	}
 

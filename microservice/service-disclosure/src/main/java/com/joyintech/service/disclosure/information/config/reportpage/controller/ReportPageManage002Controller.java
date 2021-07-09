@@ -69,14 +69,14 @@ public class ReportPageManage002Controller extends BaseController {
         
     }
     @PostMapping("insertReportInfo")
-    public void insertReportInfo(@RequestBody ReportPageManage001Dto param) throws Exception {
+    public void insertReportInfo(@RequestBody ReportPageManage001Dto param) {
     	reportPageManage001Service.insertReportInfo(param);
 //        return new AjaxResult("保存成功");
     }
     
     
     @PostMapping("getReportInputsNew")
-    public ReportPageManage001Dto getReportInputsNew(@RequestBody Map<String, Object> pageParam) throws Exception {
+    public ReportPageManage001Dto getReportInputsNew(@RequestBody Map<String, Object> pageParam) {
     	return reportPageManage001Service.getReportInputsNew(pageParam);
 //        return new AjaxResult("保存成功");
     }

@@ -383,8 +383,7 @@ public class BussTrdTransferOrderController extends BaseController {
 
     @RequestMapping("select")
     @ResponseBody
-    public List<SelectOptionDto> select()
-        throws Exception {
+    public List<SelectOptionDto> select() throws IOException {
         List<SelectOptionDto> tempList = new ArrayList<>();
         // DVP资金调拨管理,直接使用画面上选择的收付款账户
         String selectValue = getParam("selectValue");

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
+import javax.xml.parsers.ParserConfigurationException;
 
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
@@ -38,6 +40,7 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.Repor
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import org.xml.sax.SAXException;
 
 /**
  * jaspar连接公共类
@@ -339,7 +342,7 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String  connectJasparAndGenHtml(String strUrl) throws Exception{
+	public String  connectJasparAndGenHtml(String strUrl) throws IOException {
 		
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -386,7 +389,7 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws Exception{
+	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws IOException, ParserConfigurationException, SAXException {
 		
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
