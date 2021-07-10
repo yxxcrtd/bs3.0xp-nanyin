@@ -116,7 +116,7 @@ public class EtrFinProductDto {
     private String mdate;
 
     /**
-     * 剩余期限
+     * 剩余期限(债券估值行情)
      */
     private BigDecimal lastqx;
 
@@ -166,7 +166,7 @@ public class EtrFinProductDto {
     private BigDecimal newPrice;
 
     /**
-     * 估价净价
+     * 估价净价（行权）
      */
     private BigDecimal priceXq;
 
@@ -176,7 +176,7 @@ public class EtrFinProductDto {
     private BigDecimal newRate;
 
     /**
-     * 估价净价
+     * 估价净价（推荐）
      */
     private BigDecimal priceTj;
 
@@ -184,6 +184,8 @@ public class EtrFinProductDto {
      * 估值收益率
      */
     private BigDecimal gzRate;
+    
+    
 
     public String getPortfolioId() {
         return portfolioId;
