@@ -343,6 +343,10 @@
             if (param.channelId) {
                 $("#chlFinprodId").val(param.channelId).trigger("change");//通道
             }
+            
+            if (param.price){
+                $("#calculateField").val(param.price).trigger("change");//净价
+            }
             $("#ps").textSelect('setValue',"T02");
             $("#priceModel").textSelect('setValue',"PRM02");
             $("#vdate").val(sysDate).trigger("change");
@@ -423,21 +427,21 @@
     };
 
     //查询组合可用现金,资产可用券面总额
-    var getPtlCashPositionInfo = function () {
-        if (!$('#portfolioId').val()) {
-            return;
-        }
-        var param = {};
-        param.finprodId = $("#finprodIdhid").val();
-        param.portfolioId = $("#portfolioId").val();
-        
-        Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
-            if (result) {
-                $("#proAvailableCash").val(result.zhkyxj_t);
-                $("#assetAvailablePosition").val(result.zcky_qmze);
-            }
-        });        
-    }
+    // var getPtlCashPositionInfo = function () {
+    //     if (!$('#portfolioId').val()) {
+    //         return;
+    //     }
+    //     var param = {};
+    //     param.finprodId = $("#finprodIdhid").val();
+    //     param.portfolioId = $("#portfolioId").val();
+    //    
+    //     Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
+    //         if (result) {
+    //             $("#proAvailableCash").val(result.zhkyxj_t);
+    //             $("#assetAvailablePosition").val(result.zcky_qmze);
+    //         }
+    //     });        
+    // }
 
     /**
      * 左下行情信息联动
@@ -682,12 +686,9 @@
                 $("#matureYield").val("").trigger("change").trigger("blur");
             }
 
-            //左下行情信息联动
+            //左下行情信息联动 & 组合可用现金,资产可用持仓
             getLeftMarketInfo();
          
-            //组合可用现金,资产可用持仓
-            getPtlCashPositionInfo();
-            
             // 画星星
             star();
         });
@@ -699,12 +700,8 @@
 
             var portfolioId = $("#portfolioId").val();
 
-            //左下行情信息联动
+            //左下行情信息联动 & 组合可用现金,资产可用持仓
             getLeftMarketInfo();
-         
-            //组合可用现金,资产可用持仓
-            getPtlCashPositionInfo();
-
         });
 
         $.fn.updateChosenArr = function updateChosenArr(obj) {

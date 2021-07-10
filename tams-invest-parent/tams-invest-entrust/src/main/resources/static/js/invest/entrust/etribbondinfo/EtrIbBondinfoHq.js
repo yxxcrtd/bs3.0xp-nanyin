@@ -43,7 +43,7 @@
     		sysDateT1:sysDateT1,
     		calId:calId
         };
-        if (portfolioId != null && portfolioId != '') {
+        if (portfolioId != null) {
             document.getElementById('zhkyxj_t').innerHTML = '0.00元';
             document.getElementById('zhkyxj_t1').innerHTML = '0.00元';
             document.getElementById('tghkyxj_t').innerHTML = '0.00元';
