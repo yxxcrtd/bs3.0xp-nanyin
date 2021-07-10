@@ -427,21 +427,21 @@
     };
 
     //查询组合可用现金,资产可用券面总额
-    // var getPtlCashPositionInfo = function () {
-    //     if (!$('#portfolioId').val()) {
-    //         return;
-    //     }
-    //     var param = {};
-    //     param.finprodId = $("#finprodIdhid").val();
-    //     param.portfolioId = $("#portfolioId").val();
-    //    
-    //     Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
-    //         if (result) {
-    //             $("#proAvailableCash").val(result.zhkyxj_t);
-    //             $("#assetAvailablePosition").val(result.zcky_qmze);
-    //         }
-    //     });        
-    // }
+    var getPtlCashPositionInfo = function () {
+        if (!$('#portfolioId').val()) {
+            return;
+        }
+        var param = {};
+        param.finprodId = $("#finprodIdhid").val();
+        param.portfolioId = $("#portfolioId").val();
+
+        Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
+            if (result) {
+                $("#proAvailableCash").val(result.zhkyxj_t);
+                $("#assetAvailablePosition").val(result.zcky_qmze);
+            }
+        });
+    }
 
     /**
      * 左下行情信息联动
@@ -688,7 +688,10 @@
 
             //左下行情信息联动 & 组合可用现金,资产可用持仓
             getLeftMarketInfo();
-         
+
+            //组合可用现金,资产可用持仓
+            getPtlCashPositionInfo();
+
             // 画星星
             star();
         });
@@ -702,6 +705,9 @@
 
             //左下行情信息联动 & 组合可用现金,资产可用持仓
             getLeftMarketInfo();
+
+            //组合可用现金,资产可用持仓
+            getPtlCashPositionInfo();
         });
 
         $.fn.updateChosenArr = function updateChosenArr(obj) {
