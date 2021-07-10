@@ -583,19 +583,16 @@
         $("#ps").change(function () {
             var finprodIdhid = $("#finprodIdhid").val();
             if ($("#ps").val() == T01) {
-                $("#finprodId").removeAttr("required");
                 if ($("#isRight").val() != N) {
                     $("#exerYield").removeAttr("disabled");
                 }
                 $("#matureYield").removeAttr("disabled");
             } else if ($("#ps").val() == T02) {
-                $("#finprodId").attr("required", "true");
                 $("#exerYield").attr("disabled", true);
                 $("#matureYield").attr("disabled", true);
                 $("#exerYield").val("");
                 $("#matureYield").val("");
             } else if ($("#ps").val() == T03 || $("#ps").val() == T39) {
-                $("#finprodId").attr("required", "true");
                 $("#exerYield").attr("disabled", true);
                 $("#matureYield").attr("disabled", true);
                 $("#exerYield").val("");
