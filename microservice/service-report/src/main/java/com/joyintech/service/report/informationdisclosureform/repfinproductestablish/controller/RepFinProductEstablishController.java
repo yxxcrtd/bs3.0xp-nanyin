@@ -63,7 +63,7 @@ public class RepFinProductEstablishController{
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RepFinProductEstablishDto> selectAll(@RequestBody Map<String, Object> pageParam,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repFinProductEstablishService.selectForPage(page, length, pageParam);
     }
     /**
@@ -77,7 +77,7 @@ public class RepFinProductEstablishController{
      */
     @PostMapping("getPortfolioId")
     public List<SelectOptionDto> getPortfolioId(@RequestBody Map<String,Object> map)
-        throws Exception {
+    {
         map.put("manageObjType", DictCodeListExt1.管理对象类型_金融产品.getValue());
         map.put("profitType", DictCodeList.收益类型_收益型.getValue());
         return repFinProductEstablishService.getSelectOption(map);

@@ -39,7 +39,7 @@ public class TotalMaintainController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TotalMaintain001Dto> queryProdIdInfo(@RequestBody Map<String, Object> paramMap,
                                                      @PathVariable("page") int page,
-                                                     @PathVariable("length") int length) throws Exception {
+                                                     @PathVariable("length") int length) {
         return totalMaintainService.findPage(page, length, paramMap);
     }
 

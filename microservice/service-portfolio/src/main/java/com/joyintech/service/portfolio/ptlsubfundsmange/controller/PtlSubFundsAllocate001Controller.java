@@ -49,7 +49,7 @@ public class PtlSubFundsAllocate001Controller {
 	 */
 	@PostMapping("/getPortfolioId/{page}/{length}")
 	public Page<SelectOptionDto> getPortfolioId(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return ptlSubFundsAllocate001Service.getPortfolioId(pageParam, page, length);
 	}
 
@@ -61,7 +61,7 @@ public class PtlSubFundsAllocate001Controller {
 	 */
 	@PostMapping("/getSubPortfolioId/{page}/{length}")
 	public Page<SelectOptionDto> getSubPortfolioId(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return ptlSubFundsAllocate001Service.getSubPortfolioId(pageParam, page, length);
 	}
 
@@ -73,7 +73,7 @@ public class PtlSubFundsAllocate001Controller {
 	 */
 	@PostMapping("findFundsAllocatePage/{page}/{length}")
 	public Page<PtlSubFundsAllocateDto> findFundsAllocatePage(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return ptlSubFundsAllocate001Service.findFundsAllocatePage(page, length, pageParam);
 	}
 	
@@ -84,13 +84,13 @@ public class PtlSubFundsAllocate001Controller {
 	 * @return
 	 */
 	@PostMapping("selectFundsAllocateList")
-	public List<PtlSubFundsAllocateDto> selectFundsAllocateList(@RequestBody Map<String, Object> pageParam) throws Exception {
+	public List<PtlSubFundsAllocateDto> selectFundsAllocateList(@RequestBody Map<String, Object> pageParam) {
 		return ptlSubFundsAllocate001Service.selectFundsAllocateList(pageParam);
 	}
 
 	 @PostMapping("selectOther/{page}/{length}")
     public Page<PtlSubFundsAllocateDto> selectOther(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception{
+	 {
         return ptlSubFundsAllocate001Service.selectOther(page, length, param);
     }
 	 

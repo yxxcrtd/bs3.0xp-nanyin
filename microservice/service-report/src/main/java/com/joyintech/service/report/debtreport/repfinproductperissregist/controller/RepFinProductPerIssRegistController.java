@@ -55,7 +55,7 @@ public class RepFinProductPerIssRegistController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<RepFinProductPerIssRegistDto> findPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repFinProductPerIssRegistService.selectForPage(page, length, param);
     }
     /**
@@ -65,7 +65,7 @@ public class RepFinProductPerIssRegistController {
      */
     @PostMapping("/selectForExport/{page}/{length}")
     public Page<RepFinProductPerIssRegistDto> selectForExport(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repFinProductPerIssRegistService.selectForExport(page, length, param);
     }
 }

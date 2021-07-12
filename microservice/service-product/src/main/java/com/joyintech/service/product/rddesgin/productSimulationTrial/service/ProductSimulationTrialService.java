@@ -64,7 +64,7 @@ public class ProductSimulationTrialService extends BaseService<ProductSimulation
 	 */
 	public Page<ProductSimulationTrialDto> findPage(int page, int length,
 													Map<String, Object> pageParam)
-			throws Exception {
+	{
 		Page<ProductSimulationTrialDto> resultPage = this.queryForPage(page, length,
 				() -> productSimulationTrialMapper.findPage(pageParam));
 		return resultPage;

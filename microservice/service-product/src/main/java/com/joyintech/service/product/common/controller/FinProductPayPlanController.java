@@ -48,7 +48,8 @@ public class FinProductPayPlanController {
      * @throws Exception 
      */
     @GetMapping("queryPayPlanInfoByFinprodId")
-    public BussFinProductPayPlanDto queryPayPlanInfoByFinprodId(String finprodId, String effDate) throws Exception {
+    public BussFinProductPayPlanDto queryPayPlanInfoByFinprodId(String finprodId, String effDate)
+    {
         return finProductPayPlanService.queryPayPlanInfoByFinprodId(finprodId, effDate);
     }
 

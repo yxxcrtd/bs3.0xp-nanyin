@@ -40,7 +40,7 @@ public class RepFinProductAssetBalanceController {
     private RepFinProductAssetBalanceService repFinProductAssetBalanceService;
     @PostMapping("findPage/{page}/{length}")
     public Page<RepFinProductAssetBalanceDto> selectAll(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repFinProductAssetBalanceService.selectForPage(page, length, param);
     }
     
@@ -54,7 +54,7 @@ public class RepFinProductAssetBalanceController {
      * @since 1.0
      */
     @PostMapping("selectAllListSum")
-    public List<RepFinProductAssetBalanceDto> selectAllListSum(@RequestBody Map<String, Object> param) throws Exception {
+    public List<RepFinProductAssetBalanceDto> selectAllListSum(@RequestBody Map<String, Object> param)  {
         return repFinProductAssetBalanceService.selectAllListSum(param);
     }
     
@@ -68,7 +68,7 @@ public class RepFinProductAssetBalanceController {
      * @since 1.0
      */
     @PostMapping("selectAllList")
-    public List<RepFinProductAssetBalanceDto> selectAllList(@RequestBody Map<String, Object> param) throws Exception {
+    public List<RepFinProductAssetBalanceDto> selectAllList(@RequestBody Map<String, Object> param) {
         return repFinProductAssetBalanceService.selectAllList(param);
     }
     

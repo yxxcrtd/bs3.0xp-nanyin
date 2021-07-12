@@ -35,7 +35,7 @@ public class PltMedianManagementController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<PltMedianManagementDto> selectAll(@RequestBody Map<String, Object> param,
-                                                  @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                  @PathVariable("page") int page, @PathVariable("length") int length) {
         return pltMedianManagementService.selectForPage(page,length,param);
     }
     
@@ -52,7 +52,7 @@ public class PltMedianManagementController {
     public Page<SelectOptionDto> selectMedianManagement(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page,
                                                         @PathVariable("length") int length)
-        throws Exception {
+    {
         return pltMedianManagementService.selectMedianManagement(page, length, param);
     }
 

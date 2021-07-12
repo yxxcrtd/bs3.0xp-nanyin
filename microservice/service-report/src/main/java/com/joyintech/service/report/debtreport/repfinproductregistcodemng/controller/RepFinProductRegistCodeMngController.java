@@ -92,7 +92,7 @@ public class RepFinProductRegistCodeMngController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RepFinProductRegistCodeMngDto> selectAll(@RequestBody Map<String, Object> pageParam,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repFinProductRegistCodeMngService.selectForPage(page, length, pageParam);
     }
     

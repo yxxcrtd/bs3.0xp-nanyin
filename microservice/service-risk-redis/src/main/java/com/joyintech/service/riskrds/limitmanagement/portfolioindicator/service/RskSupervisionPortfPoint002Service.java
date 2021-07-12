@@ -43,7 +43,7 @@ public class RskSupervisionPortfPoint002Service extends BaseService<RskSupervisi
      */
     public Page<RskSupervisionIndicator002Dto> queryRelatedIndList(int page, int length,
                                                                    Map<String, Object> param)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> rskSupervisionPortfPoint002Mapper.queryRelatedIndList(param));
     }

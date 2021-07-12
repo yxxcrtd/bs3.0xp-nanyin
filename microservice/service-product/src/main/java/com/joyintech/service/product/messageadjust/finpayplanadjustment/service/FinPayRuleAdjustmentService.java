@@ -10,6 +10,7 @@
 
 package com.joyintech.service.product.messageadjust.finpayplanadjustment.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -155,7 +156,7 @@ public class FinPayRuleAdjustmentService extends BaseService<FinPayRuleAdjustmen
 	 * 
 	 * @param finPayRuleAdjustmentDto
 	 */
-	public void insertFinProductFeeInfo(FinPayRuleAdjustmentDto entity) throws Exception {
+	public void insertFinProductFeeInfo(FinPayRuleAdjustmentDto entity) throws InvocationTargetException, IllegalAccessException {
 		Long branch = Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
 		if (entity.getSelectedItem() != null) {
 			// 分层产品款型为空所有子产品都使用该费用

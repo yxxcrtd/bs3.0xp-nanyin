@@ -46,7 +46,7 @@ public class RiskMonitorIndicatorsController{
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<RiskMonitorIndicatorsDto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return riskMonitorIndicatorsService.selectForPage(page, length, param);
     }
     

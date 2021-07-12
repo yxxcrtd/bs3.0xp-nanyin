@@ -38,7 +38,7 @@ public class FinInvestmentEvaluateController {
     public Page<FinInvestmentEvaluateDto> selectReserve(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page,
                                                         @PathVariable("length") int length)
-        throws Exception {
+    {
         return finInvestmentEvaluateService.findPage2(page, length, param);
     }
 /**
@@ -48,7 +48,7 @@ public class FinInvestmentEvaluateController {
 public Page<BokPositionPrdNetvalueDto> findPage3(@RequestBody Map<String, Object> param,
                                                  @PathVariable("page") int page,
                                                  @PathVariable("length") int length)
-        throws Exception {
+{
     return finInvestmentEvaluateService.findPage3(page, length, param);
 }
     /**
@@ -56,7 +56,7 @@ public Page<BokPositionPrdNetvalueDto> findPage3(@RequestBody Map<String, Object
      */
     @PostMapping("findPage3e")
     public List<BokPositionPrdNetvalueDto> findPage3e(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return finInvestmentEvaluateService.findPage3e(param);
     }
 /**
@@ -74,7 +74,7 @@ public Page<BokPositionPrdNetvalueDto> findPage3(@RequestBody Map<String, Object
     public Page<FinInvestmentEvaluate003Dto> findPage(@RequestBody Map<String, Object> param,
                                                        @PathVariable("page") int page,
                                                        @PathVariable("length") int length)
-            throws Exception {
+    {
         Page<FinInvestmentEvaluate003Dto> page1=finInvestmentEvaluateService.findPage(page, length, param);
 //        System.out.println(page1);
         logger.info(page1.toString());
