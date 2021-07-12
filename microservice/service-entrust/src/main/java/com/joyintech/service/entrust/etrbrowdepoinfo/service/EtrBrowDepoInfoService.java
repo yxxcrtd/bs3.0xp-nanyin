@@ -210,6 +210,7 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
      * @since 1.0
      */
     public BigDecimal getChannelAvailableCash(int page,int length,Map<String, Object> map) {
+        map.put("platDate",platformDateImpl.getSysDate());
         return etrBrowDepoInfoMapper.getChannelAvailableCash(map);
     }
 

@@ -1348,6 +1348,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 
 
     public BigDecimal getTongDaoCash(Map<String, Object> param) {
+        param.put("platDate",iPlatformDate.getSysDate());
         BigDecimal bigDecimal = restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdConBond/getTongDaoCash",
                 param, BigDecimal.class);
         return bigDecimal;

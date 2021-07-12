@@ -90,6 +90,7 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 	 * @since 1.0
 	 */
 	public Page<RskPortfolioIndicator002Dto> selectTableIndForPage(Map<String, Object> parameters) {
+		parameters.put("platDate",platformDateService.getSysDate());
 		return restTemplate.postForPage(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortfPoint/selectTableIndForPage",
 				parameters, RskPortfolioIndicator002Dto.class);
 	}
