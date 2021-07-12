@@ -115,9 +115,9 @@ public class FinExFundTargetService extends BaseService<FinExFundTargetDto> {
      */
     public Page<FinExFundTargetDto> selectForPage(int page, int length, Map<String, Object> param)
             throws Exception {
-        param.put("CASH_TYPE_2", DictCodeListExt1.现金流二级类型_利息.getValue());
-        param.put("FIN_CASH_BUSINESS_TYPE", DictCodeListExt1.现金流业务类型_金融产品.getValue());
         param.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+        param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        param.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         return super.queryForPage(page, length, () -> finExFundTargetMapper.selectForPage(param));
     }
 
