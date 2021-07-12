@@ -143,7 +143,7 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
     //private String customerId;
 
     /**
-     * 支付方式
+     * 分红方式
      */
     private String divideMethod;
 

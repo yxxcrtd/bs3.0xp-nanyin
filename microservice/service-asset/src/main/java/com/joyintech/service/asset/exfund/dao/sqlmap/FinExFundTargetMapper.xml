@@ -70,8 +70,8 @@
 		   b.ETF_TYPE etfType,
 		   a.TRADE_MARKET tradeMarket,
 		   c.CUSTOMER_NAME manager,
+	   	    b.DIVIDE_METHOD  divideMethod,
 	   		a.IDATE idate,
-	   		e.PAY_TYPE divideMethod,
 		   (CASE
 		   WHEN b.PUR_SPEED is not null THEN 'T+'||b.PUR_SPEED
 		   ELSE ''
@@ -87,13 +87,8 @@
 		   b.FINPROD_ID = a.FINPROD_ID
 	    left join MST_CUSTOMER_INFO c on
 	    	c.CUSTOMER_ID = a.MANAGER
-		   left join FIN_CASH_INFO d on
-		   d.FINPROD_ID = a.FINPROD_ID and d.CASH_TYPE_2 = #{CASH_TYPE_2,jdbcType=VARCHAR}
-		   and d.FINPROD_TYPE = #{FIN_CASH_BUSINESS_TYPE,jdbcType=VARCHAR}
-		   left join FIN_CASH_PAY_RULE e on
-		   e.CASH_ID = d.CASH_ID and a.VDATE = e.EFF_DATE
 	    where
-		   a.TRADE_MARKET in ('03','04')
+		   a.TRADE_MARKET in (#{TRADE_PLACE_03,jdbcType=VARCHAR},#{TRADE_PLACE_04,jdbcType=VARCHAR})
 	    	and a.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F06,jdbcType=VARCHAR}
 	    	<if test="finprodMarketId != null and finprodMarketId != ''">
 			 and a.FINPROD_MARKET_ID like CONCAT('%',CONCAT(#{finprodMarketId,jdbcType=VARCHAR},'%'))
