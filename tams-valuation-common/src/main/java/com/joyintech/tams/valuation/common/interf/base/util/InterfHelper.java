@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class InterfHelper {
     			md5CashId += FinalString.SPLIT+cashId[i];
     		}
     	}
-    	md5CashId = MD5Util.string2MD5(md5CashId);
+    	md5CashId = EncryptUtil.getInstance().md5(md5CashId);
     	return md5CashId;
     }
     

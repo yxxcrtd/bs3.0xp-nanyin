@@ -2794,15 +2794,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 EquityInfo001Dto eInfo001Dto = equityInfo001Map.get(key).get(0);
                 if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())
                         || StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())){
-                    try {
                         String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
                                 single.getCustContractNo(),
                                 eInfo001Dto.getIdentifyNumber());
                         single.setCustContractNo(tuominStr);
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        logger.error(e.getMessage(),e);
-                    }
                 }
             }
             if (single.getStatus() != null && single.getStatus().equals("E")) {
@@ -2901,15 +2896,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         if(equityInfoCheck!=null){
             if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), equityInfoCheck.getPersonalIdentifyType())
                     || StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), equityInfoCheck.getPersonalIdentifyType())){
-                try {
-                    String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
-                            dto.getCustContractNo(),
-                            equityInfoCheck.getIdentifyNumber());
-                    dto.setCustContractNo(tuominStr);
-                }
-                catch (UnsupportedEncodingException e) {
-                    logger.error(e.getMessage(),e);
-                }
+                String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
+                        dto.getCustContractNo(),
+                        equityInfoCheck.getIdentifyNumber());
+                dto.setCustContractNo(tuominStr);
             }
         }
 
@@ -2967,15 +2957,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 EquityInfo001Dto eInfo001Dto = equityInfo001Map.get(key).get(0);
                 if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())
                         || StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())){
-                    try {
-                        String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
-                                dto.getCustContractNo(),
-                                eInfo001Dto.getIdentifyNumber());
-                        dto.setCustContractNo(tuominStr);
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        logger.error(e.getMessage(),e);
-                    }
+                    String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
+                            dto.getCustContractNo(),
+                            eInfo001Dto.getIdentifyNumber());
+                    dto.setCustContractNo(tuominStr);
                 }
             }
             // 数据日期

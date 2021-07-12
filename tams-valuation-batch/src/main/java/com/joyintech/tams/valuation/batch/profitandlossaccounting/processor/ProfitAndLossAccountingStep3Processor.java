@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListTableId;
 import org.apache.commons.lang.StringUtils;
@@ -254,7 +255,7 @@ public class ProfitAndLossAccountingStep3Processor extends BaseProcessor<NeedOpe
             String bookId = x.getBooksetId() + x.getTableId()
                      + x.getHappenDate() + BookConstant.DEF_BOK_DETAIL_ID
                      + x.getOffsetFlag();
-            bookId = MD5Util.string2MD5(bookId);
+            bookId = EncryptUtil.getInstance().md5(bookId);
             x.setBookId(bookId);
             // 分支号
             x.setBranch(BookConstant.DEFALUT_BRANCH);

@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
 import org.slf4j.Logger;
@@ -77,9 +78,8 @@ public class ChbSensitiveInfoUtil {
      * @param source 原字符串
      * @param idNo 身份证件号码
      * @return 处理后字符串
-     * @throws UnsupportedEncodingException 
      */
-    public static String replaceIdNoToMd5(String source, String idNo) throws UnsupportedEncodingException {
+    public static String replaceIdNoToMd5(String source, String idNo) {
         if (StringUtil.isBlank(source) || StringUtil.isBlank(idNo)) {
             return source;
         }
@@ -87,9 +87,9 @@ public class ChbSensitiveInfoUtil {
         if (StringUtil.contains(source, idNo)) {
             if(source.startsWith(idNo)){
                 source="JOYIN"+source;
-                return StringUtil.replaceAll(source, idNo, encrypByMD5(idNo.toUpperCase())).substring(5);
+                return StringUtil.replaceAll(source, idNo, EncryptUtil.getInstance().md5(idNo.toUpperCase())).substring(5);
             }else{
-                return StringUtil.replaceAll(source, idNo, encrypByMD5(idNo.toUpperCase()));
+                return StringUtil.replaceAll(source, idNo, EncryptUtil.getInstance().md5(idNo.toUpperCase()));
             }
         }
         
@@ -171,24 +171,24 @@ public class ChbSensitiveInfoUtil {
 //    }
     
     
-    /***
-     * 对指定的字符串进行MD5加密
-     * @throws UnsupportedEncodingException 
-     */
-    private static String encrypByMD5(String originString) throws UnsupportedEncodingException {
-        try {
-            //创建具有MD5算法的信息摘要
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            //使用指定的字节数组对摘要进行最后更新，然后完成摘要计算
-            byte[] bytes = md.digest(originString.getBytes("UTF-8"));
-            //将得到的字节数组变成字符串返回
-            String s = byteArrayToHex(bytes);
-            return s.toLowerCase();
-        } catch (NoSuchAlgorithmException e) {
-            logger.error(e.getMessage(),e);
-        }
-        return null;
-    }
+//    /***
+//     * 对指定的字符串进行MD5加密
+//     * @throws UnsupportedEncodingException
+//     */
+//    private static String encrypByMD5(String originString) throws UnsupportedEncodingException {
+//        try {
+//            //创建具有MD5算法的信息摘要
+//            MessageDigest md = MessageDigest.getInstance("MD5");
+//            //使用指定的字节数组对摘要进行最后更新，然后完成摘要计算
+//            byte[] bytes = md.digest(originString.getBytes("UTF-8"));
+//            //将得到的字节数组变成字符串返回
+//            String s = byteArrayToHex(bytes);
+//            return s.toLowerCase();
+//        } catch (NoSuchAlgorithmException e) {
+//            logger.error(e.getMessage(),e);
+//        }
+//        return null;
+//    }
     /**
      * 将字节数组转换成十六进制，并以字符串的形式返回
      * 128位是指二进制位。二进制太长，所以一般都改写成16进制，
