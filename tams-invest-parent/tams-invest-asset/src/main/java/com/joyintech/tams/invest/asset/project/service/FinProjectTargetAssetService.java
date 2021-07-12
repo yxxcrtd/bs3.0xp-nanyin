@@ -483,6 +483,8 @@ public class FinProjectTargetAssetService extends CommonExportService<FinProject
                             creditNonstdInfoDto.setRepBasis(BussinessDictCodeList.中债_计息基础_ACT360.getValue());
                         }else if (StringUtil.equals(factorDto.getBasis(), DictCodeList.计息基础_A_365.getValue())){
                             creditNonstdInfoDto.setRepBasis(BussinessDictCodeList.中债_计息基础_ACT365.getValue());
+                        }else if(StringUtil.equals(factorDto.getBasis(), DictCodeList.计息基础_A_A_按实际天数分配.getValue())){
+                            creditNonstdInfoDto.setRepBasis(BussinessDictCodeList.中债_计息基础_ACTACT.getValue());
                         }
                             
                         
