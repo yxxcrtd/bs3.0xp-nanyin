@@ -27,6 +27,9 @@ var loadTree = function (callback) {
 	EtrIbRepoRk = {
 		loadTree: loadTree
 	};
+	window.EtrIbRepoRk = {
+		loadTree: loadTree
+	};
 
 $(function () {
 	
@@ -241,7 +244,10 @@ $(function () {
     $('#EtrIbRepoRk_btn_creat').click(function () {
         Joyin.dialog(JoyinUtil.getLabel("质押库新建"),
             basePath + "invest/entrust/etribrepo/EtrIbRepoRk002/init",
-            "50%", "75%")
+            "50%", "75%",null,function(){
+        		loadTree();
+        	}
+        )
     });
     //“列表信息”上下箭头展示事件 '.icon-downarrow',  '.icon-uparrow'
     $("body").on('click','.mixtree-head', function () {

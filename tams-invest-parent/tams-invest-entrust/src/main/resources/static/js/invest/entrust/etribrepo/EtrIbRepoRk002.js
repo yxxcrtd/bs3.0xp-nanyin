@@ -11,11 +11,11 @@ $(function() {
             Joyin.confirm(result.data, function() {
                 if (operateType == 'save') {
                     WorkFlow.doSaveList(basePath + 'invest/entrust/etribrepo/EtrIbRepoRk002/save', object, "EtrIbRepoRk002_btn_save");
-                    EtrIbRepoRk.loadTree();
+//                    window.EtrIbRepoRk.loadTree();
                 }
                 else {
                     WorkFlow.doSubmitList(basePath + 'invest/entrust/etribrepo/EtrIbRepoRk002/save', object, "EtrIbRepoRk002_btn_submit");
-                    EtrIbRepoRk.loadTree();
+//                    window.EtrIbRepoRk.loadTree();
                 };
             });
         });
