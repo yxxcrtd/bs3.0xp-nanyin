@@ -36,6 +36,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -240,7 +241,7 @@ public class EtrStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getTongDaoCash")
-    public BigDecimal getTongDaoCash(@RequestBody Map<String,Object> map) throws Exception{
+    public BigDecimal getTongDaoCash(@RequestBody Map<String,Object> map){
         return etrStockService.getTongDaoCash(map);
     }
 
@@ -321,7 +322,7 @@ public class EtrStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrStockDto dto, BindingResult br) throws Exception {
+    public AjaxResult save(@RequestBody EtrStockDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
