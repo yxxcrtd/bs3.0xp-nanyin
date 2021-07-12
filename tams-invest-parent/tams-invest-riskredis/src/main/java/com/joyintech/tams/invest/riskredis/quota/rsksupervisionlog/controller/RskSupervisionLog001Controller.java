@@ -56,8 +56,7 @@ public class RskSupervisionLog001Controller extends BaseController  {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskSupervisionLogDto> selectAll()
-            throws Exception {
+    public Page<RskSupervisionLogDto> selectAll(){
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RskSupervisionLogDto> page = rskSupervisionLogService.selectForPage(map);
         return page;
@@ -69,8 +68,7 @@ public class RskSupervisionLog001Controller extends BaseController  {
      * @throws Exception 异常
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return rskSupervisionLogService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 
