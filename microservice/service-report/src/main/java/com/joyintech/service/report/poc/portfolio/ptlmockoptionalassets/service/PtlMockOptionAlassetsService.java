@@ -16,6 +16,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,13 @@ public class PtlMockOptionAlassetsService extends BaseService<PtlMockOptionAlass
         map.put("F01", DictCodeList.平安资产类型_债券.getValue());
         map.put("F06", DictCodeList.平安资产类型_项目类资产.getValue());
         map.put("type9", BussinessDictCodeList.行内资产二级分类_非标准化债权类资产.getValue());
+
+        //排除已经选择的资产
+        if(StringUtil.isNotEmpty(map.get("selectedFinprodId"))){
+            List<String> selectedFinprodIds = Arrays.asList(map.get("selectedFinprodId").toString().split(","));
+            map.put("selectedFinprodIds", selectedFinprodIds);
+        }
+
         return super.queryForPage(page, length,
             () -> ptlmockoptionalassetsMapper.selectForPage(map));
     }

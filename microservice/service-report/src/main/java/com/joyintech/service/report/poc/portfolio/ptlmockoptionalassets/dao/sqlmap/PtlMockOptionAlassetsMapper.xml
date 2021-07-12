@@ -146,6 +146,13 @@
 		<if test="loginUserName != null and loginUserName != ''">
             and PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
         </if>
+		<if test="selectedFinprodIds != null and !selectedFinprodIds.isEmpty()">
+			AND fin_product.FINPROD_ID not IN
+			<foreach collection="selectedFinprodIds" item="finprodId" open="( " close=" )" separator=",">
+				#{finprodId}
+			</foreach>
+		</if>
+
 	</select>
 	
 	<select id="getFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
