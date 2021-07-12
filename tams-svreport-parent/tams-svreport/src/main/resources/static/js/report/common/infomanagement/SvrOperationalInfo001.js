@@ -704,7 +704,7 @@ $(function() {
 
 function showTables() {
 	var h = $("#selectedColumns").outerHeight(true);
-	var divheight = 110 + h;
+	var divheight = 150 + h;
 	var tableId = $('#baseTableName').val();
 	if (typeof (tableId) == "undefined" || tableId == null || tableId == "") {
 		layer.alert('请选择数据源表', {
