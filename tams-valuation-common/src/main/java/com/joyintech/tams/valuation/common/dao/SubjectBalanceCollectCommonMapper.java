@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.BokSubject;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance;
@@ -25,6 +26,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanc
  * @see SubjectBalanceCollectCommonMapper
  * @since 1.0
  */
+@Repository
 public interface SubjectBalanceCollectCommonMapper {
 
     /**

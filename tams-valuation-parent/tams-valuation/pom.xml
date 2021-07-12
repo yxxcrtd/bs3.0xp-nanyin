@@ -10,7 +10,7 @@
     <parent>
         <groupId>com.joyintech</groupId>
         <artifactId>tams-parent</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.3-BOOTVIS</version>
     </parent>
 
     <properties>
@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>com.jixu</groupId>
-            <artifactId>jixu</artifactId>
+            <artifactId>JixuApi</artifactId>
             <version>0.0.1</version>
         </dependency>
     </dependencies>

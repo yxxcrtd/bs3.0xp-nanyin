@@ -10,17 +10,18 @@
  
 package com.joyintech.tams.invest.portfolio.ptlpositionanalysis.controller;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import com.jixu.common.util.JsonUtil;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis001Dto;
+import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto;
+import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.service.PtlPositionAnalysis001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,22 +29,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.system.constant.SystemGlobalConstant;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
-import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis001Dto;
-import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto;
-import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.service.PtlPositionAnalysis001Service;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -116,7 +105,7 @@ public class PtlPositionAnalysis001Controller extends BaseController {
         
         // start  modify by wj 2020-04-16 饼图展示数据 无现金数据。重新计算并赋值。
         countSumAndCalPercent(list);
-        
+
         return list==null?new ArrayList<PtlPositionAnalysis002Dto>():list;
     }
     

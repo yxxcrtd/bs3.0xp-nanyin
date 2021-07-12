@@ -6,8 +6,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface PbcBeforeSubCheckMapper {
     
     List<PbcBeforeSubCheckDto> selectPbcPrdBaseInfoSubCheck(Date checkdate);

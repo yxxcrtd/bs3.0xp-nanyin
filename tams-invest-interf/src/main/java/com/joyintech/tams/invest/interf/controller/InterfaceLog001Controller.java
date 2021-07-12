@@ -10,14 +10,13 @@
  
 package com.joyintech.tams.invest.interf.controller;
 
-import com.jixu.common.util.JsonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.interf.dto.InterfStatus;
 import com.joyintech.tams.invest.interf.service.InterfaceLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class InterfaceLog001Controller extends BaseController{
         noSend.setId("02");
         noSend.setText("未发送");
         codeList.add(noSend);
-        model.addAttribute("interfStsType", JsonUtil.objToString(codeList));
+        model.addAttribute("interfStsType", JsonUtils.object2Json(codeList));
         return super.init(model);
     }
     

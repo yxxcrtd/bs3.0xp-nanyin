@@ -1,18 +1,5 @@
 package com.jixu.joyin2jixu.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import com.joyintech.framework.select.SelectOptionDto;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.jixu.common.func.CommFuncService;
 import com.jixu.common.type.ResultContainer;
@@ -20,27 +7,24 @@ import com.jixu.common.type.ResultInterface;
 import com.jixu.common.types.ActiveType;
 import com.jixu.common.types.JixuDictCode;
 import com.jixu.common.util.DateUtil;
-import com.jixu.dao.intf.BkCashAcctDao;
-import com.jixu.dao.intf.BkInfoDao;
-import com.jixu.dao.intf.BrokerDao;
-import com.jixu.dao.intf.IssueInfoDao;
-import com.jixu.dao.intf.PortfolioHdrDao;
-import com.jixu.dao.intf.SecAcctDao;
-import com.jixu.dao.intf.TranBasicDao;
+import com.jixu.dao.intf.*;
 import com.jixu.framework.msg.MsgError;
 import com.jixu.joyin2jixu.dto.SecurityInfoDto;
 import com.jixu.msg.dto.JJBkCashAcctDto;
 import com.jixu.msg.dto.JJPortfolioDto;
 import com.jixu.secTran.SecurityCoreFactory;
-import com.orm.obj.BkCashAcct;
-import com.orm.obj.BkInfo;
-import com.orm.obj.Broker;
-import com.orm.obj.CoaaGroup;
-import com.orm.obj.IssueInfo;
-import com.orm.obj.PortfolioHdr;
-import com.orm.obj.Province;
-import com.orm.obj.SecAcct;
-import com.orm.obj.TranBasic;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.orm.obj.*;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 该类为joyin调用接口，新建产品等信息

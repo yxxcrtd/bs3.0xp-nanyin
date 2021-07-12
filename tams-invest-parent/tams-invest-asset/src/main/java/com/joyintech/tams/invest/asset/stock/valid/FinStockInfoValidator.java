@@ -10,9 +10,7 @@
  
 package com.joyintech.tams.invest.asset.stock.valid;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
@@ -20,12 +18,10 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
-import com.joyintech.tams.invest.asset.stock.service.FinStockInfoService;
 import com.joyintech.tams.invest.asset.stock.dto.FinStockInfoDto;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import com.joyintech.tams.invest.asset.stock.service.FinStockInfoService;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +56,7 @@ public class FinStockInfoValidator implements BeanValidator {
     MstWorkflowCommonService mstWorkflowCommonService;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
     
     /**
      * {@inheritDoc}
@@ -200,7 +196,7 @@ public class FinStockInfoValidator implements BeanValidator {
 
                    //总股本大于等于流通股本check
                }
-                errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, "1302", ValidMessage.class);
+                errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, "1302");
             }
 
         return errorList;

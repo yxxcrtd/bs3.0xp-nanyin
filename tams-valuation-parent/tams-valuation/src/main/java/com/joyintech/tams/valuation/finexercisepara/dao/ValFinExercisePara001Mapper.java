@@ -16,6 +16,7 @@ import java.util.Map;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.finexercisepara.dto.ValFinExercisePara001Dto;
 import com.joyintech.tams.valuation.finexercisepara.dto.ValFinExercisePara002Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 含权债摊销参数设置
@@ -24,6 +25,7 @@ import com.joyintech.tams.valuation.finexercisepara.dto.ValFinExercisePara002Dto
  * @see ValFinExercisePara001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValFinExercisePara001Mapper {
 
     List<ValFinExercisePara001Dto> selectAll(Map<String, Object> map);

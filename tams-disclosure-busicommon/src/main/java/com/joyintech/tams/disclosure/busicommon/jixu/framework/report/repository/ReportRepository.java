@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoDao;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
@@ -24,7 +24,7 @@ public class ReportRepository {
     }
 	
 	@Autowired
-	private ReportInfoDao reportInfoDao;
+	private ReportInfoMapper reportInfoMapper;
 	
 	@Transactional(value="jixuTXManager")
 	public void createReport(ReportInfo report){
@@ -44,14 +44,14 @@ public class ReportRepository {
 	}
 	
 	public List<ReportInfo> getAllReports(){
-		  return reportInfoDao.loadEntityAll(ReportInfo.class);
+		  return reportInfoMapper.loadEntityAll(ReportInfo.class);
 	}
 	
 	public ReportInfo getReportByURI(String uri){
-		return reportInfoDao.getReportInfoByURI(uri);
+		return reportInfoMapper.getReportInfoByURI(uri);
 	}
 	
 	public ReportInfo getReportByID(String reportID){
-		return reportInfoDao.getReportInfoByID(reportID);
+		return reportInfoMapper.getReportInfoByID(reportID);
 	}
 }

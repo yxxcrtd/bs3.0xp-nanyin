@@ -13,6 +13,7 @@ package com.joyintech.service.interf.wind.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.InterfCompintroduction;
 
@@ -24,6 +25,7 @@ import com.joyintech.tams.common.base.entity.InterfCompintroduction;
  * @see CompintroductionMapper
  * @since 1.0
  */
+@Repository
 public interface CompintroductionMapper extends WindMapper<InterfCompintroduction> {
 
     /**

@@ -18,6 +18,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.valuation.trademanage.producttradedeal.dto.ProductTradeDealQuery001Dto;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -27,6 +28,7 @@ import com.joyintech.tams.valuation.trademanage.producttradedeal.dto.ProductTrad
  * @see ProductTradeDealQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface ProductTradeDealQuery001Mapper {
 
 	/**

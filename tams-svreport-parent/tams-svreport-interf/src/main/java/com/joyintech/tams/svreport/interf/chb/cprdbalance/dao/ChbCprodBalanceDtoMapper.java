@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.tams.common.base.entity.ChbCprodBalanceDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbCprodBalanceDtoMapper {
     int deleteByPrimaryKey(String balId);
     

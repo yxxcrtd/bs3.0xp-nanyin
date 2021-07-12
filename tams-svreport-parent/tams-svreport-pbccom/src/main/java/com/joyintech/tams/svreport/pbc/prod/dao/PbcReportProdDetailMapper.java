@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcReportProdDetailDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PbcReportProdDetailMapper {
 	
     int insert(PbcReportProdDetailDto record);

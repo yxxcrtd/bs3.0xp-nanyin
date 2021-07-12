@@ -9,6 +9,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto;
 import com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001DtoKey;
 import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 人行产品资产池代码管理Mapper
@@ -16,6 +17,7 @@ import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeMan
  * @author kx
  *
  */
+@Repository
 public interface ProPeoplebankcodeManagement001DtoMapper {
 
 	int deleteByPrimaryKey(ProPeoplebankcodeManagement001DtoKey key);
