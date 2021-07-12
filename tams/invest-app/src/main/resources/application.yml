@@ -161,6 +161,7 @@ application:
      systemVersion: V2.1.6
      lastChromeVersion: 73
      customerName: 某某银行
+  runOptimize: Y
 
 #  不使用服务注册中心,tams和tams-service-container整体部署的方式
   loadbalance: false
@@ -244,7 +245,7 @@ wind:
     password: zgtams0810_123
 log:
   path: ${user.home}/logs/${spring.application.name}
-  level: debug
+  level: DEBUG
 eureka:
   client:
     enabled: false
