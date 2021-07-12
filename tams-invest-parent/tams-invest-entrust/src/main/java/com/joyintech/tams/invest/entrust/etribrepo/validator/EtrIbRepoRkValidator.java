@@ -54,7 +54,7 @@ public class EtrIbRepoRkValidator implements BeanValidator{
         if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
             // 判断是否选择质押库
             if(dto.getPledgeStockId()==null||"".equals(dto.getPledgeStockId())) {
-            	validList.add(new ValidMessage(this.getMessage("请选择质押券代码")));
+            	validList.add(new ValidMessage(this.getMessage("请选择质押券库")));
             }
             
         }
