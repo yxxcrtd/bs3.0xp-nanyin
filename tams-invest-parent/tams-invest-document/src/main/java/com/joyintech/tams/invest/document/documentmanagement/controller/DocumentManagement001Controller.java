@@ -93,8 +93,7 @@ public class DocumentManagement001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/findPage")
-    public Page<DocumentManagementDto> findPage()
-        throws Exception {
+    public Page<DocumentManagementDto> findPage(){
         return documentManagementService.selectForPage(RequestUtil.getParameters(getRequest()));
     }
     /**
@@ -107,8 +106,7 @@ public class DocumentManagement001Controller extends BaseController{
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return documentManagementService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

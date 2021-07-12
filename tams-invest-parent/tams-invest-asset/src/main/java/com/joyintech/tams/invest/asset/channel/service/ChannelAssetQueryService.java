@@ -50,8 +50,7 @@ public class ChannelAssetQueryService  extends CommonExportService<ChannelAssetD
      * @see
      * @since 1.0
      */
-    public Page<ChannelAssetDto> selectForPage(Map<String,Object> pageParam) 
-        throws Exception{
+    public Page<ChannelAssetDto> selectForPage(Map<String,Object> pageParam) {
         return restTemplate.postForPage(
             ServiceApplication.ASSET_SERVICE_NAME + "/channelmanageinfo/findPage", 
             pageParam, ChannelAssetDto.class);

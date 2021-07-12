@@ -97,8 +97,7 @@ implements BaseProcessService<ChannelAssetDto>{
      * @see
      * @since 1.0
      */
-    public Page<ChannelAssetDto> selectForPage(Map<String,Object> pageParam) 
-        throws Exception{
+    public Page<ChannelAssetDto> selectForPage(Map<String,Object> pageParam) {
         return restTemplate.postForPage(
             ServiceApplication.ASSET_SERVICE_NAME + "/FinChannelAsset/findPage", 
             pageParam, ChannelAssetDto.class);

@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -429,8 +430,7 @@ public class FinStageManagementService extends CommonExportService<FinStageManag
      * @since 1.0
      */
     private List<FinCashPlan> getFinCashPlan(FinStageManagementDto dto, FinPayInterestStdInfoDto finPayInterestStdInfoDto,
-                                             FinCashInfo finCashInfoPrincipal, FinProduct finProduct, Long branch)
-        throws Exception {
+                                             FinCashInfo finCashInfoPrincipal, FinProduct finProduct, Long branch) throws ParseException {
         // 还本计划(return)
         List<FinCashPlan> finCashPlanList = new ArrayList<FinCashPlan>();
         // 还本计划(cal)

@@ -15,6 +15,7 @@ package com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -105,8 +106,7 @@ public class MstSecuritiesAccount002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getBusiAcctNo")
-    public List<SelectOptionDto> getBusiAcctNo(String search)
-        throws Exception {
+    public List<SelectOptionDto> getBusiAcctNo(String search){
         List<SelectOptionDto> temp = mstSecuritiesAccountService.getBusiAcctNo(search);
         return temp;
     }
@@ -137,7 +137,7 @@ public class MstSecuritiesAccount002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstSecuritiesAccountDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstSecuritiesAccountDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

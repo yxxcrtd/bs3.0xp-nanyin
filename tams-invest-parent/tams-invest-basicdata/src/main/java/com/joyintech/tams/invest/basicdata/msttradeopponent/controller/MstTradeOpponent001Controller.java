@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.msttradeopponent.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -88,7 +89,7 @@ public class MstTradeOpponent001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstTradeOpponentDto> findPage() throws Exception{
+    public Page<MstTradeOpponentDto> findPage(){
         Page<MstTradeOpponentDto> page = mstTradeOpponent001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -101,8 +102,7 @@ public class MstTradeOpponent001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstTradeOpponent001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -115,8 +115,7 @@ public class MstTradeOpponent001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getCounterType") // 获取交易对手类型
-    public List<SelectOptionDto> getCounterType()
-        throws Exception {
+    public List<SelectOptionDto> getCounterType(){
         // 画面的输入值
         Map<String, Object> param = RequestUtil.getPageParam();
         List<SelectOptionDto> temp = mstTradeOpponent001Service.getCounterType(param);// 获取交易对手类型
@@ -134,8 +133,7 @@ public class MstTradeOpponent001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstTradeOpponentDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstTradeOpponentDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -169,7 +169,7 @@ public class EtrStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd() throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd() {
         Page<SelectOptionDto> temp = etrStockService.getentrustIdAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -212,7 +212,7 @@ public class EtrStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         Page<SelectOptionDto> temp = etrStockService.getfinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }

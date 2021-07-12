@@ -71,8 +71,7 @@ public class InterfaceLog001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<InterfStatus> selectForPage()
-        throws Exception {
+    public Page<InterfStatus> selectForPage(){
         Page<InterfStatus> page = interfaceLogService.selectForPage(
             RequestUtil.getPageParam());
         page.getRoot().forEach(item->{

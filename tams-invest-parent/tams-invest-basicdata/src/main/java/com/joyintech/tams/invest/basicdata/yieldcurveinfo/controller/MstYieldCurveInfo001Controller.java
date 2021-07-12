@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.basicdata.yieldcurveinfo.controller;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -76,8 +77,7 @@ public class MstYieldCurveInfo001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstYieldCurveInfoDto> selectAll()
-        throws Exception {
+    public Page<MstYieldCurveInfoDto> selectAll(){
         Page<MstYieldCurveInfoDto> page = mstYieldCurveInfoService.selectForPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -111,7 +111,7 @@ public class MstYieldCurveInfo001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody  @Validated({ValidateGroupDelete.class})  MstYieldCurveInfoDto dto, BindingResult br) throws Exception{
+    public AjaxResult delete(@RequestBody  @Validated({ValidateGroupDelete.class})  MstYieldCurveInfoDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -143,7 +143,7 @@ public class MstYieldCurveInfo001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() {
         return mstYieldCurveInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

@@ -39,6 +39,7 @@ import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import com.joyintech.tools.util.ListUtils;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,8 +220,7 @@ public class FinDepositTarget002Controller extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinDepositTargetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinDepositTargetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -268,8 +268,7 @@ public class FinDepositTarget002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getTradeOpponent")
-    public List<SuggestDto> getTradeOpponent()
-        throws Exception {
+    public List<SuggestDto> getTradeOpponent(){
         String param = super.getRequest().getParameter("param");
         String counterType = super.getRequest().getParameter("counterType");
         List<SuggestDto> temp = finDepositTargetService.getTradeOpponent(param,counterType);
@@ -285,8 +284,7 @@ public class FinDepositTarget002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getTradeCalendarName")
-    public List<SuggestDto> getTradeCalendarName()
-        throws Exception {
+    public List<SuggestDto> getTradeCalendarName(){
         String param = super.getRequest().getParameter("param");
         String isTradeCalendar = super.getRequest().getParameter("isTradeCalendar");
         List<SuggestDto> temp = finDepositTargetService.getTradeCalendarName(param, isTradeCalendar);

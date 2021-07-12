@@ -22,6 +22,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -109,8 +110,7 @@ public class FinPlanProfitAsset001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinProdMarketId")
-    public List<SuggestDto> getFinProdMarketId(String param)
-        throws Exception {
+    public List<SuggestDto> getFinProdMarketId(String param){
         List<SuggestDto> temp = finPlanProfitAssetService.getFinProdMarketId(param);
         return temp;
     }
@@ -122,8 +122,7 @@ public class FinPlanProfitAsset001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinPlanProfitAssetDto> selectAll()
-        throws Exception {
+    public Page<FinPlanProfitAssetDto> selectAll(){
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<FinPlanProfitAssetDto> page = finPlanProfitAssetService.selectForPage(map);
         return page;
@@ -171,8 +170,7 @@ public class FinPlanProfitAsset001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody  @Validated({
-            ValidateGroupDelete.class}) FinPlanProfitAssetDto dto, BindingResult br)
-        throws Exception {
+            ValidateGroupDelete.class}) FinPlanProfitAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -203,8 +201,7 @@ public class FinPlanProfitAsset001Controller extends BaseController{
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
         // 修改导出错误 zhuyongkang
 //		param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));

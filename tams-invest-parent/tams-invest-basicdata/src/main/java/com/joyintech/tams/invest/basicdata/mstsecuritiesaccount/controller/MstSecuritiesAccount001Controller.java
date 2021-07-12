@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -78,8 +79,7 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstSecuritiesAccountDto> selectAll()
-        throws Exception {
+    public Page<MstSecuritiesAccountDto> selectAll(){
         Page<MstSecuritiesAccountDto> page = mstSecuritiesAccountService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -95,8 +95,7 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getSecAcctId")
-    public List<SuggestDto> getSecAcctId(String param)
-        throws Exception {
+    public List<SuggestDto> getSecAcctId(String param){
         List<SuggestDto> temp = mstSecuritiesAccountService.getSecAcctId(param);
         return temp;
     }
@@ -140,8 +139,7 @@ public class MstSecuritiesAccount001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstSecuritiesAccountDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstSecuritiesAccountDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -170,8 +168,7 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstSecuritiesAccountService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

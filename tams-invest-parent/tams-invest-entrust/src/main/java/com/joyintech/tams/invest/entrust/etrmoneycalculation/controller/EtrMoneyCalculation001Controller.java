@@ -138,8 +138,7 @@ public class EtrMoneyCalculation001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export(EtrMoneyCalculationDto dto)
-        throws Exception {
+    public ResponseEntity<byte[]> export(EtrMoneyCalculationDto dto){
         return etrMoneyCalculationService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

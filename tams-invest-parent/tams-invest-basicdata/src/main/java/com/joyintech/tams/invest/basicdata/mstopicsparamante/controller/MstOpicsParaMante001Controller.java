@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.basicdata.mstopicsparamante.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -75,8 +76,7 @@ public class MstOpicsParaMante001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("selectOpicsParaManteInfo")
-    public Page<MstOpicsParaManteDto> selectOpicsParaManteInfo()
-        throws Exception {
+    public Page<MstOpicsParaManteDto> selectOpicsParaManteInfo(){
         Page<MstOpicsParaManteDto> page = mstOpicsParaManteService.selectOpicsParaManteInfo(
             RequestUtil.getPageParam());
         return page;
@@ -109,8 +109,7 @@ public class MstOpicsParaMante001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstOpicsParaManteDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstOpicsParaManteDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -141,8 +140,7 @@ public class MstOpicsParaMante001Controller extends BaseController {
      * @throws Exception 异常
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstOpicsParaManteService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

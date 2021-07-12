@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -91,8 +92,7 @@ public class FinPlanNetAsset001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinProdMarketId")
-    public List<SuggestDto> getFinProdMarketId(String param)
-        throws Exception {
+    public List<SuggestDto> getFinProdMarketId(String param){
         List<SuggestDto> temp = finPlanNetAssetService.getFinProdMarketId(param);
         return temp;
     }
@@ -104,8 +104,7 @@ public class FinPlanNetAsset001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinPlanNetAssetDto> selectAll()
-        throws Exception {
+    public Page<FinPlanNetAssetDto> selectAll(){
         Map<String,Object> map = RequestUtil.getPageParam();
         Page<FinPlanNetAssetDto> page = finPlanNetAssetService.selectForPage(map);
         return page;
@@ -136,8 +135,7 @@ public class FinPlanNetAsset001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-            ValidateGroupDelete.class}) FinPlanNetAssetDto dto, BindingResult br)
-        throws Exception {
+            ValidateGroupDelete.class}) FinPlanNetAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -168,8 +166,7 @@ public class FinPlanNetAsset001Controller extends BaseController{
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return finPlanNetAssetService.export(this.getPageId(),param);

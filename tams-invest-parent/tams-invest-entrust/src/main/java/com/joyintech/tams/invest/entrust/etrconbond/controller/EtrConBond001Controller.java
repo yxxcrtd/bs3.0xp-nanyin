@@ -80,8 +80,7 @@ public class EtrConBond001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getFinprodId")
-    public Page<SelectOptionDto> getFinprodId(@RequestParam Map<String, Object> params)
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodId(@RequestParam Map<String, Object> params){
         return service.getFinprodId(params);
     }
     /**
@@ -148,8 +147,7 @@ public class EtrConBond001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

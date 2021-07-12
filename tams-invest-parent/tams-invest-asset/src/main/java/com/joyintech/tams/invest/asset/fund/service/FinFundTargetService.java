@@ -83,8 +83,7 @@ public class FinFundTargetService extends CommonExportService<FinFundTargetDto> 
      * @return Page类 Page
      * @throws Exception 异常信息
      */
-    public Page<FinFundTargetDto> selectForPage(Map<String, Object> pageParam)
-        throws Exception {
+    public Page<FinFundTargetDto> selectForPage(Map<String, Object> pageParam){
         // type9-11 created by wangguiqi on 2019/7/19 -start
         if (StringUtil.isNotEmpty(pageParam.get("type9"))) {
             pageParam.put("type9", StringUtil.splitToList(null, pageParam.get("type9").toString()));

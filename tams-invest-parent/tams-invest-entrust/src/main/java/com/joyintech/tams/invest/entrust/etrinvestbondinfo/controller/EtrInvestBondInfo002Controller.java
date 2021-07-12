@@ -189,8 +189,7 @@ public class EtrInvestBondInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         Page<SelectOptionDto> temp = etrInvestBondInfoService.getfinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }

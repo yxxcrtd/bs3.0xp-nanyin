@@ -178,7 +178,7 @@ public class ExprTree {
 	//------------------------------
 	//
 	//------------------------------
-	public Object calc(Map<String, Object> params) throws Exception {
+	public Object calc(Map<String, Object> params) {
 		String v = root.getValue();
 		if(! patternOp.matcher(v).find()) {
 			return params.get(v);
@@ -189,7 +189,7 @@ public class ExprTree {
 		}
 	}
 	
-	private void _calc(ExprNode node, Stack<Double> vStack, Map<String, Object> params) throws Exception {
+	private void _calc(ExprNode node, Stack<Double> vStack, Map<String, Object> params) {
 		ExprNode left = node.getLeft();
 		if(left != null) _calc(left, vStack, params);
 		
@@ -208,7 +208,7 @@ public class ExprTree {
 			} else if(paramValue instanceof BigDecimal) {
 				vStack.push(((BigDecimal)paramValue).doubleValue());
 			} else {
-				throw new Exception("cannot get number from parameters for expression");
+				throw new IllegalArgumentException("cannot get number from parameters for expression");
 			}
 		} else {
 			Double vRight = vStack.pop();

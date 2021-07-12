@@ -19,10 +19,9 @@ public class ExcelUtilForRisk {
      * @see
      * @since 1.0
      */
-    public static int columnToIndex(String column)
-            throws Exception {
+    public static int columnToIndex(String column){
         if (!column.matches("[A-Z]+")) {
-            throw new Exception("Invalid parameter");
+            throw new IllegalArgumentException("Invalid parameter");
         }
         int index = 0;
         char[] chars = column.toUpperCase().toCharArray();
@@ -42,10 +41,9 @@ public class ExcelUtilForRisk {
      * @see
      * @since 1.0
      */
-    public static String indexToColumn(int index)
-            throws Exception {
+    public static String indexToColumn(int index){
         if (index <= 0) {
-            throw new Exception("Invalid parameter");
+            throw new IllegalArgumentException("Invalid parameter");
         }
         index-- ;
         String column = "";
