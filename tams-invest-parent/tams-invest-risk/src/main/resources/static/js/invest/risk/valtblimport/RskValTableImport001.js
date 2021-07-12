@@ -135,8 +135,15 @@ RskValTableImport001 = function(){
             //--add by 裴家俊20190514---start----
             $('#ddfilterId').text(result.filterName==null||result.filterName==''?'':result.filterName);
             //--add by 裴家俊20190514---end----
+
+
+            $("#tabList>ul>li[lay-id='00']").trigger('click');
             rskvalstructureTable.table ? rskvalstructureTable.reload() : rskvalstructureTable.load();
+
+            $("#tabList>ul>li[lay-id='01']").trigger('click');
             rskValAssetCodeTable.table ? rskValAssetCodeTable.reload() : rskValAssetCodeTable.load();
+
+            $("#tabList>ul>li[lay-id='02']").trigger('click');
             rskvalsumnameTable.table ? rskvalsumnameTable.reload() : rskvalsumnameTable.load();
         })
     }
