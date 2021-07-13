@@ -102,7 +102,10 @@
         cols:[
             {field:'entrustId', title: 'EtrIbBondinfo001.entrustId', sortField:'entrustId',width : 100}//指令编号
             ,{field:'entrustStatus', visible:false}
-            ,{field:'entrustStatusName', title: 'EtrIbBondinfo001.entrustStatus', sortField:'entrustStatus',width : 100}//有效状态
+            ,{field:'effectiveStatus', title: 'EtrIbBondinfo001.effectiveStatus',render : function(data, type, row, meta) {
+                    return row.entrustStatusName==='流程中'?'流程中':"有效";
+                }, width : 100}//有效状态
+            ,{field:'entrustStatusName', title: 'EtrIbBondinfo001.entrustStatus', sortField:'entrustStatus',width : 100}//指令状态
             ,{field:'invManagerId', title: 'EtrInvestBondInfo001.invManagerId', sortField:"invManagerId", width : 100}
             /*,{field:'parentPortfolioId', title: 'EtrInvestBondInfo001.portfolioId', width: 100, sortField:"parentPortfolioId",visible:false}*/
             ,{field:'portfolioId', title: 'EtrInvestBondInfo001.portfolioId', width: 100,
@@ -131,11 +134,12 @@
             ,{field:'settleSpreedName', title: 'EtrInvestBondInfo002.settleSpreed', width : 100}
             ,{field:'vdate', title: 'EtrInvestBondInfo001.vdate', width:100,type:'date',sortField:"vdate"}
             ,{field:'mdate', title: 'EtrInvestBondInfo001.mdate', width:100,type:'date',sortField:"mdate"}
-            ,{field:'finishAmt',type:'money', title: 'EtrIbBondinfo001.finishAmt', fixed:'right',width:100}
+            
             ,{field:'transactioncom', title: 'EtrInvestBondInfo001.transactioncom',render : function(data, type, row, meta){
                     return "<div class='layui-progress layui-progress-big' style='margin-top:3px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.transactioncom+"%'><span class='layui-progress-text'>"+row.transactioncom+"%</span></div></div>";
                 }, width:100,sortable:false}
             ,{field:'remark', title: 'EtrInvestBondInfo001.remark', width:180,sortable:false}
+            ,{field:'finishAmt',type:'money', title: 'EtrIbBondinfo001.finishAmt', fixed:'right',width:100}
             ,{field:'counterId', visible:false}
         ]
     });
