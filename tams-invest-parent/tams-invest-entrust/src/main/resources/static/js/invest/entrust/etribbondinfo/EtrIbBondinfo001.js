@@ -68,10 +68,10 @@
             ,{field:'avaPledgePrin', title: 'EtrIbBondinfo001.avaPledgePrin',type:'money', width : 150}//质押券面总额(万元)
             ,{field:'avaShareAmt', title: 'EtrIbBondinfo001.avaShareAmt',type:'money', width : 150}//可用券面总额(万元)
             ,{field:'positionsAmt', title: 'EtrIbBondinfo001.positionsAmt',type:'money', digit:4, width : 150}//持仓成本
-            ,{field:'unitCost', title: 'EtrIbBondinfo001.unitCost',type:'money', width : 150}//持仓成本价
+            ,{field:'unitCost', title: 'EtrIbBondinfo001.unitCost',type:'money', digit:4, width : 150}//持仓成本价
             ,{field:'price', title: 'EtrIbBondinfo001.price',type:'number', digit:4, width : 100}//最新价
-            ,{field:'positionsPrice', title: 'EtrIbBondinfo001.positionsPrice',type:'money', width : 150}//持仓市值（元）
-            ,{field:'floatingPl', title: 'EtrIbBondinfo001.floatingPl',type:'money', width : 150}//浮动盈亏
+            ,{field:'positionsPrice', title: 'EtrIbBondinfo001.positionsPrice',type:'money', digit:4, width : 150}//持仓市值（元）
+            ,{field:'floatingPl', title: 'EtrIbBondinfo001.floatingPl',type:'money', digit:4, width : 150}//浮动盈亏
             ,{field:'channelId', visible:false}
         ]
     });
@@ -145,48 +145,73 @@
      * 组合代码链接
      */
     positionsTable.bind('click','.portfolioIdLink', function(row) {
-        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-            "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
-                portfolioId:row.portfolioId});//主键组合代码
+        // 在父页面全屏展示
+        parent.EtrIbBondinfoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),basePath
+            + "invest/asset/bond/FinBondTargetAsset002/init",
+            {pageModel:PAGE_MODEL_REFERENCE, portfolioId:row.portfolioId});
+        
+        // Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+        //     basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+        //     "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+        //         portfolioId:row.portfolioId});//主键组合代码
     });
     /**
      * 资产代码链接
      */
     positionsTable.bind('click','.finprodIdLink', function(row) {
-        //在新建界面进行显示单行的详细信息
-        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-            basePath
-            + "invest/asset/bond/FinBondTargetAsset002/init",
-            "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,
+        parent.EtrIbBondinfoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+            {pageModel:PAGE_MODEL_REFERENCE,
                 finprodId:row.finprodId,  //金融产品代码
                 //valDate:data.valDate,//估值日
                 //finprodMarketId:data.finprodMarketId//市场代码
             });
+        
+        //在新建界面进行显示单行的详细信息
+        // Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+        //     basePath
+        //     + "invest/asset/bond/FinBondTargetAsset002/init",
+        //     "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,
+        //         finprodId:row.finprodId,  //金融产品代码
+        //         //valDate:data.valDate,//估值日
+        //         //finprodMarketId:data.finprodMarketId//市场代码
+        //     });
     });
 
     /**
      * 组合代码链接
      */
     positionsTable_zqzy.bind('click','.portfolioIdLink', function(row) {
-        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+        // 在父页面全屏展示
+        parent.EtrIbBondinfoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
             basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-            "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
-                portfolioId:row.portfolioId});//主键组合代码
+            {pageModel:PAGE_MODEL_REFERENCE, portfolioId:row.portfolioId});
+        
+        // Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+        //     basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+        //     "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+        //         portfolioId:row.portfolioId});//主键组合代码
     });
     /**
      * 资产代码链接
      */
     positionsTable_zqzy.bind('click','.finprodIdLink', function(row) {
+        // 在父页面全屏展示
+        parent.EtrIbBondinfoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),basePath
+            + "invest/asset/bond/FinBondTargetAsset002/init",{pageModel:PAGE_MODEL_REFERENCE,
+            finprodId:row.finprodId,  //金融产品代码
+            //valDate:data.valDate,//估值日
+            //finprodMarketId:data.finprodMarketId//市场代码
+        });
         //在新建界面进行显示单行的详细信息
-        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-            basePath
-            + "invest/asset/bond/FinBondTargetAsset002/init",
-            "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,
-                finprodId:row.finprodId,  //金融产品代码
-                //valDate:data.valDate,//估值日
-                //finprodMarketId:data.finprodMarketId//市场代码
-            });
+        // Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+        //     basePath
+        //     + "invest/asset/bond/FinBondTargetAsset002/init",
+        //     "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,
+        //         finprodId:row.finprodId,  //金融产品代码
+        //         //valDate:data.valDate,//估值日
+        //         //finprodMarketId:data.finprodMarketId//市场代码
+        //     });
     });
 
     /**
