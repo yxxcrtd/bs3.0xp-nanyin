@@ -56,7 +56,7 @@ public class ProductelementdesService extends BaseService {
      */
     public Page<Productelementdes002Dto> selectForPage(int page, int length,
                                                            Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("PROCESS_STATE_NEW", DictCodeList.流程状态_新建.getValue());
         Page<Productelementdes002Dto> resultPage = this.queryForPage(page, length,
             () -> productelementdesMapper.selectMainData(pageParam));
@@ -67,7 +67,7 @@ public class ProductelementdesService extends BaseService {
     @SuppressWarnings("unchecked")
 	public Page<Productelementdes001Dto> findDetailPage(int page, int length,
                                                             Map<String, Object> pageParam)
-    	throws Exception {
+    {
     	 pageParam.put("STATUS_VALID_01", DictCodeListExt1.有效状态_有效.getValue());
          pageParam.put("REPORT_STATUS2_1", DictCodeListExt1.初评结果_初评通过.getValue());
        return this.queryForPage(page, length,

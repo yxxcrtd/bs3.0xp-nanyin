@@ -78,7 +78,7 @@ public class FinOpenPlanMaintenanceService  extends BaseService<FinOpenPlanMaint
      * @see
      * @since 1.0
      */
-    public List<FinOpenPlanMaintenanceDto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public List<FinOpenPlanMaintenanceDto> selectForPage(Map<String, Object> pageParam) {
         pageParam.put("openType03", DictCodeList.申赎开放类型_申赎开放.getValue());
         return finOpenPlanMaintenanceMapper.selectForPage(pageParam);
     }

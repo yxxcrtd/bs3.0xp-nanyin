@@ -46,7 +46,7 @@ public class RskSupervisionRiskAnalyzeService extends BaseService<RskSupervision
      */
     public Page<RskSupervisionRiskAnalyzeDto> selectForPage(int page, int length,
                                                             Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("PORTFOLIO_LEVEL_01", BussinessDictCodeListRds.组合层次_单组合.getValue());
         pageParam.put("PORTFOLIO_LEVEL_02", BussinessDictCodeListRds.组合层次_组合包.getValue());
         return super.queryForPage(page, length,
@@ -55,7 +55,7 @@ public class RskSupervisionRiskAnalyzeService extends BaseService<RskSupervision
     //进入界面初始化查询
     public Page<RskSupervisionRiskAnalyzeDto> selectForPageInit(int page, int length,
             Map<String, Object> pageParam)
-		throws Exception {
+    {
 		pageParam.put("PORTFOLIO_LEVEL_01", BussinessDictCodeListRds.组合层次_单组合.getValue());
 		pageParam.put("PORTFOLIO_LEVEL_02", BussinessDictCodeListRds.组合层次_组合包.getValue());
 		return super.queryForPage(page, length,
@@ -63,14 +63,14 @@ public class RskSupervisionRiskAnalyzeService extends BaseService<RskSupervision
 	}
     public Page<RskSupervisionRiskAnalyzeDto> selectForPageMx(int page, int length,
                                                               Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> rskSupervisionRiskAnalyzeMapper.selectMx(pageParam));
     }
 
     public Page<RskSupervisionRiskAnalyzeDto> selectForPageNx(int page, int length,
                                                               Map<String, Object> pageParam)
-        throws Exception {
+    {
         if (StringUtil.isNotEmpty(pageParam.get("portfolioId"))) { 
             String portfolioId = pageParam.get("portfolioId").toString(); 
             List<RskPortfolioPackageDtlImp> portfDtlList = rskSupervisionPortfPoint003Mapper.selectPortfBagDtlByBagId(portfolioId); 
@@ -88,7 +88,7 @@ public class RskSupervisionRiskAnalyzeService extends BaseService<RskSupervision
 
     public Page<RskSupervisionRiskAnalyzeDto> selectForPageFu(int page, int length,
                                                               Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> rskSupervisionRiskAnalyzeMapper.selectFu(pageParam));
     }

@@ -53,7 +53,7 @@ public class FinProductSchedulingController {
     public Page<PaPrdIssueSchedule> selectForPage(@RequestBody Map<String, Object> param,
                                                   @PathVariable("page") int page,
                                                   @PathVariable("length") int length)
-        throws Exception {
+    {
         return finProductSchedulingService.selectForPage(page, length, param);
     }
 
@@ -122,7 +122,7 @@ public class FinProductSchedulingController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody PrdIssueScheduleDto entity) throws Exception {
+    public int insert(@RequestBody PrdIssueScheduleDto entity) throws InvocationTargetException, IllegalAccessException {
         return finProductSchedulingService.insert(entity);
     }
 

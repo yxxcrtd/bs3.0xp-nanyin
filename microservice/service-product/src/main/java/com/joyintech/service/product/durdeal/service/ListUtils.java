@@ -57,7 +57,7 @@ public class ListUtils {
      */
     public static <E> void sort(List<E> list, final String[] sortnameArr, final boolean[] typeArr) {
         if (sortnameArr.length != typeArr.length) {
-            throw new RuntimeException("属性数组元素个数和升降序数组元素个数不相等");
+            throw new IllegalArgumentException("属性数组元素个数和升降序数组元素个数不相等");
         }
         Collections.sort(list, new Comparator<E>() {
             public int compare(E a, E b) {
@@ -87,7 +87,7 @@ public class ListUtils {
      * @return
      * @throws Exception
      */
-    private static <E> int compareObject(final String sortname, final boolean isAsc, E a, E b) throws Exception {
+    private static <E> int compareObject(final String sortname, final boolean isAsc, E a, E b) throws NoSuchFieldException, IllegalAccessException {
         int ret;
         Object value1 = ListUtils.forceGetFieldValue(a, sortname);
         Object value2 = ListUtils.forceGetFieldValue(b, sortname);
@@ -145,7 +145,7 @@ public class ListUtils {
      * @return
      * @throws Exception
      */
-    public static Object forceGetFieldValue(Object obj, String fieldName) throws Exception {
+    public static Object forceGetFieldValue(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         Field field = obj.getClass().getDeclaredField(fieldName);
         Object object = null;
         boolean accessible = field.isAccessible();

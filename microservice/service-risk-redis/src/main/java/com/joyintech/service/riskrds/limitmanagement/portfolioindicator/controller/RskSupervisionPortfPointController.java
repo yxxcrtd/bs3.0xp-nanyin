@@ -56,7 +56,7 @@ public class RskSupervisionPortfPointController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<RskPortfolioIndicator002Dto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskSupervisionPortfPointService.selectForPage(page, length, param);
     }
 
@@ -67,7 +67,7 @@ public class RskSupervisionPortfPointController {
      */
     @PostMapping("/selectTableIndForPage/{page}/{length}")
     public Page<RskPortfolioIndicator002Dto> selectTableIndForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskSupervisionPortfPointService.selectTableIndForPage(page, length, param);
     }
     
@@ -90,13 +90,13 @@ public class RskSupervisionPortfPointController {
     @Transactional
 	@DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody RskSupervisionIndicator002Dto dto) throws Exception {
+    public void insert(@RequestBody RskSupervisionIndicator002Dto dto) {
     	rskSupervisionPortfPointService.insert(dto);
     }
     
     
     @PostMapping("playPortfolio")
-    public int playPortfolio(@RequestBody Map<String,Object> param) throws Exception {
+    public int playPortfolio(@RequestBody Map<String,Object> param) {
     	return rskSupervisionPortfPointService.playPortfolio(param);
     }
     
@@ -110,7 +110,7 @@ public class RskSupervisionPortfPointController {
      * @since 1.0
      */
     @PostMapping("selectIndividUnite")
-    public boolean selectIndividUnite(@RequestBody Map<String,Object> param) throws Exception {
+    public boolean selectIndividUnite(@RequestBody Map<String,Object> param) {
         return rskSupervisionPortfPointService.selectIndividUnite(param);
     }
     // add by zhuzhen 20191128 组合关联指标删除时校验联合设置 end

@@ -48,13 +48,13 @@ public class PeriodicManagementController {
 	 */
 	@PostMapping("selectForPage/{page}/{length}")
 	public Page<PeriodicManagement001Dto> selectForPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return periodicManagementService.selectForPage(page, length, param);
 	}
 
 	@PostMapping("getInvestCycle/{page}/{length}")
 	public Page<SelectOptionDto> getInvestCycle(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return periodicManagementService.getInvestCycle(page, length, param);
 	}
 	

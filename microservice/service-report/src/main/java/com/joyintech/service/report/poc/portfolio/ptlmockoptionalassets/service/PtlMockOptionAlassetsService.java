@@ -52,7 +52,7 @@ public class PtlMockOptionAlassetsService extends BaseService<PtlMockOptionAlass
      */
     public Page<PtlMockOptionAlassetsDto> selectForPage(int page, int length,
                                                         Map<String, Object> map)
-        throws Exception {
+    {
         map.put("cdate", iPlatformDate.getSysDateStr());
         // 查询组合添加权限限制
         map.put("loginUserName", LoginUserUtil.getUserName());

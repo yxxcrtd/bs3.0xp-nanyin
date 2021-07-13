@@ -66,7 +66,7 @@ public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto
      * @throws Exception 异常信息
      */
     public Page<FinAssetConfigPlanDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+	{
     	Page<FinAssetConfigPlanDto> rpage = super.queryForPage(page, length,() -> finAssetConfigPlanMapper.queryAssetConfigPlanList(pageParam));
     	List<FinAssetConfigPlanDto> llist = rpage.getRoot();       
         for (FinAssetConfigPlanDto dto : llist) {
@@ -98,7 +98,7 @@ public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto
      * @since 1.0
      */
     public List<FinAssetConfigPlanDto> queryAssetConfigPlanList(Map<String, Object> pageParam)
-            throws Exception {
+	{
         	List<FinAssetConfigPlanDto> llist = finAssetConfigPlanMapper.queryAssetConfigPlanList(pageParam);      
         	for (FinAssetConfigPlanDto dto : llist) {
             	Map<String, Object> param = new HashMap<String, Object>(); 

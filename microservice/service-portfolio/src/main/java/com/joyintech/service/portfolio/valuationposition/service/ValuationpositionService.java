@@ -44,7 +44,7 @@ public class ValuationpositionService extends BaseService {
      * @throws Exception 异常
      */
     public MockPtlValuationPositionDto selectPtlValuationPositionAllData(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         MockPtlValuationPositionDto resultDto = new MockPtlValuationPositionDto();
         // 组合资产分析查询
         resultDto.setPtlSecValuationList(this.selectPtlSecValuationData(param));
@@ -72,7 +72,7 @@ public class ValuationpositionService extends BaseService {
      * @throws Exception 异常
      */
     public List<MockPtlSecValuationDto> selectPtlSecValuationData(Map<String, Object> map)
-        throws Exception {
+    {
         return valuationpositionMapper.selectPtlSecValuationData(map);
     }
 
@@ -84,7 +84,7 @@ public class ValuationpositionService extends BaseService {
      * @throws Exception 异常
      */
     public List<MockPtlPortfolioValuationDto> selectPtlPortfolioValuationData(Map<String, Object> map)
-        throws Exception {
+    {
         return valuationpositionMapper.selectPtlPortfolioValuationData(map);
     }
 
@@ -96,7 +96,7 @@ public class ValuationpositionService extends BaseService {
      * @throws Exception 异常
      */
     public List<MockPtlFeePositionDto> selectPtlFeePositionData(Map<String, Object> map)
-        throws Exception {
+    {
         return valuationpositionMapper.selectPtlFeePositionData(map);
     }
 
@@ -108,7 +108,7 @@ public class ValuationpositionService extends BaseService {
      * @throws Exception 异常
      */
     public List<MockPtlCashPositionDto> selectPtlCashPositionData(Map<String, Object> map)
-        throws Exception {
+    {
         map.put("HODING_TYPE", DictCodeList.持仓类型_实际.getValue());
         return valuationpositionMapper.selectPtlCashPositionData(map);
     }

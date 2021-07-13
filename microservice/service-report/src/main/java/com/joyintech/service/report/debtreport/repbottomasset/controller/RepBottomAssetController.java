@@ -42,7 +42,7 @@ public class RepBottomAssetController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<RepBottomAsset> findPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repBottomAssetService.findPage(page, length, param);
     }
     

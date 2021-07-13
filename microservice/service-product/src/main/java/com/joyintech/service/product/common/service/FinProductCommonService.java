@@ -519,8 +519,7 @@ public class FinProductCommonService extends BaseService {
      * @throws Exception Exception
      */
     @Transactional
-    public void updateFinProductCommon(FinProductCommonInfoDto finProductCommonInfoDto)
-        throws Exception {
+    public void updateFinProductCommon(FinProductCommonInfoDto finProductCommonInfoDto) throws InvocationTargetException, IllegalAccessException {
         this.deleteFinProductCommon(finProductCommonInfoDto.getFinprodId());
         if(StringUtil.equals(finProductCommonInfoDto.getBussRepFinProductInfoDto().getIsMerger(), DictCodeList.是否_否.getValue())){
         	finProductCommonInfoDto.setFinprodId(StringUtil.defaultString(DictCodeListExt1.金融产品类型_投管用_理财产品.getValue()).concat(GlobalConstant.UNDER_LINE).concat(
@@ -707,8 +706,7 @@ public class FinProductCommonService extends BaseService {
      * @throws Exception Exception
      */
     @Transactional
-    public void insertFinProductCommon(FinProductCommonInfoDto finProductCommonInfoDto)
-        throws Exception {
+    public void insertFinProductCommon(FinProductCommonInfoDto finProductCommonInfoDto) throws InvocationTargetException, IllegalAccessException {
         // 平台日期
         Date platFormDate = iPlatformDate.getSysDate();
         // 标的类金融产品基本信息基础组件
@@ -1639,7 +1637,7 @@ public class FinProductCommonService extends BaseService {
 	 * @throws IllegalAccessException
 	 */
 		private void layerProdInfo(FinProductCommonInfoDto entity,FinCashInfo pCahsInfo,
-	    FinCashPayRule pCashPayRule,FinRateInfo  pRateinfo, HashMap<String,String> cashMap) throws Exception{
+	    FinCashPayRule pCashPayRule,FinRateInfo  pRateinfo, HashMap<String,String> cashMap) throws InvocationTargetException, IllegalAccessException {
 			 FinProduct parentFinProduct = finProductMapper.selectByPrimaryKey(
 		                entity.getFinprodId());
 		            // 查询现金流信息
@@ -1919,7 +1917,7 @@ public class FinProductCommonService extends BaseService {
 		 * @throws IllegalAccessException
 		 */
 		private void cycleProdInfo(FinProductCommonInfoDto entity,FinCashInfo pCahsInfo,
-		    FinCashPayRule pCashPayRule,FinRateInfo  pRateinfo, HashMap<String,String> cashMap) throws Exception{
+		    FinCashPayRule pCashPayRule,FinRateInfo  pRateinfo, HashMap<String,String> cashMap) throws InvocationTargetException, IllegalAccessException {
 				 FinProduct parentFinProduct = finProductMapper.selectByPrimaryKey(
 			                entity.getFinprodId());
 				// 查询现金流信息
@@ -2728,8 +2726,7 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
      */
     private void procFinProductFeeInfoData(FinProductCommonInfoDto finProductCommonInfoDto,
                                            BaseFinProductBaseInfoDto baseFinProductBaseInfoDto,
-                                           BussFinProductFeeInfoDto bussFinProductFeeInfoDto,HashMap<String,String> cashMap ,boolean flag)
-                                               throws Exception {
+                                           BussFinProductFeeInfoDto bussFinProductFeeInfoDto,HashMap<String,String> cashMap ,boolean flag) throws InvocationTargetException, IllegalAccessException {
         FinProduct finProduct = baseFinProductBaseInfoDto.getFinProduct();
         String cashId_fee = "";
         String cashType2 = "";
@@ -2973,8 +2970,7 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
      * @since 1.0
      */
     private void procFinProductOpenPlan(FinProductCommonInfoDto finProductCommonInfoDto,
-                                        BaseFinProductBaseInfoDto baseFinProductBaseInfoDto)
-                                            throws Exception {
+                                        BaseFinProductBaseInfoDto baseFinProductBaseInfoDto) throws InvocationTargetException, IllegalAccessException {
         if (finProductCommonInfoDto.getBussFinProductOpenPlanDto() != null) {
             // 现金流信息dtolist-->本金
             String cashId_amt = CommonUtil.generateCashFlowCode(
@@ -3144,7 +3140,8 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
 	 * @see
 	 * @since 1.0
 	 */
-	private void procFinProductFloatFeeInfoData(FinProductCommonInfoDto finProductCommonInfoDto, BaseFinProductBaseInfoDto baseFinProductBaseInfoDto,FinProductFloatFeeDto finProductFloatFeeDto, String resetType, HashMap<String,String> cashMap) throws Exception{
+	private void procFinProductFloatFeeInfoData(FinProductCommonInfoDto finProductCommonInfoDto, BaseFinProductBaseInfoDto baseFinProductBaseInfoDto,FinProductFloatFeeDto finProductFloatFeeDto, String resetType, HashMap<String,String> cashMap)
+            throws InvocationTargetException, IllegalAccessException {
         if (StringUtil.isNotEmpty(finProductFloatFeeDto.getFeeId())) {
            FinProduct finProduct = baseFinProductBaseInfoDto.getFinProduct();
            String cashId_floatFee = CommonUtil.generateCashFlowCode(

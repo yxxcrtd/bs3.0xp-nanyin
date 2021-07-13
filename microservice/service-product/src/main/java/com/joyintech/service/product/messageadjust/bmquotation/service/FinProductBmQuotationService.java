@@ -79,7 +79,7 @@ public class FinProductBmQuotationService extends BaseService<FinProductBmQuotat
      * @return
      */
     public Page<FinProductBmQuotationDto> selectForPage(int page, int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
             return super.queryForPage(page, length, () -> finProductBmQuotationService.select(pageParam));
     }
     
@@ -89,7 +89,7 @@ public class FinProductBmQuotationService extends BaseService<FinProductBmQuotat
      * @return
      */
     public List<FinProductBmQuotationDto> selectForList(Map<String, Object> pageParam)
-        throws Exception {
+    {
         String keys = (String)pageParam.get("keys");
         pageParam.put("keys", StringUtil.splitToList(GlobalConstant.COMMA, keys));
         return finProductBmQuotationService.select(pageParam);
