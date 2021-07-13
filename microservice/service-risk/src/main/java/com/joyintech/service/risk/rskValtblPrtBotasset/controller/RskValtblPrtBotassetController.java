@@ -49,7 +49,7 @@ public class RskValtblPrtBotassetController {
     
     @PostMapping("findPage/{page}/{length}")
     public Page<RskValtblPrtBotassetMapDto> selectAll(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskValtblPrtBotassetService.selectForPage(page, length, param);
     }
     

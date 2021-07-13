@@ -47,7 +47,7 @@ public class CreditRightsManagementController {
 	 */
     @PostMapping("/findForPage/{page}/{length}")
     public Page<CreditRightsManagementDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+	{
         return creditRightsManagementService.selectForPage(page,length,pageParam);
     }
     

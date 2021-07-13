@@ -34,7 +34,7 @@ public class DvpOrdersManagementController {
      */
     @PostMapping("findDvpTransferTableData/{page}/{length}")
     public Page<DvpOrdersManagementDto> findDvpTransferTableData(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
-                                                              @PathVariable("length") int length) throws Exception {
+                                                              @PathVariable("length") int length) {
         return dvpOrdersManagementService.findDvpTransferTableData(page, length, param);
     }
 
@@ -46,7 +46,7 @@ public class DvpOrdersManagementController {
      */
     @PostMapping("findTransferTableData/{page}/{length}")
     public Page<DvpOrdersManagementDto> findTransferTableData(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
-                                                              @PathVariable("length") int length) throws Exception {
+                                                              @PathVariable("length") int length) {
         return dvpOrdersManagementService.findTransferTableData(page, length, param);
     }
 
@@ -57,7 +57,7 @@ public class DvpOrdersManagementController {
      * @throws Exception 异常
      */
     @PostMapping("findTradeData")
-    public List<DvpOrdersManagementDto> findTradeData(@RequestBody Map<String, Object> params) throws Exception {
+    public List<DvpOrdersManagementDto> findTradeData(@RequestBody Map<String, Object> params) {
         return dvpOrdersManagementService.findTradeData(params);
     }
 
@@ -68,7 +68,7 @@ public class DvpOrdersManagementController {
      * @throws Exception 异常
      */
     @PostMapping("findDvpOrdersByOrderId")
-    public DvpOrdersDto findDvpOrdersByOrderId(@RequestBody String orderId) throws Exception {
+    public DvpOrdersDto findDvpOrdersByOrderId(@RequestBody String orderId) {
         return dvpOrdersManagementService.findDvpOrdersByOrderId(orderId);
     }
 
@@ -79,7 +79,7 @@ public class DvpOrdersManagementController {
      * @throws Exception 异常
      */
     @PostMapping("findMatchedNum")
-    public int findMatchedNum(@RequestBody List<DvpOrdersManagementDto> tradeDatas) throws Exception {
+    public int findMatchedNum(@RequestBody List<DvpOrdersManagementDto> tradeDatas) {
         return dvpOrdersManagementService.findMatchedNum(tradeDatas);
     }
     

@@ -78,7 +78,7 @@ public class RskValAssetCodeController {
      */
     @PostMapping("findPageDtl/{page}/{length}")
     public Page<RskValtblAssetSubMapDtlDto> findPageDtl(@RequestBody Map<String, Object> param,
-         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+         @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskValAssetCodeService.findPageDtl(page, length, param);
     }
     

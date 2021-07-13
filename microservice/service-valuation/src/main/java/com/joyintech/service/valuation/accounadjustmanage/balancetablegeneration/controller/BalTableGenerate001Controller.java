@@ -193,7 +193,7 @@ public class BalTableGenerate001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<BalTableGenerate001Dto> findPage(@RequestBody Map<String, Object> params,
-                                                 @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                 @PathVariable("page") int page, @PathVariable("length") int length) {
 //        Map<String, Object> params= this.getRequestMap();
 //        BalTableGenerate001SearchDto dto = (BalTableGenerate001SearchDto)JsonUtils.map2entity(params, BalTableGenerate001SearchDto.class);
 //        dto.setFileType(DictCodeList.文件类型_余额表.getValue());
@@ -211,7 +211,7 @@ public class BalTableGenerate001Controller extends BaseController {
     @Transactional
     @DTXTransaction
     @PostMapping("/handle")
-    public int handle(@RequestBody List<BalTableGenerate001SearchDto> listdto) throws Exception {
+    public int handle(@RequestBody List<BalTableGenerate001SearchDto> listdto) {
         int flag = 0;
         if(listdto!=null&&listdto.size()>0){
             for(BalTableGenerate001SearchDto dto:listdto){

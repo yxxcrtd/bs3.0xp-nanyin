@@ -83,7 +83,7 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
      * @since 1.0
      */
     public Page<RskValtblAssetSubMapDtlDto> findPageDtl(int page, int length,
-                                                       Map<String, Object> pageParam) throws Exception {
+                                                       Map<String, Object> pageParam) {
              return super.queryForPage(page, length, () -> {
                  rskValAssetCodeMapper.selectDtl(pageParam);
              });

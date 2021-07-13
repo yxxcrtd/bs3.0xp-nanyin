@@ -61,7 +61,7 @@ public class TrdCommandsCollectionService extends BaseService<TrdCommandsCollect
      * @since 1.0
      */
 	public Page<TrdCommandsCollection001Dto>  selectForPage(int page, int length,Map<String, Object> pageParam)
-			throws Exception{
+	{
 		String assetType = pageParam.get("assetType").toString();
 		if (MultilevelDataAuthorityUtil.isEnabled()) {
             List<String> institutionList = LoginUserUtil.getTreeInstCode(); 

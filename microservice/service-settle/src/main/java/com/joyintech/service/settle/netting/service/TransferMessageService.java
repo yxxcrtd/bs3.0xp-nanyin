@@ -27,7 +27,7 @@ public class TransferMessageService extends BaseService<TransferMessageDto> {
 
 
     public Page<TransferMessageDto> findTransferMessage(int page, int length, Map<String, Object> param)
-            throws Exception {
+    {
         setParams(param);
         return queryForPage(page, length, () -> nettingManagementMapper.transferMessage(param));
     }

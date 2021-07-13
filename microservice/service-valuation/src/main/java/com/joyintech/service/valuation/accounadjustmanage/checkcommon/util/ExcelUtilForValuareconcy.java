@@ -1,9 +1,6 @@
 package com.joyintech.service.valuation.accounadjustmanage.checkcommon.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +57,7 @@ public class ExcelUtilForValuareconcy {
      * @return 读取结果列表
      * @throws Exception 异常
      */
-    public static List<List<String>> readToList(File file, int sheetIndex)
-        throws Exception {
+    public static List<List<String>> readToList(File file, int sheetIndex) throws FileNotFoundException {
         List<List<String>> ls = new ArrayList<List<String>>();
         Workbook wb = loadWorkbook(null, file, null);
         if (null != wb) {
@@ -104,8 +100,7 @@ public class ExcelUtilForValuareconcy {
      * @return 读取结果列表
      * @throws Exception 异常
      */
-    public static List<List<String>> readToList(File file, int sheetIndex, int skipRows)
-        throws Exception {
+    public static List<List<String>> readToList(File file, int sheetIndex, int skipRows) throws FileNotFoundException {
         List<List<String>> ls = new ArrayList<List<String>>();
         Workbook wb = loadWorkbook(null, file, null);
         if (null != wb) {
@@ -164,8 +159,7 @@ public class ExcelUtilForValuareconcy {
      */
     public static List<List<String>> readToList(String fileName, File file,
                                                 InputStream inputStream, int sheetIndex,
-                                                int skipRows, int titleRow)
-        throws Exception {
+                                                int skipRows, int titleRow) throws FileNotFoundException {
         List<List<String>> ls = new ArrayList<List<String>>();
         Workbook wb = loadWorkbook(fileName, file, inputStream);
         if (null != wb) {
@@ -223,8 +217,7 @@ public class ExcelUtilForValuareconcy {
      */
     public static List<List<String>> readToListForPOC(String fileName, File file,
                                                       InputStream inputStream, int sheetIndex,
-                                                      int skipRows, int titleRow)
-        throws Exception {
+                                                      int skipRows, int titleRow) throws FileNotFoundException {
         List<List<String>> ls = new ArrayList<List<String>>();
         Workbook wb = loadWorkbook(fileName, file, inputStream);
         if (null != wb) {
@@ -331,8 +324,7 @@ public class ExcelUtilForValuareconcy {
      * @return wb
      * @throws Exception yc
      */
-    public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream)
-        throws Exception {
+    public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream) throws FileNotFoundException {
         if (null == file && StringUtil.isEmpty(fileName)) {
             return null;
         }
@@ -401,7 +393,7 @@ public class ExcelUtilForValuareconcy {
                     logger.error(e.getMessage(),e);
                 }
             }
-            throw new Exception("不是一个有效的Excel文件");
+            throw new FileNotFoundException("不是一个有效的Excel文件");
         }
         return wb;
     }
@@ -417,8 +409,7 @@ public class ExcelUtilForValuareconcy {
      * @throws Exception 文件异常
      */
     public static String getSheetName(String fileName, File file, InputStream inputStream,
-                                      int sheetIndex)
-        throws Exception {
+                                      int sheetIndex) throws FileNotFoundException {
         Workbook wb = loadWorkbook(fileName, file, inputStream);
         if (null != wb) {
             Sheet sh = wb.getSheetAt(sheetIndex);
@@ -440,8 +431,7 @@ public class ExcelUtilForValuareconcy {
      * @see
      * @since 1.0
      */
-    public static int getNumberOfSheets(String fileName, File file, InputStream inputStream)
-        throws Exception {
+    public static int getNumberOfSheets(String fileName, File file, InputStream inputStream) throws FileNotFoundException {
         Workbook wb = loadWorkbook(fileName, file, inputStream);
         if (null != wb) {
             return wb.getNumberOfSheets();
@@ -459,10 +449,9 @@ public class ExcelUtilForValuareconcy {
      * @see
      * @since 1.0
      */
-    public static int columnToIndex(String column)
-        throws Exception {
+    public static int columnToIndex(String column) throws IllegalAccessException {
         if (!column.matches("[A-Z]+")) {
-            throw new Exception("Invalid parameter");
+            throw new IllegalAccessException("Invalid parameter");
         }
         int index = 0;
         char[] chars = column.toUpperCase().toCharArray();
@@ -481,10 +470,9 @@ public class ExcelUtilForValuareconcy {
      * @see
      * @since 1.0
      */
-    public static String indexToColumn(int index)
-        throws Exception {
+    public static String indexToColumn(int index) throws IllegalAccessException {
         if (index <= 0) {
-            throw new Exception("Invalid parameter");
+            throw new IllegalAccessException("Invalid parameter");
         }
         index-- ;
         String column = "";

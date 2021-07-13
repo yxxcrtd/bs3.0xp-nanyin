@@ -59,7 +59,7 @@ public class RskValRelateImportController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<RskValRelateImportDto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskValRelateImportService.selectForPage(page, length, param);
     }
     

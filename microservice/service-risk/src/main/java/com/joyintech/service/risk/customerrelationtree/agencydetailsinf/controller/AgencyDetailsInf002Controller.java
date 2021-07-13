@@ -88,7 +88,7 @@ public class AgencyDetailsInf002Controller {
 	 @Transactional
 	 @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody SeniorExecutiveInfDto dto) throws Exception {
+    public void insert(@RequestBody SeniorExecutiveInfDto dto) {
 		 agencyDetailsInf002Service.insert(dto);
     }
     
@@ -99,7 +99,7 @@ public class AgencyDetailsInf002Controller {
      * @since 1.0
      */
     @PostMapping("update")
-    public void update(@RequestBody SeniorExecutiveInfDto dto) throws Exception {
+    public void update(@RequestBody SeniorExecutiveInfDto dto) {
     	agencyDetailsInf002Service.update(dto);
     }
 	    
@@ -110,7 +110,7 @@ public class AgencyDetailsInf002Controller {
      * @throws Exception
      */
     @PostMapping("delete")
-    public int delete(@RequestBody SeniorExecutiveInfDto dto) throws Exception {
+    public int delete(@RequestBody SeniorExecutiveInfDto dto) {
         return agencyDetailsInf002Service.delete(dto);
     }
 }

@@ -43,7 +43,7 @@ public class MarketRiskStressTestView001Controller{
 	
 	 @PostMapping("findPage/{page}/{length}")
 	    public Page<MarketRiskStressTestView001Dto> selectAll(@RequestBody Map<String, Object> param,
-	            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+	            @PathVariable("page") int page, @PathVariable("length") int length) {
 			 Map<String, Object> param1=param;
 			 Object st=param1.get("testId");
 			 if(st!=null && st!=""){
@@ -64,12 +64,12 @@ public class MarketRiskStressTestView001Controller{
 			 return marketRiskStressTestView001Service.selectForPage(page, length, param1);
 	    }
 	 @PostMapping("selectTestListMap")
-	    public List<SelectOptionDto> selectTestListMap(@RequestBody Map<String, Object> param) throws Exception {
+	    public List<SelectOptionDto> selectTestListMap(@RequestBody Map<String, Object> param) {
 	       
 	        return marketRiskStressTestView001Service.selectTestListMap(param);
 	    }
 	 @PostMapping("initPage")
-	    public List<MarketRiskStressTestView001Dto> initPage(@RequestBody Map<String, Object> param) throws Exception {
+	    public List<MarketRiskStressTestView001Dto> initPage(@RequestBody Map<String, Object> param) {
 	       
 	        return marketRiskStressTestView001Service.initPage(param);
 	    }

@@ -105,7 +105,7 @@ public class ValAccountsAdjustAccountEntry001Controller extends BaseController {
      */
     @PostMapping("/getBooksetId")
     public List<SuggestDto> getBooksetId(@RequestBody Map<String, Object> params)
-        throws Exception {
+    {
     	String param = (String) params.get("param");
         return valAssetBook001Service.getBooksetIdByBooksetType(param);
     }

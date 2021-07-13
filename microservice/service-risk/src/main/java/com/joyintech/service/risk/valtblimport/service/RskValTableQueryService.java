@@ -23,7 +23,7 @@ public class RskValTableQueryService extends BaseService<RskValtblAssetSumDto> {
 
 
     public Page<RskValtblAssetSumDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         String valDate = String.valueOf(pageParam.get("valDate"));
         //前一日
         pageParam.put("previousDay", DateUtil.addDay(valDate,-1));

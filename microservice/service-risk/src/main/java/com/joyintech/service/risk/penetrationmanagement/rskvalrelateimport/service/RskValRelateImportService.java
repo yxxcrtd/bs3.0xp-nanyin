@@ -73,7 +73,7 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
      * @since 1.0
      */
     public Page<RskValRelateImportDto> selectForPage(int page, int length,
-                                                     Map<String, Object> param) throws Exception{
+                                                     Map<String, Object> param) {
         return super.queryForPage(page, length, () ->rskValRelateImportMapper.selectForPage(param));
     }
     
