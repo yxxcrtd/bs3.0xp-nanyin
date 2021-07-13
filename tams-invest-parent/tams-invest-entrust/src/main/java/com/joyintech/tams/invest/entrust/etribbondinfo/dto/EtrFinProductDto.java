@@ -5,6 +5,8 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * 银行间债券指令
@@ -372,7 +374,16 @@ public class EtrFinProductDto {
     }
 
     public String getXqFlg() {
-        return xqFlg;
+        if (StringUtil.isEmpty(this.xqFlg)) {
+            return null;
+        }
+        if (this.xqFlg.contains(",")){
+            return Arrays.stream(this.xqFlg.split(","))
+                    .map(i->SysDataUtil.getNameFromDataDict(DictCode.行权方式, getSecType()))
+                    .collect(Collectors.joining(","));
+        }else{
+            return SysDataUtil.getNameFromDataDict(DictCode.行权方式, getSecType());
+        }
     }
 
     public void setXqFlg(String xqFlg) {
