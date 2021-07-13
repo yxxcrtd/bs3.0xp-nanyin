@@ -160,7 +160,6 @@ public class EtrSecLend001Controller extends BaseController {
      * 文件导出 <功能详细描述>
      *
      * @return 导出返回参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */

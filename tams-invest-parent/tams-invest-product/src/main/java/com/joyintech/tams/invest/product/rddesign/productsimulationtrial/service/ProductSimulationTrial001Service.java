@@ -28,7 +28,6 @@ public class ProductSimulationTrial001Service extends CommonExportService<Produc
 	 *
 	 * @param param 过滤参数
 	 * @return 下拉框列表
-	 * @throws Exception Exception
 	 */
 	public Page<SelectOptionDto> queryDesignIdInfo(Map<String, Object> param)
 			throws Exception {

@@ -56,7 +56,6 @@ public class PltMedianManagement001Controller extends BaseController{
     /**
      * 分页查询
      * @return Page<PltMedianManagementDto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -85,7 +84,6 @@ public class PltMedianManagement001Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0 
      */
@@ -101,7 +99,6 @@ public class PltMedianManagement001Controller extends BaseController{
 	 * 查询画面风险事件名称联想框内容
 	 * 
 	 * @return 检索数据
-	 * @throws Exception
 	 *             异常
 	 */
 	@ResponseBody

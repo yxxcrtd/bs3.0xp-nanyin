@@ -79,12 +79,10 @@ public class PtlPositionAnalysis001Controller extends BaseController {
     /**
      * 组合持仓明细查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlPositionAnalysis001Dto> selectAll()
-            throws Exception {
+    public Page<PtlPositionAnalysis001Dto> selectAll() {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<PtlPositionAnalysis001Dto> page = ptlPositionAnalysis001Service.selectForPage(map);
         return page;
@@ -92,7 +90,6 @@ public class PtlPositionAnalysis001Controller extends BaseController {
     /**
      * 组合持仓汇总查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
    /* @ResponseBody
     @RequestMapping("findPageForAsset")
@@ -105,12 +102,10 @@ public class PtlPositionAnalysis001Controller extends BaseController {
     /**
      * 组合持仓汇总查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPageForAssetList")
-    public List<PtlPositionAnalysis002Dto> selectAllAssetList()
-            throws Exception {
+    public List<PtlPositionAnalysis002Dto> selectAllAssetList(){
         Map<String,Object> map = RequestUtil.getPageParam();
         List<PtlPositionAnalysis002Dto> list = ptlPositionAnalysis001Service.selectAllAssetList(map);
         
@@ -158,26 +153,23 @@ public class PtlPositionAnalysis001Controller extends BaseController {
 	/**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
    /* @RequestMapping("/export")*/
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlPositionAnalysis001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> exportNew() throws Exception{
+    public ResponseEntity<byte[]> exportNew() {
 //        List<PtlPositionAnalysis001Dto> dtoList = new ArrayList<PtlPositionAnalysis001Dto>();
 //        dtoList= ptlPositionAnalysis001Service.selectAllList(RequestUtil.getParameters(getRequest()));
 //        File outFile = ptlPositionAnalysis001Service.makeFile(

@@ -107,7 +107,7 @@ public class MstExchangeQuotationInfo002Controller extends BaseController {
      * @param dto 传入参数
      * @param br 传入的报错参数
      * @return 返回结果
-     * @throws Exception 抛出异常
+     * @throws WorkFlowException 抛出异常
      * @see
      * @since 1.0
      */

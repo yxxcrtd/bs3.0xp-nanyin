@@ -95,7 +95,6 @@ public class ProductSimulationTrial001Controller extends BaseController {
 	/**
 	 * 产品设计系列编号下拉框
 	 * @return 下拉框列表
-	 * @throws Exception Exception
 	 */
 	@RequestMapping("queryDesignIdInfo")
 	@ResponseBody
@@ -164,7 +163,6 @@ public class ProductSimulationTrial001Controller extends BaseController {
 	 * @param dto dto
 	 * @param br 验证信息
 	 * @return 结果
-	 * @throws Exception 异常
 	 * @see
 	 * @since 1.0
 	 */
@@ -198,7 +196,6 @@ public class ProductSimulationTrial001Controller extends BaseController {
 	 * 导出信息excel
 	 *
 	 * @return excel
-	 * @throws Exception
 	 *             异常
 	 * @see
 	 * @since 1.0

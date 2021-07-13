@@ -17,7 +17,6 @@ public class ValSztInterfDetail001Service extends CommonExportService<ValSztInte
      * <功能详细描述>
      * @param params
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */

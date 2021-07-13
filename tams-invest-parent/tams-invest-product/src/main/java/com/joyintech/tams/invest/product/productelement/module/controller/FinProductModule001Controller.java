@@ -83,7 +83,6 @@ public class FinProductModule001Controller extends BaseController {
      * <功能详细描述>
      * @param  param param
      * @return SelectOptionDto
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -96,7 +95,6 @@ public class FinProductModule001Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 所有数据
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
@@ -124,7 +122,6 @@ public class FinProductModule001Controller extends BaseController {
      * @param dto 费用品种
      * @param result result
      * @return 删除结果
-     * @throws Exception Exception
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
@@ -160,7 +157,6 @@ public class FinProductModule001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

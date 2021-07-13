@@ -85,7 +85,6 @@ public class BokBalanceStatementQuery001Controller extends BaseController {
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -106,7 +105,6 @@ public class BokBalanceStatementQuery001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */

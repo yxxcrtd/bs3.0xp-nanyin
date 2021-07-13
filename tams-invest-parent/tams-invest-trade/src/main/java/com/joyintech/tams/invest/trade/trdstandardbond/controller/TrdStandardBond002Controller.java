@@ -101,7 +101,6 @@ public class TrdStandardBond002Controller extends BaseController {
      *
      * @param dto
      * @return
-     * @throws Exception
      */
     @RequestMapping("check")
     @ResponseBody
@@ -115,7 +114,6 @@ public class TrdStandardBond002Controller extends BaseController {
      *
      * @param dto
      * @return
-     * @throws Exception
      */
     @RequestMapping("save")
     @ResponseBody

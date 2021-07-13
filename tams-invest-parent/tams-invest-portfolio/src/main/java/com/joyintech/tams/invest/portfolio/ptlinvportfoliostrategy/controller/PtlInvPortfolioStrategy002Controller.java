@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -113,11 +114,10 @@ public class PtlInvPortfolioStrategy002Controller extends BaseController {
 	 * 通过组合代码，获取组合名称
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("getPortfolioName")
-	public PtlPortfolio getPortfolioName() throws Exception {
+	public PtlPortfolio getPortfolioName() {
 		return ptlInvPortfolioStrategy001Service.getPortfolioName(RequestUtil.getPageParam());
 	}
 
@@ -125,11 +125,10 @@ public class PtlInvPortfolioStrategy002Controller extends BaseController {
 	 * 通过策略代码，获取策略名称和策略描述
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("getStrategy")
-	public PtlInvPortfolioStrategy001Dto getStrategy() throws Exception {
+	public PtlInvPortfolioStrategy001Dto getStrategy() {
 		return ptlInvPortfolioStrategy001Service.getStrategy(RequestUtil.getPageParam());
 	}
 
@@ -137,7 +136,6 @@ public class PtlInvPortfolioStrategy002Controller extends BaseController {
 	 * 获取收益目标列表
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("getPtlIncomeIndexFloatList")
@@ -160,7 +158,6 @@ public class PtlInvPortfolioStrategy002Controller extends BaseController {
 	 * 新建-列表-基准下拉框
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("selectBaseRuleId")
@@ -212,13 +209,13 @@ public class PtlInvPortfolioStrategy002Controller extends BaseController {
 	 * @param br
 	 *            br
 	 * @return 结果
-	 * @throws Exception
+	 * @throws WorkFlowException
 	 *             异常
 	 */
 	@ResponseBody
 	@RequestMapping("save")
 	public AjaxResult save(@RequestBody @Validated({ ValidateGroupEdit.class }) PtlInvPortfolioStrategy001Dto dto,
-			BindingResult br) throws Exception {
+			BindingResult br) throws WorkFlowException {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}

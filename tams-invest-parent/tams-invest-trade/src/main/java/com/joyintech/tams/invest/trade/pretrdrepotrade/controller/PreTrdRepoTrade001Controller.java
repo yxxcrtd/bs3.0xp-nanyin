@@ -79,7 +79,6 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      * 分页查询
      *
      * @return Page<TrdBondInvestTradeDto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -116,7 +115,6 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @param
      * @see
      * @since 1.0
@@ -163,7 +161,6 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      * 获取资金账号下拉框
      *
      * @return 资产代码代码下拉框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -179,7 +176,6 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      * 获取托管账号下拉框
      *
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -196,7 +192,6 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      * 获取托管账号下拉框,组合代码为空，无可选择
      *
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -236,7 +231,6 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      * 获取资金账号详细
      *
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -252,7 +246,6 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      * 获取托管账号详细
      *
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -341,7 +334,6 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      * 撤销
      * @param inputDto 画面输入参数dto
      * @return 撤销结果
-     * @throws Exception
      * @see
      * @since 1.0
      */

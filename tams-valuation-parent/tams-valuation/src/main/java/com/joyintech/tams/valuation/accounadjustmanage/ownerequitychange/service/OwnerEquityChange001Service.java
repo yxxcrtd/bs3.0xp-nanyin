@@ -63,7 +63,6 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * 
      * @param pageParam
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -84,7 +83,6 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * 设置页面传回参数
      * 
      * @param pageParam
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -322,7 +320,6 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * 
      * @param params
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */

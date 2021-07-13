@@ -78,7 +78,6 @@ public class ValAssetBookParameter002Controller extends BaseController {
 	 * 下拉框 ： 参数代码
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("findParam")
@@ -89,7 +88,6 @@ public class ValAssetBookParameter002Controller extends BaseController {
 	/**
 	 * 通过参数名，获取参数值
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("getParamValue")

@@ -90,7 +90,6 @@ public class OperationManage001Controller extends BaseController{
      * 页面查询，表格分页
      * <功能详细描述>
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -105,7 +104,6 @@ public class OperationManage001Controller extends BaseController{
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

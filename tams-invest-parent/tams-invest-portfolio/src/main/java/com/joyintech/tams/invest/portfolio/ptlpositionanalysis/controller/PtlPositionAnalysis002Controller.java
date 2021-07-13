@@ -69,12 +69,10 @@ public class PtlPositionAnalysis002Controller extends BaseController {
     /**
      * 组合持仓明细查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlPositionAnalysis003Dto> selectAll()
-            throws Exception {
+    public Page<PtlPositionAnalysis003Dto> selectAll(){
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<PtlPositionAnalysis003Dto> list = ptlPositionAnalysis002Service.selectForPage(map);
         //modify by jiangpeng on 20210528 ZGBSSE-173 资产的持仓市值为0时不显示
@@ -98,12 +96,10 @@ public class PtlPositionAnalysis002Controller extends BaseController {
     /**
      * 获取动态列结果
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("getTableCols")
-    public String getTableCols()
-            throws Exception {
+    public String getTableCols() {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
       return StringUtil.trimHtmlTag(ptlPositionAnalysis002Service.getDataTableCols(map));
 
@@ -111,14 +107,12 @@ public class PtlPositionAnalysis002Controller extends BaseController {
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("/export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlPositionAnalysis002Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()),"searchDate");
     }

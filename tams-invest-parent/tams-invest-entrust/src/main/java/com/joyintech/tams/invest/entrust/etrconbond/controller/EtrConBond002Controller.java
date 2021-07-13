@@ -138,7 +138,6 @@ public class EtrConBond002Controller extends BaseController {
     /**
      * 获取通道可用现金
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/getChannelAvailableCash")
@@ -193,7 +192,7 @@ public class EtrConBond002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")

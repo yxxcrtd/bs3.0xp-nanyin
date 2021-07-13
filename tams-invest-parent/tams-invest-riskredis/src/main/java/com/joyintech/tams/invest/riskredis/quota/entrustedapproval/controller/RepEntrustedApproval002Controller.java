@@ -76,7 +76,6 @@ public class RepEntrustedApproval002Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
@@ -92,7 +91,6 @@ public class RepEntrustedApproval002Controller extends BaseController {
     * @param dto dto
     * @param br br
     * @return 结果
-    * @throws Exception 异常
     */
    @DTXTransaction
    @ResponseBody

@@ -140,7 +140,6 @@ public class MstCommissionSet002Controller extends BaseController {
      * 
      * 获取证券账户下拉框选项
      * @return 证券账户下拉框选项
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -175,7 +174,7 @@ public class MstCommissionSet002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")

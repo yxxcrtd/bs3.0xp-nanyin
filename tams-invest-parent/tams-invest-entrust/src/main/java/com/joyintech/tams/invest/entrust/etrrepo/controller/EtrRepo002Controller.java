@@ -214,7 +214,6 @@ public class EtrRepo002Controller extends BaseController {
      * 获取组合代码联想文本框信息 <功能详细描述>
      * 
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -313,7 +312,7 @@ public class EtrRepo002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")

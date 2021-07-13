@@ -69,7 +69,6 @@ public class ValBooksetDateSwitch001Controller extends BaseController {
     /**
      * 查询数据获得（同一个 Service 无法直接切换数据源调用）
      * @return 套账日期
-     * @throws Exception
      * @see
      */
     @RequestMapping("findPage")
@@ -88,7 +87,6 @@ public class ValBooksetDateSwitch001Controller extends BaseController {
     /**
      * 查询账套组
      * @return 套账日期
-     * @throws Exception
      * @see
      */
     @RequestMapping("findBooksetGroup")
@@ -101,7 +99,6 @@ public class ValBooksetDateSwitch001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */

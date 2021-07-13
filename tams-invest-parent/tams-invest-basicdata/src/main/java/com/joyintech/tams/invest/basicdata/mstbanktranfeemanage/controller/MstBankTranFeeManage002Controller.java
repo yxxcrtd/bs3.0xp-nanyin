@@ -162,7 +162,7 @@ public class MstBankTranFeeManage002Controller extends BaseController {
      * @param dto 实体类
      * @param br 结果
      * @return 结果集
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")

@@ -56,7 +56,6 @@ public class AccountsAdjustBusScenEleConf003Service extends BaseService<Accounts
      * 
      * @param paraMap 页面参数map
      * @return 查询到的业务场景配置信息
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

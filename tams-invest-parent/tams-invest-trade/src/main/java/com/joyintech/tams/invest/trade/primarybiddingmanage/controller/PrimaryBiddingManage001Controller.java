@@ -81,7 +81,6 @@ public class PrimaryBiddingManage001Controller extends BaseController {
      * 查询
      *
      * @return Page<PrimaryBiddingManageDto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -124,7 +123,6 @@ public class PrimaryBiddingManage001Controller extends BaseController {
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -168,7 +166,6 @@ public class PrimaryBiddingManage001Controller extends BaseController {
      * 撤销
      * @param inputDto 画面输入参数dto
      * @return 撤销结果
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -205,7 +202,6 @@ public class PrimaryBiddingManage001Controller extends BaseController {
      * 撤销
      * @param inputDto 画面输入参数dto
      * @return 撤销结果
-     * @throws Exception
      * @see
      * @since 1.0
      */

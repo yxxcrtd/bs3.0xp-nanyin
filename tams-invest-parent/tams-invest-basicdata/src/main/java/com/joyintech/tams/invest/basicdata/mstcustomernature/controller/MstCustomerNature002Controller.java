@@ -115,7 +115,6 @@ public class MstCustomerNature002Controller extends BaseController {
     /**
      * 代码的联想文本框的查询方法
      * @return List<SuggestDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -131,7 +130,6 @@ public class MstCustomerNature002Controller extends BaseController {
     /**
      * 名称的联想文本框的查询方法
      * @return List<SuggestDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -149,7 +147,6 @@ public class MstCustomerNature002Controller extends BaseController {
      * <一句话功能简述> 
      * <功能详细描述>
      * @return Page<MstCustomerNatureDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -168,7 +165,7 @@ public class MstCustomerNature002Controller extends BaseController {
      * @param dto 实体类
      * @param br 接口
      * @return AjaxResult
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */

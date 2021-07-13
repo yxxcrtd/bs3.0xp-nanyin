@@ -210,7 +210,7 @@ public class EtrFund003Controller extends BaseController {
      * @param allDto EtrFundDto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")

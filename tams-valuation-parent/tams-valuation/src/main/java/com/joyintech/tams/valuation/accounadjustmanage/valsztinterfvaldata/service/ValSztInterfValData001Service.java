@@ -19,7 +19,6 @@ public class ValSztInterfValData001Service extends CommonExportService<ValSztInt
      * <功能详细描述>
      * @param params
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */

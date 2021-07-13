@@ -121,7 +121,6 @@ public class ValProfitQuery001Controller extends BaseController {
 	/**
 	 * 查询账套组
 	 * @return 套账日期
-	 * @throws Exception
 	 * @see
 	 */
 	@RequestMapping("findBooksetGroup")
@@ -134,7 +133,6 @@ public class ValProfitQuery001Controller extends BaseController {
 	 * 检索账套代码(只取理财账套)
 	 *
 	 * @return 账套代码联想框内容
-	 * @throws Exception
 	 * @see
 	 * @since 1.0
 	 */
@@ -164,7 +162,6 @@ public class ValProfitQuery001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -224,7 +221,6 @@ public class ValProfitQuery001Controller extends BaseController {
 	/**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -243,7 +239,6 @@ public class ValProfitQuery001Controller extends BaseController {
 	 * 联动：报表期限类型 - 季度 半年
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("getTermLink")
@@ -268,7 +263,6 @@ public class ValProfitQuery001Controller extends BaseController {
      * 获取默认日期信息
      * 
      * @return ValProfitQuery001Dto
-     * @throws Exception exception
      */
     @ResponseBody
     @RequestMapping("getDateInfo")

@@ -101,7 +101,7 @@ public class MstExchangeQuotationInfo001Controller extends BaseController {
      * @param dto 删除数据
      * @param br 报错信息
      * @return 删除结果
-     * @throws Exception 抛出异常
+     * @throws WorkFlowException 抛出异常
      * @see
      * @since 1.0
      */
@@ -136,7 +136,6 @@ public class MstExchangeQuotationInfo001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

@@ -87,7 +87,6 @@ public class DocumentManagement001Controller extends BaseController{
     /**
      * 分页查询
      * @return Page<DocumentManagementDto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -100,7 +99,6 @@ public class DocumentManagement001Controller extends BaseController{
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

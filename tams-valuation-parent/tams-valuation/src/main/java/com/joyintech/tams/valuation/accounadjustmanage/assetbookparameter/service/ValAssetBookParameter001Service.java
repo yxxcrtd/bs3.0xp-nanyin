@@ -30,7 +30,6 @@ public class ValAssetBookParameter001Service extends CommonExportService<ValAsse
      * 
      * @param name 套帐名称
      * @return List<ValAssetBookParameter002Dto>
-     * @throws Exception 
      * @see
      * @since 1.0
      */
@@ -62,7 +61,6 @@ public class ValAssetBookParameter001Service extends CommonExportService<ValAsse
 	/**
      * 新建check
      * @return
-     * @throws Exception
      */
 	public List<ValAssetBookParameter002Dto> checkfornew(String booksetId) throws Exception {
 		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME

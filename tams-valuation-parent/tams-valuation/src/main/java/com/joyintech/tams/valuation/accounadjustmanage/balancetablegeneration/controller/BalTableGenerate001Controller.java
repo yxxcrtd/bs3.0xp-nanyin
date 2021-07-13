@@ -182,8 +182,6 @@ public class BalTableGenerate001Controller extends BaseController {
      * 记账凭证数据取得
      *
      * @return 记账凭证数据
-     * @throws Exception
-     *             异常
      * @see
      */
     @RequestMapping("findPage")
@@ -200,8 +198,6 @@ public class BalTableGenerate001Controller extends BaseController {
      * 记账凭证数据取得
      *
      * @return 记账凭证数据
-     * @throws Exception
-     *             异常
      * @see
      */
     @RequestMapping("/handle")
@@ -240,8 +236,6 @@ public class BalTableGenerate001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception
-     *             异常
      * @see
      * @since 1.0
      */

@@ -15,6 +15,7 @@ import javax.validation.Valid;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -459,14 +460,13 @@ public class FinMdateAdjustment002Controller extends BaseController {
      *
      * @param dto dto
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinMdateAdjustment001Dto dto)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinMdateAdjustment001Dto dto) throws WorkFlowException {
         ProcessParameter<FinMdateAdjustment001Dto> processParameter = new ProcessParameter<FinMdateAdjustment001Dto>();
         WorkFlowParameter<FinMdateAdjustment001Dto> params = new WorkFlowParameter<FinMdateAdjustment001Dto>();
         params.setElementId(dto.getElementId());//元素id

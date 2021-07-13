@@ -44,7 +44,6 @@ public class ValBooksetDateSwitch003Service extends CommonExportService<ValBooks
      * 
      * @param params 筛选条件
      * @return 表格信息
-     * @throws Exception
      */
     public List<ValBooksetDateSwitch003Dto> findList(Map<String, Object> params)
         throws Exception {

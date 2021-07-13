@@ -176,7 +176,6 @@ public class ValueAddedTax001Controller extends BaseController {
     /**
      * 查询页面
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
@@ -189,7 +188,6 @@ public class ValueAddedTax001Controller extends BaseController {
     /**
      * 查询页面
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("selectSum")
@@ -200,7 +198,6 @@ public class ValueAddedTax001Controller extends BaseController {
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

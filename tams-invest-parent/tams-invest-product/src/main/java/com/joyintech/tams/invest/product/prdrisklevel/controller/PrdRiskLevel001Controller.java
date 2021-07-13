@@ -73,7 +73,6 @@ public class PrdRiskLevel001Controller extends BaseController {
      * 分页查询
      *
      * @return Page<FinProductPayInt001Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -104,7 +103,6 @@ public class PrdRiskLevel001Controller extends BaseController {
      * 导出
      *
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */

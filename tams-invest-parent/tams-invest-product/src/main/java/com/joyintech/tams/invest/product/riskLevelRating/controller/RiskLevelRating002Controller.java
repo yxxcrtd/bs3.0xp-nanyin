@@ -133,7 +133,6 @@ public class RiskLevelRating002Controller extends BaseController {
      * @param dto
      * @param br
      * @return AjaxResult
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("save")
@@ -188,7 +187,6 @@ public class RiskLevelRating002Controller extends BaseController {
      *
      * @param dto
      * @return AjaxResult
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("delete")

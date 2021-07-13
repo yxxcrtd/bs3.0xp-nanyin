@@ -605,7 +605,6 @@ public class TrdDepositInvestTrade003Controller extends BaseController {
      * 保存
      * @param dto dto
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("save")

@@ -70,7 +70,6 @@ public class MstOpicsParaMante001Controller extends BaseController {
     /**
      * 查询按钮的查询方法 
      * @return Page
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -102,7 +101,6 @@ public class MstOpicsParaMante001Controller extends BaseController {
      * @param dto 实体类
      * @param br 结果集
      * @return AjaxResult
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -137,7 +135,6 @@ public class MstOpicsParaMante001Controller extends BaseController {
      * 导出
      * 
      * @return ResponseEntity
-     * @throws Exception 异常
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export(){

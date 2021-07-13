@@ -63,7 +63,6 @@ public class ReportProductRequirement001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

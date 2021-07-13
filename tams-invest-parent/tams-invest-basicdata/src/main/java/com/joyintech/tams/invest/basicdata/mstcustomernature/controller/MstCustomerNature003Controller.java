@@ -115,7 +115,7 @@ public class MstCustomerNature003Controller extends BaseController {
      * @param dto 实体类
      * @param br 结果集
      * @return AjaxResult
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */

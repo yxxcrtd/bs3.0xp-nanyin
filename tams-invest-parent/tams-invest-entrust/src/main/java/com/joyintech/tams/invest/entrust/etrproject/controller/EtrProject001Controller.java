@@ -89,7 +89,6 @@ public class EtrProject001Controller extends BaseController {
      * 获取组合代码联想文本框信息
      * <功能详细描述>
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -104,7 +103,6 @@ public class EtrProject001Controller extends BaseController {
      * 获取资产代码联想文本框信息
      * <功能详细描述>
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -197,7 +195,6 @@ public class EtrProject001Controller extends BaseController {
      * 文件导出 <功能详细描述>
      * 
      * @return 导出返回参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */

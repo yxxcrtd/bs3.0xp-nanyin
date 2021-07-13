@@ -71,7 +71,6 @@ public class RskEvent001Controller extends BaseController {
 	 * 画面查询方法
 	 * 
 	 * @return 所有数据
-	 * @throws Exception
 	 *             异常
 	 */
 	@ResponseBody
@@ -94,7 +93,6 @@ public class RskEvent001Controller extends BaseController {
 	 * 查询画面风险事件名称联想框内容
 	 * 
 	 * @return 检索数据
-	 * @throws Exception
 	 *             异常
 	 */
 	@ResponseBody
@@ -128,7 +126,6 @@ public class RskEvent001Controller extends BaseController {
 	 * 
 	 * @param dto
 	 * @return
-	 * @throws Exception
 	 */
 	@DTXTransaction
 	@ResponseBody
@@ -163,7 +160,6 @@ public class RskEvent001Controller extends BaseController {
 	 * 导出信息excel
 	 * 
 	 * @return excel
-	 * @throws Exception
 	 *             异常
 	 */
 //	@RequestMapping(ACTION_EXPORT)

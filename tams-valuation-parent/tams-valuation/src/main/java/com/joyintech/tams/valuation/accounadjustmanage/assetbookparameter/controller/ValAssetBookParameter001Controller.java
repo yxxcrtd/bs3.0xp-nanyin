@@ -52,7 +52,6 @@ public class ValAssetBookParameter001Controller extends BaseController {
      * 获取查询结果
      * 
      * @return List<ValAssetBookParameter002Dto>
-     * @throws Exception 
      * @see
      * @since 1.0
      */
@@ -69,7 +68,6 @@ public class ValAssetBookParameter001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      *
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -83,7 +81,6 @@ public class ValAssetBookParameter001Controller extends BaseController {
      * 新建参数check
      *
      * @return 
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -106,7 +103,6 @@ public class ValAssetBookParameter001Controller extends BaseController {
      * 导出数据
      *
      * @return ResponseEntity<byte[]>
-     * @throws Exception ExportUtil.export
      * @see
      * @since 1.0
      */

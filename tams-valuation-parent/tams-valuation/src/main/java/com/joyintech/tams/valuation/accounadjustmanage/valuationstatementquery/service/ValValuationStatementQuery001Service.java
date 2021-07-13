@@ -55,7 +55,6 @@ public class ValValuationStatementQuery001Service extends CommonExportService<Va
      * 
      * @param params 筛选条件
      * @return 表格信息
-     * @throws Exception 
      */
     public Page<ValValuationStatementQuery001Dto> findPage(Map<String, Object> params) throws Exception {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValValuationStatementQuery001/findPage", params, ValValuationStatementQuery001Dto.class);

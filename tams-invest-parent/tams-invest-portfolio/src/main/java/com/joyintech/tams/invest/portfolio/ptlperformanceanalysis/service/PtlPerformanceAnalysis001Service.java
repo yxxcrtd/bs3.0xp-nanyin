@@ -84,7 +84,6 @@ public class PtlPerformanceAnalysis001Service extends CommonExportService<PtlPer
     /**
      * 获取动态列结果
      * @return 查询结果集
-     * @throws Exception 异常
      * @param map
      */
     public String getDataTableCols(Map<String, Object> map) {
@@ -133,7 +132,6 @@ public class PtlPerformanceAnalysis001Service extends CommonExportService<PtlPer
     /**
      * 获取动态列结果
      * @return 查询结果集
-     * @throws Exception 异常
      * @param map
      */
     public String getShowDataTableCols(Map<String, Object> map) {

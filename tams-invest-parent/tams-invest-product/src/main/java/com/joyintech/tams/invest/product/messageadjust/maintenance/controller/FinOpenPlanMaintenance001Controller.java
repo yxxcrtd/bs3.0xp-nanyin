@@ -116,13 +116,12 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
      * 根据产品代码查询数据
      * <功能详细描述>
      * @return Page<FinPayPlanAdjustmentDto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public List<FinOpenPlanMaintenanceDto> selectForPage() throws Exception{
+    public List<FinOpenPlanMaintenanceDto> selectForPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return finOpenPlanMaintenanceService.selectForPage(param);
     }
@@ -148,7 +147,6 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -185,7 +183,6 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

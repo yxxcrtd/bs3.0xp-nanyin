@@ -64,7 +64,7 @@ public class PtlAnalyzeAfterInvest003Service extends CommonExportService<PtlAnal
     /**
      * 导出
      * @return ResponseEntity<byte[]>
-     * @throws Exception
+     * @throws IOException
      */
 	public ResponseEntity<byte[]> export(Map<String, Object> selectParam) throws IOException {
 		String pageId = (String) selectParam.get("pageId");

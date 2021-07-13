@@ -44,7 +44,6 @@ public class MstFeeVarietiesService extends CommonExportService<MstFeeVarietiesD
      * 
      * @param pageParam 页面参数
      * @return 查询到的所有数据
-     * @throws Exception 异常
      */
     public Page<MstFeeVarietiesDto> selectForPage(Map<String, Object> pageParam){
         Page<MstFeeVarietiesDto> page = restTemplate.postForPage(

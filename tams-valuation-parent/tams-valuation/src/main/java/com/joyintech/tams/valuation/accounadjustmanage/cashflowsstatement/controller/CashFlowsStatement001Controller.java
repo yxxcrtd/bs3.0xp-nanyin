@@ -129,7 +129,6 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -191,7 +190,6 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * 联动：报表期限类型 - 季度 半年
      * 
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("getTermLink")
@@ -219,7 +217,6 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * 导出信息
      * 
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -234,7 +231,6 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * 获取默认日期信息
      * 
      * @return CashFlowsStatement001Dto
-     * @throws Exception exception
      */
     @ResponseBody
     @RequestMapping("getDateInfo")

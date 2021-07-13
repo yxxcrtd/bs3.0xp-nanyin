@@ -68,10 +68,8 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * 产品代码联想框 
      * @param finprodMarketId finprodMarketId
      * @return List List
-     * @throws Exception Exception
      */
-    public Page<SelectOptionDto> getFinprodMarketIdList(String finprodMarketId)
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodMarketIdList(String finprodMarketId){
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("finprodMarketId", finprodMarketId);
         User user = SecurityUtil.getLoginUser();
@@ -88,11 +86,10 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * <功能详细描述>
      * @param pageParam pageParam
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
-    public Page<FinProductBmQuotationDto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public Page<FinProductBmQuotationDto> selectForPage(Map<String, Object> pageParam){
         //获取平台日
         pageParam.put("SESSION_SYS_DATE", platformDate != null ? platformDate.getSysDateStr():DateUtil.format(DateUtil.now()));
         User user = SecurityUtil.getLoginUser();
@@ -107,11 +104,10 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * <功能详细描述>
      * @param pageParam pageParam
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
-    public List<FinProductBmQuotationDto> selectForList(Map<String, Object> pageParam) throws Exception {
+    public List<FinProductBmQuotationDto> selectForList(Map<String, Object> pageParam) {
         //获取平台日
         pageParam.put("SESSION_SYS_DATE", platformDate != null ? platformDate.getSysDateStr():DateUtil.format(DateUtil.now()));
         User user = SecurityUtil.getLoginUser();
@@ -196,12 +192,10 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * <功能详细描述>
      * @param map finprodMarketId
      * @return Object
-     * @exception Exception Exception
      * @see
      * @since 1.0
      */
-    public Page<SelectOptionDto> getFinprodMarketIdToNew(Map<String,Object> map)
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodMarketIdToNew(Map<String,Object> map){
         if(!StringUtil.isNotEmpty(map.get("initValue"))){
             User user = SecurityUtil.getLoginUser();
             map.put("userName", user.getUserName());
@@ -219,7 +213,6 @@ public class FinProductBmQuotationService extends CommonExportService<FinProduct
      * <功能详细描述>
      * @param map map
      * @return FinProductBmQuotationDto
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */

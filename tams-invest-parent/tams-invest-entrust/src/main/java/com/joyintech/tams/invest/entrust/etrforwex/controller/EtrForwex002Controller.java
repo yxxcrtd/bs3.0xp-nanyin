@@ -269,7 +269,7 @@ public class EtrForwex002Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
@@ -325,7 +325,6 @@ public class EtrForwex002Controller extends BaseController{
      * 获取托管清算账户
      * <功能详细描述>
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */

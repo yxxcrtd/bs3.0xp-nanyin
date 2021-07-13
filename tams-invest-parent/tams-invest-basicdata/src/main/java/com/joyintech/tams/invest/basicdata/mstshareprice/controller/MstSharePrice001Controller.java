@@ -75,7 +75,6 @@ public class MstSharePrice001Controller extends BaseController{
      * 页面查询，表格分页
      * 
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -90,7 +89,6 @@ public class MstSharePrice001Controller extends BaseController{
     /**
      * 获取页面下拉选信息(资产代码信息）
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/getFinprodIdForAdd")
@@ -120,7 +118,7 @@ public class MstSharePrice001Controller extends BaseController{
      * 删除按钮点击
      * @return AjaxResult
      * @param dto MstSharePriceDto
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @param  br BindingResult
      * @see
      * @since 1.0
@@ -154,7 +152,6 @@ public class MstSharePrice001Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

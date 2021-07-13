@@ -107,10 +107,8 @@ public class FinProductDurDeal001Service extends CommonExportService<FinProductD
      *
      * @param param 过滤参数
      * @return 下拉框列表
-     * @throws Exception Exception
      */
-    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> param)
-        throws Exception {
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> param) {
         // 收益型产品 下拉选项过滤净值型产品 lijun add SHBS-518
         // param.put("PROFIT_TYPE", DictCodeList.收益类型_收益型.getValue());
         return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductDurDeal/queryProdIdInfo", param,

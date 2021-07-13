@@ -30,7 +30,6 @@ public class ValAssetBookParameter002Service extends CommonExportService<ValAsse
 	/**
      * 获取参数 - 下拉框
      * @return
-     * @throws Exception
      */
 	public Page<SelectOptionDto> findParam(Map<String, Object> parameters) throws Exception {
 		return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME

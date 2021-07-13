@@ -55,7 +55,6 @@ public class ValBooksetDateSwitch001Service extends CommonExportService<ValBooks
      * 
      * @param params 筛选条件
      * @return 表格信息
-     * @throws Exception 
      */
     public Page<ValBooksetDateSwitch001Dto> findPage(Map<String, Object> params) throws Exception {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ValBooksetDateSwitch001/findPage", params, ValBooksetDateSwitch001Dto.class);

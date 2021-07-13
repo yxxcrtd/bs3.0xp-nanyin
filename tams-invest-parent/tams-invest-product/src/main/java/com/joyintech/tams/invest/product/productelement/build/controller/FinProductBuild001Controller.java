@@ -233,7 +233,6 @@ public class FinProductBuild001Controller extends BaseController {
      * 画面查詢方法
      * 
      * @return 所有數據
-     * @throws Exception 異常
      */
     @ResponseBody
     @RequestMapping("selectForPage")
@@ -245,7 +244,6 @@ public class FinProductBuild001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

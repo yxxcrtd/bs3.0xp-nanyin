@@ -54,7 +54,6 @@ public class ValBooksetDateSwitch003Controller extends BaseController {
     /**
      * 查询数据获得
      * @return 套账日期
-     * @throws Exception
      * @see
      */
     @RequestMapping("findList")

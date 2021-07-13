@@ -62,7 +62,6 @@ public class CstpTrdMatchInfoController  extends BaseController {
     /**
      * 导出
      * @return
-     * @throws Exception
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export() throws Exception {

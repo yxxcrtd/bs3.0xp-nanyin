@@ -114,7 +114,6 @@ public class TrdFxswapInvestTrade001Controller extends BaseController {
      * 分页查询
      * 
      * @return Page<TrdFxswapInvestTrade001Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -129,7 +128,6 @@ public class TrdFxswapInvestTrade001Controller extends BaseController {
      * 画面导出功能实现
      * 
      * @return ResponseEntity 确认的实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

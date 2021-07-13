@@ -105,7 +105,6 @@ public class AccountsAdjustBusScenEleConf004Service extends BaseService<Accounts
      * <功能详细描述>
      * @param dto 页面参数dto
      * @return 是否保存成功
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

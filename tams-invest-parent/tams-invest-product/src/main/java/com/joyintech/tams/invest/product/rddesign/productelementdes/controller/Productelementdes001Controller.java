@@ -86,7 +86,6 @@ public class Productelementdes001Controller extends BaseController {
      * 产品要素设计查询
      * 
      * @return Page<Productelementdes002Dto>
-     * @throws Exception Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
@@ -141,7 +140,6 @@ public class Productelementdes001Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

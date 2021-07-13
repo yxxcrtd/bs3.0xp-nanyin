@@ -64,7 +64,6 @@ public class ValSztInterfValData001Controller  extends BaseController{
 	 * 深圳通估值对账页面查询方法
 	 * <功能详细描述>
 	 * @return
-	 * @throws Exception
 	 * @see
 	 * @since 1.0
 	 */

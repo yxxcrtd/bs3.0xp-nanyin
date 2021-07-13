@@ -75,7 +75,6 @@ public class ColProductRequirement001Controller extends BaseController {
 	 * 导出信息excel
 	 * 
 	 * @return excel
-	 * @throws Exception
 	 *             异常
 	 * @see
 	 * @since 1.0
@@ -110,7 +109,6 @@ public class ColProductRequirement001Controller extends BaseController {
 	 * @param dto
 	 * @param br
 	 * @return 结果
-	 * @throws Exception
 	 *             异常
 	 */
 	@ResponseBody

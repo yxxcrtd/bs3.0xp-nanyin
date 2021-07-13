@@ -59,7 +59,6 @@ public class DocumentManagement003Controller extends BaseController{
     /**
      * 附件详情查询
      * @return Page<DocumentManagementDto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -74,7 +73,6 @@ public class DocumentManagement003Controller extends BaseController{
      * @param dto dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

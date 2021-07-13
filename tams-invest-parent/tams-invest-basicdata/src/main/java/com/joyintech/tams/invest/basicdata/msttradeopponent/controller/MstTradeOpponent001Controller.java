@@ -83,7 +83,6 @@ public class MstTradeOpponent001Controller extends BaseController{
     /**
      * 分页查询
      * @return 泛型后的分页实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -97,7 +96,6 @@ public class MstTradeOpponent001Controller extends BaseController{
     /**
      * 导出
      * @return 返回导出的数据
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -109,7 +107,6 @@ public class MstTradeOpponent001Controller extends BaseController{
     /**
      * 获取交易对手类型
      * @return List<SuggestDto> 下拉框实体类集合
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -126,7 +123,7 @@ public class MstTradeOpponent001Controller extends BaseController{
      * @param dto 验证的实体类
      * @param br 错误结果
      * @return 错误信息
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */

@@ -113,7 +113,6 @@ public class MstYieldCurveInfo002Controller  extends BaseController{
      * @param dto MstYieldCurveInfoDto
      * @param br br
      * @return AjaxResult
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */

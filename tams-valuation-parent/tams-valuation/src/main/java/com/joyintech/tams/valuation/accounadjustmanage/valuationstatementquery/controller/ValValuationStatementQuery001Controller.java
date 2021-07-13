@@ -78,7 +78,6 @@ public class ValValuationStatementQuery001Controller extends BaseController {
 	 * 导出信息excel
 	 * 
 	 * @return excel
-	 * @throws Exception
 	 *             异常
 	 * @see
 	 * @since 1.0
@@ -158,7 +157,6 @@ public class ValValuationStatementQuery001Controller extends BaseController {
 	 * 查询数据获得
 	 *
 	 * @return 记账凭证数据
-	 * @throws Exception
 	 *             异常
 	 * @see
 	 */

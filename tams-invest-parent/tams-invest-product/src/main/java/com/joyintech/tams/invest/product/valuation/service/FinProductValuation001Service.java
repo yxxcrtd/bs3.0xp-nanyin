@@ -63,7 +63,6 @@ public class FinProductValuation001Service extends BaseService<FinProductValuati
 	 * 
 	 * @param pageParam
 	 * @return
-	 * @throws Exception
 	 */
 	public Page<FinProductValuation001Dto> selectForPage(Map<String, Object> pageParam) throws Exception {
 		return super.queryForPage(() -> finProductValuation001Dao.selectForPage(pageParam));

@@ -46,7 +46,6 @@ public class RepTradeApproval001Controller extends BaseController  {
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")

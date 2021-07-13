@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
@@ -288,12 +289,10 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
      *
      * @param inputDto PtlMockTest002Dto
      * @return 处理结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
-    public PtlMockTest002Dto doMockTest(PtlMockTest002Dto inputDto)
-        throws Exception {
+    public PtlMockTest002Dto doMockTest(PtlMockTest002Dto inputDto) throws InvocationTargetException, IllegalAccessException {
         PtlMockTest002Dto resultDto = new PtlMockTest002Dto();
         logger.info("测算开始...");
         // BigDecimal 一百 = BigDecimal.valueOf(100);
@@ -1101,12 +1100,11 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
      * @param 组合资产估值列表 组合资产估值列表
      * @param 全量组合估值列表 全量组合估值列表
      * @param resultDto 计算结果dto
-     * @throws Exception 异常
      */
     private void do曲线数据处理(MockPtlPortfolioDto ptlBaseInfoDto, Date 平台日,
                           List<MockPtlSecValuationDto> 组合资产估值列表,
                           List<MockPtlPortfolioValuationDto> 全量组合估值列表,
-                          PtlMockTest002Dto resultDto) throws Exception {
+                          PtlMockTest002Dto resultDto) throws InvocationTargetException, IllegalAccessException {
         // 展示区间为：封闭型组合为起息日至到期日、定开型为上一开放日至下一开放日、高频开放型为起息日至三个月后
         List<Date> periodList = RealTimeValIndicatorCalcUtil.genMockDatePeriod(
             ptlBaseInfoDto.getPaPtlPortfolio().getOpenType(), ptlBaseInfoDto.getVdate(),
@@ -1862,7 +1860,6 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
      * @param calcFlg 计算区分
      * 1：计算前一日组合表现 2：计算实时组合表现（考虑当日成交）
      * 3：计算实时组合表现（试算后）（区间相关指标除外） 4:计算模拟测算净值曲线数据
-     * @throws Exception 异常
      */
     private void do计算组合表现(MockPtlPortfolioDto ptlBaseInfoDto,
                              List<MockPtlSecValuationDto> 组合资产估值列表,
@@ -1870,8 +1867,7 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
                              MockPtlCashPositionDto 组合现金,
                              List<MockAssetInfoDto> 资产基本信息列表,
                              List<MockMstExchargeQuoteDto> 汇率行情数据, String 计算日期,
-                             PtlMockTest002Dto resultDto, int calcFlg)
-        throws Exception {
+                             PtlMockTest002Dto resultDto, int calcFlg) throws InvocationTargetException, IllegalAccessException {
         Map<IndicatorName, String> 计算指标信息Map = new HashMap<>();
         // 1：计算前一日组合表现
         if (calcFlg == 1) {
@@ -2002,7 +1998,6 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
      * @param 区间开始日 区间开始日
      * @param 区间结束日 区间结束日
      * @param resultDto 计算结果
-     * @throws Exception 异常
      */
     private void do计算区间收益率(MockPtlPortfolioDto ptlBaseInfoDto,
                            List<MockPtlPortfolioValuationDto> 全量组合估值列表, Date 区间开始日, Date 区间结束日,
@@ -2972,7 +2967,6 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
 
     /**
      * 根据组合关联的估值方案查询对应资产的投资目的
-     * @param portfolioId,finprodId
      * @return 投资目的
      */
     public String findInvAim(Map<String, Object> pageParam) {

@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.product.forecast.service;
 
   
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,11 +69,10 @@ public class FinFlowForecastService extends BaseService<FinFlowForecastConfig>{
      * 流动性储备信息
      * @param params
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
-    public Page<FinFlowForecastConfig> findReserveDetail(Map<String, Object> params) throws Exception {
+    public Page<FinFlowForecastConfig> findReserveDetail(Map<String, Object> params) {
         params.put("flowType", DictCodeListExt2.流动性预测维护_流动性种类_流动性储备.getValue());
         params.put("depType", DictCodeListExt2.流动性预测维护_部门类型_产品管理处.getValue());
         return restTemplate.postForPage(
@@ -85,11 +85,10 @@ public class FinFlowForecastService extends BaseService<FinFlowForecastConfig>{
      * 流动性预测信息
      * @param params
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
-    public Page<FinFlowForecastConfig> findForecast(Map<String, Object> params) throws Exception {
+    public Page<FinFlowForecastConfig> findForecast(Map<String, Object> params) throws ParseException {
         String depType = (String)params.get("depType");
         params.put("flowType", DictCodeListExt2.流动性预测维护_流动性种类_流动性预测.getValue());
         params.put("targetType", DictCode.流动性预测维护_指标种类.getValue());
@@ -134,12 +133,11 @@ public class FinFlowForecastService extends BaseService<FinFlowForecastConfig>{
      * <功能详细描述>
      * @param params
      * @return
-     * @throws Exception
+     * @throws ParseException
      * @see
      * @since 1.0
      */
-    public Page<FinFlowForecastDealAmontDto> findNetValueOpenforecast(Map<String, Object> params) throws Exception {
-
+    public Page<FinFlowForecastDealAmontDto> findNetValueOpenforecast(Map<String, Object> params) throws ParseException {
         params = setDateSlotparams(params);
         return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FlowForecast/findNetValueOpenforecast",
@@ -229,7 +227,7 @@ public class FinFlowForecastService extends BaseService<FinFlowForecastConfig>{
  
  
     
-    private Map<String, Object> setDateSlotparams(Map<String, Object> params) throws Exception{
+    private Map<String, Object> setDateSlotparams(Map<String, Object> params) throws ParseException {
         params.put("PS_C2", DictCodeList.交易方向_产品申购.getValue());
         params.put("PS_C4", DictCodeList.交易方向_产品赎回.getValue());
         params.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());

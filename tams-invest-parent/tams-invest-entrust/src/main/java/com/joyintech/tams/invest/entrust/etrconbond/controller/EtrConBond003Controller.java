@@ -150,7 +150,7 @@ public class EtrConBond003Controller extends BaseController {
      * 
      * @param List<EtrConBondDto> dtoList
      * @param String msg
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
