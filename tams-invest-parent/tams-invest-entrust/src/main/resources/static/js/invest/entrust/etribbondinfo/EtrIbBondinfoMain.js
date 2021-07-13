@@ -341,3 +341,15 @@ function importEtr() {
         table.reload();
     });
 }
+
+var dialogSelf = {}
+dialogSelf.flag="abc";
+dialogSelf.dialog=function(msg, url, param){
+    Joyin.dialog(msg, url, "98%", "95%", param);
+}
+parent.EtrIbBondinfoMain = {
+    dialogSelf:dialogSelf,
+}
+EtrIbBondinfoMain = {
+    dialogSelf:dialogSelf
+}
