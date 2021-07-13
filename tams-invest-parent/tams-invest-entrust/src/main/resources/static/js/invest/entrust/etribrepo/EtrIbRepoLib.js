@@ -35,9 +35,9 @@
             //债券简称
             ,{field: 'finProdAbbr', width: 150, title: '债券简称'}
             // 证券账户/通道
-            , {field: 'secAcctId',visible: false, width: 150, title: "EtrStandardBond002.avaColModel.secAcctId"}
+            , {field: 'secAcctId',visible: false, width: 150, title: "EtrStandardBond002.pledgeColModel.secAcctIdName"}
             // 证券账户/通道
-            , {field: 'secAcctStr', width: 150, title: "EtrStandardBond002.avaColModel.secAcctId"}
+            , {field: 'secAcctStr', width: 150, title: "EtrStandardBond002.pledgeColModel.secAcctIdName"}
             // 交易场所
             , {field: 'tradePlaceText', width: 150, title: 'EtrStandardBond002.avaColModel.tradePlace',visible:false}
             // 券面总额
@@ -115,9 +115,9 @@
             //债券简称
             ,{field: 'finProdAbbr', width: 150, title: '债券简称'}
             // 证券账户/通道
-            , {field: 'secAcctId', visible: false, width: 150, title: "EtrStandardBond002.pledgeColModel.secAcctId",sortable: false}
+            , {field: 'secAcctId', visible: false, width: 150, title: "EtrStandardBond002.pledgeColModel.secAcctIdName",sortable: false}
             // 证券账户/通道
-            , {field: 'secAcctStr', width: 150, title: "EtrStandardBond002.pledgeColModel.secAcctId",sortable: false}
+            , {field: 'secAcctStr', width: 150, title: "EtrStandardBond002.pledgeColModel.secAcctIdName",sortable: false}
 
             // 交易场所
             , {field: 'tradePlaceText',width: 150,title: 'EtrStandardBond002.pledgeColModel.tradePlace',sortable: false,visible:false}
