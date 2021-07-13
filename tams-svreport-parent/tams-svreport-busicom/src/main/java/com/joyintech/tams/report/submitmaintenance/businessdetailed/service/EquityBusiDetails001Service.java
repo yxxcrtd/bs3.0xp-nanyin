@@ -926,7 +926,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     logger.error(e.getMessage(), e);
                     // 从内存中移除当前画面的导出进度
                     progressBarService.removePercent(pageId, PROCESS_KEY);
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             // 从内存中移除当前画面的导出进度
@@ -1234,7 +1234,6 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     logger.error(e.getMessage(), e);
                     // 从内存中移除当前画面的导出进度
                     progressBarService.removePercent(pageId, PROCESS_KEY);
-                    e.printStackTrace();
                 }
             }
             // 从内存中移除当前画面的导出进度
@@ -1824,7 +1823,6 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     ibd.seteQuityConfDate(sdf.parse(map.get("EQUITY_CONF_DATE")));
                 }
                 catch (ParseException e) {
-                    // e.printStackTrace();
                     logger.error(e.getMessage(), e);
                 }
             }
@@ -2796,15 +2794,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 EquityInfo001Dto eInfo001Dto = equityInfo001Map.get(key).get(0);
                 if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())
                         || StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())){
-                    try {
                         String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
                                 single.getCustContractNo(),
                                 eInfo001Dto.getIdentifyNumber());
                         single.setCustContractNo(tuominStr);
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
             if (single.getStatus() != null && single.getStatus().equals("E")) {
@@ -2903,15 +2896,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         if(equityInfoCheck!=null){
             if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), equityInfoCheck.getPersonalIdentifyType())
                     || StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), equityInfoCheck.getPersonalIdentifyType())){
-                try {
-                    String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
-                            dto.getCustContractNo(),
-                            equityInfoCheck.getIdentifyNumber());
-                    dto.setCustContractNo(tuominStr);
-                }
-                catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
+                        dto.getCustContractNo(),
+                        equityInfoCheck.getIdentifyNumber());
+                dto.setCustContractNo(tuominStr);
             }
         }
 
@@ -2969,15 +2957,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 EquityInfo001Dto eInfo001Dto = equityInfo001Map.get(key).get(0);
                 if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())
                         || StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())){
-                    try {
-                        String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
-                                dto.getCustContractNo(),
-                                eInfo001Dto.getIdentifyNumber());
-                        dto.setCustContractNo(tuominStr);
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+                    String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
+                            dto.getCustContractNo(),
+                            eInfo001Dto.getIdentifyNumber());
+                    dto.setCustContractNo(tuominStr);
                 }
             }
             // 数据日期

@@ -14,7 +14,8 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.select.SelectOptionDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.service.risk.conf.DataSourceType;
@@ -49,6 +50,10 @@ import java.util.*;
  */
 @Service
 public class MarketRiskStressTestService extends BaseService<FlowRiskStressTest001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MarketRiskStressTestService.class);
     
     @Autowired
     private MarketRiskStressTestMapper marketRiskStressTestMapper;
@@ -136,8 +141,7 @@ public class MarketRiskStressTestService extends BaseService<FlowRiskStressTest0
             endDate = dft.parse(dft.format(date.getTime()));
         }
         catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         int count = marketRiskStressTestMapper.queryStrTesCount();

@@ -86,7 +86,7 @@ public class RskSupervisionIndicatorParam001Controller extends BaseController {
         Enumeration<String> paramNames = request.getParameterNames();
         while (paramNames.hasMoreElements()){
             String key=paramNames.nextElement();
-            model.addAttribute(key,request.getParameter(key));
+            model.addAttribute(key,request.getParameter(key)==null?"":request.getParameter(key));
         }
         setSelectOptionToModel(model, DICT_CODES);
         model.addAttribute("FIX", BussinessDictCodeListRds.指标参数实现类型_固定值.getValue());

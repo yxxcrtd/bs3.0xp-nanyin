@@ -60,7 +60,6 @@ public class DisDoReadyServer extends AutoSendCBBaseService{
     		logger.info("确认标识生成完成");
     	}
     	catch(Exception e){
-//    		e.printStackTrace();
     		logger.error("error:", e);
     		logger.info("确认标识生成失败"+DateUtil.getCurrentDateTime());
     	}

@@ -1900,7 +1900,7 @@ public class TradeController extends ExceptionControl{
 			  			  HttpServletResponse response){
 		
 		HashMap<String, String> result = new HashMap<String, String>();
-		if(secid!="" && secid!=null && secAcct!="" && longshort!=""){
+		if(secid!=null && secid!="" && secAcct!="" && longshort!=""){
 			String[] secids=secid.split("\\|");
 			if(secids.length==3){
 				secid=secids[1];

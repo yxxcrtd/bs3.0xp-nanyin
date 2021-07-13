@@ -36,7 +36,9 @@ public class PbccomUtil {
 			while (it.hasNext()) {
 				String key2 = it.next();
 				if (key.equals(key2)) {
-					ret = prop.getProperty(key);
+					if(prop!=null) {
+						ret = prop.getProperty(key);
+					}
 					in.close();
 					return ret.trim();
 				}
@@ -48,7 +50,7 @@ public class PbccomUtil {
 				try {
 					in.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 			}
 		}

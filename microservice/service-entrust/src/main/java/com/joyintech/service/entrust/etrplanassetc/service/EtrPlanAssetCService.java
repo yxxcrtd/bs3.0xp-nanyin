@@ -120,7 +120,7 @@ public class EtrPlanAssetCService extends BaseService<EtrPlanAssetCDto>{
      * @since 1.0
      */
     public Page<EtrPlanAssetCDto> selectForPage(int page, int length, Map<String, Object> param)
-        throws Exception {
+    {
         param.put("FINPROD_TYPE2", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         param.put("PROFIT_TYPE", DictCodeList.收益类型_货币型.getValue());
         String portfolioId = (String)param.get("portfolioId");

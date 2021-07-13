@@ -90,7 +90,7 @@ public class ShadowPriceScheme002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) ShadowPriceScheme001Dto dto,
                             BindingResult bindingResult)
-        throws Exception {
+         {
         if (bindingResult.hasErrors()) {
             return new AjaxResult(bindingResult);
         }

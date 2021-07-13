@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.fundsecuritiesaccount.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,8 +78,7 @@ public class FundSecuritiesAccount001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FundSecuritiesAccountDto> selectAll()
-        throws Exception {
+    public Page<FundSecuritiesAccountDto> selectAll(){
         Page<FundSecuritiesAccountDto> page = fundSecuritiesAccountService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -94,8 +94,7 @@ public class FundSecuritiesAccount001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getSecAcctId")
-    public List<SuggestDto> getSecAcctId(String param)
-        throws Exception {
+    public List<SuggestDto> getSecAcctId(String param){
         List<SuggestDto> temp = fundSecuritiesAccountService.getSecAcctId(param);
         return temp;
     }
@@ -110,8 +109,7 @@ public class FundSecuritiesAccount001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getSecManager")
-    public List<SuggestDto> getSecManager(String param)
-        throws Exception {
+    public List<SuggestDto> getSecManager(String param){
         List<SuggestDto> temp = fundSecuritiesAccountService.getSecManager(param);
         return temp;
     }
@@ -143,8 +141,7 @@ public class FundSecuritiesAccount001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) FundSecuritiesAccountDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) FundSecuritiesAccountDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -172,8 +169,7 @@ public class FundSecuritiesAccount001Controller extends BaseController{
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return fundSecuritiesAccountService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

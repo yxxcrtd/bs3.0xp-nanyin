@@ -95,8 +95,7 @@ public class MstCalendarType004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstCalendarType002Dto> selectCanlendarDetail()
-        throws Exception {
+    public Page<MstCalendarType002Dto> selectCanlendarDetail(){
         Map<String, Object> map = RequestUtil.getPageParam();
         return mstCalendarType002service.selectCanlendarDetail(map);
     }
@@ -110,8 +109,7 @@ public class MstCalendarType004Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstCalendarType002service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

@@ -13,6 +13,8 @@ package com.joyintech.service.trade.investtrade.commanddispatcher.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +51,10 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 @RestController("TrdCommandDispatcher001Ctr_dtx")
 @RequestMapping("/TrdCommandDispatcher001")
 public class TrdCommandDispatcher001Controller{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdCommandDispatcher001Controller.class);
 
 	/**
      * 指令分发微服务service注入
@@ -267,7 +273,7 @@ public class TrdCommandDispatcher001Controller{
             trdCommandDispatcher001Service.deleteEtrAutoTime();
             return 1;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return 0;
         }
     }
@@ -289,7 +295,7 @@ public class TrdCommandDispatcher001Controller{
             trdCommandDispatcher001Service.insertEtrAutoTime(dto);
             return 1;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return 0;
         }
     }

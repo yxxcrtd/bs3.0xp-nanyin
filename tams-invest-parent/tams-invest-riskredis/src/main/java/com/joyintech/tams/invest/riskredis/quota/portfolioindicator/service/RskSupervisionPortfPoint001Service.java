@@ -138,7 +138,7 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 			}
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
         return null;
     }

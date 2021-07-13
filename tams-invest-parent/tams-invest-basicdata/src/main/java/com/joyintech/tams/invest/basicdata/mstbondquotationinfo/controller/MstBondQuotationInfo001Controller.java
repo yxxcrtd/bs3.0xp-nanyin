@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.mstbondquotationinfo.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,8 +78,7 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getSecId")
-    public List<SuggestDto> getSecIdOption(String param)
-        throws Exception {
+    public List<SuggestDto> getSecIdOption(String param){
         List<SuggestDto> list = mstBondQuotationInfoService.getSecIdOption(param);
         return list;
     }
@@ -92,8 +92,7 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getFinProdAbbr")
-    public List<SuggestDto> getFinProdAbbr(String param)
-        throws Exception {
+    public List<SuggestDto> getFinProdAbbr(String param){
         return mstBondQuotationInfoService.getFinProdAbbr(param);
     }
 
@@ -104,8 +103,7 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstBondQuotationInfoDto> selectAll()
-        throws Exception {
+    public Page<MstBondQuotationInfoDto> selectAll(){
         Page<MstBondQuotationInfoDto> page = mstBondQuotationInfoService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -136,8 +134,7 @@ public class MstBondQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstBondQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstBondQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -171,8 +168,7 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstBondQuotationInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

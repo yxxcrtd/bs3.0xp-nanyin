@@ -523,7 +523,7 @@ public class OneKeyMakeAccount001Services {
      */
     @DataSource(DataSourceType.OTHER)
     public List<ValAccountHandle001Dto> findLogPage(Map<String, Object> map)
-        throws Exception {
+         {
 
         DynamicDataSourceHolder.putDataSource(DataSourceType.OTHER);
         List<ValAccountHandle001Dto> list = new ArrayList<>();

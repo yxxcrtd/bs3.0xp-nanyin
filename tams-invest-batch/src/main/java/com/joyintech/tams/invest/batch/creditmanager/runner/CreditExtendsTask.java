@@ -69,7 +69,7 @@ public class CreditExtendsTask extends BatchBaseService{
                     try {
                         Thread.sleep(30000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
                 isRunning = true;

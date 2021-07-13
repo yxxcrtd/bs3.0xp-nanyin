@@ -56,7 +56,7 @@ public class ValBalanceUnusualQuery001Service extends CommonExportService<ValBal
      * @see
      * @since 1.0
      */
-    public Page<ValBalanceUnusualQuery001Dto> queryPageList(Map<String, Object> params) throws Exception {
+    public Page<ValBalanceUnusualQuery001Dto> queryPageList(Map<String, Object> params) {
         List<ValBalanceUnusualQuery001Dto> listDto = new ArrayList<>();
         String booksetId = (String)params.get("booksetId");
         String[] booksetidArr = null;

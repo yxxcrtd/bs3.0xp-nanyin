@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -274,7 +275,7 @@ public class EtrForwex002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrForwexDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrForwexDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -330,8 +331,7 @@ public class EtrForwex002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/selectPtlCapAcctNo")
-    public List<SelectOptionDto> selectPtlCapAcctNo()
-        throws Exception {
+    public List<SelectOptionDto> selectPtlCapAcctNo(){
         List<SelectOptionDto> temp = etrForwexService.selectPtlCapAcctNo(RequestUtil.getPageParam());
         return temp;
     }

@@ -65,7 +65,7 @@ public class PltMedianManagement001Service extends CommonExportService<PltMedian
 			map.put("paraCode", paraCodeList);
 		}
 		Object blank = map.get("blank");
-		if(blank != null || blank != ""){
+		if(blank != null && blank != ""){
 			map.put("blank", blank);
 		}
 		Object supDate = map.get("supDate");

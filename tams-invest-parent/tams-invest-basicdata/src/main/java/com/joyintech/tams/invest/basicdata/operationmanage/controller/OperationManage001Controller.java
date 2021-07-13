@@ -96,8 +96,7 @@ public class OperationManage001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<OperationManageDto> selectAllMstCaptialAccount()
-        throws Exception {
+    public Page<OperationManageDto> selectAllMstCaptialAccount(){
         Page<OperationManageDto> page = operationManageService.selectForPage(RequestUtil.getPageParam());
         return page;
     }
@@ -111,8 +110,7 @@ public class OperationManage001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return operationManageService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
 
     }

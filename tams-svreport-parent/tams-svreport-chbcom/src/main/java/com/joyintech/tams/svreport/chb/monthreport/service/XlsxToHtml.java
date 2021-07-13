@@ -66,7 +66,6 @@ public class XlsxToHtml {
                 htmlExcel = XlsxToHtml.getExcelInfo(hWb,isWithStyle);
             }
         } catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }finally{
             try {
@@ -76,7 +75,6 @@ public class XlsxToHtml {
                 }
 
             } catch (IOException e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
              }
             try {
@@ -85,7 +83,6 @@ public class XlsxToHtml {
                     wb.close();
                 }
             } catch (IOException e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
              }
          }
@@ -198,7 +195,7 @@ public class XlsxToHtml {
       */
      private static String getCellValue(Cell cell) {
  
-         String result = new String();
+         String result = "";
          if (CellType.NUMERIC.equals(cell.getCellType())) {
              if (HSSFDateUtil.isCellDateFormatted(cell)) {// 处理日期格式、时间格式
                  SimpleDateFormat sdf = null;

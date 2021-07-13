@@ -24,6 +24,8 @@ import javax.validation.Valid;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,6 +72,10 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 @PageId("ValReconcileSchemeInfo001")
 @RequestMapping("/valuation/valuationparametermanage/reconcilescheme/ValReconcileSchemeInfo001")
 public class ValReconcileSchemeInfo001Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValReconcileSchemeInfo001Controller.class);
 
     /** 对账规则方案配置Service */
     @Autowired
@@ -108,7 +114,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findSchemeList")
-    public Page<ValReconcileSchemeInfo001Dto> findSchemeList() throws Exception {
+    public Page<ValReconcileSchemeInfo001Dto> findSchemeList() {
         List<String> schemeTypeList = new ArrayList<>();
         schemeTypeList.add(DictCodeListExt1.配置方案类型_估值表对账方案.getValue());
         schemeTypeList.add(DictCodeListExt1.配置方案类型_余额表对账方案.getValue());
@@ -275,7 +281,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
             reconcileSchemeInfo001Service.doSaveOrUpdate(schemeDto);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             return new AjaxResult(this.getMessage("VAL_COMMON_I_0008") + e.getMessage(),
                 MessageType.错误消息);
         }
@@ -298,14 +304,14 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
     @RequestMapping("uploadFile")
     public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response,
                                  ModelMap model)
-        throws Exception {
+         {
         AjaxResult res = new AjaxResult();
         ValReconcileSchemeInfo001Dto infoDto = new ValReconcileSchemeInfo001Dto();
 
         // 文件名
-        String fileName = request.getParameter("fileName");
-        String schemeType = request.getParameter("schemeType");
-        String booksetId = request.getParameter("booksetId");
+        String fileName = request.getParameter("fileName")==null?"":request.getParameter("fileName");
+        String schemeType = request.getParameter("schemeType")==null?"":request.getParameter("schemeType");
+        String booksetId = request.getParameter("booksetId")==null?"":request.getParameter("booksetId");
         if (!StringUtil.isNotEmpty(schemeType)) {
             String msg = "方案类型不能为空";
             res = new AjaxResult(msg, MessageType.错误消息);
@@ -344,7 +350,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
                 ProgressBarService.FILE_UPLOAD_ID, 1D, false);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             String msg = "请上传正确的映射关系表";
             res = new AjaxResult(msg, MessageType.错误消息);
             progressBarService.updatePercent("ValReconcileSchemeInfo001",
@@ -370,7 +376,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      */
     private List<ValReconcileSchemeStructConfigDto> getStructList(String schemeType,
                                                                   String fileName)
-        throws Exception, IOException {
+        throws IOException {
 
         // 导入文件数据列表,
         ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName), null);
@@ -421,7 +427,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      */
     private List<ValReconcileSchemeSubjectConfigDto> getSubjectList(String fileName,
                                                                     String booksetId)
-        throws Exception, IOException {
+        throws IOException {
         Map<String, BokSubject> bokSubjectMap = reconcileSchemeInfo001Service.getAllBokSubjectMap(booksetId);
 
         // 导入文件数据列表,第二个sheet
@@ -471,7 +477,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      */
     private List<ValReconcileSchemeNatureConfigDto> getNatureList(String fileName,
                                                                   String booksetId)
-        throws Exception, IOException {
+        throws IOException {
 //        Map<String, BokSubject> bokSubjectMap = reconcileSchemeInfo001Service.getAllBokSubjectMap(
 //            booksetId);
         // 导入文件数据列表,第二个sheet
@@ -514,7 +520,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
      * @since 1.0
      */
     private List<ValReconcileSchemeAssetConfigDto> getAssetList(String fileName)
-        throws Exception, IOException {
+        throws IOException {
 
         // 导入文件数据列表,第三个sheet
         ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName), null);

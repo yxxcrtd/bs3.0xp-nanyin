@@ -8,6 +8,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.thoughtworks.xstream.core.util.Base64Encoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Base64 {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(Base64.class);
+
     @Value("${application.chb.base64Key}")
     private String base64Key;
 
@@ -40,12 +47,14 @@ public class Base64 {
 	public static String encryptData(String input) {
 		try {
 			if (KEY == null) {
-				System.out.print("Key为空null");
+//				System.out.print("Key为空null");
+				logger.info("Key为空null");
 				return null;
 			}
 			// 判断Key是否为16位
 			if (KEY.length() != 16) {
-				System.out.print("Key长度不是16位");
+//				System.out.print("Key长度不是16位");
+				logger.info("Key长度不是16位");
 				return null;
 			}
 			byte[] raw = KEY.getBytes("utf-8");
@@ -56,7 +65,7 @@ public class Base64 {
 			byte[] encrypted = cipher.doFinal(input.getBytes());
 			return new Base64Encoder().encode(encrypted);//此处使用BASE64做转码功能，同时能起到2次加密的作用。
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}
@@ -70,12 +79,14 @@ public class Base64 {
 		try {
 			// 判断Key是否正确
 			if (KEY == null) {
-				System.out.print("Key为空null");
+//				System.out.print("Key为空null");
+				logger.info("Key为空null");
 				return null;
 			}
 			// 判断Key是否为16位
 			if (KEY.length() != 16) {
-				System.out.print("Key长度不是16位");
+//				System.out.print("Key长度不是16位");
+				logger.info("Key长度不是16位");
 				return null;
 			}
 			byte[] raw = KEY.getBytes("utf-8");
@@ -89,11 +100,12 @@ public class Base64 {
 				String originalString = new String(original);
 				return originalString;
 			} catch (Exception e) {
-				System.out.println(e.toString());
+//				System.out.println(e.toString());
+				logger.info(e.toString());
 				return null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return input;
 	}
@@ -284,7 +296,8 @@ public class Base64 {
 				if (baos != null)
 					baos.close();
 			} catch (Exception e) {
-				System.out.println(e);
+//				System.out.println(e);
+				logger.info(e.toString());
 			}
 		}
 		return b;
@@ -313,7 +326,8 @@ public class Base64 {
 				if (fr != null)
 					fr.close();
 			} catch (Exception e) {
-				System.out.println(e);
+//				System.out.println(e);
+				logger.info(e.toString());
 			}
 		}
 		return caw.toCharArray();
@@ -333,7 +347,8 @@ public class Base64 {
 				if (fos != null)
 					fos.close();
 			} catch (Exception e) {
-				System.out.println(e);
+//				System.out.println(e);
+				logger.info(e.toString());
 			}
 		}
 	}
@@ -352,7 +367,7 @@ public class Base64 {
 				if (fos != null)
 					fos.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 	}

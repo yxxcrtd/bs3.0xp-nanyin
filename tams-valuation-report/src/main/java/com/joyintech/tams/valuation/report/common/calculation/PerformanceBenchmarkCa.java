@@ -124,7 +124,7 @@ public class PerformanceBenchmarkCa {
      * @throws SQLException 
      * @returnMap<BigDecimal, List<BigDecimal>>
      */
-	public static Map<String,Object> getClaCompareRule(Date startDate, Date endDate,String prodId, Connection conn) throws Exception {
+	public static Map<String,Object> getClaCompareRule(Date startDate, Date endDate,String prodId, Connection conn) throws SQLException {
 		//调用阶段业绩比较基准List查询
 		Map<String,Object> resultMap=getPhasePerformance(startDate, endDate, prodId, conn);
 		//获取参数map

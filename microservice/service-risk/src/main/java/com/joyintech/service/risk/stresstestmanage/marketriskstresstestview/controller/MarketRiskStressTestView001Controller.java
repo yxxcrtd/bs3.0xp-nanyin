@@ -46,7 +46,7 @@ public class MarketRiskStressTestView001Controller{
 	            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
 			 Map<String, Object> param1=param;
 			 Object st=param1.get("testId");
-			 if(st!=""&&st!=null){
+			 if(st!=null && st!=""){
 				 String [] str=((String) st).split(",");
 				 List<String> list=Arrays.asList(str);
 				 param1.replace("testId", list);
@@ -54,7 +54,7 @@ public class MarketRiskStressTestView001Controller{
 			     param1.remove("testId"); 
 		     }
 			 Object sc=param1.get("sceneIds");
-			 if(sc!=""&&sc!=null){
+			 if(sc!=null && sc!=""){
 				 String [] str=((String) sc).split(",");
 				 List<String> list=Arrays.asList(str);
 				 param1.replace("sceneIds", list);

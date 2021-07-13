@@ -8,6 +8,8 @@ import com.joyintech.tams.mobileApproval.util.HttpKit;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.service.MessageInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,10 +17,11 @@ import java.util.List;
 
 @Service(value = "messageService")
 public class MobileMessageService implements MessageInterface {
-
+    private static final Logger logger = LoggerFactory.getLogger(MobileMessageService.class);
     @Override
     public void sendMeg(FlowEntity flowEntity) {
-        System.out.println("发送消息开始.......");
+//        System.out.println("发送消息开始.......");
+        logger.info("发送消息开始.......");
         List<MessageDto> lst = new ArrayList<MessageDto>();
         MessageDto dto = new MessageDto();
         dto.setThirdpartyMessageId(InterfHelper.getUUid());
@@ -31,13 +34,14 @@ public class MobileMessageService implements MessageInterface {
         dto.setMessageH5URL("http://localhost:8080/tams/mobileApproval/AssetMobileApproval/" +
                 "getNewTodoList?userId="+flowEntity.getNextUser()+"&pageNo=1&pageSize=10&auditType="+flowEntity.getBusinessType());
         lst.add(dto);
-        System.out.println("发送消息内容为：" + JsonUtils.object2Json(lst));
-
+//        System.out.println("发送消息内容为：" + JsonUtils.object2Json(lst));
+        logger.info("发送消息内容为：" + JsonUtils.object2Json(lst));
         //此部分代码现场自己调试 start
 //        String res = HttpKit.post("http://127.0.0.1/seeyon/rest/thirdpartyMessage/receive/singleMessage?token=" + token,JsonKit.toJson(msg));
 //        System.out.println(res);
         //此部分代码现场自己调试 end
 
-        System.out.println("发送消息结束.......");
+//        System.out.println("发送消息结束.......");
+        logger.info("发送消息结束.......");
     }
 }

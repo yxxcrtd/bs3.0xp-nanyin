@@ -26,7 +26,7 @@ public class SftpUtil {
 
     private static Session sshSession;
 
-    public static final String ENCODE = System.getProperty("file.encoding");
+    public static final String ENCODE = System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding");
 
     /**
      * 日志
@@ -269,8 +269,7 @@ public class SftpUtil {
      * @param deleteFile 要删除的文件
      * @throws Exception
      */
-    public static void delete(String directory, String deleteFile)
-        throws Exception {
+    public static void delete(String directory, String deleteFile){
         try {
             sftp.cd(directory);
             sftp.rm(deleteFile);

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,8 +78,7 @@ public class MstNaturalPerson001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstNaturalPerson001Dto> selectAllMstCaptialAccount()
-        throws Exception {
+    public Page<MstNaturalPerson001Dto> selectAllMstCaptialAccount(){
         Page<MstNaturalPerson001Dto> page = mstNaturalPerson001Service.selectForPage(
             RequestUtil.getPageParam());
         return page;
@@ -94,8 +94,7 @@ public class MstNaturalPerson001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getcName")
-    public List<SuggestDto> getcName()
-        throws Exception {
+    public List<SuggestDto> getcName() {
         String param = super.getRequest().getParameter("param");
         Map<String, String> map = new HashMap<String, String>();
         map.put("naturalp", DictCodeList.客户类型_自然人.getValue());
@@ -115,8 +114,7 @@ public class MstNaturalPerson001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getcID")
-    public List<SuggestDto> getcID()
-        throws Exception {
+    public List<SuggestDto> getcID(){
         String param = super.getRequest().getParameter("param");
         List<SuggestDto> temp = mstNaturalPerson001Service.getcID(param);
         return temp;
@@ -152,8 +150,7 @@ public class MstNaturalPerson001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("delete")
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstNaturalPerson001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstNaturalPerson001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -187,8 +184,7 @@ public class MstNaturalPerson001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstNaturalPerson001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

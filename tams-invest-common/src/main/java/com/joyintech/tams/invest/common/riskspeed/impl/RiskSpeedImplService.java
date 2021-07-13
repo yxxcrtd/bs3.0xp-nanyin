@@ -148,14 +148,12 @@ public class RiskSpeedImplService {
             executor.invokeAll(taskCallableList);
             executor.shutdown();
         } catch (InterruptedException e) {
-            e.printStackTrace();
         }*/
 
 
         try {
             riskTrialRetList = riskSpeedCallable.getRiskSpeedValue(speedType,riskSpeedDto,taskList, inputDto);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return riskTrialRetList;
     }

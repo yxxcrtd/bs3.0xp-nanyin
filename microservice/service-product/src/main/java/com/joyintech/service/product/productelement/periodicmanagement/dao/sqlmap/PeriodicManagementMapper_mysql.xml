@@ -25,35 +25,35 @@
 	</select>
 	<select id="selectFloatFeeList" resultType="com.joyintech.tams.common.base.entity.FinFloatCalcRuleDetail">
 		select
-		fin_float_calc_rule_detail.LEV lev,
-		fin_float_calc_rule_detail.base_rule_id baseRuleId,
-		fin_float_calc_rule_detail.coefficient ,
-		fin_float_calc_rule_detail.spread_rate * 100 spreadRate,
-		fin_float_calc_rule_detail.charge_ratio * 100  chargeRatio
-		from fin_float_calc_rule_detail ,fin_product,fin_cash_info
-    	left join  FIN_TRADE_PRODUCT
-    	on  fin_cash_info.finprod_id = FIN_TRADE_PRODUCT.finprod_id
-        AND fin_cash_info.BRANCH = FIN_TRADE_PRODUCT.BRANCH
-		where fin_float_calc_rule_detail.cash_id = fin_cash_info.cash_id
-		and fin_cash_info.finprod_id = fin_product.finprod_id
-		and fin_cash_info.cash_type_1 = #{cashType1}
-		and fin_cash_info.cash_type_2 = #{cashType2}
-		and fin_float_calc_rule_detail.EFF_DATE = (
-			select max(t.EFF_DATE) from fin_float_calc_rule_detail t where t.CASH_ID = fin_float_calc_rule_detail.CASH_ID
+		FFCRD.LEV lev,
+		FFCRD.base_rule_id baseRuleId,
+		FFCRD.coefficient ,
+		FFCRD.spread_rate * 100 spreadRate,
+		FFCRD.charge_ratio * 100  chargeRatio
+		from fin_float_calc_rule_detail FFCRD,fin_product FP,fin_cash_info FCI
+    	left join  FIN_TRADE_PRODUCT FTP
+    	on  FCI.finprod_id = FTP.finprod_id
+        AND FCI.BRANCH = FTP.BRANCH
+		where FFCRD.cash_id = FCI.cash_id
+		and FCI.finprod_id = FP.finprod_id
+		and FCI.cash_type_1 = #{cashType1}
+		and FCI.cash_type_2 = #{cashType2}
+		and FFCRD.EFF_DATE = (
+			select max(t.EFF_DATE) from fin_float_calc_rule_detail t where t.CASH_ID = FFCRD.CASH_ID
 			AND T.EFF_DATE &lt;= STR_TO_DATE(#{effDate},'%Y-%m-%d')
 		)
 		<if test="periodProdId != null and periodProdId != ''">
-			and fin_cash_info.finprod_id = #{periodProdId}
+			and FCI.finprod_id = #{periodProdId}
 		</if>
 		<choose>
 			<when test="periodId != null and periodId != ''">
-				and FIN_TRADE_PRODUCT.PERIOD_ID = #{periodId}
+				and FTP.PERIOD_ID = #{periodId}
 			</when>
 			<otherwise>
-				and fin_cash_info.BRANCH = 0
+				and FCI.BRANCH = 0
 			</otherwise>
 		</choose>
-		and fin_cash_info.finprod_type = #{type01}
+		and FCI.finprod_type = #{type01}
 	</select>
 	<select id="selectCashPayRule" resultType="com.joyintech.tams.common.base.entity.FinCashPayRule">
 		select 

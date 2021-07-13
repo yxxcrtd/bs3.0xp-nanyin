@@ -30,7 +30,7 @@ public class ValFundMarketInfo001Service extends CommonExportService<ValFundMark
 
 	/**
 	 * 加载表格
-	 * @param dto ValFundMarketInfo001dto
+	 * @param params
 	 * @return  List<ValFundMarketInfo001dto>
 	 */
     public List<ValFundMarketInfo001dto> tableLoad(Map<String, Object> params) {

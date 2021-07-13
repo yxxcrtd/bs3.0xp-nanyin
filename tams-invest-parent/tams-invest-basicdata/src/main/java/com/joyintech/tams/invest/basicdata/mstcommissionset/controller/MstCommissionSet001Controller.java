@@ -5,6 +5,7 @@ package com.joyintech.tams.invest.basicdata.mstcommissionset.controller;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -65,8 +67,7 @@ public class MstCommissionSet001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstCommissionSetDto> selectAll()
-        throws Exception {
+    public Page<MstCommissionSetDto> selectAll(){
         Page<MstCommissionSetDto> page = mstCommissionSetService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -97,8 +98,7 @@ public class MstCommissionSet001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstCommissionSetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstCommissionSetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -139,8 +139,7 @@ public class MstCommissionSet001Controller extends BaseController {
 //            RequestUtil.getParameters(getRequest()));
 //
 //    }
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<MstCommissionSetDto> param1;
         if (datas == null) {

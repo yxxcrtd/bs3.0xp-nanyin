@@ -55,7 +55,7 @@ public class MstIndexQuotationInfo001Validator implements BeanValidator {
             // 判断操作类型
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
                 // 判断是否获取到删除的项目
-                if (dto.getSelectedItem() != null || dto.getSelectedItem().size() > 0) {
+                if (dto.getSelectedItem() != null && dto.getSelectedItem().size() > 0) {
                     // 遍历选择的项目
                     for (MstIndexQuotationInfo001Dto cur : dto.getSelectedItem()) {
                         // 判断估值时间是否小于平台时间

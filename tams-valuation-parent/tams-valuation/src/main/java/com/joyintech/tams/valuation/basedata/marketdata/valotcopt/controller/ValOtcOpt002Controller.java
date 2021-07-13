@@ -12,6 +12,8 @@ package com.joyintech.tams.valuation.basedata.marketdata.valotcopt.controller;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +39,10 @@ import com.joyintech.tams.valuation.basedata.marketdata.valotcopt.service.ValOtc
 @PageId("ValOtcOpt002")
 @RequestMapping("/valuation/basedata/marketdata/valotcopt/ValOtcOpt002")
 public class ValOtcOpt002Controller extends BaseController {
-	
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValOtcOpt002Controller.class);
     /**
      * ValOtcOpt001Service
      */
@@ -57,8 +62,7 @@ public class ValOtcOpt002Controller extends BaseController {
 		try {
 			dto = valOtcOpt001Service.findAll(params).get(0);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		model.addAttribute("entity", dto);
     	super.setSelectOptionToModel(model, DictCode.交易方向);

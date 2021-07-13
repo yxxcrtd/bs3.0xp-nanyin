@@ -191,7 +191,6 @@ public class PtlAnalyzeAfterInvest002Service extends CommonExportService<PtlAnal
                 wb = new XSSFWorkbook(stream);
             }
             else {
-                stream.close();
                 throw new BusinessException("不是一个有效的Excel文件");
             }
             return wb;

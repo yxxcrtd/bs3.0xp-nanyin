@@ -331,7 +331,7 @@ public class EchartsPictureService {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		// 创建phantomjs命令（必须用全路径）
@@ -345,13 +345,12 @@ public class EchartsPictureService {
 		} catch (IOException e) {
 			logger.error("执行的phantomjs命令：" + phantomjsCmd);
 			logger.error("执行phantomjs命令异常，请检查phantomjs工具是否安装成功和phantomjs命令语句！");
-			e.printStackTrace();
 		} finally {
 			if (process != null) {
 				try {
 					process.waitFor();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 				process.destroy();
 			}
@@ -367,12 +366,14 @@ public class EchartsPictureService {
 	/**
 	 * 生成options存储json文件
 	 * 
-	 * @param options 图表数据
+	 * @param option 图表数据
+	 * @param echartsFileTmp    
 	 * @return 文件
 	 */
 	private String buildEChartOptionsFile(String option, String echartsFileTmp) {
 		// Echarts临时json文件
 		String dataPath = echartsFileTmp + ".json";
+		BufferedWriter out = null;
 		try {
 			File writename = new File(dataPath);
 			if (!writename.exists()) {
@@ -380,12 +381,20 @@ public class EchartsPictureService {
 				dir.mkdirs();
 				writename.createNewFile();
 			}
-			BufferedWriter out = new BufferedWriter(new FileWriter(writename));
+			out = new BufferedWriter(new FileWriter(writename));
 			out.write(option);
-			out.flush();
-			out.close();
+
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
+		}finally {
+			if (out !=null){
+				try {
+					out.flush();
+					out.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
 		}
 		return dataPath;
 	}

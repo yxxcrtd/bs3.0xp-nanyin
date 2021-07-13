@@ -75,7 +75,7 @@ public class ActualTimeCapitalService extends BaseService<ActualTimeCapitalDto> 
      * @throws Exception 异常信息
      */
     public Page<ActualTimeCapitalDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         //组合现金余额表持仓类型
         List<String> ptlHodingTypeList = Arrays.asList(DictCodeList.持仓类型_实际.getValue(), 
             DictCodeListExt1.持仓类型_不可支取.getValue(), DictCodeListExt1.持仓类型_预占用.getValue());
@@ -100,7 +100,7 @@ public class ActualTimeCapitalService extends BaseService<ActualTimeCapitalDto> 
      */
     @Transactional
     public void insertAdjustmentBalance(CashArtDealDto cashArtDealDto)
-        throws Exception {
+    {
         String seqno = getSeqNo();
         cashArtDealDto.setSeqno(seqno);
         //现金头寸调整表

@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -91,7 +93,11 @@ import com.joyintech.tools.collectors.JoyinCollectors;
  */
 @Service
 public class PbcClassicsDataFileService {
-	
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(PbcClassicsDataFileService.class);
+
     public static final String APPLY_TYPE_1="1-产品基本信息";
     public static final String APPLY_TYPE_2="2-产品终止信息";
     public static final String APPLY_TYPE_3="3-资金池基本信息";
@@ -167,7 +173,7 @@ public class PbcClassicsDataFileService {
     
     /**
      * 删除上日及本日未处理（未发送）业务数据
-     * @param genDate 跑批日期
+     * @param batchDate 跑批日期
      * @return
      */
 	public String deleteUnSendDataFile(Date batchDate) {
@@ -2252,7 +2258,7 @@ public class PbcClassicsDataFileService {
     			  }
 //                new File(folderPath).delete();//删除文件夹
               }catch (Exception e) {
-            	  e.printStackTrace();
+				  logger.error(e.getMessage(),e);
               }
     		  try {
     			  if(StringUtil.equals("open", switchs)){
@@ -2268,8 +2274,7 @@ public class PbcClassicsDataFileService {
     			  }
               }
               catch (Exception e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
+				  logger.error(e.getMessage(),e);
               }
     	}
     	return zipFileList;
@@ -2392,7 +2397,7 @@ public class PbcClassicsDataFileService {
     	try {
 			ZipFileUtil.compressZip(outFile, true, allFiles);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
     	
     	return finalZipPath;

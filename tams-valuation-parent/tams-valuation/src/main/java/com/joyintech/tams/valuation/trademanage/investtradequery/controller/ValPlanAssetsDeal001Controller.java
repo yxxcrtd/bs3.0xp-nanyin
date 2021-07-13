@@ -75,7 +75,7 @@ public class ValPlanAssetsDeal001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<InvestTradeDto> findPage()  throws Exception {
+    public Page<InvestTradeDto> findPage() {
         return investTradeQuery001Service.findPage(RequestUtil.getPageParam());
     }
 

@@ -109,9 +109,9 @@
 		   FIN.FEE_ID=MST.FEE_ID
 		   AND MST.FEE_ID=#{feeId,jdbcType=VARCHAR})
 		   SELECT
-<!--		   DECODE(SIGN(R1.COT-R2.COT),R2.COT,R1.COT,R1.COT)-->
-		   SUM(R1.COT+R2.COT) cnt
-		   FROM R1,R2
+<!--		   DECODE(SIGN(f1.COT-f2.COT),f2.COT,f1.COT,f1.COT)-->
+		   SUM(f1.COT+f2.COT) cnt
+		   FROM R1 f1,R2 f2
 	   </select>
 	   
 	   <!-- 

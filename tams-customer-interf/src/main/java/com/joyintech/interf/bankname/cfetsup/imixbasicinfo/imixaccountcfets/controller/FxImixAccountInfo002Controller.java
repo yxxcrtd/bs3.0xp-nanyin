@@ -65,8 +65,7 @@ public class FxImixAccountInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/save",method = POST)
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) FxImixAccountInfo001Dto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) FxImixAccountInfo001Dto dto, BindingResult br){
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -11,6 +11,8 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +46,7 @@ import com.joyintech.tams.valuation.common.utils.ValStringUtil;
 @Service(value="serviceValAccountsAdjustAccountEntry003Service")
 @Transactional(rollbackFor = Exception.class)
 public class ValAccountsAdjustAccountEntry003Service extends CommonExportService<ValAccountsAdjustAccountEntry003Dto> {
-
+    private static final Logger logger = LoggerFactory.getLogger(ValAccountsAdjustAccountEntry003Service.class);
     /**
      * AccountsAdjustAccountEntry003Mapper
      */
@@ -244,7 +246,8 @@ public class ValAccountsAdjustAccountEntry003Service extends CommonExportService
     private void insertScenSubject(ValAccountsAdjustAccountEntry003Dto accountEntryDto, String sceneNodeId) {
     	List<ValAccountsAdjustAccountEntry002Dto> gridData = accountEntryDto.getRows();
         for (ValAccountsAdjustAccountEntry002Dto row : gridData) {
-        	System.out.println("row.getIsExtends()："+row.getIsExtends());
+//        	System.out.println("row.getIsExtends()："+row.getIsExtends());
+        	logger.info("row.getIsExtends()："+row.getIsExtends());
             if (!row.getIsExtends()) {
                 BokScenesubject bokScenesubject = new BokScenesubject();
                 // TODO

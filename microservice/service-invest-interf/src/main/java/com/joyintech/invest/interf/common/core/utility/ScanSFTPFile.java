@@ -7,9 +7,15 @@ import java.util.Properties;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ScanSFTPFile implements Runnable{
-	
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(ScanSFTPFile.class);
+
 	private ScanSFTPEntity entity;
 	
 	public ScanSFTPFile(ScanSFTPEntity entity) {
@@ -23,7 +29,7 @@ public class ScanSFTPFile implements Runnable{
 		//sftp用户名
 		String sftpUserName ="";
 		//sftp密码
-		String sftpWord;
+		String sftpWord = "";
 		//读取配置文件，获取请求资管的接口地址
 		//sftp服务ip
 		String sftpIp ="";
@@ -40,10 +46,12 @@ public class ScanSFTPFile implements Runnable{
 				e1.printStackTrace();
 			}
 			if (prop != null){
-				sftpUserName = prop.getProperty("sftpUserName");
-				sftpWord= prop.getProperty("sftpWord");
-				sftpIp = prop.getProperty("sftpIp");
-				sftpPort = prop.getProperty("sftpPort");
+				if(prop!=null) {
+					sftpUserName = prop.getProperty("sftpUserName");
+					sftpWord = prop.getProperty("sftpWord");
+					sftpIp = prop.getProperty("sftpIp");
+					sftpPort = prop.getProperty("sftpPort");
+				}
 				int port = Integer.parseInt(sftpPort);
 
 				// 创建sftp工具类对象
@@ -71,16 +79,16 @@ public class ScanSFTPFile implements Runnable{
 								//如果没有扫描的文件，则睡1秒
 								Thread.currentThread().sleep(1000);
 							} catch (InterruptedException e) {
-								e.printStackTrace();
+								logger.error(e.getMessage(),e);
 							}
 						}
 					} catch (SftpException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 				}
 			}
 		} catch (JSchException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		
 	}

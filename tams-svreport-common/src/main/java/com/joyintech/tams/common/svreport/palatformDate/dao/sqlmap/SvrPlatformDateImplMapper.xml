@@ -9,6 +9,7 @@
 	</select>
 	<update id="updateSysDate" parameterType="java.util.Date">
 		update SYS_DATE set CUR_DATE=#{newDate, jdbcType=DATE}
+		where 1=1
 	</update>
 	<select id="getSysDateByIns" resultType="java.util.Date">
 		select CUR_DATE from SYS_DATE where institution_code = #{institutionCode}

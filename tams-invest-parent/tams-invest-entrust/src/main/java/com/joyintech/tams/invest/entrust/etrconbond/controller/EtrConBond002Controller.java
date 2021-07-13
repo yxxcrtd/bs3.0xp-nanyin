@@ -27,6 +27,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -117,8 +118,7 @@ public class EtrConBond002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getFinprodIdForAdd")
-    public Page<SelectOptionDto> getFinprodIdForAdd()
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodIdForAdd(){
         return etrConBondService.getFinprodIdForAdd(RequestUtil.getPageParam());
     }
     /**
@@ -197,8 +197,7 @@ public class EtrConBond002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrConBondDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrConBondDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

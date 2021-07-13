@@ -77,7 +77,7 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
      * @see
      * @since 1.0
      */
-    public Page<PtlActivityPeriod001Dto> selectForPage(int page,int length,Map<String,Object> map) throws Exception{
+    public Page<PtlActivityPeriod001Dto> selectForPage(int page,int length,Map<String,Object> map) {
         map.put("BUSI_TYPE", DictCodeList.共通业务类型_活期结息.getValue());
         map.put("TRADE_FLOW_STATUS_02", DictCodeListExt1.交易流程状态_有效.getValue());
         map.put("TRADE_FLOW_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());

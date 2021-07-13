@@ -445,14 +445,14 @@ public class FinMdateAdjustment002Controller extends BaseController {
         return ar;
     }
 
-    public static void main(String[] args) {
-
-        String vdate = "2018-09-06";
-        String mdate = "2018-11-11";
-        long date = DateUtil.getBetweenDate(vdate, mdate, DateUtil.DurationType.天);
-        System.out.println("sdfsdfsdf:"+date);
-
-    }
+//    public static void main(String[] args) {
+//
+//        String vdate = "2018-09-06";
+//        String mdate = "2018-11-11";
+//        long date = DateUtil.getBetweenDate(vdate, mdate, DateUtil.DurationType.天);
+//        System.out.println("sdfsdfsdf:"+date);
+//
+//    }
 
     /**
      * 保存操作

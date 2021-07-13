@@ -256,7 +256,7 @@ public class PtlInvPortfolioStrategyService extends BaseService<PtlInvPortfolioS
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	public int insert(PtlInvPortfolioStrategyDto dto) throws Exception {
+	public int insert(PtlInvPortfolioStrategyDto dto) {
         // 组合策略代码
         String ptlStgyId = dto.getPtlStgyId();
 	    //【投资策略】入库

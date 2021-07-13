@@ -548,7 +548,7 @@ public class FinProductCommonService extends BaseService {
     @Transactional
     public void updateRaiseType(FinProductCommonInfoDto finProductCommonInfoDto){
     	//根据金融产品代码获取组合代码
-    	String raisetype=ptlPortfolioMapper.selectportfolioId(finProductCommonInfoDto.getFinprodId().toString());
+    	String raisetype=ptlPortfolioMapper.selectportfolioId(finProductCommonInfoDto.getFinprodId());
     	Map<String,Object> param=new HashMap<>();
     	param.put("raisetype", raisetype);
     	param.put("finprodId",finProductCommonInfoDto.getFinprodId());
@@ -2706,7 +2706,7 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
 //               ptlManagementInfo001Mapper.insertPtlPortfolio(entity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
     }
 

@@ -44,8 +44,7 @@ public class ValExchangeQuotationInfoController {
      */
     @RequestMapping("/selectForPage/{page}/{length}")
     public Page<ValExchangeQuotationInfoDto> selectForPage(@RequestBody Map<String, Object> pageParam,
-                                                           @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+                                                           @PathVariable("page") int page, @PathVariable("length") int length){
         return valExchangeQuotationInfoService.selectForPage(page, length, pageParam);
     }
 

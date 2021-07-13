@@ -19,6 +19,8 @@ import javax.validation.Valid;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.workflow.engine.WorkflowContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,6 +75,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("ValManualVoucher003")
 @RequestMapping("/valuation/accounadjustmanage/manualvoucher/ValManualVoucher003")
 public class ValManualVoucher003Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValManualVoucher003Controller.class);
 
     @Autowired
     private ValManualVoucher003Service valManualVoucher003Service;
@@ -164,7 +170,7 @@ public class ValManualVoucher003Controller extends BaseController {
                 processMark.setPageId("ValManualVoucher003");
                 dto = valManualVoucher003Service.getBussinessEntityByPk(processMark);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             dto.setSeqno(null);
             model.addAttribute("entity", dto);

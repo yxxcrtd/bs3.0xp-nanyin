@@ -18,9 +18,15 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.framework.util.FileNameUtil;
 
 import net.sf.jxls.transformer.XLSTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PbcExcelUtil {
-	
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(PbcExcelUtil.class);
+
 	public static File createFile(Map<Object, Object> data, String exceltemplate, String flieName) {
 		File depositfile = null;
 		InputStream fis = null;
@@ -83,13 +89,13 @@ public class PbcExcelUtil {
             	if(fis !=null)
             	fis.close();
             } catch (IOException e) {
-            	e.printStackTrace();
+				logger.error(e.getMessage(),e);
              }
             try {
             	if(fos !=null)
             	fos.close();
             } catch (IOException e) {
-            	e.printStackTrace();
+				logger.error(e.getMessage(),e);
              }
          }
 		return depositfile;
@@ -139,8 +145,8 @@ public class PbcExcelUtil {
                 fileWrite(targetFile, wb); 
                 fis.close(); 
             }
-        } catch (Exception e) { 
-            e.printStackTrace(); 
+        } catch (Exception e) {
+			logger.error(e.getMessage(),e);
         } 
     }
     

@@ -18,6 +18,8 @@ import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -51,6 +53,11 @@ import net.sf.jxls.transformer.XLSTransformer;
  */
 @Service
 public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCashFlowGapAnalysis001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PtlCashFlowGapAnalysis001Service.class);
+
 	@Autowired(required = false) 
 	private IPlatformDate iPlatformDate;
 	
@@ -323,7 +330,7 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
                     os.flush();
                     os.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

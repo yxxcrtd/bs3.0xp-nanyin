@@ -199,8 +199,7 @@ public class EtrOption001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return etrOptionService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

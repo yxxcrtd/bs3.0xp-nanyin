@@ -13,9 +13,11 @@ import com.joyintech.tams.invest.portfolio.ptldvpfundallocation.dto.PtlDvpFundAl
 import com.joyintech.tams.invest.portfolio.ptlfundallocation.dto.PtlFundAllocationDto;
 import com.joyintech.tams.mobileApproval.dto.ReturnTodoDto;
 import com.joyintech.tams.mobileApproval.util.MobileUtils;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -31,7 +33,7 @@ public class MobilePtlDvpFundAllocationService {
     private MobileApprovalService mobileApprovalService;
 
 
-    public String getWorkFlowInfo(String businessData) throws Exception {
+    public String getWorkFlowInfo(String businessData) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //1、获取业务数据
     	PtlDvpFundAllocationDto dto = JsonUtils.json2Object(businessData, PtlDvpFundAllocationDto.class);
     	

@@ -96,8 +96,7 @@ public class MstCustomerNatureService extends CommonExportService<MstCustomerNat
      * @see
      * @since 1.0
      */
-    public Page<MstCustomerNatureDto> searchMstCustomerNature(Map<String, Object> pageParam)
-        throws Exception {
+    public Page<MstCustomerNatureDto> searchMstCustomerNature(Map<String, Object> pageParam){
         return restTemplate.postForPage(
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCustomerNature/searchMstCustomerNature",
             pageParam, MstCustomerNatureDto.class);

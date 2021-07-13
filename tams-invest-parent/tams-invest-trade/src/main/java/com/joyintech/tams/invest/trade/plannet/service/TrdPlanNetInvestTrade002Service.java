@@ -56,6 +56,8 @@ import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -74,6 +76,10 @@ import java.util.*;
  */
 @Service
 public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInvestTradeDto> implements BaseProcessService<TrdPlanNetInvestTradeDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanNetInvestTrade002Service.class);
 
     /**
      * 划款指令业务组件service
@@ -207,7 +213,7 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
 	                try {
 	                    WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(),"","", confirmDto.getCreateUser(),OperationType.NEW,false,confirmDto);
 	                }catch (Exception e) {
-	                    e.printStackTrace();
+                        logger.error(e.getMessage(),e);
 	                }
 //            	}
             }
@@ -225,8 +231,7 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
            		 try {
 					WorkFlowUtil.deleteProcess(flow.getSeqNo(), flow.getWorkflowId());
 				} catch (WorkFlowException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+                     logger.error(e.getMessage(),e);
 				}
            	 }
             }

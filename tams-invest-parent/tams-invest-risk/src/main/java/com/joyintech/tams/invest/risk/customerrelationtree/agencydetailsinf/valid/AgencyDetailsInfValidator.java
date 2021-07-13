@@ -48,7 +48,7 @@ public class AgencyDetailsInfValidator implements BeanValidator {
 		if (StringUtil.equals(dto.getCorClass(), "1") && StringUtil.equals(dto.getOperateType(), "new")) {
 			// 添加 check验证
 			List<SeniorExecutiveInfDto> list = dto.getSelectedItem();
-			if (list.size() > 0 && list != null) {
+			if (list != null && list.size() > 0) {
 				for (SeniorExecutiveInfDto e : list) {
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("orgNo", e.getOrgNo());

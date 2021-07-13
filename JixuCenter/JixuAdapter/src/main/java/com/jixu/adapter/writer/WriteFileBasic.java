@@ -51,7 +51,7 @@ public abstract class WriteFileBasic implements WriteDataFile {
 	 * @return
 	 * @throws Exception
 	 */
-	protected File getWriteFile(InterfaceSource interfaceSource, DataReadResult dataSet) throws Exception {
+	protected File getWriteFile(InterfaceSource interfaceSource, DataReadResult dataSet) throws IOException {
 		String folderPath = interfaceSource.getOutFilepath();
 		folderPath = parseDateFolder(folderPath);
 		String filename = interfaceSource.getOutFileName();
@@ -72,8 +72,7 @@ public abstract class WriteFileBasic implements WriteDataFile {
 		return file;
 	}
 
-	protected boolean writeFileResult(InterfaceSource interfaceSource, DataReadResult dataSet, int fileType)
-			throws Exception {
+	protected boolean writeFileResult(InterfaceSource interfaceSource, DataReadResult dataSet, int fileType) throws IOException {
 		boolean writeSuccessFlag = false;
 		File file = getWriteFile(interfaceSource, dataSet);
 		FileOutputStream out = null;

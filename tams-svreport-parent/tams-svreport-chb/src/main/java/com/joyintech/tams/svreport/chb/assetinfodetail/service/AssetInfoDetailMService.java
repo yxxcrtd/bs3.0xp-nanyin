@@ -218,8 +218,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}catch (Exception e){
 			logger.info("实体转换错误,请检查数据类型",e);
 		}finally {
-			return null;
+//			return null;
 		}
+		return null;
 	}
 
 	/**

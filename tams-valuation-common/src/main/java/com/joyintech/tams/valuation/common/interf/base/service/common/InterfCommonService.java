@@ -7189,7 +7189,7 @@ public class InterfCommonService {
      */
     public  Map<String,String> parameterConditionAnalysis(String parms){
         Map<String,String> resultMap = new HashMap<String,String>();
-        if(parms.isEmpty() || parms == null){
+        if(parms == null || parms.isEmpty()){
             return  resultMap;
         }
         String[] parm = parms.split("\\|");
@@ -7220,7 +7220,7 @@ public class InterfCommonService {
 	        Object obj = method.invoke(dto);
 	        settleAmt = obj == null ? BigDecimal.ZERO :(BigDecimal) obj ;
         }catch(Exception e){
-        	e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return settleAmt;
     }

@@ -21,7 +21,7 @@ public class ExeDB2Scripts extends ExecuteDBAbstract{
 	
 	@Override
 	@Transactional(value="jixuTXManager", rollbackFor=Exception.class)
-	public void exeMergerData(InterfaceSource source, String tableName) throws Exception{
+	public void exeMergerData(InterfaceSource source, String tableName) throws SQLException{
 		//edit by wangqidong
 		String tmpTableName=tableName+tmpTableAppend;	//临时存放数据表
 		

@@ -46,7 +46,7 @@ public class ValProdSchemeConfig001Service extends CommonExportService<ValProdSc
     @Autowired
     private ValProdSchemeConfig001Mapper mapper;
     
-    public Page<ValProdSchemeConfig001Dto> findPage(int page, int length,Map<String, Object> params) throws Exception{
+    public Page<ValProdSchemeConfig001Dto> findPage(int page, int length,Map<String, Object> params){
         List<String> schemeTypeList = new ArrayList<String>();
         String schemeType = (String) params.get("schemeType");
         // 查询所需配置的账套是否有方案类型
@@ -71,7 +71,7 @@ public class ValProdSchemeConfig001Service extends CommonExportService<ValProdSc
         return super.queryForPage(page, length,()-> mapper.queryPageList(params));
     }
     
-    public List<ValProdSchemeConfig001Dto> selectAll(Map<String, Object> params) throws Exception{
+    public List<ValProdSchemeConfig001Dto> selectAll(Map<String, Object> params){
         List<String> schemeTypeList = new ArrayList<String>();
         String schemeType = (String) params.get("schemeType");
         // 查询所需配置的账套是否有方案类型

@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.entrust.etrstandardbond.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -93,8 +94,7 @@ public class EtrStandardBond003Controller extends BaseController {
      */
     @RequestMapping("check")
     @ResponseBody
-    AjaxResult check(@Validated({ValidateGroupEdit.class}) @RequestBody EtrStandardBond003Dto dto, BindingResult result)
-            throws Exception {
+    AjaxResult check(@Validated({ValidateGroupEdit.class}) @RequestBody EtrStandardBond003Dto dto, BindingResult result){
         return commonCheck(result, null);
     }
 
@@ -120,8 +120,7 @@ public class EtrStandardBond003Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@Validated({ValidateGroupEdit.class}) @RequestBody EtrStandardBond003Dto dto, BindingResult result)
-            throws Exception {
+    AjaxResult save(@Validated({ValidateGroupEdit.class}) @RequestBody EtrStandardBond003Dto dto, BindingResult result) throws WorkFlowException {
         if (result != null && result.hasErrors()) {
             return commonCheck(result, null);
         }

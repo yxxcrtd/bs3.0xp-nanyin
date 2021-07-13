@@ -38,7 +38,7 @@ public class CalFuncGetUid extends AdditionFunc{
 	}
 
 	@Override
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception {
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		// TODO 获取UUID
 		String result = funcGUid();
 		return result;
@@ -51,12 +51,12 @@ public class CalFuncGetUid extends AdditionFunc{
 	}
 
 	@Override
-	public boolean filterField(Object field, String compareField) throws Exception {
+	public boolean filterField(Object field, String compareField)  {
 		return false;
 	}
 
 	@Override
-	public String groupCal(String key, List<HashMap<String, Object>> sourceData) throws Exception {
+	public String groupCal(String key, List<HashMap<String, Object>> sourceData)  {
 		return null;
 	}
 	

@@ -30,6 +30,8 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessCounterDetailsDto;
 import org.apache.commons.lang.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +55,11 @@ import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.Inve
  */
 @Service
 public class InvestmentsInfoService {
-	
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(InvestmentsInfoService.class);
+
 	@Autowired
 	private InvestmentBusinessDetailsMapper investmentBusinessDetailsMapper;
 	@Autowired
@@ -616,7 +622,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -908,7 +914,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -977,7 +983,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -1047,7 +1053,7 @@ public class InvestmentsInfoService {
 		    calendar.add(Calendar.MONTH, -3);
 		    termId = DateUtil.format(calendar.getTime(), "yyyyMM");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return termId;
 	}
@@ -1089,7 +1095,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 	    calendar.setTime(cdate);
@@ -1536,7 +1542,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -2007,7 +2013,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -2170,7 +2176,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -2560,7 +2566,7 @@ public class InvestmentsInfoService {
 		try {
 			startDate = DateUtil.parseDate(startDateStr,"yyyy-MM-dd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(startDate);
@@ -2581,7 +2587,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.setTime(cdate);
@@ -2694,7 +2700,7 @@ public class InvestmentsInfoService {
 		try {
 			startDate = DateUtil.parseDate(startDateStr,"yyyy-MM-dd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(startDate);

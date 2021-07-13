@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.jixu.common.pojo.InterfaceSource;
 import com.jixu.common.type.DataReadResult;
 
+import java.io.IOException;
+
 /** 
  * @ClassName 		DataWriteService
  * @author  		Pan Wei 
@@ -16,5 +18,5 @@ import com.jixu.common.type.DataReadResult;
 public interface WriteDataFile {
 	public int getFileType();
 	
-	public boolean writeFile(InterfaceSource interfaceSource, DataReadResult dataSet) throws Exception;
+	public boolean writeFile(InterfaceSource interfaceSource, DataReadResult dataSet) throws IOException;
 }

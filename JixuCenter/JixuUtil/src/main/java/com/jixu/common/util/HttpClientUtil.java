@@ -26,6 +26,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @ClassName HttpClientUtil
@@ -36,6 +38,11 @@ import org.apache.http.util.EntityUtils;
  */
 
 public class HttpClientUtil {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
+
 	private RequestConfig requestConfig = RequestConfig.custom()
 			.setConnectTimeout(120000).setSocketTimeout(120000)
 			.setConnectionRequestTimeout(120000).build();
@@ -83,7 +90,7 @@ public class HttpClientUtil {
 			stringEntity.setContentType("application/x-www-form-urlencoded");
 			httpPost.setEntity(stringEntity);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return sendHttpPost(httpPost);
 	}
@@ -106,7 +113,7 @@ public class HttpClientUtil {
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return sendHttpPost(httpPost);
 	}
@@ -121,7 +128,7 @@ public class HttpClientUtil {
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return sendHttpPost(httpPost);
 	}
@@ -170,7 +177,7 @@ public class HttpClientUtil {
 			entity = response.getEntity();
 			responseContent = EntityUtils.toString(entity, "UTF-8");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} finally {
 			try {
 				// 关闭连接,释放资源
@@ -178,7 +185,7 @@ public class HttpClientUtil {
 					response.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		return responseContent;
@@ -224,7 +231,7 @@ public class HttpClientUtil {
 			entity = response.getEntity();
 			responseContent = EntityUtils.toString(entity, "UTF-8");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} finally {
 			try {
 				// 关闭连接,释放资源
@@ -235,7 +242,7 @@ public class HttpClientUtil {
 					response.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		return responseContent;
@@ -266,7 +273,7 @@ public class HttpClientUtil {
 			entity = response.getEntity();
 			responseContent = EntityUtils.toString(entity, "UTF-8");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} finally {
 			try {
 				// 关闭连接,释放资源
@@ -274,7 +281,7 @@ public class HttpClientUtil {
 					response.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		return responseContent;

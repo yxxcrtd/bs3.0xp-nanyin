@@ -294,7 +294,8 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
 //                  StringUtil.dealString(StringUtil.lowerCase(string), false));
                         this.subBlank(StringUtil.lowerCase(string)));
                 if(field==null){
-                    System.out.println(string);
+//                    System.out.println(string);
+                    logger.info(string);
                     continue;
                   }
                 field.setAccessible(true);

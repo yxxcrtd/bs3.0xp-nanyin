@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.mstcaptialaccount.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -74,8 +75,7 @@ public class MstCaptialAccount001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstCaptialAccountDto> selectAllMstCaptialAccount()
-        throws Exception {
+    public Page<MstCaptialAccountDto> selectAllMstCaptialAccount(){
         Page<MstCaptialAccountDto> page = mstCaptialAccountService.selectForPage(RequestUtil.getPageParam());
         return page;
     }
@@ -91,7 +91,7 @@ public class MstCaptialAccount001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getAcctName")
-    public List<SuggestDto> getAcctName() throws Exception {
+    public List<SuggestDto> getAcctName(){
         String param = super.getRequest().getParameter("param");
         List<SuggestDto> temp = mstCaptialAccountService.getAcctName(param);
         return temp;
@@ -123,7 +123,7 @@ public class MstCaptialAccount001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) MstCaptialAccountDto dto, BindingResult br) throws Exception{
+    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) MstCaptialAccountDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -154,7 +154,7 @@ public class MstCaptialAccount001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstCaptialAccountService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

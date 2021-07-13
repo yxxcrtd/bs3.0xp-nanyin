@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.common.base.entity.BokBussDetsub;
 import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
 import com.joyintech.tams.constant.DictCodeList;
@@ -420,7 +421,7 @@ public class ExchangeCarryoverProcessorService {
             // 凭证编号 (场景代码 + 发生日 + "汇兑损益结转" + 冲销标识)md5加密处理
             String bookId = item.getBooksetId() + item.getTableId() + item.getHappenDate()
                     + BookConstant.DEF_BOK_DETAIL_ID + item.getOffsetFlag();
-            bookId = MD5Util.string2MD5(bookId);
+            bookId = EncryptUtil.getInstance().md5(bookId);
             // 凭证说明 会计场景代码对应名称
             item.setBookId(bookId);
             // 冲正标识 正常交易

@@ -69,7 +69,7 @@ public class ValProductAssetsQuery001Contoller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValProductAssetsQuery001Dto> findPage(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    		@PathVariable("page") int page, @PathVariable("length") int length) {
         return valProductAssetsQuery001Service.findPage(page,length,params);
     }
     

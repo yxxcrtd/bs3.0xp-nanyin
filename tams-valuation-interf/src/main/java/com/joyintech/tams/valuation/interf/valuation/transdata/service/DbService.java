@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,7 @@ import com.joyintech.tams.valuation.interf.valuation.transdata.entity.ValRecvSer
 @Service
 @Scope("prototype")
 public class DbService {
-
+	private static final Logger logger = LoggerFactory.getLogger(DbService.class);
 	@Autowired
     HqTemplateCommonService hqTemplateCommonService;
     /**
@@ -61,7 +63,8 @@ public class DbService {
     	dbUtil.init();
     	
     	if(dbUtil.getDbConnection()==null){
-    		System.out.println("数据库("+entity.getRemotePath()+")连接"+dbUtil.getConnectionResult());
+//    		System.out.println("数据库("+entity.getRemotePath()+")连接"+dbUtil.getConnectionResult());
+    		logger.info("数据库("+entity.getRemotePath()+")连接"+dbUtil.getConnectionResult());
     		return null;
     	}
     	//3.读取数据

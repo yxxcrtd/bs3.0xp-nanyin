@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -41,6 +42,8 @@ import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -60,6 +63,11 @@ import static org.apache.poi.ss.usermodel.CellType.*;
  */
 
 public class ExcelUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
+
     public static void writeExcel(InputStream stream, String tempName, Map<String, Object> paraMap,
             String outputFilepath) {
     	writeExcel(stream, tempName, paraMap, outputFilepath, null);
@@ -79,7 +87,7 @@ public class ExcelUtil {
                 wb = new HSSFWorkbook(stream);
             }
             else {
-                throw new Exception("不是一个有效的Excel文件");
+                throw new BusinessException("不是一个有效的Excel文件");
             }
 
             for (Sheet sheet : wb) {
@@ -195,20 +203,25 @@ public class ExcelUtil {
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            FileOutputStream outputStream = new FileOutputStream(file);
-            wb.write(outputStream);
-            outputStream.close();
-
+            FileOutputStream outputStream = null;
+            try{
+                outputStream = new FileOutputStream(file);
+                wb.write(outputStream);
+            }finally {
+                if (outputStream != null){
+                    outputStream.close();
+                }
+            }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         finally {
             try {
                 wb.close();
             }
             catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
     }
@@ -430,7 +443,7 @@ public class ExcelUtil {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return map;
     }
@@ -464,7 +477,7 @@ public class ExcelUtil {
         	}
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return map;
 
@@ -482,7 +495,7 @@ public class ExcelUtil {
     	try {
 			inputStream = resource.getInputStream();
 		} catch (IOException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
     	return inputStream;
     }

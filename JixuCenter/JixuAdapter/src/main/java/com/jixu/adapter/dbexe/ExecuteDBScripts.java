@@ -1,5 +1,6 @@
 package com.jixu.adapter.dbexe;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface ExecuteDBScripts {
 	
 	public MsgContainer executeBatch(List<MsgContainer> containerList);
 	
-	public void exeMergerData(InterfaceSource source, String tableName) throws Exception;
+	public void exeMergerData(InterfaceSource source, String tableName) throws SQLException;
 	
 	/**
 	 * 在复合主键下，发现目标数据库有数据存在，则先全部删除，再做插入。

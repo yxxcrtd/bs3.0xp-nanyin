@@ -54,7 +54,7 @@ public class ValOtcOpt001Contoller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValOtcOpt001Dto> findPage(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    		@PathVariable("page") int page, @PathVariable("length") int length){
         return valOtcOpt001Service.findPage(page,length,params);
     }
     
@@ -67,7 +67,7 @@ public class ValOtcOpt001Contoller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/findAll")
-    public List<ValOtcOpt001Dto> findAll(@RequestBody Map<String, Object> params) throws Exception{
+    public List<ValOtcOpt001Dto> findAll(@RequestBody Map<String, Object> params) {
         return valOtcOpt001Service.findAll(params);
     }
     

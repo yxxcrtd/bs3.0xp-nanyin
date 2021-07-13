@@ -12,6 +12,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +30,11 @@ import com.jixu.framework.msg.MsgFactory;
 
 @Controller
 public class MessageController extends ExceptionControl{
-    
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(MessageController.class);
+
 	@Resource(name="commfuncService")
 	private CommFuncService commService;
 	
@@ -74,13 +80,13 @@ public class MessageController extends ExceptionControl{
 					num++;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}finally {
 				if (br != null){
 					try {
 						br.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 				}
 			}

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,10 @@ import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
  **/
 @Service
 public class StlOrderManagement001Service extends CommonExportService<StlOrderManagement001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(StlOrderManagement001Service.class);
 
     public Page<StlOrderManagement001Dto> findOrderData(Map<String, Object> pageParam) {
         return restTemplate.postForPage(ServiceApplication.SETTLE_SERVICE_NAME + "/StlOrderManagement/findOrderData",
@@ -56,7 +62,7 @@ public class StlOrderManagement001Service extends CommonExportService<StlOrderMa
 
     /**
      * 重新发送指令接口
-     * @param model
+     * @param orderIds
      * @return
      * @see
      * @since 1.0
@@ -147,7 +153,7 @@ public class StlOrderManagement001Service extends CommonExportService<StlOrderMa
             try {
                 ZipFileUtil.compressZip(outFile, false, exportFiles.toArray(new SafelyFile[] {}));
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             return ExportUtil.export(outFile.getName(), outFile, true);
         }

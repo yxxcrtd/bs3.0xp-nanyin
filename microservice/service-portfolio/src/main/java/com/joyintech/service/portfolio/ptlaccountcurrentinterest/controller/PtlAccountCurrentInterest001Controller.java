@@ -67,7 +67,8 @@ public class PtlAccountCurrentInterest001Controller {
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<PtlAccountCurrentInterest001Dto> selectForPage(@RequestBody Map<String, Object> map,
-                                                               @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+                                                               @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         Page<PtlAccountCurrentInterest001Dto> pages =  ptlAccountCurrentInterest001Service.selectForPage(page,length,map);
         return pages;
     }
@@ -148,7 +149,8 @@ public class PtlAccountCurrentInterest001Controller {
      */
     @PostMapping("ratePage/{page}/{length}")
     public Page<PtlAccountCurrentInterest001Dto> ratePage(@RequestBody Map<String, Object> map,
-                                                          @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+                                                          @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return ptlAccountCurrentInterest001Service.ratePage(page, length, map);
     }
 

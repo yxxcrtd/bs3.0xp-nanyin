@@ -104,7 +104,6 @@ public abstract class AbstractFileImpService extends InterfService {
                     lock = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error(e.getMessage(),e);
                     //return "fail";
                 }
@@ -116,7 +115,6 @@ public abstract class AbstractFileImpService extends InterfService {
                     channel = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error(e.getMessage(),e);
                    // return "fail";
                 }

@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,6 +57,11 @@ import com.joyintech.tams.report.system.subinfobatchlog.service.ChbSubinfoBatchL
  */
 @Service
 public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(EquityBusiInfoRegistMService.class);
+    
     /**
      * 进度条接口
      */
@@ -137,7 +144,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
                 }
             }
             catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
 
         }

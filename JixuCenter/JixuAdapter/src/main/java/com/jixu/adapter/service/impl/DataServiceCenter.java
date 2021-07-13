@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import com.joyintech.framework.file.SafelyFile;
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -179,7 +180,7 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 				//自定义处理逻辑
 				container=adapterComFunction.executeCustom(true, sourceID, outParams, ilog);
 				if(!container.isCorrectFlag()) {
-					throw new Exception(container.getErrorMsg());
+					throw new ServiceException(container.getErrorMsg());
 				}
 				
 				logger.info(source.getSourceName()+ "		开始运行适配器");
@@ -624,7 +625,7 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
     private ApplicationContext applicationContext;
 	
     
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		logger.info("开始初始化数据中心...");
 		Map<String, ReadDataFile> beanMap = applicationContext.getBeansOfType(ReadDataFile.class);
 		for (ReadDataFile fileBean : beanMap.values()) {

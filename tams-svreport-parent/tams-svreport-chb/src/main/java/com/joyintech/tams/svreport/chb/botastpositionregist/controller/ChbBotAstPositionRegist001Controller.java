@@ -201,7 +201,6 @@ public class ChbBotAstPositionRegist001Controller extends BaseController{
 						ChbBotAstPositionRegist001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

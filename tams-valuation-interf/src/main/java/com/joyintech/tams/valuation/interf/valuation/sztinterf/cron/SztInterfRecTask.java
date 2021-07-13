@@ -34,7 +34,7 @@ public class SztInterfRecTask {
             SztInterfRecService.sztRecDeal();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             logger.info("the SztInterfRecTask throws Exception!");
         }
     }

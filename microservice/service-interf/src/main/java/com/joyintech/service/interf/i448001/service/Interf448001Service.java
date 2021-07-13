@@ -62,7 +62,7 @@ public class Interf448001Service extends SendEsbService<Interf448001InEntity, In
      */
     @Override
     public Interf448001InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         ProdModifyDto dto = (ProdModifyDto)param;
         Map<String, Object> map = new HashMap<>();
         // 金融产品代码， 平台时间
@@ -99,7 +99,7 @@ public class Interf448001Service extends SendEsbService<Interf448001InEntity, In
      */
     @Override
     public int saveInterfData(Interf448001OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -108,7 +108,7 @@ public class Interf448001Service extends SendEsbService<Interf448001InEntity, In
      */
     @Override
     public int saveBusinessData(Interf448001OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 

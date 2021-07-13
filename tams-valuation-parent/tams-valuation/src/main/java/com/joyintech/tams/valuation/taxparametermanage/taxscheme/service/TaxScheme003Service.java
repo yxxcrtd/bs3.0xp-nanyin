@@ -61,7 +61,7 @@ public class TaxScheme003Service extends CommonExportService<TaxScheme003Dto> im
      * @return
      * @throws Exception
      */
-	public List<TaxScheme003Dto> checkVatTax(Map<String, Object> parameters) throws Exception {
+	public List<TaxScheme003Dto> checkVatTax(Map<String, Object> parameters)  {
 	    return restTemplate.postForList(
             ServiceApplication.VALUATION_SERVICE_NAME + "/TaxScheme003/checkVatTax",
             parameters, TaxScheme003Dto.class);

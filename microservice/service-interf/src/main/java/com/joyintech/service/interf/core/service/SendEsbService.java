@@ -10,9 +10,11 @@
 
 package com.joyintech.service.interf.core.service;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
+import com.joyintech.service.interf.core.util.InterfException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -249,8 +251,7 @@ public abstract class SendEsbService<T, F> extends InterfBaseEsbService<T, F> {
      * @see
      * @since 1.0
      */
-    public abstract T preparedLocalData(Object param)
-        throws Exception;
+    public abstract T preparedLocalData(Object param) throws InterfException, ParseException;
 
     /**
      * 构建发送给ESB的数据 </br>

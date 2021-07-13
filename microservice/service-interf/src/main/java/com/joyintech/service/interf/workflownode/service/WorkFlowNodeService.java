@@ -47,7 +47,7 @@ public class WorkFlowNodeService extends InterfBaseService {
      * @since 1.0
      */
     public InterfBillOutEntity selectWorkFlowNode(ProcessMark mark)
-        throws Exception {
+    {
 
         InterfBillOutEntity interfEntity = new InterfBillOutEntity();
         // List<WflStatusDto> list = WorkFlowUtil.getNodeInfo(mark, 2);

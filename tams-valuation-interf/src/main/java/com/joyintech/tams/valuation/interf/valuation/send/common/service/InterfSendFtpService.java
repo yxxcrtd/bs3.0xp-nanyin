@@ -57,7 +57,6 @@ public class InterfSendFtpService {
                 sftpUtil.close(); // 关闭登录
             } catch (Exception e) {
                 sftpUtil.close();// 关闭登录
-                e.printStackTrace();
                 String errorInfo = executeInfo.getTaskName()+"  数据文件回传失败";
                 logger.error(errorInfo + "   错误信息：" + e.getMessage());
                 throw e;
@@ -83,7 +82,6 @@ public class InterfSendFtpService {
                 sftpUtil.close(); // 关闭登录
             } catch (Exception e) {
                 sftpUtil.close();// 关闭登录
-                e.printStackTrace();
                 String errorInfo = executeInfo.getTaskName()+"  数据文件回传失败";
                 logger.error(errorInfo + "   错误信息：" + e.getMessage());
                 throw e;
@@ -118,7 +116,6 @@ public class InterfSendFtpService {
                 logger.info(executeInfo.getTaskName() + ": sftp关闭成功！");
             } catch (Exception e) {
                 sftpUtil.close();// 关闭登录
-                e.printStackTrace();
                 String errorInfo = executeInfo.getTaskName()+": 数据文件回传失败";
                 logger.error(errorInfo + "   错误信息：" + e.getMessage());
                 throw e;

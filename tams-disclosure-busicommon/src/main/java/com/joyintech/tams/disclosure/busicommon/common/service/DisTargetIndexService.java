@@ -16,6 +16,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.CacheUtil;
@@ -48,6 +50,10 @@ import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
  */
 @Service
 public class DisTargetIndexService {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(DisTargetIndexService.class);
 
 	/**
 	 * 货币性表二
@@ -57,7 +63,7 @@ public class DisTargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表二
 	 */
-	public  Map<String,Object> printTargetCurrencyTypeTbTwo(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public  Map<String,Object> printTargetCurrencyTypeTbTwo(Date startDate, Date endDate, String prodId,Connection conn) {
 		//定义返回值
 		Map<String,Object> resultmap=new HashMap<>();
 //		// 表二dto
@@ -147,7 +153,7 @@ public class DisTargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表二
 	 */
-	public Map<String,Object> printTargetNetTypeTbTwo(Date startDate, Date endDate, String prodId,Connection  conn) throws Exception {
+	public Map<String,Object> printTargetNetTypeTbTwo(Date startDate, Date endDate, String prodId,Connection  conn) {
 		//定义 
 		Map<String,Object> resultmap=new HashMap<>();
 		// 产品指标表集合查询
@@ -238,7 +244,7 @@ public class DisTargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表三
 	 */
-	public  Map<String,Object> printTargetCurrencyTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public  Map<String,Object> printTargetCurrencyTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) {
 		Map<String,Object> resultmap=new HashMap<>();
 		// 表三dto
 		//ResultTwoDto twoDto = new ResultTwoDto();
@@ -341,7 +347,7 @@ public class DisTargetIndexService {
 	 * @throws Exception 
 	 * @retun 指标表三
 	 */
-	public static Map<String,Object> printTargetNetTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public static Map<String,Object> printTargetNetTypeTbThree(Date startDate, Date endDate, String prodId,Connection conn) {
 		Map<String,Object> resultmap=new HashMap<>();
 		// 表三dto
 		//ResultTwoDto twoDto = new ResultTwoDto();
@@ -458,7 +464,7 @@ public class DisTargetIndexService {
 	 * @return
 	 * @throws Exception
 	 */
-	public  static Map<String,Object> printTableCpValueConfig(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public  static Map<String,Object> printTableCpValueConfig(Date startDate, Date endDate, String prodId,Connection conn){
 		Map<String,Object> resultmap=new HashMap<>();
 		// 产品指标集合的查询
 		List<RepProdIndex> list=getListRepProdIndebyJjdbc(startDate, endDate, prodId,conn);
@@ -601,7 +607,7 @@ public class DisTargetIndexService {
 				list.add(index);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -609,14 +615,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -654,7 +660,7 @@ public class DisTargetIndexService {
 				return null;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -662,14 +668,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -708,7 +714,7 @@ public class DisTargetIndexService {
 				list.add(chbMktHoliday);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -716,14 +722,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -757,10 +763,10 @@ public class DisTargetIndexService {
 				map.put("SSZB", rs.getBigDecimal("SSZB"));
 				map.put("JZSY", rs.getBigDecimal("JZSY"));
 				map.put("FEJZ", rs.getBigDecimal("FEJZ"));
-				map.put("PROD_ID", rs.getString("PROD_ID"));
+				map.put("PROD_ID", rs.getString("PROD_ID")==null?"":rs.getString("PROD_ID"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -768,14 +774,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -811,7 +817,7 @@ public class DisTargetIndexService {
 				map.put("NETVALUETOTAL", rs.getBigDecimal("NETVALUETOTAL"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -819,14 +825,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1209,13 +1215,13 @@ public class DisTargetIndexService {
 						dataMap = new HashMap<String,Object>();
 						dataMap.put("TDY_COST_AMT", rs.getBigDecimal("TDY_COST_AMT"));// 估值
 						dataMap.put("END_DAYS_2", rs.getInt("END_DAYS_2"));// 剩余存续期限
-						dataMap.put("AL_FLAG", rs.getString("AL_FLAG"));// 资产负债标识
-						dataMap.put("ASSET_TYPE_DIS", rs.getString("DIS_ASSET_TYPETWO"));// 资产一级分类(已经转换为信批资产类型，数据字典=ASSET_TYPE_DIS)
+						dataMap.put("AL_FLAG", rs.getString("AL_FLAG")==null?"":rs.getString("AL_FLAG"));// 资产负债标识
+						dataMap.put("ASSET_TYPE_DIS", rs.getString("DIS_ASSET_TYPETWO")==null?"":rs.getString("DIS_ASSET_TYPETWO"));// 资产一级分类(已经转换为信批资产类型，数据字典=ASSET_TYPE_DIS)
 						dataMapList.add(dataMap);
 					}
 
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 				finally {
 					// 释放连接
@@ -1223,14 +1229,14 @@ public class DisTargetIndexService {
 						try {
 							ps.close();
 						} catch (SQLException e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(),e);
 						}
 					}
 					if (rs != null) {
 						try {
 							rs.close();
 						} catch (SQLException e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(),e);
 						}
 					}
 				}
@@ -1246,7 +1252,7 @@ public class DisTargetIndexService {
 	 * @return
 	 * @throws Exception
 	 */
-	public  static List<Map<String,Object>> printTableTradeRela(Date startDate, Date endDate,Connection conn) throws Exception{
+	public  static List<Map<String,Object>> printTableTradeRela(Date startDate, Date endDate,Connection conn){
 		List<Map<String,Object>>  listMap=new ArrayList<>();
 		 
 		List<RepTreadInfoDto> list=new ArrayList<>();
@@ -1313,11 +1319,11 @@ public class DisTargetIndexService {
 			 rs = ps.executeQuery();
 			//获取结果集
 			while(rs.next()){
-				String aSSET_NAME=rs.getString("ASSET_NAME");
-				String bUY_PARTY=rs.getString("BUY_PARTY");
-				String sELL_PARTY=rs.getString("SELL_PARTY");
+				String aSSET_NAME=rs.getString("ASSET_NAME")==null?"":rs.getString("ASSET_NAME");
+				String bUY_PARTY=rs.getString("BUY_PARTY")==null?"":rs.getString("BUY_PARTY");
+				String sELL_PARTY=rs.getString("SELL_PARTY")==null?"":rs.getString("SELL_PARTY");
 				BigDecimal tRADE_AMT=rs.getBigDecimal("TRADE_AMT");
-				String cONTRACT_NO=rs.getString("CONTRACT_NO");
+				String cONTRACT_NO=rs.getString("CONTRACT_NO")==null?"":rs.getString("CONTRACT_NO");
 				RepTreadInfoDto dto=new RepTreadInfoDto();
 				dto.setAssetName(aSSET_NAME);
 				dto.setBuyParty(bUY_PARTY);
@@ -1327,7 +1333,7 @@ public class DisTargetIndexService {
 				list.add(dto);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1335,14 +1341,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1377,11 +1383,11 @@ public class DisTargetIndexService {
 			 rs = ps.executeQuery();
 			//获取结果集
 			while(rs.next()){
-				String aSSET_NAME=rs.getString("ASSET_NAME");
-				String bUY_PARTY=rs.getString("BUY_PARTY");
-				String sELL_PARTY=rs.getString("SELL_PARTY");
+				String aSSET_NAME=rs.getString("ASSET_NAME")==null?"":rs.getString("ASSET_NAME");
+				String bUY_PARTY=rs.getString("BUY_PARTY")==null?"":rs.getString("BUY_PARTY");
+				String sELL_PARTY=rs.getString("SELL_PARTY")==null?"":rs.getString("SELL_PARTY");
 				BigDecimal tRADE_AMT=rs.getBigDecimal("TRADE_AMT");
-				String cONTRACT_NO=rs.getString("CONTRACT_NO");
+				String cONTRACT_NO=rs.getString("CONTRACT_NO")==null?"":rs.getString("CONTRACT_NO");
 				RepTreadInfoDto dto=new RepTreadInfoDto();
 				dto.setAssetName(aSSET_NAME);
 				dto.setBuyParty(bUY_PARTY);
@@ -1391,7 +1397,7 @@ public class DisTargetIndexService {
 				list.add(dto);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1399,14 +1405,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1439,11 +1445,11 @@ public class DisTargetIndexService {
 			rs = ps.executeQuery();
 			//获取结果集
 			while(rs.next()){
-				String aSSET_NAME=rs.getString("ASSET_NAME");
-				String bUY_PARTY=rs.getString("BUY_PARTY");
-				String sELL_PARTY=rs.getString("SELL_PARTY");
+				String aSSET_NAME=rs.getString("ASSET_NAME")==null?"":rs.getString("ASSET_NAME");
+				String bUY_PARTY=rs.getString("BUY_PARTY")==null?"":rs.getString("BUY_PARTY");
+				String sELL_PARTY=rs.getString("SELL_PARTY")==null?"":rs.getString("SELL_PARTY");
 				BigDecimal tRADE_AMT=rs.getBigDecimal("TRADE_AMT");
-				String cONTRACT_NO=rs.getString("CONTRACT_NO");
+				String cONTRACT_NO=rs.getString("CONTRACT_NO")==null?"":rs.getString("CONTRACT_NO");
 				RepTreadInfoDto dto=new RepTreadInfoDto();
 				dto.setAssetName(aSSET_NAME);
 				dto.setBuyParty(bUY_PARTY);
@@ -1453,7 +1459,7 @@ public class DisTargetIndexService {
 				list.add(dto);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1461,14 +1467,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1501,7 +1507,7 @@ public class DisTargetIndexService {
 				count=rs.getInt(1);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1509,14 +1515,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1544,7 +1550,7 @@ public class DisTargetIndexService {
 				praManger=rs.getString("bankname");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			//释放连接
@@ -1552,14 +1558,14 @@ public class DisTargetIndexService {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -1578,21 +1584,30 @@ public class DisTargetIndexService {
 	 * 查询收益类型
 	 * @throws SQLException 
 	 */
-	public  String   getProfitType(String prodId,Connection conn) throws SQLException{
+	public String getProfitType(String prodId,Connection conn) throws SQLException{
 		String profitType=null;
-		
-		//编写sql
-		String sql="select PROD_TYPE  profitType from rep_prod_info where PROD_ID = ?";		
-				  //创建执行语句
-				PreparedStatement ps = conn.prepareStatement(sql);
-				// 传参
-				ps.setString(1, prodId);
-				// 执行语句
-				ResultSet rs = ps.executeQuery();
-				if(rs.next()){
-					profitType=rs.getString("profitType");
-				}
-				return profitType;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try{
+			//编写sql
+			String sql="select PROD_TYPE  profitType from rep_prod_info where PROD_ID = ?";
+			//创建执行语句
+			ps = conn.prepareStatement(sql);
+			// 传参
+			ps.setString(1, prodId);
+			// 执行语句
+			rs = ps.executeQuery();
+			if(rs.next()){
+				profitType=rs.getString("profitType");
+			}
+		}finally {
+			if (ps != null){
+				ps.close();
+			}
+			if (rs != null){
+				rs.close();
+			}
+		}
+		return profitType;
 	}
-	
 }

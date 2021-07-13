@@ -10,6 +10,7 @@
     
 package com.joyintech.tams.invest.report.regulatoryreporting.investmentsinfo.controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -85,7 +86,7 @@ public class InvestmentsInfo001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         return investmentsInfoService.export(RequestUtil.getParameters(getRequest()));
     }
 }

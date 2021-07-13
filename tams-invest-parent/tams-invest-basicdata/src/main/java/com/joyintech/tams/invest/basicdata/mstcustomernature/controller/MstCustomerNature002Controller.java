@@ -10,6 +10,7 @@
 package com.joyintech.tams.invest.basicdata.mstcustomernature.controller;
 import java.util.*;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -120,8 +121,7 @@ public class MstCustomerNature002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getCustomerId")
-    public List<SuggestDto> getCustomerId()
-        throws Exception {
+    public List<SuggestDto> getCustomerId() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("customerId", super.getRequest().getParameter("param"));
         List<SuggestDto> list = mstCustomerNatureService.getCustomerId(param);;
@@ -137,8 +137,7 @@ public class MstCustomerNature002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getName")
-    public List<SuggestDto> getName()
-        throws Exception {
+    public List<SuggestDto> getName() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("customerName", super.getRequest().getParameter("param"));
         List<SuggestDto> list = mstCustomerNatureService.getName(param);;
@@ -156,8 +155,7 @@ public class MstCustomerNature002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("searchMstCustomerNature")
-    public Page<MstCustomerNatureDto> search()
-        throws Exception {
+    public Page<MstCustomerNatureDto> search() {
         Page<MstCustomerNatureDto> page = mstCustomerNatureService.searchMstCustomerNature(
             RequestUtil.getPageParam());
         return page;
@@ -177,8 +175,7 @@ public class MstCustomerNature002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstCustomerNatureDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstCustomerNatureDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -69,8 +69,7 @@ public class MstCustomerNature001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getCustomerName")
-    public List<SuggestDto> getCustomerName()
-        throws Exception {
+    public List<SuggestDto> getCustomerName() {
         Map<String, Object> param = new HashMap<>();
         param.put("customerName", super.getRequest().getParameter("param"));
         List<SuggestDto> list = mstCustomerNatureService.getCustomerName(param);;
@@ -86,8 +85,7 @@ public class MstCustomerNature001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("selectCustomerInfo")
-    public Page<MstCustomerNatureDto> selectCustomerInfo()
-        throws Exception {
+    public Page<MstCustomerNatureDto> selectCustomerInfo() {
         Map<String, Object> param = RequestUtil.getPageParam();
         Page<MstCustomerNatureDto> dto = mstCustomerNatureService.selectCustomerInfo(param);
         return dto;
@@ -99,7 +97,7 @@ public class MstCustomerNature001Controller extends BaseController {
      * @throws Exception 异常
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstCustomerNatureService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

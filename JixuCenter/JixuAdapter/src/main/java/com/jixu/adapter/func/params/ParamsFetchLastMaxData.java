@@ -40,7 +40,7 @@ public class ParamsFetchLastMaxData extends AdditionFunc{
 		return funcname;
 	}
 	
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws InterfaceException {
 		//返回上一次执行的标记位
 		InterfaceColConfig config=(InterfaceColConfig)colcfgMap.get(ParamsSet.interfaceColCfg);
 		InterfaceParamsLastMax iplm=interfaceParamsLastMaxDao.getLastRecord(config.getId());
@@ -79,7 +79,7 @@ public class ParamsFetchLastMaxData extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

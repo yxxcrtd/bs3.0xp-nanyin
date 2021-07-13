@@ -109,7 +109,7 @@ public class EtrStockService extends BaseService<EtrStockDto>{
      *@return: com.joyintech.framework.grid.Page<com.joyintech.service.entrust.etrstock.dto.EtrStockDto>
      *@throws:
      */
-    public Page<EtrStockDto> selectForPage(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<EtrStockDto> selectForPage(int page, int length, Map<String, Object> param) {
         String portfolioId = (String)param.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));

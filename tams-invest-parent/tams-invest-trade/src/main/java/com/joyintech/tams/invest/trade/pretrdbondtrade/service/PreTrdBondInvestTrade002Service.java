@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -141,7 +143,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInvestTrade002Dto> implements BaseProcessService<PreTrdBondInvestTrade002Dto> {
-
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PreTrdBondInvestTrade002Service.class);
 
 
     @Autowired
@@ -611,7 +616,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             // 重新insert
             this.handleBussFlowData(entity);
@@ -1727,7 +1732,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (dto.getYield() != null) {
@@ -1797,7 +1802,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // --------add by 裴家俊 2019/03/28 费用查询----end---
     }

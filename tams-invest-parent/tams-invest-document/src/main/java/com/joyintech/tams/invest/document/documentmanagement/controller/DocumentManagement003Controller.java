@@ -65,8 +65,7 @@ public class DocumentManagement003Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/findPage")
-    public Page<DocumentManagementDto> findPage()
-        throws Exception {
+    public Page<DocumentManagementDto> findPage(){
         return documentManagementService.selectForDetails(RequestUtil.getParameters(getRequest()));
     }
     /**

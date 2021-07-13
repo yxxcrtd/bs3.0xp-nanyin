@@ -43,7 +43,8 @@ public class FeeProvisionSettingController {
 	 */
 	@PostMapping("selectForPage/{page}/{length}")
 	public Page<FeeProvisionSettingDto> selectForPage(@RequestBody Map<String, Object> param,
-													  @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+													  @PathVariable("page") int page, @PathVariable("length") int length)
+	{
 		String positionStartDateStr = (String)param.get("positionStartDate");
 		String positionEndDateStr = (String)param.get("positionEndDate");
 		String actPositionEndDateStr = (String)param.get("actPositionEndDate");
@@ -64,7 +65,7 @@ public class FeeProvisionSettingController {
 	@PostMapping("getSecAcctId/{page}/{length}")
 	public Page<SelectOptionDto> getSecAcctId(@RequestBody Map<String, Object> param,
 											  @PathVariable("page") int page, @PathVariable("length") int length)
-			throws Exception {
+	{
 		return feeProvisionSettingService.getSecAcctId(page, length, param);
 	}
 
@@ -79,7 +80,7 @@ public class FeeProvisionSettingController {
 	 * @since 1.0
 	 */
 	@PostMapping("selectDetail/{page}/{length}")
-	public Page<TrdAccountmfConfigdetailDto> selectDetail(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+	public Page<TrdAccountmfConfigdetailDto> selectDetail(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page, @PathVariable("length") int length) {
 		return feeProvisionSettingService.selectDetail(page,length,pageParam);
 	}
 

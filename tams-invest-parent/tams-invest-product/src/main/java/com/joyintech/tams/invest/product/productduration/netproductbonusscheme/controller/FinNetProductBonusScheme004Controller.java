@@ -23,6 +23,8 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.product.productduration.netproductbonusscheme.dto.ActualTimeCapital001Dto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,6 +73,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("FinNetProductBonusScheme004")
 @RequestMapping("/invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme004")
 public class FinNetProductBonusScheme004Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinNetProductBonusScheme004Controller.class);
 
     /**
      * 净值型分红方案service
@@ -149,7 +155,7 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
                 processMark.setPageId("FinNetProductBonusScheme002");
                 temp1 = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             finNetProductBonusSchemeInfo.setTdyUnitValue(temp1.getTdyUnitValue());
             finNetProductBonusSchemeInfo.setNetvalue(temp1.getNetvalue());
@@ -177,7 +183,7 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
 				processMark.setPageId("FinNetProductBonusScheme004");
 				finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
 			} catch (Exception e) {
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
 			if(finNetProductBonusSchemeInfo.getBussTrdTransferOrder()!=null 
 	                && finNetProductBonusSchemeInfo.getBussTrdTransferOrder().size()>0){

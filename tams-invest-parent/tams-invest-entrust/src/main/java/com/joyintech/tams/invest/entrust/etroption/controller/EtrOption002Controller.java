@@ -18,6 +18,7 @@ import com.joyintech.tams.invest.entrust.etroption.dto.EtrOptionDto;
 import com.joyintech.tams.invest.entrust.etroption.service.EtrOptionService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -183,8 +184,7 @@ public class EtrOption002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrOptionDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrOptionDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import com.joyintech.framework.file.SafelyFile;
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -416,7 +417,7 @@ public class ExpAssembleOutput extends InterfaceFieldsService {
 				// 自定义处理逻辑
 				container = adapterComFunction.executeCustom(true, sourceID, outParams, ilog);
 				if (!container.isCorrectFlag()) {
-					throw new Exception(container.getErrorMsg());
+					throw new ServiceException(container.getErrorMsg());
 				}
 
 				logger.info(source.getSourceName() + "		开始运行适配器");

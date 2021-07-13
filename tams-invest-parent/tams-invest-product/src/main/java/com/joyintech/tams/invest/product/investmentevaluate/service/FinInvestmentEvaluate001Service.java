@@ -15,6 +15,8 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.product.evaluationentrance.EvaluationEntrance;
 import com.joyintech.tams.invest.product.evaluationentrance.dto.EvaluationRateDto;
 import com.joyintech.tams.invest.product.investmentevaluate.dto.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class FinInvestmentEvaluate001Service extends CommonExportService {
+    private static final Logger logger = LoggerFactory.getLogger(FinInvestmentEvaluate001Service.class);
     //调用共同接口方法
     @Autowired
     EvaluationEntrance evaluationEntrance;
@@ -64,7 +67,8 @@ public class FinInvestmentEvaluate001Service extends CommonExportService {
     public Page<FinInvestmentEvaluate003Dto> findPage(Map<String, Object> pageParam){
         Page<FinInvestmentEvaluate003Dto> findPage=restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinInvestmentEvaluate/findPage",
                 pageParam, FinInvestmentEvaluate003Dto.class);
-        System.out.println(findPage);
+//        System.out.println(findPage);
+        logger.info(findPage.toString());
         return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinInvestmentEvaluate/findPage",
                 pageParam, FinInvestmentEvaluate003Dto.class);
     }

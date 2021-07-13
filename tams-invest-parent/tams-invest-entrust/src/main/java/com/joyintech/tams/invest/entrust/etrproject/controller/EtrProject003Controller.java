@@ -19,6 +19,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -186,8 +187,7 @@ public class EtrProject003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody List<EtrProjectDto> dtoList, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody List<EtrProjectDto> dtoList, BindingResult br) throws WorkFlowException {
         for(EtrProjectDto dto:dtoList) {
             if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
                 BussinessCodeParameter param = new BussinessCodeParameter();

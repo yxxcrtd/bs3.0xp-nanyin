@@ -126,7 +126,7 @@ public class EtrSecLendService extends BaseService {
      */
     public Page<EtrSecLendDto> selectForPage(int page, int length,
                                                     Map<String, Object> param)
-        throws Exception {
+    {
         param.put("bondList", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(),DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue()));
         Page<EtrSecLendDto> pageDto = queryForPage(page, length,
             () -> etrSecLendMapper.selectForPage(param));
@@ -141,7 +141,8 @@ public class EtrSecLendService extends BaseService {
      * @see
      * @since 1.0
      */
-    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param)
+    {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         // 可选择的债券标的只能是银行间 add by renping 20190920 start
         param.put("FINPROD_MARKET",DictCodeListExt1.交易场所_银行间.getValue());

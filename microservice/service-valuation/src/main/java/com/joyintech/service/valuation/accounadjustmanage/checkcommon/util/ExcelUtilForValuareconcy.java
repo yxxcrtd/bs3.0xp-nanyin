@@ -20,6 +20,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * excel操作
@@ -30,6 +32,10 @@ import com.joyintech.framework.util.StringUtil;
  * @since 1.0
  */
 public class ExcelUtilForValuareconcy {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(ExcelUtilForValuareconcy.class);
 
     /**
      * 去。0的格式化
@@ -349,7 +355,7 @@ public class ExcelUtilForValuareconcy {
                 inputStream.close();
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             finally {
                 try {
@@ -358,13 +364,13 @@ public class ExcelUtilForValuareconcy {
                     }
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 try {
                     inputStream.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
 
@@ -375,14 +381,14 @@ public class ExcelUtilForValuareconcy {
                 inputStream.close();
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             finally {
                 try {
                     inputStream.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
@@ -392,7 +398,7 @@ public class ExcelUtilForValuareconcy {
                     inputStream.close();
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             throw new Exception("不是一个有效的Excel文件");

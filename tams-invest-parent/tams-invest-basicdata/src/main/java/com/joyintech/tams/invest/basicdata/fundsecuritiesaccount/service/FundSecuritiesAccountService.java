@@ -131,8 +131,7 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
      * @see
      * @since 1.0
      */
-    public FundSecuritiesAccountDto fileUpload(HttpServletRequest request) 
-        throws Exception{
+    public FundSecuritiesAccountDto fileUpload(HttpServletRequest request) {
         return restTemplate.postForObject(
             ServiceApplication.BASICDATA_SERVICE_NAME + "/FundSecuritiesAccountInfo/uploadFile",
             request,FundSecuritiesAccountDto.class);

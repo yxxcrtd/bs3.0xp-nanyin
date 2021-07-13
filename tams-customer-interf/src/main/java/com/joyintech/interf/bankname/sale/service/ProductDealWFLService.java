@@ -40,7 +40,7 @@ public class ProductDealWFLService {
 	 * @param dto
 	 * @throws Exception
 	 */
-	public Map<String, String> save(FinProductPayInt003Dto dto) throws Exception {
+	public Map<String, String> save(FinProductPayInt003Dto dto) {
 		
 		Map<String, String> res = new HashMap<>();
         if (StringUtil.isBlank(dto.getBussId())) {
@@ -81,7 +81,7 @@ public class ProductDealWFLService {
 	 * @param dto
 	 * @throws Exception
 	 */
-	public Map<String, String> saveExpireInfo(FinProductExpire002Dto dto) throws Exception {
+	public Map<String, String> saveExpireInfo(FinProductExpire002Dto dto) {
 		
 		Map<String, String> res = new HashMap<>();
 		WorkFlowParameter<FinProductExpire002Dto> params = new WorkFlowParameter<FinProductExpire002Dto>();
@@ -119,7 +119,7 @@ public class ProductDealWFLService {
 	 * @param dto
 	 * @return
 	 */
-	public Map<String, String> saveProEstablishInfo(FinProductEstablish002Dto dto)  throws Exception {
+	public Map<String, String> saveProEstablishInfo(FinProductEstablish002Dto dto) {
 		
 		Map<String, String> res = new HashMap<>();
 		WorkFlowParameter<FinProductEstablish002Dto> params = new WorkFlowParameter<FinProductEstablish002Dto>();

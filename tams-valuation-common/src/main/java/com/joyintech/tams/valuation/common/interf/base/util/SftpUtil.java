@@ -64,7 +64,7 @@ public class SftpUtil {
 	 *            端口
 	 * @throws JSchException
 	 */
-	public void login(String userName, String password, String host, int port) throws Exception {
+	public void login(String userName, String password, String host, int port) throws JSchException {
 		try {
 			// 接口 SFTP 服务配置
 			JSch jsch = new JSch();
@@ -81,7 +81,7 @@ public class SftpUtil {
 			sftp = (ChannelSftp) channel;
 		} catch (JSchException e) {
 			logger.error("", e);
-			throw new Exception("登录文件服务器失败");
+			throw new JSchException("登录文件服务器失败");
 		}
 	}
 
@@ -98,7 +98,7 @@ public class SftpUtil {
 	 *            端口
 	 * @throws JSchException
 	 */
-	public void loginById(String userName, String identity, String host, int port) throws Exception {
+	public void loginById(String userName, String identity, String host, int port) throws JSchException {
 		try {
 			// 接口 SFTP 服务配置
 			JSch jsch = new JSch();
@@ -115,7 +115,7 @@ public class SftpUtil {
 			sftp = (ChannelSftp) channel;
 		} catch (JSchException e) {
 			logger.error("", e);
-			throw new Exception("登录文件服务器失败");
+			throw new JSchException("登录文件服务器失败");
 		}
 	}
 
@@ -382,7 +382,8 @@ public class SftpUtil {
 				sftp.ls(dir);
 			}
 			catch (SftpException e) {
-				System.out.println("服务器上没有该目录：" + dir);
+//				System.out.println("服务器上没有该目录：" + dir);
+				logger.info("服务器上没有该目录：" + dir);
 				sftp.mkdir(dir);
 			}
 			sftp.cd(dir);

@@ -211,8 +211,7 @@ public class ChbPrdEndDayYieldInterf extends BaseService{
 //        try {
 //            datet = f.parse(datetime);
 //            cal.setTime(datet);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
+//        } catch (ParseException e) {logger.error(e.getMessage(),e);
 //        }
 //        int w = cal.get(Calendar.DAY_OF_WEEK) - 1; // 指示一个星期中的某天。
 //        if (w < 0)

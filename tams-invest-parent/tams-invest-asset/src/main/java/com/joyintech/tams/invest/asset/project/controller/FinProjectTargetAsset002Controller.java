@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.depo.dto.FinDepositTargetDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -306,8 +307,7 @@ public class FinProjectTargetAsset002Controller extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinProjectTargetAssetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinProjectTargetAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

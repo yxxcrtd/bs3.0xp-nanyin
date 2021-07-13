@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,10 @@ import com.joyintech.service.product.productplanning.common.dao.PlanningCommonMa
  */
 @Service("finAssetConfigPlanService")
 public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(FinAssetConfigPlanService.class);
 
     @Autowired(required = false)
     private PlanningCommonMapper planningCommonMapper;
@@ -76,7 +82,7 @@ public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto
 					method = dto.getClass().getDeclaredMethod("setCurInvAmt" + mondetail.getAssetMonth(),BigDecimal.class);
 	        		method.invoke(dto,mondetail.getCurInvAmt());
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				} 
         	}
         }
@@ -107,7 +113,7 @@ public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto
     					method = dto.getClass().getDeclaredMethod("setCurInvAmt" + mondetail.getAssetMonth(),BigDecimal.class);
     	        		method.invoke(dto,mondetail.getCurInvAmt());
     				} catch (Exception e) {
-    					e.printStackTrace();
+						logger.error(e.getMessage(),e);
     				} 
             	}
             }

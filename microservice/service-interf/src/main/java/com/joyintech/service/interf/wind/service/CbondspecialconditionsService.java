@@ -63,7 +63,7 @@ public class CbondspecialconditionsService extends WindService<InterfCbondspecia
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InterfCbondspecialconditions entity) throws Exception {
+	public int insert(InterfCbondspecialconditions entity) {
 		// 删除重复数据
 		insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 登陆接口表

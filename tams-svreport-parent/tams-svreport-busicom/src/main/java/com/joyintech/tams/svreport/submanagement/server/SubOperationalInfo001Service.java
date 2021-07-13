@@ -1015,7 +1015,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		try {
 			responseEntity = chbAssetListToExcel(tableId,tableName, title, dataList, enumIndexMap, mergeIndexList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return responseEntity;
 	}
@@ -1141,7 +1141,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			responseEntity = objListToExcel(tableId,tableName, title, dataList, false, enumIndexMap);
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		return responseEntity;
 	}
@@ -1389,7 +1388,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		return responseEntity;
 	}
@@ -1621,12 +1619,12 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					out.close();
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return responseEntity;
 	}
@@ -1754,13 +1752,11 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
-					e.printStackTrace();
 				}
 			}
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		return responseEntity;
 	}
@@ -3604,11 +3600,11 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		catch (SQLException es)
 		{
-			es.printStackTrace();
+			logger.error(es.getMessage(),es);
 		}
 
 		return null;

@@ -170,8 +170,7 @@ public class FlowRiskStressTestService extends BaseService<FlowRiskStressTest001
             endDate = dft.parse(dft.format(date.getTime()));
         }
         catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         int count = flowRiskStressTestMapper.queryStrTesCount();

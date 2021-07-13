@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.report.common.infodisclosure.util;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -40,7 +41,7 @@ public class JasparConnectUtilService {
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
-			String fileType) throws Exception{
+			String fileType) throws IOException{
 		
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -136,7 +137,7 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String  connectJasparAndGenHtml(String strUrl) throws Exception{
+	public String  connectJasparAndGenHtml(String strUrl) throws IOException {
 		
 		URL connUrl = new URL(strUrl);
 		
@@ -165,7 +166,7 @@ public class JasparConnectUtilService {
     	 
         StringBuffer tStringBuffer = new StringBuffer();
 
-        String sTempOneLine = new String("");
+        String sTempOneLine = "";
 
         while ((sTempOneLine = tBufferedReader.readLine()) != null){
 

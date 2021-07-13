@@ -76,7 +76,8 @@ public class ReportWorkManage001Contoller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ReportWorkManage001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+			@PathVariable("page") int page, @PathVariable("length") int length)
+	{
         Page<ReportWorkManage001Dto>  pageList = reportWorkManage001Service.findPage(page, length, param);
         return pageList;
     }
@@ -215,7 +216,7 @@ public class ReportWorkManage001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/check")
-	public AjaxResult check(@RequestBody ReportWorkManage001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody ReportWorkManage001Dto dto, BindingResult result) {
 		return new AjaxResult();
 	}
     /**
@@ -274,7 +275,8 @@ public class ReportWorkManage001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/refreshCheck")
-	public AjaxResult refreshCheck() throws Exception {
+	public AjaxResult refreshCheck()
+	{
 		AjaxResult aj = new AjaxResult();
 		String times = CacheUtil.getSysParam(ReportGlobalConstant.REP_REFRESH_JOBRULE);
 		aj.setData(times);

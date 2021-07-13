@@ -184,7 +184,6 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 						ProdDurationReg001Dto.class);
 				pageParam.put("prodDurationList", prodDurationList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {

@@ -9,11 +9,11 @@
         a.WARN_COND warnCond, a.APPROVE_COND approveCond, a.FOUL_COND foulCond, a.CONCLUSION conclusion, 
         a.OLD_SUP_VAL oldSupVal, a.SUP_TREND supTrend
         from RSK_ISUP_TRIAL a, RSK_ISUP_INDICATOR b
-        where TRADE_ID = #{eventId, jdbcType=VARCHAR}
+        where a.TRADE_ID = #{eventId, jdbcType=VARCHAR}
         and a.IND_ID = b.IND_ID
         and a.SEQ_NO = #{uuid, jdbcType=VARCHAR}
         <if test="assetCode != null and assetCode != ''">
-            and ASSET_CODE = #{assetCode, jdbcType=VARCHAR}
+            and a.ASSET_CODE = #{assetCode, jdbcType=VARCHAR}
         </if>
     </select>
     <select id="selectIsupTrialCls" resultMap="com.joyintech.tams.common.base.dao.RskIsupTrialMapper.BaseResultMap" parameterType="java.lang.String" >

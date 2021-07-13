@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -26,7 +28,7 @@ import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAn
 
 @Service
 public class PtlPerformanceAnalysis001Service extends CommonExportService<PtlPerformanceAnalysis001Dto>  {
-	
+    private static final Logger logger = LoggerFactory.getLogger(PtlPerformanceAnalysis001Service.class);
     public Page<PtlPerformanceAnalysis001Dto> selectForPage(Map<String, Object> map){
     	
     	Page<PtlPerformanceAnalysis001Dto> page = restTemplate.postForPage(
@@ -241,7 +243,8 @@ public class PtlPerformanceAnalysis001Service extends CommonExportService<PtlPer
         }
 
         jsonStr = JsonUtils.object2Json(totalColsList);
-        System.out.print(jsonStr);
+//        System.out.print(jsonStr);
+        logger.info(jsonStr);
         return jsonStr;
     }
     

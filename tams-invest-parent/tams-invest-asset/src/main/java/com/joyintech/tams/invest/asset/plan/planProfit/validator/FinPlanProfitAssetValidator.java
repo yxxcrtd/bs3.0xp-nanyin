@@ -114,7 +114,7 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 	        }
         }
 		if (StringUtil.equals(dto.getOperateType(), "delete")) {
-			if (dto.getSelectedItem() != null || dto.getSelectedItem().size() > 0) {
+			if (dto.getSelectedItem() != null && dto.getSelectedItem().size() > 0) {
 				for(FinPlanProfitAssetDto dto1:dto.getSelectedItem()) {
 					if (commonBusinessService.isTransInAsset(dto1.getFinprodId())>0){
 						errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0043")));

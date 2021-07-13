@@ -139,8 +139,7 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
      * @see
      * @since 1.0
      */
-    public MstSecuritiesAccountDto fileUpload(HttpServletRequest request) 
-        throws Exception{
+    public MstSecuritiesAccountDto fileUpload(HttpServletRequest request) {
         return restTemplate.postForObject(
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/uploadFile",
             request,MstSecuritiesAccountDto.class);

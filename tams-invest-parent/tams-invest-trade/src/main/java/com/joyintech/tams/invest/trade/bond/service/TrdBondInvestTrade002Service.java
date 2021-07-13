@@ -1266,7 +1266,6 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 					
 				} catch (Exception e) {
 					logger.error("解析dto出错："+e);
-					e.printStackTrace();
 				}
         	}
         	else {
@@ -1291,7 +1290,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
     }
@@ -1405,7 +1404,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         			debtbaseinfo.setCreateDept(LoginUserUtil.getDeptCode());
         			debtbaseinfo.setUpdateUser(LoginUserUtil.getUserName());
         			//判断交易对手表中是否存在
-        			int flag=trdFinProductDealTotalMapper.selectCounterName(debtbaseinfo.getCounterName().toString());
+        			int flag=trdFinProductDealTotalMapper.selectCounterName(debtbaseinfo.getCounterName());
         			if(flag == 0){
             			trdFinProductDealTotalMapper.insertDebtBaseInfo(debtbaseinfo);
         			}
@@ -2845,7 +2844,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (dto.getYield() != null) {
@@ -2927,7 +2926,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // --------add by 裴家俊 2019/03/28 费用查询----end---
     }
@@ -3348,7 +3347,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                             interfComponentService.sendMurexRequest(OrderCaller.BOND001, sendData);
                         }
                         catch (Exception e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                     }
                 }
@@ -3432,7 +3431,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // --------add by 裴家俊 2019/03/28 费用查询----end---
     }

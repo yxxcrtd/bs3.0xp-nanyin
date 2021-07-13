@@ -42,6 +42,8 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +63,10 @@ import java.util.Map;
  */
 @Service
 public class FinNetValueProductBuild002Service extends BaseService<FinNetValueProductBuild002Dto> implements BaseProcessService<FinNetValueProductBuild002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinNetValueProductBuild002Service.class);
 
     /**
      * {@linkplain}
@@ -253,7 +259,7 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
             WorkFlowUtil.startProcess(params, null, null, userName, OperationType.NEW, false, ptlPortfolioInfoDto);
         }
         catch (Exception e) {
-            e.printStackTrace();// SpringContextUtil.getTextValue("COMMON_I_0005")
+            logger.error(e.getMessage(),e);
         }
     }
 

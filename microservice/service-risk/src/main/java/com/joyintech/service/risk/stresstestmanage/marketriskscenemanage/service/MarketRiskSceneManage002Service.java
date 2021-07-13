@@ -498,7 +498,6 @@ public class MarketRiskSceneManage002Service extends BaseService<MarketRiskScene
             session.clearCache();
             SqlSessionUtils.closeSqlSession(session, sessionFactory);
         } catch (Exception e) {
-            //e.printStackTrace();
             log.error("批量插入情景因子标签出错");
             throw e;
         }

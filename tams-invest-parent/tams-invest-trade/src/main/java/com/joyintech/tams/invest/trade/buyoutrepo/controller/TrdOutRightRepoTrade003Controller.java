@@ -50,6 +50,8 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,6 +62,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 /**
@@ -73,6 +76,8 @@ import java.util.*;
 @PageId("TrdOutRightRepoTrade003")
 @RequestMapping("/invest/trade/buyoutrepo/TrdOutRightRepoTrade003")
 public class TrdOutRightRepoTrade003Controller extends BaseController {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * {@linkplain}
@@ -687,7 +692,17 @@ public class TrdOutRightRepoTrade003Controller extends BaseController {
         if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
             AjaxResult ar =interfRiskRdsService.checkBatchRiskRds(dtoList,new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
                     BussinessDictCodeListRds.接口系统ID_实占接口.getValue(), BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),DictCodeList.平安资产类型_买断式回购.getValue(),
-                    (sm,en)->interfRiskRdsService.sendRiskRdsData(sm,en));
+                    (sm,en)-> {
+						try {
+							return interfRiskRdsService.sendRiskRdsData(sm,en);
+						} catch (IOException e) {
+							logger.error(e.getMessage(), e);
+							throw new IOException();
+						} catch (InstantiationException e) {
+							logger.error(e.getMessage(), e);
+							throw new InstantiationException();
+						}
+					});
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }

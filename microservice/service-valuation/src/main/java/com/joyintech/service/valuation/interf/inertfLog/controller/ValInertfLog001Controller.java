@@ -74,7 +74,7 @@ public class ValInertfLog001Controller extends BaseController {
     
     @PostMapping("/initTable/{page}/{length}")
     public Page<ValInertfLog001Dto> findScheme(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         
         return valInertfLog001Service.findSchemeByPage(page, length, param);
     }
