@@ -10,16 +10,15 @@
  
 package com.joyintech.service.asset.exfund.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.service.asset.exfund.dto.BussExFinIntPayDto;
-import com.joyintech.service.asset.exfund.dto.BussRepExFundInfoDto;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.service.asset.exfund.dto.BussFinIntPayDto;
+import com.joyintech.service.asset.exfund.dto.BussRepFundInfoDto;
 import com.joyintech.service.asset.exfund.dto.FinExFundTargetDto;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉
@@ -109,7 +108,7 @@ public interface FinExFundTargetMapper {
      * @see
      * @since 1.0
      */
-    BussExFinIntPayDto getIntPayByFinprodId(Map<String,Object> param);
+    BussFinIntPayDto getIntPayByFinprodId(Map<String,Object> param);
 
     /**
      * 给基金中债报送页面赋值
@@ -119,7 +118,7 @@ public interface FinExFundTargetMapper {
      * @see
      * @since 1.0
      */
-    BussRepExFundInfoDto getFundInfoByFinprodId(Map<String, Object> param);
+    BussRepFundInfoDto getFundInfoByFinprodId(Map<String, Object> param);
 
     /**
      * 根据发行人查询发行机构类型、发行机构所属行业
@@ -129,6 +128,6 @@ public interface FinExFundTargetMapper {
      * @see
      * @since 1.0
      */
-    BussRepExFundInfoDto getInfoByIssuer(Map<String, Object> pageParam);
+    BussRepFundInfoDto getInfoByIssuer(Map<String, Object> pageParam);
 
 }

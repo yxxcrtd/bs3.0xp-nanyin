@@ -83,6 +83,10 @@ public class FinExFundTargetDto extends FinProduct {
      */
     private String purSpeed;
     /**
+     * 当日回转交易
+     */
+    private String  dayBackTrade;
+    /**
      * 客户名称
      */
     private String customerName;
@@ -191,11 +195,11 @@ public class FinExFundTargetDto extends FinProduct {
     /**
      * 分红计划组件dto
      */
-    private BussExFinIntPayDto bussExFinIntPayDto;
+    private BussFinIntPayDto bussFinIntPayDto;
     /**
      * 基金中债报送信息dto
      */
-    private BussRepExFundInfoDto bussRepExFundInfoDto;
+    private BussRepFundInfoDto bussRepFundInfoDto;
     /**
      * 
      */
@@ -391,21 +395,21 @@ public class FinExFundTargetDto extends FinProduct {
     public void setPageModel(String pageModel) {
         this.pageModel = pageModel;
     }
-    
-    public BussExFinIntPayDto getBussExFinIntPayDto() {
-        return bussExFinIntPayDto;
+
+    public BussFinIntPayDto getBussFinIntPayDto() {
+        return bussFinIntPayDto;
+    }
+
+    public void setBussFinIntPayDto(BussFinIntPayDto bussFinIntPayDto) {
+        this.bussFinIntPayDto = bussFinIntPayDto;
     }
     
-    public void setBussExFinIntPayDto(BussExFinIntPayDto bussExFinIntPayDto) {
-        this.bussExFinIntPayDto = bussExFinIntPayDto;
+    public BussRepFundInfoDto getBussRepFundInfoDto() {
+        return bussRepFundInfoDto;
     }
     
-    public BussRepExFundInfoDto getBussRepExFundInfoDto() {
-        return bussRepExFundInfoDto;
-    }
-    
-    public void setBussRepExFundInfoDto(BussRepExFundInfoDto bussExRepFundInfoDto) {
-        this.bussRepExFundInfoDto = bussExRepFundInfoDto;
+    public void setBussRepFundInfoDto(BussRepFundInfoDto bussRepFundInfoDto) {
+        this.bussRepFundInfoDto = bussRepFundInfoDto;
     }
     
     public List<SysUploadFileInfo> getFileArray() {
@@ -714,5 +718,16 @@ public class FinExFundTargetDto extends FinProduct {
 
     public void setpMarketId(String pMarketId) {
         this.pMarketId = pMarketId;
+    }
+
+
+
+    public String getDayBackTrade() {
+        return dayBackTrade;
+    }
+
+    public FinExFundTargetDto setDayBackTrade(String dayBackTrade) {
+        this.dayBackTrade = dayBackTrade;
+        return this;
     }
 }

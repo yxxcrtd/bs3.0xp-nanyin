@@ -18,10 +18,10 @@ import com.joyintech.tams.common.base.entity.FinCashPayRule;
  *
  * @author meifaxin
  * @version 1.0 2021年7月8日
- * @see BussExFinIntPayDto
+ * @see BussFinIntPayDto
  * @since 1.0
  */
-public class BussExFinIntPayDto extends FinCashPayRule {
+public class BussFinIntPayDto extends FinCashPayRule {
 
     /**
      * <意义，目的和功能，以及可能被用到的地方>

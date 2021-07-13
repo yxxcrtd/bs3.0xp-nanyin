@@ -79,26 +79,6 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
      */
     private String secondType;
 
-    /**added by wangguiqi on 2019/7/19 -start**/
-    /**
-     * 分类9（资产二级类型 ）
-     */
-    private String type9;
-
-    /**
-     * 分类10（资产三级类型）
-     */
-    private String type10;
-
-    /**
-     * 分类11（资产四级类型）
-     */
-    private String type11;
-
-    /**
-     * 分类12（资产五级类型）
-     */
-    private String type12;
     /* add by zhangpuyu 2019/10/24 start */
     /**
      * 交易对手类型---分行、通道
@@ -131,6 +111,12 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
      * 申购确认速度
      */
     private String purSpeed;
+
+
+    /**
+     * 当日回转交易
+     */
+    private String  dayBackTrade;
 
     /**
      * 客户名称
@@ -382,10 +368,6 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
         return DateUtil.format(super.getVdate());
     }
 
-    @NotEmpty(fieldName = "FinFundTarget002.idate", groups = {ValidateGroupEdit.class})
-    public Date getIdate() {
-        return super.getIdate();
-    }
 
     //@Length(fieldName = "FinFundTarget001.fundType", max = 32, groups = {ValidateGroupEdit.class})
     public String getFundType() {
@@ -715,125 +697,6 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
         return repAssetDept;
     }
 
-    /**
-     * 获取 type9
-     *
-     * @return type9.
-     */
-    @NotEmpty(fieldName = "FinBondTargetAsset002.type9", groups = {ValidateGroupEdit.class})
-    public String getType9() {
-        return type9;
-    }
-
-    /**
-     * 获取资产二级类型name
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public String getType9Name() {
-        return SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, this.getType9());
-    }
-
-    /**
-     * 设置 type9
-     *
-     * @param type9
-     */
-    public void setType9(String type9) {
-        this.type9 = type9;
-    }
-
-    /**
-     * 获取 type10
-     *
-     * @return type10.
-     */
-    @NotEmpty(fieldName = "FinBondTargetAsset002.type10", groups = {ValidateGroupEdit.class})
-    public String getType10() {
-        return type10;
-    }
-
-    /**
-     * 获取资产三级类型name
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public String getType10Name() {
-        return SysDataUtil.getNameFromDataDict(DictCode.行内资产三级分类, this.getType10());
-    }
-
-    /**
-     * 设置 type10
-     *
-     * @param type10
-     */
-    public void setType10(String type10) {
-        this.type10 = type10;
-    }
-
-    /**
-     * 获取 type11
-     *
-     * @return type11.
-     */
-//	@NotEmpty(fieldName = "FinBondTargetAsset002.type11" ,groups = {ValidateGroupEdit.class})
-    public String getType11() {
-        return type11;
-    }
-
-    /**
-     * 获取资产四级类型name
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public String getType11Name() {
-        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, this.getType11());
-    }
-
-    /**
-     * 设置 type11
-     *
-     * @param type11
-     */
-    public void setType11(String type11) {
-        this.type11 = type11;
-    }
-
-    /**
-     * 获取 type12
-     *
-     * @return type12.
-     */
-//	@NotEmpty(fieldName = "FinBondTargetAsset002.type12" ,groups = {ValidateGroupEdit.class})
-    public String getType12() {
-        return type12;
-    }
-
-    /**
-     * 获取资产五级类型name
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public String getType12Name() {
-        return SysDataUtil.getNameFromDataDict(DictCode.行内资产五级分类, this.getType12());
-    }
-
-    /**
-     * 设置 type5
-     *
-     * @param type12
-     */
-    public void setType12(String type12) {
-        this.type12 = type12;
-    }
 
 
     public void setRepAssetDept(RepAssetDept repAssetDept) {
@@ -997,4 +860,12 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
         this.oldFinprodMarketId = oldFinprodMarketId;
     }
 
+    public String getDayBackTrade() {
+        return dayBackTrade;
+    }
+
+    public FinExFundTargetDto setDayBackTrade(String dayBackTrade) {
+        this.dayBackTrade = dayBackTrade;
+        return this;
+    }
 }

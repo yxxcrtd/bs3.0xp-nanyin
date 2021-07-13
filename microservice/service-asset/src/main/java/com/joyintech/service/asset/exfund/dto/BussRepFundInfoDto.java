@@ -21,10 +21,10 @@ import com.joyintech.tams.constant.DictCodeList;
  *
  * @author mefiaxin
  * @version 1.0 2021年7月8日
- * @see BussRepExFundInfoDto
+ * @see BussRepFundInfoDto
  * @since 1.0
  */
-public class BussRepExFundInfoDto extends RepFund {
+public class BussRepFundInfoDto extends RepFund {
     /*
      *二级资产负债类别
      */

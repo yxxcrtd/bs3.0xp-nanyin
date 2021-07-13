@@ -129,7 +129,7 @@ public class FinExFundTarget002Controller extends BaseController{
             FinExFundTargetDto dto = new FinExFundTargetDto();
             dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             /*dto.setPurSpeed(DictCodeList.清算速度_T_1.getValue());*/
-            dto.setTradeMarket(DictCodeListExt1.交易场所_OTC场外.getValue());
+            dto.setTradeMarket(DictCodeListExt1.交易场所_上海证券交易所.getValue());
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
             /**jira:TWO-61 add by chendijun start**/
             dto.setCapiIncomeFeature(DictCodeList.是否_否.getValue());
@@ -142,10 +142,10 @@ public class FinExFundTarget002Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.基金类资产类型,DictCode.币种
             , DictCode.清算速度, DictCode.关联范围,DictCode.交易场所
             // 新增资产五级分类 wangguiqi 2019-07-23 start
-            ,DictCode.行内资产二级分类,DictCode.行内资产三级分类,DictCode.行内资产四级分类,DictCode.行内资产五级分类
+            ,DictCode.分红方式,DictCode.行内资产三级分类,DictCode.行内资产四级分类,DictCode.行内资产五级分类
             // 新增资产五级分类 wangguiqi 2019-07-23 end
-            ,DictCode.交易所基金类型,DictCode.分级基金,DictCode.ETF类型
-            ,DictCode.基金类资产二级类型,DictCode.是否, DictCode.投资性质);
+            ,DictCode.交易所基金类型,DictCode.分级基金,DictCode.ETF基金类型
+            ,DictCode.基金类资产二级类型,DictCode.允许或不允许,DictCode.投资性质);
       //取系统参数
         model.addAttribute("CE_MODEL", CacheUtil.getSysParam(BussinessConstant.CEMODEL));
         model.addAttribute("INTI_BONUS_MODE", DictCodeList.分红方式_红利再投); // 默认分红方式-红利再投 王贵奇 2019/7/29
@@ -165,10 +165,6 @@ public class FinExFundTarget002Controller extends BaseController{
         model.addAttribute("ETF_TYPE_04",DictCodeListExt2.ETF类型_债券ETF.getValue());
         model.addAttribute("ETF_TYPE_05",DictCodeListExt2.ETF类型_黄金ETF.getValue());
         model.addAttribute("ETF_TYPE_06",DictCodeListExt2.ETF类型_货币ETF.getValue());
-        model.addAttribute("FUND_ASSET_SECOND_TYPE_01",DictCodeList.基金类资产二级类型_债券基金.getValue());
-        model.addAttribute("FUND_ASSET_SECOND_TYPE_02",DictCodeList.基金类资产二级类型_货币市场基金.getValue());
-        model.addAttribute("FUND_ASSET_SECOND_TYPE_03",DictCodeList.基金类资产二级类型_股票基金.getValue());
-        model.addAttribute("FUND_ASSET_SECOND_TYPE_06",DictCodeList.基金类资产二级类型_其他公募基金.getValue());
         if("01".equals(CacheUtil.getSysParam(BussinessConstant.CEMODEL))){
             model.addAttribute("creditFlag","N");
         }else{
@@ -297,4 +293,6 @@ public class FinExFundTarget002Controller extends BaseController{
         return super.after(draftobj, model);
     }
     //modify by mashukai 20201117 BS-2006公募基金草稿箱提交时中债报送信息反显没有值问题
+
+
 }

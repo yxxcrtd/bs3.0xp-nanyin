@@ -11,13 +11,11 @@
 package com.joyintech.tams.invest.asset.exfund.valid;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.asset.exfund.dto.FinExFundTargetDto;
 import com.joyintech.tams.invest.asset.exfund.service.FinExFundTargetService;
@@ -178,19 +176,6 @@ public class FinExFundTargetValidator implements BeanValidator {
                         new ValidMessage("市场代码："+dto.getFinprodMarketId()+"已存在"));
                 }
             }*/
-            //场内基金变更
-            //add by zhangnian 20191105 start
-            if (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
-                    || StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
-                if (StringUtil.isEmpty(dto.getTrmFundAbbr())) {
-                    resultList.add(new ValidMessage("trmFundAbbr",
-                            getMessage("COMMON_E_0057", getMessage("FinFundTarget002.trmFundAbbr"))));
-                }
-                if (StringUtil.isEmpty(dto.getTrmFundType())) {
-                    resultList.add(new ValidMessage("trmFundType",
-                            getMessage("COMMON_E_0057", getMessage("FinFundTarget002.trmFundType"))));
-                }
-            }
             if (StringUtil.equals(dto.getTrmFundType(), DictCodeListExt2.交易所基金类型_分级基金.getValue())) {
                 if (StringUtil.isEmpty(dto.getGraFundType())) {
                     resultList.add(new ValidMessage("graFundType",
@@ -206,25 +191,10 @@ public class FinExFundTargetValidator implements BeanValidator {
                     resultList.add(new ValidMessage("purRedAbbr",
                             getMessage("COMMON_E_0057", getMessage("FinFundTarget002.purRedAbbr"))));
                 }
-                if (null == dto.getEtfMinPrunit()) {
-                    resultList.add(new ValidMessage("etfMinPrunit",
-                            getMessage("COMMON_E_0057", getMessage("FinFundTarget002.etfMinPrunit"))));
+                if (StringUtil.isEmpty(dto.getEtfType())) {
+                    resultList.add(new ValidMessage("etfType",
+                            getMessage("COMMON_E_0057", getMessage("FinFundTarget002.etfType"))));
                 }
-            }
-            //add by zhangnian 20191105 end
-//            if (StringUtil.isNotEmpty(dto.getBussRepFundInfoDto())){
-//                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, value, null, dto.getBussRepFundInfoDto().getRepAssetType(), ValidMessage.class);
-//            }
-        }
-        // 是否展示资产四五级分类
-        if (StringUtil.equals(CacheUtil.getSysParam("IS_SHOW_TYPE"), "01") && (StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit"))) {
-            if (StringUtil.isEmpty(dto.getType11())) {
-                resultList.add(new ValidMessage("type11",
-                        getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.type11"))));
-            }
-            if (StringUtil.isEmpty(dto.getType12())) {
-                resultList.add(new ValidMessage("type12",
-                        getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.type12"))));
             }
         }
         return resultList;

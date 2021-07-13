@@ -270,12 +270,6 @@ public class FinExFundTargetService extends CommonExportService<FinExFundTargetD
         //基金类型
         fundTargetDto.setFundType(baseInfoDto.getFinProductType().getType4());
         fundTargetDto.setSecondType(baseInfoDto.getFinProductType().getType5());
-        fundTargetDto.setType9(baseInfoDto.getFinProductType().getType9());
-        fundTargetDto.setType10(baseInfoDto.getFinProductType().getType10());
-        if (StringUtil.equals(CacheUtil.getSysParam("IS_SHOW_TYPE"),"01")){
-            fundTargetDto.setType11(baseInfoDto.getFinProductType().getType11());
-            fundTargetDto.setType12(baseInfoDto.getFinProductType().getType12());
-        }
         fundTargetDto.setTrmFundAbbr(baseInfoDto.getFinProductAdd().getTrmFundAbbr());
         //fundTargetDto.setTrmFundType(baseInfoDto.getFinProductAdd().getTrmFundType());
         //fundTargetDto.setTrmFundType("01");

@@ -20,8 +20,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.asset.common.dao.AssetCommonMapper;
 import com.joyintech.service.asset.common.service.AssetCommonService;
 import com.joyintech.service.asset.exfund.dao.FinExFundTargetMapper;
-import com.joyintech.service.asset.exfund.dto.BussExFinIntPayDto;
-import com.joyintech.service.asset.exfund.dto.BussRepExFundInfoDto;
+import com.joyintech.service.asset.exfund.dto.BussFinIntPayDto;
+import com.joyintech.service.asset.exfund.dto.BussRepFundInfoDto;
 import com.joyintech.service.asset.exfund.dto.FinExFundTargetDto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -35,7 +35,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -352,7 +351,7 @@ public class FinExFundTargetService extends BaseService<FinExFundTargetDto> {
         }
         //基金资产报送信息
         RepFund repFund = new RepFund();
-        BeanUtil.copyProperties(repFund, dto.getBussRepExFundInfoDto());
+        BeanUtil.copyProperties(repFund, dto.getBussRepFundInfoDto());
         repFund.setRepFinprodId(finProduct.getFinprodId());
         //根据画面.管理人，关联客户信息查询出客户名称
         String customerName = finExFundTargetMapper.getCustomerNameByManager(dto.getManager());
@@ -369,7 +368,7 @@ public class FinExFundTargetService extends BaseService<FinExFundTargetDto> {
         }*/
         //资产负债报送信息
         RepAssetDept repAssetDept = new RepAssetDept();
-        BeanUtil.copyProperties(repAssetDept, dto.getBussRepExFundInfoDto());
+        BeanUtil.copyProperties(repAssetDept, dto.getBussRepFundInfoDto());
         if (StringUtil.equals(dto.getFundType(), DictCodeList.基金类资产类型_货币基金.getValue())) {
             repAssetDept.setRepAssetType(DictCodeListExt2.资产_负债二级类别_货币市场基金.getValue());
         } else {
@@ -389,7 +388,7 @@ public class FinExFundTargetService extends BaseService<FinExFundTargetDto> {
         repAssetDept.setRepFinprodName(finProduct.getFinprodName());
         repAssetDept.setRepFinprodId(finProduct.getFinprodId());
         repAssetDept.setFinprodMarketId(finProduct.getFinprodMarketId());
-        repAssetDept.setRepIssuePartyId(dto.getBussRepExFundInfoDto().getRepAssetDept().getRepIssuePartyId());
+        repAssetDept.setRepIssuePartyId(dto.getBussRepFundInfoDto().getRepAssetDept().getRepIssuePartyId());
         //标的类金融产品附属表dto
         FinProductAdd finProductAdd = new FinProductAdd();
         //add by zhangnian  20191106 start
@@ -458,30 +457,30 @@ public class FinExFundTargetService extends BaseService<FinExFundTargetDto> {
         finCashInfoList.add(finCashInfoInterest);
         //现金流支付规则表Entity/分红计划组件
         //分红计划组件dto
-
-        if (dto.getBussExFinIntPayDto() != null) {
-            FinCashPayRule finCashPayRule = new FinCashPayRule();
-            BeanUtil.copyProperties(finCashPayRule, dto.getBussExFinIntPayDto());
-            finCashPayRule.setCashId(finCashInfoInterest.getCashId());
-            finCashPayRule.setEffDate(dto.getVdate());
-            finCashPayRule.setFinprodId(finProduct.getFinprodId());
-            finCashPayRule.setFinprodType(finProduct.getFinprodType());
-            finCashPayRule.setFinprodType2(finProduct.getFinprodType2());
-            finCashPayRule.setBranch(i);
-            if (DictCodeList.收益结转频率_按月结转.getValue().equals(dto.getBussExFinIntPayDto().getPayCycle())) {
-                finCashPayRule.setDayType(DictCodeListExt1.日期类型_几号.getValue());
-            }
-
-            // 一体化对应etliu 现金流支付规则表，支付频率没存值，可能有问题
-            if (StringUtil.isBlank(finCashPayRule.getPayCycle())) {
-                finCashPayRule.setPayCycle(BussinessConstant.DEFAULT_PAY_CYCLE);
-            }
-
-            //List<现金流支付规则表Entity>/List<分红计划组件Entity>
-            List<FinCashPayRule> finCashPayRuleList = new ArrayList<FinCashPayRule>();
-            finCashPayRuleList.add(finCashPayRule);
-            param.put("finCashPayRuleList", finCashPayRuleList);
-        }
+//
+//        if (dto.getBussExFinIntPayDto() != null) {
+//            FinCashPayRule finCashPayRule = new FinCashPayRule();
+//            BeanUtil.copyProperties(finCashPayRule, dto.getBussExFinIntPayDto());
+//            finCashPayRule.setCashId(finCashInfoInterest.getCashId());
+//            finCashPayRule.setEffDate(dto.getVdate());
+//            finCashPayRule.setFinprodId(finProduct.getFinprodId());
+//            finCashPayRule.setFinprodType(finProduct.getFinprodType());
+//            finCashPayRule.setFinprodType2(finProduct.getFinprodType2());
+//            finCashPayRule.setBranch(i);
+//            if (DictCodeList.收益结转频率_按月结转.getValue().equals(dto.getBussExFinIntPayDto().getPayCycle())) {
+//                finCashPayRule.setDayType(DictCodeListExt1.日期类型_几号.getValue());
+//            }
+//
+//            // 一体化对应etliu 现金流支付规则表，支付频率没存值，可能有问题
+//            if (StringUtil.isBlank(finCashPayRule.getPayCycle())) {
+//                finCashPayRule.setPayCycle(BussinessConstant.DEFAULT_PAY_CYCLE);
+//            }
+//
+//            //List<现金流支付规则表Entity>/List<分红计划组件Entity>
+//            List<FinCashPayRule> finCashPayRuleList = new ArrayList<FinCashPayRule>();
+//            finCashPayRuleList.add(finCashPayRule);
+//            param.put("finCashPayRuleList", finCashPayRuleList);
+//        }
 
         //获取要修改的金融产品代码集合(修改时用)
         List<String> finprodIdList = new ArrayList<String>();
@@ -555,7 +554,9 @@ public class FinExFundTargetService extends BaseService<FinExFundTargetDto> {
         param.put("CASH_TYPE_2", DictCodeListExt1.现金流二级类型_利息.getValue());
         param.put("FIN_CASH_BUSINESS_TYPE", DictCodeListExt1.金融产品类型_理财产品.getValue());
         param.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
-        return finExFundTargetMapper.selectByFinprodId(param);
+        FinExFundTargetDto fundTargetDto=finExFundTargetMapper.selectByFinprodId(param);
+
+        return fundTargetDto;
     }
 
 
@@ -585,7 +586,7 @@ public class FinExFundTargetService extends BaseService<FinExFundTargetDto> {
      * @see
      * @since 1.0
      */
-    public BussExFinIntPayDto getIntPayByFinprodId(String finprodId) {
+    public BussFinIntPayDto getIntPayByFinprodId(String finprodId) {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("finprodId", finprodId);
         param.put("FIN_CASH_BUSINESS_TYPE_01", DictCodeListExt1.现金流业务类型_金融产品.getValue());
@@ -606,8 +607,8 @@ public class FinExFundTargetService extends BaseService<FinExFundTargetDto> {
      * @see
      * @since 1.0
      */
-    public BussRepExFundInfoDto getFundInfoByFinprodId(String finprodId) throws IllegalAccessException, InvocationTargetException {
-        BussRepExFundInfoDto entity = new BussRepExFundInfoDto();
+    public BussRepFundInfoDto getFundInfoByFinprodId(String finprodId) throws IllegalAccessException, InvocationTargetException {
+        BussRepFundInfoDto entity = new BussRepFundInfoDto();
         //根据金融产品代码查询基金资产报送数据
         BaseRepFundAssetInfoDto dto1 = new BaseRepFundAssetInfoDto();
         List<String> finprodIdList = new ArrayList<String>();
@@ -682,7 +683,7 @@ public class FinExFundTargetService extends BaseService<FinExFundTargetDto> {
      * @see
      * @since 1.0
      */
-    public BussRepExFundInfoDto getInfoByIssuer(Map<String, Object> pageParam) {
+    public BussRepFundInfoDto getInfoByIssuer(Map<String, Object> pageParam) {
         return finExFundTargetMapper.getInfoByIssuer(pageParam);
     }
 }

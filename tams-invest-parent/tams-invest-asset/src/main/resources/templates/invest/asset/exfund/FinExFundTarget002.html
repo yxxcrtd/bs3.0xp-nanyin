@@ -3,7 +3,7 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorator="~{layout/default}">
 <head>
-	<title data-th-text="#{FinExFundTarget002}">场内基金类标的信息新建</title>
+	<title data-th-text="#{FinExFundTarget002}">场内基金标的信息新建</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -80,67 +80,20 @@
 								<a id='magnifier' class="input-right-show" href='javascript:;' style='color:#4893e6;left: 32.5%; top: 40px;'><i class='iconfont icon-search'></i></a>
 							</div>
 							<div class="layui-form-item">
-								<!-- 资产五级分类  王贵奇 开始 -->
-								<div class="form-inline-wrap" id="selector3">
-									<label class="layui-form-label form-label-wrap"
-										   data-th-text="#{FinBondTargetAsset002.type9}">资产二级分类
-									</label>
+								<div class="form-inline-wrap">
+									<label class="layui-form-label form-lable"
+										   data-th-text="#{FinExFundTarget001.manager}"> 管理人</label>
 									<div class="layui-input-inline input-inline">
-										<select id="type9" name="type9"
-												th:initValue="*{entity?.type9}" required="required"
-												class="layui-input form-input input-select"
-												allowClear="true" placeholder="请选择"
+										<select type="text" id="manager" name="manager"
+												required="required"
+												class="layui-input form-input input-select" placeholder=""
 												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${CUSTOM_ASSET_TYPE_TWO}"
-												formatoption=true childrenIds="type10"></select>
+												data-th-data-url="@{/invest/asset/exfund/FinExFundTarget002/getManager}"
+												data-th-initValue="${entity?.manager}">
+										</select>
 									</div>
 								</div>
-								<div class="form-inline-wrap" id="selector4">
-									<label class="layui-form-label form-label-wrap"
-										   data-th-text="#{FinBondTargetAsset002.type10}">资产三级分类
-									</label>
-									<div class="layui-input-inline input-inline">
-										<select id="type10" name="type10" parentIds="type9"
-												th:initValue="*{entity?.type10}" required="required"
-												class="layui-input form-input input-select"
-												allowClear="true" placeholder="请选择"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${CUSTOM_ASSET_TYPE_THREE}"
-												formatoption=true childrenIds="type11"></select>
-									</div>
-								</div>
-								<div class="form-inline-wrap" id="selector5" style="display: none">
-									<label class="layui-form-label form-label-wrap"
-										   data-th-text="#{FinBondTargetAsset002.type11}">资产四级分类
-									</label>
-									<div class="layui-input-inline input-inline">
-										<select id="type11" name="type11" parentIds="type10"
-												th:initValue="*{entity?.type11}" required="required"
-												class="layui-input form-input input-select"
-												allowClear="true" placeholder="请选择"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${CUSTOM_ASSET_TYPE_FOUR}"
-												formatoption=true childrenIds="type12"></select>
-									</div>
-								</div>
-							</div>
-							<div class="layui-form-item">
-								<div class="form-inline-wrap" id="selector6" style="display: none">
-									<label class="layui-form-label form-label-wrap"
-										   data-th-text="#{FinBondTargetAsset002.type12}">资产五级分类
-									</label>
-									<div class="layui-input-inline input-inline">
-										<select id="type12" name="type12" parentIds="type11"
-												th:initValue="*{entity?.type12}" required="required"
-												class="layui-input form-input input-select"
-												allowClear="true" placeholder="请选择"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-result="${CUSTOM_ASSET_TYPE_FIVE}"
-												formatoption=true ></select>
-									</div>
-								</div>
-								<!-- 资产五级分类 王贵奇 结束 -->
-								<div class="form-inline-wrap" style="display: none">
+								<div class="form-inline-wrap">
 									<label class="layui-form-label form-lable"
 										   data-th-text="#{FinExFundTarget001.fundType}">基金类型</label>
 									<div class="layui-input-inline input-inline">
@@ -148,63 +101,37 @@
 											   class="layui-input form-input input-select"
 											   placeholder="请输入内容"
 											   data-th-placeholder="#{SysCommon.placeholder}"
-											   data-th-data-result='${FUND_ASSET_TYPE}'
-											   data-th-value="${entity?.fundType}"
+											   data-th-data-result='${TRM_FUND_TYPE}'
+											   data-th-value="${entity?.trmFundType}"
 										/>
 									</div>
 								</div>
-								<div class="form-inline-wrap" style="display: none">
+								<div class="form-inline-wrap">
 									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget001.secondType}">二级类型</label>
+										   data-th-text="#{FinExFundTarget001.etfType}">二级类型</label>
 									<div class="layui-input-inline input-inline">
 										<select id="secondType" name="secondType"
 												class="layui-input form-input input-select" placeholder=""
 												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-initValue="${entity?.secondType}"
-												data-th-data-result="${FUND_ASSET_SECOND_TYPE}"
+												data-th-initValue="${entity?.etfType}"
+												data-th-data-result="${ETF_FUND_TYPE}"
 												childrenIds="trmFundType,etfType"
 										>
 										</select>
 									</div>
 								</div>
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget002.idate}"> 发行日</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" id="idate" name="idate"
-											   required="required"
-											   class="layui-input form-input input-dateSelect"
-											   placeholder=""
-											   data-th-placeholder="#{SysCommon.placeholder}"
-											   data-th-value='${#dates.format(entity?.idate,"yyyy-MM-dd")}' />
-									</div>
-								</div>
-								<!--/div>
-                                <div class="layui-form-item"-->
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget002.vdate}">成立日期</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" id="vdate" name="vdate"
-											   class="layui-input form-input input-dateSelect"
-											   required="required" placeholder="请输入内容"
-											   data-th-placeholder="#{SysCommon.placeholder}"
-											   data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'/>
-
-									</div>
-								</div>
 							</div>
 							<div class="layui-form-item">
 								<div class="form-inline-wrap">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinBondTargetAsset002.mdate}">到期日</label>
+									<!--修改标的投资性质为资产投资性质 lishuping 20190911 start-->
+									<label class="layui-form-label form-label-wrap">资产投资性质</label>
+									<!--修改标的投资性质为资产投资性质 lishuping 20190911 end-->
 									<div class="layui-input-inline input-inline">
-										<input type="text" id="mdate" name="mdate"
-											   class="layui-input form-input input-dateSelect"
-											   placeholder="请输入内容"
-											   data-th-placeholder="#{SysCommon.placeholder}"
-											   data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'/>
-
+										<select id="investNature" name="investNature"
+												class="layui-input form-input input-select"
+												data-th-placeholder="#{SysCommon.placeholder}"
+												required data-th-data-result="${INVEST_TYPE}" data-th-initvalue="${entity?.investNature}">
+										</select>
 									</div>
 								</div>
 								<div class="form-inline-wrap">
@@ -223,164 +150,28 @@
 								</div>
 								<div class="form-inline-wrap">
 									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget001.manager}"> 管理人</label>
+										   data-th-text="#{FinExFundTarget002.vdate}">成立日期</label>
 									<div class="layui-input-inline input-inline">
-										<select type="text" id="manager" name="manager"
-												required="required"
-												class="layui-input form-input input-select" placeholder=""
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-data-url="@{/invest/asset/exfund/FinExFundTarget002/getManager}"
-												data-th-initValue="${entity?.manager}">
-										</select>
+										<input type="text" id="vdate" name="vdate"
+											   class="layui-input form-input input-dateSelect"
+											   required="required" placeholder="请输入内容"
+											   data-th-placeholder="#{SysCommon.placeholder}"
+											   data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'/>
+
 									</div>
 								</div>
-								<!--/div>
-                                <div class="layui-form-item"-->
 							</div>
 							<div class="layui-form-item">
-								<!--<div class="form-inline-wrap">
-									<label class="layui-form-label form-lable"
-										data-th-text="#{FinExFundTarget001.purSpeed}">交易方式</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" id="purSpeed" name="purSpeed"
-											class="layui-input form-input input-checkbox"
-											data-th-data-result='${ACCOUNT_SPEED}' required="required"
-											data-th-initValue="${entity?.purSpeed}" />
-									</div>
-								</div>-->
-								<div class=" form-inline-wrap">
-									<label class="layui-form-label form-label-wrap purSpeed"
-										   data-th-text="#{FinExFundTarget002.purSpeed}">申购确认速度</label>
-									<div class="layui-input-inline input-inline delaytime-inline-wrap">
-										<label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
-										<input type="text" id="purSpeed" name="purSpeed"  th:value="${entity?.purSpeed}" class="layui-input form-input"
-											   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
-											   style="float: left;display: inline-block; width: 89%;"/>
-									</div>
-								</div>
-								<div class=" form-inline-wrap">
-									<label class="layui-form-label form-label-wrap redSpeed"
-										   data-th-text="#{FinExFundTarget002.redSpeed}">赎回确认速度</label>
-									<div class="layui-input-inline input-inline delaytime-inline-wrap">
-										<label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
-										<input type="text" id="redSpeed" name="redSpeed"  th:value="${entity?.redSpeed}" class="layui-input form-input"
-											   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
-											   style="float: left;display: inline-block; width: 89%;"/>
-									</div>
-								</div>
 								<div class="form-inline-wrap">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget002.calendarId}"> 交易日历</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="calendarId" name="calendarId"
-												required="required"
-												class="layui-input form-input input-select"
-												placeholder=""
-												data-th-data-url="@{/business/common/CommonSelect/selectCalendarId}"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-initValue="${entity?.calendarId}" >
-										</select>
-									</div>
-								</div>
-								<!--/div>
-                                <div class="layui-form-item"-->
-							</div>
-							<div class="layui-form-item">
-								<div class=" form-inline-wrap" id="pflshDiv">
 									<label class="layui-form-label form-label-wrap"
-										   data-th-text="#{FinExFundTarget002.pflsh}">批复号</label>
+										   data-th-text="#{FinStockInfo002.vDate}">上市日期</label>
 									<div class="layui-input-inline input-inline">
-										<select type="text" class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												id="pflsh" maxlength="30" name="pflsh" parentIds="pfhId"
-												data-th-initvalue="${entity?.pflsh}" formatoption="false"
-												data-th-data-url="@{/invest/asset/common/getPflshList}">
-										</select>
-									</div>
-								</div>
-								<div class=" form-inline-wrap" id="actualCreditProvidDiv">
-									<label class="layui-form-label form-label-wrap"
-										   data-th-text="#{FinExFundTarget002.actualCreditProvid}">实际授信主体</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												id="actualCreditProvid" maxlength="30" name="actualCreditProvid"
-												data-th-initvalue="${entity?.actualCreditProvid}"
-												data-th-data-url="@{/invest/asset/common/getActualCreditProvid}">
-										</select>
-									</div>
-								</div>
-								<!--/div>
-                                <div class="layui-form-item"-->
-								<!-- 保本标识和投资性质移至分红计划 王贵奇 2019/7/29	 开始 -->
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap" >保本标识</label>
-									<div class="layui-input-inline input-inline">
-										<input type="checkbox" id="capiIncomeFeature" name="capiIncomeFeature"
-											   lay-skin="switch" th:value="${NO}"
-											   lay-text="是|否"
-											   th:checked="${entity?.capiIncomeFeature!=null && entity?.capiIncomeFeature!=NO && entity?.capiIncomeFeature!='02' ?true:false}">
-									</div>
-								</div>
-								<div class="form-inline-wrap">
-									<!--修改标的投资性质为资产投资性质 lishuping 20190911 start-->
-									<label class="layui-form-label form-label-wrap">资产投资性质</label>
-									<!--修改标的投资性质为资产投资性质 lishuping 20190911 end-->
-									<div class="layui-input-inline input-inline">
-										<select id="investNature" name="investNature"
-												class="layui-input form-input input-select"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												required data-th-data-result="${INVEST_TYPE}" data-th-initvalue="${entity?.investNature}">
-										</select>
-									</div>
-								</div>
-								<!-- 保本标识和投资性质移至分红计划 王贵奇 2019/7/29	 开始 -->
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget001.isCompoundInt}">是否按日复利</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="isCompoundInt" name="isCompoundInt"
-												class="layui-input form-input input-select"
-												placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-initValue="${entity?.isCompoundInt}" data-th-data-result='${YES_OR_NO}' >
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="layui-form-item">
-								<!--			<div class="form-inline-wrap">
-                                                <label class="layui-form-label form-label-wrap"
-                                                       data-th-text="#{FinExFundTarget002.contractNo}">合同号</label>
-                                                <div class="layui-input-inline input-inline">
-                                                    <input type="text" name="contractNo"
-                                                           data-th-value="${entity?.contractNo}"
-                                                           class="layui-input form-input" placeholder="请输入内容"
-                                                           data-th-placeholder="#{SysCommon.placeholder}" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-inline-wrap">
-                                                <label class="layui-form-label form-label-wrap"
-                                                       data-th-text="#{FinExFundTarget002.trialNo}">法审编号</label>
-                                                <div class="layui-input-inline input-inline">
-                                                    <input type="text" name="trialNo"
-                                                           data-th-value="${entity?.trialNo}"
-                                                           class="layui-input form-input" placeholder="请输入内容"
-                                                           data-th-placeholder="#{SysCommon.placeholder}">
-                                                </div>
-                                            </div>-->
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget001.ccy}">币种</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="ccy" name="ccy"
-												class="layui-input form-input input-select"
-												required="required" placeholder="请输入内容"
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-initValue="*{entity?.ccy?:CCY_default}" data-th-data-result='${CCY}' >
-										</select>
+										<input id="vdate" name="vdate"
+											   class="layui-input form-input input-dateSelect"
+											   placeholder="请选择时间"
+											   data-th-value="${#dates.format(entity?.vdate,'yyyy-MM-dd')}"
+											   required="required"
+											   data-th-placeholder="#{SysCommon.placeholder}"/>
 									</div>
 								</div>
 								<div class="form-inline-wrap">
@@ -409,148 +200,87 @@
 								</div>
 							</div>
 							<div class="layui-form-item">
-
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget002.trmFundAbbr}">交易所基金简称</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" id="trmFundAbbr" name="trmFundAbbr"
-											   class="layui-input form-input"
-											   placeholder="" maxlength="75"
-											   data-th-placeholder="#{SysCommon.placeholder}"
-											   data-th-value="${entity?.trmFundAbbr}" />
+								<div class=" form-inline-wrap">
+									<label class="layui-form-label form-label-wrap purSpeed"
+										   data-th-text="#{FinExFundTarget002.purSpeed}">申购确认速度</label>
+									<div class="layui-input-inline input-inline delaytime-inline-wrap">
+										<label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
+										<input type="text" id="purSpeed" name="purSpeed"  th:value="${entity?.purSpeed}" class="layui-input form-input"
+											   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
+											   style="float: left;display: inline-block; width: 89%;"/>
+									</div>
+								</div>
+								<div class=" form-inline-wrap">
+									<label class="layui-form-label form-label-wrap redSpeed"
+										   data-th-text="#{FinExFundTarget002.redSpeed}">赎回确认速度</label>
+									<div class="layui-input-inline input-inline delaytime-inline-wrap">
+										<label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
+										<input type="text" id="redSpeed" name="redSpeed"  th:value="${entity?.redSpeed}" class="layui-input form-input"
+											   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
+											   style="float: left;display: inline-block; width: 89%;"/>
 									</div>
 								</div>
 								<div class="form-inline-wrap">
 									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget002.trmFundType}">交易所基金类型 </label>
+										   data-th-text="#{FinExFundTarget002.dayBackTrade}"> 当日回转交易</label>
 									<div class="layui-input-inline input-inline">
-										<select type="text" id="trmFundType" name="trmFundType"
-												class="layui-input form-input input-select" placeholder=""
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-initValue="${entity?.trmFundType}"
-												data-th-data-result='${TRM_FUND_TYPE}' disabled="disabled">
-										</select>
-									</div>
-								</div>
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap"
-										   data-th-text="#{FinExFundTarget002.purRedId}">申购赎回代码</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" name="purRedId"
-											   data-th-value="${entity?.purRedId}"
-											   class="layui-input form-input" placeholder="请输入内容"
-											   data-th-placeholder="#{SysCommon.placeholder}">
-									</div>
-								</div>
-							</div>
-							<div class="layui-form-item">
-
-								<div class="form-inline-wrap" id="graFundType_div" style="display: none">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget002.graFundType}">分级基金</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="graFundType" name="graFundType"
-												class="layui-input form-input input-select" placeholder=""
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-initValue="${entity?.graFundType}"
-												data-th-data-result='${GRA_FUND_TYPE}'>
-										</select>
-									</div>
-								</div>
-
-							</div>
-							<div class="layui-form-item">
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap"
-										   data-th-text="#{FinExFundTarget002.purRedAbbr}">申购赎回简称</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" name="purRedAbbr"
-											   data-th-value="${entity?.purRedAbbr}"
-											   class="layui-input form-input" placeholder="请输入内容"
-											   data-th-placeholder="#{SysCommon.placeholder}">
-									</div>
-								</div>
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap" data-th-text="#{FinExFundTarget002.purStartLow}">单笔申购金额下限</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" id="purStartLow" name="purStartLow"   th:value="${entity?.purStartLow}"
-											   class="layui-input form-input text-number" data-textrange="4"/>
-									</div>
-								</div>
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap" data-th-text="#{FinExFundTarget002.redStartLow}">单笔赎回份额下限</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" id="redStartLow" name="redStartLow"   th:value="${entity?.redStartLow}"
-											   class="layui-input form-input text-number" data-textrange="4"/>
-									</div>
-								</div>
-							</div>
-							<div class="layui-form-item">
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap" data-th-text="#{FinExFundTarget002.etfMinPrunit}">ETF最小申购赎回单位</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" name="etfMinPrunit"   th:value="${entity?.etfMinPrunit}"
-											   class="layui-input form-input text-number" data-textrange="4"/>
-									</div>
-								</div>
-								<div class="form-inline-wrap">
-									<label class="layui-form-label form-lable"
-										   data-th-text="#{FinExFundTarget002.etfType}">ETF类型</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="etfType" name="etfType" disabled="disabled"
-												class="layui-input form-input input-select" placeholder=""
-												data-th-placeholder="#{SysCommon.placeholder}"
-												data-th-initValue="${entity?.etfType}"
-												data-th-data-result='${ETF_TYPE}'>
-										</select>
-									</div>
-								</div>
-								<div class="form-inline-wrap" id="faceValue_div" style="display: none">
-									<label class="layui-form-label form-label-wrap" data-th-text="#{FinExFundTarget002.faceValue}">单位面值</label>
-									<div class="layui-input-inline input-inline">
-										<input type="text" id="faceValue" name="faceValue"   th:value="${entity?.faceValue}"
-											   class="layui-input form-input text-number" data-textrange="4"/>
-									</div>
-								</div>
-							</div>
-							<div class="layui-form-item">
-								<div class="form-inline-wrap" id="pFinprodId_div" style="display: none">
-									<input type="hidden" id="pFinprodId" name="pFinprodId" data-th-initValue='${entity?.pFinprodId}'>
-									<label class="layui-form-label form-label-wrap"
-										   data-th-text="#{FinExFundTarget002.pFinprodId}">母基金</label>
-									<div class="layui-input-inline input-inline">
-										<select type="text" id="pMarketId" name="pMarketId"
+										<select type="text" id="dayBackTrade" name="dayBackTrade"
+												required="required"
 												class="layui-input form-input input-select"
-												data-th-data-url="@{/invest/asset/common/getAssetIdOption(finprodType2=${F06},graFundType=${GRA_FUND_TYPE_M})}"
-												formatoption="true" allowClear="true"
-												data-th-initValue='${entity?.pMarketId}'>
+												data-th-initValue="${entity?.dayBackTrade}"
+												data-th-placeholder="#{SysCommon.placeholder}"
+												data-th-data-result='${ALLOW_OR_NO}' >
 										</select>
 									</div>
 								</div>
-								<!--　add by zhangpuyu 2019/10/24 start -->
+								<!--/div>
+                                <div class="layui-form-item"-->
+							</div>
+							<div class="layui-form-item">
 								<div class="form-inline-wrap">
-									<label class="layui-form-label form-label-wrap" data-th-utext="#{FinDepositTarget002.postOrg}" >投后责任机构</label>
+									<label class="layui-form-label form-lable"
+										   data-th-text="#{FinExFundTarget001.divideMethod}">允许的分红方式</label>
 									<div class="layui-input-inline input-inline">
-										<select  id="postOrg" name="postOrg"
-												 th:data-url="|@{/business/common/CommonSelect/selectCounterId}?counterType=${counterType}|"
-												 formatOption="false"
-												 th:initValue="${entity?.postOrg}" class="layui-input form-input input-select"
-												 th:placeholder="#{SysCommon.placeholder}">
+										<select type="text" id="divideMethod" name="divideMethod"
+												class="layui-input form-input input-select"
+												required="required" placeholder="请输入内容"
+												data-th-initValue="${entity?.divideMethod}"
+												data-th-placeholder="#{SysCommon.placeholder}"
+												 data-th-data-result='${BONUS_MODE}' multiple>
 										</select>
 									</div>
 								</div>
-								<!--　add by zhangpuyu 2019/10/24 end -->
+								<div class="form-inline-wrap">
+									<label class="layui-form-label form-lable"
+										   data-th-text="#{FinExFundTarget001.ccy}">币种</label>
+									<div class="layui-input-inline input-inline">
+										<select type="text" id="ccy" name="ccy"
+												class="layui-input form-input input-select"
+												required="required" placeholder="请输入内容"
+												data-th-placeholder="#{SysCommon.placeholder}"
+												data-th-initValue="*{entity?.ccy?:CCY_default}" data-th-data-result='${CCY}' >
+										</select>
+									</div>
+								</div>
+								<div class="form-inline-wrap">
+									<label class="layui-form-label form-label-wrap"
+										   data-th-text="#{FinExFundTarget002.tradeCalendarCode}">交易日历</label>
+									<div class="layui-input-inline input-inline">
+										<select name="calendarId" id="calendarId"
+												class="layui-input form-input input-select"
+												data-th-placeholder="#{SysCommon.placeholder}"
+												data-th-data-url="@{/business/common/CommonSelect/selectCalendarId}"
+												data-th-initValue='${entity?.calendarId}'
+												required="required">
+										</select>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- 分红计划组件 -->
-				<div class="page-component" th:data-path="@{/component/asset/BussFinIntPay/init}" th:data-params="|{pageModel:pageModel,fundTypeElement: 'fundType', entityName: 'bussFinIntPayDto',finprodId:'${entity?.finprodId ?:''}',workflowId: '${entity?.workflowId ?:'' }' ,pageId:pageId}|"></div>
 				<!-- 基金中债报送信息组件 -->
 				<div class="page-component" th:data-path="@{/component/report/asset/fund/BussRepFundInfo/init}" th:data-params="|{pageModel:pageModel,fundTypeElement: 'fundType', secondTypeElement:'secondType',entityName: 'bussRepFundInfoDto',finprodId:'${entity?.finprodId ?:''}',workflowId: '${entity?.workflowId ?:''}'}|"></div>
-				<!-- 文件上传 -->
-				<div class="page-component" th:data-path="@{/component/core/FileCommon/init}" th:data-params="|{entityName: 'FileCommon', businessId: '${businessId ?: ''}'}|"></div>
 				<!-- 备注 -->
 				<div class="pro-module-wrap">
 					<div class="pro-module">
@@ -584,6 +314,9 @@
 						</div>
 					</div>
 				</div>
+				<!-- 文件上传 -->
+				<div class="page-component" th:data-path="@{/component/core/FileCommon/init}" th:data-params="|{entityName: 'FileCommon', businessId: '${businessId ?: ''}'}|"></div>
+
 			</div>
 
 

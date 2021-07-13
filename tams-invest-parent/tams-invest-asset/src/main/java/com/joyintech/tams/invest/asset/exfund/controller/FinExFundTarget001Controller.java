@@ -69,7 +69,7 @@ public class FinExFundTarget001Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.ETF类型
+        this.setSelectOptionToModel(model, DictCode.ETF基金类型
             ,DictCode.交易场所,DictCode.交易所基金类型);
         List<SelectOptionDto> listtype = new ArrayList<SelectOptionDto>();
         SelectOptionDto dto1 = new SelectOptionDto();

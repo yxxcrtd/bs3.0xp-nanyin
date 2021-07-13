@@ -152,7 +152,7 @@
 	    left join FIN_CASH_INFO e on
 	    	a.FINPROD_ID = e.FINPROD_ID and e.CASH_TYPE_2 = #{CASH_TYPE_2,jdbcType=VARCHAR}
 	    	and e.FINPROD_TYPE = #{FIN_CASH_BUSINESS_TYPE,jdbcType=VARCHAR}
-	    left join FIN_CASH_PAY_RULE f on 
+	    left join FIN_CASH_PAY_RULE f on
 	    	e.CASH_ID = f.CASH_ID and a.VDATE = f.EFF_DATE ,
 	     FIN_PRODUCT_TYPE b ,
 	     FIN_PRODUCT_ADD c
@@ -184,84 +184,29 @@
 	   		a.FINPROD_NAME finprodName,
 	   		a.FINPROD_ABBR finprodAbbr,
 	   		a.FINPROD_TYPE2 finprodType2,
-	   		a.CALENDAR_ID calendarId,
 	   		a.IDATE idate,
 	   		a.CCY ccy,
 	   		a.VDATE vdate,
 	   		a.MDATE mdate,
 	   		a.TRADE_MARKET tradeMarket,
 	   		a.MANAGER manager,
-	   		b.TYPE_6 fundType,
-	   		b.TYPE_7 secondType,
-	   		/**added by wangguiqi on 2019/7/22 -start**/
-	   		b.TYPE_9 type9,
-	   		b.TYPE_10 type10,
-	   		b.TYPE_11 type11,
-	   		b.TYPE_12 type12,
-	   		<!-- add by zhangpuyu 2019/10/25 start -->
-	   		T9.POST_ORG postOrg,
-	   		<!-- add by zhangpuyu 2019/10/25 end -->
-	   		/**added by wangguiqi on 2019/7/22 -end**/
-	   		c.IS_COMPOUND_INT isCompoundInt,
-	   		d.CUSTOMER_ID manager,
-	   		f.PAY_TYPE divideMethod,
-	   		f.PAY_CYCLE carryoverFreq,
-	   		a.REMARK remark,
-	   		<!--case
-			 when c.PUR_SPEED = 0 then '01'
-			 when c.PUR_SPEED = 1 then '02'
-			 else '03'
-			 end purSpeed,-->
 			 c.PUR_SPEED,
 			 c.RED_SPEED,
-			 T.PFLSH pflsh,
-        	T.HAP_CREDIT_AMT hapCreditAmt,
-        	T.CREDIT_FLAG creditFlag,
-        	g.ACTUAL_CREDIT_PROVID actualCreditProvid,
-        	a.CAPI_INCOME_FEATURE capiIncomeFeature,
 			c.INVEST_NATURE investNature,
-			a.CONTRACT_NO,
-			g.TRIAL_NO,
-			<!--场内基金 add by 张年  20191106  start-->
 			c.TOFF_STRDATE,
 			c.TOFF_ENDDATE,
-			c.TRM_FUND_ABBR,
 			c.TRM_FUND_TYPE,
-			c.GRA_FUND_TYPE,
-			c.PUR_RED_ID,
-			c.PUR_RED_ABBR,
-			c.PUR_START_LOW,
-			c.RED_START_LOW,
-			c.ETF_TYPE,
-			c.ETF_MIN_PRUNIT,
-			a.P_FINPROD_ID,
-			aa.FINPROD_MARKET_ID pMarketId
-			 <!--场内基金 add by 张年  20191106  end-->
+			c.ETF_TYPE etfType,
+            c.DIVIDE_METHOD divideMethod,
+			 c.DAY_BACK_TRADE dayBackTrade,
+	     a.CALENDAR_ID calendarId
 	   	from
 	    	FIN_PRODUCT a 
-	    	LEFT JOIN (SELECT T2.FINPROD_ID,T1.CREDIT_FLAG,T1.PFLSH,T1.HAP_CREDIT_AMT ,T1.CUSTOMER_ID FROM CREDIT_LINES T1 LEFT JOIN CREDIT_ASSETPOOL_DETAIL T2 
-        ON T1.CUSTOMER_ID = T2.SEQNO) T ON (T.FINPROD_ID = a.FINPROD_ID OR T.CUSTOMER_ID = a.FINPROD_ID)
-	    left join MST_CUSTOMER_INFO d on 	
-	    	d.CUSTOMER_ID = a.ISSUER
-	    left join FIN_CASH_INFO e on
-	    	a.FINPROD_ID = e.FINPROD_ID and e.CASH_TYPE_2 = #{CASH_TYPE_2,jdbcType=VARCHAR}
-	    	and e.FINPROD_TYPE = #{FIN_CASH_BUSINESS_TYPE,jdbcType=VARCHAR}
-	    <!-- add by zhangpuyu 2019/10/25 start -->
-	    left join FIN_POST_INVEST_INFO T9 on T9.FINPROD_ID=a.FINPROD_ID
-	    <!-- add by zhangpuyu 2019/10/25 start -->
-	    left join FIN_CASH_PAY_RULE f on 
-	    	e.CASH_ID = f.CASH_ID and a.VDATE = f.EFF_DATE
-		LEFT JOIN PA_FIN_PRODUCT g ON a.FINPROD_ID = g.FINPROD_ID
-		LEFT JOIN FIN_PRODUCT aa ON aa.FINPROD_ID = a.P_FINPROD_ID,
-		FIN_PRODUCT_TYPE b ,
-	    FIN_PRODUCT_ADD c
+	    left join MST_CUSTOMER_INFO b on
+	    	b.CUSTOMER_ID = a.ISSUER
+		left join FIN_PRODUCT_ADD c on c.FINPROD_ID = a.FINPROD_ID
 	    where
-	    	a.FINPROD_ID = b.FINPROD_ID
-	    	and a.FINPROD_ID = c.FINPROD_ID
-	    	and a.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F06,jdbcType=VARCHAR}
-	    	<if test="finprodId != null and finprodId != ''">
-	    	and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-	    	</if>
+			 a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
 	     </select>
 	     <!-- 
 	     /**
@@ -312,7 +257,7 @@
      */
     BussExFinIntPayDto getIntPayByFinprodId(Map<String,Object> param);
 	       -->
-	       <select id="getIntPayByFinprodId" resultType="com.joyintech.service.asset.exfund.dto.BussExFinIntPayDto">
+	       <select id="getIntPayByFinprodId" resultType="com.joyintech.service.asset.exfund.dto.BussFinIntPayDto">
 	       select
 	       	c.PAY_TYPE payType,
 	       	c.PAY_CYCLE payCycle,
@@ -340,7 +285,7 @@
      		*/
     		BussRepExFundInfoDto getInfoByIssuer(Map<String, Object> pageParam);
 	        -->
-	        <select id="getInfoByIssuer" resultType="com.joyintech.service.asset.exfund.dto.BussRepExFundInfoDto">
+	        <select id="getInfoByIssuer" resultType="com.joyintech.service.asset.exfund.dto.BussRepFundInfoDto">
 	        SELECT
 	        PARTY_TYPE3 repPartyType3,
 	        PARTY_TYPE2 repPartyType2,

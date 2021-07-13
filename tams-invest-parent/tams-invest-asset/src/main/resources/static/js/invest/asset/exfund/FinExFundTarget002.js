@@ -50,10 +50,13 @@
         object.pageId = pageId;
         object.finprodType2 = finprodType2;
         if(object.bussFinIntPayDto != null){
-        	object.bussFinIntPayDto.fundType = $('#fundType').val();
+            object.bussFinIntPayDto.fundType = $('#fundType').val();
         }
         if(object.bussRepFundInfoDto != null){
         	object.bussRepFundInfoDto.finprodType2 = finprodType2;
+        }
+        if(object.divideMethod){
+            object.divideMethod = object.divideMethod.join(",");
         }
         //modify by mashukai 20201117 BS-2006 公募基金草稿箱提交时校验资产代码问题
         if(!draftoption){
@@ -73,17 +76,6 @@
         } else {
             object.capiIncomeFeature = 'N';
         }
-        /*if(file != null){
-        	object.fileName = file[0].srcName;
-        	object.revealFileId = file[0].fileNo;
-        	object.path = file[0].targetFile;
-        }*/
-     // 是否分层
-//        if ($('#bussRepFundInfoDto_repIsGovInvest').next().find("em").text() === '是') {
-//            object.bussRepFundInfoDto.repIsGovInvest = 'Y';
-//        } else {
-//            object.bussRepFundInfoDto.repIsGovInvest = 'N';
-//        }
         if(FileCommon) {
     		object.fileArray = FileCommon.getUploadFileInfo();
     		if(object.fileArray && _.isArray(object.fileArray)){
@@ -108,6 +100,7 @@
                 } else {
                     Joyin.confirm(result.data, function () {
                         if (operateType === 'save') {
+                            alert(JSON.stringify(object));
                             WorkFlow.doSaveList(basePath + 'invest/asset/exfund/FinExFundTarget002/save', object, "FinExFundTarget002_btn_save");
                         } else {
                             WorkFlow.doSubmitList(basePath + 'invest/asset/exfund/FinExFundTarget002/save', object, "FinExFundTarget002_btn_submit");
@@ -405,14 +398,15 @@
 
     var tradeMarketChange = function(){
         AssetCommon.setTradeMarketId($('#tradeMarket').val());
-        if($('#tradeMarket').val() == '09'){
+        if($('#tradeMarket').val() == '03'){
+            $('#tradeCalendarCode').val(TRM_FUND_TYPE);
+        }else if($('#tradeMarket').val() == '04'){
             $('#trmFundType').val('').trigger('change');
             $('#trmFundType').prop('disabled',true);
             $('#trmFundAbbr').val('');
             $('#trmFundAbbr').prop('disabled',true);
         }else{
-            $('#trmFundType').prop('disabled',false);
-            $('#trmFundAbbr').prop('disabled',false);
+            $('#tradeMarketId').val('');
         }
         secondTypeChange();
         trmFundTypeChange();

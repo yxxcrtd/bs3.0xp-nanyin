@@ -14,8 +14,8 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.asset.exfund.dto.BussExFinIntPayDto;
-import com.joyintech.service.asset.exfund.dto.BussRepExFundInfoDto;
+import com.joyintech.service.asset.exfund.dto.BussFinIntPayDto;
+import com.joyintech.service.asset.exfund.dto.BussRepFundInfoDto;
 import com.joyintech.service.asset.exfund.dto.FinExFundTargetDto;
 import com.joyintech.service.asset.exfund.service.FinExFundTargetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,7 +188,7 @@ public class FinExFundTargetController {
      * @since 1.0
      */
     @GetMapping("/getIntPayByFinprodId")
-    public BussExFinIntPayDto getIntPayByFinprodId(String finprodId)
+    public BussFinIntPayDto getIntPayByFinprodId(String finprodId)
             throws Exception {
         return finExFundTargetService.getIntPayByFinprodId(finprodId);
     }
@@ -204,13 +204,13 @@ public class FinExFundTargetController {
      * @since 1.0
      */
     @GetMapping("/getFundInfoByFinprodId")
-    public BussRepExFundInfoDto getFundInfoByFinprodId(String finprodId)
+    public BussRepFundInfoDto getFundInfoByFinprodId(String finprodId)
             throws Exception {
         return finExFundTargetService.getFundInfoByFinprodId(finprodId);
     }
 
     @PostMapping("getInfoByIssuer")
-    public BussRepExFundInfoDto getInfoByIssuer(@RequestBody Map<String, Object> pageParam) {
+    public BussRepFundInfoDto getInfoByIssuer(@RequestBody Map<String, Object> pageParam) {
         return finExFundTargetService.getInfoByIssuer(pageParam);
     }
 
