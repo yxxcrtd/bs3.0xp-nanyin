@@ -362,11 +362,15 @@ public class FinProductAdd extends BaseEntity {
     /**
      * 分红方式
      */
-    private String divideMethod;
+    private String bonusType;
     /**
      * 当日回转交易
      */
-    private String  dayBackTrade;
+    private String tdyRevTrans;
+    /**
+     * 上市日期
+     */
+    private Date listingDate;
 
     /**
      * 取得 金融产品代码
@@ -1475,20 +1479,27 @@ public class FinProductAdd extends BaseEntity {
         this.minSaleUnit = minSaleUnit;
     }
 
-    public String getDivideMethod() {
-        return divideMethod;
+    public String getBonusType() {
+        return bonusType;
     }
 
-
-    public void setDivideMethod(String divideMethod) {
-        this.divideMethod = divideMethod;
+    public void setBonusType(String bonusType) {
+        this.bonusType = bonusType;
     }
 
-    public String getDayBackTrade() {
-        return dayBackTrade;
+    public String getTdyRevTrans() {
+        return tdyRevTrans;
     }
 
-    public void setDayBackTrade(String dayBackTrade) {
-        this.dayBackTrade = dayBackTrade;
+    public void setTdyRevTrans(String tdyRevTrans) {
+        this.tdyRevTrans = tdyRevTrans;
+    }
+
+    public Date getListingDate() {
+        return listingDate;
+    }
+
+    public void setListingDate(Date listingDate) {
+        this.listingDate = listingDate;
     }
 }

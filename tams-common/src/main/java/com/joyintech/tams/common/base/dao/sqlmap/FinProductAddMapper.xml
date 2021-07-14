@@ -144,7 +144,7 @@
             VAL_ORG, CAL_RATE_TYPE, REP_FINPROD_INS_ID, 
             IS_INADVANCE, NO_FIXED_TERM, IS_NET_SETT, 
             IS_PPB, TRADE_PLAT, IS_QTZQ, 
-            DATA_SOURCE, MIN_SALE_UNIT,DIVIDE_METHOD,DAY_BACK_TRADE)
+            DATA_SOURCE, MIN_SALE_UNIT,BONUS_TYPE,TDY_REV_TRANS,LISTING_DATE)
         values (#{finprodId,jdbcType=VARCHAR}, #{saleDepartment,jdbcType=VARCHAR}, #{saleLayer,jdbcType=VARCHAR}, 
             #{salePeriod,jdbcType=DECIMAL}, #{purSpeed,jdbcType=DECIMAL}, #{redSpeed,jdbcType=DECIMAL}, 
             #{isSecBond,jdbcType=VARCHAR}, #{windId,jdbcType=VARCHAR}, #{isAutoUpdate,jdbcType=VARCHAR}, 
@@ -170,7 +170,7 @@
             #{isInadvance,jdbcType=VARCHAR}, #{noFixedTerm,jdbcType=VARCHAR}, #{isNetSett,jdbcType=VARCHAR}, 
             #{isPpb,jdbcType=VARCHAR}, #{tradePlat,jdbcType=VARCHAR}, #{isQtzq,jdbcType=VARCHAR}, 
             #{dataSource,jdbcType=VARCHAR}, #{minSaleUnit,jdbcType=DECIMAL},
-                #{divideMethod,jdbcType=VARCHAR}, #{dayBackTrade,jdbcType=VARCHAR})
+                #{bonusType,jdbcType=VARCHAR}, #{tdyRevTrans,jdbcType=VARCHAR}, #{listingDate,jdbcType=DATE})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
         insert into FIN_PRODUCT_ADD

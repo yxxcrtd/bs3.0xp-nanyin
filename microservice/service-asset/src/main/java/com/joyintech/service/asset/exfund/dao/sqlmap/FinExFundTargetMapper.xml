@@ -70,7 +70,7 @@
 		   b.ETF_TYPE etfType,
 		   a.TRADE_MARKET tradeMarket,
 		   c.CUSTOMER_NAME manager,
-	   	    b.DIVIDE_METHOD  divideMethod,
+	   	    b.BONUS_TYPE  bonusType,
 	   		a.IDATE idate,
 		   (CASE
 		   WHEN b.PUR_SPEED is not null THEN 'T+'||b.PUR_SPEED
@@ -197,8 +197,9 @@
 			c.TOFF_ENDDATE,
 			c.TRM_FUND_TYPE,
 			c.ETF_TYPE etfType,
-            c.DIVIDE_METHOD divideMethod,
-			 c.DAY_BACK_TRADE dayBackTrade,
+            c.BONUS_TYPE bonusType,
+			 c.TDY_REV_TRANS tdyRevTrans,
+			c.LISTING_DATE listingDate,
 	     a.CALENDAR_ID calendarId
 	   	from
 	    	FIN_PRODUCT a 

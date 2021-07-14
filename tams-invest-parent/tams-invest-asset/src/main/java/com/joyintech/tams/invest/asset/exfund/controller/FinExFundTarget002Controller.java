@@ -141,11 +141,9 @@ public class FinExFundTarget002Controller extends BaseController{
         }
         this.setSelectOptionToModel(model, DictCode.基金类资产类型,DictCode.币种
             , DictCode.清算速度, DictCode.关联范围,DictCode.交易场所
-            // 新增资产五级分类 wangguiqi 2019-07-23 start
             ,DictCode.分红方式,DictCode.行内资产三级分类,DictCode.行内资产四级分类,DictCode.行内资产五级分类
-            // 新增资产五级分类 wangguiqi 2019-07-23 end
             ,DictCode.交易所基金类型,DictCode.分级基金,DictCode.ETF基金类型
-            ,DictCode.基金类资产二级类型,DictCode.允许或不允许,DictCode.投资性质);
+            ,DictCode.基金类资产二级类型,DictCode.当日回转交易,DictCode.投资性质);
       //取系统参数
         model.addAttribute("CE_MODEL", CacheUtil.getSysParam(BussinessConstant.CEMODEL));
         model.addAttribute("INTI_BONUS_MODE", DictCodeList.分红方式_红利再投); // 默认分红方式-红利再投 王贵奇 2019/7/29
@@ -165,6 +163,10 @@ public class FinExFundTarget002Controller extends BaseController{
         model.addAttribute("ETF_TYPE_04",DictCodeListExt2.ETF类型_债券ETF.getValue());
         model.addAttribute("ETF_TYPE_05",DictCodeListExt2.ETF类型_黄金ETF.getValue());
         model.addAttribute("ETF_TYPE_06",DictCodeListExt2.ETF类型_货币ETF.getValue());
+        model.addAttribute("TRADE_PLACE_03",DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        model.addAttribute("TRADE_PLACE_04",DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        model.addAttribute("TRANSACTION_CALENDAR_SH",DictCodeList.交易日历_上海交易所日历.getValue());
+        model.addAttribute("TRANSACTION_CALENDAR_SZ",DictCodeList.交易日历_深圳交易所日历.getValue());
         if("01".equals(CacheUtil.getSysParam(BussinessConstant.CEMODEL))){
             model.addAttribute("creditFlag","N");
         }else{

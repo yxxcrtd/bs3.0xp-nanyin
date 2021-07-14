@@ -2,7 +2,16 @@ alter table FIN_PRODUCT_ADD drop column  DIVIDE_METHOD;
 alter table FIN_PRODUCT_ADD drop column  DAY_BACK_TRADE;
 alter table FIN_PRODUCT_ADD add DIVIDE_METHOD VARCHAR(32) comment on column FIN_PRODUCT_ADD.DIVIDE_METHOD is '允许的分红方式';
 alter table FIN_PRODUCT_ADD add DAY_BACK_TRADE VARCHAR(32) comment on column FIN_PRODUCT_ADD.DAY_BACK_TRADE is '当日回转交易';
+alter table FIN_PRODUCT_ADD drop column  BONUS_TYPE;
+alter table FIN_PRODUCT_ADD drop column  TDY_REV_TRANS;
+alter table FIN_PRODUCT_ADD drop column  LISTING_DATE;
 
+alter table FIN_PRODUCT_ADD add BONUS_TYPE VARCHAR(50);
+comment on column FIN_PRODUCT_ADD.BONUS_TYPE is '允许的分红方式(多个用逗号隔开)';
+alter table FIN_PRODUCT_ADD add TDY_REV_TRANS VARCHAR(50);
+comment on column FIN_PRODUCT_ADD.TDY_REV_TRANS is '当日回转交易';
+alter table FIN_PRODUCT_ADD add LISTING_DATE DATE;
+comment on column FIN_PRODUCT_ADD.LISTING_DATE is '上市日期';
 
 delete from SYS_MENU where PAGE_ID in ('FinExFundTarget001');
 insert into SYS_MENU ( MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME )values	(		'ASSET_MANAGEMENT_001_002_012',		'MST',		NULL,		'ASSET_MANAGEMENT_001_002',		'FinExFundTarget001',		'12',		'02',		'场内基金标的',		'system',		NULL,		TO_TIMESTAMP( '2021-07-08 11:39:05.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6' ),		'system',	TO_TIMESTAMP( '2021-07-08 11:39:05.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6' ) 	);
@@ -122,11 +131,11 @@ INSERT INTO SYS_PAGE_DICTLIST(PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT
 
 
 
-DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'ALLOW_OR_NO';
-insert into SYS_DATADICT values ('ALLOW_OR_NO','SYS','允许或不允许','ALLOW_OR_NO','02','system','',to_date('2021/07/13', 'yyyy/mm/dd'), 'system',to_date('2021/07/13', 'yyyy/mm/dd'));
-DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'ALLOW_OR_NO';
-insert into SYS_DATADICT_LIST values ('ALLOW_OR_NO','Y','允许','1','0','system','',to_date('2021/07/13', 'yyyy/mm/dd'), 'system',to_date('2021/07/13', 'yyyy/mm/dd'),null);
-insert into SYS_DATADICT_LIST values ('ALLOW_OR_NO','N','不允许','2','0','system','',to_date('2021/07/13', 'yyyy/mm/dd'), 'system',to_date('2021/07/13', 'yyyy/mm/dd'),null);
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'TDY_REV_TRANS';
+insert into SYS_DATADICT values ('TDY_REV_TRANS','SYS','当日回转交易','TDY_REV_TRANS','02','system','',to_date('2021/07/14', 'yyyy/mm/dd'), 'system',to_date('2021/07/14', 'yyyy/mm/dd'));
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'TDY_REV_TRANS';
+insert into SYS_DATADICT_LIST values ('TDY_REV_TRANS','01','允许','1','0','system','',to_date('2021/07/14', 'yyyy/mm/dd'), 'system',to_date('2021/07/14', 'yyyy/mm/dd'),null);
+insert into SYS_DATADICT_LIST values ('TDY_REV_TRANS','02','不允许','2','0','system','',to_date('2021/07/14', 'yyyy/mm/dd'), 'system',to_date('2021/07/14', 'yyyy/mm/dd'),null);
 
 DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'ETF_FUND_TYPE';
 INSERT INTO SYS_DATADICT(DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ETF_FUND_TYPE', 'TG', 'ETF基金类型', NULL, '02', 'system', NULL, TO_TIMESTAMP('2021-07-13 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'), 'system', TO_TIMESTAMP('2021-07-13 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'));
