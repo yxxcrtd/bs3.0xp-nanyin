@@ -148,7 +148,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> createDeclaration(Map<String, Object> param) throws Exception {
+    public ResponseEntity<byte[]> createDeclaration(Map<String, Object> param) throws IOException {
         RepFinProductPerDeclareDto temp = JsonUtils.json2Object((String)param.get("dtoStr"),RepFinProductPerDeclareDto.class);
         List<RepFinProductPerDeclareDto> selectedItem = temp.getSelectedItem();
         //申报附件方案

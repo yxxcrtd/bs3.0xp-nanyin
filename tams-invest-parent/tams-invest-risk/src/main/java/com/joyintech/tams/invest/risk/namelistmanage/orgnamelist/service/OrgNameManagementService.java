@@ -24,6 +24,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +67,7 @@ public class OrgNameManagementService extends CommonExportService<RskAccessListD
      * @return Page类 Page
      * @throws Exception 异常信息
      */
-    public Page<RskAccessListDetailDto> selectForDetailPage(Map<String, Object> pageParam) throws Exception{
+    public Page<RskAccessListDetailDto> selectForDetailPage(Map<String, Object> pageParam) throws IOException {
         Page<RskAccessListDetailDto> resultPage = selectPageResult(pageParam);
         List<RskAccessListDetailDto> handleRskAccessListDetailList = new ArrayList<>();
         if(pageParam.containsKey("rskAccessListLogDtoList")){

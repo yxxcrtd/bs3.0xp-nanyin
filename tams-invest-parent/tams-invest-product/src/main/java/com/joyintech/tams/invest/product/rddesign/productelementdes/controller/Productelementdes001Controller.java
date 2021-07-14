@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.product.rddesign.productelementdes.service.Prod
 import com.joyintech.tams.invest.product.rddesign.productelementdes.service.ProductelementdesService002;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -90,7 +91,7 @@ public class Productelementdes001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<Productelementdes002Dto> findPage()
-        throws Exception {
+    {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         Page<Productelementdes002Dto> p=ProductelementdesService.findPage(param);
         return p;
@@ -98,7 +99,7 @@ public class Productelementdes001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findDetailPage")
     public Page<Productelementdes001Dto> findDetailPage()
-            throws Exception {
+    {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         Page<Productelementdes001Dto> p=ProductelementdesService.findDetailPage(param);
         return p;
@@ -108,8 +109,7 @@ public class Productelementdes001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult delete(@RequestBody Productelementdes002Dto dto)
-            throws Exception {
+    public AjaxResult delete(@RequestBody Productelementdes002Dto dto) throws WorkFlowException {
         ProcessParameter<Productelementdes002Dto> processParameter = new ProcessParameter<Productelementdes002Dto>();
         WorkFlowParameter<Productelementdes002Dto> params = new WorkFlowParameter<Productelementdes002Dto>();
         //判断是否在工作流中
@@ -145,7 +145,7 @@ public class Productelementdes001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-            throws Exception {
+    {
         return ProductelementdesService.export(this.getPageId(), RequestUtil.getPageParam());
     }
 }

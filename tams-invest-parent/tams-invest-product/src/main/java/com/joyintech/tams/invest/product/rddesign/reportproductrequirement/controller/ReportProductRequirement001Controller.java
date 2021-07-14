@@ -69,7 +69,7 @@ public class ReportProductRequirement001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+	{
         return reportProductRequirement001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

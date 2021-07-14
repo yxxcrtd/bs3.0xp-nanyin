@@ -15,6 +15,7 @@ import com.joyintech.tams.invest.product.rddesign.feasibilityanalysis.dto.FinPro
 import com.joyintech.tams.invest.product.rddesign.feasibilityanalysis.service.FinProductFeaAna002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,8 +102,7 @@ public class FinProductFeaAna002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinProductFeaAna002Dto dto,BindingResult br)
-        throws Exception{
+    public AjaxResult save(@RequestBody FinProductFeaAna002Dto dto,BindingResult br) throws WorkFlowException {
         if (CollectionUtils.isNotEmpty(dto.getUploadFileList())) {
             fileAttachmentProcess.updateBussinessNo(
                     dto.getUploadFileList().stream().map(UploadFile::getFileNo).collect(

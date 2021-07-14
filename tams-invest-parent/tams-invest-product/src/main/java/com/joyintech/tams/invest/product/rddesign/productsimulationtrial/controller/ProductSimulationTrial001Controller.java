@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.product.rddesign.productsimulationtrial.service
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.LeaveMarkProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +100,7 @@ public class ProductSimulationTrial001Controller extends BaseController {
 	@RequestMapping("queryDesignIdInfo")
 	@ResponseBody
 	public Page<SelectOptionDto> queryDesignIdInfo(@RequestParam Map<String, Object> param)
-			throws Exception {
+	{
 		return productSimulationTrial001Service.queryDesignIdInfo(param);
 	}
 
@@ -168,8 +169,7 @@ public class ProductSimulationTrial001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("delete")
-	public AjaxResult delete(@RequestBody ProductSimulationTrial001Dto dto, BindingResult br)
-			throws Exception {
+	public AjaxResult delete(@RequestBody ProductSimulationTrial001Dto dto, BindingResult br) throws WorkFlowException {
 	    ProductSimulationTrial002Dto productSimulationTrial002Dto = productSimulationTrial002Service.getProductSimulationTrialBySeqNo(dto.getSeqNo());
 	    Map<String, Object> param = new HashMap<String, Object>();
 	    param.put("seqNo", dto.getSeqNo());
@@ -201,7 +201,7 @@ public class ProductSimulationTrial001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() {
 		return productSimulationTrial001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
 

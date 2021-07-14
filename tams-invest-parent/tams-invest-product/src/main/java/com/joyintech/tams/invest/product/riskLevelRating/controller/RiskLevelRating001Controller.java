@@ -67,7 +67,7 @@ public class RiskLevelRating001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-            throws Exception {
+    {
         return riskLevelRating001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 }

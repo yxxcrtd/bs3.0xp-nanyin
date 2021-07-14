@@ -30,7 +30,7 @@ public class ProductSimulationTrial001Service extends CommonExportService<Produc
 	 * @return 下拉框列表
 	 */
 	public Page<SelectOptionDto> queryDesignIdInfo(Map<String, Object> param)
-			throws Exception {
+	{
 		return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/ProductSimulationTrial/queryDesignIdInfo", param,
             SelectOptionDto.class);
 	}
