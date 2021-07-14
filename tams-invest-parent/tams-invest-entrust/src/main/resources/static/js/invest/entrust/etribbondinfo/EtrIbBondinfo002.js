@@ -702,6 +702,12 @@
                 $("#finprodIdhid").val(data.finprodId).trigger("change");
                 $("#finprodName").val(finprodId).trigger("change");
                 $("#isRight").val(data.isRight).trigger("change");
+                if(data.isRight === N){
+                    // 资产为非含权债时，置灰“行权收益率”字段
+                    $('#exerYield').val('').attr('disabled', true);
+                    $('#calculateField_exerYield').prop('checked', false).attr('disabled', true);
+                    layui.form.render();
+                }
                 $("#calendarId").val(data.calendarId).trigger("change");
                 $("#finvdate").val(new Date(data.finvdate)).trigger("change");
                 $("#finmdate").val(new Date(data.finmdate)).trigger("change");
@@ -719,7 +725,7 @@
                 $("#finprodName").val("").trigger("change");
                 $("#calendarId").val("").trigger("change");
                 //$("#tradeMarket").val("").trigger("change").attr("disabled", false);
-                $("#ccy").val($("#EtrIbBondinfo002_default_ccy").val()).trigger("change").attr("disabled", false);
+                $("#ccy").val(CCY).trigger("change").attr("disabled", false);
                 $("#isRight").val("").trigger("change");
 
                 $("#exerYield").val("").trigger("change").trigger("blur");
