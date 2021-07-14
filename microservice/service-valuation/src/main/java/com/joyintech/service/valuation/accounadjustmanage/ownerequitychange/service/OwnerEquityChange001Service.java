@@ -70,8 +70,7 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * @see
      * @since 1.0
      */
-    public List<OwnerEquityChange001Dto> selectList(Map<String, Object> pageParam, OwnerEquityChange001Dto dto)
-            throws Exception {
+    public List<OwnerEquityChange001Dto> selectList(Map<String, Object> pageParam, OwnerEquityChange001Dto dto) throws ParseException {
         changeMapData(pageParam);
         Map<String, OwnerEquityChange001Dto> dtoMap = new HashMap<String, OwnerEquityChange001Dto>();
         List<OwnerEquityChange001Dto> list = new ArrayList<OwnerEquityChange001Dto>();
@@ -662,8 +661,7 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * @see
      * @since 1.0
      */
-    public void changeMapData(Map<String, Object> pageParam)
-            throws Exception {
+    public void changeMapData(Map<String, Object> pageParam) throws ParseException {
         String reportTermType = (String) pageParam.get("reportTermType");
         String valDate = DateUtil.format(analyseDate(pageParam), DateUtil.DEFAULT_DATE_FORMAT_EN);
         int thisYear = DateUtil.getYear(valDate);

@@ -93,7 +93,7 @@ public class ValBondassetquery001Service extends CommonExportService<ValBondasse
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValBondassetquery001Dto> findPage(int page, int length, Map<String, Object> params) throws Exception {
+    public Page<ValBondassetquery001Dto> findPage(int page, int length, Map<String, Object> params) {
         String bond = (String)params.get("bond");
         String couponType = (String)params.get("couponType");
         String bondType = (String)params.get("bondType");
@@ -126,7 +126,7 @@ public class ValBondassetquery001Service extends CommonExportService<ValBondasse
      * @see
      * @since 1.0
      */
-    public List<ValBondassetquery001Dto> findPageout(Map<String, Object> params) throws Exception {
+    public List<ValBondassetquery001Dto> findPageout(Map<String, Object> params) {
     	String bond = (String)params.get("bond");
         String couponType = (String)params.get("couponType");
         String bondType = (String)params.get("bondType");
