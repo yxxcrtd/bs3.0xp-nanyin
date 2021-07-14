@@ -640,4 +640,16 @@ public class SysCoreService extends BaseService {
             }
         }		
 	}
+
+    /**
+     * 资产是否存在交易(存在撤销交易也算交易)
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    public int isTransInAssetTwo(String finprodId) {
+        return sysCoreMapper.isTransInAssetTwo(finprodId);
+    }
 }

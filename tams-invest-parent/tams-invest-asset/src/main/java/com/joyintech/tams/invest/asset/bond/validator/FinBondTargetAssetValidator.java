@@ -120,7 +120,9 @@ public class FinBondTargetAssetValidator implements BeanValidator{
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
                 for(FinBondTargetAssetDto entity : dto.getSelectedItem()){
-                    if(commonBusinessService.isTransInAsset(entity.getFinprodId())!=0){
+                    //只要存在债券交易就不可以删除债券资料，否则债券查询页面查询不到资产信息并报错，暂时修改债券资产，后续再考虑是否一并修改
+                    //if(commonBusinessService.isTransInAsset(entity.getFinprodId())!=0){
+                    if(commonBusinessService.isTransInAssetTwo(entity.getFinprodId())!=0){
                         resultList.add(new ValidMessage("",
                             getMessage("资产存在交易,不可删除!")));
                         break;
