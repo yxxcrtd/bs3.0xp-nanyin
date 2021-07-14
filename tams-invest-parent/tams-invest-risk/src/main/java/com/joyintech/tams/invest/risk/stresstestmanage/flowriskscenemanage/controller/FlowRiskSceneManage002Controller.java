@@ -303,7 +303,8 @@ public class FlowRiskSceneManage002Controller extends BaseController {
             //String sceCode=dto.getSceneId();//获取dto中情景代码（此时是工作流业务编号）
             String riskTypeCode=dto.getRiskType();//获取dto适用风险分类CODE
             String sceneTypeCode=dto.getSceneType();//获取dto情景类型CODE
-            String finSceCode=IDGenerator.generate(12).substring(0, 8);
+//            String finSceCode=IDGenerator.generate(12).substring(0, 8);
+            String finSceCode=StringUtil.leftPad(flowRiskSceneManage002Service.getNewSceneId(), 4, "0");
             if(riskTypeCode.equals("01")){//综合风险
              finSceCode="Gnr".concat(Integer.valueOf(sceneTypeCode).toString()).concat(finSceCode);
             }else if(riskTypeCode.equals("02")){//市场风险
