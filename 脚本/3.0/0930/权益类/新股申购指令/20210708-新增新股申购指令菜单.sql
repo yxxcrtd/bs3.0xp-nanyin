@@ -1,0 +1,63 @@
+--删除是为了下一次更好的执行
+delete from sys_menu where menu_id = 'SETTLE_MANAGEMENT_001_003_008';
+delete from sys_page where page_id = 'EtrNewStock001';
+delete from sys_page where page_id = 'EtrNewStock002';
+
+--新增新股申购指令菜单
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SETTLE_MANAGEMENT_001_003_008', 'STL', null, 'SETTLE_MANAGEMENT_001_003', 'EtrNewStock001', 8, '02', '新股申购指令', 'system', null, '08-7月 -21 12.00.00.000000 上午', 'system', '08-7月 -21 12.00.00.000000 上午');
+
+--新增新股申购指令页面路径配置
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrNewStock001', 'ETR', '/invest/entrust/etrnewstock/EtrNewStock001', 'invest/entrust/etrnewstock/EtrNewStock001', 'SETTLE_MANAGEMENT_001_003_008', null, null, '02', '01', '新股申购指令', 'system', null, '08-7月 -21 12.00.00.000000 上午', 'system', '08-7月 -21 12.00.00.000000 上午');
+--新增新股申购指令新建页面路径配置
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('EtrNewStock002', 'ETR', '/invest/entrust/etrnewstock/EtrNewStock002', 'invest/entrust/etrnewstock/EtrNewStock002', null, null, null, '02', '01', '新股申购指令新建', 'system', null, '08-7月 -19 12.00.00.000000 上午', 'system', '21-4月 -21 12.00.00.000000 上午');
+
+--配置新股申购新建页面流程模板
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'EtrNewStock002';
+
+insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG)
+values ('EtrNewStock002','EtrNewStock002_btn_delete','oneApproval','system','0001',sysdate, 'system',sysdate, 'ALL', '02');
+
+insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG)
+values ('EtrNewStock002','EtrNewStock002_btn_save','oneApproval','system','0001',sysdate, 'system',sysdate, 'ALL', '02');
+
+insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG)
+values ('EtrNewStock002','EtrNewStock002_btn_submit','oneApproval','system','0001',sysdate, 'system',sysdate, 'ALL', '02');
+
+--配置新股申购查询页面交易场所枚举值
+DELETE FROM SYS_PAGE_DICTLIST WHERE PAGE_ID = 'EtrNewStock001' AND DICT_ID = 'TRADE_PLACE';
+
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('EtrNewStock001','999999','TRADE_PLACE','03','上海证券交易所','','admin','',sysdate, 'admin',sysdate, null);
+
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('EtrNewStock001','999999','TRADE_PLACE','04','深圳证券交易所','','admin','',sysdate, 'admin',sysdate, null);
+
+--配置新股申购查询页面有效状态枚举值
+DELETE FROM SYS_PAGE_DICTLIST WHERE PAGE_ID = 'EtrNewStock001' AND DICT_ID = 'ENTRUST_STATUS';
+
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('EtrNewStock001','999999','ENTRUST_STATUS','02','待接收','','admin','',sysdate, 'admin',sysdate, null);
+
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('EtrNewStock001','999999','ENTRUST_STATUS','03','已接收','','admin','',sysdate, 'admin',sysdate, null);
+
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('EtrNewStock001','999999','ENTRUST_STATUS','04','已完成','','admin','',sysdate, 'admin',sysdate, null);
+
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('EtrNewStock001','999999','ENTRUST_STATUS','05','已退回','','admin','',sysdate, 'admin',sysdate, null);
+
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('EtrNewStock001','999999','ENTRUST_STATUS','06','已关闭','','admin','',sysdate, 'admin',sysdate, null);
+
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('EtrNewStock001','999999','ENTRUST_STATUS','07','已撤回','','admin','',sysdate, 'admin',sysdate, null);
+
+--新增新股申购查询页面申购方式枚举值
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('PURCH_MODLE', '03', '战略配售', 3, '0', 'system', null, '23-10月-19 12.00.00.000000 上午', 'system', '21-4月 -21 12.00.00.000000 上午', null);
+
+commit;
