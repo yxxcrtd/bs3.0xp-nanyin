@@ -85,7 +85,7 @@ public class RskSupervisionPortfPointInd002Controller extends BaseController {
     	 setSelectOptionToModel(model, DICT_CODES);
          SelectDto selectZhccDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.组合层次, null);
          List<SelectOptionDto> optionZhcc = selectZhccDto.getOptions();
-         Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+         Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
          model.addAttribute("mapZhcc",mapZhcc);
          model.addAttribute("PORTFOLIO_LEVEL_01", BussinessDictCodeListRds.组合层次_单组合.getValue());
          model.addAttribute("CLASSIFY_DIMENSION_01",BussinessDictCodeListRds.分类维度_收益类型.getValue());

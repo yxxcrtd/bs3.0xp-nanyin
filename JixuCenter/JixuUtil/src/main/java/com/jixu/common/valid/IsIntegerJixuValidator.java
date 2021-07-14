@@ -28,6 +28,6 @@ public class IsIntegerJixuValidator implements ConstraintValidator<IsIntegerJixu
         	return false;
         
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
-	    return pattern.matcher(str.toString()).matches();   
+	    return pattern.matcher(str).matches();   
     }
 }

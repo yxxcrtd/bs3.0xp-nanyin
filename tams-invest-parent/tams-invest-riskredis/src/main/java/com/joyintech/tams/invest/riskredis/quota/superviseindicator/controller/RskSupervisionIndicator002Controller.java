@@ -92,13 +92,13 @@ public class RskSupervisionIndicator002Controller extends BaseController {
         setSelectOptionToModel(model, DICT_CODES);
         SelectDto selectJdsfDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.监督时分, null);
         List<SelectOptionDto> optionJdsf = selectJdsfDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapJdsf = optionJdsf.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapJdsf = optionJdsf.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         SelectDto selectJsmsDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.组合层次, null);
         List<SelectOptionDto> optionJsms = selectJsmsDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapZhcc = optionJsms.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapZhcc = optionJsms.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         SelectDto selectJdlxDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.监督类型, null);
         List<SelectOptionDto> optionJdlx = selectJdlxDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapJdlx = optionJdlx.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapJdlx = optionJdlx.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         //查询指标参数
         List<SelectOptionDto> mapZbcs = rskSupervisionIndicator001Service.getIndicatorParamList();
         model.addAttribute("mapJdsf",mapJdsf);

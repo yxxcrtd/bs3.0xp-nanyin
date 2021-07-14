@@ -160,7 +160,7 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
      */
     public void saveAssetCodeDtl(RskValtblAssetSubMapDtlDto dto){
         if(StringUtil.isNotEmpty(dto.getSrcCode())){
-            List<String> srcCodeList = StringUtil.splitToList(null, dto.getSrcCode().toString());
+            List<String> srcCodeList = StringUtil.splitToList(null, dto.getSrcCode());
             for(String srcCode:srcCodeList){
                 RskValtblAssetSubMapDtl record = new RskValtblAssetSubMapDtl();
                 record.setId(dto.getId());

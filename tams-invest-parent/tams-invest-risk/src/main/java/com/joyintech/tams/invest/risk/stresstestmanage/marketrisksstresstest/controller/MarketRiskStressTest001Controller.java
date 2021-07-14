@@ -88,7 +88,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
         setSelectOptionToModel(model, DICT_CODES);
         SelectDto selectZhccDto = this.getSelectDataFromDataDic(DictCode.组合层次, null);
         List<SelectOptionDto> optionZhcc = selectZhccDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         model.addAttribute("mapZhcc",mapZhcc);
         SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();
@@ -104,7 +104,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
         }
         /*SelectDto selects = this.getSelectDataFromDataDic(DictCode.风险因子的异常处理, null);
         List<SelectOptionDto> options = selects.getOptions();
-        Map<String,List<SelectOptionDto>> maps = options.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> maps = options.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         //model.addAttribute("RISK_FAC_HANDLING",maps);
         model.addAttribute("RISK_FAC_HANDLING",this.getSelectDataFromDataDic(DictCode.风险因子的异常处理, null));*/
         model.addAttribute("analysisDate",analysisDate);

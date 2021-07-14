@@ -80,7 +80,7 @@ public class RskSupervisionPortfPoint001Controller extends BaseController {
         setSelectOptionToModel(model, DICT_CODES);
         SelectDto selectJsmsDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.组合层次, null);
         List<SelectOptionDto> optionJsms = selectJsmsDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapZhcc = optionJsms.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapZhcc = optionJsms.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         model.addAttribute("mapZhcc",mapZhcc);
         return super.init(model);
     }
