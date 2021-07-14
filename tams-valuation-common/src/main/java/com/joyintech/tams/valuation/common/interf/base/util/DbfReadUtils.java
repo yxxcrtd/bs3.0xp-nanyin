@@ -88,8 +88,7 @@ public class DbfReadUtils {
     }
 
     public <T> List<T> readDbf(File file, Class<T> clazz, TemplateOrderInfoReaderResult acctEntity,
-                               List<ValInterflog> valList)
-        throws Exception {
+                               List<ValInterflog> valList) throws IOException {
         FileInputStream fis = null;
         DBFReader reader = null;
         List<T> records = new ArrayList<T>();
@@ -145,8 +144,13 @@ public class DbfReadUtils {
         }
         catch (IOException e) {
             throw e;
-        }
-        finally {
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } finally {
             if (reader != null) {
                 reader.close();
             }
@@ -203,8 +207,7 @@ public class DbfReadUtils {
                            Map<String, TemplateOrderInfoReaderDTO> checks,
                            ValInterflog checkLog,
                            StringBuffer checkError,
-                           StringBuffer info)
-        throws Exception {
+                           StringBuffer info) throws IllegalAccessException, InstantiationException, NoSuchFieldException {
         T bean = clazz.newInstance();
         for (Entry<String, TemplateColMatchDTO> entry : matchs.entrySet()) {
             if (entry.getValue().getIndex() != null) {

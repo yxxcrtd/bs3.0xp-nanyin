@@ -104,7 +104,7 @@ public class AssetInfoImpMainService extends AutoSendCBBaseService{
 //    		}
     	}catch (Exception e) {
 			 logger.error("资产要素基础表上游数据接入批处理Error",e);
-             throw e;
+             throw new BusinessException(e);
         }
 		logger.debug("资产要素基础表上游数据接入批处理");
 		logInfoBatchEnd();

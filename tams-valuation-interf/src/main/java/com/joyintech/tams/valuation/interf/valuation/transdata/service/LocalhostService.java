@@ -44,7 +44,7 @@ public class LocalhostService {
      */
     public ValRecvFileEntity doRecv(ValRecvServerInfoEntity entity,
                                     List<ValInterfTemplate> tempList)
-        throws Exception {
+         {
         ValRecvFileEntity retEntity = new ValRecvFileEntity();
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()
                           + File.separator

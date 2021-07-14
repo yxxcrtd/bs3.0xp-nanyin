@@ -178,7 +178,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValBondTargetAssetDto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValBondTargetAssetDto> findPage(Map<String, Object> params) {
         return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValBondTargetAsset/findPage",
                 params, ValBondTargetAssetDto.class);
@@ -951,7 +951,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
      * @param finCashPayRule
      * @return
      */
-    public Date getFirstMdate(InterfPayhsrcsecinfoDto interfPayhsrcsecinfo, FinCashPayRule finCashPayRule){
+    public Date getFirstMdate(InterfPayhsrcsecinfoDto interfPayhsrcsecinfo, FinCashPayRule finCashPayRule) throws InstantiationException, IllegalAccessException {
         ValFinPayInterestStdInfoDto finPayInterestStdInfoDto = new ValFinPayInterestStdInfoDto();
         //资产公共DTO
         AssetCommonInfoDto scai = new AssetCommonInfoDto();
@@ -1017,7 +1017,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
      * @see
      * @since 1.0
      */
-    public InterfPayhsrcsecinfoDto autoBondCoupon(InterfPayhsrcsecinfoDto dto,String finprodMarketId){
+    public InterfPayhsrcsecinfoDto autoBondCoupon(InterfPayhsrcsecinfoDto dto,String finprodMarketId) throws IllegalAccessException, InstantiationException {
 
         List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList = new ArrayList<BaseFinProductBaseInfoDto>();
         Long branch =StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE))?0:Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
@@ -1526,7 +1526,7 @@ implements BaseProcessService<ValBondTargetAssetDto>{
      * @see
      * @since 1.0
      */
-    public ValBondTargetAssetDto getInterfBondDto(String finprodMarketId) {
+    public ValBondTargetAssetDto getInterfBondDto(String finprodMarketId) throws InstantiationException, IllegalAccessException {
         InterfPayhsrcsecinfoDto dto = new InterfPayhsrcsecinfoDto();
         List<String> list = new ArrayList<>();
         list.add(finprodMarketId);

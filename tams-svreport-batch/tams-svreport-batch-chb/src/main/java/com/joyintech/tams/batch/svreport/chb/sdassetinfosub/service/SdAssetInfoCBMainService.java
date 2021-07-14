@@ -24,7 +24,7 @@ public class SdAssetInfoCBMainService extends AutoSendCBBaseService{
     @Autowired
     private SdAssetiInfoRegBatchService sdAssetInfoRegBatchService;
     
-	public void sdAssetInfoRegData(Date currentTime)  throws Exception {
+	public void sdAssetInfoRegData(Date currentTime) {
 		sdAssetInfoRegBatchService.sdAssetInfoRegData(currentTime);
 	}
 	

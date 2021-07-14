@@ -73,7 +73,7 @@ public class ValBooksetDateSwitch001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValBooksetDateSwitch001Dto> findPage() throws Exception {
+    public Page<ValBooksetDateSwitch001Dto> findPage() {
         Map<String, Object> params = RequestUtil.getPageParam();
         return valBooksetDateSwitch001Service.findPage(params);
         
@@ -91,7 +91,7 @@ public class ValBooksetDateSwitch001Controller extends BaseController {
      */
     @RequestMapping("findBooksetGroup")
     @ResponseBody
-    public Page<SelectOptionDto> findBooksetGroup() throws Exception {
+    public Page<SelectOptionDto> findBooksetGroup()   {
         return valBooksetDateSwitch001Service.findBooksetGroup(RequestUtil.getPageParam());
     }
     
@@ -105,7 +105,7 @@ public class ValBooksetDateSwitch001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public Page<SelectOptionDto> getBooksetId2()
-        throws Exception {
+         {
         return valBooksetDateSwitch001Service.getBooksetId(RequestUtil.getPageParam());
     }
     

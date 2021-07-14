@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -120,7 +121,7 @@ public class TrdFxswapInvestTrade001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdFxswapInvestTrade001Dto> findPage()
-        throws Exception {
+         {
         return trdFxswapInvestTrade001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -133,7 +134,7 @@ public class TrdFxswapInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+        {
         return trdFxswapInvestTrade001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -163,8 +164,7 @@ public class TrdFxswapInvestTrade001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("delete")
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) TrdFxswapInvestTrade001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) TrdFxswapInvestTrade001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

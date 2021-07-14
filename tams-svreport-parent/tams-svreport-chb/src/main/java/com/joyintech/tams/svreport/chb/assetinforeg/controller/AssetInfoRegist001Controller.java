@@ -228,7 +228,7 @@ public class AssetInfoRegist001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
-	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) {
 
 		List<AssetInfoRegist001Dto> list=new ArrayList<>();
 		// 选择行数据时

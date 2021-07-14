@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -144,8 +145,7 @@ public class ValProfitQuery001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("findPage")
-    public List<ValProfitQuery001Dto> selectBalanceStatement()
-        throws Exception {
+    public List<ValProfitQuery001Dto> selectBalanceStatement() throws ParseException {
 		Map<String, Object> paraMap = RequestUtil.getParameters(getRequest());
 		// 报表维度为单账套
 		if (DictCodeListExt2.批处理账套类型_账套.getValue().equals(String.valueOf(paraMap.get("reportDimen")))) {
@@ -225,7 +225,7 @@ public class ValProfitQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() throws IOException, ParseException {
 		Map<String, Object> paraMap = RequestUtil.getPageParam();
 		if (DictCodeListExt2.批处理账套类型_账套组.getValue().equals(paraMap.get("reportDimen"))) {
 			List<SysBatchGrpPrdlink> list = valAssetBook001Service.findAllProduct(paraMap);
@@ -267,7 +267,7 @@ public class ValProfitQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getDateInfo")
     public ValProfitQuery001Dto getDateInfo()
-        throws Exception {
+         {
     	Map<String, Object> params = RequestUtil.getPageParam();
     	params.put("booksetGroup", this.getParam("booksetGroup"));
     	params.put("reportTermType", this.getParam("reportTermType"));

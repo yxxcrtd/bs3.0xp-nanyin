@@ -108,7 +108,7 @@ public class AccountsAdjustBusScenEleConf004Service extends BaseService<Accounts
      * @see
      * @since 1.0
      */
-    public boolean saveData(AccountsAdjustBusScenEleConf002Dto dto) throws Exception {
+    public boolean saveData(AccountsAdjustBusScenEleConf002Dto dto) {
         
         return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/AccountsAdjustBusScenEleConf004/save", dto, boolean.class);
         

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,7 +164,7 @@ public class GenerateInvestorsHoldInfoAutoSendCBMainService  extends AutoSendCBB
              logInfo(e.getMessage());
 			 logger.error("投资者持有信息根据产品到期信息及导入信息自动生成批处理Error",e);
              insertResultLogException(DateUtil.now());
-             throw e;
+             throw new BusinessException(e);
          }
     }
 }

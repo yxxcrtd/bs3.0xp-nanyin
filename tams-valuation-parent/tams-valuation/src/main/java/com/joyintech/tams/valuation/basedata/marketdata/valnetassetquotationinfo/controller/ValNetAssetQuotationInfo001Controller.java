@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -87,7 +88,7 @@ public class ValNetAssetQuotationInfo001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValNetAssetQuotationInfo001Dto> selectAllAsset()
-        throws Exception {       
+         {
         return valnetassetquotationinfo001service.selectForPage(RequestUtil.getPageParam());
     }
     
@@ -102,7 +103,7 @@ public class ValNetAssetQuotationInfo001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getAssetName")
     public List<SuggestDto> getAssetName()
-        throws Exception { 
+         {
         Map<String,Object> map = new HashMap<>();
         String param = super.getRequest().getParameter("param");   
         map.put("finProdName", param);
@@ -123,7 +124,7 @@ public class ValNetAssetQuotationInfo001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getAssetCode")
     public List<SuggestDto> getAssetCode()
-        throws Exception {
+         {
         Map<String,Object> map = new HashMap<>();
         String param = super.getRequest().getParameter("param");   
         map.put("finProdMarketId", param);
@@ -160,8 +161,7 @@ public class ValNetAssetQuotationInfo001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) ValNetAssetQuotationInfo001Dto dto, BindingResult br)
-        throws Exception{
+    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) ValNetAssetQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -191,7 +191,7 @@ public class ValNetAssetQuotationInfo001Controller extends BaseController{
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export() 
-        throws Exception {
+          {
         return valnetassetquotationinfo001service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

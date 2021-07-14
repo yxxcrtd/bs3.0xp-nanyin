@@ -10,6 +10,7 @@
 package com.joyintech.tams.valuation.accounadjustmanage.assetbookparameter.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +58,7 @@ public class ValAssetBookParameter001Controller extends BaseController {
      */
     @RequestMapping("ValAssetBookParameter001search")
     @ResponseBody
-    public Page<ValAssetBookParameter002Dto> search() throws Exception {
+    public Page<ValAssetBookParameter002Dto> search() {
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("name",this.getParam("name"));
         params.put("paramCode",this.getParam("paramCode"));
@@ -73,7 +74,7 @@ public class ValAssetBookParameter001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getBooksetId")
-    public Page<SelectOptionDto> getBooksetId() throws Exception {
+    public Page<SelectOptionDto> getBooksetId() {
         return valAssetBookParameter001Service.getBooksetIdNew(RequestUtil.getPageParam());
     }
     
@@ -87,7 +88,7 @@ public class ValAssetBookParameter001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody ValAssetBookParameter002Dto paramdto, BindingResult bindingResult)
-			throws Exception {
+			 {
 //		String msg = StringUtil.EMPTY;
 //		String booksetId = paramdto.getBooksetId();
 //		List<ValAssetBookParameter002Dto> paramlist = new ArrayList<>();
@@ -107,8 +108,7 @@ public class ValAssetBookParameter001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ValAssetBookParameter002Dto> listdto;
         

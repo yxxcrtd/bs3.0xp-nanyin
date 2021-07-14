@@ -104,7 +104,7 @@ public class ValVoucherQuery001Service extends CommonExportService<ValVoucherQue
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValVoucherQuery001Dto> findPage(ValVoucherQuery001SearchDto dto) throws Exception {
+    public Page<ValVoucherQuery001Dto> findPage(ValVoucherQuery001SearchDto dto) {
 //        ValVoucherQuery001SearchDto dto = (ValVoucherQuery001SearchDto)JsonUtils.map2entity(params, ValVoucherQuery001SearchDto.class);
 //
 //        String tableId = (String) params.get("tableId");

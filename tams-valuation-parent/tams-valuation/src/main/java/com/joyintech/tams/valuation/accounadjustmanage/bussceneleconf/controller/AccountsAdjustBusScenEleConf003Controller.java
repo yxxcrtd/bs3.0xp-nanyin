@@ -77,7 +77,7 @@ public class AccountsAdjustBusScenEleConf003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<AccountsAdjustBusScenEleConf002Dto> queryPage()
-        throws Exception {
+         {
     	Page<AccountsAdjustBusScenEleConf002Dto> page = accountsAdjustBusScenEleConf003Service.findPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -96,7 +96,7 @@ public class AccountsAdjustBusScenEleConf003Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(AccountsAdjustBusScenEleConf002Dto dto) 
-		throws Exception{
+		 {
         return accountsAdjustBusScenEleConf003Service.deleteBokTableDict(dto);
 //    	String msg = "";
 //    	accountsAdjustBusScenEleConf003Service.deleteBokTableDict(dto);

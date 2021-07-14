@@ -22,7 +22,7 @@ public class ValSztInterfValData001Service extends CommonExportService<ValSztInt
      * @see
      * @since 1.0
      */
-	public Page<ValSztInterfValData001Dto> findPage(Map<String, Object> params) throws Exception{
+	public Page<ValSztInterfValData001Dto> findPage(Map<String, Object> params) {
 	    return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ValSztInterfValData/findPage",
             params, ValSztInterfValData001Dto.class);
 	}

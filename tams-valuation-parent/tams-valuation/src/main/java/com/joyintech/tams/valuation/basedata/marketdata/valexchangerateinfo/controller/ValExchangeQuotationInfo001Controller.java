@@ -3,6 +3,7 @@ package com.joyintech.tams.valuation.basedata.marketdata.valexchangerateinfo.con
 
 
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -69,7 +70,7 @@ public class ValExchangeQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValExchangeQuotationInfoDto> selectAll()
-        throws Exception {
+         {
         Page<ValExchangeQuotationInfoDto> page = valExchangeQuotationInfoService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -104,8 +105,7 @@ public class ValExchangeQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) ValExchangeQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) ValExchangeQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -139,7 +139,7 @@ public class ValExchangeQuotationInfo001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
 //        List<ValExchangeQuotationInfoDto> dtoList = valExchangeQuotationInfoService.selectAllList(
 //            RequestUtil.getParameters(getRequest()));
 //        File outFile = valExchangeQuotationInfoService.makeFile(

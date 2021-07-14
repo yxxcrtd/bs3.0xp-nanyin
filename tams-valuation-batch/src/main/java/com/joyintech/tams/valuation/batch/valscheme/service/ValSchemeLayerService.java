@@ -12,6 +12,7 @@ package com.joyintech.tams.valuation.batch.valscheme.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -85,8 +86,7 @@ public class ValSchemeLayerService extends CommonExportService<ValSchemeBatchDto
     @Autowired
     private FinProductCommonService finProductCommonService;
 
-    public ValSchemeGenerateResult execute(Map<String, Object> params1)
-        throws Exception {
+    public ValSchemeGenerateResult execute(Map<String, Object> params1) throws ParseException {
         // 获取reader返回值
         ValSchemeTodoDto acctEntity = (ValSchemeTodoDto)params1.get(GlobalConstant.READER_RESULT);
 

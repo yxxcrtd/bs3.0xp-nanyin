@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.trade.primarybiddingmanage.validator.PrimaryBid
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -86,7 +87,7 @@ public class PrimaryBiddingManage001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<PrimaryBiddingManageDto> findPage() throws Exception {
+    public Page<PrimaryBiddingManageDto> findPage() {
         return primaryBiddingManage001Service.findPage(RequestUtil.getPageParam());
     }
     /**
@@ -128,7 +129,7 @@ public class PrimaryBiddingManage001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return primaryBiddingManage001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
@@ -171,8 +172,7 @@ public class PrimaryBiddingManage001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody PrimaryBiddingManageDto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody PrimaryBiddingManageDto inputDto) throws WorkFlowException {
 
         ProcessParameter<PrimaryBiddingManageDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<PrimaryBiddingManageDto> workFlowParameter = new WorkFlowParameter<>();
@@ -207,8 +207,7 @@ public class PrimaryBiddingManage001Controller extends BaseController {
      */
     @RequestMapping("doRevoke003")
     @ResponseBody
-    AjaxResult doRevoke003(@RequestBody TrdBiddingManage003Dto inputDto)
-        throws Exception {
+    AjaxResult doRevoke003(@RequestBody TrdBiddingManage003Dto inputDto) throws WorkFlowException {
         ProcessParameter<TrdBiddingManage003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdBiddingManage003Dto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);

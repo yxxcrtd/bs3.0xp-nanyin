@@ -30,6 +30,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -347,8 +348,7 @@ public class TrdAssetsProject001Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    public AjaxResult save(@RequestBody TrdAssetsProject001Dto dto)
-            throws Exception {
+    public AjaxResult save(@RequestBody TrdAssetsProject001Dto dto) throws WorkFlowException {
         ProcessParameter<TrdAssetsProject001Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdAssetsProject001Dto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());

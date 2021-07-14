@@ -152,7 +152,7 @@ public class CheckReport001Controller extends BaseController{
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return checkReportMService.export(this.getPageId(), RequestUtil.getPageParam());
     }
 }

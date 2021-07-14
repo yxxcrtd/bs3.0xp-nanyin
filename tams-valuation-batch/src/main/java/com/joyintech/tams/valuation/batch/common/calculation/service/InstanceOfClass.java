@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.valuation.batch.common.calculation.service;
 
+import com.joyintech.framework.exception.BusinessException;
+
 /**
  * 生成泛型类 
  * 
@@ -33,7 +35,7 @@ public class InstanceOfClass {
             obj=cls.newInstance();
         } 
         catch (Exception e) {
-            throw new RuntimeException("参数出现异常");
+            throw new BusinessException("参数出现异常");
         }
         return obj;
     }

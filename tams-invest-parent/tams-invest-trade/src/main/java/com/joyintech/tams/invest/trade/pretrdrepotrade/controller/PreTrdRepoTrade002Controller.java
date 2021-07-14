@@ -42,6 +42,7 @@ import com.joyintech.tams.valuation.common.interf.base.service.common.InterfComm
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -576,7 +577,7 @@ public class PreTrdRepoTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody PreTrdRepoTrade002Dto dto)   throws Exception {
+    AjaxResult save(@RequestBody PreTrdRepoTrade002Dto dto) throws WorkFlowException {
 
         String msg = "";
         dto.setPledgeBondList(dto.getBussRepoSecPtl().getPledgeBondList());

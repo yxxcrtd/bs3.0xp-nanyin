@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.trade.pretrdrepotrade.service.PreTrdRepoTrade00
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.joyintech.framework.grid.Page;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -84,7 +86,7 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<PreTrdRepoTrade002Dto> selectForPage() throws Exception {
+    public Page<PreTrdRepoTrade002Dto> selectForPage() {
         Page<PreTrdRepoTrade002Dto> trdRepoTrade001DtoDtoPage = preTrdRepoTrade001Service.selectForPage(RequestUtil.getPageParam());
         //针对查询流程中的质押品信息，特殊处理
         if (!StringUtil.isEmptyList(trdRepoTrade001DtoDtoPage.getRoot()) && !StringUtil.isEmpty(trdRepoTrade001DtoDtoPage.getRoot().get(0).getBusinessData())){
@@ -120,7 +122,7 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	//modify by yujiaping 2020-12-10 BS-1409【 质押式回购交易预录入】未选择点击导出应导出全部，选中点击导出，只导出选中数据start
     	String datas = this.getParam("datas");
     	List<PreTrdRepoTrade002Dto> listdto ;
@@ -149,7 +151,7 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("getCounterAcct")
     @ResponseBody
-    public List<SelectOptionDto> getCounterAcct(@RequestParam Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> getCounterAcct(@RequestParam Map<String, Object> param) {
         List<SelectOptionDto> TrdRepoTrade001DtoDtoPage = preTrdRepoTrade001Service.getCounterAcct(param);
         return TrdRepoTrade001DtoDtoPage;
     }
@@ -166,7 +168,7 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("getAcct")
     @ResponseBody
-    public List<SelectOptionDto> getAcct(@RequestParam Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> getAcct(@RequestParam Map<String, Object> param) {
         List<SelectOptionDto> TrdRepoTrade001DtoDtoPage = preTrdRepoTrade001Service.getAcct(param);
         return TrdRepoTrade001DtoDtoPage;
     }
@@ -181,7 +183,7 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("getSecAcct")
     @ResponseBody
-    public List<SelectOptionDto> getSecAcct(@RequestParam Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> getSecAcct(@RequestParam Map<String, Object> param) {
         if (!"null".equals(String.valueOf(param.get("portfolioId")))) {
             param.put("portfolioId","portfolioId");
         }
@@ -197,7 +199,7 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("getSecAcctNew")
     @ResponseBody
-    public List<SelectOptionDto> getSecAcctNew(@RequestParam Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> getSecAcctNew(@RequestParam Map<String, Object> param) {
         List<SelectOptionDto>  list = new ArrayList<>();
         if (!DictCodeListExt1.是否_否.getValue().equals(String.valueOf(param.get("validPortfolioId")))
             && ("null".equals(String.valueOf(param.get("portfolioId"))) || "".equals(String.valueOf(param.get("portfolioId"))))) {
@@ -236,7 +238,7 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("getAcctId")
     @ResponseBody
-    public PreTrdRepoTrade002Dto getAcctId(@RequestParam Map<String, Object> param) throws Exception {
+    public PreTrdRepoTrade002Dto getAcctId(@RequestParam Map<String, Object> param) {
         PreTrdRepoTrade002Dto preTrdRepoTrade002Dto = preTrdRepoTrade001Service.getAcctId(param);
         return preTrdRepoTrade002Dto;
     }
@@ -251,7 +253,7 @@ public class PreTrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("getSecAcctDto")
     @ResponseBody
-    public PreTrdRepoTrade002Dto getSecAcctDto(@RequestParam Map<String, Object> param) throws Exception {
+    public PreTrdRepoTrade002Dto getSecAcctDto(@RequestParam Map<String, Object> param) {
         PreTrdRepoTrade002Dto preTrdRepoTrade002Dto = preTrdRepoTrade001Service.getSecAcctDto(param);
         if (preTrdRepoTrade002Dto != null){
             preTrdRepoTrade002Dto.setRegistOrg(SysDataUtil.getNameFromDataDict(BussinessDictCode.登记托管机构,preTrdRepoTrade002Dto.getRegistOrg()));
@@ -340,8 +342,7 @@ public class PreTrdRepoTrade001Controller extends BaseController {
     @RequestMapping("doRevoke")
     @ResponseBody
     AjaxResult doRevoke(@RequestBody @Validated({
-            ValidateGroupDelete.class}) PreTrdRepoTrade002Dto inputDto, BindingResult br)
-            throws Exception {
+            ValidateGroupDelete.class}) PreTrdRepoTrade002Dto inputDto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -58,7 +58,7 @@ public class ValBooksetDateSwitch003Controller extends BaseController {
      */
     @RequestMapping("findList")
     @ResponseBody
-    public List<ValBooksetDateSwitch003Dto> findList() throws Exception {
+    public List<ValBooksetDateSwitch003Dto> findList() {
         return valBooksetDateSwitch003Service.findList(RequestUtil.getPageParam());
 
     }

@@ -178,9 +178,9 @@ public class PerProDeclareReg001Controller extends BaseController{
 		AjaxResult res=new AjaxResult();
 		try {
             res =perProDeclareReg001Service.uploadFile(map);
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error(e.getMessage(),e);
-			throw e;
+			throw new IOException(e);
         }
 		return res;
 		
@@ -242,7 +242,7 @@ public class PerProDeclareReg001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(value = "/submitChb", method = RequestMethod.POST)
-    public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+    public AjaxResult doSubmit(@RequestBody Map<String, Object> param)  {
 
 		List<PerProDeclareRegDto> proDeclareList=new ArrayList<PerProDeclareRegDto>();
 		// 选择行数据时
@@ -317,7 +317,7 @@ public class PerProDeclareReg001Controller extends BaseController{
 		AjaxResult res=new AjaxResult();
 		try {
 			res =perProDeclareReg001Service.nineFileUploadCheck(map);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error(e.getMessage(),e);
 			throw e;
 		}
@@ -336,7 +336,7 @@ public class PerProDeclareReg001Controller extends BaseController{
 		AjaxResult res=new AjaxResult();
 		try {
 			res =perProDeclareReg001Service.nineFileUpload(map);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error(e.getMessage(),e);
 			throw e;
 		}

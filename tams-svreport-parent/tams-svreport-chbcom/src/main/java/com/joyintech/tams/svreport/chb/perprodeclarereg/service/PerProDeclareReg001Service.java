@@ -8,6 +8,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
@@ -50,6 +51,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.BindException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -689,7 +691,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			}
 
 		} catch (Exception e) {
-			throw e;
+			throw new BusinessException(e);
 		}
 
 		if (fileCheckMsg.length() > 0){
@@ -1343,7 +1345,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				}
 
 			} catch (Exception e) {
-				throw e;
+				throw new BusinessException(e);
 			}
 			if(fileCheckMsg1.length() > 0){
 				if(file.exists()){
@@ -1405,7 +1407,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				}
 
 			} catch (Exception e) {
-				throw e;
+				throw new BusinessException(e);
 			}
 			StringBuffer fileSb = new StringBuffer();
 			for (String key : fileExistsMap1.keySet()){

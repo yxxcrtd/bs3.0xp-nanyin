@@ -10,10 +10,7 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.valuationstatementquery.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -83,7 +80,7 @@ public class ValValuationStatementQuery001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> exportt() throws Exception {
+	public ResponseEntity<byte[]> exportt() throws IOException {
 		String datas = this.getParam("datas");
 		List<ValValuationStatementQuery001Dto> val001dto = JsonUtils.json2List(datas,
 				ValValuationStatementQuery001Dto.class);
@@ -162,7 +159,7 @@ public class ValValuationStatementQuery001Controller extends BaseController {
 	 */
 	@RequestMapping("findPage")
 	@ResponseBody
-	public Page<ValValuationStatementQuery001Dto> findPage() throws Exception {
+	public Page<ValValuationStatementQuery001Dto> findPage() {
 		return valValuationStatementQuery001Service.findPage(RequestUtil.getPageParam());
 
 	}

@@ -22,6 +22,7 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import com.joyintech.framework.exception.BusinessException;
 import oracle.jdbc.OracleTypes;
 
 import org.apache.commons.lang.StringUtils;
@@ -407,7 +408,7 @@ public class VasInterfCommonService{
 				dto.setConsole("02");
 				dto.setErrorMessage("模板缺失: " + templateName+"_"+templateId + ".xml");
 				ValInertfBuildXml001DtoList.add(dto);
-				throw new RuntimeException("模板缺失: " + templateName+"_"+templateId + ".xml!");
+				throw new BusinessException("模板缺失: " + templateName+"_"+templateId + ".xml!");
 			}
 			
 			info = JAXB.unmarshal(templateXmlURL, Info.class);
@@ -473,7 +474,7 @@ public class VasInterfCommonService{
 			dto.setConsole("02");
 			dto.setErrorMessage(templateName+"_"+templateId+":"+StringUtils.join(emptyList, ", ") + " 这些值为必输项但sql查询结果值为空！");
 			ValInertfBuildXml001DtoList.add(dto);
-			throw new RuntimeException(templateName+"_"+templateId+":"+StringUtils.join(emptyList, ", ") + " 这些值为必输项但sql查询结果值为空！");
+			throw new BusinessException(templateName+"_"+templateId+":"+StringUtils.join(emptyList, ", ") + " 这些值为必输项但sql查询结果值为空！");
 		}
 		return info;
 	}

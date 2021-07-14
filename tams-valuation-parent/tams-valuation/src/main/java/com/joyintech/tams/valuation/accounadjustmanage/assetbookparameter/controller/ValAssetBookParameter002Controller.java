@@ -81,7 +81,7 @@ public class ValAssetBookParameter002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findParam")
-	public Page<SelectOptionDto> findParam() throws Exception {
+	public Page<SelectOptionDto> findParam() {
 		return valAssetBookParameter002Service.findParam(RequestUtil.getPageParam());
 	}
 	
@@ -91,7 +91,7 @@ public class ValAssetBookParameter002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getParamValue")
-	public ValAssetBookParameter002Dto getParamValue() throws Exception {
+	public ValAssetBookParameter002Dto getParamValue() {
 		return valAssetBookParameter002Service.getParamValue(RequestUtil.getPageParam());
 	}
 

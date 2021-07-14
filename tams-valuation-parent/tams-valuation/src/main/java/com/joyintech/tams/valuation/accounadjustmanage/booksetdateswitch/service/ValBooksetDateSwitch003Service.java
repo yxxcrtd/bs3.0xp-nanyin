@@ -46,7 +46,7 @@ public class ValBooksetDateSwitch003Service extends CommonExportService<ValBooks
      * @return 表格信息
      */
     public List<ValBooksetDateSwitch003Dto> findList(Map<String, Object> params)
-        throws Exception {
+         {
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValBooksetDateSwitch003/findList", params, ValBooksetDateSwitch003Dto.class);
 //        return mapper.queryPageList(params);
     }

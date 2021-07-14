@@ -9,6 +9,7 @@
  */
  
 package com.joyintech.tams.invest.trade.trdplanrateinvesttrade.controller;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -404,8 +405,7 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdPlanRateInvestTradeDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdPlanRateInvestTradeDto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

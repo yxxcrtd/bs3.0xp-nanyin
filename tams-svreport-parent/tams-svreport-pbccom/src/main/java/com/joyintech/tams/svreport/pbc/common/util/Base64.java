@@ -7,6 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.thoughtworks.xstream.core.util.Base64Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -204,7 +205,7 @@ public class Base64 {
 			}
 		}
 		if (index != out.length) {
-			throw new Error("Miscalculated data length (wrote " + index
+			throw new BusinessException("Miscalculated data length (wrote " + index
 					+ " instead of " + out.length + ")");
 		}
 		return out;

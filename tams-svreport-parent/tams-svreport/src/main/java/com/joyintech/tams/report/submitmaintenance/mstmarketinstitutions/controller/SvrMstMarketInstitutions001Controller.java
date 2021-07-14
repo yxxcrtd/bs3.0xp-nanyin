@@ -95,7 +95,7 @@ public class SvrMstMarketInstitutions001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<SvrMstMarketInstitutionsDto> selectAllMstCaptialAccount()
-        throws Exception {
+         {
         Page<SvrMstMarketInstitutionsDto> page = mstMarketInstitutionsMService.selectForPage(RequestUtil.getPageParam());
         return page;
     }
@@ -112,7 +112,7 @@ public class SvrMstMarketInstitutions001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getCustomerId")
     public List<SuggestDto> getCustomerId()
-        throws Exception {
+         {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("customerType", DictCodeList.客户类型_法人.getValue());
         //List<SuggestDto> list = new ArrayList<SuggestDto>();
@@ -134,7 +134,7 @@ public class SvrMstMarketInstitutions001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getCustomerName")
     public List<SuggestDto> getCustomerName()
-        throws Exception {
+         {
         Map<String, Object> map = new HashMap<String, Object>();
         String param = super.getRequest().getParameter("param");
         map.put("customerType", DictCodeList.客户类型_法人.getValue());
@@ -171,7 +171,7 @@ public class SvrMstMarketInstitutions001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete() throws Exception{
+    public AjaxResult delete() {
     	String msg = this.getMessage("REPORT_COMMON_I_0006");
     	String keyStr = super.getParam("deleteKeys");
     	if (StringUtil.isNotEmpty(keyStr)) {
@@ -196,7 +196,7 @@ public class SvrMstMarketInstitutions001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	if(param.containsKey("keyList")){
         	String keyList = param.get("keyList").toString();

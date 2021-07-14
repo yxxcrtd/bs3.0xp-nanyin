@@ -61,7 +61,7 @@ public class AccountsAdjustBusScenEleConf003Service extends BaseService<Accounts
      */
     @DataSource(DataSourceType.MASERT)
     public Page<AccountsAdjustBusScenEleConf002Dto> findPage(Map<String, Object> pageParam)
-        throws Exception {
+         {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/AccountsAdjustBusScenEleConf003/findPage", pageParam, AccountsAdjustBusScenEleConf002Dto.class);
 //    	return super.queryForPage(()-> accountsAdjustBusScenEleConf003Mapper.findValBokTableDictList(pageParam));
     }

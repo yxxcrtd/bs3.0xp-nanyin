@@ -74,7 +74,7 @@ public class ValPenaltyInterestQuery001Service extends CommonExportService<ValPe
      * @since 1.0
      */
     public Page<ValPenaltyInterestQuery001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+         {
 
 //        // String repAsset = (String)params.get("repAsset");
 //        String finprodType = (String)params.get("finprodType");
