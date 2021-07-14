@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -358,6 +359,14 @@ public class FinProductAdd extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal minSaleUnit;
+    /**
+     * 分红方式
+     */
+    private String divideMethod;
+    /**
+     * 当日回转交易
+     */
+    private String  dayBackTrade;
 
     /**
      * 取得 金融产品代码
@@ -1464,5 +1473,22 @@ public class FinProductAdd extends BaseEntity {
      */
     public void setMinSaleUnit(BigDecimal minSaleUnit) {
         this.minSaleUnit = minSaleUnit;
+    }
+
+    public String getDivideMethod() {
+        return divideMethod;
+    }
+
+
+    public void setDivideMethod(String divideMethod) {
+        this.divideMethod = divideMethod;
+    }
+
+    public String getDayBackTrade() {
+        return dayBackTrade;
+    }
+
+    public void setDayBackTrade(String dayBackTrade) {
+        this.dayBackTrade = dayBackTrade;
     }
 }

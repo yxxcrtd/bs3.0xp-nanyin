@@ -180,7 +180,8 @@
 			BOND.VALUE_SOURCE valueSource,
 			<!-- 市场收益率查询乘100 by 赵东东 2019.11.4 -->
 			BOND.BPYIELD*100 AS bpyield,
-			BOND.CREATE_TIME importDay
+			BOND.CREATE_TIME importDay,
+	        BOND.NETVALUATION_EXERCISE AS netvaluationExercise
 		FROM 
 			FIN_PRODUCT FIN, MST_BOND_VALUATION_INFO BOND
 		WHERE

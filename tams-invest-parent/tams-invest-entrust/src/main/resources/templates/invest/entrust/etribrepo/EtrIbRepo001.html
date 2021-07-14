@@ -100,7 +100,7 @@
 			<ul class="layui-tab-title">
 				<li class="layui-this">指令管理</li>
 				<li th:if="${repo_pledge_model} =='03' ">质押券管理</li>
-				<li th:if="${repo_pledge_model} =='02' ">质押券管理</li>
+				<li th:if="${repo_pledge_model} =='01' or${repo_pledge_model} =='02' ">质押券管理</li>
 			</ul>
 			<div class="layui-tab-content">
 				<!-- 指令管理 -->
@@ -269,7 +269,7 @@
 							<div class="layui-form-item">
 								<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
 									<label class="layui-form-label form-lable"
-										data-th-text="#{EtrIbBondinfo001.portfolioName}">组合名称</label>
+										data-th-text="#{EtrIbBondinfo001.portfolioId}">组合代码</label>
 									<div class="layui-input-inline input-inline">
 										<select type="text" id="portfolioId_zqzy" name="portfolioId_zqzy"
 												class="layui-input form-input input-select"
@@ -283,7 +283,7 @@
 
 								<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
 									<label class="layui-form-label form-lable"
-										data-th-text="#{EtrIbRepo001.secAcctId}">证券账户/通道</label>
+										data-th-text="#{EtrIbRepo001.secAcctId}">证券账户</label>
 									<div class="layui-input-inline input-inline">
 										<select type="text" id="secAcctId" name="secAcctId"
 												class="layui-input form-input input-select"
@@ -329,9 +329,11 @@
 						<table class="layui-table" id="zyqglTable"></table>
 					</div>
 				</div>
-				<div class="layui-tab-item"  th:if="${repo_pledge_model} =='02' " >
-					<iframe th:src="@{/invest/entrust/etrstandardbond/EtrStandardBond001/init}" width="100%"
-								height="100%" frameborder="0" scrolling="no" style="min-height:400px"></iframe>
+				<div class="layui-tab-item"  th:if="${repo_pledge_model} =='01' or ${repo_pledge_model} =='02' " >
+					<iframe th:src="@{/invest/entrust/etrstandardbond/EtrStandardBond001/init?pageFrom='EtrIbRepoinfo001'}" width="100%"
+								height="100%" frameborder="0" scrolling="no" style="min-height:400px"
+								 th:data-params="| pageFrom: 'EtrIbRepoinfo001'|"
+								></iframe>
 				</div>
 			</div>
 		</div>

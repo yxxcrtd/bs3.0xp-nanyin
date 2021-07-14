@@ -94,8 +94,12 @@
         //提交获取计算方式单选框的值
         object.calculateField = $("input[name=calculateField]:checked").val();
 
-        object.counterType = $('#counterId').select2('data')[0].object;  //交易对手类型，校验时用到
-
+        if ($("#ps").val() == T03 || $("#ps").val() == T39) {
+            object.counterType=$('#counterId2').val();
+        }else{
+            object.counterType=$('#counterId1').val();
+        }
+        // object.counterType = $('#counterId').select2('data')[0].object;  //交易对手类型，校验时用到
         return object;
     }
 
@@ -343,6 +347,10 @@
             if (param.channelId) {
                 $("#chlFinprodId").val(param.channelId).trigger("change");//通道
             }
+            
+            if (param.price){
+                $("#calculateField").val(param.price).trigger("change");//净价
+            }
             $("#ps").textSelect('setValue',"T02");
             $("#priceModel").textSelect('setValue',"PRM02");
             $("#vdate").val(sysDate).trigger("change");
@@ -415,7 +423,8 @@
                 $("#remark").val(param.remark).trigger("change");//备注
             }
             if (param.counterId) {
-                $("#counterId").textSelect('setValue',param.counterId);
+                $("#counterId1").textSelect('setValue',param.counterId);
+                $("#counterId2").textSelect('setValue',param.counterId);
             }
             
             pageModel = PAGE_MODEL_EDIT;
@@ -428,15 +437,17 @@
             return;
         }
         var param = {};
+        param.ccy = $('#ccy').val();
+        param.vdate = $('#vdate').val();
         param.finprodId = $("#finprodIdhid").val();
         param.portfolioId = $("#portfolioId").val();
-        
+
         Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
             if (result) {
                 $("#proAvailableCash").val(result.zhkyxj_t);
                 $("#assetAvailablePosition").val(result.zcky_qmze);
             }
-        });        
+        });
     }
 
     /**
@@ -454,6 +465,17 @@
         }
     }
 
+    var getLeftZHinfo = function () {
+        var chlFinprodId = $("#chlFinprodId").val();
+        var finprodIdhid = $("#finprodIdhid").val();
+        var portfolioId = $("#portfolioId").val();
+        var ccy = $('#ccy').val();
+        var vdate = $('#vdate').val();
+        var calId = $('#calendarId').val();
+        if (todoList == false) {
+            parent.EtrIbBondinfoHq.queryPositionInfo(finprodIdhid,portfolioId,chlFinprodId,ccy,vdate,calId);
+        }
+    }
     /**
      * 取消,清空指令数据
      */
@@ -473,10 +495,14 @@
         $("#remark").val("").trigger("change");
         $("#entrustId").val("").trigger("change");
         $("#entrustStatus").val("").trigger("change");
-
+        $("#invAim").val("").trigger("change");
+        $("#calculateField_price").prop('checked', false);
+        $("#calculateField_exerYield").prop('checked', false);
+        $("#calculateField_matureYield").prop('checked', false);
+        layui.form.render(); // reload layui
         pageModel = PAGE_MODEL_NEW;
     };
-
+    
     /**
      * 保存或提交
      *
@@ -583,23 +609,32 @@
         $("#ps").change(function () {
             var finprodIdhid = $("#finprodIdhid").val();
             if ($("#ps").val() == T01) {
-                $("#finprodId").removeAttr("required");
                 if ($("#isRight").val() != N) {
                     $("#exerYield").removeAttr("disabled");
                 }
                 $("#matureYield").removeAttr("disabled");
+                
+                // 当交易方向为买入卖出时，交易对手下拉框显示为银行间机构信息中的交易账户21位码+交易成员全称
+                $("#div_counterId1").css("display","block");
+                $("#div_counterId2").css("display","none");
             } else if ($("#ps").val() == T02) {
-                $("#finprodId").attr("required", "true");
                 $("#exerYield").attr("disabled", true);
                 $("#matureYield").attr("disabled", true);
                 $("#exerYield").val("");
                 $("#matureYield").val("");
+                
+                // 当交易方向为买入卖出时，交易对手下拉框显示为银行间机构信息中的交易账户21位码+交易成员全称
+                $("#div_counterId1").css("display","block");
+                $("#div_counterId2").css("display","none");
             } else if ($("#ps").val() == T03 || $("#ps").val() == T39) {
-                $("#finprodId").attr("required", "true");
                 $("#exerYield").attr("disabled", true);
                 $("#matureYield").attr("disabled", true);
                 $("#exerYield").val("");
                 $("#matureYield").val("");
+                
+                // 当交易方向为行权回售时，可选项为市场机构
+                $("#div_counterId1").css("display","none");
+                $("#div_counterId2").css("display","block");
             }
             if (pageModel != PAGE_MODEL_REFERENCE) {
                 if ($("#ps").val() == T03) {
@@ -678,19 +713,19 @@
                 $("#finprodName").val("").trigger("change");
                 $("#calendarId").val("").trigger("change");
                 //$("#tradeMarket").val("").trigger("change").attr("disabled", false);
-                $("#ccy").val("").trigger("change").attr("disabled", false);
+                $("#ccy").val($("#EtrIbBondinfo002_default_ccy").val()).trigger("change").attr("disabled", false);
                 $("#isRight").val("").trigger("change");
 
                 $("#exerYield").val("").trigger("change").trigger("blur");
                 $("#matureYield").val("").trigger("change").trigger("blur");
             }
 
-            //左下行情信息联动
+            //左下行情信息联动 & 组合可用现金,资产可用持仓
             getLeftMarketInfo();
-         
+
             //组合可用现金,资产可用持仓
             getPtlCashPositionInfo();
-            
+
             // 画星星
             star();
         });
@@ -699,15 +734,14 @@
          * 组合代码
          */
         $("#portfolioId").change(function () {
-
             var portfolioId = $("#portfolioId").val();
-
-            //左下行情信息联动
-            getLeftMarketInfo();
-         
+            
+            //左下行情信息联动 & 组合可用现金,资产可用持仓
+            // getLeftMarketInfo();
+            getLeftZHinfo();
+            
             //组合可用现金,资产可用持仓
             getPtlCashPositionInfo();
-
         });
 
         $.fn.updateChosenArr = function updateChosenArr(obj) {

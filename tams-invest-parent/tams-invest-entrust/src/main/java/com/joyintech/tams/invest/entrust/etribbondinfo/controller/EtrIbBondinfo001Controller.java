@@ -75,7 +75,7 @@ public class EtrIbBondinfo001Controller extends BaseController{
     
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.行内资产二级分类);
+        this.setSelectOptionToModel(model, DictCode.WIND一级分类_含债券一级分类等);
         this.setSelectOptionToModel(model, DictCode.金融产品类型_投管用);
         this.setSelectOptionToModel(model, DictCode.交易方向);
         this.setSelectOptionToModel(model, DictCode.委托状态);

@@ -155,6 +155,9 @@
                 , {field: 'mdateStr', title: 'EtrIbRepo001.mdate', width:150,/*type:'date'*/}
                 , {field: 'lastPeriod', title: 'EtrIbRepo001.lastPeriod', width:150}
                 , {field: 'registOrgName', title: 'EtrIbRepo001.registOrg', width:150}
+                , {field: 'pledgeStockName', title: '质押券库', width:150, visible: function() {
+					return repo_pledge_model=='03'?true:false
+				}()}
                 , {field: 'pledgeStockId', visible: false}
                 ],
             //计算总可质押券面总额

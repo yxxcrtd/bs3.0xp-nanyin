@@ -50,6 +50,7 @@ import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
@@ -296,8 +297,11 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
         try {
             dto.setOperateType(dto.getOperateType());
             BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+            EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
             EtrEntrust etrEntrust = new EtrEntrust();
             EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            entrustCommonDto.setEtrEntrust(etrEntrust);
+            entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             dto.setIsOutTrade(DictCodeList.是否_是.getValue());
             dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
@@ -338,6 +342,9 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
             restTemplate.postForObject(
                     ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
                     Boolean.class);
+            if(baseEtrCashPositionCommService!=null){
+                baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+            }
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();

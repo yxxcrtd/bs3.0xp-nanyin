@@ -20,6 +20,7 @@
 		    </style>
             <div class="joyin-form-wrap">
                 <form class="layui-form pro-module-form" id="searchForm">
+                    <input type="hidden" id="EtrIbBondinfo002_default_ccy" th:value="${(entity?.ccy)?:'CNY1'}"/>
                     <input type="hidden" id="finprodIdhid" name="finprodId" th:value="${entity?.finprodId}" />
                     <input type="hidden" id="calendarId" name="calendarId" th:value="${entity?.calendarId}" />
                     <input type="hidden" id="businessId" name="businessId" th:value="${businessId?: ''}">
@@ -183,6 +184,7 @@
                                 <input
                                     type="text"
                                     id="price"
+                                    required
                                     name="price"
                                     placeholder="请输入内容"
                                     data-pattern=""
@@ -223,6 +225,7 @@
                                 <input
                                     type="text"
                                     id="matureYield"
+                                    required
                                     name="matureYield"
                                     placeholder="请输入内容"
                                     data-pattern=""
@@ -243,6 +246,7 @@
                                 <input
                                         type="text"
                                         id="exerYield"
+                                        required
                                         name="exerYield"
                                         placeholder="请输入内容"
                                         data-pattern=""
@@ -257,18 +261,38 @@
                     </div>
                     <div class="layui-form-item" style="padding:0px;">
                        
-                        <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                        <div id="div_counterId1" class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.counterId}">交易对手</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
-                                <select
-                                    id="counterId"
-                                    name="counterId"
-                                    class="layui-input form-input input-select"
-                                    data-th-placeholder="#{SysCommon.placeholder}"
-                                    formatoption="false"
-                                    parentIds="ps,finprodType2,profitType,tradeMarket,finprodId,pinanAssetType"
-                                    data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}?innerTrade=false&tradeMarket=01&callPageId=EtrInvestBondInfo002|"
-                                    th:initValue="${entity?.counterId}"
+<!--                                <select-->
+<!--                                    id="counterId1"-->
+<!--                                    name="counterId1"-->
+<!--                                    class="layui-input form-input input-select"-->
+<!--                                    data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--                                    formatoption="false"-->
+<!--                                    parentIds="ps,finprodType2,profitType,tradeMarket,finprodId,pinanAssetType"-->
+<!--                                    data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}?innerTrade=false&tradeMarket=01&callPageId=EtrInvestBondInfo002|"-->
+<!--                                    th:initValue="${entity?.counterId}"-->
+<!--                                ></select>-->
+                                <select required type="text" id="counterId1" name="counterId1"
+                                        class="layui-input form-input input-select"
+                                        th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
+                                        th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}" allowClear="true"
+                                        formatoption="true"
+                                        th:initValue="${entity?.counterId}"></select>
+                            </div>
+                        </div>
+                        <div id="div_counterId2" class="form-inline-wrap" style=" width: 50%; padding:0px;display: none">
+                            <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.counterId}">交易对手</label>
+                            <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
+                                <select required
+                                        id="counterId2" name="counterId2"
+                                        class="layui-input form-input input-select"
+                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                        formatoption="false"
+                                        parentIds="ps,finprodType2,profitType,tradeMarket,finprodId,pinanAssetType"
+                                        data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}|"
+                                        th:initValue="${entity?.counterId}"
                                 ></select>
                             </div>
                         </div>
@@ -314,7 +338,6 @@
                                     name="vdate"
                                     placeholder="请选择时间"
                                     data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
-                                    disabled="disabled"
                                     required="required"
                                 />
                             </div>
@@ -329,7 +352,6 @@
                                         placeholder="请选择时间"
                                         data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
                                         required="required"
-                                        disabled="disabled"
                                 />
                             </div>
                         </div>

@@ -27,6 +27,9 @@ var loadTree = function (callback) {
 	EtrIbRepoRk = {
 		loadTree: loadTree
 	};
+	window.EtrIbRepoRk = {
+		loadTree: loadTree
+	};
 
 $(function () {
 	
@@ -166,13 +169,13 @@ $(function () {
         ,{field:'windtypeone',  title: '资产一级分类',edit: true,
         	editOption: {
                 type: 'select', id: 'windtypeoneSelect', multiple: false, searchable: true,
-                result: CUSTOM_ASSET_TYPE_TWO,childrenIds: 'windtypetwoSelect'
+                result: WINDTYPEONE,childrenIds: 'windtypetwoSelect'
         	},sortable: false
         },
         {field:'windtypetwo',  title: '资产二级分类',edit: true,
         	editOption: {
                 type: 'select', id: 'windtypetwoSelect', multiple: false, searchable: true,
-                result: CUSTOM_ASSET_TYPE_THREE,parentIds: 'windtypeoneSelect',
+                result: WINDTYPETWO,parentIds: 'windtypeoneSelect',
         	},sortable: false
         },
         {field:'mGradeResult',  title: '主体评级',edit: true,
@@ -241,7 +244,10 @@ $(function () {
     $('#EtrIbRepoRk_btn_creat').click(function () {
         Joyin.dialog(JoyinUtil.getLabel("质押库新建"),
             basePath + "invest/entrust/etribrepo/EtrIbRepoRk002/init",
-            "50%", "75%")
+            "50%", "75%",null,function(){
+        		loadTree();
+        	}
+        )
     });
     //“列表信息”上下箭头展示事件 '.icon-downarrow',  '.icon-uparrow'
     $("body").on('click','.mixtree-head', function () {

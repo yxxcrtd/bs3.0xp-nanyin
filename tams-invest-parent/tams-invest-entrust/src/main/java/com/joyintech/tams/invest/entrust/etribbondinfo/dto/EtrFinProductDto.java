@@ -5,6 +5,8 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * 银行间债券指令
@@ -116,7 +118,7 @@ public class EtrFinProductDto {
     private String mdate;
 
     /**
-     * 剩余期限
+     * 剩余期限(债券估值行情)
      */
     private BigDecimal lastqx;
 
@@ -166,7 +168,7 @@ public class EtrFinProductDto {
     private BigDecimal newPrice;
 
     /**
-     * 估价净价
+     * 估价净价（行权）
      */
     private BigDecimal priceXq;
 
@@ -176,7 +178,7 @@ public class EtrFinProductDto {
     private BigDecimal newRate;
 
     /**
-     * 估价净价
+     * 估价净价（推荐）
      */
     private BigDecimal priceTj;
 
@@ -184,6 +186,8 @@ public class EtrFinProductDto {
      * 估值收益率
      */
     private BigDecimal gzRate;
+    
+    
 
     public String getPortfolioId() {
         return portfolioId;
@@ -370,7 +374,16 @@ public class EtrFinProductDto {
     }
 
     public String getXqFlg() {
-        return xqFlg;
+        if (StringUtil.isEmpty(this.xqFlg)) {
+            return null;
+        }
+        if (this.xqFlg.contains(",")){
+            return Arrays.stream(this.xqFlg.split(","))
+                    .map(i->SysDataUtil.getNameFromDataDict(DictCode.行权方式, getSecType()))
+                    .collect(Collectors.joining(","));
+        }else{
+            return SysDataUtil.getNameFromDataDict(DictCode.行权方式, getSecType());
+        }
     }
 
     public void setXqFlg(String xqFlg) {

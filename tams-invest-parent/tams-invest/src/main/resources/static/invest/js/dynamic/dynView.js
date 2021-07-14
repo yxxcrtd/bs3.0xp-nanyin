@@ -165,8 +165,10 @@ function DynamicView (pageId, dynId, callback){
         _this.empty();
         $.each(checkedList, function(index, value){
             // alert(index + "-" + value.name + "-" + value.label + "=" + value.suffix);
-            var item = $('<div style="float: left;width: 50%;height: 22px;line-height: 22px;"><label>'+ value.label +':</label><label id="EtrIbBondinfoHq_'+ value.name +'"></label></div>');
-            item.appendTo(_this);
+            if(value.label){
+                var item = $('<div style="float: left;width: 50%;height: 22px;line-height: 22px;"><label>'+ value.label +':</label><label id="EtrIbBondinfoHq_'+ value.name +'"></label></div>');
+                item.appendTo(_this);
+            }
         });
     };
         
@@ -192,7 +194,7 @@ function DynamicView (pageId, dynId, callback){
                     if(resultValue && resultValue != ''){
                         if(value.suffix && value.suffix != 'undefined' && value.suffix != ''){
                             if(value.suffix == '%'){
-                                _labelName.html(JoyinUtil.formatNumber(result.rate, 4, null, 2) + value.suffix);
+                                _labelName.html(JoyinUtil.formatNumber(resultValue, 4, null, 2) + value.suffix);
                             }else{
                                 _labelName.html(resultValue + value.suffix);
                             }

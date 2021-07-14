@@ -33,6 +33,68 @@
         });
     }
 
+    var queryPositionInfo = function(finprodId,portfolioId,chlFinprodId,ccy,vdate,calId) {
+        var param = {
+            finprodId : finprodId,
+            portfolioId : portfolioId,
+            chlFinprodId : chlFinprodId,
+            ccy:ccy,
+            vdate:vdate,
+            calId:calId
+        };
+        document.getElementById('zhkyxj_t').innerHTML = '0.00元';
+        document.getElementById('zhkyxj_t1').innerHTML = '0.00元';
+        document.getElementById('tghkyxj_t').innerHTML = '0.00元';
+        document.getElementById('tghkyxj_t1').innerHTML = '0.00元';
+        document.getElementById('tdkyxj_t').innerHTML = '0.00元';
+        document.getElementById('tdkyxj_t1').innerHTML = '0.00元';
+        document.getElementById('zccc_qmze').innerHTML = '0.00万元';
+        document.getElementById('zcky_qmze').innerHTML = '0.00万元';
+        if(!portfolioId){
+            return;
+        }
+        Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
+            if (result) {
+                if (result.zhkyxj_t != null && result.zhkyxj_t != '') {
+                    document.getElementById('zhkyxj_t').innerHTML = JoyinUtil.formatNumber(result.zhkyxj_t, 2, null, 2) + '元';
+                    parent.EtrIbBondinfoHq.zhkyxj_t = result.zhkyxj_t;
+                }
+                if (result.zhkyxj_t1 != null && result.zhkyxj_t1 != '') {
+                    document.getElementById('zhkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.zhkyxj_t1, 2, null, 2) + '元';
+                }
+                if (chlFinprodId != null && chlFinprodId != '') {
+                    document.getElementById("tghkyxj_t_dev").style.display="none";
+                    document.getElementById("tghkyxj_t1_dev").style.display="none";
+                    document.getElementById("tdkyxj_t_dev").style.display="";
+                    document.getElementById("tdkyxj_t1_dev").style.display="";
+                    if (result.tdkyxj_t != null && result.tdkyxj_t != '') {
+                        document.getElementById('tdkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t, 2, null, 2) + '元';
+                    }
+                    if (result.tdkyxj_t1 != null && result.tdkyxj_t1 != '') {
+                        document.getElementById('tdkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t1, 2, null, 2) + '元';
+                    }
+                } else {
+                    document.getElementById("tdkyxj_t_dev").style.display="none";
+                    document.getElementById("tdkyxj_t1_dev").style.display="none";
+                    document.getElementById("tghkyxj_t_dev").style.display="";
+                    document.getElementById("tghkyxj_t1_dev").style.display="";
+                    if (result.tghkyxj_t != null && result.tghkyxj_t != '') {
+                        document.getElementById('tghkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tghkyxj_t, 2, null, 2) + '元';
+                    }
+                    if (result.tghkyxj_t1 != null && result.tghkyxj_t1 != '') {
+                        document.getElementById('tghkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tghkyxj_t1, 2, null, 2) + '元';
+                    }
+                }
+                if (result.zccc_qmze != null && result.zccc_qmze != '') {
+                    document.getElementById('zccc_qmze').innerHTML = JoyinUtil.formatNumber(result.zccc_qmze, 2, null, 2) + '万元';
+                }
+                if (result.zcky_qmze != null && result.zcky_qmze != '') {
+                    document.getElementById('zcky_qmze').innerHTML = JoyinUtil.formatNumber(result.zcky_qmze, 2, null, 2) + '万元';
+                }
+            }
+        }, false);
+    }
+    
     /**根据市场代码，查询行情信息，展示出来*/
     var querySecinfo = function(finprodId,portfolioId,chlFinprodId,ccy,sysDateT1,calId) {
         var param = {
@@ -55,11 +117,11 @@
             Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
                 if (result) {
                     if (result.zhkyxj_t != null && result.zhkyxj_t != '') {
-                        document.getElementById('zhkyxj_t').innerHTML = JoyinUtil.formatNumber(result.zhkyxj_t, 3, null, 2) + '元';
+                        document.getElementById('zhkyxj_t').innerHTML = JoyinUtil.formatNumber(result.zhkyxj_t, 2, null, 2) + '元';
                         parent.EtrIbBondinfoHq.zhkyxj_t = result.zhkyxj_t;
                     }
                     if (result.zhkyxj_t1 != null && result.zhkyxj_t1 != '') {
-                        document.getElementById('zhkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.zhkyxj_t1, 3, null, 2) + '元';
+                        document.getElementById('zhkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.zhkyxj_t1, 2, null, 2) + '元';
                     }
                     if (chlFinprodId != null && chlFinprodId != '') {
                         document.getElementById("tghkyxj_t_dev").style.display="none";
@@ -67,10 +129,10 @@
                         document.getElementById("tdkyxj_t_dev").style.display="";
                         document.getElementById("tdkyxj_t1_dev").style.display="";
                         if (result.tdkyxj_t != null && result.tdkyxj_t != '') {
-                            document.getElementById('tdkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t, 3, null, 2) + '元';
+                            document.getElementById('tdkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t, 2, null, 2) + '元';
                         }
                         if (result.tdkyxj_t1 != null && result.tdkyxj_t1 != '') {
-                            document.getElementById('tdkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t1, 3, null, 2) + '元';
+                            document.getElementById('tdkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t1, 2, null, 2) + '元';
                         }
                     } else {
                         document.getElementById("tdkyxj_t_dev").style.display="none";
@@ -78,17 +140,17 @@
                         document.getElementById("tghkyxj_t_dev").style.display="";
                         document.getElementById("tghkyxj_t1_dev").style.display="";
                         if (result.tghkyxj_t != null && result.tghkyxj_t != '') {
-                            document.getElementById('tghkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tghkyxj_t, 3, null, 2) + '元';
+                            document.getElementById('tghkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tghkyxj_t, 2, null, 2) + '元';
                         }
                         if (result.tghkyxj_t1 != null && result.tghkyxj_t1 != '') {
-                            document.getElementById('tghkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tghkyxj_t1, 3, null, 2) + '元';
+                            document.getElementById('tghkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tghkyxj_t1, 2, null, 2) + '元';
                         }
                     }
                     if (result.zccc_qmze != null && result.zccc_qmze != '') {
-                        document.getElementById('zccc_qmze').innerHTML = JoyinUtil.formatNumber(result.zccc_qmze, 3, null, 2) + '万元';
+                        document.getElementById('zccc_qmze').innerHTML = JoyinUtil.formatNumber(result.zccc_qmze, 2, null, 2) + '万元';
                     }
                     if (result.zcky_qmze != null && result.zcky_qmze != '') {
-                        document.getElementById('zcky_qmze').innerHTML = JoyinUtil.formatNumber(result.zcky_qmze, 3, null, 2) + '万元';
+                        document.getElementById('zcky_qmze').innerHTML = JoyinUtil.formatNumber(result.zcky_qmze, 2, null, 2) + '万元';
                     }
                 }
             }, false);
@@ -117,6 +179,9 @@
                     secId = result.secId;
                     $("#secName").html('');
                     $("#secName").html(result.secName);
+                    result.secType=result.secTypeName;
+                    result.rateType=result.rateTypeName;
+                    result.issuer=result.issuerName;
                     dynview.resultToView(result);
                     //
                     // if (result.secName != null && result.secName != '') {
@@ -183,6 +248,7 @@
      */
     parent.EtrIbBondinfoHq = {
         querySecinfo:querySecinfo,
+        queryPositionInfo:queryPositionInfo,
         zhkyxj_t: zhkyxj_t
     }
     

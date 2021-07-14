@@ -189,6 +189,8 @@ public class EtrIbRepo001Dto extends BaseEntity {
     
     private String pledgeStockId;
     
+    private String pledgeStockName;
+    
     public String getEntrustStatusName(){
         if (StringUtil.isEmpty(getEntrustStatus())) {
             return null;
@@ -531,4 +533,12 @@ public class EtrIbRepo001Dto extends BaseEntity {
     public void setParentPortfolioId(String parentPortfolioId) {
         this.parentPortfolioId = parentPortfolioId;
     }
+
+	public String getPledgeStockName() {
+		return pledgeStockName;
+	}
+
+	public void setPledgeStockName(String pledgeStockName) {
+		this.pledgeStockName = pledgeStockName;
+	}
 }

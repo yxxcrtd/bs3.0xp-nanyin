@@ -21,13 +21,18 @@ $(function() {
 	$('#multFileBtn').click(function() {
 		$('.mult-file-btn', '#FileCommon_DIV').trigger('click');
 	});
-
+	
    $("#EtrIbBondinfoFile_btn_save").click(function() {
        var object =  $.serializeToObject("#searchForm");
        object.fileArray = FileCommon.getUploadFileInfo();
-       Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfoFile/save', object, function(result1) {
+       if(object.fileArray != null && object.fileArray != ''){
+           Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfoFile/save', object, function(result1) {
+               Joyin.closeTopWindow();
+           });
+       }else{
            Joyin.closeTopWindow();
-       });
+       }
+       
 
    });
 });
