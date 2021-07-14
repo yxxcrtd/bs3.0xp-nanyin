@@ -166,7 +166,7 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
              * 当单选组合时，使用组合的币种
              */
             PtlPortfolio ptlPortfolio = findPortfolio(param.get("portfolioId") + "");
-            if(ptlPortfolio != null){
+            if(ptlPortfolio != null && StringUtil.isNotEmpty(ptlPortfolio.getCcy())){
                 param.put("ccy", ptlPortfolio.getCcy());
             }
         }
