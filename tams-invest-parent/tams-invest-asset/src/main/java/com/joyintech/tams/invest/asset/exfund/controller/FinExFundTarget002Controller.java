@@ -294,7 +294,5 @@ public class FinExFundTarget002Controller extends BaseController{
         }
         return super.after(draftobj, model);
     }
-    //modify by mashukai 20201117 BS-2006公募基金草稿箱提交时中债报送信息反显没有值问题
-
 
 }

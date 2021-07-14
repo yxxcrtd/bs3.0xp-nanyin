@@ -413,19 +413,17 @@
 
         setTradeMarketId($('#tradeMarket').val());
         if($('#tradeMarket').val() == TRADE_PLACE_03){
-            $('#tradeCalendarCode').textSelect('setValue', '04');
+            $('#calendarId').textSelect('setValue', '04');
         }else if($('#tradeMarket').val() == TRADE_PLACE_04){
             // $('#trmFundType').val('').trigger('change');
             // $('#trmFundType').prop('disabled',true);
             // $('#trmFundAbbr').val('');
             // $('#trmFundAbbr').prop('disabled',true);
-            $('#tradeCalendarCode').textSelect('setValue', '05');
+            $('#calendarId').textSelect('setValue', '05');
         }else{
             $('#tradeMarketId').val('');
-            $('#tradeCalendarCode').val();
+            $('#calendarId').val("").trigger('change');
         }
-        secondTypeChange();
-        trmFundTypeChange();
     }
     //控件加载完成后
     window.componentLoadCallback = function(isDone, pagePath, params){
