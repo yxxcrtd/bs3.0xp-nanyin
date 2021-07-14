@@ -57,7 +57,6 @@ public class FinProductPayInt001Service extends CommonExportService<FinProductPa
      */
     public Page<SelectOptionDto> selectPortfolioId(Map<String, Object> param){
         param.put("loginUserName", LoginUserUtil.getUserName());
-
         return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductPayInt/selectPortfolioId", param,
             SelectOptionDto.class);

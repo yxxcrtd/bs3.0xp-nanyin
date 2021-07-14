@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -463,8 +464,7 @@ public class FinProductBuild002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinProductBuild002Dto dto)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinProductBuild002Dto dto) throws WorkFlowException {
         ProcessParameter<FinProductBuild002Dto> processParameter = new ProcessParameter<FinProductBuild002Dto>();
         WorkFlowParameter<FinProductBuild002Dto> params = new WorkFlowParameter<FinProductBuild002Dto>();
         params.setElementId(dto.getElementId());
@@ -576,7 +576,7 @@ public class FinProductBuild002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getTempletNameList")
-    public Page<SelectOptionDto> getTempletNameList() throws Exception{
+    public Page<SelectOptionDto> getTempletNameList(){
         Map<String , Object> map = RequestUtil.getPageParam();
         map.put("profitType", DictCodeList.收益类型_收益型.getValue());
         return finProductModule001Service.getTempletNameList(map);

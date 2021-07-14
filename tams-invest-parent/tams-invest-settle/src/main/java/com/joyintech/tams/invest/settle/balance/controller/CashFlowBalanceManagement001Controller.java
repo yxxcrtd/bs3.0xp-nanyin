@@ -121,7 +121,7 @@ public class CashFlowBalanceManagement001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return cashFlowBalanceManagement001Service.export(getPageId(), RequestUtil.getParameters(getRequest()));
     }
 }

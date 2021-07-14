@@ -254,7 +254,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
         }
         catch (Exception e) {
             logger.error(template + "生成失败！");
-            throw new RuntimeException(e);
+            throw new BusinessException(e);
         }finally{
         	if (stream != null){
 				try {
@@ -392,7 +392,7 @@ public class AssetTransferExport001Service  extends CommonExportService<AssetTra
         }
         catch (Exception e) {
             logger.error(template + "生成失败！");
-            throw new RuntimeException(e);
+            throw new BusinessException(e);
         }finally{
         	if (stream != null){
 				try {

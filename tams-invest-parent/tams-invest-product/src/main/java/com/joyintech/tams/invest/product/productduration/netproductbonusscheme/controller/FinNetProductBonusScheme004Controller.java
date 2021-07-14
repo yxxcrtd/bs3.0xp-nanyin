@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.product.productduration.netproductbonusscheme.dto.ActualTimeCapital001Dto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -272,14 +273,13 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
      * @param dto dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinNetProductBonusSchemeDto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody FinNetProductBonusSchemeDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -310,8 +310,7 @@ public class FinNetProductBonusScheme004Controller extends BaseController {
     
     @ResponseBody
     @RequestMapping("doRevoke")
-    public AjaxResult doRevoke(@RequestBody FinNetProductBonusSchemeDto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult doRevoke(@RequestBody FinNetProductBonusSchemeDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

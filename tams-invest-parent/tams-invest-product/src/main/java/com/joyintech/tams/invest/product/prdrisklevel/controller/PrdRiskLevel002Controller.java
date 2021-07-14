@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.prdrisklevel.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -104,7 +105,7 @@ public class PrdRiskLevel002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("insert")
-	public AjaxResult insert(@RequestBody PrdRiskLevel002Dto dto) throws Exception {
+	public AjaxResult insert(@RequestBody PrdRiskLevel002Dto dto) throws WorkFlowException {
 		
         ProcessParameter<PrdRiskLevel002Dto> processParameter = new ProcessParameter<PrdRiskLevel002Dto>();
         WorkFlowParameter<PrdRiskLevel002Dto> params = new WorkFlowParameter<PrdRiskLevel002Dto>();
@@ -127,7 +128,7 @@ public class PrdRiskLevel002Controller extends BaseController {
 	// 验证流程，删除数据
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult delete(@RequestBody PrdRiskLevel002Dto dto,BindingResult br) throws Exception{
+    public AjaxResult delete(@RequestBody PrdRiskLevel002Dto dto,BindingResult br) throws WorkFlowException {
 
         if (br.hasErrors()) {
             return new AjaxResult(br);
@@ -153,7 +154,7 @@ public class PrdRiskLevel002Controller extends BaseController {
     // 新增页面填充
     @ResponseBody
     @RequestMapping("selectPageParam")
-    public Page2Dto selectPageParam(String finProductCode) throws Exception{
+    public Page2Dto selectPageParam(String finProductCode){
     	
     	Page2Dto p2 = prdRiskLevel002Service.selectPageParam(finProductCode);
     	String level = prdRiskLevel002Service.calcRiskGrade(finProductCode);

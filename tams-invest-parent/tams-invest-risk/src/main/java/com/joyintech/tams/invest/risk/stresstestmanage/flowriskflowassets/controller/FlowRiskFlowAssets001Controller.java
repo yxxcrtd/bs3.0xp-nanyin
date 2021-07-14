@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.risk.stresstestmanage.flowriskflowassets.contr
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -292,8 +293,7 @@ public class FlowRiskFlowAssets001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody FlowRiskFlowAssets001Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody FlowRiskFlowAssets001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

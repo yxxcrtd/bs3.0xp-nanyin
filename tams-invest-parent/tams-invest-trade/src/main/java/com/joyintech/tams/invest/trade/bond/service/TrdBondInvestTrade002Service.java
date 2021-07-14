@@ -98,6 +98,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -1295,7 +1296,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         }
     }
 
-    public List<TrdBondInvestTradeDto> getDtoList(TrdBondInvestTradeDto dto) throws Exception{
+    public List<TrdBondInvestTradeDto> getDtoList(TrdBondInvestTradeDto dto) throws InvocationTargetException, IllegalAccessException {
     	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
     	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();
     	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();

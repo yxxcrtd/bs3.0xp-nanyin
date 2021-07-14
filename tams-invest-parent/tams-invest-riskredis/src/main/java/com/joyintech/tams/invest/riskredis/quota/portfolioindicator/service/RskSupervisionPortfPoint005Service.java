@@ -40,7 +40,7 @@ public class RskSupervisionPortfPoint005Service extends CommonExportService<RskP
 	 * @see
 	 * @since 1.0
 	 */
-	public Page<RskPtlPortfolioDto> selectForPage(Map<String, Object> parameters) throws Exception {
+	public Page<RskPtlPortfolioDto> selectForPage(Map<String, Object> parameters) {
 		return restTemplate.postForPage(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortf003Point/selectPortElementForPage",
 				parameters, RskPtlPortfolioDto.class);
 	}

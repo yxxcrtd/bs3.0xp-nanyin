@@ -79,7 +79,7 @@ public class RskValStructure001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskValStructureDto> selectForPage() throws Exception{
+    public Page<RskValStructureDto> selectForPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         //估值表导入结构映射初始化 
         if(StringUtil.isNotEmpty(this.getParam("structMapId"))){

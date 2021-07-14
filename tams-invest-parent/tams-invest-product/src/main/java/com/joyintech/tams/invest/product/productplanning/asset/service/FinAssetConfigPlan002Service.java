@@ -10,8 +10,10 @@
 
 package com.joyintech.tams.invest.product.productplanning.asset.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,7 +77,7 @@ public class FinAssetConfigPlan002Service extends BaseService<FinAssetConfigPlan
      * @see
      * @since 1.0
      */
-    public Page<FinAssetConfigPlan001Dto> getFinAssetConfigPlanList(Map<String, Object> pageParam)throws Exception{
+    public Page<FinAssetConfigPlan001Dto> getFinAssetConfigPlanList(Map<String, Object> pageParam) throws ParseException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     	List<FinAssetConfigPlan001Dto> list = new ArrayList<FinAssetConfigPlan001Dto>();
     	Page<FinAssetConfigPlan001Dto> page = new Page<>();
     	

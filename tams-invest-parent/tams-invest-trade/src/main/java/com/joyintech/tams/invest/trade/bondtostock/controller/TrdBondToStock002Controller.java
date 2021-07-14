@@ -19,6 +19,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -161,8 +163,7 @@ public class TrdBondToStock002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    AjaxResult save(@RequestBody TrdBondToStock001Dto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdBondToStock001Dto dto) throws InvocationTargetException, IllegalAccessException, WorkFlowException {
         
         
         

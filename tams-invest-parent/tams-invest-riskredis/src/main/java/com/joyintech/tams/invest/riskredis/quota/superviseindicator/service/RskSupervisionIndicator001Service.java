@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.riskredis.quota.superviseindicator.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -196,7 +197,7 @@ public class RskSupervisionIndicator001Service extends CommonExportService<RskSu
         }*/
     }
     
-    private String transferWarnFoul(String value,String indCellType) throws Exception{
+    private String transferWarnFoul(String value,String indCellType) throws IOException {
 		String wg=StringUtil.EMPTY;
 		ObjectMapper mapper = new ObjectMapper();
 		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(value), Map.class);

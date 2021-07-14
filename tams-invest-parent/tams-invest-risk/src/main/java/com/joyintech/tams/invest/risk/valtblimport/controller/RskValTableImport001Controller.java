@@ -111,7 +111,7 @@ public class RskValTableImport001Controller extends BaseController{
     @RequestMapping("getGroupIdInfo")
     @ResponseBody
     public Page<SelectOptionDto> getGroupIdInfo()
-            throws Exception {
+             {
         return rskValTableImportService.getGroupIdInfo(RequestUtil.getPageParam());
     }
 }

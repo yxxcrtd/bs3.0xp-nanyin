@@ -134,7 +134,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
      * @see
      * @since 1.0
      */
-    public Page<PayTheVatQuery002Dto> search(Map<String, Object> pageParam) throws Exception {
+    public Page<PayTheVatQuery002Dto> search(Map<String, Object> pageParam){
         //产品多选
         if (StringUtil.isNotEmpty(pageParam.get("portfolioId"))) {
             String portfolioId = (String) pageParam.get("portfolioId");
@@ -866,7 +866,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
     /**
      * 查询币种
      */
-    public List<String> searchCurrency(Map<String, Object> pageParam) throws Exception {
+    public List<String> searchCurrency(Map<String, Object> pageParam) {
     	pageParam.put("finprodType2_F28", BussinessDictCodeList.金融产品类型_投管用_通道.getValue());
         return payTheVatQuery002Mapper.searchCurrency(pageParam);
     }

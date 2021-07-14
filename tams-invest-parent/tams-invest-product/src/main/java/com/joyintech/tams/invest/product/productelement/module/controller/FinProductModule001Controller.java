@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -98,8 +99,7 @@ public class FinProductModule001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinProductModuleInfoDto> selectAll()
-        throws Exception {
+    public Page<FinProductModuleInfoDto> selectAll(){
         return finProductModule001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -125,8 +125,7 @@ public class FinProductModule001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Valid FinProductModuleInfo002Dto dto, BindingResult result)
-        throws Exception {
+    public AjaxResult delete(@RequestBody @Valid FinProductModuleInfo002Dto dto, BindingResult result) throws WorkFlowException {
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -162,8 +161,7 @@ public class FinProductModule001Controller extends BaseController {
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductModule001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

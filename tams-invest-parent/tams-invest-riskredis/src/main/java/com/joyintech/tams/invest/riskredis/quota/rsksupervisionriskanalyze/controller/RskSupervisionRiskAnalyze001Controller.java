@@ -93,7 +93,7 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskSupervisionRiskAnalyzeDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RskSupervisionRiskAnalyzeDto> page = rskSupervisionRiskAnalyzeService.selectForPage(map);
         return page;
@@ -107,7 +107,7 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
     @ResponseBody
     @RequestMapping("findPageInit")
     public Page<RskSupervisionRiskAnalyzeDto> selectAllInit()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RskSupervisionRiskAnalyzeDto> page = rskSupervisionRiskAnalyzeService.selectForPageInit(map);
         return page;
@@ -124,7 +124,7 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return rskSupervisionRiskAnalyzeService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

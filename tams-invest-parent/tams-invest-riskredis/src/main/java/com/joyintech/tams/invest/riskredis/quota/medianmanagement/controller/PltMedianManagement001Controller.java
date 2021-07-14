@@ -61,7 +61,7 @@ public class PltMedianManagement001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PltMedianManagementDto> findPage() throws Exception {
+    public Page<PltMedianManagementDto> findPage() {
     	Map<String, Object> map = RequestUtil.getParameters(getRequest());
 		Object paraCode = map.get("paraCode");
 		if (null != paraCode) {
@@ -89,7 +89,7 @@ public class PltMedianManagement001Controller extends BaseController{
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return pltMedianManagement001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
@@ -103,7 +103,7 @@ public class PltMedianManagement001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectMedianManagement", method = RequestMethod.GET)
-	public Page<SelectOptionDto> selectMultiOptionEvent() throws Exception {
+	public Page<SelectOptionDto> selectMultiOptionEvent()  {
 		Map<String, Object> map = RequestUtil.getParameters(getRequest());
 		Page<SelectOptionDto> page = pltMedianManagement001Service.selectMedianManagement(map);
 		return page;

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -244,15 +245,14 @@ public class FinNetProductBonusScheme002Controller extends BaseController {
      * @param dto dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) FinNetProductBonusSchemeDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) FinNetProductBonusSchemeDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

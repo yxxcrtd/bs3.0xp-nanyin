@@ -5,6 +5,7 @@ import java.util.Map;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.riskredis.quota.entrustedapproval.dto.RepEntrustedApprovalDto;
 import com.joyintech.tams.invest.riskredis.quota.entrustedapproval.service.RepEntrustedApprovalService;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,7 +81,7 @@ public class RepEntrustedApproval002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepEntrustedApprovalDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RepEntrustedApprovalDto> page = repEntrustedApprovalService.selectForPageDel(map);
         return page;
@@ -96,8 +97,7 @@ public class RepEntrustedApproval002Controller extends BaseController {
    @ResponseBody
    @RequestMapping("submit")
    public AjaxResult save(@RequestBody @Validated({
-       ValidateGroupEdit.class}) RepEntrustedApprovalDto dto, BindingResult br)
-       throws Exception {
+       ValidateGroupEdit.class}) RepEntrustedApprovalDto dto, BindingResult br) throws WorkFlowException {
        if (br.hasErrors()) {
            return new AjaxResult(br);
        }

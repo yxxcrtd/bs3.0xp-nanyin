@@ -86,7 +86,7 @@ public class MarketRiskStressTest002Controller extends BaseController{
     /** 产品持仓分页查询 */
     @ResponseBody
     @RequestMapping("/selectProdForPage")
-    public Page<MarketRiskStressTest002Dto> selectProdForPage() throws Exception {
+    public Page<MarketRiskStressTest002Dto> selectProdForPage() {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         String prodIds = getParam("prodIds");
         return marketRiskStressTest002Service.selectProdForPage(ImmutableMap.of("prodIds",map.get("prodIds").toString(),"sceneId",map.get("sceneId").toString(),"baseDate",map.get("baseDate").toString()));
@@ -95,14 +95,14 @@ public class MarketRiskStressTest002Controller extends BaseController{
     /** 判断有无未准备因子 */
     @ResponseBody
     @RequestMapping("/judgeFacStatus")
-    public Page<MarketRiskStressTest002Dto> judgeFacStatus(@RequestBody MarketRiskStressTest002Dto dto) throws Exception {
+    public Page<MarketRiskStressTest002Dto> judgeFacStatus(@RequestBody MarketRiskStressTest002Dto dto) {
         return marketRiskStressTest002Service.selectFacForPage(ImmutableMap.of("prodIds",dto.getProdIds(),"sceneId",dto.getSceneId(),"baseDate",dto.getBaseDate(),"inIsOneRow",dto.getFtrValueStruct()));
     } 
     
     /** 因为未准备分页查询 */
     @ResponseBody
     @RequestMapping("/selectFacForPage")
-    public Page<MarketRiskStressTest002Dto> selectFacForPage() throws Exception {
+    public Page<MarketRiskStressTest002Dto> selectFacForPage() {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         String prodIds = getParam("object");
         return marketRiskStressTest002Service.selectFacForPage(ImmutableMap.of("prodIds",map.get("prodIds").toString(),"sceneId",map.get("sceneId").toString(),"baseDate",map.get("baseDate").toString()));

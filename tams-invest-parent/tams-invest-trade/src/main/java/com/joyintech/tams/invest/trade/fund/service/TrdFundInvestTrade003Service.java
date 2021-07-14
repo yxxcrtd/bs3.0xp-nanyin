@@ -135,7 +135,7 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
      * @return
      */
     public BigDecimal getcarryAmt(Map<String, Object> map)
-        throws Exception {
+         {
         Date carryDate = DateUtil.parse((String)map.get("carryDate"));
         String calId = (String)map.get("cid");
         if (StringUtil.isNotEmpty(calId)) {
