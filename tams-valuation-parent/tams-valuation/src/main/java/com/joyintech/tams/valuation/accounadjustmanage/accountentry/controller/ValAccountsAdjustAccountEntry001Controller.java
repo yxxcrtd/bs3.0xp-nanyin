@@ -116,7 +116,7 @@ public class ValAccountsAdjustAccountEntry001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public List<SuggestDto> getBooksetId()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         
         return valAccountsAdjustAccountEntry001Service.getBooksetId(RequestUtil.getPageParam());
@@ -176,7 +176,7 @@ public class ValAccountsAdjustAccountEntry001Controller extends BaseController {
      */
     @RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         String booksetId = this.getParam("booksetId");
         String nodeId = this.getParam("nodeId");
         Integer level = -1;

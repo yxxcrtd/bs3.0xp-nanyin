@@ -43,6 +43,8 @@ import org.slf4j.LoggerFactory;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 
+import javax.annotation.processing.FilerException;
+
 public class ExcelTools {
 
     /**
@@ -64,7 +66,7 @@ public class ExcelTools {
                 wb = new HSSFWorkbook(stream);
             }
             else {
-                throw new Exception("不是一个有效的Excel文件");
+                throw new FilerException("不是一个有效的Excel文件");
             }
 
             for (Sheet sheet : wb) {

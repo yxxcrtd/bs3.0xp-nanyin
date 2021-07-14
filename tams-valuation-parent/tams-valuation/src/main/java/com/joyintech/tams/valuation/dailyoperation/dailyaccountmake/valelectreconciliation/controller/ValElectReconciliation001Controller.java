@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
+
+import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -89,7 +91,7 @@ public class ValElectReconciliation001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValElectReconciliation001Dto> findPage()
-        throws Exception {
+         {
         Page<ValElectReconciliation001Dto> page = valElectReconciliation001Service.findPage(
             RequestUtil.getPageParam());
         return page;
@@ -173,8 +175,7 @@ public class ValElectReconciliation001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("adjustValue")
-    public AjaxResult check()
-        throws Exception {
+    public AjaxResult check() throws IOException {
         String msg = StringUtil.EMPTY;
         String datas = this.getParam("datas");
         String remark = this.getParam("remark");
@@ -215,8 +216,7 @@ public class ValElectReconciliation001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ValElectReconciliation001Dto> listdto;
 
@@ -240,8 +240,7 @@ public class ValElectReconciliation001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("down")
-    public String sztDown()
-        throws Exception {
+    public String sztDown() throws IOException, DocumentException {
         SztXmlMessageDto sztXmlMessageDto = new SztXmlMessageDto();
         String prodId = this.getParam("prodId");
         String interType = this.getParam("interType");

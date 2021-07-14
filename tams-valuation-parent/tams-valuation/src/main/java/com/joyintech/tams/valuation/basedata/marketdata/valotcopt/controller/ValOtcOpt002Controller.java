@@ -81,7 +81,7 @@ public class ValOtcOpt002Controller extends BaseController {
      */
     @RequestMapping("/getBooksetName")
     @ResponseBody
-    public ValOtcOpt001Dto getBooksetName() throws Exception {
+    public ValOtcOpt001Dto getBooksetName() {
         return valOtcOpt001Service.findAll(RequestUtil.getPageParam()).get(0);
     }
     

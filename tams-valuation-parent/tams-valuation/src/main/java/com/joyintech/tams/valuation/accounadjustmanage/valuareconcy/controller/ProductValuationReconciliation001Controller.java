@@ -118,7 +118,7 @@ public class ProductValuationReconciliation001Controller extends BaseController 
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ProductValuationReconciliation001Dto> findPage()
-        throws Exception {
+         {
 
         // 获取分页数据
         Page<ProductValuationReconciliation001Dto> pageinfo = productValuationReconciliation001Service.findPage(RequestUtil.getPageParam());

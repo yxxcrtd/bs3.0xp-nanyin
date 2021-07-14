@@ -29,6 +29,7 @@ import com.joyintech.tams.invest.trade.trdstandardbond.service.TrdStandardBond00
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -105,7 +106,7 @@ public class TrdStandardBond002Controller extends BaseController {
     @RequestMapping("check")
     @ResponseBody
     AjaxResult check(@Validated({ValidateGroupEdit.class}) @RequestBody TrdStandardBond002Dto dto, BindingResult result)
-            throws Exception {
+             {
         return commonCheck(result, null);
     }
 
@@ -117,8 +118,7 @@ public class TrdStandardBond002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@Validated({ValidateGroupEdit.class}) @RequestBody TrdStandardBond002Dto dto, BindingResult result)
-            throws Exception {
+    AjaxResult save(@Validated({ValidateGroupEdit.class}) @RequestBody TrdStandardBond002Dto dto, BindingResult result) throws WorkFlowException {
         if (result != null && result.hasErrors()) {
             return commonCheck(result, null);
         }

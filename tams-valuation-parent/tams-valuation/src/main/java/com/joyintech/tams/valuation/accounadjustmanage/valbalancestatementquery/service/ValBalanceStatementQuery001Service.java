@@ -87,7 +87,7 @@ public class ValBalanceStatementQuery001Service extends CommonExportService<ValB
     }
 
     
-    public Page<ValBalanceStatementQuery001Dto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public Page<ValBalanceStatementQuery001Dto> selectForPage(Map<String, Object> pageParam) {
         
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValBalanceStatementQuery001/findPage", pageParam, ValBalanceStatementQuery001Dto.class);
         

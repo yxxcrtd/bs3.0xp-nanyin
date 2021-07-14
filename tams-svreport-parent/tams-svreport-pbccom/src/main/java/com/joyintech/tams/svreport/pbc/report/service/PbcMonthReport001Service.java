@@ -31,11 +31,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -792,12 +794,12 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 		}
 		
 		transformer.transformXLS(template, data, depositfilePath + File.separator +flieName);
-	    }catch(Exception e){
-	    	logger.info(exceltemplate+"生成失败！");
-	    	logger.error(e.getMessage(),e);
-	    	throw new RuntimeException(e);
-	    }
-		 return depositfile;
+	    }catch(InvalidFormatException|IOException e) {
+			logger.info(exceltemplate + "生成失败！");
+			logger.error(e.getMessage(), e);
+			throw new BusinessException(e);
+		}
+		return depositfile;
 	}
 	
 	public static String getXmlPath(String filename) {

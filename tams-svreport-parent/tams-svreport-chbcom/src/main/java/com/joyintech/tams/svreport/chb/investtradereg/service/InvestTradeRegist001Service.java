@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto;
@@ -652,7 +653,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
                 } catch (Exception e) {
                 	logger.error(e.getMessage(),e);
                     session.rollback();
-                    throw e;
+                    throw new BusinessException(e);
                 } finally {
                     session.close();
                 }
@@ -719,7 +720,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
                 } catch (Exception e) {
                 	logger.error(e.getMessage(),e);
                     session.rollback();
-                    throw e;
+                    throw new BusinessException(e);
                 } finally {
                     session.close();
                 }

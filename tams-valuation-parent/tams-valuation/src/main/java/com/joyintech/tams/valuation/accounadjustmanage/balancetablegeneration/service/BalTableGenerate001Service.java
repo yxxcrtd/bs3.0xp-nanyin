@@ -143,7 +143,7 @@ public class BalTableGenerate001Service extends CommonExportService<BalTableGene
 	 *            筛选条件
 	 * @return 表格信息
 	 */
-	public Page<BalTableGenerate001Dto> findPage(Map<String, Object> params) throws Exception {
+	public Page<BalTableGenerate001Dto> findPage(Map<String, Object> params) {
 	    
 	    
 	    return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/BalTableGenerate001/findPage", params, BalTableGenerate001Dto.class);

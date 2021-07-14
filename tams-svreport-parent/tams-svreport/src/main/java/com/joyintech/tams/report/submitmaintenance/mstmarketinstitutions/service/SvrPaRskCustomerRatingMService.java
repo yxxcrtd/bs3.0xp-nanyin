@@ -50,7 +50,7 @@ public class SvrPaRskCustomerRatingMService extends CommonExportService<SvrPaRsk
      * @since 1.0
      */
     public Page<SvrPaRskCustomerRatingDto> selectPaRskCustomerPage(Map<String, Object> pageParam)
-        throws Exception {
+         {
 //        String workflowId = (String)pageParam.get("workflowId");
 //        if (StringUtil.isNotEmpty(workflowId)) {
 //            MstMarketInstitutionsDto mstMarketInstitutionsDto = mstMarketInstitutionsService.getBussinessEntityByWorkflowId(

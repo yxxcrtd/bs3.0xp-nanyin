@@ -91,7 +91,7 @@ public class OwnerEquityChange001Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Valid OwnerEquityChange001Dto dto, BindingResult result) throws Exception {
+    public AjaxResult check(@RequestBody @Valid OwnerEquityChange001Dto dto, BindingResult result) {
         AjaxResult ajaxResult = new AjaxResult();
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
@@ -220,7 +220,7 @@ public class OwnerEquityChange001Controller  extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> exportExcel()
-        throws Exception {
+         {
     	Map<String, Object> params = RequestUtil.getParameters(getRequest());
     	return ownerEquityChange001Service.exportExcel(params);
     }
@@ -232,7 +232,7 @@ public class OwnerEquityChange001Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getTermLink")
-    public List<SelectOptionDto> getTradeMarket() throws Exception {
+    public List<SelectOptionDto> getTradeMarket() {
         Map<String, Object> param = RequestUtil.getPageParam();
         String reportTermType = (String) param.get("reportTermType");
 
@@ -257,7 +257,7 @@ public class OwnerEquityChange001Controller  extends BaseController {
     @ResponseBody
     @RequestMapping("getDateInfo")
     public OwnerEquityChange001Dto getDateInfo()
-        throws Exception {
+         {
     	Map<String, Object> params = RequestUtil.getPageParam();
     	params.put("booksetGroup", this.getParam("booksetGroup"));
     	params.put("reportTermType", this.getParam("reportTermType"));

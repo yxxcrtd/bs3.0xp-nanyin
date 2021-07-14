@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.valuation.interf.valuation.send.common.service;
 
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.valuation.interf.valuation.send.utils.SendFtpUtil;
 import com.joyintech.tams.valuation.common.interf.base.util.SftpUtil;
@@ -40,7 +42,7 @@ public class InterfSendFtpService {
      */
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public void doSend(InterfExecuteInfo executeInfo,SendWriterEntity item) throws Exception{
+    public void doSend(InterfExecuteInfo executeInfo,SendWriterEntity item) throws SftpException, JSchException {
       
         SftpUtil sftpUtil = new SftpUtil();
             try {   
@@ -55,7 +57,7 @@ public class InterfSendFtpService {
                 sftpUtil.login(username, password, ip, port);// sftp登录
                 sftpUtil.putFileDate(local,remote,date); // 上传至文件服务器
                 sftpUtil.close(); // 关闭登录
-            } catch (Exception e) {
+            } catch (SftpException|JSchException e) {
                 sftpUtil.close();// 关闭登录
                 String errorInfo = executeInfo.getTaskName()+"  数据文件回传失败";
                 logger.error(errorInfo + "   错误信息：" + e.getMessage());
@@ -63,7 +65,7 @@ public class InterfSendFtpService {
             }
     }
     
-    public void doSendByBooksetId(InterfExecuteInfo executeInfo,String tmpEName, Date exeDate,String bookSetId, Date sysDate) throws Exception{
+    public void doSendByBooksetId(InterfExecuteInfo executeInfo,String tmpEName, Date exeDate,String bookSetId, Date sysDate) throws SftpException, JSchException {
         
         SftpUtil sftpUtil = new SftpUtil();
             try {   
@@ -80,7 +82,7 @@ public class InterfSendFtpService {
                 sftpUtil.login(username, password, ip, port);// sftp登录
                 sftpUtil.putFileDate(local,remote,date); // 上传至文件服务器
                 sftpUtil.close(); // 关闭登录
-            } catch (Exception e) {
+            } catch (JSchException|SftpException e) {
                 sftpUtil.close();// 关闭登录
                 String errorInfo = executeInfo.getTaskName()+"  数据文件回传失败";
                 logger.error(errorInfo + "   错误信息：" + e.getMessage());
@@ -88,7 +90,7 @@ public class InterfSendFtpService {
             }
     }
     
-    public void doSendMyByBooksetId(InterfExecuteInfo executeInfo,String tmpEName, Date exeDate,String bookSetId, Date sysDate) throws Exception{
+    public void doSendMyByBooksetId(InterfExecuteInfo executeInfo,String tmpEName, Date exeDate,String bookSetId, Date sysDate) throws JSchException {
         
     	SendFtpUtil sftpUtil = new SendFtpUtil();
             try {  
@@ -114,7 +116,7 @@ public class InterfSendFtpService {
 				
                 sftpUtil.close(); // 关闭登录
                 logger.info(executeInfo.getTaskName() + ": sftp关闭成功！");
-            } catch (Exception e) {
+            } catch (JSchException e) {
                 sftpUtil.close();// 关闭登录
                 String errorInfo = executeInfo.getTaskName()+": 数据文件回传失败";
                 logger.error(errorInfo + "   错误信息：" + e.getMessage());

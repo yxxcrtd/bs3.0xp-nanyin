@@ -318,7 +318,7 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 	    	catch(Exception e){
 	    		logger.error(e.getMessage(),e);
 	    		session.rollback();
-	    		throw e;
+	    		throw new BusinessException(e);
 	    	}
 	    	finally {
 	    		session.close();

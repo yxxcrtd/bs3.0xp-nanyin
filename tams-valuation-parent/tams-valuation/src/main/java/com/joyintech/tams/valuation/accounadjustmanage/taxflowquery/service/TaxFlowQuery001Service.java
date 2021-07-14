@@ -39,7 +39,7 @@ public class TaxFlowQuery001Service  extends CommonExportService<TaxFlowQuery001
 //	private TaxFlowQuery001Mapper taxFlowQuery001Mapper;
 
 	public Page<TaxFlowQuery001Dto> selectForPage(Map<String, Object> params)
-			 throws Exception {
+			  {
 	    return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/TaxFlowQuery001/findPage", params, TaxFlowQuery001Dto.class);
 //		 return super.queryForPage(() -> taxFlowQuery001Mapper.queryList(dto));
 	}
@@ -86,7 +86,7 @@ public class TaxFlowQuery001Service  extends CommonExportService<TaxFlowQuery001
 	 * @return
 	 * @throws Exception
 	 */
-	 public List<TaxFlowQuery001Dto> findPageout(TaxFlowQuery001Dto dto) throws Exception {
+	 public List<TaxFlowQuery001Dto> findPageout(TaxFlowQuery001Dto dto)  {
 	     return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/TaxFlowQuery001/findPageout",dto, TaxFlowQuery001Dto.class);
 //	        return  taxFlowQuery001Mapper.queryList(dto);
 	    }

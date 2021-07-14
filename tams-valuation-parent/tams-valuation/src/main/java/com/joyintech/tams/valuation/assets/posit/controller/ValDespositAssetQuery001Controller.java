@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.assets.posit.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,7 @@ public class ValDespositAssetQuery001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValDespositAssetQuery001Dto> findPage()
-        throws Exception {
+         {
         return valDespositAssetQuery001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -123,8 +124,7 @@ public class ValDespositAssetQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ValDespositAssetQuery001Dto> dtoList;
         if (datas == null) {
@@ -242,7 +242,7 @@ public class ValDespositAssetQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("deleteCheck")
     public AjaxResult check(@RequestBody ValDespositAssetQuery001Dto dto, BindingResult result)
-        throws Exception {
+         {
         String finprodId = dto.getFinprodId();
         if (StringUtils.isNotEmpty(finprodId)) {// 删除基金类资产验证
             boolean flag = valDespositAssetQuery001Service.checkFinprodId(finprodId);
@@ -275,7 +275,7 @@ public class ValDespositAssetQuery001Controller extends BaseController {
     @RequestMapping("updateCheck")
     public AjaxResult updateCheck(@RequestBody ValDespositAssetQuery001Dto dto,
                                   BindingResult result)
-        throws Exception {
+          {
         String finprodId = dto.getFinprodId();
 
         if (StringUtils.isNotEmpty(finprodId)) {// 修改基金类资产验证

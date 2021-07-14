@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.valuationtablegeneration.controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -132,7 +133,7 @@ public class ValTableGenerate001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public Page<SelectOptionDto> getBooksetId()
-        throws Exception {
+        {
         return valAssetBook001Service.findBooksetIdByPage(RequestUtil.getPageParam());
     }
     
@@ -146,7 +147,7 @@ public class ValTableGenerate001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValTableGenerate001Dto> findPage() throws Exception {
+    public Page<ValTableGenerate001Dto> findPage() throws ParseException {
         return valTableGenerate001Service.findPage(this.getRequestMap());
 
     }
@@ -161,7 +162,7 @@ public class ValTableGenerate001Controller extends BaseController {
      */
     @RequestMapping("/checkAccountsForHandle")
     @ResponseBody
-    public HandleReturnDto checkAccountsForHandle() throws Exception {
+    public HandleReturnDto checkAccountsForHandle() {
         String data=this.getParam("data");
         return valTableGenerate001Service.checkAccountsForHandle(data);
 
@@ -213,7 +214,7 @@ public class ValTableGenerate001Controller extends BaseController {
      */
     @RequestMapping("/handle")
     @ResponseBody
-    public HandleReturnDto handle() throws Exception {
+    public HandleReturnDto handle() {
         String data=this.getParam("data");
         return valTableGenerate001Service.handle(data);
         
@@ -305,7 +306,7 @@ public class ValTableGenerate001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ValValuationStatementQuery001Dto> val001dto = JsonUtils.json2List(datas,
             ValValuationStatementQuery001Dto.class);

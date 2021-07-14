@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
@@ -617,7 +618,7 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 	    }catch(Exception e){
 	    	logger.info(exceltemplate+"生成失败！");
 	    	logger.error(e.getMessage(),e);
-	    	throw new RuntimeException(e);
+	    	throw new BusinessException(e);
 	    }finally{
 	    	if(fos !=null){
 	    		try {

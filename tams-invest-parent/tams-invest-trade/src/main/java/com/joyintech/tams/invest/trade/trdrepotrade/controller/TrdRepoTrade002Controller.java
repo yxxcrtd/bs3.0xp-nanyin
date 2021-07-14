@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.trade.trdrepotrade.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -22,6 +23,7 @@ import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -638,8 +640,7 @@ public class TrdRepoTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdRepoTrade002Dto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdRepoTrade002Dto dto) throws IOException, InstantiationException, WorkFlowException {
         
         
         

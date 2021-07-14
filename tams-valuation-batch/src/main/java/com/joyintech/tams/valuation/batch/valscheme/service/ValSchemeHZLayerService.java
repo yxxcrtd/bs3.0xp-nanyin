@@ -82,7 +82,7 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
     private FinProductCommonService finProductCommonService;
 
     public ValSchemeGenerateResult execute(Map<String, Object> params1)
-        throws Exception {
+         {
         // 获取reader返回值
         ValSchemeTodoDto acctEntity = (ValSchemeTodoDto)params1.get(GlobalConstant.READER_RESULT);
 

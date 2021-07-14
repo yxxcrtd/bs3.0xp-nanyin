@@ -65,7 +65,7 @@ public class ValSztInterfSubject001Controller extends BaseController{
 	@RequestMapping("findPage")
     @ResponseBody
     public Page<ValSztInterfSubject001Dto> findPage()
-            throws Exception {
+             {
 		Page<ValSztInterfSubject001Dto> page = valSztInterfSubject001Service.findPage(RequestUtil.getPageParam());
 		return page;
 	}

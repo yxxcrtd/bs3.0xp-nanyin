@@ -48,7 +48,7 @@ public class ValNetPlanQuotation001Service extends CommonExportService<ValNetPla
       * @return
       * @throws Exception
       */
-     public Page<ValNetPlanQuotation001Dto> queryPageList(Map<String, Object> params) throws Exception{
+     public Page<ValNetPlanQuotation001Dto> queryPageList(Map<String, Object> params) {
          
 //         return super.queryForPage(()->valNetPlanQuotation001Mapper.queryPageList(dto));
     	 return restTemplate.postForPage(
@@ -115,7 +115,7 @@ public class ValNetPlanQuotation001Service extends CommonExportService<ValNetPla
  	 * @return
  	 * @throws Exception
  	 */
- 	 public List<ValNetPlanQuotation001Dto> findPageout(Map<String, Object> params) throws Exception {
+ 	 public List<ValNetPlanQuotation001Dto> findPageout(Map<String, Object> params) {
  	       
 // 	        return  valNetPlanQuotation001Mapper.queryPageList(dto);
  		return restTemplate.postForList(

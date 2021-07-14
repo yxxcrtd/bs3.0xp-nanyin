@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.util.CacheUtil;
@@ -1578,7 +1579,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 } catch (Exception e) {
                 	logger.error(e.getMessage(),e);
                     session.rollback();
-                    throw e;
+                    throw new BusinessException(e);
                 } finally {
                     session.close();
                 }
@@ -1645,7 +1646,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 } catch (Exception e) {
                 	logger.error(e.getMessage(),e);
                     session.rollback();
-                    throw e;
+                    throw new BusinessException(e);
                 } finally {
                     session.close();
                 }

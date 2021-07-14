@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -96,14 +97,14 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValBalanceStatementQuery001Dto> selectBalanceStatement()
-        throws Exception {
+          {
         Page<ValBalanceStatementQuery001Dto> page = valBalanceStatementQuery001Service.selectForPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
     @ResponseBody
     @RequestMapping("selectSum")
     public Page<ValBalanceStatementQuery001Dto> selectSum()
-        throws Exception {
+          {
         return valBalanceStatementQuery001Service.selectSum(RequestUtil.getParameters(getRequest()));
     }
     /**
@@ -113,7 +114,7 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() throws IOException {
         return valBalanceStatementQuery001Service.exportExcel(RequestUtil.getParameters(getRequest()));
         
     }
@@ -135,7 +136,7 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetId2(RequestUtil.getPageParam());
     }

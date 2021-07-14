@@ -270,7 +270,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getSubjectNo")
     public AjaxResult getSubjectNo(@RequestBody ValManualVoucher003SubjectDto dto)
-        throws Exception {
+         {
         String booksetId = dto.getBooksetId();
         String subjectNo = dto.getSubjectNo();
 //        String busiId = dto.getBusiId();
@@ -299,7 +299,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getBookDate")
     public AjaxResult getBookDate(@RequestBody ValManualVoucher003SubjectDto dto)
-        throws Exception {
+         {
         String booksetId = dto.getBooksetId();
         if (StringUtil.isNotEmpty(booksetId) ) {
             AjaxResult ajaxResult = new AjaxResult();
@@ -326,7 +326,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getSubjectNoPullDw")
     public List<SelectOptionDto> getSubjectNoPullDw()
-        throws Exception {
+         {
 //        String param = this.getParam("param");
         String booksetId = this.getParam("booksetId");
         if (StringUtil.isNotEmpty(booksetId)) {
@@ -348,7 +348,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getAcctId")
     public List<SelectOptionDto> getAcctId()
-        throws Exception {
+         {
         String param = this.getParam("param");
         String booksetId = this.getParam("booksetId");
         if (StringUtil.isNotEmpty(booksetId)) {
@@ -370,7 +370,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getBranch")
     public List<SelectOptionDto> getBranch()
-        throws Exception {
+         {
         String param = this.getParam("param");
         String booksetId = this.getParam("booksetId");
         String finprodType = this.getParam("finprodType");
@@ -543,7 +543,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetIdAll(RequestUtil.getPageParam());
     }
@@ -578,7 +578,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getInvAim")
     public AjaxResult getInvAim(@RequestBody ValManualVoucher003Dto dto)
-        throws Exception {
+         {
         String busiId = dto.getBusiId();
         if (StringUtil.isNotEmpty(busiId) ) {
             AjaxResult ajaxResult = new AjaxResult();

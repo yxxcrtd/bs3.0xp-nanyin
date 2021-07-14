@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import com.jcraft.jsch.SftpException;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -58,8 +59,7 @@ public class ValSFtpService {
      * @since 1.0
      */
     public ValRecvFileEntity doRecv(ValRecvServerInfoEntity entity,
-                                    List<ValInterfTemplate> tempList)
-        throws Exception {
+                                    List<ValInterfTemplate> tempList) throws InterfException, SftpException {
         ValRecvFileEntity retEntity = new ValRecvFileEntity();
         // 本地路径
         String localDirTemp = entity.getLocalPath() + File.separator + entity.getSystemID()
@@ -225,8 +225,7 @@ public class ValSFtpService {
      * @since 1.0
      */
     public ValRecvFileEntity doRecvId(ValRecvServerInfoEntity entity,
-                                    List<ValInterfTemplate> tempList)
-        throws Exception {
+                                    List<ValInterfTemplate> tempList) throws InterfException, SftpException {
         ValRecvFileEntity retEntity = new ValRecvFileEntity();
         // 本地路径
         String localDirTemp = entity.getLocalPath() + File.separator + entity.getSystemID()

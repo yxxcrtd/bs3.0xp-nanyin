@@ -144,7 +144,7 @@ public class TrdSecOverdueDurationController {
      * @return 匹配结果
      */
     @PostMapping("genAssetTfInfo")
-    public Map<String,Object> genAssetTfInfo(@RequestBody Map<String, Object> param) {
+    public Map<String,Object> genAssetTfInfo(@RequestBody Map<String, Object> param) throws IllegalAccessException, InstantiationException {
         return trdSecOverdueDurationService.genAssetTfInfo(param);
     }
 

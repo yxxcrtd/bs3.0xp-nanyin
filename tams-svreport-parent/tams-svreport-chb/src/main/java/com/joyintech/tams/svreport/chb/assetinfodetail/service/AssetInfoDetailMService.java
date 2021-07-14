@@ -127,7 +127,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return dtoList;
 	}
 
-	public void doSave(AssetInfoDetailDto dto) throws Exception {
+	public void doSave(AssetInfoDetailDto dto) {
 		//分别调用各自的setEntity方法
 		this.getDtoByPageMessgae(dto);
 		//赋值相关数据
@@ -157,7 +157,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	}
 
 
-	public void doDelete(AssetInfoDetailDto dto) throws Exception {
+	public void doDelete(AssetInfoDetailDto dto) {
 
 		restTemplate.postForObject(
 				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doDelete", dto, Integer.class);
