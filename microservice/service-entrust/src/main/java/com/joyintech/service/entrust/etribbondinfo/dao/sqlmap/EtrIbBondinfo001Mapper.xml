@@ -185,6 +185,7 @@
         T1.REMARK
         ,T1.COUNTER_ID counterId
         ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        ,T1.INV_AIM as invAim
         from
         ETR_ENTRUST T1
         INNER JOIN
@@ -279,6 +280,7 @@
         T1.REMARK
         ,T1.COUNTER_ID counterId
         ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        ,T1.INV_AIM as invAim
         from
         WFL_ETR_ENTRUST T1
         INNER JOIN

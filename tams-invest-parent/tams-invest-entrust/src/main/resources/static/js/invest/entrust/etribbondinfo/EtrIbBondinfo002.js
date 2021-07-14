@@ -99,6 +99,7 @@
         }else{
             object.counterType=$('#counterId1').val();
         }
+        object.counterId=object.counterType;
         // object.counterType = $('#counterId').select2('data')[0].object;  //交易对手类型，校验时用到
         return object;
     }
@@ -422,9 +423,12 @@
             if (param.remark) {
                 $("#remark").val(param.remark).trigger("change");//备注
             }
-            if (param.counterId) {
-                $("#counterId1").textSelect('setValue',param.counterId);
-                $("#counterId2").textSelect('setValue',param.counterId);
+            if (param.counterId) { // 交易对手
+                $("#counterId1").val(param.counterId).trigger("change");
+                $("#counterId2").val(param.counterId).trigger("change");
+            }
+            if(param.invAim){
+                $("#invAim").val(param.invAim).trigger("change");//投资目的
             }
             
             pageModel = PAGE_MODEL_EDIT;
@@ -499,6 +503,8 @@
         $("#calculateField_price").prop('checked', false);
         $("#calculateField_exerYield").prop('checked', false);
         $("#calculateField_matureYield").prop('checked', false);
+        $("#vdate").val(sysDate).trigger("change");
+        $("#mdate").val(sysDate).trigger("change");
         layui.form.render(); // reload layui
         pageModel = PAGE_MODEL_NEW;
     };

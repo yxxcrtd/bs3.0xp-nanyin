@@ -102,6 +102,8 @@
         cols:[
             {field:'entrustId', title: 'EtrIbBondinfo001.entrustId', sortField:'entrustId',width : 100}//指令编号
             ,{field:'entrustStatus', visible:false}
+            ,{field:'counterId'} // 交易对手
+            ,{field:'invAim'} // 投资目的
             ,{field:'effectiveStatus', title: 'EtrIbBondinfo001.effectiveStatus',render : function(data, type, row, meta) {
                     return row.entrustStatusName==='流程中'?'流程中':"有效";
                 }, width : 100}//有效状态
