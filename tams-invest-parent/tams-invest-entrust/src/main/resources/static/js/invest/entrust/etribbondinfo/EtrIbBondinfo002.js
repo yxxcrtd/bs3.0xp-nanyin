@@ -495,10 +495,14 @@
         $("#remark").val("").trigger("change");
         $("#entrustId").val("").trigger("change");
         $("#entrustStatus").val("").trigger("change");
-
+        $("#invAim").val("").trigger("change");
+        $("#calculateField_price").prop('checked', false);
+        $("#calculateField_exerYield").prop('checked', false);
+        $("#calculateField_matureYield").prop('checked', false);
+        layui.form.render(); // reload layui
         pageModel = PAGE_MODEL_NEW;
     };
-
+    
     /**
      * 保存或提交
      *
