@@ -20,6 +20,7 @@
 		    </style>
             <div class="joyin-form-wrap">
                 <form class="layui-form pro-module-form" id="searchForm">
+                    <input type="hidden" id="EtrIbBondinfo002_default_ccy" th:value="${(entity?.ccy)?:'CNY1'}"/>
                     <input type="hidden" id="finprodIdhid" name="finprodId" th:value="${entity?.finprodId}" />
                     <input type="hidden" id="calendarId" name="calendarId" th:value="${entity?.calendarId}" />
                     <input type="hidden" id="businessId" name="businessId" th:value="${businessId?: ''}">
