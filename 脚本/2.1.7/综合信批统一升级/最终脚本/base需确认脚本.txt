@@ -1,21 +1,36 @@
 
+
+
+/***同时包含一二三期选是,其他选否**/
 DELETE FROM   SYS_PARA  WHERE   PARA_CODE='SVR_IS_EQUDET_CONUT';
 Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('SVR','SVR_IS_EQUDET_CONUT','01',null,null,'募集登记客户数是否走投资者明细中取(01:是  02:否)','system',null,sysdate,'system',sysdate);
+/***根据行内情况选择,是否有此个性化**/
 delete  from  SYS_PARA  where  para_code='SVR_IS_TOATL_YES_NO';
 Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('VAL','SVR_IS_TOATL_YES_NO','N','01','(null)','是否走产品汇总分支 N(默认):否 Y:是','system',null,SYSDATE,'system',SYSDATE);
-
+/***根据当前公司是母公司还是子公司选择*/
 DELETE FROM sys_para WHERE PARA_CODE = 'SVR_IS_SUBSIDIARY';
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('SVR', 'SVR_IS_SUBSIDIARY', '01', '', '', '是否子公司(01：是 02：否)', 'system', '', SYSDATE, 'why', SYSDATE);
+
+/***联社或银行模式 如果需要直连必须为银行模式,联社暂不支持*/
+------ add by zhouwenqiang 20210708 start---------------
+update sys_para set param_value = '02' where para_code = 'data_authority';
+update sys_para set param_value = '01' where para_code = 'AUTHORITY_TYPE';
+------ add by zhouwenqiang 20210708 end---------------
+
+/**在服务器上配置新路径,包括批处理和前台※如果要批处理报送申报登记需要一个共享磁盘存放所有目录(上传文件等),如果没有共享磁盘,申报必须前台点击报送**/
+DELETE FROM SYS_PARA WHERE PARA_CODE = 'SVR_TMP_PATH';
+insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
+values ('SVR', 'SVR_TMP_PATH', '/app/tams/tmp', '  ', null, '中债导出临时中转路径', 'system', null, sysdate, 'system',sysdate, null, '02');
+
 
 
 /****21.20210513_新增反馈文件管理功能页面***/
 --增加中债反馈文件管理菜单和页面
 delete from SYS_MENU where PAGE_ID = 'ChbFeedbackFileManagement001';
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_006_008', 'REP', null, 'REPORT_001_006', 'ChbFeedbackFileManagement001', 10, '02', '中债反馈文件管理', 'system', null, TO_TIMESTAMP('2019-03-13 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'), 'system', TO_TIMESTAMP('2019-03-13 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'));
-
 
 /***26.20210518_新增报送状态查询页面**/
 --新增菜单和页面
@@ -39,11 +54,7 @@ DELETE FROM SYS_MENU WHERE PAGE_ID = 'SvrSubOperationalInfo001';
 insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('REPORT_001_001_015', 'REP', null, 'REPORT_001_001', 'SvrSubOperationalInfo001', 15, '02', '中债excel数据导入', 'system', null, SYSDATE, 'system', SYSDATE);
 
-/***联社或银行模式*/
------- add by zhouwenqiang 20210708 start---------------
-update sys_para set param_value = '02' where para_code = 'data_authority';
-update sys_para set param_value = '01' where para_code = 'AUTHORITY_TYPE';
------- add by zhouwenqiang 20210708 end---------------
+
 
 /***一体化页面位置调整*/
 delete from sys_menu where PAGE_ID  IN ('ChbFeedbackFileManagement001','ChbSubinfoBatchLog001','ManuallyGeneratingPbcData001','PbcReportFileManage001',
@@ -67,9 +78,6 @@ values ('REPORT_001_006_008', 'REP', null, 'REPORT_001_006', 'ChbSubinfoBatchLog
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('REPORT_001_006_009', 'REP', null, 'REPORT_001_006', 'AutBatchProResultQuery001', 9, '02', '自动报送批处理结果查询','system', null, SYSDATE, 'system', SYSDATE);
 
-DELETE FROM SYS_PARA WHERE PARA_CODE = 'SVR_TMP_PATH';
-insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
-values ('SVR', 'SVR_TMP_PATH', '/app/tams/tmp', '  ', null, '中债导出临时中转路径', 'system', null, sysdate, 'system',sysdate, null, '02');
 
 /****质量核查功能***/
 --menu脚本
