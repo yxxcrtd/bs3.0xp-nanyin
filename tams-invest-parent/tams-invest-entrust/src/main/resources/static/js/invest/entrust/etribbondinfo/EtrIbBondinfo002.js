@@ -713,7 +713,7 @@
                 $("#finprodName").val("").trigger("change");
                 $("#calendarId").val("").trigger("change");
                 //$("#tradeMarket").val("").trigger("change").attr("disabled", false);
-                $("#ccy").val("").trigger("change").attr("disabled", false);
+                // $("#ccy").val("").trigger("change").attr("disabled", false);
                 $("#isRight").val("").trigger("change");
 
                 $("#exerYield").val("").trigger("change").trigger("blur");
