@@ -194,8 +194,6 @@ public class EtrIbBondinfo002Service extends CommonExportService<EtrIbBondinfo00
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo002/doComplete", dto,
                 Integer.class);
-        doDeleteFlow(dto.getWorkflowId());
-
         //发送数据到b45
 //        Map<String, Object> param = new HashMap<String, Object>();
 //        param.put("entrustId", dto.getEntrustId());
@@ -210,67 +208,6 @@ public class EtrIbBondinfo002Service extends CommonExportService<EtrIbBondinfo00
 //        }
     }
 
-    private void doInsertFlow(EtrIbBondinfo002Dto dto) {
-        try {
-            dto.setOperateType(dto.getOperateType());
-            BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
-            EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
-            EtrEntrust etrEntrust = new EtrEntrust();
-            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
-            entrustCommonDto.setEtrEntrust(etrEntrust);
-            entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
-            dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            dto.setIsOutTrade(DictCodeList.是否_是.getValue());
-            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
-            dto.setRecStatus(DictCodeListExt3.委托状态_流程中.getValue());
-            BeanUtil.copyProperties(etrEntrust, dto);
-            //BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
-            etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
-            etrEntrust.setEntrustAmt(null);
-            etrEntrust.setEntrustNum(dto.getEntrustNum().multiply(new BigDecimal(100))); //前台单位万元
-            BeanUtil.copyProperties(etrEntrustAdd, dto);
-            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_债券.getValue());
-            etrEntrustAdd.setVdate(null);
-            etrEntrustAdd.setMdate(null);
-            //etrEntrustAdd.setOurEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
-            //etrEntrustAdd.setLendinEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
-            etrEntrustAdd.setFullPrice(dto.getFpriceAmt());
-            if (dto.getExerYield() != null) {
-                etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
-            }
-            if (dto.getMatureYield() != null) {
-                etrEntrustAdd.setMatureYield(dto.getMatureYield().divide(new BigDecimal(100)));
-            }
-
-            if (StringUtil.equals(dto.getSettleSpreed(),
-                    DictCodeList.清算速度_T_0.getValue())) {
-                etrEntrustAdd.setSettleSpreed((long) 0);
-            }
-            if (StringUtil.equals(dto.getSettleSpreed(),
-                    DictCodeList.清算速度_T_1.getValue())) {
-                etrEntrustAdd.setSettleSpreed((long) 1);
-            }
-            entity.setEtrEntrust(etrEntrust);
-            entity.setEtrEntrustAdd(etrEntrustAdd);
-            MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
-            mstFileInputParameter.setFileList(dto.getFileArray());
-            mstFileInputParameter.setBussinessId(dto.getEntrustId());
-            entity.setMstFileInputParameter(mstFileInputParameter);
-            entity.setWorkFlowId(dto.getWorkflowId());
-            restTemplate.postForObject(
-                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
-                    Boolean.class);
-            if(baseEtrCashPositionCommService!=null){
-                baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     @Override
     public void doDelete(String workflowId) {
         doDeleteFlow(workflowId);
@@ -282,7 +219,6 @@ public class EtrIbBondinfo002Service extends CommonExportService<EtrIbBondinfo00
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doDeleteEtrFlow", param,
                 Boolean.class);
-
     }
 
     /**
@@ -290,10 +226,6 @@ public class EtrIbBondinfo002Service extends CommonExportService<EtrIbBondinfo00
      */
     @Override
     public void doInsert(EtrIbBondinfo002Dto dto, OperationType type) {
-        if ("submit".equals(dto.getOperateType())) {
-            doInsertFlow(dto);
-        }
-        dto.setOperateType(type.toString());
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo002/doInsert", dto,
                 Integer.class);
@@ -305,13 +237,9 @@ public class EtrIbBondinfo002Service extends CommonExportService<EtrIbBondinfo00
     @Override
     public void doUpdate(EtrIbBondinfo002Dto dto) {
         restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo002/doInsert", dto,
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo002/doUpdate", dto,
                 Integer.class);
         if (!StringUtil.equals("revoke", dto.getOperateType()) && !StringUtil.equals("delete", dto.getOperateType())) {
-            // 先删除流程中数据
-            doDeleteFlow(dto.getWorkflowId());
-            // 重新insert
-            doInsertFlow(dto);
             ProcessMark newEntity;
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrIbBondinfo002Dto.class, true);
@@ -1016,6 +944,9 @@ public class EtrIbBondinfo002Service extends CommonExportService<EtrIbBondinfo00
 
     @Override
     public void doBack(EtrIbBondinfo002Dto entity) {
-    	baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
+//    	baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo002/doBack", entity,
+                Integer.class);
     }
 }

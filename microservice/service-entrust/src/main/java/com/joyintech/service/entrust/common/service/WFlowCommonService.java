@@ -1,11 +1,15 @@
 package com.joyintech.service.entrust.common.service;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +23,7 @@ import java.util.Map;
 public class WFlowCommonService {
     private static BaseEtrInvestInfoServiceImpl baseEtrInvestInfoServiceImpl; // 流程数据相关修改
     private static BaseEtrCashPositionCommService baseEtrCashPositionCommService; // 持仓处理
+    private static EtrEntrustMapper etrEntrustMapper; // 指令
 
     /**
      * 操作类型为submit时执行新增流程数据 & 持仓处理
@@ -91,8 +96,7 @@ public class WFlowCommonService {
     }
 
     public static boolean insertFlow(BaseEtrInvestInfoDto dto){
-        dto.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
-        return baseEtrInvestInfoServiceImpl.newDelegateFlow(dto);
+        return baseEtrInvestInfoServiceImpl.insertWithQuery(dto);
     }
 
     public static boolean deleteFlow(String workflowId) {
@@ -109,5 +113,10 @@ public class WFlowCommonService {
     @Autowired(required = false)
     public void setBaseEtrCashPositionCommService(BaseEtrCashPositionCommService baseEtrCashPositionCommService){
         WFlowCommonService.baseEtrCashPositionCommService=baseEtrCashPositionCommService;
+    }
+
+    @Autowired
+    public void setEtrEntrustMapper(EtrEntrustMapper etrEntrustMapper){
+        WFlowCommonService.etrEntrustMapper=etrEntrustMapper;
     }
 }

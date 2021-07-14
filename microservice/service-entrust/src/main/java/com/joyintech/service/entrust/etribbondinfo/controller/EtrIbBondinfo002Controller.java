@@ -8,7 +8,19 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -92,6 +104,8 @@ public class EtrIbBondinfo002Controller {
     @DTXTransaction
     @PostMapping("doComplete")
     public void doComplete(@RequestBody EtrIbBondinfo002Dto dto) throws IllegalAccessException, InvocationTargetException{
+        WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
+        
         etrIbBondinfo002Service.doComplete(dto, dto.getOperateType());
     }
 
@@ -99,9 +113,26 @@ public class EtrIbBondinfo002Controller {
     @DTXTransaction
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrIbBondinfo002Dto dto){
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), etrIbBondinfo002Service.initBaseEtrInvestInfoDto(dto));
+        
         etrIbBondinfo002Service.doInsert(dto, dto.getOperateType());
     }
 
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doUpdate")
+    public void doUpdate(@RequestBody EtrIbBondinfo002Dto dto){
+        WFlowCommonService.doUpdateFlow(dto.getOperateType(), etrIbBondinfo002Service.initBaseEtrInvestInfoDto(dto));
+
+        etrIbBondinfo002Service.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBack")
+    public void doBack(@RequestBody EtrIbBondinfo002Dto dto){
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
+    }
     /**
      * 
      * 可用面值计算
@@ -133,5 +164,4 @@ public class EtrIbBondinfo002Controller {
     public BigDecimal getExercisePricebyPara(@RequestBody Map<String, Object> param) {
         return etrIbBondinfo002Service.getExercisePricebyPara(param);
     }
-
 }
