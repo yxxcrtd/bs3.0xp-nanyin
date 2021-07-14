@@ -29,7 +29,6 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -117,7 +116,7 @@ public class ProductPublishCounting001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) ProductPublishCounting001Dto dto
-    		, BindingResult br) throws WorkFlowException {
+    		, BindingResult br) throws Exception{
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

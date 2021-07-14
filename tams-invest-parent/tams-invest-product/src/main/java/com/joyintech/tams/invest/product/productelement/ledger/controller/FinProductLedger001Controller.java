@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.product.productelement.ledger.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -116,7 +117,7 @@ public class FinProductLedger001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		String datas = this.getParam("datas");
         List<FinProductLedger001Dto> listdto;
         if (datas == null) {

@@ -17,6 +17,7 @@ import javax.validation.Valid;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -205,8 +206,7 @@ public class FinNetValueProductBuild003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinNetValueProductBuild003Dto dto)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinNetValueProductBuild003Dto dto) throws WorkFlowException {
         String msgId = "";
         for (FinNetValueProductBuild003Dto entity : dto.getSelectedItem()) {
             entity.setUpdateUser(dto.getUpdateUser());

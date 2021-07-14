@@ -56,7 +56,7 @@ public class PrdRiskLevel001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("productDesignCode")
-    public Page<SelectOptionDto> productDesignCode() throws Exception {
+    public Page<SelectOptionDto> productDesignCode(){
     	return prdRiskLevel001Service.productDesignCode(RequestUtil.getPageParam());
     }
     
@@ -65,7 +65,7 @@ public class PrdRiskLevel001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("finProductName")
-    public List<SelectOptionDto> finProductName() throws Exception {
+    public List<SelectOptionDto> finProductName(){
     	return prdRiskLevel001Service.selectFinProductName(RequestUtil.getPageParam());
     }
 
@@ -78,7 +78,7 @@ public class PrdRiskLevel001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<PrdRiskLevel001Dto> findPage() throws Exception {
+    public Page<PrdRiskLevel001Dto> findPage() {
     	
     	Map<String,Object> map = RequestUtil.getPageParam();
     	
@@ -107,10 +107,8 @@ public class PrdRiskLevel001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return prdRiskLevel001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
-    
     
 }
