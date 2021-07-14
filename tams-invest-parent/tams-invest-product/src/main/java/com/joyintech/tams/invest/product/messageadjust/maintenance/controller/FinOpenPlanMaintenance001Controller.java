@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -147,12 +148,13 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
+     * @throws WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinOpenPlanMaintenanceDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinOpenPlanMaintenanceDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -186,10 +188,8 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
      * @see
      * @since 1.0
      */
-
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finOpenPlanMaintenanceService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
@@ -197,7 +197,7 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
     /**
      * 发送销售接口状态
      *
-     * @param FinMdateAdjustment001Dto
+     * @param finOpenPlanMaintenanceDto
      * @return 发送结果
      * @see
      * @since 1.0

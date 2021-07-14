@@ -46,13 +46,12 @@ public class MaxIssuableSize001Controller extends BaseController{
 	 * 最大可发行规模查询 分页查询
 	 * <功能详细描述>
 	 * @return
-	 * @throws Exception
 	 * @see
 	 * @since 1.0
 	 */
     @ResponseBody
     @RequestMapping("selectForPage")
-    public Page<MaxIssuableSize001Dto> selectAll() throws Exception {
+    public Page<MaxIssuableSize001Dto> selectAll() {
         Page<MaxIssuableSize001Dto> page = maxIssuableSize001Service.selectForPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -74,12 +73,11 @@ public class MaxIssuableSize001Controller extends BaseController{
 	 * 最大可发行规模查询 导出
 	 * <功能详细描述>
 	 * @return
-	 * @throws Exception
 	 * @see
 	 * @since 1.0
 	 */
 	@RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export(){
         return maxIssuableSize001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
     

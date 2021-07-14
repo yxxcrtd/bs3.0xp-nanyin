@@ -16,6 +16,7 @@ import java.util.List;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -224,13 +225,12 @@ public class FinProductPayInt003Controller extends BaseController {
      * 查询利息明细信息
      *
      * @return 利息明细信息
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("findIntDetailInfo")
     @ResponseBody
-    public List<ReduceInfoDto> findIntDetailInfo() throws Exception {
+    public List<ReduceInfoDto> findIntDetailInfo() {
         FinProductPayInt003Dto inputDto = BeanUtil.mapToObject(RequestUtil.getPageParam(), FinProductPayInt003Dto.class);
         return finProductPayInt003Service.findIntDetailInfo(RequestUtil.getPageParam());
     }
@@ -242,12 +242,10 @@ public class FinProductPayInt003Controller extends BaseController {
      *
      * @param inputDto 参数
      * @return 画面联动结果
-     * @throws Exception Exception
      */
     @RequestMapping("calcCusProfit")
     @ResponseBody
-    public FinProductPayInt002Dto calcCusProfit(@RequestBody FinProductPayInt002Dto inputDto)
-            throws Exception {
+    public FinProductPayInt002Dto calcCusProfit(@RequestBody FinProductPayInt002Dto inputDto){
         return finProductPayInt003Service.calcCusProfit(inputDto);
     }
 
@@ -299,13 +297,13 @@ public class FinProductPayInt003Controller extends BaseController {
      *
      * @param dto 画面参数
      * @return 保存提交结果
-     * @throws Exception Exception
+     * @throws WorkFlowException
      * @see
      * @since 1.0
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody FinProductPayInt003Dto dto) throws Exception {
+    AjaxResult save(@RequestBody FinProductPayInt003Dto dto) throws WorkFlowException {
         if (StringUtil.isBlank(dto.getBussId())) {
             if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = new BussinessCodeParameter();
