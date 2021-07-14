@@ -17,6 +17,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.service.RskSupervisionPortfPointMainService;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -185,8 +186,7 @@ public class RskSupervisionPortfPointInd002Controller extends BaseController {
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskSupervisionIndicator002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody RskSupervisionIndicator002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

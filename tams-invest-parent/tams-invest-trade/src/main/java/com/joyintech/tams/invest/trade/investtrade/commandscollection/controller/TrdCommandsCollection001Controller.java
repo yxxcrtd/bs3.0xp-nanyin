@@ -86,7 +86,7 @@ public class TrdCommandsCollection001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIds")
-    public List<SuggestDto> getFinprodMarketIds() throws Exception {
+    public List<SuggestDto> getFinprodMarketIds() {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("finprodMarketId", super.getRequest().getParameter("param"));
         param.put("assetType", super.getRequest().getParameter("assetType"));
@@ -106,7 +106,7 @@ public class TrdCommandsCollection001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<TrdCommandsCollection001Dto> findPage() throws Exception{
+    public Page<TrdCommandsCollection001Dto> findPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         Page<TrdCommandsCollection001Dto> trdCommandsCollection001DtoPage = trdCommandsCollection001Service.selectForPage(param);
         return trdCommandsCollection001DtoPage;
@@ -120,7 +120,7 @@ public class TrdCommandsCollection001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export()  {
         return trdCommandsCollection001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

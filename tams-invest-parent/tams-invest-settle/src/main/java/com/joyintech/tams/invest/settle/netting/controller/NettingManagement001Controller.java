@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.settle.netting.service.TransferMessageService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +117,7 @@ public class NettingManagement001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
         String fileName = "划款信息查询" + "(" + iPlatformDate.getSysDateStr() + ").xls";
 
@@ -158,8 +159,7 @@ public class NettingManagement001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    public AjaxResult doRevoke(@RequestBody NettingProcessDto inputDto)
-            throws Exception {
+    public AjaxResult doRevoke(@RequestBody NettingProcessDto inputDto) throws WorkFlowException {
       //  System.out.println(inputDto.getOrderId());
         ProcessParameter<NettingProcessDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<NettingProcessDto> workFlowParameter = new WorkFlowParameter<>();

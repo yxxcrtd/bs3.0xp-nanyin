@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade003Service
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,6 +53,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -343,7 +346,7 @@ public class TrdFundInvestTrade005Controller extends BaseController {
     @RequestMapping("getcarryAmt")
     @ResponseBody
     public BigDecimal getcarryAmt(@RequestBody Map<String, Object> map)
-        throws Exception {
+         {
         return trdFundInvestTrade003Service.getcarryAmt(map);
     }
 
@@ -473,8 +476,7 @@ public class TrdFundInvestTrade005Controller extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdFundInvestTradeConfirmDto dto, BindingResult br)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdFundInvestTradeConfirmDto dto, BindingResult br) throws InvocationTargetException, IllegalAccessException, IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

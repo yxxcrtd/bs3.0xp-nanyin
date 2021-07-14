@@ -85,7 +85,7 @@ public class RiskFactor003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findOnePage")
     public Page<RiskFactor003Dto> selectForPage()
-        throws Exception {
+         {
        Map<String, Object> map = RequestUtil.getParameters(getRequest());
        if(map.get("twoClass")!=null && !map.get("twoClass").equals("")){
            map.put("investtype1", null);
@@ -109,7 +109,7 @@ public class RiskFactor003Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         if(map.get("twoClass")!=null && !map.get("twoClass").equals("")){
             map.put("investtype1", null);

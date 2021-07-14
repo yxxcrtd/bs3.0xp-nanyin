@@ -29,6 +29,7 @@ import com.joyintech.calculation.shell.param.*;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
@@ -178,7 +179,7 @@ public class TrdCommandsCollection002Service extends CommonExportService<TrdComm
             for (TrdCommandsCollection002Dto entity: dtoList){
                 List<WflTrdProductDealAdd> list = trdCommonBaseService.checkEtrToTrdInFlow(entity.getEntrustId());
                 if (!StringUtil.isEmptyList(list)){
-                    throw new RuntimeException("MSG:存在流程中数据:" + entity.getEntrustId());
+                    throw new BusinessException("MSG:存在流程中数据:" + entity.getEntrustId());
                 }
             }
         }

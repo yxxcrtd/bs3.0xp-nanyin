@@ -118,7 +118,7 @@ public class RskValStructure003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("insert")
-    public AjaxResult insert(@RequestBody RskValStructureDto dto) throws Exception {
+    public AjaxResult insert(@RequestBody RskValStructureDto dto) {
         rskValStructure003Service.insert(dto);
         return new AjaxResult(getMessage("BUSS_COM_E_0033"));
     }
@@ -134,7 +134,7 @@ public class RskValStructure003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("update")
-    public AjaxResult update(@RequestBody RskValStructureDto dto) throws Exception {
+    public AjaxResult update(@RequestBody RskValStructureDto dto) {
         rskValStructure003Service.update(dto);
         return new AjaxResult(getMessage("BUSS_COM_E_0033"));
     }

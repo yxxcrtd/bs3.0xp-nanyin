@@ -50,7 +50,7 @@ public class RepTradeApproval001Controller extends BaseController  {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepTradeApprovalDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RepTradeApprovalDto> page = repTradeApprovalService.selectForPage(map);
         return page;

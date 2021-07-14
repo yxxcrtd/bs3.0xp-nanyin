@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.se
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam005Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -808,8 +809,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskSupervisionIndicatorParam005Dto dto, BindingResult br)
-        throws Exception{
+    public AjaxResult save(@RequestBody RskSupervisionIndicatorParam005Dto dto, BindingResult br) throws WorkFlowException {
     	if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -852,8 +852,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) RskSupervisionIndicatorParam005Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) RskSupervisionIndicatorParam005Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

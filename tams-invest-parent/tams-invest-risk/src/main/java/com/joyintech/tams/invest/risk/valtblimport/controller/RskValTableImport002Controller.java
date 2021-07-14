@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.risk.valtblimport.controller;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +81,7 @@ public class RskValTableImport002Controller extends BaseController{
     
     @RequestMapping(value = "/initValTableInfo")
     @ResponseBody
-    public List<RskValtblAssetSubDto> initValTableInfo(@RequestBody RskValTableImportParamDto dto) throws Exception {
+    public List<RskValtblAssetSubDto> initValTableInfo(@RequestBody RskValTableImportParamDto dto) throws ClassNotFoundException, FileNotFoundException, InstantiationException, IllegalAccessException {
         List<RskValtblAssetSubDto> RskValtblAssetSubList = rskValTableImportService.viewValTable(dto);
         return RskValtblAssetSubList;
     }

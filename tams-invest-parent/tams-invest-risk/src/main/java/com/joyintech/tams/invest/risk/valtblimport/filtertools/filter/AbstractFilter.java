@@ -13,12 +13,12 @@ public abstract class AbstractFilter implements Filter {
 	}
 
 	@Override
-	public Workbook doFilter(Workbook workbook, int sheetIndex) throws Exception {
+	public Workbook doFilter(Workbook workbook, int sheetIndex) {
 		return workbook;
 	}
 
 	@Override
-	public Workbook doFilter(Workbook workbook, int sheetIndex,String param) throws Exception {
+	public Workbook doFilter(Workbook workbook, int sheetIndex,String param) {
 		return workbook;
 	}
 

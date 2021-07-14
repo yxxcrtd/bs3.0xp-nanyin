@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.trade.channel.feepay.service.ChannelFeePay002Se
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.LeaveMarkProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
@@ -94,7 +95,7 @@ public class ChannelFeePay001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ChannelFeePay001Dto> findPage()
-        throws Exception {
+         {
         return channelFeePay001Service.selectForPage(RequestUtil.getPageParam());
     }
 
@@ -121,7 +122,7 @@ public class ChannelFeePay001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return channelFeePay001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
 
@@ -132,8 +133,7 @@ public class ChannelFeePay001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("doRevoke")
-    public AjaxResult revoke(@RequestBody @Validated({ValidateGroupDelete.class}) ChannelFeePay002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult revoke(@RequestBody @Validated({ValidateGroupDelete.class}) ChannelFeePay002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

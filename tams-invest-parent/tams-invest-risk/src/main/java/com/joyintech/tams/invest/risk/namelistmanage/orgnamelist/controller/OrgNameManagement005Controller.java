@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +61,7 @@ public class OrgNameManagement005Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getAdjPriview")
-    public List<RskAccessListDetailDto> getAdjPriview()
-        throws Exception {
+    public List<RskAccessListDetailDto> getAdjPriview() throws IOException {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         //处理过的名单明细
         List<RskAccessListDetailDto> handleRskAccessListDetailList= JsonUtils.json2List(this.getParam("rskAccessListLogDtoList"), RskAccessListDetailDto.class);

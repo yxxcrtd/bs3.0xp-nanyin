@@ -123,7 +123,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
     @RequestMapping("/getAllPortfolioBySort")
     public List<TreeNode> getAllPortfolioBySort(@RequestParam(name="type", required=false) String type,@RequestParam(name="indId", required=false) String indId,@RequestParam(name="portfName", required=false) String portfName,@RequestParam(name="profitType", required=false) String profitType
             ,@RequestParam(name="issueMode", required=false) String issueMode,@RequestParam(name="raiseType", required=false) String raiseType,@RequestParam(name="investType", required=false) String investType)
-        throws Exception {
+         {
         return MarketRiskStressTest001Service.getAllPortfolioBySort(type,indId,portfName,profitType,issueMode,raiseType,investType);
         
     }
@@ -149,7 +149,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
      * */
     @ResponseBody
     @RequestMapping("querySceneOption")
-    public List<SelectOptionDto> querySceneOption(@RequestParam Map<String, Object> param)throws Exception {
+    public List<SelectOptionDto> querySceneOption(@RequestParam Map<String, Object> param) {
         return MarketRiskStressTest001Service.querySceneOption(getParam("search"));
     }
     

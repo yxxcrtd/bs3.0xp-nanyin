@@ -81,7 +81,7 @@ public class RskValRelateImport002Service extends CommonExportService<RskValRela
      * @see
      * @since 1.0
      */
-    public int insert(RskValRelateImport001Dto dto) throws Exception {
+    public int insert(RskValRelateImport001Dto dto)  {
         dto.setSubjectCodeCol(Long.parseLong(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSubjectCodeColLetter()))));
         return restTemplate.postForObject(
                 ServiceApplication.RISK_SERVICE_NAME + "/RskValRelateImport/insert", dto,
@@ -95,7 +95,7 @@ public class RskValRelateImport002Service extends CommonExportService<RskValRela
      * @see
      * @since 1.0
      */
-    public int update(RskValRelateImport001Dto dto) throws Exception {
+    public int update(RskValRelateImport001Dto dto) {
         dto.setSubjectCodeCol(Long.parseLong(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSubjectCodeColLetter()))));
         return restTemplate.postForObject(
                 ServiceApplication.RISK_SERVICE_NAME + "/RskValRelateImport/update", dto,

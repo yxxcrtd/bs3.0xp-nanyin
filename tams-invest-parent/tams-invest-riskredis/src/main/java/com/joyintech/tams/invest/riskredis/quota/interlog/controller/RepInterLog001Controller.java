@@ -63,7 +63,7 @@ public class RepInterLog001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepInterLogDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RepInterLogDto> page = repInterLogService.selectForPage(map);
         return page;
@@ -79,7 +79,7 @@ public class RepInterLog001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return repInterLogService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

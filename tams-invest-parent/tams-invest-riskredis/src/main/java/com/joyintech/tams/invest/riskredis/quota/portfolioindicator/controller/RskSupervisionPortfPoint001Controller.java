@@ -8,6 +8,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.dto.RskPortfolioIndicator002Dto;
 import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.service.RskSupervisionPortfPoint001Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -93,7 +94,7 @@ public class RskSupervisionPortfPoint001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskPortfolioIndicator002Dto> selectAll()
-        throws Exception {
+         {
         return rskSupervisionPortfPoint001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -106,7 +107,7 @@ public class RskSupervisionPortfPoint001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("playPortfolio")
     public AjaxResult playPortfolio()
-        throws Exception {
+         {
     	rskSupervisionPortfPoint001Service.playPortfolio(RequestUtil.getPageParam());
         return new AjaxResult(getMessage("BUSS_COM_I_0033",getMessage("RskSupervisionIndicator001.play")));
     }
@@ -132,8 +133,7 @@ public class RskSupervisionPortfPoint001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) RskPortfolioIndicator002Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) RskPortfolioIndicator002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -180,7 +180,7 @@ public class RskSupervisionPortfPoint001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return rskSupervisionPortfPoint001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

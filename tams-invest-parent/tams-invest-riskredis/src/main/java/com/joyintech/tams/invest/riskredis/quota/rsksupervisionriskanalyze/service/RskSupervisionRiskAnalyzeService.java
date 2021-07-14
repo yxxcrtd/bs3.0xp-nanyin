@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
@@ -224,7 +225,7 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
 		return null;
     }
 
-    public String transferSupVal(String value,String foulValue,String indCellType) throws Exception{
+    public String transferSupVal(String value,String foulValue,String indCellType) throws IOException {
     	if(!StringUtil.isNotEmpty(value)){
     		return value;
     	}
@@ -253,7 +254,7 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
     	return wg;
     }
     
-    public String transferWarnFoul(String value,String indCellType) throws Exception{
+    public String transferWarnFoul(String value,String indCellType) throws IOException {
     	String wg=StringUtil.EMPTY;
     	ObjectMapper mapper = new ObjectMapper();
 		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(value), Map.class);

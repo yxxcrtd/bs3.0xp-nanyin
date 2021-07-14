@@ -241,7 +241,7 @@ public class OutflowFundsCheckManagement001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
         String fileName = "流出资金核对-托管流水" + "(" + DateUtil.getCurrentDate() + ").xlsx";
         if (searchParams.get("isSys") != null && Boolean.parseBoolean((String)searchParams.get("isSys"))) {

@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.trade.option.service.TrdOptionTrade002Service;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +70,7 @@ public class TrdOptionTrade001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<TrdOptionTrade001Dto> findPage() throws Exception {
+    public Page<TrdOptionTrade001Dto> findPage() {
         return trdOptionTrade001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -96,7 +97,7 @@ public class TrdOptionTrade001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return trdOptionTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 
@@ -126,8 +127,7 @@ public class TrdOptionTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdOptionTrade002Dto inputDto)
-            throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdOptionTrade002Dto inputDto) throws WorkFlowException {
 
         ProcessParameter<TrdOptionTrade002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdOptionTrade002Dto> workFlowParameter = new WorkFlowParameter<>();
