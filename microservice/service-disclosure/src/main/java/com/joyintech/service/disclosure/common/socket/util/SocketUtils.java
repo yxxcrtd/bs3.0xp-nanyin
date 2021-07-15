@@ -12,11 +12,14 @@ package com.joyintech.service.disclosure.common.socket.util;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.env.PropertySourcesLoader;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+
 
 /**
  * Socket工具类
@@ -27,6 +30,8 @@ import org.springframework.core.io.ResourceLoader;
  * @since 1.0
  */
 public class SocketUtils {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SocketUtils.class);
 
     /**
      * 配置文件
@@ -56,7 +61,7 @@ public class SocketUtils {
             }
         }
         catch (IOException e1) {
-            e1.printStackTrace();
+        	logger.error(e1.getMessage(),e1);
         }
         return value;
     }

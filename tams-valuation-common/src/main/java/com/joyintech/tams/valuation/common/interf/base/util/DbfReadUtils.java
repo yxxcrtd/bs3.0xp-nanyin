@@ -145,11 +145,11 @@ public class DbfReadUtils {
         catch (IOException e) {
             throw e;
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        	logger.error(e.getMessage(),e);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+        	logger.error(e.getMessage(),e);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+        	logger.error(e.getMessage(),e);
         } finally {
             if (reader != null) {
                 reader.close();

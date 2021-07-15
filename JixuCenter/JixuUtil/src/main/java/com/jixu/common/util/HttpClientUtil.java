@@ -58,7 +58,7 @@ public class HttpClientUtil {
 			try{
 				httpClient.close();
 			}catch(IOException ie){
-				ie.printStackTrace();
+				logger.error(ie.getMessage(),ie);
 			}
 		}
 	}

@@ -43,7 +43,7 @@ public class ScanSFTPFile implements Runnable{
 				prop = WebserviceIntefUtil.getProperties("webservice.properties");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				logger.error(e1.getMessage(),e1);
 			}
 			if (prop != null){
 				if(prop!=null) {

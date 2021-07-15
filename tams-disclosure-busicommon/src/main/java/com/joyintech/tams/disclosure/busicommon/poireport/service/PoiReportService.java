@@ -293,7 +293,7 @@ public class PoiReportService {
 			conn = jdbcTemplate.getDataSource().getConnection();
 			ps = conn.prepareStatement(sql);
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(),e1);
 		}
 		ResultSet rs = null;
 		try {
@@ -316,7 +316,7 @@ public class PoiReportService {
 				}
 			}
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(),e1);
 		} finally {
 			if(null != ps) {
 				try {

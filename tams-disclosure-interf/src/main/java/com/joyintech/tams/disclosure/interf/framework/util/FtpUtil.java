@@ -89,7 +89,7 @@ public class FtpUtil {
                 LOGGER.info("上传成功");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+        	logger.error(ex.getMessage(),ex);
         } finally {
             input.close();
         }
@@ -106,7 +106,7 @@ public class FtpUtil {
                 LOGGER.info("上传成功");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+        	logger.error(ex.getMessage(),ex);
         } finally {
             input.close();
         }

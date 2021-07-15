@@ -64,7 +64,7 @@ public class HttpRequest {
                     in.close();
                 }
             } catch (Exception e2) {
-                e2.printStackTrace();
+            	logger.error(e2.getMessage(),e2);
             }
         }
         return result;
