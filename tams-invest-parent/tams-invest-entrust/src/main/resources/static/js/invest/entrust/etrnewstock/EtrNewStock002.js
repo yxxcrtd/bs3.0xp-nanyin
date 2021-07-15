@@ -58,6 +58,8 @@
         object.purchModle = $('#purchModle').val();
         //申购时间
         object.purchDate = $('#purchDate').val();
+        object.vdate = $('#purchDate').val();
+        object.mdate = $('#purchDate').val();
         /*object.entrustAmt = $('#entrustNum').val();*/
         object.finprodId = $('#finprodIdhid').val();
         object.finvdate = $('#finvdate').val();
