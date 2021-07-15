@@ -9,6 +9,27 @@
     var initFlag = true;
     var pageModel = PAGE_MODEL_NEW;
 
+    var etrIbBondinfo002Funcs = {};
+
+    etrIbBondinfo002Funcs.reloadLayui = function(){
+        layui.form.render();
+    }
+    etrIbBondinfo002Funcs.exerYield_setDisabled = function(isDisabled, isRight, priceModel){
+        // 行权收益率
+        let exerYield = $('#exerYield');
+        if(isDisabled){
+            exerYield.val('').attr('disabled', true).removeAttr("required");
+            $('#calculateField_exerYield').prop('checked', false).attr('disabled', true);
+        }else{
+            if(isRight !== N && priceModel !== PRICEMODEL_03){
+                // 含权债或为空 且 价格模式不是市价
+                exerYield.val('').attr('disabled', false).trigger("change").trigger("blur");
+                $('#calculateField_exerYield').val('').attr('disabled', false);
+            }
+        }
+        return exerYield;
+    };
+    
     var getriskdata = function () {
         var obj = {
             tradeDirection: $("#ps").val(),
@@ -235,7 +256,7 @@
                 $('#matureYield').val('').attr('disabled', true);
 
                 // 行权收益率
-                $('#exerYield').val('').attr('disabled', true);
+                etrIbBondinfo002Funcs.exerYield_setDisabled(true);
 
             } else {
                 // 净价必填
@@ -246,7 +267,8 @@
 
                 $('#matureYield').attr('disabled', false);
 
-                $('#exerYield').attr('disabled', false);
+                // 行权收益率
+                etrIbBondinfo002Funcs.exerYield_setDisabled(false);
             }
         }
 
@@ -616,7 +638,7 @@
             var finprodIdhid = $("#finprodIdhid").val();
             if ($("#ps").val() == T01) {
                 if ($("#isRight").val() != N) {
-                    $("#exerYield").removeAttr("disabled");
+                    etrIbBondinfo002Funcs.exerYield_setDisabled(false);
                 }
                 $("#matureYield").removeAttr("disabled");
                 
@@ -624,18 +646,19 @@
                 $("#div_counterId1").css("display","block");
                 $("#div_counterId2").css("display","none");
             } else if ($("#ps").val() == T02) {
-                $("#exerYield").attr("disabled", true);
+                if ($("#isRight").val() != N) {
+                    etrIbBondinfo002Funcs.exerYield_setDisabled(false);
+                }
                 $("#matureYield").attr("disabled", true);
-                $("#exerYield").val("");
                 $("#matureYield").val("");
                 
                 // 当交易方向为买入卖出时，交易对手下拉框显示为银行间机构信息中的交易账户21位码+交易成员全称
                 $("#div_counterId1").css("display","block");
                 $("#div_counterId2").css("display","none");
             } else if ($("#ps").val() == T03 || $("#ps").val() == T39) {
-                $("#exerYield").attr("disabled", true);
+                etrIbBondinfo002Funcs.exerYield_setDisabled(true);
+                
                 $("#matureYield").attr("disabled", true);
-                $("#exerYield").val("");
                 $("#matureYield").val("");
                 
                 // 当交易方向为行权回售时，可选项为市场机构
@@ -696,18 +719,14 @@
                 }
                 // 不为空
                 $("#price").attr("required", false);
-                $("#exerYield").attr("required", false);
+                etrIbBondinfo002Funcs.exerYield_setDisabled(false);
                 $("#matureYield").attr("required", false);
                 //var data = $('#finprodId').select2('data')[0].object;
                 $("#finprodIdhid").val(data.finprodId).trigger("change");
                 $("#finprodName").val(finprodId).trigger("change");
                 $("#isRight").val(data.isRight).trigger("change");
-                if(data.isRight === N){
-                    // 资产为非含权债时，置灰“行权收益率”字段
-                    $('#exerYield').val('').attr('disabled', true);
-                    $('#calculateField_exerYield').prop('checked', false).attr('disabled', true);
-                    layui.form.render();
-                }
+                // // 资产为非含权债时，置灰“行权收益率”字段
+                etrIbBondinfo002Funcs.exerYield_setDisabled(false, data.isRight, $("#priceModel").val());
                 $("#calendarId").val(data.calendarId).trigger("change");
                 $("#finvdate").val(new Date(data.finvdate)).trigger("change");
                 $("#finmdate").val(new Date(data.finmdate)).trigger("change");
@@ -719,7 +738,6 @@
             } else {
                 // 为空
                 $("#price").attr("required", true);
-                $("#exerYield").attr("required", true);
                 $("#matureYield").attr("required", true);
                 $("#finprodIdhid").val("").trigger("change");
                 $("#finprodName").val("").trigger("change");
@@ -727,9 +745,9 @@
                 //$("#tradeMarket").val("").trigger("change").attr("disabled", false);
                 $("#ccy").val(CCY).trigger("change").attr("disabled", false);
                 $("#isRight").val("").trigger("change");
-
-                $("#exerYield").val("").trigger("change").trigger("blur");
                 $("#matureYield").val("").trigger("change").trigger("blur");
+                
+                etrIbBondinfo002Funcs.exerYield_setDisabled(false, $("#isRight").val(), $("#priceModel").val());
             }
 
             //左下行情信息联动 & 组合可用现金,资产可用持仓
@@ -806,13 +824,14 @@
                 calData("price");
             } else if (!$("#finprodId").val() && ps == T01) {
                 if ($("#price").val()) {
-                    $("#exerYield").attr("disabled", true);
                     $("#matureYield").attr("disabled", true);
-                    $("#exerYield").val("");
                     $("#matureYield").val("");
+                    
+                    etrIbBondinfo002Funcs.exerYield_setDisabled(true);
                 } else {
-                    $("#exerYield").removeAttr("disabled");
                     $("#matureYield").removeAttr("disabled");
+
+                    etrIbBondinfo002Funcs.exerYield_setDisabled(false, $("#isRight").val(), $("#priceModel").val());
                 }
             }
         });
@@ -849,12 +868,13 @@
             } else if (!$("#finprodId").val() && ps == T01) {
                 if ($("#matureYield").val()) {
                     $("#price").attr("disabled", true);
-                    $("#exerYield").attr("disabled", true);
                     $("#price").val("");
-                    $("#exerYield").val("");
+
+                    etrIbBondinfo002Funcs.exerYield_setDisabled(true);
                 } else {
                     $("#price").removeAttr("disabled");
-                    $("#exerYield").removeAttr("disabled");
+
+                    etrIbBondinfo002Funcs.exerYield_setDisabled(false, $("#isRight").val(), $("#priceModel").val());
                 }
             }
         });
@@ -865,15 +885,17 @@
         $("#priceModel").change(function () {
             if (pageModel !== PAGE_MODEL_REFERENCE) {
                 if ($("#priceModel").val() === PRICEMODEL_03) {
-                    $("#price").val("").removeAttr("required").attr("disabled", false); // 净价
+                    $("#price").attr("disabled", true).removeAttr("required"); // 净价
                     $("#fpriceAmt").val("").attr("disabled", true); // 全价
                     $("#matureYield").val("").attr("disabled", true); // 到期收益率
-                    $("#exerYield").val("").attr("disabled", true); // 行权收益率
+
+                    etrIbBondinfo002Funcs.exerYield_setDisabled(true); // 行权收益率
                 } else {
-                    $("#price").attr("required", "true").attr("disabled", true); // 净价
+                    $("#price").val("").attr("disabled", false).attr("required", "true"); // 净价
                     $("#fpriceAmt").val("").attr("disabled", false); // 全价
                     $("#matureYield").val("").attr("disabled", false); // 到期收益率
-                    $("#exerYield").val("").attr("disabled", false); // 行权收益率
+                    
+                    etrIbBondinfo002Funcs.exerYield_setDisabled(false, $("#isRight").val(), $("#priceModel").val()); // 行权收益率
                 }
                 if ($("#price").val()) {
                     calData("price");
@@ -903,12 +925,11 @@
          */
         $('#isRight').change(function () {
             var isRight = $('#isRight').val();
-            if (!isRight || isRight == N) {
-                $('#exerYield').val('').attr('disabled', true);
+            if (!isRight || isRight === N) {
+                etrIbBondinfo002Funcs.exerYield_setDisabled(true);
             } else {
-                if($("#priceModel").val() !== PRICEMODEL_03){
-                    $('#exerYield').attr('disabled', false);
-                }   
+                // 行权收益率
+                etrIbBondinfo002Funcs.exerYield_setDisabled(false, isRight, $("#priceModel").val()); 
             }
         });
 
