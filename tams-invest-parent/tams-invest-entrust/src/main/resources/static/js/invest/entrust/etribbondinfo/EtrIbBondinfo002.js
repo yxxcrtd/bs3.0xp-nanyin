@@ -527,6 +527,8 @@
         $("#calculateField_matureYield").prop('checked', false);
         $("#vdate").val(sysDate).trigger("change");
         $("#mdate").val(sysDate).trigger("change");
+        $("#counterId1").val("").trigger("change");
+        $("#counterId2").val("").trigger("change");
         layui.form.render(); // reload layui
         pageModel = PAGE_MODEL_NEW;
     };
