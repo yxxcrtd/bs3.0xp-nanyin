@@ -5,6 +5,95 @@
     var cluflag;
     var businessId;
 
+    var etrIbBondinfo003Funcs = {};
+    etrIbBondinfo003Funcs.finprodIdChange = function(){
+        var ps = $('#ps').val();
+        var ccy = $('#ccy').val();
+        var portfolioId = $('#portfolioId').val();
+        var vdate = $('#vdate').val();
+        var finprodId = $('#finprodId').val();
+        if (finprodId) {
+            var data = $('#finprodId').select2('data')[0].object;
+            if (!data.finprodId) {
+                //自动加券
+                data = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
+            }
+            // 不为空
+            $('#price').attr("required", false);
+            $('#exerYield').attr("required", false);
+            $('#matureYield').attr("required", false);
+            //var data = $('#finprodId').select2('data')[0].object;
+            $('#finprodIdhid').val(data.finprodId).trigger('change');
+            $('#finprodName').val(finprodId).trigger('change');
+            //if (!initFlag) {
+            //    $('#tradeMarket').val(data.tradeMarket).trigger('change');
+            //}
+            //$('#tradeMarket').attr('disabled', true);
+            $('#isRight').val(data.isRight).trigger('change');
+            $('#calendarId').val(data.calendarId).trigger('change');
+            $('#assetType1').val(data.assetType1).trigger('change');
+            $('#assetType10').val(data.assetType10).trigger('change');//新增资产三级分类 王贵奇 2019/7/27
+            $('#assetType11').val(data.assetType11).trigger('change');//新增资产四级分类 王贵奇 2019/7/27
+            $('#finvdate').val(new Date(data.finvdate)).trigger('change');
+            $('#finmdate').val(new Date(data.finmdate)).trigger('change');
+            $('#ccy').val(data.ccy).trigger('change').attr('disabled', true);
+            if (ps == PS_T01 && ccy && portfolioId && vdate) {
+                getPtlCashPositionInfo();
+            }
+            // 一体化对应etliu start
+//                if((ps == T02 ||ps == T03) && portfolioId){
+            if ((ps == PS_T02 ) && portfolioId) {
+                // 一体化对应etliu end
+                getPtlSecPositionInfo();
+            }
+            Joyin.ajax(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo002/getAvailableNum?finprodId=' + data.finprodId, null,
+                function (result) {
+                    $('#availableNum').val(result);
+                });
+            checkFinMdate();
+            if ($('#price').val()) {
+                calData('price');
+            }
+        } else {
+            // 为空
+            $('#price').attr("required", true);
+            $('#exerYield').attr("required", true);
+            $('#matureYield').attr("required", true);
+            $('#finprodIdhid').val('').trigger('change');
+            $('#finprodName').val('').trigger('change');
+            $('#calendarId').val('').trigger('change');
+            $('#assetType1').val('').trigger('change');
+            $('#assetType10').val('').trigger('change');//新增资产三级分类 王贵奇 2019/7/27
+            $('#assetType11').val('').trigger('change');//新增资产四级分类 王贵奇 2019/7/27
+            // $('#proAvailableCash1').val('');
+            $('#channelAvailableCash').val('');
+            $('#availableNum').val('');
+            //$('#tradeMarket').val('').trigger('change').attr('disabled', false);
+            $('#ccy').val('').trigger('change').attr('disabled', false);
+            $('#isRight').val('').trigger('change');
+
+            $('#exerYield').val('').trigger('change').trigger('blur');
+            $('#matureYield').val('').trigger('change').trigger('blur');
+        }
+
+        // 非含权债时，行权收益率置灰，为空
+        if ($('#isRight').val() != 'Y') {
+            $('#exerYield').val('').attr('disabled', true);
+        }
+
+        //左下行情信息联动
+        var chlFinprodId = $("#chlFinprodId").val();
+        var finprodIdhid = $("#finprodIdhid").val();
+        var ccy = $('#ccy').val();
+        var sysDateT1 = $('#vdate').val();
+        var calId = $('#calendarId').val();
+        if (parent.EtrIbBondinfoHq) {
+            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
+        }
+        // 画星星
+        star();
+    }
+    
     /**
      * 画星星
      */
@@ -296,18 +385,20 @@
     });
 
     var refreshTradAmt = function () {
-        var datas = table.getAllRows();
-        var tradeAmt = Number(0)
-        for (var i in datas) {
-            var entrustNum = 0;
-            if (datas[i].entrustNum == '' || datas[i].entrustNum == undefined) {
-                entrustNum = 0;
-            } else {
-                entrustNum = parseFloat(datas[i].entrustNum);
+        if(!$("#tradeAmt").val()){ // 卷面总额不为空时执行
+            var datas = table.getAllRows();
+            var tradeAmt = Number(0)
+            for (var i in datas) {
+                var entrustNum = 0;
+                if (datas[i].entrustNum == '' || datas[i].entrustNum == undefined) {
+                    entrustNum = 0;
+                } else {
+                    entrustNum = parseFloat(datas[i].entrustNum);
+                }
+                tradeAmt += parseFloat(entrustNum);
             }
-            tradeAmt += parseFloat(entrustNum);
+            $("#tradeAmt").val(tradeAmt)
         }
-        $("#tradeAmt").val(tradeAmt)
     }
     /**
      * 绑定删除事件
@@ -989,91 +1080,7 @@
     });
 
     $('#finprodId').change(function () {
-        var ps = $('#ps').val();
-        var ccy = $('#ccy').val();
-        var portfolioId = $('#portfolioId').val();
-        var vdate = $('#vdate').val();
-        var finprodId = $('#finprodId').val();
-        if (finprodId) {
-            var data = $('#finprodId').select2('data')[0].object;
-            if (!data.finprodId) {
-                //自动加券
-                data = AutoCoupon.autoBondTradeCoupon($('#finprodId').val());
-            }
-            // 不为空
-            $('#price').attr("required", false);
-            $('#exerYield').attr("required", false);
-            $('#matureYield').attr("required", false);
-            //var data = $('#finprodId').select2('data')[0].object;
-            $('#finprodIdhid').val(data.finprodId).trigger('change');
-            $('#finprodName').val(finprodId).trigger('change');
-            //if (!initFlag) {
-            //    $('#tradeMarket').val(data.tradeMarket).trigger('change');
-            //}
-            //$('#tradeMarket').attr('disabled', true);
-            $('#isRight').val(data.isRight).trigger('change');
-            $('#calendarId').val(data.calendarId).trigger('change');
-            $('#assetType1').val(data.assetType1).trigger('change');
-            $('#assetType10').val(data.assetType10).trigger('change');//新增资产三级分类 王贵奇 2019/7/27
-            $('#assetType11').val(data.assetType11).trigger('change');//新增资产四级分类 王贵奇 2019/7/27
-            $('#finvdate').val(new Date(data.finvdate)).trigger('change');
-            $('#finmdate').val(new Date(data.finmdate)).trigger('change');
-            $('#ccy').val(data.ccy).trigger('change').attr('disabled', true);
-            if (ps == PS_T01 && ccy && portfolioId && vdate) {
-                getPtlCashPositionInfo();
-            }
-            // 一体化对应etliu start
-//                if((ps == T02 ||ps == T03) && portfolioId){
-            if ((ps == PS_T02 ) && portfolioId) {
-                // 一体化对应etliu end
-                getPtlSecPositionInfo();
-            }
-            Joyin.ajax(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo002/getAvailableNum?finprodId=' + data.finprodId, null,
-                function (result) {
-                    $('#availableNum').val(result);
-                });
-            checkFinMdate();
-            if ($('#price').val()) {
-                calData('price');
-            }
-        } else {
-            // 为空
-            $('#price').attr("required", true);
-            $('#exerYield').attr("required", true);
-            $('#matureYield').attr("required", true);
-            $('#finprodIdhid').val('').trigger('change');
-            $('#finprodName').val('').trigger('change');
-            $('#calendarId').val('').trigger('change');
-            $('#assetType1').val('').trigger('change');
-            $('#assetType10').val('').trigger('change');//新增资产三级分类 王贵奇 2019/7/27
-            $('#assetType11').val('').trigger('change');//新增资产四级分类 王贵奇 2019/7/27
-            // $('#proAvailableCash1').val('');
-            $('#channelAvailableCash').val('');
-            $('#availableNum').val('');
-            //$('#tradeMarket').val('').trigger('change').attr('disabled', false);
-            $('#ccy').val('').trigger('change').attr('disabled', false);
-            $('#isRight').val('').trigger('change');
-
-            $('#exerYield').val('').trigger('change').trigger('blur');
-            $('#matureYield').val('').trigger('change').trigger('blur');
-        }
-
-        // 非含权债时，行权收益率置灰，为空
-        if ($('#isRight').val() != 'Y') {
-            $('#exerYield').val('').attr('disabled', true);
-        }
-
-        //左下行情信息联动
-        var chlFinprodId = $("#chlFinprodId").val();
-        var finprodIdhid = $("#finprodIdhid").val();
-        var ccy = $('#ccy').val();
-        var sysDateT1 = $('#vdate').val();
-		var calId = $('#calendarId').val();
-        if (parent.EtrIbBondinfoHq) {
-            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
-        }
-        // 画星星
-        star();
+        etrIbBondinfo003Funcs.finprodIdChange();
     });
 
 
