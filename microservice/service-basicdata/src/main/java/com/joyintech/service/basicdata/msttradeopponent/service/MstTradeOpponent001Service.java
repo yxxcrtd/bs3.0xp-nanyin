@@ -247,4 +247,16 @@ public class MstTradeOpponent001Service extends BaseService<MstTradeOpponentDto>
         return basicMstTradeOpponent001Mapper.getCctInfo(map);
         
     }
+
+    /**
+     * 统计 当交易对手类别是分行时，是否被债券投后责任机构使用
+     * <功能详细描述>
+     * @param counterId id
+     * @return 统计结果
+     * @see
+     * @since 1.0
+     */
+    public int selectFHCounter(String counterId) {
+        return basicMstTradeOpponent001Mapper.selectFHCounter(counterId);
+    }
 }
