@@ -22,6 +22,9 @@ import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +46,8 @@ import java.util.Date;
 @PageId("NettingManagement002")
 @RequestMapping("/invest/settle/netting/NettingManagement002")
 public class NettingManagement002Controller extends BaseController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(NettingManagement002Controller.class);
 
     @Autowired
     public NettingManagement002Service nettingManagement002Service;
@@ -140,8 +145,8 @@ public class NettingManagement002Controller extends BaseController {
                 DateUtil.format(sysDate, DateUtil.DEFAULT_OTHER_FORMAT) + baseGetBusinessIdImpl.buildBussinessCode(parameter));
         params.setBusinessCode(dto.getOrderId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_产品端轧差划款.getValue());
-
-        System.out.println(JSONObject.toJSONString(dto));
+      
+        logger.info(JSONObject.toJSONString(dto));
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> WorkFlowUtil.concatComment("轧差划款指令, 指令编号：" + dto.getOrderId()));
         processParameter.setWorkFlowParameter(params);
