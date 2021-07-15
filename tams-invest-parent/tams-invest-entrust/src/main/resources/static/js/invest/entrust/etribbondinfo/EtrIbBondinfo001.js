@@ -92,7 +92,6 @@
                 parent.EtrIbBondinfo002.dbclickEtr(data);
             }
         },
-        page: false,
         /**
          * 定义表格名称
          */

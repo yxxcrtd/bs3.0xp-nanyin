@@ -198,9 +198,9 @@ public class EtrIbBondinfo001Service extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        List<EtrIbBondinfo001Dto> list = etrIbBondinfo001Mapper.findZqzyPositionsPage(pageParam);
-
-        return new Page<EtrIbBondinfo001Dto>(list);
+//        List<EtrIbBondinfo001Dto> list = etrIbBondinfo001Mapper.findZqzyPositionsPage(pageParam);
+        return super.queryForPage(page, length, () -> etrIbBondinfo001Mapper.findZqzyPositionsPage(pageParam));
+//        return new Page<EtrIbBondinfo001Dto>(list);
     }
 
     /**
