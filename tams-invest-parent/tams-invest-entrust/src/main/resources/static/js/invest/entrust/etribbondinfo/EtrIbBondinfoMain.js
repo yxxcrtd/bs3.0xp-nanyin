@@ -176,12 +176,12 @@ $(
                             if (operateType === "save") {
                                 WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_save", "EtribBondInfo003"
                                 ,function(){
-                                        EtrIbBondinfo003.doReset();
+                                    window.location.reload();
                                 });
                             } else {
                                 WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_submit", "EtribBondInfo003"
                                 ,function(){
-                                    EtrIbBondinfo003.doReset();
+                                    window.location.reload();
                                 });
                             }
                         });
@@ -258,13 +258,11 @@ $(
                     Joyin.confirm(result.data, function () {
                         if (operateType === "save") {
                             WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/save", object, "EtrIbBondinfoMain_btn_save", "EtrIbBondinfo002", function () {
-                                JoyinUtil.disableButton("EtrIbBondinfoMain_btn_save", false);
-                                EtrIbBondinfo002.doReset();
+                                window.location.reload();
                             });
                         } else {
                             WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/save", object, "EtrIbBondinfoMain_btn_submit", "EtrIbBondinfo002", function () {
-                                JoyinUtil.disableButton("EtrIbBondinfoMain_btn_submit", false);
-                                EtrIbBondinfo002.doReset();
+                                window.location.reload();
                             });
                         }
                     });
