@@ -135,7 +135,8 @@ public class EtribBondInfo003Controller extends BaseController {
         model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
         model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
         model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
-
+        model.addAttribute("N", DictCodeList.是否_否.getValue());
+        
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
@@ -356,7 +357,7 @@ public class EtribBondInfo003Controller extends BaseController {
                         + ")-(" + this.getMessage("EtribBondInfo003.mdate") + ":"
                         + DateUtil.format(entity.getMdate())+ ")-"
                         + this.getMessage("EtribBondInfo003.entrustAmt") + ":"
-                        + entity.getEntrustNum());
+                        + entity.getEntrustNum().divide(new BigDecimal("10000")));
         processParameter.setWorkFlowParameter(params);
 
         String msg = etribBondInfo003Service.start(processParameter, bondInfoDto);
