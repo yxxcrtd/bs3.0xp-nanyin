@@ -721,14 +721,15 @@
                 }
                 // 不为空
                 $("#price").attr("required", false);
-                etrIbBondinfo002Funcs.exerYield_setDisabled(false);
                 $("#matureYield").attr("required", false);
                 //var data = $('#finprodId').select2('data')[0].object;
                 $("#finprodIdhid").val(data.finprodId).trigger("change");
                 $("#finprodName").val(finprodId).trigger("change");
                 $("#isRight").val(data.isRight).trigger("change");
                 // // 资产为非含权债时，置灰“行权收益率”字段
-                etrIbBondinfo002Funcs.exerYield_setDisabled(false, data.isRight, $("#priceModel").val());
+                if(data.isRight === N){
+                    etrIbBondinfo002Funcs.exerYield_setDisabled(true);
+                }
                 $("#calendarId").val(data.calendarId).trigger("change");
                 $("#finvdate").val(new Date(data.finvdate)).trigger("change");
                 $("#finmdate").val(new Date(data.finmdate)).trigger("change");
@@ -821,64 +822,67 @@
          * 净价
          */
         $("#price").change(function () {
-            var ps = $("#ps").val();
+            // var ps = $("#ps").val();
             if ($("#finprodId").val() && $(this).val()) {
                 calData("price");
-            } else if (!$("#finprodId").val() && ps == T01) {
-                if ($("#price").val()) {
-                    $("#matureYield").attr("disabled", true);
-                    $("#matureYield").val("");
-                    
-                    etrIbBondinfo002Funcs.exerYield_setDisabled(true);
-                } else {
-                    $("#matureYield").removeAttr("disabled");
-
-                    etrIbBondinfo002Funcs.exerYield_setDisabled(false, $("#isRight").val(), $("#priceModel").val());
-                }
-            }
+            } 
+            // else if (!$("#finprodId").val() && ps == T01) {
+            //     if ($("#price").val()) {
+            //         $("#matureYield").attr("disabled", true);
+            //         $("#matureYield").val("");
+            //        
+            //         etrIbBondinfo002Funcs.exerYield_setDisabled(true);
+            //     } else {
+            //         $("#matureYield").removeAttr("disabled");
+            //
+            //         etrIbBondinfo002Funcs.exerYield_setDisabled(false, $("#isRight").val(), $("#priceModel").val());
+            //     }
+            // }
         });
         /**
          * 行权收益率
          */
         $("#exerYield").change(function () {
-            var ps = $("#ps").val();
+            // var ps = $("#ps").val();
             if ($("#finprodId").val()) {
                 if ($("#exerYield").val()) {
                     calData("exerYield");
                 }
-            } else if (!$("#finprodId").val() && ps == T01) {
-                if ($("#exerYield").val()) {
-                    $("#price").attr("disabled", true);
-                    $("#matureYield").attr("disabled", true);
-                    $("#price").val("");
-                    $("#matureYield").val("");
-                } else {
-                    $("#price").removeAttr("disabled");
-                    $("#matureYield").removeAttr("disabled");
-                }
-            }
+            } 
+            // else if (!$("#finprodId").val() && ps == T01) {
+            //     if ($("#exerYield").val()) {
+            //         $("#price").attr("disabled", true);
+            //         $("#matureYield").attr("disabled", true);
+            //         $("#price").val("");
+            //         $("#matureYield").val("");
+            //     } else {
+            //         $("#price").removeAttr("disabled");
+            //         $("#matureYield").removeAttr("disabled");
+            //     }
+            // }
         });
         /**
          * 到期收益率
          */
         $("#matureYield").change(function () {
-            var ps = $("#ps").val();
+            // var ps = $("#ps").val();
             if ($("#finprodId").val()) {
                 if ($("#matureYield").val()) {
                     calData("matureYield");
                 }
-            } else if (!$("#finprodId").val() && ps == T01) {
-                if ($("#matureYield").val()) {
-                    $("#price").attr("disabled", true);
-                    $("#price").val("");
-
-                    etrIbBondinfo002Funcs.exerYield_setDisabled(true);
-                } else {
-                    $("#price").removeAttr("disabled");
-
-                    etrIbBondinfo002Funcs.exerYield_setDisabled(false, $("#isRight").val(), $("#priceModel").val());
-                }
-            }
+            } 
+            // else if (!$("#finprodId").val() && ps == T01) {
+            //     if ($("#matureYield").val()) {
+            //         $("#price").attr("disabled", true);
+            //         $("#price").val("");
+            //
+            //         etrIbBondinfo002Funcs.exerYield_setDisabled(true);
+            //     } else {
+            //         $("#price").removeAttr("disabled");
+            //
+            //         etrIbBondinfo002Funcs.exerYield_setDisabled(false, $("#isRight").val(), $("#priceModel").val());
+            //     }
+            // }
         });
 
         /**
