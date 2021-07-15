@@ -97,6 +97,9 @@ $(
             var object = EtrIbBondinfo003.getSearchParams();
             var checkParam = {};
             checkParam.data = EtrIbBondinfo003.getriskdata();
+            if(!checkParam.data){
+                return null;
+            }
             var param = [];
 
             if (checkParam.data.length > 0) {
