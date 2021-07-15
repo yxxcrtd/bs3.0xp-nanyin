@@ -863,16 +863,17 @@
          * 价格模式
          */
         $("#priceModel").change(function () {
-            if (pageModel != PAGE_MODEL_REFERENCE) {
-                if ($("#priceModel").val() == PRICEMODEL_03) {
-                    $("#price").val("").attr("disabled", true);
-                    $("#fpriceAmt").val("").attr("disabled", true);
-                    $("#matureYield").val("").attr("disabled", true);
-                    $("#exerYield").val("").attr("disabled", true);
+            if (pageModel !== PAGE_MODEL_REFERENCE) {
+                if ($("#priceModel").val() === PRICEMODEL_03) {
+                    $("#price").val("").removeAttr("required").attr("disabled", false); // 净价
+                    $("#fpriceAmt").val("").attr("disabled", true); // 全价
+                    $("#matureYield").val("").attr("disabled", true); // 到期收益率
+                    $("#exerYield").val("").attr("disabled", true); // 行权收益率
                 } else {
-                    $("#price").val("").attr("disabled", false);
-                    $("#matureYield").attr("disabled", false);
-                    $("#exerYield").attr("disabled", false);
+                    $("#price").attr("required", "true").attr("disabled", true); // 净价
+                    $("#fpriceAmt").val("").attr("disabled", false); // 全价
+                    $("#matureYield").val("").attr("disabled", false); // 到期收益率
+                    $("#exerYield").val("").attr("disabled", false); // 行权收益率
                 }
                 if ($("#price").val()) {
                     calData("price");
