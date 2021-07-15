@@ -922,6 +922,11 @@
     }
 
     function getriskdata() {
+    	let ps = $('#ps').val();
+        if(ps == null || ps === ''){
+            JoyinUtil.showMessage("请选择交易方向","error");
+            return null;
+        }
         var bussCombDistribtList = $.serializeToObject('#searchForm').bussCombDistribtList;
         if (bussCombDistribtList.length > 0) {
             var objects = new Array();
@@ -957,33 +962,35 @@
             }
             return objects;
         } else {//若组合分配列表为空，则单个check
-            var obj = {
-                tradeDirection: $('#ps').val(),
-                timePoint: MY_SUP_TIME_TYPE_02,
-                valDate: sysDate,
-                assetType: fintype,
-                assetSecType: $('#assetType1').val(),
-                isEnabled: '01',
-                assetCode: $('#finprodIdhid').val()
-            }
-            obj.ps = $('#ps').val();
-            obj.price = $('#price').val();
-            obj.ccy = 'CNY';
-            // add by zhangrui1 交易对手影响风险试算 start
-            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
-            // add by zhangrui1 交易对手影响风险试算 end
-            var object = {
-                tradeDirection: ['ps', 'EtribRepoInfo003.ps'],
-                portfolioCode: ['portfolioId', 'EtribRepoInfo003.portfolioId'],
-                entrustAmt: ['entrustAmt', 'EtribRepoInfo003.entrustAmt'],
-                data: obj
-            }
-            // add by zhangrui1 交易对手影响风险试算 start
-            object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
-            var objects = [];
-            objects.push(object)
-            // add by zhangrui1 交易对手影响风险试算 end
-            return objects;
+        	JoyinUtil.showMessage("请添加组合信息","error");
+            return null;
+//            var obj = {
+//                tradeDirection: $('#ps').val(),
+//                timePoint: MY_SUP_TIME_TYPE_02,
+//                valDate: sysDate,
+//                assetType: fintype,
+//                assetSecType: $('#assetType1').val(),
+//                isEnabled: '01',
+//                assetCode: $('#finprodIdhid').val()
+//            }
+//            obj.ps = $('#ps').val();
+//            obj.price = $('#price').val();
+//            obj.ccy = 'CNY';
+//            // add by zhangrui1 交易对手影响风险试算 start
+//            obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+//            // add by zhangrui1 交易对手影响风险试算 end
+//            var object = {
+//                tradeDirection: ['ps', 'EtribRepoInfo003.ps'],
+//                portfolioCode: ['portfolioId', 'EtribRepoInfo003.portfolioId'],
+//                entrustAmt: ['entrustAmt', 'EtribRepoInfo003.entrustAmt'],
+//                data: obj
+//            }
+//            // add by zhangrui1 交易对手影响风险试算 start
+//            object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
+//            var objects = [];
+//            objects.push(object)
+//            // add by zhangrui1 交易对手影响风险试算 end
+//            return objects;
         }
     }
 

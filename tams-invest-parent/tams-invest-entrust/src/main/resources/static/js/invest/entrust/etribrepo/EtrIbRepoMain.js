@@ -98,6 +98,10 @@ $(function() {
         checkParam.data = EtrIbRepoinfo003.getriskdata();
         var param = [];
 
+        if(!checkParam.data){
+            return null;
+        }
+        
         if (checkParam.data.length > 0) {
             for(var index in checkParam.data){
                 var item = checkParam.data[index];
