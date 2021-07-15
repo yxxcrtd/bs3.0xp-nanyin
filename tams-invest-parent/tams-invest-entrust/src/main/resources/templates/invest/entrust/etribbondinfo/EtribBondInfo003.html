@@ -6,7 +6,7 @@
     <title data-th-text="#{EtribBondInfo003}">银行间债券指令多组合指令新建</title>
 </head>
 <body>
-<div layout:fragment="content">
+<div layout:fragment="content" id="EtribBondInfo003_bodydiv">
 	<style type="text/css">
 		        .layui-form-radio {
 		            line-height: 24px;
@@ -164,16 +164,29 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                    <div id="div_counterId1" class="form-inline-wrap" style=" width: 50%; padding:0px;">
                         <label class="layui-form-label form-lable" style="width: 95px;"
                                data-th-utext="#{EtribBondInfo003.counterId}">交易对手</label>
                         <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
-                            <select th:id="counterId" th:name="counterId"
-                                    parentIds="ps,finprodType2,profitType,tradeMarket,finprodId,pinanAssetType"
-                                    data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}?innerTrade=${innerTrade}&counterType=${counterType}&callPageId=EtrInvestBondInfo002|"                                    formatOption="false"
-                                    th:initValue="${entity?.counterId}"
+                            <select type="text" id="counterId1" name="counterId1"
                                     class="layui-input form-input input-select"
-                                    th:placeholder="#{SysCommon.placeholder}">
+                                    th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
+                                    th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}" allowClear="true"
+                                    formatoption="true"
+                                    th:initValue="${entity?.counterId}">
+                            </select>
+                        </div>
+                    </div>
+                    <div id="div_counterId2" class="form-inline-wrap" style=" width: 50%; padding:0px;display: none">
+                        <label class="layui-form-label form-lable" style="width: 95px;"
+                               data-th-utext="#{EtribBondInfo003.counterId}">交易对手</label>
+                        <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
+                            <select id="counterId2" name="counterId2"
+                                    class="layui-input form-input input-select"
+                                    data-th-placeholder="#{SysCommon.placeholder}"
+                                    formatoption="false"
+                                    parentIds="ps,finprodType2,profitType,tradeMarket,finprodId,pinanAssetType"
+                                    data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}|">
                             </select>
                         </div>
                     </div>
@@ -270,6 +283,7 @@
         var PS_T01 = /*[[${PS_T01}]]*/'T01';
         var PS_T02 = /*[[${PS_T02}]]*/'T02';
         var PS_T03 = /*[[${PS_T03}]]*/'T03';
+        var N = /*[[${N}]]*/ ''
         var MY_SUP_TIME_TYPE_02 = /*[[${MY_SUP_TIME_TYPE_02}]]*/'';
         var fintype = /*[[${fintype}]]*/'';
         var sysDate = /*[[${sysDate}]]*/'';

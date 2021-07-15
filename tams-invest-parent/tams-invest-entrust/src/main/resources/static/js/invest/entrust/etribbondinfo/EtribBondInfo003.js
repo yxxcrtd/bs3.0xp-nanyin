@@ -4,8 +4,57 @@
     var initFlag = false;
     var cluflag;
     var businessId;
-
+    function query(ele){
+        return $("#EtribBondInfo003_bodydiv " + ele);
+    }
+    
     var etrIbBondinfo003Funcs = {};
+    etrIbBondinfo003Funcs.psToCounterId = function (){
+        if (query("#ps").val() === PS_T01) {
+            if (query("#isRight").val() !== N) {
+                etrIbBondinfo003Funcs.exerYield_setDisabled(false);
+            }
+            query("#matureYield").removeAttr("disabled");
+
+            // 当交易方向为买入卖出时，交易对手下拉框显示为银行间机构信息中的交易账户21位码+交易成员全称
+            query("#div_counterId1").css("display","block");
+            query("#div_counterId2").css("display","none");
+        } else if (query("#ps").val() === PS_T02) {
+            if (query("#isRight").val() !== N) {
+                etrIbBondinfo003Funcs.exerYield_setDisabled(false);
+            }
+            query("#matureYield").attr("disabled", true);
+            query("#matureYield").val("");
+
+            // 当交易方向为买入卖出时，交易对手下拉框显示为银行间机构信息中的交易账户21位码+交易成员全称
+            query("#div_counterId1").css("display","block");
+            query("#div_counterId2").css("display","none");
+        } else if (query("#ps").val() == PS_T03) {
+            etrIbBondinfo003Funcs.exerYield_setDisabled(true);
+
+            query("#matureYield").attr("disabled", true);
+            query("#matureYield").val("");
+
+            // 当交易方向为行权回售时，可选项为市场机构
+            query("#div_counterId1").css("display","none");
+            query("#div_counterId2").css("display","block");
+        }
+    }
+    etrIbBondinfo003Funcs.exerYield_setDisabled = function(isDisabled, isRight, priceModel){
+        // 行权收益率
+        let exerYield = query('#exerYield');
+        if(isDisabled){
+            exerYield.val('').attr('disabled', true).removeAttr("required");
+            query('#calculateField_exerYield').prop('checked', false).attr('disabled', true);
+        }else{
+            if(isRight !== N && priceModel !== PRICEMODEL_03){
+                // 含权债或为空 且 价格模式不是市价
+                exerYield.val('').attr('disabled', false).trigger("change").trigger("blur");
+                query('#calculateField_exerYield').val('').attr('disabled', false);
+            }
+        }
+        return exerYield;
+    };
     etrIbBondinfo003Funcs.finprodIdChange = function(){
         var ps = $('#ps').val();
         var ccy = $('#ccy').val();
@@ -481,6 +530,8 @@
 
     // 交易方向联动
     $('#ps, #chlFinprodId').change(function () {
+        etrIbBondinfo003Funcs.psToCounterId();
+        
         var rowsData = table.getAllRows();
         if (rowsData.length > 0) {
             for (var index in rowsData) {
@@ -591,6 +642,12 @@
 
         object.finmdate = $('#finmdate').val();
         object.ccy = $('#ccy').val();
+        if (query("#ps").val() === PS_T03) {
+            object.counterId=query('#counterId2').val();
+        }else{
+            object.counterId=query('#counterId1').val();
+        }
+        
         object.etrInvestPersonInfo = {
             counterId: object.counterId
         };
