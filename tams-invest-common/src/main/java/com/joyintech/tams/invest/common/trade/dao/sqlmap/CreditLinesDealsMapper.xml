@@ -522,7 +522,7 @@
     </select>
 
 	<select id="getPledgeAmt"  resultType="java.math.BigDecimal" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal">
-		select sum(fdp.pledge_number * newfaceValue) pledge_number
+		select sum(fdp.pledge_number * nvl(newfaceValue,100)) pledge_number
 		from FIN_DEAL_PLEDGE fdp
 				 left join (SELECT FINPROD_ID, nvl(100 - sum(nvl(PRIN_AMT, 0)), 100) newfaceValue
 							FROM FIN_CASH_PLAN
