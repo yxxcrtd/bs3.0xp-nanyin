@@ -2,14 +2,10 @@ package com.joyintech.service.entrust.common.service;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
