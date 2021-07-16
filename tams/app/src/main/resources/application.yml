@@ -360,13 +360,13 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0702ls
-  sqldirpassword: zgtams0702ls_123
+  sqldiruserName: product_zgtams217_LS
+  sqldirpassword: product_zgtams217_LS
 shiro:
   ssoEnable: false
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -379,29 +379,29 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -505,40 +505,40 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
 application:
   url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  username: zgtams0702ls
-  password: zgtams0702ls_123
+  username: product_zgtams217_LS
+  password: product_zgtams217_LS
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 #中债直连主从数据源配置（本服务器是一二期，单独部署时则配置三期的数据库地址，反之配置一二期数据库地址）
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls_123
+    username: product_zgtams217_LS
+    password: product_zgtams217_LS
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG
