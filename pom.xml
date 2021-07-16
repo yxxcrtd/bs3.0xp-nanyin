@@ -85,9 +85,13 @@
         <module>microservice/tams-service-container</module>
         <module>tams/app</module>
 
+
         <module>tams-batch-common</module>
 
         <module>tams/invest-app</module>
+        <module>tams/disclosure-app</module>
+        <module>tams/valuation-app</module>
+        <module>tams/svreport-app</module>
 <!--        <module>tams-svreport-api</module>-->
 
     </modules>
