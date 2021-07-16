@@ -76,6 +76,7 @@
         }
     }
     function saveOrSubmit(operateType) {
+
         var fundAccountTables = FundAccountInfo.table;
         var securitiesAccountInfoTables = SecuritiesAccountInfo.table;
         /**
@@ -109,11 +110,11 @@
         var fundAccountTable = fundAccountTables.getAllRows();
         var securitiesAccountInfoTable = securitiesAccountInfoTables.getAllRows();
         object.fundAccountInfoDto = fundAccountTable;
-        for(var i in object.fundAccountInfoDto){
-            if(object.fundAccountInfoDto[i] && object.fundAccountInfoDto[i].acctNo && object.fundAccountInfoDto[i].ccy){
-                object.fundAccountInfoDto[i].acctNo = object.fundAccountInfoDto[i].acctNo.concat('_',object.fundAccountInfoDto[i].ccy);
-            }
-        }
+//        for(var i in object.fundAccountInfoDto){
+//            if(object.fundAccountInfoDto[i] && object.fundAccountInfoDto[i].acctNo && object.fundAccountInfoDto[i].ccy){
+//                object.fundAccountInfoDto[i].acctNo = object.fundAccountInfoDto[i].acctNo.concat('_',object.fundAccountInfoDto[i].ccy);
+//            }
+//        }
         object.securitiesAccountInfoDto = securitiesAccountInfoTable;
         object.operateType = operateType;
         object.pageModel = pageModel;
