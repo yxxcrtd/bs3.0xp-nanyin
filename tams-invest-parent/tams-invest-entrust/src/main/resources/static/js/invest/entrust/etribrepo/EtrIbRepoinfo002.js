@@ -850,6 +850,14 @@
                 parent.EtrIbRepoinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId, termType);
             }
         });
+        
+        /**
+         * 通道
+         */
+        $("#entrustAmt").change(function () {
+        	setBussRepoSecInput();
+        });
+        
 
     });
     // 解决查看画面打开联动仍然触发的bug

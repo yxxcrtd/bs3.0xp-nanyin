@@ -403,30 +403,57 @@
      * 自动导入质押券按钮按下处理
      */
     var autoPledge = function () {
-    	Joyin.ajaxJson(basePath + 'component/trade/BussRepoSec/checkAutoPledge',param, function (result) {
-    	    //获取质押券列表原数据
-    		var oldData =  pledgeBondTotalTbl.getAllRows();
-    		var newData = [];
-    		if(oldData != undefined){
-    		    var map = new Map();
-    		    var resultData = oldData.concat(result.data);
-    		    resultData.forEach(item => {
-    		        if(map.has(item.bondCode)){
-                        map.set(item.bondCode,true);
-    		        }else{
-    		            map.set(item.bondCode,true);
-    		            newData.push(item);
-    		        }
-    		    });
-    		}else{
-    		    newData = result.data;
-    		}
-    		// 加载质押券数据
-    		pledgeBondTotalTbl.reload({data: newData});
-    		// 汇总券面总额 赋值
-    		refreshTotalPrinAmt() ;
-                    
-    	});
+    	if(getElementById('pageFrom').val()=="EtrIbRepoinfo002"&&repo_pledge_model=='02'){
+    		Joyin.ajaxJson(basePath + 'component/trade/BussRepoSec/checkAutoPledgeOfEtrIbRepoinfo',param, function (result) {
+        	    //获取质押券列表原数据
+        		var oldData =  pledgeBondTotalTbl.getAllRows();
+        		var newData = [];
+        		if(oldData != undefined){
+        		    var map = new Map();
+        		    var resultData = oldData.concat(result.data);
+        		    resultData.forEach(item => {
+        		        if(map.has(item.bondCode)){
+                            map.set(item.bondCode,true);
+        		        }else{
+        		            map.set(item.bondCode,true);
+        		            newData.push(item);
+        		        }
+        		    });
+        		}else{
+        		    newData = result.data;
+        		}
+        		// 加载质押券数据
+        		pledgeBondTotalTbl.reload({data: newData});
+        		// 汇总券面总额 赋值
+        		refreshTotalPrinAmt() ;
+                        
+        	});
+    	}else{
+    		Joyin.ajaxJson(basePath + 'component/trade/BussRepoSec/checkAutoPledge',param, function (result) {
+        	    //获取质押券列表原数据
+        		var oldData =  pledgeBondTotalTbl.getAllRows();
+        		var newData = [];
+        		if(oldData != undefined){
+        		    var map = new Map();
+        		    var resultData = oldData.concat(result.data);
+        		    resultData.forEach(item => {
+        		        if(map.has(item.bondCode)){
+                            map.set(item.bondCode,true);
+        		        }else{
+        		            map.set(item.bondCode,true);
+        		            newData.push(item);
+        		        }
+        		    });
+        		}else{
+        		    newData = result.data;
+        		}
+        		// 加载质押券数据
+        		pledgeBondTotalTbl.reload({data: newData});
+        		// 汇总券面总额 赋值
+        		refreshTotalPrinAmt() ;
+                        
+        	});
+    	}
     };
     
     /**
