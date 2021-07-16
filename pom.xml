@@ -49,7 +49,7 @@
         
         <!-- 接口 -->
         <module>tams-valuation-interf</module>
-        <module>tams-customer-interf</module>
+<!--        <module>tams-customer-interf</module>-->
 
         <!-- 移动审批 -->
         <module>mobileApproval</module>
