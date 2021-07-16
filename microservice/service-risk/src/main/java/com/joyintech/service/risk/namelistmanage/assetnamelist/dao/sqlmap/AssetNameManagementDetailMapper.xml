@@ -218,7 +218,7 @@ FROM
         OPERATE_PS，
         null WORKFLOW_ID,
        <!-- #{updateUser} updateUser -->
-        UPDATE_USER updateUser,
+        #{updateUser} updateUser,
         #{spr}  spr
     FROM
         RSK_ACCESS_LIST_LOG
