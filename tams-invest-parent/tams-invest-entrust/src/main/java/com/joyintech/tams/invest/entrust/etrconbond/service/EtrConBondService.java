@@ -365,8 +365,8 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
             etrConBondDto.setCcy(data.get(4).toString().split(":")[0]);
             //申购类型
             etrConBondDto.setPurchModle(data.get(5).toString().split(":")[0]);
-            //申购方式
-            etrConBondDto.setPurchType(data.get(6).toString().split(":")[0]);
+            /*//申购方式
+            etrConBondDto.setPurchType(data.get(6).toString().split(":")[0]);*/
             //申购券面总额
             etrConBondDto.setPurchBondTotal(new BigDecimal((data.get(7).toString())));
             //投资目的
@@ -506,9 +506,9 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
                 // 币种非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(4).toString(), "EtrConBond003.ccy", lineNo));
-                // 申购方式非空
+               /* // 申购方式非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrConBond001.purchModle", lineNo));
+                    etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrConBond001.purchModle", lineNo));*/
                 // 申购类型非空
                 confirmMsg =  etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(6).toString(), "EtrConBond001.purchType", lineNo));
