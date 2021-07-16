@@ -287,16 +287,29 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
      */
     @Override
     public void doInsert(EtribBondInfo003Dto entity, OperationType type){
-        if ("submit".equals(entity.getOperateType())) {
-            if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos())) {
-                for (EtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
-                    doInsertFlow(dto);
-                }
-            }
-        }
-        entity.setOperateType(type.toString());
+//        if ("submit".equals(entity.getOperateType())) {
+//            if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos())) {
+//                for (EtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
+//                    doInsertFlow(dto);
+//                }
+//            }
+//        }
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo003/doInsert",entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doUpdate(EtribBondInfo003Dto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo003/doUpdate",entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doBack(EtribBondInfo003Dto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo003/doBack",entity,
                 Integer.class);
     }
 
@@ -1060,7 +1073,7 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo003/doComplete", entity,
                 Integer.class);
 
-        doDeleteFlow(entity.getWorkflowId());
+//        doDeleteFlow(entity.getWorkflowId());
     }
 
     @Override
