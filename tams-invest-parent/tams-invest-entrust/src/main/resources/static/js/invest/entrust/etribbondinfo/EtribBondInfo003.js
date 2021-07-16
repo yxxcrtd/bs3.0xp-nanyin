@@ -79,6 +79,9 @@
             //}
             //$('#tradeMarket').attr('disabled', true);
             $('#isRight').val(data.isRight).trigger('change');
+            if(data.isRight === N){
+                etrIbBondinfo003Funcs.exerYield_setDisabled(true);
+            }
             $('#calendarId').val(data.calendarId).trigger('change');
             $('#assetType1').val(data.assetType1).trigger('change');
             $('#assetType10').val(data.assetType10).trigger('change');//新增资产三级分类 王贵奇 2019/7/27
@@ -106,7 +109,7 @@
         } else {
             // 为空
             $('#price').attr("required", true);
-            $('#exerYield').attr("required", true);
+            // $('#exerYield').attr("required", true);
             $('#matureYield').attr("required", true);
             $('#finprodIdhid').val('').trigger('change');
             $('#finprodName').val('').trigger('change');
@@ -123,11 +126,8 @@
 
             $('#exerYield').val('').trigger('change').trigger('blur');
             $('#matureYield').val('').trigger('change').trigger('blur');
-        }
 
-        // 非含权债时，行权收益率置灰，为空
-        if ($('#isRight').val() != 'Y') {
-            $('#exerYield').val('').attr('disabled', true);
+            etrIbBondinfo003Funcs.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val()).attr("required", true);;
         }
 
         //左下行情信息联动
@@ -728,8 +728,17 @@
         $("#chlFinprodId").val('').trigger('change');
 
         $("#remark").val('').trigger('change');
-        var platFormDate = $("#vdate").val();
-        $("#mdate").val(platFormDate).trigger('change');
+        // var platFormDate = $("#vdate").val();
+        // $("#mdate").val(platFormDate).trigger('change');
+
+        query("#calculateField_price").prop('checked', false);
+        query("#calculateField_exerYield").prop('checked', false);
+        query("#calculateField_matureYield").prop('checked', false);
+        layui.form.render(); // reload layui
+        query("#vdate").val(sysDate).trigger("change");
+        query("#mdate").val(sysDate).trigger("change");
+        query("#counterId1").val("").trigger("change");
+        query("#counterId2").val("").trigger("change");
         table.clear();
     }
 
