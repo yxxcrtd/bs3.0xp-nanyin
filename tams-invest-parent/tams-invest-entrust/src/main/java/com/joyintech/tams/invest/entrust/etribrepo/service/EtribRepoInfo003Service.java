@@ -26,6 +26,8 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
@@ -283,6 +285,7 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
             }
             entity.setEtrEntrust(etrEntrust);
             entity.setEtrEntrustAdd(etrEntrustAdd);
+            entity.setEtrPledgeList(getEtrPledgeListByBussRepoSecDto(dto.getBussRepoSec(),dto.getEntrustId()));
             MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
             mstFileInputParameter.setFileList(dto.getFileArray());
             mstFileInputParameter.setBussinessId(dto.getEntrustId());
@@ -304,6 +307,31 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
     }
 
 
+    private List<EtrPledge> getEtrPledgeListByBussRepoSecDto(BussRepoSecDto bussRepoSec,String bizCode){
+   	 if(StringUtil.isNotEmpty(bussRepoSec)){
+   		 List<EtrPledge> etrPledgeList = new ArrayList<>();
+   		 for (PledgeBondInfoDto pledgeBond : bussRepoSec.getPledgeBondList()) {
+                // 回购委托新建
+                EtrPledge etrPledge = new EtrPledge();
+                // 委托代码 = 委托代码
+                etrPledge.setEntrustId(bizCode);
+                // 金融产品代码 = 输出质押品DTO.金融产品代码
+                etrPledge.setFinprodId(pledgeBond.getFinprodId());
+                // 质押面值 = 输出质押品DTO.质押面值
+                etrPledge.setPledgeFaceValue(new BigDecimal("100"));
+                // 质押数量 = 输出质押品DTO.质押数量
+                etrPledge.setPledgeNumber(ArithmeticUtil.divide(pledgeBond.getPledgePrin(), new BigDecimal("100"), 4));
+                // 质押率 = 输出质押品DTO.质押率
+                etrPledge.setPledgeRatio(ArithmeticUtil.divide(pledgeBond.getPledgeRatio(), new BigDecimal("100"), 4));
+                // 质押金额 = 输出质押品DTO.质押金额
+                etrPledge.setPledgeAmt(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), etrPledge.getPledgeRatio()));
+                etrPledgeList.add(etrPledge);
+                return etrPledgeList;
+       	 }
+   	 }
+   	 return null;
+   }
+   
     /**
      * 校验方法 <功能详细描述>
      *

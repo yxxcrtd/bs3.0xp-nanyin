@@ -51,15 +51,15 @@
      */
     function getSaveOrSubmitParams(operateType) {
         //证券账户
-        if ($("#chlFinprodId").val() != null && $("#chlFinprodId").val() != '') {
-            $("#secManageAcctId").val('');
-        } else {
-            $("#secManageAcctId").val('999999');
-        }
-        if (!$("#secManageAcctId").val() && !$("#chlFinprodId").val()) {
-            Joyin.warn("证券账户和通道不能同时为空！");
-            return false;
-        }
+//        if ($("#chlFinprodId").val() != null && $("#chlFinprodId").val() != '') {
+//            $("#secManageAcctId").val('');
+//        } else {
+//            $("#secManageAcctId").val('999999');
+//        }
+//        if (!$("#secManageAcctId").val() && !$("#chlFinprodId").val()) {
+//            Joyin.warn("证券账户和通道不能同时为空！");
+//            return false;
+//        }
         var object = $.serializeToObject("#searchForm");
         if ($("#select2-finprodId-container").attr("title")) {
             object.finprodName = $("#select2-finprodId-container").attr("title");

@@ -1221,7 +1221,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                         // 证券管理账户/通道代码 = nvl（nvl（金融产品交易Entity.证券托管账户，金融产品交易Entity.通道代码），999999）
                         String secAcctId = input.getEtrEntrustAdd().getSecAcctId();
                         if (StringUtil.isEmpty(secAcctId) && StringUtil.isEmpty(input.getEtrEntrust().getChlId())) {
-                            secAcctId = "999999";
+                            secAcctId = avaBond.getSecAcctId();
                         } else if (StringUtil.isNotEmpty(input.getEtrEntrust().getChlId())) {
                             secAcctId = input.getEtrEntrust().getChlId();
                         }
