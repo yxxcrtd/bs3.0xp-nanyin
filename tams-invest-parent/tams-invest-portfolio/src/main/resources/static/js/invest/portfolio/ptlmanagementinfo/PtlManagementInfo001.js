@@ -63,8 +63,8 @@ $(function() {
             ,{field:'portfolioName', width: 200, title: 'PtlManagementInfo001.portfolioName'}//组合名称
             ,{field:'portfolioTypeStr', width: 200, title: 'PtlManagementInfo001.portfolioType',sortField:'portfolioType'}//组合类型
             ,{field:'profitTypeStr', width: 200, title: 'PtlManagementInfo001.revenueType',sortField:'profitType'}//收益类型
-            ,{field:'strategyName', width: 200, title: 'PtlManagementInfo001.strategy',sortField:'strategyName'}//投资策略
-            ,{field:'disPercent', width: 200, title: 'PtlManagementInfo004.inheritanceRatio',sortField:'disPercent'}//继承比例
+            ,{field:'strategyName', width: 200, title: 'PtlManagementInfo001.strategy',sortField:'strategyName', visible:false}//投资策略
+            ,{field:'disPercent', width: 200, title: 'PtlManagementInfo004.inheritanceRatio',sortField:'disPercent', visible:false}//继承比例
             ,{field:'isGuaranteeStr', width: 200, title: 'PtlManagementInfo002.isGuarantee',sortField:'isGuarantee'}//是否有收益
             ,{field:'vdate', width: 200, title: 'PtlManagementInfo001.vDate',type:'date'}//开始日
             ,{field:'mdate', width: 200, title: 'PtlManagementInfo001.mDate',type:'date'}//结束日
