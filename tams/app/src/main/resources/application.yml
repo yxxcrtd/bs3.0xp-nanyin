@@ -229,6 +229,7 @@ application:
      systemVersion: V2.1.7
      lastChromeVersion: 73
      customerName: 兆尹科技
+  runOptimize: Y
 #  不使用服务注册中心,tams和tams-service-container分开部署的方式
 #  loadbalance: false
 #  micorservice:
