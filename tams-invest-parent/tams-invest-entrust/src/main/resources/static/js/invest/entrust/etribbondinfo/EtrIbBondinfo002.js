@@ -830,7 +830,7 @@
          */
         query("#price").change(function () {
             // var ps = query("#ps").val();
-            if (query("#finprodId").val() && query(this).val()) {
+            if (query("#finprodId").val() && $(this).val()) {
                 calData("price");
             } 
             // else if (!query("#finprodId").val() && ps == T01) {
