@@ -73,7 +73,7 @@ public class TrdCommandDispatcher001Controller{
      * @since 1.0
      */
 	@PostMapping("findPage/{page}/{length}")
-	public Page<TrdCommandDispatcher001Dto> selectAllCommonChar(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+	public Page<TrdCommandDispatcher001Dto> selectAllCommonChar(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) {
 	    Page<TrdCommandDispatcher001Dto> pageLimit =trdCommandDispatcher001Service.selectForPage(page, length, param);
 	    //将交易员和投资经理转为真实姓名
         List<TrdCommandDispatcher001Dto> list=pageLimit.getRoot();
@@ -134,7 +134,7 @@ public class TrdCommandDispatcher001Controller{
 	 * @throws Exception
 	 */
     @PostMapping("/getEntIds")
-    public List<SuggestDto> getEntrustId(@RequestBody Map<String,Object> param) throws Exception {
+    public List<SuggestDto> getEntrustId(@RequestBody Map<String,Object> param) {
         return trdCommandDispatcher001Service.getEntrustId(param);
     }
     /**
@@ -144,7 +144,7 @@ public class TrdCommandDispatcher001Controller{
      * @throws Exception
      */
     @PostMapping("/getPortfolioIds")
-    public List<SuggestDto> getPortfolioIds(@RequestBody Map<String,Object> param) throws Exception {
+    public List<SuggestDto> getPortfolioIds(@RequestBody Map<String,Object> param) {
     	return trdCommandDispatcher001Service.getPortfolioIds(param);
     }
     /**
@@ -154,7 +154,7 @@ public class TrdCommandDispatcher001Controller{
      * @throws Exception
      */
     @GetMapping("/getFinprodIds")
-    public List<SuggestDto> getFinprodIds(String finprodId) throws Exception {
+    public List<SuggestDto> getFinprodIds(String finprodId) {
     	return trdCommandDispatcher001Service.getFinprodIds(finprodId);
     }
     /**
@@ -178,7 +178,7 @@ public class TrdCommandDispatcher001Controller{
      * @since 1.0
      */
     @PostMapping("/getRadios")
-    public List<TrdCommandDispatcher001Dto> getRadios(@RequestBody Map<String, Object> param) throws Exception{
+    public List<TrdCommandDispatcher001Dto> getRadios(@RequestBody Map<String, Object> param) {
         return trdCommandDispatcher001Service.getRadios(param);
     }
     /**
@@ -189,7 +189,7 @@ public class TrdCommandDispatcher001Controller{
      * @since 1.0
      */
     @PostMapping("/getUsers")
-    public List<SelectOptionDto> getUsers(@RequestBody Map<String,Object> param) throws Exception{
+    public List<SelectOptionDto> getUsers(@RequestBody Map<String,Object> param) {
         return trdCommandDispatcher001Service.getUsers(param);
     }
     
@@ -232,7 +232,7 @@ public class TrdCommandDispatcher001Controller{
     @Transactional
     @DTXTransaction
     @PostMapping("/addAutoTime")
-    public int insertAutoTime(@RequestBody PaEtrAutoDispenseTime record) throws Exception{
+    public int insertAutoTime(@RequestBody PaEtrAutoDispenseTime record) {
          return trdCommandDispatcher001Service.addAutoTime(record);
     }
     /**

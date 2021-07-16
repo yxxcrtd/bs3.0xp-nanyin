@@ -30,6 +30,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -397,8 +398,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdRolloverPledgedRepo001Dto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdRolloverPledgedRepo001Dto dto) throws WorkFlowException {
         for (TrdRolloverPledgedRepo001Dto listDto:dto.getPledgedRepoInfoList()) {
             if(StringUtil.isBlank(listDto.getTradeId())) {
                 if (baseGetBusinessId != null) {

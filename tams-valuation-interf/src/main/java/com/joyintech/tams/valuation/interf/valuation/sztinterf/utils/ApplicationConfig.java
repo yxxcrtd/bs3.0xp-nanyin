@@ -1,11 +1,12 @@
 package com.joyintech.tams.valuation.interf.valuation.sztinterf.utils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class ApplicationConfig {
 	
-	public static SztConnector connectorInit() throws Exception{
+	public static SztConnector connectorInit() throws IOException {
 		SztConnector  connector= new SztConnector();
 				
 		Properties prop = new Properties();
@@ -31,7 +32,7 @@ public class ApplicationConfig {
 		}
 	}
 	
-	public static SztMessage msgInit() throws Exception{
+	public static SztMessage msgInit() throws IOException {
 		SztMessage  msg= new SztMessage();
 		
 		Properties prop = new Properties();

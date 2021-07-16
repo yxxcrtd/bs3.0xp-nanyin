@@ -722,7 +722,7 @@ public class TisUtil {
 	 * @param wb          Excel对象
 	 * @throws Exception
 	 */
-	public static void fileWrite(File targetFile,HSSFWorkbook wb) throws Exception{
+	public static void fileWrite(File targetFile,HSSFWorkbook wb) throws IOException {
 		FileOutputStream fileOut = null;
 		try {
 			new FileOutputStream(targetFile);

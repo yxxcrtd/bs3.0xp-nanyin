@@ -10,9 +10,7 @@
  
 package com.joyintech.tams.invest.report.common.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.CellType;
@@ -39,7 +37,7 @@ public class FileMergeUtil {
      */
     private static Logger logger = LoggerFactory.getLogger(FileMergeUtil.class);
     
-    public void handle(File file,XSSFWorkbook newExcelCreat) throws Exception{
+    public void handle(File file,XSSFWorkbook newExcelCreat) throws IOException {
     	InputStream in = null;
     	XSSFWorkbook fromExcel= null;
         try {

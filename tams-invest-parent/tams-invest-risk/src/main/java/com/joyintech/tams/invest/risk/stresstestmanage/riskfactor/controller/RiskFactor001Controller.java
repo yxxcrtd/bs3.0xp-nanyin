@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.risk.stresstestmanage.riskfactor.service.RiskFa
 import com.joyintech.tams.invest.risk.stresstestmanage.riskfactor.service.RiskFactor002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -87,7 +89,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findOnePage")
     public Page<RiskFactor001Dto> selectForPage()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         return service.selectAll(map);
     }
@@ -98,7 +100,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectRiskFactorMap")
     public List<SelectOptionDto> selectRiskFactorMap(@RequestParam Map<String, Object> param)
-        throws Exception {
+         {
 
         return service.selectRiskFactorMap(param);
     }
@@ -108,7 +110,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectRiskFactorMap2")
     public List<SelectOptionDto> selectRiskFactorMap2(@RequestParam Map<String, Object> param)
-            throws Exception {
+             {
 
         return service.selectRiskFactorMap2(param);
     }
@@ -118,7 +120,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectRiskFactorType1")
     public List<SelectOptionDto> selectRiskFactorMapType1(@RequestParam Map<String, Object> param)
-        throws Exception {
+         {
 
         return service.selectRiskFactorMapType1(param);
 
@@ -129,7 +131,7 @@ public class RiskFactor001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectRiskFactorType2")
     public List<SelectOptionDto> selectRiskFactorMapType2()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
 
         return service.selectRiskFactorMapType2(map);
@@ -185,8 +187,7 @@ public class RiskFactor001Controller extends BaseController {
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         if(datas==null) {
             return service.export(this.getPageId(),
@@ -214,8 +215,7 @@ public class RiskFactor001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(OPERATE_TYPE_SUBMIT)
-    public AjaxResult delete(@RequestBody @Validated RiskFactor001Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult delete(@RequestBody @Validated RiskFactor001Dto dto, BindingResult br) throws WorkFlowException {
 
         if (br.hasErrors()) {
             return new AjaxResult(br);

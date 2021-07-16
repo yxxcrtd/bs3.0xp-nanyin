@@ -193,7 +193,7 @@ public class OfficeMergeUtil {
         catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
+            logger.error(pw.toString() + "_" + e.getMessage(), e);
 //            System.out.println(sw.toString());
             logger.info(sw.toString());
         }

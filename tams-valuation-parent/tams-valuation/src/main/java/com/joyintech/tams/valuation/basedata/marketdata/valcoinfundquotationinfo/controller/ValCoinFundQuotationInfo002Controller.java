@@ -25,6 +25,7 @@ import com.joyintech.tams.valuation.basedata.marketdata.valcoinfundquotationinfo
 import com.joyintech.tams.valuation.basedata.marketdata.valcoinfundquotationinfo.service.ValCoinFundQuotationInfo001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,8 +137,7 @@ public class ValCoinFundQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(OPERATE_TYPE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) ValCoinFundQuotationInfo001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) ValCoinFundQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -191,7 +191,7 @@ public class ValCoinFundQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/queryFinprod")
     public List<SuggestDto> queryFinprod()
-        throws Exception {
+         {
         // 画面的输入值param前台的输入值，为了进行模糊查询
         Map<String, Object> param = RequestUtil.getPageParam();
         // 获取根据输入值检索到的结果

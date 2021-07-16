@@ -74,7 +74,6 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      * 债券代码下拉选择框
      * @param param 参数
      * @return list结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("getSecId")
@@ -88,7 +87,6 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      * 
      * @param param 参数
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("getFinProdAbbr")
@@ -99,7 +97,6 @@ public class MstBondQuotationInfo001Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
@@ -129,7 +126,6 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      * @param dto 页面选中的数据
      * @param br br
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
@@ -162,7 +158,6 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

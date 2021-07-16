@@ -63,7 +63,6 @@ public class MstCommissionSet001Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
@@ -93,7 +92,7 @@ public class MstCommissionSet001Controller extends BaseController {
      * @param dto 页面选中的数据
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
@@ -127,7 +126,6 @@ public class MstCommissionSet001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

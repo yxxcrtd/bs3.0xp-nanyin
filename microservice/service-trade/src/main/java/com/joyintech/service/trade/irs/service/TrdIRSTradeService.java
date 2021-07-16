@@ -55,7 +55,7 @@ public class TrdIRSTradeService extends BaseService<TrdIRSTradeDto>{
      */
     public Page<TrdIRSTradeDto> selectForPage(int page, int length,
                                                          Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.交易流程状态_流程中.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.交易流程状态_有效.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());

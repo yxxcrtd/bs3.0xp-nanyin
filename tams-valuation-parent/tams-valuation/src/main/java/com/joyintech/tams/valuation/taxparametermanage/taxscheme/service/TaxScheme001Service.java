@@ -36,7 +36,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
 	/**
      * 获取税务方案 - 分页
      * @return
-     * @throws Exception
      */
 	public Page<TaxScheme001Dto> findSchemeByPage(Map<String, Object> parameters) {
 	    return restTemplate.postForPage(
@@ -47,7 +46,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
 	/**
      * 获取增值税则表 - 分页
      * @return
-     * @throws Exception
      */
 	public Page<TaxScheme001Dto> findVatTaxByPage(Map<String, Object> parameters) {
 	    return restTemplate.postForPage(
@@ -58,7 +56,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
 	/**
      * 获取增值税则表 - 不分页
      * @return
-     * @throws Exception
      */
 	public List<TaxScheme001Dto> findVatTax(Map<String, Object> parameters) {
 	    return restTemplate.postForList(
@@ -69,7 +66,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
 	/**
      * 获取附加税则表 - 分页
      * @return
-     * @throws Exception
      */
 	public Page<TaxScheme001Dto> findAdtTaxByPage(Map<String, Object> parameters) {
 	    return restTemplate.postForPage(
@@ -80,7 +76,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
 	/**
      * 获取附加税则表 
      * @return
-     * @throws Exception
      */
 	public List<TaxScheme001Dto> findAdtTax(Map<String, Object> parameters) {
 	    return restTemplate.postForList(
@@ -92,7 +87,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * 获取资产应税表 - 分页
      * @param pageParam
      * @return
-     * @throws Exception 
      * @see
      * @since 1.0
      */
@@ -120,7 +114,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * 获取资产代码 - 下拉框
      * 
      * @return
-     * @throws Exception
      */
     public List<SelectOptionDto> findAsset(Map<String, Object> pageParam)  {
         return restTemplate.postForList(
@@ -132,7 +125,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * 查询参数设置 - 分页
      * @param pageParam
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -146,7 +138,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * 查询参数设置 - 不分页
      * @param pageParam
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -171,7 +162,6 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * 查询参数设置 - 不分页
      * @param pageParam
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */

@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.product.rddesign.colproductrequirement.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -92,7 +93,7 @@ public class ColProductRequirement002Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(@RequestBody @Validated({ ValidateGroupEdit.class }) ColProductRequirement002Dto dto,
-			BindingResult br) throws Exception {
+			BindingResult br) throws WorkFlowException {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}

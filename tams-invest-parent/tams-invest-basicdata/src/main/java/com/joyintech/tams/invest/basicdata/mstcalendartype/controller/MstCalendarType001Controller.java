@@ -78,7 +78,6 @@ public class MstCalendarType001Controller extends BaseController {
      * 查询操作
      *
      * @return 查询结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -93,7 +92,6 @@ public class MstCalendarType001Controller extends BaseController {
      * 交易日历名称的联想文本框事件
      * 
      * @return 查询的交易日历代码和交易日历名称列表
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -112,7 +110,6 @@ public class MstCalendarType001Controller extends BaseController {
      * 交易日历类型的下拉框事件
      * 
      * @return 查询的交易日历类型列表
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -149,7 +146,7 @@ public class MstCalendarType001Controller extends BaseController {
      * @param dto dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
@@ -180,7 +177,6 @@ public class MstCalendarType001Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -193,7 +189,6 @@ public class MstCalendarType001Controller extends BaseController {
     /**
      * getTradeCalendarName
      * @return List<SuggestDto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */

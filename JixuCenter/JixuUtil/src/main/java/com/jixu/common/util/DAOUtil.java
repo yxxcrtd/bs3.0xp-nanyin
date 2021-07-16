@@ -334,7 +334,7 @@ public class DAOUtil<T> extends HibernateDaoSupport {
 				heads.add(field );
 			}
 		}catch(SQLException se){
-			se.printStackTrace();
+			logger.error(se.getMessage(),se);
 		}finally {
 			try {
 				if (stmt != null){

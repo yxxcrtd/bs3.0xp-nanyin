@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,6 +91,11 @@ import com.orm.obj.TranSum;
 
 @Controller
 public class TradeController extends ExceptionControl{
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(TradeController.class);
+
 	
 	@Resource(name="tradeService")
 	private TradeService tradeService;
@@ -843,8 +850,8 @@ public class TradeController extends ExceptionControl{
     					  @RequestParam(value = "start", required = true) String start,
     					  @RequestParam(value = "end", required = true) String end,
     					  HttpServletResponse response) {
-		List<Object> r_list = JsonUtil.stringToList(resources);
-		System.out.println(r_list + "|" + type + "|" + portfolio + "|" + start + "|" + end);
+		List<Object> r_list = JsonUtil.stringToList(resources);		
+		logger.info(r_list + "|" + type + "|" + portfolio + "|" + start + "|" + end);
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		List<String> titles = Arrays.asList("交易编号", "操作类型", "操作时间", "结算时间", "借方科目", "借方金额", "贷方科目", "贷方金额", "银行账户","最后更新时间","操作人");
 		result.put("titles", titles);

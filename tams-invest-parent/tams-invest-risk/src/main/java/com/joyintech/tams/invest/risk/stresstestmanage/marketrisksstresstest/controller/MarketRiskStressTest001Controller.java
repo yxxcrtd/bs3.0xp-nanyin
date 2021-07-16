@@ -88,7 +88,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
         setSelectOptionToModel(model, DICT_CODES);
         SelectDto selectZhccDto = this.getSelectDataFromDataDic(DictCode.组合层次, null);
         List<SelectOptionDto> optionZhcc = selectZhccDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         model.addAttribute("mapZhcc",mapZhcc);
         SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();
@@ -104,7 +104,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
         }
         /*SelectDto selects = this.getSelectDataFromDataDic(DictCode.风险因子的异常处理, null);
         List<SelectOptionDto> options = selects.getOptions();
-        Map<String,List<SelectOptionDto>> maps = options.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> maps = options.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         //model.addAttribute("RISK_FAC_HANDLING",maps);
         model.addAttribute("RISK_FAC_HANDLING",this.getSelectDataFromDataDic(DictCode.风险因子的异常处理, null));*/
         model.addAttribute("analysisDate",analysisDate);
@@ -123,7 +123,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
     @RequestMapping("/getAllPortfolioBySort")
     public List<TreeNode> getAllPortfolioBySort(@RequestParam(name="type", required=false) String type,@RequestParam(name="indId", required=false) String indId,@RequestParam(name="portfName", required=false) String portfName,@RequestParam(name="profitType", required=false) String profitType
             ,@RequestParam(name="issueMode", required=false) String issueMode,@RequestParam(name="raiseType", required=false) String raiseType,@RequestParam(name="investType", required=false) String investType)
-        throws Exception {
+         {
         return MarketRiskStressTest001Service.getAllPortfolioBySort(type,indId,portfName,profitType,issueMode,raiseType,investType);
         
     }
@@ -149,7 +149,7 @@ public class MarketRiskStressTest001Controller extends BaseController{
      * */
     @ResponseBody
     @RequestMapping("querySceneOption")
-    public List<SelectOptionDto> querySceneOption(@RequestParam Map<String, Object> param)throws Exception {
+    public List<SelectOptionDto> querySceneOption(@RequestParam Map<String, Object> param) {
         return MarketRiskStressTest001Service.querySceneOption(getParam("search"));
     }
     

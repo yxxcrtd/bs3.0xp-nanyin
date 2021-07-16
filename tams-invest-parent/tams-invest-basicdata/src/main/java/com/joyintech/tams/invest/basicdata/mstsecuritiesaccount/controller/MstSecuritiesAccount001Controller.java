@@ -73,7 +73,6 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      * 页面查询，表格分页
      * 
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -89,7 +88,6 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      * 证券账户账号联想文本框 <功能详细描述>
      * @param param String
      * @return List
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -131,7 +129,7 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      * 行删除及删除按钮点击
      * @return AjaxResult
      * @param dto MstSecuritiesAccountDto
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @param  br BindingResult
      * @see
      * @since 1.0
@@ -162,7 +160,6 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

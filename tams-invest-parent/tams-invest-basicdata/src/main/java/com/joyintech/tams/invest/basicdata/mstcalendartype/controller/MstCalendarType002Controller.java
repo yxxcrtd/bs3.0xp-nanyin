@@ -143,7 +143,7 @@ public class MstCalendarType002Controller extends BaseController {
      * @param dto dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */

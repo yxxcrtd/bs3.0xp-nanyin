@@ -25,7 +25,7 @@ public class TodayOltoTlFilter extends AbstractFilter {
 	private static final String  PROJ_JJ_R = "基金单位净值:";
 	
 	@Override
-	public Workbook doFilter(Workbook workbook,int sheetIndex) throws Exception {
+	public Workbook doFilter(Workbook workbook,int sheetIndex) {
 		String cost = null; String smv=null;
 		org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(sheetIndex);
 	    for (org.apache.poi.ss.usermodel.Row row : sheet) {

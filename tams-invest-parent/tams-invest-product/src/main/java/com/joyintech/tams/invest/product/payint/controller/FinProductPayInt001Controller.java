@@ -20,6 +20,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -118,25 +119,20 @@ public class FinProductPayInt001Controller extends BaseController {
     /**
      * 产品代码下拉框
      * @return 下拉框列表
-     * @throws Exception Exception
      */
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
-    public Page<SelectOptionDto> queryProdIdInfo()
-            throws Exception {
+    public Page<SelectOptionDto> queryProdIdInfo(){
         return finProductPayInt001Service.queryProdIdInfo(RequestUtil.getPageParam());
     }
 
     /**
      * 组合代码下拉框
-     * @param param 过滤参数
      * @return 下拉框列表
-     * @throws Exception Exception
      */
     @RequestMapping("selectPortfolioId")
     @ResponseBody
-    public Page<SelectOptionDto> selectPortfolioId()
-            throws Exception {
+    public Page<SelectOptionDto> selectPortfolioId(){
         return finProductPayInt001Service.selectPortfolioId(RequestUtil.getPageParam());
     }
 
@@ -158,19 +154,17 @@ public class FinProductPayInt001Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductPayInt001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
     /**
      * check
      * 
-     * @param finProductExpire001Dto check对象
+     * @param finProductPayInt001Dto check对象
      * @param br 验证信息
      * @return check结果
      * @see
@@ -223,14 +217,13 @@ public class FinProductPayInt001Controller extends BaseController {
      * 
      * @param inputDto 画面输入参数dto
      * @return 撤销结果
-     * @throws Exception 异常信息
+     * @throws WorkFlowException 异常信息
      * @see
      * @since 1.0
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody FinProductPayInt003Dto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody FinProductPayInt003Dto inputDto) throws WorkFlowException {
 
         ProcessParameter<FinProductPayInt003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<FinProductPayInt003Dto> workFlowParameter = new WorkFlowParameter<>();

@@ -472,7 +472,7 @@ public class MstTradeOpponent002Controller extends BaseController {
      * @param dto 请求实体类
      * @param br 验证的错误
      * @return 错误集合
-     * @throws Exception 错误
+     * @throws WorkFlowException 错误
      * @see
      * @since 1.0
      */

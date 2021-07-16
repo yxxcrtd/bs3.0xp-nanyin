@@ -178,7 +178,7 @@ public class EtrRepo003Controller extends BaseController {
      * @param dtoList dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")

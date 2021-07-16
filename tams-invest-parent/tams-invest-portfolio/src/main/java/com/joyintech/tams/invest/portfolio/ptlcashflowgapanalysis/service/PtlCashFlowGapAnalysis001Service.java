@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
@@ -76,12 +77,10 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
 	/**
 	 * 获取发行人信息
 	 * 
-	 * @param paraMap
+	 * @param map
 	 * @return
-	 * @throws Exception
 	 */
-	public List<SelectOptionDto> getFundAccount(Map<String,Object> map)
-			throws Exception {
+	public List<SelectOptionDto> getFundAccount(Map<String,Object> map){
 		map.put("userId", SecurityUtil.getLoginUser().getUserName());
 		List<SelectOptionDto> fundAccountSelect = restTemplate.postForList(
 				ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlowGapAnalysis/getFundAccount",map,
@@ -94,7 +93,6 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -213,7 +211,7 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> detailExport(Map<String, Object> selectParam) {
+    public ResponseEntity<byte[]> detailExport(Map<String, Object> selectParam) throws IOException, InvalidFormatException {
         Map<Object, Object> data = new HashMap<Object, Object>(); 
         List<PtlCashFlowGapAnalysis001Dto> list = this.selectListData(selectParam);
         List<Map<String, Object>> lists = getColumnMap(list);  
@@ -284,7 +282,7 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
      * @since 1.0
      */
     public ResponseEntity<byte[]> exportExcel(Map<Object, Object> data,
-                                                         String exceltemplate) {
+                                                         String exceltemplate) throws IOException, InvalidFormatException {
         String termname = data.get("termname").toString();
         String flieName =  termname +".xlsx";
         File depositfile = createFile(data, exceltemplate);
@@ -299,7 +297,7 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
      * @see
      * @since 1.0
      */
-    public File createFile(Map<Object, Object> data, String exceltemplate) {
+    public File createFile(Map<Object, Object> data, String exceltemplate) throws IOException, InvalidFormatException {
         String termname = data.get("termname").toString();
         String flieName =  termname + ".xlsx";
         File depositfile = null;
@@ -322,9 +320,7 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
             os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
             workbook.write(os); 
         }
-        catch (Exception e) { 
-            throw new RuntimeException(e);
-        }finally {
+        finally {
             if(os != null){
                 try {
                     os.flush();

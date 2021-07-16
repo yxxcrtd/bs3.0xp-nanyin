@@ -66,7 +66,7 @@ public class PeriodicManagement001Service extends CommonExportService<PeriodicMa
 	 * @return
 	 * @throws Exception
 	 */
-	public Page<PeriodicManagement001Dto> selectForPage(Map<String, Object> params) throws Exception {
+	public Page<PeriodicManagement001Dto> selectForPage(Map<String, Object> params){
 		if (StringUtil.isNotEmpty(params.get("finprodId"))) {
 			params.put("finprodId", StringUtil.splitToList(null, params.get("finprodId").toString()));
         }

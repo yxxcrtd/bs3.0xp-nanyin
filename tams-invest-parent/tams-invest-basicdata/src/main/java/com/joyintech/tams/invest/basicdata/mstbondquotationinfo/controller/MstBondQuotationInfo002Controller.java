@@ -95,7 +95,6 @@ public class MstBondQuotationInfo002Controller extends BaseController {
      * 新建页面查询资产代码
      * <功能详细描述>
      * @return list
-     * @throws Exception Exception
      * @see
      * @param param param
      * @since 1.0
@@ -130,7 +129,6 @@ public class MstBondQuotationInfo002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("save")
@@ -169,7 +167,6 @@ public class MstBondQuotationInfo002Controller extends BaseController {
      * 资产代码的联想文本框事件
      * 
      * @return 查询的资产代码和资产名称列表
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

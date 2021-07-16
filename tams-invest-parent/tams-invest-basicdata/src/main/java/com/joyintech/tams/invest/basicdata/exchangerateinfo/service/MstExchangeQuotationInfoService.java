@@ -54,7 +54,6 @@ public class MstExchangeQuotationInfoService extends CommonExportService<MstExch
      * 
      * @param pageParam 查询参数
      * @return 返回查询结果
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */

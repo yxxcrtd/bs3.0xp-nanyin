@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,7 +146,7 @@ public class SftpUtil {
 	 * @see
 	 * @since 1.0
 	 */
-	public List<String> listFileName(String path, String fileNamePart) throws Exception {
+	public List<String> listFileName(String path, String fileNamePart) {
 		List<String> res = new ArrayList<>();
 		try {
 			// 获取当前路径
@@ -208,7 +209,7 @@ public class SftpUtil {
 	 * @param localDir
 	 * @throws Exception
 	 */
-	public void downFileOrDir(String remoteFileName, String localDir) throws Exception {
+	public void downFileOrDir(String remoteFileName, String localDir) {
 		try {
 			String curDir = "";
 			File file = new File(remoteFileName);
@@ -267,7 +268,7 @@ public class SftpUtil {
 
 		} catch (SftpException e) {
 			logger.error("下载失败！", e);
-			throw new Exception("下载文件或目录失败");
+			throw new BusinessException("下载文件或目录失败");
 		}
 
 	}
@@ -281,7 +282,7 @@ public class SftpUtil {
 	 * @see
 	 * @since 1.0
 	 */
-	public void getFile(String remoteFile, String localDir) throws Exception {
+	public void getFile(String remoteFile, String localDir)  {
 		File localFile = new File(localDir);
 		if (localFile.exists()) {
 			// 本地目录不是目录，先删除
@@ -299,7 +300,7 @@ public class SftpUtil {
 			sftp.get(remoteFile, localDir);
 		} catch (SftpException e) {
 			logger.error("连接失败！", e);
-			throw new Exception("下载文件失败");
+			throw new BusinessException("下载文件失败");
 		}
 	}
 

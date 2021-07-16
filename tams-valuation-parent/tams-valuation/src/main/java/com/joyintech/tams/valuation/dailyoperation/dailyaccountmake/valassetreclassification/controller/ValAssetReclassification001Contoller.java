@@ -117,7 +117,7 @@ public class ValAssetReclassification001Contoller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public Page<SelectOptionDto> getBooksetId()
-        throws Exception {
+          {
         return valAssetReclassification001Service.getBookSetId(RequestUtil.getPageParam());
     }
     
@@ -173,7 +173,7 @@ public class ValAssetReclassification001Contoller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "doSave", method=RequestMethod.POST)
-    public AjaxResult doAdd(@RequestBody @Valid ValAssetReclassification001ValidDto dto, BindingResult br) throws Exception {
+    public AjaxResult doAdd(@RequestBody @Valid ValAssetReclassification001ValidDto dto, BindingResult br) {
 
         if(br.hasErrors()){
             return new AjaxResult(br);

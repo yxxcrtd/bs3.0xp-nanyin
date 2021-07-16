@@ -87,7 +87,7 @@ public class AdapterHttpClientWebservice {
                 	connection.disconnect();
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+            	logger.error(ex.getMessage(),ex);
             }
         }
         

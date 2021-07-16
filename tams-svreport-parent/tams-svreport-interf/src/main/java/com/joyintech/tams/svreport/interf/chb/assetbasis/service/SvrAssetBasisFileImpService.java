@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -375,7 +376,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                     if (value != null&&""!=value) {
                         try {
                             field.set(chbAssetsBasisData, DateUtil.parse(value));
-                        } catch ( IllegalAccessException e) {
+                        } catch (IllegalAccessException e) {
                             logger.error(e.getMessage(),e);
                             return ;
                         }

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -144,7 +145,7 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
      * String
      */
     @SuppressWarnings("unchecked")
-    public String getAssetInfoByInterf(String currentDate) {
+    public String getAssetInfoByInterf(String currentDate) throws ParseException {
 	    // 调用共通方法传入接口文件
 	    List<InterfFile> xmlFileList = queryAndDownloadFiles(currentDate, null);
         for (InterfFile interfFile : xmlFileList){
@@ -189,7 +190,7 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
 	 * @see com.joyintech.tams.common.FileImpService#saveDataBySteps(java.util.List)
 	 */
     @Override
-    public String importDB(List<Map<String, String>> assetInfoList,InterfFile interfFile) {
+    public String importDB(List<Map<String, String>> assetInfoList,InterfFile interfFile){
         // 数据检查
         // 添加待处理的数据
         checkDataCodeCheck(assetInfoList, interfFile.getFilename(), ChbCheckTableInfo.资产要素登记表INFO);

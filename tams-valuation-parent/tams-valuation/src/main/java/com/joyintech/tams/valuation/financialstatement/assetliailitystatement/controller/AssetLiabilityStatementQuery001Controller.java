@@ -125,7 +125,6 @@ public class AssetLiabilityStatementQuery001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */

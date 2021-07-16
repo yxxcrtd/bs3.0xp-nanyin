@@ -72,7 +72,6 @@ public class MstNaturalPerson001Controller extends BaseController {
      * 查询 <功能详细描述>
      * 
      * @return page分页参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
@@ -88,7 +87,6 @@ public class MstNaturalPerson001Controller extends BaseController {
      * 用户名联想文本框 <功能详细描述>
      * 
      * @return temp 返回联想文本框参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
@@ -108,7 +106,6 @@ public class MstNaturalPerson001Controller extends BaseController {
      * 身份证联想文本框 <功能详细描述>
      * 
      * @return temp 联想文本框参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
@@ -143,7 +140,7 @@ public class MstNaturalPerson001Controller extends BaseController {
      * @param dto 删除参数
      * @param br 删除参数
      * @return 删除返回参数
-     * @throws Exception 抛出异常
+     * @throws WorkFlowException 抛出异常
      * @see
      * @since 1.0
      */
@@ -179,7 +176,6 @@ public class MstNaturalPerson001Controller extends BaseController {
      * 文件导出 <功能详细描述>
      * 
      * @return 导出返回参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */

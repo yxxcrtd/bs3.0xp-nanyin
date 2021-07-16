@@ -315,14 +315,13 @@ public class PtlMockTest002Controller extends BaseController {
      * @param inputDto PtlMockTest002Dto
      * @param result BindingResult
      * @return 处理结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("doMockTest")
     public AjaxResult doMockTest(@Validated({
-        ValidateGroupEdit.class}) @RequestBody PtlMockTest002Dto inputDto, BindingResult result) throws Exception {
+        ValidateGroupEdit.class}) @RequestBody PtlMockTest002Dto inputDto, BindingResult result) {
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }

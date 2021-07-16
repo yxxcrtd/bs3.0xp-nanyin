@@ -203,7 +203,7 @@ public class ProdPersonIssue001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
-	public AjaxResult doSubmit(@RequestBody Map<String, Object> param)  throws Exception{
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) {
 
 		List<ProdPersonIssue001Dto> list=new ArrayList<ProdPersonIssue001Dto>();
 		// 选择行数据时

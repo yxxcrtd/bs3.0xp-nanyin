@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.period.trdirsduration.controller;
 import java.util.Map;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -138,8 +139,7 @@ public class TrdIRSDuration003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdIRSDuration003ProcessDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdIRSDuration003ProcessDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

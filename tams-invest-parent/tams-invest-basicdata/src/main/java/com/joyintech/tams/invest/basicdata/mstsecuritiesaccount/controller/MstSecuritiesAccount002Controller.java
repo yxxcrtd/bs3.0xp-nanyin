@@ -100,7 +100,6 @@ public class MstSecuritiesAccount002Controller extends BaseController{
      * 回款账户以及资金账户联想下拉框 <功能详细描述>
      * @param search String
      * @return List
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -131,7 +130,7 @@ public class MstSecuritiesAccount002Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
@@ -182,7 +181,6 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //     * @param request 请求
 //     * @param response 响应
 //     * @param model ModelAndView
-//     * @throws Exception 异常
 //     * @return String
 //     * @see
 //     * @since 1.0
@@ -203,7 +201,6 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //     * 查询上传的文件
 //     *
 //     * @param businessId String
-//     * @throws Exception 异常
 //     * @return String
 //     * @see
 //     * @since 1.0
@@ -217,7 +214,6 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //     * 插入附件文件
 //     *
 //     * @param dto MstSecuritiesAccountDto
-//     * @throws Exception 异常
 //     * @return String
 //     * @see
 //     * @since 1.0
@@ -231,7 +227,6 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //     * 删除上传的附件文件
 //     *
 //     * @param businessId String
-//     * @throws Exception 异常
 //     * @return String
 //     * @see
 //     * @since 1.0

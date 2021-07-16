@@ -41,7 +41,7 @@ public class CeOrg001Service extends BaseService<CreditLinesOrgDto> {
      * @since 1.0
      */
     public Page<CreditLinesOrgDto> selectForPage(int page, int length,Map<String, Object> param) 
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> ceOrgMapper.selectForPage(param));
     }
 

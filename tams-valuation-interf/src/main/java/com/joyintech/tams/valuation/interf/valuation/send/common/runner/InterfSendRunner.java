@@ -75,7 +75,7 @@ public class InterfSendRunner {
      */
     private Map<String, Object> params;
     
-    public void execute() throws Exception {
+    public void execute() {
         // 将用户加入到SESSION中
         addUserToSession();
         executor.submit(new Runnable() {

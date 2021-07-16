@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.product.riskLevelRating.dto.RiskLevelRating002D
 import com.joyintech.tams.invest.product.riskLevelRating.service.RiskLevelRating002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -133,11 +135,10 @@ public class RiskLevelRating002Controller extends BaseController {
      * @param dto
      * @param br
      * @return AjaxResult
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated RiskLevelRating001Dto dto, BindingResult br) throws Exception {
+    public AjaxResult save(@RequestBody @Validated RiskLevelRating001Dto dto, BindingResult br) throws ParseException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -188,12 +189,10 @@ public class RiskLevelRating002Controller extends BaseController {
      *
      * @param dto
      * @return AjaxResult
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult delete(@RequestBody RiskLevelRating001Dto dto)
-            throws Exception {
+    public AjaxResult delete(@RequestBody RiskLevelRating001Dto dto) throws WorkFlowException {
         ProcessParameter<RiskLevelRating001Dto> processParameter = new ProcessParameter<RiskLevelRating001Dto>();
         WorkFlowParameter<RiskLevelRating001Dto> params = new WorkFlowParameter<RiskLevelRating001Dto>();
         //判断是否在工作流中

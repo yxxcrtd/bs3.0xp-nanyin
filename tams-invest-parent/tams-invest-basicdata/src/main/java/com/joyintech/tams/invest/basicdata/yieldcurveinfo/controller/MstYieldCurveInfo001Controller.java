@@ -71,7 +71,6 @@ public class MstYieldCurveInfo001Controller extends BaseController{
      * <一句话功能简述>
      * <功能详细描述>
      * @return Page<MstYieldCurveInfoDto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -105,7 +104,7 @@ public class MstYieldCurveInfo001Controller extends BaseController{
      * @param dto MstYieldCurveInfoDto
      * @param br br
      * @return AjaxResult
-     * @throws Exception Exception
+     * @throws WorkFlowException Exception
      * @see
      * @since 1.0
      */
@@ -138,7 +137,6 @@ public class MstYieldCurveInfo001Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

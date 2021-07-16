@@ -47,7 +47,7 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
      * @throws Exception 
      * void
      */
-    public void generateReport(Date batchDate,List<String> prodIdList,boolean isEdit) throws Exception{
+    public void generateReport(Date batchDate,List<String> prodIdList,boolean isEdit) {
         setBatchBeanName(BatchBeanName.人行报表生成);
         logInfoBatchStart();
         Calendar calendar = Calendar.getInstance();
@@ -76,7 +76,7 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
      * @throws Exception 
      * void
      */
-	public void generateAssetReport(Date batchDate,List<String> prodIdList,boolean isEdit) throws Exception{
+	public void generateAssetReport(Date batchDate,List<String> prodIdList,boolean isEdit) {
 //        //已报送报送检查
         List<String> reporttypeList = new ArrayList<String>();
         reporttypeList.add(DictCodeListExt2.人行报表名称_资管产品资产负债统计表.getValue());
@@ -85,7 +85,7 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
         reporttypeList.add(DictCodeListExt2.人行报表名称_资管产品资产负债剩余期限统计表.getValue());
         String msg = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeList);
         if(msg!=null&&!StringUtil.isEmpty(msg)){
-            throw new Exception(msg+"\n");
+            throw new BusinessException(msg+"\n");
         }
 
         // 上游资产头寸数据接入
@@ -106,7 +106,7 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
 	 * @throws Exception 
 	 * void
 	 */
-    public void generateProdReport(Date batchDate,List<String> prodIdList,boolean isEdit) throws Exception{
+    public void generateProdReport(Date batchDate,List<String> prodIdList,boolean isEdit) {
         //已报送报送检查
         List<String> reporttypeList = new ArrayList<String>();
         reporttypeList.add(DictCodeListExt2.人行报表名称_资管产品募集余额统计表.getValue());
@@ -119,7 +119,7 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
         reporttypeList.add(DictCodeListExt2.人行报表名称_新发产品分合同期限募集金额统计表.getValue());
         String msg = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeList);
         if(msg!=null&&!StringUtil.isEmpty(msg)){
-            throw new Exception(msg+"\n");
+            throw new BusinessException(msg+"\n");
         }
 
         pbcMonthProdPositionService.generateProdPositionData(batchDate,prodIdList,false,isEdit);

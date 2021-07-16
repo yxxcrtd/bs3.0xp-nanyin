@@ -66,6 +66,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -78,6 +79,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -605,11 +608,10 @@ public class TrdDepositInvestTrade003Controller extends BaseController {
      * 保存
      * @param dto dto
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody TrdDepositInvestTrade001Dto dto) throws Exception {
+    public AjaxResult save(@RequestBody TrdDepositInvestTrade001Dto dto) throws InvocationTargetException, IllegalAccessException, WorkFlowException, IOException, InstantiationException {
        
     	List<TrdDepositInvestTrade001Dto> dtoList = new ArrayList<>();
     	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();//组合分配

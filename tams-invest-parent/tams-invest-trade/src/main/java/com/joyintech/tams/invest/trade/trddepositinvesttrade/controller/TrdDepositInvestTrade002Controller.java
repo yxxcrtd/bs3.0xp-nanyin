@@ -46,6 +46,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -613,8 +614,7 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdDepositInvestTrade001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdDepositInvestTrade001Dto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
     	if(flag) {
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter(); 
             bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_存款录入);

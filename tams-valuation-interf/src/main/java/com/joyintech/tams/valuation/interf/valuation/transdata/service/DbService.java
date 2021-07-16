@@ -52,8 +52,7 @@ public class DbService {
      * @see
      * @since 1.0
      */
-    public ValRecvFileEntity doRecv(ValRecvServerInfoEntity entity, List<ValInterfTemplate> _tempList)
-        throws Exception {
+    public ValRecvFileEntity doRecv(ValRecvServerInfoEntity entity, List<ValInterfTemplate> _tempList) throws ClassNotFoundException {
     	ValRecvFileEntity result = new ValRecvFileEntity();
     	
     	Date time = entity.getOccurTime();

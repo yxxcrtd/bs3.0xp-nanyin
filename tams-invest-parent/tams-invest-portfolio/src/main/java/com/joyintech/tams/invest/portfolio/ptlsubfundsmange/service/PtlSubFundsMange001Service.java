@@ -81,8 +81,7 @@ public class PtlSubFundsMange001Service extends CommonExportService<PtlSubFundsM
      * @see
      * @since 1.0
      */
-    public List<PtlSubFundsMange001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+    public List<PtlSubFundsMange001Dto> findPage(Map<String, Object> params) {
     	User user = SecurityUtil.getLoginUser();
 //    	params.put("userId", user.getUid());
     	params.put("userId", user.getUserName());
@@ -91,8 +90,7 @@ public class PtlSubFundsMange001Service extends CommonExportService<PtlSubFundsM
                 params, PtlSubFundsMange001Dto.class);
     }
     
-    public List<PtlSubFundsMange001Dto> findPageList(Map<String, Object> params)
-            throws Exception {
+    public List<PtlSubFundsMange001Dto> findPageList(Map<String, Object> params){
         	User user = SecurityUtil.getLoginUser();
 //        	params.put("userId", user.getUid());
         	params.put("userId", user.getUserName());

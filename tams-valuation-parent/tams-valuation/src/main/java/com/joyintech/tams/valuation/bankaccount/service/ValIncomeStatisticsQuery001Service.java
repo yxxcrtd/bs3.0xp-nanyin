@@ -90,7 +90,7 @@ public class ValIncomeStatisticsQuery001Service extends CommonExportService<ValI
      * @since 1.0
      */
     public Page<ValIncomeStatisticsQuery001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+         {
 //        Map<String, Object> map = new HashMap<String, Object>();
 //        map.put("paraCode", "SUBJECT_NO_LIST");
 //        List<SysParaSet001Dto> listSysParaSet001Dto = sysParaSet001Service.getReportInfoList(map);

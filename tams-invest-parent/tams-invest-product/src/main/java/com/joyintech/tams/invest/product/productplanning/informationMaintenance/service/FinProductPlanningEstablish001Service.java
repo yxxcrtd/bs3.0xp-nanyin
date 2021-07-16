@@ -34,8 +34,7 @@ public class FinProductPlanningEstablish001Service extends CommonExportService<F
      *  @return 下拉框列
      *   * @throws Exception Exception
      */
-    public Page<SelectOptionDto> querySeriesName(Map<String, Object> param)
-            throws Exception {
+    public Page<SelectOptionDto> querySeriesName(Map<String, Object> param){
         param.put("loginUserName", LoginUserUtil.getUserName());
 
         return restTemplate.postForPage(

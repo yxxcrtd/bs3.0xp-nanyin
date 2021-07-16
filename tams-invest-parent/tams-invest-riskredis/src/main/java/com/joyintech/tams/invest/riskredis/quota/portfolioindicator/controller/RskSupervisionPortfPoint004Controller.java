@@ -7,6 +7,7 @@ import com.google.json.JsonSanitizer;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.dto.RskPortfolioIndicator002Dto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -151,8 +152,7 @@ public class RskSupervisionPortfPoint004Controller extends BaseController {
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskPortfolioIndicator002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody RskPortfolioIndicator002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

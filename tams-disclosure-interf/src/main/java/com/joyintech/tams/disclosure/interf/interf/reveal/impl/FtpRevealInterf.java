@@ -151,8 +151,7 @@ public class FtpRevealInterf implements RevealInterf{
 					}
 			}
 		} catch (NumberFormatException | IOException e1) {
-			logger.error("连接",e1);
-			e1.printStackTrace();
+			logger.error("连接",e1);			
 		}
 		
 		

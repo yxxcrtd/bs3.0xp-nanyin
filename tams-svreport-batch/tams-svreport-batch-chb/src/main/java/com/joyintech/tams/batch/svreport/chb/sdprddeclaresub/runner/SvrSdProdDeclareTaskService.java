@@ -92,12 +92,7 @@ public class SvrSdProdDeclareTaskService extends BatchBaseService {
             mainService.SendDurationRegMsg(ToolsUtil.getCurrentTime(batchExecuteInfo.getExecuteDate())
             		                             ,prodListex);
             result.setStatus(BatchStatus.COMPLETED);
-        }
-        catch (BatchException e) {
-            logger.error("产品申报登记信息报送批处理Error",e);
-        	throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 			logger.info("批处理异常" + e.getMessage());
         	logger.error("批处理异常Error",e);
         }finally{

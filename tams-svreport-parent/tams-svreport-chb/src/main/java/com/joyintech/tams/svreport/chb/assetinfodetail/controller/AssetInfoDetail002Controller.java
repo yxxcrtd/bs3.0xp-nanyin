@@ -112,7 +112,7 @@ public class AssetInfoDetail002Controller extends BaseController {
     }
     @ResponseBody
     @RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-    public AjaxResult doAdd(@RequestBody AssetInfoDetailDto dto) throws Exception {
+    public AjaxResult doAdd(@RequestBody AssetInfoDetailDto dto) {
         assetInfoDetailMService.doSave(dto);
         return new AjaxResult("保存成功");
     }

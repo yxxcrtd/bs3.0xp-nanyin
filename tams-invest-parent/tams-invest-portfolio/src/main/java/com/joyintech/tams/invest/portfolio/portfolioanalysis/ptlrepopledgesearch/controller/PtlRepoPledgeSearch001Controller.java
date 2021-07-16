@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -137,8 +138,7 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlRepoPledgeSearchDto> selectAll()
-            throws Exception {
+    public Page<PtlRepoPledgeSearchDto> selectAll(){
         Map<String,Object> map = RequestUtil.getPageParam();
         return ptlRepoPledgeSearch001Service.selectForPage(map);
     }
@@ -154,8 +154,7 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
 
     @RequestMapping("exportCheck")
     @ResponseBody
-    public AjaxResult exportCheck()
-            throws Exception {
+    public AjaxResult exportCheck(){
         Page<PtlRepoPledgeSearchDto> result = ptlRepoPledgeSearch001Service.selectForPage(RequestUtil.getPageParam());
 //        if (result.getRoot().isEmpty()) {
 //            return new AjaxResult(getMessage("PTL_COM_E_0012"), MessageType.错误消息);
@@ -164,8 +163,7 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
     }
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         if(datas==null) {
             return ptlRepoPledgeSearch001Service.export(this.getPageId(),

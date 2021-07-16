@@ -58,7 +58,7 @@ public class FlowRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/queryIndexByType")
-    public List<FlowRiskSceneManage002Dto> queryIndexByType(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FlowRiskSceneManage002Dto> queryIndexByType(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManage002Service.queryIndexByType(param);
     }
     /**
@@ -81,7 +81,7 @@ public class FlowRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/queryScentNameCount")
-    public List<FlowRiskSceneManage002Dto> queryScentNameCount(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FlowRiskSceneManage002Dto> queryScentNameCount(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManage002Service.queryScentNameCount(param);
     }
     /**
@@ -95,7 +95,7 @@ public class FlowRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/querySceneById")
-    public FlowRiskSceneManage002Dto querySceneById(@RequestBody Map<String, Object> param) throws Exception {
+    public FlowRiskSceneManage002Dto querySceneById(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManage002Service.querySceneById(param);
     }
     /**
@@ -109,7 +109,7 @@ public class FlowRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/queryFtrBySceId")
-    public List<FlowRiskSceneManage002Dto> queryFtrBySceId(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FlowRiskSceneManage002Dto> queryFtrBySceId(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManage002Service.queryFtrBySceId(param);
     }
     
@@ -123,7 +123,7 @@ public class FlowRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/queryFlowSttFactor")
-    public List<FlowRiskSceneManage002Dto> queryFlowSttFactor(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FlowRiskSceneManage002Dto> queryFlowSttFactor(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManage002Service.queryFlowSttFactor(param);
     }
     /**
@@ -137,7 +137,7 @@ public class FlowRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/queryFlowSttFactor2")
-    public List<FlowRiskSceneManage002Dto> queryFlowSttFactor2(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FlowRiskSceneManage002Dto> queryFlowSttFactor2(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManage002Service.queryFlowSttFactor2(param);
     }
     /**
@@ -150,7 +150,7 @@ public class FlowRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/selectSceneTmpl")
-    public FlowRiskSceneManage002Dto selectSceneTmpl(@RequestBody Map<String, Object> param) throws Exception {
+    public FlowRiskSceneManage002Dto selectSceneTmpl(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManage002Service.selectSceneTmpl(param);
     }
     /**
@@ -163,7 +163,7 @@ public class FlowRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/selectTmplIndByType")
-    public List<FlowRiskSceneManage002Dto> selectTmplIndByType(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FlowRiskSceneManage002Dto> selectTmplIndByType(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManage002Service.selectTmplIndByType(param);
     }
     /**
@@ -177,7 +177,7 @@ public class FlowRiskSceneManage002Controller {
      * @since 1.0
      */
     @PostMapping("/queryNetOutflow")
-    public SttSceneFtrtips queryNetOutflow(@RequestBody Map<String, Object> param) throws Exception {
+    public SttSceneFtrtips queryNetOutflow(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManage002Service.queryNetOutflow(param);
     }
     
@@ -193,7 +193,7 @@ public class FlowRiskSceneManage002Controller {
     @DTXTransaction
     @DataSource(DataSourceType.STRESSTEST)
     @PostMapping("insert")
-    public void insert(@RequestBody FlowRiskSceneManage002Dto dto) throws Exception {
+    public void insert(@RequestBody FlowRiskSceneManage002Dto dto) {
         flowRiskSceneManage002Service.insert(dto);
     }
     
@@ -209,7 +209,7 @@ public class FlowRiskSceneManage002Controller {
     @DTXTransaction
     @DataSource(DataSourceType.STRESSTEST)
     @PostMapping("update")
-    public void update(@RequestBody FlowRiskSceneManage002Dto dto) throws Exception {
+    public void update(@RequestBody FlowRiskSceneManage002Dto dto) {
         flowRiskSceneManage002Service.update(dto);
     }
     

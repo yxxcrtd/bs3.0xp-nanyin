@@ -55,7 +55,7 @@ public class ValValuationStatementQuery001Service extends CommonExportService<Va
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValValuationStatementQuery001Dto> findPage(int page ,int length,Map<String, Object> params) throws Exception {
+    public Page<ValValuationStatementQuery001Dto> findPage(int page ,int length,Map<String, Object> params) {
     	return super.queryForPage(page,length,()-> mapper.queryPageList(params));
     }
     

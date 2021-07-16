@@ -7,6 +7,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.dto.RskPortfolioIndicator002Dto;
 import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.service.RskSupervisionPortfPoint001Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,7 +78,7 @@ public class RskSupervisionPortfPointMainController extends BaseController {
         setSelectOptionToModel(model, DICT_CODES);
         SelectDto selectZhccDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.组合层次, null);
         List<SelectOptionDto> optionZhcc = selectZhccDto.getOptions();
-        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+        Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
         model.addAttribute("mapZhcc",mapZhcc);
         return super.init(model);
     }
@@ -96,7 +97,7 @@ public class RskSupervisionPortfPointMainController extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskPortfolioIndicator002Dto> selectTableIndAll()
-        throws Exception {
+         {
         return rskSupervisionPortfPoint001Service.selectTableIndForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -111,7 +112,7 @@ public class RskSupervisionPortfPointMainController extends BaseController {
 	@ResponseBody
     @RequestMapping("/getTreeIndicatorByIndType")
     public List<TreeNode> getTreeIndicatorByIndType(@RequestParam(name="type", required=false) String type)
-        throws Exception {
+         {
         return rskSupervisionPortfPoint001Service.getTreeIndicatorByIndType(type);
         
     }
@@ -126,8 +127,7 @@ public class RskSupervisionPortfPointMainController extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) RskPortfolioIndicator002Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) RskPortfolioIndicator002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -159,7 +159,7 @@ public class RskSupervisionPortfPointMainController extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return rskSupervisionPortfPoint001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

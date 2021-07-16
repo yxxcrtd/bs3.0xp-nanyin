@@ -1,10 +1,6 @@
 package com.joyintech.tams.svreport.pbc.common.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +17,15 @@ import net.sf.jxls.transformer.XLSTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.processing.FilerException;
+
 public class PbcExcelUtil {
 	/**
 	 * 日志
 	 */
 	private static Logger logger = LoggerFactory.getLogger(PbcExcelUtil.class);
 
-	public static File createFile(Map<Object, Object> data, String exceltemplate, String flieName) {
+	public static File createFile(Map<Object, Object> data, String exceltemplate, String flieName) throws FilerException {
 		File depositfile = null;
 		InputStream fis = null;
 		FileOutputStream fos = null;
@@ -82,7 +80,7 @@ public class PbcExcelUtil {
 				destFile.delete();
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new FilerException(e.getMessage());
 		}
 		finally{
             try {
@@ -156,7 +154,7 @@ public class PbcExcelUtil {
      * @param wb          Excel对象 
      * @throws Exception 
      */ 
-    public static void fileWrite(File targetFile,HSSFWorkbook wb) throws Exception{
+    public static void fileWrite(File targetFile,HSSFWorkbook wb) throws IOException {
         FileOutputStream fileOut =null;
         try{
 			fileOut = new FileOutputStream(targetFile);

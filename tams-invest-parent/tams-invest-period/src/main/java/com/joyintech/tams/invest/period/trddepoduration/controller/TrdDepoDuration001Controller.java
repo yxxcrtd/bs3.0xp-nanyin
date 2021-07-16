@@ -134,7 +134,6 @@ public class TrdDepoDuration001Controller extends BaseController{
      * 导出
      *
      * @return 文件流
-     * @throws Exception 异常
      * @since 1.0
      */
     /* add by zhangpuyu 2019/12/9 start */

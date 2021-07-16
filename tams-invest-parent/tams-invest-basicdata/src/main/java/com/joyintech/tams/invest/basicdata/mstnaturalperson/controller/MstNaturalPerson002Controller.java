@@ -110,7 +110,7 @@ public class MstNaturalPerson002Controller extends BaseController {
      * @param dto 保存参数
      * @param br 保存参数
      * @return 保存返回信息
-     * @throws Exception 抛出异常
+     * @throws WorkFlowException 抛出异常
      * @see
      * @since 1.0
      */

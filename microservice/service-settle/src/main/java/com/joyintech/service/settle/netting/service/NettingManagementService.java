@@ -35,7 +35,7 @@ public class NettingManagementService extends BaseService<NettingManagementDto> 
 
 
     public Page<NettingManagementDto> findNettingTableData(int page, int length, Map<String, Object> param)
-            throws Exception {
+    {
         setParams(param);
         return queryForPage(page, length, () -> nettingManagementMapper.findNettingTableData(param));
     }

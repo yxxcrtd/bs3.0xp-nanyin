@@ -59,7 +59,6 @@ public class TaxScheme003Service extends CommonExportService<TaxScheme003Dto> im
 	/**
      * 增值税则表check(去除本金收益特征不能为空的校验后添加本方法)
      * @return
-     * @throws Exception
      */
 	public List<TaxScheme003Dto> checkVatTax(Map<String, Object> parameters)  {
 	    return restTemplate.postForList(

@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.report.submitmaintenance.mstmarketcalendarinfo.service;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,8 +112,7 @@ public class SvrMstMarketCalendarInfoMService extends CommonExportService<SvrMst
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public List<ExcelValidDto> importData(String flieName)
-        throws Exception {
+    public List<ExcelValidDto> importData(String flieName) throws FileNotFoundException, ParseException {
         // 检查文件名是否为空
         if (StringUtil.isNotEmpty(flieName)) {
             // 检查文件名是否包含市场日历信息导入

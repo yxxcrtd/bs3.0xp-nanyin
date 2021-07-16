@@ -48,7 +48,7 @@ public class FlowRiskStressTestView001Controller{
 	
 	  @PostMapping("findPage/{page}/{length}")
 	  public Page<FlowRiskStressTestView001Dto> selectAll(@RequestBody Map<String, Object> param,
-	            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+	            @PathVariable("page") int page, @PathVariable("length") int length) {
 		 Map<String, Object> param1=param;
 		 Object st=param1.get("testId");
 		 Object sce=param1.get("sceneId");
@@ -76,7 +76,7 @@ public class FlowRiskStressTestView001Controller{
 		 
 	   }
 	 @PostMapping("selectTestListMap")
-	 public List<SelectOptionDto> selectTestListMap(@RequestBody Map<String, Object> param) throws Exception {
+	 public List<SelectOptionDto> selectTestListMap(@RequestBody Map<String, Object> param) {
     	     //wangyang1 压力测试二级法人改造 start
              if (MultilevelDataAuthorityUtil.isEnabled()) {
 //               param.put("institution", MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));   
@@ -87,14 +87,14 @@ public class FlowRiskStressTestView001Controller{
 	        return FlowRiskStressTestView001Service.selectTestListMap(param);
 	    }
 	 @PostMapping("initPage")
-	    public List<FlowRiskStressTestView001Dto> initPage(@RequestBody Map<String, Object> param) throws Exception {
+	    public List<FlowRiskStressTestView001Dto> initPage(@RequestBody Map<String, Object> param) {
 	       
 	        return FlowRiskStressTestView001Service.initPage(param);
 	    }
 	 
 	 
 	     @PostMapping("fuzzySelectScene")
-	     public List<SelectOptionDto> fuzzySelectScene(@RequestBody Map<String, Object> param) throws Exception {
+	     public List<SelectOptionDto> fuzzySelectScene(@RequestBody Map<String, Object> param) {
     	        //CommonUtil.hasChinese(fuzzyText)
     	        List<SelectOptionDto> resultList = new ArrayList<>();
     	        List<SttScene> dataList = null;

@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.assets.penaltyinterest.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class ValPenaltyInterestQuery001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValPenaltyInterestQuery001Dto> findPage()
-        throws Exception {
+         {
         return valPenaltyInterestQuery001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -105,8 +106,7 @@ public class ValPenaltyInterestQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> paraMap = RequestUtil.getPageParam();
         List<ValPenaltyInterestQuery001Dto> listdto;

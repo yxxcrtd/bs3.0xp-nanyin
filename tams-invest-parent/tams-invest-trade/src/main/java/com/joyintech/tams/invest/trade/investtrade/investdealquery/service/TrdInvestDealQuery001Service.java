@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.investtrade.investdealquery.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.file.SafelyFile;
@@ -578,7 +579,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		}
 		catch (Exception e) {
 			logger.info(exceltemplate + "生成失败！");
-			throw new RuntimeException(e);
+			throw new BusinessException(e);
 		}finally {
 			if(os != null){
 				try {

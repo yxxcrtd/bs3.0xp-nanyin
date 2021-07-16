@@ -191,12 +191,10 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
      *
      * @param map 画面参数
      * @return 利息明细信息
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
-    public List<ReduceInfoDto> findIntDetailInfo(Map<String, Object> map)
-        throws Exception {
+    public List<ReduceInfoDto> findIntDetailInfo(Map<String, Object> map){
         /*
          * Page<FinProductPayInt002IntDetailDto> resultPage = new Page<>(); if (!WorkFlowUtil.isNotFromToDoList() &&
          * StringUtil.isNotBlank(inputDto.getWorkflowId())) { FinProductPayInt003Dto dataDto = this.getBussinessEntityByWorkflowId( inputDto.getWorkflowId());
@@ -218,10 +216,8 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
      *
      * @param inputDto 参数
      * @return 下拉框列表
-     * @throws Exception Exception
      */
-    public FinProductPayInt002Dto calcCusProfit(FinProductPayInt002Dto inputDto)
-        throws Exception {
+    public FinProductPayInt002Dto calcCusProfit(FinProductPayInt002Dto inputDto){
         FinProductPayInt002Dto resultDto = new FinProductPayInt002Dto();
         if (inputDto == null || StringUtil.isEmptyList(inputDto.getIntDetailDataList())) {
             return resultDto;

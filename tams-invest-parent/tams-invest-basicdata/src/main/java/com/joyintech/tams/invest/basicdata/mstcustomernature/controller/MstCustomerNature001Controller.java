@@ -63,7 +63,6 @@ public class MstCustomerNature001Controller extends BaseController {
      * <一句话功能简述> 
      * <功能详细描述>
      * @return list
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -79,7 +78,6 @@ public class MstCustomerNature001Controller extends BaseController {
     /**
      * 客服性质管理查询按钮的查询方法
      * @return Page<MstCustomerNatureDto>
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -94,7 +92,6 @@ public class MstCustomerNature001Controller extends BaseController {
     /**
      * 导出
      * @return ResponseEntity
-     * @throws Exception 异常
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {

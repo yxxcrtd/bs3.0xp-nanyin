@@ -132,7 +132,7 @@ public class MstCaptialAccount002Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */

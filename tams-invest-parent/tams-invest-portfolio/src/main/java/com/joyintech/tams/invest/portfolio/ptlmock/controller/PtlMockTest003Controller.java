@@ -72,14 +72,12 @@ public class PtlMockTest003Controller extends BaseController {
     /**
      * 分页查询
      * @return Page<MstInterestRateQuotationInfoDto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlMockTest003Dto> findPage()
-        throws Exception {
+    public Page<PtlMockTest003Dto> findPage(){
         return ptlMockTest003Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }

@@ -3712,7 +3712,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         }   
         catch (SQLException es)   
         {   
-            es.printStackTrace();
+        	logger.error(es.getMessage(),es);
           }   
              
           return null;   

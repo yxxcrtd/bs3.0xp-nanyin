@@ -217,9 +217,8 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
             }
 
             fileList.add(this.makeSingleFile(wb, reportConfig, (String)null, fileType, contents, new LongAdder(), 0L, count, index, sum));
-        } catch (Exception var24) {
-            var24.printStackTrace();
-//            this.logger.error(var24.getMessage());
+        } catch (Exception var24) {          
+           logger.error(var24.getMessage(),var24);
         } finally {
             try {
                 if (null != wb) {

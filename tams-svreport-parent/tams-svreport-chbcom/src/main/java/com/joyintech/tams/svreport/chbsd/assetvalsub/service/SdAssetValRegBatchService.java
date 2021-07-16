@@ -53,7 +53,7 @@ public class SdAssetValRegBatchService{
     @Autowired
 	private ChbAstValueRegist001Service chbAstValueRegist001Service;
 	
-	public void sdAssetValRegData(Date batchDate) throws Exception {
+	public void sdAssetValRegData(Date batchDate)  {
 		//1、报送数据检索,取得 List
 		logger.info("【资产估值信息登记】未报送数据检索开始------" +  df.format(new Date()));
 		List<ChbAstValueRegist001Dto> list = sdAssetValSvrMapper.selcteUnRegData(DateUtil.format(batchDate));
@@ -108,7 +108,7 @@ public class SdAssetValRegBatchService{
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbAstValueSubDto> dataList, SendDataCheckType sendDataCheckType) throws Exception{
+	public void sendBatchCommon(List<ChbAstValueSubDto> dataList, SendDataCheckType sendDataCheckType) {
 		int dataCountPerTime = Integer.valueOf(
 				CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST));
 

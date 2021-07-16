@@ -63,7 +63,6 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * 
      * @param pageParam
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -84,12 +83,11 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * 设置页面传回参数
      * 
      * @param pageParam
-     * @throws Exception
      * @see
      * @since 1.0
      */
     public void changeMapData(Map<String, Object> pageParam)
-        throws Exception {
+         {
         String reportTermType = (String)pageParam.get("reportTermType");
         String valDate = DateUtil.format(analyseDate(pageParam), DateUtil.DEFAULT_DATE_FORMAT_EN);
         int thisYear = DateUtil.getYear(valDate);
@@ -311,7 +309,7 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * @since 1.0
      */
     public ResponseEntity<byte[]> exportExcel(Map<String, Object> params)
-        throws Exception {
+         {
         ExportFileDto exportFileDto = createExcel(params);
         File file = new File(exportFileDto.getFilePath());
         return ExportUtil.export(exportFileDto.getFileName(), file, true);
@@ -322,7 +320,6 @@ public class OwnerEquityChange001Service extends CommonExportService<OwnerEquity
      * 
      * @param params
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */

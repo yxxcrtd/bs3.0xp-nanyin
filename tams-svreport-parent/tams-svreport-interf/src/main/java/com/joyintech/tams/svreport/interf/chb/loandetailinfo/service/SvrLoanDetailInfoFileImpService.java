@@ -29,6 +29,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -266,7 +267,7 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
                             if (value != null&&""!=value) {
                                 field.set(chbLoanDetailInfo, DateUtil.parse(value));
                             }
-                        } catch ( IllegalAccessException e) {
+                        } catch (IllegalAccessException e) {
                             logger.error(e.getMessage(),e);
                             return entities;
                         }

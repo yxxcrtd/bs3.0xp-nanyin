@@ -343,7 +343,7 @@ public class CommonAutoCouponService extends BaseService{
                     finProduct.setCapiIncomeFeature(DictCodeList.产品收益标识_保证收益.getValue());
                 }*/
 //                if(null!=interfPayhsrcsecinfo && null!=interfPayhsrcsecinfo.getIssuetype()){
-//                    if(interfPayhsrcsecinfo.getIssuetype().toString().startsWith("43901")){
+//                    if(interfPayhsrcsecinfo.getIssuetype().startsWith("43901")){
 //                        finProduct.setIssueType(BussinessDictCodeList.发行方式_公开发行.getValue()); 
 //                    }else{
 //                        finProduct.setIssueType(BussinessDictCodeList.发行方式_非公开发行.getValue());

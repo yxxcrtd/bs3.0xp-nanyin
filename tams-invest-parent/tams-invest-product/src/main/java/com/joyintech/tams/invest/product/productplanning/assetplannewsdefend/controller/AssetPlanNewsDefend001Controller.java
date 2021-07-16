@@ -15,6 +15,7 @@ import com.joyintech.tams.invest.product.productplanning.assetplannewsdefend.ser
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -67,8 +68,7 @@ public class AssetPlanNewsDefend001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/delete")
-    public AjaxResult deleteByPrimaryKey(@RequestBody AssetPlanNewsDefend001Dto dto)
-            throws Exception{
+    public AjaxResult deleteByPrimaryKey(@RequestBody AssetPlanNewsDefend001Dto dto) throws WorkFlowException {
 
         dto.setOperateType(GlobalConstant.OPERATE_TYPE_DELETE);
         ProcessParameter<AssetPlanNewsDefend002Dto> processParameter = new ProcessParameter<>();
@@ -99,8 +99,7 @@ public class AssetPlanNewsDefend001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return assetPlanNewsDefend001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

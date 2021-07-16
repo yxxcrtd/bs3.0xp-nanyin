@@ -83,7 +83,7 @@ public class FinResultsCovering001Service extends CommonExportService<FinResults
      * @throws Exception Exception
      */
     public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> param)
-        throws Exception {
+    {
         // 收益型产品 下拉选项过滤净值型产品 lijun add SHBS-518
         // param.put("PROFIT_TYPE", DictCodeList.收益类型_收益型.getValue());
         if(!StringUtil.isNotEmpty(param.get("initValue"))){

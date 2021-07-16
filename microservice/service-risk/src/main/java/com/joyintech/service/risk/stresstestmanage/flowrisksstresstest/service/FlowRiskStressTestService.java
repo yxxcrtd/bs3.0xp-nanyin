@@ -365,7 +365,7 @@ public class FlowRiskStressTestService extends BaseService<FlowRiskStressTest001
         	catch(Exception e) {
         		map.put("status", DictCodeListRsk.压力测试_执行状态_异常.getValue());
         		flowRiskStressTestMapper.updateStressStatus(map);
-        		throw e;
+                throw new IllegalArgumentException("压力测试执行状态异常");
         	}
         }
         else {
@@ -375,7 +375,7 @@ public class FlowRiskStressTestService extends BaseService<FlowRiskStressTest001
         	catch(Exception e) {
         		map.put("status", DictCodeListRsk.压力测试_执行状态_异常.getValue());
         		flowRiskStressTestMapper.updateStressStatus(map);
-        		throw e;
+                throw new IllegalArgumentException("压力测试执行状态异常");
         	}
         }
         DynamicDataSourceHolder.clearDataSource();

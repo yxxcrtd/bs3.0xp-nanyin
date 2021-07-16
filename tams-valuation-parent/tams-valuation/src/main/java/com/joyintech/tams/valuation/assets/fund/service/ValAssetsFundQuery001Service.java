@@ -45,7 +45,7 @@ public class ValAssetsFundQuery001Service extends CommonExportService<ValAssetsF
      * @since 1.0
      */
     public Page<ValAssetsFundQuery001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+         {
         params.put("finprodType", "F06");// 仅查询基金型资产信息
 //        return super.queryForPage(() -> valAssetsFundQuery001Mapper.selectList(params));
         return restTemplate.postForPage(
@@ -63,7 +63,7 @@ public class ValAssetsFundQuery001Service extends CommonExportService<ValAssetsF
      * @since 1.0
      */
     public List<ValAssetsFundQuery001Dto> findAll(Map<String, Object> params)
-        throws Exception {
+         {
         params.put("finprodType", "F06");// 仅查询基金型资产信息
 //        return valAssetsFundQuery001Mapper.selectList(params);
         return restTemplate.postForList(

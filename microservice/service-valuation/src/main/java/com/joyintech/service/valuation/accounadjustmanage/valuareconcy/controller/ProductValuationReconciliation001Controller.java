@@ -121,7 +121,7 @@ public class ProductValuationReconciliation001Controller extends BaseController 
     @PostMapping("/findPage/{page}/{length}")
     public Page<ProductValuationReconciliation001Dto> findPage(@RequestBody Map<String, Object> params,
                                                                @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
 
         return  productValuationReconciliation001Service.findPage(page,length,params);
         // 获取分页数据

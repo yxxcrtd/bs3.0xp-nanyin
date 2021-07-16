@@ -72,7 +72,7 @@ public class MarketRiskStressTest002Service extends BaseService<MarketRiskStress
      * @throws Exception
      */
     public Page<MarketRiskStressTest002Dto> selectProdForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
     	
     	SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();
@@ -123,7 +123,7 @@ public class MarketRiskStressTest002Service extends BaseService<MarketRiskStress
      * @throws Exception
      */
     public Page<MarketRiskStressTest002Dto> selectFacForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
     	
     	SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();

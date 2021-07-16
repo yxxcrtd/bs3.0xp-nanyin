@@ -69,7 +69,6 @@ public class MstCaptialAccount001Controller extends BaseController{
      * 页面查询，表格分页
      * <功能详细描述>
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -85,7 +84,6 @@ public class MstCaptialAccount001Controller extends BaseController{
      * 联想文本框
      * <功能详细描述>
      * @return List<SuggestDto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -117,7 +115,6 @@ public class MstCaptialAccount001Controller extends BaseController{
      * @param dto 业务实体
      * @param br br
      * @return AjaxResult
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
@@ -149,7 +146,6 @@ public class MstCaptialAccount001Controller extends BaseController{
      * <一句话功能简述>
      * <功能详细描述>
      * @return ResponseEntity
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */

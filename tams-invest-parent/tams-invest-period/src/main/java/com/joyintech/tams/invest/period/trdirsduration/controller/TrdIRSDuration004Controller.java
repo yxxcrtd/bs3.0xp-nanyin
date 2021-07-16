@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.period.trdirsduration.service.TrdIRSDuration004
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -245,7 +246,7 @@ public class TrdIRSDuration004Controller extends BaseController {
     @RequestMapping("save")
     public AjaxResult save(
             @RequestBody @Validated({ ValidateGroupEdit.class }) TrdIRSDuration004ProcessDto dto,
-            BindingResult br) throws Exception {
+            BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

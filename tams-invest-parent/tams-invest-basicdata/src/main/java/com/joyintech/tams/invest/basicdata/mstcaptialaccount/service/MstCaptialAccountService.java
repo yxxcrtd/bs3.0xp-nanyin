@@ -53,7 +53,6 @@ public class MstCaptialAccountService extends CommonExportService<MstCaptialAcco
      *
      * @param pageParam 查询方法
      * @return Page类
-     * @throws Exception 异常信息
      */
     public Page<MstCaptialAccountDto> selectForPage(Map<String, Object> pageParam){
         return restTemplate.postForPage(

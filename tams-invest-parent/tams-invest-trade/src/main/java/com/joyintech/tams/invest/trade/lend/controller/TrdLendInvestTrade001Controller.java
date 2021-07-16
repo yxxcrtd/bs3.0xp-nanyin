@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade002Service
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +85,7 @@ public class TrdLendInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<TrdLendInvestTradeDto> findPage() throws Exception {
+    public Page<TrdLendInvestTradeDto> findPage() {
         return trdLendInvestTrade001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -98,7 +99,7 @@ public class TrdLendInvestTrade001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return trdLendInvestTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 
@@ -139,8 +140,7 @@ public class TrdLendInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdLendInvestTradeDto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdLendInvestTradeDto inputDto) throws WorkFlowException {
         if(StringUtil.isNotEmpty(inputDto.getTradeId())){
             inputDto = trdLendInvestTrade002Service.getTrdLendInvestTradeDto(inputDto.getTradeId());
         }

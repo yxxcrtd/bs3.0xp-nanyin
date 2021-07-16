@@ -157,7 +157,7 @@ public class RskValRelateImport001Dto extends RskValtblPrtImpMap implements Proc
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.估值过滤器, this.getFilterId());
     }
 
-    public String getSubjectCodeColLetter() throws Exception {
+    public String getSubjectCodeColLetter() {
         if(null!=this.getSubjectCodeCol()){
             return ExcelUtilForRisk.indexToColumn(Integer.parseInt(String.valueOf(this.getSubjectCodeCol())));
         }

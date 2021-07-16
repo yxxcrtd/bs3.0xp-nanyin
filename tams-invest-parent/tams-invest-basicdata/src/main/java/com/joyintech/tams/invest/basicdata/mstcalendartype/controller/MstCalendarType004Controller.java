@@ -89,7 +89,6 @@ public class MstCalendarType004Controller extends BaseController {
      * 查询交易日历名称明细
      * 
      * @return 查询结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -104,7 +103,6 @@ public class MstCalendarType004Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

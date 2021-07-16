@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.trade.forwex.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -413,8 +415,7 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdForwexInvestTradeDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdForwexInvestTradeDto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -468,7 +469,7 @@ public class TrdForwexInvestTrade002Controller extends BaseController {
     @ResponseBody
     @PostMapping("autosave")
     public String autosave(@RequestBody TrdForwexInvestTradeDto dto, BindingResult br)
-        throws Exception {
+         {
         if (br.hasErrors()) {
             return br.toString();
         }

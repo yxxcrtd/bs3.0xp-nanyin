@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.risk.valtblimport.service;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -490,7 +491,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
      * @see
      * @since 1.0
      */
-   public List<RskValtblAssetSubDto> viewValTable(RskValTableImportParamDto dto) throws Exception{
+   public List<RskValtblAssetSubDto> viewValTable(RskValTableImportParamDto dto) throws ClassNotFoundException, FileNotFoundException, InstantiationException, IllegalAccessException {
        Map<String, Object> paramMap = new HashMap<String, Object>();
        List<RskValtblAssetSubDto> valList = new LinkedList<RskValtblAssetSubDto>();
        List<RskValtblAssetSubDto> valHand_oneList = new LinkedList<RskValtblAssetSubDto>();
@@ -1232,7 +1233,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @see
     * @since 1.0
     */
-	private List<List<String>> readExcelUtil(RskValTableImportParamDto dto) throws Exception {
+	private List<List<String>> readExcelUtil(RskValTableImportParamDto dto) throws FileNotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 		List<List<String>> resultList = new ArrayList<List<String>>();
 		Workbook wb = ExcelUtil.loadWorkbook(dto.getValTableFileName(), null, null);
 		// ---modify by 裴家俊 20190514---start---------
@@ -1276,7 +1277,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @since 1.0
     */
    private List<List<String>> readToList(int sheetIndex, int skipRows, int titleRow,Workbook wb)
-       throws Exception {
+        {
        List<List<String>> ls = new ArrayList<List<String>>();
        if (null != wb) {
            Sheet sh = wb.getSheetAt(sheetIndex);
@@ -1381,7 +1382,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * @since 1.0
     */
    public Page<SelectOptionDto> getGroupIdInfo(Map<String, Object> param)
-       throws Exception {
+         {
        param.put("loginUserName", SecurityUtil.getLoginUser().getUserName());
        param.put("portfolioType", DictCodeListExt1.组合类型_委外组合.getValue());
        return restTemplate.postForPage(

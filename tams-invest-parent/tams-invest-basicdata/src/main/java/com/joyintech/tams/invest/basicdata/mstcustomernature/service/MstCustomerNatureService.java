@@ -92,7 +92,6 @@ public class MstCustomerNatureService extends CommonExportService<MstCustomerNat
      * 客服性质配置查询按钮的查询方法 <一句话功能简述> <功能详细描述>
      * @param pageParam map
      * @return Page
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -106,7 +105,6 @@ public class MstCustomerNatureService extends CommonExportService<MstCustomerNat
      * 客服性质管理查询按钮的查询方法
      * @param pageParam map
      * @return Page
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

@@ -111,7 +111,7 @@ public class MstSharePrice002Controller extends BaseController{
      * 保存提交
      * @param dto MstSharePriceDto
      * @return AjaxResult
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
@@ -157,7 +157,6 @@ public class MstSharePrice002Controller extends BaseController{
     /**
      * 通过id获取最近指定日期的股票行情信息   
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/getLatelyShareById")

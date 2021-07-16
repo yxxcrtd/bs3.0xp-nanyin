@@ -65,7 +65,7 @@ public class TrdPlanNetInvestTradeController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdPlanNetInvestTradeDto> queryForPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdPlanNetInvestTradeService.selectForPage(page, length, param);
     }
     

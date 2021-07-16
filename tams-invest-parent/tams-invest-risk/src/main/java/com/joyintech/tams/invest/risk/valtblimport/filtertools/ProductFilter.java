@@ -22,7 +22,7 @@ public class ProductFilter extends AbstractFilter {
 	private static final String  COL_UNIT_T = "今日单位净值：";
 	
 	@Override
-	public Workbook doFilter(Workbook workbook, int sheetIndex) throws Exception {
+	public Workbook doFilter(Workbook workbook, int sheetIndex) {
 		org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(sheetIndex);		
 		Integer rowNum_src = sheet.getLastRowNum();
 		String cost = null; String smv=null;
