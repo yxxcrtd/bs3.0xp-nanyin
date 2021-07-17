@@ -276,9 +276,10 @@
                 query('#fpriceAmt').attr('disabled', false);
 
                 query('#matureYield').attr('disabled', false);
-
+                
                 // 行权收益率
-                doChange.exerYield_setDisabled(false);
+                query('#exerYield').attr('disabled', false);
+                
             }
         }
 
