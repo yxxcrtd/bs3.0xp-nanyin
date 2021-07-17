@@ -1,16 +1,28 @@
 (function () {
+    function query(ele){
+        return $("#EtribBondInfo003_bodydiv " + ele);
+    }
+    
     // 风险试算结果
     var riskResultdata;
     var initFlag = false;
     var cluflag;
     var businessId;
-    function query(ele){
-        return $("#EtribBondInfo003_bodydiv " + ele);
-    }
+
+    // 封装js方法，包含change事件、disabled赋值
+    let doChange = {
+        // 选中组合事件
+        portfolioChange : function (value, data){ 
+            // 多组合单行添加 显示同行持仓信息
+            portfolioSingleChange(value, data);
+            // 左边持仓现金信息联动
+            leftHqReload();
+        },
+        // 刷新修改页面卷面总额
+        refreshTradAmt : refreshTradAmt
+    }; 
     
-    let Funcs_This = {};
-    
-    Funcs_This.priceModelChange = function(){
+    doChange.priceModelChange = function(){
         // 市价指令时
         if (query('#priceModel').val() == PRICEMODEL_03) {
             // 净价置灰不可填
@@ -36,14 +48,14 @@
 
             // 行权收益率
             // query('#exerYield').attr('disabled', false);
-            Funcs_This.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
+            doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
         }
     }
-    Funcs_This.psChange = function (){
+    doChange.psChange = function (){
         // 交易对手change
         if (query("#ps").val() === PS_T01) {
             if (query("#isRight").val() !== N) {
-                Funcs_This.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
+                doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
             }
             query("#matureYield").removeAttr("disabled");
 
@@ -52,7 +64,7 @@
             query("#div_counterId2").css("display","none");
         } else if (query("#ps").val() === PS_T02) {
             if (query("#isRight").val() !== N) {
-                Funcs_This.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
+                doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
             }
             query("#matureYield").attr("disabled", true);
             query("#matureYield").val("");
@@ -61,7 +73,7 @@
             query("#div_counterId1").css("display","block");
             query("#div_counterId2").css("display","none");
         } else if (query("#ps").val() == PS_T03) {
-            Funcs_This.exerYield_setDisabled(true);
+            doChange.exerYield_setDisabled(true);
 
             query("#matureYield").attr("disabled", true);
             query("#matureYield").val("");
@@ -71,8 +83,8 @@
             query("#div_counterId2").css("display","block");
         }
     }
-    
-    Funcs_This.exerYield_setDisabled = function(isDisabled, isRight, priceModel){
+
+    doChange.exerYield_setDisabled = function(isDisabled, isRight, priceModel){
         // 行权收益率可用判断通用设置
         let exerYield = query('#exerYield');
         if(isDisabled){
@@ -87,7 +99,7 @@
         }
         return exerYield;
     };
-    Funcs_This.finprodIdChange = function(){
+    doChange.finprodIdChange = function(){
         var ps = query('#ps').val();
         var ccy = query('#ccy').val();
         var portfolioId = query('#portfolioId').val();
@@ -112,7 +124,7 @@
             //$('#tradeMarket').attr('disabled', true);
             query('#isRight').val(data.isRight).trigger('change');
             if(data.isRight === N){
-                Funcs_This.exerYield_setDisabled(true);
+                doChange.exerYield_setDisabled(true);
             }
             query('#calendarId').val(data.calendarId).trigger('change');
             query('#assetType1').val(data.assetType1).trigger('change');
@@ -159,7 +171,7 @@
             query('#exerYield').val('').trigger('change').trigger('blur');
             query('#matureYield').val('').trigger('change').trigger('blur');
 
-            Funcs_This.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val()).attr("required", true);;
+            doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val()).attr("required", true);;
         }
 
         //左下行情信息联动
@@ -174,7 +186,7 @@
         // 画星星
         star();
     }
-    
+
     /**
      * 画星星
      */
@@ -273,21 +285,21 @@
                 url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true')
             }
         }
-       /* ,{
-             组合代码 
-            field: 'portfolioId', width: 100, title: 'EtribBondInfo003.portfolioIdChild', edit: true, sortable: false,
-            editOption: {
-                type: 'select',
-                parentIds:'parentPortfolioId',
-                id: 'portfolioId',
-                multiple: false,
-                showField: 'text',
-                searchable: true,
-                url: JoyinUtil.getRealPath('/business/common/CommonSelect/qryPortfolioIdChildByRequestParam')
-            }
-        }*/
+        /* ,{
+              组合代码 
+             field: 'portfolioId', width: 100, title: 'EtribBondInfo003.portfolioIdChild', edit: true, sortable: false,
+             editOption: {
+                 type: 'select',
+                 parentIds:'parentPortfolioId',
+                 id: 'portfolioId',
+                 multiple: false,
+                 showField: 'text',
+                 searchable: true,
+                 url: JoyinUtil.getRealPath('/business/common/CommonSelect/qryPortfolioIdChildByRequestParam')
+             }
+         }*/
         , {
-        /*劵面总额*/
+            /*劵面总额*/
             field: 'entrustNum',
             width: 50,
             title: 'EtribBondInfo003.entrustAmt',
@@ -329,7 +341,7 @@
             sortable: false,
             type: 'number',
             digit: 2,
-            visible: (query("#chlFinprodId").val() == null || query("#chlFinprodId").val() == '')?true:false
+            visible: true
         }
         , {
             field: 'secManageAvailablePosition1',
@@ -338,19 +350,19 @@
             sortable: false,
             type: 'number',
             digit: 2,
-            visible: (query("#chlFinprodId").val() == null || query("#chlFinprodId").val() == '')?true:false
+            visible: true
         }
-        , {
-            field: 'channelAvailableCash',
-            width: 40,
-            title: 'EtribBondInfo003.channelAvailableCash', sortable: false, type: 'number', digit: 2,
-            visible: (query("#chlFinprodId").val() == null || query("#chlFinprodId").val() == '')?false:true
-        }
-        , {
-            field: 'channelAvailableCash1', width: 100, title: 'EtribBondInfo003.channelAvailableCash1'
-            , sortable: false, type: 'number', digit: 2,
-            visible: (query("#chlFinprodId").val() == null || query("#chlFinprodId").val() == '')?false:true
-        }
+        // , {
+        //     field: 'channelAvailableCash',
+        //     width: 40,
+        //     title: 'EtribBondInfo003.channelAvailableCash', sortable: false, type: 'number', digit: 2,
+        //     visible: (query("#chlFinprodId").val() == null || query("#chlFinprodId").val() == '')?false:true
+        // }
+        // , {
+        //     field: 'channelAvailableCash1', width: 100, title: 'EtribBondInfo003.channelAvailableCash1'
+        //     , sortable: false, type: 'number', digit: 2,
+        //     visible: (query("#chlFinprodId").val() == null || query("#chlFinprodId").val() == '')?false:true
+        // }
 
         , {
             field: 'assetPositionEntrustAmt',
@@ -370,6 +382,7 @@
         }
         , {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
     ]
+
     var table = query("#bussCombDistribtTable").joyintable({
         data:entity_BussCombDistribtList||[],
         cols: cols,
@@ -384,117 +397,28 @@
         },
         editCell: function (value, data, field, cell, column) {
             if (field == "entrustNum") {
-                refreshTradAmt();
+                doChange.refreshTradAmt();
             }
             if (field == "portfolioId") {
-                var rowData = {};
-                rowData.entrustNum = data.entrustNum;
-                table.renderRow(data.LAY_TABLE_INDEX, rowData);
-                if (value != null && value != '') {
-                    /*var datas = {
-                        portfolioId: data.portfolioId,
-                        sysDateT1: query('#vdate').val(),
-                        calId: query('#calendarId').val(),
-                        chlFinprodId: query("#chlFinprodId").val(),
-                        finprodId: query("#finprodIdhid").val()
-                    };*/
-                    
-                    var datas = {
-                    		portfolioId:data.portfolioId, 
-                    		ccy:query('#ccy').val(), 
-                    		sysDateT1:query('#vdate').val(), 
-                    		calId:query('#calendarId').val(),
-                    		chlFinprodId: query("#chlFinprodId").val()};
-                    Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', datas, function (result) {
-                        if (result) {
-                            if (query('#ps').val() == PS_T01) {
-                                rowData.proAvailableCash = result.proAvailableCash;
-                                rowData.proAvailableCash1 = result.proAvailableCashT1;
-                                rowData.assetPositionEntrustAmt = ' ';
-                                rowData.assetAvailableEntrustAmt = ' ';
-                            } else if (query('#ps').val() == PS_T02 || query('#ps').val() == PS_T03) {
-                                rowData.proAvailableCash = ' ';
-                                rowData.proAvailableCash1 = ' ';
-                                rowData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
-                                rowData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
-                            } else {
-                                rowData.proAvailableCash = ' ';
-                                rowData.proAvailableCash1 = ' ';
-                                rowData.assetPositionEntrustAmt = ' ';
-                                rowData.assetAvailableEntrustAmt = ' ';
-                            }
-
-
-                            if (query("#chlFinprodId").val() != null && query("#chlFinprodId").val() != '') {
-                                table.showColumns([{field: 'secManageAvailablePosition', visible: false}]);
-                                table.showColumns([{field: 'secManageAvailablePosition1', visible: false}]);
-                                table.showColumns([{field: 'channelAvailableCash', visible: true}]);
-                                table.showColumns([{field: 'channelAvailableCash1', visible: true}]);
-                                rowData.secManageAvailablePosition = '';
-                                rowData.secManageAvailablePosition1 = '';
-                                rowData.channelAvailableCash = result.channelAvailable;
-                                rowData.channelAvailableCash1 = result.channelAvailableT1;
-                            } else {
-                                table.showColumns([{field: 'secManageAvailablePosition', visible: true}]);
-                                table.showColumns([{field: 'secManageAvailablePosition1', visible: true}]);
-                                table.showColumns([{field: 'channelAvailableCash', visible: false}]);
-                                table.showColumns([{field: 'channelAvailableCash1', visible: false}]);
-                                rowData.secManageAvailablePosition = result.secManageAvailablePosition;
-                                rowData.secManageAvailablePosition1 = result.secManageAvailablePositionT1;
-                                rowData.channelAvailableCash = '';
-                                rowData.channelAvailableCash1 = '';
-                            }
-
-                            table.renderRow(data.LAY_TABLE_INDEX, rowData);
-                        }
-                    });
-                }
-                if (value == null || value == '') {
-                    rowData.proAvailableCash = ' ';
-                    rowData.proAvailableCash1 = ' ';
-                    rowData.secManageAvailablePosition = ' ';
-                    rowData.secManageAvailablePosition1 = ' ';
-                    rowData.channelAvailableCash = ' ';
-                    rowData.channelAvailableCash1 = ' ';
-                    rowData.assetPositionEntrustAmt = ' ';
-                    rowData.assetAvailableEntrustAmt = ' ';
-                    table.renderRow(data.LAY_TABLE_INDEX, rowData);
-                }
+                doChange.portfolioChange(value, data);
             }
-
         }
     });
 
-    var refreshTradAmt = function () {
-        if(!query("#tradeAmt").val()){ // 卷面总额不为空时执行
-            var datas = table.getAllRows();
-            var tradeAmt = Number(0)
-            for (var i in datas) {
-                var entrustNum = 0;
-                if (datas[i].entrustNum == '' || datas[i].entrustNum == undefined) {
-                    entrustNum = 0;
-                } else {
-                    entrustNum = parseFloat(datas[i].entrustNum);
-                }
-                tradeAmt += parseFloat(entrustNum);
-            }
-            query("#tradeAmt").val(tradeAmt)
-        }
-    }
     /**
      * 绑定删除事件
      */
     table.bind('click', '.delt', function (data, index) {
         table.removeRow(data);
-        refreshTradAmt();
+        doChange.refreshTradAmt();
     });
 
     var init = function () {
-    	table.reload();
-    	if(calculateField){
-        	query("#calculateField_" + calculateField).attr("checked", true);
+        table.reload();
+        if(calculateField){
+            query("#calculateField_" + calculateField).attr("checked", true);
         }
-    	
+
         if (pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
             $('#EtribBondInfo003_btn_reset').css('display', 'none');
         }
@@ -525,7 +449,7 @@
                 query('#matureYield').attr('disabled', false);
 
                 // query('#exerYield').attr('disabled', false);
-                Funcs_This.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
+                doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
             }
         }
         businessId = query('#businessId').val();
@@ -533,13 +457,13 @@
 
     // 价格模式修改时
     query('#priceModel').change(function () {
-        Funcs_This.priceModelChange();
+        doChange.priceModelChange();
     });
 
     // 交易方向联动
     query('#ps').change(function () {
-        Funcs_This.psChange();
-        
+        doChange.psChange();
+
         var rowsData = table.getAllRows();
         if (rowsData.length > 0) {
             for (var index in rowsData) {
@@ -617,7 +541,7 @@
         var portfolioId = query("#portfolioId").val();
         var ccy = query('#ccy').val();
         var sysDateT1 = query('#vdate').val();
-		var calId = query('#calendarId').val();
+        var calId = query('#calendarId').val();
         parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid, portfolioId, chlFinprodId,ccy,sysDateT1,calId);
     });
 
@@ -644,7 +568,7 @@
         object.finvdate = query('#finvdate').val();
         object.invManagerId = query('#invManagerId').val();
         object.entrustDate = object.vdate > object.finvdate.split(' ')[0] ?
-        object.vdate: object.finvdate.split(' ')[0];
+            object.vdate: object.finvdate.split(' ')[0];
         //提交获取计算方式单选框的值
         object.calculateField = query("input[name=calculateField]:checked").val();
 
@@ -655,7 +579,7 @@
         }else{
             object.counterId=query('#counterId1').val();
         }
-        
+
         object.etrInvestPersonInfo = {
             counterId: object.counterId
         };
@@ -1075,7 +999,7 @@
             //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
             var calculateField =  query("input[name=calculateField]:checked").val();
             if(calflag != calculateField){
-            	return;
+                return;
             }
             //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 end
             var object = $.serializeToObject("#searchForm");
@@ -1157,8 +1081,140 @@
     });
 
     query('#finprodId').change(function () {
-        Funcs_This.finprodIdChange();
+        doChange.finprodIdChange();
     });
 
+//封装方法start-------------------------------------------------------------------------------------------------------------------------------
+    
+    function portfolioSingleChange(value, data) {
+        var rowData = {};
+        // rowData.entrustNum = data.entrustNum;
+        // table.renderRow(data.LAY_TABLE_INDEX, rowData);
+        if (value != null && value !== '') {
+            var datas = {
+                portfolioId:data.portfolioId,
+                ccy:query('#ccy').val(),
+                vdate:query('#vdate').val(),
+                calId:query('#calendarId').val(),
+                finprodId:query("#finprodIdhid").val()
+            };
+            Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', datas, function (result) {
+                if (result) {
+                    if (query('#ps').val() == PS_T01) {
+                        rowData.proAvailableCash = result.proAvailableCash;
+                        rowData.proAvailableCash1 = result.proAvailableCashT1;
+                        rowData.assetPositionEntrustAmt = ' ';
+                        rowData.assetAvailableEntrustAmt = ' ';
+                    } else if (query('#ps').val() == PS_T02 || query('#ps').val() == PS_T03) {
+                        rowData.proAvailableCash = ' ';
+                        rowData.proAvailableCash1 = ' ';
+                        rowData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
+                        rowData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
+                    } else {
+                        rowData.proAvailableCash = ' ';
+                        rowData.proAvailableCash1 = ' ';
+                        rowData.assetPositionEntrustAmt = ' ';
+                        rowData.assetAvailableEntrustAmt = ' ';
+                    }
 
+                    if(result.secManageAvailablePosition){
+                        table.showColumns([{field: 'secManageAvailablePosition', visible: true}]);
+                        rowData.secManageAvailablePosition = result.secManageAvailablePosition;
+                    }
+
+                    if(result.secManageAvailablePositionT1){
+                        table.showColumns([{field: 'secManageAvailablePosition1', visible: true}]);
+                        rowData.secManageAvailablePosition1 = result.secManageAvailablePositionT1;
+                    }
+
+                    table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                }
+            });
+        }else{
+            rowData.proAvailableCash = ' ';
+            rowData.proAvailableCash1 = ' ';
+            rowData.secManageAvailablePosition = ' ';
+            rowData.secManageAvailablePosition1 = ' ';
+            rowData.assetPositionEntrustAmt = ' ';
+            rowData.assetAvailableEntrustAmt = ' ';
+            table.renderRow(data.LAY_TABLE_INDEX, rowData);
+        }
+    }
+
+    function refreshTradAmt () {
+        if(!query("#tradeAmt").val()){ // 卷面总额不为空时执行
+            var datas = table.getAllRows();
+            var tradeAmt = Number(0)
+            for (var i in datas) {
+                var entrustNum = 0;
+                if (datas[i].entrustNum == '' || datas[i].entrustNum == undefined) {
+                    entrustNum = 0;
+                } else {
+                    entrustNum = parseFloat(datas[i].entrustNum);
+                }
+                tradeAmt += parseFloat(entrustNum);
+            }
+            query("#tradeAmt").val(JoyinUtil.formatNumber(tradeAmt, 2, null, 2));
+        }
+    }
+
+    function leftHqReload () { // 左边持仓现金信息联动
+        let ccy = query('#ccy').val();
+        let vdate = query('#vdate').val();
+        let calId = query('#calendarId').val();
+        let finprodId = query("finprodIdhid").val;
+
+        /**
+         * 查询资产持仓券面总额、资产可用券面总额
+         */
+        var params_finprodId = {
+            ccy:ccy, vdate:vdate, calId:calId, finprodId:finprodId
+        };
+        Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', params_finprodId,
+        function (result) {
+            var leftPositionData = {
+                proAvailableCash:Number(0),
+                proAvailableCashT1:Number(0),
+                secManageAvailablePosition:Number(0),
+                secManageAvailablePositionT1:Number(0),
+                assetPositionEntrustAmt:Number(0),
+                assetAvailableEntrustAmt:Number(0)
+            };
+
+            if (result) {
+                if(result.assetPositionEntrustAmt) leftPositionData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
+                if(result.assetAvailableEntrustAmt) leftPositionData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
+            }
+
+            var datas = table.getAllRows();
+            for (var i in datas) {
+                if (datas[i].portfolioId !== '' && datas[i].portfolioId !== undefined) {
+                    var params = {
+                        portfolioId:datas[i].portfolioId,
+                        ccy:ccy,
+                        vdate:vdate,
+                        calId:calId,
+                        finprodId:finprodId
+                    };
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', params,
+                        function (result) {
+                            if (result) {
+                                // 组合T日可用现金
+                                if (result.proAvailableCash) leftPositionData.proAvailableCash += Number(result.proAvailableCash);
+                                // 组合T+1日可用现金
+                                if(result.proAvailableCashT1) leftPositionData.proAvailableCashT1 += Number(result.proAvailableCashT1);
+                                // 托管户T日可用现金
+                                if(result.secManageAvailablePosition) leftPositionData.secManageAvailablePosition += Number(result.secManageAvailablePosition);
+                                // 托管户T+1日可用现金
+                                if(result.secManageAvailablePositionT1) leftPositionData.secManageAvailablePositionT1+= Number(result.secManageAvailablePositionT1);
+                            }
+                            // 左边联动
+                            parent.EtrIbBondinfoHq.viewPositionInfo(leftPositionData);
+                        });
+                }
+            }
+        });
+    }
+    
+//封装方法end-----------------------------------------------------------------------------------------------------------------------------------
 }());

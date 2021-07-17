@@ -33,6 +33,45 @@
         });
     }
 
+    var viewPositionInfo = function(result){
+        // 组合T日可用现金
+        if (result.proAvailableCash) {
+            document.getElementById('zhkyxj_t').innerHTML = JoyinUtil.formatNumber(result.proAvailableCash, 2, null, 2) + '元';
+        }else{
+            document.getElementById('zhkyxj_t').innerHTML = '0.00元';
+        }
+        // 组合T+1日可用现金
+        if(result.proAvailableCashT1) {
+            document.getElementById('zhkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.proAvailableCashT1, 2, null, 2) + '元';
+        }else{
+            document.getElementById('zhkyxj_t1').innerHTML = '0.00元';
+        }
+        // 托管户T日可用现金
+        if(result.secManageAvailablePosition) {
+            document.getElementById('tghkyxj_t').innerHTML = JoyinUtil.formatNumber(result.secManageAvailablePosition, 2, null, 2) + '元';
+        }else{
+            document.getElementById('tghkyxj_t').innerHTML = '0.00元';
+        }
+        // 托管户T+1日可用现金
+        if(result.secManageAvailablePositionT1) {
+            document.getElementById('tghkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.secManageAvailablePositionT1, 2, null, 2) + '元';
+        }else{
+            document.getElementById('tghkyxj_t1').innerHTML = '0.00元';
+        }
+        // 资产持仓券面总额
+        if(result.assetPositionEntrustAmt) {
+            
+            document.getElementById('zccc_qmze').innerHTML = JoyinUtil.formatNumber(result.assetPositionEntrustAmt, 2, null, 2) + '元';
+        }else{
+            document.getElementById('zccc_qmze').innerHTML = '0.00万元';
+        }
+        // 资产可用券面总额
+        if(result.assetAvailableEntrustAmt) {
+            document.getElementById('zcky_qmze').innerHTML = JoyinUtil.formatNumber(result.assetAvailableEntrustAmt, 2, null, 2) + '元';
+        }else{
+            document.getElementById('zcky_qmze').innerHTML = '0.00万元';
+        }
+    }
     var queryPositionInfo = function(finprodId,portfolioId,chlFinprodId,ccy,vdate,calId) {
         var param = {
             finprodId : finprodId,
@@ -46,8 +85,8 @@
         document.getElementById('zhkyxj_t1').innerHTML = '0.00元';
         document.getElementById('tghkyxj_t').innerHTML = '0.00元';
         document.getElementById('tghkyxj_t1').innerHTML = '0.00元';
-        document.getElementById('tdkyxj_t').innerHTML = '0.00元';
-        document.getElementById('tdkyxj_t1').innerHTML = '0.00元';
+        // document.getElementById('tdkyxj_t').innerHTML = '0.00元';
+        // document.getElementById('tdkyxj_t1').innerHTML = '0.00元';
         document.getElementById('zccc_qmze').innerHTML = '0.00万元';
         document.getElementById('zcky_qmze').innerHTML = '0.00万元';
         if(!portfolioId){
@@ -65,17 +104,17 @@
                 if (chlFinprodId != null && chlFinprodId != '') {
                     document.getElementById("tghkyxj_t_dev").style.display="none";
                     document.getElementById("tghkyxj_t1_dev").style.display="none";
-                    document.getElementById("tdkyxj_t_dev").style.display="";
-                    document.getElementById("tdkyxj_t1_dev").style.display="";
-                    if (result.tdkyxj_t != null && result.tdkyxj_t != '') {
-                        document.getElementById('tdkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t, 2, null, 2) + '元';
-                    }
-                    if (result.tdkyxj_t1 != null && result.tdkyxj_t1 != '') {
-                        document.getElementById('tdkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t1, 2, null, 2) + '元';
-                    }
+                    // document.getElementById("tdkyxj_t_dev").style.display="";
+                    // document.getElementById("tdkyxj_t1_dev").style.display="";
+                    // if (result.tdkyxj_t != null && result.tdkyxj_t != '') {
+                    //     document.getElementById('tdkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t, 2, null, 2) + '元';
+                    // }
+                    // if (result.tdkyxj_t1 != null && result.tdkyxj_t1 != '') {
+                    //     document.getElementById('tdkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t1, 2, null, 2) + '元';
+                    // }
                 } else {
-                    document.getElementById("tdkyxj_t_dev").style.display="none";
-                    document.getElementById("tdkyxj_t1_dev").style.display="none";
+                    // document.getElementById("tdkyxj_t_dev").style.display="none";
+                    // document.getElementById("tdkyxj_t1_dev").style.display="none";
                     document.getElementById("tghkyxj_t_dev").style.display="";
                     document.getElementById("tghkyxj_t1_dev").style.display="";
                     if (result.tghkyxj_t != null && result.tghkyxj_t != '') {
@@ -100,7 +139,7 @@
         var param = {
             finprodId : finprodId,
             portfolioId : portfolioId,
-            chlFinprodId : chlFinprodId,
+            // chlFinprodId : chlFinprodId,
             ccy:ccy, 
     		sysDateT1:sysDateT1,
     		calId:calId
@@ -110,8 +149,8 @@
             document.getElementById('zhkyxj_t1').innerHTML = '0.00元';
             document.getElementById('tghkyxj_t').innerHTML = '0.00元';
             document.getElementById('tghkyxj_t1').innerHTML = '0.00元';
-            document.getElementById('tdkyxj_t').innerHTML = '0.00元';
-            document.getElementById('tdkyxj_t1').innerHTML = '0.00元';
+            // document.getElementById('tdkyxj_t').innerHTML = '0.00元';
+            // document.getElementById('tdkyxj_t1').innerHTML = '0.00元';
             document.getElementById('zccc_qmze').innerHTML = '0.00万元';
             document.getElementById('zcky_qmze').innerHTML = '0.00万元';
             Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
@@ -126,17 +165,17 @@
                     if (chlFinprodId != null && chlFinprodId != '') {
                         document.getElementById("tghkyxj_t_dev").style.display="none";
                         document.getElementById("tghkyxj_t1_dev").style.display="none";
-                        document.getElementById("tdkyxj_t_dev").style.display="";
-                        document.getElementById("tdkyxj_t1_dev").style.display="";
-                        if (result.tdkyxj_t != null && result.tdkyxj_t != '') {
-                            document.getElementById('tdkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t, 2, null, 2) + '元';
-                        }
-                        if (result.tdkyxj_t1 != null && result.tdkyxj_t1 != '') {
-                            document.getElementById('tdkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t1, 2, null, 2) + '元';
-                        }
+                        // document.getElementById("tdkyxj_t_dev").style.display="";
+                        // document.getElementById("tdkyxj_t1_dev").style.display="";
+                        // if (result.tdkyxj_t != null && result.tdkyxj_t != '') {
+                        //     document.getElementById('tdkyxj_t').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t, 2, null, 2) + '元';
+                        // }
+                        // if (result.tdkyxj_t1 != null && result.tdkyxj_t1 != '') {
+                        //     document.getElementById('tdkyxj_t1').innerHTML = JoyinUtil.formatNumber(result.tdkyxj_t1, 2, null, 2) + '元';
+                        // }
                     } else {
-                        document.getElementById("tdkyxj_t_dev").style.display="none";
-                        document.getElementById("tdkyxj_t1_dev").style.display="none";
+                        // document.getElementById("tdkyxj_t_dev").style.display="none";
+                        // document.getElementById("tdkyxj_t1_dev").style.display="none";
                         document.getElementById("tghkyxj_t_dev").style.display="";
                         document.getElementById("tghkyxj_t1_dev").style.display="";
                         if (result.tghkyxj_t != null && result.tghkyxj_t != '') {
@@ -249,6 +288,7 @@
     parent.EtrIbBondinfoHq = {
         querySecinfo:querySecinfo,
         queryPositionInfo:queryPositionInfo,
+        viewPositionInfo:viewPositionInfo,
         zhkyxj_t: zhkyxj_t
     }
     
