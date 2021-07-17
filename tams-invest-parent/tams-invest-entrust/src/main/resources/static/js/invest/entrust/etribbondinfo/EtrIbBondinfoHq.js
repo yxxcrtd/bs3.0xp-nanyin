@@ -73,6 +73,7 @@
         }
     }
     var queryPositionInfo = function(finprodId,portfolioId,chlFinprodId,ccy,vdate,calId) {
+        var rs;
         var param = {
             finprodId : finprodId,
             portfolioId : portfolioId,
@@ -94,6 +95,7 @@
         }
         Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
             if (result) {
+                rs = result;
                 if (result.zhkyxj_t != null && result.zhkyxj_t != '') {
                     document.getElementById('zhkyxj_t').innerHTML = JoyinUtil.formatNumber(result.zhkyxj_t, 2, null, 2) + '元';
                     parent.EtrIbBondinfoHq.zhkyxj_t = result.zhkyxj_t;
@@ -132,10 +134,13 @@
                 }
             }
         }, false);
+        
+        return rs;
     }
     
     /**根据市场代码，查询行情信息，展示出来*/
     var querySecinfo = function(finprodId,portfolioId,chlFinprodId,ccy,sysDateT1,calId) {
+        var rs;
         var param = {
             finprodId : finprodId,
             portfolioId : portfolioId,
@@ -155,6 +160,7 @@
             document.getElementById('zcky_qmze').innerHTML = '0.00万元';
             Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
                 if (result) {
+                    rs = result;
                     if (result.zhkyxj_t != null && result.zhkyxj_t != '') {
                         document.getElementById('zhkyxj_t').innerHTML = JoyinUtil.formatNumber(result.zhkyxj_t, 2, null, 2) + '元';
                         parent.EtrIbBondinfoHq.zhkyxj_t = result.zhkyxj_t;
@@ -279,6 +285,8 @@
             }, false);
 
             queryJJHQXX(secId);
+            
+            return rs;
         }
     }
 

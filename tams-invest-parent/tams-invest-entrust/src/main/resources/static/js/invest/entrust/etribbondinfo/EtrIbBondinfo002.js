@@ -73,6 +73,9 @@
     }
 
 
+    function setCashPosition(result) {
+        
+    }
     /**
      * 获取表单参数
      *
@@ -465,22 +468,28 @@
     };
 
     //查询组合可用现金,资产可用券面总额
-    var getPtlCashPositionInfo = function () {
-        if (!query('#portfolioId').val()) {
-            return;
+    var getPtlCashPositionInfo = function (rs) {
+        // if (!query('#portfolioId').val()) {
+        //     return;
+        // }
+        // var param = {};
+        // param.ccy = query('#ccy').val();
+        // param.vdate = query('#vdate').val();
+        // param.finprodId = query("#finprodIdhid").val();
+        // param.portfolioId = query("#portfolioId").val();
+        //
+        // Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
+        //     if (result) {
+        //         query("#proAvailableCash").val(result.zhkyxj_t);
+        //         query("#assetAvailablePosition").val(result.zcky_qmze);
+        //     }
+        // });
+        if(rs){ 
+            // 避免重复请求头寸信息
+            alert(rs.zhkyxj_t + "=" + rs.zcky_qmze);
+            query("#proAvailableCash").val(rs.zhkyxj_t);
+            query("#assetAvailablePosition").val(rs.zcky_qmze);
         }
-        var param = {};
-        param.ccy = query('#ccy').val();
-        param.vdate = query('#vdate').val();
-        param.finprodId = query("#finprodIdhid").val();
-        param.portfolioId = query("#portfolioId").val();
-
-        Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
-            if (result) {
-                query("#proAvailableCash").val(result.zhkyxj_t);
-                query("#assetAvailablePosition").val(result.zcky_qmze);
-            }
-        });
     }
 
     /**
@@ -494,7 +503,8 @@
         var sysDateT1 = query('#vdate').val();
 		var calId = query('#calendarId').val();
         if (todoList == false) {
-            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
+            var rs = parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
+            getPtlCashPositionInfo(rs);
         }
     }
 
@@ -506,7 +516,8 @@
         var vdate = query('#vdate').val();
         var calId = query('#calendarId').val();
         if (todoList == false) {
-            parent.EtrIbBondinfoHq.queryPositionInfo(finprodIdhid,portfolioId,chlFinprodId,ccy,vdate,calId);
+            var rs = parent.EtrIbBondinfoHq.queryPositionInfo(finprodIdhid,portfolioId,chlFinprodId,ccy,vdate,calId);
+            getPtlCashPositionInfo(rs);
         }
     }
     /**
@@ -595,7 +606,7 @@
         isNeedRiskcal: isNeedRiskcal,
         getRiskInterfUrl: getRiskInterfUrl,
         getSaveOrSubmitParams:  getSaveOrSubmitParams,
-
+        setCashPosition:setCashPosition,
 
         riskResultdata: riskResultdata,
         cluflag: cluflag
@@ -764,7 +775,7 @@
             getLeftMarketInfo();
 
             //组合可用现金,资产可用持仓
-            getPtlCashPositionInfo();
+            // getPtlCashPositionInfo();
 
             // 画星星
             star();
@@ -781,7 +792,7 @@
             getLeftZHinfo();
             
             //组合可用现金,资产可用持仓
-            getPtlCashPositionInfo();
+            // getPtlCashPositionInfo();
         });
 
         $.fn.updateChosenArr = function updateChosenArr(obj) {
