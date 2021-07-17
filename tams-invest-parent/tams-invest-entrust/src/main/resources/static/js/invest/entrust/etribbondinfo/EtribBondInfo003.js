@@ -19,7 +19,11 @@
             leftHqReload();
         },
         // 刷新修改页面卷面总额
-        refreshTradAmt : refreshTradAmt
+        refreshTradAmt : refreshTradAmt,
+        // 组合单行数据添加
+        portfolioSingleChange:portfolioSingleChange,
+        // 左下行情联动
+        leftHqReload:leftHqReload
     }; 
     
     doChange.priceModelChange = function(){
@@ -1101,20 +1105,20 @@
             Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', datas, function (result) {
                 if (result) {
                     if (query('#ps').val() == PS_T01) {
-                        rowData.proAvailableCash = result.proAvailableCash;
-                        rowData.proAvailableCash1 = result.proAvailableCashT1;
-                        rowData.assetPositionEntrustAmt = ' ';
-                        rowData.assetAvailableEntrustAmt = ' ';
+                        if(result.proAvailableCash) rowData.proAvailableCash = result.proAvailableCash;
+                        if(result.proAvailableCashT1) rowData.proAvailableCash1 = result.proAvailableCashT1;
+                        // rowData.assetPositionEntrustAmt = ' ';
+                        // rowData.assetAvailableEntrustAmt = ' ';
                     } else if (query('#ps').val() == PS_T02 || query('#ps').val() == PS_T03) {
-                        rowData.proAvailableCash = ' ';
-                        rowData.proAvailableCash1 = ' ';
-                        rowData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
-                        rowData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
+                        // rowData.proAvailableCash = ' ';
+                        // rowData.proAvailableCash1 = ' ';
+                        if(result.assetPositionEntrustAmt) rowData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
+                        if(result.assetAvailableEntrustAmt) rowData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
                     } else {
-                        rowData.proAvailableCash = ' ';
-                        rowData.proAvailableCash1 = ' ';
-                        rowData.assetPositionEntrustAmt = ' ';
-                        rowData.assetAvailableEntrustAmt = ' ';
+                        // rowData.proAvailableCash = ' ';
+                        // rowData.proAvailableCash1 = ' ';
+                        // rowData.assetPositionEntrustAmt = ' ';
+                        // rowData.assetAvailableEntrustAmt = ' ';
                     }
 
                     if(result.secManageAvailablePosition){
@@ -1162,58 +1166,48 @@
         let ccy = query('#ccy').val();
         let vdate = query('#vdate').val();
         let calId = query('#calendarId').val();
-        let finprodId = query("finprodIdhid").val;
+        let finprodId = query("#finprodIdhid").val();
 
-        /**
-         * 查询资产持仓券面总额、资产可用券面总额
-         */
-        var params_finprodId = {
-            ccy:ccy, vdate:vdate, calId:calId, finprodId:finprodId
+        var leftPositionData = {
+            proAvailableCash:Number(0),
+            proAvailableCashT1:Number(0),
+            secManageAvailablePosition:Number(0),
+            secManageAvailablePositionT1:Number(0),
+            assetPositionEntrustAmt:Number(0),
+            assetAvailableEntrustAmt:Number(0)
         };
-        Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', params_finprodId,
-        function (result) {
-            var leftPositionData = {
-                proAvailableCash:Number(0),
-                proAvailableCashT1:Number(0),
-                secManageAvailablePosition:Number(0),
-                secManageAvailablePositionT1:Number(0),
-                assetPositionEntrustAmt:Number(0),
-                assetAvailableEntrustAmt:Number(0)
-            };
+        var datas = table.getAllRows();
+        for (var i in datas) {
+            if (datas[i].portfolioId !== '' && datas[i].portfolioId !== undefined) {
+                var params = {
+                    portfolioId:datas[i].portfolioId,
+                    ccy:ccy,
+                    vdate:vdate,
+                    calId:calId,
+                    finprodId:finprodId
+                };
+                Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', params,
+                    function (result) {
+                        if (result) {
+                            // 组合T日可用现金
+                            if (result.proAvailableCash) leftPositionData.proAvailableCash += Number(result.proAvailableCash);
+                            // 组合T+1日可用现金
+                            if(result.proAvailableCashT1) leftPositionData.proAvailableCashT1 += Number(result.proAvailableCashT1);
+                            // 托管户T日可用现金
+                            if(result.secManageAvailablePosition) leftPositionData.secManageAvailablePosition += Number(result.secManageAvailablePosition);
+                            // 托管户T+1日可用现金
+                            if(result.secManageAvailablePositionT1) leftPositionData.secManageAvailablePositionT1+= Number(result.secManageAvailablePositionT1);
 
-            if (result) {
-                if(result.assetPositionEntrustAmt) leftPositionData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
-                if(result.assetAvailableEntrustAmt) leftPositionData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
-            }
-
-            var datas = table.getAllRows();
-            for (var i in datas) {
-                if (datas[i].portfolioId !== '' && datas[i].portfolioId !== undefined) {
-                    var params = {
-                        portfolioId:datas[i].portfolioId,
-                        ccy:ccy,
-                        vdate:vdate,
-                        calId:calId,
-                        finprodId:finprodId
-                    };
-                    Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtribBondInfo003/getPortfolioAllocationValues', params,
-                        function (result) {
                             if (result) {
-                                // 组合T日可用现金
-                                if (result.proAvailableCash) leftPositionData.proAvailableCash += Number(result.proAvailableCash);
-                                // 组合T+1日可用现金
-                                if(result.proAvailableCashT1) leftPositionData.proAvailableCashT1 += Number(result.proAvailableCashT1);
-                                // 托管户T日可用现金
-                                if(result.secManageAvailablePosition) leftPositionData.secManageAvailablePosition += Number(result.secManageAvailablePosition);
-                                // 托管户T+1日可用现金
-                                if(result.secManageAvailablePositionT1) leftPositionData.secManageAvailablePositionT1+= Number(result.secManageAvailablePositionT1);
+                                if(result.assetPositionEntrustAmt) leftPositionData.assetPositionEntrustAmt = result.assetPositionEntrustAmt;
+                                if(result.assetAvailableEntrustAmt) leftPositionData.assetAvailableEntrustAmt = result.assetAvailableEntrustAmt;
                             }
-                            // 左边联动
-                            parent.EtrIbBondinfoHq.viewPositionInfo(leftPositionData);
-                        });
-                }
+                        }
+                        // 左边联动
+                        parent.EtrIbBondinfoHq.viewPositionInfo(leftPositionData);
+                    });
             }
-        });
+        }
     }
     
 //封装方法end-----------------------------------------------------------------------------------------------------------------------------------
