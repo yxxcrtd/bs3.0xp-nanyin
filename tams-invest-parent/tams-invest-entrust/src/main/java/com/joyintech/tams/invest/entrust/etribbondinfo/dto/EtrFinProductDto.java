@@ -374,15 +374,15 @@ public class EtrFinProductDto {
     }
 
     public String getXqFlg() {
-        if (StringUtil.isEmpty(this.xqFlg)) {
-            return null;
+        if (StringUtil.isEmpty(this.xqFlg) || StringUtil.equals(this.xqFlg, "无")) {
+            return "无";
         }
         if (this.xqFlg.contains(",")){
             return Arrays.stream(this.xqFlg.split(","))
-                    .map(i->SysDataUtil.getNameFromDataDict(DictCode.行权方式, getSecType()))
+                    .map(i->SysDataUtil.getNameFromDataDict(DictCode.行权方式, getXqFlg()))
                     .collect(Collectors.joining(","));
         }else{
-            return SysDataUtil.getNameFromDataDict(DictCode.行权方式, getSecType());
+            return SysDataUtil.getNameFromDataDict(DictCode.行权方式, getXqFlg());
         }
     }
 
