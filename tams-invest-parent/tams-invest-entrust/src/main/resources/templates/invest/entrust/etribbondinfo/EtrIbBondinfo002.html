@@ -4,7 +4,7 @@
     <head> 
     </head>
     <body>
-        <div layout:fragment="content">
+        <div layout:fragment="content" id="EtribBondInfo002_bodydiv">
 	        <style type="text/css">
 		        .layui-form-radio {
 		            line-height: 24px;
@@ -18,7 +18,7 @@
 		            font-size: 14px;
 		        }
 		    </style>
-            <div class="joyin-form-wrap" id="EtribBondInfo002_bodydiv">
+            <div class="joyin-form-wrap">
                 <form class="layui-form pro-module-form" id="searchForm">
                     <input type="hidden" id="finprodIdhid" name="finprodId" th:value="${entity?.finprodId}" />
                     <input type="hidden" id="calendarId" name="calendarId" th:value="${entity?.calendarId}" />
