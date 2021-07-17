@@ -486,7 +486,6 @@
         // });
         if(rs){ 
             // 避免重复请求头寸信息
-            alert(rs.zhkyxj_t + "=" + rs.zcky_qmze);
             query("#proAvailableCash").val(rs.zhkyxj_t);
             query("#assetAvailablePosition").val(rs.zcky_qmze);
         }
