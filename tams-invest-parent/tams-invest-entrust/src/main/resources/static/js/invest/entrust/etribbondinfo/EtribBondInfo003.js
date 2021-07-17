@@ -169,7 +169,7 @@
             query('#channelAvailableCash').val('');
             query('#availableNum').val('');
             //query('#tradeMarket').val('').trigger('change').attr('disabled', false);
-            query('#ccy').val('').trigger('change').attr('disabled', false);
+            query('#ccy').val(CCY).trigger('change').attr('disabled', false);
             query('#isRight').val('').trigger('change');
 
             query('#exerYield').val('').trigger('change').trigger('blur');
