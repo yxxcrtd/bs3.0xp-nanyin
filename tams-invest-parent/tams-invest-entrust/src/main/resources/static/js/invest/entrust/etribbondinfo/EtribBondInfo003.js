@@ -14,9 +14,9 @@
         // 选中组合事件
         portfolioChange : function (value, data){ 
             // 多组合单行添加 显示同行持仓信息
-            portfolioSingleChange(value, data);
+            this.portfolioSingleChange(value, data);
             // 左边持仓现金信息联动
-            leftHqReload();
+            this.leftHqReload();
         },
         // 刷新修改页面卷面总额
         refreshTradAmt : refreshTradAmt,
@@ -415,6 +415,7 @@
     table.bind('click', '.delt', function (data, index) {
         table.removeRow(data);
         doChange.refreshTradAmt();
+        doChange.leftHqReload();
     });
 
     var init = function () {
@@ -661,11 +662,7 @@
         query("#matureYield").val('').trigger('change');
         query("#exerYield").val('').trigger('change');
         query("#chlFinprodId").val('').trigger('change');
-
         query("#remark").val('').trigger('change');
-        // var platFormDate = query("#vdate").val();
-        // query("#mdate").val(platFormDate).trigger('change');
-
         query("#calculateField_price").prop('checked', false);
         query("#calculateField_exerYield").prop('checked', false);
         query("#calculateField_matureYield").prop('checked', false);
@@ -674,6 +671,7 @@
         query("#mdate").val(sysDate).trigger("change");
         query("#counterId1").val("").trigger("change");
         query("#counterId2").val("").trigger("change");
+        query("#tradeAmt").removeAttr("auto");// 劵面总额汇总方式
         table.clear();
     }
 
@@ -1146,7 +1144,18 @@
     }
 
     function refreshTradAmt () {
-        if(!query("#tradeAmt").val()){ // 卷面总额不为空时执行
+        if(query("#tradeAmt").attr("auto") == undefined){
+            if(query("#tradeAmt").val()) {
+                query("#tradeAmt").attr("auto", "false");
+            }else{
+                query("#tradeAmt").attr("auto", "true");
+            }
+        }
+        
+        if(query("#tradeAmt").attr("auto") === "false") return;
+        
+        if(query("#tradeAmt").attr("auto") === "true") { 
+            if(query("#tradeAmt").attr("auto") === "") query("#tradeAmt").attr("auto", "true");
             var datas = table.getAllRows();
             var tradeAmt = Number(0)
             for (var i in datas) {
