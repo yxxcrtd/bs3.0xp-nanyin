@@ -282,6 +282,18 @@ $(
             }
         }
 
+        var defaultStyle = "";
+        $("#enlarge").click(function () {
+            let rightDiv = $("#right_bottom_panel_dev");
+            if(!rightDiv.attr("flag") || rightDiv.attr("flag") === "1"){
+                if(defaultStyle === "") defaultStyle = rightDiv.attr("style");
+                rightDiv.attr("style", "position: absolute; left: 0px; top:0px; width: 100%; height:100%;background: #fff; z-index: 100");
+                rightDiv.attr("flag","0");
+            }else{
+                rightDiv.attr("style", defaultStyle);
+                rightDiv.attr("flag","1");
+            }
+        });
         /**
          * 绑定事件
          */

@@ -384,7 +384,7 @@ public class EtrIbBondinfo002Controller extends BaseController {
                         + this.getMessage("EtrIbBondinfo002.vdate") + ":" + DateUtil.format(entity.getVdate())
                         + ")-(" + this.getMessage("EtrIbBondinfo002.mdate") + ":"
                         + DateUtil.format(entity.getMdate()) + ")-"
-                        + this.getMessage("EtrIbBondinfo002.entrustAmt") + ":"
+                        + this.getMessage("EtrIbBondinfo003.entrustAmt") + ":"  // 此处使用多组合的卷面总额（万元）描述
                         + entity.getEntrustNum());
         processParameter.setWorkFlowParameter(params);
         String msg = etrIbBondinfo002Service.start(processParameter, dto);
