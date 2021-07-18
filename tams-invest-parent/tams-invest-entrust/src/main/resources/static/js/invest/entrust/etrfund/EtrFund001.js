@@ -83,7 +83,7 @@
                     function(){table.reload();});
         },
         cols:[ 
-            {field:'entrustStatusStr', title: '委托状态', width:'10%',sortField:"entrustStatus"}
+            {field:'entrustStatusStr', title: 'EtrFund001.entrustStatus', width:'10%',sortField:"entrustStatus"}
 //            ,{field:'entrustId', title: 'EtrFund001.entrustId', width:180}
             ,{field:'portfolioId', 
             	title: 'EtrFund001.portfolioId',
