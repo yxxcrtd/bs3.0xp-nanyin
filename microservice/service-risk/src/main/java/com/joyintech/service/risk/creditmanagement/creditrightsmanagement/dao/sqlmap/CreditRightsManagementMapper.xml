@@ -62,9 +62,6 @@
     		REMARK
    		from RISK_WEIGHT
    		<where>
-	   		<if test="assetTypeOne != null and assetTypeOne != ''">
-	   		AND	ASSET_TYPE_ONE = #{assetTypeOne,jdbcType=VARCHAR}
-   			</if>
    			<if test="assetTypeTwo != null and assetTypeTwo != ''">
    			AND	ASSET_TYPE_TWO = #{assetTypeTwo,jdbcType=VARCHAR}
    			</if>

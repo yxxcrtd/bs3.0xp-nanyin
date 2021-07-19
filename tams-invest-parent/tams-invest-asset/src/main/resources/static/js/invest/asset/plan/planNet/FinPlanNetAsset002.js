@@ -134,10 +134,15 @@ var QueryFunc=function(){
         /*object.bussRepAssetMngProdInfo.needValid = object.type == publicOffPlan || !object.type;
         object.bussRepOutInvestAgrInfo.needValid = object.type && object.type != publicOffPlan;*/
         //update by zhangnian 20191031  start
-        object.bussRepAssetMngProdInfo.needValid = repAssetType=="1701"||repAssetType=="1702"||repAssetType=="1703"||repAssetType=="1704"
-            ||repAssetType=="1705"||repAssetType=="1706";
-        object.bussRepOutInvestAgrInfo.needValid = repAssetType=="2801"||repAssetType=="2802"||repAssetType=="2803"||repAssetType=="2804"
-            ||repAssetType=="2805"||repAssetType=="2806"||repAssetType=="2899";
+        if ( object.bussRepAssetMngProdInfo){
+            object.bussRepAssetMngProdInfo.needValid = repAssetType=="1701"||repAssetType=="1702"||repAssetType=="1703"||repAssetType=="1704"
+                ||repAssetType=="1705"||repAssetType=="1706";
+        }
+       if (object.bussRepOutInvestAgrInfo){
+           object.bussRepOutInvestAgrInfo.needValid = repAssetType=="2801"||repAssetType=="2802"||repAssetType=="2803"||repAssetType=="2804"
+               ||repAssetType=="2805"||repAssetType=="2806"||repAssetType=="2899";
+       }
+
         //update by zhangnian 20191031  end
         //文件信息
         object.fileCommonList = FileCommon.getUploadFileInfo();
@@ -151,10 +156,19 @@ var QueryFunc=function(){
 //        object.fjId = '';
         //增加快捷录入功能 by 赵东东 2019.10.12 end
         //参与方信息
-        object.bussParticipantInfoDto.type6 = object.category;
+        if (object.bussParticipantInfoDto){
+            object.bussParticipantInfoDto.type6 = object.category;
+        }
+
         //add by  zhangnian 20191021 start
-        object.bussRepAssetMngProdInfo.repAssetType = repAssetType;
-        object.bussRepOutInvestAgrInfo.repAssetType = repAssetType;
+        if (object.bussRepAssetMngProdInfo){
+            object.bussRepAssetMngProdInfo.repAssetType = repAssetType;
+
+        }
+        if (object.bussRepOutInvestAgrInfo){
+            object.bussRepOutInvestAgrInfo.repAssetType = repAssetType;
+        }
+
         //add by  zhangnian 20191021 end
         Joyin.ajaxJson(basePath + 'invest/asset/plan/planNet/FinPlanNetAsset002/check', object, function(result) {
             Joyin.ajaxJson(basePath + 'invest/asset/common/isHoliday', {

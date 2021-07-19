@@ -10,7 +10,6 @@
  
 package com.joyintech.service.risk.creditmanagement.ceasset.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +47,10 @@ public class CeAsset001Controller {
      * @return 查询结果集
      * @throws Exception 异常
      */
-	@PostMapping("/getFinprodMarketIds")
-    public List<SelectOptionDto> getFinprodMarketIds(@RequestBody Map<String, Object> map){
-        return ceAsset001Service.getFinprodMarketIds(map);
+	@RequestMapping("getFinprodMarketIds/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketIds(@RequestBody Map<String, Object> param,
+													 @PathVariable("page") int page, @PathVariable("length") int length){
+        return ceAsset001Service.getFinprodMarketIds(page, length, param);
     }
 	 
 

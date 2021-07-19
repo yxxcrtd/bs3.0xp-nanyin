@@ -45,25 +45,25 @@
                 });
         },
         cols: [
-            {field: 'statusValidString', width: 200, title: '有效状态', sortField: 'statusValid'}
-            , {field: 'busiCode', width: 200, title: '业务编号', sortField: 'busiCode'}
-            , {field: 'paBussTypeString', width: 200, title: '类型', sortField: 'PA_BUSS_TYPE'}
-            , {field: 'finprodMarketId', width: 200, title: '资产代码', sortField: 'FINPROD_MARKET_ID',
+            {field: 'statusValidString', width: 200, title: 'TrdPlanInterestDuration001.status', sortField: 'statusValid'}
+            , {field: 'busiCode', width: 200, title: 'TrdPlanInterestDuration001.tradeId', sortField: 'busiCode'}
+            , {field: 'paBussTypeString', width: 200, title: 'TrdPlanInterestDuration001.paBussType', sortField: 'PA_BUSS_TYPE'}
+            , {field: 'finprodMarketId', width: 200, title: 'TrdPlanInterestDuration001.finprodId', sortField: 'FINPROD_MARKET_ID',
                 render : function(data, type, row, meta) {
                     if(row.finprodMarketId !=undefined){
                         return "<a onclick=\"showDetailByFinprodId('"+row.finprodId+"')\" + style='cursor: pointer;'>"+row.finprodMarketId+"</a>";
                     }
                 }}
-            , {field: 'finprodMarketName', width: 200, title: '资产名称', sortField: 'finprodMarketName'}
-            , {field: 'chlFinprodId', width: 200, title: '合作资产', sortField: 'chlName'}
-            , {field: 'qty', width: 200, title: '剩余本金', type: 'number', sortField: 'qty'}
-            , {field: 'returnAmount', width: 200, title: '还本金额', type: 'number', sortField: 'returnAmount'}
-            , {field: 'yield', width: 200, title: '预期收益率%', type: 'number', sortField: 'yield'}
-            , {field: 'vDate', width: 200, title: '计息开始日', sortField: 'vDate'}
-            , {field: 'mDate', width: 200, title: '计息结束日', sortField: 'mDate'}
-            , {field: 'interestPayDay', width: 200, title: '理论支付日', sortField: 'interestPayDay'}
-            , {field: 'arrivalDate', width: 200, title: '资金到账日', sortField: 'arrivalDate'}
-            , {field: 'fpriceAmt', width: 200, title: '到账金额', type: 'number', sortField: 'FPRICE_AMT'}
+            , {field: 'finprodMarketName', width: 200, title: 'TrdPlanInterestDuration001.finprodName', sortField: 'finprodMarketName'}
+            , {field: 'chlFinprodId', width: 200, title: 'TrdPlanInterestDuration001.chlFinprodId', sortField: 'chlName'}
+            , {field: 'qty', width: 200, title: 'TrdPlanInterestDuration001.qty', type: 'number', sortField: 'qty'}
+            , {field: 'returnAmount', width: 200, title: 'TrdPlanInterestDuration001.returnAmount', type: 'number', sortField: 'returnAmount'}
+            , {field: 'yield', width: 200, title: 'TrdPlanInterestDuration001.yield', type: 'number', sortField: 'yield'}
+            , {field: 'vDate', width: 200, title: 'TrdPlanInterestDuration001.vDate', sortField: 'vDate'}
+            , {field: 'mDate', width: 200, title: 'TrdPlanInterestDuration001.mDate', sortField: 'mDate'}
+            , {field: 'interestPayDay', width: 200, title: 'TrdPlanInterestDuration001.interestPayDay', sortField: 'interestPayDay'}
+            , {field: 'arrivalDate', width: 200, title: 'TrdPlanInterestDuration001.arrivalDate', sortField: 'arrivalDate'}
+            , {field: 'fpriceAmt', width: 200, title: 'TrdPlanInterestDuration001.fpriceAmt', type: 'number', sortField: 'FPRICE_AMT'}
             , {field: 'statusValid', visible: false}
             , {field: 'cashType', visible: false}
             , {field: 'workflowId', visible: false}

@@ -33,13 +33,13 @@
                     function(){table.reload();});
         },
         cols:[ 
-            {field:'assetTypeOneStr', title: 'CreditRightsManagement001.assetTypeOne', width:'18%',sortField:'asset_Type_One'}
-            ,{field:'assetTypeTwoStr', title: 'CreditRightsManagement001.assetTypeTwo', width:'18%',sortField:'asset_Type_Two'}
-            ,{field:'effDateStr', title: 'CreditRightsManagement001.effDate', width:'18%',sortField:'eff_Date'}
-            ,{field:'riskWeight', title: 'CreditRightsManagement001.riskWeight', width:'18%',sortField:'risk_Weight'}
+            {field:'assetTypeOneStr', title: 'CreditRightsManagement001.assetTypeOne', width:'18%'}
+            ,{field:'assetTypeTwoStr', title: 'CreditRightsManagement001.assetTypeTwo', width:'18%'}
+            ,{field:'effDateStr', title: 'CreditRightsManagement001.effDate', width:'18%'}
+            ,{field:'riskWeight', title: 'CreditRightsManagement001.riskWeight', width:'18%'}
             ,{field:'remark',title: 'CreditRightsManagement001.remark'}
             ,{field:'seqno',visible:false}
-            ,{field:'action', title: 'SysCommon.operation' , type:'action',buttons: ['edit','delt']}
+            ,{field:'operation', title: 'SysCommon.operation' , type:'action',buttons: ['edit','delt']}
         ],
     });
     

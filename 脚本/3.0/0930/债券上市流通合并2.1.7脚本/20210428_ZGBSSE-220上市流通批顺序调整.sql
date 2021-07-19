@@ -1,0 +1,1 @@
+update sys_batch_task set task_pri = '1' where task_id = '11112';

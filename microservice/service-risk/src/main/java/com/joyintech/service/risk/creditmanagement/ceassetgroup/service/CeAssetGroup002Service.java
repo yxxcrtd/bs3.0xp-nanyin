@@ -1,20 +1,20 @@
 package com.joyintech.service.risk.creditmanagement.ceassetgroup.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.risk.creditmanagement.ceassetgroup.dao.CeAssetGroupMapper;
 import com.joyintech.service.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto;
 import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
+import com.joyintech.tams.common.base.dao.CreditAssetpoolMapper;
 import com.joyintech.tams.common.base.dao.CreditLinesMapper;
-import com.joyintech.tams.invest.common.trade.CelinesUpdateFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.Map;
+import com.joyintech.tams.common.base.entity.CreditAssetpool;
 
 
 /**
@@ -32,9 +32,10 @@ public class CeAssetGroup002Service extends BaseService<CreditMstInfoDto> {
 	
 	@Autowired
 	private CreditLinesMapper creditLinesMapper;
-
+	
 	@Autowired
-	private CelinesUpdateFactory celinesUpdateFactory;
+	private CreditAssetpoolMapper creditAssetpoolMapper;
+	
 	
     /**
      * 查询额度信息
@@ -54,18 +55,16 @@ public class CeAssetGroup002Service extends BaseService<CreditMstInfoDto> {
     	if(StringUtil.isNotEmpty(entity.getCreditAmt())){
     		entity.setCreditAmt(entity.getCreditAmt().multiply(new BigDecimal(100000000)));
     	}
+    	entity.setHapCreditAmt(new BigDecimal(0));
     	entity.setParentCustomerId(entity.getCustomerId());
-		//多级法人改造 add by jingqiongqiong 20200616
-		//当前用户所属机构代码
-		String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-		entity.setInstitutionCode(createInst);
-		//多级法人改造 add by jingqiongqiong 20200616
-		if(entity.getVdate().compareTo(DateUtil.platDateFromCache())<=0){
-			entity.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(entity.getSeqno(), entity.getVdate(), entity.getCreditMstId(),entity.getCustomerId(), createInst));
-		}else{
-			entity.setHapCreditAmt(new BigDecimal(0));
-		}
-		creditLinesMapper.insert(entity);
+    	entity.setCreditType("03");
+    	creditLinesMapper.insert(entity);
+    	//登录资产系列池子数据
+    	CreditAssetpool pool = new CreditAssetpool();
+    	pool.setSeqno(entity.getCustomerId());
+    	pool.setAssetpoolName(entity.getCustomerName());
+    	creditAssetpoolMapper.insert(pool);
+    	
     }
     
    
@@ -80,11 +79,6 @@ public class CeAssetGroup002Service extends BaseService<CreditMstInfoDto> {
     		if(StringUtil.isNotEmpty(entity.getCreditAmt())){
         		entity.setCreditAmt(entity.getCreditAmt().multiply(new BigDecimal(100000000)));
         	}
-    		//多级法人改造 add by jingqiongqiong 20200622
-    		//当前用户所属机构代码
-    		String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-    		entity.setInstitutionCode(createInst);
-    		//多级法人改造 add by jingqiongqiong 20200622
     		creditLinesMapper.updateByPrimaryKeySelective(entity);
     	}
     }
@@ -94,6 +88,18 @@ public class CeAssetGroup002Service extends BaseService<CreditMstInfoDto> {
      * @param name
      */
     public int delete(CreditLinesAstGrpDto dto) {
+    	ceAssetGroupMapper.deleteByPrimaryKey(dto.getSeqno());
     	return creditLinesMapper.deleteByPrimaryKey(dto.getSeqno());
     }
+    
+    /**
+     * 查询是否存在对应系列
+      *
+      * @param map 检索参数
+      * @return SelectOptionDto
+      */
+    public List<CreditAssetpool> querycreditAssetpool(Map<String, Object> map) {
+        return ceAssetGroupMapper.querycreditAssetpool(map);
+    }
+    
 }

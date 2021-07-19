@@ -139,7 +139,7 @@
 											<!-- class="layui-input form-input input-select" allowClear="true" data-th-data-result="${ASSET_TYPE_SECOND_LEVEL}" childrenIds="bussRepEquityInfoDto_repAssetType,bussRepAssetCreditNonstdInfoDto_repAssetType,bussRepAssetAstBillInfoDto_repAssetType,bussRepOtherInvestTargetInfoDto_repAssetType,bussFinBondRepInfoDto_repAssetType,bussRepFundInfoDto_repAssetType" formatoption=true></select> -->
 										</div>
 									</div>
-									<div class="form-inline-wrap">
+									<div id="projectAssetSource" class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{FinProjectTargetAsset002.assetSource}">资产来源</label>
 										<div class="layui-input-inline input-inline">
@@ -267,7 +267,7 @@
 									</div>
                                 </div>
                                 <div class="layui-form-item">
-									<div class="form-inline-wrap">
+									<div id="projectSettleDays" class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{FinProjectTargetAsset002.settleDays}">清算时效（工作日）</label>
 										<div class="layui-input-inline input-inline">
@@ -278,7 +278,7 @@
 												style="width: 50px">工作日</span>
 										</div>
 									</div>
-									<div class="form-inline-wrap">
+									<div id="projectBuyOutRate" class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{FinProjectTargetAsset002.buyOutRate}">买断利率</label>
 										<div class="layui-input-inline input-inline">
@@ -302,7 +302,7 @@
 		<!-- 增加推荐方与推荐费率 delete by renping 20191014 end -->
                                 </div>
                                 <div class="layui-form-item">
-									<div class="form-inline-wrap">
+									<div id="projectCapiIncomeFeature" class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{FinProjectTargetAsset002.capiIncomeFeature}">保本标识</label>
 										<div class="layui-input-inline input-inline">
@@ -398,7 +398,7 @@
 												</select>
 											</div>
                                     	</div>
-									<div class="form-inline-wrap">
+									<div id="projectInvestAdviser" class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap"
 											   data-th-text="#{FinProjectTargetAsset002.investAdviser}">投资顾问</label>
 										<div class="layui-input-inline input-inline">
@@ -484,7 +484,7 @@
 					</div>
                     <!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
 					<!-- 资产推荐方及费率信息 -->
-					<div class="page-component"
+					<div id="projectBussFinRecomment" class="page-component"
 						th:data-path="@{/component/asset/BussFinRecomment/init}"
 						th:data-params="|{entityName:'bussFinRecommentDto',finprodId:'${entity?.finprodId}',workflowId:'${workflowId}', pageId:'${pageId}'}|"></div>
                     <!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
@@ -554,7 +554,7 @@
 						 th:data-path="@{/component/project/BussFinProductCredit/init}"
 						 th:data-params="|{entityName:'bussFinProductCreditDto',finprodId:'${entity?.finprodId?:''}',workflowId:'${workflowId?:''}', pageId:'${pageId}'}|"></div>
 				</div>
-				<div class="pro-module-wrapper step" title="中债报送信息">
+				<div  id="bussRepProjectInfo" class="pro-module-wrapper step" title="中债报送信息" >
 					<div class="layui-form-item" style="margin-bottom: 5px">
 						<div class="form-inline-wrap">
 							<label class="layui-form-label form-label-wrap" data-th-text="#{BussRepEquityInfo.repAssetType}">二级资产类别</label>

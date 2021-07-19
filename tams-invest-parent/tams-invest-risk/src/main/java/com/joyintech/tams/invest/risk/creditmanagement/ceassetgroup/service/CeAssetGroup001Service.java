@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.stereotype.Service;
 
@@ -64,12 +65,13 @@ public class CeAssetGroup001Service extends CommonExportService<CreditLinesAstGr
      */
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
-    	 if(("vdate".equals(propName)) && value != null){
-             cell.setCellValue(DateUtil.format((Date)value));
-         }
-    	 if(("mdate".equals(propName)) && value != null){
-             cell.setCellValue(DateUtil.format((Date)value));
-         }
+		if(StringUtil.equals(propName,"vdate") || StringUtil.equals(propName,"mdate")){
+			if(value instanceof Date){
+				cell.setCellValue(DateUtil.format((Date)value));
+			}else if (value instanceof Long){
+				cell.setCellValue(DateUtil.format(new Date((Long) value)));
+			}
+		}
     }
 	
 	/**

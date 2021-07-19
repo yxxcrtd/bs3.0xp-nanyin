@@ -26,8 +26,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dao.CeAssetGroupManagementMapper;
 import com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dto.CeAssetGroupManagement001Dto;
@@ -82,13 +80,22 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
         CreditAssetpool record = new CreditAssetpool();
         record.setSeqno(dto.getSeqno());
         record.setAssetpoolName(dto.getAssetpoolName());
-		//多级法人改造 add by jingqiongqiong 20200616
-		//当前用户所属机构代码
-		String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-		record.setInstitutionCode(createInst);
-		//多级法人改造 add by jingqiongqiong 20200616
         creditAssetpoolMapper.insert(record);
     }
+    public void ceAssetDetaDeleteInsert(CeAssetGroupManagement001Dto dto) {
+        HashMap<String, Object> map = new HashMap<> ();
+
+        for(int i = 0; i < dto.getDataList ().size (); i++){
+            map.put("finprodId",dto.getDataList ().get (i).getFinprodId ());
+            ceAssetGroupManagementMapper.ceAssetDetaDelete(dto.getDataList ().get (i).getFinprodId ());
+
+            dto.getDataList ().get (i).setSeqno (dto.getSeqno ());
+            ceAssetGroupManagementMapper.ceAssetDetaInsert(dto.getDataList ().get (i));
+        }
+
+
+    }
+
 
     /**
      * <一句话功能简述>
@@ -101,11 +108,6 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
         CreditAssetpool record = new CreditAssetpool();
         record.setSeqno(dto.getSeqno());
         record.setAssetpoolName(dto.getAssetpoolName());
-		//多级法人改造 add by jingqiongqiong 20200616
-		//当前用户所属机构代码
-		String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-		record.setInstitutionCode(createInst);
-		//多级法人改造 add by jingqiongqiong 20200616
         creditAssetpoolMapper.updateByPrimaryKey(record);
         
     }
@@ -154,19 +156,15 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryAssetInfo(Map<String, Object> map) { 
-        List<SelectOptionDto> assetInfoList = ceAssetGroupManagementMapper.queryAssetInfo(map);
-//        // wangyang1 二级法人改造 2020年7月18日 start
-//        assetInfoList.addAll(ceAssetGroupManagementMapper.queryAssetInfoPub(map));
-//        // wangyang1 二级法人改造 2020年7月18日 start
-        return assetInfoList;
+    public List<SelectOptionDto> queryAssetInfo(Map<String, Object> map) {
+        return ceAssetGroupManagementMapper.queryAssetInfo(map);
     }
 
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param page
-     * @param length
+     * @param
+     * @param
      * @param param
      * @return
      * @throws Exception 
@@ -225,6 +223,11 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
         return super.queryForPage(page, length, () ->ceAssetGroupManagementMapper.getAssetDetailBySeqno(param));
     }
 
+    public Page<CeAssetGroupManagement001Dto> getAssetBySeqno(int page, int length,
+                                                                    Map<String, Object> param) throws Exception {
+        return super.queryForPage(page, length, () ->ceAssetGroupManagementMapper.getAssetBySeqno(param));
+    }
+
     /**
      * <一句话功能简述>
      * <功能详细描述>
@@ -240,8 +243,8 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param seqno
-     * @param assetpoolName
+     * @param
+     * @param
      * @return
      * @see
      * @since 1.0
@@ -258,21 +261,8 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
      * @see
      * @since 1.0
      */
-    public int checkIsExistAssetPool(String finprodId) {
+    public List<CeAssetGroupManagement001Dto> checkIsExistAssetPool(String finprodId) {
         return ceAssetGroupManagementMapper.checkIsExistAssetPool(finprodId);
-    }
-    
-    /**
-     * <一句话功能简述>
-     * 校验添加的资产明细是否已被添加到其他系列中
-     * @param finprodId
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public String checkIsExistAssetPoolNew(String finprodId) {
-        return ceAssetGroupManagementMapper.checkIsExistAssetPoolNew
-        		(finprodId, MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName()));
     }
 
     /**
@@ -288,12 +278,7 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
     }
 
     public int checkisExistAssetByCredit(String finprodId) {
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("finprodId", finprodId);
-        if (MultilevelDataAuthorityUtil.isEnabled()) {
-            param.put("institutionCode", MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
-        }
-        return ceAssetGroupManagementMapper.checkisExistAssetByCredit(param);
+        return ceAssetGroupManagementMapper.checkisExistAssetByCredit(finprodId);
     }
     
     /**

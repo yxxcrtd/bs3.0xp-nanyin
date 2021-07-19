@@ -654,7 +654,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setPurchDate(Date purchDate) {
         this.purchDate = purchDate;
     }
-    @NotEmpty(fieldName = "EtrConBond001.purchModle", groups = {ValidateGroupEdit.class})
+   /* @NotEmpty(fieldName = "EtrConBond001.purchModle", groups = {ValidateGroupEdit.class})*/
     public String getPurchModle() {
         return purchModle;
     }

@@ -1,20 +1,15 @@
 package com.joyintech.service.risk.creditmanagement.ceorg.service;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.risk.creditmanagement.ceorg.dao.CeOrgMapper;
 import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
-
 
 
 /**
@@ -55,4 +50,5 @@ public class CeOrg001Service extends BaseService<CreditLinesOrgDto> {
     	return this.queryForPageForSelectReturn(page, length,()->ceOrgMapper.getCustomerId(map));
     }
     
+
 }

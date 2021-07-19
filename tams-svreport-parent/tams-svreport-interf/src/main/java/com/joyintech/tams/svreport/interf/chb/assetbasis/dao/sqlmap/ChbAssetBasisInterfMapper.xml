@@ -561,4 +561,11 @@ where 1=1 <!-- fp2.branch = 0 -->
 		and EXERCISE_DATE >= #{valueDate,jdbcType=DATE}
 	</select>
 
+	<select id="getPulicAssetId"  resultType="java.lang.String">
+		select fp1.finprod_market_id from fin_product_add fpd
+		inner join fin_product fp on fpd.appear_market_id = fp.finprod_market_id
+		left join fin_product fp1 on fp1.finprod_id = fpd.finprod_id
+		where fpd.appear_market_id = #{assetId,jdbcType=VARCHAR}
+		and fp.finprod_type2 ='F01'
+	</select>
 </mapper>

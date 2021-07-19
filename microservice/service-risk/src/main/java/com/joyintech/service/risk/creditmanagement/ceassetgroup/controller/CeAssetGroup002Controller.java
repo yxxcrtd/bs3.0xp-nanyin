@@ -10,9 +10,12 @@
  
 package com.joyintech.service.risk.creditmanagement.ceassetgroup.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.select.SelectOptionDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.service.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto;
 import com.joyintech.service.risk.creditmanagement.ceassetgroup.service.CeAssetGroup002Service;
+import com.joyintech.tams.common.base.entity.CreditAssetpool;
 
 
 /**
@@ -84,4 +88,15 @@ public class CeAssetGroup002Controller {
     public int delete(@RequestBody CreditLinesAstGrpDto dto) throws Exception {
         return ceAssetGroup002Service.delete(dto);
     }
+    
+	/**
+     * 查询是否存在对应系列
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+	@PostMapping("/querycreditAssetpool")
+    public List<CreditAssetpool> querycreditAssetpool(@RequestBody Map<String, Object> map){
+        return ceAssetGroup002Service.querycreditAssetpool(map);
+    }
+	
 }

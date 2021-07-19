@@ -38,15 +38,11 @@ public interface CeAssetMapper {
     List<SelectOptionDto> getFinprodMarketIds(Map<String, Object> map);
     
     List<CreditLinesAstDto> searchSameAssetGroup(@Param(value = "customerId") String customerId);
-    //多级法人改造 add by jingqiongqiong 20200615
     /**
-     * 获取资产id联想文本框
-     * <功能详细描述>
-     * @param param
-     * @return
+     * 强制更新总份额和总额度字段
+     * @param entity 参数
      * @see
      * @since 1.0
      */
-    List<SelectOptionDto> getAssetIdPub(Map<String, Object> param);
-    //多级法人改造 add by jingqiongqiong 20200615
+    int updateAmtByPrimaryKey(CreditLinesAstDto entity);
 }

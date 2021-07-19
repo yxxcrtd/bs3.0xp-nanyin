@@ -13,7 +13,6 @@ package com.joyintech.service.risk.creditmanagement.ceorg.controller;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.CreditLines;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
+import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditConfInfoDto;
 import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
-import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
 import com.joyintech.service.risk.creditmanagement.ceorg.service.CeOrg002Service;
+import com.joyintech.service.risk.creditmanagement.ceorg.service.CeOrg003Service;
 
 
 /**
@@ -47,6 +47,11 @@ public class CeOrg002Controller {
 	@Autowired
 	private CeOrg002Service ceOrg002Service;
 	
+	/**
+	 * ceOrg003Service
+	 */
+	@Autowired
+	private CeOrg003Service ceOrg003Service;
 	/**
      * 客户代码联想
      * @return 查询结果集
@@ -85,12 +90,12 @@ public class CeOrg002Controller {
 	 * @param param
 	 * @return
 	 */
-	 @PostMapping("/getTreeCeOrgQuote/{page}/{length}")
+/*	 @PostMapping("/getTreeCeOrgQuote/{page}/{length}")
 	public Page<CreditMstInfoDto> getTreeCeOrgQuote(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
 		 length=100000000;
 	    return ceOrg002Service.getTreeCeOrgQuote(page, length,param);
-	}
+	}*/
 	
 	 /**
 	 * 额度信息获取
@@ -127,6 +132,16 @@ public class CeOrg002Controller {
 	public int searchRepeatByPflsh(String pflsh,String seqno,String creditMstId) {
 		return ceOrg002Service.searchRepeatByPflsh(pflsh,seqno,creditMstId);
 	}
+	// add by yushilong 查询是否重复校验 20200629 start
+	/**
+	 * 新建编辑场合时查询数据是否重复
+	 * @param param
+	 */
+	@PostMapping("/searchRepeat")
+	public int searchRepeat(@RequestBody Map<String, Object> param) {
+		return ceOrg002Service.searchRepeat(param);
+	}
+	// add by yushilong 查询是否重复校验 20200629 end
 	 /**
      * 插入
      * @param dto
@@ -170,9 +185,21 @@ public class CeOrg002Controller {
 		return ceOrg002Service.searchIsUse(param);
 	}
 
-	@PostMapping("/selectCreditLines")
-	public List<CreditLines> selectCreditLines(@RequestBody Map<String, Object> param){
-		return ceOrg002Service.selectCreditLines(param);
-	}
-
+	/**
+	 * 获取机构相关信息
+	 * @param param
+	 */   
+   @PostMapping("getOrgInfo")
+   public String getOrgInfo(@RequestBody String customerId) throws Exception {
+   	    return  ceOrg002Service.getOrgInfo(customerId);
+   }
+	
+	/**
+	 * 获取机构标签列表
+	 * @param param
+	 */
+	  @PostMapping("getCreditConfig/{page}/{length}")
+	  public Page<CreditConfInfoDto> getCreditConfig(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+	      return ceOrg003Service.getCreditConfig(page,length,pageParam);
+	  }
 }

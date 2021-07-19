@@ -6,9 +6,15 @@
 	             ,{field:'pflsh', width:210 , title: 'CeAsset001.pflsh'}
 	             ,{field:'customerId', width:210 , title: 'CeAsset001.assetId'}
 	             ,{field:'customerName', width:250 , title: 'CeAsset001.assetName'}
-	             ,{field:'creditAmt', width:210 ,title: 'CeAsset001.creditTotalAmt'}
+	             ,{field:'creditAmt', width:210 ,title: 'CeAsset001.creditTotalAmt',type:'number',digit:'4'}
 	             ,{field:'vdate', width:180 ,title: 'CeAsset001.vdate',type:'date'}           
 	             ,{field:'mdate',  title: 'CeAsset001.mdate',type:'date'}
+	             ,{field:'creditObjStr', width:180 ,  title: 'CeAsset001.creditObj',sortField:"creditObj"}
+	             ,{field:'creditShareAmt', width:180 ,  title: 'CeAsset001.creditShareAmt',type:'number',digit:'4'}
+                ,{field:'isLoopAmtStr', width:180 ,  title: '是否循环额度',sortField:"isLoopAmt"}
+                ,{field:'holdMaturityStr', width:180 ,  title: '是否持有至到期',sortField:"holdMaturity"}
+                ,{field:'creditCondition', width:180 ,  title: '附加条件',sortField:"creditCondition"}
+                ,{field:'remark', width:180 ,  title: '备注',sortField:"remark"}
 	             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
 	         ]
 	}
@@ -20,6 +26,8 @@
 	             ,{field:'creditAmt', width:210 ,title: 'CeAsset001.creditTotalAmt'}
 	             ,{field:'vdate', width:180 ,title: 'CeAsset001.vdate',type:'date'}           
 	             ,{field:'mdate',  title: 'CeAsset001.mdate',type:'date'}
+                 ,{field:'creditObjStr', width:180 ,  title: 'CeAsset001.creditObj',sortField:"creditObj"}
+                 ,{field:'creditShareAmt', width:180 ,  title: 'CeAsset001.creditShareAmt'}
 	             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
 	         ]
 	}
@@ -33,6 +41,9 @@
         	vdate: $('#vdate').startDate(),//生效日开始
         	mdate: $('#vdate').endDate(),//生效日结束
             customerId: $('#customerId').val(),
+            creditObj: $('#creditObj').val(),
+            creditShareAmt: $('#creditShareAmt').val(),
+            holdMaturity: $('#holdMaturity').val(),
         }
     };
     /**
