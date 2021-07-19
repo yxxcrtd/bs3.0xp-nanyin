@@ -1447,13 +1447,15 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
          validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null, ValidMessage.class);
 
          //同一数据行：开放开始日小于等于开放结束日，开放结束日小于等于开放确认日
-        List<FinOpenPlan> finOpenPlanListTemp = entity.getBussFinProductOpenPlanDto().getFinOpenPlanList();
-        if (!StringUtil.isEmptyList(finOpenPlanListTemp)){
-            for (FinOpenPlan finOpenPlan : finOpenPlanListTemp) {
-                  if(!(finOpenPlan.getOpenDateStr().compareTo(finOpenPlan.getOpenDateEnd())<=0 && finOpenPlan.getOpenDateEnd().compareTo(finOpenPlan.getOpenVdate())<=0)){
-                      validList.add(new ValidMessage("开放计划中开放开始日必须小于等于开放结束日，开放结束日必须小于等于开放确认日"));
-                      break;
-                  }
+        if (entity.getBussFinProductOpenPlanDto() != null) {
+            List<FinOpenPlan> finOpenPlanListTemp = entity.getBussFinProductOpenPlanDto().getFinOpenPlanList();
+            if (!StringUtil.isEmptyList(finOpenPlanListTemp)){
+                for (FinOpenPlan finOpenPlan : finOpenPlanListTemp) {
+                    if(!(finOpenPlan.getOpenDateStr().compareTo(finOpenPlan.getOpenDateEnd())<=0 && finOpenPlan.getOpenDateEnd().compareTo(finOpenPlan.getOpenVdate())<=0)){
+                        validList.add(new ValidMessage("开放计划中开放开始日必须小于等于开放结束日，开放结束日必须小于等于开放确认日"));
+                        break;
+                    }
+                }
             }
         }
         return validList;
