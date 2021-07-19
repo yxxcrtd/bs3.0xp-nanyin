@@ -411,6 +411,16 @@ public class FinProductAdd extends BaseEntity {
     private Date listingDate;
 
     /**
+     * 增信措施
+     */
+    private String creditEnhanceMeasure;
+
+    /**
+     * 基金经理姓名
+     */
+    private String fundMangerName;
+
+    /**
      * 取得 金融产品代码
      * @return 金融产品代码
      */
@@ -1540,4 +1550,37 @@ public class FinProductAdd extends BaseEntity {
     public void setListingDate(Date listingDate) {
         this.listingDate = listingDate;
     }
+
+    /**
+     * 取得 增信措施
+     * @return 增信措施
+     */
+    public String getCreditEnhanceMeasure() {
+        return creditEnhanceMeasure;
+    }
+
+    /**
+     * 设置 增信措施
+     * @param creditEnhanceMeasure 增信措施
+     */
+    public void setCreditEnhanceMeasure(String creditEnhanceMeasure) {
+        this.creditEnhanceMeasure = creditEnhanceMeasure;
+    }
+
+    /**
+     * 取得 基金经理姓名
+     * @return 基金经理姓名
+     */
+    public String getFundMangerName() {
+        return fundMangerName;
+    }
+
+    /**
+     * 设置 基金经理姓名
+     * @param fundMangerName 基金经理姓名
+     */
+    public void setFundMangerName(String fundMangerName) {
+        this.fundMangerName = fundMangerName;
+    }
+
 }

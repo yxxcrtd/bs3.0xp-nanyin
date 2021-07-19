@@ -15,7 +15,9 @@
 				<i class="iconfont icon-team_fill"></i>
 					<span data-th-text="#{PtlManagementInfo001.allocation}">用户分配</span>
 				</a>
-				<a id="PtlManagementInfo001_btn_add_child" class="layui-btn layui-btn-sm btn-create" data-th-text="#{PtlManagementInfo001.createChild}">创建子组合</a>
+				<!-- 隐藏【创建子组合】按钮  by caozhenming 20210719 start-->
+<!--				<a id="PtlManagementInfo001_btn_add_child" class="layui-btn layui-btn-sm btn-create" data-th-text="#{PtlManagementInfo001.createChild}">创建子组合</a>-->
+				<!-- 隐藏【创建子组合】按钮  by caozhenming 20210719 end-->
 			</div>
 			<div class='joyin-form-wrap joyin-filter-form condition-area curr-form' >
 				<form class="layui-form" id="searchForm">
@@ -50,19 +52,21 @@
 						</div>
 					</div>
 					<div class="layui-form-item">
-						<div id="strategy"  class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4">
-							<label class="layui-form-label form-lable"
-								   data-th-text="#{PtlManagementInfo001.strategy}">投资策略</label>
-							<div class="layui-input-inline input-inline">
-								<input type="text" id="strategyName" name="strategyName"
-									   data-th-data-url="@{/invest/portfolio/ptlmanagementinfo/PtlManagementInfo001/getStrategy}"
-									   class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
-									   data-th-placeholder="#{SysCommon.placeholder}"
-									   data-idfield="shortName" data-keyfield="shortName"
-									   data-th-data-effectivefieldsalias='|{"code":"#{PtlManagementInfo001.strategyId}",
-									   "shortName":"#{PtlManagementInfo001.strategyName}"}|'>
-							</div>
-						</div>
+							<!-- 查询条件【投资策略】隐藏 by caozhenming 20210719 start -->
+<!--						<div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4">-->
+<!--							<label class="layui-form-label form-lable"-->
+<!--								   data-th-text="#{PtlManagementInfo001.strategy}">投资策略</label>-->
+<!--							<div class="layui-input-inline input-inline">-->
+<!--								<input type="text" id="strategyName" name="strategyName"-->
+<!--									   data-th-data-url="@{/invest/portfolio/ptlmanagementinfo/PtlManagementInfo001/getStrategy}"-->
+<!--									   class="layui-input form-input input-lenovoselect" placeholder="请输入内容"-->
+<!--									   data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--									   data-idfield="shortName" data-keyfield="shortName"-->
+<!--									   data-th-data-effectivefieldsalias='|{"code":"#{PtlManagementInfo001.strategyId}",-->
+<!--									   "shortName":"#{PtlManagementInfo001.strategyName}"}|' disabled="disabled">-->
+<!--							</div>-->
+<!--						</div>-->
+						<!-- 查询条件【投资策略】隐藏 by caozhenming 20210719 end -->
 						<div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4">
 							<label class="layui-form-label form-lable" data-th-text="#{PtlManagementInfo001.vDate}">成立日</label>
 							<div class="layui-input-inline input-inline">
