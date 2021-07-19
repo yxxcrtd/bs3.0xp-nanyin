@@ -57,9 +57,7 @@ public class CeAssetGroupManagement001Validator implements BeanValidator{
             if (count > 0) {
                 /** modify by yanya on 20190930 系列名称重复时 ，提醒“系列已存在！start
                 validList.add(new ValidMessage(this.getMessage("RSK_W_0041")));**/
-//                validList.add(new ValidMessage(this.getMessage("RSK_W_0043")));
-            	// modify by wj 20200424  改为提醒 {xxxx}系列已存在  ---
-                validList.add(new ValidMessage(this.getMessage("RSK_W_0044",dto.getAssetpoolName())));
+                validList.add(new ValidMessage(this.getMessage("RSK_W_0043")));
                 /** modify by yanya on 20190930 系列名称重复时 ，提醒“系列已存在！end **/
             } 
             // 判断是否输入系列名称
@@ -86,7 +84,7 @@ public class CeAssetGroupManagement001Validator implements BeanValidator{
             if (count>0) {
             	 /** modify by gaopeng on 20191009 系列名称重复时 ，提醒“系列已存在！start
                 validList.add(new ValidMessage(this.getMessage("RSK_W_0041")));**/
-                validList.add(new ValidMessage(this.getMessage("RSK_W_0044",dto.getAssetpoolName())));
+                validList.add(new ValidMessage(this.getMessage("RSK_W_0043")));
                 /** modify by gaopeng on 20191009 系列名称重复时 ，提醒“系列已存在！end **/
             }
             //判断流程中是否存在相同的数据

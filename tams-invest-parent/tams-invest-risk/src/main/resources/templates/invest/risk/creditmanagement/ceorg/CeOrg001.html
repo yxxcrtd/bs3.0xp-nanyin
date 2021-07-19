@@ -47,6 +47,22 @@
 							</div>
 						</div>
 					</div>
+					<!--add by yushilong 机构授信画面查询新增“是否同业”条件 20200629 start-->
+					<div class="layui-form-item">
+						<div class="layui-inline layui-col-md4  layui-col-xs4 layui-col-sm4 layui-col-lg4">
+							<label class="layui-form-label form-lable"
+								   data-th-text="#{CeOrg001.isInterbank}">是否同业</label>
+							<div class="layui-input-inline input-inline">
+								<select  id="isInterbank" name="isInterbank"
+										 class="layui-input form-input input-select"
+										 th:placeholder="#{SysCommon.placeholder}"
+										 th:data-result="${YES_OR_NO}" allowClear="true"
+										 formatoption="true">
+								</select>
+							</div>
+						</div>
+					</div>
+					<!--add by yushilong 机构授信画面查询新增“是否同业”条件 20200629 end-->
 				</form>
 			</div>
 

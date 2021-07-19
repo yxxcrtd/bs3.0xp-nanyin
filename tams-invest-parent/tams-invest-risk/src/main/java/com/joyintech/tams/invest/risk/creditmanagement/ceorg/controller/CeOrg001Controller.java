@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -53,6 +54,9 @@ public class CeOrg001Controller extends BaseController {
     
     @Override
     public String init(Model model) {
+        // add by yushilon 机构授信查询新增字段 20200629 start
+        this.setSelectOptionToModel(model, DictCode.是否);
+        // add by yushilon 机构授信查询新增字段 20200629 end
         return super.init(model);
     }
   

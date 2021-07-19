@@ -437,10 +437,11 @@ from
     LEFT JOIN FIN_CASH_CALC_RULE t8 ON t8.FINPROD_ID=tempT8.FINPROD_ID AND t8.EFF_DATE = tempT8.EFF_DATE
     and t8.CASH_ID = t5.CASH_ID
     LEFT JOIN (
-        select A.FINPROD_ID,max(A.EXERCISE_DATE) EXERCISE_DATE
+        <!-- 取大于当前时间的最接近的实际行权日 -->
+        select A.FINPROD_ID,min(A.EXERCISE_DATE) EXERCISE_DATE
         from FIN_EXERCISE_PLAN A
         where
-        1=1
+        sysdate &lt;= A.ACT_EXERCISE_DATE 
         <if test="finprodId != null and finprodId != ''">
             AND A.FINPROD_ID = #{finprodId}
         </if>

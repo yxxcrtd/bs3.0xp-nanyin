@@ -9,15 +9,15 @@
     var initFlag = true;
     var pageModel = PAGE_MODEL_NEW;
 
-    var etrIbBondinfo002Funcs = {};
+    var doChange = {};
     function query(ele){
         return $("#EtribBondInfo002_bodydiv " + ele);
     }
     
-    etrIbBondinfo002Funcs.reloadLayui = function(){
+    doChange.reloadLayui = function(){
         layui.form.render();
     }
-    etrIbBondinfo002Funcs.exerYield_setDisabled = function(isDisabled, isRight, priceModel){
+    doChange.exerYield_setDisabled = function(isDisabled, isRight, priceModel){
         // 行权收益率
         let exerYield = query('#exerYield');
         if(isDisabled){
@@ -73,6 +73,9 @@
     }
 
 
+    function setCashPosition(result) {
+        
+    }
     /**
      * 获取表单参数
      *
@@ -263,7 +266,7 @@
                 query('#matureYield').val('').attr('disabled', true);
 
                 // 行权收益率
-                etrIbBondinfo002Funcs.exerYield_setDisabled(true);
+                doChange.exerYield_setDisabled(true);
 
             } else {
                 // 净价必填
@@ -273,9 +276,10 @@
                 query('#fpriceAmt').attr('disabled', false);
 
                 query('#matureYield').attr('disabled', false);
-
+                
                 // 行权收益率
-                etrIbBondinfo002Funcs.exerYield_setDisabled(false);
+                query('#exerYield').attr('disabled', false);
+                
             }
         }
 
@@ -465,22 +469,27 @@
     };
 
     //查询组合可用现金,资产可用券面总额
-    var getPtlCashPositionInfo = function () {
-        if (!query('#portfolioId').val()) {
-            return;
+    var getPtlCashPositionInfo = function (rs) {
+        // if (!query('#portfolioId').val()) {
+        //     return;
+        // }
+        // var param = {};
+        // param.ccy = query('#ccy').val();
+        // param.vdate = query('#vdate').val();
+        // param.finprodId = query("#finprodIdhid").val();
+        // param.portfolioId = query("#portfolioId").val();
+        //
+        // Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
+        //     if (result) {
+        //         query("#proAvailableCash").val(result.zhkyxj_t);
+        //         query("#assetAvailablePosition").val(result.zcky_qmze);
+        //     }
+        // });
+        if(rs){ 
+            // 避免重复请求头寸信息
+            query("#proAvailableCash").val(rs.zhkyxj_t);
+            query("#assetAvailablePosition").val(rs.zcky_qmze);
         }
-        var param = {};
-        param.ccy = query('#ccy').val();
-        param.vdate = query('#vdate').val();
-        param.finprodId = query("#finprodIdhid").val();
-        param.portfolioId = query("#portfolioId").val();
-
-        Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findPositionInfo', param, function (result) {
-            if (result) {
-                query("#proAvailableCash").val(result.zhkyxj_t);
-                query("#assetAvailablePosition").val(result.zcky_qmze);
-            }
-        });
     }
 
     /**
@@ -494,7 +503,8 @@
         var sysDateT1 = query('#vdate').val();
 		var calId = query('#calendarId').val();
         if (todoList == false) {
-            parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
+            var rs = parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
+            getPtlCashPositionInfo(rs);
         }
     }
 
@@ -506,7 +516,8 @@
         var vdate = query('#vdate').val();
         var calId = query('#calendarId').val();
         if (todoList == false) {
-            parent.EtrIbBondinfoHq.queryPositionInfo(finprodIdhid,portfolioId,chlFinprodId,ccy,vdate,calId);
+            var rs = parent.EtrIbBondinfoHq.queryPositionInfo(finprodIdhid,portfolioId,chlFinprodId,ccy,vdate,calId);
+            getPtlCashPositionInfo(rs);
         }
     }
     /**
@@ -595,7 +606,7 @@
         isNeedRiskcal: isNeedRiskcal,
         getRiskInterfUrl: getRiskInterfUrl,
         getSaveOrSubmitParams:  getSaveOrSubmitParams,
-
+        setCashPosition:setCashPosition,
 
         riskResultdata: riskResultdata,
         cluflag: cluflag
@@ -647,7 +658,7 @@
             var finprodIdhid = query("#finprodIdhid").val();
             if (query("#ps").val() == T01) {
                 if (query("#isRight").val() != N) {
-                    etrIbBondinfo002Funcs.exerYield_setDisabled(false);
+                    doChange.exerYield_setDisabled(false);
                 }
                 query("#matureYield").removeAttr("disabled");
                 
@@ -656,7 +667,7 @@
                 query("#div_counterId2").css("display","none");
             } else if (query("#ps").val() == T02) {
                 if (query("#isRight").val() != N) {
-                    etrIbBondinfo002Funcs.exerYield_setDisabled(false);
+                    doChange.exerYield_setDisabled(false);
                 }
                 query("#matureYield").attr("disabled", true);
                 query("#matureYield").val("");
@@ -665,7 +676,7 @@
                 query("#div_counterId1").css("display","block");
                 query("#div_counterId2").css("display","none");
             } else if (query("#ps").val() == T03 || query("#ps").val() == T39) {
-                etrIbBondinfo002Funcs.exerYield_setDisabled(true);
+                doChange.exerYield_setDisabled(true);
                 
                 query("#matureYield").attr("disabled", true);
                 query("#matureYield").val("");
@@ -735,7 +746,7 @@
                 query("#isRight").val(data.isRight).trigger("change");
                 // // 资产为非含权债时，置灰“行权收益率”字段
                 if(data.isRight === N){
-                    etrIbBondinfo002Funcs.exerYield_setDisabled(true);
+                    doChange.exerYield_setDisabled(true);
                 }
                 query("#calendarId").val(data.calendarId).trigger("change");
                 query("#finvdate").val(new Date(data.finvdate)).trigger("change");
@@ -757,14 +768,14 @@
                 query("#isRight").val("").trigger("change");
                 query("#matureYield").val("").trigger("change").trigger("blur");
                 
-                etrIbBondinfo002Funcs.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val());
+                doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val());
             }
 
             //左下行情信息联动 & 组合可用现金,资产可用持仓
             getLeftMarketInfo();
 
             //组合可用现金,资产可用持仓
-            getPtlCashPositionInfo();
+            // getPtlCashPositionInfo();
 
             // 画星星
             star();
@@ -781,7 +792,7 @@
             getLeftZHinfo();
             
             //组合可用现金,资产可用持仓
-            getPtlCashPositionInfo();
+            // getPtlCashPositionInfo();
         });
 
         $.fn.updateChosenArr = function updateChosenArr(obj) {
@@ -902,13 +913,13 @@
                     query("#fpriceAmt").val("").attr("disabled", true); // 全价
                     query("#matureYield").val("").attr("disabled", true); // 到期收益率
 
-                    etrIbBondinfo002Funcs.exerYield_setDisabled(true); // 行权收益率
+                    doChange.exerYield_setDisabled(true); // 行权收益率
                 } else {
                     query("#price").val("").attr("disabled", false).attr("required", "true"); // 净价
                     query("#fpriceAmt").val("").attr("disabled", false); // 全价
                     query("#matureYield").val("").attr("disabled", false); // 到期收益率
                     
-                    etrIbBondinfo002Funcs.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val()); // 行权收益率
+                    doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val()); // 行权收益率
                 }
                 if (query("#price").val()) {
                     calData("price");
@@ -939,10 +950,10 @@
         query('#isRight').change(function () {
             var isRight = query('#isRight').val();
             if (!isRight || isRight === N) {
-                etrIbBondinfo002Funcs.exerYield_setDisabled(true);
+                doChange.exerYield_setDisabled(true);
             } else {
                 // 行权收益率
-                etrIbBondinfo002Funcs.exerYield_setDisabled(false, isRight, query("#priceModel").val()); 
+                doChange.exerYield_setDisabled(false, isRight, query("#priceModel").val()); 
             }
         });
 

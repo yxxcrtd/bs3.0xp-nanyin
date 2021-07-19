@@ -8,6 +8,9 @@
         	pflsh: $('#pflsh').val(),
         	vdate: $('#vdate').startDate(),//生效日开始
         	mdate: $('#vdate').endDate()//生效日结束
+            /*add by yushilon 查询条件新增 20200629 start*/
+            ,isInterbank: $('#isInterbank').val()
+            /*add by yushilon 查询条件新增 20200629 end*/
         }
     };
     /**
@@ -35,6 +38,13 @@
             ,{field:'pflsh', width:180 , title: 'CeOrg001.pflsh'}
             ,{field:'customerId', width:190 , title: 'CeOrg001.institutionId'}
             ,{field:'customerName', width:210 , title: 'CeOrg001.institutionName'}
+            /*add by yushilong 机构授信查询画面新增字段 20200629 start*/
+            ,{field:'isInterbank', width:120 , visible: false}
+            ,{field:'isInterbankStr', width:120 , title: 'CeOrg001.isInterbank',sortField: 'isInterbank'}
+            ,{field:'isLoopAmt', width:120 , visible: false}
+            ,{field:'isLoopAmtStr', width:120 , title: 'CeOrg001.isLoopAmt', sortField: 'isLoopAmt'}
+            ,{field:'nlpscreditline', width:210 , title: 'CeOrg001.nlpscreditline', type: 'number', digit:4}
+            /*add by yushilong 机构授信查询画面新增字段 20200629 end*/
             ,{field:'insitituteCode', width:180 , title: 'CeOrg001.insitituteCode'}
             ,{field:'creditAmt', width:180 ,title: 'CeOrg001.creditTotalAmt',type: 'number', digit:4 }
             ,{field:'vdate', width:120 ,title: 'CeOrg001.vdate',type:'date'}           
@@ -104,6 +114,17 @@
         });
         $('#CeOrg001_btn_add').click(function() {
             openNew();
+        });
+        
+        /**
+         * 绑定额度标签管理按钮事件
+         */
+        $('#CeOrg001_btn_manage').click(function () {
+            Joyin.dialog(JoyinUtil.getLabel("CeLine001"), basePath
+                + "invest/risk/creditmanagement/creditlinemanage/CeLine001/init", "99%", "99%", {
+                	pageModel: PAGE_MODEL_NEW
+            	}, function () {
+            });
         });
     });
 }());

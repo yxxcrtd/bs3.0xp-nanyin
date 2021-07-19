@@ -146,11 +146,11 @@ public class CreditRightsManagement002Controller extends BaseController{
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item->item.getSeqno());
         params.setBusinessType(DictCodeList.共通业务类型_风险权数管理.getValue());
-        String twoStr =StringUtil.isEmpty(dto.getAssetTypeTwoStr())?"":"-" + "资产二级分类"+ "(" + dto.getAssetTypeTwoStr()+ ")";
+
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
             entity -> "资产一级分类"+ "(" + entity.getAssetTypeOneStr()+ ")" 
-                +  "-" + twoStr
+                +  "-" + "资产二级分类"+ "(" + entity.getAssetTypeTwoStr()+ ")"
             		+ "生效日"+"(" + entity.getEffDateStr() + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = creditRightsManagementService.start(processParameter, dto);
@@ -193,17 +193,8 @@ public class CreditRightsManagement002Controller extends BaseController{
         }
         SelectDto selectDto7 = this.getSelectDataFromDataDic(DictCode.回购类型, null);
         for (SelectOptionDto dto : selectDto7.getOptions()) {
-            if(DictCodeList.回购类型_买断式回购.getValue().equals(dto.getId())){
-                continue;
-            }
             listFloatRate.add(dto);
         }
-        /*SelectDto selectDto10 = this.getSelectDataFromDataDic(DictCode.回购类型, null);
-        for (SelectOptionDto dto : selectDto10.getOptions()) {
-            if(DictCodeList.回购类型_买断式回购.getValue().equals(dto.getId())){
-                listFloatRate.add(dto);
-            }
-        }*/
         return listFloatRate;
     }
 }

@@ -107,7 +107,14 @@ public class CeAssetGroupManagement001Service extends CommonExportService<CeAsse
             CeAssetGroupManagement001Dto.class);
         
     }
-    
+
+    public Page<CeAssetGroupManagement001Dto> getAssetBySeqno(Map<String, Object> param) {
+        return restTemplate.postForPage(
+                ServiceApplication.RISK_SERVICE_NAME + "/CeAssetGroupManagement/getAssetBySeqno" ,param,
+                CeAssetGroupManagement001Dto.class);
+
+    }
+
     /**
      * 导出
      */

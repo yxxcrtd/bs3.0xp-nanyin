@@ -11,6 +11,7 @@
 package com.joyintech.service.entrust.etribbondinfo.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -330,6 +331,7 @@ public class EtrIbBondinfo003Service {
             EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
             entrustCommonDto.setEtrEntrust(etrEntrust);
             entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+            dto.setInvManagerId(LoginUserUtil.getUserName());
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             dto.setIsOutTrade(DictCodeList.是否_是.getValue());
             dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());

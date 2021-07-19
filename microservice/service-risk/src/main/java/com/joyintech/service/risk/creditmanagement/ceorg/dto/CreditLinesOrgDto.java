@@ -10,8 +10,11 @@
 
 package com.joyintech.service.risk.creditmanagement.ceorg.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.framework.base.dto.UploadFile;
 
@@ -71,6 +74,35 @@ public class CreditLinesOrgDto  extends CreditLines {
      * 画面Id - 机构名称
      */
     private String customerName;
+
+    /*private String holdMaturity;
+
+	@Override
+	public String getHoldMaturity() {
+		return holdMaturity;
+	}
+
+	@Override
+	public void setHoldMaturity(String holdMaturity) {
+		this.holdMaturity = holdMaturity;
+	}*/
+
+	// add by yushilong 非法非法人主体授信额度（亿元）字段新增 20200629 start
+	/**
+	 * 画面Id - 非法人主体授信额度（亿元）
+	 */
+	@JsonSerialize(using= BigDecimalSerializer.class)
+	private BigDecimal nlpscreditline;
+
+	public BigDecimal getNlpscreditline() {
+		return nlpscreditline;
+	}
+
+
+	public void setNlpscreditline(BigDecimal nlpscreditline) {
+		this.nlpscreditline = nlpscreditline;
+	}
+	// add by yushilong 非法非法人主体授信额度（亿元）字段新增 20200629 end
 
 	public String getPageModel() {
 		return pageModel;
@@ -161,5 +193,44 @@ public class CreditLinesOrgDto  extends CreditLines {
 		this.uploadFileList = uploadFileList;
 	}
 	
+	private List<CreditConfInfoDto> creditLabelItem;
     
+    public List<CreditConfInfoDto> getCreditLabelItem() {
+		return creditLabelItem;
+	}
+
+	public void setCreditLabelItem(List<CreditConfInfoDto> creditLabelItem) {
+		this.creditLabelItem = creditLabelItem;
+	}
+
+	// delete by yushilong 风险授信查询结果内容修改 20200629 start
+	/**
+     * 是否集团客户
+     * @param creditCondition 授信使用条件
+     *//*
+    private String isGroupCustomer;
+    
+    public String getIsGroupCustomer() {
+		return isGroupCustomer;
+	}
+
+	public void setIsGroupCustomer(String isGroupCustomer) {
+		this.isGroupCustomer = isGroupCustomer;
+	}
+    *//**
+     * 所属集团客户名称
+     * @param creditCondition 授信使用条件
+     *//*
+
+	private String parentCustomerName;
+
+	public String getParentCustomerName() {
+		return parentCustomerName;
+	}
+
+	public void setParentCustomerName(String parentCustomerName) {
+		this.parentCustomerName = parentCustomerName;
+	}*/
+	// delete by yushilong 风险授信查询结果内容修改 20200629 end
+
 }

@@ -108,6 +108,23 @@ public class CeAssetGroupManagementController {
     public void insert(@RequestBody CeAssetGroupManagement001Dto dto) {
         ceAssetGroupManagementService.insert(dto);
     }
+
+    /**
+     *
+     * <一句话功能简述>
+     * 插入
+     * @param dto
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("ceAssetDetaDeleteInsert")
+    public void ceAssetDetaDeleteInsert(@RequestBody CeAssetGroupManagement001Dto dto) {
+        ceAssetGroupManagementService.ceAssetDetaDeleteInsert(dto);
+    }
+
+
     
     /**
      * 
@@ -217,6 +234,13 @@ public class CeAssetGroupManagementController {
                                                                     @PathVariable("length") int length) throws Exception {
         return ceAssetGroupManagementService.getAssetDetailBySeqno(page, length, param);
     }
+
+    @PostMapping("getAssetBySeqno/{page}/{length}")
+    public Page<CeAssetGroupManagement001Dto> getAssetBySeqno(@RequestBody Map<String, Object> param,
+                                                              @PathVariable("page") int page,
+                                                              @PathVariable("length") int length) throws Exception {
+        return ceAssetGroupManagementService.getAssetBySeqno(page, length, param);
+    }
     
     /**
      * 
@@ -256,22 +280,8 @@ public class CeAssetGroupManagementController {
      * @since 1.0
      */
     @PostMapping("checkIsExistAssetPool")
-    public int checkIsExistAssetPool(@RequestBody String finprodId) {
+    public List<CeAssetGroupManagement001Dto> checkIsExistAssetPool(@RequestBody String finprodId) {
         return ceAssetGroupManagementService.checkIsExistAssetPool(finprodId);
-    }
-    
-    /**
-     * 
-     * <一句话功能简述>
-     * 校验添加的资产明细是否已被添加到其他系列中
-     * @param finprodId
-     * @return
-     * @see
-     * @since 1.0
-     */
-    @PostMapping("checkIsExistAssetPoolNew")
-    public String checkIsExistAssetPoolNew(@RequestBody String finprodId) {
-        return ceAssetGroupManagementService.checkIsExistAssetPoolNew(finprodId);
     }
     
     /**

@@ -13,6 +13,8 @@ package com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.CreditAssetpool;
+import com.joyintech.tams.common.base.entity.CreditAssetpoolDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -64,16 +66,6 @@ public interface CeAssetGroupManagementMapper {
     /**
      * <一句话功能简述>
      * <功能详细描述>
-     * @param map
-     * @return
-     * @see
-     * @since 1.0
-     */
-    List<SelectOptionDto> queryAssetInfoPub(Map<String, Object> map);
-    
-    /**
-     * <一句话功能简述>
-     * <功能详细描述>
      * @param param
      * @return
      * @see
@@ -100,6 +92,8 @@ public interface CeAssetGroupManagementMapper {
      */
     List<CeAssetGroupManagement001Dto> getAssetDetailBySeqno(Map<String, Object> param);
 
+    List<CeAssetGroupManagement001Dto> getAssetBySeqno(Map<String, Object> param);
+
     /**
      * <一句话功能简述>
      * <功能详细描述>
@@ -110,6 +104,7 @@ public interface CeAssetGroupManagementMapper {
      * @since 1.0
      */
     int deleteAssetPool(@Param("seqno") String seqno, @Param("finprodId") String finprodId);
+
 
     /**
      * <一句话功能简述>
@@ -150,18 +145,7 @@ public interface CeAssetGroupManagementMapper {
      * @see
      * @since 1.0
      */
-    int checkIsExistAssetPool(@Param("finprodId") String finprodId);
-    
-    
-    /**
-     * <一句话功能简述>
-     * 校验添加的资产明细是否已被添加到其他系列中
-     * @param finprodId
-     * @return
-     * @see
-     * @since 1.0
-     */
-    String checkIsExistAssetPoolNew(@Param("finprodId") String finprodId,  @Param(value = "institutionCode")String institutionCode);
+    List<CeAssetGroupManagement001Dto> checkIsExistAssetPool(@Param("finprodId") String finprodId);
     
     /**
      * <一句话功能简述>
@@ -171,7 +155,7 @@ public interface CeAssetGroupManagementMapper {
      * @see
      * @since 1.0
      */
-    int checkisExistAssetByCredit(Map<String, Object> param);
+    int checkisExistAssetByCredit(@Param("finprodId") String finprodId);
 
     /**
      * <一句话功能简述>
@@ -202,5 +186,10 @@ public interface CeAssetGroupManagementMapper {
      * @since 1.0
      */
     List<CeAssetGroupManagement002Dto> getBusinessWorkflowId(@Param("pageId") String pageId);
+
+    int ceAssetDetaDelete(@Param("finprodId") String finprodId);
+//    int deleteAssetPool(@Param("seqno") String seqno, @Param("finprodId") String finprodId);
+
+    void ceAssetDetaInsert(CreditAssetpoolDetail selectedItem);
 
 }

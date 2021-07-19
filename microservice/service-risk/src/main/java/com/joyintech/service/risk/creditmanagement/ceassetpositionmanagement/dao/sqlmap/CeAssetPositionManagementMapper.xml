@@ -134,7 +134,7 @@
 		</if>
 	</select>
 	<delete id="deleteByPtlid">
-		delete from CREDIT_LINES_SEC_POSITION where PTL_ID = #{ptlid, jdbcType=VARCHAR} and  to_date(#{valdate},'%Y/%m/%d %H:%i:%s') >= VAL_DATE
+		delete from CREDIT_LINES_SEC_POSITION where PTL_ID = #{ptlid, jdbcType=VARCHAR} and  to_date(#{valdate},'YYYY/MM/DD HH24:mi:ss') >= VAL_DATE
     </delete>
     
     <update id="updateLinesByPtlId">

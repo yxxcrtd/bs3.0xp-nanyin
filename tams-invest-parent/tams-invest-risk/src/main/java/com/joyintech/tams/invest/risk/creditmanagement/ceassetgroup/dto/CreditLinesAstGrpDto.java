@@ -10,10 +10,14 @@
 
 package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.dto;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Length;
@@ -21,15 +25,10 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.validator.CeAssetGroupValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 
@@ -86,15 +85,23 @@ public class CreditLinesAstGrpDto  extends CreditLines implements ITableRow,Proc
      * 画面Id - 机构名称
      */
     private String customerName;
-    
+
+    // add by yushilong 新增字段校验 20200630 start
+	@Override
+	@NotEmpty(fieldName = "CeOrg002.isLoopAmt",groups={ValidateGroupEdit.class})
+	public String getIsLoopAmt() {
+		return super.getIsLoopAmt();
+	}
+    // add by yushilong 新增字段校验 20200630 end
+
     @Override
-	@PrimaryKey(value=Field.PK_1)
+    @PrimaryKey(value=Field.PK_1)
 	public String getSeqno() {
 		return StringUtil.isNotEmpty(super.getSeqno())?super.getSeqno():StringUtil.EMPTY;
 	}
 
     @Override
-    @PrimaryKey(value=Field.PK_3)
+    @PrimaryKey(value=Field.PK_2)
     @Length(fieldName = "CeAssetGroup002.pflsh", max =50, groups = {ValidateGroupEdit.class})
 	@NotEmpty(fieldName = "CeAssetGroup002.pflsh",groups={ValidateGroupEdit.class})
 	public String getPflsh() {
@@ -106,8 +113,7 @@ public class CreditLinesAstGrpDto  extends CreditLines implements ITableRow,Proc
      * {@inheritDoc}
      */
     @Override
-	@PrimaryKey(value=Field.PK_2)
-    @NotEmpty(fieldName = "CeAssetGroup002.assetGroupName", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "CeAssetGroup002.assetGroupName", groups = {ValidateGroupEdit.class})
     public String getCustomerId(){
         return super.getCustomerId();
     }
@@ -121,11 +127,6 @@ public class CreditLinesAstGrpDto  extends CreditLines implements ITableRow,Proc
     public Date getVdate(){
         return super.getVdate();
     }
-
-	@PrimaryKey(value=Field.PK_4)
-	public String getVdateStr(){
-		return DateUtil.format(super.getVdate());
-	}
     
     
     /**
@@ -220,11 +221,6 @@ public class CreditLinesAstGrpDto  extends CreditLines implements ITableRow,Proc
 	}
 
 
-	@PrimaryKey(value=Field.PK_5)
-	public String getInstitutionCode() {
-		return super.getInstitutionCode();
-	}
-
 	public String getInsitituteCode() {
 		return insitituteCode;
 	}
@@ -234,7 +230,8 @@ public class CreditLinesAstGrpDto  extends CreditLines implements ITableRow,Proc
 		this.insitituteCode = insitituteCode;
 	}
 
-
+	@NotEmpty(fieldName = "CeAssetGroup002.assetGroupName", groups = {ValidateGroupEdit.class})
+    @PrimaryKey(value=Field.PK_3)
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -243,14 +240,6 @@ public class CreditLinesAstGrpDto  extends CreditLines implements ITableRow,Proc
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
-
-	/**
-	 * 授信配置代码
-	 * {@inheritDoc}
-	 */
-	@Override
-	@PrimaryKey(value=Field.PK_6)
-	public String getCreditMstId(){
-		return super.getCreditMstId();
-	}
+	
+    
 }
