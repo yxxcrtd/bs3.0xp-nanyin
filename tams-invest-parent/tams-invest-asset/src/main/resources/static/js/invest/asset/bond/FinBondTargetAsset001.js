@@ -66,6 +66,8 @@
         cols:[
              {field:'finprodId',  title: 'FinBondTargetAsset002.finprodId',visible:false} //金融产品代码
             ,{field:'finprodMarketId',  title: 'FinBondTargetAsset002.finprodId',sortField:'FINPROD_MARKET_ID',width:200}//资产代码
+            ,{field:'isIssueAsset',sortField:"isIssueAsset",title:'FinBondTargetAsset002.isIssueAsset',width:150,visible:false}//是否发行标的
+            ,{field:'isIssueAssetStr',sortField:"isIssueAsset",title:'FinBondTargetAsset002.isIssueAsset',width:150}//是否城投债
             ,{field:'finprodAbbr',  title: 'FinBondTargetAsset002.finprodAbbr',sortField:'FINPROD_ABBR',width:200}//资产简称
             ,{field:'vdate',title:'FinBondTargetAsset002.vdate',type:'date',width:150}//起息日
             ,{field:'mdate',title:'FinBondTargetAsset002.mdate',type:'date',width:150}//到期日

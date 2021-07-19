@@ -203,8 +203,7 @@
             and B.BUSI_ID = #{finprodId}
             AND TO_CHAR(B.HAPPEN_DATE, 'yyyy-MM-dd') = #{sysDate}
             <!-- add by liuwei for huaxing 20200309 start -->
-            AND b.BOOKSET_ID = #{portfolioId}
-            <!-- add by liuwei for huaxing 20200309 end -->
+            AND b.BOOKSET_ID = decode(f.profit_type,#{PROFIT_TYPE_02},#{portfolioId},CONCAT(#{FINPROD_TYPE_TG_F16},#{portfolioId}))
         </if>
         <if test="invAim != null and invAim != 'AC'">
             SELECT

@@ -86,5 +86,11 @@ public interface ChbAssetBasisInterfMapper {
 	 * @return
 	 */
 	Date queryExerciseDate(@Param("secid") String secid,@Param("valueDate") Date valueDate);
-	
+
+	/**
+	 * 根据债券上市代码查询发行代码
+	 * @param assetId
+	 * @return
+	 */
+    String getPulicAssetId(@Param("assetId")String assetId);
 }
