@@ -38,7 +38,7 @@ RskValTableImport001 = function(){
             }
             ,{
                 field : 'srcColIndexLetter',
-                title : 'RskValStructure001.srcColIndex'
+                title : 'RskValStructure001.srcColIndex',sortField:'srcColIndex'
             }, {
                 field : 'srcColDataTypeStr',
                 sortField : "srcColDataType",
@@ -73,13 +73,13 @@ RskValTableImport001 = function(){
             visible : false
         }, {
             field : 'srcCode',
-            title : 'RskValAssetCode004.srcCode'
+            title : 'RskValAssetCode004.srcCode',sortField:'SRC_CODE'
         }, {
             field : 'tgtCode',
-            title : 'RskValAssetCode004.tgtCode'
+            title : 'RskValAssetCode004.tgtCode',sortField:'TGT_CODE'
         }, {
             field : 'allowSumName',
-            title : 'RskValAssetCode004.allowSum'
+            title : 'RskValAssetCode004.allowSum',sortField:'ALLOW_SUM'
         }, {
             field : 'memo',
             title : 'RskValAssetCode004.memo'
