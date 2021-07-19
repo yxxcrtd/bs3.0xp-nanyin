@@ -53,6 +53,33 @@ public class CreditLinesDealDto extends CreditLines implements GridRowDto{
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal remainAmt;
+    // 机构额度监控表查询新增 add by yufei 20200702 start
+    /**
+     * 非法人机构授信额度
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal creditAmtNl;
+    /**
+     * 非法人机构已使用金额(直接投资)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal usedAmtNl;
+    /**
+     * 非法人机构已使用金额(委托投资)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal usedEnstustAmtNl;
+    /**
+     * 非法人机构已使用金额(合计)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal usedAmtTotalNl;
+    /**
+     * 非法人机构剩余金额(亿元)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal remainAmtNl;
+    // 机构额度监控表查询新增 add by yufei 20200702 end
     
     /**
      * 是否有子节点
@@ -181,5 +208,83 @@ public class CreditLinesDealDto extends CreditLines implements GridRowDto{
 		this.creditQuoteTypeValue = creditQuoteTypeValue;
 	}
     
+    /**
+     * 获取 usedAmtNl
+     * @return usedAmtNl.
+     */
+    public BigDecimal getUsedAmtNl() {
+        return usedAmtNl;
+    }
     
+    /**
+     * 设置 usedAmtNl
+     * @param usedAmtNl usedAmtNl
+     */
+    public void setUsedAmtNl(BigDecimal usedAmtNl) {
+        this.usedAmtNl = usedAmtNl;
+    }
+    
+    /**
+     * 获取 usedEnstustAmtNl
+     * @return usedEnstustAmtNl.
+     */
+    public BigDecimal getUsedEnstustAmtNl() {
+        return usedEnstustAmtNl;
+    }
+    
+    /**
+     * 设置 usedEnstustAmtNl
+     * @param usedEnstustAmtNl usedEnstustAmtNl
+     */
+    public void setUsedEnstustAmtNl(BigDecimal usedEnstustAmtNl) {
+        this.usedEnstustAmtNl = usedEnstustAmtNl;
+    }
+    
+    /**
+     * 获取 usedAmtTotalNl
+     * @return usedAmtTotalNl.
+     */
+    public BigDecimal getUsedAmtTotalNl() {
+        return usedAmtTotalNl;
+    }
+    
+    /**
+     * 设置 usedAmtTotalNl
+     * @param usedAmtTotalNl usedAmtTotalNl
+     */
+    public void setUsedAmtTotalNl(BigDecimal usedAmtTotalNl) {
+        this.usedAmtTotalNl = usedAmtTotalNl;
+    }
+    
+    /**
+     * 获取 remainAmtNl
+     * @return remainAmtNl.
+     */
+    public BigDecimal getRemainAmtNl() {
+        return remainAmtNl;
+    }
+    
+    /**
+     * 设置 remainAmtNl
+     * @param remainAmtNl remainAmtNl
+     */
+    public void setRemainAmtNl(BigDecimal remainAmtNl) {
+        this.remainAmtNl = remainAmtNl;
+    }
+    
+    /**
+     * 获取 creditAmtNl
+     * @return creditAmtNl.
+     */
+    public BigDecimal getCreditAmtNl() {
+        return creditAmtNl;
+    }
+    
+    /**
+     * 设置 creditAmtNl
+     * @param creditAmtNl creditAmtNl
+     */
+    public void setCreditAmtNl(BigDecimal creditAmtNl) {
+        this.creditAmtNl = creditAmtNl;
+    }
 }

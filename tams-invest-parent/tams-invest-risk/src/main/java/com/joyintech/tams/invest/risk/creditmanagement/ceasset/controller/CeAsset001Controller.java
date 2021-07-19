@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -23,10 +25,9 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.risk.creditmanagement.ceasset.dto.CreditLinesAstDto;
 import com.joyintech.tams.invest.risk.creditmanagement.ceasset.service.CeAsset001Service;
 import com.joyintech.tams.invest.risk.creditmanagement.ceasset.service.CeAsset002Service;
@@ -63,17 +64,20 @@ public class CeAsset001Controller extends BaseController {
     @Override
     public String init(Model model) {
     	model.addAttribute("cemodel", CacheUtil.getSysParam(BussinessConstant.CEMODEL));
+        setSelectOptionToModel(model, BussinessDictCode.授信对象);
+        setSelectOptionToModel(model,DictCode.是否);
         return super.init(model);
     }
   
     @ResponseBody
     @RequestMapping("/getFinprodMarketIds")
-    public List<SelectOptionDto> getFinprodMarketIds()
+    public Page<SelectOptionDto> getFinprodMarketIds(@RequestParam Map<String, Object> params)
         throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        String param = super.getRequest().getParameter("search");
-        map.put("finprodMarketId", param);
-        List<SelectOptionDto> temp = ceAsset001Service.getFinprodMarketIds(map);
+        Object param = params.get("search");
+        Object customerId = params.get("initValue");
+        params.put("finprodMarketId", param);
+        params.put("customerId",customerId);
+        Page<SelectOptionDto> temp = ceAsset001Service.getFinprodMarketIds(params);
       
         return temp;
     }

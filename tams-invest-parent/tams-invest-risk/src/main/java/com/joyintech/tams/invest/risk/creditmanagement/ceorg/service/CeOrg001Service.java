@@ -93,12 +93,15 @@ public class CeOrg001Service extends CommonExportService<CreditLinesOrgDto>
      */
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
-    	 if(("vdate".equals(propName)) && value != null){
-             cell.setCellValue(DateUtil.format((Date)value));
-         }
-    	 if(("mdate".equals(propName)) && value != null){
-             cell.setCellValue(DateUtil.format((Date)value));
-         }
+    	// modify by yushilong 导出异常修改 20200630 start
+		if(StringUtil.equals(propName,"vdate") || StringUtil.equals(propName,"mdate")){
+			if(value instanceof Date){
+				cell.setCellValue(DateUtil.format((Date)value));
+			}else if (value instanceof Long){
+				cell.setCellValue(DateUtil.format(new Date((Long) value)));
+			}
+		}
+		// modify by yushilong 导出异常修改 20200630 end
     }
 	
 	/**

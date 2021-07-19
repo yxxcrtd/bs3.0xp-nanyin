@@ -14,6 +14,7 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.creditmanagement.ceasset.dto.CreditLinesAstDto;
@@ -34,8 +35,8 @@ public class CeAsset001Service extends CommonExportService<CreditLinesAstDto>{
       * @param map 检索参数
       * @return SuggestDto
       */
-    public List<SelectOptionDto> getFinprodMarketIds(Map<String, Object> map) {
-        return restTemplate.postForList(
+    public Page<SelectOptionDto> getFinprodMarketIds(Map<String, Object> map) {
+        return restTemplate.postForPage(
             ServiceApplication.RISK_SERVICE_NAME + "/CeAsset001/getFinprodMarketIds",
             map, SelectOptionDto.class);
     }
@@ -75,12 +76,13 @@ public class CeAsset001Service extends CommonExportService<CreditLinesAstDto>{
      */
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
-    	 if(("vdate".equals(propName)) && value != null){
-             cell.setCellValue(DateUtil.format((Date)value));
-         }
-    	 if(("mdate".equals(propName)) && value != null){
-             cell.setCellValue(DateUtil.format((Date)value));
-         }
+        if(StringUtil.equals(propName,"vdate") || StringUtil.equals(propName,"mdate")){
+            if(value instanceof Date){
+                cell.setCellValue(DateUtil.format((Date)value));
+            }else if (value instanceof Long){
+                cell.setCellValue(DateUtil.format(new Date((Long) value)));
+            }
+        }
     }
 	
 	/**
@@ -96,7 +98,4 @@ public class CeAsset001Service extends CommonExportService<CreditLinesAstDto>{
 		}
 		return null;
 	}
-
-
-	
 }

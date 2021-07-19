@@ -21,7 +21,6 @@ import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
@@ -109,13 +108,12 @@ public class CreditRightsManagement001Controller extends BaseController{
         WorkFlowParameter<CreditRightsManagementDto> params = new WorkFlowParameter<CreditRightsManagementDto>();
         params.setPageId("CreditRightsManagement002");
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(item->item.getSeqno());
+        params.setBusinessCode(item->item.getAssetTypeOneStr()+item.getAssetTypeTwoStr()+item.getEffDateStr());
         params.setBusinessType(DictCodeList.共通业务类型_风险权数管理.getValue());
-        String twoStr =StringUtil.isEmpty(dto.getAssetTypeTwoStr())?"":"-" + "资产二级分类"+ "(" + dto.getAssetTypeTwoStr()+ ")";
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
                 entity -> "资产一级分类"+ "(" + entity.getAssetTypeOneStr()+ ")" 
-                		+  "-" + twoStr
+                    +  "-" + "资产二级分类"+ "(" + entity.getAssetTypeTwoStr()+ ")"
                 		+ "生效日"+"(" + entity.getEffDateStr() + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = creditRightsManagementService.start(processParameter, 

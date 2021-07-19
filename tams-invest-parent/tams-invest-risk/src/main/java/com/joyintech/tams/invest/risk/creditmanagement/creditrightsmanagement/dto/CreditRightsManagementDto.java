@@ -102,8 +102,7 @@ public class CreditRightsManagementDto extends RiskWeight implements ProcessEnti
             return SysDataUtil.getNameFromDataDict(DictCode.存款类资产类型, super.getAssetTypeTwo());
         }
         else if(StringUtil.equals(super.getAssetTypeOne(), DictCodeList.平安资产类型_计划类资产_净值型.getValue())
-            || StringUtil.equals(super.getAssetTypeOne(), DictCodeList.平安资产类型_计划类资产_利率型.getValue())
-            || StringUtil.equals(super.getAssetTypeOne(), DictCodeList.平安资产类型_计划类资产_货币型.getValue())){
+            || StringUtil.equals(super.getAssetTypeTwo(), DictCodeList.平安资产类型_计划类资产_利率型.getValue())){
             return SysDataUtil.getNameFromDataDict(DictCode.计划类资产一级分类, super.getAssetTypeTwo());
         }
         else if(StringUtil.equals(super.getAssetTypeOne(), DictCodeList.平安资产类型_项目类资产.getValue())){
@@ -118,20 +117,14 @@ public class CreditRightsManagementDto extends RiskWeight implements ProcessEnti
         return null;
     }
     
-    @PrimaryKey(value = Field.PK_2)
     @NotEmpty(fieldName = "CreditRightsManagement001.assetTypeOne", groups = {ValidateGroupEdit.class})
     public String getAssetTypeOne(){
     	return super.getAssetTypeOne();
     }
     
-//    @NotEmpty(fieldName = "CreditRightsManagement001.assetTypeTwo", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "CreditRightsManagement001.assetTypeTwo", groups = {ValidateGroupEdit.class})
     public String getAssetTypeTwo(){
     	return super.getAssetTypeTwo();
-    }
-    
-    @PrimaryKey(value = Field.PK_3)
-    public String getAssetTypeTwoPK(){
-    	return StringUtil.isEmpty(super.getAssetTypeTwo()) ? "PK_3":super.getAssetTypeTwo() ;
     }
     //add by gaopeng 增加风险权数和生效日必填验证 20191014 start 
 	@NotEmpty(fieldName = "CreditRightsManagement001.effDate", groups = {ValidateGroupEdit.class})
@@ -143,15 +136,12 @@ public class CreditRightsManagementDto extends RiskWeight implements ProcessEnti
 	        return super.getRiskWeight();
 	    }
 	//add by gaopeng 增加风险权数和生效日必填验证 20191014 end 
+    @PrimaryKey(value = Field.PK_1)
     public String getSeqno(){
     	return super.getSeqno();
     }
 	public Date getEffDateOld() {
 		return effDateOld;
-	}
-	@PrimaryKey(value = Field.PK_1)
-	public String getEffDateOldPK() {
-		return DateUtil.format(super.getEffDate());
 	}
 
 	public void setEffDateOld(Date effDateOld) {

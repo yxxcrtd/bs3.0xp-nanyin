@@ -10,6 +10,10 @@
 
 package com.joyintech.service.risk.creditmanagement.ceasset.dto;
 
+import java.math.BigDecimal;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.common.base.entity.CreditLines;
 
 /**
@@ -54,6 +58,12 @@ public class CreditLinesAstDto  extends CreditLines {
      * 画面Id - 机构名称
      */
     private String customerName;
+
+    /**
+     * 授信总份额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal creditShareAmt;
 
 	public String getPageModel() {
 		return pageModel;
@@ -113,6 +123,24 @@ public class CreditLinesAstDto  extends CreditLines {
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
-	
+
+
     
+    /**
+     * 获取 creditShareAmt
+     * @return creditShareAmt.
+     */
+    public BigDecimal getCreditShareAmt() {
+        return creditShareAmt;
+    }
+
+
+    
+    /**
+     * 设置 creditShareAmt
+     * @param creditShareAmt creditShareAmt
+     */
+    public void setCreditShareAmt(BigDecimal creditShareAmt) {
+        this.creditShareAmt = creditShareAmt;
+    }
 }

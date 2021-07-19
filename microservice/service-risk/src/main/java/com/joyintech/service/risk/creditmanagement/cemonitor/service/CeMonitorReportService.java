@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.service.risk.creditmanagement.cemonitor.dao.CeMonitorReportMapper;
 import com.joyintech.service.risk.creditmanagement.cemonitor.dto.CreditLinesDealDto;
+import com.joyintech.tams.constant.DictCodeListRsk;
 
 /**
  * @description: RskSupervisionRiskAnalyzeService
@@ -37,18 +37,20 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
      */
     public Page<CreditLinesDealDto> selectOrgForPage(int page, int length, Map<String, Object> pageParam)
             throws Exception {
+        pageParam.put("creditTypeOrg", DictCodeListRsk.授信占用方式_机构授信.getValue());
+        pageParam.put("limitType13", DictCodeListRsk.额度分类_非法人机构.getValue());
+        pageParam.put("yes01", DictCodeListRsk.是否_是.getValue());
         if (pageParam.get("customerId") != null && StringUtil.isNotEmpty((String)pageParam.get("customerId"))) {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
         }
-        pageParam.put("sysDate", DateUtil.getSysDate());
     	if(StringUtil.isNotEmpty(pageParam.get("parentId")) && !StringUtil.equals(pageParam.get("parentId"),"root")) {
-            List<CreditLinesDealDto> resultList = ceMonitorReportMapper.selectOrgForPage(pageParam);
+            List<CreditLinesDealDto> resultList = ceMonitorReportMapper.selectOrgForPage2(pageParam);
             Page<CreditLinesDealDto> pagelist = new Page<>();
             pagelist.setRoot(resultList);
             return pagelist;
         }
-        return super.queryForPage(page, length, () -> ceMonitorReportMapper.selectOrgForPage(pageParam));
+        return super.queryForPage(page, length, () -> ceMonitorReportMapper.selectOrgForPage2(pageParam));
     }
     /**
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
@@ -64,7 +66,6 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
         }
-        pageParam.put("sysDate", DateUtil.getSysDate());
         return super.queryForPage(page, length, () -> ceMonitorReportMapper.selectAssetForPage(pageParam));
     }
     /**
@@ -81,7 +82,6 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
         }
-        pageParam.put("sysDate", DateUtil.getSysDate());
         return super.queryForPage(page, length, () -> ceMonitorReportMapper.selectAssetGroupForPage(pageParam));
     }
 }

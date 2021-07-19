@@ -5143,7 +5143,22 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 央行票据
      */
     央行票据(BussinessDictCode.WIND一级分类_含债券一级分类等, "B03", "央行票据"),
-	/**
+
+    /**
+     * 授信对象_金额
+     */
+    授信对象_金额(BussinessDictCode.授信对象, "01", "授信对象_金额"),
+    /**
+     * 授信对象_份额
+     */
+    授信对象_份额(BussinessDictCode.授信对象, "02", "授信对象_份额"),
+    //add by yufei 20200629 end
+    // 资产授信新建增加字段  add by yufei 20200630 start
+    行内资产三级分类_私募股权基金(BussinessDictCode.行内资产三级分类, "87", "私募股权基金"),
+    // 资产授信新建增加字段  add by yufei 20200630 end
+    //zhangliang hefei 银行间上行 20200512 add start
+
+    /**
      * 结算方式
      */
     结算方式_见券付款(BussinessDictCode.结算方式, "01", "见券付款"),

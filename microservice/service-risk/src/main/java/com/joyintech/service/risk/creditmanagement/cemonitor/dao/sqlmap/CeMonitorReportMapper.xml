@@ -20,27 +20,14 @@
 			  	nvl(D.TRADE_AMT,0)/100000000 as usedAmt,
 		        nvl(E.TRADE_AMT,0)/100000000 as usedEnstustAmt,
 		        decode(nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0),0,0,nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0))/100000000 as usedAmtTotal,
-		        (nvl(A.CREDIT_AMT,0)-decode(nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0),0,0,nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0)))/100000000 as remainAmt,
-				A.INSTITUTION_CODE institutionCode
+		        (nvl(A.CREDIT_AMT,0)-decode(nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0),0,0,nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0)))/100000000 as remainAmt
     		FROM 
 			 	CREDIT_LINES A
 			 	INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('01','04')
 			 	left join MST_CUSTOMER_INFO C on A.CUSTOMER_ID=C.CUSTOMER_ID
 		    left join SYS_DATADICT_LIST y  ON B.CREDIT_QUOTE_TYPE_VALUE = y.item_code and B.CREDIT_QUOTE_TYPE_CODE=y.dict_code  
-			left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on A.SEQNO=D.SEQNO
-			left join
-				(
-					SELECT c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
-					FROM CREDIT_LINES_PIERCE c
-					where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
-					and c.CREDIT_FLAG != 'N'
-					group by c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE
-				) E
-				on A.CUSTOMER_ID= E.CUSTOMER_ID
-				and A.CREDIT_MST_ID= E.CREDIT_MST_ID
-				and A.INSTITUTION_CODE = E.INSTITUTION_CODE
-				and A.VDATE &lt;= E.CDATE
-				and A.MDATE &gt;= E.CDATE
+			 	left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on A.SEQNO=D.SEQNO
+				left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_SEC_POSITION GROUP BY SEQNO) E on A.SEQNO=E.SEQNO
 			 <where>
 			    <if test="customerIdList != null and !customerIdList.isEmpty()">
 			 	A.CUSTOMER_ID IN (<foreach collection="customerIdList" item="item" separator=",">#{item}</foreach> )
@@ -55,7 +42,7 @@
 				AND #{vdate,jdbcType=DATE} &lt; = to_char(A.MDATE,'yyyy-MM-dd')
 			 	</if>
 			 </where>
-			ORDER BY A.PFLSH DESC ,A.SEQNO ASC,A.CREDIT_AMT DESC
+		    ORDER BY vdate desc
     	)
     </sql>
     <select id="selectOrgForPage" resultType="com.joyintech.service.risk.creditmanagement.cemonitor.dto.CreditLinesDealDto" >
@@ -77,8 +64,7 @@
 		        remainAmt,
 			 	'02' hasChildren,
 			  	'root' parentInfo,
-			CONCAT(CONCAT(PFLSH, customerId),institutionCode) childInfo,
-				institutionCode
+			  	CONCAT(PFLSH, customerId) childInfo
 			from CET
 			<where>
 				parentCustomerId is null
@@ -100,14 +86,13 @@
 		        usedAmtTotal,
 		        remainAmt,
 			 	'02' hasChildren,
-			concat(CONCAT(PFLSH, customerId),institutionCode) parentInfo,
-			  	CONCAT(CONCAT(concat(CONCAT(PFLSH, customerId),institutionCode), creditQuoteTypeCode), creditQuoteType) childInfo,
-				institutionCode
+			  	CONCAT(PFLSH, customerId) parentInfo,
+			  	null childInfo
 			  from CET
 			 <where>
 				parentCustomerId is not null
 	  		 	AND creditQuoteRank = '01'
-	  		 	AND concat(CONCAT(PFLSH, customerId),institutionCode) = #{parentId}
+	  		 	AND CONCAT(PFLSH, customerId) = #{parentId}
 			</where>
 			
 			 union all
@@ -128,15 +113,14 @@
 		        remainAmt,
 			 	'01' hasChildren,
 			  	#{parentId} parentInfo,
-			  	null  childInfo,
-				institutionCode
+			  	null  childInfo
 			from CET
 			left join SYS_DATADICT_LIST_LINK dll
 			on dll.DICT_CODE = creditQuoteTypeCode and dll.ITEM_CODE = creditQuoteType
 			<where>
 				parentCustomerId is not null
 			  	and (creditQuoteRank is null or creditQuoteRank != '01')
-				and rtrim(concat(concat(concat(CONCAT(PFLSH, customerId),institutionCode), dll.LINKED_DICT_CODE), dll.LINKED_ITEM_CODE)) = #{parentId}
+				and rtrim(concat(concat(CONCAT(PFLSH, customerId), dll.LINKED_DICT_CODE), dll.LINKED_ITEM_CODE)) = #{parentId}
 	  		</where>
 	 	</if>
 	 	<if test="parentId == 'export'.toString()">
@@ -153,49 +137,316 @@
 			  	usedAmt,
 		        usedEnstustAmt,
 		        usedAmtTotal,
-		        remainAmt,
-				institutionCode
+		        remainAmt
 	 		from CET
 	 	</if>
     </select>
 	 
-	 
+    <sql id="CET2">
+        with CET as(
+            SELECT
+                <!--已使用金额（委托投资）-->
+                case
+                    when NVL(DECODE(A.CREDIT_MST_ID,'0001',D.usedEnstustAmt,E.usedEnstustAmt),0)  &lt;  0 then
+                        0
+                    else
+                        NVL(DECODE(A.CREDIT_MST_ID,'0001',D.usedEnstustAmt,E.usedEnstustAmt),0)
+                end AS usedEnstustAmt ,
+                <!--已使用金额（直接投资）-->
+                case
+                    when NVL(DECODE(A.CREDIT_MST_ID,'0001',D.usedAmt,E.usedAmt),0)  &lt;  0 then
+                        0
+                    else
+                        NVL(DECODE(A.CREDIT_MST_ID,'0001',D.usedAmt,E.usedAmt),0)
+                end AS usedAmt ,
+                <!--已使用金额（合计）-->
+                case
+                    when NVL(DECODE(A.CREDIT_MST_ID,'0001',D.usedAmtTotal,E.usedAmtTotal),0)  &lt;  0 then
+                        0
+                    else
+                        NVL(DECODE(A.CREDIT_MST_ID,'0001',D.usedAmtTotal,E.usedAmtTotal),0)
+                end AS usedAmtTotal,
+                <!--机构批复金额（亿元）-->
+                (NVL(A.CREDIT_AMT,0)/100000000)                                  AS creditAmt ,
+                <!--非法人主体授信额度（亿元）-->
+                G.creditAmtNl                                                    AS creditAmtNl ,
+                <!--非法人主体授信额度-已使用金额（委托投资）（亿元）-->
+                case
+                    when G.usedEnstustAmt  &lt;  0 then
+                        0
+                    else
+                        G.usedEnstustAmt
+                end AS usedEnstustAmtNl,
+                <!--非法人主体授信额度-已使用金额（直接投资）（亿元）-->
+                case
+                    when G.usedAmt  &lt;  0 then
+                        0
+                    else
+                        G.usedAmt
+                end AS usedAmtNl,
+                <!--非法人主体授信额度-已使用金额（合计）（亿元）-->
+                case
+                    when G.usedAmtTotal  &lt;  0 then
+                        0
+                    else
+                        G.usedAmtTotal
+                end AS usedAmtTotalNl,
+                <!--机构剩余金额（亿元）-->
+                CASE
+                  WHEN (A.CREDIT_AMT/100000000 - NVL(DECODE(A.CREDIT_MST_ID,'0001',D.usedAmtTotal,E.usedAmtTotal ),0)) &lt; 0 THEN
+                    0
+                  WHEN (A.CREDIT_AMT/100000000 - NVL(DECODE(A.CREDIT_MST_ID,'0001',D.usedAmtTotal,E.usedAmtTotal ),0)) >= A.CREDIT_AMT/100000000 THEN
+                    A.CREDIT_AMT/100000000
+                  ELSE
+                    (A.CREDIT_AMT/100000000 - NVL(DECODE(A.CREDIT_MST_ID,'0001',D.usedAmtTotal,E.usedAmtTotal ),0))
+                END AS remainAmt,
+                <!--非法人机构剩余金额（亿元）-->
+                CASE
+                  WHEN G.creditAmtNl - G.usedAmtTotal &lt; 0 THEN
+                    0
+                  WHEN G.creditAmtNl - G.usedAmtTotal >= G.creditAmtNl THEN
+                    G.creditAmtNl
+                  ELSE
+                    G.creditAmtNl - G.usedAmtTotal
+                END AS remainAmtNl,
+                C.CREDIT_TYPE                            AS creditType,
+                C.CREDIT_TAG_NAME                        AS creditQuoteTypeValue,
+                A.SEQNO                                  AS SEQNO,
+                A.CREDIT_MST_ID                          AS creditMstId,
+                A.CUSTOMER_ID                            AS customerId,
+                F.CUSTOMER_NAME                          AS customerName,
+                A.PARENT_CUSTOMER_ID                     AS parentCustomerId,
+                A.PFLSH                                  AS PFLSH,
+                A.VDATE                                  AS VDATE,
+                A.MDATE                                  AS MDATE
+            FROM
+                CREDIT_LINES A
+            LEFT JOIN
+                CREDIT_CONF_INFO B
+            ON
+                A.CREDIT_MST_ID = B.CREDIT_MST_ID
+            LEFT JOIN
+                CREDIT_TAG_INFO C
+            ON
+                B.CREDIT_TAG_ID = C.CREDIT_TAG_ID
+            LEFT JOIN (
+                SELECT
+                    CUSTOMER_ID,
+                    SUM(DECODE(IS_BOTTOM,#{yes01},NVL(amount,0),0)/100000000) AS usedEnstustAmt,
+                    SUM(DECODE(IS_BOTTOM,#{yes01},0,NVL(amount,0))/100000000) AS usedAmt,
+                    SUM(NVL(amount,0)/100000000)                          AS usedAmtTotal
+                FROM CREDIT_USING_CUSTOMER WHERE STATUS = '01'
+                <if test="vdate != null and vdate !=''">
+                    AND CDATE &lt;= to_date(#{vdate,jdbcType=DATE},'yyyy-MM-dd')
+                </if>
+                GROUP BY CUSTOMER_ID
+            ) D ON D.CUSTOMER_ID = A.CUSTOMER_ID
+            LEFT JOIN (
+                SELECT
+                    CUSTOMER_ID,
+                    CREDIT_MST_ID,
+                    SUM(DECODE(IS_BOTTOM,#{yes01},NVL(amount,0),0)/100000000) AS usedEnstustAmt,
+                    SUM(DECODE(IS_BOTTOM,#{yes01},0,NVL(amount,0))/100000000) AS usedAmt,
+                    SUM(NVL(amount,0)/100000000)                          AS usedAmtTotal
+                FROM CREDIT_USING_CUSTOMER_MST WHERE STATUS = '01'
+                <if test="vdate != null and vdate !=''">
+                    AND CDATE &lt;= to_date(#{vdate,jdbcType=DATE},'yyyy-MM-dd')
+                </if>
+                GROUP BY CUSTOMER_ID,CREDIT_MST_ID
+            ) E ON E.CUSTOMER_ID = A.CUSTOMER_ID AND E.CREDIT_MST_ID = A.CREDIT_MST_ID
+            LEFT JOIN MST_CUSTOMER_INFO F
+            ON A.CUSTOMER_ID=F.CUSTOMER_ID
+            LEFT JOIN (
+                SELECT
+                    B.CUSTOMER_ID                                             AS customerId,
+                    B.PFLSH                                                   AS PFLSH,
+                    B.VDATE                                                   AS vdate,
+                    SUM(DECODE(A.IS_BOTTOM,#{yes01},NVL(A.AMOUNT,0),0)/100000000) AS usedEnstustAmt,
+                    SUM(DECODE(A.IS_BOTTOM,#{yes01},0,NVL(A.AMOUNT,0))/100000000) AS usedAmt,
+                    SUM(NVL(A.AMOUNT,0)/100000000)                            AS usedAmtTotal,
+                    MAX (B.CREDIT_AMT/100000000)                              AS creditAmtNl
+                FROM CREDIT_LINES B
+                INNER JOIN CREDIT_CONF_INFO C
+                ON B.CREDIT_MST_ID = C.CREDIT_MST_ID
+                INNER JOIN CREDIT_TAG_INFO D
+                ON C.CREDIT_TAG_ID = D.CREDIT_TAG_ID
+                AND D.CREDIT_TYPE = #{limitType13}
+                LEFT JOIN CREDIT_USING_CUSTOMER_MST A
+                ON A.CREDIT_LINES_ID = B.SEQNO
+                AND A.CREDIT_MST_ID = B.CREDIT_MST_ID
+                AND A.STATUS = '01'
+                <where>
+                    <if test="vdate != null and vdate !=''">
+                        AND A.CDATE &lt;= to_date(#{vdate,jdbcType=DATE},'yyyy-MM-dd')
+                    </if>
+                </where>
+                GROUP BY B.CUSTOMER_ID, B.PFLSH, B.VDATE
+            ) G ON G.customerId = A.CUSTOMER_ID
+            AND G.PFLSH = A.PFLSH
+            AND G.vdate = A.VDATE
+            AND A.CREDIT_MST_ID = '0001'
+            WHERE A.CREDIT_TYPE = #{creditTypeOrg}
+            AND A.SEQNO NOT IN (
+                SELECT A.SEQNO
+                FROM CREDIT_LINES A
+                INNER JOIN CREDIT_CONF_INFO B
+                ON A.CREDIT_MST_ID = B.CREDIT_MST_ID
+                INNER JOIN CREDIT_TAG_INFO C
+                ON B.CREDIT_TAG_ID = C.CREDIT_TAG_ID
+                AND C.CREDIT_TYPE = #{limitType13}
+            )
+            <if test="customerIdList != null and !customerIdList.isEmpty()">
+                AND A.CUSTOMER_ID IN (<foreach collection="customerIdList" item="item" separator=",">#{item}</foreach> )
+            </if>
+            <if test="pflsh !=null and pflsh !=''">
+                AND A.PFLSH LIKE CONCAT(CONCAT('%',#{pflsh}),'%')
+            </if>
+            <if test="vdate != null and vdate !=''">
+                AND   to_char(A.VDATE,'yyyy-MM-dd')&lt;=#{vdate,jdbcType=DATE}
+            </if>
+            <if test="vdate != null and vdate !=''">
+                AND #{vdate,jdbcType=DATE} &lt; = to_char(A.MDATE,'yyyy-MM-dd')
+            </if>
+            ORDER BY A.SEQNO ,A.CUSTOMER_ID
+        )
+    </sql>
+    <select id="selectOrgForPage2" resultType="com.joyintech.service.risk.creditmanagement.cemonitor.dto.CreditLinesDealDto" >
+        <include refid="CET2"></include>
+        <if test="parentId == null or parentId == '' or parentId=='root'.toString()">
+            select
+                SEQNO, 
+                null creditMstId,
+                customerId,
+                customerName,
+                PFLSH,
+                null creditQuoteTypeValue,
+                creditAmt, 
+                creditAmtNl,
+                VDATE,
+                MDATE,
+                usedAmt,
+                usedEnstustAmt,
+                usedAmtTotal,
+                usedAmtNl,
+                usedEnstustAmtNl,
+                usedAmtTotalNl,
+                remainAmt,
+                remainAmtNl,
+                '02' hasChildren,
+                'root' parentInfo,
+                CONCAT(PFLSH, customerId) childInfo
+            from CET
+            <where>
+                parentCustomerId is null
+            </where>
+        </if>
+        <if test="parentId != null and parentId != '' and parentId!='root'.toString() and parentId!='export'.toString()">
+            select
+                SEQNO, 
+                null creditMstId,
+                customerId,
+                customerName,
+                PFLSH,
+                creditQuoteTypeValue,
+                creditAmt, 
+                creditAmtNl,
+                VDATE,
+                MDATE,
+                usedAmt,
+                usedEnstustAmt,
+                usedAmtTotal,
+                usedAmtNl,
+                usedEnstustAmtNl,
+                usedAmtTotalNl,
+                remainAmt,
+                remainAmtNl,
+                '02' hasChildren,
+                CONCAT(PFLSH, customerId) parentInfo,
+                null childInfo
+              from CET
+             <where>
+                parentCustomerId is not null
+                AND CONCAT(PFLSH, customerId) = #{parentId}
+            </where>
+        </if>
+        <if test="parentId == 'export'.toString()">
+            select
+                SEQNO, 
+                null creditMstId,
+                customerId,
+                customerName,
+                PFLSH,
+                creditQuoteTypeValue,
+                creditAmt, 
+                creditAmtNl,
+                VDATE,
+                MDATE,
+                usedAmt,
+                usedEnstustAmt,
+                usedAmtTotal,
+                usedAmtNl,
+                usedEnstustAmtNl,
+                usedAmtTotalNl,
+                remainAmt,
+                remainAmtNl
+            from CET
+        </if>
+    </select>
     <select id="selectAssetForPage" resultType="com.joyintech.service.risk.creditmanagement.cemonitor.dto.CreditLinesDealDto" >
        SELECT
 	 	A.SEQNO SEQNO,
 	 	A.CREDIT_MST_ID creditMstId, 
 	 	A.CUSTOMER_ID customerId,
 	 	A.PFLSH PFLSH, 
-       nvl(A.CREDIT_AMT,0)/100000000 creditAmt, 
+        nvl(A.CREDIT_AMT,0)/100000000 creditAmt,
         A.VDATE VDATE,
         A.MDATE MDATE,
         C.FINPROD_NAME as customerName,
-        nvl(D.TRADE_AMT,0)/100000000 as usedAmt,
-        nvl(E.TRADE_AMT,0)/100000000 as usedEnstustAmt,
-        decode(nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0),0,0,nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0))/100000000 as usedAmtTotal,
-         (nvl(A.CREDIT_AMT,0)-decode(nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0),0,0,nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0)))/100000000 as remainAmt,
-         A.INSTITUTION_CODE institutionCode
+        case
+            when NVL(D.usedAmt,0)  &lt;  0 then
+                0
+            else
+                NVL(D.usedAmt,0)
+        end AS usedAmt,
+        case
+            when NVL(D.usedEnstustAmt,0)  &lt;  0 then
+                0
+            else
+                NVL(D.usedEnstustAmt,0)
+        end AS usedEnstustAmt,
+        case
+            when NVL(D.usedAmtTotal,0)  &lt;  0 then
+                0
+            else
+                NVL(D.usedAmtTotal,0)
+        end AS usedAmtTotal,
+        CASE
+          WHEN (NVL(A.CREDIT_AMT,0)/100000000-NVL(D.usedAmtTotal,0)) &lt; 0 THEN
+            0
+          WHEN (NVL(A.CREDIT_AMT,0)/100000000-NVL(D.usedAmtTotal,0)) >= NVL(A.CREDIT_AMT,0)/100000000 THEN
+            NVL(A.CREDIT_AMT,0)/100000000
+          ELSE
+            (NVL(A.CREDIT_AMT,0)/100000000-NVL(D.usedAmtTotal,0))
+        END AS remainAmt
 	 FROM 
-	 	 CREDIT_LINES A
-	 	INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('02')
+	 	CREDIT_LINES A
 	 	inner join FIN_PRODUCT C on A.CUSTOMER_ID=C.FINPROD_ID
-	 	left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on A.SEQNO=D.SEQNO
-		left join
-		(
-			SELECT c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
-			FROM CREDIT_LINES_PIERCE c
-			where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
-			and c.CREDIT_FLAG != 'N'
-			group by c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE
-		) E
-		on A.CUSTOMER_ID= E.CUSTOMER_ID
-		and A.CREDIT_MST_ID= E.CREDIT_MST_ID
-		and A.INSTITUTION_CODE = E.INSTITUTION_CODE
-		and A.VDATE &lt;= E.CDATE
-		and A.MDATE &gt;= E.CDATE
+	 	left join (
+	 	    SELECT
+                SUM(DECODE(IS_BOTTOM,'01',NVL(AMOUNT,0)/100000000 ,0)) AS usedEnstustAmt,
+                SUM(DECODE(IS_BOTTOM,'01',0 ,NVL(AMOUNT,0)/100000000)) AS usedAmt,
+                SUM(NVL(AMOUNT,0)/100000000)                           AS usedAmtTotal,
+                FINPROD_ID
+            FROM CREDIT_USING_AST WHERE STATUS = '01'
+            <if test="vdate != null and vdate !=''">
+                AND CDATE &lt;= to_date(#{vdate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            GROUP BY FINPROD_ID
+        ) D on A.CUSTOMER_ID = D.FINPROD_ID
 		 <where>
+		 	A.CREDIT_TYPE = '02'
 			<if test="customerIdList != null and !customerIdList.isEmpty()">
-				A.CUSTOMER_ID IN (<foreach collection="customerIdList" item="item" separator=",">#{item}</foreach> )
+				and A.CUSTOMER_ID IN (<foreach collection="customerIdList" item="item" separator=",">#{item}</foreach> )
 			</if>
 	    	<if test="pflsh !=null and pflsh !=''">
 			AND	A.PFLSH LIKE CONCAT(CONCAT('%',#{pflsh}),'%')
@@ -210,93 +461,114 @@
 		order by A.VDATE desc
 	 </select>
 	
-	 <select id="selectAssetGroupForPage" resultType="com.joyintech.service.risk.creditmanagement.cemonitor.dto.CreditLinesDealDto" >
-     select MM.* from (  SELECT
-    'root' as pid,
-    A.CUSTOMER_ID customerId,
-    A.PFLSH PFLSH, 
-          nvl(A.CREDIT_AMT,0)/100000000 creditAmt, 
-        A.VDATE VDATE,
-        A.MDATE MDATE,
-        C.ASSETPOOL_NAME as customerName,
-         nvl(D.TRADE_AMT,0)/100000000 as usedAmt,
-        nvl(E.TRADE_AMT,0)/100000000 as usedEnstustAmt,
-        decode(nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0),0,0,nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0))/100000000 as usedAmtTotal,
-         (nvl(A.CREDIT_AMT,0)-decode(nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0),0,0,nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0)))/100000000 as remainAmt,
-        '02' as hasChildren,
-		 A.INSTITUTION_CODE institutionCode
-   FROM 
-    CREDIT_LINES A
-    INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('03')
-    inner join CREDIT_ASSETPOOL C on A.CUSTOMER_ID=C.SEQNO
-    left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on A.SEQNO=D.SEQNO
-	left join
-		 (
-		 SELECT d.seqno,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
-		 FROM CREDIT_LINES_PIERCE c
-		 inner join CREDIT_ASSETPOOL_DETAIL d
-		 on c.CUSTOMER_ID =d.FINPROD_ID
-		 and CREDIT_MST_ID = '0002'
-		 where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
-		 and c.CREDIT_FLAG != 'N'
-		 group by d.seqno,c.INSTITUTION_CODE ,c.CDATE
-		 ) E
-		 on A.CUSTOMER_ID= E.seqno
-		 and A.INSTITUTION_CODE = E.INSTITUTION_CODE
-		 and A.VDATE &lt;= E.CDATE
-		 and A.MDATE &gt;= E.CDATE
-    union all
-    
-    SELECT
-    A.SEQNO pid,
-    A.FINPROD_ID customerId,
-    A.PFLSH AS  PFLSH, 
-        NULL AS creditAmt,
-        B.VDATE VDATE,
-        B.MDATE MDATE,
-        C.FINPROD_ABBR as customerName,
-       nvl(D.TRADE_AMT,0)/100000000 as usedAmt,
-        nvl(E.TRADE_AMT,0)/100000000 as usedEnstustAmt,
-        decode(nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0),0,0,nvl(D.TRADE_AMT,0)+ nvl(E.TRADE_AMT,0))/100000000 as usedAmtTotal,
-        null as remainAmt,
-        '01' as hasChildren,
-		 B.INSTITUTION_CODE institutionCode
-   FROM 
-     (select m.seqno,m.finprod_id,n.pflsh from CREDIT_ASSETPOOL_DETAIL m inner join CREDIT_LINES n on m.seqno=n.customer_id)  A
-    inner join  CREDIT_LINES B on A.FINPROD_ID=B.CUSTOMER_ID
-	 	inner join FIN_PRODUCT C on A.FINPROD_ID=C.FINPROD_ID
-    left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on B.SEQNO=D.SEQNO
-	left join
-		 (
-		 SELECT d.FINPROD_ID,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
-		 FROM CREDIT_LINES_PIERCE c
-		 inner join CREDIT_ASSETPOOL_DETAIL d
-		 on c.CUSTOMER_ID =d.FINPROD_ID
-		 and CREDIT_MST_ID = '0002'
-		 where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
-		 and c.CREDIT_FLAG != 'N'
-		 group by d.FINPROD_ID,c.INSTITUTION_CODE ,c.CDATE
-		 ) E
-		 on A.FINPROD_ID = E.FINPROD_ID
-		 and B.INSTITUTION_CODE = E.INSTITUTION_CODE
-		 and B.VDATE &lt;= E.CDATE
-		 and B.MDATE &gt;= E.CDATE
-    ) MM
-		 <where>
-			 <if test="customerIdList != null and !customerIdList.isEmpty()">
-				 MM.customerId IN (<foreach collection="customerIdList" item="item" separator=",">#{item}</foreach> )
-			 </if>
-	    	<if test="pflsh !=null and pflsh !=''">
-			AND	MM.PFLSH LIKE CONCAT(CONCAT('%',#{pflsh}),'%')
-			</if>
-			 <if test="vdate != null and vdate !=''">
-				 AND to_char(MM.VDATE,'yyyy-MM-dd')&lt;=#{vdate,jdbcType=DATE}
-			 </if>
-			 <if test="vdate != null and vdate !=''">
-				 AND #{vdate,jdbcType=DATE} &lt; = to_char(MM.MDATE,'yyyy-MM-dd')
-			 </if>
-		 </where>
-		 order by MM.VDATE desc
+    <select id="selectAssetGroupForPage" resultType="com.joyintech.service.risk.creditmanagement.cemonitor.dto.CreditLinesDealDto" >
+        select MM.* from (
+            SELECT
+                'root' as pid,
+                A.CUSTOMER_ID customerId,
+                A.PFLSH PFLSH,
+                nvl(A.CREDIT_AMT,0)/100000000 creditAmt,
+                A.VDATE VDATE,
+                A.MDATE MDATE,
+                C.ASSETPOOL_NAME as customerName,
+                case
+                    when NVL(D.usedAmt,0)  &lt;  0 then
+                        0
+                    else
+                        NVL(D.usedAmt,0)
+                end AS usedAmt,
+                case
+                    when NVL(D.usedEnstustAmt,0)  &lt;  0 then
+                        0
+                    else
+                        NVL(D.usedEnstustAmt,0)
+                end AS usedEnstustAmt,
+                case
+                    when NVL(D.usedAmtTotal,0)  &lt;  0 then
+                        0
+                    else
+                        NVL(D.usedAmtTotal,0)
+                end AS usedAmtTotal,
+                CASE
+                  WHEN (NVL(A.CREDIT_AMT,0)/100000000-NVL(D.usedAmtTotal,0)) &lt; 0 THEN
+                    0
+                  WHEN (NVL(A.CREDIT_AMT,0)/100000000-NVL(D.usedAmtTotal,0)) >= NVL(A.CREDIT_AMT,0)/100000000 THEN
+                    NVL(A.CREDIT_AMT,0)/100000000
+                  ELSE
+                    (NVL(A.CREDIT_AMT,0)/100000000-NVL(D.usedAmtTotal,0))
+                END AS remainAmt,
+                '02' as hasChildren
+            FROM CREDIT_LINES A
+            INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('03')
+            inner join CREDIT_ASSETPOOL C on A.CUSTOMER_ID=C.SEQNO
+            LEFT JOIN (
+                SELECT
+                    SUM(DECODE(M.IS_BOTTOM,'01',NVL(M.AMOUNT,0)/100000000 ,0)) AS usedEnstustAmt,
+                    SUM(DECODE(M.IS_BOTTOM,'01',0 ,NVL(M.AMOUNT,0)/100000000)) AS usedAmt,
+                    SUM(NVL(M.AMOUNT,0)/100000000)                           AS usedAmtTotal,
+                    DE.SEQNO
+                FROM CREDIT_USING_SERIES M
+                INNER JOIN CREDIT_ASSETPOOL_DETAIL DE ON DE.FINPROD_ID = M.FINPROD_ID
+                WHERE M.STATUS = '01'
+                 <if test="vdate != null and vdate !=''">
+                     AND M.CDATE &lt;= to_date(#{vdate,jdbcType=DATE},'yyyy-MM-dd')
+                 </if>
+                GROUP BY DE.SEQNO
+            ) D ON A.CUSTOMER_ID = D.SEQNO
+            union all
+            SELECT
+                A.SEQNO pid,
+                A.FINPROD_ID customerId,
+                A.PFLSH AS  PFLSH,
+                NULL AS creditAmt,
+                B.VDATE VDATE,
+                B.MDATE MDATE,
+                C.FINPROD_ABBR as customerName,
+                NVL(D.usedAmt,0)                                      AS usedAmt,
+                NVL(D.usedEnstustAmt,0)                               AS usedEnstustAmt,
+                NVL(D.usedAmtTotal,0)                                 AS usedAmtTotal,
+                CASE
+                  WHEN (NVL(B.CREDIT_AMT,0)/100000000-NVL(D.usedAmtTotal,0)) &lt; 0 THEN
+                    0
+                  WHEN (NVL(B.CREDIT_AMT,0)/100000000-NVL(D.usedAmtTotal,0)) >= NVL(B.CREDIT_AMT,0)/100000000 THEN
+                    NVL(B.CREDIT_AMT,0)/100000000
+                  ELSE
+                    (NVL(B.CREDIT_AMT,0)/100000000-NVL(D.usedAmtTotal,0))
+                 END AS remainAmt,
+                '01' as hasChildren
+            FROM  (select m.seqno,m.finprod_id,n.pflsh from CREDIT_ASSETPOOL_DETAIL m inner join CREDIT_LINES n on m.seqno=n.customer_id)  A
+            inner join  CREDIT_LINES B on A.FINPROD_ID=B.CUSTOMER_ID
+            inner join FIN_PRODUCT C on A.FINPROD_ID=C.FINPROD_ID
+            LEFT JOIN (
+                SELECT
+                    SUM(DECODE(M.IS_BOTTOM,'01',NVL(M.AMOUNT,0)/100000000 ,0)) AS usedEnstustAmt,
+                    SUM(DECODE(M.IS_BOTTOM,'01',0 ,NVL(M.AMOUNT,0)/100000000)) AS usedAmt,
+                    SUM(NVL(M.AMOUNT,0)/100000000)                           AS usedAmtTotal,
+                    DE.SEQNO
+                FROM CREDIT_USING_SERIES M
+                INNER JOIN CREDIT_ASSETPOOL_DETAIL DE ON DE.FINPROD_ID = M.FINPROD_ID
+                WHERE M.STATUS = '01'
+                <if test="vdate != null and vdate !=''">
+                    AND M.CDATE &lt;= to_date(#{vdate,jdbcType=DATE},'yyyy-MM-dd')
+                </if>
+                GROUP BY DE.SEQNO
+            ) D ON B.CUSTOMER_ID = D.SEQNO
+        ) MM
+        <where>
+            <if test="customerIdList != null and !customerIdList.isEmpty()">
+                MM.customerId IN (<foreach collection="customerIdList" item="item" separator=",">#{item}</foreach> )
+            </if>
+            <if test="pflsh !=null and pflsh !=''">
+                AND	MM.PFLSH LIKE CONCAT(CONCAT('%',#{pflsh}),'%')
+            </if>
+            <if test="vdate != null and vdate !=''">
+                AND to_char(MM.VDATE,'yyyy-MM-dd')&lt;=#{vdate,jdbcType=DATE}
+            </if>
+            <if test="vdate != null and vdate !=''">
+                AND #{vdate,jdbcType=DATE} &lt; = to_char(MM.MDATE,'yyyy-MM-dd')
+            </if>
+        </where>
+        order by MM.VDATE desc
 	 </select>
 	 
 </mapper>
