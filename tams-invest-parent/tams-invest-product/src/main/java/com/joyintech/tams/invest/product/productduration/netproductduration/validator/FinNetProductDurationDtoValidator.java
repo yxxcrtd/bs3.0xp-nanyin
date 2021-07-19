@@ -397,19 +397,19 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
                 	}
             	}
                 //赎回 交易份额、交易金额、净金额 必填校验
-            	if(dto.getRedDealNum()==null || dto.getRedDealNum().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedDealNum()==null || dto.getRedDealNum().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redDealNum",getMessage("FIN_PROD_E_0091","交易份额")));
                 }
-            	if(dto.getRedDealAmt()==null || dto.getRedDealAmt().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedDealAmt()==null || dto.getRedDealAmt().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redDealAmt",getMessage("FIN_PROD_E_0091","交易金额")));
                 }
-            	if(dto.getRedTotalNetValue()==null || dto.getRedTotalNetValue().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedTotalNetValue()==null || dto.getRedTotalNetValue().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redTotalNetValue",getMessage("FIN_PROD_E_0091","净金额")));
                 }
             	if(dto.getRedConfirmDate() ==null){
                     errorList.add(new ValidMessage("redConfirmDate",getMessage("确认日不能为空！")));
             	}
-            	else if(dto.getRedPayDate()==null || dto.getRedPayDate().compareTo(dto.getRedConfirmDate())<0){
+            	else if(dto.getRedPayDate()==null || dto.getRedPayDate().compareTo(dto.getRedConfirmDate())<=0){
                     errorList.add(new ValidMessage("redPayDate",getMessage("支付日不能为空且必须大于等于确认日！")));
             	}
             	if(!DictCodeList.是否_是.getValue().equals(dto.getIsCycle())) {
@@ -831,7 +831,7 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
                 	}
             	}
                 //赎回 交易本金、收益金额、交易金额、净金额 必填校验
-            	if(dto.getRedPrinAmt03()==null || dto.getRedPrinAmt03().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedPrinAmt03()==null || dto.getRedPrinAmt03().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redPrinAmt03",getMessage("FIN_PROD_E_0091","交易本金")));
                 }
 //            	if(dto.getRedProfit03()==null || dto.getRedProfit03().compareTo(BigDecimal.ZERO)<0){
@@ -843,10 +843,10 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
 	                    errorList.add(new ValidMessage("redProfit03",getMessage("FIN_PROD_E_0123","收益金额")));
 	                }
             	}
-            	if(dto.getRedDealAmt03()==null || dto.getRedDealAmt03().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedDealAmt03()==null || dto.getRedDealAmt03().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redDealAmt03",getMessage("FIN_PROD_E_0091","交易金额")));
                 }
-            	if(dto.getRedTotalNetValue03()==null || dto.getRedTotalNetValue03().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedTotalNetValue03()==null || dto.getRedTotalNetValue03().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redTotalNetValue03",getMessage("FIN_PROD_E_0091","净金额")));
                 }
             	//违约赎回，违约金不能为空
@@ -998,10 +998,10 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
 //                	}
                 	
                 	//产品到期 交易本金、收益金额、交易金额
-                	if(dto.getExpirePrinAmt03()==null || dto.getExpirePrinAmt03().compareTo(BigDecimal.ZERO)<0){
+                	if(dto.getExpirePrinAmt03()==null || dto.getExpirePrinAmt03().compareTo(BigDecimal.ZERO)<=0){
                         errorList.add(new ValidMessage("expirePrinAmt03",getMessage("FIN_PROD_E_0091","交易本金")));
                     }
-                	if(dto.getExpireDealAmt03()==null || dto.getExpireDealAmt03().compareTo(BigDecimal.ZERO)<0){
+                	if(dto.getExpireDealAmt03()==null || dto.getExpireDealAmt03().compareTo(BigDecimal.ZERO)<=0){
                         errorList.add(new ValidMessage("expireDealAmt03",getMessage("FIN_PROD_E_0091","交易金额")));
                     }
                 	
@@ -1114,7 +1114,7 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
             		errorList.add(new ValidMessage("bonusShareEndDate03","计息结束日不能为空"));
             	}
             	//再投确认日不能为空
-            	if(dto.getBonusShareConfirmDate03()==null ||dto.getBonusShareConfirmDate03().compareTo(sysDate)<0){
+            	if(dto.getBonusShareConfirmDate03()==null ||dto.getBonusShareConfirmDate03().compareTo(sysDate)<=0){
                     errorList.add(new ValidMessage("bonusShareConfirmDate03","再投确认日不能为空，且必须大于等于平台日！"));
                 }
             	//modify by wm 2019-06-19 start 根据需求去除红利再投金额为负的限制
