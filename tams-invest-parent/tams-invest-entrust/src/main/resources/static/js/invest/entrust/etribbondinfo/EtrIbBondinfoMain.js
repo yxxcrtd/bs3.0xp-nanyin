@@ -95,27 +95,28 @@ $(
          */
         function doRiskcal003() {
             var object = EtrIbBondinfo003.getSearchParams();
-            var checkParam = {};
-            checkParam.data = EtrIbBondinfo003.getriskdata();
-            if(!checkParam.data){
-                return null;
-            }
-            var param = [];
+            // var checkParam = {};
+            // checkParam.data = EtrIbBondinfo003.getriskdata();
+            // if(!checkParam.data){
+            //     return null;
+            // }
+            // var param = [];
 
-            if (checkParam.data.length > 0) {
-                for (var index in checkParam.data) {
-                    var item = checkParam.data[index];
-                    item.data.assetCode = object.finprodId;
-                    item.data.finprodId = object.finprodId;
-                    item.data.counterId = object.counterId;
-                    item.data.ps = object.ps;
-                    item.data.ccy = "CNY";
-                    item.data.portfolioId = item.data.portfolioCode;
-                    item.data.price = object.price;
-                    item.data.entrustNum = item.data.entrustNum;
-                    param.push(item.data);
-                }
-            }
+            // if (checkParam.data.length > 0) {
+            //     for (var index in checkParam.data) {
+            //         var item = checkParam.data[index];
+            //         item.data.assetCode = object.finprodId;
+            //         item.data.finprodId = object.finprodId;
+            //         item.data.counterId = object.counterId;
+            //         item.data.ps = object.ps;
+            //         item.data.ccy = "CNY";
+            //         item.data.portfolioId = item.data.portfolioCode;
+            //         item.data.price = object.price;
+            //         item.data.entrustNum = item.data.entrustNum;
+            //         param.push(item.data);
+            //     }
+            // }
+            let checkParam = EtrIbBondinfo003.getriskdata();
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + "riskrds/interf/doInfBatchData/0/RSK002/F01", object, checkParam, riskMathRedisCallback003);
         }
         /**
@@ -161,8 +162,7 @@ $(
                 if (!s && s != "") {
                     return;
                 }
-                var checkData = {};
-                checkData.data = EtrIbBondinfo003.getriskdata();
+                var checkData = EtrIbBondinfo003.getriskdata();
                 if (window.BaseRiskMathComm.isCalcConditionChanged(checkData)) {
                     return;
                 }
