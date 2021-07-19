@@ -771,17 +771,67 @@
         }
     });
 
+    function getBaseRiskdata(item) {
+        var obj = {
+            tradeDirection: query('#ps').val(),
+            timePoint: MY_SUP_TIME_TYPE_02,
+            valDate: sysDate,
+            assetType: fintype,
+            isEnabled: '01',
+            assetCode: query('#finprodIdhid').val()
+        }
+        obj.ps = query('#ps').val();
+        if (obj.ps === PS_T03) {
+            obj.counterId=query('#counterId2').val();
+        }else{
+            obj.counterId=query('#counterId1').val();
+        }
+        obj.price = query('#price').val();
+        obj.ccy = 'CNY';
+        return obj;
+    }
+    
     function getriskdata() {
-        let finprodIdhid = query('#finprodIdhid').val();
-        if(finprodIdhid == null || finprodIdhid === ''){
-            JoyinUtil.showMessage("请选择资产简称","error");
-            return null;
+        let dataList = [];
+        let portfolioIdList = $.serializeToObject('#searchForm').bussCombDistribtList;
+        if (portfolioIdList.length > 0) {
+            for (var index in portfolioIdList) {
+                let item = portfolioIdList[index];
+                let obj = getBaseRiskdata();
+                obj.portfolioCode=item.portfolioId;
+                obj.tradeAmount=item.entrustNum;
+                dataList.push(obj);
+            }
+        }else{
+            let obj = getBaseRiskdata();
+            obj.portfolioCode="";
+            obj.tradeAmount=query("#tradeAmt").val();
+            dataList.push(obj);
         }
-        let ps = query('#ps').val();
-        if(ps == null || ps === ''){
-            JoyinUtil.showMessage("请选择交易方向","error");
-            return null;
+        
+        let checkParam = {
+            tradeDirection: ['ps', 'EtribBondInfo003.ps'],
+            portfolioCode: ['portfolioId', 'EtribBondInfo003.portfolioId'],
+            tradeAmount: ['tradeAmt', 'EtribBondInfo003.tradeAmt'],
+            assetType: ["assetType1", "EtrIbBondinfo002.bondType"],
+            data: dataList
         }
+        checkParam.counterId = ['counterId', 'EtribBondInfo003.counterId'];
+        checkParam.price = ['price', 'EtribBondInfo003.price'];
+        checkParam.ccy = ['ccy', 'EtrIbBondinfo002.ccy'];
+        return checkParam;
+        
+        // let finprodIdhid = query('#finprodIdhid').val();
+        // if(finprodIdhid == null || finprodIdhid === ''){
+        //     JoyinUtil.showMessage("请选择资产简称","error");
+        //     return null;
+        // }
+        // let ps = query('#ps').val();
+        // if(ps == null || ps === ''){
+        //     JoyinUtil.showMessage("请选择交易方向","error");
+        //     return null;
+        // }
+        /*
         var bussCombDistribtList = $.serializeToObject('#searchForm').bussCombDistribtList;
         if (bussCombDistribtList.length > 0) {
             var objects = new Array();
@@ -792,7 +842,7 @@
                     timePoint: MY_SUP_TIME_TYPE_02,
                     valDate: sysDate,
                     portfolioCode: item.portfolioId,
-                    entrustNum: item.entrustNum,
+                    tradeAmount: query("#entrustNum").val(),
                     assetType: fintype,
                     isEnabled: '01',
                     assetCode: query('#finprodIdhid').val()
@@ -813,7 +863,8 @@
                 var object = {
                     tradeDirection: ['ps', 'EtribBondInfo003.ps'],
                     portfolioCode: ['portfolioId', 'EtribBondInfo003.portfolioId'],
-                    entrustNum: ['entrustNum', 'EtribBondInfo003.entrustAmt'],
+                    tradeAmount: ['entrustNum', 'EtribBondInfo003.entrustAmt'],
+                    assetType: ["assetType1", "EtrIbBondinfo002.bondType"],
                     data: obj
                 }
                 // add by zhangrui1 交易对手影响风险试算 start
@@ -823,8 +874,8 @@
             }
             return objects;
         } else {//若组合分配列表为空，则单个check
-            JoyinUtil.showMessage("请添加组合信息","error");
-            return null;
+            // JoyinUtil.showMessage("请添加组合信息","error");
+            // return null;
             // var obj = {
             //     tradeDirection: query('#ps').val(),
             //     timePoint: MY_SUP_TIME_TYPE_02,
@@ -855,6 +906,7 @@
             // // add by zhangrui1 交易对手影响风险试算 end
             // return objects;
         }
+        */
     }
 
     /**
@@ -922,7 +974,6 @@
         }
     }
 
-
     function saveOrSubmit(operateType) {
         var s;
         if (BaseRiskMathComm) {
@@ -930,9 +981,7 @@
             if (!s && s != "") {
                 return;
             }
-            var checkData = {};
-            checkData.data = getriskdata();
-            if (window.BaseRiskMathComm.isCalcConditionChanged(checkData)) {
+            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())) {
                 return;
             }
         }

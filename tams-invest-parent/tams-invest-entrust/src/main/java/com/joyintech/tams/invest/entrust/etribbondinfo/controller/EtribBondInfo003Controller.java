@@ -182,11 +182,20 @@ public class EtribBondInfo003Controller extends BaseController {
             if(!StringUtil.isNotEmpty(dto.getMdate()))
                 messages.add(new ValidMessage("mdate", "请输入指令终止日。"));
             if (!StringUtil.isNotEmpty(dtoList.get(0).getTradeMarketMode()))
-                messages.add(new ValidMessage("tradeMarketMode", "请输入交易市场。"));
+                messages.add(new ValidMessage("tradeMarketMode", "请输入交易市场！"));
             if(!StringUtil.isNotEmpty(dtoList.get(0).getSettleSpeed()))
-                messages.add(new ValidMessage("settleSpeed", "请输入清算速度。"));
+                messages.add(new ValidMessage("settleSpeed", "请输入清算速度！"));
             if (StringUtil.isNotEmpty(dtoList.get(0).getChlId())) {
                 chlId = true;
+            }
+            if(!StringUtil.isNotEmpty(dtoList.get(0).getPriceModel())){
+                messages.add(new ValidMessage("priceModel", "请输入价格模式！"));
+            }
+            if(!StringUtil.isNotEmpty(dtoList.get(0).getCounterId())){
+                messages.add(new ValidMessage("counterId", "请选择交易对手！"));
+            }
+            if(!StringUtil.isNotEmpty(dtoList.get(0).getCalculateField())){
+                messages.add(new ValidMessage("calculateField", "净价、到期收益率、行权收益率三选一！"));
             }
             // 价格模式check
             if (StringUtil.isNotEmpty(dto.getPriceModel()) &&
@@ -194,7 +203,7 @@ public class EtribBondInfo003Controller extends BaseController {
                             || StringUtil.equals(dto.getPriceModel(), DictCodeListExt2.价格模式_限价指令.getValue()))) {
                 // 价格模式选择限价指令，净价必填
                if (dto.getPrice() == null ) {
-                   messages.add(new ValidMessage("settleSpeed", "请输入净价。"));
+                   messages.add(new ValidMessage("price", "请输入净价。"));
                }
             }
         }
