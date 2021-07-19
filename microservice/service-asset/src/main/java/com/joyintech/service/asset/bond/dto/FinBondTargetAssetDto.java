@@ -236,7 +236,46 @@ public class FinBondTargetAssetDto extends FinProduct{
      * 是否私募债
      */
     private String isPPB;
-    
+	/**
+     * 是否发行标的
+     */
+    public String isIssueAsset;
+	
+	/**
+     * 获取 isIssueAsset
+     * @return isIssueAsset.
+     */
+    public String getIsIssueAsset() {
+        return isIssueAsset;
+    }
+
+    /**
+     * 设置 isIssueAsset
+     * @param isIssueAsset isIssueAsset
+     */
+    public void setIsIssueAsset(String isIssueAsset) {
+        this.isIssueAsset = isIssueAsset;
+    }
+	
+    /**
+     * 上市代码
+     */
+    public String appearMarketId;
+
+    /**
+     * 获取上市代码
+     */
+    public String getAppearMarketId() {
+        return appearMarketId;
+    }
+
+    /**
+     * 设置上市代码
+     */
+    public void setAppearMarketId(String appearMarketId) {
+        this.appearMarketId = appearMarketId;
+    }
+	
     /**
      * 是否净价交易
      */

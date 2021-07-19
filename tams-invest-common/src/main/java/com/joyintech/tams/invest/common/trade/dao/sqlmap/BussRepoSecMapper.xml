@@ -48,6 +48,8 @@
             A.IS_RIGHT,
             A.REGIST_ORG
         FROM FIN_PRODUCT A
+        LEFT JOIN FIN_PRODUCT_ADD FPA
+            ON FPA.FINPROD_ID = A.FINPROD_ID
         LEFT JOIN FIN_PRODUCT_TYPE B
             ON B.FINPROD_ID = A.FINPROD_ID
         LEFT JOIN
@@ -89,6 +91,7 @@
                     #{item}
                 </foreach>
             </if>
+            AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
         </where>
    </select>
 
@@ -290,7 +293,9 @@
                    <if test="tradeMarket != null and tradeMarket != ''">
                        AND fp.TRADE_MARKET = #{tradeMarket}
                    </if>
-            LEFT JOIN   MST_BOND_VALUATION_INFO mbvi
+            LEFT JOIN FIN_PRODUCT_ADD FPA ON FPA.FINPROD_ID = T.FINPROD_ID
+
+       LEFT JOIN   MST_BOND_VALUATION_INFO mbvi
                     ON  mbvi.SEC_ID = fp.FINPROD_MARKET_ID
                     AND mbvi.VALUE_DATE &lt;= TO_DATE(#{plateDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
                     AND NOT EXISTS (
@@ -317,6 +322,9 @@
             /*modify by caojin 2020/6/1  债券质押式回购   可质押券面总额全部质押时 为0  故加上‘=’ TISHKBS-594  start*/
             AND  NVL(ava.AMOUNT, 0) - NVL(pledge.AMOUNT, 0) + nvl(AVA_FLOW.amount, 0)  &gt;= 0
             /*modify by caojin 2020/6/1  债券质押式回购   可质押券面总额全部质押时 为0  故加上‘=’   end*/
+            /*modify by mashukai 2021/4/15  过滤发行标的 start*/
+            AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
+            /*modify by mashukai 2021/4/15  过滤发行标的 end*/
             <if test="repRegistOrg != null and repRegistOrg.size() > 0">
                 AND fp.REGIST_ORG in
                 <foreach collection="repRegistOrg" item="item" open="(" close=")" separator=",">
@@ -364,7 +372,11 @@
            fpt.type_6 secType
            <!-- 债券质押回购多组合，张庚林，20190723 end-->
         FROM
-                        FIN_PRODUCT fp
+            FIN_PRODUCT fp
+            <!-- 过滤发行标的，马数凯，20210415 start-->
+            LEFT JOIN FIN_PRODUCT_ADD FPA
+                ON FPA.FINPROD_ID = fp.FINPROD_ID
+            <!-- 过滤发行标的，马数凯，20210415 end-->
             <!-- 债券质押回购多组合，张庚林，20190723 start-->
             left join fin_product_type fpt2
             on fp.finprod_id=fpt2.finprod_id
@@ -386,7 +398,8 @@
            LEFT JOIN FIN_PRODUCT_TYPE FPT
              ON fp.FINPROD_ID = FPT.FINPROD_ID                                 
         <where>
-                fp.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+            fp.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+            AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
             <if test="tradeMarket != null and tradeMarket != ''">
                 AND fp.TRADE_MARKET = #{tradeMarket, jdbcType=VARCHAR}
             </if>

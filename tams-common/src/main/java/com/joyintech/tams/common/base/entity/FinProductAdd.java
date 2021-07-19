@@ -333,6 +333,44 @@ public class FinProductAdd extends BaseEntity {
      * 是否纳入净额结算 Y:是 N:否
      */
     private String isNetSett;
+	
+	/**
+	 * 是否发行标的
+	 */
+	private String isIssueAsset;
+
+	/**
+	 * 上市代码
+	 */
+	private String appearMarketId;
+
+	/**
+	 * 获取是否发行标的
+	 */
+	public String getIsIssueAsset() {
+		return isIssueAsset;
+	}
+
+	/**
+	 * 设置是否发行标的
+	 */
+	public void setIsIssueAsset(String isIssueAsset) {
+		this.isIssueAsset = isIssueAsset;
+	}
+
+	/**
+	 * 获取上市代码
+	 */
+	public String getAppearMarketId() {
+		return appearMarketId;
+	}
+
+	/**
+	 * 设置上市代码
+	 */
+	public void setAppearMarketId(String appearMarketId) {
+		this.appearMarketId = appearMarketId;
+	}
 
     /**
      * 是否私募债 Y:是 N:否

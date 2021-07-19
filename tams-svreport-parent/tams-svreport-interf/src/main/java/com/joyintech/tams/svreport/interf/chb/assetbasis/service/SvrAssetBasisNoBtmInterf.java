@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -24,10 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper;
 import com.joyintech.tams.common.base.entity.ChbAssetsBasisData;
 import com.joyintech.tams.common.base.entity.ChbAstValue;
@@ -197,6 +194,12 @@ public class SvrAssetBasisNoBtmInterf extends BaseService{
 	        				data.setMdate(exerciseDate);
 	        			}
 	        		}
+
+					//上市流通交易，上市标的修改成发行标的资产代码
+					String pulicAssetId = chbAssetBasisInterfMapper.getPulicAssetId(data.getAssetId());
+					if(StringUtil.isNotEmpty(pulicAssetId)){
+						data.setAssetId(pulicAssetId);
+					}
 	        		
 	        		StringBuffer keyVFinal = new StringBuffer();
 	            	keyVFinal.append(data.getProdId()).append(data.getAssetId()).append(data.getValueDate());

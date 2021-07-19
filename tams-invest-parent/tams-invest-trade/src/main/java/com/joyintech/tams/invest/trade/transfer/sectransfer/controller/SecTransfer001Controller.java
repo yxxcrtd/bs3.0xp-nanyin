@@ -202,6 +202,8 @@ public class SecTransfer001Controller extends BaseController {
             calendar.setTime(DateUtil.platDateFromCache());
             calendar.add(Calendar.DATE, -1);
             paraMap.put("sysDate", DateUtil.format(calendar.getTime(), "yyyy-MM-dd"));
+            paraMap.put("PROFIT_TYPE_02",DictCodeList.收益类型_收益型.getValue());
+            paraMap.put("FINPROD_TYPE_TG_F16",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue().concat("_"));
             if(entity.getUnitCprice() == null) {
             	BigDecimal unitCprice = secTransfer001Service.findUnitCprice(paraMap);
             	entity.setUnitCprice(unitCprice);
