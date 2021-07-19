@@ -33,8 +33,8 @@
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
-        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="DATE" />
-        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="DATE" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
         <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
         <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
         <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
