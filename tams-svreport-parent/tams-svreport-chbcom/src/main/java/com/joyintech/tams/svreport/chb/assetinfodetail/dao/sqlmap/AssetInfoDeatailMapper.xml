@@ -2450,7 +2450,8 @@
             #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
             #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
             #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
-            #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
+            #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB,
+            #{item.planId,jdbcType=VARCHAR} PLAN_ID
 
 
             from dual
@@ -2676,7 +2677,8 @@
         CII.OPTION_FLAG=TEMP.OPTION_FLAG,
         CII.IS_BJSZQ=TEMP.IS_BJSZQ,
         CII.IS_PERPETUAL=TEMP.IS_PERPETUAL,
-        CII.IS_FBZB=TEMP.IS_FBZB
+        CII.IS_FBZB=TEMP.IS_FBZB,
+        CII.PLAN_ID=TEMP.PLAN_ID
 
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
@@ -2773,7 +2775,7 @@
         BANK_SEC_PERPETUAL,BANK_SEC_KZZQ,BANK_SEC_ZXZQ,ISUNLISTED,
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
-        IS_BJSZQ,IS_PERPETUAL,IS_FBZB
+        IS_BJSZQ,IS_PERPETUAL,IS_FBZB,PLAN_ID
         )
         values(
         TEMP.ASSET_UUID,
@@ -2983,7 +2985,7 @@
         TEMP.BANK_SEC_KZZQ,TEMP.BANK_SEC_ZXZQ,TEMP.ISUNLISTED,
         TEMP.IS_BZHPJ,TEMP.CHB_ISSUER_ID,TEMP.CHB_MANAGER_ID,
         TEMP.CHB_FINANCIER_ID,TEMP.PERPETUAL_FLAG,TEMP.OPTION_FLAG,
-        TEMP.IS_BJSZQ,TEMP.IS_PERPETUAL,TEMP.IS_FBZB
+        TEMP.IS_BJSZQ,TEMP.IS_PERPETUAL,TEMP.IS_FBZB,TEMP.PLAN_ID
         )
     </insert>
 

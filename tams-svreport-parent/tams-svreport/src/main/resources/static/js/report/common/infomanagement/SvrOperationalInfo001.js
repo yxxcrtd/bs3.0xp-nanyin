@@ -64,6 +64,7 @@ var assetColList1 = [ //标题栏
                   	{field: 'BASIS02', align: 'center', title: '*计息基础', width: 150},
                   	{field: 'TARGET_TYPE102', align: 'center', title: '回购标的类别', width: 150},
                   	{field: 'TARGET_AMT02', align: 'center', title: '回购标的金额', width: 150},
+                  	{field: 'PLAN_ID', align: 'center', title: '对应资管计划代码', width: 150},
                   	// 非标准化债权类资产/信贷资产流转项目
                   	{field: 'PROFIT_TYPE04', align: 'center', title: '收/受益权类型', width: 150},
                   	{field: 'IS_RESALE04', align: 'center', title: '*是否属于买入返售', width: 150},
