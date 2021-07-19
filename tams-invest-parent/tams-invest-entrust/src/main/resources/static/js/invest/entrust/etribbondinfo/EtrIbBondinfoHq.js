@@ -227,6 +227,7 @@
                     result.secType=result.secTypeName;
                     result.rateType=result.rateTypeName;
                     result.issuer=result.issuerName;
+                    result.xqFlg=result.xqFlgName;
                     dynview.resultToView(result);
                     //
                     // if (result.secName != null && result.secName != '') {
