@@ -90,15 +90,24 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
             pageParam.put("resourcesTreeInstCodeList",resourcesTreeInstCodeList);
         }
         // 多级法人改造 add by jingqiongqiong 20200615
+
+        List<PtlPositionAnalysis001Dto> resultList = ptlPositionAnalysisMapper.select(pageParam);
+        //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本------->>>>>>>
+        resultList.forEach(x -> {
+            if(null != x.getMarketValue()){
+                x.setFloatAmt(x.getMarketValue().subtract((null == x.getDscCostAmt()?BigDecimal.ZERO:x.getDscCostAmt())));
+            }
+        });
+        //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本-------<<<<<<<
+
+        Page<PtlPositionAnalysis001Dto> pagelist = new Page<>();
+        pagelist.setRoot(resultList);
+
         if (StringUtil.isNotEmpty(pageParam.get("parentId")) && !StringUtil.equals(pageParam.get("parentId"), "root")) {
-            List<PtlPositionAnalysis001Dto> resultList = ptlPositionAnalysisMapper.select(pageParam);
             countSumAndCalPercent(resultList);
-            Page<PtlPositionAnalysis001Dto> pagelist = new Page<>();
-            pagelist.setRoot(resultList);
             return pagelist;
         }
-        Page<PtlPositionAnalysis001Dto> list = super.queryForPage(page, length, () -> ptlPositionAnalysisMapper.select(pageParam));
-        return list;
+        return pagelist;
     }
     private void countSumAndCalPercent(List<PtlPositionAnalysis001Dto> resultList) {
         BigDecimal sum = BigDecimal.ZERO;
@@ -262,8 +271,14 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         } else {
             list = ptlPositionAnalysisMapper.selectAssetPierce(pageParam);
         }
-
-        return list == null ? new ArrayList<>() : list;
+        //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本------->>>>>>>
+        list.forEach(x -> {
+            if(null != x.getMarketValue()){
+                x.setFloatAmt(x.getMarketValue().subtract((null == x.getDscCostAmt()?BigDecimal.ZERO:x.getDscCostAmt())));
+            }
+        });
+        //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本-------<<<<<<<
+        return list;
     }
 
     /**

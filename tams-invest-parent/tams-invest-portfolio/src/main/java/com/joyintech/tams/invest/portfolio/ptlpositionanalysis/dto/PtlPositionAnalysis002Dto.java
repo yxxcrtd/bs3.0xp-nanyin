@@ -39,6 +39,11 @@ public class PtlPositionAnalysis002Dto{
     private BigDecimal dscCostAmt;
 
     /**
+     * 盈亏 = 市值 - 成本
+     */
+    private BigDecimal floatAmt;
+
+    /**
      * 应计利息
      */
     private BigDecimal tdyIntincexp;
@@ -100,7 +105,14 @@ public class PtlPositionAnalysis002Dto{
         this.dscCostAmt = dscCostAmt;
     }
 
-    
+    public BigDecimal getFloatAmt() {
+        return floatAmt;
+    }
+
+    public void setFloatAmt(BigDecimal floatAmt) {
+        this.floatAmt = floatAmt;
+    }
+
     /**
      * 获取 tdyIntincexp
      * @return tdyIntincexp.
