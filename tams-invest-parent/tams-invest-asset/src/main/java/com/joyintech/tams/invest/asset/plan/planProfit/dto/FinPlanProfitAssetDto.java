@@ -1830,7 +1830,7 @@ public class FinPlanProfitAssetDto extends FinProduct implements ProcessEntity {
     // 增加推荐方与推荐费率 add by renping 20191014 end
 
 
-    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
+ /*   @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})*/
     public String getRepAssetType() {
         return repAssetType;
     }
