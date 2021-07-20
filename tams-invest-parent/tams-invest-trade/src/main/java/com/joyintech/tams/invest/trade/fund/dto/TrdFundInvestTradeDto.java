@@ -805,7 +805,7 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
      * 
      * @return tradeMarket.
      */
-    @NotEmpty(fieldName = "TrdFundInvestTrade002.tradeMarket", groups = {ValidateGroupEdit.class})
+   /* @NotEmpty(fieldName = "TrdFundInvestTrade002.tradeMarket", groups = {ValidateGroupEdit.class})*/
     public String getTradeMarket() {
         return tradeMarket;
     }
