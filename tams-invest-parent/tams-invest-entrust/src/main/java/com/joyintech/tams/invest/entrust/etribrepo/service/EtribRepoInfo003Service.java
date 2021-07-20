@@ -292,7 +292,7 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
             entity.setMstFileInputParameter(mstFileInputParameter);
             entity.setWorkFlowId(dto.getWorkflowId());
             restTemplate.postForObject(
-                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/insertWithQuery", entity,
                     Boolean.class);
             if(baseEtrCashPositionCommService!=null){
                 baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
