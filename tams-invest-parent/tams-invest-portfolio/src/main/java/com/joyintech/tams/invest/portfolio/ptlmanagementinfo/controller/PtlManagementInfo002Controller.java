@@ -84,7 +84,7 @@ public class PtlManagementInfo002Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.组合类型,DictCode.收益类型
                                     ,DictCode.募集方式,DictCode.投资性质
                                     ,DictCode.开放类型,DictCode.是否
-                                    ,DictCode.尾数处理方式,DictCode.组合序列);
+                                    ,DictCode.尾数处理方式,DictCode.组合系列);
         model.addAttribute("YES", DictCodeList.是否_是.getValue());
         String portfolioId = getParam("portfolioId");
         // 判断是否存在于留痕表

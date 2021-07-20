@@ -64,7 +64,7 @@ $(function() {
             ,{field:'portfolioTypeStr', width: 200, title: 'PtlManagementInfo001.portfolioType',sortField:'portfolioType'}//组合类型
             ,{field:'profitTypeStr', width: 200, title: 'PtlManagementInfo001.revenueType',sortField:'profitType'}//收益类型
             // 查询结果隐藏【投资策略】【继承比例%】增加【组合系列】 by caozhenming 20210719 start
-            ,{field:'portfolioSequenceStr', width: 200, title: 'PtlManagementInfo001.portfolioSequence',sortField:'portfolioSequence'}//组合序列
+            ,{field:'portfolioSeriesStr', width: 200, title: 'PtlManagementInfo001.portfolioSeries',sortField:'portfolioSeries'}//组合系列
             // ,{field:'strategyName', width: 200, title: 'PtlManagementInfo001.strategy',sortField:'strategyName'}//投资策略
             // ,{field:'disPercent', width: 200, title: 'PtlManagementInfo004.inheritanceRatio',sortField:'disPercent'}//继承比例
             // 查询结果隐藏【投资策略】【继承比例%】增加【组合系列】 by caozhenming 20210719 end

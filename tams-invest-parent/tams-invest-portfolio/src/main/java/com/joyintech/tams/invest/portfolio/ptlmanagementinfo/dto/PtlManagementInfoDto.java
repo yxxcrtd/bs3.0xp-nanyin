@@ -160,9 +160,9 @@ public class PtlManagementInfoDto extends PtlPortfolio implements ITableRow,Proc
     private List<UploadFile> fileArray;
 
     /**
-     * 组合序列
+     * 组合系列
      */
-    private String portfolioSequence;
+    private String portfolioSeries;
 
     public String getInvestNatureStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.投资性质, this.investNature);
@@ -340,11 +340,11 @@ public class PtlManagementInfoDto extends PtlPortfolio implements ITableRow,Proc
     }
 
     /**
-     * 获取 portfolioSequenceStr
-     * @return portfolioSequenceStr.
+     * 获取 portfolioSeriesStr
+     * @return portfolioSeriesStr.
      */
-    public String getPortfolioSequenceStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.组合序列,this.portfolioSequence);
+    public String getPortfolioSeriesStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.组合系列,this.portfolioSeries);
     }
     /**
      * 获取 isGuarantee
@@ -457,11 +457,11 @@ public class PtlManagementInfoDto extends PtlPortfolio implements ITableRow,Proc
         this.fileArray = fileArray;
     }
 
-    public String getPortfolioSequence() {
-        return portfolioSequence;
+    public String getPortfolioSeries() {
+        return portfolioSeries;
     }
 
-    public void setPortfolioSequence(String portfolioSequence) {
-        this.portfolioSequence = portfolioSequence;
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries;
     }
 }

@@ -12,12 +12,12 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="PORTFOLIO_SEQUENCE" property="portfolioSequence" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_SERIES" property="portfolioSeries" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         PORTFOLIO_ID PORTFOLIO_ID, IS_GUARANTEE IS_GUARANTEE, OPEN_TYPE OPEN_TYPE, RAISE_TYPE RAISE_TYPE, 
         INVEST_NATURE INVEST_NATURE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
-        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,PORTFOLIO_SEQUENCE
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,PORTFOLIO_SERIES
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -43,11 +43,11 @@
         insert into PA_PTL_PORTFOLIO (PORTFOLIO_ID, IS_GUARANTEE, OPEN_TYPE, 
             RAISE_TYPE, INVEST_NATURE, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME,PORTFOLIO_SEQUENCE)
+            UPDATE_TIME,PORTFOLIO_SERIES)
         values (#{portfolioId,jdbcType=VARCHAR}, #{isGuarantee,jdbcType=VARCHAR}, #{openType,jdbcType=VARCHAR}, 
             #{raiseType,jdbcType=VARCHAR}, #{investNature,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP},#{portfolioSequence,jdbcType=VARCHAR})
+            #{updateTime,jdbcType=TIMESTAMP},#{portfolioSeries,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PaPtlPortfolio" >
         insert into PA_PTL_PORTFOLIO
@@ -82,8 +82,8 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
-            <if test="portfolioSequence != null" >
-                PORTFOLIO_SEQUENCE,
+            <if test="portfolioSeries != null" >
+                PORTFOLIO_SERIES,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -117,14 +117,14 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="portfolioSequence != null" >
-                #{portfolioSequence,jdbcType=VARCHAR},
+            <if test="portfolioSeries != null" >
+                #{portfolioSeries,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PaPtlPortfolio" >
         insert into PA_PTL_PORTFOLIO(PORTFOLIO_ID, IS_GUARANTEE, OPEN_TYPE, RAISE_TYPE, INVEST_NATURE, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,PORTFOLIO_SEQUENCE)
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,PORTFOLIO_SERIES)
         select PORTFOLIO_ID, IS_GUARANTEE, OPEN_TYPE, RAISE_TYPE, INVEST_NATURE, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
              from PA_PTL_PORTFOLIO
@@ -151,8 +151,8 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="portfolioSequence != null" >
-                PORTFOLIO_SEQUENCE = #{portfolioSequence,jdbcType=VARCHAR},
+            <if test="portfolioSeries != null" >
+                PORTFOLIO_SERIES = #{portfolioSeries,jdbcType=VARCHAR},
             </if>
         </set>
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
