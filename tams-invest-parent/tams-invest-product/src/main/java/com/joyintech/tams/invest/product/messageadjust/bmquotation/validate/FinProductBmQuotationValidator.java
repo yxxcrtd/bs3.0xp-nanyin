@@ -199,7 +199,7 @@ public class FinProductBmQuotationValidator implements BeanValidator {
             // 判断生效日与标的类金融产品表.到期日,到期日,平台日的关系
             FinProductBmQuotationDto entity = finProductBmQuotationService.getMdate(
                 dto.getFinprodId());
-            if (dto.getEffDate() != null) {
+            if (dto.getEffDate() != null && entity != null) {
                 if (entity.getVdate() != null) {
                     if (dto.getEffDate().compareTo(entity.getVdate()) < 0) {
                         resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0004",
