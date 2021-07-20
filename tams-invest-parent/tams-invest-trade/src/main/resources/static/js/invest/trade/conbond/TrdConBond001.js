@@ -77,7 +77,7 @@
         	,{field:'purchDate',sortField:'purchDate', width:120, title: 'TrdConBond001.purchDate', type: 'date'}
         	,{field:'tradeDate', sortField:'tradeDate',width:100, title: 'TrdConBond001.tradeDate', type: 'date'}
         	,{field:'settleDate',sortField:'settleDate', width:100, title: 'TrdConBond001.settleDate', type: 'date'}
-        	,{field:'purchModleStr',sortField:'purchModle', width:150, title: 'TrdConBond001.purchModle'}
+        	,{field:'purchModleStr',sortField:'purchModle', width:150, title: 'TrdConBond001.purchModle',visible: false}
         	,{field:'purchTypeStr',sortField:'purchType', width:150, title: 'TrdConBond001.purchType'}
         	,{field:'tradeMarketStr', sortField:'tradeMarket',width:130, title: 'TrdConBond001.tradeMarket'}
         	,{field:'ccyStr', sortField:'CCY',width:130, title: 'TrdConBond001.ccy'}
