@@ -169,6 +169,7 @@ $(
             }
             
             var res = EtrIbBondinfo003.getSubmitParam(operateType);
+            if(res == null) return;
             Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", res.param, function (result1) {
                 if (res.objects.length > 0) {
                     Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/check", res.objects, function (result) {

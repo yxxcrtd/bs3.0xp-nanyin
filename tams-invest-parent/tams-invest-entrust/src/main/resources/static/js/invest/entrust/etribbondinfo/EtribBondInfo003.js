@@ -51,7 +51,6 @@
             query('#matureYield').attr('disabled', false);
 
             // 行权收益率
-            // query('#exerYield').attr('disabled', false);
             doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
         }
     }
@@ -560,7 +559,7 @@
      */
     function getSubmitParam(operateType) {
         var res = {}
-        var object = $.serializeToObject('#searchForm');
+        var object = $.serializeToObject('#EtribBondInfo003_bodydiv #searchForm');
         if ($('#select2-finprodId-container').attr('title')){
             object.finprodName = query('#select2-finprodId-container').attr('title');
         }
@@ -605,10 +604,13 @@
         var tradeMarket = query('#tradeMarket').val();
         var ps = null;
         var param = {};
+
+        var tradeAmt = Number(0)
         for(var index in object.bussCombDistribtList){
             var item = object.bussCombDistribtList[index];
             var temp = JSON.parse(JSON.stringify(object));
             temp.portfolioId = item.portfolioId;
+            tradeAmt += parseFloat(item.entrustNum);
             temp.entrustNum = item.entrustNum * 10000;
             finprodId = temp.finprodId;
             counterId = temp.counterId;
@@ -623,6 +625,10 @@
             temp.elementId = 'EtribBondInfo003_btn_submit';
 
             objects.push(temp);
+        }
+        if(tradeAmt !== parseFloat(object.tradeAmt)){
+            JoyinUtil.showMessage("多组合劵面总额不等！" + tradeAmt + ":" + parseFloat(object.tradeAmt), "error")
+            return null;
         }
         param = JSON.parse(JSON.stringify(object));
         param.entrustNum = object.tradeAmt * 10000;
@@ -1010,26 +1016,23 @@
 
     }
 
-    /**
-     * 价格模式
-     */
-    query("#priceModel").change(function () {
-        if (pageModel != PAGE_MODEL_REFERENCE) {
-            if (query("#priceModel").val() == PRICEMODEL_03) {
-                query("#price").val("").attr("disabled", true);
-                query("#fpriceAmt").val("").attr("disabled", true);
-                query("#matureYield").val("").attr("disabled", true);
-                query("#exerYield").val("").attr("disabled", true);
-            } else {
-                query("#price").val("").attr("disabled", false);
-                query("#matureYield").attr("disabled", false);
-                query("#exerYield").attr("disabled", false); //行权收益率
-            }
-            if (query("#price").val()) {
-                calData("price");
-            }
-        }
-    });
+    // query("#priceModel").change(function () {
+    //     if (pageModel != PAGE_MODEL_REFERENCE) {
+    //         if (query("#priceModel").val() == PRICEMODEL_03) {
+    //             query("#price").val("").attr("disabled", true);
+    //             query("#fpriceAmt").val("").attr("disabled", true);
+    //             query("#matureYield").val("").attr("disabled", true);
+    //             query("#exerYield").val("").attr("disabled", true);
+    //         } else {
+    //             query("#price").val("").attr("disabled", false);
+    //             query("#matureYield").attr("disabled", false);
+    //             query("#exerYield").attr("disabled", false); //行权收益率
+    //         }
+    //         if (query("#price").val()) {
+    //             calData("price");
+    //         }
+    //     }
+    // });
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
