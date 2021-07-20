@@ -984,13 +984,13 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                     inputDto.setTrdProductDeal(trdProductDeal);
                 }
                 // 强增，强减只输入交易金额或交易份额，不调用估值接口
-                if (DictCodeList.交易方向_份额强增.getValue().equals(inputDto.getTrdProductDeal().getPs())
-                    || DictCodeList.交易方向_份额强减.getValue().equals(inputDto.getTrdProductDeal().getPs())) {
-                    if (inputDto.getTrdProductDeal().getShareAmt() == null
-                        || inputDto.getTrdProductDeal().getTradeAmt() == null) {
-                        continue;
-                    }
-                }
+//                if (DictCodeList.交易方向_份额强增.getValue().equals(inputDto.getTrdProductDeal().getPs())
+//                    || DictCodeList.交易方向_份额强减.getValue().equals(inputDto.getTrdProductDeal().getPs())) {
+//                    if (inputDto.getTrdProductDeal().getShareAmt() == null
+//                        || inputDto.getTrdProductDeal().getTradeAmt() == null) {
+//                        continue;
+//                    }
+//                }
                 AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
             }
 
