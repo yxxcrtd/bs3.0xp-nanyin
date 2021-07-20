@@ -364,9 +364,16 @@ dialogSelf.flag="abc";
 dialogSelf.dialog=function(msg, url, param){
     Joyin.dialog(msg, url, "98%", "95%", param);
 }
+
+let changeFlgObj = {}; 
+changeFlgObj.getChangeFlg=function () {
+    return changeFlg;
+}
 parent.EtrIbBondinfoMain = {
     dialogSelf:dialogSelf,
+    changeFlgObj:changeFlgObj
 }
 EtrIbBondinfoMain = {
-    dialogSelf:dialogSelf
+    dialogSelf:dialogSelf,
+    changeFlgObj:changeFlgObj
 }

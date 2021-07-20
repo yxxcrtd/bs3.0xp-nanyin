@@ -381,14 +381,17 @@
             if (param.channelId) {
                 query("#chlFinprodId").val(param.channelId).trigger("change");//通道
             }
-            
-            if (param.price){
-                query("#calculateField").val(param.price).trigger("change");//净价
-            }
             query("#ps").textSelect('setValue',"T02");
             query("#priceModel").textSelect('setValue',"PRM02");
             query("#vdate").val(sysDate).trigger("change");
             query("#mdate").val(sysDate).trigger("change");
+
+            if (param.price){
+                //净价
+                query("#calculateField_price").prop('checked', true);
+                query("#price").val(param.price).trigger("change");
+                layui.form.render();
+            }
         }
     };
 
@@ -435,18 +438,18 @@
             if (param.priceModel) {
                 query("#priceModel").val(param.priceModel).trigger("change");//价格模式
             }
-            if (param.unitPrice) {
-                query("#price").val(param.unitPrice).trigger("change");//净价
-            }
-            if (param.allPrice) {
-                query("#fpriceAmt").val(param.allPrice).trigger("change");//全价
-            }
-            if (param.matureYield) {
-                query("#matureYield").val(param.matureYield).trigger("change");//到期收益率
-            }
-            if (param.exerYield) {
-                query("#exerYield").val(param.exerYield).trigger("change");//行权收益率
-            }
+            // if (param.unitPrice) {
+            //     query("#price").val(param.unitPrice).trigger("change");//净价
+            // }
+            // if (param.allPrice) {
+            //     query("#fpriceAmt").val(param.allPrice).trigger("change");//全价
+            // }
+            // if (param.matureYield) {
+            //     query("#matureYield").val(param.matureYield).trigger("change");//到期收益率
+            // }
+            // if (param.exerYield) {
+            //     query("#exerYield").val(param.exerYield).trigger("change");//行权收益率
+            // }
             /*             if (param.vdate) {
                 query("#vdate").val(param.vdate).trigger("change");//成立日
             }
@@ -463,7 +466,13 @@
             if(param.invAim){
                 query("#invAim").val(param.invAim).trigger("change");//投资目的
             }
-            
+
+            if (param.unitPrice){
+                //净价
+                query("#calculateField_price").prop('checked', true);
+                query("#price").val(param.unitPrice).trigger("change");
+                layui.form.render();
+            }
             pageModel = PAGE_MODEL_EDIT;
         }
     };

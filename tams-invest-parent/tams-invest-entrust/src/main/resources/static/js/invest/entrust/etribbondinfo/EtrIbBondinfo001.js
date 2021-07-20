@@ -45,7 +45,10 @@
             }//ajax请求数据
         },
         dblclick:function(table, data) {
-            parent.EtrIbBondinfo002.dbclickRefresh002(data);
+            let flag = parent.EtrIbBondinfoMain.changeFlgObj.getChangeFlg();
+            if(flag === "01"){
+                parent.EtrIbBondinfo002.dbclickRefresh002(data);
+            }
         },
         /**
          * 定义表格名称
@@ -89,7 +92,10 @@
         },
         dblclick:function(table, data) {
             if(data.entrustStatus === "05" || data.entrustStatus === "07"){
-                parent.EtrIbBondinfo002.dbclickEtr(data);
+                let flag = parent.EtrIbBondinfoMain.changeFlgObj.getChangeFlg();
+                if(flag === "01"){
+                    parent.EtrIbBondinfo002.dbclickEtr(data);
+                }
             }
         },
         /**
