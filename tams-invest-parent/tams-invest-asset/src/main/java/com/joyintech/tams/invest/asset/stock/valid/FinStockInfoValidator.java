@@ -114,7 +114,7 @@ public class FinStockInfoValidator implements BeanValidator {
                     && StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepRemark())){
                     errorList.add(new ValidMessage(this.getMessage("BUSS_COM_CRE_003")));
                 }
-                //中债的行业必填
+               /* //中债的行业必填
                 if(StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepIndustry()) || StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepIndustryLevel2())){
                     errorList.add(
                         new ValidMessage("bussRepEquityInfoDto.repIndustry",this.getMessage("FW_E_0006", getMessage("BussRepFundInfo.repIndustry"))));
@@ -144,7 +144,7 @@ public class FinStockInfoValidator implements BeanValidator {
                if(StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepPartyType3())){
                    errorList.add(
                        new ValidMessage("bussRepEquityInfoDto.repPartyType3",this.getMessage("FW_E_0006", getMessage("BussRepEquityInfo.repPartyType3"))));
-               }
+               }*/
                //通过资产代码查询数据，验证资产代码的唯一性
                Map<String,Object> map = new HashMap<String,Object>();
              //  if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
