@@ -75,7 +75,10 @@
         if ($('#select2-finprodMarketId-container').attr('title')){
             object.finprodName = $('#select2-finprodMarketId-container').attr('title');
         }
-        object.bussEtrInvestPersonInfoDto.invManagerId = $('#bussEtrInvestPersonInfoDto_invManagerId').val();
+        if (object.bussEtrInvestPersonInfoDto){
+            object.bussEtrInvestPersonInfoDto.invManagerId = $('#bussEtrInvestPersonInfoDto_invManagerId').val();
+        }
+
         if(object.bussEtrInvestPersonInfoDto.trader != null && object.bussEtrInvestPersonInfoDto.trader != ''){
             object.bussEtrInvestPersonInfoDto.trader = object.bussEtrInvestPersonInfoDto.trader.join(",");
         }
