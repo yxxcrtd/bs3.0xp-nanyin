@@ -344,7 +344,7 @@ public class PtlManagementInfoDto extends PtlPortfolio implements ITableRow,Proc
      * @return portfolioSequenceStr.
      */
     public String getPortfolioSequenceStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.组合序列,this.getPortfolioSequence());
+        return SysDataUtil.getNameFromDataDict(DictCode.组合序列,this.portfolioSequence);
     }
     /**
      * 获取 isGuarantee
