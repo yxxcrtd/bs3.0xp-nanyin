@@ -70,4 +70,16 @@
 			from RSK_VALTBL_PRT_IMP_MAP rvp
 		  where rvp.PTL_ID = #{ptlId}
 	</select>
+	<select id="selectAllAsset" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+		SELECT
+		ASSET_CODE FINPROD_ID,
+		null FINPROD_TYPE,
+		null FINPROD_TYPE2,
+		ASSET_CODE FINPROD_ABBR,
+		ASSET_NAME FINPROD_NAME
+		FROM
+		RSK_ASSET_INFO /**资产要素表**/
+		WHERE
+		status in ('E', 'M')
+	</select>
 </mapper>

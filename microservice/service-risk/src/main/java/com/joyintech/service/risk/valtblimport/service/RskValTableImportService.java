@@ -12,6 +12,7 @@ package com.joyintech.service.risk.valtblimport.service;
 
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,10 @@ public class RskValTableImportService {
         rskValTableImportMapper.deleteSumValTable(dto);
         if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
             for(RskValtblAssetSubDto entity:dto.getSelectedItem()){
+                if(StringUtil.equals(entity.getValType().getDesc(), ValType.ASSET.getDesc())
+                        && StringUtil.isNotEmpty(entity.getIsMatch()) && StringUtil.equals(entity.getIsMatch(), DictCodeListExt1.是否_否.getValue())){
+                    continue;
+                }
                 if(StringUtil.equals(entity.getValType().getDesc(),ValType.ASSET.getDesc())){
                     RskValtblAssetSub record = new RskValtblAssetSub();
                     BeanUtil.copyPropertiesIgnoreNull(record, entity);

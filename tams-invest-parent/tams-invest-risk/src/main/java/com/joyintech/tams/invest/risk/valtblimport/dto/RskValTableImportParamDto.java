@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.risk.valtblimport.dto;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -57,6 +58,13 @@ public class RskValTableImportParamDto{
     
     //---add by 裴家俊 20190514------
     private String filterId;
+
+    // add by swwan 20210615 start
+    private String assetName;
+
+    private Map<String, Integer> warnMap;
+    // add by swwan 20210615 end
+
     /**
      * 获取 ptlId
      * @return ptlId.
@@ -259,7 +267,21 @@ public class RskValTableImportParamDto{
 	public void setFilterId(String filterId) {
 		this.filterId = filterId;
 	}
-    
-    
-    
+
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public Map<String, Integer> getWarnMap() {
+        return warnMap;
+    }
+
+    public void setWarnMap(Map<String, Integer> warnMap) {
+        this.warnMap = warnMap;
+    }
 }

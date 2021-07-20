@@ -26,6 +26,7 @@
 	 	distinct
 		 ID id,
 	 	SRC_COL_INDEX srcColIndex,
+		to_number(SRC_COL_INDEX) srcColIndexNumber,
 	 	SRC_COL_DATA_TYPE srcColDataType,
 	 	TGT_INDEX tgtIndex,
 	 	MEMO memo

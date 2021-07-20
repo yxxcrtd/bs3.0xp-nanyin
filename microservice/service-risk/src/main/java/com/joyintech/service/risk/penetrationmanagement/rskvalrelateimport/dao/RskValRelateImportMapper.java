@@ -13,6 +13,8 @@ package com.joyintech.service.risk.penetrationmanagement.rskvalrelateimport.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -93,5 +95,8 @@ public interface RskValRelateImportMapper {
      * @since 1.0
      */
     int checkGroupName(RskValRelateImportDto dto);
-
+    /**
+     * 查询资产维护界面维护的所有资产要素完整信息
+     */
+    List<FinProduct> selectAllAsset();
 }

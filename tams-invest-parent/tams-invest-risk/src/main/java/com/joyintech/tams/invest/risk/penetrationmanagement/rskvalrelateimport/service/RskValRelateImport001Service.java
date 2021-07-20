@@ -10,11 +10,34 @@
 
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.service;
 
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.text.ParseException;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.progressbar.ProgressBarService;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.risk.valtblimport.dto.RskValTableImportParamDto;
+import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSubDto;
+import com.joyintech.tams.invest.risk.valtblimport.dto.ZipFileAssetInfoDto;
+import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportCommonService;
+import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportService;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -40,7 +63,16 @@ import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.d
  */
 @Service
 public class RskValRelateImport001Service extends CommonExportService<RskValRelateImport001Dto> {
+    @Autowired
+    private RskValTableImportCommonService rskValTableImportCommonService;
+    @Autowired
+    private RskValRelateImport002Service rskValRelateImport002Service;
+    @Autowired
+    private RskValTableImportService rskValTableImportService;
+    @Autowired
+    private ProgressBarService progressBarService;
 
+    private static final Logger logger = LoggerFactory.getLogger(RskValRelateImport001Service.class);
     /**
      * 画面查询 <功能详细描述>
      * 
@@ -105,6 +137,320 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
     @Override
     public Page<RskValRelateImport001Dto> selectPageData(Map<String, Object> selectParam) {
         return selecForPage(selectParam);
+    }
+    public List<ExcelValidDto> batchUploadFile(String pageId, String filePath) {
+        // 更新导入的进度条
+        progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0.5d, false);
+
+        //获取所有错误信息
+        List<ExcelValidDto> errorList = new ArrayList<>();
+        // 获取本地ZIP包路径
+        File file = new SafelyFile(filePath);
+        List<File> fileList = new ArrayList<>();
+        if (Objects.isNull(file)) {
+            errorList.add(new ExcelValidDto(StringUtils.EMPTY, StringUtils.EMPTY, "上传估值表zip文件失败"));
+            return errorList;
+        }
+
+        if (!RskValTableImportCommonService.decompressZip(file, fileList)) {
+            errorList.add(new ExcelValidDto(StringUtils.EMPTY, StringUtils.EMPTY, "解压估值表zip文件失败"));
+            return errorList;
+        }
+
+        if (!checkFileNum(fileList, errorList)) {
+            return errorList;
+        }
+
+        List<ZipFileAssetInfoDto> list = new ArrayList<>();
+        for (int j=0;j<fileList.size();j++) {
+            File file1=fileList.get(j);
+            Boolean isError=false;
+            isError= checkFileName(file1, errorList, list,isError);
+            if(isError){
+                //fileList.get(j).delete();
+                fileList.remove(j);
+            }
+        }
+      /*  if (errorList.size() > 0) {
+            return errorList;
+        }*/
+        progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0.55d, false);
+        saveData(pageId, fileList, list, errorList);
+        if (errorList.size() > 0) {
+            return errorList;
+        }
+        return errorList;
+    }
+
+    private void saveData(String pageId, List<File> fileList, List<ZipFileAssetInfoDto> list, List<ExcelValidDto> errorList) {
+        //默认最大的线程数
+        int maxPoolCapacitySize = 50;
+        //获取系统参数最大的缓存的线程队列
+        if (StringUtil.isNotEmpty(CacheUtil.getSysParam("BATCH_IMPORT_VAL_MAX_THREAD"))) {
+            maxPoolCapacitySize = Integer.parseInt(CacheUtil.getSysParam("BATCH_IMPORT_VAL_MAX_THREAD"));
+        }
+        int listSize = fileList.size();
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();//线程池
+        int initPoolSize = listSize < 10 ? listSize : 10;//初始化线程数
+        int actMaxPoolSize = listSize < maxPoolCapacitySize ? listSize : maxPoolCapacitySize;//最大线程数
+        taskExecutor.initialize();//初始化
+        taskExecutor.setCorePoolSize(initPoolSize);//初始线程数
+        taskExecutor.setMaxPoolSize(maxPoolCapacitySize);//最大线程数
+        taskExecutor.setQueueCapacity(actMaxPoolSize);//缓存队列
+        taskExecutor.setThreadNamePrefix("svrval-batch-import-");//线程前缀
+
+        List<Future<String>> tasks = new ArrayList<>();
+        for (ZipFileAssetInfoDto dto : list) {
+            String fileName = dto.getFileName();
+            Date valDate = dto.getDate();
+            SelectOptionDto info = dto.getInfo();
+            Future<String> singleExportFileDto = taskExecutor.submit(new Callable<String>() {
+                @Override
+                public String call() {
+                    return dealSvrValFile(info.getId(), info.getText(), valDate, fileName);
+                }
+            });
+            tasks.add(singleExportFileDto);
+        }
+
+        //循环查看每个线程的执行结果，如果全部执行完，或者执行时间超过20分钟则取消循环
+        long maxForTime = 20 * 60 * 1000;//20分钟
+        long startForTime = System.currentTimeMillis();//开始循环的时间
+
+        try {
+            Set<Integer> taskSet = new HashSet<>();
+            int successNum = 0;
+            while (true) {
+                boolean isAllDone = true;
+                for (Future<String> taskResult : tasks) {
+                    isAllDone &= (taskResult.isDone() || taskResult.isCancelled());
+                    if (taskResult.isDone() || taskResult.isCancelled()) {
+                        if (taskSet.add(taskResult.hashCode())) {
+                            successNum++;
+                            // 更新导入的进度条
+                            double processD = (55 + 45 * successNum / list.size()) / 100.0;
+                            progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, processD, false);
+                            if (taskResult.get() != null) {
+                                String arr[] = taskResult.get().split(GlobalConstant.COMMA);
+                                if (arr.length == 2) {
+                                    errorList.add(new ExcelValidDto(arr[0], "", taskResult.get()));
+                                } else {
+                                    errorList.add(new ExcelValidDto("", "", taskResult.get()));
+                                }
+                            }
+                        }
+                    }
+                }
+                if (isAllDone || (System.currentTimeMillis() - startForTime) > maxForTime) {
+                    // 任务都执行完毕，跳出循环
+                    break;
+                }
+                TimeUnit.MILLISECONDS.sleep(200);
+            }
+        } catch (Exception e) {
+            logger.error("saveData error: ", e);
+            errorList.add(new ExcelValidDto(StringUtils.EMPTY, StringUtils.EMPTY, "保存估值表文件失败"));
+        } finally {
+            taskExecutor.shutdown();
+        }
+    }
+
+
+
+    private String dealSvrValFile(String assetCode, String assetName, Date valDate, String fileName) {
+        // 获取映射信息
+        RskValRelateImport001Dto import001Dto = rskValRelateImport002Service.selectInfoById(assetCode);
+        if (Objects.isNull(import001Dto) || Objects.isNull(import001Dto.getStructMapId())
+                || Objects.isNull(import001Dto.getAssetSubMapId()) || Objects.isNull(import001Dto.getSumsubMapId())) {
+            return assetName + ",获取映射信息失败";
+        }
+        // 预览
+        RskValTableImportParamDto dto = getRskValTableImportParamDto(valDate, fileName, import001Dto);
+        List<RskValtblAssetSubDto> rskValtblAssetSubDtos = null;
+        try {
+            rskValtblAssetSubDtos = rskValTableImportService.viewValTable(dto);
+        } catch (Exception e) {
+            return assetName + ",导入失败";
+        }
+        if (Objects.isNull(rskValtblAssetSubDtos)) {
+            return assetName + ",导入失败";
+        }
+        // 保存
+        RskValtblAssetSubDto rskValtblAssetSubDto = getRskValtblAssetSubDto(assetCode, valDate, rskValtblAssetSubDtos);
+        try {
+            rskValTableImportService.insert(rskValtblAssetSubDto);
+        } catch (ParseException e) {
+            return assetName + ",保存失败";
+        }
+       /* if (dto.getWarnMap().get(assetName) > 0) {
+            return assetName + ",存在" + dto.getWarnMap().get(assetName) + "条科目未配置映射";
+        }*/
+        return null;
+    }
+
+    /**
+     * 组装RskValtblAssetSubDto
+     *
+     * @param assetCode
+     * @param valDate
+     * @param rskValtblAssetSubDtos
+     * @return
+     */
+    private RskValtblAssetSubDto getRskValtblAssetSubDto(String assetCode, Date valDate, List<RskValtblAssetSubDto> rskValtblAssetSubDtos) {
+        RskValtblAssetSubDto rskValtblAssetSubDto = new RskValtblAssetSubDto();
+        rskValtblAssetSubDto.setSelectedItem(rskValtblAssetSubDtos);
+        rskValtblAssetSubDto.setPtlId(assetCode);
+        rskValtblAssetSubDto.setValDate(valDate);
+        rskValtblAssetSubDto.setImpMode(DictCodeListExt1.导入方式_手工.getValue());
+        return rskValtblAssetSubDto;
+    }
+
+    /**
+     * 组装RskValTableImportParamDto
+     *
+     * @param valDate
+     * @param fileName
+     * @param import001Dto
+     * @return
+     */
+    private RskValTableImportParamDto getRskValTableImportParamDto(Date valDate, String fileName, RskValRelateImport001Dto import001Dto) {
+        RskValTableImportParamDto dto = new RskValTableImportParamDto();
+        dto.setValTableFileName(fileName);
+        dto.setValDate(valDate);
+        BeanUtil.copyPropertiesIgnoreNull(dto, import001Dto);
+        dto.setStartRow(Long.toString(import001Dto.getStartRow()));
+        dto.setSubjectCodeCol(Long.toString(import001Dto.getSubjectCodeCol()));
+        dto.setAssetName(import001Dto.getName());
+        return dto;
+    }
+
+    private boolean checkFileNum(List<File> fileList, List<ExcelValidDto> errorList) {
+        int maxNum = 100;
+        if (CacheUtil.getSysParam("BATCH_IMPORT_VAL_MAX") != null) {
+            maxNum = Integer.parseInt(CacheUtil.getSysParam("BATCH_IMPORT_VAL_MAX"));
+        }
+        if (fileList.size() > maxNum) {
+            errorList.add(new ExcelValidDto(StringUtils.EMPTY, StringUtils.EMPTY, "批量上传估值表文件的数量不能超过："+maxNum));
+            return false;
+        }
+        if (StringUtil.isEmptyList(fileList)) {
+            errorList.add(new ExcelValidDto(StringUtils.EMPTY, StringUtils.EMPTY, "批量上传估值表文件为空"));
+            return false;
+        }
+        return true;
+    }
+
+    private Boolean checkFileName(File file, List<ExcelValidDto> errorList, List<ZipFileAssetInfoDto> list,Boolean isError) {
+        String fileName = file.getName();
+        String chbValSplitStr = CacheUtil.getSysParam(BussinessConstant.CHB_VAL_SPLIT_STR);
+        String[] arr = fileName.split(chbValSplitStr);
+        if (arr.length != 2) {
+            errorList.add(new ExcelValidDto(fileName, StringUtils.EMPTY, fileName + "，不符合格式要求"));
+            isError=true;
+        } else {
+            Date valDate = rskValTableImportCommonService.getDateFromStr(arr[1]);
+            if (Objects.isNull(valDate)) {
+                errorList.add(new ExcelValidDto(fileName, StringUtils.EMPTY, fileName + "，日期格式错误"));
+                isError=true;
+            }
+            SelectOptionDto info = rskValTableImportCommonService.getAssetInfoFromName(arr[0]);
+            if (Objects.isNull(info)) {
+                errorList.add(new ExcelValidDto(fileName, StringUtils.EMPTY, fileName + "，资产名称不存在"));
+                isError=true;
+            }
+
+            ZipFileAssetInfoDto dto = new ZipFileAssetInfoDto(file.getPath(), info, valDate);
+            list.add(dto);
+        }
+        return isError;
+    }
+
+    /**
+     * 删除目录（文件夹）以及目录下的文件
+     * @param   sPath 被删除目录的文件路径
+     * @return  目录删除成功返回true，否则返回false
+     */
+    public static boolean deleteDirectory(String sPath) {
+        boolean flag = false;
+        //如果sPath不以文件分隔符结尾，自动添加文件分隔符
+        if (!sPath.endsWith(File.separator)) {
+            sPath = sPath + File.separator;
+        }
+        File dirFile = new File(sPath);
+        //如果dir对应的文件不存在，或者不是一个目录，则退出
+        if (!dirFile.exists() || !dirFile.isDirectory()) {
+            return false;
+        }
+        flag = true;
+        //删除文件夹下的所有文件(包括子目录)
+        File[] files = dirFile.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            //删除子文件
+            if (files[i].isFile()) {
+                flag = deleteFile(files[i].getAbsolutePath());
+                if (!flag) {
+                    break;
+                }
+            } //删除子目录
+            else {
+                flag = deleteDirectory(files[i].getAbsolutePath());
+                if (!flag) {
+                    break;
+                }
+            }
+        }
+        if (!flag) {
+            return false;
+        }
+        //删除当前目录
+        if (dirFile.delete()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 删除单个文件
+     * @param   sPath    被删除文件的文件名
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    public static boolean deleteFile(String sPath) {
+        boolean flag = false;
+        flag = false;
+        File file = new File(sPath);
+        // 路径为文件且不为空则进行删除
+        if (file.isFile() && file.exists()) {
+            file.delete();
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 获取路径下的所有文件/文件夹
+     * @param directoryPath 需要遍历的文件夹路径
+     * @param isAddDirectory 是否将子文件夹的路径也添加到list集合中
+     * @return
+     */
+    public static List<String> getAllFile(String directoryPath,boolean isAddDirectory) {
+        List<String> list = new ArrayList<String>();
+        File baseFile = new File(directoryPath);
+        if (baseFile.isFile() || !baseFile.exists()) {
+            return list;
+        }
+        File[] files = baseFile.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                if(isAddDirectory){
+                    list.add(file.getAbsolutePath());
+                }
+                list.addAll(getAllFile(file.getAbsolutePath(),isAddDirectory));
+            } else {
+                list.add(file.getAbsolutePath());
+            }
+        }
+        return list;
     }
 
 }
