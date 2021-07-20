@@ -68,6 +68,17 @@
         <result column="ACCR_NUM" property="accrNum" jdbcType="DECIMAL" />
         <result column="SPLIT_TRADE_ID" property="splitTradeId" jdbcType="VARCHAR" />
         <result column="IS_SWAP_TRANSACTION" property="isSwapTransaction" jdbcType="VARCHAR" />
+        <result column="HK_MARKET" property="hkMarket" jdbcType="VARCHAR" />
+        <result column="BUY_SETTLE_RATE" property="buySettleRate" jdbcType="DECIMAL" />
+        <result column="SELL_SETTLE_RATE" property="sellSettleRate" jdbcType="DECIMAL" />
+        <result column="DEAL_AMT" property="dealAmt" jdbcType="DECIMAL" />
+        <result column="COMMISSION" property="commission" jdbcType="DECIMAL" />
+        <result column="STAMPDUTY" property="stampDuty" jdbcType="DECIMAL" />
+        <result column="TRANSACTION_LEVY" property="transactionLevy" jdbcType="DECIMAL" />
+        <result column="TRANSACTION_FEE" property="transactionFee" jdbcType="DECIMAL" />
+        <result column="TRANSACTION_SYSTEM_FEE" property="transactionSystemFee" jdbcType="DECIMAL" />
+        <result column="SHARE_PAYMENT_FEE" property="sharePaymentFee" jdbcType="DECIMAL" />
+        <result column="YESTERDAY_POSITION" property="yesterdayPosition" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, WORKFLOW_STATUS WORKFLOW_STATUS, BUSI_TYPE BUSI_TYPE, FINPROD_ID FINPROD_ID, 
@@ -87,7 +98,10 @@
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, DELIVERY_TYPE DELIVERY_TYPE, SALE_CODE SALE_CODE, 
         PAY_DATE PAY_DATE
         , TG_BUSI_TYPE TG_BUSI_TYPE
-        , ACCR_NUM ACCR_NUM,SPLIT_TRADE_ID SPLIT_TRADE_ID,IS_SWAP_TRANSACTION IS_SWAP_TRANSACTION
+        , ACCR_NUM ACCR_NUM,SPLIT_TRADE_ID SPLIT_TRADE_ID,IS_SWAP_TRANSACTION IS_SWAP_TRANSACTION,
+        HK_MARKET HK_MARKET, BUY_SETTLE_RATE BUY_SETTLE_RATE, SELL_SETTLE_RATE SELL_SETTLE_RATE, DEAL_AMT DEAL_AMT,
+        COMMISSION COMMISSION, STAMPDUTY STAMPDUTY, TRANSACTION_LEVY TRANSACTION_LEVY, TRANSACTION_FEE TRANSACTION_FEE,
+        TRANSACTION_SYSTEM_FEE TRANSACTION_SYSTEM_FEE, SHARE_PAYMENT_FEE SHARE_PAYMENT_FEE, YESTERDAY_POSITION YESTERDAY_POSITION
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -124,7 +138,9 @@
         R_TRADE_ID, B_TRADE_ID, CHL_ID, COUNTER_ID, IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT, 
         TRADE_MARKET_MODE, TRADER, COUNTER_TRADER, COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID, 
         CASH_ID, REGIST_ORG, REMARK, CANCEL_REMARK, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME, DELIVERY_TYPE, SALE_CODE, PAY_DATE)
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, DELIVERY_TYPE, SALE_CODE, PAY_DATE,
+        HK_MARKET, BUY_SETTLE_RATE, SELL_SETTLE_RATE, DEAL_AMT, COMMISSION, STAMPDUTY,
+        TRANSACTION_LEVY, TRANSACTION_FEE, TRANSACTION_SYSTEM_FEE, SHARE_PAYMENT_FEE, YESTERDAY_POSITION)
         select TRADE_ID, WORKFLOW_STATUS, BUSI_TYPE, FINPROD_ID, 
             FINPROD_TYPE, FINPROD_TYPE2, BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, SETTLE_SPEED, 
             CCY, CPRICE_DATE, UNIT_CPRICE, UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, 
@@ -133,7 +149,9 @@
             R_TRADE_ID, B_TRADE_ID, CHL_ID, COUNTER_ID, IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT, 
             TRADE_MARKET_MODE, TRADER, COUNTER_TRADER, COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID, 
             CASH_ID, REGIST_ORG, REMARK, CANCEL_REMARK, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DELIVERY_TYPE, SALE_CODE, PAY_DATE
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DELIVERY_TYPE, SALE_CODE, PAY_DATE,
+            HK_MARKET, BUY_SETTLE_RATE, SELL_SETTLE_RATE, DEAL_AMT, COMMISSION, STAMPDUTY,
+        	TRANSACTION_LEVY, TRANSACTION_FEE, TRANSACTION_SYSTEM_FEE, SHARE_PAYMENT_FEE, YESTERDAY_POSITION
              from WFL_TRD_PRODUCT_DEAL
              where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
@@ -314,6 +332,39 @@
             <if test="payDate != null" >
                 PAY_DATE = #{payDate,jdbcType=DATE},
             </if>
+            <if test="hkMarket != null" >
+                HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="buySettleRate != null" >
+                BUY_SETTLE_RATE = #{buySettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="dealAmt != null" >
+                DEAL_AMT = #{dealAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="commission != null" >
+                COMMISSION = #{commission,jdbcType=DECIMAL},
+            </if>
+            <if test="stampDuty != null" >
+                STAMPDUTY = #{stampDuty,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionLevy != null" >
+                TRANSACTION_LEVY = #{transactionLevy,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionFee != null" >
+                TRANSACTION_FEE = #{transactionFee,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionSystemFee != null" >
+                TRANSACTION_SYSTEM_FEE = #{transactionSystemFee,jdbcType=DECIMAL},
+            </if>
+            <if test="sharePaymentFee != null" >
+                SHARE_PAYMENT_FEE = #{sharePaymentFee,jdbcType=DECIMAL},
+            </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
@@ -377,7 +428,18 @@
         UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
         DELIVERY_TYPE = #{deliveryType,jdbcType=VARCHAR},
         SALE_CODE = #{saleCode,jdbcType=VARCHAR},
-        PAY_DATE = #{payDate,jdbcType=DATE}
+        PAY_DATE = #{payDate,jdbcType=DATE},
+        HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+		BUY_SETTLE_RATE = #{buySettleRate,jdbcType=DECIMAL},
+		SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
+		DEAL_AMT = #{dealAmt,jdbcType=DECIMAL},
+		COMMISSION = #{commission,jdbcType=DECIMAL},
+		STAMPDUTY = #{stampDuty,jdbcType=DECIMAL},
+		TRANSACTION_LEVY = #{transactionLevy,jdbcType=DECIMAL},
+		TRANSACTION_FEE = #{transactionFee,jdbcType=DECIMAL},
+		TRANSACTION_SYSTEM_FEE = #{transactionSystemFee,jdbcType=DECIMAL},
+		SHARE_PAYMENT_FEE = #{sharePaymentFee,jdbcType=DECIMAL},
+		YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL}
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDeal" >
@@ -403,8 +465,10 @@
             UPDATE_USER, UPDATE_TIME, DELIVERY_TYPE, 
             SALE_CODE, PAY_DATE
             , TG_BUSI_TYPE
-            , ACCR_NUM
-            )
+            , ACCR_NUM,
+            HK_MARKET, BUY_SETTLE_RATE, SELL_SETTLE_RATE, DEAL_AMT, COMMISSION, STAMPDUTY,
+        	TRANSACTION_LEVY, TRANSACTION_FEE, TRANSACTION_SYSTEM_FEE, SHARE_PAYMENT_FEE, 
+        	YESTERDAY_POSITION)
         values (#{tradeId,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, 
             #{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
             #{branch,jdbcType=DECIMAL}, #{tradeDate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, 
@@ -427,7 +491,11 @@
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{deliveryType,jdbcType=VARCHAR}, 
             #{saleCode,jdbcType=VARCHAR}, #{payDate,jdbcType=DATE}
             , #{tgBusiType,jdbcType=VARCHAR}
-            , #{accrNum,jdbcType=DECIMAL})
+            , #{accrNum,jdbcType=DECIMAL},
+            #{hkMarket,jdbcType=VARCHAR}, #{buySettleRate,jdbcType=DECIMAL}, #{sellSettleRate,jdbcType=DECIMAL},
+            #{dealAmt,jdbcType=DECIMAL}, #{commission,jdbcType=DECIMAL}, #{stampDuty,jdbcType=DECIMAL}, #{transactionLevy,jdbcType=DECIMAL},
+            #{transactionFee,jdbcType=DECIMAL}, #{transactionSystemFee,jdbcType=DECIMAL}, #{sharePaymentFee,jdbcType=DECIMAL},
+            #{yesterdayPosition,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDeal" >
         insert into WFL_TRD_PRODUCT_DEAL
@@ -630,6 +698,39 @@
             <if test="isSwapTransaction != null" >
                 IS_SWAP_TRANSACTION,
             </if>
+	    <if test="hkMarket != null" >
+                HK_MARKET,
+            </if>
+            <if test="buySettleRate != null" >
+                BUY_SETTLE_RATE,
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE,
+            </if>
+            <if test="dealAmt != null" >
+                DEAL_AMT,
+            </if>
+            <if test="commission != null" >
+                COMMISSION,
+            </if>
+            <if test="stampDuty != null" >
+                STAMPDUTY,
+            </if>
+            <if test="transactionLevy != null" >
+                TRANSACTION_LEVY,
+            </if>
+            <if test="transactionFee != null" >
+                TRANSACTION_FEE,
+            </if>
+            <if test="transactionSystemFee != null" >
+                TRANSACTION_SYSTEM_FEE,
+            </if>
+            <if test="sharePaymentFee != null" >
+                SHARE_PAYMENT_FEE,
+            </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -830,6 +931,39 @@
             <if test="isSwapTransaction != null" >
                 #{isSwapTransaction,jdbcType=VARCHAR},
             </if>
+	    <if test="hkMarket != null" >
+                #{hkMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="buySettleRate != null" >
+                #{buySettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="dealAmt != null" >
+                #{dealAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="commission != null" >
+                #{commission,jdbcType=DECIMAL},
+            </if>
+            <if test="stampDuty != null" >
+                #{stampDuty,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionLevy != null" >
+                #{transactionLevy,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionFee != null" >
+                #{transactionFee,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionSystemFee != null" >
+                #{transactionSystemFee,jdbcType=DECIMAL},
+            </if>
+            <if test="sharePaymentFee != null" >
+                #{sharePaymentFee,jdbcType=DECIMAL},
+            </if>
+            <if test="yesterdayPosition != null" >
+                #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflTrdProductDeal" >
@@ -842,7 +976,9 @@
         TRADE_MARKET_MODE, TRADER, COUNTER_TRADER, COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID, 
         CASH_ID, REGIST_ORG, REMARK, CANCEL_REMARK, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
         CREATE_TIME, UPDATE_USER, UPDATE_TIME, DELIVERY_TYPE, SALE_CODE, PAY_DATE,
-        TG_BUSI_TYPE, ACCR_NUM)
+        TG_BUSI_TYPE, ACCR_NUM,
+        HK_MARKET, BUY_SETTLE_RATE, SELL_SETTLE_RATE, DEAL_AMT, COMMISSION, STAMPDUTY,
+        TRANSACTION_LEVY, TRANSACTION_FEE, TRANSACTION_SYSTEM_FEE, SHARE_PAYMENT_FEE, YESTERDAY_POSITION)
         select TRADE_ID, WORKFLOW_STATUS, BUSI_TYPE, FINPROD_ID, 
             FINPROD_TYPE, FINPROD_TYPE2, BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, SETTLE_SPEED, 
             CCY, CPRICE_DATE, UNIT_CPRICE, UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, 
@@ -852,7 +988,9 @@
             TRADE_MARKET_MODE, TRADER, COUNTER_TRADER, COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID, 
             CASH_ID, REGIST_ORG, REMARK, CANCEL_REMARK, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DELIVERY_TYPE, SALE_CODE, PAY_DATE,
-            TG_BUSI_TYPE, ACCR_NUM
+            TG_BUSI_TYPE, ACCR_NUM,
+            HK_MARKET, BUY_SETTLE_RATE, SELL_SETTLE_RATE, DEAL_AMT, COMMISSION, STAMPDUTY,
+        	TRANSACTION_LEVY, TRANSACTION_FEE, TRANSACTION_SYSTEM_FEE, SHARE_PAYMENT_FEE, YESTERDAY_POSITION
              from WFL_TRD_PRODUCT_DEAL
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </insert>
@@ -1036,6 +1174,39 @@
             <if test="accrNum != null" >
                 ACCR_NUM = #{accrNum,jdbcType=DECIMAL},
             </if>
+            <if test="hkMarket != null" >
+                HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="buySettleRate != null" >
+                BUY_SETTLE_RATE = #{buySettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="dealAmt != null" >
+                DEAL_AMT = #{dealAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="commission != null" >
+                COMMISSION = #{commission,jdbcType=DECIMAL},
+            </if>
+            <if test="stampDuty != null" >
+                STAMPDUTY = #{stampDuty,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionLevy != null" >
+                TRANSACTION_LEVY = #{transactionLevy,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionFee != null" >
+                TRANSACTION_FEE = #{transactionFee,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionSystemFee != null" >
+                TRANSACTION_SYSTEM_FEE = #{transactionSystemFee,jdbcType=DECIMAL},
+            </if>
+            <if test="sharePaymentFee != null" >
+                SHARE_PAYMENT_FEE = #{sharePaymentFee,jdbcType=DECIMAL},
+            </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
@@ -1100,7 +1271,18 @@
             SALE_CODE = #{saleCode,jdbcType=VARCHAR},
             PAY_DATE = #{payDate,jdbcType=DATE},
             ACCR_NUM = #{accrNum,jdbcType=DECIMAL},
-            TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR}
+            TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR},
+            HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+            BUY_SETTLE_RATE = #{buySettleRate,jdbcType=DECIMAL},
+            SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
+            DEAL_AMT = #{dealAmt,jdbcType=DECIMAL},
+            COMMISSION = #{commission,jdbcType=DECIMAL},
+            STAMPDUTY = #{stampDuty,jdbcType=DECIMAL},
+            TRANSACTION_LEVY = #{transactionLevy,jdbcType=DECIMAL},
+            TRANSACTION_FEE = #{transactionFee,jdbcType=DECIMAL},
+            TRANSACTION_SYSTEM_FEE = #{transactionSystemFee,jdbcType=DECIMAL},
+            SHARE_PAYMENT_FEE = #{sharePaymentFee,jdbcType=DECIMAL},
+            YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </update>

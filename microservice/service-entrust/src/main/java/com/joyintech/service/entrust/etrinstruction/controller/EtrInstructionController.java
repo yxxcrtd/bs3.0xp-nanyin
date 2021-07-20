@@ -12,7 +12,7 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.service.entrust.etrfund.dto.EtrFundDto;
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrinstruction.dto.EtrInstructionDto;
 import com.joyintech.service.entrust.etrinstruction.service.EtrInstructionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,7 +155,19 @@ public class EtrInstructionController {
         etrInstructionService.doInsert(dto);
     }
 
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/doUpdate")
+    public void doUpdate(@RequestBody EtrInstructionDto dto) throws IllegalAccessException, InvocationTargetException {
+        etrInstructionService.doUpdate(dto);
+    }
 
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/doBack")
+    public void doBack(@RequestBody EtrInstructionDto dto) {
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
+    }
     /**
      *
      *
@@ -170,6 +182,8 @@ public class EtrInstructionController {
     @DTXTransaction
     @PostMapping("/doComplete")
     public void doComplete(@RequestBody EtrInstructionDto dto) throws IllegalAccessException, InvocationTargetException {
+        WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
+        
         etrInstructionService.doComplete(dto);
     }
 

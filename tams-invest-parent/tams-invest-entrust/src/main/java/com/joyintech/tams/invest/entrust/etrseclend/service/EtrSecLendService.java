@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.entrust.etrseclend.service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -111,7 +112,10 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
         //有效状态
         String entrustStatus = (String)param.get("entrustStatus");
         if(StringUtil.isNotEmpty(entrustStatus)){
-            param.put("entrustStatusList", StringUtil.splitToList(GlobalConstant.COMMA,entrustStatus));
+            // 去除空字符串值
+            List<String> entrustStatusList = StringUtil.splitToList(GlobalConstant.COMMA, entrustStatus);
+            entrustStatusList = entrustStatusList.stream().filter(i->!i.isEmpty()).collect(Collectors.toList());
+            param.put("entrustStatusList", entrustStatusList);
         }
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         return restTemplate.postForPage(
@@ -180,6 +184,7 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
         dto.setOperateType(operationType.toString());
         Date sysDate = DateUtil.platDateFromCache();
         dto.setEntrustDate(sysDate);
+        deleteWflEntity(dto);
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doComplete",dto,
@@ -205,6 +210,22 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
                bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
          }
      }
+     
+     @Override
+    public void doBack(EtrSecLendDto entity) {
+    	 deleteWflEntity(entity);
+    }
+     
+    
+     
+     /**
+      * 删除流程中数据和流水
+      * @param dto
+      */
+     public void deleteWflEntity(EtrSecLendDto dto) {
+    	 restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME+"/EtrSecLend/doDeleteFlow", 
+    			 dto, Void.class);
+     }
 
      /**
       *
@@ -212,6 +233,7 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
       */
      @Override
      public void doUpdate(EtrSecLendDto dto){
+    	 deleteWflEntity(dto);
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doInsert",dto,
              Integer.class);

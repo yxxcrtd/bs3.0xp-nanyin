@@ -12,11 +12,12 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PLEDGE_STOCK_ID" property="pledgeStockId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         PORTFOLIO_ID PORTFOLIO_ID, FINPROD_ID FINPROD_ID, BRANCH BRANCH, SEC_ACCT_ID SEC_ACCT_ID, 
         SCALE SCALE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
-        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, PLEDGE_STOCK_ID PLEDGE_STOCK_ID
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -48,11 +49,11 @@
         insert into ETR_ENTRUST_PLEDGE (PORTFOLIO_ID, FINPROD_ID, BRANCH, 
             SEC_ACCT_ID, SCALE, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME)
+            UPDATE_TIME, PLEDGE_STOCK_ID)
         values (#{portfolioId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
             #{secAcctId,jdbcType=VARCHAR}, #{scale,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP})
+            #{updateTime,jdbcType=TIMESTAMP}, #{pledgeStockId,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustPledge" >
         insert into ETR_ENTRUST_PLEDGE
@@ -87,6 +88,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="pledgeStockId != null" >
+                PLEDGE_STOCK_ID,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="portfolioId != null" >
@@ -119,13 +123,16 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="pledgeStockId != null" >
+                #{pledgeStockId,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustPledge" >
         insert into ETR_ENTRUST_PLEDGE(PORTFOLIO_ID, FINPROD_ID, BRANCH, SEC_ACCT_ID, SCALE, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, PLEDGE_STOCK_ID)
         select PORTFOLIO_ID, FINPROD_ID, BRANCH, SEC_ACCT_ID, SCALE, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PLEDGE_STOCK_ID
              from ETR_ENTRUST_PLEDGE
              where 1 = 1 and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
     </insert>
@@ -141,6 +148,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="pledgeStockId != null" >
+                PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR},
+            </if>
         </set>
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
           and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
@@ -151,7 +161,8 @@
         update ETR_ENTRUST_PLEDGE
         set SCALE = #{scale,jdbcType=DECIMAL},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
           and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}

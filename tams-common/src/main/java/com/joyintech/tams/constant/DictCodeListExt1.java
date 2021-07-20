@@ -905,6 +905,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	交易场所_上海证券交易所(DictCode.交易场所,"03","上海证券交易所"),
 	交易场所_深圳证券交易所(DictCode.交易场所,"04","深圳证券交易所"),
 	交易场所_机构间私募系统(DictCode.交易场所,"05","机构间私募系统"),
+	交易场所_香港联合交易所(DictCode.交易场所,"13","香港联合交易所"),
 	交易场所_OTC场外(DictCode.交易场所,"09","OTC场外"),
 	交易场所_境外交易场所(DictCode.交易场所,"10","境外交易场所"),
 	/*委托接收状态_待接收(DictCode.委托接收状态,"01","待接收"),
@@ -1830,6 +1831,24 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	//add by yzg 20210422 end
 
 	存款类资产类型_GZ_同业借款(DictCode.存款类资产类型_GZ,"03","同业借款"),
+	//add by meifaxin 20210713 start
+	当日回转交易_允许(DictCode.当日回转交易,"01","允许"),
+	当日回转交易_不允许(DictCode.当日回转交易,"02","不允许"),
+	基金类型_ETF(DictCode.基金类型,"07","ETF"),
+	ETF基金类型_货币ETF(DictCode.ETF基金类型,"01","货币ETF"),
+	ETF基金类型_单市场股票ETF(DictCode.ETF基金类型,"02","单市场股票ETF"),
+	ETF基金类型_跨市场股票ETF(DictCode.ETF基金类型,"03","跨市场股票ETF"),
+	ETF基金类型_跨沪深港股票ETF_沪(DictCode.ETF基金类型,"04","跨沪深港股票ETF（沪）"),
+	ETF基金类型_单市场债券ETF(DictCode.ETF基金类型,"05","单市场债券ETF"),
+	ETF基金类型_跨沪深债券ETF_沪(DictCode.ETF基金类型,"06","跨沪深债券ETF（沪）"),
+	ETF基金类型_现金申赎类债券ETF_沪(DictCode.ETF基金类型,"07","现金申赎类债券ETF（沪）"),
+	ETF基金类型_跨市场债券ETF_深(DictCode.ETF基金类型,"08","跨市场债券ETF（深）"),
+	ETF基金类型_黄金ETF(DictCode.ETF基金类型,"09","黄金ETF"),
+	ETF基金类型_商品期货ETF(DictCode.ETF基金类型,"10","商品期货ETF"),
+	ETF基金类型_跨境ETF(DictCode.ETF基金类型,"11","跨境ETF"),
+
+
+	//add by meifaxin 20210713  end
 	;
 
     /**

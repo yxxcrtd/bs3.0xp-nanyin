@@ -448,10 +448,12 @@ public class BaseRiskMathCommController extends BaseController {
             return result;
         }
         dealCheckRiskComm(map,entry->{
+        	List<ValidMessage> retMes = new ArrayList<>();
             if(StringUtil.isNotEmpty(entry)) {
                 map.put("data",(Map) entry);
+                retMes=dealEachCheck((Map<String, Object>)entry);
             }
-            List<ValidMessage> retMes=dealEachCheck(map);
+            retMes=dealEachCheck(map);
             if(retMes.size()>0){
                 result.setErrorList(retMes);
             }

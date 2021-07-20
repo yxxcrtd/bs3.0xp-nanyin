@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
@@ -28,9 +29,6 @@ import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -127,6 +125,8 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
+        param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
+        param.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
         return queryForPage(page, length, () -> etrBoutRepoMapper.selectForPage(param));
     }
     /**
@@ -400,9 +400,9 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
         }
-        if (baseEtrCashPositionCommService != null ) {
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if (baseEtrCashPositionCommService != null ) {
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
 
     /**
@@ -558,5 +558,64 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
             map.put("sysDate",iPlatformDate.getSysDate());
         }
         return etrBoutRepoMapper.selectStandardAmt(map);
+    }
+    
+    public BaseEtrInvestInfoDto initBaseDto(EtrBoutRepoDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            dto.setFinprodType2(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue());
+            dto.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
+            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            if(iPlatformDate != null){
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            etrEntrust.setEntrustNum(etrEntrust.getEntrustAmt().divide(new BigDecimal(100)));
+            etrEntrust.setEntrustAmt(null);
+            if(StringUtil.isNotEmpty(etrEntrust.getPrice())){
+                etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));
+            }
+            entity.setEtrEntrust(etrEntrust);            
+            
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            etrEntrustAdd.setEntrustId(dto.getEntrustId());
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_0.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long)0);
+            }
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_1.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long)1);
+            }
+            etrEntrustAdd.setVdate(dto.getVdateAdd());
+            etrEntrustAdd.setMdate(dto.getMdateAdd());
+            if(StringUtil.isNotEmpty(dto.getRepoTerm())){
+                etrEntrustAdd.setTermDays(Long.valueOf(dto.getRepoTerm()));
+            }
+            if(StringUtil.isNotEmpty(dto.getRepoTerm2())) {
+                etrEntrustAdd.setTermDays2(Long.valueOf(dto.getRepoTerm2()));
+            }
+            etrEntrustAdd.setTermType(dto.getTermType());
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_买断式回购.getValue());
+            etrEntrustAdd.setAssetType1(dto.getAssetType1());
+            etrEntrustAdd.setBusiPs(dto.getPs());
+            etrEntrustAdd.setCashUsedate(dto.getAvailableDay());
+            etrEntrustAdd.setSecAcctId(dto.getSecuritiesCust());
+            etrEntrustAdd.setFirstUnitCprice(dto.getFirstprice());
+            etrEntrustAdd.setFirstUnitCprice2(dto.getFirstprice2());
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 添加流程编号
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        } 
+        return entity;
     }
 }

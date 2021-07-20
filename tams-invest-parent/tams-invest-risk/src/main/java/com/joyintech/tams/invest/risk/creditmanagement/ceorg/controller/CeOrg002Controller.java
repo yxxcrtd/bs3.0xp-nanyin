@@ -1,30 +1,8 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceorg.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.dto.UploadFile;
-import com.joyintech.framework.base.intf.IDictCode;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
-import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
-import com.joyintech.tams.invest.risk.creditmanagement.ceorg.service.CeOrg002Service;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,8 +14,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.base.intf.IDictCode;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.select.TreeNode;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditConfInfoDto;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditConfInfoDto;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.service.CeOrg002Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 
 /**
@@ -69,13 +69,15 @@ public class CeOrg002Controller extends BaseController {
     private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.指标类型,
         DictCode.监督类型, DictCode.运算符, DictCode.连接符,DictCode.操作符,
         DictCode.单位, DictCode.监督时分, DictCode.监督频率, DictCode.组合层次,
-        DictCode.分类维度,DictCode.申万行业一级类型
+        DictCode.分类维度,DictCode.申万行业一级类型,DictCode.是否,DictCode.期限种类
        };
 
     @Override
     public String init(Model model) {
         setSelectOptionToModel(model, DICT_CODES);
         String workflowId = getParam("workflowId");
+        /*model.addAttribute("YES",DictCodeList.是否_是.getValue());
+        model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());*/
        // Page<CreditMstInfoDto> page = ceOrg002Service.getTreeCeOrgQuote(RequestUtil.getParameters(getRequest()));
         // 待办跳转
         if (!WorkFlowUtil.isNotFromToDoList()&&StringUtil.isNotEmpty(workflowId)) {
@@ -100,8 +102,25 @@ public class CeOrg002Controller extends BaseController {
             		mstEntry.get(0).setCreditAmtInit(item.getCreditAmt());
             	}
             });*/
+            if(StringUtil.isNotEmpty(creditLinesOrgDto.getCustomerId())){
+	            String data=ceOrg002Service.getOrgInfo(creditLinesOrgDto.getCustomerId());
+	            if (StringUtil.isNotEmpty(data)) {
+	            		for(int i = 0; i < data.split("#").length; i++){                     
+	                      if(i==0)creditLinesOrgDto.setIsGroupCustomer(data.split("#")[0]);
+	                      if(i==1)creditLinesOrgDto.setParentCustomerName(data.split("#")[1]); 
+	                    }   	
+	            }
+            }
+
             model.addAttribute(GlobalConstant.ENTITY, creditLinesOrgDto);
         }
+        // add by yushilong 新建页面时增加“是否循环额度”初始值 20200629 start
+        else if (WorkFlowUtil.isNotFromToDoList() && !StringUtil.isNotEmpty(this.getParam("seqno"))){
+            CreditLinesOrgDto creditLinesOrgDto = new CreditLinesOrgDto();
+            creditLinesOrgDto.setIsLoopAmt(DictCodeList.是否_是.getValue());
+            model.addAttribute(GlobalConstant.ENTITY, creditLinesOrgDto);
+        }
+        // add by yushilong 新建页面时增加“是否循环额度”初始值 20200629 end
         //model.addAttribute("creditQuoteItem", page.getRoot());
         return super.init(model);
     }
@@ -127,7 +146,7 @@ public class CeOrg002Controller extends BaseController {
      * @throws Exception Exception
      * @since 1.0
      */
-	@ResponseBody
+	/*@ResponseBody
     @RequestMapping("/getTreeCeOrgQuote")
     public Page<CreditMstInfoDto> getTreeCeOrgQuote()
         throws Exception {
@@ -162,7 +181,7 @@ public class CeOrg002Controller extends BaseController {
         }
 		return page;
         
-    }
+    }*/
     
     /**
      * 保存按钮点击时的check
@@ -199,8 +218,6 @@ public class CeOrg002Controller extends BaseController {
                  dto.setSeqno(IDGenerator.generate());
              }
         }
-        String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-        dto.setInstitutionCode(createInst);
         //文件信息
         if (CollectionUtils.isNotEmpty(dto.getUploadFileList())
             && StringUtil.isNotEmpty(dto.getSeqno())) {
@@ -232,4 +249,37 @@ public class CeOrg002Controller extends BaseController {
         String msg = ceOrg002Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }
+    
+    
+
+	@ResponseBody
+    @RequestMapping("getOrgInfo")
+    public AjaxResult getOrgInfo(String customerId) {
+        AjaxResult ar = new AjaxResult();
+        if(StringUtil.isNotEmpty(customerId)){
+	        String data=ceOrg002Service.getOrgInfo(customerId);
+	        ar.setData(data); 
+        }
+        return ar;
+    }
+	
+	@ResponseBody
+    @RequestMapping("getCreditConfig")
+    public Page<CreditConfInfoDto> getCreditConfig()
+        throws Exception {
+        String workflowId = getParam("workflowId");
+        if (!WorkFlowUtil.isNotFromToDoList()&&StringUtil.isNotEmpty(workflowId)) {
+            CreditLinesOrgDto creditLinesOrgDto = ceOrg002Service.getBussinessEntityByWorkflowId(workflowId);
+            if (creditLinesOrgDto != null){
+                List<CreditConfInfoDto> list = creditLinesOrgDto.getCreditLabelItem();
+                Page<CreditConfInfoDto> page = new Page<>();
+                page.setRoot(list);
+                page.setRecords(list.size());
+                return page;
+            }
+        }
+        Page<CreditConfInfoDto> page = ceOrg002Service.getCreditConfig(RequestUtil.getPageParam());
+        return page;
+    }
+	
 }

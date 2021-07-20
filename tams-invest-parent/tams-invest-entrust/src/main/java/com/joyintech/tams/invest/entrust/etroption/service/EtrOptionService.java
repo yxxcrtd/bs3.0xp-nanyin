@@ -10,27 +10,9 @@
 
 package com.joyintech.tams.invest.entrust.etroption.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
-import com.joyintech.tams.invest.entrust.etroption.dto.EtrOptionDto;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -39,17 +21,32 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.system.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-
-import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
+import com.joyintech.tams.invest.entrust.etroption.dto.EtrOptionDto;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 期权委托画面端service 〈功能详细描述〉
@@ -107,6 +104,8 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
         }
         if(StringUtil.isNotEmpty(param.get("entrustStatus"))){
             List<String> entrustStatusList = StringUtil.splitToList(",",(String)param.get("entrustStatus"));
+            // 去除空字符串值
+            entrustStatusList = entrustStatusList.stream().filter(i->!i.isEmpty()).collect(Collectors.toList());
             param.put("entrustStatusList", entrustStatusList);
         }
         param.put("option", DictCodeListExt3.平安资产类型_期权.getValue());
@@ -120,7 +119,6 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
     /**
      * 查询页面组合代码联想文本框 <功能详细描述>
      *
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -148,7 +146,6 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
     /**
      * 新建页面组合代码联想下拉框 <功能详细描述>
      *
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -164,7 +161,6 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
     /**
      * 新建页面组合代码联想下拉框 <功能详细描述>
      *
-     * @param param
      * @return
      * @see
      * @since 1.0
@@ -234,12 +230,15 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
     @Override
     public void doComplete(EtrOptionDto dto, OperationType operationType) {
         dto.setOperateType(operationType.toString());
-        Date sysDate = DateUtil.platDateFromCache();
-        dto.setEntrustDate(sysDate);
-        basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
-        restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doComplete",dto,
-            Integer.class);
+        
+        if(doDeleteFlow(dto.getWorkflowId())){
+            Date sysDate = DateUtil.platDateFromCache();
+            dto.setEntrustDate(sysDate);
+            basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
+            restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doComplete",dto,
+                    Integer.class); 
+        }
     }
    /**
     *
@@ -247,10 +246,13 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
     */
     @Override
     public void doInsert(EtrOptionDto dto, OperationType type){
-        dto.setOperateType(type.toString());
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doInsert",dto,
-            Integer.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doInsert",dto,
+                Integer.class);
+        
+        if ("submit".equals(dto.getOperateType())) {
+            doInsertFlow(dto);
+        }
     }
 
     /**
@@ -259,10 +261,44 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
      */
     @Override
     public void doUpdate(EtrOptionDto dto){
-        restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doInsert",dto,
-            Integer.class);
+        boolean flag = restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doUpdate",dto,
+                Boolean.class);
+        
+        if (!flag){
+            return;
+        }
+        
+        if (!StringUtil.equals("revoke", dto.getOperateType()) 
+                && !StringUtil.equals("delete", dto.getOperateType())) {
+            
+            // 执行通用方法删除并重新插入流程指令数据
+            boolean isSuccess = doDeleteFlow(dto.getWorkflowId()) && doInsertFlow(dto);
+            
+            if(isSuccess){
+                ProcessMark newEntity;
+                try {
+                    newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrOptionDto.class, true);
+                    newEntity.setWorkflowId(dto.getWorkflowId());
+                    newEntity.setStatus(dto.getStatus());
+                    newEntity.setBusinessData(JsonUtils.object2Json(dto));
+                    // 操作留痕表
+                    WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+                } catch (Exception e){
+                    throw new RuntimeException("数据留痕失败", e);
+                }
+            }
+        }
     }
+
+    @Override
+    public void doBack(EtrOptionDto dto) {
+        if (doDeleteFlow(dto.getWorkflowId())){
+            restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrOption/doBack",dto,
+                    Boolean.class);
+        }
+    }
+
     /**
      *
      * 流程作废时调用
@@ -344,7 +380,6 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
      *
      * 查询授权额度
      * <功能详细描述>
-     * @param map
      * @return
      * @see
      * @since 1.0
@@ -383,4 +418,55 @@ public class EtrOptionService extends CommonExportService<EtrOptionDto> implemen
 //        }
 ////        return null;
 //    }
+
+    private boolean doInsertFlow(EtrOptionDto dto){
+        boolean isSuccess = false;
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+        
+        try {
+            // EtrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            BeanUtil.copyProperties(etrEntrust,dto);
+            BeanUtil.copyProperties(etrEntrust,dto.getEtrInvestPersonInfo());
+            etrEntrust.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            etrEntrust.setFinprodType2(DictCodeListExt3.金融产品类型_投管用_期权.getValue());
+            entity.setEtrEntrust(etrEntrust);
+
+            // EtrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyProperties(etrEntrustAdd,dto);
+            etrEntrustAdd.setBusiPs(dto.getPs());
+            etrEntrustAdd.setVdate(dto.getVdateAdd());
+            etrEntrustAdd.setMdate(dto.getMdateAdd());
+            etrEntrustAdd.setAssetType(DictCodeListExt3.平安资产类型_期权.getValue());
+            try {etrEntrustAdd.setOptFeePayType2((Double.parseDouble(dto.getOptFeePayType2())/100)+"");} catch (Exception e) {}
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 附件 MstFileInputParameter
+            MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
+            mstFileInputParameter.setFileList(dto.getFileArray());
+            mstFileInputParameter.setBussinessId(dto.getEntrustId());
+            entity.setMstFileInputParameter(mstFileInputParameter);
+
+            // WorkflowId
+            entity.setWorkFlowId(dto.getWorkflowId());
+
+            isSuccess = restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
+                    Boolean.class);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        } 
+        return isSuccess;
+    }
+
+    private boolean doDeleteFlow(String workflowId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("workflowId", workflowId);
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doDeleteEtrFlow", param,
+                Boolean.class);
+
+    }
 }

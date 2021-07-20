@@ -110,12 +110,12 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
         return pages;
     }
     
-    @PostMapping("/selectSum/{page}/{length}")
-    public Page<ValBalanceStatementQuery001Dto> selectSum(@RequestBody Map<String,Object> pageParam,
-                                                          @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
-        return valBalanceStatementQuery001Service.selectSum(pageParam);
-    }
+//    @PostMapping("/selectSum/{page}/{length}")
+//    public Page<ValBalanceStatementQuery001Dto> selectSum(@RequestBody Map<String,Object> pageParam,
+//                                                          @PathVariable("page") int page, @PathVariable("length") int length)
+//        throws Exception {
+//        return valBalanceStatementQuery001Service.selectSum(pageParam);
+//    }
 //    /**
 //     * 导出信息excel
 //     * @return excel

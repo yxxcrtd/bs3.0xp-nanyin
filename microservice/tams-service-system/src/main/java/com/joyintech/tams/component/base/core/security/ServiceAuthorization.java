@@ -128,6 +128,11 @@ public class ServiceAuthorization implements AuthorizationListener, Authorizatio
 		return null;
 	}
 
+	@Override
+	public void updateSysUserFrozen(String s) {
+
+	}
+
 	@Autowired(required = false)
 	public void setMapper(DataAuthorityMapper mapper) {
 		ServiceAuthorization.mapper = mapper;

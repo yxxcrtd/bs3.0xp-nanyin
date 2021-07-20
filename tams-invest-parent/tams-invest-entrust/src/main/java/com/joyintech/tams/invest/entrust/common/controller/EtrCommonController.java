@@ -5,16 +5,12 @@ import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.risk.service.RiskNamListCommonValidatorService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrbondtostock.dto.EtrBondToStockDto;
@@ -37,7 +33,6 @@ import com.joyintech.tams.invest.entrust.etrseclend.dto.EtrSecLendDto;
 import com.joyintech.tams.invest.entrust.etrstock.dto.EtrStockDto;
 import com.joyintech.tams.invest.entrust.etrwtfxswap.dto.EtrWtFxswapDto;
 import com.joyintech.tams.invest.entrust.etrwtspotex.dto.EtrWtSpotexDto;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author yjm
@@ -499,4 +491,54 @@ public class EtrCommonController extends BaseController {
         return wr;
     }
 
+    /**
+     * 银行间指令关闭check
+     *
+     * @return check结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("entrustCheckCloseList")
+    public AjaxResult entrustCheckCloseList(@RequestBody  Map<String,Object> map) {
+    	List<Map<String,Object>> selectedItem= (List<Map<String, Object>>) map.get("selectedItem");
+    	AjaxResult ajaxResult=new AjaxResult();
+    	if(StringUtil.isNotEmpty(selectedItem)){
+    		List<String> entrustIds = new ArrayList<>();
+    		for(Map<String,Object> Item:selectedItem){
+    			entrustIds.add((String)Item.get("entrustId"));
+    		}
+    		Map<String,Object> param= new HashMap<>();
+    		param.put("entrustIds",entrustIds);
+            ajaxResult.setErrorList(etrCommonService.entrustCheckCloseList(param));
+            return ajaxResult;
+    	}
+    	ValidMessage  validMessage= new ValidMessage();
+    	validMessage.setMessage("请选择列表中数据");
+    	ajaxResult.setErrorList(Arrays.asList(validMessage));
+    	return ajaxResult;
+    }
+
+    /**
+     * 根据键值获取动态配置信息 select ... DYN_CONFIG_INFO where DYN_ID...
+     * 根据dynId查询对应配置信息 {"dynId":"id"}
+     * @return 示例： {"all":"secName,secType,issuer","checked":"secName"}
+     */
+    @RequestMapping(value="selectByDynId")
+    @ResponseBody
+    public String selectByDynId(@RequestBody Map<String,Object> map) {
+        return etrCommonService.selectByDynId(map);
+    }
+
+    /**
+     * 修改动态配置信息  {"dynId":dynId, "checked":"a,b,c", "userName":"dd"}
+     * @return
+     */
+    @RequestMapping("updateByParam")
+    @ResponseBody
+    public Integer updateByParam(@RequestBody Map<String,Object> map){
+        map.put("userName",LoginUserUtil.getUserName());
+        return etrCommonService.updateByParam(map);
+    }
+    
 }

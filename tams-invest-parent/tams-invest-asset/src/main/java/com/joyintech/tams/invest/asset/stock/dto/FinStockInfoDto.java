@@ -116,6 +116,11 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
     private String tradeMarketId;
 
     /**
+     * 最小买卖单位
+     */
+    private Long minSaleUnit;
+
+    /**
      * 附件信息DTO
      */
     private List<FileCommonDto> fileCommonList;
@@ -477,8 +482,6 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      * 是否沪港通或深港通
      * @return
      */
-    @NotEmpty(fieldName = "FinStockInfo002.shOrZh",groups={ValidateGroupEdit.class})//是否沪港通或深港通非空校验
-
     public String getShOrZh() {
         return shOrZh;
     }
@@ -682,5 +685,11 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
 		this.realFinProductId = realFinProductId;
 	}
 
+    public Long getMinSaleUnit() {
+        return minSaleUnit;
+    }
 
+    public void setMinSaleUnit(Long minSaleUnit) {
+        this.minSaleUnit = minSaleUnit;
+    }
 }

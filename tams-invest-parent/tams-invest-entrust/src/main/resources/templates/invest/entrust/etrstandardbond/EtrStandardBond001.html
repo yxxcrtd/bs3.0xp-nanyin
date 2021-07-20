@@ -13,7 +13,7 @@
         <a class="layui-btn layui-btn-sm btn-default" id="EtrStandardBond001_btn_out"
            th:utext="#{EtrStandardBond001.out}">
             <i class="iconfont icon-outof-storage"></i>出库</a>
-        <a class="layui-btn layui-btn-sm btn-default" id="EtrStandardBond001_btn_priority"
+        <a th:if="!(${repo_pledge_model} =='01' and ${pageFrom}=='EtrIbRepoinfo001')" class="layui-btn layui-btn-sm btn-default" id="EtrStandardBond001_btn_priority"
            th:utext="#{EtrStandardBond001.level}">
             <i class="iconfont icon-outof-storage"></i>优先级设置</a>
     </div>

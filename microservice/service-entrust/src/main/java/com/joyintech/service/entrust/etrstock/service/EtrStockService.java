@@ -19,7 +19,7 @@ import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
@@ -30,6 +30,7 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,6 +116,7 @@ public class EtrStockService extends BaseService<EtrStockDto>{
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
         param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        param.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return queryForPage(page, length, () -> etrStockMapper.selectForPage(param));
     }
 
@@ -403,9 +405,9 @@ public class EtrStockService extends BaseService<EtrStockDto>{
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
         }
-        if(baseEtrCashPositionCommService!=null){
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if(baseEtrCashPositionCommService!=null){
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
 
     /**
@@ -558,4 +560,40 @@ public class EtrStockService extends BaseService<EtrStockDto>{
 	public BigDecimal getClosePriceByPara(Map<String, Object> param) {
 		return etrStockMapper.getClosePriceByPara(param);
 	}
+
+    public BaseEtrInvestInfoDto initBaseDto(EtrStockDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+            dto.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
+            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto);
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto.getEtrInvestPersonInfo());
+            if(iPlatformDate != null){
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())){
+                etrEntrust.setEntrustAmt(dto.getEntrustAmt());
+                etrEntrust.setEntrustNum(dto.getEntrustNum());
+            }
+            entity.setEtrEntrust(etrEntrust);
+
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, dto);
+            etrEntrustAdd.setVdate(null);
+            etrEntrustAdd.setMdate(null);
+            etrEntrustAdd.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 添加流程编号
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (Exception e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+        return entity;
+    }
 }

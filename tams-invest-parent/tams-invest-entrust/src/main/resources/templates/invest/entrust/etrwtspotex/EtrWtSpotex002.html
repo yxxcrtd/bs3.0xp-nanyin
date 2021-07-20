@@ -3,7 +3,7 @@
     layout:decorator="~{layout/default}">
 <meta charset="UTF-8">
 <head>
-<title data-th-text="#{EtrWtSpotex002}">外汇即期委托新建</title>
+<title data-th-text="#{EtrWtSpotex002}">外汇即期指令新建</title>
 </head>
 <body>
     <div layout:fragment="content">
@@ -35,19 +35,19 @@
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-lable" data-th-text="#{EtrWtSpotex.vdate}">委托开始日</label>
+                                        <label class="layui-form-label form-lable" data-th-text="#{EtrWtSpotex.vdate}">指令开始日</label>
                                         <div class="layui-input-inline input-inline">
                                             <input class="layui-input form-input input-dateSelect" id="vdate"
-                                                name="vdate" placeholder="请选择时间"
+                                                name="vdate" placeholder="请选择时间" disabled="disabled"
                                                 data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
                                                 required="required">
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-lable" data-th-text="#{EtrWtSpotex.mdate}">委托终止日</label>
+                                        <label class="layui-form-label form-lable" data-th-text="#{EtrWtSpotex.mdate}">指令终止日</label>
                                         <div class="layui-input-inline input-inline">
                                             <input class="layui-input form-input input-dateSelect" id="mdate"
-                                                name="mdate" placeholder="请选择时间"
+                                                name="mdate" placeholder="请选择时间" disabled="disabled"
                                                 data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
                                                 required="required">
                                         </div>

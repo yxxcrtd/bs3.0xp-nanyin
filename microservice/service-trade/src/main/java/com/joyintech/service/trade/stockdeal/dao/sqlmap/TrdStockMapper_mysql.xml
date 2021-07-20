@@ -89,7 +89,8 @@
 		</association>
 	</resultMap>
 	<select id="selectDeal" resultMap="TrdaProductDealResultMap">
-				select 
+		select t1.* from(
+			select
 				#{VALID_STATUS_01} VALID_STATUS,
 				wtrd.TRADE_ID,
 				wtrda.ENTRUST_ID,
@@ -115,7 +116,7 @@
 				left join WFL_TRD_PRODUCT_DEAL_ADD wtrda
 									on wtrd.TRADE_ID = wtrda.TRADE_ID
 				left join FIN_PRODUCT fp
-									on wtrd.FINPROD_ID = fp.FINPROD_ID
+									on wtrd.FINPROD_ID = fp.FINPROD_ID and fp.TRADE_MARKET IN ('03', '04')
 				left join FIN_PRODUCT_ADD fpa
 									on fpa.FINPROD_ID = fp.FINPROD_ID
 				left join PTL_PORTFOLIO pp
@@ -225,9 +226,8 @@
 					and #{VALID_STATUS_01} = #{validStatus}
 				</if>
 			UNION ALL
-				select  
-				
-				if(trd.IS_CANCEL=#{YES_NO_YES},#{VALID_STATUS_03},#{YES_NO_NO}, if(trd.IS_CANCEL=#{VALID_STATUS_02},#{VALID_STATUS_02}, null)) as VALID_STATUS,
+				select
+				CASE WHEN trd.IS_CANCEL = #{YES_NO_YES} THEN #{VALID_STATUS_03} WHEN trd.IS_CANCEL = #{YES_NO_NO} THEN #{VALID_STATUS_02} END  as VALID_STATUS,
 				trd.TRADE_ID,
 				tpda.ENTRUST_ID,
 				PP.PORTFOLIO_ID,
@@ -251,7 +251,7 @@
 				left join TRD_PRODUCT_DEAL_ADD tpda
 									on trd.TRADE_ID = tpda.TRADE_ID
 				left join FIN_PRODUCT fp
-									on trd.FINPROD_ID = fp.FINPROD_ID
+									on trd.FINPROD_ID = fp.FINPROD_ID and fp.TRADE_MARKET IN ('03', '04')
 				left join FIN_PRODUCT_ADD fpa
 									on fpa.FINPROD_ID = fp.FINPROD_ID
 				LEFT JOIN PTL_TRADE PT ON IFNULL(trd.P_TRADE_ID,trd.TRADE_ID) = PT.BUSI_NO
@@ -366,8 +366,7 @@
                     <if test="tradeDateEnd != null and tradeDateEnd != ''">
                         AND trd.TRADE_DATE &lt;= STR_TO_DATE(#{tradeDateEnd}, '%Y-%m-%d')
                     </if>
-				and trd.P_TRADE_ID is null
-		ORDER BY  TRADE_ID DESC
+				and trd.P_TRADE_ID is null) t1 ORDER BY t1.TRADE_ID DESC
 	</select>
 	<select id="selectEtrByKey" resultMap="TrdaProductDealResultMap">
         SELECT

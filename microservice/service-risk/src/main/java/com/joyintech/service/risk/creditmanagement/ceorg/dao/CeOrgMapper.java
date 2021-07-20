@@ -10,16 +10,17 @@
  
 package com.joyintech.service.risk.creditmanagement.ceorg.dao;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
 import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
-import com.joyintech.tams.common.base.entity.CreditLines;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -35,9 +36,6 @@ public interface CeOrgMapper {
     List<CreditMstInfoDto> getTreeCeOrgQuote(Map<String, Object> param);
     CreditLinesOrgDto queryCeOrgBySeqno(Map<String, Object> param);
     List<CreditLines> queryCeOrgByPflshAndCustomId(@Param(value = "pflsh") String pflsh,@Param(value = "customerId") String customerId);
-
-    List<CreditLines> queryCeOrgByPflshAndCustomIdAndInst(@Param(value = "pflsh") String pflsh,@Param(value = "customerId") String customerId,@Param(value = "INSTITUTION_CODE") String INSTITUTION_CODE);
-
     /**
      * 客户代码联想下拉框
      * @return List<SuggestDto>
@@ -52,8 +50,11 @@ public interface CeOrgMapper {
     
     int searchRepeatByVmDate(Map<String, Object> param);
     int searchRepeatByVmDateArea(Map<String, Object> param);
-    int searchRepeatByPflsh(@Param(value = "pflsh") String pflsh,@Param(value = "seqno") String seqno,@Param(value = "creditMstId")String creditMstId, @Param(value = "institutionCodes")List<String> institutionCodes);
-    int deleteOrgMx(@Param(value = "pflsh") String pflsh);
+    int searchRepeatByPflsh(@Param(value = "pflsh") String pflsh,@Param(value = "seqno") String seqno,@Param(value = "creditMstId")String creditMstId);
+    int deleteOrgMx(@Param(value = "customerId") String customerId, @Param(value = "pflsh") String pflsh);
+    // add by yushilong 查询是否重复校验 20200629 start
+    int searchRepeat(Map<String, Object> param);
+    // add by yushilong 查询是否重复校验 20200629 end
 
     /**
      * 如果当前数据额度已被占用则不允许操作
@@ -61,10 +62,8 @@ public interface CeOrgMapper {
      * @param param
      */
     int searchIsUse(Map<String, Object> param);
+    
+    
+    String getOrgInfo(String customerId);
 
-//    List<CreditLinesDeal> selectCreditLinesDeal(Map<String, Object> param);
-//
-//    BigDecimal selectCreditLinesHap(Map<String, Object> param);
-
-    List<CreditLines> selectCreditLines(Map<String, Object> param);
 }

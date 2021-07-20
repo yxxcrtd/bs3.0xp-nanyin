@@ -81,6 +81,7 @@
 		<result column="PRICE" property="price" jdbcType="DECIMAL" />
 		<result column="FINISH_AMT" property="finishAmt" jdbcType="DECIMAL" />
 		<result column="belongInstitutionCode" property="belongInstitutionCode" jdbcType="VARCHAR" />
+		<result column="SALE_CODE" property="saleCode" jdbcType="VARCHAR" />
 		
 		<association property="trdInvestPersonInfo" javaType="com.joyintech.service.trade.stockdeal.dto.TrdInvestPersonInfoDto">
             <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
@@ -383,7 +384,7 @@
             tpd.SEC_MANAGE_ACCT_ID, tpd.CCY, tpd.SHARE_AMT ,tpd.TRADE_AMT , tpd.UNIT_CPRICE,
             tpd.UNIT_INT, tpd.UNIT_FPRICE, tpd.CPRICE_AMT, tpd.INT_AMT,
             tpd.FPRICE_AMT, tpd.YIELD, tpd.EXER_YIELD, tpd.REMARK,tpda.lock_mdate,tpda.with_lock_period,
-            tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,tpd.CHL_ID
+            tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,tpd.CHL_ID,tpd.SALE_CODE
         FROM TRD_PRODUCT_DEAL tpd
         LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda
           ON tpda.TRADE_ID = tpd.TRADE_ID
@@ -403,7 +404,7 @@
 	<!-- 证券托管户 -->
 	<select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT
-		distinct A.ACCT_NO hidCode,
+		A.ACCT_NO hidCode,
 		A.ACCT_NO code,
 		B.SEC_ACCT_NAME name,
 		B.SEC_ACCT_NAME shortName
@@ -412,9 +413,7 @@
 		STL_SEC_ACCT_INFO B
 		ON A.ACCT_NO = B.SEC_ACCT_ID
 		<where>
-			<if test="portfolioId != null and portfolioId !='' ">
-				A.PORTFOLIO_ID = #{portfolioId}
-			</if>
+			A.PORTFOLIO_ID = #{portfolioId}
 			<if test="search != null and search != ''">
 				AND
 				(
@@ -513,6 +512,13 @@
 					or
 				A.FINPROD_ID  =#{initValue}
 				)
+		</if>
+		<if test="tradeMarketList != null and tradeMarketList.size() > 0">
+			AND A.TRADE_MARKET IN
+			<foreach collection="tradeMarketList" item="item" open="(" close=")"
+				separator=",">
+				#{item}
+			</foreach>
 		</if>
 	</select>
 

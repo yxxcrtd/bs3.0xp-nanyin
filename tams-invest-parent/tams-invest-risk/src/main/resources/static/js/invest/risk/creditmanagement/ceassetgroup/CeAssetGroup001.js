@@ -35,7 +35,7 @@
              ,{field:'pflsh', width:210 , title: 'CeAssetGroup001.pflsh'}
              ,{field:'customerId', width:210 , title: 'CeAssetGroup001.assetGroupId'}
              ,{field:'customerName', width:250 , title: 'CeAssetGroup001.assetGroupName'}
-             ,{field:'creditAmt', width:210 ,title: 'CeAssetGroup001.creditTotalAmt'}
+             ,{field:'creditAmt', width:210 ,title: 'CeAssetGroup001.creditTotalAmt',type: "number"}
              ,{field:'vdate', width:180 ,title: 'CeAssetGroup001.vdate',type:'date'}           
              ,{field:'mdate',  title: 'CeAssetGroup001.mdate',type:'date'}
              ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}

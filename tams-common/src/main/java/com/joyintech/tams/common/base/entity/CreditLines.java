@@ -97,10 +97,73 @@ public class CreditLines extends BaseEntity {
      * 授信使用条件
      */
     private String creditCondition;
+
     /**
      * 机构代码
      */
     private String institutionCode;
+
+    /**
+     * 单债占机构限额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal singerSecRatio;
+
+    /**
+     * 授信类型
+     */
+    private String creditType;
+
+    /**
+     * 叠加授信额度
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal creditAmtAdd;
+
+    /**
+     * 币种
+     */
+    private String ccy;
+
+    /**
+     * 是否同业
+     */
+    private String isInterbank;
+
+    /**
+     * 是否循环额度
+     */
+    private String isLoopAmt;
+
+    /**
+     * 授信对象
+     */
+    private String creditObj;
+
+    /**
+     * 审批开始日
+     */
+    private Date apprVdate;
+
+    /**
+     * 审批结束日
+     */
+    private Date apprMdate;
+
+    /**
+     * 首次开贷开始日
+     */
+    private Date creditVdate;
+
+    /**
+     * 首次开贷结束日
+     */
+    private Date creditMdate;
+
+    /**
+     * 是否持有至到期
+     */
+    private String holdMaturity;
 
     /**
      * 取得 授信额度代码
@@ -377,6 +440,22 @@ public class CreditLines extends BaseEntity {
     }
 
     /**
+     * 取得 单债占机构限额
+     * @return 单债占机构限额
+     */
+    public BigDecimal getSingerSecRatio() {
+        return singerSecRatio;
+    }
+
+    /**
+     * 设置 单债占机构限额
+     * @param singerSecRatio 单债占机构限额
+     */
+    public void setSingerSecRatio(BigDecimal singerSecRatio) {
+        this.singerSecRatio = singerSecRatio;
+    }
+
+    /**
      * 取得 机构代码
      * @return 机构代码
      */
@@ -390,5 +469,185 @@ public class CreditLines extends BaseEntity {
      */
     public void setInstitutionCode(String institutionCode) {
         this.institutionCode = institutionCode == null ? null : institutionCode.trim();
+    }
+
+    /**
+     * 取得 授信类型
+     * @return 授信类型
+     */
+    public String getCreditType() {
+        return creditType;
+    }
+
+    /**
+     * 设置 授信类型
+     * @param creditType 授信类型
+     */
+    public void setCreditType(String creditType) {
+        this.creditType = creditType == null ? null : creditType.trim();
+    }
+
+    /**
+     * 取得 叠加授信额度
+     * @return 叠加授信额度
+     */
+    public BigDecimal getCreditAmtAdd() {
+        return creditAmtAdd;
+    }
+
+    /**
+     * 设置 叠加授信额度
+     * @param creditAmtAdd 叠加授信额度
+     */
+    public void setCreditAmtAdd(BigDecimal creditAmtAdd) {
+        this.creditAmtAdd = creditAmtAdd;
+    }
+
+    /**
+     * 取得 币种
+     * @return 币种
+     */
+    public String getCcy() {
+        return ccy;
+    }
+
+    /**
+     * 设置 币种
+     * @param ccy 币种
+     */
+    public void setCcy(String ccy) {
+        this.ccy = ccy == null ? null : ccy.trim();
+    }
+
+    /**
+     * 取得 是否同业
+     * @return 是否同业
+     */
+    public String getIsInterbank() {
+        return isInterbank;
+    }
+
+    /**
+     * 设置 是否同业
+     * @param isInterbank 是否同业
+     */
+    public void setIsInterbank(String isInterbank) {
+        this.isInterbank = isInterbank == null ? null : isInterbank.trim();
+    }
+
+    /**
+     * 取得 是否循环额度
+     * @return 是否循环额度
+     */
+    public String getIsLoopAmt() {
+        return isLoopAmt;
+    }
+
+    /**
+     * 设置 是否循环额度
+     * @param isLoopAmt 是否循环额度
+     */
+    public void setIsLoopAmt(String isLoopAmt) {
+        this.isLoopAmt = isLoopAmt == null ? null : isLoopAmt.trim();
+    }
+
+    /**
+     * 取得 授信对象
+     * @return 授信对象
+     */
+    public String getCreditObj() {
+        return creditObj;
+    }
+
+    /**
+     * 设置 授信对象
+     * @param creditObj 授信对象
+     */
+    public void setCreditObj(String creditObj) {
+        this.creditObj = creditObj == null ? null : creditObj.trim();
+    }
+
+    /**
+     * 取得 审批开始日
+     * @return 审批开始日
+     */
+    public Date getApprVdate() {
+        return apprVdate;
+    }
+
+    /**
+     * 设置 审批开始日
+     * @param apprVdate 审批开始日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setApprVdate(Date apprVdate) {
+        this.apprVdate = apprVdate;
+    }
+
+    /**
+     * 取得 审批结束日
+     * @return 审批结束日
+     */
+    public Date getApprMdate() {
+        return apprMdate;
+    }
+
+    /**
+     * 设置 审批结束日
+     * @param apprMdate 审批结束日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setApprMdate(Date apprMdate) {
+        this.apprMdate = apprMdate;
+    }
+
+    /**
+     * 取得 首次开贷开始日
+     * @return 首次开贷开始日
+     */
+    public Date getCreditVdate() {
+        return creditVdate;
+    }
+
+    /**
+     * 设置 首次开贷开始日
+     * @param creditVdate 首次开贷开始日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setCreditVdate(Date creditVdate) {
+        this.creditVdate = creditVdate;
+    }
+
+    /**
+     * 取得 首次开贷结束日
+     * @return 首次开贷结束日
+     */
+    public Date getCreditMdate() {
+        return creditMdate;
+    }
+
+    /**
+     * 设置 首次开贷结束日
+     * @param creditMdate 首次开贷结束日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setCreditMdate(Date creditMdate) {
+        this.creditMdate = creditMdate;
+    }
+
+    /**
+     * 取得 是否持有至到期
+     * @return 是否持有至到期
+     */
+    public String getHoldMaturity() {
+        return holdMaturity;
+    }
+
+    /**
+     * 设置 是否持有至到期
+     * @param holdMaturity 是否持有至到期
+     */
+    public void setHoldMaturity(String holdMaturity) {
+        this.holdMaturity = holdMaturity == null ? null : holdMaturity.trim();
     }
 }

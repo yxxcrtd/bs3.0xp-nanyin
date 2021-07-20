@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -332,6 +333,44 @@ public class FinProductAdd extends BaseEntity {
      * 是否纳入净额结算 Y:是 N:否
      */
     private String isNetSett;
+	
+	/**
+	 * 是否发行标的
+	 */
+	private String isIssueAsset;
+
+	/**
+	 * 上市代码
+	 */
+	private String appearMarketId;
+
+	/**
+	 * 获取是否发行标的
+	 */
+	public String getIsIssueAsset() {
+		return isIssueAsset;
+	}
+
+	/**
+	 * 设置是否发行标的
+	 */
+	public void setIsIssueAsset(String isIssueAsset) {
+		this.isIssueAsset = isIssueAsset;
+	}
+
+	/**
+	 * 获取上市代码
+	 */
+	public String getAppearMarketId() {
+		return appearMarketId;
+	}
+
+	/**
+	 * 设置上市代码
+	 */
+	public void setAppearMarketId(String appearMarketId) {
+		this.appearMarketId = appearMarketId;
+	}
 
     /**
      * 是否私募债 Y:是 N:否
@@ -352,6 +391,34 @@ public class FinProductAdd extends BaseEntity {
      * 数据来源
      */
     private String dataSource;
+
+    /**
+     * 最小买卖单位
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal minSaleUnit;
+    /**
+     * 分红方式
+     */
+    private String bonusType;
+    /**
+     * 当日回转交易
+     */
+    private String tdyRevTrans;
+    /**
+     * 上市日期
+     */
+    private Date listingDate;
+
+    /**
+     * 增信措施
+     */
+    private String creditEnhanceMeasure;
+
+    /**
+     * 基金经理姓名
+     */
+    private String fundMangerName;
 
     /**
      * 取得 金融产品代码
@@ -1443,4 +1510,77 @@ public class FinProductAdd extends BaseEntity {
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource == null ? null : dataSource.trim();
     }
+
+    /**
+     * 取得 最小买卖单位
+     * @return 最小买卖单位
+     */
+    public BigDecimal getMinSaleUnit() {
+        return minSaleUnit;
+    }
+
+    /**
+     * 设置 最小买卖单位
+     * @param minSaleUnit 最小买卖单位
+     */
+    public void setMinSaleUnit(BigDecimal minSaleUnit) {
+        this.minSaleUnit = minSaleUnit;
+    }
+
+    public String getBonusType() {
+        return bonusType;
+    }
+
+    public void setBonusType(String bonusType) {
+        this.bonusType = bonusType;
+    }
+
+    public String getTdyRevTrans() {
+        return tdyRevTrans;
+    }
+
+    public void setTdyRevTrans(String tdyRevTrans) {
+        this.tdyRevTrans = tdyRevTrans;
+    }
+
+    public Date getListingDate() {
+        return listingDate;
+    }
+
+    public void setListingDate(Date listingDate) {
+        this.listingDate = listingDate;
+    }
+
+    /**
+     * 取得 增信措施
+     * @return 增信措施
+     */
+    public String getCreditEnhanceMeasure() {
+        return creditEnhanceMeasure;
+    }
+
+    /**
+     * 设置 增信措施
+     * @param creditEnhanceMeasure 增信措施
+     */
+    public void setCreditEnhanceMeasure(String creditEnhanceMeasure) {
+        this.creditEnhanceMeasure = creditEnhanceMeasure;
+    }
+
+    /**
+     * 取得 基金经理姓名
+     * @return 基金经理姓名
+     */
+    public String getFundMangerName() {
+        return fundMangerName;
+    }
+
+    /**
+     * 设置 基金经理姓名
+     * @param fundMangerName 基金经理姓名
+     */
+    public void setFundMangerName(String fundMangerName) {
+        this.fundMangerName = fundMangerName;
+    }
+
 }

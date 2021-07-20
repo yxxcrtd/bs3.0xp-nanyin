@@ -408,6 +408,54 @@ public interface BussinessConstant {
     static final String INPUT_TYPE_RADIO = "radio";
 
     static final String INPUT_TYPE_CHECKBOX = "checkbox";
-    
+
     String ibuFlag_quote_switch = "ibuFlag_quote_switch";
+
+    /**
+     * FTP类型(01:FTP,02:SFTP,03:本地文件)
+     */
+    static final String SYS_PARA_FTP_TYPE = "FTP_TYPE";
+
+    /**
+     *股票网络投票基础数据文件路径
+     */
+    static final String STOCK_ONLINE_VOTING_FILE_PATH = "STOCK_ONLINE_VOTING_FILE_PATH";
+
+    /**
+     * 股票网络投票基础数据 FTP IP
+     */
+    static final String STOCK_ONLINE_VOTING_FTP_IP= "STOCK_ONLINE_VOTING_FTP_IP";
+
+    /**
+     * 股票网络投票基础数据 FTP port
+     */
+    static final String STOCK_ONLINE_VOTING_FTP_PROT= "STOCK_ONLINE_VOTING_FTP_PROT";
+
+    /**
+     * 股票网络投票基础数据 FTP username
+     */
+    static final String STOCK_ONLINE_VOTING_FTP_USENAME= "STOCK_ONLINE_VOTING_FTP_USENAME";
+
+    /**
+     * 股票网络投票基础数据 FTP password
+     */
+    static final String STOCK_ONLINE_VOTING_FTP_PASSWORD= "STOCK_ONLINE_VOTING_FTP_PASSWORD";
+
+    /**
+         * 股票网络投票基础数据文件临时路径
+     */
+    static final String STOCK_ONLINE_VOTING_FILE_EXPORTPATH = "STOCK_ONLINE_VOTING_FILE_EXPORTPATH";
+
+    
+    String ETRLIMIT_SWITCH_IS_TOTAL = "etrlimit_switch_is_total";
+    
+    //是否启用银行间单指令模式
+    static final String SINGLE_ETR_ISSHOW = "single_etr_isshow";
+    
+    //银行间质押式回购模式
+    static final String REPO_PLEDGE_MODEL = "repo_pledge_model";
+    
+    
+    //债券面值，暂定100
+    static final int BOND_PRICE = 100;
 }

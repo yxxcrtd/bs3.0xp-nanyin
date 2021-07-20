@@ -105,6 +105,12 @@ public class PtlManagementInfoDto extends PtlPortfolio {
     private String childPortfolioId;
 
     private String childPortfolioName;
+
+    /**
+     * 组合序列
+     */
+    private String portfolioSequence;
+
     /**
      * 获取 ptlValParam
      * @return ptlValParam.
@@ -374,5 +380,13 @@ public class PtlManagementInfoDto extends PtlPortfolio {
 
     public void setChildPortfolioName(String childPortfolioName) {
         this.childPortfolioName = childPortfolioName;
+    }
+
+    public String getPortfolioSequence() {
+        return portfolioSequence;
+    }
+
+    public void setPortfolioSequence(String portfolioSequence) {
+        this.portfolioSequence = portfolioSequence;
     }
 }

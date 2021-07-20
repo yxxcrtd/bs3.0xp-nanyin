@@ -202,4 +202,17 @@ public class CommonSelectService extends BaseService {
         return queryForPageForSelectReturn(page, length, () -> commonSelectMapper.selectFinprodMarketId(param));
 
     }
+
+    public Page<SelectOptionDto> qryPortfolioIdChildByRequestParam(int page, int length,
+                                                                   Map<String, Object> param) {
+        Page<SelectOptionDto> list = this.queryForPageForSelectReturn(page, length,
+                () -> commonSelectMapper.selectPortfolioIdChild(param));
+        if (list != null && list.getRoot() !=null && list.getRoot().size() > 0) {
+            return list;
+        }
+        String ptl = (String) param.get("parentPortfolioId");
+        param.put("initValue", ptl);
+        return this.queryForPageForSelectReturn(page, length,
+                () -> commonSelectMapper.selectParentPortfolioId(param));
+    }
 }

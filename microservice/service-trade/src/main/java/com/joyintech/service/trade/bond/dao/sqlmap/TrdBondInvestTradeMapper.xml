@@ -25,6 +25,17 @@
     </resultMap>
 
     <select id="selectDeal" resultMap="trdBondInvestTradeResultMap">
+        WITH TEMP AS (
+            SELECT DISTINCT
+                FP2.FINPROD_ID,
+                FP.FINPROD_MARKET_ID
+            FROM FIN_PRODUCT FP
+            LEFT JOIN FIN_PRODUCT_ADD FPA
+            ON FPA.APPEAR_MARKET_ID = FP.FINPROD_MARKET_ID
+            LEFT JOIN FIN_PRODUCT FP2 ON FPA.FINPROD_ID = FP2.FINPROD_ID
+            WHERE FP.FINPROD_ID LIKE CONCAT('%', CONCAT(#{finprodId}, '%'))
+            AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        )
         <trim prefixOverrides="UNION ALL">
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_01">
               select
@@ -688,10 +699,14 @@
             <!-- 新增资产二、三、四级分类  王贵奇  2019/7/30 结束-->
             <result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR"/>
             <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR"/>
+            <!-- 是否发行标的 马数凯 2021/4/22 start-->
+            <result column="IS_ISSUE_ASSET" property="isIssueAsset" jdbcType="VARCHAR"/>
+            <!-- 是否发行标的 马数凯 2021/4/22 end-->
         </association>
     </resultMap>
     <select id="getFinprodId" resultMap="finprodIdMap">
-        SELECT
+        <if test="tradeMarketMode != '02'.toString()">
+            SELECT
             DISTINCT
             A.FINPROD_ID id,
             <!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
@@ -715,9 +730,12 @@
             B.TYPE_11,
             <!-- 新增资产二、三、四级分类  王贵奇  2019/7/30 结束-->
             A.FINPROD_MARKET_ID,
+            Q.IS_ISSUE_ASSET,
             A.IS_RIGHT
-        FROM FIN_PRODUCT A
-        LEFT JOIN FIN_PRODUCT_TYPE B
+            FROM FIN_PRODUCT A
+            LEFT JOIN FIN_PRODUCT_ADD Q
+            ON Q.FINPROD_ID = A.FINPROD_ID
+            LEFT JOIN FIN_PRODUCT_TYPE B
             ON B.FINPROD_ID = A.FINPROD_ID
         LEFT JOIN
             (
@@ -771,9 +789,108 @@
 	            <if test="windtypeone != null and windtypeone != ''">
 	                AND B.TYPE_4 = #{windtypeone}
 	            </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND A.TRADE_MARKET in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
+		AND Q.IS_ISSUE_ASSET = 'Y'
+                <if test="pageModel != null and pageModel != '2'.toString() and pageModel != ''">
+                    AND Q.APPEAR_MARKET_ID IS NULL
+                </if> 
 	        </where>
+		UNION ALL    
+        </if>
+	SELECT
+            DISTINCT
+            A.FINPROD_ID id,
+            <!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
+            A.FINPROD_ABBR text,
+            <!--下拉框值为代码+简称 modified by lishuping 20191017 end-->
+            A.FINPROD_ID,
+            A.FINPROD_NAME,
+            A.FINPROD_ABBR,
+            TO_CHAR(A.VDATE, 'yyyy-MM-dd') VDATE,
+            TO_CHAR(A.MDATE, 'yyyy-MM-dd') MDATE,
+            TO_CHAR(A.IDATE, 'yyyy-MM-dd') IDATE,
+            A.TRADE_MARKET,
+            A.CCY,
+            A.CALENDAR_ID,
+            basisData.BASIS,
+            B.TYPE_4 windtypeone,
+            B.TYPE_6,
+            <!-- 新增资产二、三、四级分类  王贵奇  2019/7/30 开始-->
+            B.TYPE_9,
+            B.TYPE_10,
+            B.TYPE_11,
+            <!-- 新增资产二、三、四级分类  王贵奇  2019/7/30 结束-->
+            A.FINPROD_MARKET_ID,
+            Q.IS_ISSUE_ASSET,
+            A.IS_RIGHT
+            FROM FIN_PRODUCT A
+            LEFT JOIN FIN_PRODUCT_ADD Q
+            ON Q.FINPROD_ID = A.FINPROD_ID
+            LEFT JOIN FIN_PRODUCT_TYPE B
+            ON B.FINPROD_ID = A.FINPROD_ID
+            LEFT JOIN
+            (
+            select
+            max(BASIS) as BASIS,
+            FINPROD_ID
+            from
+            FIN_CASH_CALC_RULE
+            <where>
+                <if test="initValue != null and initValue != ''">
+                    AND FINPROD_ID = #{initValue}
+                </if>
+            </where>
+            group by FINPROD_ID
+            ) basisData
+            on A.FINPROD_ID = basisData.FINPROD_ID
+            <!-- 吉林银行设置卖出时资产为同组合持有资产  wangyang1  2020年1月3日 开始-->
+            LEFT JOIN
+            TRD_PRODUCT_DEAL D
+            ON
+            A.FINPROD_ID = D.FINPROD_ID
+            LEFT JOIN
+            PTL_SEC_POSITION P
+            ON
+            P.FINPROD_ID = D.FINPROD_ID
+            AND P.CDATE = D.TRADE_DATE
+            <!-- 吉林银行设置卖出时资产为同组合持有资产  wangayang1  2020年1月3日 结束-->
+            <where>
+                <if test="search != null and search != ''">
+                    (
+                    A.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    or
+                    A.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    )
+                </if>
+                <!-- 吉林银行设置卖出时资产为同组合持有资产  wangyang1  2020年1月3日 开始-->
+                <if test="portfolioId1 != null and portfolioId1 != ''">
+                    and P.PORTFOLIO_ID = #{portfolioId1}
+                    and p.AMOUNT != 0
+                    AND p.INV_AIM != '999999'
+                </if>
+                <!-- 吉林银行设置卖出时资产为同组合持有资产  wangayang1  2020年1月3日 结束-->
+                <if test="initValue != null and initValue != ''">
+                    AND A.FINPROD_ID = #{initValue}
+                </if>
+                <if test="initValue == null or initValue == ''">
+                    <if test="FINPROD_TYPE_TG != null and FINPROD_TYPE_TG != ''">
+                        AND A.FINPROD_TYPE2 = #{FINPROD_TYPE_TG}
+                    </if>
+                </if>
+                <if test="windtypeone != null and windtypeone != ''">
+                    AND B.TYPE_4 = #{windtypeone}
+                </if>
+                AND (Q.IS_ISSUE_ASSET IS NULL OR Q.IS_ISSUE_ASSET = 'N')
+            </where>
         <if test="isautobond != null and isautobond == 'true'">
-        union
+        UNION ALL
           select interf.SECID  id,
           interf.secname text,
           fin.FINPROD_ID,
@@ -888,10 +1005,17 @@
           AND B.CASH_TYPE_1 = #{cashType1}
       LEFT JOIN FIN_PRODUCT_TYPE D
         ON D.FINPROD_ID = A.FINPROD_ID
+        <!-- 可能存在多条规则  20210617 yzg start -->
+      left join (select FINPROD_ID, max(eff_date) as EFF_DATE
+                      from FIN_CASH_CALC_RULE
+                     group by FINPROD_ID) T1
+       		on T1.FINPROD_ID = A.FINPROD_ID 
+       <!-- 可能存在多条规则  20210617 yzg end -->
       LEFT JOIN FIN_CASH_CALC_RULE E
         ON E.FINPROD_ID = A.FINPROD_ID
           AND E.FINPROD_TYPE2 = #{finprodType2}
           and E.IS_INITIAL = #{YES_NO_Y}
+          and E.EFF_DATE = T1.EFF_DATE
       LEFT JOIN FIN_RATE_INFO F
         ON F.CASH_ID = B.CASH_ID
           AND F.FINPROD_TYPE2 = #{finprodType2}

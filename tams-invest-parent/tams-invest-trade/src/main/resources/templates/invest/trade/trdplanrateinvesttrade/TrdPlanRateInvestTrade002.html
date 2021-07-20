@@ -44,7 +44,7 @@
 										<div class="layui-input-inline input-inline">
 											<select type="text" id="settleSpeed" name="settleSpeed" class="layui-input form-input input-select" required
 													placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" th:initValue="${entity?.mySettleSpeed}"
-													data-th-data-result='${ACCOUNT_SPEED}' allowClear="true" formatoption="true" disabled></select>
+													data-th-data-result='${ACCOUNT_SPEED}' allowClear="true" formatoption="true" ></select>
 										</div>
 									</div>
 									<div class="layui-form-item">
@@ -75,9 +75,9 @@
 										</div>
 										<div class="form-inline-wrap">
 											<label class="layui-form-label form-label-wrap"
-												   data-th-text="#{TrdDepositInvestTrade001.finprodName}">资产代码</label>
+												   data-th-text="#{TrdDepositInvestTrade001.finprodName}">资产名称</label>
 											<div class="layui-input-inline input-inline">
-												<select type="text" id="finprodMarketId" name="finprodMarketId" class="layui-input form-input input-select" required 
+												<select type="text" id="finprodMarketId" name="finprodMarketId" class="layui-input form-input input-select" required
 														placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" th:initValue="${entity?.finprodMarketId}"
 														data-th-data-url="@{/invest/trade/trdplanrateinvesttrade/TrdPlanRateInvestTrade002/getFinprodMarketId(isparent=${YES_OR_NO_N})}" allowClear="true" showField="id" formatoption="true"></select>
 											</div>
@@ -87,7 +87,7 @@
 								</div>
 								<div class="layui-form-item">
 									<div class="form-inline-wrap">
-										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdDepositInvestTrade001.finprodId}">资产名称</label>
+										<label class="layui-form-label form-label-wrap" data-th-text="#{TrdDepositInvestTrade001.finprodId}">资产代码</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" id="finprodName" name="finprodName" th:value="${entity?.finprodName}"
 												   class="layui-input form-input hidden" required

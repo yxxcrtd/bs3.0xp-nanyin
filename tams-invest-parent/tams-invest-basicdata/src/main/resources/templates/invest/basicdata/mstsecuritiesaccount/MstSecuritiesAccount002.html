@@ -91,7 +91,7 @@
                                                  class="layui-input form-input input-select"
                                                  data-th-data-result='${TRADE_PLACE}' allowClear="true" 
                                                  placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                                 formatoption=true required="required">
+                                                 formatoption=true required="required" multiple="multiple">
                                              </select>
                                          </div>
                                           <div class="layui-input-inline input-inline" id="tradePlaceOld" >
@@ -118,6 +118,19 @@
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 data-th-data-result="${ACCOUNT_SOURCE}"
                                                 data-th-placeholder="#{SysCommon.placeholder}" required="required">
+                                            </select>
+                                        </div>
+                                    </div>
+									<div id = "yNHkstockc_div" class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap"
+                                               data-th-text="#{MstSecuritiesAccount002.yNHkstockc}">是否开通港股通</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <select name="yNHkstockc" id="yNHkstockc"
+                                                    class="layui-input form-input input-select"
+                                                    required="required"
+                                                    data-th-placeholder="#{SysCommon.placeholder}"
+                                                    data-th-initValue='${entity?.yNHkstockc}'
+                                                    data-th-data-result="${Y_N_HKSTOCKC}" >
                                             </select>
                                         </div>
                                     </div>

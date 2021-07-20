@@ -23,6 +23,7 @@ import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
 import com.joyintech.service.entrust.common.service.EntrustCommonPersonSelectService;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
+import com.joyintech.service.entrust.etrboutrepo.dto.EtrBoutRepoDto;
 import com.joyintech.service.entrust.etrconbond.dao.EtrConBondMapper;
 import com.joyintech.service.entrust.etrconbond.dto.EtrConBondDto;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
@@ -31,6 +32,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
@@ -142,6 +144,7 @@ public class EtrConBondService extends BaseService{
         pageParam.put("PS_T05",DictCodeList.交易方向_申购确认.getValue());
         pageParam.put("PS_T04",DictCodeList.交易方向_申购.getValue());
         pageParam.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return super.queryForPage(page, length, () -> mapper.selectForPage(pageParam));
     }
 
@@ -424,9 +427,9 @@ public class EtrConBondService extends BaseService{
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
         }
-        if(baseEtrCashPositionCommService!=null){
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if(baseEtrCashPositionCommService!=null){
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
 
     /**
@@ -499,5 +502,43 @@ public class EtrConBondService extends BaseService{
 
     public String getCounterIdByFinprodId(String finprodId) {
         return mapper.getCounterId(finprodId);
+    }
+
+    public BaseEtrInvestInfoDto initBaseDto(EtrConBondDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            dto.setIsOutTrade(DictCodeList.是否_是.getValue());
+            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            etrEntrust.setEntrustDate(dto.getEntrustDate());
+            etrEntrust.setEntrustAmt(null);
+            etrEntrust.setPs(DictCodeList.交易方向_申购.getValue());
+            etrEntrust.setChlId(dto.getChlId());
+            if (StringUtil.isNotEmpty(dto.getPurchBondTotal())) {
+                etrEntrust.setEntrustNum(dto.getPurchBondTotal().divide(new BigDecimal(100)));
+            }
+            entity.setEtrEntrust(etrEntrust);
+
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            etrEntrustAdd.setPurchModle(dto.getPurchModle());
+            etrEntrustAdd.setPurchType(dto.getPurchType());
+            etrEntrustAdd.setSecAcctId(dto.getSecAcctId());
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_债券.getValue());
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 添加流程编号
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+        return entity;
     }
 }

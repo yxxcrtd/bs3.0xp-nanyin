@@ -30,10 +30,12 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.etrstandardbond.dto.EtrStandardBond001Dto;
 import com.joyintech.tams.invest.entrust.etrstandardbond.service.EtrStandardBond001Service;
 
@@ -57,6 +59,8 @@ public class EtrStandardBond001Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.交易场所);
+        model.addAttribute("repo_pledge_model",CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
+        model.addAttribute("pageFrom",this.getParam("pageFrom"));
         return super.init(model);
     }
 

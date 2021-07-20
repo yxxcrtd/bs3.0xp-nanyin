@@ -42,28 +42,26 @@ public class CreditRightsManagementValidator implements BeanValidator{
 		
 		if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
 			//1.同一个资产二级类型、同一生效日只能有一条数据
-			if(StringUtil.isNotEmpty(dto.getAssetTypeOne()) && StringUtil.isNotEmpty(dto.getEffDateStr())){
+			if(StringUtil.isNotEmpty(dto.getAssetTypeTwo()) && StringUtil.isNotEmpty(dto.getEffDateStr())){
 				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("assetTypeOne", dto.getAssetTypeOne());
-				map.put("assetTypeTwo", StringUtil.isNotEmpty(dto.getAssetTypeTwo())?dto.getAssetTypeTwo():null);
+				map.put("assetTypeTwo", dto.getAssetTypeTwo());
 				map.put("effDate", dto.getEffDateStr());
 				if(creditRightsManagementService.checkalreadyhave(map).size()>0){
-					erroList.add(new ValidMessage("","同一个资产一级类型、资产二级类型、同一生效日只能有一条数据"));
+					erroList.add(new ValidMessage("","同一个资产二级类型、同一生效日只能有一条数据"));
 				}
 			}
 			
 		}
 		else if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT) && !StringUtil.equals(dto.getOperateType(),"edit")){
 			//1.同一个资产二级类型、同一生效日只能有一条数据
-			if(StringUtil.isNotEmpty(dto.getAssetTypeOne()) &&StringUtil.isNotEmpty(dto.getEffDateStr())){
+			if(StringUtil.isNotEmpty(dto.getAssetTypeTwo()) && StringUtil.isNotEmpty(dto.getEffDateStr())){
 				if(dto.getEffDateOld().compareTo(dto.getEffDate()) != 0){
 					if(StringUtil.isNotEmpty(dto.getAssetTypeTwo()) && StringUtil.isNotEmpty(dto.getEffDateStr())){
 						Map<String,Object> map = new HashMap<String,Object>();
-						map.put("assetTypeOne", dto.getAssetTypeOne());
-						map.put("assetTypeTwo", StringUtil.isNotEmpty(dto.getAssetTypeTwo())?dto.getAssetTypeTwo():null);
+						map.put("assetTypeTwo", dto.getAssetTypeTwo());
 						map.put("effDate", dto.getEffDateStr());
 						if(creditRightsManagementService.checkalreadyhave(map).size()>0){
-							erroList.add(new ValidMessage("","同一个资产一级类型、资产二级类型、同一生效日只能有一条数据"));
+							erroList.add(new ValidMessage("","同一个资产二级类型、同一生效日只能有一条数据"));
 						}
 					}
 				}

@@ -75,6 +75,11 @@ public class FinStockInfoDto extends FinProduct{
     private String isMarginFinprod;
 
     /**
+     * 最小买卖单位
+     */
+    private Long minSaleUnit;
+
+    /**
      *
      */
     private List<SysUploadFileInfo> fileArray;
@@ -936,5 +941,13 @@ public class FinStockInfoDto extends FinProduct{
 
     public void setcShares(String cShares) {
         this.cShares = cShares;
+    }
+
+    public Long getMinSaleUnit() {
+        return minSaleUnit;
+    }
+
+    public void setMinSaleUnit(Long minSaleUnit) {
+        this.minSaleUnit = minSaleUnit;
     }
 }

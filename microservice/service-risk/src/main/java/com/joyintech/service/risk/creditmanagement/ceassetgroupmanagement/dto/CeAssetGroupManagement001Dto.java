@@ -12,6 +12,8 @@ package com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dto;
 
 import com.joyintech.tams.common.base.entity.CreditAssetpool;
 
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
@@ -53,7 +55,67 @@ public class CeAssetGroupManagement001Dto extends CreditAssetpool{
      * 资产名称
      */
     private String finprodName;
-    
+
+    private String pflsh;
+    private String assetGroupName;
+    private String creditAmt;
+
+    private String seqno;
+
+    private List<CeAssetGroupManagement002Dto> dataList;
+
+    public List<CeAssetGroupManagement002Dto> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<CeAssetGroupManagement002Dto> dataList) {
+        this.dataList = dataList;
+    }
+
+    @Override
+    public String getSeqno() {
+        return seqno;
+    }
+
+    @Override
+    public void setSeqno(String seqno) {
+        this.seqno = seqno;
+    }
+
+    private String vdate;
+
+    public String getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(String vdate) {
+        this.vdate = vdate;
+    }
+
+    public String getPflsh() {
+        return pflsh;
+    }
+
+    public void setPflsh(String pflsh) {
+        this.pflsh = pflsh;
+    }
+
+    public String getAssetGroupName() {
+        return assetGroupName;
+    }
+
+    public void setAssetGroupName(String assetGroupName) {
+        this.assetGroupName = assetGroupName;
+    }
+
+    public String getCreditAmt() {
+        return creditAmt;
+    }
+
+    public void setCreditAmt(String creditAmt) {
+        this.creditAmt = creditAmt;
+    }
+
     /**
      * 获取 operateType
      * @return operateType.

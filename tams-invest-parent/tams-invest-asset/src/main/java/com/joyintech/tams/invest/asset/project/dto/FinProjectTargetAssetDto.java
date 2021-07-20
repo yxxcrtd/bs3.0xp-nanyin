@@ -1783,7 +1783,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
         this.investNature = investNature;
     }
 
-    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
+    /*@NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})*/
     public String getRepAssetType() {
         return repAssetType;
     }

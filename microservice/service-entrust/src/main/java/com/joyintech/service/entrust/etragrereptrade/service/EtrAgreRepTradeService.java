@@ -783,6 +783,27 @@ public class EtrAgreRepTradeService extends BaseService{
 
         // 构造单组合单资产DTO
         EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(entity);
+        
+        //待分发逻辑处理
+        List<EtrDistribute> etrDistributeList = new ArrayList<>();
+        if (busiAutoEtrDispService != null) {
+            // 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
+            // 设置指令日期 add by yufei 20200808 start
+            if(etrEntrust.getEntrustDate() == null) {
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            // 设置指令日期 add by yufei 20200808 end
+            if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
+                // 自动分发
+            	etrDistributeList = busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd);
+                isPushMsg = DictCodeList.是否_是.getValue();
+            }
+            
+        }
+        if(StringUtil.isEmptyList(etrDistributeList)){//无分发人员
+        	etrSinglePortfolioDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
+        }
+        
         //协议回购首期指令
     	AgreRepFristIssueDto agreRepFristIssueDto = new AgreRepFristIssueDto();
     	//协议回购提前购回指令
@@ -1301,21 +1322,21 @@ public class EtrAgreRepTradeService extends BaseService{
         }
        
         // 自动分发
-        List<EtrDistribute> etrDistributeList = new ArrayList<>();
-        if (busiAutoEtrDispService != null) {
-            // 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
-            // 设置指令日期 add by yufei 20200808 start
-            if(etrEntrust.getEntrustDate() == null) {
-                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
-            }
-            // 设置指令日期 add by yufei 20200808 end
-            if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
-                // 自动分发
-            	etrDistributeList = busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd);
-                isPushMsg = DictCodeList.是否_是.getValue();
-            }
-            
-        }
+//        List<EtrDistribute> etrDistributeList = new ArrayList<>();
+//        if (busiAutoEtrDispService != null) {
+//            // 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
+//            // 设置指令日期 add by yufei 20200808 start
+//            if(etrEntrust.getEntrustDate() == null) {
+//                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+//            }
+//            // 设置指令日期 add by yufei 20200808 end
+//            if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
+//                // 自动分发
+//            	etrDistributeList = busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd);
+//                isPushMsg = DictCodeList.是否_是.getValue();
+//            }
+//            
+//        }
         // 自动分发数据入库 add by yufei 20200808 start
         if(!StringUtil.isEmptyList(etrDistributeList)){
             baseEtrInvestInfoService.distributeDelegate(etrDistributeList);

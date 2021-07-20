@@ -29,6 +29,11 @@ public class PaPtlPortfolio extends BaseEntity {
     private String investNature;
 
     /**
+     * 组合序列
+     */
+    private String portfolioSequence;
+
+    /**
      * 取得 组合代码
      * @return 组合代码
      */
@@ -106,5 +111,21 @@ public class PaPtlPortfolio extends BaseEntity {
      */
     public void setInvestNature(String investNature) {
         this.investNature = investNature == null ? null : investNature.trim();
+    }
+
+    /**
+     * 获取 组合序列
+     * @return 组合序列
+     */
+    public String getPortfolioSequence() {
+        return portfolioSequence;
+    }
+
+    /**
+     * 设置 组合序列
+     * @param portfolioSequence 组合序列
+     */
+    public void setPortfolioSequence(String portfolioSequence) {
+        this.portfolioSequence = portfolioSequence;
     }
 }

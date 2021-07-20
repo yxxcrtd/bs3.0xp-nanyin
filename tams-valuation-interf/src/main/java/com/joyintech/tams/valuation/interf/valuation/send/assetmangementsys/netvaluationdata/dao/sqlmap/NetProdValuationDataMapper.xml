@@ -31,17 +31,17 @@
                     BOK_BOOKSET
                 WHERE
                     ACCT_MODE = '01')
-            	AND BOOKSET_ID in 
-                <foreach item="item" index="index" collection="booksetList" open="("  close=")" separator=",">  
+            	AND BOOKSET_ID in
+                <foreach item="item" index="index" collection="booksetList" open="("  close=")" separator=",">
           			#{item, jdbcType=VARCHAR}
         		</foreach>
         		AND VAL_DATE = #{exeDate, jdbcType=TIMESTAMP}
-        AND DETAIL_DIST IN ('02','05','06','07','08','17') ) PIVOT ( MAX(MARKET_VALUE) 
+        AND DETAIL_DIST IN ('02','05','06','07','10','27') ) PIVOT ( MAX(MARKET_VALUE)
         FOR DETAIL_DIST IN ( '02' AS prodAllAmt,
-        					 '17' AS totalValue,
+        					 '27' AS totalValue,
                              '05' AS dailyAssetAllValue,
                              '06' AS dailyAllDebt,
-                             '08' AS unitValue) )
+                             '10' AS unitValue) )
 		ORDER BY
     		valueDate
 </select>
@@ -60,9 +60,9 @@
 <!-- 		ORDER BY ffas.OPEN_DATE_END DESC -->
 <!-- </select> -->
 <select id="queryNowRate" resultType="com.joyintech.tams.common.base.entity.FinFloatAccrualSche">
-	select 
+	select
 	fin.ACCR_STR_DATE
-	 from 
+	 from
 	FIN_FLOAT_ACCRUAL_SCHE fin
 	where CASH_ID in (
 	select CASH_ID

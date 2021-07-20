@@ -134,7 +134,7 @@ public class TrdCommandDispatcher001Controller extends BaseController{
         //add by wangpeng start
         model.addAttribute("IRS_TYPE", DictCode.互换方式.getValue());
         //add by wangpeng end
-        model.addAttribute("entrustStatus", "02");
+        model.addAttribute("entrustStatus", DictCodeListExt3.委托状态_待分发.getValue());
 		List<TrdCommandDispatcher001Dto> dto = trdCommandDispatcher001Service.selectEtrAutoTime();
 		if(dto.size() > 0){
 		    model.addAttribute("VDATE", dto.get(0).getVdateStr());

@@ -88,4 +88,6 @@ public interface CommonBusinessMapper {
      * @return int
      */
     int selectFundNum(@Param("finprodId") String finprodId);
+
+	String selectCustomer(Map<String, Object> map);
 }

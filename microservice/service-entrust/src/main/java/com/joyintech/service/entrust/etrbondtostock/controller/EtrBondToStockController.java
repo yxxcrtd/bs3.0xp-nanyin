@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -195,6 +196,8 @@ public class EtrBondToStockController {
     @DTXTransaction
     @PostMapping("doComplete")
     public void doComplete(@RequestBody EtrBondToStockDto dto) throws IllegalAccessException, InvocationTargetException{
+        WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
+        
     	etrBondToStockService.doComplete(dto, dto.getOperateType());
     }
 
@@ -202,8 +205,27 @@ public class EtrBondToStockController {
     @DTXTransaction
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrBondToStockDto dto){
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), etrBondToStockService.initBaseDto(dto));
+        
     	etrBondToStockService.doInsert(dto, dto.getOperateType());
     }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doUpdate")
+    public void doUpdate(@RequestBody EtrBondToStockDto dto){
+        WFlowCommonService.doUpdateFlow(dto.getOperateType(), etrBondToStockService.initBaseDto(dto));
+        
+        etrBondToStockService.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBack")
+    public void doBack(@RequestBody EtrBondToStockDto dto){
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
+    }
+    
     /**
      * 
      * 通过主键查询数据

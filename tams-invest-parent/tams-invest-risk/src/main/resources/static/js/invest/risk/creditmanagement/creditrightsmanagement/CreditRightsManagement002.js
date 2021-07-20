@@ -16,16 +16,6 @@
     	if($('#seqno').val() != null && $('#seqno').val() != ''){
     		object.seqno = $('#seqno').val();
     	}
-    	var assetTypeOne = $("#assetTypeOne").val();
-    	var assetTypeTwo = $("#assetTypeTwo").val();
-        if(!assetTypeTwo && !(assetTypeOne == 'F10' || assetTypeOne == 'F11'
-        	|| assetTypeOne == 'F12' || assetTypeOne == 'F13'
-        	|| assetTypeOne == 'F14' || assetTypeOne == 'F15'
-        	|| assetTypeOne == 'F16' || assetTypeOne == 'F17'
-        	|| assetTypeOne == 'F18' || assetTypeOne == 'F38')){
-        	Joyin.error("请选择资产二级分类");
-        	return;
-        }
         Joyin.ajaxJson(basePath + 'invest/risk/creditmanagement/creditrightsmanagement/CreditRightsManagement002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
                 if(operateType === 'save') {
@@ -40,48 +30,14 @@
     
     
     var init = function(){
-    	debugger;
     	var wfl_operType = $("#wfl_operType").val();
-    	if(pageModel==PAGE_MODEL_EDIT || pageModel==PAGE_MODEL_REFERENCE){
+    	if(pageModel==PAGE_MODEL_EDIT){
     		if(wfl_operType == null || wfl_operType != 'NEW'){
     			$('#assetTypeOne').attr("disabled",true);
         		$('#assetTypeTwo').attr("disabled",true);
     		}
-    		
-            var assetTypeOne = $("#assetTypeOne").val();
-            if(assetTypeOne == 'F10' || assetTypeOne == 'F11'
-            	|| assetTypeOne == 'F12' || assetTypeOne == 'F13'
-            	|| assetTypeOne == 'F14' || assetTypeOne == 'F15'
-            	|| assetTypeOne == 'F16' || assetTypeOne == 'F17'
-            	|| assetTypeOne == 'F18' || assetTypeOne == 'F38'){
-                $("#assetTypeTwo").attr("required", false);
-            	$("#assetTypeTwoDiv").hide();
-
-            } else {
-            	$("#assetTypeTwo").attr("required", true);
-            	$("#assetTypeTwoDiv").show();
-
-            }
     	}
-    	$("#contractType").trigger("change");
     };
-    
-    $("#assetTypeOne").on("change", function () {
-        var assetTypeOne = $("#assetTypeOne").val();
-        if(assetTypeOne == 'F10' || assetTypeOne == 'F11'
-        	|| assetTypeOne == 'F12' || assetTypeOne == 'F13'
-        	|| assetTypeOne == 'F14' || assetTypeOne == 'F15'
-        	|| assetTypeOne == 'F16' || assetTypeOne == 'F17'
-        	|| assetTypeOne == 'F18' || assetTypeOne == 'F38'){
-            $("#assetTypeTwo").attr("required", false);
-        	$("#assetTypeTwoDiv").hide();
-
-        } else {
-        	$("#assetTypeTwo").attr("required", true);
-        	$("#assetTypeTwoDiv").show();
-
-        }
-    });
         
         
     $(function() {

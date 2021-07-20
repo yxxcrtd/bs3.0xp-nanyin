@@ -15,6 +15,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrconbond.dto.EtrConBondDto;
 import com.joyintech.service.entrust.etrconbond.service.EtrConBondService;
 import com.joyintech.tams.common.base.entity.FinProduct;
@@ -151,6 +152,8 @@ public class EtrConBondController {
     @DTXTransaction
     @PostMapping("doComplete")
     public void doComplete(@RequestBody EtrConBondDto dto) throws IllegalAccessException, InvocationTargetException{
+        WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
+        
         service.doComplete(dto, dto.getOperateType());
     }
 
@@ -158,7 +161,25 @@ public class EtrConBondController {
     @DTXTransaction
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrConBondDto dto){
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), service.initBaseDto(dto));
+        
         service.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doUpdate")
+    public void doUpdate(@RequestBody EtrConBondDto dto){
+        WFlowCommonService.doUpdateFlow(dto.getOperateType(), service.initBaseDto(dto));
+        
+        service.doInsert(dto, dto.getOperateType());
+    }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBack")
+    public void doBack(@RequestBody EtrConBondDto dto){
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
     }
     /**
      * 

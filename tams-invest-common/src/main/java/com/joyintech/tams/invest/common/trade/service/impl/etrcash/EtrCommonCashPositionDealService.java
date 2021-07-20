@@ -90,8 +90,22 @@ public class EtrCommonCashPositionDealService extends BaseService {
     private static EtrEntrustMapper etrEntrustMapper;
 
     private static EtrEntrustAddMapper etrEntrustAddMapper;
-
+    
+    private static WflEtrEntrustMapper wflEtrEntrustMapper;
+    
+    private static WflEtrEntrustAddMapper wflEtrEntrustAddMapper;
+    
     @Autowired
+	public void setWflEtrEntrustMapper(WflEtrEntrustMapper wflEtrEntrustMapper) {
+		EtrCommonCashPositionDealService.wflEtrEntrustMapper = wflEtrEntrustMapper;
+	}
+
+	@Autowired
+	public void setWflEtrEntrustAddMapper(WflEtrEntrustAddMapper wflEtrEntrustAddMapper) {
+		EtrCommonCashPositionDealService.wflEtrEntrustAddMapper = wflEtrEntrustAddMapper;
+	}
+
+	@Autowired
     public void setPtlCapacctInfoMapper(PtlCapacctInfoMapper ptlCapacctInfoMapper) {
         EtrCommonCashPositionDealService.ptlCapacctInfoMapper = ptlCapacctInfoMapper;
     }
@@ -1133,6 +1147,27 @@ public class EtrCommonCashPositionDealService extends BaseService {
     public static EntrustCommonDto findEntrust(String entrustId) {
     	EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
         EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
+        //流程中委托查询流程表
+        if(etrEntrust == null) {
+        	WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+        	wflEtrEntrustKey.setEntrustId(entrustId);
+        	wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+        	WflEtrEntrust wflEtrEntrust = wflEtrEntrustMapper.selectByPrimaryKey(wflEtrEntrustKey);
+        	if(wflEtrEntrust != null) {
+        		etrEntrust = new EtrEntrust();
+        		BeanUtil.copyPropertiesIgnoreNull(etrEntrust,wflEtrEntrust );
+        	}
+        }
+        if(etrEntrustAdd == null) {
+        	WflEtrEntrustAddKey wflEtrEntrustAddKey = new WflEtrEntrustAddKey();
+        	wflEtrEntrustAddKey.setEntrustId(entrustId);
+        	wflEtrEntrustAddKey.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+        	WflEtrEntrustAdd wflEtrEntrustAdd = wflEtrEntrustAddMapper.selectByPrimaryKey(wflEtrEntrustAddKey);
+        	if(wflEtrEntrustAdd != null) {
+        		etrEntrustAdd = new EtrEntrustAdd();
+        		BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd,wflEtrEntrustAdd );
+        	}
+        }
         EntrustCommonDto result = new EntrustCommonDto();
         result.setEtrEntrust(etrEntrust);
         result.setEtrEntrustAdd(etrEntrustAdd);
@@ -1401,4 +1436,21 @@ public class EtrCommonCashPositionDealService extends BaseService {
 		param.put("entrustId", entrustId);
 		return etrCommonCashPositionMapper.selectSumTradeAmt(param);
 	}
+
+    public static BigDecimal getHkseClosePrice(String finprodId, Date cdate) {
+        BigDecimal 最新收盘价 = getLatestPrePrice(finprodId, cdate);
+        if (最新收盘价 == null) {
+            最新收盘价 = BigDecimal.ZERO;
+        }
+        return 最新收盘价;
+    }
+
+    public static BigDecimal getLatestPrePrice(String finprodId, Date cdate) {
+        BigDecimal 最新收盘价 = etrCommonCashPositionMapper.getPreClosePrice(finprodId, cdate);
+        if (最新收盘价 == null) {
+            最新收盘价 = etrCommonCashPositionMapper.getInterfPreClosePrice(finprodId, cdate);
+        }
+        return 最新收盘价;
+    }
+
 }

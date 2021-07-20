@@ -80,6 +80,7 @@
         <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
         <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
         <result column="REG_DATE" property="regDate" jdbcType="DATE" />
+        <result column="REG_DATE_AMT" property="regDateAmt" jdbcType="DECIMAL" />
         <result column="EX_DEVIDENT_DATE" property="exDevidentDate" jdbcType="DATE" />
         <result column="RED_SHARE_LISTING_DATE" property="redShareListingDate" jdbcType="DATE" />
         <result column="DEVIDENT_DATE" property="devidentDate" jdbcType="DATE" />
@@ -87,6 +88,13 @@
         <result column="PER_DEVIDENT_CASH" property="perDevidentCash" jdbcType="DECIMAL" />
         <result column="DEVIDENT_CASH" property="devidentCash" jdbcType="DECIMAL" />
         <result column="DEVIDENT_AMT" property="devidentAmt" jdbcType="DECIMAL" />
+        <result column="IF_DIVIDEND" property="ifDividend" jdbcType="VARCHAR" />
+        <result column="DIVID_CCY" property="dividCcy" jdbcType="VARCHAR" />
+        <result column="EXCHANGE_RATE" property="exchangeRate" jdbcType="DECIMAL" />
+        <result column="REPLACE_PRICE" property="replacePrice" jdbcType="DECIMAL" />
+        <result column="YESTERDAY_POSITION" property="yesterdayPosition" jdbcType="DECIMAL" />
+        <result column="TRADE_AMT_HK" property="tradeAmtHk" jdbcType="DECIMAL" />
+        <result column="SELL_SETTLE_RATE" property="sellSettleRate" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, BUSI_TYPE BUSI_TYPE, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, 
@@ -108,9 +116,11 @@
         SETTLE_SPEED SETTLE_SPEED, PAY_UNPAIDINT_AMT PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT ISPAY_UNPAIDINT, 
         CLEAR_TYPE CLEAR_TYPE, EFF_TIME EFF_TIME, DELIVERY_TYPE DELIVERY_TYPE, M_DELIVERY_TYPE M_DELIVERY_TYPE, 
         RATE RATE, REPO_TERM REPO_TERM, TERM_TYPE TERM_TYPE, INSTITUTION_CODE INSTITUTION_CODE, 
-        REG_DATE REG_DATE, EX_DEVIDENT_DATE EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE RED_SHARE_LISTING_DATE, 
+        REG_DATE REG_DATE,REG_DATE_AMT REG_DATE_AMT, EX_DEVIDENT_DATE EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE RED_SHARE_LISTING_DATE, 
         DEVIDENT_DATE DEVIDENT_DATE, PER_DEVIDENT_AMT PER_DEVIDENT_AMT, PER_DEVIDENT_CASH PER_DEVIDENT_CASH, 
-        DEVIDENT_CASH DEVIDENT_CASH, DEVIDENT_AMT DEVIDENT_AMT
+        DEVIDENT_CASH DEVIDENT_CASH, DEVIDENT_AMT DEVIDENT_AMT, 
+        IF_DIVIDEND IF_DIVIDEND, DIVID_CCY DIVID_CCY, EXCHANGE_RATE EXCHANGE_RATE, REPLACE_PRICE REPLACE_PRICE, 
+        YESTERDAY_POSITION YESTERDAY_POSITION, TRADE_AMT_HK TRADE_AMT_HK, SELL_SETTLE_RATE SELL_SETTLE_RATE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -158,9 +168,11 @@
             PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, CLEAR_TYPE, 
             EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, 
             RATE, REPO_TERM, TERM_TYPE, 
-            INSTITUTION_CODE, REG_DATE, EX_DEVIDENT_DATE, 
+            INSTITUTION_CODE, REG_DATE, REG_DATE_AMT, EX_DEVIDENT_DATE, 
             RED_SHARE_LISTING_DATE, DEVIDENT_DATE, PER_DEVIDENT_AMT, 
-            PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT
+            PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT, IF_DIVIDEND, DIVID_CCY, 
+            EXCHANGE_RATE, REPLACE_PRICE, YESTERDAY_POSITION, 
+            TRADE_AMT_HK, SELL_SETTLE_RATE
             )
         values (#{totleTradeId,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
             #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
@@ -187,9 +199,12 @@
             #{payUnpaidintAmt,jdbcType=DECIMAL}, #{ispayUnpaidint,jdbcType=VARCHAR}, #{clearType,jdbcType=VARCHAR}, 
             #{effTime,jdbcType=TIMESTAMP}, #{deliveryType,jdbcType=VARCHAR}, #{mDeliveryType,jdbcType=VARCHAR}, 
             #{rate,jdbcType=DECIMAL}, #{repoTerm,jdbcType=DECIMAL}, #{termType,jdbcType=VARCHAR}, 
-            #{institutionCode,jdbcType=VARCHAR}, #{regDate,jdbcType=DATE}, #{exDevidentDate,jdbcType=DATE}, 
+            #{institutionCode,jdbcType=VARCHAR}, #{regDate,jdbcType=DATE}, #{regDateAmt,jdbcType=DECIMAL}, #{exDevidentDate,jdbcType=DATE}, 
             #{redShareListingDate,jdbcType=DATE}, #{devidentDate,jdbcType=DATE}, #{perDevidentAmt,jdbcType=DECIMAL}, 
-            #{perDevidentCash,jdbcType=DECIMAL}, #{devidentCash,jdbcType=DECIMAL}, #{devidentAmt,jdbcType=DECIMAL}
+            #{perDevidentCash,jdbcType=DECIMAL}, #{devidentCash,jdbcType=DECIMAL}, #{devidentAmt,jdbcType=DECIMAL},
+	    #{ifDividend,jdbcType=VARCHAR}, #{dividCcy,jdbcType=VARCHAR}, 
+            #{exchangeRate,jdbcType=DECIMAL}, #{replacePrice,jdbcType=DECIMAL}, #{yesterdayPosition,jdbcType=DECIMAL}, 
+            #{tradeAmtHk,jdbcType=DECIMAL}, #{sellSettleRate,jdbcType=DECIMAL}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
@@ -429,6 +444,9 @@
             <if test="regDate != null" >
                 REG_DATE,
             </if>
+            <if test="regDateAmt != null" >
+                REG_DATE_AMT,
+            </if>
             <if test="exDevidentDate != null" >
                 EX_DEVIDENT_DATE,
             </if>
@@ -449,6 +467,27 @@
             </if>
             <if test="devidentAmt != null" >
                 DEVIDENT_AMT,
+            </if>
+            <if test="ifDividend != null" >
+                IF_DIVIDEND,
+            </if>
+            <if test="dividCcy != null" >
+                DIVID_CCY,
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE,
+            </if>
+            <if test="replacePrice != null" >
+                REPLACE_PRICE,
+            </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION,
+            </if>
+            <if test="tradeAmtHk != null" >
+                TRADE_AMT_HK,
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -686,6 +725,9 @@
             <if test="regDate != null" >
                 #{regDate,jdbcType=DATE},
             </if>
+            <if test="regDateAmt != null" >
+                #{regDateAmt,jdbcType=DECIMAL},
+            </if>
             <if test="exDevidentDate != null" >
                 #{exDevidentDate,jdbcType=DATE},
             </if>
@@ -707,6 +749,27 @@
             <if test="devidentAmt != null" >
                 #{devidentAmt,jdbcType=DECIMAL},
             </if>
+            <if test="ifDividend != null" >
+                #{ifDividend,jdbcType=VARCHAR},
+            </if>
+            <if test="dividCcy != null" >
+                #{dividCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null" >
+                #{exchangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="replacePrice != null" >
+                #{replacePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="yesterdayPosition != null" >
+                #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmtHk != null" >
+                #{tradeAmtHk,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
@@ -721,8 +784,9 @@
         LAST_AMT_SUB, ACCOUNTING_AMT, RED_PROFIT, RED_COST, DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
         TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, 
         CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, 
-        INSTITUTION_CODE, REG_DATE, EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE, DEVIDENT_DATE, 
-        PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT)
+        INSTITUTION_CODE, REG_DATE, REG_DATE_AMT,EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE, DEVIDENT_DATE, 
+        PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT, IF_DIVIDEND, 
+        DIVID_CCY, EXCHANGE_RATE, REPLACE_PRICE,YESTERDAY_POSITION, TRADE_AMT_HK, SELL_SETTLE_RATE)
         select TOTLE_TRADE_ID, BUSI_TYPE, FINPROD_ID, FINPROD_TYPE, 
             FINPROD_TYPE2, BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, CCY, UNIT_CPRICE, UNIT_INT, 
             UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, FEE_AMT_PAY, 
@@ -734,8 +798,9 @@
             LAST_AMT_SUB, ACCOUNTING_AMT, RED_PROFIT, RED_COST, DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
             TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, 
             CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, 
-            INSTITUTION_CODE, REG_DATE, EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE, DEVIDENT_DATE, 
-            PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT
+            INSTITUTION_CODE, REG_DATE,REG_DATE_AMT, EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE, DEVIDENT_DATE, 
+            PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT,IF_DIVIDEND, 
+            DIVID_CCY, EXCHANGE_RATE, REPLACE_PRICE, YESTERDAY_POSITION, TRADE_AMT_HK, SELL_SETTLE_RATE
              from TRD_FIN_PRODUCT_DEAL_TOTAL
              where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </insert>
@@ -964,6 +1029,9 @@
             <if test="regDate != null" >
                 REG_DATE = #{regDate,jdbcType=DATE},
             </if>
+            <if test="regDateAmt != null" >
+                REG_DATE_AMT = #{regDateAmt,jdbcType=DECIMAL},
+            </if>
             <if test="exDevidentDate != null" >
                 EX_DEVIDENT_DATE = #{exDevidentDate,jdbcType=DATE},
             </if>
@@ -984,6 +1052,27 @@
             </if>
             <if test="devidentAmt != null" >
                 DEVIDENT_AMT = #{devidentAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ifDividend != null" >
+                IF_DIVIDEND = #{ifDividend,jdbcType=VARCHAR},
+            </if>
+            <if test="dividCcy != null" >
+                DIVID_CCY = #{dividCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="replacePrice != null" >
+                REPLACE_PRICE = #{replacePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmtHk != null" >
+                TRADE_AMT_HK = #{tradeAmtHk,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
             </if>
         </set>
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
@@ -1064,13 +1153,21 @@
             TERM_TYPE = #{termType,jdbcType=VARCHAR},
             INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
             REG_DATE = #{regDate,jdbcType=DATE},
+            REG_DATE_AMT = #{regDateAmt,jdbcType=DECIMAL},
             EX_DEVIDENT_DATE = #{exDevidentDate,jdbcType=DATE},
             RED_SHARE_LISTING_DATE = #{redShareListingDate,jdbcType=DATE},
             DEVIDENT_DATE = #{devidentDate,jdbcType=DATE},
             PER_DEVIDENT_AMT = #{perDevidentAmt,jdbcType=DECIMAL},
             PER_DEVIDENT_CASH = #{perDevidentCash,jdbcType=DECIMAL},
             DEVIDENT_CASH = #{devidentCash,jdbcType=DECIMAL},
-            DEVIDENT_AMT = #{devidentAmt,jdbcType=DECIMAL}
+            DEVIDENT_AMT = #{devidentAmt,jdbcType=DECIMAL},
+            IF_DIVIDEND = #{ifDividend,jdbcType=VARCHAR},
+            DIVID_CCY = #{dividCcy,jdbcType=VARCHAR},
+            EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
+            REPLACE_PRICE = #{replacePrice,jdbcType=DECIMAL},
+            YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            TRADE_AMT_HK = #{tradeAmtHk,jdbcType=DECIMAL},
+            SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL}
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
     

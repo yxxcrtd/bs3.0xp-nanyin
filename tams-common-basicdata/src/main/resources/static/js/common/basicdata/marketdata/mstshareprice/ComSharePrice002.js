@@ -27,10 +27,19 @@ $(function() {
         
          //*  资产代码
         $('#sharesId').on('change', function () {
+			var s, ss;
             if ($('#sharesId').val()) {
                 // var data = $('#sharesId').select2('data')[0].object;
 				var data = $('#sharesId').select2('data')[0].text;
                 $('#finprodAbbr').val(data).trigger('change');
+                s=$('#sharesId').val();
+				ss = s.split(".");
+				if(ss[1]=='SH' || ss[1]=='SZ'){
+					$('#ccy').textSelect('setValue', 'CNY');
+				}else if(ss[1] == 'HK'){
+					$('#ccy').textSelect('setValue', 'HKD');
+				}
+				$('#ccy').attr("disabled",true);
                 if($('#dealDate').val()){
                 	getLatelyShareById();
         		}

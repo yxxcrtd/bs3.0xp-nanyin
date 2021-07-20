@@ -162,7 +162,7 @@
             OR EE.FINPROD_TYPE2 = #{FINPROD_TYPE2_F01,jdbcType=VARCHAR}
         )
         and #{batchDate,jdbcType=DATE} >= EE.VDATE
-        and EE.ENTRUST_STATUS in (#{ENTRUST_STATUS_02,jdbcType=VARCHAR},#{ENTRUST_STATUS_03,jdbcType=VARCHAR})
+        and EE.ENTRUST_STATUS in (#{ENTRUST_STATUS_02,jdbcType=VARCHAR},#{ENTRUST_STATUS_03,jdbcType=VARCHAR},#{ENTRUST_STATUS_08,jdbcType=VARCHAR})
         <if test="productIdList != null and !productIdList.isEmpty()">
             and (
             <include refid="portfolio_id_in_sql" />

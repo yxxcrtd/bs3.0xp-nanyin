@@ -320,9 +320,17 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
      @Override
      public void doUpdate(EtrPlanAssetRDto dto){
          restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetR/doInsert",dto,
+             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetR/doUpdate",dto,
              Integer.class);
      }
+
+    @Override
+    public void doBack(EtrPlanAssetRDto dto) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetR/doBack",dto,
+                Integer.class);
+    }
+
     /**
      * 通过资产代码获取资产类型
      * <功能详细描述>

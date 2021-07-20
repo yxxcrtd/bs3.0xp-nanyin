@@ -20,6 +20,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
+import com.joyintech.service.entrust.etrboutrepo.dto.EtrBoutRepoDto;
 import com.joyintech.service.entrust.etrfund.dao.EtrFundMapper;
 import com.joyintech.service.entrust.etrfund.dto.EtrFundDto;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
@@ -30,6 +31,7 @@ import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
@@ -154,7 +156,7 @@ public class EtrFundService extends BaseService<EtrFundDto> {
         // add by etliu 20210501 银行间场内场外拆分 start
         pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
         // add by etliu 20210501 银行间场内场外拆分 end
-
+        pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         return super.queryForPage(page, length, () -> etrFundMapper.select(pageParam));
     }
     
@@ -535,9 +537,9 @@ public class EtrFundService extends BaseService<EtrFundDto> {
             entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
         }
 
-        if(baseEtrCashPositionCommService!=null){
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if(baseEtrCashPositionCommService!=null){
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
     
     /**
@@ -577,6 +579,7 @@ public class EtrFundService extends BaseService<EtrFundDto> {
     public BigDecimal selectEntrustAmt(String finprodId) {
         List<String> statusList = new ArrayList<String>();
         statusList.add(DictCodeList.委托状态_待接收.getValue());
+        statusList.add(DictCodeListExt3.委托状态_待分发.getValue());
         statusList.add(DictCodeList.委托状态_已接收.getValue());
         statusList.add(DictCodeList.委托状态_已完成.getValue());
         statusList.add(DictCodeList.委托状态_已撤回.getValue());
@@ -722,4 +725,38 @@ public class EtrFundService extends BaseService<EtrFundDto> {
         return etrFundMapper.findSameNameCounterId(map);
     }
 
+    public BaseEtrInvestInfoDto initBaseDto(EtrFundDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getBussEtrInvestPersonInfoDto());
+            //设置委托状态
+            etrEntrust.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            etrEntrust.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+            etrEntrust.setIsOutTrade(DictCodeList.是否_是.getValue());
+            if(platformDateImpl != null){
+                etrEntrust.setEntrustDate(platformDateImpl.getSysDate());
+            }
+            entity.setEtrEntrust(etrEntrust);
+
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_基金.getValue());
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            //设置起息日到期日
+            etrEntrustAdd.setVdate(null);
+            etrEntrustAdd.setMdate(null);
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 添加流程编号
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+        return entity;
+    }
 }

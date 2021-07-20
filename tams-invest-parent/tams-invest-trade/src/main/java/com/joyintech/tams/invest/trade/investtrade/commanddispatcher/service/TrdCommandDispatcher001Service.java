@@ -17,6 +17,7 @@ import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.tams.common.base.dao.AutoDispenseRightMapper;
 import com.joyintech.tams.common.base.entity.AutoDispenseRight;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.trade.investtrade.commanddispatcher.dto.TrdCommandDispatcher004Dto;
 import org.apache.poi.ss.usermodel.Cell;
@@ -67,6 +68,7 @@ public class TrdCommandDispatcher001Service extends CommonExportService<TrdComma
 	 */
 	public Page<TrdCommandDispatcher001Dto> selectForPage(Map<String, Object> pageParam){
 		pageParam.put("entrustAwait", DictCodeList.委托状态_待接收.getValue());
+		pageParam.put("entrustDistribute", DictCodeListExt3.委托状态_待分发.getValue());
 		pageParam.put("entrustReceive", DictCodeList.委托状态_已接收.getValue());
 		pageParam.put("entrustUntread", DictCodeList.委托状态_已完成.getValue());
 		pageParam.put("entrustClose", DictCodeList.委托状态_已关闭.getValue());
@@ -193,6 +195,7 @@ public class TrdCommandDispatcher001Service extends CommonExportService<TrdComma
 		    if(StringUtil.equals("99", entrustStatus)){
 		        pageParam.put("entrustStatus1", DictCodeList.委托状态_已接收.getValue());
 		        pageParam.put("entrustStatus2", DictCodeList.委托状态_待接收.getValue());
+		        pageParam.put("entrustStatus8", DictCodeListExt3.委托状态_待分发.getValue());
 		    }
 		}
 		//根据组合权限表添加检索权限
@@ -215,6 +218,7 @@ public class TrdCommandDispatcher001Service extends CommonExportService<TrdComma
 	 */
     public List<SuggestDto> getEntrustId(Map<String, Object> pageParam) {
         pageParam.put("entrustAwait", DictCodeList.委托状态_待接收.getValue());
+        pageParam.put("entrustDistribute", DictCodeListExt3.委托状态_待分发.getValue());
         pageParam.put("entrustReceive", DictCodeList.委托状态_已接收.getValue());
         pageParam.put("entrustUntread", DictCodeList.委托状态_已退回.getValue());
         pageParam.put("entrustClose", DictCodeList.委托状态_已关闭.getValue());
@@ -482,9 +486,9 @@ public class TrdCommandDispatcher001Service extends CommonExportService<TrdComma
     				+ "/TrdCommandDispatcher001/getEntrustStatus",pageParam,TrdCommandDispatcher001Dto.class);
         	for(TrdCommandDispatcher001Dto dto:list){
         		String entrustStatu = dto.getEntrustStatus();
-        		if(StringUtil.equals(entrustStatu, DictCodeList.委托状态_已接收.getValue()) || 						StringUtil.equals(entrustStatu,DictCodeList.委托状态_已关闭.getValue())
-                        || StringUtil.equals(entrustStatu, DictCodeList.委托状态_已完成.getValue())){
-                    errorList.add(new ValidMessage("",getMessage("TRD_W_0001",SysDataUtil.getNameFromDataDict(DictCode.委托状态, 								entrustStatu),"分发")));
+        		if(!(StringUtil.equals(entrustStatu, DictCodeList.委托状态_待接收.getValue()) ||StringUtil.equals(entrustStatu,DictCodeListExt3.委托状态_待分发.getValue())
+                        )){
+                    errorList.add(new ValidMessage("",getMessage("TRD_W_0001",SysDataUtil.getNameFromDataDict(DictCode.委托状态,entrustStatu),"分发")));
                 }
         	}
         }

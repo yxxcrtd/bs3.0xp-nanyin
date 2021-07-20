@@ -198,7 +198,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         // 委托操作类型 = “撤回”并且投资委托信息dto.委托指令Entity.委托状态不是“待接收”
         if (DictCodeListExt1.委托操作类型_撤回.getValue().equals(delegateOperationType)) {
             if (etrInvestInfoDto.getEtrEntrust() != null) {
-                if (!DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())) {
+                if (!(DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
+                		||DictCodeListExt3.委托状态_待分发.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus()))) {
                     errorList.add(new ValidMessage(
                         // “待接收”
                         this.getMessage("ETR_E_0010", this.getMessage("BaseEtrInvestInfoServiceImpl.toReceive"))));
@@ -209,6 +210,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         if (DictCodeListExt1.委托操作类型_分发.getValue().equals(delegateOperationType)) {
             if (etrInvestInfoDto.getEtrEntrust() != null) {
                 if (!(DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
+                		||DictCodeListExt3.委托状态_待分发.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
                       || DictCodeList.委托状态_已退回.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus()))) {
                     errorList.add(new ValidMessage(
                         // “待接收”
@@ -234,7 +236,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         }
         // 委托操作类型 = “接收”并且投资委托信息dto.委托指令Entity.委托状态不是“待接收”
         if (DictCodeListExt1.委托操作类型_接收.getValue().equals(delegateOperationType)
-            && !DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())) {
+            && !(DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
+            		||DictCodeListExt3.委托状态_待分发.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus()))) {
             errorList.add(new ValidMessage(
                 // “待接收”
                 this.getMessage("ETR_E_0004", this.getMessage("BaseEtrInvestInfoServiceImpl.toReceive"))));
@@ -468,8 +471,16 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     public boolean newDelegate(BaseEtrInvestInfoDto dto) {
         if (dto != null) {
             // 保存委托指令
-            if (!DictCodeList.委托状态_待接收.getValue().equals(dto.getEtrEntrust().getEntrustStatus())) {
-                dto.getEtrEntrust().setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+        	 // 保存list<委托指令分发>
+            if (dto.getEtrDistributeList() != null && dto.getEtrDistributeList().size() > 0) {
+                for (EtrDistribute etrDistribute : dto.getEtrDistributeList()) {
+                    if (!DictCodeList.委托状态_待接收.getValue().equals(etrDistribute.getRecStatus())) {
+                        etrDistribute.setRecStatus(DictCodeList.委托状态_待接收.getValue());
+                    }
+                    etrDistributeMapper.insertSelective(etrDistribute);
+                }
+            }else if (!DictCodeListExt3.委托状态_待分发.getValue().equals(dto.getEtrEntrust().getEntrustStatus())) {
+                dto.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());
             }
             etrEntrustMapper.insertSelective(dto.getEtrEntrust());
             // 保存委托指令附属表
@@ -481,14 +492,14 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 }
             }
             // 保存list<委托指令分发>
-            if (dto.getEtrDistributeList() != null && dto.getEtrDistributeList().size() > 0) {
-                for (EtrDistribute etrDistribute : dto.getEtrDistributeList()) {
-                    if (!DictCodeList.委托状态_待接收.getValue().equals(etrDistribute.getRecStatus())) {
-                        etrDistribute.setRecStatus(DictCodeList.委托状态_待接收.getValue());
-                    }
-                    etrDistributeMapper.insertSelective(etrDistribute);
-                }
-            }
+//            if (dto.getEtrDistributeList() != null && dto.getEtrDistributeList().size() > 0) {
+//                for (EtrDistribute etrDistribute : dto.getEtrDistributeList()) {
+//                    if (!DictCodeList.委托状态_待接收.getValue().equals(etrDistribute.getRecStatus())) {
+//                        etrDistribute.setRecStatus(DictCodeList.委托状态_待接收.getValue());
+//                    }
+//                    etrDistributeMapper.insertSelective(etrDistribute);
+//                }
+//            }
             // 保存List<委托完成状况表>
             if (dto.getEtrFinishStatusList() != null && dto.getEtrFinishStatusList().size() > 0) {
                 for (EtrFinishStatus etrFinishStatus : dto.getEtrFinishStatusList()) {
@@ -890,6 +901,9 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
 	        if(StringUtil.equals(etrEntrust.getEntrustStatus(),DictCodeList.委托状态_待接收.getValue())){
 	            entrustStatus = DictCodeList.委托状态_待接收.getValue();
 	        }
+	        if(StringUtil.equals(etrEntrust.getEntrustStatus(),DictCodeListExt3.委托状态_待分发.getValue())){
+	            entrustStatus = DictCodeListExt3.委托状态_待分发.getValue();
+	        }
 	        // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已接收”
 	        boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, entrustStatus);
 	        // 指令释放后撤销交易，如果指令是待接收状态，则不改变指令状态 modify by yufei 20200804 end
@@ -1000,5 +1014,31 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 撤回或退回再启动流程时转移至废弃备份表
+     * 流程表数据入库
+     * @param dto
+     * @return
+     */
+    public boolean insertWithQuery(BaseEtrInvestInfoDto dto){
+        EtrEntrust etr = etrEntrustMapper.selectByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+        if(etr != null){
+//            if(StringUtil.equals(etr.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue()) ||
+//                    StringUtil.equals(etr.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())){
+//            }
+            // 有效数据转移
+            etrEntrustMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustAddMapper.deleteByPrimaryKey(dto.getEtrEntrustAdd().getEntrustId());
+            // 转移至废弃表
+            etrEntrustMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
+            etrEntrustAddMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
+            // 使用退回或撤回状态
+            dto.getEtrEntrust().setEntrustStatus(etr.getEntrustStatus());
+        }else{
+            dto.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+        }
+        return newDelegateFlow(dto);
     }
 }

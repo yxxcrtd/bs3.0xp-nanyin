@@ -427,7 +427,9 @@ public class EtrRepoService extends BaseService<EtrRepoDto> {
         for(int i=0; i<traderList.size(); i++){
             trader = trader +","+ traderList.get(i);
         }
-        etrProjectDto.getEtrInvestPersonInfo().setTrader(trader);
+        if(StringUtil.isNotEmpty(etrProjectDto.getEtrInvestPersonInfo())){
+        	etrProjectDto.getEtrInvestPersonInfo().setTrader(trader);
+        }
         return etrProjectDto;
     }
     /**

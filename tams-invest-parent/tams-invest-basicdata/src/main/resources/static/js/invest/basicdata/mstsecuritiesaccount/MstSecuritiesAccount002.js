@@ -117,18 +117,30 @@ $(function() {
     
 
 	 var tradeMarketChange = function() {
+		 if(($("#tradePlace").val() == "03" || $("#tradePlace").val() == "04" || $("#tradePlace2").val() == "03" || $("#tradePlace2").val() == "04")){
+			 $('#yNHkstockc_div').show();
+		 }else{
+			 $('#yNHkstockc_div').hide();
+		 }
 		if ($("#registOrg").val()) {
 			if ($("#registOrg").val() == "03" && ($("#tradePlace").val() == "03" || $("#tradePlace").val() == "04")) {
 				$("#bondId_div").css('display', 'block');
+				$('#yNHkstockc_div').show();
 			} else {
 				$("#bondId").val('').trigger('change');
 				$("#bondId_div").css('display', 'none');
+				$('#yNHkstockc_div').hide();
 			}
 			if($("#registOrg").val() == "07" && $("#tradePlace2").val() == "12"){
 				$("#tradeNo_div").css('display', 'block');
 			} else{
 				$("#tradeNo").val('').trigger('change');
 				$("#tradeNo_div").css('display', 'none');
+			}
+			if(($("#tradePlace").val() == "03" || $("#tradePlace").val() == "04" || $("#tradePlace2").val() == "03" || $("#tradePlace2").val() == "04")){
+				$('#yNHkstockc_div').show();
+			}else{
+				$('#yNHkstockc_div').hide();
 			}
 		} else {
 			$("#bondId").val('').trigger('change');

@@ -17,12 +17,13 @@
         <result column="CCY" property="ccy" jdbcType="VARCHAR" />
         <result column="IS_PREPAID" property="isPrepaid" jdbcType="VARCHAR" />
         <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+	<result column="YESTERDAY_POSITION" property="yesterdayPosition" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, FEE_TYPE FEE_TYPE, IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE, FEE_AMT FEE_AMT, 
         CHL_FINPROD_ID CHL_FINPROD_ID, FEE_ID FEE_ID, FEE_RATE FEE_RATE, CREATE_USER CREATE_USER, 
         CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        CCY CCY, IS_PREPAID IS_PREPAID, REGIST_ORG REGIST_ORG
+        CCY CCY, IS_PREPAID IS_PREPAID, REGIST_ORG REGIST_ORG, YESTERDAY_POSITION YESTERDAY_POSITION
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -51,13 +52,13 @@
             FEE_AMT, CHL_FINPROD_ID, FEE_ID, 
             FEE_RATE, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            CCY, IS_PREPAID, REGIST_ORG
+            CCY, IS_PREPAID, REGIST_ORG, YESTERDAY_POSITION
             )
         values (#{tradeId,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{isPayWithTrade,jdbcType=VARCHAR}, 
             #{feeAmt,jdbcType=DECIMAL}, #{chlFinprodId,jdbcType=VARCHAR}, #{feeId,jdbcType=VARCHAR}, 
             #{feeRate,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{ccy,jdbcType=VARCHAR}, #{isPrepaid,jdbcType=VARCHAR}, #{registOrg,jdbcType=VARCHAR}
+            #{ccy,jdbcType=VARCHAR}, #{isPrepaid,jdbcType=VARCHAR}, #{registOrg,jdbcType=VARCHAR}, #{yesterdayPosition,jdbcType=DECIMAL}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdTradeFeeDetail" >
@@ -108,6 +109,9 @@
             <if test="registOrg != null" >
                 REGIST_ORG,
             </if>
+	    <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -155,15 +159,18 @@
             <if test="registOrg != null" >
                 #{registOrg,jdbcType=VARCHAR},
             </if>
+	    <if test="yesterdayPosition != null" >
+                #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdTradeFeeDetail" >
         insert into TRD_TRADE_FEE_DETAIL(TRADE_ID, FEE_TYPE, IS_PAY_WITH_TRADE, FEE_AMT, 
         CHL_FINPROD_ID, FEE_ID, FEE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME, CCY, IS_PREPAID, REGIST_ORG)
+        UPDATE_TIME, CCY, IS_PREPAID, REGIST_ORG, YESTERDAY_POSITION)
         select TRADE_ID, FEE_TYPE, IS_PAY_WITH_TRADE, FEE_AMT, 
             CHL_FINPROD_ID, FEE_ID, FEE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CCY, IS_PREPAID, REGIST_ORG
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CCY, IS_PREPAID, REGIST_ORG, YESTERDAY_POSITION
              from TRD_TRADE_FEE_DETAIL
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
     </insert>
@@ -200,6 +207,9 @@
             <if test="registOrg != null" >
                 REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
             </if>
+	    <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
           and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
@@ -215,7 +225,8 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             CCY = #{ccy,jdbcType=VARCHAR},
             IS_PREPAID = #{isPrepaid,jdbcType=VARCHAR},
-            REGIST_ORG = #{registOrg,jdbcType=VARCHAR}
+            REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
           and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
     </update>

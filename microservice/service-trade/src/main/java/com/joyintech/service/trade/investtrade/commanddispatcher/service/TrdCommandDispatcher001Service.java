@@ -332,17 +332,17 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
         List<String> userNames = StringUtil.splitToList(GlobalConstant.COMMA, userName);
         EtrDistributeKey key = new EtrDistributeKey();
         // 将委托交易 状态为“已退回”的交易更新为“待接收” add by hpp 20200711 start
-        String entrustStatus = dto.getEntrustStatus();
-        List<String> entrustStatuss = StringUtil.splitToList(GlobalConstant.COMMA, entrustStatus);
-        for (int i = 0; i < entrustStatuss.size(); i++ ) {
-        	if(StringUtil.equals(DictCodeList.委托状态_已退回.getValue(), entrustStatuss.get(i))){
-        		// 修改委托指令表 委托状态
-        		EtrEntrust etrEntrust = new EtrEntrust();
-        		etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
-        		etrEntrust.setEntrustId(entrustIds.get(i));
-                etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
-        	}
-        }
+//        String entrustStatus = dto.getEntrustStatus();
+//        List<String> entrustStatuss = StringUtil.splitToList(GlobalConstant.COMMA, entrustStatus);
+//        for (int i = 0; i < entrustStatuss.size(); i++ ) {
+//        	if(StringUtil.equals(DictCodeList.委托状态_已退回.getValue(), entrustStatuss.get(i))){
+//        		// 修改委托指令表 委托状态
+//        		EtrEntrust etrEntrust = new EtrEntrust();
+//        		etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+//        		etrEntrust.setEntrustId(entrustIds.get(i));
+//                etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
+//        	}
+//        }
         // 将委托交易 状态为“已退回”的交易更新为“待接收” add by hpp 20200711 end
         /*
          * for(int i=0;i<entrustIds.size();i++){ key.setEntrustId(entrustIds.get(i)); key.setTrader(trader); etrDistributeMapper.deleteByPrimaryKey(key); }
@@ -353,6 +353,11 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
         for (int j = 0; j < entrustIds.size(); j++ ) {
             key.setEntrustId(entrustIds.get(j));
             trdCommandDispatcher001Mapper.deleteEtrDistributeByPrimaryKey(key);
+            //待分发转为待接收
+            EtrEntrust etrEntrust = new EtrEntrust();
+    		etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+    		etrEntrust.setEntrustId(entrustIds.get(j));
+            etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
         }
         for (int i = 0; i < userNames.size(); i++ ) {
             record.setTrader(userNames.get(i));

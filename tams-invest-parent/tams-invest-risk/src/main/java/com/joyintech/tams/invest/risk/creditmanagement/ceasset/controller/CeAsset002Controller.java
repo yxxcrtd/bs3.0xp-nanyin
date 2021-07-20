@@ -1,28 +1,8 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceasset.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.dto.UploadFile;
-import com.joyintech.framework.base.intf.IDictCode;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.risk.creditmanagement.ceasset.dto.CreditLinesAstDto;
-import com.joyintech.tams.invest.risk.creditmanagement.ceasset.service.CeAsset002Service;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.util.stream.Collectors;
+
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +13,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.stream.Collectors;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.base.intf.IDictCode;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.risk.creditmanagement.ceasset.dto.CreditLinesAstDto;
+import com.joyintech.tams.invest.risk.creditmanagement.ceasset.service.CeAsset002Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 
 /**
@@ -69,6 +71,7 @@ public class CeAsset002Controller extends BaseController {
     @Override
     public String init(Model model) {
     	model.addAttribute("cemodel", CacheUtil.getSysParam(BussinessConstant.CEMODEL));
+        setSelectOptionToModel(model, BussinessDictCode.授信对象);
         setSelectOptionToModel(model, DICT_CODES);
         String workflowId = getParam("workflowId");
         // 待办跳转
@@ -81,6 +84,22 @@ public class CeAsset002Controller extends BaseController {
             CreditLinesAstDto creditLinesDto = ceAsset002Service.getBussinessEntityByIndId(seqno);
             model.addAttribute(GlobalConstant.ENTITY, creditLinesDto);
         }
+
+        // 资产授信新建增加字段  add by yufei 20200630 start
+        model.addAttribute("finprodType2_F01",BussinessDictCodeList.金融产品类型_投管用_债券.getValue());// 数据字典.金融产品类型（投管）.债券
+        model.addAttribute("finprodType2_F17",BussinessDictCodeList.金融产品类型_投管用_计划类资产.getValue());// 数据字典.金融产品类型（投管）.计划类资产
+        model.addAttribute("finprodType2_F06",BussinessDictCodeList.金融产品类型_投管用_基金.getValue());// 数据字典.金融产品类型（投管）.基金
+        model.addAttribute("finprodType2_F18",BussinessDictCodeList.金融产品类型_投管用_项目类资产.getValue());// 数据字典.金融产品类型（投管）.项目类资产（非标债权）
+        model.addAttribute("finprodType2_F37", DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue());// 数据字典.金融产品类型（投管）.权益类资产
+        model.addAttribute("profitType_01",BussinessDictCodeList.收益类型_净值.getValue());// 数据字典.收益类型.净值型
+        model.addAttribute("profitType_03",BussinessDictCodeList.收益类型_货币.getValue());// 数据字典.收益类型.货币型
+        model.addAttribute("type9_P01",BussinessDictCodeList.项目类一级分类_非标债权.getValue());// 数据字典. 项目类一级分类.非标准化债权资产
+        model.addAttribute("type9_87",BussinessDictCodeList.行内资产三级分类_私募股权基金.getValue());// 数据字典. 项目类二级分类.私募股权基金
+        model.addAttribute("type9_P03",BussinessDictCodeList.项目类一级分类_其他权益类投资.getValue());// 数据字典. 项目类一级分类.权益类投资
+        model.addAttribute("type10_87",BussinessDictCodeList.行内资产三级分类_私募股权基金.getValue());// 数据字典. 项目类二级分类.私募股权基金
+        model.addAttribute("creditObj_02",BussinessDictCodeList.授信对象_份额.getValue());// 数据字典. 授信对象.份额
+        // 资产授信新建增加字段  add by yufei 20200630 end
+        model.addAttribute("NO",DictCodeList.是否_否.getValue());
         return super.init(model);
     }
   
@@ -119,8 +138,6 @@ public class CeAsset002Controller extends BaseController {
                 dto.setSeqno(IDGenerator.generate());
             }
        }
-        String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-        dto.setInstitutionCode(createInst);
        //文件信息
        if (CollectionUtils.isNotEmpty(dto.getUploadFileList())
            && StringUtil.isNotEmpty(dto.getSeqno())) {

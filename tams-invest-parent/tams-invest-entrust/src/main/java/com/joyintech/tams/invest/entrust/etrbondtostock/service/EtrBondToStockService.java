@@ -112,7 +112,28 @@ public class EtrBondToStockService extends CommonExportService<EtrBondToStockDto
 	             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondToStock/doComplete",entity,
 	             Integer.class);
 	}
-	
+
+    @Override
+    public void doInsert(EtrBondToStockDto entity, OperationType type) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondToStock/doInsert",entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doUpdate(EtrBondToStockDto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondToStock/doUpdate",entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doBack(EtrBondToStockDto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondToStock/doBack",entity,
+                Integer.class);
+    }
+
     /**
      * 为调授信 封装信息
      * @param etrBondToStockDto

@@ -1442,4 +1442,17 @@ public class CommonBusinessService extends BaseService {
         return termType;
     }
 
+	   /**
+    * 根据产品代码查应占用授信的机构    
+    * 
+    * @param finprodId
+    * @return
+    */
+   public String selectCustomer(Map<String, Object> map) {
+	   map.put("fzq", DictCodeList.平安资产类型_债券.getValue());
+	   map.put("fck", DictCodeList.平安资产类型_存款.getValue());
+	   map.put("fxml", DictCodeList.平安资产类型_项目类资产.getValue());
+	   return commonBusinessMapper.selectCustomer(map);
+   }
+
 }

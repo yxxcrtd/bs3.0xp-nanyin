@@ -6,16 +6,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.dao.RiskWeightMapper;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.risk.creditmanagement.creditrightsmanagement.dao.CreditRightsManagementMapper;
 import com.joyintech.service.risk.creditmanagement.creditrightsmanagement.dto.CreditRightsManagementDto;
+import com.joyintech.tams.common.base.dao.RiskWeightMapper;
 
 
 /**

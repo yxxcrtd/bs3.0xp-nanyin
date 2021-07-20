@@ -65,7 +65,7 @@ public class MstSecuritiesAccount001Controller extends BaseController{
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         //单选框枚举值设置
-        this.setSelectOptionToModel(model, DictCode.登记托管机构);
+        this.setSelectOptionToModel(model, DictCode.登记托管机构,DictCode.是否);
         return super.init(model);
     }
     /**

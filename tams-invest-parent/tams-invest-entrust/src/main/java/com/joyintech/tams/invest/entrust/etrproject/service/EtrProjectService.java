@@ -139,8 +139,15 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
     	wflTrdProductDealMapper.updateByWorkflowIdSelective(wflTrdProductDeal);
     	
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doInsert", dto,
+            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doUpdate", dto,
             Integer.class);
+    }
+
+    @Override
+    public void doBack(EtrProjectDto dto) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doBack", dto,
+                Integer.class);
     }
 
     /**

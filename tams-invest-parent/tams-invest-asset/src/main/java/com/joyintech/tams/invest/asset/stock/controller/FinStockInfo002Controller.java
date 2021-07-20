@@ -113,10 +113,12 @@ public class FinStockInfo002Controller extends BaseController {
             FinStockInfoDto dto = finStockInfoService.selectByFinprodId(finprodId);
             dto.setRealFinProductId(finprodId);
             //commonBusinessService.setTradeMarketId(dto,model);
-            if("03".equals(dto.getTradeMarket())){ 
-            	dto.setTradeMarketId(".SH");
+            if("03".equals(dto.getTradeMarket())){
+                dto.setTradeMarketId(".SH");
+            }else if("04".equals(dto.getTradeMarket())){
+                dto.setTradeMarketId(".SZ");
             }else{
-            	dto.setTradeMarketId(".SZ");
+                dto.setTradeMarketId(".HK");
             }
             if(null != dto){
                 model.addAttribute("businessId", dto.getFinprodId());
@@ -132,9 +134,9 @@ public class FinStockInfo002Controller extends BaseController {
         {
             FinStockInfoDto dto = new FinStockInfoDto();
            // dto.setFinprodId(IDGenerator.generate());
-            dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            //dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             dto.setIsMarginFinprod(DictCodeList.是否_否.getValue());
-            dto.setShOrZh(DictCodeListExt2.是否沪港通或深港通_否.getValue());
+//            dto.setShOrZh(DictCodeListExt2.是否沪港通或深港通_否.getValue());
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
             //commonBusinessService.setTradeMarketId(dto,model);
             model.addAttribute("entity", dto);
@@ -308,8 +310,34 @@ FinStockInfoDto dto = finStockInfoService.getInterfFundDto(finprodMarketId + tra
         if(tradeMarket.equals("03")){
             tradeMarket = "04";
         }
-        else{
+        else if(tradeMarket.equals("04")){
             tradeMarket = "05";
+        }else{
+            tradeMarket = "13";
+        }
+        List<SuggestDto> temp =  finStockInfoService.getCalendarId(tradeMarket);
+        ar.setData(temp);
+        return ar;
+    }
+
+    /**
+     * 沪港通深港通
+     * @return
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getCalendarId2")
+    public AjaxResult getCalendarId2(@RequestParam("tradeMarket") String tradeMarket) throws ParseException{
+        AjaxResult ar = new AjaxResult();
+        if(tradeMarket.equals("01")){
+            tradeMarket = "13";
+        }
+        else if(tradeMarket.equals("02")){
+            tradeMarket = "14";
+        }else{
+            tradeMarket = "15";
         }
         List<SuggestDto> temp =  finStockInfoService.getCalendarId(tradeMarket);
         ar.setData(temp);

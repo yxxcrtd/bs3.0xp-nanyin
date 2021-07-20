@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.tams.constant.DictCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -71,6 +72,7 @@ public class ComSharePrice001Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
+        this.setSelectOptionToModel(model, DictCode.币种);
         return super.init(model);
     }
     /**

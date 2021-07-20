@@ -79,20 +79,34 @@ public class ValBalanceStatementQuery001Service extends CommonExportService<ValB
 
     public Page<ValBalanceStatementQuery001Dto> selectForPage(Map<String, Object> pageParam) throws Exception {
         String parentId = (String)pageParam.get("parentId");
-        
-        return super.queryForTree(() -> valBalanceStatementQuery001Mapper.selectAll(pageParam),
-            ValBalanceStatementQuery001Dto::getSubjectNo,
-            ValBalanceStatementQuery001Dto::getParentId,
-            ValBalanceStatementQuery001Dto::getSubjectName, getFilter(pageParam),Integer.MAX_VALUE,parentId.equals("root")?null:parentId);
+        List<ValBalanceStatementQuery001Dto> list = valBalanceStatementQuery001Mapper.selectAll(pageParam);
+        List<ValBalanceStatementQuery001Dto> sumList = valBalanceStatementQuery001Mapper.selectSum(pageParam);
+        if(!StringUtil.isEmptyList(sumList)) {
+            sumList.stream().forEach(item -> {
+                item.setHasChildren("01");//无子级节点
+            });
+            list.addAll(sumList);
+        }
 
-       // return super.queryForPage(() -> valBalanceStatementQuery001Mapper.selectAll(pageParam));
+        return super.queryForTree(() -> list,
+                ValBalanceStatementQuery001Dto::getSubjectNo,
+                ValBalanceStatementQuery001Dto::getParentId,
+                ValBalanceStatementQuery001Dto::getSubjectName, getFilter(pageParam),Integer.MAX_VALUE,parentId.equals("root")?null:parentId);
+//        String parentId = (String)pageParam.get("parentId");
+//
+//        return super.queryForTree(() -> valBalanceStatementQuery001Mapper.selectAll(pageParam),
+//            ValBalanceStatementQuery001Dto::getSubjectNo,
+//            ValBalanceStatementQuery001Dto::getParentId,
+//            ValBalanceStatementQuery001Dto::getSubjectName, getFilter(pageParam),Integer.MAX_VALUE,parentId.equals("root")?null:parentId);
+//
+//       // return super.queryForPage(() -> valBalanceStatementQuery001Mapper.selectAll(pageParam));
 
     }
 
-    public Page<ValBalanceStatementQuery001Dto> selectSum(Map<String, Object> pageParam) {
-        return new Page<ValBalanceStatementQuery001Dto>(
-            valBalanceStatementQuery001Mapper.selectSum(pageParam));
-    }
+//    public Page<ValBalanceStatementQuery001Dto> selectSum(Map<String, Object> pageParam) {
+//        return new Page<ValBalanceStatementQuery001Dto>(
+//            valBalanceStatementQuery001Mapper.selectSum(pageParam));
+//    }
 
     public List<ValBalanceStatementQuery001Dto> selectAllList(Map<String, Object> pageParam) {
         List<ValBalanceStatementQuery001Dto> list = valBalanceStatementQuery001Mapper.selectAll(
