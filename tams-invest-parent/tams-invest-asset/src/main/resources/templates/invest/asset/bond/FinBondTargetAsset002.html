@@ -724,7 +724,7 @@
 					</div>
 				</div>
 				<!-- 判断系统参数是否隐藏中债信息,动态加载calss值"step",不展示在页面头  -->
-				<div class="" title="中债报送信息" 
+				<div id="bussRepBondInfo" class="" title="中债报送信息"
 					th:if="${ASSET_INFO_CHB_HIDE != '02'}"
 					th:classappend="${ASSET_INFO_CHB_HIDE != '02'}? 'pro-module-wrapper step':'pro-module-wrapper1 step1' " style="margin-bottom: 30px">
 					<div class="layui-form-item" style="margin-bottom: 5px">

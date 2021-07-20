@@ -214,7 +214,7 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
         return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsNetprice());
     }
 
-	@NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
+	/*@NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})*/
     public String getRepAssetType() {
         return repAssetType;
     }

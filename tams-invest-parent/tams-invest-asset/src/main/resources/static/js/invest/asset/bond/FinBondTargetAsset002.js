@@ -99,8 +99,11 @@ $(function() {
             object.finPayInterestStdInfoDto.finCashPlanList = FinPayInterestStdInfo.getAllRows(); 
         }
         // 还本计划
-        object.bussFinRepaymentDto.vdate = $('#vdate').val();
-        object.bussFinRepaymentDto.mdate = $('#mdate').val();
+        if (object.bussFinRepaymentDto){
+            object.bussFinRepaymentDto.vdate = $('#vdate').val();
+            object.bussFinRepaymentDto.mdate = $('#mdate').val();
+        }
+
         if(BussFinRepayment){
             object.bussFinRepaymentDto.finCashPlanList = BussFinRepayment.getAllRows();
         }
@@ -128,7 +131,10 @@ $(function() {
 	        object.bussFinBondRepInfoDto.tradeMarket = $('#tradeMarket').val();
 	        
         }
-        object.finPayInterestStdInfoDto.mdate = $('#mdate').val();
+        if (object.finPayInterestStdInfoDto){
+            object.finPayInterestStdInfoDto.mdate = $('#mdate').val();
+        }
+
         Joyin.ajaxJson(basePath + 'invest/asset/bond/FinBondTargetAsset002/check', object, function(
                 result) {
             //息票品种为贴现、零息时不作付息计划 、还本计划check
