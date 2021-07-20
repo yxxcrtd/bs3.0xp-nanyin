@@ -25,6 +25,7 @@
     </resultMap>
 
     <select id="selectDeal" resultMap="trdBondInvestTradeResultMap">
+        <if test="finprodId != null and finprodId != ''">
         WITH TEMP AS (
             SELECT DISTINCT
                 FP2.FINPROD_ID,
@@ -36,6 +37,7 @@
             WHERE FP.FINPROD_ID LIKE CONCAT('%', CONCAT(#{finprodId}, '%'))
             AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         )
+        </if>
         <trim prefixOverrides="UNION ALL">
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_01">
               select
@@ -68,6 +70,9 @@
                 <!-- mbvi.LAST_PERIOD endDays1,-->
                 wtpda.ASSET_RECOMMAND_ORG
               from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL wtpd
+                <if test="finprodId != null and finprodId != ''">
+                    LEFT JOIN TEMP tp ON wtpd.FINPROD_ID = tp.FINPROD_ID
+                </if>
 			  	LEFT JOIN wfl_trd_product_deal  wDeal on wDeal.TOTLE_TRADE_ID = wtpd.TOTLE_TRADE_ID
                 LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD wtpda on wtpd.TOTLE_TRADE_ID = wtpda.TOTLE_TRADE_ID
                 LEFT JOIN FIN_PRODUCT fp on fp.FINPROD_ID = wtpd.FINPROD_ID
@@ -132,7 +137,9 @@
                         AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     <if test="finprodId != null and finprodId != ''">
-                        AND fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                        AND (fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                                OR tp.FINPROD_MARKET_ID = #{finprodId}
+                            )
                     </if>
                     <if test="tradeMarket != null and tradeMarket != ''">
                         AND wtpd.TRADE_MARKET = #{tradeMarket}
@@ -226,6 +233,9 @@
                 <!-- mbvi.LAST_PERIOD endDays1,  -->
                 wtpda.ASSET_RECOMMAND_ORG
               from TRD_FIN_PRODUCT_DEAL_TOTAL wtpd
+                <if test="finprodId != null and finprodId != ''">
+                    LEFT JOIN TEMP tp ON wtpd.FINPROD_ID = tp.FINPROD_ID
+                </if>
                 LEFT JOIN TRD_DEAL_TOTAL_ADD wtpda on wtpd.TOTLE_TRADE_ID = wtpda.TOTLE_TRADE_ID
                 LEFT JOIN FIN_PRODUCT fp on fp.FINPROD_ID = wtpd.FINPROD_ID
                 LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = wtpd.CHL_ID
@@ -285,7 +295,9 @@
                         AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     <if test="finprodId != null and finprodId != ''">
-                        AND fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                        AND (fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                            OR tp.FINPROD_MARKET_ID = #{finprodId}
+                            )
                     </if>
                     <if test="tradeMarket != null and tradeMarket != ''">
                         AND wtpd.TRADE_MARKET = #{tradeMarket}
@@ -381,6 +393,9 @@
                <!--  mbvi.LAST_PERIOD endDays1, -->
                 wtpda.ASSET_RECOMMAND_ORG
               from TRD_FIN_PRODUCT_DEAL_TOTAL wtpd
+                <if test="finprodId != null and finprodId != ''">
+                    LEFT JOIN TEMP tp ON wtpd.FINPROD_ID = tp.FINPROD_ID
+                </if>
                 left join TRD_DEAL_TOTAL_ADD wtpda on wtpd.TOTLE_TRADE_ID = wtpda.TOTLE_TRADE_ID
                 left join FIN_PRODUCT fp on fp.FINPROD_ID = wtpd.FINPROD_ID
                 LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = wtpd.CHL_ID
@@ -437,7 +452,9 @@
                         AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     <if test="finprodId != null and finprodId != ''">
-                        AND fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                        AND (fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                            OR tp.FINPROD_MARKET_ID = #{finprodId}
+                            )
                     </if>
                     <if test="tradeMarket != null and tradeMarket != ''">
                         AND wtpd.TRADE_MARKET = #{tradeMarket}
@@ -895,6 +912,7 @@
           interf.secname text,
           fin.FINPROD_ID,
           interf.SECNAME FINPROD_NAME,
+          null,
           null,
           null,
           null,
