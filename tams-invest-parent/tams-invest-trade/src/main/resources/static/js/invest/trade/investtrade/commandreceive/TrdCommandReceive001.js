@@ -498,12 +498,12 @@ var TrdCommandReceive001 = function () {
                         width: 140
                     },
                     //add by  gejiaao satrt 列表项中委托额度后增加合同签署结果、合同号
-                    {
+                    /*{
                         field: 'contractResult',
                         title: 'TrdCommandReceive001.contractResult',
                         width: 130,
                         sortField: 'contractResult'
-                    },
+                    },*/
                     {
                         field: 'contractNo',
                         title: 'TrdCommandReceive001.contractNo',

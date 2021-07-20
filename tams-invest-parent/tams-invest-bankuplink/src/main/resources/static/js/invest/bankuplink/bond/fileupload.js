@@ -290,6 +290,10 @@ $(function() {
         						})
                 	});
         }
+		else{
+			Joyin.error("请先点击导入预览!");
+			return;
+		}
 	});
 });
 
