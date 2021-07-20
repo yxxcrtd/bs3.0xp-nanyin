@@ -302,7 +302,7 @@
 								</div>
 								</div>
 								<div class="layui-form-item">
-									<div class="form-inline-wrap"
+									<div id="depositBuyOutRate" class="form-inline-wrap">
 										th:id="|${entityName}_buyOutRate_div|">
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{FinInterestFactor.buyOutRate}">买断利率</label>
@@ -339,7 +339,7 @@
 									</div>
 								</div>
 								<div class="layui-form-item">
-									<div class="form-inline-wrap">
+									<div id="depositAssetSource" class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap"
 											   data-th-text="#{FinDepositTarget002.assetSource}">资产来源</label>
 										<div class="layui-input-inline input-inline">
@@ -402,7 +402,7 @@
 											</select>
 										</div>
 									</div>
-									<div class="form-inline-wrap">
+									<div id="depositRegulatoryRating" class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap"
 											   data-th-text="#{FinDepositTarget002.regulatoryRating}">监管评级</label>
 										<div class="layui-input-inline input-inline">
@@ -445,7 +445,7 @@
 					</div>
                     <!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
 					<!-- 资产推荐方及费率信息 -->
-					<div class="page-component"
+					<div id="depositBussFinRecomment" class="page-component"
 						th:data-path="@{/component/asset/BussFinRecomment/init}"
 						th:data-params="|{entityName:'bussFinRecommentDto',finprodId:'${entity?.finprodId}',workflowId:'${workflowId}', pageId:'${pageId}'}|"></div>
                     <!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
@@ -484,7 +484,7 @@
                 </div>
             </div>
 				</div>
-				<div class="pro-module-wrapper step" title="中债报送信息">
+				<div id="bussRepDepositInfo"  class="pro-module-wrapper step" title="中债报送信息">
 					<!-- 申报参数基本信息 -->
 					<div class="page-component"
 						th:data-path="@{/component/report/asset/depo/BussRepDepositInfo/init}"

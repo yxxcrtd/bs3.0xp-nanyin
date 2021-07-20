@@ -65,9 +65,14 @@ $(function() {
         }
         //计息要素
         /*object.finInterestFactorDto.investRate = "";*/
-        object.bussRepDlRepoInfoDto.type6 = type6;
-        object.bussRepDepositInfoDto.type6 = type6;
-        object.bussRepDepositInfoDto.repTargetType = $('#bussRepDepositInfoDto_repTargetType').val()?$('#bussRepDepositInfoDto_repTargetType').val().join(","):'';
+        if (object.bussRepDlRepoInfoDto){
+            object.bussRepDlRepoInfoDto.type6 = type6;
+        }
+       if (object.bussRepDepositInfoDto){
+           object.bussRepDepositInfoDto.type6 = type6;
+           object.bussRepDepositInfoDto.repTargetType = $('#bussRepDepositInfoDto_repTargetType').val()?$('#bussRepDepositInfoDto_repTargetType').val().join(","):'';
+       }
+
         //文件信息
         if(FileCommon){
             object.fileArray = FileCommon.getUploadFileInfo();
