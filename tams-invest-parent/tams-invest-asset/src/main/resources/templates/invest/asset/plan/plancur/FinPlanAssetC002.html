@@ -242,7 +242,7 @@
 										</div>
 
 									<!--<div class="layui-form-item">-->
-										<div class=" form-inline-wrap">
+										<div id="planTrustee" class=" form-inline-wrap">
 											<label class="layui-form-label form-label-wrap"
 												data-th-text="#{FinPlanAssetC002.trusteeId}">托管人</label>
 											<div class="layui-input-inline input-inline">
@@ -349,7 +349,7 @@
 <!-- 											</div> -->
 <!-- 										</div> -->
                                         <!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
-										<div class="form-inline-wrap">
+										<div id="planRecommender" class="form-inline-wrap">
 											<label class="layui-form-label form-label-wrap"
 												data-th-text="#{FinPlanAssetC002.recommender}">资产推荐方</label>
 											<div class="layui-input-inline input-inline">
@@ -364,7 +364,7 @@
                                     <!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
 									</div>
 									<div class="layui-form-item">
-										<div class=" form-inline-wrap">
+										<div id="planCapiIncomeFeature" class=" form-inline-wrap">
 											<label class="layui-form-label form-label-wrap"
 												data-th-text="#{FinPlanAssetC002.capiIncomeFeature}">保本标识</label>
 											<div class="layui-input-inline input-inline">
@@ -529,7 +529,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="pro-module-wrapper step" title="中债报送信息">
+				<div  id="bussRepPlanInfo" class="pro-module-wrapper step" title="中债报送信息">
 					<!-- 资产管理计划报送信息组件 -->
 					<div class="page-component" style="margin-bottom: 50px"
 						th:data-path="@{/component/report/asset/plan/BussRepAssetMngProdInfo/init}"

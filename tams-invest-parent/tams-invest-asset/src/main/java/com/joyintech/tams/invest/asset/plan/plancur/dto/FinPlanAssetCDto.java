@@ -455,7 +455,7 @@ public class FinPlanAssetCDto extends FinProduct implements ProcessEntity{
     public BigDecimal getIssueAmt() {
         return super.getIssueAmt();
     }
-    @NotEmpty(fieldName = "FinPlanAssetC002.capiIncomeFeature",groups={ValidateGroupEdit.class})
+/*    @NotEmpty(fieldName = "FinPlanAssetC002.capiIncomeFeature",groups={ValidateGroupEdit.class})*/
     public String getCapiIncomeFeature(){
         return super.getCapiIncomeFeature();
     }
