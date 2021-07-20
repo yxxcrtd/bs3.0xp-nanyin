@@ -149,6 +149,13 @@
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
         if (!initFlag) {
+            let finvdate = query("#vdate").val();
+            let finmdate = query("#mdate").val();
+            if(finvdate !=='' && finvdate !== finmdate){
+                // 只有指令开始日=指令结束日时才联动
+                return;
+            }
+            
             var ps = query("#ps").val();
             if (!ps) {
                 return;

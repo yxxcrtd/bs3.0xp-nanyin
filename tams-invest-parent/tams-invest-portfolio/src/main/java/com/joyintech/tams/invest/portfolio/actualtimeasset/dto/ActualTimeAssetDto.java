@@ -114,6 +114,9 @@ public class ActualTimeAssetDto extends BaseEntity {
      * @since 1.0
      */
     public String getType8Name() {
+        if (StringUtil.isNotEmpty(this.getType8()) && this.getType8().equals("cash")) {
+            return "现金";
+        }
         return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, this.getType8());
     }
     
@@ -198,7 +201,12 @@ public class ActualTimeAssetDto extends BaseEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal preReductionAmount;
 
-    
+    /**
+     * 市值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal marketValue;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -347,7 +355,13 @@ public class ActualTimeAssetDto extends BaseEntity {
     public void setPreReductionAmount(BigDecimal preReductionAmount) {
         this.preReductionAmount = preReductionAmount;
     }
-    
-    
+
+    public BigDecimal getMarketValue() {
+        return marketValue;
+    }
+
+    public void setMarketValue(BigDecimal marketValue) {
+        this.marketValue = marketValue;
+    }
 
 }

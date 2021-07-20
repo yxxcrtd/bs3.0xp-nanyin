@@ -121,7 +121,12 @@ public class ActualTimeAssetDto extends BaseEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal preReductionAmount;
 
-    
+    /**
+     * 市值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal marketValue;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -271,7 +276,12 @@ public class ActualTimeAssetDto extends BaseEntity {
     public void setPreReductionAmount(BigDecimal preReductionAmount) {
         this.preReductionAmount = preReductionAmount;
     }
-    
-    
 
+    public BigDecimal getMarketValue() {
+        return marketValue;
+    }
+
+    public void setMarketValue(BigDecimal marketValue) {
+        this.marketValue = marketValue;
+    }
 }
