@@ -109,8 +109,14 @@ public class FinPlanProfitAsset002Controller extends BaseController{
         		DictCode.行内资产五级分类,
         		/* 添加数据字典、zhuyongkang、2019/7/19、start*/
         		DictCode.清算速度,
-            DictCode.币种,DictCode.本金收益特征,DictCode.计息基础,DictCode.资产_负债二级类别, DictCode.投资性质,
-            DictCode.资产来源,DictCode.资产来源条线);
+                DictCode.币种,
+                DictCode.本金收益特征,
+                DictCode.计息基础,
+                DictCode.资产_负债二级类别,
+                DictCode.投资性质,
+                DictCode.资产来源,
+                DictCode.资产来源条线,
+                DictCode.增信措施);
         model.addAttribute("FINPROD_TYPE_TG_F17",DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         //资产类型
         model.addAttribute("INT_ASSET_TYPE", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());

@@ -312,6 +312,8 @@ public class FinPlanProfitAssetService extends CommonExportService<FinPlanProfit
         finProductAdd.setPurSpeed((long)(StringUtil.equals(dto.getTransMode(), "01") ? 0 : 1));
         finProductAdd.setInvestNature(dto.getInvestNature());
         finProductAdd.setCalRateType(dto.getCalRateType());
+        finProductAdd.setCreditEnhanceMeasure(dto.getCreditEnhanceMeasure());
+        finProductAdd.setFundMangerName(dto.getFundMangerName());
         dto.setFinProductAdd(finProductAdd);
         // 金融产品分类表
         FinProductType finProductType = new FinProductType();

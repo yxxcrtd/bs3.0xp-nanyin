@@ -197,6 +197,8 @@
         A.CONTRACT_NO contractNo,
         C.PUR_SPEED purSpeed,
         C.RED_SPEED redSpeed,
+        C.CREDIT_ENHANCE_MEASURE creditEnhanceMeasure,
+        C.FUND_MANGER_NAME fundMangerName,
         D.TRIAL_NO trialNo
          <!--添加合同号等字段add by zhuyongkang 2019/09/29 end-->
     FROM

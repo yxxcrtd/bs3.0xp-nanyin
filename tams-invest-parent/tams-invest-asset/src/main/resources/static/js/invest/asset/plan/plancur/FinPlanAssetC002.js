@@ -76,6 +76,8 @@ var QueryFunc=function(){
         object.assetProvider = assetProvider;
         object.pageModel = pageModel;
         object.operateType = operateType;
+        // 增信措施(多选)
+        object.creditEnhanceMeasure = $('#creditEnhanceMeasure').val()?$('#creditEnhanceMeasure').val().join(","):'';
         //update by zhangnian 20191102 start
         /*var repYieldFlag = $("#bussRepAssetMngProdInfo_repYieldFlag").prop("checked") ? 'Y' : 'N';
         object.bussRepAssetMngProdInfo.repYieldFlag = repYieldFlag;

@@ -100,7 +100,7 @@ public class FinPlanNetAsset002Controller extends BaseController{
         		DictCode.行内资产五级分类,DictCode.资产_负债二级类别,
         // 新增行内五级分类 zhangpuyu 2019-7-25 end
             DictCode.计划类资产二级分类,DictCode.清算速度,DictCode.币种,DictCode.资金实际投向,
-            DictCode.本金收益特征,DictCode.投资性质);
+            DictCode.本金收益特征,DictCode.投资性质,DictCode.增信措施);
         model.addAttribute("FINPROD_TYPE_TG_F17",DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         String finprodId = getParam("finprodId");
         // 增加快捷录入功能 by 赵东东 2019.10.12 start 

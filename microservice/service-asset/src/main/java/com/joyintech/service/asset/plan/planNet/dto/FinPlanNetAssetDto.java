@@ -398,6 +398,16 @@ public class FinPlanNetAssetDto extends FinProduct{
      * 投资性质_固定收益类
      */
     private String investmentAttributes;
+
+    /**
+     * 增信措施
+     */
+    private String creditEnhanceMeasure;
+
+    /**
+     * 基金经理姓名
+     */
+    private String fundMangerName;
     
     /**
      * 获取 creditFlag
@@ -1037,7 +1047,7 @@ public class FinPlanNetAssetDto extends FinProduct{
 
     /**
      * 设置 资产推荐方名称
-     * @param recommender 资产推荐方名称
+     * @param recommenderName 资产推荐方名称
      */
     public void setRecommenderName(String recommenderName) {
         this.recommenderName = recommender == null ? null : recommenderName.trim();
@@ -1074,5 +1084,21 @@ public class FinPlanNetAssetDto extends FinProduct{
 
     public void setRepAssetType(String repAssetType) {
         this.repAssetType = repAssetType;
+    }
+
+    public String getCreditEnhanceMeasure() {
+        return creditEnhanceMeasure;
+    }
+
+    public void setCreditEnhanceMeasure(String creditEnhanceMeasure) {
+        this.creditEnhanceMeasure = creditEnhanceMeasure;
+    }
+
+    public String getFundMangerName() {
+        return fundMangerName;
+    }
+
+    public void setFundMangerName(String fundMangerName) {
+        this.fundMangerName = fundMangerName;
     }
 }

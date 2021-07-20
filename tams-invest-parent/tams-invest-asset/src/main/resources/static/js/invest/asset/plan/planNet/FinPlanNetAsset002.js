@@ -121,6 +121,8 @@ var QueryFunc=function(){
         var object = $.serializeToObject('#submitForm', true);
         object.pageModel = pageModel;
         object.operateType = operateType;
+        // 增信措施(多选)
+        object.creditEnhanceMeasure = $('#creditEnhanceMeasure').val()?$('#creditEnhanceMeasure').val().join(","):'';
         var repAssetType = $('#repAssetType').val();
         //update by zhangnian 20191102 start
         /*var repYieldFlag = $("#bussRepAssetMngProdInfo_repYieldFlag").prop("checked") ? 'Y' : 'N';

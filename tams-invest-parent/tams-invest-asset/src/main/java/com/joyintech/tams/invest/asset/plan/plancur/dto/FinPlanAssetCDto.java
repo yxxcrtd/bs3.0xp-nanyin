@@ -79,6 +79,16 @@ public class FinPlanAssetCDto extends FinProduct implements ProcessEntity{
      * 赎回确认速度
      */
     private String redSpeed;
+
+    /**
+     * 增信措施
+     */
+    private String creditEnhanceMeasure;
+
+    /**
+     * 基金经理姓名
+     */
+    private String fundMangerName;
     /**
      * 获取 trialNo
      * @return trialNo.
@@ -1159,6 +1169,20 @@ public class FinPlanAssetCDto extends FinProduct implements ProcessEntity{
     public void setPtlPortfolio(PtlPortfolio ptlPortfolio) {
         this.ptlPortfolio = ptlPortfolio;
     }
-    
-    
+
+    public String getCreditEnhanceMeasure() {
+        return creditEnhanceMeasure;
+    }
+
+    public void setCreditEnhanceMeasure(String creditEnhanceMeasure) {
+        this.creditEnhanceMeasure = creditEnhanceMeasure;
+    }
+
+    public String getFundMangerName() {
+        return fundMangerName;
+    }
+
+    public void setFundMangerName(String fundMangerName) {
+        this.fundMangerName = fundMangerName;
+    }
 }

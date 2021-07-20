@@ -480,17 +480,42 @@
 										</div>
 										</div>
 										<div class="layui-form-item">
-										<div class=" form-inline-wrap">
-											<label class="layui-form-label form-label-wrap"
-												   data-th-text="#{FinPlanNetAsset002.overallocation}">超额分成方式</label>
-											<div class="layui-input-inline input-inline">
-												<input type="text" class="layui-input form-input"
-													   placeholder="请输入内容"
-													   data-th-placeholder="#{SysCommon.placeholder}"
-													   id="overallocation" maxlength="80" name="overallocation"
-													   data-th-value="${entity?.overallocation}">
+											<div class=" form-inline-wrap">
+												<label class="layui-form-label form-label-wrap"
+													   data-th-text="#{FinPlanNetAsset002.overallocation}">超额分成方式</label>
+												<div class="layui-input-inline input-inline">
+													<input type="text" class="layui-input form-input"
+														   placeholder="请输入内容"
+														   data-th-placeholder="#{SysCommon.placeholder}"
+														   id="overallocation" maxlength="80" name="overallocation"
+														   data-th-value="${entity?.overallocation}">
+												</div>
 											</div>
-										</div>
+											<!-- 增加[增信措施、基金经理姓名] by caozhenming 20210715 start -->
+											<div class="form-inline-wrap">
+												<label class="layui-form-label form-label-wrap"
+													   data-th-text="#{FinPlanNetAsset002.creditEnhanceMeasure}">增信措施</label>
+												<div class="layui-input-inline input-inline">
+													<select id="creditEnhanceMeasure" name="creditEnhanceMeasure"
+															class="layui-input form-input input-select"
+															data-th-placeholder="#{SysCommon.placeholder}"
+															required data-th-data-result="${CREDIT_ENHANCE_MEASURE}"
+															data-th-initvalue="${entity?.creditEnhanceMeasure}"
+															multiple="true">
+													</select>
+												</div>
+											</div>
+											<div class="form-inline-wrap">
+												<label class="layui-form-label form-label-wrap"
+													   data-th-text="#{FinPlanNetAsset002.fundMangerName}">基金经理姓名</label>
+												<div class="layui-input-inline input-inline">
+													<input type="text" name="fundMangerName"
+														   data-th-value="${entity?.fundMangerName}"
+														   class="layui-input form-input" placeholder="请输入内容"
+														   data-th-placeholder="#{SysCommon.placeholder}">
+												</div>
+											</div>
+											<!-- 增加[增信措施、基金经理姓名] by caozhenming 20210715 end -->
 										</div>
 										<!-- 增加合同号，预警线，止损线，业务基准，法审编号，超额分成方式by赵东东 2019.9.29 end -->
 								</div>	

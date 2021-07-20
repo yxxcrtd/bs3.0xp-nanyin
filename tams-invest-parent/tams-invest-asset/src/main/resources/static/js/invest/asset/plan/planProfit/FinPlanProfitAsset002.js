@@ -139,6 +139,8 @@ var QueryFunc=function(){
         var object = $.serializeToObject('#submitForm', true);
         //多选
         object.assetProvider = $('#assetProvider').val()?$('#assetProvider').val().join(","):'';
+        // 增信措施(多选)
+        object.creditEnhanceMeasure = $('#creditEnhanceMeasure').val()?$('#creditEnhanceMeasure').val().join(","):'';
         object.pageModel = pageModel;
         object.operateType = operateType;
         var repAssetType = $('#repAssetType').val();
