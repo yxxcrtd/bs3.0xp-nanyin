@@ -53,6 +53,7 @@ public class RiskUtil {
     /*合并模拟测算代码 panbin 2020-8-11 start*/
 	public static final String PAGE_REDIS_FLAG="pageRedisFlag";
 	/*合并模拟测算代码 panbin 2020-8-11 end*/
+	public static final String IS_DISPLAY_PEND_PERIOD="IS_DISPLAY_PEND_PERIOD";
 	/**
 	 * @param str
 	 * @return
