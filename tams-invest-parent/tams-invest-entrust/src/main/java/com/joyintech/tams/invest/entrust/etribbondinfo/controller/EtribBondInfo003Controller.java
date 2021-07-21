@@ -235,10 +235,8 @@ public class EtribBondInfo003Controller extends BaseController {
                 messages.add(new ValidMessage("请输入组合代码(第"+(i+1)+"行)。"));
             if(!StringUtil.isNotEmpty(dtoList.get(i).getEntrustNum()))
                 messages.add(new ValidMessage("请输入券面总额(第"+(i+1)+"行)。"));
-            // delete by dubaojun 2020-07-07 缺陷SNSTZJY-192对应：债券指令画面，删除投资目的 start
-//			if(!StringUtil.isNotEmpty(dtoList.get(i).getInvAim()))
-//				messages.add(new ValidMessage("请输入投资目的(第"+(i+1)+"行)。"));
-            // delete by dubaojun 2020-07-07 缺陷SNSTZJY-192对应：债券指令画面，删除投资目的 end
+			if(!StringUtil.isNotEmpty(dtoList.get(i).getInvAim()))
+				messages.add(new ValidMessage("请输入投资目的(第"+(i+1)+"行)。"));
             if(chlId && StringUtil.isNotEmpty(dtoList.get(i).getSecAcctId()))
                 messages.add(new ValidMessage("不能同时输入通道代码和证券账户(第"+(i+1)+"行)。"));
         }
