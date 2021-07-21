@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.common.service;
 
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,20 @@ public class ChbDataCheckService {
             checkResultList = new ArrayList<>();
         }
         // 调用service-chb服务的接口进行校验
-        checkResultList.addAll(restTemplate.postForList(ServiceApplication.CHB_SERVICE_NAME + "/openapi/chbDataCheck/{pageId}/{repType}", entity, ValidMessage.class, pageId, repType));
+        String tailStr = "";
+        if(StringUtil.isNotEmpty(pageId)){
+            tailStr = "pageId="+pageId;
+        }
+        if(StringUtil.isNotEmpty(repType)){
+            if (StringUtil.isNotEmpty(tailStr)){
+                tailStr = tailStr.concat("&repType="+repType);
+            }else{
+                tailStr = "repType="+repType;
+            }
+        }
+
+
+        checkResultList.addAll(restTemplate.postForList(ServiceApplication.CHB_SERVICE_NAME + "/openapi/chbDataCheck?"+tailStr, entity, ValidMessage.class));
         return checkResultList;
     }
 }

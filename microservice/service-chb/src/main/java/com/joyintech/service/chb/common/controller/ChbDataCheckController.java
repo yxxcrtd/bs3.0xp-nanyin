@@ -19,8 +19,8 @@ public class ChbDataCheckController {
     @Autowired
     private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
-    @PostMapping("chbDataCheck/{pageId}/{repType}")
-    public List<ValidMessage> chbDataCheck(@RequestBody Map entity, @PathVariable(name = "pageId", required = false) String pageId, @PathVariable(name = "repType", required = false) String repType) {
+    @PostMapping("chbDataCheck")
+    public List<ValidMessage> chbDataCheck(@RequestBody Map entity, @RequestParam(value = "pageId", required = false) String pageId, @RequestParam(value = "repType", required = false) String repType) {
         return chbDataCheckCommonUtil.chbCheckCommon(null, entity, pageId, repType, ValidMessage.class);
     }
 }
