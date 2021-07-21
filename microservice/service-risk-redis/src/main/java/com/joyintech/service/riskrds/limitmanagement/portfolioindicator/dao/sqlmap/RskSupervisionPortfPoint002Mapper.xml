@@ -11,10 +11,7 @@
 	 	A.WARN_COND  warnCond,
 	 	A.FOUL_COND  foulCond,
 	 	A.APPROVE_COND approveCond,
-	 	A.IS_ENABLED isEnabled,
-	 	<!-- wangyang1 风险二级法人改造 start -->
-	 	A.INSTITUTION_CODE institutionCode
-	 	<!-- wangyang1 风险二级法人改造 end -->
+	 	A.IS_ENABLED isEnabled
 	 FROM 
 	 	RSK_ISUP_INDICATOR A
 	 <where>

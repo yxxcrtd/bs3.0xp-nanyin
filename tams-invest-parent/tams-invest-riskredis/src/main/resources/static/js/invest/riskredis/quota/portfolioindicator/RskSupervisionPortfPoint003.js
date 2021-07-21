@@ -119,12 +119,13 @@
     	return retArr;
     }
     function init(){
-    	//修改  组合包名称置灰 
+    	//修改  组合包名称置灰
         if(pageModel!=PAGE_MODEL_NEW){
             $("input[name='ptlBagName']").attr('disabled',true);
         }
     	searchTreeSingle();
     	if(entity!=null&&entity.rskPortfolioPackageDtlDto!=null&&entity.rskPortfolioPackageDtlDto.rskPortfolioPackageDtlList!=null){
+    		debugger;
     		var treeArray= entity.rskPortfolioPackageDtlDto.rskPortfolioPackageDtlList;
     		for (var i = 0; i < treeArray.length; i++){
         		var trStr = '<li data-id="'+treeArray[i].portfolioId+'"><input type="checkbox" name="zhibao1">'+treeArray[i].portfolioName+'</li>';
@@ -136,8 +137,9 @@
 			 entity.rskPortfolioPoolConfigDto.ptlParamPoolConfigList.map(function(v){
 				table.layOption.data.push(v);//table.addRow()方法无法用，因init方法与table.joyintable同步加载
 				 
-			 }) 
-    	} 
+			 })
+    	}
+    	
     }
     
   //add by 裴家俊  2019-02-27--组合多条件查询--
@@ -248,17 +250,14 @@
         
         //移除点击事件
         $(".removePortf").click(function(){
-        	if(entity!=null&&entity.rskPortfolioPackageDtlDto!=null&&entity.rskPortfolioPackageDtlDto.rskPortfolioPackageDtlList!=null){
-        		var treeArray= entity.rskPortfolioPackageDtlDto.rskPortfolioPackageDtlList;
-        		for (var i = 0; i < treeArray.length; i++){
-            		haveRightLi+=treeArray[i].portfolioId+","; 
-            	} 
-        	} 
-        	if (haveRightLi == null) {
-				return;
-			}
+            // add by zhangrui1 容错处理 start
+            /*
             var treeIdArray=haveRightLi[0].split(',');
             var treeArray=haveRightLi[1].split(',');
+            */
+            var treeIdArray=haveRightLi && haveRightLi[0] ? haveRightLi[0].split(',') : [];
+            var treeArray=haveRightLi && haveRightLi[1] ? haveRightLi[1].split(',') : [];
+            // add by zhangrui1 容错处理 end
         	$("#treeDepartmentYxuan").find('input[type="checkbox"]').each(function(){
         		if($(this).is(':checked')){
         		    var indexC=treeIdArray.indexOf($(this).closest('li').data('id'));
