@@ -203,6 +203,9 @@ public class FinStockInfoValidator implements BeanValidator {
                 errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, "1302", ValidMessage.class);
             }
 
+            if(dto.getTradeMarket()=="12"&&StringUtil.isEmpty(dto.getShOrZh())) {
+                errorList.add(new ValidMessage("交易场所为香港联合交易所时，港股通市场必填！"));
+            }
         return errorList;
     }
 
