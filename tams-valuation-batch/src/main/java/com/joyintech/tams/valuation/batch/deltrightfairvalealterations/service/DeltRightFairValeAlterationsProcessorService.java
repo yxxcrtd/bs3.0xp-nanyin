@@ -143,7 +143,7 @@ public class DeltRightFairValeAlterationsProcessorService {
             drawBaseInfoSelectComResult.getHappenDate(),
             drawBaseInfoSelectComResult.getHappenDate(), drawBaseInfoSelectComResult.getBookDate(),
             drawBaseInfoSelectComResult.getBooksetId(),
-            drawBaseInfoSelectComResult.getBokDetailId(), null, null,batchExecuteInfo.getBatchExedetailSeqNo());
+            drawBaseInfoSelectComResult.getBokDetailId(), null, null,null);
         
         
          // 账套核算参数查询
