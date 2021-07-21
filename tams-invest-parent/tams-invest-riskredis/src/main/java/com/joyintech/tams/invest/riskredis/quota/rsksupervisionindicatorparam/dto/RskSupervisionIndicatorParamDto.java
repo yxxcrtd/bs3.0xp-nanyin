@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -92,10 +93,22 @@ public class RskSupervisionIndicatorParamDto extends RskIsupIndicatorParaDtl imp
 	 * 是否更新redis
 	 */
 	private String isUpRedis;
+
 	/**
 	 * 参数数据类型
 	 */
 	private String paramDataType;
+
+	/**
+	 * 参数计算方式
+	 */
+	private String paramMathType;
+
+	/**
+	 * 参数为空设显示值
+	 */
+	private String paramValueNone;
+
     /**
      * 取得 参数代码
      * @return 参数代码
@@ -278,6 +291,7 @@ public class RskSupervisionIndicatorParamDto extends RskIsupIndicatorParaDtl imp
 	public String getParaTypeStr(){
 		return SysDataUtil.getNameFromDataDict(BussinessDictCodeRds.指标参数实现类型, this.getParaType());
 	}
+
 	public String getIsUpRedis() {
 		return isUpRedis;
 	}
@@ -285,6 +299,7 @@ public class RskSupervisionIndicatorParamDto extends RskIsupIndicatorParaDtl imp
 	public void setIsUpRedis(String isUpRedis) {
 		this.isUpRedis = isUpRedis;
 	}
+
 	public String getParamDataType() {
 		return paramDataType;
 	}
@@ -292,5 +307,28 @@ public class RskSupervisionIndicatorParamDto extends RskIsupIndicatorParaDtl imp
 	public void setParamDataType(String paramDataType) {
 		this.paramDataType = paramDataType;
 	}
-    
+
+    /**
+     * 导出用更新时间
+     * 
+     * @return 导出用更新时间
+     */
+    public String getUpdateTimeStr() {
+        return DateUtil.format(this.getUpdateTime());
+    }
+	public String getParamMathType() {
+		return paramMathType;
+	}
+
+	public void setParamMathType(String paramMathType) {
+		this.paramMathType = paramMathType;
+	}
+
+	public String getParamValueNone() {
+		return paramValueNone;
+	}
+
+	public void setParamValueNone(String paramValueNone) {
+		this.paramValueNone = paramValueNone;
+	}
 }
