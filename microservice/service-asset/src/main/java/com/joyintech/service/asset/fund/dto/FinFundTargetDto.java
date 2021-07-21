@@ -275,6 +275,11 @@ public class FinFundTargetDto extends FinProduct {
      */
     private String pMarketId;
 
+    /**
+     * 基金经理姓名
+     */
+    private String fundMangerName;
+
     public String getFundType() {
         return fundType;
     }
@@ -714,5 +719,13 @@ public class FinFundTargetDto extends FinProduct {
 
     public void setpMarketId(String pMarketId) {
         this.pMarketId = pMarketId;
+    }
+
+    public String getFundMangerName() {
+        return fundMangerName;
+    }
+
+    public void setFundMangerName(String fundMangerName) {
+        this.fundMangerName = fundMangerName;
     }
 }
