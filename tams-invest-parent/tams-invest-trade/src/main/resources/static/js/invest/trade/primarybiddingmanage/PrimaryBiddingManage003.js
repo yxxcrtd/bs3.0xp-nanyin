@@ -33,6 +33,7 @@
                 }
 		    }}
         ,{field:'winCprice',  title: '中标净价'}
+        ,{field:'isFrozenPosition', title: '是否头寸冻结', edit:true, editOption:{id: 'isFrozenPosition', type:'select', result: YES_OR_NO}}
     ];
     var table =$("#dataTable").joyintable({
     	 /*ajax: {

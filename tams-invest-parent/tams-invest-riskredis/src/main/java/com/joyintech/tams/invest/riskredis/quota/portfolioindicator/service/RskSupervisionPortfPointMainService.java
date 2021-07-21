@@ -33,19 +33,20 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class RskSupervisionPortfPointMainService extends CommonExportService<RskSupervisionIndicator002Dto> implements BaseProcessService<RskSupervisionIndicator002Dto> {
-	/**
+
+    /**
      * 日志
      */
     private static Logger logger = LoggerFactory.getLogger(RskSupervisionPortfPointMainService.class);
-
-    @Autowired
-    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     /**
      * redis数据初始化
      */
     @Autowired
     private RiskRedisInitService<ImplCond> redisRriter;
+
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public void doComplete(RskSupervisionIndicator002Dto entity, OperationType type) {
@@ -73,15 +74,25 @@ public class RskSupervisionPortfPointMainService extends CommonExportService<Rsk
 
         String pageRedisFlag = CacheUtil.getSysParam("pageRedisFlag");
         if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
-            // 更新Redis
-            ImplCond cond = new ImplCond();
-            List<RskPortfolioIndicatorDto> dtoList = entity.getSelectedPortfIndItem();
-            if (!StringUtil.isEmptyList(dtoList)) {
-                String[] prodIdList = dtoList.stream().map(item -> item.getPortfolioId()).collect(
-                    Collectors.toList()).toArray(new String[dtoList.size()]);
-                cond.setPortfIdArray(prodIdList);
-                redisRriter.dealRiskPtlIndicator(cond);
-            }
+            threadPoolTaskExecutor.execute(()->{
+                try {
+                    logger.info("===========指标关联组合进入redis开始=============");
+                    Thread.sleep(6000);
+                    // 更新Redis
+                    ImplCond cond = new ImplCond();
+                    List<RskPortfolioIndicatorDto> dtoList = entity.getSelectedPortfIndItem();
+                    if (!StringUtil.isEmptyList(dtoList)) {
+                        String[] prodIdList = dtoList.stream().map(item -> item.getPortfolioId()).collect(
+                            Collectors.toList()).toArray(new String[dtoList.size()]);
+                        cond.setPortfIdArray(prodIdList);
+                        redisRriter.dealRiskPtlIndicator(cond);
+                    }
+                    logger.info("===========指标关联组合进入redis结束=============");
+                } catch (InterruptedException e) {
+                    logger.error("===========指标关联组合进入redis异常=============");
+                }
+
+            });
         }
     }
 

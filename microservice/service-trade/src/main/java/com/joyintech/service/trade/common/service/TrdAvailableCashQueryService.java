@@ -12,7 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
 import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlSecPositionInfoMapper;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +40,11 @@ public class TrdAvailableCashQueryService {
      */
     @Autowired(required = false)
     private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+
+    @Autowired
+    private EtrCommonCashPositionDealService etrCommonCashPositionDealService;
+    @Autowired
+    private BasePtlCashPositionInfoMapper basePtlCashPositionInfoMapper;
 
     /**
      * 组合可用现金和实际现金查询更新组件
@@ -73,9 +83,37 @@ public class TrdAvailableCashQueryService {
             dto.setCcy((String)param.get("ccy"));
             dto.setAcctType(acctTypeList);
             dto.setAcctId((String)param.get("acctId"));
-            ret.put("T_0", basePtlCashPositionInfoService.queryUsableCashPosition(dto));
+            /**modify by sunhui 20210720 重庆银行：中标结果维护，缴款日特殊处理现金   start**/
+            BigDecimal T_0 = basePtlCashPositionInfoService.queryUsableCashPosition(dto);
             dto.setCdate(tradeDateNext);
-            ret.put("T_1", basePtlCashPositionInfoService.queryUsableCashPosition(dto));
+            BigDecimal T_1 = basePtlCashPositionInfoService.queryUsableCashPosition(dto);
+            //如果是中标缴款进来,需要补上中标维护的占用头寸:不需要再判断维护明细中的是否占用头寸了，因为如果有就有，如果没有就是0，前后不变
+            if(StringUtil.isNotEmpty(param.get("bondFirstSign")) &&
+               StringUtil.isNotEmpty(param.get("entrustId")) &&
+               StringUtil.equals("01",param.get("bondFirstSign"))){
+                EntrustCommonDto entrustCommonDto = etrCommonCashPositionDealService.findEntrust((String)param.get("entrustId"));
+                String acctId = etrCommonCashPositionDealService.select组合托管户(entrustCommonDto.getEtrEntrust().getPortfolioId(),
+                        entrustCommonDto.getEtrEntrust().getCcy(),
+                        DictCodeListExt2.资金账户类型_托管户.getValue());
+                PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+                ptlCashPositionFlowDto.setPortfolioId((String)param.get("portfolioId"));
+                ptlCashPositionFlowDto.setCcy(entrustCommonDto.getEtrEntrust().getCcy());
+                ptlCashPositionFlowDto.setCdate(entrustCommonDto.getEtrEntrust().getVdate());
+                ptlCashPositionFlowDto.setAcctId(acctId);
+                ptlCashPositionFlowDto.setOrderId(entrustCommonDto.getEtrEntrust().getEntrustId());
+                ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                List<String> acctTypeList2 = new ArrayList<String>();
+                acctTypeList2.add(DictCodeListExt2.资金账户类型_托管户.getValue());
+                ptlCashPositionFlowDto.setAcctType(acctTypeList2);
+                //根据ptlCashPositionFlowDto查询出冻结的持仓，取反+T_0作为新的T_0
+                ptlCashPositionFlowDto.setIsFrozenPositionFlag(BussinessDictCodeList.是否_是.getValue());
+                BigDecimal isFrozenPosition = basePtlCashPositionInfoMapper.selectCashPositionFlow(ptlCashPositionFlowDto);
+                T_0 = ArithmeticUtil.doAdd(T_0,ArithmeticUtil.multiply(isFrozenPosition,new BigDecimal("-1")));
+                T_1 = ArithmeticUtil.doAdd(T_1,ArithmeticUtil.multiply(isFrozenPosition,new BigDecimal("-1")));
+            }
+            ret.put("T_0", T_0);
+            ret.put("T_1", T_1);
+            /**modify by sunhui 20210720 重庆银行：中标结果维护，【缴款日特殊处理现金   end**/
 
             // 通道交易 新增 强成西 2019/03/26 start
             if (StringUtil.isNotEmpty(param.get("chlId"))) {

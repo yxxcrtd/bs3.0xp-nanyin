@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 @Service
 public class RskSupervisionPortfPoint002Service extends CommonExportService<RskPortfolioIndicator002Dto> implements BaseProcessService<RskPortfolioIndicator002Dto> {
 
-
     /**
      * 日志
      */
@@ -108,6 +107,7 @@ public class RskSupervisionPortfPoint002Service extends CommonExportService<RskP
             });
         }
     }
+
     /**
      * 画面查询 <功能详细描述>
      * 

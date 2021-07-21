@@ -49,14 +49,13 @@ var rsk = function() {
             
         },
         cols:[
-             {field:'validDate',visible: false}
-            ,{field:'paraName',title: 'RskSupervisionIndicatorParam001.paraName' ,width:320}
-            ,{field:'paraCode',title: 'RskSupervisionIndicatorParam001.paraCode' ,width:220}
-            ,{field:'paraTypeStr',sortField:"paraType",title: 'RskSupervisionIndicatorParam001.paraType',width:220}
-            ,{field:'content',title: 'RskSupervisionIndicatorParam001.content',width:220}
-            ,{field:'updateTime', title: 'RskSupervisionIndicatorParam001.updateTime',type:'date',width:220}
-            ,{field:'updateFlg', visible:false}
-            ,{field:'operation',width:150,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
+              {field:'validDate',visible: false}
+            ,{field:'paraName',title: 'RskSupervisionIndicatorParam001.paraName'}
+            ,{field:'paraCode',title: 'RskSupervisionIndicatorParam001.paraCode'}
+            ,{field:'paraTypeStr',sortField:"paraType",title: 'RskSupervisionIndicatorParam001.paraType'}
+            ,{field:'content',title: 'RskSupervisionIndicatorParam001.content',type: "number"}
+            ,{field:'updateTimeStr', title: 'RskSupervisionIndicatorParam001.updateTime',type:'date'}
+            ,{field:'operation',width:200,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });
     /**
