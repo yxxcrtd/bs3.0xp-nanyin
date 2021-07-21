@@ -229,7 +229,8 @@ $(function () {
             }
             ,{field:'finprodName',sortField:'finprodName',width:150,title:'资产名称'}//资产名称
             ,{field:'secManageAcctName',sortField:'secManageAcctName', width:100,title:'证券托管户'}//证券账户
-            ,{field:'chIldName',sortField:'chIldName', width:100,title:'通道'}//证券账户
+            // 通道隐藏  by gaoshuqi 20210721
+           /* ,{field:'chIldName',sortField:'chIldName', width:100,title:'通道'}//证券账户*/
             ,{field:'vdate',sortField:'vdate',width:100,title:'计息起始日',type:'date'}//计息起始日
             ,{field:'mdate',sortField:'mdate',width:100,title:'计息结束日',type:'date'}//交易方向
             ,{field:'endPayDate',sortField:'endPayDate',width:100,title:'最终支付日',type:'date'}//登记日
