@@ -232,7 +232,8 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
                     FundAccountInfoDto fundAccountInfo = new FundAccountInfoDto();
                     fundAccountInfo.setPortfolioId(ptlPortfolioInfoDto.getPortfolioId());
                     fundAccountInfo.setAcctType(temp_account.getAcctType());
-                    fundAccountInfo.setAcctNo(temp_account.getAcctNo().concat("_" + temp_account.getCcy()));
+                    //fundAccountInfo.setAcctNo(temp_account.getAcctNo().concat("_" + temp_account.getCcy()));
+                    fundAccountInfo.setAcctNo(temp_account.getAcctNo());
                     fundAccountInfo.setAcctName(temp_account.getAcctName());
                     fundAccountInfo.setBankDep(temp_account.getBankDep());
                     fundAccountInfo.setLargePayno(temp_account.getLargePayno());
