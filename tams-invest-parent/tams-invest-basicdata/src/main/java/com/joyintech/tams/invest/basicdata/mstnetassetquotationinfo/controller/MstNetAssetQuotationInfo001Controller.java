@@ -178,7 +178,7 @@ public class MstNetAssetQuotationInfo001Controller extends BaseController{
         params.setPageId("MstNetAssetQuotationInfo002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item->item.getFinprodId());
-        params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_信息.getValue());
+        params.setBusinessType(DictCodeList.共通业务类型_计划类资产行情信息.getValue());
         // 设置流程业务说明: "资产代码" + "(" + 资产代码 + ")" + "-"  + "估值日期" + "(" + 估值日期 + ")" 
         params.setComment(
             entity -> this.getMessage("MstNetAssetQuotationInfo001.assetCode") + "("+entity.getFinprodId() + ")"

@@ -1,0 +1,1 @@
+update bok_profit_rep_config f set f.subject_no='611196' where f.proj_code='1.2.9';
