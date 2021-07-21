@@ -17,14 +17,14 @@
     doChange.reloadLayui = function(){
         layui.form.render();
     }
-    doChange.exerYield_setDisabled = function(isDisabled, isRight, priceModel){
+    doChange.exerYield_setDisabled = function(isDisabled){
         // 行权收益率
         let exerYield = query('#exerYield');
         if(isDisabled){
             exerYield.val('').attr('disabled', true).removeAttr("required");
             query('#calculateField_exerYield').prop('checked', false).attr('disabled', true);
         }else{
-            if(isRight !== N && priceModel !== PRICEMODEL_03){
+            if(query("#isRight").val() !== N && query("#priceModel").val() !== PRICEMODEL_03){
                 // 含权债或为空 且 价格模式不是市价
                 exerYield.val('').attr('disabled', false).trigger("change").trigger("blur");
                 query('#calculateField_exerYield').val('').attr('disabled', false);
@@ -673,18 +673,14 @@
         query("#ps").change(function () {
             var finprodIdhid = query("#finprodIdhid").val();
             if (query("#ps").val() == T01) {
-                if (query("#isRight").val() != N) {
-                    doChange.exerYield_setDisabled(false);
-                }
+                doChange.exerYield_setDisabled(false);
                 query("#matureYield").removeAttr("disabled");
                 
                 // 当交易方向为买入卖出时，交易对手下拉框显示为银行间机构信息中的交易账户21位码+交易成员全称
                 query("#div_counterId1").css("display","block");
                 query("#div_counterId2").css("display","none");
             } else if (query("#ps").val() == T02) {
-                if (query("#isRight").val() != N) {
-                    doChange.exerYield_setDisabled(false);
-                }
+                doChange.exerYield_setDisabled(false);
                 query("#matureYield").attr("disabled", true);
                 query("#matureYield").val("");
                 
@@ -754,8 +750,6 @@
                     data = AutoCoupon.autoBondTradeCoupon(query("#finprodId").val());
                 }
                 // 不为空
-                query("#price").attr("required", false);
-                query("#matureYield").attr("required", false);
                 //var data = query('#finprodId').select2('data')[0].object;
                 query("#finprodIdhid").val(data.finprodId).trigger("change");
                 query("#finprodName").val(finprodId).trigger("change");
@@ -763,6 +757,8 @@
                 // // 资产为非含权债时，置灰“行权收益率”字段
                 if(data.isRight === N){
                     doChange.exerYield_setDisabled(true);
+                }else{
+                    doChange.exerYield_setDisabled(false);
                 }
                 query("#calendarId").val(data.calendarId).trigger("change");
                 query("#finvdate").val(new Date(data.finvdate)).trigger("change");
@@ -774,17 +770,14 @@
                 }
             } else {
                 // 为空
-                query("#price").attr("required", true);
-                query("#matureYield").attr("required", true);
                 query("#finprodIdhid").val("").trigger("change");
                 query("#finprodName").val("").trigger("change");
                 query("#calendarId").val("").trigger("change");
-                //query("#tradeMarket").val("").trigger("change").attr("disabled", false);
                 query("#ccy").val(CCY).trigger("change").attr("disabled", false);
                 query("#isRight").val("").trigger("change");
                 query("#matureYield").val("").trigger("change").trigger("blur");
                 
-                doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val());
+                doChange.exerYield_setDisabled(false);
             }
 
             //左下行情信息联动 & 组合可用现金,资产可用持仓
@@ -935,8 +928,11 @@
                     query("#fpriceAmt").val("").attr("disabled", false); // 全价
                     query("#matureYield").val("").attr("disabled", false); // 到期收益率
                     
-                    doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val()); // 行权收益率
+                    doChange.exerYield_setDisabled(false); // 行权收益率
                 }
+
+                query('#finprodId').trigger("change"); // 触发star功能
+                
                 if (query("#price").val()) {
                     calData("price");
                 }
@@ -958,19 +954,6 @@
             //左下行情信息联动
             getLeftMarketInfo();
          
-        });
-
-        /**
-         * 是否行权
-         */
-        query('#isRight').change(function () {
-            var isRight = query('#isRight').val();
-            if (!isRight || isRight === N) {
-                doChange.exerYield_setDisabled(true);
-            } else {
-                // 行权收益率
-                doChange.exerYield_setDisabled(false, isRight, query("#priceModel").val()); 
-            }
         });
 
     });
