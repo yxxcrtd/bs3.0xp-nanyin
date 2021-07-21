@@ -5,6 +5,7 @@ import com.joyintech.service.entrust.etrfund.dao.EtrFundMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -40,4 +41,6 @@ public interface EtrbondbiddingresultMapper {
 	int updateTradeId(Map<String,Object> map);
 
 	int deleteTradeId(Map<String,Object> map);
+
+	BigDecimal getisFrozenPosition(Map<String,Object> map);
 }

@@ -99,6 +99,13 @@ public class EtrbondbiddingresultService extends BaseService<Etrbondbiddingresul
         etrbondbiddingresultMapper.updateTradeId(map);
     }
 
+	public BigDecimal getisFrozenPosition(Map<String, Object> map) {
+		if (map.get("totleTradeId") == null || map.get("entrustId") == null) {
+			return BigDecimal.ZERO;
+		}
+		return etrbondbiddingresultMapper.getisFrozenPosition(map);
+	}
+
 	public void deleteTradeId(Map<String, Object> map) {
 		etrbondbiddingresultMapper.deleteTradeId(map);
 	}

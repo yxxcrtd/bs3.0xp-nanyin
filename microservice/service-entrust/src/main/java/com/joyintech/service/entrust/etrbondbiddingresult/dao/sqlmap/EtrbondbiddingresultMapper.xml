@@ -271,4 +271,13 @@
 		update BID_ORDER_BID_PRICE  set TRADE_ID = null
 		where ENTRUST_ID= #{entrustId,jdbcType=VARCHAR} and TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
 	</update>
+
+	<select id="getisFrozenPosition" resultType="java.math.BigDecimal">
+		select
+		WIN_PRIN_AMT * 100 * WIN_CPRICE * -1
+		from BID_ORDER_BID_PRICE
+		where is_frozen_position = 'Y'
+		and ENTRUST_ID= #{entrustId,jdbcType=VARCHAR}
+		and TRADE_ID = #{totleTradeId,jdbcType = VARCHAR}
+	</select>
 </mapper>

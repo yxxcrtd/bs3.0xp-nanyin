@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,17 @@ public class EtrbondbiddingresultController {
     @PostMapping("/updateTradeId")
     public void updateTradeId(@RequestBody Map<String, Object> map) {
         etrbondbiddingresultService.updateTradeId(map);
+    }
+
+    /**
+     * 通过交易id和委托id及标位获取需要冻结的头寸
+     *
+     * @param map
+     * @return
+     */
+    @PostMapping("/getisFrozenPosition")
+    public BigDecimal getisFrozenPosition(@RequestBody Map<String, Object> map) {
+        return etrbondbiddingresultService.getisFrozenPosition(map);
     }
 
     @Transactional

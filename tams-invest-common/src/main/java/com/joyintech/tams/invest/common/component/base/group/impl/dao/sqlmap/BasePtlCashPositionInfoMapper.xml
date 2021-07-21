@@ -87,6 +87,9 @@
         <if test="ccy != null and ccy != ''">
             and CCY = #{ccy,jdbcType=VARCHAR}
         </if>
+        <if test="isFrozenPositionFlag != null and isFrozenPositionFlag != ''">
+            and ORDER_ID = #{orderId,jdbcType=VARCHAR}
+        </if>
     </sql>
 
     <select id="selectCashPositionNew" resultType="java.math.BigDecimal" >
