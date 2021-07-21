@@ -7,6 +7,7 @@ package com.joyintech.service.entrust.etribbondinfo.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.ArithmeticUtil;
@@ -408,4 +409,58 @@ public class EtrIbBondinfo002Service extends BaseService<EtrIbBondinfo002Dto> {
         return etrIbBondinfo002Mapper.getExercisePricebyPara(param);
     }
 
+    public BaseEtrInvestInfoDto initBaseEtrInvestInfoDto(EtrIbBondinfo002Dto dto) {
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+        try {
+            EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
+            EtrEntrust etrEntrust = new EtrEntrust();
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            entrustCommonDto.setEtrEntrust(etrEntrust);
+            entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+            dto.setInvManagerId(LoginUserUtil.getUserName());
+            dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            dto.setIsOutTrade(DictCodeList.是否_是.getValue());
+            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            dto.setRecStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            BeanUtil.copyProperties(etrEntrust, dto);
+            etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            etrEntrust.setEntrustAmt(null);
+            etrEntrust.setEntrustNum(dto.getEntrustNum().multiply(new BigDecimal(100))); //前台单位万元
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_债券.getValue());
+            etrEntrustAdd.setVdate(null);
+            etrEntrustAdd.setMdate(null);
+            //etrEntrustAdd.setOurEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
+            //etrEntrustAdd.setLendinEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
+            etrEntrustAdd.setFullPrice(dto.getFpriceAmt());
+            if (dto.getExerYield() != null) {
+                etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
+            }
+            if (dto.getMatureYield() != null) {
+                etrEntrustAdd.setMatureYield(dto.getMatureYield().divide(new BigDecimal(100)));
+            }
+
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_0.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long) 0);
+            }
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_1.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long) 1);
+            }
+            entity.setEtrEntrust(etrEntrust);
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+            MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
+            mstFileInputParameter.setFileList(dto.getFileArray());
+            mstFileInputParameter.setBussinessId(dto.getEntrustId());
+            entity.setMstFileInputParameter(mstFileInputParameter);
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return entity;
+    }
 }

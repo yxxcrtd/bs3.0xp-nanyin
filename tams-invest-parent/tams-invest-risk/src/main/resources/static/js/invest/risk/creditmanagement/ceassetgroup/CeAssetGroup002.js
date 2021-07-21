@@ -23,7 +23,7 @@
     //新建或编辑初始化
     function init(){
     	if(pageModel!=PAGE_MODEL_NEW){
-    		$("select[name='customerId']").attr('disabled',true).trigger('change');
+    		$("input[name='customerName']").attr('disabled',true);
             $("input[name='pflsh']").attr('disabled',true);
         }
     }

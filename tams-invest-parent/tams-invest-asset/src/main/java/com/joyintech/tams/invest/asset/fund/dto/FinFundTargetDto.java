@@ -311,6 +311,11 @@ public class FinFundTargetDto extends FinProduct implements ProcessEntity {
     private String pMarketId;
 
     /**
+     * 基金经理姓名
+     */
+    private String fundMangerName;
+
+    /**
      * 获取 creditFlag
      * @return creditFlag.
      */
@@ -960,4 +965,11 @@ public class FinFundTargetDto extends FinProduct implements ProcessEntity {
         this.oldFinprodMarketId = oldFinprodMarketId;
     }
 
+    public String getFundMangerName() {
+        return fundMangerName;
+    }
+
+    public void setFundMangerName(String fundMangerName) {
+        this.fundMangerName = fundMangerName;
+    }
 }

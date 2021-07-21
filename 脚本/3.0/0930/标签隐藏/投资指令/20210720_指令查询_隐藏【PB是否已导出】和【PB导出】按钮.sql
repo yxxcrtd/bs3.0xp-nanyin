@@ -1,0 +1,5 @@
+DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='EtrInvestAllInfo001';
+insert into EXPORT_TABLE (PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+values ('EtrInvestAllInfo001','EtrInvestAllInfo001_btn_pb_export','EtrInvestAllInfo001_btn_pb_export','PB导出','02','02','02',null);
+insert into EXPORT_TABLE (PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+values ('EtrInvestAllInfo001','exPbExportstatus','pbExportstatus','PB是否已导出','02','02','02',null);

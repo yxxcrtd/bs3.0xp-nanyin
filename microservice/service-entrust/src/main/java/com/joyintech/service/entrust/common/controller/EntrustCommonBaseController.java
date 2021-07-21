@@ -13,6 +13,7 @@ package com.joyintech.service.entrust.common.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,6 +110,25 @@ public class EntrustCommonBaseController {
         catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+        return true;
+    }
+
+    /**
+     * 流程表数据入库，有效指令数据转移致废弃表
+     * @param entity
+     * @return
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("insertWithQuery")
+    public boolean insertWithQuery(@RequestBody
+                                           BaseEtrInvestInfoDto entity){
+        try {
+            WFlowCommonService.insertFlow(entity);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return true;
     }

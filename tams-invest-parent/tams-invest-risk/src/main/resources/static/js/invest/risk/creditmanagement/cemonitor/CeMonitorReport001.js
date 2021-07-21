@@ -65,27 +65,24 @@
 				,{field:'pflsh', width:120 , title: 'CeMonitorReport001.pflsh',rowspan: 2}
 				,{field:'customerName', width:210 , title: 'CeMonitorReport001.institutionName',rowspan: 2}
 				,{field:'creditQuoteTypeValue', width:180 , title: 'CeMonitorReport001.creditQuoteType',rowspan: 2}
-				,{field:'creditAmt', sortable:false,width:140 , title: 'CeMonitorReport001.creditTotalAmt',rowspan: 2,fixType:"2",pattern:"2", digit:4}
-				,{title: 'CeMonitorReport001.useAmtStatus',colspan: 3}//系统资产对象
-				,{field:'remainAmt', width:160 ,title: 'CeMonitorReport001.remainAmt',type: 'number',rowspan: 2,fixType:"2",pattern:"2", digit:6,render: function (data, type, row, meta) {
-                    if(null!=row.creditAmt){
-                    	var num = row.creditAmt-(row.usedAmtTotal==null?0:row.usedAmtTotal);
-                    	num= (num || 0).toString();
-                    	if(!isNaN(num)) {
-                    		return JoyinUtil.formatNumber(num, 6, null, 2);
-                    	}
-                    	return num;
-                    }
-				}}
+				,{field:'creditAmt',type :"number", sortable:false,width:140 , title: 'CeMonitorReport001.creditTotalAmtOrg',rowspan: 2,fixType:"2",pattern:"2", digit:4}
+                ,{field:'creditAmtNl',type :"number", sortable:false,width:200 , title: 'CeMonitorReport001.creditAmtNl',rowspan: 2,fixType:"2",pattern:"2", digit:4}
+				,{title: 'CeMonitorReport001.useAmtStatusOrg',colspan: 3}//系统资产对象
+				,{field:'remainAmt', width:160 ,title: 'CeMonitorReport001.remainAmtOrg',type: 'number',rowspan: 2,fixType:"2",pattern:"2", digit:4}
+				,{title: 'CeMonitorReport001.useAmtStatusNl',colspan: 3}//非法人系统资产对象
+				,{field:'remainAmtNl',type :"number", width:200 ,title: 'CeMonitorReport001.remainAmtNl',type: 'number',rowspan: 2,fixType:"2",pattern:"2", digit:4}
 				,{field:'vdate', width:100 ,title: 'CeMonitorReport001.vdate',type:'date',rowspan: 2}           
 				,{field:'mdate',  title: 'CeMonitorReport001.mdate',type:'date',rowspan: 2}
 	            ,{field:'childInfo', width:150, visible: false}
 	            ,{field:'parentInfo', width:150, visible: false}
 				],
               [
-				 {field:'usedAmt', width:160, title: 'CeMonitorReport001.usedAmtAcct',type: 'number',fixType:"2",pattern:"2", digit:6}
-				,{field:'usedEnstustAmt', width:160, title: 'CeMonitorReport001.usedAmtEnstustAcct',type: 'number',fixType:"2",pattern:"2", digit:6}
-				,{field:'usedAmtTotal', width:160,  title: 'CeMonitorReport001.usedAmtTotal',type: 'number',fixType:"2",pattern:"2", digit:6}
+				 {field:'usedAmt',type :"number", width:180, title: 'CeMonitorReport001.usedAmtAcct',type: 'number',fixType:"2",pattern:"2", digit:4}
+				,{field:'usedEnstustAmt',type :"number", width:180, title: 'CeMonitorReport001.usedAmtEnstustAcct',type: 'number',fixType:"2",pattern:"2", digit:4}
+				,{field:'usedAmtTotal',type :"number", width:180,  title: 'CeMonitorReport001.usedAmtTotal',type: 'number',fixType:"2",pattern:"2", digit:4}
+                ,{field:'usedAmtNl',type :"number", width:200, title: 'CeMonitorReport001.usedAmtAcctNl',type: 'number',fixType:"2",pattern:"2", digit:4}
+                ,{field:'usedEnstustAmtNl',type :"number", width:200, title: 'CeMonitorReport001.usedAmtEnstustAcctNl',type: 'number',fixType:"2",pattern:"2", digit:4}
+                ,{field:'usedAmtTotalNl',type :"number", width:200,  title: 'CeMonitorReport001.usedAmtTotalNl',type: 'number',fixType:"2",pattern:"2", digit:4}
 			  ]
            
         ]
@@ -120,27 +117,16 @@
 				,{field:'customerId', width:190 , visible: false,title: 'CeMonitorReport001.institutionId'}
 				,{field:'pflsh', width:120 , title: 'CeMonitorReport001.pflsh',rowspan: 2}
 				,{field:'customerName', width:210 , title: 'CeMonitorReport001.assetName',rowspan: 2}
-				,{field:'creditAmt', sortable:false,width:140 , title: 'CeMonitorReport001.creditTotalAmt',rowspan: 2,fixType:"2",pattern:"2", digit:6}
+				,{field:'creditAmt', sortable:false,width:140 , title: 'CeMonitorReport001.creditTotalAmt',rowspan: 2,fixType:"2",pattern:"2", digit:4}
 				,{title: 'CeMonitorReport001.useAmtStatus', colspan: 3}//系统资产对象
-				,{field:'remainAmt', width:140 ,sortable:false,title: 'CeMonitorReport001.remainAmt',type: 'number',rowspan: 2,render: function (data, type, row, meta) {
-                    if(null!=row.creditAmt){
-                    	 var num = row.creditAmt-(row.usedAmtTotal==null?0:row.usedAmtTotal);
-                     	num= (num || 0).toString();
-                     	if(!isNaN(num)) {
-                     		return JoyinUtil.formatNumber(num, 6, null, 2);
-                     	}
-                     	return num;
-                    }
-                    
-                   
-			}}
+				,{field:'remainAmt', width:140 ,sortable:false,title: 'CeMonitorReport001.remainAmt',type: 'number',rowspan: 2,digit:4}
 				,{field:'vdate', width:80 ,sortable:false,title: 'CeMonitorReport001.vdate',type:'date',rowspan: 2}           
 				,{field:'mdate', width:80, sortable:false,title: 'CeMonitorReport001.mdate',type:'date',rowspan: 2}
 				],
               [
-				 {field:'usedAmt', width:150, sortable:false,title: 'CeMonitorReport001.usedAmtAcct',type: 'number',fixType:"2",pattern:"2", digit:6}
-				,{field:'usedEnstustAmt', width:150,sortable:false, title: 'CeMonitorReport001.usedAmtEnstustAcct',type: 'number',fixType:"2",pattern:"2", digit:6}
-				,{field:'usedAmtTotal', width:150, sortable:false,  title: 'CeMonitorReport001.usedAmtTotal',type: 'number',fixType:"2",pattern:"2", digit:6}
+				 {field:'usedAmt', width:150, sortable:false,title: 'CeMonitorReport001.usedAmtAcct',type: 'number',fixType:"2",pattern:"2", digit:4}
+				,{field:'usedEnstustAmt', width:150,sortable:false, title: 'CeMonitorReport001.usedAmtEnstustAcct',type: 'number',fixType:"2",pattern:"2", digit:4}
+				,{field:'usedAmtTotal', width:150, sortable:false,  title: 'CeMonitorReport001.usedAmtTotal',type: 'number',fixType:"2",pattern:"2", digit:4}
 			  ]
            
         ]
@@ -173,28 +159,16 @@
 				,{field:'customerId', width:190 , visible: false,title: 'CeMonitorReport001.institutionId'}
 				,{field:'pflsh', width:120 , title: 'CeMonitorReport001.pflsh',rowspan: 2}
 				,{field:'customerName', width:210 , title: 'CeMonitorReport001.assetGroupName',rowspan: 2}
-				,{field:'creditAmt', sortable:false,width:140 , title: 'CeMonitorReport001.creditTotalAmt',rowspan: 2,fixType:"2",pattern:"2", digit:6}
+				,{field:'creditAmt', sortable:false,width:140 , title: 'CeMonitorReport001.creditTotalAmt',rowspan: 2,fixType:"2",pattern:"2", digit:4}
 				,{title:'CeMonitorReport001.useAmtStatus', colspan: 3}//系统资产对象
-				,{field:'remainAmt', sortable:false,width:160 ,title: 'CeMonitorReport001.remainAmt',type: 'number',rowspan: 2,render: function (data, type, row, meta) {
-					      if('02'==row.hasChildren){
-					    	  if(null!=row.creditAmt){
-					    		  var num = row.creditAmt-(row.usedAmtTotal==null?0:row.usedAmtTotal);
-				                	num= (num || 0).toString();
-				                	if(!isNaN(num)) {
-				                		return JoyinUtil.formatNumber(num, 6, null, 2);
-				                	}
-				                	return num;
-			                    }
-					      }
-					}
-				}
+				,{field:'remainAmt', sortable:false,width:160 ,title: 'CeMonitorReport001.remainAmt',type: 'number',rowspan: 2,digit:4}
 				,{field:'vdate', width:100 ,sortable:false,title: 'CeMonitorReport001.vdate',type:'date',rowspan: 2}           
 				,{field:'mdate', sortable:false, title: 'CeMonitorReport001.mdate',type:'date',rowspan: 2}
 				],
               [
-				 {field:'usedAmt', sortable:false,width:160 ,title: 'CeMonitorReport001.usedAmtAcct',type: 'number',fixType:"2",pattern:"2", digit:6}
-				,{field:'usedEnstustAmt', sortable:false,width:160 ,title: 'CeMonitorReport001.usedAmtEnstustAcct',type: 'number',fixType:"2",pattern:"2", digit:6}
-				,{field:'usedAmtTotal', sortable:false,width:160,  title: 'CeMonitorReport001.usedAmtTotal',type: 'number',fixType:"2",pattern:"2", digit:6}
+				 {field:'usedAmt', sortable:false,width:160 ,title: 'CeMonitorReport001.usedAmtAcct',type: 'number',fixType:"2",pattern:"2", digit:4}
+				,{field:'usedEnstustAmt', sortable:false,width:160 ,title: 'CeMonitorReport001.usedAmtEnstustAcct',type: 'number',fixType:"2",pattern:"2", digit:4}
+				,{field:'usedAmtTotal', sortable:false,width:160,  title: 'CeMonitorReport001.usedAmtTotal',type: 'number',fixType:"2",pattern:"2", digit:4}
 			  ]
            
         ]
@@ -232,7 +206,5 @@
         $('.ce-assetgroup-form #CeMonitorReport001_btn_export').click(function() {
             exportGroupExcel();
         });
-        
-        $('.datehidden').toggle(false);
     });
 }());

@@ -53,11 +53,10 @@
                            class="layui-input form-input input-fuzzy-text"
                            placeholder="请输入资产系列名称关键词" th:maxlength="200"
                            data-eventfunc="QueryFunc.serachKey"> -->
-                    <a id="CeAssetGroupManagement001_btn_creat" class="layui-btn layui-btn-sm btn-create btn-trans"
-                       data-th-text="#{SysCommon.create}" style="float: right; padding-right: 5px;margin-top: 3px;color: yellowgreen;border: 0px!important;">新建</a>
-                    <a id="CeAssetGroupManagement001_btn_refresh" class="layui-btn layui-btn-sm btn-refresh btn-trans" 
-                       style="float: right; padding-right: 5px;margin-top: 3px;color: yellowgreen;border: 0px!important;">
-                       <i class="iconfont icon-refresh"></i>&nbsp;刷新</a>
+                    <!--delete by yuhshilong 新建功能屏蔽 20200703 start-->
+                    <!--<a id="CeAssetGroupManagement001_btn_creat" class="layui-btn layui-btn-sm btn-create btn-trans"
+                       data-th-text="#{SysCommon.create}" style="float: right; padding-right: 5px;margin-top: 3px;color: yellowgreen;border: 0px!important;">新建</a>-->
+                    <!--delete by yuhshilong 新建功能屏蔽 20200703 start-->
                 <!-- </div> -->
                 <div id="mixTree"></div>
             </div>
@@ -65,9 +64,12 @@
         <div class="layui-col-md9" style="float:right;padding-left:10px;">
             <div class="condition-area" style='overflow: hidden;padding:0;'>
                 <div class= "layui-col-md-offset4" style="float:right">
-                    <a id="CeAssetGroupManagement001_btn_add" class="layui-btn layui-btn-sm btn-create"></i>新增</a>
+                    <!--delete by yuhshilong 新增删除功能屏蔽 20200703 start-->
+                    <!--<a id="CeAssetGroupManagement001_btn_add" class="layui-btn layui-btn-sm btn-create"></i>新增</a>
                     <a id="CeAssetGroupManagement001_delete" class="layui-btn layui-btn-sm btn-delete"
-                       data-th-text="#{SysCommon.delete}">删除</a>
+                       data-th-text="#{SysCommon.delete}">删除</a>-->
+                    <!--delete by yuhshilong 新增删除功能屏蔽 20200703 end-->
+                    <a class="layui-btn layui-btn-sm btn-default" id="CeAssetGroupManagement001_btn_move">移动至新批复</a>
                     <a class="layui-btn layui-btn-sm btn-export btn-default" id="CeAssetGroupManagement001_btn_export">导出</a>
                 </div>
             </div>

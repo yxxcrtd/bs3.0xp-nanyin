@@ -541,6 +541,18 @@
 									</div>
 								</div>
 								<!--　add by zhangpuyu 2019/10/24 end -->
+								<!-- 增加[基金经理姓名] by caozhenming 20210715 start -->
+								<div class="form-inline-wrap">
+									<label class="layui-form-label form-label-wrap"
+										   data-th-text="#{FinFundTarget002.fundMangerName}">基金经理姓名</label>
+									<div class="layui-input-inline input-inline">
+										<input type="text" id="fundMangerName" name="fundMangerName"
+											   data-th-value="${entity?.fundMangerName}"
+											   class="layui-input form-input" placeholder="请输入内容"
+											   data-th-placeholder="#{SysCommon.placeholder}">
+									</div>
+								</div>
+								<!-- 增加[基金经理姓名] by caozhenming 20210715 end -->
 							</div>
 						</div>
 					</div>
@@ -548,7 +560,7 @@
 				<!-- 分红计划组件 -->
 				<div class="page-component" th:data-path="@{/component/asset/BussFinIntPay/init}" th:data-params="|{pageModel:pageModel,fundTypeElement: 'fundType', entityName: 'bussFinIntPayDto',finprodId:'${entity?.finprodId ?:''}',workflowId: '${entity?.workflowId ?:'' }' ,pageId:pageId}|"></div>
 				<!-- 基金中债报送信息组件 -->
-				<div class="page-component" th:data-path="@{/component/report/asset/fund/BussRepFundInfo/init}" th:data-params="|{pageModel:pageModel,fundTypeElement: 'fundType', secondTypeElement:'secondType',entityName: 'bussRepFundInfoDto',finprodId:'${entity?.finprodId ?:''}',workflowId: '${entity?.workflowId ?:''}'}|"></div>
+				<div id="bussRepFundInfo" class="page-component" th:data-path="@{/component/report/asset/fund/BussRepFundInfo/init}" th:data-params="|{pageModel:pageModel,fundTypeElement: 'fundType', secondTypeElement:'secondType',entityName: 'bussRepFundInfoDto',finprodId:'${entity?.finprodId ?:''}',workflowId: '${entity?.workflowId ?:''}'}|"></div>
 				<!-- 文件上传 -->
 				<div class="page-component" th:data-path="@{/component/core/FileCommon/init}" th:data-params="|{entityName: 'FileCommon', businessId: '${businessId ?: ''}'}|"></div>
 				<!-- 备注 -->

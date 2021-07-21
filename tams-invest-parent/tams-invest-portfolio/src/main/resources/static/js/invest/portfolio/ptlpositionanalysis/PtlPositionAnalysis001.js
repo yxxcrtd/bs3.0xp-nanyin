@@ -58,6 +58,7 @@ $(function () {
             ,{field:'shareAmt',  title: '数量',width: 80, rowspan: 2,sortable: false,type:'number'}//数量
             ,{field:'dscCostAmt',title: '成本(元)',  width: 80, rowspan: 2,sortable: false,type:'number'}//成本(元)
             ,{field:'marketValue', title: '市值(元)',width: 80,  rowspan: 2,sortable: false,type:'number'}//市值(元)
+            ,{field:'floatAmt', title: '盈亏(元)',width: 80,  rowspan: 2,sortable: false,type:'number'}//盈亏(元)
             ,{field:'tdyIntincexp',  title: '应收利息(元)', width: 80,rowspan: 2,sortable: false,type:'number'}//应收利息(元)
             ,{field:'childInfo', visible: false,rowspan: 2}
             ,{field:'parentInfo',visible: false,rowspan: 2}
@@ -89,6 +90,7 @@ $(function () {
             ,{field:'finprodType2', visible: false} //资产维度
             ,{field:'dscCostAmt',  width:100, title: '成本(元)',sortable: false,type:'number'}//成本(元)
             ,{field:'marketValue',  width:100, title: '市值(元)',sortable: false,type:'number'}//市值(元)
+            ,{field:'floatAmt',  width:100, title: '盈亏(元)',sortable: false,type:'number'}//市值(元)
             ,{field:'tdyIntincexp',width:100, title:'应收利息(元)',sortable: false,type:'number'}//应收利息(元)
             ,{field:'amtRation',width:100, title:'规模占比(%)',sortable: false,type:'number'}//规避占比(%)
         ],

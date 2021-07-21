@@ -19,6 +19,10 @@
 					                           when fpt.TYPE_6 = 'L02' then -1*(NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0))
 					                           when fpt.TYPE_8 = 'F07' AND fpt.TYPE_7 = '03' then -1*(NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0))
 					                           else (NVL(psv.TDY_FLOAT_INGPL,0)+NVL(psv.DSC_COST_AMT,0)) end as marketValue,
+										  case when fpt.TYPE_8 = 'F08' AND fpt.TYPE_6 = 'L01' then -1*(NVL(psv.TDY_INTINCEXP,0))
+											  when fpt.TYPE_6 = 'L02' then -1*(NVL(psv.TDY_INTINCEXP,0))
+											  when fpt.TYPE_8 = 'F07' AND fpt.TYPE_7 = '03' then -1*(NVL(psv.TDY_INTINCEXP,0))
+											  else NVL(psv.TDY_INTINCEXP,0) end as tdyIntincexp,
 		                                  pp.PORTFOLIO_NAME portFolioName,fp.FINPROD_MARKET_ID finprodMarketId,
 		                                  fp.FINPROD_ABBR finprodAbbr,
 										  pp.PORTFOLIO_ID portfolioId1
@@ -66,6 +70,7 @@
 		                          marketValueRatio,gavInfo.portfolioId,ppvInfo.tdyAssetValue,gavInfo.portfolioId1
 		                     from (select psv.CDATE cdate,psv.PORTFOLIO_ID portfolioId,psv.FINPROD_ID finprodId,
 		                                  psv.MARKET_VALUE marketValue,psv.SHARE_AMT shareAmt,psv.DSC_COST_AMT dscCostAmt,
+		                                  psv.tdy_intincexp tdyIntincexp,
 		                                  pp.PORTFOLIO_NAME portFolioName,fp.FINPROD_MARKET_ID finprodMarketId,
 		                                  fp.FINPROD_ABBR finprodAbbr,
 										  pp.PORTFOLIO_ID portfolioId1

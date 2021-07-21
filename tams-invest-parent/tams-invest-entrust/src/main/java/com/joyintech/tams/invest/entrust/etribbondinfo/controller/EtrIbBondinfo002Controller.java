@@ -101,6 +101,7 @@ public class EtrIbBondinfo002Controller extends BaseController {
         model.addAttribute("type03", DictCodeList.收益类型_货币型.getValue());
         model.addAttribute("type02", DictCodeList.收益类型_收益型.getValue());
         model.addAttribute("N", DictCodeList.是否_否.getValue());
+        model.addAttribute("CCY", DictCodeList.币种_人民币_CNY.getValue());
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE") == null ? "01" : CacheUtil.getSysParam("IS_SHOW_TYPE"));
         
         model.addAttribute("SHARES_TRADE_MARKET_01", DictCodeListExt1.交易市场_一级市场.getValue());
@@ -383,7 +384,7 @@ public class EtrIbBondinfo002Controller extends BaseController {
                         + this.getMessage("EtrIbBondinfo002.vdate") + ":" + DateUtil.format(entity.getVdate())
                         + ")-(" + this.getMessage("EtrIbBondinfo002.mdate") + ":"
                         + DateUtil.format(entity.getMdate()) + ")-"
-                        + this.getMessage("EtrIbBondinfo002.entrustAmt") + ":"
+                        + this.getMessage("EtrIbBondinfo003.entrustAmt") + ":"  // 此处使用多组合的卷面总额（万元）描述
                         + entity.getEntrustNum());
         processParameter.setWorkFlowParameter(params);
         String msg = etrIbBondinfo002Service.start(processParameter, dto);

@@ -69,7 +69,12 @@ public class ActualTimeAsset001Service extends CommonExportService<ActualTimeAss
      */
     public Page<ActualTimeAssetDto> selectForPage(Map<String, Object> map){
         //组合代码
-        Object portfolioId = map.get("portfolioId");
+        // add by swwan 多组合查询 20210719 start
+        String portfolioId = (String) map.get("portfolioId");
+        if (StringUtil.isNotEmpty(portfolioId)) {
+            map.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
+        }
+        // add by swwan 多组合查询 20210719 end
         Object secManageAcctId = map.get("secManageAcctId");
         if (portfolioId != null) {
             map.put("portfolioIdList",

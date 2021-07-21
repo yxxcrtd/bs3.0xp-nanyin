@@ -423,6 +423,8 @@ public class FinPlanAssetCService extends BaseService<FinPlanAssetCDto> {
         }
         /*  update by zhuyongkang 2019/09/29 END*/
         finProductAdd.setIsCompoundInt(dto.getIsCompoundInt());
+        finProductAdd.setFundMangerName(dto.getFundMangerName());
+        finProductAdd.setCreditEnhanceMeasure(dto.getCreditEnhanceMeasure());
         //金融产品分类表dto
         FinProductType finProductType = new FinProductType();
         finProductType.setFinprodId(finProduct.getFinprodId());

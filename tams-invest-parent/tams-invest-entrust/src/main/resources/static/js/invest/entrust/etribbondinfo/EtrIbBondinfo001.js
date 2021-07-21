@@ -45,7 +45,10 @@
             }//ajax请求数据
         },
         dblclick:function(table, data) {
-            parent.EtrIbBondinfo002.dbclickRefresh002(data);
+            let flag = parent.EtrIbBondinfoMain.changeFlgObj.getChangeFlg();
+            if(flag === "01"){
+                parent.EtrIbBondinfo002.dbclickRefresh002(data);
+            }
         },
         /**
          * 定义表格名称
@@ -89,10 +92,12 @@
         },
         dblclick:function(table, data) {
             if(data.entrustStatus === "05" || data.entrustStatus === "07"){
-                parent.EtrIbBondinfo002.dbclickEtr(data);
+                let flag = parent.EtrIbBondinfoMain.changeFlgObj.getChangeFlg();
+                if(flag === "01"){
+                    parent.EtrIbBondinfo002.dbclickEtr(data);
+                }
             }
         },
-        page: false,
         /**
          * 定义表格名称
          */
@@ -102,6 +107,8 @@
         cols:[
             {field:'entrustId', title: 'EtrIbBondinfo001.entrustId', sortField:'entrustId',width : 100}//指令编号
             ,{field:'entrustStatus', visible:false}
+            ,{field:'counterId', visible:false} // 交易对手
+            ,{field:'invAim', visible:false} // 投资目的
             ,{field:'effectiveStatus', title: 'EtrIbBondinfo001.effectiveStatus',render : function(data, type, row, meta) {
                     return row.entrustStatusName==='流程中'?'流程中':"有效";
                 }, width : 100}//有效状态

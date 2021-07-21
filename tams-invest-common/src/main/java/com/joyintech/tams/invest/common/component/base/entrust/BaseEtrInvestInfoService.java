@@ -207,4 +207,11 @@ public interface BaseEtrInvestInfoService {
      * @return
      */
     boolean deleteDelegateFlow(Map<String, Object> param);
+
+    /**
+     * 退回或撤回后再启动流程时初始化流程数据
+     * @param dto
+     * @return
+     */
+    public boolean insertWithQuery(BaseEtrInvestInfoDto dto);
 }

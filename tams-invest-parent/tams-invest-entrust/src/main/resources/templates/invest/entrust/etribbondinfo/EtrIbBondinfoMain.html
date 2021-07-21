@@ -68,15 +68,16 @@
 		</div>
 	</div>
 	<div class="bottom_panel" id = "bottom_panel_dev">
-		<div class="left_bottom_panel" id = "left_bottom_panel_dev">
+		<div class="left_bottom_panel" id = "left_bottom_panel_dev" >
 			<iframe id = "EtrEtfInfoHq" th:src="@{'/invest/entrust/etribbondinfo/EtrIbBondinfo001/initHq'}" width="100%"
 					height="100%"  frameborder="0"  style="border:none;"></iframe>
 		</div>
-		<div class="right_bottom_panel" id = "right_bottom_panel_dev">
+		<div class="right_bottom_panel" id = "right_bottom_panel_dev" >
 			<div class="layui-tab"  style="height:83%;margin-bottom:3%;" lay-filter="zlPlatform">
 				<ul class="layui-tab-title">
 					<li class="layui-this" id="danEtr_li">单组合指令</li>
 					<li>多组合指令</li>
+					<a id="enlarge" class="layui-btn layui-btn-sm " data-th-text="大小切换" style="margin-bottom: 5px;"></a>
 				</ul>
 				<div class="layui-tab-content" style="height:98%;padding-top:0.5%;">
 					<!-- 单组合指令 -->

@@ -38,10 +38,7 @@ import com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.BasePtlRe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 计划类资产（利率型）Service
@@ -327,10 +324,15 @@ public class FinPlanProfitAssetService extends BaseService<FinPlanProfitAssetDto
         //end
         //调用资产负债报送信息组件插入数据
         List<RepAssetDept> repAssetDeptList = new ArrayList<>();
-        for (RepAssetDept r :repAssetDeptList){
-            r.setRepCcy(dto.getCcy());
+
+        // 20210720 增加判空校验 by caozhenming start
+        if (Objects.nonNull(dto.getRepAssetDept())){
+            repAssetDeptList.add(dto.getRepAssetDept());
+            for (RepAssetDept r :repAssetDeptList){
+                r.setRepCcy(dto.getCcy());
+            }
         }
-        repAssetDeptList.add(dto.getRepAssetDept());
+        // 20210720 增加判空校验 by caozhenming end
         baseRepAssetDeptInfoService.insert(repAssetDeptList);
         //金融产品买断利率表插入数据
         PaFinProductBuyoutRateKey paFinProductBuyoutRateKey = new PaFinProductBuyoutRateKey();

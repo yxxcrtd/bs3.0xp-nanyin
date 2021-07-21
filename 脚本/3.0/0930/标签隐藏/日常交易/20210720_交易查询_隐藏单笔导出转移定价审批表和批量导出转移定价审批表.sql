@@ -1,0 +1,6 @@
+DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='TrdInvestDealQuery001';
+insert into SYS_ELEMENT_CONTROL(PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+VALUES('TrdInvestDealQuery001','TrdInvestDealQuery001_btn_singleExport','singleExport','单笔导出转移定价审批表','02','02','02',null);
+
+insert into SYS_ELEMENT_CONTROL(PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+VALUES('TrdInvestDealQuery001','TrdInvestDealQuery001_btn_batchExport','batchExport','批量导出转移定价审批表','02','02','02',null);

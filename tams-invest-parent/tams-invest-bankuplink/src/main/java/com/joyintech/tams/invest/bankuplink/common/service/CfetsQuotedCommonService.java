@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.system.base.entity.SysUserAdd;
 import com.joyintech.tams.constant.DictCodeList;
 
@@ -625,6 +626,8 @@ public class CfetsQuotedCommonService extends BaseService {
      * @since 1.0
      */
     public Page<SelectOptionDto> selectPortfolioId(Map<String, Object> param) {
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        param.put("userId", userId == null ? "" : userId);
         param.put("platDate", iPlatformDate.getSysDateStr());
 		if (null != param.get("responseMySide") && StringUtils.isNotEmpty(param.get("responseMySide").toString())) {
 			param.put("mySide", param.get("responseMySide").toString());

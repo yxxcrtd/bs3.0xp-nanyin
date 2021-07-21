@@ -88,7 +88,7 @@ public class FinPlanAssetC002Controller extends BaseController{
             DictCode.行内资产三级分类,DictCode.行内资产四级分类,DictCode.行内资产五级分类);
         this.setSelectOptionToModel(model,DictCode.计划类资产一级分类,
             DictCode.计划类资产二级分类,DictCode.清算速度,DictCode.币种, DictCode.资产_负债二级类别,
-            DictCode.本金收益特征,DictCode.是否,DictCode.投资性质,DictCode.资金实际投向, DictCode.购买结构);
+            DictCode.本金收益特征,DictCode.是否,DictCode.投资性质,DictCode.资金实际投向, DictCode.购买结构,DictCode.增信措施);
         /*添加行内资产五级分类的数据字典值 lishuping 2019/7/23 end*/
         model.addAttribute("FUND_ASSET_TYPE_F01", DictCodeList.基金类资产类型_货币基金.getValue());
         model.addAttribute("PLAN_ASSET_TYPE_N02", DictCodeList.计划类资产一级分类_信托产品.getValue());

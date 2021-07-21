@@ -441,7 +441,8 @@
             ,{field:'doEntrustMoney', width:150, title: '剩余委托额度',sortable: false}
             ,{field:'prinAmt', width:150, title: '本金金额',edit:true,sortable: false,type:'number', digit:2}
             ,{field:'intAmt', width:150, title: '应计利息总额',sortable: false,type:'number', digit:2}
-            ,{field:'channelFee', width:150, title: '通道费',edit:false,sortable: false,visible: true,type:'number', digit:2}
+            // 通道费 隐藏  by gaoshuqi 20210721
+            /*,{field:'channelFee', width:150, title: '通道费',edit:false,sortable: false,visible: true,type:'number', digit:2}*/
             ,{field:'tradeAmtAndFee', width:150, title: '交易金额',sortable: false,type:'number', digit:2}
             ,{field:'accAvailableCashT', width:150, title: '组合T日可用现金',sortable: false,type:'number', digit:2}
             ,{field:'accAvailableCashT1', width:150, title: '组合T+1日可用现金',sortable: false,type:'number', digit:2}

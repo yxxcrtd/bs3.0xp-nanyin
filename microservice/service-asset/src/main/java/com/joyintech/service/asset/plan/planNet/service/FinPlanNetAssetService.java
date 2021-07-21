@@ -39,10 +39,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 计划类资产（净值型）Service
@@ -348,9 +345,11 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
         
         //调用资产负债报送信息组件插入数据
         List<RepAssetDept> repAssetDeptList = new ArrayList<>();
-        repAssetDeptList.add(dto.getRepAssetDept());
         for (RepAssetDept r :repAssetDeptList){
             r.setRepCcy(dto.getCcy());
+        }
+        if (Objects.nonNull(dto.getRepAssetDept())){
+            repAssetDeptList.add(dto.getRepAssetDept());
         }
         baseRepAssetDeptInfoService.insert(repAssetDeptList);
         /**
@@ -452,9 +451,11 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
         //调用资产负债报送信息组件修改数据
         BaseRepAssetDeptInfoDto baseRepAssetDeptInfoDto = new BaseRepAssetDeptInfoDto();
         List<RepAssetDept> repAssetDeptList = new ArrayList<>();
-        repAssetDeptList.add(dto.getRepAssetDept());
-        for (RepAssetDept r :repAssetDeptList){
-            r.setRepCcy(dto.getCcy());
+        if (Objects.nonNull(dto.getRepAssetDept())){
+            repAssetDeptList.add(dto.getRepAssetDept());
+            for (RepAssetDept r :repAssetDeptList){
+                r.setRepCcy(dto.getCcy());
+            }
         }
         baseRepAssetDeptInfoDto.setRepAssetDeptList(repAssetDeptList);
         List<String> finProdIdList = new ArrayList<>();
@@ -542,7 +543,7 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
     /**
      * 查询资产代码
      *
-     * @param finprodId 资产代码
+     * @param finprodMarketId 资产代码
      * @return 查询资产代码
      * @see
      * @since 1.0

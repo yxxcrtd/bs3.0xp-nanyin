@@ -83,10 +83,6 @@ public class CeAssetGroupManagement002Service extends CommonExportService<CeAsse
         Map<String, Object> map = new HashMap<>();
         map.put("seqno", seqno);
         map.put("assetpoolName", assetpoolName);
-        
-        //modify by wj  增加流程中的判断。
-        map.put("pageId", "CeAssetGroupManagement002");
-        
         return restTemplate.postForObject(ServiceApplication.RISK_SERVICE_NAME
                                           + "/CeAssetGroupManagement/checkIsExistByassetpoolName",
             map, Integer.class);

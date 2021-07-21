@@ -1015,4 +1015,30 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         }
         return false;
     }
+
+    /**
+     * 撤回或退回再启动流程时转移至废弃备份表
+     * 流程表数据入库
+     * @param dto
+     * @return
+     */
+    public boolean insertWithQuery(BaseEtrInvestInfoDto dto){
+        EtrEntrust etr = etrEntrustMapper.selectByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+        if(etr != null){
+//            if(StringUtil.equals(etr.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue()) ||
+//                    StringUtil.equals(etr.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())){
+//            }
+            // 有效数据转移
+            etrEntrustMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustAddMapper.deleteByPrimaryKey(dto.getEtrEntrustAdd().getEntrustId());
+            // 转移至废弃表
+            etrEntrustMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
+            etrEntrustAddMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
+            // 使用退回或撤回状态
+            dto.getEtrEntrust().setEntrustStatus(etr.getEntrustStatus());
+        }else{
+            dto.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+        }
+        return newDelegateFlow(dto);
+    }
 }

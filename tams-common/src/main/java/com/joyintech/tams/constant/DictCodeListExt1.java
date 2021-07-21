@@ -1832,8 +1832,8 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 
 	存款类资产类型_GZ_同业借款(DictCode.存款类资产类型_GZ,"03","同业借款"),
 	//add by meifaxin 20210713 start
-	允许不允许_允许(DictCode.允许或不允许,"Y","允许"),
-	允许不允许_不允许(DictCode.允许或不允许,"N","不允许"),
+	当日回转交易_允许(DictCode.当日回转交易,"01","允许"),
+	当日回转交易_不允许(DictCode.当日回转交易,"02","不允许"),
 	基金类型_ETF(DictCode.基金类型,"07","ETF"),
 	ETF基金类型_货币ETF(DictCode.ETF基金类型,"01","货币ETF"),
 	ETF基金类型_单市场股票ETF(DictCode.ETF基金类型,"02","单市场股票ETF"),

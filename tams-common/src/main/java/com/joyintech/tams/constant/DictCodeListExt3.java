@@ -758,6 +758,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     扣减对象_担保人(DictCode.扣减对象,"04","担保人"),
     扣减对象_管理人(DictCode.扣减对象,"05","管理人"),
     扣减对象_存放行(DictCode.扣减对象,"06","存放行"),
+    扣减对象_合作机构(DictCode.扣减对象,"09","合作机构"),
     额度规则类型_资产大类(DictCode.额度规则类型,"01","资产大类"),
     额度规则类型_单笔资产(DictCode.额度规则类型,"02","单笔资产"),
     共通业务类型_单笔资产额度校验规则(DictCode.共通业务类型,"RSK45","单笔资产额度校验规则"),

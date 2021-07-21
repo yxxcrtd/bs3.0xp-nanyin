@@ -121,7 +121,7 @@
             ,{field:'ccy',visible:false}
             ,{field:'ccyStr', width:'10%', title: 'TrdFundInvestTrade001.ccy',sortField:"CCY"}
             // <!-- 资产推荐方 新增 zhuyongkang 20191023 start-->
-            ,{field:'assetRecommandOrg',sortField:'ASSET_RECOMMAND_ORG', width:150, title: 'TrdFundInvestTrade001.assetRecommandOrg'}
+            ,{field:'assetRecommandOrg',sortField:'ASSET_RECOMMAND_ORG', width:150, title: 'TrdFundInvestTrade001.assetRecommandOrg',visible:false}
             // <!-- 资产推荐方 新增 zhuyongkang 20191023 end-->
             ,{field:'remark', width:'20%', title: 'TrdFundInvestTrade001.remark',sortable:false}
             ,{field:'bTradeId',visible:false}

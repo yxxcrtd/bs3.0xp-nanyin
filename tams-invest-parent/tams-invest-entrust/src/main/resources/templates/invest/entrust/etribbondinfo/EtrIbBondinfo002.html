@@ -4,7 +4,7 @@
     <head> 
     </head>
     <body>
-        <div layout:fragment="content">
+        <div layout:fragment="content" id="EtribBondInfo002_bodydiv">
 	        <style type="text/css">
 		        .layui-form-radio {
 		            line-height: 24px;
@@ -20,7 +20,6 @@
 		    </style>
             <div class="joyin-form-wrap">
                 <form class="layui-form pro-module-form" id="searchForm">
-                    <input type="hidden" id="EtrIbBondinfo002_default_ccy" th:value="${(entity?.ccy)?:'CNY1'}"/>
                     <input type="hidden" id="finprodIdhid" name="finprodId" th:value="${entity?.finprodId}" />
                     <input type="hidden" id="calendarId" name="calendarId" th:value="${entity?.calendarId}" />
                     <input type="hidden" id="businessId" name="businessId" th:value="${businessId?: ''}">
@@ -274,7 +273,7 @@
 <!--                                    data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}?innerTrade=false&tradeMarket=01&callPageId=EtrInvestBondInfo002|"-->
 <!--                                    th:initValue="${entity?.counterId}"-->
 <!--                                ></select>-->
-                                <select required type="text" id="counterId1" name="counterId1"
+                                <select type="text" id="counterId1" name="counterId1"
                                         class="layui-input form-input input-select"
                                         th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
                                         th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}" allowClear="true"
@@ -285,8 +284,7 @@
                         <div id="div_counterId2" class="form-inline-wrap" style=" width: 50%; padding:0px;display: none">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.counterId}">交易对手</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
-                                <select required
-                                        id="counterId2" name="counterId2"
+                                <select id="counterId2" name="counterId2"
                                         class="layui-input form-input input-select"
                                         data-th-placeholder="#{SysCommon.placeholder}"
                                         formatoption="false"
@@ -409,6 +407,7 @@
                 var aim01 = /*[[${aim01}]]*/ ''
                 var aim02 = /*[[${aim02}]]*/ ''
                 var N = /*[[${N}]]*/ ''
+                var CCY = /*[[${CCY}]]*/ ''
                 var MY_SUP_TIME_TYPE_02 = /*[[${MY_SUP_TIME_TYPE_02}]]*/ ''
                 var sysDate = /*[[${sysDate}]]*/ ''
                 var fintype = /*[[${fintype}]]*/ ''

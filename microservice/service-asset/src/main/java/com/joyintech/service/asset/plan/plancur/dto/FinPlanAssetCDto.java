@@ -66,6 +66,16 @@ public class FinPlanAssetCDto extends FinProduct {
      */
     private String redSpeed;
 
+    /**
+     * 增信措施
+     */
+    private String creditEnhanceMeasure;
+
+    /**
+     * 基金经理姓名
+     */
+    private String fundMangerName;
+
     public String getTrialNo() {
         return trialNo;
     }
@@ -308,7 +318,7 @@ public class FinPlanAssetCDto extends FinProduct {
 
     /**
      * 设置 资产推荐方名称
-     * @param recommender 资产推荐方名称
+     * @param recommenderName 资产推荐方名称
      */
     public void setRecommenderName(String recommenderName) {
         this.recommenderName = recommender == null ? null : recommenderName.trim();
@@ -893,7 +903,20 @@ public class FinPlanAssetCDto extends FinProduct {
     public void setPtlPortfolio(PtlPortfolio ptlPortfolio) {
         this.ptlPortfolio = ptlPortfolio;
     }
-    
-    
-    
+
+    public String getCreditEnhanceMeasure() {
+        return creditEnhanceMeasure;
+    }
+
+    public void setCreditEnhanceMeasure(String creditEnhanceMeasure) {
+        this.creditEnhanceMeasure = creditEnhanceMeasure;
+    }
+
+    public String getFundMangerName() {
+        return fundMangerName;
+    }
+
+    public void setFundMangerName(String fundMangerName) {
+        this.fundMangerName = fundMangerName;
+    }
 }

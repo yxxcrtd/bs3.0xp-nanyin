@@ -21,6 +21,7 @@ import com.joyintech.service.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtrTrdProductDealDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -198,9 +199,9 @@ public class EtrIbBondinfo001Service extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        List<EtrIbBondinfo001Dto> list = etrIbBondinfo001Mapper.findZqzyPositionsPage(pageParam);
-
-        return new Page<EtrIbBondinfo001Dto>(list);
+//        List<EtrIbBondinfo001Dto> list = etrIbBondinfo001Mapper.findZqzyPositionsPage(pageParam);
+        return super.queryForPage(page, length, () -> etrIbBondinfo001Mapper.findZqzyPositionsPage(pageParam));
+//        return new Page<EtrIbBondinfo001Dto>(list);
     }
 
     /**
@@ -210,6 +211,9 @@ public class EtrIbBondinfo001Service extends BaseService{
      */
     public EtrFinProductDto getEtrFinProductInfo(Map<String, Object> pageParam) {
         pageParam.put("sysDate", iPlatformDate.getSysDateStr());
+        pageParam.put("EXEC_MODE_01", DictCodeList.行权方式_赎回.getValue());
+        pageParam.put("EXEC_MODE_02", DictCodeList.行权方式_回售.getValue());
+        pageParam.put("FINPROD_TYPE2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         EtrFinProductDto dto = etrIbBondinfo001Mapper.getEtrFinProductInfo(pageParam);
         if (dto != null) {
             //剩余期限为负统一为0

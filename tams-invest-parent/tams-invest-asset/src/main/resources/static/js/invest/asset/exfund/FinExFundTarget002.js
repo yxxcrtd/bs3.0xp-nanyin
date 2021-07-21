@@ -55,8 +55,8 @@
         if(object.bussRepFundInfoDto != null){
         	object.bussRepFundInfoDto.finprodType2 = finprodType2;
         }
-        if(object.divideMethod){
-            object.divideMethod = object.divideMethod.join(",");
+        if(object.bonusType){
+            object.bonusType = object.bonusType.join(",");
         }
         //modify by mashukai 20201117 BS-2006 公募基金草稿箱提交时校验资产代码问题
         if(!draftoption){
@@ -69,7 +69,7 @@
 		if (object.tradeMarketId != null) {
 			object.finprodMarketId = object.finprodMarketId + object.tradeMarketId;
 		}else {
-			object.finprodMarketId = object.finprodMarketId + AssetCommon.setTradeMarketId(object.finprodMarketId);
+			object.finprodMarketId = object.finprodMarketId + setTradeMarketId(object.finprodMarketId);
 		}
         if ($('#capiIncomeFeature').next().find("em").text() === '是') {
             object.capiIncomeFeature = 'Y';
@@ -100,7 +100,6 @@
                 } else {
                     Joyin.confirm(result.data, function () {
                         if (operateType === 'save') {
-                            alert(JSON.stringify(object));
                             WorkFlow.doSaveList(basePath + 'invest/asset/exfund/FinExFundTarget002/save', object, "FinExFundTarget002_btn_save");
                         } else {
                             WorkFlow.doSubmitList(basePath + 'invest/asset/exfund/FinExFundTarget002/save', object, "FinExFundTarget002_btn_submit");
@@ -247,7 +246,7 @@
                 //下拉框特殊处理
                 if (id == 'tradeMarket') {
                     //给资产代码后缀赋值
-                    AssetCommon.setTradeMarketId(value);
+                    setTradeMarketId(value);
                     element.val(value).trigger('change');
                 }else if (id == 'manager' ||   id == 'calendarId') {
                     //data-url 赋值要特殊处理
@@ -263,6 +262,20 @@
                 element.val(value);
             }
 		}
+    }
+
+    /**
+     * 设置市场代码后缀
+     */
+    var  setTradeMarketId=function(tradeMarket){
+        if (tradeMarket == '03') {//上海证券交易所
+            $('#tradeMarketId').val('.SH');
+        }else if (tradeMarket == '04') {//深圳证券交易所
+            $('#tradeMarketId').val('.SZ');
+        }else{//机构间私募系统
+            $('#tradeMarketId').val('.IOC');
+        }
+        return $('#tradeMarketId').val();
     }
     /**
      * 交易所基金类型 change
@@ -397,19 +410,20 @@
     }
 
     var tradeMarketChange = function(){
-        AssetCommon.setTradeMarketId($('#tradeMarket').val());
-        if($('#tradeMarket').val() == '03'){
-            $('#tradeCalendarCode').val(TRM_FUND_TYPE);
-        }else if($('#tradeMarket').val() == '04'){
-            $('#trmFundType').val('').trigger('change');
-            $('#trmFundType').prop('disabled',true);
-            $('#trmFundAbbr').val('');
-            $('#trmFundAbbr').prop('disabled',true);
+
+        setTradeMarketId($('#tradeMarket').val());
+        if($('#tradeMarket').val() == TRADE_PLACE_03){
+            $('#calendarId').textSelect('setValue', '04');
+        }else if($('#tradeMarket').val() == TRADE_PLACE_04){
+            // $('#trmFundType').val('').trigger('change');
+            // $('#trmFundType').prop('disabled',true);
+            // $('#trmFundAbbr').val('');
+            // $('#trmFundAbbr').prop('disabled',true);
+            $('#calendarId').textSelect('setValue', '05');
         }else{
             $('#tradeMarketId').val('');
+            $('#calendarId').val("").trigger('change');
         }
-        secondTypeChange();
-        trmFundTypeChange();
     }
     //控件加载完成后
     window.componentLoadCallback = function(isDone, pagePath, params){

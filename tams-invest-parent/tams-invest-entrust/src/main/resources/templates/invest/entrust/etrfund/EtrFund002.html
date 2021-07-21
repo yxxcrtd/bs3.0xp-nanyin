@@ -34,19 +34,19 @@
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-lable" data-th-text="#{EtrFund001.entrustVDate}">委托开始日</label>
+                                        <label class="layui-form-label form-lable" data-th-text="#{EtrFund001.entrustVDate}">指令开始日</label>
                                         <div class="layui-input-inline input-inline">
                                             <input id='vdate' name='vdate'
-                                                   class="layui-input form-input input-dateSelect" placeholder="请选择时间"
+                                                   class="layui-input form-input input-dateSelect" placeholder="请选择时间" disabled="disabled"
                                                    data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
                                                    required>
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-lable" data-th-text="#{EtrFund001.entrustMDate}">委托终止日</label>
+                                        <label class="layui-form-label form-lable" data-th-text="#{EtrFund001.entrustMDate}">指令终止日</label>
                                         <div class="layui-input-inline input-inline">
                                             <input id='mdate' name='mdate'
-                                                   class="layui-input form-input input-dateSelect" placeholder="请选择时间"
+                                                   class="layui-input form-input input-dateSelect" placeholder="请选择时间" disabled="disabled"
                                                    data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
                                                    required>
                                         </div>
@@ -83,7 +83,7 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <div class="form-inline-wrap">
+                                    <div id="etrTradeMarket" class="form-inline-wrap">
                                         <label class="layui-form-label form-lable" data-th-text="#{EtrFund002.tradePlat}">交易场所</label>
                                         <div class="layui-input-inline input-inline">
                                             <select type="text" id="tradeMarket" name="tradeMarket" class="layui-input form-input input-select"
@@ -173,7 +173,7 @@
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap" id="entrustAmt0">
-                                        <label class="layui-form-label form-lable" data-th-text="#{EtrFund001.entrustAmt}">委托金额</label>
+                                        <label class="layui-form-label form-lable" data-th-text="#{EtrFund001.entrustAmt}">指令金额</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="entrustAmt" name="entrustAmt" class="layui-input form-input text-money"
                                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
@@ -183,7 +183,7 @@
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap" id="entrustNum0">
-                                        <label class="layui-form-label form-lable">委托份额</label>
+                                        <label class="layui-form-label form-lable" data-th-text="#{EtrFund001.entrustNum}">指令份额</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="entrustNum" name="entrustNum" class="layui-input form-input text-number"
                                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
@@ -195,7 +195,7 @@
                                </div>
                                <div class="layui-form-item">
                                  <div class="form-inline-wrap" id="entrustAmt0">
-                                        <label class="layui-form-label form-lable" data-th-text="#{EtrFund002.price}">委托价格</label>
+                                        <label class="layui-form-label form-lable" data-th-text="#{EtrFund002.price}">指令价格</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="price" name="price" class="layui-input form-input text-money"
                                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"

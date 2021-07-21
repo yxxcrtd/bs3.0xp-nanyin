@@ -20,4 +20,12 @@ public interface CeMonitorReportMapper {
 	List<CreditLinesDealDto> selectOrgForPage(Map<String, Object> pageParam);
     List<CreditLinesDealDto> selectAssetForPage(Map<String, Object> pageParam);
     List<CreditLinesDealDto> selectAssetGroupForPage(Map<String, Object> pageParam);
+    /**
+     * 查询机构额度监控数据，20200702新增，add by yufei
+     * @param pageParam 查询参数
+     * @return 结果集
+     * @see
+     * @since 1.0
+     */
+    List<CreditLinesDealDto> selectOrgForPage2(Map<String, Object> pageParam);
 }

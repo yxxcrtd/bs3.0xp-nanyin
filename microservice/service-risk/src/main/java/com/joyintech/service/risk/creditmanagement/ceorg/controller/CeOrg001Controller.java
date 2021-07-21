@@ -28,6 +28,7 @@ import com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
 import com.joyintech.service.risk.creditmanagement.ceorg.service.CeOrg001Service;
 
 
+
 /**
  * 机构授信
  * @author 裴家俊
@@ -66,6 +67,5 @@ public class CeOrg001Controller {
             @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
         return ceOrg001Service.selectForPage(page, length, param);
     }
-
 
 }

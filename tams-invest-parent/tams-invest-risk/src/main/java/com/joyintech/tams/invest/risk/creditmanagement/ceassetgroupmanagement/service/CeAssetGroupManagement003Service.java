@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.s
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.dto.CeAssetGroupManagement001Dto;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -110,24 +111,10 @@ public class CeAssetGroupManagement003Service extends CommonExportService<CeAsse
      * @see
      * @since 1.0
      */
-    public int checkIsExistAssetPool(String finprodId) {
-        return restTemplate.postForObject(
+    public List<CeAssetGroupManagement001Dto> checkIsExistAssetPool(String finprodId) {
+        return restTemplate.postForList(
             ServiceApplication.RISK_SERVICE_NAME + "/CeAssetGroupManagement/checkIsExistAssetPool",
-            finprodId, Integer.class);
-    }
-    
-    /**
-     * <一句话功能简述>
-     * 校验添加的资产明细是否已被添加到其他系列中
-     * @param finprodId
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public String checkIsExistAssetPoolNew(String finprodId) {
-        return restTemplate.postForObject(
-            ServiceApplication.RISK_SERVICE_NAME + "/CeAssetGroupManagement/checkIsExistAssetPoolNew",
-            finprodId, String.class);
+            finprodId, CeAssetGroupManagement001Dto.class);
     }
 
     

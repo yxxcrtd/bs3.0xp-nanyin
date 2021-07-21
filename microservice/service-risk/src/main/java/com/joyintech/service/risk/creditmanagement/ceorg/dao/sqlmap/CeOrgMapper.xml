@@ -7,31 +7,40 @@
      */
     Page<CreditLinesDto> selectForPage(Map<String, Object> param);
 	 -->
-	 <select id="selectForPage" resultType="com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto">
-	 SELECT
-	 	A.SEQNO SEQNO,
-	 	A.CREDIT_MST_ID creditMstId, 
-	 	A.CUSTOMER_ID customerId,
-	 	A.TERM TERM, 
-	 	A.PFLSH PFLSH, 
-        A.CREDIT_AMT/100000000 creditAmt, 
-        A.VDATE VDATE,
-        A.MDATE MDATE,
-        A.REMARK,
-        A.HAP_CREDIT_AMT as hapCreditAmt,
-        C.CUSTOMER_NAME as customerName
-        <!--多级法人改造 add by jingqiongqiong 20200617-->
-		,A.INSTITUTION_CODE as institutionCode
-		 <!--多级法人改造 add by jingqiongqiong 20200617-->
-		,D.INSITITUTE_CODE as insitituteCode
-	 FROM 
-	 	CREDIT_LINES A
-	 	INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('01')
-	 	left join MST_CUSTOMER_INFO C on A.CUSTOMER_ID=C.CUSTOMER_ID
+	<!--modify by yushilong 机构授信字段新增 20200629 start-->
+	<select id="selectForPage" resultType="com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto">
+		SELECT
+			A.SEQNO SEQNO,
+			A.CREDIT_MST_ID creditMstId,
+			A.CUSTOMER_ID customerId,
+			A.TERM TERM,
+			A.PFLSH PFLSH,
+			A.CREDIT_AMT/100000000 creditAmt,
+			A.VDATE VDATE,
+			A.MDATE MDATE,
+			A.REMARK,
+			A.HAP_CREDIT_AMT as hapCreditAmt,
+			C.CUSTOMER_NAME as customerName,
+			D.INSITITUTE_CODE as insitituteCode
+			,A.IS_INTERBANK as isInterbank
+			,A.IS_LOOP_AMT as isLoopAmt
+			,case when G.CREDIT_TYPE = '13'
+			then G.CREDIT_AMT/100000000
+			else null
+			end as nlpscreditline
+		FROM CREDIT_LINES A
+		left join MST_CUSTOMER_INFO C on A.CUSTOMER_ID=C.CUSTOMER_ID
 	 	left join MST_CUSTOMER_INFO_ADD D on A.CUSTOMER_ID=D.CUSTOMER_ID
-		 <where>
+		left join (
+			select B.CUSTOMER_ID,B.PFLSH,B.CREDIT_AMT,F.CREDIT_TYPE from CREDIT_LINES B
+		 	left join CREDIT_CONF_INFO E on B.CREDIT_MST_ID = E.CREDIT_MST_ID
+		 	left join CREDIT_TAG_INFO F on E.CREDIT_TAG_ID = F.CREDIT_TAG_ID where F.CREDIT_TYPE = '13'
+		) G
+		on A.CUSTOMER_ID = G.CUSTOMER_ID AND A.PFLSH = G.PFLSH
+		<where>
+		 	A.CREDIT_MST_ID = '0001'
 		    <if test="customerId != null and customerId != ''">
-		 	 A.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		 	AND  A.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
 		 	</if>
 	    	<if test="pflsh !=null and pflsh !=''">
 			AND	A.PFLSH LIKE CONCAT(CONCAT('%',#{pflsh}),'%')
@@ -42,12 +51,15 @@
 		 	<if test="mdate != null and mdate !=''">
 		 	AND to_char(A.VDATE,'yyyy-MM-dd') &lt; = #{mdate,jdbcType=DATE}
 		 	</if>
-		 </where>
+			<if test="isInterbank != null and isInterbank !=''">
+			AND A.IS_INTERBANK = #{isInterbank,jdbcType=VARCHAR}
+			</if>
+		</where>
 	 </select>
 	
 	 <select id="queryCeOrgBySeqno" resultType="com.joyintech.service.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto"  >
        SELECT
-	 	A.SEQNO SEQNO,
+	 	A.SEQNO SEQNO,A.INTERNAL_RATING,
 	 	A.CREDIT_MST_ID creditMstId, 
 	 	A.CUSTOMER_ID customerId,
 	 	A.TERM TERM, 
@@ -57,12 +69,24 @@
         A.MDATE MDATE,
         A.REMARK,
         A.CREDIT_CONDITION,
-		A.INSTITUTION_CODE institutionCode
-
-	 FROM 
+        <!-- A.HOLD_MATURITY holdMaturity, -->
+        A.SINGER_SEC_RATIO
+        ,A.IS_INTERBANK isInterbank
+        ,A.IS_LOOP_AMT isLoopAmt
+        ,case when G.CREDIT_TYPE = '13'
+        then G.CREDIT_AMT/100000000
+        else null
+        end as nlpscreditline
+	 FROM
 	 	CREDIT_LINES A
+	 	left join
+	 	(select B.CUSTOMER_ID,B.CREDIT_AMT,B.PFLSH,F.CREDIT_TYPE from CREDIT_LINES B
+        left join CREDIT_CONF_INFO E on B.CREDIT_MST_ID = E.CREDIT_MST_ID
+        left join CREDIT_TAG_INFO F on E.CREDIT_TAG_ID = F.CREDIT_TAG_ID where F.CREDIT_TYPE = '13') G
+        on A.CUSTOMER_ID = G.CUSTOMER_ID and A.PFLSH = G.PFLSH
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </select>
+	<!--modify by yushilong 机构授信字段新增 20200629 end-->
     
      <select id="queryCeOrgByPflshAndCustomId" resultType="com.joyintech.tams.common.base.entity.CreditLines"  >
        SELECT
@@ -75,55 +99,31 @@
         where PFLSH = #{pflsh,jdbcType=VARCHAR}
         and PARENT_CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
     </select>
-
-	<select id="queryCeOrgByPflshAndCustomIdAndInst" resultType="com.joyintech.tams.common.base.entity.CreditLines"  >
-		SELECT
-		A.SEQNO,
-		A.CREDIT_MST_ID creditMstId,
-		A.CUSTOMER_ID customerId,
-		A.CREDIT_AMT/100000000 creditAmt
-		FROM
-		CREDIT_LINES A
-		where PFLSH = #{pflsh,jdbcType=VARCHAR}
-		and PARENT_CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
-		<if test="INSTITUTION_CODE != null and INSTITUTION_CODE != ''">
-			and A.INSTITUTION_CODE = #{INSTITUTION_CODE,jdbcType=VARCHAR}
-		</if>
-	</select>
     
-    <select id="searchRepeatByVmDate" 	resultType="Integer" >
-     select nvl(sum(base99.count),0) from (
-       SELECT
-	 	count(1) as count,
-	 	A.INSTITUTION_CODE as institutionCode
-	 FROM 
-	 	CREDIT_LINES A
+	<select id="searchRepeatByVmDate" 	resultType="Integer" >
+		SELECT
+	 		count(1)
+	 	FROM
+	 		CREDIT_LINES A
         where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
-        /** modify by yanya on 20190930 去除主体客户编号为空判断
-         and PARENT_CUSTOMER_ID IS NULL 
-         **/
-      <![CDATA[  
-      and to_char(VDATE,'yyyy-MM-dd')<= #{vmdate, jdbcType=VARCHAR}
-       and to_char(MDATE,'yyyy-MM-dd')>=#{vmdate, jdbcType=VARCHAR} 
-      ]]>
-      <if test="seqno != null and seqno != ''">
-			 <![CDATA[and  SEQNO <> #{seqno}]]>
-		</if> 
-		GROUP BY A.INSTITUTION_CODE
-	) base99
-		<if test="institutionCodes != null and institutionCodes.size() > 0">
-		where base99.institutionCode in
-			<foreach collection="institutionCodes" item="institutionCode" open="(" close=")" separator=",">
-				#{institutionCode}
-			</foreach>
+        AND A.Credit_Type='01'
+        <if test="vdate != null and vdate != ''">
+            and A.VDATE= to_date(#{vdate},'yyyy-MM-dd')
+        </if>
+		<if test="creditMstId != null and creditMstId != ''">
+			AND A.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
 		</if>
+		<if test="seqno != null and seqno != ''">
+			 <![CDATA[and  SEQNO <> #{seqno}]]>
+		</if>
+        <if test="pflsh != null and pflsh != ''">
+            AND A.pflsh = #{pflsh,jdbcType=VARCHAR}
+        </if>
     </select>
     
      <select id="searchRepeatByVmDateArea" 	resultType="Integer" >
-     select nvl(sum(base99.count),0) from (
        SELECT
-	 	count(1) as count,
-	 	A.INSTITUTION_CODE as institutionCode
+	 	count(1)
 	 FROM 
 	 	CREDIT_LINES A
         where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
@@ -137,73 +137,69 @@
       <if test="seqno != null and seqno != ''">
 			 <![CDATA[and  SEQNO <> #{seqno}]]>
 		</if> 
-		GROUP BY A.INSTITUTION_CODE
-	) base99
-		<if test="institutionCodes != null and institutionCodes.size() > 0">
-		where base99.institutionCode in
-			<foreach collection="institutionCodes" item="institutionCode" open="(" close=")" separator=",">
-				#{institutionCode}
-			</foreach>
-		</if>
     </select>
     
     <select id="searchRepeatByPflsh" 	resultType="Integer" >
-    select nvl(sum(base99.count),0) from (
        SELECT
-	 	count(1) as count,
-		res.INSTITUTION_CODE as institutionCode
-	 FROM
-	 (
-	 select INSTITUTION_CODE from CREDIT_LINES A
-	 where PFLSH = #{pflsh,jdbcType=VARCHAR}
-		<if test="seqno != null and seqno != ''">
-			<![CDATA[and  SEQNO <> #{seqno}]]>
+	 	count(1)
+	 FROM 
+	 	CREDIT_LINES 
+        where PFLSH = #{pflsh,jdbcType=VARCHAR}
+
+    	<if test="seqno != null and seqno != ''">
+			 <![CDATA[and  SEQNO <> #{seqno}]]>
 		</if>
 		<if test="creditMstId != null and creditMstId != '' and seqno != null and seqno != ''">
 			and CREDIT_MST_ID=#{creditMstId}
 		</if>
-		union all
-	 select sdpm.BUSINESS_DATA_PK5 as INSTITUTION_CODE
-		from SYS_DATA_PROCESS_MARK sdpm
-		WHERE 1=1
-		AND sdpm.status IN('A','U','P')
-		and sdpm.his_no = (select max (sdpm1.his_no) from SYS_DATA_PROCESS_MARK sdpm1 where sdpm1.WORKFLOW_ID = sdpm.WORKFLOW_ID)
-		and sdpm.BUSINESS_DATA_PK3 = #{pflsh,jdbcType=VARCHAR}
-		<if test="seqno !=null and seqno !=''">
-			AND sdpm.BUSINESS_DATA_PK1 != #{seqno,jdbcType=VARCHAR}
-		</if>
-		<if test="creditMstId != null and creditMstId != '' and seqno != null and seqno != ''">
-			and sdpm.BUSINESS_DATA_PK6 = #{creditMstId}
-		</if>
-		)res
-		GROUP BY res.INSTITUTION_CODE
-	) base99
-		<if test="institutionCodes != null and institutionCodes.size() > 0">
-			where base99.institutionCode in
-			<foreach collection="institutionCodes" item="institutionCode" open="(" close=")" separator=",">
-				#{institutionCode}
-			</foreach>
-		</if>
+
     </select>
-    
+
+	<!--add by yushilong 查询是否重复校验 20200629 start-->
+	<select id="searchRepeat" 	resultType="Integer" >
+        SELECT
+            count(1)
+        FROM CREDIT_LINES A
+        where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		<if test="creditType != null and creditType != ''">
+			AND A.Credit_Type = #{creditType,jdbcType=VARCHAR}
+		</if>
+        <if test="vdate != null and vdate != ''">
+            and A.VDATE= to_date(#{vdate},'yyyy-MM-dd')
+        </if>
+        <if test="creditMstId != null and creditMstId != ''">
+            AND A.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
+        </if>
+        <if test="seqno != null and seqno != ''">
+            and  SEQNO != #{seqno,jdbcType=VARCHAR}
+        </if>
+        <if test="pflsh != null and pflsh != ''">
+            AND A.pflsh = #{pflsh,jdbcType=VARCHAR}
+        </if>
+	</select>
+	<!--add by yushilong 查询是否重复校验 20200629 end-->
+
 	<!-- 客户代码联想查询 -->
 	<select id="getCustomerId" parameterType="Map" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT
 		    distinct
-			CUSTOMER_ID AS id,
-			CUSTOMER_NAME AS text
-		FROM MST_CUSTOMER_INFO 
-			 where CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR}
+			i.CUSTOMER_ID AS id,
+			i.CUSTOMER_NAME AS text,
+			a.INDUSTRY AS object
+		FROM MST_CUSTOMER_INFO i
+		LEFT JOIN MST_CUSTOMER_INFO_ADD a
+		ON i.CUSTOMER_ID = a.CUSTOMER_ID
+			 where i.CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR}
 		 	<if test="search !=null and search !=''">
-		  		AND (CUSTOMER_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
-			 	or CUSTOMER_NAME like concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
+		  		AND (i.CUSTOMER_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
+			 	or i.CUSTOMER_NAME like concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
 			 		
 			</if>
 			<if test="initValue != null and initValue != ''">
-				AND CUSTOMER_ID = #{initValue,jdbcType=VARCHAR}
+				AND i.CUSTOMER_ID = #{initValue,jdbcType=VARCHAR}
 			</if>
 	</select>
-	
+
 	
 	 <select id="getAllCeOrgQuote" resultType="com.joyintech.framework.select.TreeNode">
 	 	select m.CREDIT_QUOTE_TYPE_VALUE as id ,y.item_value as name,n.linked_item_code as upperCreditQuoteTypeCode  
@@ -245,7 +241,7 @@
 	
 	 <delete id="deleteOrgMx" parameterType="java.lang.String" >
         delete from CREDIT_LINES
-        where PFLSH = #{pflsh,jdbcType=VARCHAR}
+        where PFLSH = #{pflsh,jdbcType=VARCHAR} and CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
     </delete>
 
 	<select id="searchIsUse" parameterType="Map"	resultType="Integer" >
@@ -261,82 +257,23 @@
 		and  A.Hap_Credit_Amt>0
 
 	</select>
-
-	<select id="selectCreditLinesDeal" parameterType="Map"	resultType="com.joyintech.tams.common.base.entity.CreditLinesDeal" >
-		select CLD1.* from CREDIT_LINES_DEAL CLD1
-		left join CREDIT_LINES CL1 on CL1.SEQNO = CLD1.SEQNO
-		WHERE CL1.VDATE = (select max(VDATE) from CREDIT_LINES CL2 WHERE CL1.CREDIT_MST_ID = CL2.CREDIT_MST_ID AND CL1.CUSTOMER_ID = CL2.CUSTOMER_ID
-		<if test="vdate !=null">
-			and CL2.vdate &lt; #{vdate, jdbcType=DATE}
-		</if>
-		)
-		<if test="creditMstId !=null and creditMstId !=''">
-			and CL1.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
-		</if>
-		<if test="customerId !=null and customerId !=''">
-			AND CL1.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
-		</if>
-	</select>
-
-	<select id="selectCreditLinesHap" parameterType="Map"	resultType="java.math.BigDecimal" >
-		select nvl(CL1.HAP_CREDIT_AMT,0) from CREDIT_LINES CL1
-		WHERE CL1.VDATE = (select max(VDATE) from CREDIT_LINES CL2 WHERE CL1.CREDIT_MST_ID = CL2.CREDIT_MST_ID AND CL1.CUSTOMER_ID = CL2.CUSTOMER_ID
-		<if test="vdate !=null">
-			and CL2.vdate &lt; #{vdate, jdbcType=DATE}
-		</if>
-		)
-		<if test="creditMstId !=null and creditMstId !=''">
-			and CL1.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
-		</if>
-		<if test="customerId !=null and customerId !=''">
-			AND CL1.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
-		</if>
-	</select>
-
-    <select id="selectCreditLines" parameterType="Map"	resultType="com.joyintech.tams.common.base.entity.CreditLines" >
-        select CL1.SEQNO as seqno,
-        CL1.CUSTOMER_ID as customerId,
-        CL1.PFLSH as pflsh,
-        CL1.VDATE as vdate,
-        CL1.INSTITUTION_CODE as institution_Code,
-        CL1.CREDIT_MST_ID as creditMstId
-        from CREDIT_LINES CL1
-        WHERE 1=1
-        <if test="creditMstId !=null and creditMstId !=''">
-            and CL1.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
-        </if>
-        <if test="customerId !=null and customerId !=''">
-            AND CL1.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
-        </if>
-		<if test="vdate !=null and vdate !=''">
-			AND to_char(CL1.VDATE,'yyyy-MM-dd')  &gt;= #{vdate, jdbcType=VARCHAR}
-        </if>
-		<if test="seqno !=null and seqno !=''">
-			AND CL1.seqno != #{seqno,jdbcType=VARCHAR}
-		</if>
-		union all
-		select 	sdpm.BUSINESS_DATA_PK1 as seqno,
-				sdpm.BUSINESS_DATA_PK2 as customerId,
-				sdpm.BUSINESS_DATA_PK3 as pflsh,
-				to_date(sdpm.BUSINESS_DATA_PK4,'yyyy-MM-dd') as vdate,
-				sdpm.BUSINESS_DATA_PK5 as institution_Code,
-				sdpm.BUSINESS_DATA_PK6 as creditMstId
-		 from SYS_DATA_PROCESS_MARK sdpm
-		 WHERE 1=1
-		<if test="creditMstId !=null and creditMstId !=''">
-			and sdpm.BUSINESS_DATA_PK6 = #{creditMstId,jdbcType=VARCHAR}
-		</if>
-		<if test="customerId !=null and customerId !=''">
-			AND sdpm.BUSINESS_DATA_PK2 = #{customerId,jdbcType=VARCHAR}
-		</if>
-		<if test="vdate !=null and vdate !=''">
-			AND sdpm.BUSINESS_DATA_PK4  &gt;= #{vdate, jdbcType=VARCHAR}
-		</if>
-		<if test="seqno !=null and seqno !=''">
-			AND sdpm.BUSINESS_DATA_PK1 != #{seqno,jdbcType=VARCHAR}
-		</if>
-		AND sdpm.status IN('A','U','P')
-		and sdpm.his_no = (select max (sdpm1.his_no) from SYS_DATA_PROCESS_MARK sdpm1 where sdpm1.WORKFLOW_ID = sdpm.WORKFLOW_ID)
-    </select>
-
+	<select id="getOrgInfo" resultType="String" parameterType="String" >
+	 WITH TEMP AS
+     (SELECT customer_id, MAX(Vdate) Vdate
+        FROM CREDIT_INTERNAL_RATING
+       WHERE customer_id = #{customerId,jdbcType=VARCHAR}
+       GROUP BY customer_id)
+      select A.IS_GROUP_CUSTOMER || '#' || A.PARENT_CUSTOMER_NAME || '#' ||
+           BB.INTERNAL_RATING
+      FROM MST_CUSTOMER_INFO_ADD A
+      left join (select B.INTERNAL_RATING, B.CUSTOMER_ID, B.Vdate
+                   from CREDIT_INTERNAL_RATING B
+                   left join TEMP C
+                     ON C.CUSTOMER_ID = B.CUSTOMER_ID
+                  where B.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+                    and B.Vdate = C.vdate) BB
+        on BB.CUSTOMER_ID = A.Customer_Id
+       where A.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}        
+	  </select>
+	    
 </mapper>

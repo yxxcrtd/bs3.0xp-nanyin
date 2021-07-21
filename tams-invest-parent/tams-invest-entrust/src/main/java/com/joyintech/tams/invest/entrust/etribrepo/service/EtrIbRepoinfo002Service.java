@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.entrust.etribrepo.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,8 @@ import com.joyintech.tams.common.base.entity.*;
 //import com.joyintech.tams.invest.interf.b45.service.SendService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
+import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.workflow.engine.WorkflowContext;
@@ -254,8 +257,9 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
             mstFileInputParameter.setBussinessId(dto.getEntrustId());
             entity.setMstFileInputParameter(mstFileInputParameter);
             entity.setWorkFlowId(dto.getWorkflowId());
+            entity.setEtrPledgeList(getEtrPledgeListByBussRepoSecDto(dto.getBussRepoSec(),dto.getEntrustId()));
             restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/insertWithQuery", entity,
                 Boolean.class);
             if(baseEtrCashPositionCommService!=null){
                 baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
@@ -269,6 +273,31 @@ public class EtrIbRepoinfo002Service extends CommonExportService<EtrIbRepoinfo00
         }
     }
     
+    
+    private List<EtrPledge> getEtrPledgeListByBussRepoSecDto(BussRepoSecDto bussRepoSec,String bizCode){
+    	 if(StringUtil.isNotEmpty(bussRepoSec)){
+    		 List<EtrPledge> etrPledgeList = new ArrayList<>();
+    		 for (PledgeBondInfoDto pledgeBond : bussRepoSec.getPledgeBondList()) {
+                 // 回购委托新建
+                 EtrPledge etrPledge = new EtrPledge();
+                 // 委托代码 = 委托代码
+                 etrPledge.setEntrustId(bizCode);
+                 // 金融产品代码 = 输出质押品DTO.金融产品代码
+                 etrPledge.setFinprodId(pledgeBond.getFinprodId());
+                 // 质押面值 = 输出质押品DTO.质押面值
+                 etrPledge.setPledgeFaceValue(new BigDecimal("100"));
+                 // 质押数量 = 输出质押品DTO.质押数量
+                 etrPledge.setPledgeNumber(ArithmeticUtil.divide(pledgeBond.getPledgePrin(), new BigDecimal("100"), 4));
+                 // 质押率 = 输出质押品DTO.质押率
+                 etrPledge.setPledgeRatio(ArithmeticUtil.divide(pledgeBond.getPledgeRatio(), new BigDecimal("100"), 4));
+                 // 质押金额 = 输出质押品DTO.质押金额
+                 etrPledge.setPledgeAmt(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), etrPledge.getPledgeRatio()));
+                 etrPledgeList.add(etrPledge);
+        	 }
+    		 return etrPledgeList;
+    	 }
+    	 return null;
+    }
     
     @Override
     public void doDelete(String workflowId) {

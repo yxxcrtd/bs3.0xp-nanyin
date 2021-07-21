@@ -51,10 +51,10 @@ public class BussRepFundInfoValidator implements BeanValidator{
                 && ( StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_基础设施基金.getValue()) ||
                 StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他私募股权投资基金.getValue()) ))
             ){
-            if(StringUtil.isEmpty(dto.getRepAssetType())){
+        /*    if(StringUtil.isEmpty(dto.getRepAssetType())){
                 resultList.add(new ValidMessage("repAssetType",
                     getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repAssetType"))));
-            }
+            }*/
             if(StringUtil.isNotEmpty(dto.getRepAssetType())){
                 if(StringUtil.isEmpty(dto.getRepIndustry())){
                     resultList.add(new ValidMessage("repIndustry",

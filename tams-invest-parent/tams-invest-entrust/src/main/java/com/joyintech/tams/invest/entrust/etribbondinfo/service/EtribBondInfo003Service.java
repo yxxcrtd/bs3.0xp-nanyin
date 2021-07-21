@@ -32,7 +32,10 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.FinCashCalcRule;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -47,19 +50,14 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
-import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.SecInfoModelDto;
-import com.joyintech.tams.invest.entrust.etribrepo.dto.EtribRepoInfo003Dto;
-import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -163,6 +161,15 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
         }
         Map<String, Object> result = new HashMap<>();
 
+        if(!StringUtil.isNotEmpty(param.get("finprodId"))){
+            /**
+             * 当单选组合时，使用组合的币种
+             */
+            PtlPortfolio ptlPortfolio = findPortfolio(param.get("portfolioId") + "");
+            if(ptlPortfolio != null && StringUtil.isNotEmpty(ptlPortfolio.getCcy())){
+                param.put("ccy", ptlPortfolio.getCcy());
+            }
+        }
         // 可用现金
         Map<String, Object> cash = etrCommonService.getProAvailableCash(param);
         //组合T日可用现金
@@ -280,16 +287,29 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
      */
     @Override
     public void doInsert(EtribBondInfo003Dto entity, OperationType type){
-        if ("submit".equals(entity.getOperateType())) {
-            if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos())) {
-                for (EtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
-                    doInsertFlow(dto);
-                }
-            }
-        }
-        entity.setOperateType(type.toString());
+//        if ("submit".equals(entity.getOperateType())) {
+//            if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos())) {
+//                for (EtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
+//                    doInsertFlow(dto);
+//                }
+//            }
+//        }
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo003/doInsert",entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doUpdate(EtribBondInfo003Dto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo003/doUpdate",entity,
+                Integer.class);
+    }
+
+    @Override
+    public void doBack(EtribBondInfo003Dto entity) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo003/doBack",entity,
                 Integer.class);
     }
 
@@ -1053,7 +1073,7 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo003/doComplete", entity,
                 Integer.class);
 
-        doDeleteFlow(entity.getWorkflowId());
+//        doDeleteFlow(entity.getWorkflowId());
     }
 
     @Override

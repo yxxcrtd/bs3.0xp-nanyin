@@ -185,6 +185,7 @@
         T1.REMARK
         ,T1.COUNTER_ID counterId
         ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        ,T1.INV_AIM as invAim
         from
         ETR_ENTRUST T1
         INNER JOIN
@@ -279,6 +280,7 @@
         T1.REMARK
         ,T1.COUNTER_ID counterId
         ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        ,T1.INV_AIM as invAim
         from
         WFL_ETR_ENTRUST T1
         INNER JOIN
@@ -435,12 +437,13 @@ from
     LEFT JOIN FIN_CASH_CALC_RULE t8 ON t8.FINPROD_ID=tempT8.FINPROD_ID AND t8.EFF_DATE = tempT8.EFF_DATE
     and t8.CASH_ID = t5.CASH_ID
     LEFT JOIN (
-        select A.FINPROD_ID,max(A.EXERCISE_DATE) EXERCISE_DATE
-        from FIN_EXERCISE_PLAN A
+        <!-- 取大于当前时间的最接近的实际行权日 -->
+        select A.FINPROD_ID,min(A.EXERCISE_DATE) EXERCISE_DATE
+        from FIN_EXERCISE_PLAN A 
         where
-        1=1
+        sysdate &lt;= A.ACT_EXERCISE_DATE and A.EXERCISE_TYPE in (#{EXEC_MODE_01}, #{EXEC_MODE_02}) 
         <if test="finprodId != null and finprodId != ''">
-            AND A.FINPROD_ID = #{finprodId}
+            AND A.FINPROD_ID = #{finprodId} 
         </if>
         group by A.FINPROD_ID
     ) B on t1.FINPROD_ID = B.FINPROD_ID
@@ -464,11 +467,11 @@ from
     FIN_EXERCISE_PLAN t1
     inner join sys_datadict_list t2
         on t2.DICT_CODE = 'EXEC_MODE' and t1.EXERCISE_TYPE = t2.ITEM_CODE
-    where
-    1=1
-    and t1.FINPROD_TYPE2 = 'F01'
-    <if test="finprodId != null and finprodId != ''">
-        AND t1.FINPROD_ID = #{finprodId}
-    </if>
+    where 
+          t1.FINPROD_TYPE2 = #{FINPROD_TYPE2_F01} and 
+          sysdate &lt;= t1.ACT_EXERCISE_DATE and t1.EXERCISE_TYPE in (#{EXEC_MODE_01}, #{EXEC_MODE_02}) 
+      <if test="finprodId != null and finprodId != ''">
+            AND t1.FINPROD_ID = #{finprodId}
+      </if>
     </select>
 </mapper>

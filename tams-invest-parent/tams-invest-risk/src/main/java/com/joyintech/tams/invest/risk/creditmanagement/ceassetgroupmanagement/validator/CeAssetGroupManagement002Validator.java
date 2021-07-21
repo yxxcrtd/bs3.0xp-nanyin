@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.v
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.dto.CeAssetGroupManagement001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +22,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.invest.risk.creditmanagement.ceasset.dto.CreditLinesAstDto;
-import com.joyintech.tams.invest.risk.creditmanagement.ceasset.service.CeAsset002Service;
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.dto.CeAssetGroupManagement002Dto;
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.service.CeAssetGroupManagement003Service;
 
@@ -48,9 +47,6 @@ public class CeAssetGroupManagement002Validator implements BeanValidator {
      */
     @Autowired
     MstWorkflowCommonService mstWorkflowCommonService;
-    
-    @Autowired
-    CeAsset002Service ceAsset002Service;
 
     /**
      * {@inheritDoc}
@@ -73,57 +69,37 @@ public class CeAssetGroupManagement002Validator implements BeanValidator {
                 if (!StringUtil.isEmptyList(selectedItem)) {
                     List<CeAssetGroupManagement002Dto> totalList = this.getBusinessInfoByWorkflowId(
                         dto.getWorkflowId(), false);
-                    
-                    // add by wj  20200429 --- 增加校验  判断  流程中的 授信资产 
-                    List<CreditLinesAstDto> assetList = getCeAssetListByWorkflowId(dto.getWorkflowId(), false);
-                    
                     // 页面中选中的资产明细
                     for (CeAssetGroupManagement002Dto ceAssetGroupManagement002Dto : selectedItem) {
                         // 数据库已存在资产明细判断
-                    	// modifyby wj 20200424 是否存在其他授信系列中 将系列name查出 放入提示中
-                        String assetpoolName = ceAssetGroupManagement003Service.checkIsExistAssetPoolNew(
+                        List<CeAssetGroupManagement001Dto> list = ceAssetGroupManagement003Service.checkIsExistAssetPool(
                             ceAssetGroupManagement002Dto.getFinprodId());
-                        if (StringUtil.isNotEmpty(assetpoolName)) {
-                            validList.add(new ValidMessage(this.getMessage("RSK_W2_0002",
-                                ceAssetGroupManagement002Dto.getFinprodId(),assetpoolName)));
+                        if (!StringUtil.isEmptyList(list)) {
+                            validList.add(new ValidMessage(this.getMessage("RSK_W_0043",
+                                ceAssetGroupManagement002Dto.getFinprodId(),list.get(0).getAssetpoolName())));
                         }
-                        
-                        // 资产授信判断 判断是否已存在单个资产授信中。
                         int countLine = ceAssetGroupManagement003Service.checkisExistAssetByCredit(ceAssetGroupManagement002Dto.getFinprodId());
                         if (countLine > 0) {
-                        	validList.add(new ValidMessage(this.getMessage("RSK_W2_0001",
-                                    ceAssetGroupManagement002Dto.getFinprodId())));
+                        	validList.add(new ValidMessage(this.getMessage("RSK_W_0043",
+                                    ceAssetGroupManagement002Dto.getFinprodId(),dto.getAssetpoolName())));
                         }
                         if (!StringUtil.isEmptyList(totalList)) {
                             for (int i = 0; i < totalList.size(); i++ ) {
                                 // 逐个判断资产明细
                                 if (StringUtil.equals(ceAssetGroupManagement002Dto.getFinprodId(),
                                     totalList.get(i).getFinprodId())) {
-                                    validList.add(new ValidMessage(this.getMessage("RSK_W2_0003",
-                                        ceAssetGroupManagement002Dto.getFinprodId())));
+                                    validList.add(new ValidMessage(this.getMessage("RSK_W_0043",
+                                        ceAssetGroupManagement002Dto.getFinprodId(),dto.getAssetpoolName())));
                                 }
                             }
                         }
-                        
-                        // add by wj 20200429--- 增加校验  判断  流程中的 授信资产 
-                        if (!StringUtil.isEmptyList(assetList)) {
-                            for (int i = 0; i < assetList.size(); i++ ) {
-                                // 逐个判断资产明细
-                                if (StringUtil.equals(ceAssetGroupManagement002Dto.getFinprodId(),
-                                		assetList.get(i).getCustomerId())) {
-                                    validList.add(new ValidMessage(this.getMessage("RSK_W2_0004",
-                                        ceAssetGroupManagement002Dto.getFinprodId())));
-                                }
-                            }
-                        }
-                        
                     }
                 }
                 else {
                     validList.add(new ValidMessage(this.getMessage("RSK_W_0045")));
                 }
             }
-            
+
         }
         if (!StringUtil.equals(dto.getOperateType(), "edit")
             && StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
@@ -180,40 +156,6 @@ public class CeAssetGroupManagement002Validator implements BeanValidator {
             totalList.addAll(selectedItem2);
         }
         return totalList;
-    }
-    
-    
-    
-    /**
-     * <一句话功能简述> 筛选获取流程中的资产明细
-     * 
-     * @param workflowId 工作流代码
-     * @param isdelete 是否过滤自身流程
-     * @return 流程中存在的资产
-     * @see
-     * @since 1.0
-     */
-    private List<CreditLinesAstDto> getCeAssetListByWorkflowId(String workflowId,Boolean isdelete) {
-        // 查询流程中的工作流代码
-        String pageId = "CeAsset002";
-        List<CeAssetGroupManagement002Dto> list = ceAssetGroupManagement003Service.getBusinessWorkflowId(
-            pageId);
-        List<CreditLinesAstDto> ceAssetList = new ArrayList<>();
-        if (isdelete == true) {
-            for (int i = list.size() - 1; i >= 0; i-- ) {
-                if (StringUtil.equals(list.get(i).getWorkflowId(), workflowId)) {
-                    list.remove(i);
-                }
-            }
-        }
-        // 流程中的资产明细查询并汇总
-        for (CeAssetGroupManagement002Dto ceAssetGroupManagement002Dto2 : list) {
-        	CreditLinesAstDto business = ceAsset002Service.getBussinessEntityByWorkflowId(
-                ceAssetGroupManagement002Dto2.getWorkflowId());
-            // 流程中的资产明细
-        	ceAssetList.add(business);
-        }
-        return ceAssetList;
     }
 
 }

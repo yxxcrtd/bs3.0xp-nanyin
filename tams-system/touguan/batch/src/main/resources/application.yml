@@ -533,3 +533,78 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
+
+
+
+---
+spring:
+  profiles: dev
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.90.198
+    port: 6379
+    timeout: 20000
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: BS30INIT_DEV
+    password: BS30INIT_DEV
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+#应用配置
+application:
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldiruserName: BS30INIT_DEV
+  sqldirpassword: BS30INIT_DEV
+  #以下根据实际ip和端口进行修改
+  micorservice:
+    contextPath:
+      single: true
+      commonService: http://127.0.0.1:8080/tams
+      basicDataService: http://127.0.0.1:8080/tams
+      documentService: http://127.0.0.1:8080/tams
+      entrustService: http://127.0.0.1:8080/tams
+      periodService: http://127.0.0.1:8080/tams
+      assetService: http://127.0.0.1:8080/tams
+      portfolioService: http://127.0.0.1:8080/tams
+      productService: http://127.0.0.1:8080/tams
+      quotaService: http://127.0.0.1:8080/tams
+      reportService: http://127.0.0.1:8080/tams
+      riskService: http://127.0.0.1:8080/tams
+      riskRdsService: http://127.0.0.1:8080/tams
+      riskInfService: http://127.0.0.1:8080/tams
+      settleService: http://127.0.0.1:8080/tams
+      tradeService: http://127.0.0.1:8080/tams
+      disclosureService: http://127.0.0.1:8080/tams
+      valuationService: http://127.0.0.1:8080/tams
+      chbService: http://127.0.0.1:8080/tams
+      chb3Service: http://127.0.0.1:8080/tams
+      svrcomService: http://127.0.0.1:8080/tams
+      pbcService: http://127.0.0.1:8080/tams
+      investInterfService: http://127.0.0.1:8080/tams
+      tamsServer: http://127.0.0.1:8080/tams
+      exchangeService: http://127.0.0.1:8080/tams
+#base数据库配置
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: BS30INIT_DEV
+    password: BS30INIT_DEV
+#interf数据源配置
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: BS30INIT_DEV
+    password: BS30INIT_DEV
+#日志路径配置
+log:
+  path: D:/home/tams/logs/touguan/batch
+  level: debug
+logging:
+  path: /home/tams/logs/touguan/batch
+#注册中心配置
+eureka:
+  client:
+    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.197:8070

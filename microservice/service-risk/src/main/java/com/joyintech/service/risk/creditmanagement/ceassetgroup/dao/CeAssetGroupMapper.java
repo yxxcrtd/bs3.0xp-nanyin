@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto;
+import com.joyintech.tams.common.base.entity.CreditAssetpool;
 
 /**
  * 
@@ -36,5 +37,7 @@ public interface CeAssetGroupMapper {
      */
     List<SelectOptionDto> getAssetGroupAliasIds(Map<String, Object> map);
     
-
+    int deleteByPrimaryKey(String seqno);
+    
+    List<CreditAssetpool> querycreditAssetpool(Map<String, Object> map);
 }

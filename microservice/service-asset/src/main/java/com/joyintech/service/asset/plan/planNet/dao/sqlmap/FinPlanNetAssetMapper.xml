@@ -274,6 +274,8 @@ WHERE
         B.PUR_SPEED,
         B.RED_SPEED,
         <!--update by zhangnian 20190916 end-->
+        B.CREDIT_ENHANCE_MEASURE creditEnhanceMeasure,
+        B.FUND_MANGER_NAME fundMangerName,
         C.CASH_OUT_NO cmsId,
         D.TYPE_6 category,
         D.TYPE_7 type,

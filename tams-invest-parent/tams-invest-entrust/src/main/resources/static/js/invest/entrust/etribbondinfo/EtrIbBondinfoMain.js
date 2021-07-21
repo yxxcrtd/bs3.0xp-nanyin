@@ -95,24 +95,28 @@ $(
          */
         function doRiskcal003() {
             var object = EtrIbBondinfo003.getSearchParams();
-            var checkParam = {};
-            checkParam.data = EtrIbBondinfo003.getriskdata();
-            var param = [];
+            // var checkParam = {};
+            // checkParam.data = EtrIbBondinfo003.getriskdata();
+            // if(!checkParam.data){
+            //     return null;
+            // }
+            // var param = [];
 
-            if (checkParam.data.length > 0) {
-                for (var index in checkParam.data) {
-                    var item = checkParam.data[index];
-                    item.data.assetCode = object.finprodId;
-                    item.data.finprodId = object.finprodId;
-                    item.data.counterId = object.counterId;
-                    item.data.ps = object.ps;
-                    item.data.ccy = "CNY";
-                    item.data.portfolioId = item.data.portfolioCode;
-                    item.data.price = object.price;
-                    item.data.entrustNum = item.data.entrustNum;
-                    param.push(item.data);
-                }
-            }
+            // if (checkParam.data.length > 0) {
+            //     for (var index in checkParam.data) {
+            //         var item = checkParam.data[index];
+            //         item.data.assetCode = object.finprodId;
+            //         item.data.finprodId = object.finprodId;
+            //         item.data.counterId = object.counterId;
+            //         item.data.ps = object.ps;
+            //         item.data.ccy = "CNY";
+            //         item.data.portfolioId = item.data.portfolioCode;
+            //         item.data.price = object.price;
+            //         item.data.entrustNum = item.data.entrustNum;
+            //         param.push(item.data);
+            //     }
+            // }
+            let checkParam = EtrIbBondinfo003.getriskdata();
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + "riskrds/interf/doInfBatchData/0/RSK002/F01", object, checkParam, riskMathRedisCallback003);
         }
         /**
@@ -150,7 +154,7 @@ $(
                 saveOrSubmit003(operateType);
             }
         }
-
+        
         function saveOrSubmit003(operateType) {
             var s;
             if (BaseRiskMathComm) {
@@ -158,24 +162,28 @@ $(
                 if (!s && s != "") {
                     return;
                 }
-                var checkData = {};
-                checkData.data = EtrIbBondinfo003.getriskdata();
+                var checkData = EtrIbBondinfo003.getriskdata();
                 if (window.BaseRiskMathComm.isCalcConditionChanged(checkData)) {
                     return;
                 }
             }
+            
             var res = EtrIbBondinfo003.getSubmitParam(operateType);
-
+            if(res == null) return;
             Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", res.param, function (result1) {
                 if (res.objects.length > 0) {
                     Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/check", res.objects, function (result) {
                         Joyin.confirm(result.data, function () {
                             if (operateType === "save") {
-                                WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_save", "EtribBondInfo003");
-                                EtrIbBondinfo003.doReset();
+                                WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_save", "EtribBondInfo003"
+                                ,function(){
+                                    window.location.reload();
+                                });
                             } else {
-                                WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_submit", "EtribBondInfo003");
-                                EtrIbBondinfo003.doReset();
+                                WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/save", res.param, "EtribBondInfo003_btn_submit", "EtribBondInfo003"
+                                ,function(){
+                                    window.location.reload();
+                                });
                             }
                         });
                     });
@@ -251,13 +259,11 @@ $(
                     Joyin.confirm(result.data, function () {
                         if (operateType === "save") {
                             WorkFlow.doSaveList(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/save", object, "EtrIbBondinfoMain_btn_save", "EtrIbBondinfo002", function () {
-                                JoyinUtil.disableButton("EtrIbBondinfoMain_btn_save", false);
-                                EtrIbBondinfo002.doReset();
+                                window.location.reload();
                             });
                         } else {
                             WorkFlow.doSubmitList(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/save", object, "EtrIbBondinfoMain_btn_submit", "EtrIbBondinfo002", function () {
-                                JoyinUtil.disableButton("EtrIbBondinfoMain_btn_submit", false);
-                                EtrIbBondinfo002.doReset();
+                                window.location.reload();
                             });
                         }
                     });
@@ -277,6 +283,18 @@ $(
             }
         }
 
+        var defaultStyle = "";
+        $("#enlarge").click(function () {
+            let rightDiv = $("#right_bottom_panel_dev");
+            if(!rightDiv.attr("flag") || rightDiv.attr("flag") === "1"){
+                defaultStyle = rightDiv.attr("style");
+                rightDiv.attr("style", "position: absolute; left: 0px; top:0px; width: 100%; height:100%;background: #fff; z-index: 100");
+                rightDiv.attr("flag","0");
+            }else{
+                rightDiv.attr("style", defaultStyle);
+                rightDiv.attr("flag","1");
+            }
+        });
         /**
          * 绑定事件
          */
@@ -347,9 +365,16 @@ dialogSelf.flag="abc";
 dialogSelf.dialog=function(msg, url, param){
     Joyin.dialog(msg, url, "98%", "95%", param);
 }
+
+let changeFlgObj = {}; 
+changeFlgObj.getChangeFlg=function () {
+    return changeFlg;
+}
 parent.EtrIbBondinfoMain = {
     dialogSelf:dialogSelf,
+    changeFlgObj:changeFlgObj
 }
 EtrIbBondinfoMain = {
-    dialogSelf:dialogSelf
+    dialogSelf:dialogSelf,
+    changeFlgObj:changeFlgObj
 }

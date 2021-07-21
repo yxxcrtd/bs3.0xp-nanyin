@@ -237,4 +237,46 @@ public class BussRepoSecController extends BaseController {
         }
         return result;
     }
+    
+    /**
+     * 自动导入质押券
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping("checkAutoPledgeOfEtrIbRepoinfo")
+    @ResponseBody
+    public AjaxResult checkAutoPledgeOfEtrIbRepoinfo(@RequestBody Map<String, Object> map) {
+        AjaxResult result = new AjaxResult();
+        List<ValidMessage> messages = new ArrayList<>();
+        Map<String, String> data = (HashMap<String, String>) map.get("data");
+        //组合代码,委托金额，基准日(委托开始日)，必填校验
+        String[] validParams = {"portfolioId", "entrustAmt", "vdate"};
+        for (String param : validParams) {
+            if (map.get(param) != null) {
+                List<String> fields = (List<String>) map.get(param);
+                notEmptyCheck(data == null ? null : data.get(param), fields.get(0).toString(), fields.get(1).toString(), messages);
+            }
+        }
+//        if (!(StringUtil.equals(data ==null?null :(String)data.get("ps"), DictCodeList.回购拆借方向_逆回购.getValue()))
+//            && !(StringUtil.isNotEmpty(data.get("secAcctId")) || StringUtil.isNotEmpty(data.get("chlId")) ||
+//                    StringUtil.isNotEmpty(data.get("securitiesCust")))){
+//            messages.add(new ValidMessage("BUS_REPO_SEC_001",getMessage("BUS_REPO_SEC_002")));
+//        }
+//       
+        // 必填项校验完成，则自动导入
+        if (!(messages.size() > 0)) {
+            // 自动导入质押券 查询
+            List<PledgeBondInfoDto> dataList = bussRepoSecService.selectAutoPledge(data);
+            if(dataList.size() > 0){
+                result.setData(dataList);
+            }else{
+                messages.add(new ValidMessage("BUS_REPO_SEC_001","无可用质押券，请手动添加"));
+            }
+        }
+        if(messages.size() > 0){
+            result.setErrorList(messages);
+        }
+        return result;
+    }
+    
+    
 }

@@ -10,11 +10,18 @@
 
 package com.joyintech.tams.invest.risk.creditmanagement.ceasset.dto;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -22,14 +29,13 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.CreditLines;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.risk.creditmanagement.ceasset.validator.CeAssetValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 
@@ -53,6 +59,13 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
      */
     private String pageModel;
 
+    public String isLoopAmtStr;
+
+    /**
+     * 授信使用条件
+     */
+    private String creditCondition;
+
     /**
      * 操作类型 - 工作流参数
      */
@@ -62,7 +75,7 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
      * 按钮ID - 工作流参数
      */
     private String elementId;
-    
+
     /**
      * 画面Id - 工作流参数
      */
@@ -86,6 +99,12 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
      * 画面Id - 机构名称
      */
     private String customerName;
+
+    /**
+     * 授信总份额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal creditShareAmt;
     
     @Override
     @PrimaryKey(value=Field.PK_1)
@@ -94,12 +113,14 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
 	}
 
     @Override
-    @PrimaryKey(value=Field.PK_3)
     @Length(fieldName = "CeAsset002.pflsh", max =50, groups = {ValidateGroupEdit.class})
+    @PrimaryKey(value=Field.PK_2)
 	@NotEmpty(fieldName = "CeAsset002.pflsh",groups={ValidateGroupEdit.class})
 	public String getPflsh() {
     	return StringUtil.isNotEmpty(super.getPflsh())?super.getPflsh():StringUtil.EMPTY;
 	}
+
+
 
     @Override
     @Length(fieldName = "CeAsset002.pflshName", max =60, groups = {ValidateGroupEdit.class})
@@ -112,7 +133,7 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
      * {@inheritDoc}
      */
     @Override
-	@PrimaryKey(value=Field.PK_2)
+    @PrimaryKey(value=Field.PK_3)
     public String getCustomerId(){
         return super.getCustomerId();
     }
@@ -126,11 +147,6 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
     public Date getVdate(){
         return super.getVdate();
     }
-
-	@PrimaryKey(value=Field.PK_4)
-	public String getVdateStr(){
-		return DateUtil.format(super.getVdate());
-	}
     /**
      * 到期日
      * {@inheritDoc}
@@ -156,14 +172,29 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
      * {@inheritDoc}
      */
     @Override
-    @Amount(fieldName = "CeAsset002.creditTotalAmt", maxIntBit = 30, maxDecBit = 2, groups = {
+    @Amount(fieldName = "CeAsset002.creditTotalAmt", maxIntBit = 30, maxDecBit = 4, groups = {
             ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "CeAsset002.creditTotalAmt", groups = {ValidateGroupEdit.class})
     public BigDecimal getCreditAmt(){
         return super.getCreditAmt();
     }
-    
-	public String getPageModel() {
+    /**
+     * 授信份额
+     * {@inheritDoc}
+     */
+    @Amount(fieldName = "CeAsset002.creditShareAmt", maxIntBit = 30, maxDecBit = 4, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getCreditShareAmt(){
+        return creditShareAmt;
+    }
+    /**
+     * 设置 creditShareAmt
+     * @param creditShareAmt creditShareAmt
+     */
+    public void setCreditShareAmt(BigDecimal creditShareAmt) {
+        this.creditShareAmt = creditShareAmt;
+    }
+
+    public String getPageModel() {
 		return pageModel;
 	}
 
@@ -222,10 +253,6 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
 		this.selectedItem = selectedItem;
 	}
 
-	@PrimaryKey(value=Field.PK_5)
-	public String getInstitutionCode() {
-		return super.getInstitutionCode();
-	}
 
 	public String getInsitituteCode() {
 		return insitituteCode;
@@ -245,14 +272,70 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
+	
+    public String getCreditObjStr() {
+        return StringUtil.isNotEmpty(this.getCreditObj()) ? SysDataUtil.getNameFromDataDict(
+            BussinessDictCode.授信对象, this.getCreditObj()) : null;
+    }
 
-	/**
-	 * 授信配置代码
-	 * {@inheritDoc}
-	 */
-	@Override
-	@PrimaryKey(value=Field.PK_6)
-	public String getCreditMstId(){
-		return super.getCreditMstId();
-	}
+    /**
+     * 获取首次开贷区间
+     * @return 首次开贷区间
+     * @see
+     * @since 1.0
+     */
+    public String getFirstLendingInterval() {
+        if (this.getCreditVdate() != null
+            && this.getCreditMdate() != null) {
+            return DateUtil.format(getCreditVdate(),
+                DateUtil.DEFAULT_DATE_FORMAT_EN) + " - "
+                   + DateUtil.format(getCreditMdate(),
+                       DateUtil.DEFAULT_DATE_FORMAT_EN);
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotEmpty(fieldName = "CeAsset002.creditObj", groups = {ValidateGroupEdit.class})
+    public String getCreditObj() {
+        return super.getCreditObj();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotEmpty(fieldName = "CeAsset002.isLoopAmt", groups = {ValidateGroupEdit.class})
+    public String getIsLoopAmt() {
+        return super.getIsLoopAmt();
+    }
+
+
+    public String getHoldMaturityStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.是否, super.getHoldMaturity());
+    }
+
+    public String getIsLoopAmtStr() {
+        if (StringUtil.equals (DictCodeList.是否_是.getValue(), this.getIsLoopAmt ())){
+            return "是";
+        }else if(StringUtil.equals (DictCodeList.是否_否.getValue(), this.getIsLoopAmt ())) {
+            return "否";
+        }else {
+            return "";
+        }
+    }
+
+
+    /**
+     * 取得 授信使用条件
+     * @return 授信使用条件
+     */
+    public String getCreditCondition() {
+        return super.getCreditCondition ();
+    }
 }

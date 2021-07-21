@@ -10,14 +10,15 @@
  
 package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.dto;
 
-import com.joyintech.framework.validation.annotation.ValidLogic;
+import java.util.List;
+
 import com.joyintech.tams.common.base.entity.CreditAssetpool;
+import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.validator.CeAssetGroupManagement001Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
-
-import java.util.List;
+import org.apache.poi.ss.formula.functions.T;
 
 /**
  * 〈一句话功能简述〉
@@ -69,8 +70,56 @@ public class CeAssetGroupManagement001Dto extends CreditAssetpool implements Pro
      * 
      */
     private Boolean flag;
-    
-    
+
+    private String pflsh;
+    private String assetGroupName;
+    private String creditAmt;
+
+    private String seqno;
+
+    private String vdate;
+    private List<CeAssetGroupManagement002Dto> dataList;
+
+    public List<CeAssetGroupManagement002Dto> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<CeAssetGroupManagement002Dto> dataList) {
+        this.dataList = dataList;
+    }
+
+    public String getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(String vdate) {
+        this.vdate = vdate;
+    }
+
+    public String getPflsh() {
+        return pflsh;
+    }
+
+    public void setPflsh(String pflsh) {
+        this.pflsh = pflsh;
+    }
+
+    public String getAssetGroupName() {
+        return assetGroupName;
+    }
+
+    public void setAssetGroupName(String assetGroupName) {
+        this.assetGroupName = assetGroupName;
+    }
+
+    public String getCreditAmt() {
+        return creditAmt;
+    }
+
+    public void setCreditAmt(String creditAmt) {
+        this.creditAmt = creditAmt;
+    }
+
     @Override
     @PrimaryKey(value=Field.PK_1)
     public String getSeqno() {
@@ -238,19 +287,7 @@ public class CeAssetGroupManagement001Dto extends CreditAssetpool implements Pro
     public void setFlag(Boolean flag) {
         this.flag = flag;
     }
-
-    /**
-     * 机构
-     */
-    @PrimaryKey(value = Field.PK_5)
-    private String institutionCode;
-
-    public String getInstitutionCode() {
-        return institutionCode;
-    }
-
-    public void setInstitutionCode(String institutionCode) {
-        this.institutionCode = institutionCode;
-    }
+    
+    
     
 }

@@ -54,6 +54,34 @@
 							</div>
 						</div>
 					</div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                            <label class="layui-form-label form-lable"
+                                data-th-text="#{CeAsset001.creditObj}">授信对象</label>
+                            <div class="layui-input-inline input-inline">
+                                <select  type="text" name="creditObj"class="layui-input form-input input-select" 
+                                data-th-data-result='${CREDIT_OBJ}' 
+                                allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" id="creditObj"
+                                ></select>    
+                            </div>
+                        </div>
+                        <div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                            <label class="layui-form-label form-lable"
+                                data-th-text="#{CeAsset001.creditShareAmt}">授信总份额（亿份）</label>
+                            <div class="layui-input-inline input-inline">
+                                <input type="text" name="creditShareAmt" data-th-placeholder="#{SysCommon.placeholder}" id="creditShareAmt"
+                                class="layui-input form-input input-text text-number" />    
+                            </div>
+                        </div>
+						<div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">
+							<label class="layui-form-label form-label-wrap" data-th-text="#{CeAsset002.holdMaturity}">是否持有至到期</label>
+							<div class="layui-input-inline input-inline">
+								<select id="holdMaturity" name="holdMaturity" class="layui-input form-input input-select"
+									data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${YES_OR_NO}">
+								</select>
+							</div>
+						</div>
+                    </div>
 				</form>
 			</div>
 
@@ -64,7 +92,7 @@
 	</div>
 	<div layout:fragment="script">
 	    <script data-th-inline="javascript" type="text/javascript">
-	    var cemodel=/*[[${cemodel}]]*/;
+	    var cemodel=/*[[${cemodel}]]*/'';
 		</script>
 		<script data-th-src="@{/js/invest/risk/creditmanagement/ceasset/CeAsset001.js}"></script>
 	</div>

@@ -76,6 +76,8 @@ var QueryFunc=function(){
         object.assetProvider = assetProvider;
         object.pageModel = pageModel;
         object.operateType = operateType;
+        // 增信措施(多选)
+        object.creditEnhanceMeasure = $('#creditEnhanceMeasure').val()?$('#creditEnhanceMeasure').val().join(","):'';
         //update by zhangnian 20191102 start
         /*var repYieldFlag = $("#bussRepAssetMngProdInfo_repYieldFlag").prop("checked") ? 'Y' : 'N';
         object.bussRepAssetMngProdInfo.repYieldFlag = repYieldFlag;
@@ -88,7 +90,10 @@ var QueryFunc=function(){
         object.bussRepAssetMngProdInfo.needValid = object.type == publicOffPlan;
         object.bussRepOutInvestAgrInfo.needValid = object.type != publicOffPlan;*/
         //文件信息
-        object.fileCommonList = FileCommon.getUploadFileInfo();
+        if (FileCommon){
+            object.fileCommonList = FileCommon.getUploadFileInfo();
+        }
+
       //参与方信息
       //   if(BussParticipantInfo){
       //       object.bussParticipantInfoDto = {};
@@ -96,8 +101,13 @@ var QueryFunc=function(){
       //       object.bussParticipantInfoDto.bussParticipantInfoDtoList = BussParticipantInfo.getAllRows();
       //   }
         //分红计划-货币型
-        object.bussFinIntPayDto.fundType = FUND_ASSET_TYPE_F01;
-        object.setFinprodType2 = FINPROD_TYPE_TG_F17;
+        if (object.bussFinIntPayDto){
+            object.bussFinIntPayDto.fundType = FUND_ASSET_TYPE_F01;
+        }
+        if (object.setFinprodType2){
+            object.setFinprodType2 = FINPROD_TYPE_TG_F17;
+        }
+
         //附件信息
         if(FileCommon) {
     		object.fileArray = FileCommon.getUploadFileInfo();

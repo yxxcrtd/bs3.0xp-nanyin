@@ -19,6 +19,8 @@ package com.joyintech.service.entrust.etribbondinfo.controller;
  */
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
 import com.joyintech.service.entrust.etribbondinfo.service.EtrIbBondinfo003Service;
@@ -28,6 +30,7 @@ import com.joyintech.tams.common.base.entity.WflEtrEntrustAddKey;
 import com.joyintech.tams.common.base.entity.WflEtrEntrustKey;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -64,7 +68,14 @@ public class EtrIbBondinfo003Controller {
     @PostMapping("doComplete")
     public void doComplete(@RequestBody EtribBondInfo003Dto entity)
             throws IllegalAccessException, InvocationTargetException {
-
+        if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos()))  {
+            for (EtribBondInfo003Dto dto: entity.getEtrInvestBondInfoDtos()) {
+                Map<String, Object> param = new HashMap<>();
+                param.put("entrustId", dto.getEntrustId());
+                etrIbBondinfo003Service.doDeleteEtrFlow(param);
+            }
+        }
+        WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         for (EtribBondInfo003Dto dto: entity.getEtrInvestBondInfoDtos()) {
             etrIbBondinfo003Service.doComplete(dto, entity.getOperateType());
         }
@@ -73,10 +84,43 @@ public class EtrIbBondinfo003Controller {
     @Transactional
     @DTXTransaction
     @PostMapping("doInsert")
-    public void doInsert(@RequestBody EtribBondInfo003Dto dto){
-        etrIbBondinfo003Service.doInsert(dto, dto.getOperateType());
+    public void doInsert(@RequestBody EtribBondInfo003Dto entity){
+        if ("submit".equals(entity.getOperateType())) {
+            if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos())) {
+                for (EtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
+                    dto.setWorkflowId(entity.getWorkflowId());
+                    WFlowCommonService.doInsertFlow(entity.getOperateType(), etrIbBondinfo003Service.initBaseEtrInvestInfoDto(dto));
+                }
+            }
+        }
+        
+        etrIbBondinfo003Service.doInsert(entity, entity.getOperateType());
     }
 
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doUpdate")
+    public void doUpdate(@RequestBody EtribBondInfo003Dto entity){
+        if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+            for (EtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
+                WFlowCommonService.doUpdateFlow(entity.getOperateType(), etrIbBondinfo003Service.initBaseEtrInvestInfoDto(dto));
+            }
+        }
+    }
+    
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBack")
+    public void doBack(@RequestBody EtribBondInfo003Dto entity){
+        if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos()))  {
+            for (EtribBondInfo003Dto dto: entity.getEtrInvestBondInfoDtos()) {
+                Map<String, Object> param = new HashMap<>();
+                param.put("entrustId", dto.getEntrustId());
+                etrIbBondinfo003Service.doDeleteEtrFlow(param);
+            }
+        }
+    }
+    
     @Transactional
     @DTXTransaction
     @PostMapping("doDeleteEtrFlow")

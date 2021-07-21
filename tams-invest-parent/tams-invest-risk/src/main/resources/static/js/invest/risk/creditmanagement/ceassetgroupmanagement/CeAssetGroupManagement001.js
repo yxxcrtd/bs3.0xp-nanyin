@@ -17,14 +17,6 @@ var loadTree = function (callback) {
     $("#mixTree").load(basePath +'invest/risk/creditmanagement/ceassetgroupmanagement/CeAssetGroupManagement001/getAssetName',
         {assetPoolName: $('#assetPoolName').val()}, function (data) {
             nodeId = '';
-          //update by yantianyuan 二级法人按钮改造 start
-            if(purviewElements.indexOf('_edit')==-1){
-            	$(".node_modify").hide();
-            }
-            if(purviewElements.indexOf('_delete')==-1){
-            	$(".node_delete").hide();
-            }
-          //update by yantianyuan 二级法人按钮改造 end
             if (typeof callback == 'function') {
                 callback();
             }
@@ -41,7 +33,7 @@ $(function () {
     //鼠标放置显示操作列效果
     $("body").on('mouseover', ".mixtree-node", null, function () {
         $(".operate_div").hide();
-        $(this).find(".operate_div").css({display: 'inline-block'});
+        // $(this).find(".operate_div").css({display: 'inline-block'});
     })
     //移开鼠标隐藏操作列效果
     $("body").on('mouseout', ".mixtree-node", null, function () {
@@ -106,6 +98,7 @@ $(function () {
         cols: [
             {field: 'finprodId', title:'CeAssetGroupManagement001.assetId'}
             ,{field: 'finprodName', title: 'CeAssetGroupManagement001.assetName'}
+            ,{field: 'vdate', title: '批复生效日', visible:false}
             ]
     });
     //绑定新增资产按钮事件
@@ -129,18 +122,25 @@ $(function () {
     $('#CeAssetGroupManagement001_btn_export').click(function () {
         exportExcel();
     })
+
+    $('#CeAssetGroupManagement001_btn_move').click(function () {
+        if(table.getAllCheckedRows().length == 0){
+            Joyin.alert("请选择资产代码！", 2);
+            return false;
+        }
+        Joyin.dialog(JoyinUtil.getLabel("CeAssetGroupManagement005"),
+            basePath + "invest/risk/creditmanagement/ceassetgroupmanagement/CeAssetGroupManagement005/init",
+            "50%", "75%",
+            {dataList:JSON.stringify(table.getAllCheckedRows())}
+            )
+    })
+
     //绑定系列名称新建按钮事件
     $('#CeAssetGroupManagement001_btn_creat').click(function () {
         Joyin.dialog(JoyinUtil.getLabel("CeAssetGroupManagement002"),
             basePath + "invest/risk/creditmanagement/ceassetgroupmanagement/CeAssetGroupManagement002/init",
             "50%", "75%")
     });
-    
-    $('#CeAssetGroupManagement001_btn_refresh').click(function () {
-    	loadTree();
-    	table.clear();
-    });
-    
     //绑定资产明细删除事件
     $('#CeAssetGroupManagement001_delete').click(function () {
         if (table != null && table != '') {

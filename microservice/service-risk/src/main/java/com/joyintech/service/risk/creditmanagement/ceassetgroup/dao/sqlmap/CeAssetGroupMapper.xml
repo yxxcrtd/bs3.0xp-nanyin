@@ -21,16 +21,14 @@
         A.HAP_CREDIT_AMT as hapCreditAmt,
         A.CREDIT_FLAG as creditFlag,
         C.ASSETPOOL_NAME as customerName
-		 <!--多级法人改造 add by jingqiongqiong 20200617-->
-		 ,A.INSTITUTION_CODE as institutionCode
-		 <!--多级法人改造 add by jingqiongqiong 20200617-->
 	 FROM 
 	 	CREDIT_LINES A
-	 	INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('03')
+<!-- 	 	INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('03') -->
 	 	left join CREDIT_ASSETPOOL C on A.CUSTOMER_ID=C.SEQNO
 		 <where>
+		 	A.CREDIT_TYPE = '03'
 		    <if test="customerId != null and customerId != ''">
-		 	 A.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		 	 AND A.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
 		 	</if>
 	    	<if test="pflsh !=null and pflsh !=''">
 			AND	A.PFLSH LIKE CONCAT(CONCAT('%',#{pflsh}),'%')
@@ -56,26 +54,29 @@
         A.MDATE MDATE,
         A.CREDIT_FLAG as creditFlag,
         A.REMARK,
-        A.CREDIT_CONDITION
-	 FROM 
+        A.CREDIT_CONDITION,
+        C.ASSETPOOL_NAME customerName,
+        /*add by yushilong 系列授信新增字段 20200630 start*/
+        A.IS_LOOP_AMT
+        /*add by yushilong 系列授信新增字段 20200630 end*/
+	 FROM
 	 	CREDIT_LINES A
-        where SEQNO = #{seqno,jdbcType=VARCHAR}
+	 	left join CREDIT_ASSETPOOL C on A.CUSTOMER_ID=C.SEQNO
+        where A.SEQNO = #{seqno,jdbcType=VARCHAR}
     </select>
     
 		<!-- 市场代码下拉框 -->
 	<select id="getAssetGroupAliasIds" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT 
-			SEQNO id,
-			ASSETPOOL_NAME text,
-			INSTITUTION_CODE institutionCode
-		FROM
-			CREDIT_ASSETPOOL
+		SELECT C.SEQNO id, C.ASSETPOOL_NAME text
+			  FROM CREDIT_ASSETPOOL C
+			 INNER JOIN CREDIT_LINES A
+			    on A.CUSTOMER_ID = C.SEQNO
 		<where>
 			<if test="assetAliasIds !=null and assetAliasIds != ''">	
-				ASSETPOOL_NAME like concat(concat('%',
+				C.ASSETPOOL_NAME like concat(concat('%',
 				#{assetAliasIds,jdbcType=VARCHAR}),'%')
 				OR
-				SEQNO like concat(concat('%',
+				C.SEQNO like concat(concat('%',
 				#{assetAliasIds,jdbcType=VARCHAR}),'%')
 			</if>
 		</where>	
@@ -122,5 +123,20 @@
             #{updateTime, jdbcType=TIMESTAMP}
 		)
  	</insert>
- 	
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CREDIT_ASSETPOOL
+        where SEQNO in (
+        select CUSTOMER_ID from CREDIT_LINES where SEQNO = #{seqno,jdbcType=VARCHAR}
+        )
+    </delete>
+    
+	 <select id="querycreditAssetpool" resultType="com.joyintech.tams.common.base.entity.CreditAssetpool"  >
+       SELECT
+	 	A.*
+	 FROM 
+	 	CREDIT_ASSETPOOL A
+        where A.ASSETPOOL_NAME = #{customerName,jdbcType=VARCHAR}
+    </select>
+    
 </mapper>

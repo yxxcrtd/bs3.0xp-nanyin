@@ -13,9 +13,11 @@ $(function() {
             secManageAcctId=object.secManageAcctId.join(',');
         }
         var portfolioId = object.portfolioId;
-//        if(null != portfolioId && "" != portfolioId){
-//            portfolioId=object.portfolioId.join(',');
-//        }
+        // add by swwan 多组合查询 20210719 start
+        if(null != portfolioId && "" != portfolioId){
+            portfolioId=object.portfolioId.join(',');
+        }
+        // add by swwan 多组合查询 20210719 start
         return {
         	portfolioId : portfolioId,//组合代码
         	cdate : $('#cdate').val(),//日期
@@ -51,7 +53,8 @@ $(function() {
             ,{field:'tradePositionAmount', title: 'ActualTimeAsset001.tradePositionAmount',type:'number', width : 200}//交易可用持仓
             ,{field:'pledgeAmount', title: 'ActualTimeAsset001.pledgeAmount',type:'number', width : 200}//预减持仓
             ,{field:'preReductionAmount', title: 'ActualTimeAsset001.preReductionAmount',type:'number', width : 200}//质押持仓
-            
+            ,{field:'marketValue', title: 'ActualTimeAsset001.marketValue',type:'number', width : 200}//市值
+
         ]
     });
     

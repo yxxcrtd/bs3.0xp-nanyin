@@ -337,6 +337,8 @@ public class FinPlanNetAssetService extends CommonExportService<FinPlanNetAssetD
         //update by  zhangnian  20190916 end
         //清算速度枚举值新加一个T+2 所以原有判断方法错误 yjm end 20190910
         finProductAdd.setInvestNature(dto.getInvestmentAttributes());
+        finProductAdd.setCreditEnhanceMeasure(dto.getCreditEnhanceMeasure());
+        finProductAdd.setFundMangerName(dto.getFundMangerName());
         dto.setFinProductAdd(finProductAdd);
         //金融产品分类表
         FinProductType finProductType = new FinProductType();

@@ -32,3 +32,4 @@ tams-integration/*
 .txlcn*
 
 *rebel.xml
+/maven_2.1.2/

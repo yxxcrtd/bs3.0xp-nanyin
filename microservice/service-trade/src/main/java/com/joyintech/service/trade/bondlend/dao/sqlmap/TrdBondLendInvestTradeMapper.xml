@@ -385,6 +385,8 @@
             A.FINPROD_MARKET_ID,
             A.IS_RIGHT
         FROM FIN_PRODUCT A
+        LEFT JOIN FIN_PRODUCT_ADD FPA
+            ON FPA.FINPROD_ID = A.FINPROD_ID
         LEFT JOIN FIN_PRODUCT_TYPE B
             ON B.FINPROD_ID = A.FINPROD_ID
         LEFT JOIN
@@ -424,6 +426,7 @@
                 <if test="FINPROD_MARKET != null and FINPROD_MARKET != ''">
                     AND A.TRADE_MARKET = #{FINPROD_MARKET}
                 </if>
+                AND (FPA.IS_ISSUE_ASSET = 'N' OR FPA.IS_ISSUE_ASSET IS NULL)
 	        </where>
         union
           select interf.SECID  id,

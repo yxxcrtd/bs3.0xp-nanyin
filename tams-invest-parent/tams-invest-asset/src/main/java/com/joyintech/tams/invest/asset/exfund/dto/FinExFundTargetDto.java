@@ -113,10 +113,6 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
     private String purSpeed;
 
 
-    /**
-     * 当日回转交易
-     */
-    private String  dayBackTrade;
 
     /**
      * 客户名称
@@ -127,11 +123,23 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
      * 客户代码
      */
     //private String customerId;
-
     /**
      * 分红方式
      */
     private String divideMethod;
+
+    /**
+     * 分红方式
+     */
+    private String bonusType;
+    /**
+     * 当日回转交易
+     */
+    private String tdyRevTrans;
+    /**
+     * 上市日期
+     */
+    private Date listingDate;
 
     /**
      * 支付频率
@@ -473,17 +481,11 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
     //@NotEmpty(fieldName = "FinFundTarget001.divideMethod", groups = {ValidateGroupEdit.class})
     //@Length(fieldName = "FinFundTarget001.divideMethod", max = 32, groups = {
     //  ValidateGroupEdit.class})
-    public String getDivideMethod() {
-        return divideMethod;
-    }
 
     public String getDivideMethodStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.分红方式, divideMethod);
     }
 
-    public void setDivideMethod(String divideMethod) {
-        this.divideMethod = divideMethod;
-    }
 
     //@NotEmpty(fieldName = "FinFundTarget001.carryoverFreq", groups = {ValidateGroupEdit.class})
     //@Length(fieldName = "FinFundTarget001.carryoverFreq", max = 32, groups = {
@@ -860,12 +862,28 @@ public class FinExFundTargetDto extends FinProduct implements ProcessEntity {
         this.oldFinprodMarketId = oldFinprodMarketId;
     }
 
-    public String getDayBackTrade() {
-        return dayBackTrade;
+
+    public String getBonusType() {
+        return bonusType;
     }
 
-    public FinExFundTargetDto setDayBackTrade(String dayBackTrade) {
-        this.dayBackTrade = dayBackTrade;
-        return this;
+    public void setBonusType(String bonusType) {
+        this.bonusType = bonusType;
+    }
+
+    public String getTdyRevTrans() {
+        return tdyRevTrans;
+    }
+
+    public void setTdyRevTrans(String tdyRevTrans) {
+        this.tdyRevTrans = tdyRevTrans;
+    }
+
+    public Date getListingDate() {
+        return listingDate;
+    }
+
+    public void setListingDate(Date listingDate) {
+        this.listingDate = listingDate;
     }
 }

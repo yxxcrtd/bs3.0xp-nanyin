@@ -18,4 +18,11 @@ public interface EtrEntrustMapper {
     int updateByPrimaryKeySelective(EtrEntrust record);
 
     int updateByPrimaryKey(EtrEntrust record);
+
+    /**
+     * 撤回或退回再启动流程时转移至废弃备份表
+     * @param entrustId
+     * @return
+     */
+    int insertFromQuery(String entrustId);
 }

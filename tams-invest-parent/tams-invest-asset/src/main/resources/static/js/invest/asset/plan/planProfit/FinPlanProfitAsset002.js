@@ -139,6 +139,8 @@ var QueryFunc=function(){
         var object = $.serializeToObject('#submitForm', true);
         //多选
         object.assetProvider = $('#assetProvider').val()?$('#assetProvider').val().join(","):'';
+        // 增信措施(多选)
+        object.creditEnhanceMeasure = $('#creditEnhanceMeasure').val()?$('#creditEnhanceMeasure').val().join(","):'';
         object.pageModel = pageModel;
         object.operateType = operateType;
         var repAssetType = $('#repAssetType').val();
@@ -152,10 +154,15 @@ var QueryFunc=function(){
         object.bussRepOutInvestAgrInfo.repContainExpectedYield = repContainExpectedYield;*/
         //update by zhangnian 20191102 end
         //是否需要验证判断
-        object.bussRepAssetMngProdInfo.needValid = repAssetType=="1701"||repAssetType=="1702"||repAssetType=="1703"||repAssetType=="1704"
-            ||repAssetType=="1705"||repAssetType=="1706";
-        object.bussRepOutInvestAgrInfo.needValid = repAssetType=="2801"||repAssetType=="2802"||repAssetType=="2803"||repAssetType=="2804"
-            ||repAssetType=="2805"||repAssetType=="2806"||repAssetType=="2899";
+        if (object.bussRepAssetMngProdInfo){
+            object.bussRepAssetMngProdInfo.needValid = repAssetType=="1701"||repAssetType=="1702"||repAssetType=="1703"||repAssetType=="1704"
+                ||repAssetType=="1705"||repAssetType=="1706";
+        }
+        if (object.bussRepOutInvestAgrInfo){
+            object.bussRepOutInvestAgrInfo.needValid = repAssetType=="2801"||repAssetType=="2802"||repAssetType=="2803"||repAssetType=="2804"
+                ||repAssetType=="2805"||repAssetType=="2806"||repAssetType=="2899";
+        }
+
         
         //sx个性化 草稿箱bug修复 start
         if (draftoption && object.bussRepAssetMngProdInfo){
@@ -167,12 +174,20 @@ var QueryFunc=function(){
 		//sx个性化 草稿箱bug修复 end
 		
         //参与方信息
-        object.bussParticipantInfoDto.type6 = object.category;
-        object.bussParticipantInfoDto.finprodType2 = INT_ASSET_TYPE;
+        if (object.bussParticipantInfoDto){
+            object.bussParticipantInfoDto.type6 = object.category;
+            object.bussParticipantInfoDto.finprodType2 = INT_ASSET_TYPE;
+        }
+
         //文件信息
-        object.fileCommonList = FileCommon.getUploadFileInfo();
+        if (FileCommon){
+            object.fileCommonList = FileCommon.getUploadFileInfo();
+        }
         // object.finProductAdd.calRateType = $('#finInterestFactorDto_calRateType').val();
-        object.calRateType = $('#finInterestFactorDto_calRateType').val();
+        if ( object.calRateType){
+            object.calRateType = $('#finInterestFactorDto_calRateType').val();
+        }
+
 
         if(object.parentPlan == 'Y'){
          // 付息信息
@@ -186,8 +201,13 @@ var QueryFunc=function(){
             object.bussFinRepaymentDto.finCashPlanList = BussFinRepayment.getAllRows();
         }
         //add by  zhangnian 20191021 start
-        object.bussRepAssetMngProdInfo.repAssetType = repAssetType;
-        object.bussRepOutInvestAgrInfo.repAssetType = repAssetType;
+        if (object.bussRepAssetMngProdInfo){
+            object.bussRepAssetMngProdInfo.repAssetType = repAssetType;
+        }
+        if (object.bussRepOutInvestAgrInfo){
+            object.bussRepOutInvestAgrInfo.repAssetType = repAssetType;
+        }
+
         //add by  zhangnian 20191021 end
         Joyin.ajaxJson(basePath + 'invest/asset/plan/planProfit/FinPlanProfitAsset002/check', object, function(result) {
             if (result.errorList.length > 0){

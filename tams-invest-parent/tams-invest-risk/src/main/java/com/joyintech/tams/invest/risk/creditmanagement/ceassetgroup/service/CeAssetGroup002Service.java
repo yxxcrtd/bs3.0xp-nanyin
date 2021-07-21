@@ -1,12 +1,19 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.CreditAssetpool;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -22,6 +29,13 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class CeAssetGroup002Service extends CommonExportService<CreditLinesAstGrpDto>
 		implements BaseProcessService<CreditLinesAstGrpDto> {
+    
+    
+    /**
+     * 文件附件接口
+     */
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
 
 	/**
 	 * {@inheritDoc}
@@ -67,4 +81,43 @@ public class CeAssetGroup002Service extends CommonExportService<CreditLinesAstGr
     	             Integer.class);
     }
     
+	 /**
+     * 查询是否存在对应系列
+      * @param map 检索参数
+      * @return CreditAssetpool
+      */
+    public List<CreditAssetpool> querycreditAssetpool(Map<String, Object> map) {
+        return restTemplate.postForList(
+            ServiceApplication.RISK_SERVICE_NAME + "/CeAssetGroup002/querycreditAssetpool",
+            map, CreditAssetpool.class);
+    }
+    
+    /**
+     * 
+     *  工作流doInsert
+     */
+    @Override
+    public void doInsert(CreditLinesAstGrpDto entity, OperationType type) {
+        if (!CollectionUtils.isEmpty(entity.getUploadFileList())
+            && StringUtil.isNotEmpty(entity.getSeqno())) {
+            fileAttachmentProcess.updateBussinessNo(
+                entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                    Collectors.toList()), entity.getSeqno());
+        }
+    }
+    
+    /**
+     * 工作流doUpdate
+     *
+     * @param entity entity 业务entity
+     */
+    @Override
+    public void doUpdate(CreditLinesAstGrpDto entity) {
+        if (!CollectionUtils.isEmpty(entity.getUploadFileList())
+            && StringUtil.isNotEmpty(entity.getSeqno())) {
+            fileAttachmentProcess.updateBussinessNo(
+                entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                    Collectors.toList()), entity.getSeqno());
+        }
+    }
 }

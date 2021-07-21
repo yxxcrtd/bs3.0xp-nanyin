@@ -1,24 +1,29 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceorg.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditConfInfoDto;
 import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
-import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditMstInfoDto;
+import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditConfInfoDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * 机构授信
@@ -35,7 +40,8 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 	
 	@Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
-	
+
+	 
 	/**
 	 * {@inheritDoc}
 	 */
@@ -47,12 +53,15 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 	        }
 	        else if (OperationType.NEW.equals(type)) {
 	            action = "insert";
-	            if(StringUtil.isNotEmpty(entity.getCreditQuoteItem())){
-	        		for(CreditLines dto:entity.getCreditQuoteItem()){
+	            // modify by yushilong 新建画面入库逻辑变更 20200702 start
+				entity.setSeqno(getQuotePrimaryKey());
+	            if(StringUtil.isNotEmpty(entity.getCreditLabelItem())){
+	        		for(CreditConfInfoDto dto:entity.getCreditLabelItem()){
 	        			dto.setSeqno(getQuotePrimaryKey());
 	        		}
 	        		
 	        	}
+				// modify by yushilong 新建画面入库逻辑变更 20200702 end
 	        }
 	        else {
 	            action = "update";
@@ -92,11 +101,11 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 
 	}
 	
-	public Page<CreditMstInfoDto> getTreeCeOrgQuote(Map<String, Object> pageParam) {
+	public Page<CreditConfInfoDto> getTreeCeOrgQuote(Map<String, Object> pageParam) {
 		pageParam.put("rank", quote_rank);
 		return restTemplate.postForPage(
 				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/getTreeCeOrgQuote",pageParam,
-				CreditMstInfoDto.class);
+				CreditConfInfoDto.class);
 	}
 	
 	 /**
@@ -114,13 +123,14 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 	
     /**
      * 新建场合时查询时间区间是否重复
-     * @param name
+     * @param
      */
-    public int searchRepeatByVmDate(String seqno,String customerId,Date vdate){
+    public int searchRepeatByVmDate(String seqno,String customerId,Date vdate,String creditMstId){
     	 Map<String, Object> map = new HashMap<String, Object>();
          map.put("customerId", customerId);
          map.put("seqno", seqno);
-         map.put("vmdate", DateUtil.format(vdate));
+         map.put("vdate", DateUtil.format(vdate,"yyyy-MM-dd"));
+         map.put("creditMstId",creditMstId);
     	 return restTemplate.postForObject(
     	            ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/searchRepeatByVmDate",map,
     	             Integer.class);
@@ -128,7 +138,7 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
     
     /**
      * 新建场合时查询时间区间是否重复
-     * @param name
+     * @param
      */
     public int searchRepeatByVmDateArea(String seqno,String customerId,Date vdate,Date mdate){
     	 Map<String, Object> map = new HashMap<String, Object>();
@@ -163,15 +173,29 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/searchIsUse",map,
 				Boolean.class);
 	}
-
-	public List<CreditLines> selectCreditLines(String creditMstId, String customerId, Date vdate, String seqno) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("customerId", customerId);
-		map.put("creditMstId", creditMstId);
-		map.put("seqno", seqno);
-		map.put("vdate", DateUtil.format(vdate));
-		return restTemplate.postForList(
-				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/selectCreditLines",map,
-				CreditLines.class);
+	
+	public String getOrgInfo(String customerId){
+		return restTemplate.postForObject(
+				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/getOrgInfo",customerId,
+				String.class);
 	}
+	
+	
+    public Page<CreditConfInfoDto> getCreditConfig(Map<String, Object> pageParam)
+            throws Exception {
+			return restTemplate.postForPage(
+				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/getCreditConfig",
+				pageParam, CreditConfInfoDto.class);
+        }
+	// add by yushilong 查询是否重复校验 20200629 start
+	/**
+	 * 新建或修改场合时查询数据是否重复
+	 * @param map
+	 */
+	public int searchRepeat(Map<String, Object> map){
+		return restTemplate.postForObject(
+				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/searchRepeat",map,
+				Integer.class);
+	}
+	// add by yushilong 查询是否重复校验 20200629 end
 }

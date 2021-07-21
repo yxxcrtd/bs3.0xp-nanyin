@@ -37,6 +37,8 @@ public class BussCombDistribtDto {
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal entrustNum;
 
+    private String invAim;
+    
     /**
      * 组合T日可用现金
      */
@@ -100,6 +102,14 @@ public class BussCombDistribtDto {
 
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
     }
 
     public BigDecimal getEntrustNum() {
