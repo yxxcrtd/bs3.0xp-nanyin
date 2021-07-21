@@ -154,15 +154,16 @@
 														class="layui-input form-input input-select"
 														id="subRateType" name="subRateType"
 														data-th-data-result='${GRADE_TYPE}'
-														data-th-initvalue="${entity?.subRateType}" 
+														data-th-initvalue="${entity?.subRateType}"
+														childrenIds="subRateType2"
 														data-th-placeholder="#{SysCommon.placeholder}"></select>
 												</div>
 												<div class="layui-input-inline" style="width: 41.5%">
 													<select type="text"
 														class="layui-input form-input input-select"
 														id="subRateType2" name="subRateType2"
-														formatoption="false" 
-                                                        multiple="multiple"
+														formatoption="false"
+														parentIds="subRateType" multiple="multiple"
 														data-th-initvalue="${entity?.subRateType2}"
 														data-th-data-result="${BODY_GRADE}"
 														data-th-placeholder="#{SysCommon.placeholder}"></select>
@@ -179,12 +180,14 @@
 													<select class="layui-input form-input input-select"
 														id="debRateType" name="debRateType"
 														data-th-data-result='${GRADE_TYPE}'
-														data-th-initvalue="${entity?.debRateType}" 
+														data-th-initvalue="${entity?.debRateType}"
+														childrenIds="debRateType2"
 														data-th-placeholder="#{SysCommon.placeholder}"></select>
 												</div>
 												<div class="layui-input-inline" style="width: 41.5%">
 													<select class="layui-input form-input input-select"
-														multiple="multiple" id="debRateType2" name="debRateType2" 
+														multiple="multiple" id="debRateType2" name="debRateType2"
+														parentIds="debRateType"
 														formatoption="false"
 														data-th-initvalue="${entity?.debRateType2}"
 														data-th-data-result="${BODY_GRADE}"
@@ -351,7 +354,7 @@
 }
 </style>
 		<script data-th-inline="javascript" type="text/javascript">
-    	var entity=/*[[${entity}]]*/;
+    	var entity=/*[[${entity}]]*/'';
         var DATE_RANGE_TYPE_CUSTOM = /*[[${DATE_RANGE_TYPE_CUSTOM}]]*/'';
         var PARA_TEMPLATE_FHMB = /*[[${PARA_TEMPLATE_FHMB}]]*/'';
         var PARA_TEMPLATE_ZCSZ = /*[[${PARA_TEMPLATE_ZCSZ}]]*/'';

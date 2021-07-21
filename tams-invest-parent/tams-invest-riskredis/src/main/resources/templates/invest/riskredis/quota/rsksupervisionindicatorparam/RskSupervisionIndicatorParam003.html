@@ -44,7 +44,15 @@
 							<div class="layui-form-item">
 								<div class="layui-col-md12 layui-col-sm12 layui-col-lg12">
 									<label class="layui-form-label form-lable" style="width: 22%;"
-										data-th-text="#{RskSupervisionIndicatorParam003.validDate}">有效日期</label> 
+										data-th-text="#{RskSupervisionIndicatorParam003.validDate}">有效日期</label>
+									<!-- <div class="layui-input-inline input-inline">
+										<input id="validDate" name="validDate"
+											class="layui-input form-input input-dateSelect"
+											placeholder="��ѡ��ʱ��"
+											data-th-value="${#dates.format(entity?.validDate,'yyyy-MM-dd')}"
+											data-th-placeholder="#{SysCommon.placeholder}"
+											required="required">
+									</div> -->
 									<div class="layui-input-inline input-inline" style="width:60%!important">
 										<input style="float: left; margin-right: 5px" type="text"
 											id="validDate" name="validDate"
@@ -66,21 +74,6 @@
 									</div>
 								</div>
 							</div>
-                            <div class="layui-form-item">
-                                <div class="layui-col-md12 layui-col-sm12 layui-col-lg12">
-                                    <label class="layui-form-label form-lable" style="width: 22%;"
-                                        data-th-text="#{RskSupervisionIndicatorParam003.institutionName}">机构名称</label>
-                                    <div class="layui-input-inline input-inline" style="width:60%!important">
-                                       <select type="text" id="institutionId"
-                                        name="institutionId" required="required"
-                                        class="layui-input form-input input-select" placeholder=""
-                                        data-th-placeholder="#{SysCommon.placeholder}" multiple="true"
-                                        data-th-data-url="@{/invest/riskredis/quota/rsksupervisionindicatorparam/RskSupervisionIndicatorParam003/getInstitutionId}"
-                                        data-th-initValue="${entity?.institutionCode}">
-                                       </select>
-                                   </div> 
-                                </div>
-                            </div>
 						</div>
 					</div>
 				</div>
@@ -142,9 +135,9 @@
 }
 </style>
 		<script data-th-inline="javascript" type="text/javascript">
-    	var entity=/*[[${entity}]]*/;
+    	var entity=/*[[${entity}]]*/'';
         var paraDisplayTypeFix = /*[[${paraDisplayTypeFix}]]*/'';
-        var SYS_DATE = /*[[${SYS_DATE}]]*/;
+        var SYS_DATE = /*[[${SYS_DATE}]]*/'';
     </script>
 		<script
 			data-th-src="@{/js/invest/riskredis/quota/rsksupervisionindicatorparam/RskSupervisionIndicatorParam003.js}"

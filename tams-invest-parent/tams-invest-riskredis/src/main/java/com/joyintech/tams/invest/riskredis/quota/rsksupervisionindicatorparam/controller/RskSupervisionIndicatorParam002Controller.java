@@ -12,7 +12,6 @@ import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.se
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,7 +60,7 @@ public class RskSupervisionIndicatorParam002Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
-        this.setSelectOptionToModel(model, BussinessDictCodeRds.指标参数实现类型, BussinessDictCodeRds.是否,BussinessDictCodeRds.指标参数分类维度, DictCode.报表数据格式类型);
+        this.setSelectOptionToModel(model, BussinessDictCodeRds.指标参数实现类型, BussinessDictCodeRds.是否,BussinessDictCodeRds.指标参数分类维度, DictCode.报表数据格式类型,BussinessDictCodeRds.指标参数计算方式);
         String paraCode = this.getParam("paraCode");
         if (StringUtil.isNotEmpty(getParam("workflowId"))&&!WorkFlowUtil.isNotFromToDoList()) {
        	 String workflowId = getParam("workflowId");
@@ -72,22 +71,20 @@ public class RskSupervisionIndicatorParam002Controller extends BaseController {
         else if(StringUtil.isNotEmpty(getParam("paraCode"))){
             List<RskSupervisionIndicatorParamDto> rskSupervisionIndicatorParamInfo = rskSupervisionIndicatorParamService.selectInfo(paraCode);
             RskSupervisionIndicatorParamDto dto = new RskSupervisionIndicatorParamDto();
-            if (!CollectionUtils.isEmpty(rskSupervisionIndicatorParamInfo) && rskSupervisionIndicatorParamInfo.size()>0) { 
-                BeanUtil.copyPropertiesIgnoreNull(dto,rskSupervisionIndicatorParamInfo.get(0));
-                for(RskSupervisionIndicatorParamDto entity:rskSupervisionIndicatorParamInfo){
-                	 if(StringUtil.equals(entity.getParaGranularity(), BussinessDictCodeListRds.参数粒度_买入.getValue())){
-    	                    dto.setMrContent(entity.getContent());
-    	         	 }
-    	         	 else if(StringUtil.equals(entity.getParaGranularity(),BussinessDictCodeListRds.参数粒度_卖出.getValue())){
-    	         		dto.setMcContent(entity.getContent());
-    	         	 }else if(StringUtil.equals(entity.getParaGranularity(),BussinessDictCodeListRds.参数粒度_实时.getValue())){
-    	         		dto.setContent(entity.getContent());
-    	         	 }else if(StringUtil.equals(entity.getParaGranularity(),BussinessDictCodeListRds.参数粒度_事后_日终.getValue())){
-    	         		dto.setRzContent(entity.getContent());
-    	         	 }else if(StringUtil.equals(entity.getParaGranularity(),BussinessDictCodeListRds.参数粒度_事后_日间.getValue())){
-    	         		dto.setRjContent(entity.getContent());
-    	         	 }
-                }
+            BeanUtil.copyPropertiesIgnoreNull(dto, rskSupervisionIndicatorParamInfo.get(0));
+            for(RskSupervisionIndicatorParamDto entity:rskSupervisionIndicatorParamInfo){
+            	 if(StringUtil.equals(entity.getParaGranularity(), BussinessDictCodeListRds.参数粒度_买入.getValue())){
+	                    dto.setMrContent(entity.getContent());
+	         	 }
+	         	 else if(StringUtil.equals(entity.getParaGranularity(),BussinessDictCodeListRds.参数粒度_卖出.getValue())){
+	         		dto.setMcContent(entity.getContent());
+	         	 }else if(StringUtil.equals(entity.getParaGranularity(),BussinessDictCodeListRds.参数粒度_实时.getValue())){
+	         		dto.setContent(entity.getContent());
+	         	 }else if(StringUtil.equals(entity.getParaGranularity(),BussinessDictCodeListRds.参数粒度_事后_日终.getValue())){
+	         		dto.setRzContent(entity.getContent());
+	         	 }else if(StringUtil.equals(entity.getParaGranularity(),BussinessDictCodeListRds.参数粒度_事后_日间.getValue())){
+	         		dto.setRjContent(entity.getContent());
+	         	 }
             }
             model.addAttribute("entity",dto);
         }else{

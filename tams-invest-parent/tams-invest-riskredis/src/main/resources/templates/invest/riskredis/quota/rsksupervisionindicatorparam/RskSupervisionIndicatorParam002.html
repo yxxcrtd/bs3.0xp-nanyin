@@ -61,7 +61,7 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4"
-						id="isFreshCanTrdDiv" style="display: none">
+					id="isFreshCanTrdDiv">
 					<label class="layui-form-label form-label-wrap"
 						data-th-text="#{RskSupervisionIndicatorParam002.isFreshCanTrd}">刷新时是否能做交易</label>
 					<div class="layui-input-inline input-inline">
@@ -73,7 +73,19 @@
 				</div>
 				<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
 					<label class="layui-form-label form-label-wrap"
-						 	data-th-text="#{RskSupervisionIndicatorParam002.paramDataType}">参数数据类型</label>
+						   data-th-text="#{RskSupervisionIndicatorParam002.isUpRedis}">是否更新Redis</label>
+					<div class="layui-input-inline input-inline">
+						<input type="checkbox" id="isUpRedis" name="isUpRedis"
+							   lay-skin="switch" lay-filter="isUpRedisFilter"
+							   data-th-value="Y" lay-text="是|否"
+							   data-th-checked="${'Y' == entity?.isUpRedis}">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{RskSupervisionIndicatorParam002.paramDataType}">参数数据类型</label>
 					<div class="layui-input-inline input-inline">
 						<select th:id="|${pageId}_paramDataType|"
 								name="paramDataType" formatoption="false" allowClear="false"
@@ -86,25 +98,42 @@
 				</div>
 				<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
 					<label class="layui-form-label form-label-wrap"
-						   data-th-text="#{RskSupervisionIndicatorParam002.isUpRedis}">是否更新Redis</label>
+						   data-th-text="#{RskSupervisionIndicatorParam002.paramMathType}">参数计算方式</label>
 					<div class="layui-input-inline input-inline">
-						<input type="checkbox" id="isUpRedis" name="isUpRedis"
-							   lay-skin="switch" lay-filter="isUpRedisFilter"
-							   data-th-value="Y" lay-text="是|否"
-							   data-th-checked="${entity.isUpRedis}? 'Y' == ${entity.isUpRedis}:true">
+						<select th:id="|${pageId}_paramMathType|"
+								name="paramMathType" formatoption="false" allowClear="false"
+								class="layui-input form-input input-select"
+								data-th-placeholder="#{SysCommon.placeholder}"
+								data-th-initValue='${entity?.paramMathType}'
+								data-th-data-result="${PARAM_MATH_TYPE}">
+						</select>
+					</div>
+				</div>
+				<div  id="paramValueNoneDiv" class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4" style="display: none">
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{RskSupervisionIndicatorParam002.paramValueNull}">参数为空设显示值</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" class="layui-input form-input" id="paramValueNone"
+							   name="paramValueNone" data-th-value="${entity?.paramValueNone}"
+							   placeholder="请输入内容"
+							   data-th-placeholder="#{SysCommon.placeholder}"
+							   maxlength="200" />
 					</div>
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<div class="layui-inline layui-col-md8 layui-col-sm8 layui-col-lg8">
+				<div class="layui-inline" style="width:100%;">
 					<label class="layui-form-label form-lable-wrap"
 						style="padding-left: 70px; padding-top: 0px;"
 						data-th-text="#{RskSupervisionIndicatorParam002.sysVariable}">系统变量:</label>
 					<div class="layui-input-inline input-inline"
-						style="float: left; width: 70% !important">
+						style="float: left; width: 80% !important">
 						<div>
-							<font style="color: #2693ff; font-weight: bold">valDate:
-								估值日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;portfolioCode: 组合代码</font>
+							<span class="param-span">valDate:估值日期</span>
+							<span class="param-span">portfolioCode: 组合代码</span>
+							<span class="param-span">assetCode: 金融产品代码</span>
+							<span class="param-span">assetType: 投管资产大类</span>
+							<span class="param-span">ptlBagId: 组合包代码</span>
 						</div>
 					</div>
 				</div>
@@ -223,7 +252,7 @@
 							<div class="layui-inline  content" style="width: 100%;">
 								<label class="layui-form-label form-label-wrap"
 									style="width: 10% !important;"
-									data-th-text="#{RskSupervisionIndicatorParam002.rjContent}">事后(日间)</label>
+									data-th-text="#{RskSupervisionIndicatorParam002.rjContent}">事中(日间)</label>
 								<div class="layui-input-inline input-inline"
 									style="width: 83% !important;">
 									<textarea id="rjContent" name="rjContent" placeholder="请输入内容"
@@ -284,7 +313,12 @@
 		</form>
 	</div>
 	<div layout:fragment="script">
-		<style>
+<style>
+.param-span{
+	color: #2693ff;
+	font-weight: bold;
+	margin-right: 20px;
+}
 .form-label-wrap {
 	width: 36% !important;
 }
@@ -324,7 +358,7 @@
 }
 </style>
 		<script data-th-inline="javascript" type="text/javascript">
-    	var entity=/*[[${entity}]]*/;
+    	var entity=/*[[${entity}]]*/'';
         var paraDisplayTypeFix = /*[[${paraDisplayTypeFix}]]*/'';
         var PLUGIN = /*[[${PLUGIN}]]*/'';
     </script>

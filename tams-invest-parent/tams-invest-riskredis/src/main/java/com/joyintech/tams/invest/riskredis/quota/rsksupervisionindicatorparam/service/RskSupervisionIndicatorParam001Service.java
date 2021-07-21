@@ -1,21 +1,23 @@
 package com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
+import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -42,10 +44,18 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 public class RskSupervisionIndicatorParam001Service extends CommonExportService<RskSupervisionIndicatorParamDto> implements BaseProcessService<RskSupervisionIndicatorParamDto> {
 
     /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(RskSupervisionIndicatorParam001Service.class);
+
+    /**
      * redis数据初始化
      */
     @Autowired
     private RiskRedisInitService<ImplCond> redisRriter;
+
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     /**
      * 查询界面询事件
@@ -126,52 +136,34 @@ public class RskSupervisionIndicatorParam001Service extends CommonExportService<
 
         String pageRedisFlag = CacheUtil.getSysParam("pageRedisFlag");
         if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
-            // 更新Redis
-            ImplCond cond = new ImplCond();
-            cond.setParamCodeArray(entity.getParaCode());
-            cond.setDel(StringUtil.equals(action, "delete"));
-            cond.setIsUpdParVal(false);
-            cond.setPlateDate(DateUtil.parse(DateUtil.getSysDate()));
-            redisRriter.dealRiskIndParam(cond);
-            if (OperationType.NEW.equals(type)) {
-            	// 更新Redis
-                ImplCond cond2 = new ImplCond();
-                cond2.setParamCodeArray(entity.getParaCode());
-                cond2.setDel(StringUtil.equals(action, "delete"));
-                cond2.setIsUpdParVal(true);
-                cond2.setPlateDate(DateUtil.parse(DateUtil.getSysDate()));
-                redisRriter.dealRiskIndParam(cond2);
-            }
-        }
-        // 二级法人权限处理
-        if(MultilevelDataAuthorityUtil.isEnabled()) {
-            //创建机构代码
-            String createInst =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-            entity.setCreateInst(createInst);
+            final String actionRedis=action;
+            threadPoolTaskExecutor.execute(()->{
+                try {
+                    logger.info("===========指标参数更新进入redis开始=============");
+                    Thread.sleep(6000);
+                    // 更新Redis
+                    ImplCond cond = new ImplCond();
+                    cond.setIsUpdParVal(OperationType.NEW.equals(type)?true:false);
+                    cond.setParamCodeArray(entity.getParaCode());
+                    cond.setDel(StringUtil.equals(actionRedis, "delete"));
+                    cond.setPlateDate(DateUtil.parse(DateUtil.getSysDate()));
+                    redisRriter.dealRiskIndParam(cond);
+                    logger.info("===========指标参数更新进入redis结束=============");
+                } catch (Exception e) {
+                    logger.error("===========指标参数更新进入redis异常=============");
+                }
 
-            // 有查询权限的机构代码
-            List<String> searchOrgCodeList = null;
-            // 有编辑权限的机构代码
-            List<String> editOrgCodeList = null;
-            // 新建或修改时重新设置二级法人权限，删除时则清空
-            if (!OperationType.DELETE.equals(type)) {
-                                
-                //获取所有父级机构。  拥有查看权限
-                searchOrgCodeList = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(createInst);
-                // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
-                editOrgCodeList = Arrays.asList(entity.getCreateInst());
-            }
-            // 记录二级法人权限
-//            insertDataAuthTypeInst(entity.getFinprodId(), searchOrgCodeList, editOrgCodeList);
-        } 
+            });
+
+        }
     }
 
     private void setEntity(RskSupervisionIndicatorParamDto entity) {
         if (entity != null) {
             List<RskIsupIndicatorParaDtl> list = new ArrayList<RskIsupIndicatorParaDtl>();
 
-            if (StringUtil.equals(entity.getParaDisplayType(),
-                BussinessDictCodeListRds.指标参数实现类型_SQL.getValue())) {
+/*            if (StringUtil.equals(entity.getParaDisplayType(),
+                BussinessDictCodeListRds.指标参数实现类型_SQL.getValue())) {*/
                 RskSupervisionIndicatorParamDto dto1 = new RskSupervisionIndicatorParamDto();
                 BeanUtil.copyPropertiesIgnoreNull(dto1, entity);
                 // 设置买入参数
@@ -184,7 +176,7 @@ public class RskSupervisionIndicatorParam001Service extends CommonExportService<
                 dto2.setParaGranularity(BussinessDictCodeListRds.参数粒度_卖出.getValue());
                 dto2.setContent(entity.getMcContent());
                 list.add(dto2);
-            }
+           /* }*/
             RskSupervisionIndicatorParamDto dto3 = new RskSupervisionIndicatorParamDto();
             BeanUtil.copyPropertiesIgnoreNull(dto3, entity);
             // 设置实时参数
@@ -245,14 +237,14 @@ public class RskSupervisionIndicatorParam001Service extends CommonExportService<
      */
     public List<RskSupervisionIndicatorParamDto> selectInfo(String paraCode) {
         List<RskSupervisionIndicatorParamDto> listRet = restTemplate.getForList(ServiceApplication.RISK_RDS_SERVICE_NAME
-                + "/RskSupervisionIndicatorParam/selectInfo?paraCode="
-                + paraCode,
-		    RskSupervisionIndicatorParamDto.class);
-		listRet.forEach(en->{
-		//特殊字符转换
-		en.setContent(RiskUtil.specialCharacterConversion(en.getContent(),true));
-		});
-		return listRet;
+                                             + "/RskSupervisionIndicatorParam/selectInfo?paraCode="
+                                             + paraCode,
+            RskSupervisionIndicatorParamDto.class);
+        listRet.forEach(en->{
+            //特殊字符转换
+            en.setContent(RiskUtil.specialCharacterConversion(en.getContent(),true));
+        });
+        return listRet;
     }
 
     /**
@@ -296,5 +288,19 @@ public class RskSupervisionIndicatorParam001Service extends CommonExportService<
 	            ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionIndicatorParam/isInWflProcess",
 	            params, boolean.class);
 	}
+    /**
+     * 设置日期格式
+     * {@inheritDoc}
+     */
+    @Override
+    public void setCellValue(String beanName, Cell cell, String propName, Object value) {
+        if(("updateTime".equals(propName)) && value != null){
+            if(value instanceof Long){
+                cell.setCellValue(DateUtil.format(new Date((long)value)));
+            }else {
+                cell.setCellValue(DateUtil.format((Date) value));
+            }
+        }
+    }
 
 }

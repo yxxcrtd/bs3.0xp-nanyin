@@ -26,15 +26,6 @@
         object.pageModel = pageModel;
         object.workflowId = $("#workflowId").val();
         object.paraCode = $("#paraCode").val();
-        var institutionId = $('#institutionId').val();
-        if(!institutionId ||  institutionId.length ==0 ){
-        	Joyin.error("请输入机构！");
-			return;
-        }
-        var institutionCode = null;
-        if(institutionId != null)
-        	institutionCode=institutionId.join(",");
-        object.institutionCode=institutionCode;
         object.pageId="RskSupervisionIndicatorParam003";
         Joyin.ajaxJson(basePath + 'invest/riskredis/quota/rsksupervisionindicatorparam/RskSupervisionIndicatorParam003/check', object, function(result) {
             Joyin.confirm(result.data, function() {
