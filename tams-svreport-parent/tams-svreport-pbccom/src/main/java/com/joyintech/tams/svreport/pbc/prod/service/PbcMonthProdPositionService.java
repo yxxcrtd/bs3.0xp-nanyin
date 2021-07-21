@@ -136,7 +136,7 @@ public class PbcMonthProdPositionService  extends BaseService{
 		if(CommonUtil.isBAmodel()){
 			modelType = DictCodeList.权限模式_联社模式.getValue();
 		}
-		String jsbankStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.DIVIDEND_REINVESTMENT_FLAG);
+		String jsbankStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_JSBK_IS_ROUND);
 
         if(StringUtil.equals(bankCode, "001")){
            pbcMonthPrdPostionMapper.genPsbcPosition(reportStartDate,reportEndDate, batchDate,prodList,exchangeSource, dividendReinvestmentFlag,jsbankStr);
