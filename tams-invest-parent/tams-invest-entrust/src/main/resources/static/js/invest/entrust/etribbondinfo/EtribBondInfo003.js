@@ -30,8 +30,7 @@
         // 市价指令时
         if (query('#priceModel').val() == PRICEMODEL_03) {
             // 净价置灰不可填
-            query('#price').val('').attr('disabled', true);
-            query('#price').removeAttr("required");
+            query('#price').val('').attr("required", false).attr('disabled', true);
             // 全价置灰不可填
             query('#fpriceAmt').val('').attr('disabled', true);
 
@@ -43,8 +42,7 @@
 
         } else {
             // 净价必填
-            query('#price').attr('disabled', false);
-            query('#price').attr("required", "true");
+            query('#price').attr('disabled', false).attr("required", true);
             // 全价 可填
             query('#fpriceAmt').attr('disabled', false);
 
@@ -53,6 +51,8 @@
             // 行权收益率
             doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
         }
+
+        query('#finprodId').trigger("change");
     }
     doChange.psChange = function (){
         // 交易对手change
@@ -96,7 +96,7 @@
         }else{
             if(isRight !== N && priceModel !== PRICEMODEL_03){
                 // 含权债或为空 且 价格模式不是市价
-                exerYield.val('').attr('disabled', false).trigger("change").trigger("blur");
+                exerYield.val('').attr('disabled', false).removeAttr("required").trigger("change").trigger("blur");
                 query('#calculateField_exerYield').val('').attr('disabled', false);
             }
         }
@@ -115,19 +115,13 @@
                 data = AutoCoupon.autoBondTradeCoupon(query('#finprodId').val());
             }
             // 不为空
-            query('#price').attr("required", false);
-            query('#exerYield').attr("required", false);
-            query('#matureYield').attr("required", false);
-            //var data = $('#finprodId').select2('data')[0].object;
             query('#finprodIdhid').val(data.finprodId).trigger('change');
             query('#finprodName').val(finprodId).trigger('change');
-            //if (!initFlag) {
-            //    $('#tradeMarket').val(data.tradeMarket).trigger('change');
-            //}
-            //$('#tradeMarket').attr('disabled', true);
             query('#isRight').val(data.isRight).trigger('change');
             if(data.isRight === N){
-                doChange.exerYield_setDisabled(true);
+                doChange.exerYield_setDisabled(true); // 非含权债则行权收益率不可用
+            }else{
+                doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val());
             }
             query('#calendarId').val(data.calendarId).trigger('change');
             query('#assetType1').val(data.assetType1).trigger('change');
@@ -155,9 +149,6 @@
             }
         } else {
             // 为空
-            query('#price').attr("required", true);
-            // query('#exerYield').attr("required", true);
-            query('#matureYield').attr("required", true);
             query('#finprodIdhid').val('').trigger('change');
             query('#finprodName').val('').trigger('change');
             query('#calendarId').val('').trigger('change');
@@ -174,7 +165,7 @@
             query('#exerYield').val('').trigger('change').trigger('blur');
             query('#matureYield').val('').trigger('change').trigger('blur');
 
-            doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val()).attr("required", true);;
+            doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val());;
         }
 
         //左下行情信息联动
@@ -452,7 +443,6 @@
 
                 query('#matureYield').attr('disabled', false);
 
-                // query('#exerYield').attr('disabled', false);
                 doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
             }
         }
@@ -721,7 +711,7 @@
                 query("#exerYield").val("");
                 query("#matureYield").val("");
             } else {
-                query("#exerYield").removeAttr("disabled");
+                doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
                 query("#matureYield").removeAttr("disabled");
             }
         }
@@ -772,7 +762,7 @@
                 query("#exerYield").val("");
             } else {
                 query("#price").removeAttr("disabled");
-                query("#exerYield").removeAttr("disabled");
+                doChange.exerYield_setDisabled(false, query("#isRight").val(), query("#priceModel").val())
             }
         }
     });
