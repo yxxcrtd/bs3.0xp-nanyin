@@ -76,6 +76,9 @@ public class RskEvent003Controller extends BaseController {
 			}
 		}
 		model.addAttribute("entity", rskEvent003Dto);
+        // add by zhangrui1 公式配置 start
+        model.addAttribute("EVENT_REL_ITEM_FORMULA", "formula");
+        // add by zhangrui1 公式配置 end
 		return "invest/riskredis/quota/rskevent/RskEvent003";
 	}
 

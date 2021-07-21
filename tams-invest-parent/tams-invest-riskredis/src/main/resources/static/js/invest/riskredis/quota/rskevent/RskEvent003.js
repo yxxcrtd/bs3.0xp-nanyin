@@ -60,9 +60,12 @@
 			field : 'customVal',
 			title : 'RskEvent002.customVal',
 			width : '10%',
-			type : 'number',
+//			type : 'number',
 			sortable : false,
-			edit : true
+			edit : true,
+            editOption : {
+                type : 'number'
+            }
 		},{
 			field : 'remark',
 			title : 'RskEvent002.remark',
@@ -70,6 +73,9 @@
 			sortable : false,
 			edit : true
 		},
+		// add by zhangrui1 公式配置 start
+		{field : 'formulaVal',visible: false},
+        // add by zhangrui1 公式配置 end
 		{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']}
 		],
 		editCell : function(value, data, field, cell, column){
@@ -92,6 +98,25 @@
 				return;
 			}
 		},
+        // add by zhangrui1 公式配置 start
+        beforeEditCell : function(value, field, data) {
+            if (field === "customVal" && data.relItem == EVENT_REL_ITEM_FORMULA) {
+                Joyin.dialog(JoyinUtil.getLabel("RskEventFormula"),
+                        basePath + "invest/riskredis/quota/rskevent/RskEventFormula/init",
+                        "80%", "50%", {pageModel:PAGE_MODEL_EDIT, customVal: value},
+                        function(rtnData) {
+                            if (!rtnData) {
+                                return;
+                            }
+                            data.customVal = rtnData;
+                            data.formulaVal = rtnData;
+                            dataTable.renderRow(data.LAY_TABLE_INDEX, data);
+                        });
+                return false;
+            }
+            return true;
+        },
+        // add by zhangrui1 公式配置 end
 		done : function(table, allData) {
 		}
 	});
@@ -134,6 +159,16 @@
 				message=JoyinUtil.getMessage('RSKRDS_W_0078');
 				return checkTable;
 			}
+            // add by zhangrui1 公式配置 start
+            if (item.relItem==EVENT_REL_ITEM_FORMULA) {
+                item.customVal=null;
+            }
+            if(item.relItem==EVENT_REL_ITEM_FORMULA&&!item.formulaVal){
+                checkTable=false;
+                message=JoyinUtil.getMessage('RSKRDS_W_0079');
+                return checkTable;
+            }
+            // add by zhangrui1 公式配置 end
 		});
 		if(!checkTable){
 			Joyin.error(message)
@@ -160,6 +195,11 @@
 			list = entity.paramList;
 		}
 		$.each(list,function(i,v){
+            // add by zhangrui1 公式配置 start
+            if (v.relItem == EVENT_REL_ITEM_FORMULA) {
+                v.customVal = v.formulaVal;
+            }
+            // add by zhangrui1 公式配置 end
 			dataTable.layOption.data.push(v);
 		})
 	}

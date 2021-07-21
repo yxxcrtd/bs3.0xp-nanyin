@@ -39,26 +39,12 @@
         cols:[
             {field:'eventCode',title: 'RskEvent001.eventCode'}
             ,{field:'eventName',title: 'RskEvent001.eventName'}
-            ,{field:'updateTime',title:'RskEvent001.updateDate',type:'date'}
+            ,{field:'updateTimeStr',title:'RskEvent001.updateDate',type:'date'}
             ,{field:'remark', title: 'RskEvent001.remark'}
-/*            ,{field:'relateParam',width:120,title: 'RskEvent001.relPara',sortable:false, render:function(data, type, row, meta){
+            ,{field:'relateParam',width:120,title: 'RskEvent001.relPara',sortable:false, render:function(d, type, row, meta){
                 return '<a title="RskEvent001.setRelPara" class="relParamEdit" style="font-size:12px;">设置</a>' +
                     '<a title="RskEvent001.queryRelPara" class="relParamQuery" style="margin-left:5px;font-size:12px;">查看</a>';
-                }}*/
-            ,{field:'relateParam',width:200,title: 'RskEvent001.relPara',sortable:false, render:function(data, type, row, meta){
-                var buttons = '';
-                if(purviewElements.indexOf('_manual')!=-1){
-                       buttons += '<a title="设置" class="btn layui-btn manual" style="font-size:12px;color:white">设置</a>';
-                 }
-                if(purviewElements.indexOf('_batch')!=-1){
-                		buttons += '<a title="查看" class="btn layui-btn batch" style="margin-left:5px;font-size:12px;color:white">查看</a>';
-                }
-
-                return buttons;
-            		}
-            	}
-
-            
+                }}
             ,{field:'operation',width:100,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });
@@ -66,7 +52,7 @@
     /**
      * 绑定编辑关联指标参数事件
      */
-    table.bind('click', '.manual', function(data, index) {
+    table.bind('click', '.relParamEdit', function(data, index) {
         Joyin.dialog(JoyinUtil.getLabel("RskEvent001.editRelPara"),
             basePath + "invest/riskredis/quota/rskevent/RskEvent003/init",
             "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
@@ -78,7 +64,7 @@
     /**
      * 绑定编辑关联指标参数事件
      */
-    table.bind('click', '.batch', function(data, index) {
+    table.bind('click', '.relParamQuery', function(data, index) {
         Joyin.dialog(JoyinUtil.getLabel("RskEvent001.editRelPara"),
             basePath + "invest/riskredis/quota/rskevent/RskEvent003/init",
             "95%", "90%", {pageModel:PAGE_MODEL_REFERENCE,

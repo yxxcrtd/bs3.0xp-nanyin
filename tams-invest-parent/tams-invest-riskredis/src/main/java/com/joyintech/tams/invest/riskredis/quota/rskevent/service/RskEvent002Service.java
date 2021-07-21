@@ -16,7 +16,6 @@ import com.joyintech.tams.invest.riskredis.quota.rskevent.dto.RskEvent002Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,7 @@ import java.util.Map;
 
 @Service
 public class RskEvent002Service extends CommonExportService<RskEvent002Dto> implements BaseProcessService<RskEvent002Dto> {
+
 	/**
 	 * 日志
 	 */
@@ -40,7 +40,8 @@ public class RskEvent002Service extends CommonExportService<RskEvent002Dto> impl
      */
     @Autowired
     private RiskRedisInitService<ImplCond> redisRriter;
-    @Autowired
+
+	@Autowired
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Override
@@ -57,22 +58,22 @@ public class RskEvent002Service extends CommonExportService<RskEvent002Dto> impl
             action = "update";
         }
         restTemplate.postForObject(
-                ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskEvent/" + action, entity,
-                Integer.class);
-            String pageRedisFlag = CacheUtil.getSysParam("pageRedisFlag");
-            if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
-    			threadPoolTaskExecutor.execute(()->{
-    				try {
-    					logger.info("===========风控事项特征值进入redis开始=============");
-    					Thread.sleep(6000);
-    					redisRriter.dealRiskEvent();
-    					logger.info("===========风控事项特征值进入redis结束=============");
-    				} catch (InterruptedException e) {
-    					logger.error("===========风控事项特征值进入redis异常=============",e);
-    				}
-    			});
-            }
-    	}
+            ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskEvent/" + action, entity,
+            Integer.class);
+        String pageRedisFlag = CacheUtil.getSysParam("pageRedisFlag");
+        if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
+			threadPoolTaskExecutor.execute(()->{
+				try {
+					logger.info("===========风控事项特征值进入redis开始=============");
+					Thread.sleep(6000);
+					redisRriter.dealRiskEvent();
+					logger.info("===========风控事项特征值进入redis结束=============");
+				} catch (InterruptedException e) {
+					logger.error("===========风控事项特征值进入redis异常=============",e);
+				}
+			});
+        }
+	}
 	
 	private void setEntity(RskEvent002Dto entity,OperationType type) {
 		if(!StringUtil.isEmptyList(entity.getParamGroup())){

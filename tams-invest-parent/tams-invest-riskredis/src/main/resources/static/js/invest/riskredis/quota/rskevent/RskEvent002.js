@@ -69,22 +69,13 @@
 				$.each(list,function(i,v){
 					table.layOption.data.push(v);
 				})
-		    	deleteRowtable(table);
+		    	table.bind('click', '.delt', function(data, index) {
+		    		table.deleteRow(index);
+		        });
 		    	$(".btn-detail-del").layButton();
 			}
 		}
 	}
-	/**
-	 *TISHKBS-639
-	 *	风控事项管理，当特征值列表有三个的时候，在第二个列表点击删除会删除第三个列表中的数据
-	 */
-	
-	function deleteRowtable(table){
-		table.bind('click', '.delt', function(data, index) {
-			table.deleteRow(index);
-		});
-	}
-	
 	var buttons = ['delt'];
 	/**
      * 定义数据表格
@@ -100,7 +91,7 @@
 			addbtn : true,
         cols : [{field: 'groupId',visible: false
         }, {
-        	field : 'itemCode',
+			field : 'itemCode',
 			width : 160,
 			title : 'RskEvent002.itemCode',
 			sortable : false,
