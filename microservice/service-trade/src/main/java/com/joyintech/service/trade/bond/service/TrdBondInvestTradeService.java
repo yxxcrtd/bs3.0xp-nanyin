@@ -865,6 +865,7 @@ public class TrdBondInvestTradeService extends BaseService {
 
     public Boolean isAllTradeAmtByFTradeId(Map<String, Object> map){
         String fTradeId = (String) map.get("fTradeId");
+
         BigDecimal tradeAmt = null;
         if(map.get("tradeAmt") instanceof Integer){
             tradeAmt =  new BigDecimal((int)map.get("tradeAmt"));
