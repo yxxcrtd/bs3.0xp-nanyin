@@ -4,7 +4,15 @@
 (function(){
     var bidPrinAmt = 0;
     var getriskdata = function () {
-        var obj = {tradeDirection:etrPs,timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustNum').val(),assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val(),tradeAmt:$('#tradeAmt').val(),counterId:$('#etrInvestPersonInfo_counterId').val()}
+        //配置单位 edit by yeming 20210721 start
+        var entrustNum=$('#entrustNum').val();
+        if (entrustNum) {
+            if(entrustAmtUnit == '02' ){
+                entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            }
+        }
+        //配置单位 edit by yeming 20210721 end
+        var obj = {tradeDirection:etrPs,timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustNum,assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val(),tradeAmt:$('#tradeAmt').val(),counterId:$('#etrInvestPersonInfo_counterId').val()}
         var object = {tradeDirection:['ps','EtrBondFirstLBidding002.ps'],portfolioCode:['portfolioId','EtrBondFirstLBidding002.portfolioId'],tradeAmount:['entrustNum','EtrBondFirstLBidding002.entrustAmt'],assetType:['assetType1','EtrBondFirstLBidding002.bondType'],counterId:['counterId','trdInvestPersonInfo_counterId'],assetCode:['finprodId','EtrBondFirstLBidding002.finprodId'],data:obj}
         return object;
     }
@@ -72,7 +80,8 @@
         		bidPrinAmt = 0;
         		var tableRows  = table.getAllRows();
             	$.each(tableRows, function(id, value){
-                    bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseInt(value.bidPrinAmt), 2)
+                    // bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseInt(value.bidPrinAmt), 2)
+                    bidPrinAmt = JoyinMath.doAdd(bidPrinAmt, parseFloat(value.bidPrinAmt), 4)
             	});
             	$('#entrustNum').val(bidPrinAmt);
             	return true;
@@ -83,7 +92,8 @@
     
     table.bind('click', '.delt', function(data, index) {
     	if (data.bidPrinAmt) {
-        	$('#entrustNum').val($('#entrustNum').val()-parseInt(data.bidPrinAmt));
+        	// $('#entrustNum').val($('#entrustNum').val()-parseInt(data.bidPrinAmt));
+            $('#entrustNum').val(JoyinMath.doMinus($('#entrustNum').val(), parseFloat(data.bidPrinAmt), 4));
 		}
     	
     	table.deleteRow(index);
@@ -268,6 +278,14 @@
         var elementId = "";
         var entrustNum_old = $("#entrustNum_old").val();
         var entrustNum = $("#entrustNum").val();
+        if (entrustNum) {
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit == '02' ){
+                entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                entrustNum_old=JoyinMath.doMul(entrustNum_old, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            }
+            //配置单位 edit by yeming 20210721 end
+        }
         //改高投标量
         if(pageModel == PAGE_MODEL_EDIT&&entrustNum_old&&parseFloat(entrustNum_old) < parseFloat(entrustNum)){
             elementId = 'EtrBondFirstLBidding002_btn_total';
@@ -319,6 +337,11 @@
             $("#tradeMarket").trigger("change").attr("disabled", true);
             $("#entrustDate").trigger("change").attr("disabled", true);
         }
+        //配置单位 add by yeming 20210721 start
+        if(entrustAmtUnit == '01' ) {
+            $(".unitNum").text('元');
+        }
+        //配置单位 add by yeming 20210721 end
     }
 
     $(function(){

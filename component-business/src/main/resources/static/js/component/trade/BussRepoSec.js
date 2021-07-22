@@ -7,6 +7,9 @@
      * 设置初始参数
      * @param paramObject
      */
+    if(entrustAmtUnit == '01' ){
+        $(".unitNum").text('元');
+    }
     var setInputParam = function (paramObject) {
         param = paramObject;
         getElementById("ps").val(param.data.ps);
@@ -306,6 +309,11 @@
                 sqsPrinAmt+=pledgePrin * allRows[i].pledgeRatio / 100;
             }
         }
+        //配置单位 add by yeming 20210721 end
+        if(entrustAmtUnit == '02' ){
+            totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,2,JoyinMath.ROUND_HALF_UP);
+        }
+        //配置单位 add by yeming 20210721 end
         getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
         getElementById("zzdTotalPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
         getElementById("sqsTotalPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
@@ -348,6 +356,11 @@
                     zzdPrinAmt = zzdPrinAmt*10000;
                     sqsPrinAmt = sqsPrinAmt*10000;
                 }
+                //配置单位 add by yeming 20210721 end
+                if(entrustAmtUnit == '02' ){
+                    totalPrinAmt = JoyinMath.doMul(totalPrinAmt,10000,2,JoyinMath.ROUND_HALF_UP);
+                }
+                //配置单位 add by yeming 20210721 end
                 getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
                 getElementById("zzdTotalPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
                 getElementById("sqsTotalPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');

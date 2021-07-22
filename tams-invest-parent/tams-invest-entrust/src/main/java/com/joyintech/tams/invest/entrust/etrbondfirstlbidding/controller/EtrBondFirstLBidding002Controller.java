@@ -85,6 +85,9 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         String mId = getParam("mId");
         String tradeMarket = getParam("tradeMarket");
         // by zhaodongdong 20191116 end
+        //配置单位 add by yeming 20210721 start
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+        //配置单位 add by yeming 20210721 end
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         model.addAttribute("TodoList", !WorkFlowUtil.isNotFromToDoList());
         //流程代办
@@ -92,6 +95,13 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
 
             EtrBondFirstLBiddingDto dto = firstService.getBussinessEntityByWorkflowId(
                 workflowId);
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit.equals("02")){
+                if(dto.getEntrustNum() != null) {
+                    dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 edit by yeming 20210721 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("bidPriceList", StringUtil.isEmptyList(dto.getBidPriceList()) ? null : JsonUtils.object2Json(dto.getBidPriceList()));
@@ -101,6 +111,13 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         }else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
             //编辑页面
             EtrBondFirstLBiddingDto dto = firstService.selectByKey(entrustId,finprodId,portfolioId);
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit.equals("02")){
+                if(dto.getEntrustNum() != null) {
+                    dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 edit by yeming 20210721 end
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("tradeId", dto.getEntrustId());
             model.addAttribute("bidPriceList", StringUtil.isEmptyList(dto.getBidPriceList()) ? null : JsonUtils.object2Json(dto.getBidPriceList()));
@@ -109,6 +126,13 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         }else{
             //新建页面初始化
             EtrBondFirstLBiddingDto entity = new EtrBondFirstLBiddingDto();
+            //配置单位 edit by yeming 20210721 start
+            if(entrustAmtUnit.equals("02")){
+                if(entity.getEntrustNum() != null) {
+                    entity.setEntrustNum(entity.getEntrustNum().divide(new BigDecimal(10000)));
+                }
+            }
+            //配置单位 edit by yeming 20210721 end
             entity.setVdate(sysDate);
             entity.setMdate(sysDate);
             // 从一级新债日历进入一级债券委托界面带出信息 by 赵东东  20191116 start
@@ -138,6 +162,10 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
         // add by etliu 20210501 银行间场内场外拆分 end
+
+        //配置单位 add by yeming 20210721 start
+        model.addAttribute("entrustAmtUnit", entrustAmtUnit);
+        //配置单位 add by yeming 20210721 end
 
         return super.init(model);
     }

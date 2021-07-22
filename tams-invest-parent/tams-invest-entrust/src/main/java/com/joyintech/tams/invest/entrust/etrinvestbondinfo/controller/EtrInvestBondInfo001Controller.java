@@ -91,16 +91,16 @@ public class EtrInvestBondInfo001Controller extends BaseController {
     public Page<EtrInvestBondInfoDto> selectForPage(){
         Page<EtrInvestBondInfoDto> page = etrInvestBondInfoService.selectForPage(
             RequestUtil.getPageParam());
-        for(EtrInvestBondInfoDto dto:page.getRoot()){
-        	dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));//转成万元
-        	dto.setFinishAmt(dto.getFinishAmt().divide(new BigDecimal(10000)));//转成万元
-        	if(dto.getEntrustOwnNum() != null) {
-        		dto.setEntrustOwnNum(dto.getEntrustOwnNum().divide(new BigDecimal(10000)));
-            }
-            if(dto.getEntrustIntegrateNum() != null) {
-            	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
-            }
-        }
+//        for(EtrInvestBondInfoDto dto:page.getRoot()){
+//        	dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));//转成万元
+//        	dto.setFinishAmt(dto.getFinishAmt().divide(new BigDecimal(10000)));//转成万元
+//        	if(dto.getEntrustOwnNum() != null) {
+//        		dto.setEntrustOwnNum(dto.getEntrustOwnNum().divide(new BigDecimal(10000)));
+//            }
+//            if(dto.getEntrustIntegrateNum() != null) {
+//            	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
+//            }
+//        }
         return page;
     }
     /**
