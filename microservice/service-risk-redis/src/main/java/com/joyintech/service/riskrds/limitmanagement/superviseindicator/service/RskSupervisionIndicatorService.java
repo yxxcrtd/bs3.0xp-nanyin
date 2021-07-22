@@ -1,21 +1,17 @@
 
 package com.joyintech.service.riskrds.limitmanagement.superviseindicator.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.DateUtil;
@@ -60,7 +56,6 @@ public class RskSupervisionIndicatorService extends BaseService<RskSupervisionIn
     public Page<RskSupervisionIndicator002Dto> selectForPage(int page, int length,
                                                              Map<String, Object> param)
         throws Exception {
-        CommonUtil.setInstitutionMapByType_ms(param);
         return super.queryForPage(page, length,
             () -> rskSupervisionIndicatorMapper.selectForPage(param));
     }
@@ -139,14 +134,9 @@ public class RskSupervisionIndicatorService extends BaseService<RskSupervisionIn
     @Transactional(rollbackFor = Throwable.class)
     public void insert(RskSupervisionIndicator002Dto entity) {
         if (null != entity.getRskSupervisionIndicatorDto()) {
-            // 监督指标基本信息 
-                Map<String, Object> map = new HashMap<String, Object>();
-                CommonUtil.setInstitutionMapByType_ms(map); 
-                if (StringUtil.isNotEmpty(map.get("institution"))) {
-                    entity.getRskSupervisionIndicatorDto().setInstitutionCode(map.get("institution").toString()); 
-                } 
-                rskSupervisionIndicatorMapper.insertSupervisionIndicator(
-                   entity.getRskSupervisionIndicatorDto());
+            // 监督指标基本信息
+            rskSupervisionIndicatorMapper.insertSupervisionIndicator(
+                entity.getRskSupervisionIndicatorDto());
         }
         if (null != entity.getSelectedPortfIndItem()) {
             // 组合关联指标

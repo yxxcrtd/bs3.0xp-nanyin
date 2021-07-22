@@ -39,7 +39,6 @@
             ,{field:'foulCond', width:240 ,title: 'RskSupervisionIndicator001.foulCond',render: transferWarnFoul}
             ,{field:'approveCond', title: 'RskSupervisionIndicator001.approveCond',render: transferWarnFoul,width:150}
             ,{field:'isEnabledStr', width:100 , sortField:"isEnabled",title: 'RskSupervisionIndicator001.isEnabled'}
-            ,{field:'updateFlg', visible:false}
             ,{field:'operation', width:160, title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });    
@@ -91,14 +90,17 @@
 			}else{
 				/* 禁止型 */
                 //------update by jjpei 20190812----解析禁投项------
-				wg = detailJson.threshold_1.value_cn;
 				/*var wgArr=wg.split(",");
 				var wgStr='';
 				for(var m=0;m<wgArr.length;m++){
 					if(wgArr[m]!=null&&wgArr[m]!='')
 						wgStr+=StringToChinese(wgArr[m],row.indType)+",";
 				}*/
-				wg=wg.substring(0,wg.length-1);
+				if(detailJson.threshold_1.value_cn) {
+				    wg = detailJson.threshold_1.value_cn;
+				    wg=wg.substring(0,wg.length-1);   
+				} 
+				
                 //------update by jjpei 20190812----解析禁投项------
 			}
 		}

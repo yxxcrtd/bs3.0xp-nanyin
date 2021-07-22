@@ -57,8 +57,6 @@
 	var jqModal = $('#rskSupervisionIndicatorForm');	
 	var lnkNo = "";
 	  function data003Display(){
-		/* var detail=jqModal.find('[name="detail"]').val();	
-		 var detailJson = JSON.parse(detail);*/
 		var warnDetail=jqModal.find('[name="rskSupervisionIndicatorDto.warnCond"]').val();	
 		var warnDetailJson = warnDetail==''?'':JSON.parse(warnDetail);
 		var foulDetail=jqModal.find('[name="rskSupervisionIndicatorDto.foulCond"]').val();	
@@ -66,7 +64,7 @@
 		var approveDetail=jqModal.find('[name="rskSupervisionIndicatorDto.approveCond"]').val();	
 		var approveDetailJson = approveDetail==''?'':JSON.parse(approveDetail);
 		 // 限制型 
-		 if(entity.rskSupervisionIndicatorDto.indType.indexOf("LIMIT_")!=-1){
+		 if(entity.rskSupervisionIndicatorDto.indType.indexOf("LIMIT_")!=-1||entity.rskSupervisionIndicatorDto.indType.indexOf("INNER_")!=-1){
 			 var comparison = '';
 			 var unit = '';
 			 var is_model = '';
@@ -102,8 +100,6 @@
 				jqModal.find('[name="rskSupervisionIndicatorDto.isModel"]').prop("checked","checked");
 				layui.form.render('checkbox');
 			}
-			//jqModal.find('[name="rskSupervisionIndicatorDto.isModel"]').val(warnDetailJson.threshold_1.is_model).trigger('change');
-			
 		 }else if(entity.rskSupervisionIndicatorDto.indType.indexOf("FORBID_")!=-1){
 				var arrObj = foulDetailJson.threshold_1.value.split(",");
 				var jzx = jqModal.find('[name="jzx"]');
@@ -125,31 +121,14 @@
 	var supDirectionShow = function(){
 	    $("#RskSupervisionIndicator002_supDirection").val('');
     	$("#supDirectionDiv").hide();
-		/*//指标类型
-		var intType = $("#RskSupervisionIndicator002_indType").val();
-		//监控时点
-		var timePoint = jqModal.find('[name="rskSupervisionIndicatorDto.timePoint"]');
-		if((intType==jyekz||intType==zxjgkz||intType==drjyl)&&
-				(timePoint[0].checked||timePoint[1].checked)){
-			$("#supDirectionDiv").show();
-		}else{
-			$("#RskSupervisionIndicator002_supDirection").val('');
-			$("#supDirectionDiv").hide();
-		}*/
 	}
 	//展现违规条件和预警条件
     function show_cond_add(v){
-		if(v.indexOf("LIMIT_")>=0){
+		if(v.indexOf("LIMIT_")>=0 || v.indexOf("INNER_")>=0){
 			$("#xzx_qzsz_div").show();
 			$("#jzx_wg_div").hide();
-			$("#inner_wg_div").hide();
-		}else if(v.indexOf("INNER_")>=0){
-			$("#inner_wg_div").show();
-			$("#xzx_qzsz_div").hide();
-			$("#jzx_wg_div").hide()
 		}else{
 			$("#xzx_qzsz_div").hide();
-			$("#inner_wg_div").hide();
 			$("#jzx_wg_div").show();
 			//var arrFobid=JSON.parse(relateIndType).filter(item => item.id===v);
             //----update by jjpei 20190811---注销原有的，在指标参数中生成动态的---start-----
@@ -243,7 +222,7 @@
 	 //必填项 
 	function requiredW(){
 		var pointType = jqModal.find('[name="rskSupervisionIndicatorDto.indType"]').val();
-		if(pointType.indexOf("LIMIT_")!=-1){
+		if(pointType.indexOf("LIMIT_")!=-1||pointType.indexOf("INNER_")!=-1){
 			if(table!=null && table!=''){
                 var selArr = table.getAllRows();
             }
@@ -306,7 +285,7 @@
 	function abJson(){
 		var jsonResult={};
 		 //限制型 
-		if(jqModal.find('[name="rskSupervisionIndicatorDto.indType"]').val().indexOf("LIMIT_")!=-1){
+		if(jqModal.find('[name="rskSupervisionIndicatorDto.indType"]').val().indexOf("LIMIT_")!=-1 ||jqModal.find('[name="rskSupervisionIndicatorDto.indType"]').val().indexOf("INNER_")!=-1){
 			debugger;
 			var comparison = $("#RskSupervisionIndicator002_comparison").val();
 			var unit = $("#RskSupervisionIndicator002_unit").val();
@@ -371,7 +350,6 @@
 							    }
 							}
 			}
-			//jsonResult = JSON.stringify(jsonResult);
 			jqModal.find('[name="rskSupervisionIndicatorDto.warnCond"]').val(JSON.stringify(jsonResult.warning));
 			jqModal.find('[name="rskSupervisionIndicatorDto.foulCond"]').val(JSON.stringify(jsonResult.violation));
 			jqModal.find('[name="rskSupervisionIndicatorDto.approveCond"]').val(JSON.stringify(jsonResult.approve));
@@ -398,7 +376,6 @@
 					}
 				}
 			}
-			//jsonResult = JSON.stringify(jsonResult);
 			//-----add by 裴家俊 2019/03/25------start-----
 			jqModal.find('[name="rskSupervisionIndicatorDto.warnCond"]').val('');
 			jqModal.find('[name="rskSupervisionIndicatorDto.approveCond"]').val('');
@@ -415,8 +392,28 @@
 		}
 		//监控方向显示事件
 		supDirectionShow();
+		//是否显示原值
+		if($(this).val()) {
+			supIsDisplayVal($(this));
+		}
 	})
-	
+
+	/**
+	 * 是否显示原值
+	 * @param obj
+	 */
+	var supIsDisplayVal=function(obj){
+ 		if($(obj).val().indexOf("INNER_")!=-1||$(obj).val().indexOf("FORBID_")!=-1) {
+			$('#RskSupervisionIndicator002_isDisplayOriginal').prop('checked', false).trigger('change');
+			$('#RskSupervisionIndicator002_isDisplayOriginal').next().addClass('layui-form-onswitch').trigger('change');
+			$('#RskSupervisionIndicator002_isDisplayOriginal').next().find("em").text('否');
+			$("#RskSupervisionIndicator002_isDisplayOriginal").prop('disabled', true).trigger('change');
+			layui.form.render('checkbox')
+		}else{
+			$("#RskSupervisionIndicator002_isDisplayOriginal").prop('disabled', false).trigger('change');
+			layui.form.render('checkbox')
+		}
+	}
 	
 	
 	layui.form.on('checkbox(03_timePoint)', function(data){

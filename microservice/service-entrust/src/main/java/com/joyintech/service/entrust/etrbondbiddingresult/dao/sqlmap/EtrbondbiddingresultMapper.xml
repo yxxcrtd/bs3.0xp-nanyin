@@ -280,4 +280,13 @@
 		and ENTRUST_ID= #{entrustId,jdbcType=VARCHAR}
 		and TRADE_ID = #{totleTradeId,jdbcType = VARCHAR}
 	</select>
+
+	<select id="checkFrozenPosition" resultType="java.lang.Integer">
+		select count(1)
+		from BID_ORDER_BID_PRICE
+		where IS_FROZEN_POSITION = 'Y'
+		and ENTRUST_ID= #{entrustId,jdbcType=VARCHAR}
+		and BID_ID = #{bidId,jdbcType=VARCHAR}
+		and BID_PRICE * 100 = #{bidPrice,jdbcType=DECIMAL}
+	</select>
 </mapper>

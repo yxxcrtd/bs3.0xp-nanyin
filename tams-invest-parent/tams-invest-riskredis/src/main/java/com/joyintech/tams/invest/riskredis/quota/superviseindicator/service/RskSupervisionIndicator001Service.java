@@ -11,7 +11,6 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
 
-
 import com.joyintech.tams.invest.riskredis.quota.superviseindicator.dto.RskPortfolioIndicatorDto;
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
@@ -66,9 +65,9 @@ public class RskSupervisionIndicator001Service extends CommonExportService<RskSu
     private RiskRedisInitService<ImplCond> redisRriter;
     @Autowired
     private IndicatorService indicatorService;
-    @Autowired
-	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
+	@Autowired
+	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	private  Map<String ,Object> mapSuper=new HashMap<String,Object>();
 	/**
@@ -89,28 +88,27 @@ public class RskSupervisionIndicator001Service extends CommonExportService<RskSu
 	        restTemplate.postForObject(
 	            ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionIndicator/" + action, entity,
 	            Integer.class);
+		String pageRedisFlag = CacheUtil.getSysParam("pageRedisFlag");
+		if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
+			final String actionRedis=action;
+			threadPoolTaskExecutor.execute(()->{
+				try {
+					logger.info("===========指标管理删除进入redis开始=============");
+					Thread.sleep(6000);
+					// 更新Redis
+					ImplCond cond = new ImplCond();
+					cond.setDel(StringUtil.equals(actionRedis, "delete"));
+					cond.setIndicatorCodeArray(entity.getIndId());
+					redisRriter.dealRiskIndicator(cond);
+					logger.info("===========指标管理删除进入redis结束=============");
+				} catch (InterruptedException e) {
+					logger.error("===========指标管理删除进入redis异常=============");
+				}
 
-	        String pageRedisFlag = CacheUtil.getSysParam("pageRedisFlag");
-			if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
-				final String actionRedis=action;
-				threadPoolTaskExecutor.execute(()->{
-					try {
-						logger.info("===========指标管理删除进入redis开始=============");
-						Thread.sleep(6000);
-						// 更新Redis
-						ImplCond cond = new ImplCond();
-						cond.setDel(StringUtil.equals(actionRedis, "delete"));
-						cond.setIndicatorCodeArray(entity.getIndId());
-						redisRriter.dealRiskIndicator(cond);
-						logger.info("===========指标管理删除进入redis结束=============");
-					} catch (InterruptedException e) {
-						logger.error("===========指标管理删除进入redis异常=============");
-					}
-
-				});
-			}
-
+			});
 		}
+
+	}
 	/**
 	 * 插入操作
 	 */

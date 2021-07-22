@@ -1727,11 +1727,12 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                     ptlCashPositionFlowDto.setAcctType(acctTypeList2);
                     ptlCashPositionFlowDto.setIsFrozenPositionFlag(BussinessDictCodeList.是否_是.getValue());
                     BigDecimal isFrozenPosition = basePtlCashPositionInfoMapper.selectCashPositionFlow(ptlCashPositionFlowDto);
-                    basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
-                    //释放组合可用现金结束
-                    //2.指令可用现金
-                    //释放指令可用现金开始（反塞入）
+                    //判断是否已释放头寸
                     if(isFrozenPosition != null && isFrozenPosition.compareTo(BigDecimal.ZERO) != 0){
+                        basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
+                        //释放组合可用现金结束
+                        //2.指令可用现金
+                        //释放指令可用现金开始（反塞入）
                         EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
                         BeanUtil.copyPropertiesIgnoreNull(dto, ptlCashPositionFlowDto);
                         dto.setSeqno(IDGenerator.generate());
@@ -1739,8 +1740,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                         dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                         dto.setAmount(ArithmeticUtil.multiply(isFrozenPosition,new BigDecimal("-1")));
                         etrCashPositionFlowMapper.insertSelective(dto);
+                        //释放指令可用现金结束
                     }
-                    //释放指令可用现金结束
                 }
                 /**add by sunhui 20210721 重庆银行：一级债缴款后释放中标维护占用的头寸   end**/
             }

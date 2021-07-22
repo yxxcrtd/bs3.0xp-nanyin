@@ -79,4 +79,10 @@ public class EtrbondbiddingresultController {
     public void deleteTradeId(@RequestBody Map<String, Object> map) {
         etrbondbiddingresultService.deleteTradeId(map);
     }
+
+    @PostMapping("/checkFrozenPosition")
+    public Integer checkFrozenPosition(@RequestBody Map<String, Object> map) {
+        return etrbondbiddingresultService.checkFrozenPosition(map);
+    }
+
 }

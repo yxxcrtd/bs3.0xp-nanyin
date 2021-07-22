@@ -1,6 +1,5 @@
 package com.joyintech.tams.invest.riskredis.quota.superviseindicator.service;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,12 +13,9 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -40,7 +36,8 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class RskSupervisionIndicator002Service extends CommonExportService<RskSupervisionIndicator002Dto> implements BaseProcessService<RskSupervisionIndicator002Dto> {
-	/**
+
+    /**
      * 日志
      */
     private static Logger logger = LoggerFactory.getLogger(RskSupervisionIndicator002Service.class);
@@ -76,7 +73,6 @@ public class RskSupervisionIndicator002Service extends CommonExportService<RskSu
         restTemplate.postForObject(
             ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionIndicator/" + action, entity,
             Integer.class);
-
         String pageRedisFlag = CacheUtil.getSysParam("pageRedisFlag");
         if (CommonUtil.isType(pageRedisFlag, BussinessDictCodeListRds.是否_是)) {
             final String actionRedis=action;
@@ -108,28 +104,11 @@ public class RskSupervisionIndicator002Service extends CommonExportService<RskSu
                     logger.info("===========指标管理进入redis结束=============");
                 } catch (InterruptedException e) {
                     logger.error("===========指标管理进入redis异常=============");
-                } 
+                }
+
             });
         }
-        // 二级法人权限处理
-        if(MultilevelDataAuthorityUtil.isEnabled()) {
-            //创建机构代码
-            String createInst =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-            entity.setCreateInst(createInst);
-            // 有查询权限的机构代码
-            List<String> searchOrgCodeList = null;
-            // 有编辑权限的机构代码
-            List<String> editOrgCodeList = null;
-            // 新建或修改时重新设置二级法人权限，删除时则清空
-            if (!OperationType.DELETE.equals(type)) {
-                //获取所有父级机构。  拥有查看权限
-                searchOrgCodeList = com.joyintech.tams.systemtools.util.CommonUtil.getParentInstitution(createInst);
-                // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
-                editOrgCodeList = Arrays.asList(entity.getCreateInst());
-            }
-            // 记录二级法人权限
-            insertDataAuthTypeInst(entity.getIndId(), searchOrgCodeList, editOrgCodeList,DictCodeList.共通业务类型_限额监督指标管理.getValue());
-        } 
+
     }
 
     /**

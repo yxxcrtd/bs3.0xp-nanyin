@@ -109,4 +109,9 @@ public class EtrbondbiddingresultService extends BaseService<Etrbondbiddingresul
 	public void deleteTradeId(Map<String, Object> map) {
 		etrbondbiddingresultMapper.deleteTradeId(map);
 	}
+
+	public Integer checkFrozenPosition(Map<String, Object> map) {
+		return etrbondbiddingresultMapper.checkFrozenPosition(map);
+	}
+
 }

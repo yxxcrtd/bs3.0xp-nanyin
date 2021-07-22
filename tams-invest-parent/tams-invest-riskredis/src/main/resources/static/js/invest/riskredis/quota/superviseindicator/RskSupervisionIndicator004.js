@@ -6,9 +6,19 @@
 	            onTreeLoadSuccess: function () {
 	                if(pageModel == PAGE_MODEL_EDIT||pageModel == PAGE_MODEL_REFERENCE) {//编辑或待办处理
 	                	var treeObj = $.fn.zTree.getZTreeObj("treeDataSingle_tree");
+                        // add by zhangrui1 容错处理 start
+                        if (treeObj == null) {
+                            return;
+                        }
+                        // add by zhangrui1 容错处理 end
 	                    if(entity!=null&&entity.selectedPortfIndItem!=null){
 	                    	$.each(entity.selectedPortfIndItem,function(i,v){
 	                    		 var node=treeObj.getNodeByParam("id",v.portfolioId);
+                                 // add by zhangrui1 容错处理 start
+                                 if (node == null) {
+                                     return;
+                                 }
+                                 // add by zhangrui1 容错处理 end
 	                    		 treeObj.checkNode(node, true, true);//指定勾选ID的节点
 	                    		 //treeObj.selectNode(node,true);//指定选中ID的节点
 	                    	})
