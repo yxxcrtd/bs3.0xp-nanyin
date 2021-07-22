@@ -21,6 +21,7 @@ import javax.validation.Valid;
 
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.dto.Product;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -188,6 +189,32 @@ public class OwnerEquityChangeNew001Controller  extends BaseController {
         Map<String, Object> params = new HashMap<>();
         params.put("param",param);
         return valAssetBook001Service.getBooksetId2(params);
+    }
+
+    /**
+     * 查询账套组
+     * @return 套账日期
+     * @throws Exception
+     * @see
+     */
+    @RequestMapping("findBooksetGroup")
+    @ResponseBody
+    public Page<SelectOptionDto> findBooksetGroup() throws Exception {
+        return valAssetBook001Service.findBooksetGroup(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 所属账套下拉框获取
+     *
+     * @return 返回的数据
+     * @exception Exception
+     *                异常
+     * @since 1.0
+     */
+    @RequestMapping("/findBooksetId")
+    @ResponseBody
+    public Page<SelectOptionDto> findBooksetId(){
+        return valAssetBook001Service.findBooksetIdByPage(RequestUtil.getPageParam());
     }
     
     /**

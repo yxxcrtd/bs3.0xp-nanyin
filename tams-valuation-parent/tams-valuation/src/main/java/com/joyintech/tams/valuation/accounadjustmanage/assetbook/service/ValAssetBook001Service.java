@@ -113,7 +113,20 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
 //        param.put("booksetType", DictCodeList.账套类别_理财账套.getValue());
 //        return super.queryForPageForSelectReturn(()->mapper.findBooksetId(param));
     }
-    
+
+    /**
+     * 检索账套代码列表(分页下拉框)
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> findBooksetIds(Map<String, Object> param) {
+
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBook001/findBooksetIds", param, SelectOptionDto.class);
+
+        //        param.put("booksetType", DictCodeList.账套类别_理财账套.getValue());
+        //        return super.queryForPageForSelectReturn(()->mapper.findBooksetId(param));
+    }
+
     /**
      * 检索账套代码列表(分页下拉框)
      * @param param

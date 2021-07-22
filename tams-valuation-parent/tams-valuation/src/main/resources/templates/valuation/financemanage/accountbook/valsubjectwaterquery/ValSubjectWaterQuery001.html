@@ -16,7 +16,6 @@
 	                   <div class="layui-input-inline input-inline">
 	                   	<select id="booksetType" name="booksetType" class="layui-input form-input input-select" 
 	                           		data-th-data-url="@{/valuation/accounadjustmanage/voucherquery/ValVoucherQuery001/findBooksetType}"
-	                           		
 	                                 allowClear="true" placeholder="请输入内容">
 	                       </select>
 	                  </div>
@@ -35,9 +34,9 @@
                             		multiple="multiple"
                                   allowClear="true" placeholder="请输入内容">
                            </select> -->
-                           <select id="booksetId" name="booksetId" class="layui-input form-input input-select" 
-                            		
-                            		multiple="multiple"
+                           <select id="booksetId" name="booksetId" class="layui-input form-input input-select"
+                                   data-th-data-url="@{/valuation/financemanage/accountbook/valsubjectwaterquery/ValSubjectWaterQuery001/findBooksetId}"
+                            		multiple="multiple" parentIds = 'booksetType'
                                   allowClear="true" placeholder="请输入内容">
                            </select>
                         </div>
