@@ -128,20 +128,18 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
             // 委托终止日
             etrInvestBondInfoDto.setMdate(DateUtil.parse(rowData.get(2).toString()));
             // 组合代码
-            etrInvestBondInfoDto.setPortfolioId(rowData.get(4).toString());
-            //子组合代码
-            etrInvestBondInfoDto.setParentPortfolioId(rowData.get(3).toString());
+            etrInvestBondInfoDto.setPortfolioId(rowData.get(3).toString());
             // 资产代码
-            etrInvestBondInfoDto.setFinprodMarketId(rowData.get(5).toString());
+            etrInvestBondInfoDto.setFinprodMarketId(rowData.get(4).toString());
             // 交易方向
-            etrInvestBondInfoDto.setPs(rowData.get(6).toString().split(":")[0]);
+            etrInvestBondInfoDto.setPs(rowData.get(5).toString().split(":")[0]);
             // 币种
-            etrInvestBondInfoDto.setCcy(rowData.get(7).toString().split(":")[0]);
+            etrInvestBondInfoDto.setCcy(rowData.get(6).toString().split(":")[0]);
             // 券面总额
-            etrInvestBondInfoDto.setEntrustNum(new BigDecimal(rowData.get(8).toString()));
+            etrInvestBondInfoDto.setEntrustNum(new BigDecimal(rowData.get(7).toString()));
 	         // 清算速度
 	//          etrInvestBondInfoDto.setSettleSpreed(rowData.get(13).toString().split(":")[0]);
-	        String code = rowData.get(9).toString().split(":")[0];
+	        String code = rowData.get(8).toString().split(":")[0];
 	        if(DictCodeList.清算速度_T_0.getValue().equals(code)) {
 	            etrInvestBondInfoDto.setSettleSpreed("01");
 	        }
@@ -152,18 +150,26 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
 	            etrInvestBondInfoDto.setSettleSpreed("03");
 	        }
             // 价格模式
-            etrInvestBondInfoDto.setPriceModel(rowData.get(10).toString().split(":")[0]);
+            etrInvestBondInfoDto.setPriceModel(rowData.get(9).toString().split(":")[0]);
             // 净价
-            if (StringUtil.isNotBlank(rowData.get(11).toString())) {
-                etrInvestBondInfoDto.setPrice(new BigDecimal(rowData.get(11).toString()));
+            if (StringUtil.isNotBlank(rowData.get(10).toString())) {
+                etrInvestBondInfoDto.setPrice(new BigDecimal(rowData.get(10).toString()));
             }
             // 行权收益率（%）
-            if (StringUtil.isNotBlank(rowData.get(12).toString())) {
-                etrInvestBondInfoDto.setExerYield(new BigDecimal(rowData.get(12).toString()));
+            if (StringUtil.isNotBlank(rowData.get(11).toString())) {
+                etrInvestBondInfoDto.setExerYield(new BigDecimal(rowData.get(11).toString()));
             }
             // 到期收益率（%）
+            if (StringUtil.isNotBlank(rowData.get(12).toString())) {
+                etrInvestBondInfoDto.setMatureYield(new BigDecimal(rowData.get(12).toString()));
+            }
+            // 投资目的
             if (StringUtil.isNotBlank(rowData.get(13).toString())) {
-                etrInvestBondInfoDto.setMatureYield(new BigDecimal(rowData.get(13).toString()));
+                etrInvestBondInfoDto.setInvAim(rowData.get(13).toString().split(":")[0]);
+            }
+            // 到期收益率（%）
+            if (StringUtil.isNotBlank(rowData.get(14).toString())) {
+                etrInvestBondInfoDto.setTradeMarket(rowData.get(14).toString().split(":")[0]);
             }
             Map<String, Object> param;
             Page<SelectOptionDto> selectOptionDtoPage;
@@ -201,10 +207,10 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
 //                }
 //            }
             // 通道
-            if (StringUtil.isNotBlank(rowData.get(14).toString())) {
-                etrInvestBondInfoDto.setChlId(rowData.get(14).toString());
+            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
+                etrInvestBondInfoDto.setChlId(rowData.get(15).toString());
                 param = new HashMap<>();
-                param.put("initValue", rowData.get(14).toString());
+                param.put("initValue", rowData.get(15).toString());
                 param.put("page", 1);
                 param.put("length", 20);
                 selectOptionDtoPage = restTemplate.postForPage(
@@ -232,14 +238,14 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
 //                etrInvestBondInfoDto.setTradePlat(rowData.get(17).toString().split(":")[0]);
 //            }
             // 交易对手
-            etrInvestBondInfoDto.setCounterId(rowData.get(15).toString());
+            etrInvestBondInfoDto.setCounterId(rowData.get(16).toString());
             // 交易对手名称
-            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
-                String counterName = getCounterName(rowData.get(15).toString());
+            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
+                String counterName = getCounterName(rowData.get(16).toString());
                 etrInvestBondInfoDto.setCounterIdName(counterName);
             }
             // 备注
-            etrInvestBondInfoDto.setRemark(rowData.get(16).toString());
+            etrInvestBondInfoDto.setRemark(rowData.get(17).toString());
             etrInvestBondInfoDto.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
             etrInvestBondInfoDto.setInvManagerId(LoginUserUtil.getUserName());
             param = new HashMap<>();
@@ -359,15 +365,15 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                 rowData.get(2).toString(), "EtrInvestBondInfo004.mdate", lineNo));
             // 组合代码非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
-                rowData.get(4).toString(), "EtrInvestBondInfo004.portfolioId", lineNo));
+                rowData.get(3).toString(), "EtrInvestBondInfo004.portfolioId", lineNo));
             // 组合代码check
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                 etrCommonService.checkPortfolioIdExist(rowData.get(4).toString(),
                     "EtrInvestBondInfo004.portfolioId", lineNo));
             // 资产代码(市场代码)
-            String finprodMarketId = rowData.get(5).toString();
+            String finprodMarketId = rowData.get(4).toString();
             // 交易方向
-            String ps = rowData.get(6).toString();
+            String ps = rowData.get(5).toString();
             if (StringUtil.isNotBlank(ps)) {
                 ps = ps.split(":")[0];
             }
@@ -383,7 +389,7 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
 //                            "EtrInvestBondInfo004.tradeMarket", lineNo));
                     // 币种非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(7).toString(),
+                        etrCommonService.checkIsBlank(rowData.get(6).toString(),
                             "EtrInvestBondInfo004.ccy", lineNo));
                 }
                 else {
@@ -408,7 +414,7 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                 }
             }
             // 券面总额
-            String entrustAmt = rowData.get(8).toString();
+            String entrustAmt = rowData.get(7).toString();
             // 券面总额非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
                 entrustAmt, "EtrInvestBondInfo004.entrustAmt", lineNo));
@@ -420,19 +426,19 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                 entrustAmt, "EtrInvestBondInfo004.entrustAmt", lineNo));
             // 清算速度非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
-                rowData.get(9).toString(), "EtrInvestBondInfo004.settleSpreed", lineNo));
+                rowData.get(8).toString(), "EtrInvestBondInfo004.settleSpreed", lineNo));
             // 价格模式非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
-                rowData.get(10).toString(), "EtrInvestBondInfo004.priceModel", lineNo));
+                rowData.get(9).toString(), "EtrInvestBondInfo004.priceModel", lineNo));
             // 净价
-            String price = rowData.get(11).toString();
+            String price = rowData.get(10).toString();
             // 行权收益率（%）
-            String exerYield = rowData.get(12).toString();
+            String exerYield = rowData.get(11).toString();
             // 到期收益率（%）
-            String matureYield = rowData.get(13).toString();
+            String matureYield = rowData.get(12).toString();
             // 净价/行权收益率（%）/到期收益率（%）至少且只有一个非空
-            if (rowData.get(10).toString().contains(DictCodeListExt2.价格模式_指定价格.getValue())
-                || rowData.get(10).toString().contains(DictCodeListExt2.价格模式_限价指令.getValue())) {
+            if (rowData.get(9).toString().contains(DictCodeListExt2.价格模式_指定价格.getValue())
+                || rowData.get(9).toString().contains(DictCodeListExt2.价格模式_限价指令.getValue())) {
                 int inputNo = (StringUtil.isBlank(price) ? 0 : 1)
                               + (StringUtil.isBlank(exerYield) ? 0 : 1)
                               + (StringUtil.isBlank(matureYield) ? 0 : 1);
@@ -459,41 +465,17 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
             // 到期收益率（%）是大于0
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsGtZero(
                 matureYield, "EtrInvestBondInfo004.matureYield", lineNo));
-//            // 最低成交金额
-//            String minAmt = rowData.get(13).toString();
-//            // 最低成交金额是数值
-//            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-//                etrCommonService.checkIsNumber(minAmt, "EtrInvestBondInfo004.minAmt", lineNo));
-//            // 最低成交金额是大于0
-//            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-//                etrCommonService.checkIsGtZero(minAmt, "EtrInvestBondInfo004.minAmt", lineNo));
-//            // 投资目的非空
-//            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
-//                rowData.get(15).toString(), "EtrInvestBondInfo004.invAim", lineNo));
-//            // 交易平台非空
-//            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
-//                rowData.get(17).toString(), "EtrInvestBondInfo004.tradePlat", lineNo));
-            // 证券账户存在
-//            if (StringUtil.isNotBlank(rowData.get(3).toString())
-//                && StringUtil.isNotBlank(rowData.get(18).toString())) {
-//                Map<String, Object> param = new HashMap<>();
-//                param.put("initValue", rowData.get(18).toString());
-//                param.put("portfolioId", rowData.get(3).toString());
-//                if (StringUtil.isNotBlank(rowData.get(16).toString())) {
-//                    param.put("tradeMarket", rowData.get(16).toString().split(":")[0]);
-//                }
-//                param.put("page", 1);
-//                param.put("length", 20);
-//                List<SelectOptionDto> selectOptionDtoList = this.getSecManageAcctId(param);
-//                if (StringUtil.isEmptyList(selectOptionDtoList)) {
-//                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
-//                        "ETR_E_0017", getMessage("EtrInvestBondInfo004.secManageAcctId"), lineNo));
-//                }
-//            }
+
+            // 投资目的非空
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
+                    rowData.get(13).toString(), "EtrInvestBondInfo004.invAim", lineNo));
+            // 交易场所非空
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
+                    rowData.get(14).toString(), "EtrInvestBondInfo004.tradeMarket", lineNo));
             // 通道存在
-            if (StringUtil.isNotBlank(rowData.get(14).toString())) {
+            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
                 Map<String, Object> param = new HashMap<>();
-                param.put("initValue", rowData.get(14).toString());
+                param.put("initValue", rowData.get(15).toString());
                 param.put("page", 1);
                 param.put("length", 20);
                 Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
@@ -505,9 +487,9 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                 }
             }
             // 交易对手存在时check对手存在
-            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
+            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("initValue", rowData.get(15).toString());
+                map.put("initValue", rowData.get(16).toString());
                 map.put("page", 1);
                 map.put("length", 20);
                 map.put("innerTrade", false);

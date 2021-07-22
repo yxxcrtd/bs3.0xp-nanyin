@@ -213,6 +213,16 @@ public class EtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntity {
     private List<RiskTrialRetDto> riskTrialRetDto;
 
     /**
+     * 本方交易员
+     */
+    private String trader;
+
+    /**
+     * 净价偏离度
+     */
+    private BigDecimal deviationDegree;
+
+    /**
      * 获取 chlIdName
      * 
      * @return chlIdName.
@@ -1033,6 +1043,20 @@ public class EtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntity {
 	public void setCalculateField(String calculateField) {
 		this.calculateField = calculateField;
 	}
-	
-	
+
+    public String getTrader() {
+        return trader;
+    }
+
+    public void setTrader(String trader) {
+        this.trader = trader;
+    }
+
+    public BigDecimal getDeviationDegree() {
+        return deviationDegree;
+    }
+
+    public void setDeviationDegree(BigDecimal deviationDegree) {
+        this.deviationDegree = deviationDegree;
+    }
 }

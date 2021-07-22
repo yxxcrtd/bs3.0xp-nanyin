@@ -59,4 +59,11 @@ public interface EtrIbBondinfo001Mapper {
     EtrFinProductDto getEtrFinProductInfo(Map<String, Object> map);
 
     List<String> getEtrFinExerciseInfo(Map<String, Object> map);
+
+    /**
+     * 根据资产代码获取相关交易信息列表 （平台日期前所有的交易）
+     * @param map
+     * @return
+     */
+    List<EtrTrdProductDealDto> getAllTradeListByFinprodId(Map<String, Object> map);
 }

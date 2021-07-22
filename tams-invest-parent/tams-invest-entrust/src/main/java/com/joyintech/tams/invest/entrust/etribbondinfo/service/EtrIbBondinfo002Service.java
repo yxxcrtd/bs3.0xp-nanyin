@@ -949,4 +949,30 @@ public class EtrIbBondinfo002Service extends CommonExportService<EtrIbBondinfo00
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo002/doBack", entity,
                 Integer.class);
     }
+
+    /**
+     * 计算净价偏离度
+     * @param paramMap
+     */
+    public BigDecimal calDeviationDegree(Map<String, Object> paramMap) {
+        BigDecimal deviationDegree = null;
+        if(paramMap.get("price")==null){
+            return deviationDegree;
+        }
+        BigDecimal price = new BigDecimal(paramMap.get("price").toString());
+        BigDecimal valuationPrice =
+                restTemplate.postForObject(
+                        ServiceApplication.BASICDATA_SERVICE_NAME + "/ComBondQuotationInfo/selectNewValuationPriceByKey", paramMap,
+                        BigDecimal.class);
+
+        if(valuationPrice==null||BigDecimal.ZERO.compareTo(valuationPrice)==0){
+            return deviationDegree;
+        }
+        deviationDegree = ArithmeticUtil.divide(ArithmeticUtil.subtract(price,valuationPrice),valuationPrice,6,RoundingMode.HALF_UP);
+        deviationDegree = ArithmeticUtil.multiply(new BigDecimal(100),deviationDegree);
+        deviationDegree = deviationDegree.abs();
+
+        return deviationDegree;
+    }
+
 }

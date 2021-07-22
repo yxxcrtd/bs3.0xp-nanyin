@@ -202,6 +202,7 @@
         }
         if (finprodId != null && finprodId != '') {
             var secId = '';
+            var finprodAbbr = '';
             
             // document.getElementById('secName').innerHTML = '';
             // document.getElementById('secType').innerHTML = '';
@@ -222,6 +223,7 @@
             Joyin.ajaxJson(basePath + 'invest/entrust/etribbondinfo/EtrIbBondinfo001/findSecinfo', param, function (result) {
                 if (result) {
                     secId = result.secId;
+                    finprodAbbr = result.finprodAbbr;
                     $("#secName").html('');
                     $("#secName").html(result.secName);
                     result.secType=result.secTypeName;
@@ -286,9 +288,15 @@
             }, false);
 
             queryJJHQXX(secId);
+            window.EtrInitAmount.queryAmountInfo(secId,finprodAbbr,finprodId,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
             
             return rs;
         }
+    }
+
+
+    var calCanBuyAmount = function(portfolioId,ccy,sysDate,price) {
+        window.EtrInitAmount.calCanBuyAmount(portfolioId,ccy,sysDate,price);
     }
 
     /**
@@ -298,6 +306,7 @@
         querySecinfo:querySecinfo,
         queryPositionInfo:queryPositionInfo,
         viewPositionInfo:viewPositionInfo,
+        calCanBuyAmount:calCanBuyAmount,
         zhkyxj_t: zhkyxj_t
     }
     

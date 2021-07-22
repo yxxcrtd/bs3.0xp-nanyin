@@ -390,4 +390,19 @@ public class EtrIbBondinfo002Controller extends BaseController {
         String msg = etrIbBondinfo002Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }
+
+
+    /**
+     * 计算净价偏离度
+     * @param paramMap
+     * @return
+     */
+    @RequestMapping("/calDeviationDegree")
+    @ResponseBody
+    public BigDecimal calDeviationDegree(@RequestBody Map<String, Object> paramMap) {
+        BigDecimal result =
+        etrIbBondinfo002Service.calDeviationDegree(paramMap);
+        return result;
+    }
+
 }

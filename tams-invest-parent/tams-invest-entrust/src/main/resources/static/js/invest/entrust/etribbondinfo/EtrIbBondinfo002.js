@@ -146,6 +146,25 @@
         }
     };
 
+    /**
+     * 净值偏离度
+     */
+    function calDeviationDegree() {
+        if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
+            return;
+        }
+        Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calDeviationDegree",
+            {
+                price: query("#price").val(),
+                finprodId: query("#finprodId").val(),
+                vdate:query('#vdate').val()
+            }, function (result) {
+            if (result ) {
+                document.getElementById('deviationDegree').innerHTML = JoyinUtil.formatNumber(result, 4, null, 2) + '%';
+            }
+        });
+    }
+
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
         if (!initFlag) {
@@ -175,6 +194,10 @@
             if (!object.entrustNum) {
                 object.entrustNum = 100;
             }
+            // 根据净价计算可买数量
+            parent.EtrIbBondinfoHq.calCanBuyAmount(query("#portfolioId").val(),query('#ccy').val(),query('#vdate').val(),query('#price').val());
+            // 根据净价计算净价偏离度
+            calDeviationDegree();
             //只有选中单选按钮的值才进行联动计算  add by yzg 20210622 start
             var calculateField =  query("input[name=calculateField]:checked").val();
             if(calflag != calculateField){
@@ -534,6 +557,7 @@
         if (todoList == false) {
             var rs = parent.EtrIbBondinfoHq.queryPositionInfo(finprodIdhid,portfolioId,chlFinprodId,ccy,vdate,calId);
             getPtlCashPositionInfo(rs);
+            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
         }
     }
     /**

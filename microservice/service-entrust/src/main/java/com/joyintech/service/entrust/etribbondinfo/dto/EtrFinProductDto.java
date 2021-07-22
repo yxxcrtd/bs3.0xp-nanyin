@@ -25,6 +25,11 @@ public class EtrFinProductDto {
     private String finprodId;
 
     /**
+     * 资产简称
+     */
+    private String finprodAbbr;
+
+    /**
      * 资产名称
      */
     private String finprodName;
@@ -428,5 +433,13 @@ public class EtrFinProductDto {
 
     public void setSecId(String secId) {
         this.secId = secId;
+    }
+
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
+
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
     }
 }

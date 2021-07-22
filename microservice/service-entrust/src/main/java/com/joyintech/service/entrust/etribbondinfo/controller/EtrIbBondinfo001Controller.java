@@ -18,6 +18,7 @@ import com.joyintech.service.entrust.etribbondinfo.service.EtrIbBondinfo001Servi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -80,5 +81,15 @@ public class EtrIbBondinfo001Controller {
     @PostMapping("getEtrFinProductInfo")
     public EtrFinProductDto getEtrFinProductInfo(@RequestBody Map<String, Object> pageParam) {
         return etrIbBondinfo001Service.getEtrFinProductInfo(pageParam);
+    }
+
+    /**
+     * 查询债券持仓成本价
+     * @param pageParam
+     * @return
+     */
+    @PostMapping("getCostPrice")
+    public BigDecimal getCostPrice(@RequestBody Map<String, Object> pageParam) {
+        return etrIbBondinfo001Service.getCostPrice(pageParam);
     }
 }

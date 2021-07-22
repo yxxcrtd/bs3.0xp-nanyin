@@ -5,6 +5,7 @@
 
 package com.joyintech.service.basicdata.marketdata.mstbondquotationinfo.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -206,5 +207,18 @@ public class ComBondQuotationInfoController {
    public void mergeInfoList(@RequestBody List<ComBondQuotationInfoDto> equityList){
 	   comBondQuotationInfoService.mergeInfoList(equityList);
    }
+
+    /**
+     *
+     * @param secId
+     * @param valueDate
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("selectNewValuationPriceByKey")
+    public BigDecimal selectNewValuationPriceByKey(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return comBondQuotationInfoService.selectNewValuationPriceByKey(param);
+    }
 
 }

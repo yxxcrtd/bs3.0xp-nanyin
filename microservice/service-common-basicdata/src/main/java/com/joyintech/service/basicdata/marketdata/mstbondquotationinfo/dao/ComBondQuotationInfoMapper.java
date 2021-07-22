@@ -1,5 +1,6 @@
 package com.joyintech.service.basicdata.marketdata.mstbondquotationinfo.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -113,4 +114,10 @@ public interface ComBondQuotationInfoMapper {
     */
    int mergeInfoList(@Param("newDataList")List<ComBondQuotationInfoDto> insertList);
 
+	/**
+	 * 查询最新的估值净价
+	 * @param map
+	 * @return
+	 */
+    BigDecimal selectNewValuationPriceByKey(Map<String, Object> map);
 }
