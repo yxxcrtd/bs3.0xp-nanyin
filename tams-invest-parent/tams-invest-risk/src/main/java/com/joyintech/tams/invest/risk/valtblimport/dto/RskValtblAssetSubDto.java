@@ -11,7 +11,9 @@
 package com.joyintech.tams.invest.risk.valtblimport.dto;
 
 import java.util.List;
+import java.util.Queue;
 
+import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
 import com.joyintech.tams.common.base.entity.RskValtblAssetSub;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.systemtools.util.SysDatadictUtil;
@@ -225,4 +227,13 @@ public class RskValtblAssetSubDto extends RskValtblAssetSub implements Comparabl
         }
     }
 
+ 	private Queue<RskOutValtblImportHis> importHisQueue;
+
+    public Queue<RskOutValtblImportHis> getImportHisQueue() {
+        return importHisQueue;
+    }
+
+    public void setImportHisQueue(Queue<RskOutValtblImportHis> importHisQueue) {
+        this.importHisQueue = importHisQueue;
+    }
 }
