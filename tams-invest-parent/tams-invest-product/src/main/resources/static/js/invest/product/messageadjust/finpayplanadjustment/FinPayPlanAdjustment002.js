@@ -192,7 +192,7 @@ $(function() {
         	
         	//修改不允许修改参数
         	// modify by lizhi TISHKBS-719 【产品要素调整/付费计划调整】付费规则调整时，将原来不规则费用调整为月付时，首次付费日无法填写，但是提交不了 start
-        	if(rowData.cashId && ( /**field == "firstCalEndDate" ||*/ field == "feeId" || field == "prodStyle" || field == "provisionFirstDay" || field == "eAccrDate" || field == "basicBill")){
+        	if(rowData.cashId && (field == "firstCalEndDate" || field == "feeId" || field == "prodStyle" || field == "provisionFirstDay" || field == "eAccrDate" || field == "basicBill")){
     		// modify by lizhi TISHKBS-719 【产品要素调整/付费计划调整】付费规则调整时，将原来不规则费用调整为月付时，首次付费日无法填写，但是提交不了 start
         		return false;
         	}
