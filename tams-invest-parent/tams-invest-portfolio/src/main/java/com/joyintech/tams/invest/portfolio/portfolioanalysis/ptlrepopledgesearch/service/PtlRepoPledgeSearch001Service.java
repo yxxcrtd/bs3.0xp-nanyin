@@ -61,6 +61,20 @@ public class PtlRepoPledgeSearch001Service extends CommonExportService<PtlRepoPl
                         + "/PtlRepoPledgeSearch/getFinprodMarketId" , map,
                 SelectOptionDto.class);
     }
+
+    /**
+     * 交易对手的联想下拉框事件
+     *
+     * @param map 输入的参数
+     * @return 调用微服务
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> getCounter(Map<String,Object> map) {
+        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                        + "/PtlRepoPledgeSearch/getCounter" , map,
+                SelectOptionDto.class);
+    }
     
     /**
      * 查询画面查询方法
