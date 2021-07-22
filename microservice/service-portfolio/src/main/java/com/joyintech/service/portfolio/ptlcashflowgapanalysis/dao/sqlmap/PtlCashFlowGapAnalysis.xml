@@ -81,6 +81,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         ,pcpf.update_time update_time
         from
         PTL_CASH_POSITION_FLOW pcpf
@@ -99,6 +102,7 @@
         left join FIN_PRODUCT_ADD on fp.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pcpf.acct_id
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
 
         where (
         (trd.TRADE_ID is not null and trd.TRADE_STATUS = '01' AND trd.IS_CANCEL='N')
@@ -126,6 +130,17 @@
 
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList !=null and portfolioSeriesList.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         <if test="fundAccountList != null and fundAccountList.size()>0 ">
             and (pcpf.ACCT_ID in
             <foreach collection="fundAccountList" item="item" index= "index" open="(" close=")" separator="," >
@@ -201,6 +216,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         ,psp.update_time update_time
         from PTL_SEC_POSITION psp
         left join PTL_PORTFOLIO pp on psp.PORTFOLIO_ID = pp.PORTFOLIO_ID
@@ -217,6 +235,7 @@
         left JOIN BOK_POSITION_PRD BPP1 ON fcp.FINPROD_ID = BPP1.FINPROD_ID AND fcp.BRANCH = BPP1.BRANCH AND BPP1.CDATE = fcp.MDATE -1
         LEFT JOIN FIN_PRODUCT_ADD PRODADD ON (PSP.PORTFOLIO_ID = PRODADD.PORTFOLIO_ID or pp.PARENT_PORTFOLIO_ID = PRODADD.PORTFOLIO_ID)
         LEFT JOIN FIN_PRODUCT PROD ON PRODADD.FINPROD_ID = PROD.FINPROD_ID
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
         where PROD.VDATE &lt;= FCP.VDATE /*过滤掉产品陈立日之前的计划*/
         <if test="portfolioIdList != null and portfolioIdList.size()>0 ">
             and psp.PORTFOLIO_ID in
@@ -238,6 +257,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList !=null and portfolioSeriesList.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         <if test="searchDateStart != null and searchDateStart != ''">
             AND (fcp.PAY_DATE BETWEEN TO_DATE(#{searchDateStart},'YYYY-MM-DD')
             AND TO_DATE(#{searchDateEnd},'YYYY-MM-DD'))
@@ -296,6 +326,7 @@
         left join FIN_PRODUCT_ADD on fp.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pcpf.acct_id
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
         where (
         (trd.TRADE_ID is not null and trd.TRADE_STATUS = '01' AND trd.IS_CANCEL='N')
         or (TRD1.TRADE_ID is not null and TRD1.TRADE_STATUS = '01' AND TRD1.IS_CANCEL='N')
@@ -322,6 +353,17 @@
 
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList !=null and portfolioSeriesList.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         <if test="fundAccountList != null and fundAccountList.size()>0 ">
             and (pcpf.ACCT_ID in
             <foreach collection="fundAccountList" item="item" index= "index" open="(" close=")" separator="," >
@@ -391,6 +433,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         ,psp.update_time update_time
         from PTL_SEC_POSITION psp
         left join PTL_PORTFOLIO pp on psp.PORTFOLIO_ID = pp.PORTFOLIO_ID
@@ -402,6 +447,7 @@
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT_ADD PRODADD ON (PSP.PORTFOLIO_ID = PRODADD.PORTFOLIO_ID or pp.PARENT_PORTFOLIO_ID = PRODADD.PORTFOLIO_ID)
         LEFT JOIN FIN_PRODUCT PROD ON PRODADD.FINPROD_ID = PROD.FINPROD_ID
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
         where PROD.VDATE &lt;= FCP.VDATE /*过滤掉产品陈立日之前的计划*/
         <if test="portfolioIdList != null and portfolioIdList.size()>0 ">
             and psp.PORTFOLIO_ID in
@@ -423,6 +469,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList !=null and portfolioSeriesList.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         <if test="searchDateStart != null and searchDateStart != ''">
             AND (fcp.PAY_DATE BETWEEN TO_DATE(#{searchDateStart},'YYYY-MM-DD')
             AND TO_DATE(#{searchDateEnd},'YYYY-MM-DD'))
@@ -492,6 +549,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         ,psp.update_time update_time
         from PTL_SEC_POSITION psp
         left join PTL_PORTFOLIO pp on psp.PORTFOLIO_ID = pp.PORTFOLIO_ID
@@ -503,6 +563,7 @@
         left join FIN_EXERCISE_PLAN fep1 on fep1.FINPROD_ID = psp.FINPROD_ID
         LEFT JOIN FIN_PRODUCT_ADD PRODADD ON (PSP.PORTFOLIO_ID = PRODADD.PORTFOLIO_ID or pp.PARENT_PORTFOLIO_ID = PRODADD.PORTFOLIO_ID)
         LEFT JOIN FIN_PRODUCT PROD ON PRODADD.FINPROD_ID = PROD.FINPROD_ID
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
         <where>
             PROD.VDATE &lt;= fep1.VDATE /*过滤掉产品陈立日之前的计划*/
             AND psp.AMOUNT > 0
@@ -527,6 +588,17 @@
                 </foreach>
             </if>
             <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+            <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+            <if test="portfolioSeriesList !=null and portfolioSeriesList.size()>0" >
+                AND (ppp.PORTFOLIO_SERIES IN
+                <foreach collection="portfolioSeriesList" item="item" index="index" open="(" close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) OR ppp.PORTFOLIO_SERIES IN (
+                    </if>
+                    #{item}
+                </foreach>)
+            </if>
+            <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
             <if test="searchDateStart != null and searchDateStart != ''">
                 AND (fep1.EXERCISE_DATE BETWEEN TO_DATE(#{searchDateStart},'YYYY-MM-DD')
                 AND TO_DATE(#{searchDateEnd},'YYYY-MM-DD'))
@@ -575,6 +647,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         total.portfolioId1 as portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,total.portfolioSeries portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from (
 
         <!-- 1、查询已实际发生的现金流 -->
@@ -594,6 +669,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pcpf.PORTFOLIO_ID as portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from
         PTL_CASH_POSITION_FLOW pcpf
         left join PTL_PORTFOLIO pp on pcpf.PORTFOLIO_ID = pp.PORTFOLIO_ID
@@ -605,6 +683,7 @@
         left join TRD_FIN_PRODUCT_DEAL_TOTAL tfpdt on spo.TRADE_ID = tfpdt.TOTLE_TRADE_ID
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pcpf.ACCT_ID
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
         where (
         (trd.TRADE_ID is not null and trd.TRADE_STATUS = '01' AND trd.IS_CANCEL='N')
         or (TRD1.TRADE_ID is not null and TRD1.TRADE_STATUS = '01' AND TRD1.IS_CANCEL='N')
@@ -634,6 +713,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList1 !=null and portfolioSeriesList1.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList1" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         and pcpf.HODING_TYPE = '03'
         and pcpf.CCY = #{ccy1,jdbcType=VARCHAR}
         and pa.USER_ID = #{userId}
@@ -676,6 +766,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID as portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from PTL_SEC_POSITION psp
         left join PTL_PORTFOLIO pp on psp.PORTFOLIO_ID = pp.PORTFOLIO_ID
         left join PTL_CAPACCT_INFO pci on psp.PORTFOLIO_ID = pci.PORTFOLIO_ID
@@ -685,6 +778,7 @@
         left join FIN_PRODUCT_ADD on fp.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pci.ACCT_NO
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
 
         where 1 = 1
         <if test="portfolioIdList1 != null and portfolioIdList1.size()>0 ">
@@ -701,6 +795,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList1 !=null and portfolioSeriesList1.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList1" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         <if test="fundAccount1 != null and fundAccount1 != '' ">
             and pci.ACCT_NO = #{fundAccount1}
         </if>
@@ -737,6 +842,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID as portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from PTL_SEC_POSITION psp
         left join PTL_PORTFOLIO pp on psp.PORTFOLIO_ID = pp.PORTFOLIO_ID
         left join PTL_CAPACCT_INFO pci on psp.PORTFOLIO_ID = pci.PORTFOLIO_ID
@@ -746,6 +854,7 @@
         left join FIN_PRODUCT_ADD on fp.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pci.ACCT_NO
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
 
         where 1 = 1
         <if test="portfolioIdList1 != null and portfolioIdList1.size()>0 ">
@@ -765,6 +874,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList1 !=null and portfolioSeriesList1.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList1" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         <if test="searchDateStart1 != null and searchDateStart1 != ''">
             AND (fcp.PAY_DATE BETWEEN TO_DATE(#{searchDateStart1},'YYYY-MM-DD')
             AND TO_DATE(#{searchDateEnd1},'YYYY-MM-DD'))
@@ -813,6 +933,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID as portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from PTL_SEC_POSITION psp
         left join PTL_PORTFOLIO pp on psp.PORTFOLIO_ID = pp.PORTFOLIO_ID
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
@@ -830,6 +953,7 @@
         )
         ) fep1 on fep1.FINPROD_ID = psp.FINPROD_ID
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pci.ACCT_NO
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
         where 1 = 1
 
         <if test="portfolioIdList1 != null and portfolioIdList1.size()>0 ">
@@ -853,6 +977,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList1 !=null and portfolioSeriesList1.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList1" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         and not exists (
         select 1 from TRD_PRODUCT_DEAL tpd
         where 1 = 1
@@ -868,7 +1003,7 @@
         and pa.USER_ID = #{userId}
         ) total
         <!--多级法人改造 add by jingqiongqiong 20200615-->
-        group by total.ccy,total.portfolioId,total.fundAccount,total.portfolioId1
+        group by total.ccy,total.portfolioId,total.fundAccount,total.portfolioId1,total.portfolioSeries
         <!--多级法人改造 add by jingqiongqiong 20200615-->
     </select>
 
@@ -882,6 +1017,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         total1.portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,total1.portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from (
         select
         ftsi.TERM_STRUCT_NAME aggregDimension,
@@ -894,6 +1032,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         total.portfolioId1 portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,total.portfolioSeries portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from (
         <!-- 1、查询已实际发生的现金流。 -->
         select DISTINCT
@@ -912,6 +1053,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from
         PTL_CASH_POSITION_FLOW pcpf
         left join PTL_PORTFOLIO pp on pcpf.PORTFOLIO_ID = pp.PORTFOLIO_ID
@@ -920,6 +1064,7 @@
         left join STL_PAY_ORDERS spo on pcpf.ORDER_ID = spo.ORDER_ID
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pcpf.ACCT_ID
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
 
         where 1 = 1
         <if test="portfolioIdList1 != null and portfolioIdList1.size()>0 ">
@@ -943,6 +1088,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList1 !=null and portfolioSeriesList1.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList1" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         <if test="searchDateStart1 != null and searchDateStart1 != ''">
             AND pcpf.CDATE &gt;= TO_DATE(#{searchDateStart1},'YYYY-MM-DD')
         </if>
@@ -980,6 +1136,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from PTL_SEC_POSITION psp
         left join PTL_PORTFOLIO pp on psp.PORTFOLIO_ID = pp.PORTFOLIO_ID
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
@@ -990,6 +1149,7 @@
         left join FIN_TRADE_PRODUCT FTP on FTP.FINPROD_ID = psp.FINPROD_ID
         left join FIN_PRODUCT_ADD on fp.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pci.ACCT_NO
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
 
         where 1 = 1
         <if test="portfolioIdList1 != null and portfolioIdList1.size()>0 ">
@@ -1009,6 +1169,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList1 !=null and portfolioSeriesList1.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList1" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         and fcp.PAY_DATE &gt;= to_date(#{sysDate},'YYYY-MM-DD')
         and not exists (
         select 1 from TRD_PRODUCT_DEAL tpd
@@ -1042,6 +1213,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from PTL_SEC_POSITION psp
         left join PTL_PORTFOLIO pp on psp.PORTFOLIO_ID = pp.PORTFOLIO_ID
         left join PTL_CAPACCT_INFO pci on psp.PORTFOLIO_ID = pci.PORTFOLIO_ID
@@ -1051,6 +1225,7 @@
         left join FIN_PRODUCT_ADD on fp.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pci.ACCT_NO
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
 
         where 1 = 1
         <if test="portfolioIdList1 != null and portfolioIdList1.size()>0 ">
@@ -1070,6 +1245,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList1 !=null and portfolioSeriesList1.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList1" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         AND fcp.PAY_DATE &gt;= to_date(#{sysDate},'YYYY-MM-DD')
 
         and not exists (
@@ -1119,6 +1305,9 @@
         <!--多级法人改造 add by jingqiongqiong 20200615-->
         pp.PORTFOLIO_ID portfolioId1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
+        <!--add by swwan [重庆银行] 组合系列 20210722 start-->
+        ,ppp.PORTFOLIO_SERIES portfolioSeries
+        <!--add by swwan [重庆银行] 组合系列 20210722 end-->
         from PTL_SEC_POSITION psp
         left join PTL_PORTFOLIO pp on psp.PORTFOLIO_ID = pp.PORTFOLIO_ID
         left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
@@ -1136,6 +1325,7 @@
         )
         ) fep1 on fep1.FINPROD_ID = psp.FINPROD_ID
         left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pci.ACCT_NO
+        left join PA_PTL_PORTFOLIO ppp on pp.portfolio_id = ppp.portfolio_id
         where 1 = 1
 
         <if test="portfolioIdList1 != null and portfolioIdList1.size()>0 ">
@@ -1155,6 +1345,17 @@
             </foreach>
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
+        <!--  add by swwan [重庆银行] 组合系列 20210722 start -->
+        <if test="portfolioSeriesList1 !=null and portfolioSeriesList1.size()>0" >
+            AND (ppp.PORTFOLIO_SERIES IN
+            <foreach collection="portfolioSeriesList1" item="item" index="index" open="(" close=")" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR ppp.PORTFOLIO_SERIES IN (
+                </if>
+                #{item}
+            </foreach>)
+        </if>
+        <!--  add by swwan [重庆银行] 组合系列 20210722 end -->
         AND fep1.EXERCISE_DATE &gt;= to_date(#{sysDate},'YYYY-MM-DD')
 
         and not exists (
@@ -1180,7 +1381,7 @@
         </if>
         ) total1
         <!--多级法人改造 add by jingqiongqiong 20200615-->
-        group by total1.ccy,total1.portfolioId,total1.fundAccount,total1.aggregDimension,total1.portfolioId1
+        group by total1.ccy,total1.portfolioId,total1.fundAccount,total1.aggregDimension,total1.portfolioId1,total1.portfolioSeries
         <!--多级法人改造 add by jingqiongqiong 20200615-->
     </select>
 
