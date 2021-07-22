@@ -24,7 +24,18 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="PFLSH_NAME" property="pflshName" jdbcType="VARCHAR" />
         <result column="CREDIT_CONDITION" property="creditCondition" jdbcType="VARCHAR" />
-        <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+        <result column="SINGER_SEC_RATIO" property="singerSecRatio" jdbcType="DECIMAL" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="CREDIT_AMT_ADD" property="creditAmtAdd" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="IS_INTERBANK" property="isInterbank" jdbcType="VARCHAR" />
+        <result column="IS_LOOP_AMT" property="isLoopAmt" jdbcType="VARCHAR" />
+        <result column="CREDIT_OBJ" property="creditObj" jdbcType="VARCHAR" />
+        <result column="APPR_VDATE" property="apprVdate" jdbcType="DATE" />
+        <result column="APPR_MDATE" property="apprMdate" jdbcType="DATE" />
+        <result column="CREDIT_VDATE" property="creditVdate" jdbcType="DATE" />
+        <result column="CREDIT_MDATE" property="creditMdate" jdbcType="DATE" />
+        <result column="HOLD_MATURITY" property="holdMaturity" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, CREDIT_MST_ID CREDIT_MST_ID, CUSTOMER_ID CUSTOMER_ID, TERM TERM, PFLSH PFLSH, 
@@ -32,7 +43,11 @@
         SECURITIES_RATING SECURITIES_RATING, EXTERNAL_RATING EXTERNAL_RATING, REMARK REMARK, 
         CREDIT_FLAG CREDIT_FLAG, PARENT_CUSTOMER_ID PARENT_CUSTOMER_ID, HAP_CREDIT_AMT HAP_CREDIT_AMT, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME, PFLSH_NAME PFLSH_NAME, CREDIT_CONDITION CREDIT_CONDITION,INSTITUTION_CODE INSTITUTION_CODE
+        UPDATE_TIME UPDATE_TIME, PFLSH_NAME PFLSH_NAME, CREDIT_CONDITION CREDIT_CONDITION, 
+        SINGER_SEC_RATIO SINGER_SEC_RATIO, CREDIT_TYPE CREDIT_TYPE, CREDIT_AMT_ADD CREDIT_AMT_ADD, 
+        CCY CCY, IS_INTERBANK IS_INTERBANK, IS_LOOP_AMT IS_LOOP_AMT, CREDIT_OBJ CREDIT_OBJ, 
+        APPR_VDATE APPR_VDATE, APPR_MDATE APPR_MDATE, CREDIT_VDATE CREDIT_VDATE, CREDIT_MDATE CREDIT_MDATE, 
+        HOLD_MATURITY HOLD_MATURITY
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -62,8 +77,11 @@
             CREDIT_FLAG, PARENT_CUSTOMER_ID, HAP_CREDIT_AMT, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, PFLSH_NAME, 
-            CREDIT_CONDITION, INSTITUTION_CODE
-            )
+            CREDIT_CONDITION, SINGER_SEC_RATIO, CREDIT_TYPE, 
+            CREDIT_AMT_ADD, CCY, IS_INTERBANK, 
+            IS_LOOP_AMT, CREDIT_OBJ, APPR_VDATE, 
+            APPR_MDATE, CREDIT_VDATE, CREDIT_MDATE, 
+            HOLD_MATURITY)
         values (#{seqno,jdbcType=VARCHAR}, #{creditMstId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, 
             #{term,jdbcType=DECIMAL}, #{pflsh,jdbcType=VARCHAR}, #{creditAmt,jdbcType=DECIMAL}, 
             #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{internalRating,jdbcType=VARCHAR}, 
@@ -71,8 +89,11 @@
             #{creditFlag,jdbcType=VARCHAR}, #{parentCustomerId,jdbcType=VARCHAR}, #{hapCreditAmt,jdbcType=DECIMAL}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{pflshName,jdbcType=VARCHAR}, 
-            #{creditCondition,jdbcType=VARCHAR}, #{institutionCode,jdbcType=VARCHAR}
-            )
+            #{creditCondition,jdbcType=VARCHAR}, #{singerSecRatio,jdbcType=DECIMAL}, #{creditType,jdbcType=VARCHAR}, 
+            #{creditAmtAdd,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, #{isInterbank,jdbcType=VARCHAR}, 
+            #{isLoopAmt,jdbcType=VARCHAR}, #{creditObj,jdbcType=VARCHAR}, #{apprVdate,jdbcType=DATE}, 
+            #{apprMdate,jdbcType=DATE}, #{creditVdate,jdbcType=DATE}, #{creditMdate,jdbcType=DATE}, 
+            #{holdMaturity,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditLines" >
         insert into CREDIT_LINES
@@ -143,8 +164,41 @@
             <if test="creditCondition != null" >
                 CREDIT_CONDITION,
             </if>
-            <if test="institutionCode != null" >
-                INSTITUTION_CODE,
+            <if test="singerSecRatio != null" >
+                SINGER_SEC_RATIO,
+            </if>
+            <if test="creditType != null" >
+                CREDIT_TYPE,
+            </if>
+            <if test="creditAmtAdd != null" >
+                CREDIT_AMT_ADD,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="isInterbank != null" >
+                IS_INTERBANK,
+            </if>
+            <if test="isLoopAmt != null" >
+                IS_LOOP_AMT,
+            </if>
+            <if test="creditObj != null" >
+                CREDIT_OBJ,
+            </if>
+            <if test="apprVdate != null" >
+                APPR_VDATE,
+            </if>
+            <if test="apprMdate != null" >
+                APPR_MDATE,
+            </if>
+            <if test="creditVdate != null" >
+                CREDIT_VDATE,
+            </if>
+            <if test="creditMdate != null" >
+                CREDIT_MDATE,
+            </if>
+            <if test="holdMaturity != null" >
+                HOLD_MATURITY,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -214,8 +268,41 @@
             <if test="creditCondition != null" >
                 #{creditCondition,jdbcType=VARCHAR},
             </if>
-            <if test="institutionCode != null" >
-                #{institutionCode,jdbcType=VARCHAR},
+            <if test="singerSecRatio != null" >
+                #{singerSecRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="creditType != null" >
+                #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditAmtAdd != null" >
+                #{creditAmtAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="isInterbank != null" >
+                #{isInterbank,jdbcType=VARCHAR},
+            </if>
+            <if test="isLoopAmt != null" >
+                #{isLoopAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="creditObj != null" >
+                #{creditObj,jdbcType=VARCHAR},
+            </if>
+            <if test="apprVdate != null" >
+                #{apprVdate,jdbcType=DATE},
+            </if>
+            <if test="apprMdate != null" >
+                #{apprMdate,jdbcType=DATE},
+            </if>
+            <if test="creditVdate != null" >
+                #{creditVdate,jdbcType=DATE},
+            </if>
+            <if test="creditMdate != null" >
+                #{creditMdate,jdbcType=DATE},
+            </if>
+            <if test="holdMaturity != null" >
+                #{holdMaturity,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -223,11 +310,15 @@
         insert into CREDIT_LINES(SEQNO, CREDIT_MST_ID, CUSTOMER_ID, TERM, PFLSH, CREDIT_AMT, 
         VDATE, MDATE, INTERNAL_RATING, SECURITIES_RATING, EXTERNAL_RATING, REMARK, CREDIT_FLAG, 
         PARENT_CUSTOMER_ID, HAP_CREDIT_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME, PFLSH_NAME, CREDIT_CONDITION, INSTITUTION_CODE)
+        UPDATE_TIME, PFLSH_NAME, CREDIT_CONDITION, SINGER_SEC_RATIO, CREDIT_TYPE, CREDIT_AMT_ADD, 
+        CCY, IS_INTERBANK, IS_LOOP_AMT, CREDIT_OBJ, APPR_VDATE, APPR_MDATE, CREDIT_VDATE, 
+        CREDIT_MDATE, HOLD_MATURITY)
         select SEQNO, CREDIT_MST_ID, CUSTOMER_ID, TERM, PFLSH, CREDIT_AMT, 
             VDATE, MDATE, INTERNAL_RATING, SECURITIES_RATING, EXTERNAL_RATING, REMARK, CREDIT_FLAG, 
             PARENT_CUSTOMER_ID, HAP_CREDIT_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PFLSH_NAME, CREDIT_CONDITION, INSTITUTION_CODE
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PFLSH_NAME, CREDIT_CONDITION, SINGER_SEC_RATIO, CREDIT_TYPE, CREDIT_AMT_ADD, 
+            CCY, IS_INTERBANK, IS_LOOP_AMT, CREDIT_OBJ, APPR_VDATE, APPR_MDATE, CREDIT_VDATE, 
+            CREDIT_MDATE, HOLD_MATURITY
              from CREDIT_LINES
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -288,8 +379,41 @@
             <if test="creditCondition != null" >
                 CREDIT_CONDITION = #{creditCondition,jdbcType=VARCHAR},
             </if>
-            <if test="institutionCode != null" >
-                INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            <if test="singerSecRatio != null" >
+                SINGER_SEC_RATIO = #{singerSecRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="creditType != null" >
+                CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditAmtAdd != null" >
+                CREDIT_AMT_ADD = #{creditAmtAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="isInterbank != null" >
+                IS_INTERBANK = #{isInterbank,jdbcType=VARCHAR},
+            </if>
+            <if test="isLoopAmt != null" >
+                IS_LOOP_AMT = #{isLoopAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="creditObj != null" >
+                CREDIT_OBJ = #{creditObj,jdbcType=VARCHAR},
+            </if>
+            <if test="apprVdate != null" >
+                APPR_VDATE = #{apprVdate,jdbcType=DATE},
+            </if>
+            <if test="apprMdate != null" >
+                APPR_MDATE = #{apprMdate,jdbcType=DATE},
+            </if>
+            <if test="creditVdate != null" >
+                CREDIT_VDATE = #{creditVdate,jdbcType=DATE},
+            </if>
+            <if test="creditMdate != null" >
+                CREDIT_MDATE = #{creditMdate,jdbcType=DATE},
+            </if>
+            <if test="holdMaturity != null" >
+                HOLD_MATURITY = #{holdMaturity,jdbcType=VARCHAR},
             </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
@@ -314,7 +438,18 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             PFLSH_NAME = #{pflshName,jdbcType=VARCHAR},
             CREDIT_CONDITION = #{creditCondition,jdbcType=VARCHAR},
-            INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+            SINGER_SEC_RATIO = #{singerSecRatio,jdbcType=DECIMAL},
+            CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+            CREDIT_AMT_ADD = #{creditAmtAdd,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            IS_INTERBANK = #{isInterbank,jdbcType=VARCHAR},
+            IS_LOOP_AMT = #{isLoopAmt,jdbcType=VARCHAR},
+            CREDIT_OBJ = #{creditObj,jdbcType=VARCHAR},
+            APPR_VDATE = #{apprVdate,jdbcType=DATE},
+            APPR_MDATE = #{apprMdate,jdbcType=DATE},
+            CREDIT_VDATE = #{creditVdate,jdbcType=DATE},
+            CREDIT_MDATE = #{creditMdate,jdbcType=DATE},
+            HOLD_MATURITY = #{holdMaturity,jdbcType=VARCHAR}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>

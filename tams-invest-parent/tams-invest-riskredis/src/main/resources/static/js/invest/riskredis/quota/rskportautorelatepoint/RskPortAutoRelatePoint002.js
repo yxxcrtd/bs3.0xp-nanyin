@@ -33,7 +33,7 @@ $(function() {
         
         object.selectedItem = table.getAllRows();
         for (var i = 0; i < object.selectedItem.length; i++){
-           object.selectedItem[i].paramNum = i+1;
+    		object.selectedItem[i].paramNum = i+1;
     	}
         object.selectedItem.map(function(v) {
         	if(v.classifyDimensionVal) {
@@ -107,19 +107,19 @@ $(function() {
       	  
        	return true;
        	},
-       	cols:[
-            {field:'ruleId',visible: false}
-            ,{field:'linkSign',title: 'RskPortAutoRelatePoint002.linkSign', edit:true
-               ,editOption:{type:'select',id:"linkSign",formatoption:true,result:SUP_LINK_TYPE}, sortable:false
-           }//连接符
-           ,{field:'classifyDimension' ,title: 'RskPortAutoRelatePoint002.classifyDimension', edit:true
-           	 ,editOption:{type:'select',childrenIds:"classifyDimensionVal",id:"classifyDimension",formatoption:true,result:CLASSIFY_DIMENSION}, sortable:false
-            }//分类维度
-            ,{field:'classifyDimensionVal' ,title: 'RskPortAutoRelatePoint002.classifyDimensionVal', edit:true
-           	 ,editOption:{type:'select',parentIds:"classifyDimension",id:"classifyDimensionVal",multiple: true,formatoption:true,result:CLASS_DIMENSION_SOURCE}, sortable:false
-            }//分类维度值
-            ,{field:'operation',title: 'SysCommon.operation', type:'action', buttons: ['delt']}
-        ],
+    	cols:[
+             {field:'ruleId',visible: false}
+             ,{field:'linkSign',title: 'RskPortAutoRelatePoint002.linkSign', edit:true
+                ,editOption:{type:'select',id:"linkSign",formatoption:true,result:SUP_LINK_TYPE}, sortable:false
+            }//连接符
+            ,{field:'classifyDimension' ,title: 'RskPortAutoRelatePoint002.classifyDimension', edit:true
+            	 ,editOption:{type:'select',childrenIds:"classifyDimensionVal",id:"classifyDimension",formatoption:true,result:CLASSIFY_DIMENSION}, sortable:false
+             }//分类维度
+             ,{field:'classifyDimensionVal' ,title: 'RskPortAutoRelatePoint002.classifyDimensionVal', edit:true
+            	 ,editOption:{type:'select',parentIds:"classifyDimension",id:"classifyDimensionVal",multiple: true,formatoption:true,result:CLASS_DIMENSION_SOURCE}, sortable:false
+             }//分类维度值
+             ,{field:'operation',title: 'SysCommon.operation', type:'action', buttons: ['delt']}
+         ],
         // editCell:function (value, data, field, cell, column) {
         //     if(field == 'assetType'){
         //         data.assetSecType = "";
