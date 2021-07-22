@@ -123,6 +123,10 @@ $(function() {
                 return;
             }
             var object = selArr[0];
+            if(object.tradeStatus!='02'){
+                Joyin.error(JoyinUtil.getMessage("请选择有效状态为有效的数据操作！"));
+                return;
+            }
             object.operateType = "revoke";
             Joyin.ajaxJson(basePath + 'invest/portfolio/ptlcashflow/PtlCashFlow001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_C_0032","撤销"), function(){
