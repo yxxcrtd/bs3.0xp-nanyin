@@ -1011,14 +1011,17 @@ public class CommonAutoCouponService extends BaseService{
         autoFundCoupon(dto,dto.getfInfoWindcode());
         InfChinamutualfunddescriptionDto newInfChinamutualfunddescriptionDto=checkFundRepData(dto);
         //中债校验通过
-        if(!StringUtil.isEmptyList(newInfChinamutualfunddescriptionDto.getBaseFinProductBaseInfoList())){
-        	autoFundCouponSave(dto);
-        	//基金自动加券
+        String isPermitAddcoupon = CacheUtil.getSysParam(BussinessConstant.IS_PERMIT_ADDCOUPON);
+        if(!(StringUtil.isEmptyList(newInfChinamutualfunddescriptionDto.getBaseFinProductBaseInfoList())
+                && StringUtil.equals(isPermitAddcoupon,DictCodeList.是否_否.getValue()))){
+            autoFundCouponSave(dto);
+            //基金自动加券
             busiAutoAddFundPrice(dto,dto.getfInfoWindcode());
             //场外金融产品保存
             finProductValuationSave(dto);
             //基金市场行情保存
             mstFundMarketInfoSave(dto);
+            newInfChinamutualfunddescriptionDto.setBaseFinProductBaseInfoList(dto.getBaseFinProductBaseInfoList());
         }
         return newInfChinamutualfunddescriptionDto;
     }
@@ -1849,17 +1852,20 @@ public class CommonAutoCouponService extends BaseService{
         
         //校验债券中债报送数据，不符合的债券，不进行加券
       		InterfPayhsrcsecinfoDto newInterfPayhsrcsecinfoDto=checkBondRepData(dto);
-      		if(!StringUtil.isEmptyList(newInterfPayhsrcsecinfoDto.getBaseFinProductBaseInfoList())){
-		        autoBondCouponSave(dto);
-		        //债券自动加券
-		        busiAutoAddSecPrice(dto,dto.getFinprodId());
-		        //债券估值行情保存
-		        mstBondValuationInfoSave(dto);
-		        //债券市场行情保存
-		        mstBondMarketInfoSave(dto);
-		        //回购标准折算率保存
-		        finStdsecConverseRadioSave(dto);
-        }
+            String isPermitAddcoupon = CacheUtil.getSysParam(BussinessConstant.IS_PERMIT_ADDCOUPON);
+            if(!(StringUtil.isEmptyList(newInterfPayhsrcsecinfoDto.getBaseFinProductBaseInfoList())
+                    && StringUtil.equals(isPermitAddcoupon,DictCodeList.是否_否.getValue()))){
+                autoBondCouponSave(dto);
+                //债券自动加券
+                busiAutoAddSecPrice(dto,dto.getFinprodId());
+                //债券估值行情保存
+                mstBondValuationInfoSave(dto);
+                //债券市场行情保存
+                mstBondMarketInfoSave(dto);
+                //回购标准折算率保存
+                finStdsecConverseRadioSave(dto);
+                newInterfPayhsrcsecinfoDto.setBaseFinProductBaseInfoList(dto.getBaseFinProductBaseInfoList());
+            }
         return newInterfPayhsrcsecinfoDto;
     }
 
@@ -2393,8 +2399,11 @@ public class CommonAutoCouponService extends BaseService{
         autoStockCoupon(dto,dto.getAssetcode());
         //中债要素check
         InterfStockInfoDto newInterfStockInfoDto=checkStockRepData(dto);
-        if(!StringUtil.isEmptyList(newInterfStockInfoDto.getBaseFinProductBaseInfoList())){
+        String isPermitAddcoupon = CacheUtil.getSysParam(BussinessConstant.IS_PERMIT_ADDCOUPON);
+        if(!(StringUtil.isEmptyList(newInterfStockInfoDto.getBaseFinProductBaseInfoList())
+                && StringUtil.equals(isPermitAddcoupon,DictCodeList.是否_否.getValue()))){
         	autoStockCouponSave(newInterfStockInfoDto);
+            newInterfStockInfoDto.setBaseFinProductBaseInfoList(dto.getBaseFinProductBaseInfoList());
         }
         return newInterfStockInfoDto;
     }

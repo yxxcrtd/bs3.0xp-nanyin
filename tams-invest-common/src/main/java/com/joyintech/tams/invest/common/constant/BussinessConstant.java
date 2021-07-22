@@ -306,4 +306,9 @@ public interface BussinessConstant {
      * 公墓基金存续期处理逻辑 01：旧逻辑 02：新逻辑
      */
     String FUND_DEAL_TYPE = "FUND_DEAL_TYPE";
+
+    /**
+     * 资产不满足中债报送数据时是否允许加券
+     */
+    String IS_PERMIT_ADDCOUPON = "IS_PERMIT_ADDCOUPON";
 }
