@@ -124,6 +124,55 @@ $(function() {
                 }
             });
         });
+        /**add by sunhui 20210721 重庆银行：手工释放中标结果占用的头寸 start**/
+        // 手工释放
+        $('#'+pageId+"_btn_manualRelease").click(function () {
+
+            if(table!=null && table!=''){
+                var selArr = table.getAllCheckedRows();
+            }
+            // 列表中未勾选
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            // 列表中勾选对象1条以上时
+            if (selArr.length > 1) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0058"));
+                return;
+            }
+            //check委托已关闭
+            if ('06' == selArr[0].entrustStatus){
+                Joyin.error(JoyinUtil.getMessage("ETR_BBR_005"));
+                return;
+            }
+            //check流程中和已完成
+            if ('04' == selArr[0].paymentStatus || '05' == selArr[0].paymentStatus){
+                Joyin.error(JoyinUtil.getMessage("ETR_BBR_003"));
+                return;
+            }
+            //平台日是缴款日时提示
+            if (platDate >= selArr[0].payDate){
+                Joyin.error(JoyinUtil.getMessage("ETR_BBR_006"));
+                return;
+            }
+
+            var paramObj ={};
+            paramObj.finprodId=selArr[0].finprodId;//金融产品代码
+            paramObj.finprodMarketId=selArr[0].finprodMarketId;//资产代码
+            paramObj.payDate=selArr[0].payDate;//缴款日
+            paramObj.entrustId=selArr[0].entrustId;//委托代码
+            paramObj.portfolioId=selArr[0].portfolioId;//组合代码
+            paramObj.portfolioName=selArr[0].portfolioName;//组合名称
+            paramObj.bidId=selArr[0].bidId;//投标编号
+            paramObj.bidPrice=selArr[0].bidPrice;//投标标位
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrbondbiddingresult/EtrBondBiddingResult001/checkManualRelease', paramObj, function(result) {//数据验证
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrbondbiddingresult/EtrBondBiddingResult001/doManualRelease',paramObj,function (result){
+                    table.reload();
+                });
+            });
+        });
+        /**add by sunhui 20210721 重庆银行：手工释放中标结果占用的头寸 end**/
 
         var initBondTrade = function (result, selArr) {
             selArr[0].finprodMarketId = result.finprodMarketId;

@@ -43,4 +43,7 @@ public interface EtrbondbiddingresultMapper {
 	int deleteTradeId(Map<String,Object> map);
 
 	BigDecimal getisFrozenPosition(Map<String,Object> map);
+
+	int checkFrozenPosition(Map<String,Object> map);
+
 }
