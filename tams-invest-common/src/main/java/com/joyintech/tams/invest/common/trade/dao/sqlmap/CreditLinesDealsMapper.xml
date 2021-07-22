@@ -647,11 +647,12 @@
 	</select>
 
 	<select id="selectCreditOriginDealByTradeId" resultType="com.joyintech.tams.common.base.entity.CreditLinesDeal">
+        select * from (
 		select
 			cld.SEQNO,cld.TRADE_AMT tradeAmt
 		from CREDIT_LINES_DEAL cld
 			left join TRD_PRODUCT_DEAL fpd on cld.trade_id = fpd.FINPROD_ID
-		where fpd.trade_id = #{tradeId}
+		where fpd.trade_id = #{tradeId}) where rownum = 1
 	</select>
 	
 	<select id="selectCeLinesInfoBySeqno" resultType="com.joyintech.tams.common.base.entity.CreditLines">
