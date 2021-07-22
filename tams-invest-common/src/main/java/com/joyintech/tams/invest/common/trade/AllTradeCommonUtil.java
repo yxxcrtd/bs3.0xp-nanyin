@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.JoyinRestTemplate;
@@ -67,6 +68,7 @@ import com.joyintech.tams.valuation.common.interf.howmany.dto.TrdProductDealDto;
  * @since 1.0
  */
 @Service
+@Lazy(false)
 public class AllTradeCommonUtil {
 
     private static Logger logger = LoggerFactory.getLogger("接口调用");
