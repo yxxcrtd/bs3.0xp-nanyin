@@ -251,6 +251,13 @@
     		//除0是否异常默认值为提示异常
     		$("#RskSupervisionIndicator002_isExcpWhenDivZero").val(clsfyc_tsyc).trigger('change');
     	}
+		if(null==entity&&!$("#RskSupervisionIndicator002_indType").val()){
+			$('#RskSupervisionIndicator002_isDisplayOriginal').prop('checked', true).trigger('change');
+			$('#RskSupervisionIndicator002_isDisplayOriginal').next().addClass('layui-form-onswitch').trigger('change');
+			$('#RskSupervisionIndicator002_isDisplayOriginal').next().find("em").text('是');
+			$("#RskSupervisionIndicator002_isDisplayOriginal").prop('disabled',false).trigger('change');
+			layui.form.render('checkbox')
+		}
     }
 	/**
 	 * 根据指标参数查询禁投项枚举--add by jjpei 20190812----

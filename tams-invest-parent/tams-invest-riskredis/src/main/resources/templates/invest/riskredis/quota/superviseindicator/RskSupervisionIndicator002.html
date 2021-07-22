@@ -64,16 +64,16 @@
 									</div>
 								</div>
 								 <div class="layui-form-item">
-									<div class="form-inline-wrap" style="width: 32%">
+									<div class="form-inline-wrap" style="width: 26%;">
 										<label class="layui-form-label form-label-wrap"
 										data-th-text="#{RskSupervisionIndicator002.isAdjust}"
-											style="width: 40% !important">调整期</label>
-										<div class="layui-input-block input-inline" style="width: 52.5% !important">
+											style="width: 49% !important">调整期</label>
+										<div class="layui-input-block input-inline" style="width: 46.5% !important">
 											<input type="radio" name="isAdjust" id="yes" value="Y" title="是" />
 											<input type="radio" name="isAdjust" id="no" value="N" title="否" checked required>
 										</div>
 									</div>
-									<div class="form-inline-wrap" style="width: 32%">
+									<div class="form-inline-wrap" style="width: 25%;">
 										<label class="layui-form-label form-label-wrap"
 										data-th-text="#{RskSupervisionIndicator002.adjust}"
 											style="width: 26% !important">调整时间</label>
@@ -87,7 +87,7 @@
 											 <span class="input-right-show" style=" display: block;line-height: 30px; padding-left: 5px;overflow: hidden;height: 27px">天</span>
 										</div>
 									</div>
-									<div class="form-inline-wrap" style="width: 32%">
+									<div class="form-inline-wrap" style="width: 28%">
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{RskSupervisionIndicator002.isExcpWhenDivZero}"
 											style="width: 26% !important">除0是否异常</label>
@@ -102,8 +102,18 @@
 												data-th-data-result="${DIV_ZERO_PASS_COND}" required>
 											</select>
 										</div>
-									</div> 
-								</div>
+									</div>
+									 <div class="form-inline-wrap" style="width: 20%">
+										 <label class="layui-form-label form-label-wrap" style="width: 45%;"
+												data-th-text="#{RskSupervisionIndicator002.isDisplayOriginal}">是否显示原值</label>
+										 <div class="layui-input-inline input-inline" style="width: 40%!important;">
+											 <input type="checkbox" th:id="|${pageId}_isDisplayOriginal|"  name="rskSupervisionIndicatorDto.isDisplayOriginal"
+													lay-skin="switch" lay-filter="isDisplayOriginalFilter"
+													data-th-value="Y" lay-text="是|否" required
+													data-th-checked="${'Y' == entity?.rskSupervisionIndicatorDto?.isDisplayOriginal}">
+										 </div>
+									 </div>
+								 </div>
 							</div>
 							<h3 class="pro-module-title">
 								<span class="title-des">指标表达式配置(必填)</span><i id="btn-pz-add"
@@ -263,45 +273,45 @@
 		 }
 		</style>
 		<script data-th-inline="javascript" type="text/javascript">
-			var entity=/*[[${entity}]]*/;
+			var entity=/*[[${entity}]]*/'';
 		  	var IND_TYPE = /*[[${IND_TYPE}]]*/ ;
-	        var SUP_FREQUENCY=/*[[${SUP_FREQUENCY}]]*/;
+	        var SUP_FREQUENCY=/*[[${SUP_FREQUENCY}]]*/'';
 	        var SUP_OPERATOR=/*[[${SUP_OPERATOR}]]*/ ;  //操作符数据字典下拉
-	        var SUP_CONNECTOR=/*[[${SUP_CONNECTOR}]]*/; //运算符数据字典下拉
-	        var SUP_LINK_TYPE=/*[[${SUP_LINK_TYPE}]]*/; //连接符数据字典下拉
-	        var SUP_UNIT=/*[[${SUP_LINK_TYPE}]]*/;  //单位数据字典下拉
-	        var PORTFOLIO_LEVEL=/*[[${PORTFOLIO_LEVEL}]]*/;  //组合层次数据字典下拉
-	        var SW_INDUSTRY_ONE_TYPE=/*[[${SW_INDUSTRY_ONE_TYPE}]]*/;  //申万行业一级分类
-		    var pageId = /*[[${pageId}]]*/; // 画面Id
-		    var INDICATOR_PARAM=/*[[${INDICATOR_PARAM}]]*/; //指标参数
-		    var PORTFOLIO_LEVEL_01=/*[[${PORTFOLIO_LEVEL_01}]]*/; // 组合层次-单组合
-		    var CLASSIFY_DIMENSION_01=/*[[${CLASSIFY_DIMENSION_01}]]*/; // 分类维度-收益类型
+	        var SUP_CONNECTOR=/*[[${SUP_CONNECTOR}]]*/''; //运算符数据字典下拉
+	        var SUP_LINK_TYPE=/*[[${SUP_LINK_TYPE}]]*/''; //连接符数据字典下拉
+	        var SUP_UNIT=/*[[${SUP_LINK_TYPE}]]*/'';  //单位数据字典下拉
+	        var PORTFOLIO_LEVEL=/*[[${PORTFOLIO_LEVEL}]]*/'';  //组合层次数据字典下拉
+	        var SW_INDUSTRY_ONE_TYPE=/*[[${SW_INDUSTRY_ONE_TYPE}]]*/'';  //申万行业一级分类
+		    var pageId = /*[[${pageId}]]*/''; // 画面Id
+		    var INDICATOR_PARAM=/*[[${INDICATOR_PARAM}]]*/''; //指标参数
+		    var PORTFOLIO_LEVEL_01=/*[[${PORTFOLIO_LEVEL_01}]]*/''; // 组合层次-单组合
+		    var CLASSIFY_DIMENSION_01=/*[[${CLASSIFY_DIMENSION_01}]]*/''; // 分类维度-收益类型
 		    
 		    var workflowId = /*[[${workflowId}]]*/'';
 		    var relateIndType=/*[[${IND_TYPE_LINK_ENCODE}]]*/'';
 		    var ALARM_OPER = /*[[${ALARM_OPER}]]*/'';//触警操作
 		    
-		    var xztzje = /*[[${xztzje}]]*/;
-		    var drjyl = /*[[${drjyl}]]*/;
-		    var jzd = /*[[${jzd}]]*/;
-		    var zxjgkz = /*[[${zxjgkz}]]*/;
-		    var lzxgl = /*[[${lzxgl}]]*/;
-		    var txkz = /*[[${txkz}]]*/;
-		    var ggkz = /*[[${ggkz}]]*/;
-		    var qxkz = /*[[${qxkz}]]*/;
-		    var jyekz = /*[[${jyekz}]]*/;
+		    var xztzje = /*[[${xztzje}]]*/'';
+		    var drjyl = /*[[${drjyl}]]*/'';
+		    var jzd = /*[[${jzd}]]*/'';
+		    var zxjgkz = /*[[${zxjgkz}]]*/'';
+		    var lzxgl = /*[[${lzxgl}]]*/'';
+		    var txkz = /*[[${txkz}]]*/'';
+		    var ggkz = /*[[${ggkz}]]*/'';
+		    var qxkz = /*[[${qxkz}]]*/'';
+		    var jyekz = /*[[${jyekz}]]*/'';
 		    
-		    var wtjk = /*[[${wtjk}]]*/;
-		    var jyjk = /*[[${jyjk}]]*/;
-		    var shjk = /*[[${shjk}]]*/;
-		    var cfjk = /*[[${cfjk}]]*/;
+		    var wtjk = /*[[${wtjk}]]*/'';
+		    var jyjk = /*[[${jyjk}]]*/'';
+		    var shjk = /*[[${shjk}]]*/'';
+		    var cfjk = /*[[${cfjk}]]*/'';
 		    
-		    var cjcz_yj = /*[[${cjcz_yj}]]*/;//预警
-		    var cjcz_sp = /*[[${cjcz_sp}]]*/;//审批
-		    var cjcz_jz = /*[[${cjcz_jz}]]*/;//禁止
-		    var SYS_DATE = /*[[${SYS_DATE}]]*/;//平台日
+		    var cjcz_yj = /*[[${cjcz_yj}]]*/'';//预警
+		    var cjcz_sp = /*[[${cjcz_sp}]]*/'';//审批
+		    var cjcz_jz = /*[[${cjcz_jz}]]*/'';//禁止
+		    var SYS_DATE = /*[[${SYS_DATE}]]*/'';//平台日
 		    
-		    var clsfyc_tsyc = /*[[${clsfyc_tsyc}]]*/;//提示异常
+		    var clsfyc_tsyc = /*[[${clsfyc_tsyc}]]*/'';//提示异常
 		</script>
 		<script
 			data-th-src="@{/js/invest/riskredis/quota/superviseindicator/RskSupervisionIndicator002.js}"></script>

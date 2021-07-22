@@ -69,27 +69,27 @@
 	<div layout:fragment="script">
 	    <script data-th-inline="javascript" type="text/javascript">
 		  	var IND_TYPE = /*[[${IND_TYPE}]]*/ ;
-	        var SUP_FREQUENCY=/*[[${SUP_FREQUENCY}]]*/;
+	        var SUP_FREQUENCY=/*[[${SUP_FREQUENCY}]]*/'';
 	        var SUP_OPERATOR=/*[[${SUP_OPERATOR}]]*/ ;  //操作符数据字典下拉
-	        var SUP_CONNECTOR=/*[[${SUP_CONNECTOR}]]*/; //运算符数据字典下拉
-	        var SUP_LINK_TYPE=/*[[${SUP_LINK_TYPE}]]*/; //连接符数据字典下拉
-	        var SUP_UNIT=/*[[${SUP_UNIT}]]*/;  //单位数据字典下拉
-	        var PORTFOLIO_LEVEL=/*[[${PORTFOLIO_LEVEL}]]*/;  //组合层次数据字典下拉
-		    var pageId = /*[[${pageId}]]*/; // 画面Id
+	        var SUP_CONNECTOR=/*[[${SUP_CONNECTOR}]]*/''; //运算符数据字典下拉
+	        var SUP_LINK_TYPE=/*[[${SUP_LINK_TYPE}]]*/''; //连接符数据字典下拉
+	        var SUP_UNIT=/*[[${SUP_UNIT}]]*/'';  //单位数据字典下拉
+	        var PORTFOLIO_LEVEL=/*[[${PORTFOLIO_LEVEL}]]*/'';  //组合层次数据字典下拉
+		    var pageId = /*[[${pageId}]]*/''; // 画面Id
 		    
-		    var USE_STATUS_01 = /*[[${USE_STATUS_01}]]*/; // 画面Id
+		    var USE_STATUS_01 = /*[[${USE_STATUS_01}]]*/''; // 画面Id
 		    var FORBID_ASSETTYPE=JSON.parse(/*[[${FINPROD_TYPE_TG}]]*/'[]'); // 资产类型
 		    var FORBID_BONDTYPE=JSON.parse(/*[[${WINDTYPEONE}]]*/'[]'); // 债券资产类型
 		    var FORBID_FUNDTYPE=JSON.parse(/*[[${FUND_ASSET_SECOND_TYPE}]]*/'[]'); // 基金资产类型
 		    var FORBID_DEBTRATE=JSON.parse(/*[[${CHB_BODY_GRADE}]]*/'[]'); // 债项评级
 		    var FORBID_BODYRATE=JSON.parse(/*[[${CHB_BODY_GRADE}]]*/'[]'); // 主体评级
 		    var FORBID_INDUSTRY=JSON.parse(/*[[${SW_INDUSTRY_ONE_TYPE}]]*/'[]'); // 负面行业清单
-		    var IND_TYPE_FORBID_ASSETTYPE=/*[[${IND_TYPE_FORBID_ASSETTYPE}]]*/; // 资产类型
-		    var IND_TYPE_FORBID_BONDTYPE=/*[[${IND_TYPE_FORBID_BONDTYPE}]]*/; // 债券资产类型
-		    var IND_TYPE_FORBID_FUNDTYPE=/*[[${IND_TYPE_FORBID_FUNDTYPE}]]*/; // 基金资产类型
-		    var IND_TYPE_FORBID_DEBTRATE=/*[[${IND_TYPE_FORBID_DEBTRATE}]]*/; // 债项评级
-		    var IND_TYPE_FORBID_BODYRATE=/*[[${IND_TYPE_FORBID_BODYRATE}]]*/; // 主体评级
-		    var IND_TYPE_FORBID_INDUSTRY=/*[[${IND_TYPE_FORBID_INDUSTRY}]]*/; // 负面行业清单
+		    var IND_TYPE_FORBID_ASSETTYPE=/*[[${IND_TYPE_FORBID_ASSETTYPE}]]*/''; // 资产类型
+		    var IND_TYPE_FORBID_BONDTYPE=/*[[${IND_TYPE_FORBID_BONDTYPE}]]*/''; // 债券资产类型
+		    var IND_TYPE_FORBID_FUNDTYPE=/*[[${IND_TYPE_FORBID_FUNDTYPE}]]*/''; // 基金资产类型
+		    var IND_TYPE_FORBID_DEBTRATE=/*[[${IND_TYPE_FORBID_DEBTRATE}]]*/''; // 债项评级
+		    var IND_TYPE_FORBID_BODYRATE=/*[[${IND_TYPE_FORBID_BODYRATE}]]*/''; // 主体评级
+		    var IND_TYPE_FORBID_INDUSTRY=/*[[${IND_TYPE_FORBID_INDUSTRY}]]*/''; // 负面行业清单
 		    
 		    var IND_TYPE_TOTAL_ENUM=/*[[${IND_TYPE_TOTAL_ENUM}]]*/'';
 		    var relateIndType=/*[[${IND_TYPE_LINK_ENCODE}]]*/'';

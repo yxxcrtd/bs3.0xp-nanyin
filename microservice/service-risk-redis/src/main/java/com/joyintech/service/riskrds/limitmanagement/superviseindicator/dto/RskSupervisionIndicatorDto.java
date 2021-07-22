@@ -37,5 +37,4 @@ public class RskSupervisionIndicatorDto  extends RskIsupIndicator {
 		this.portfolioCodeConst = portfolioCodeConst;
 	}
     
-	
 }

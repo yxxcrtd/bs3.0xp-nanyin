@@ -219,27 +219,5 @@ public class RskSupervisionIndicator002Dto  extends RskIsupIndicator implements 
 	public void setPortfolioId(String portfolioId) {
 		this.portfolioId = portfolioId;
 	}
-	  /**
-     * 用户可更改标识
-     */
-    private String updateFlg;
-
-    
-    /**
-     * 获取 updateFlg
-     * @return updateFlg.
-     */
-    public String getUpdateFlg() {
-        return updateFlg;
-    }
-
-    
-    /**
-     * 设置 updateFlg
-     * @param updateFlg updateFlg
-     */
-    public void setUpdateFlg(String updateFlg) {
-        this.updateFlg = updateFlg;
-    }
-     
+	 
 }
