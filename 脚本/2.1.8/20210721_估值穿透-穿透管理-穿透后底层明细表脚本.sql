@@ -5,12 +5,12 @@ values ('RISK_MANAGEMENT_001_005_009','MST',null,'RISK_MANAGEMENT_001_005','RskV
 --画面表	
 delete from SYS_PAGE where PAGE_ID in ('RskValBotDetailReport001');
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-values ('RskValBotDetailReport001','RSK','/invest/risk/rskbotdetailreport/RskValBotDetailReport001','invest/risk/rskbotdetailreport/RskValBotDetailReport001','RISK_MANAGEMENT_001_005_009',null,null,'02','02','穿透后底层明细表','system',null,sysdate,'system',sysdate);
+values ('RskValBotDetailReport001','MST','/invest/risk/rskbotdetailreport/RskValBotDetailReport001','invest/risk/rskbotdetailreport/RskValBotDetailReport001','RISK_MANAGEMENT_001_005_009',null,null,'02','02','穿透后底层明细表','system',null,sysdate,'system',sysdate);
 
 --CHB_BOT_AST_POS新增INT_AMT字段
 ALTER TABLE CHB_BOT_AST_POS DROP COLUMN INT_AMT;
 ALTER TABLE CHB_BOT_AST_POS ADD INT_AMT NUMBER(30,2);
-COMMENT ON COLUMN CHB_BOT_AST_POS.INT_AMT IS '应收利息/股利' ;
+COMMENT ON COLUMN CHB_BOT_AST_POS.INT_AMT IS '利息' ;
 
 --新建表CHB_SEC_REPAY_INFO
 DROP TABLE CHB_SEC_REPAY_INFO;
