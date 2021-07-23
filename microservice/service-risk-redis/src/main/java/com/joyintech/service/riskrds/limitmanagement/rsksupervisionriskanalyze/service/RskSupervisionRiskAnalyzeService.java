@@ -3,19 +3,16 @@ package com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dao.RskSupervisionPortfPoint003Mapper;
-import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioPackageDtlImp;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.dao.RskSupervisionRiskAnalyzeMapper;
 import com.joyintech.service.riskrds.limitmanagement.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 监控值查询
@@ -32,9 +29,6 @@ public class RskSupervisionRiskAnalyzeService extends BaseService<RskSupervision
     @Autowired
     private RskSupervisionRiskAnalyzeMapper rskSupervisionRiskAnalyzeMapper;
 
-    @Autowired
-    private RskSupervisionPortfPoint003Mapper rskSupervisionPortfPoint003Mapper;
-    
     /**
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
      * 
@@ -71,17 +65,6 @@ public class RskSupervisionRiskAnalyzeService extends BaseService<RskSupervision
     public Page<RskSupervisionRiskAnalyzeDto> selectForPageNx(int page, int length,
                                                               Map<String, Object> pageParam)
         throws Exception {
-        if (StringUtil.isNotEmpty(pageParam.get("portfolioId"))) { 
-            String portfolioId = pageParam.get("portfolioId").toString(); 
-            List<RskPortfolioPackageDtlImp> portfDtlList = rskSupervisionPortfPoint003Mapper.selectPortfBagDtlByBagId(portfolioId); 
-            List<String> portfolioIdList= new ArrayList<>();
-            if (StringUtil.isNotEmpty(portfDtlList)) {
-                portfolioIdList= portfDtlList.stream().map(item->item.getPortfolioId()).collect(Collectors.toList());
-            }else {
-                portfolioIdList.add(portfolioId);
-            }
-            pageParam.put("portfolioIdList", portfolioIdList);
-        } 
         return super.queryForPage(page, length,
             () -> rskSupervisionRiskAnalyzeMapper.selectNx(pageParam));
     }
@@ -95,5 +78,13 @@ public class RskSupervisionRiskAnalyzeService extends BaseService<RskSupervision
 
     public Page<SelectOptionDto> selectUserName(Map<String, Object> pageParam, int page, int length) {
         return this.queryForPageForSelectReturn(page, length, ()-> rskSupervisionRiskAnalyzeMapper.selectByUserName(pageParam));
+    }
+
+    public  List<SuggestDto>  selectIndName(Map<String, Object> map) {
+        return rskSupervisionRiskAnalyzeMapper.selectIndName(map);
+    }
+
+    public  List<SuggestDto>  selectGroupName(Map<String, Object> map) {
+        return rskSupervisionRiskAnalyzeMapper.selectGroupName(map);
     }
 }

@@ -45,7 +45,17 @@ var rsk = function() {
             ,{field:'groupName', title: 'RskSupervisionRiskAnalyze001.groupNameStr',width:250}
             ,{field:'supTypeAbbr',sortField:"supType", title: 'RskSupervisionRiskAnalyze001.supType',width:100}
             ,{field:'supDate', title: 'RskSupervisionRiskAnalyze001.supDate',type:'date'}
-            ,{field:'indName', title: 'RskSupervisionRiskAnalyze001.indName',width:200}
+            ,{field:'indName', title: 'RskSupervisionRiskAnalyze001.indName',width:200
+                // add by zhangrui1 指标计算明细超链接 start
+                ,render: function(data, type, row, meta) {
+                    if (!row.mathProcess) {
+                        return data;
+                    }
+                    return '<a href="javascript:;" onclick="javascript:showExprDetail(\''+ 
+                    row.indId+'\',\'' + data +'\',\''+ mathToString(row.mathProcess) + '\')" style="cursor: pointer;">' + data + '</span></a>';
+                }
+                // add by zhangrui1 指标计算明细超链接 end
+            }
             ,{field:'warnCond', width:150 ,title: 'RskSupervisionIndicator001.warnCond',render: RskQuotaCommon.transferWarnFoul}
             ,{field:'approveCond',width:150, title: 'RskSupervisionIndicator001.approveCond',render: RskQuotaCommon.transferWarnFoul}
              ,{field:'foulCond', width:150 ,title: 'RskSupervisionIndicator001.foulCond',render: RskQuotaCommon.transferWarnFoul}
@@ -112,6 +122,14 @@ var rsk = function() {
         ]
     });
 
+    // add by zhangrui1 指标计算明细 start
+    var mathToString = function(mathProcess) {
+        var object = JSON.parse(mathProcess);
+        var str = JSON.stringify(object.PARAM);
+        return str.replace(/\"/g,'#');
+    }
+    // add by zhangrui1 指标计算明细 end
+
 	/**
 	 * 绑定鼠标悬浮事件
 	 */
@@ -148,10 +166,8 @@ var rsk = function() {
          }
         else{
             infFlag=false;
-//            table.layOption.url="findPageInit";
-//            table.options.ajax.url="findPageInit";
-            table.layOption.url="findPage";
-            table.options.ajax.url="findPage";
+            table.layOption.url="findPageInit";
+            table.options.ajax.url="findPageInit";
             table.load();
         }
            // 绑定按钮事件
@@ -189,3 +205,15 @@ function showSupDetail2(indId,portfId,foulDays,supdate,supFrequency){
            basePath + "invest/riskredis/quota/rsksupervisionriskanalyze/RskSupervisionRiskAnalyze003/init",
            "70%", "90%",data);
 };
+
+// add by zhangrui1 指标计算明细 start
+function showExprDetail(indId,indName,mathProcess){
+    var data={};
+    data.indId=indId;
+    data.indName = indName;
+    data.mathProcess = mathProcess.replace(/#/g,'"');
+    Joyin.dialog(JoyinUtil.getLabel("RskIndExprDtl"),
+           basePath + "invest/riskredis/quota/rsksupervisionriskanalyze/RskIndExprDtl/init",
+           "70%", "90%",data);
+}
+// add by zhangrui1 指标计算明细 end

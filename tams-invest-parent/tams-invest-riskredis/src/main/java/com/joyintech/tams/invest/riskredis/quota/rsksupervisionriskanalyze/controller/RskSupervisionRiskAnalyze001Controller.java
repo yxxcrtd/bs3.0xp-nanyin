@@ -4,6 +4,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -98,6 +100,32 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
         Page<RskSupervisionRiskAnalyzeDto> page = rskSupervisionRiskAnalyzeService.selectForPage(map);
         return page;
     }
+
+    /**
+     * 画面查询方法
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @ResponseBody
+    @RequestMapping("/selectIndName")
+    public List<SuggestDto> selectIndName()
+            throws Exception {
+        Map<String,Object> maps = RequestUtil.getPageParam();
+        maps.put("indId",maps.get("param"));
+        List<SuggestDto> temp = rskSupervisionRiskAnalyzeService.selectIndName(maps);
+        return temp;
+    }
+
+    @ResponseBody
+    @RequestMapping("/selectGroupName")
+    public List<SuggestDto> selectGroupName()
+            throws Exception {
+        Map<String,Object> maps = RequestUtil.getPageParam();
+        maps.put("groupName",maps.get("param"));
+        List<SuggestDto> temp = rskSupervisionRiskAnalyzeService.selectGroupName(maps);
+        return temp;
+    }
+
     
     /**
      * 进入界面初始化查询
