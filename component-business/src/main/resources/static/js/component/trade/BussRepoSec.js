@@ -7,8 +7,8 @@
      * 设置初始参数
      * @param paramObject
      */
-    if(entrustAmtUnit == '01' ){
-        $(".unitNum").text('元');
+    if(entrustAmtUnit == '02' ){
+        $(".unitNum").text('万元');
     }
     var setInputParam = function (paramObject) {
         param = paramObject;

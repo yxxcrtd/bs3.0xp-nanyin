@@ -2,19 +2,29 @@
  * 买断式回购投资委托新建
  */
 (function() {
-
+    if(entrustAmtUnit == '01' ){
+        $(".unitNum").text('元');
+    }
     var getriskdata = function () {
         var ps = $('#ps').val();
         var object={};
         var obj={};
+        //配置单位 edit by yeming 20210721 start
+        var entrustAmt=$('#entrustAmt').val();
+        if (entrustAmt) {
+            if(entrustAmtUnit == '02' ){
+                entrustAmt=JoyinMath.doMul(entrustAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            }
+        }
+        //配置单位 edit by yeming 20210721 end
         if(ps == ps_03){
-             obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype_zhg,isEnabled:'01'}
+             obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustAmt,assetType:fintype_zhg,isEnabled:'01'}
              object = {tradeDirection:['ps','EtrBoutRepo002.ps'],portfolioCode:['portfolioId','EtrBoutRepo002.portfolioId'],tradeAmount:['entrustAmt','EtrBoutRepo002.entrustAmt'],assetType:['assetType1','EtrBoutRepo002.assetType1'],data:obj}
         }else if(ps == ps_04){
-             obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype_nhg,isEnabled:'01'}
+             obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustAmt,assetType:fintype_nhg,isEnabled:'01'}
              object = {tradeDirection:['ps','EtrBoutRepo002.ps'],portfolioCode:['portfolioId','EtrBoutRepo002.portfolioId'],tradeAmount:['entrustAmt','EtrBoutRepo002.entrustAmt'],assetType:['assetType1','EtrBoutRepo002.assetType1'],data:obj}
         }else{
-             obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype_zhg,isEnabled:'01'}
+             obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:entrustAmt,assetType:fintype_zhg,isEnabled:'01'}
              object = {tradeDirection:['ps','EtrBoutRepo002.ps'],portfolioCode:['portfolioId','EtrBoutRepo002.portfolioId'],tradeAmount:['entrustAmt','EtrBoutRepo002.entrustAmt'],assetType:['assetType1','EtrBoutRepo002.assetType1'],data:obj}
         }
         return object;

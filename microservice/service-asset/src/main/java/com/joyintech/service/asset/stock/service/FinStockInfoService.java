@@ -159,6 +159,9 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
      * @since 1.0
      */
     public FinStockInfoDto findEntity(Map<String, Object> param) {
+        if(iPlatformDate != null){
+            param.put("sysDate", iPlatformDate.getSysDate());
+        }
         param.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         return finStockInfoMapper.findEntity(param);
     }
