@@ -1,10 +1,12 @@
 package com.joyintech.service.chb.common.controller;
 
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,12 @@ public class ChbDataCheckController {
 
     @PostMapping("chbDataCheck")
     public List<ValidMessage> chbDataCheck(@RequestBody Map entity, @RequestParam(value = "pageId", required = false) String pageId, @RequestParam(value = "repType", required = false) String repType) {
-        return chbDataCheckCommonUtil.chbCheckCommon(null, entity, pageId, repType, ValidMessage.class);
+        String className = (String)entity.get("entityClass");
+        try {
+            return chbDataCheckCommonUtil.chbCheckCommon(null, BeanUtil.mapToObject(entity, Class.forName(className)), pageId, repType, ValidMessage.class);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 }

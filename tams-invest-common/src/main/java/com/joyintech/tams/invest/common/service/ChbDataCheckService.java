@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.common.service;
 
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 对外开放接口
@@ -38,8 +40,11 @@ public class ChbDataCheckService {
             }
         }
 
+//        restTemplate.postForObject(ServiceApplication.CHB_SERVICE_NAME + "/openapi/chbDataCheck?"+tailStr, entity, ValidMessage.class);
+        Map<String, Object> param = BeanUtil.object2Map(entity);
+        param.put("entityClass", entity.getClass().getName());
 
-        checkResultList.addAll(restTemplate.postForList(ServiceApplication.CHB_SERVICE_NAME + "/openapi/chbDataCheck?"+tailStr, entity, ValidMessage.class));
+        checkResultList.addAll(restTemplate.postForList(ServiceApplication.CHB_SERVICE_NAME + "/openapi/chbDataCheck?"+tailStr, param, ValidMessage.class));
         return checkResultList;
     }
 }
