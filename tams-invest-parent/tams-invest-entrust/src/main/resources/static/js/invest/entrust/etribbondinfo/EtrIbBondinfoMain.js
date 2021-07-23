@@ -286,6 +286,12 @@ $(
 
         var defaultStyle = "";
         $("#enlarge").click(function () {
+            enlarge_narrow("enlarge");
+        });
+        $("#narrow").click(function () {
+            enlarge_narrow("narrow");
+        });
+        function enlarge_narrow(flag) {
             let rightDiv = $("#right_bottom_panel_dev");
             if(!rightDiv.attr("flag") || rightDiv.attr("flag") === "1"){
                 defaultStyle = rightDiv.attr("style");
@@ -295,7 +301,14 @@ $(
                 rightDiv.attr("style", defaultStyle);
                 rightDiv.attr("flag","1");
             }
-        });
+            if(flag === "narrow"){
+                $("#enlarge").show();
+                $("#narrow").hide();
+            }else{
+                $("#enlarge").hide();
+                $("#narrow").show();
+            }
+        }
         /**
          * 绑定事件
          */
