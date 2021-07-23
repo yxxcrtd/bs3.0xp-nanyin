@@ -756,8 +756,8 @@ var table;
             $("#ccy").val("").trigger('change');
             $("#calendarId").val("").trigger('change');
             $("#basis").val("").trigger('change');
-            
-            // add by etliu 
+
+            // add by etliu
             $("#windtypeone").val("").trigger('change');
         }
         // 1.6计算偏离度
@@ -1796,13 +1796,13 @@ var table;
                         if(data[0].settleSpeedStr){
                             checkAndAssign("#settleSpeed", data[0].settleSpeedStr); // 清算速度
                         }
-                        if(data[0].etrEntrust.finprodId){
+                        if(data[0].etrEntrust.finprodId && !bondFirstSign){
                             zcdm = data[0].etrEntrust.finprodId;
                             deleteSelect('finprodId');
                             $('#finprodId').textSelect('setValue', data[0].etrEntrust.finprodId);//债券代码;
                             $('#finprodId').attr('disabled',true);
                         }
-                        if(data[0].finprodName){
+                        if(data[0].finprodName && !bondFirstSign){
                             //资产名称文本框根据资产代码选择自动显示对应名称;
                             $("#finprodName").val( data[0].finprodName).trigger('change');
                         }
@@ -2145,6 +2145,18 @@ var table;
             // 设置默认选中净价
             $("#calculateField_unitCprice").attr("checked", true);
             layui.form.render('radio');
+
+            //中标结果批量缴款进来时
+            if(bondFirstSign){
+                $('#finprodId').prop("disabled", true).change();
+                $('#ps').val("T01").trigger("change");
+                $('#tradeMarketMode').val("01").prop("disabled", true).trigger("change");
+                $('#settleSpeed').val("01").prop("disabled", false).trigger("change");
+                $('#chlId_div').hide();
+                $('#payType_div').hide();
+                $('#assetRecommandOrg_div').hide();
+                $('#turnInvAim_div').hide();
+            }
         }
     };
     /**

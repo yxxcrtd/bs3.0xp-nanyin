@@ -1890,6 +1890,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             Map<String, Object> map = new HashMap<>();
             map.put("tradeId", tradeId);
             map.put("winPrice", entity.getYield());
+            map.put("winCprice",entity.getUnitCprice());
             map.put("entrustId", entity.getEntrustId());
             restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/updateTradeId", map,
                 Integer.class);
