@@ -68,7 +68,11 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
         page.getRoot().forEach(item->{
             if (StringUtil.isNotEmpty(item.getFilePath()) && (item.getFilePath().replaceAll("\\\\", "/"))
                     .startsWith(filePathStart.replaceAll("\\\\", "/"))){
-                item.setRunFlag(DictCodeListExt1.是否_是.getValue());
+                if (StringUtil.equals(item.getImportType(),DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue())){
+                    item.setRunFlag(DictCodeListExt1.是否_是.getValue());
+                }else{
+                    item.setRunFlag(DictCodeListExt1.是否_否.getValue());
+                }
             }else{
                 item.setRunFlag(DictCodeListExt1.是否_否.getValue());
             }
@@ -159,17 +163,25 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
                     }
                 }
                 fileName = dto.getFileName();
-                List<String> valTableFiles = StringUtil.splitToList("_", fileName);
-                String organCode = StringUtil.EMPTY;
                 String valDate = StringUtil.EMPTY;
+                List<String> valTableFiles = StringUtil.splitToList(".", fileName);
+                try {
+                    valDate = valTableFiles.get(0);
+                    valDate = valDate.substring(valDate.length()-8,valDate.length());
+                }catch (Exception e){
+                    logger.info(fileName+",文件名异常组合or日期格式错误。");
+                    return this.saveRskOutValtblImportHis(dto.getFileName(), dto.getFilePath(), dto.getPortfolioId(), dto.getPortfolioName(), dto.getValdate(),
+                            DictCodeListExt1.估值表自动解析处理状态_异常结束.getValue(),DictCodeListExt1.估值表自动解析错误码_文件名异常组合or日期格式错误.getValue(),startDate,dto.getImpdate());
+                }
+                String organCode = StringUtil.EMPTY;
                 String portfolioName = StringUtil.EMPTY;
                 if (valTableFiles.size() >= 2){
-                    valDate = valTableFiles.get(valTableFiles.size()-1);
+//                    valDate = valTableFiles.get(valTableFiles.size()-1);
                     organCode = this.queryorgCodeCount(valTableFiles.get(0)) > 0? valTableFiles.get(0):StringUtil.EMPTY;
                     if (StringUtil.isNotEmpty(organCode)){
-                        portfolioName = fileName.replaceAll(organCode+"_","").replaceAll("_"+valDate,"");
+                        portfolioName = fileName.replaceAll(fileName.substring(fileName.lastIndexOf(".")), "").replaceAll(organCode+"估值表","").replaceAll("估值表"+valDate,"");
                     }else{
-                        portfolioName = fileName.replaceAll("_"+valDate,"");
+                        portfolioName = fileName.replaceAll(fileName.substring(fileName.lastIndexOf(".")), "").replaceAll("估值表"+valDate,"");
                     }
                 }else{
                     logger.info(fileName+",文件名异常组合or日期格式错误。");
@@ -214,7 +226,7 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
                 paramDto.setFilterId(rskValtblPrtImpMap.getFilterId());
                 paramDto.setValTableFileName(valTableFile.getPath());
                 List<RskValtblAssetSubDto> valHand_oneList = rskValTableImportService.viewValTable(paramDto);
-                if (paramDto.getImportHisQueue() == null &&  paramDto.getImportHisQueue().size()>0){
+                if (paramDto.getImportHisQueue() != null &&  paramDto.getImportHisQueue().size()>0){
                     RskOutValtblImportHis importHis = paramDto.getImportHisQueue().element();
                      return saveRskOutValtblImportHis(dto.getFileName(), dto.getFilePath(), dto.getPortfolioId(), dto.getPortfolioName(), dto.getValdate(),
                              importHis.getImportType(),importHis.getErrorCode(),startDate,dto.getImpdate());
@@ -282,7 +294,7 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
         Map<String, Object> pageParam = new HashMap<>();
         pageParam.put("portfolioType", DictCodeListExt1.组合类型_委外组合.getValue());
         pageParam.put("portfolioType2", BussinessDictCodeList.组合类型_自主组合.getValue());
-        pageParam.put("search", portfolioName);
+        pageParam.put("initValue", portfolioName);
         return restTemplate.postForObject(
                 ServiceApplication.RISK_SERVICE_NAME + "/rskOutValtblImportHis/selectPortfolioId",
                 pageParam, Map.class);
