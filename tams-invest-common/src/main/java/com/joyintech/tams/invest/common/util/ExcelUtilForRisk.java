@@ -1,5 +1,7 @@
 package com.joyintech.tams.invest.common.util;
 
+import java.io.File;
+
 /**
  * excel操作
  *
@@ -60,4 +62,33 @@ public class ExcelUtilForRisk {
         return column;
     }
 
+    /**
+     * 修改文件名
+     * wangyang1
+     * @param filePath    需要修改的文件的路径
+     * @param oldFileName 的文件的名称
+     * @param newFileName 需要修改的文件的名称
+     * @return
+     */
+    public static boolean fixFileName(String filePath,String oldFileName, String newFileName) {
+        File file = new File(filePath+File.separator+oldFileName);
+        if (!file.exists()) { // 判断原文件是否存在（防止文件名冲突）
+            return false;
+        }
+        newFileName = newFileName.trim();
+        if ("".equals(newFileName) || newFileName == null) // 文件名不能为空
+            return false;
+        String newFilePath = filePath + File.separator + newFileName;
+        File newfile = new File(newFilePath);
+        try {
+            if (newfile.exists()){
+                newfile.delete();
+            }
+            file.renameTo(newfile); // 修改文件名
+        } catch (Exception err) {
+            err.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }

@@ -91,6 +91,23 @@ public class DateCalService {
 	}
 
 	/**
+	 * 判断日期参数是否交易日历的节假日 <一句话功能简述> <功能详细描述>
+	 *
+	 * @param date 参数日期
+	 * @param calId 交易日历id
+	 * @return 是否交易日历的节假日判断结果
+	 * @see
+	 * @since 1.0
+	 */
+	public boolean isDealCalendarHoliday(Date date, String calId) {
+		if (date == null || StringUtil.isEmpty(calId)) {
+			return false;
+		}
+		String dateStr = DateUtil.format(date);
+		return this.isDealCalendarHoliday(dateStr, calId);
+	}
+
+	/**
 	 * 自然日日期计算
 	 *
 	 * @param date
