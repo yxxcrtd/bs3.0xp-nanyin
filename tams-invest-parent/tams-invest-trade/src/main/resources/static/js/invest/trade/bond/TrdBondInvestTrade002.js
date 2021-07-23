@@ -1,5 +1,6 @@
 //@ sourceURL=TrdBondInvestTrade002.js
 var table;
+var unitNum;
 (function () {
 	var initFlag = true;
     var entrustNum; // 委托时的券面总额
@@ -98,16 +99,16 @@ var table;
 	        if ($('#select2-finprodId-container').attr('title')){
 	            object.finprodName = $('#select2-finprodId-container').attr('title');
 	        }
-			object.tradeAmt = $("#tradeAmt").val()*10000;
-            object.ownTradeAmt = $("#ownTradeAmt").val()*10000;
-            object.integrateTradeAmt = $("#integrateTradeAmt").val()*10000;
+			object.tradeAmt = JoyinMath.doMul( $("#tradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+            object.ownTradeAmt = JoyinMath.doMul( $("#ownTradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+            object.integrateTradeAmt = JoyinMath.doMul( $("#integrateTradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
             object.finprodId = $("#finprodId").val();
 	        object.pageModel = pageModel;
 	        object.operateType = operateType;
 	        if(FileCommon) {
 	            object.uploadFileList = FileCommon.getUploadFileInfo();
 	        }
-          object.tradeAmt = tradeAmt_*10000;
+          object.tradeAmt = JoyinMath.doMul(tradeAmt_,unitNum,2,JoyinMath.ROUND_HALF_UP);
 	        object.settleAmt=$("#settleAmt").val();
 	        object.exchangeAmt=$("#exchangeAmt").val();
 	        object.commissionAmt=$("#commissionAmt").val();
@@ -134,7 +135,7 @@ var table;
 	        	object.trdInvestPersonInfo.counterTrader = $('input#trdInvestPersonInfo_counterTrader').val();
 	        }
             if (typeof shortSellingSupported != 'undefined' && shortSellingSupported == '02') {
-                object.ownTradeAmt = tradeAmt_*10000;
+                object.ownTradeAmt = JoyinMath.doMul(tradeAmt_,unitNum,2,JoyinMath.ROUND_HALF_UP);
                 object.ownFpriceAmt = object.fpriceAmt;
                 object.ownIntAmt = object.intAmt;
             }
@@ -153,7 +154,7 @@ var table;
                                             (object.bussTrdTransferOrder[bussTrdTransferOrder].settleAmt== object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt)){
 
                                             object.portfolioId = object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId;
-                                            object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt*10000;
+                                            object.tradeAmt = JoyinMath.doMul(object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt,unitNum,2,JoyinMath.ROUND_HALF_UP);
                                             object.cpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].cpriceAmt;
                                             object.fpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt;
                                             ajaxJsonSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
@@ -821,7 +822,7 @@ var table;
             tradeAmt = 0;
         }
         var integrateTradeAmt = $("#integrateTradeAmt").val();
-        var entrustOwnNum = JoyinMath.doMinus(tradeAmt, integrateTradeAmt, 2, JoyinMath.ROUND_HALF_UP)
+        var entrustOwnNum = JoyinMath.doMinus(tradeAmt, integrateTradeAmt, 4, JoyinMath.ROUND_HALF_UP)
         if (entrustOwnNum < 0) {
             $("#ownTradeAmt").val(tradeAmt).trigger("blur");
             $("#integrateTradeAmt").val(0).trigger("blur");
@@ -841,7 +842,7 @@ var table;
         }
         var ownTradeAmt = $("#ownTradeAmt").val();
 
-        var integrateTradeAmt = JoyinMath.doMinus(tradeAmt, ownTradeAmt, 2, JoyinMath.ROUND_HALF_UP)
+        var integrateTradeAmt = JoyinMath.doMinus(tradeAmt, ownTradeAmt, 4, JoyinMath.ROUND_HALF_UP)
         if (integrateTradeAmt < 0) {
             $("#tradeAmt").val(ownTradeAmt).trigger("blur");
             $("#integrateTradeAmt").val(0).trigger("blur");
@@ -860,7 +861,7 @@ var table;
             integrateTradeAmt = 0;
         }
 
-        var ownTradeAmt = JoyinMath.doMinus(tradeAmt, integrateTradeAmt, 2, JoyinMath.ROUND_HALF_UP);
+        var ownTradeAmt = JoyinMath.doMinus(tradeAmt, integrateTradeAmt, 4, JoyinMath.ROUND_HALF_UP);
         if (ownTradeAmt < 0) {
             $("#ownTradeAmt").val(tradeAmt).trigger("blur");
             $("#integrateTradeAmt").val(0).trigger("blur");
@@ -1514,7 +1515,7 @@ var table;
 //        paramObj.exchangeAmt=$("#exchangeAmt").val();
 //        paramObj.commissionAmt=$("#commissionAmt").val();
 
-        paramObj.tradeAmt = $("#tradeAmt").val()*10000;
+        paramObj.tradeAmt = JoyinMath.doMul( $("#tradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
         paramObj.unitCprice = $("#unitCprice").val();
         paramObj.unitInt = $("#unitInt").val();
         paramObj.unitFprice = $("#unitFprice").val();
@@ -1522,8 +1523,8 @@ var table;
         paramObj.intAmt = $("#intAmt").val();
         paramObj.fpriceAmt = $("#fpriceAmt").val();
         paramObj.exerYield = $("#exerYield").val();
-        paramObj.ownTradeAmt = $("#ownTradeAmt").val()*10000;
-        paramObj.integrateTradeAmt = $("#integrateTradeAmt").val()*10000;
+        paramObj.ownTradeAmt = JoyinMath.doMul( $("#ownTradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+        paramObj.integrateTradeAmt = JoyinMath.doMul( $("#integrateTradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
         paramObj.yield = $("#yield").val();
 
         // 隐藏域如果有值，使用隐藏域
@@ -1590,7 +1591,7 @@ var table;
             if (result && result.data) {
                 var data = result.data;
                 if(!$('#fTradeId').val()){
-                    $("#tradeAmt").val(data.tradeAmt / 10000).change().trigger("blur");
+                    $("#tradeAmt").val(JoyinMath.doDiv(data.tradeAmt,unitNum,2,JoyinMath.ROUND_HALF_UP)).change().trigger("blur");
                 }
                 $("#unitCprice").val(data.unitCprice).trigger("blur");
                 $("#unitInt").val(data.unitInt).trigger("blur");
@@ -1861,6 +1862,12 @@ var table;
         var bondFirstSign = $("#bondFirstSign").val();
         var winPrinAmt = $("#winPrinAmt").val();
         var secManageAcctId = $('#secManageAcctId').val();
+        if(entrustAmtUnit == '01' ){
+            $(".unitNum").text('元');
+            unitNum = 1;
+        }else{
+            unitNum = 10000;
+        }
         if(fTradeIdFromCstp){
             $('#fTradeId').textSelect('setValue',fTradeIdFromCstp);
             $('#fTradeId').attr('disabled',true);
@@ -2535,7 +2542,7 @@ var table;
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 start----------
             var object = $.serializeToObject('#submitForm', true);
-            object.tradeAmt = $("#tradeAmt").val()*10000;
+            object.tradeAmt = JoyinMath.doMul( $("#tradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
          // add by etliu 20210129 start
             // 选择的成交编号存在对应的报价，则不影响风险
             if (object.fTradeId) {
@@ -2857,7 +2864,7 @@ var table;
                     // 交易对手号代码
                     // 票值
                     if (result.prinamt && result.prinamt != ''){
-                        $('#tradeAmt').val(result.prinamt / 10000).trigger('blur').trigger('change');// 本金金额(券面总额)
+                        $('#tradeAmt').val(JoyinMath.doDiv(result.prinamt,unitNum,2,JoyinMath.ROUND_HALF_UP)).trigger('blur').trigger('change');// 本金金额(券面总额)
                         if($('#tradeAmt').val()){
                             $('#tradeAmt').attr('disabled', false); //成交编号以后，页面的券面总额被置灰，期望可以修改
                         }
@@ -3196,7 +3203,7 @@ var table;
     var calcFeeDataByFTradeId = function () {
         var paramObj = $.serializeToObject('#submitForm', true);
         paramObj.calculateField = $("[name=calculateField]:checked").val();
-        paramObj.tradeAmt = $("#tradeAmt").val()*10000;
+        paramObj.tradeAmt = JoyinMath.doMul( $("#tradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
         paramObj.unitCprice = $("#unitCprice").val();
         paramObj.unitInt = $("#unitInt").val();
         paramObj.unitFprice = $("#unitFprice").val();

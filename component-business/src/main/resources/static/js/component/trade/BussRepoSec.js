@@ -311,7 +311,7 @@
         }
         //配置单位 add by yeming 20210721 end
         if(entrustAmtUnit == '02' ){
-            totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,2,JoyinMath.ROUND_HALF_UP);
+            totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
         }
         //配置单位 add by yeming 20210721 end
         getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
@@ -358,7 +358,7 @@
                 }
                 //配置单位 add by yeming 20210721 end
                 if(entrustAmtUnit == '02' ){
-                    totalPrinAmt = JoyinMath.doMul(totalPrinAmt,10000,2,JoyinMath.ROUND_HALF_UP);
+                    totalPrinAmt = JoyinMath.doDiv(totalPrinAmt,10000,4,JoyinMath.ROUND_HALF_UP);
                 }
                 //配置单位 add by yeming 20210721 end
                 getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');

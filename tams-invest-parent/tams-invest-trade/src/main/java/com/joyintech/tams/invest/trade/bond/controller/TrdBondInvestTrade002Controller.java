@@ -137,6 +137,10 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         String bondFirstSign = this.getParam("bondFirstSign");
         String isCstp = this.getParam("isCstp");
         String isCstpSure = this.getParam("isCstpSure");
+        //配置单位 add by yeming 20210723 start
+        String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+        model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
+        //配置单位 add by yeming 20210723 end
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdBondInvestTrade002Service.getBussinessEntityByWorkflowId(
@@ -228,15 +232,19 @@ public class TrdBondInvestTrade002Controller extends BaseController {
 //                dto.setTurnInvAim(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue());
 //            }
 //        }
-        if (dto.getTradeAmt() != null){
-            dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-            if(StringUtil.isNotEmpty(dto.getOwnTradeAmt())){
-            	dto.setOwnTradeAmt(dto.getOwnTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-            }
-            if(StringUtil.isNotEmpty(dto.getIntegrateTradeAmt())){
-            	dto.setIntegrateTradeAmt(dto.getIntegrateTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+        //配置单位 edit by yeming 20210723 start
+        if(StringUtil.equals(entrustAmtUnit,"02")){
+            if (dto.getTradeAmt() != null){
+                dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                if(StringUtil.isNotEmpty(dto.getOwnTradeAmt())){
+                    dto.setOwnTradeAmt(dto.getOwnTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if(StringUtil.isNotEmpty(dto.getIntegrateTradeAmt())){
+                    dto.setIntegrateTradeAmt(dto.getIntegrateTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
             }
         }
+        //配置单位 edit by yeming 20210723 end
         Date sysDate = DateUtil.platDateFromCache();
         String formatDate = DateUtil.format(sysDate);
         model.addAttribute("formatDate",formatDate);
