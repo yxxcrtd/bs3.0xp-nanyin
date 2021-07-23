@@ -111,11 +111,11 @@
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <excludes> 
-                        <exclude>**/JixuApplication.class</exclude> 
-                    </excludes>
-                </configuration>
+<!--                <configuration>-->
+<!--                    <excludes> -->
+<!--                        <exclude>**/JixuApplication.class</exclude> -->
+<!--                    </excludes>-->
+<!--                </configuration>-->
             </plugin>
 			
 			<plugin>
