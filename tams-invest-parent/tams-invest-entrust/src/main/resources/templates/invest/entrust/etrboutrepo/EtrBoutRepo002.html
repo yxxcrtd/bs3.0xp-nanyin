@@ -112,7 +112,7 @@
                                                    data-pattern="" data-fixtype="2" required="required"
                                                    class="layui-input form-input text-number"
                                                    data-th-value="${entity?.entrustAmt}">
-                                            <span class="input-right-show">元</span>
+                                            <span class="input-right-show unitNum">万元</span>
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap">
@@ -429,6 +429,9 @@
             var cash = /*[[${cash}]]*/'';
             var PRICEMODEL_03 = /*[[${PRICEMODEL_03}]]*/'PRM03';
             var PINAN_ASSET_TYPE_F10 = /*[[${PINAN_ASSET_TYPE_F10}]]*/'';
+            //配置单位 add by yeming 20210721 end
+            var entrustAmtUnit = /*[[${entrustAmtUnit}]]*/'';
+            //配置单位 add by yeming 20210721 end
         </script>
         <script data-th-src="@{/js/invest/entrust/etrboutrepo/EtrBoutRepo002.js?v1}" type="text/javascript"></script>
     </div>
