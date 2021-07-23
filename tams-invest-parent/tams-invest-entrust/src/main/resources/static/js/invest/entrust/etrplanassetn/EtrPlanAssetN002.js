@@ -174,7 +174,25 @@
             }
         }
     }
-    
+
+    /**
+     * 查看资产详情事件
+     */
+    $('#EtrPlanAssetN002_btn_search').click(function() {
+        var finprodId =$('#finprodIdhid').val();
+        var url = "/invest/asset/plan/planNet/FinPlanNetAsset002/init";
+        if (finprodId != ""){
+            var params = {
+                pageModel:PAGE_MODEL_REFERENCE,
+                finprodId:finprodId
+            };
+            EtrShowFinPlanAssetDetailInfo.searchDetail(params,url);
+        } else {
+            Joyin.error("资产名称不能为空")
+        }
+    });
+
+
     /**
      * 绑定事件
      */
