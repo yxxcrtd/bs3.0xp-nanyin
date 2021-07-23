@@ -155,13 +155,13 @@ public class FinNetValueProductBuild003Controller extends BaseController {
                 pageIdList.add("FinNetValueProductBuild003");
                 wflValidInputParameter.setPageIdList(pageIdList);
                 wflValidInputParameter.setWorkflowId(entity.getWorkflowId());
-//                wflValidInputParameter.setBusinessDataPk1(
-//                    DictCodeListExt1.金融产品类型_理财产品.getValue());
-                wflValidInputParameter.setBusinessDataPk2(entity.getFinprodMarketId());
+                wflValidInputParameter.setBusinessDataPk1(
+                    DictCodeListExt1.金融产品类型_理财产品.getValue());
+                wflValidInputParameter.setBusinessDataPk2(finProductBuild003Dto.getFinprodId());
                 if (mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
                     validList.add(new ValidMessage(
                         getMessage("BUSS_COM_E_0027", getMessage("FinProductScheduling002.prodId"),
-                                entity.getFinprodMarketId())));
+                                finProductBuild003Dto.getFinprodId())));
                 }
 
                 if (finNetValueProductBuild001Service.queryProdCountByFinprodId(
