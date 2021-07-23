@@ -290,6 +290,15 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
 
                 if(CollectionUtils.isNotEmpty(inputDto.getBussTrdTransfenpeiDto())){//多组合模式
                     List<BaseEtrInvestInfoDto> entrustInfos = trdBondInvestTrade002Service.getEntrustInfos(inputDto.getEntrustId());
+                    //特殊处理中标结果中批量缴款 start
+                    if (StringUtil.isNotBlank(inputDto.getBondFirstSign())){
+                        entrustInfos.stream().forEach(e ->{
+                            //数量*100，再转换成万元
+                            e.getEtrEntrust().setEntrustNum(com.joyintech.framework.util.ArithmeticUtil.multiply(e.getEtrEntrust().getEntrustNum(),new BigDecimal("1000000")));
+                            e.setDoEntrustMoney(com.joyintech.framework.util.ArithmeticUtil.multiply(e.getDoEntrustMoney(),new BigDecimal("1000000")));
+                        });
+                    }
+                    //特殊处理中标结果中批量缴款 end
                     List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto = inputDto.getBussTrdTransfenpeiDto();
                     for (BussTrdTransfenpeiDto fenpeiDto:bussTrdTransfenpeiDto) {
                         for (BaseEtrInvestInfoDto entrustInfo:entrustInfos) {

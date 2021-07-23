@@ -13,20 +13,13 @@ package com.joyintech.tams.invest.trade.bond.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.base.BaseDictCodeList;
-import com.joyintech.framework.base.intf.DataDict;
-import com.joyintech.framework.base.intf.DataDictItem;
-import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.base.service.DealDictCodeDataService;
-import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
@@ -55,7 +48,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
@@ -142,14 +134,20 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 
         // 从"债券中标结果查询"进来，准备进行缴款 add by gejiaao 2019/07/26 Start
-        if (StringUtil.isNotEmpty(payType)){
+        if (StringUtil.isNotEmpty(bondFirstSign)){
             // 当"缴款方式"不为空时，表示为从，债券中标结果中进来的
             dto.setPayType(payType);
-            dto.setTradeAmt(BigDecimal.valueOf(Double.valueOf(winPrinAmt)));
-            dto.setYield(BigDecimal.valueOf(Double.valueOf(yield)));
-        }
-        if (StringUtil.isNotEmpty(bondFirstSign)){
+            BigDecimal winPrinAmtBig = BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(winPrinAmt)){
+                winPrinAmtBig = new BigDecimal(winPrinAmt);
+            }
+            dto.setTradeAmt(winPrinAmtBig);
+            dto.setYield(BigDecimal.valueOf(Double.valueOf(yield == null ? "0" : yield)));
             model.addAttribute("bondFirstSign",bondFirstSign);
+            model.addAttribute("winPrinAmt",winPrinAmtBig);
+            model.addAttribute("yield",yield);
+            dto.setFinprodId(this.getParam("finprodId"));
+            dto.setUnitCprice(new BigDecimal(this.getParam("winCprice")));
         }
         // 从"债券中标结果查询"进来，准备进行缴款 add by gejiaao 2019/07/26 End
         if (StringUtil.isNotBlank(tradeId)) {
@@ -738,6 +736,14 @@ public class TrdBondInvestTrade003Controller extends BaseController {
 //        }
         //中标结果查询进来  add by gejiaao 2019/7/26 end
         List<BaseEtrInvestInfoDto> entrustInfos = trdBondInvestTrade002Service.getEntrustInfos(dto.getEntrustId());
+        if (StringUtil.isNotBlank(dto.getBondFirstSign())){
+            entrustInfos.stream().forEach(e ->{
+                //数量*100，再转换成万元
+                e.getEtrEntrust().setEntrustNum(ArithmeticUtil.multiply(e.getEtrEntrust().getEntrustNum(),new BigDecimal("1000000")));
+                //转换成万元
+                e.setDoEntrustMoney(ArithmeticUtil.multiply(e.getDoEntrustMoney(),new BigDecimal("10000")));
+            });
+        }
         return entrustInfos;
     }
     

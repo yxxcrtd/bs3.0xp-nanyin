@@ -189,13 +189,15 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             dto.setPayType(payType);
             BigDecimal winPrinAmtBig = BigDecimal.ZERO;
             if(StringUtil.isNotEmpty(winPrinAmt)){
-            	winPrinAmtBig = ArithmeticUtil.divide(new BigDecimal(winPrinAmt), new BigDecimal(10000), 2);
+                //modify by sunhui 20210723 重庆银行：分销缴款进来时已经是万元了，不需要再除以10000---产品bug   start
+            	//winPrinAmtBig = ArithmeticUtil.divide(new BigDecimal(winPrinAmt), new BigDecimal(10000), 2);
+                winPrinAmtBig = new BigDecimal(winPrinAmt);
+                //modify by sunhui 20210723 重庆银行：分销缴款进来时已经是万元了，不需要再除以10000---产品bug   end
             }
             dto.setTradeAmt(winPrinAmtBig);
             dto.setYield(BigDecimal.valueOf(Double.valueOf(yield == null ? "0" : yield)));
             model.addAttribute("bondFirstSign",bondFirstSign);
             model.addAttribute("winPrinAmt",winPrinAmtBig);
-            model.addAttribute("yield",yield);
         }
         // 从"债券中标结果查询"进来，准备进行缴款 add by gejiaao 2019/07/26 End
         if (StringUtil.isNotBlank(tradeId)) {
