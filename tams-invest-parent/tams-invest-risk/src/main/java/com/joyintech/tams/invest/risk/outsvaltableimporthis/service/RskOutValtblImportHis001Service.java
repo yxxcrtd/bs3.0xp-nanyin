@@ -82,7 +82,7 @@ public class RskOutValtblImportHis001Service extends CommonExportService<RskOutV
     @Override
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config(
-                "/com/joyintech/invest/risk/outsvaltableimporthis/conf/export_conf.xml").dataSource(
+                "/com/joyintech/tams/invest/risk/outsvaltableimporthis/conf/export_conf.xml").dataSource(
                 DataSourceType.MASERT);
     }
 
