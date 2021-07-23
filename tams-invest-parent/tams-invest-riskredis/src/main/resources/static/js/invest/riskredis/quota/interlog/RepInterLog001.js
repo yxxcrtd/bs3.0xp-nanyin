@@ -84,7 +84,6 @@ var rsk = function() {
      * 查询
      */
     var demand = function() {
-    	debugger;
     	var paramObj = getSearchParams();//获取参数
     	var blank = null;
     	if(paramObj.starTranDate == null || paramObj.starTranDate == ''){
