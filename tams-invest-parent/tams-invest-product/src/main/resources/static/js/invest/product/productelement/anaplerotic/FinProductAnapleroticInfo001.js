@@ -45,7 +45,7 @@ $(function() {
             , {field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}//编辑和删除事件
         ],
         dblclick:function(table, data) {
-            Joyin.dialog(JoyinUtil.getLabel("FinProductAnapleroticInfo002.update"), JoyinUtil.getRealPath('invest/product/productelement/anaplerotic/FinProductAnapleroticInfo002/init'),
+            Joyin.dialog(JoyinUtil.getLabel("FinProductAnapleroticInfo002.reference"), JoyinUtil.getRealPath('invest/product/productelement/anaplerotic/FinProductAnapleroticInfo002/init'),
                     "98%", "95%", {pageModel:PAGE_MODEL_REFERENCE, anapleroticId : data.anapleroticId,effDateStr:data.effDateStr},function(){table.reload()})
         },
     });
