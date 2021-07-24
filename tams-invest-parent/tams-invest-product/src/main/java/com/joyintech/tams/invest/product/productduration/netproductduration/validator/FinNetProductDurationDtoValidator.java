@@ -409,7 +409,7 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
             	if(dto.getRedConfirmDate() ==null){
                     errorList.add(new ValidMessage("redConfirmDate",getMessage("确认日不能为空！")));
             	}
-            	else if(dto.getRedPayDate()==null || dto.getRedPayDate().compareTo(dto.getRedConfirmDate())<=0){
+            	else if(dto.getRedPayDate()==null || dto.getRedPayDate().compareTo(dto.getRedConfirmDate())<0){
                     errorList.add(new ValidMessage("redPayDate",getMessage("支付日不能为空且必须大于等于确认日！")));
             	}
             	if(!DictCodeList.是否_是.getValue().equals(dto.getIsCycle())) {
