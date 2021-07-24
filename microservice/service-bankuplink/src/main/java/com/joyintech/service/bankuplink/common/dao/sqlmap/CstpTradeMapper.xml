@@ -115,7 +115,8 @@
        t.SC_FPRICE_AMT,
        t.OURDEPOSITACCOUNTNUMBER ourdepositaccountnumber,
        CASE WHEN  t.SETTLDATE = t.TRADEDATE THEN '1'
-       ELSE '2' END  settleSpeed
+       ELSE '2' END  settleSpeed,
+       t.CASHHOLDINGDAYS  cashHoldingDays
   from interf_cstp_trade t
  where t.execid =  #{execid,jdbcType=VARCHAR}
   and  t.businesstype =  #{businesstype,jdbcType=VARCHAR}

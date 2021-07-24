@@ -3265,7 +3265,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
             // 期限
             entity.setTerm(repoCstpInfo.getTerm());
             // 实际占款天数
-            entity.setActCapDays(repoCstpInfo.getTerm());
+            entity.setActCapDays(repoCstpInfo.getCashHoldingDays().longValue());
             // 本金金额
             entity.setPrinAmt(prinAmt2);
             // 币种(默认人民币)
