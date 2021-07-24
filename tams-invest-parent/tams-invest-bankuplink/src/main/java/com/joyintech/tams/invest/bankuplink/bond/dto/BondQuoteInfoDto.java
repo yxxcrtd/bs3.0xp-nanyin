@@ -835,7 +835,16 @@ public class BondQuoteInfoDto extends BaseEntity {
 
     private IbuQuoteBondDetDto ibuQuoteBondDet;
 
+    private List<IbuQuoteBondDetDto> ibuQuoteBondDetList;
+
     public IbuQuoteBondDetDto getIbuQuoteBondDet() {
+        if(null!=ibuQuoteBondDet){
+            return ibuQuoteBondDet;
+        }else{
+           if(!StringUtil.isEmptyList(this.getIbuQuoteBondDetList())){
+               return this.getIbuQuoteBondDetList().get(0);
+           }
+        }
         return ibuQuoteBondDet;
     }
 
@@ -1112,7 +1121,15 @@ public class BondQuoteInfoDto extends BaseEntity {
 		this.bondQuoteInfoDtoList = bondQuoteInfoDtoList;
 	}
 
-	public BigDecimal getBondShareAmt() {
+    public List<IbuQuoteBondDetDto> getIbuQuoteBondDetList() {
+        return ibuQuoteBondDetList;
+    }
+
+    public void setIbuQuoteBondDetList(List<IbuQuoteBondDetDto> ibuQuoteBondDetList) {
+        this.ibuQuoteBondDetList = ibuQuoteBondDetList;
+    }
+
+    public BigDecimal getBondShareAmt() {
 		return bondShareAmt;
 	}
 
